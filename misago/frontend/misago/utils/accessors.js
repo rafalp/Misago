@@ -1,7 +1,7 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
-  ns.has = function(obj, key) {
+  Misago.has = function(obj, key) {
     if (obj !== undefined) {
       return obj.hasOwnProperty(key);
     } else {
@@ -9,8 +9,8 @@
     }
   };
 
-  ns.get = function(obj, key, value) {
-    if (ns.has(obj, key)) {
+  Misago.get = function(obj, key, value) {
+    if (Misago.has(obj, key)) {
       return obj[key];
     } else if (value !== undefined) {
       return value;
@@ -19,9 +19,9 @@
     }
   };
 
-  ns.pop = function(obj, key, value) {
-    var returnValue = ns.get(obj, key, value);
-    if (ns.has(obj, key)) {
+  Misago.pop = function(obj, key, value) {
+    var returnValue = Misago.get(obj, key, value);
+    if (Misago.has(obj, key)) {
       delete obj[key];
     }
     return returnValue;

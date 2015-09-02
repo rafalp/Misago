@@ -1,4 +1,4 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
   var self = {
@@ -14,5 +14,5 @@
       ]);
     }
   };
-  ns.IndexPage = self;
+  Misago.IndexPage = self;
 }(Misago.prototype));

@@ -1,16 +1,16 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
-  ns.ComponentFactory = function(_) {
+  Misago.ComponentFactory = function(_) {
     // Component factory
     _.component = function() {
-      var arguments_array = [];
+      var argumentsArray = [];
       for (var i = 0; i < arguments.length; i += 1) {
-        arguments_array.push(arguments[i]);
+        argumentsArray.push(arguments[i]);
       }
 
-      arguments_array.push(_);
-      return m.component.apply(undefined, arguments_array);
+      argumentsArray.push(_);
+      return m.component.apply(undefined, argumentsArray);
     };
   };
 }(Misago.prototype));

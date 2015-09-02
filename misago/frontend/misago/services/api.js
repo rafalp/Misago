@@ -1,10 +1,10 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
   var Api = function(_) {
     // Ajax implementation
     var cookie_regex = new RegExp(_.context.CSRF_COOKIE_NAME + '\=([^;]*)');
-    this.csrf_token = ns.get(document.cookie.match(cookie_regex), 0).split('=')[1];
+    this.csrfToken = Misago.get(document.cookie.match(cookie_regex), 0).split('=')[1];
 
     this.ajax = function(method, url, data, progress) {
       var deferred = m.deferred();
@@ -13,7 +13,7 @@
         url: url,
         method: method,
         headers: {
-          'X-CSRFToken': this.csrf_token
+          'X-CSRFToken': this.csrfToken
         },
 
         data: data | {},
@@ -36,10 +36,10 @@
     };
 
     this.get = function(url) {
-      var preloaded_data = ns.pop(_.preloaded_data, url);
-      if (preloaded_data) {
+      var context = Misago.pop(_.context, url);
+      if (context) {
         var deferred = m.deferred();
-        deferred.resolve(preloaded_data);
+        deferred.resolve(context);
         return deferred.promise;
       } else {
         return this.ajax('GET', url);
@@ -52,7 +52,7 @@
 
     // API
     this.buildUrl = function(model, call, querystrings) {
-      var url = _.router.base_url;
+      var url = _.router.baseUrl;
       url += 'api/' + model + '/';
       return url;
     };
@@ -71,7 +71,7 @@
     };
   };
 
-  ns.Api = function(_) {
+  Misago.Api = function(_) {
     return new Api(_);
   };
 }(Misago.prototype));

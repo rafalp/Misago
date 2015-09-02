@@ -77,19 +77,19 @@
   QUnit.test("services are initialized and destroyed in right order", function(assert) {
     assert.expect(2);
 
-    var initialization_order = [];
-    var destruction_order = [];
+    var initializationOrder = [];
+    var destructionOrder = [];
 
     var services = [
       {
         name: 'test_1',
         item: {
           factory: function() {
-            initialization_order.push(1);
+            initializationOrder.push(1);
           },
 
           destroy: function() {
-            destruction_order.push(1);
+            destructionOrder.push(1);
           }
         }
       },
@@ -97,11 +97,11 @@
         name: 'test_2',
         item: {
           factory: function() {
-            initialization_order.push(2);
+            initializationOrder.push(2);
           },
 
           destroy: function() {
-            destruction_order.push(2);
+            destructionOrder.push(2);
           }
         }
       }
@@ -110,8 +110,8 @@
     container._initServices(services);
     container._destroyServices(services);
 
-    assert.deepEqual(initialization_order, [1, 2], 'services were initialized in right order.');
-    assert.deepEqual(destruction_order, [2, 1], 'services were destroyed in right order.');
+    assert.deepEqual(initializationOrder, [1, 2], 'services were initialized in right order.');
+    assert.deepEqual(destructionOrder, [2, 1], 'services were destroyed in right order.');
   });
 
   QUnit.test("initialization data is stored on container", function(assert) {

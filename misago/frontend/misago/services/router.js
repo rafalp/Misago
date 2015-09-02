@@ -1,12 +1,12 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
   var Router = function(_) {
     var self = this;
-    this.base_url = $('base').attr('href');
+    this.baseUrl = $('base').attr('href');
 
-    this.static_url = ns.get(_.context, 'STATIC_URL', '/');
-    this.media_url = ns.get(_.context, 'MEDIA_URL', '/');
+    var staticUrl = Misago.get(_.context, 'STATIC_URL', '/');
+    var mediaUrl = Misago.get(_.context, 'MEDIA_URL', '/');
 
     // Routing
     this.urls = {};
@@ -17,11 +17,11 @@
         // set service container on component
         url.component.container = _;
 
-        var final_pattern = self.base_url + url.pattern;
-        final_pattern = final_pattern.replace('//', '/');
+        var finalPattern = self.baseUrl + url.pattern;
+        finalPattern = finalPattern.replace('//', '/');
 
-        self.urls[final_pattern] = url.component;
-        self.reverses[url.name] = final_pattern;
+        self.urls[finalPattern] = url.component;
+        self.reverses[url.name] = finalPattern;
       });
     };
 
@@ -38,17 +38,17 @@
     };
 
     // Delegate clicks
-    this.delegate_element = null;
-    this.delegate_name = 'click.misago-router';
+    this.delegateElement = null;
+    this.delegateName = 'click.misago-router';
 
     this.cleanUrl = function(url) {
       if (!url) { return; }
 
       // Is link relative?
-      var is_relative = url.substr(0, 1) === '/' && url.substr(0, 2) !== '//';
+      var isRelative = url.substr(0, 1) === '/' && url.substr(0, 2) !== '//';
 
       // If link contains host, validate to see if its outgoing
-      if (!is_relative) {
+      if (!isRelative) {
         var location = window.location;
 
         // If protocol matches current one, strip it from string
@@ -67,26 +67,27 @@
       }
 
       // Is link within Ember app?
-      if (url.substr(0, this.base_url.length) !== this.base_url) { return; }
+      if (url.substr(0, this.baseUrl.length) !== this.baseUrl) { return; }
 
       // Is link to media/static/avatar server?
-      if (url.substr(0, this.static_url.length) === this.static_url) { return; }
+      console.log(staticUrl);
+      if (url.substr(0, staticUrl.length) === staticUrl) { return; }
 
-      if (url.substr(0, this.media_url.length) === this.media_url) { return; }
+      if (url.substr(0, mediaUrl.length) === mediaUrl) { return; }
 
-      var avatars_url = '/user-avatar/';
-      if (url.substr(0, avatars_url.length) === avatars_url) { return; }
+      var avatarsUrl = '/user-avatar/';
+      if (url.substr(0, avatarsUrl.length) === avatarsUrl) { return; }
 
       return url;
     };
 
     this.delegateClicks = function(element) {
-      this.delegate_element = element;
-      $(this.delegate_element).on(this.delegate_name, 'a', function(e) {
-        var clean_url = self.cleanUrl(e.target.href);
-        if (clean_url) {
-          if (clean_url != m.route()) {
-            m.route(clean_url);
+      this.delegateElement = element;
+      $(this.delegateElement).on(this.delegateName, 'a', function(e) {
+        var cleanUrl = self.cleanUrl(e.target.href);
+        if (cleanUrl) {
+          if (cleanUrl != m.route()) {
+            m.route(cleanUrl);
           }
           e.preventDefault();
         }
@@ -94,7 +95,7 @@
     };
 
     this.destroy = function() {
-      $(this.delegate_element).off(this.delegate_name);
+      $(this.delegateElement).off(this.delegateName);
     };
 
     // Media/Static url
@@ -104,16 +105,16 @@
       };
     };
 
-    this.staticUrl = prefixUrl(this.static_url);
-    this.mediaUrl = prefixUrl(this.media_url);
+    this.staticUrl = prefixUrl(staticUrl);
+    this.mediaUrl = prefixUrl(mediaUrl);
   };
 
-  ns.RouterFactory = function(_) {
+  Misago.RouterFactory = function(_) {
     return new Router(_);
   };
 
-  ns.startRouting = function(_) {
-    _.router.startRouting(ns.urls, document.getElementById('router-fixture'));
+  Misago.startRouting = function(_) {
+    _.router.startRouting(Misago.urls, document.getElementById('router-fixture'));
     _.router.delegateClicks(document.getElementById(_.setup.fixture));
   };
 }(Misago.prototype));

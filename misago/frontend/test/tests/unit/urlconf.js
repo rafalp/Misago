@@ -1,11 +1,11 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
   var urlconf = null;
 
   QUnit.module("UrlConf", {
     beforeEach: function() {
-      urlconf = new ns.UrlConf();
+      urlconf = new Misago.UrlConf();
     }
   });
 
@@ -26,7 +26,7 @@
     urlconf.url('', component, 'test_url');
     urlconf.url('/test/', component, 'test_url');
 
-    var childconf = new ns.UrlConf();
+    var childconf = new Misago.UrlConf();
     childconf.url('/', component, 'users');
     childconf.url('/user/', component, 'user');
 

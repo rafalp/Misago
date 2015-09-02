@@ -1,7 +1,7 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
-  ns.BrandFull = {
+  Misago.BrandFull = {
     view: function(ctrl, branding, _) {
       var children = [
         m('img', {

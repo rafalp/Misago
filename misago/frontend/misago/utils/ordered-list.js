@@ -1,16 +1,16 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
-  ns.OrderedList = function(items) {
-    this.is_ordered = false;
+  Misago.OrderedList = function(items) {
+    this.isOrdered = false;
     this._items = items || [];
 
     this.add = function(key, item, order) {
       this._items.push({
         key: key,
         item: item,
-        after: ns.get(order, 'after'),
-        before: ns.get(order, 'before')
+        after: Misago.get(order, 'after'),
+        before: Misago.get(order, 'before')
       });
     };
 
@@ -37,9 +37,9 @@
     };
 
     this.order = function(values_only) {
-      if (!this.is_ordered) {
+      if (!this.isOrdered) {
         this._items = this._order(this._items);
-        this.is_ordered = true;
+        this.isOrdered = true;
       }
 
       if (values_only || typeof values_only === 'undefined') {

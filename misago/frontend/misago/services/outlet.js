@@ -1,11 +1,11 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
-  ns.Outlet = {
+  Misago.Outlet = {
     factory: function(_) {
       if (_.setup.fixture) {
         m.mount(document.getElementById(_.setup.fixture),
-                _.component(ns.ForumLayout));
+                _.component(Misago.ForumLayout));
       }
     },
 

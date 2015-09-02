@@ -1,11 +1,11 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
   var list = null;
 
   QUnit.module("OrderedList", {
     beforeEach: function() {
-      list = new ns.OrderedList();
+      list = new Misago.OrderedList();
     }
   });
 
@@ -27,26 +27,26 @@
     list.add('melon', 'melon', {after: 'potato'});
     list.add('potato', 'potato');
 
-    var unordered_list = list.values();
+    var unorderedList = list.values();
 
-    assert.equal(list.is_ordered, false, "list.values() didn't set is_ordered flag on list");
+    assert.equal(list.isOrdered, false, "list.values() didn't set isOrdered flag on list");
 
-    assert.equal(unordered_list[0], 'apple', 'unordered_list[0] is apple');
-    assert.equal(unordered_list[1], 'banana', 'unordered_list[1] is banana');
-    assert.equal(unordered_list[2], 'orange', 'unordered_list[2] is orange');
-    assert.equal(unordered_list[3], 'kiwi', 'unordered_list[3] is kiwi');
-    assert.equal(unordered_list[4], 'melon', 'unordered_list[4] is melon');
-    assert.equal(unordered_list[5], 'potato', 'unordered_list[5] is potato');
+    assert.equal(unorderedList[0], 'apple', 'unorderedList[0] is apple');
+    assert.equal(unorderedList[1], 'banana', 'unorderedList[1] is banana');
+    assert.equal(unorderedList[2], 'orange', 'unorderedList[2] is orange');
+    assert.equal(unorderedList[3], 'kiwi', 'unorderedList[3] is kiwi');
+    assert.equal(unorderedList[4], 'melon', 'unorderedList[4] is melon');
+    assert.equal(unorderedList[5], 'potato', 'unorderedList[5] is potato');
 
-    var ordered_list = list.order();
+    var orderedList = list.order();
 
-    assert.ok(list.is_ordered, "list.order() set is_ordered flag on list");
+    assert.ok(list.isOrdered, "list.order() set isOrdered flag on list");
 
-    assert.equal(ordered_list[0], 'apple', 'ordered_list[0] is apple');
-    assert.equal(ordered_list[1], 'kiwi', 'ordered_list[1] is kiwi');
-    assert.equal(ordered_list[2], 'banana', 'ordered_list[2] is banana');
-    assert.equal(ordered_list[3], 'orange', 'ordered_list[3] is orange');
-    assert.equal(ordered_list[4], 'potato', 'ordered_list[4] is potato');
-    assert.equal(ordered_list[5], 'melon', 'ordered_list[5] is melon');
+    assert.equal(orderedList[0], 'apple', 'orderedList[0] is apple');
+    assert.equal(orderedList[1], 'kiwi', 'orderedList[1] is kiwi');
+    assert.equal(orderedList[2], 'banana', 'orderedList[2] is banana');
+    assert.equal(orderedList[3], 'orange', 'orderedList[3] is orange');
+    assert.equal(orderedList[4], 'potato', 'orderedList[4] is potato');
+    assert.equal(orderedList[5], 'melon', 'orderedList[5] is melon');
   });
 }(Misago.prototype));

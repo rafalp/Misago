@@ -1,18 +1,18 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
-  ns.ForumFooter = {
+  Misago.ForumFooter = {
     view: function(ctrl, _) {
       var nav = null;
-      if (ns.FooterNav.isVisible(_.settings)) {
-        nav = _.component(ns.FooterNav);
+      if (Misago.FooterNav.isVisible(_.settings)) {
+        nav = _.component(Misago.FooterNav);
       }
 
       return m('footer.forum-footer', [
         m('.container',
           m('.footer-content', [
             nav,
-            _.component(ns.FooterMisagoBranding)
+            _.component(Misago.FooterMisagoBranding)
           ])
         )
       ]);

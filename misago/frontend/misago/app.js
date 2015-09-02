@@ -26,8 +26,8 @@
     };
 
     this._initServices = function(services) {
-      var ordered_services = new ns.OrderedList(services).order(false);
-      ordered_services.forEach(function (item) {
+      var orderedServices = new ns.OrderedList(services).order(false);
+      orderedServices.forEach(function (item) {
         var factory = null;
         if (item.item.factory !== undefined) {
           factory = item.item.factory;
@@ -35,17 +35,17 @@
           factory = item.item;
         }
 
-        var service_instance = factory(self);
-        if (service_instance) {
-          self[item.name] = service_instance;
+        var serviceInstance = factory(self);
+        if (serviceInstance) {
+          self[item.name] = serviceInstance;
         }
       });
     };
 
     this._destroyServices = function(services) {
-      var ordered_services = new ns.OrderedList(services).order();
-      ordered_services.reverse();
-      ordered_services.forEach(function (item) {
+      var orderedServices = new ns.OrderedList(services).order();
+      orderedServices.reverse();
+      orderedServices.forEach(function (item) {
         if (item.destroy !== undefined) {
           item.destroy(self);
         }
@@ -67,7 +67,7 @@
     this.init = function(setup) {
       this.setup = {
         fixture: ns.get(setup, 'fixture', null),
-        in_test: ns.get(setup, 'in_test', false)
+        inTest: ns.get(setup, 'inTest', false)
       };
 
       this._initServices(this._services);

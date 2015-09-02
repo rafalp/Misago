@@ -1,16 +1,16 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
   var persistent = function(el, isInit, context) {
     context.retain = true;
   };
 
-  ns.ForumLayout = {
+  Misago.ForumLayout = {
     view: function(ctrl, _) {
       return [
-        _.component(ns.ForumNavbar),
+        _.component(Misago.ForumNavbar),
         m('#router-fixture', {config: persistent}),
-        _.component(ns.ForumFooter)
+        _.component(Misago.ForumFooter)
       ];
     }
   };

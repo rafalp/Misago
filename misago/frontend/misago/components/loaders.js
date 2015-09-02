@@ -1,7 +1,7 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
-  ns.Loader = {
+  Misago.Loader = {
     view: function() {
       return m('.loader.sk-folding-cube', [
         m('.sk-cube1.sk-cube'),
@@ -12,10 +12,10 @@
     }
   };
 
-  ns.LoadingPage = {
+  Misago.LoadingPage = {
     view: function(ctrl, _) {
       return m('.page.page-loading',
-        _.component(ns.Loader)
+        _.component(Misago.Loader)
       );
     }
   };

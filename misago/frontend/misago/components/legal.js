@@ -1,50 +1,50 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
-  var legalPageFactory = function(type_name, default_title) {
-    var dashed_type_name = type_name.replace(/_/g, '-');
+  var legalPageFactory = function(typeName, defaultTitle) {
+    var dashedTypeName = typeName.replace(/_/g, '-');
 
     var self = {
-      is_destroyed: true,
+      isDestroyed: true,
       controller: function() {
         var _ = self.container;
-        self.is_destroyed = false;
+        self.isDestroyed = false;
 
-        if (ns.get(_.settings, type_name + '_link')) {
-          window.location = ns.get(_.settings, type_name + '_link');
+        if (Misago.get(_.settings, typeName + '_link')) {
+          window.location = Misago.get(_.settings, typeName + '_link');
         } else {
           self.vm.init(_);
         }
 
         return {
           onunload: function() {
-            self.is_destroyed = true;
+            self.isDestroyed = true;
           }
         };
       },
       vm: {
-        is_busy: false,
-        is_ready: false,
+        isBusy: false,
+        isReady: false,
         content: null,
 
         init: function(_) {
 
           var vm = this;
-          if (vm.is_ready) {
+          if (vm.isReady) {
             _.setTitle(vm.title);
           } else {
             _.setTitle();
 
-            if (!vm.is_busy) {
-              vm.is_busy = true;
+            if (!vm.isBusy) {
+              vm.isBusy = true;
 
-              _.api.one('legal-pages', dashed_type_name).then(function(data) {
-                vm.title = data.title || default_title;
+              _.api.one('legal-pages', dashedTypeName).then(function(data) {
+                vm.title = data.title || defaultTitle;
                 vm.body = data.body;
-                vm.is_busy = false;
-                vm.is_ready = true;
+                vm.isBusy = false;
+                vm.isReady = true;
 
-                if (!self.is_destroyed) {
+                if (!self.isDestroyed) {
                   _.setTitle(vm.title);
                   m.redraw();
                 }
@@ -56,23 +56,23 @@
       view: function() {
         var _ = this.container;
 
-        if (this.vm.is_ready) {
-          return m('.page.page-legal.page-legal-' + dashed_type_name, [
-            _.component(ns.PageHeader, {title: this.vm.title}),
+        if (this.vm.isReady) {
+          return m('.page.page-legal.page-legal-' + dashedTypeName, [
+            _.component(Misago.PageHeader, {title: this.vm.title}),
             m('.container',
               m.trust(this.vm.body)
             )
           ]);
         } else {
-          return _.component(ns.LoadingPage);
+          return _.component(Misago.LoadingPage);
         }
       }
     };
     return self;
   };
 
-  ns.TermsOfServicePage = legalPageFactory(
+  Misago.TermsOfServicePage = legalPageFactory(
     'terms_of_service', gettext('Terms of service'));
-  ns.PrivacyPolicyPage = legalPageFactory(
+  Misago.PrivacyPolicyPage = legalPageFactory(
     'privacy_policy', gettext('Privacy policy'));
 }(Misago.prototype));

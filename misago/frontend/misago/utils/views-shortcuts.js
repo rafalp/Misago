@@ -1,7 +1,7 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
-  ns.loadingPage = function(_) {
-    return m('.page.page-loading', _.component(ns.Loader));
+  Misago.loadingPage = function(_) {
+    return m('.page.page-loading', _.component(Misago.Loader));
   };
 } (Misago.prototype));

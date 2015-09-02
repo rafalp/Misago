@@ -1,22 +1,22 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
-  var legalLink = function(_, legal_type, default_title) {
-    var url = ns.get(_.settings, legal_type + '_link');
-    if (!url && ns.get(_.settings, legal_type)) {
-      url = _.router.url(legal_type);
+  var legalLink = function(_, legalType, defaultTitle) {
+    var url = Misago.get(_.settings, legalType + '_link');
+    if (!url && Misago.get(_.settings, legalType)) {
+      url = _.router.url(legalType);
     }
 
     if (url) {
       return m('li',
-        m('a', {href: url}, ns.get(_.settings, legal_type + '_title', default_title))
+        m('a', {href: url}, Misago.get(_.settings, legalType + '_title', defaultTitle))
       );
     } else {
       return null;
     }
   };
 
-  ns.FooterNav = {
+  Misago.FooterNav = {
     isVisible: function(settings) {
       return [
         !!settings.forum_footnote,

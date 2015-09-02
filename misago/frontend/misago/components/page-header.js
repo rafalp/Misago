@@ -1,7 +1,7 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
-  ns.PageHeader = {
+  Misago.PageHeader = {
     view: function(ctrl, options) {
       return m('.page-header',
         m('.container', [

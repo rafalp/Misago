@@ -1,11 +1,11 @@
-(function (ns) {
+(function (Misago) {
   'use strict';
 
-  ns.UrlConfInvalidComponentError = function() {
+  Misago.UrlConfInvalidComponentError = function() {
     this.message = 'component argument should be array or object';
   };
 
-  ns.UrlConf = function() {
+  Misago.UrlConf = function() {
     var self = this;
     this._patterns = [];
 
@@ -27,14 +27,14 @@
 
     this.url = function(pattern, component, name) {
       if (typeof component !== 'object') {
-        throw new ns.UrlConfInvalidComponentError();
+        throw new Misago.UrlConfInvalidComponentError();
       }
 
       if (pattern === '') {
         pattern = '/';
       }
 
-      if (component instanceof ns.UrlConf) {
+      if (component instanceof Misago.UrlConf) {
         include(pattern, component.patterns());
       } else {
         this._patterns.push({
