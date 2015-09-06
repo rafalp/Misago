@@ -12,15 +12,19 @@
     this.urls = {};
     this.reverses = {};
 
+    var routedComponent = function(component) {
+      component.container = _;
+      return component;
+    };
+
     var populatePatterns = function(urlconf) {
       urlconf.patterns().forEach(function(url) {
         // set service container on component
-        url.component.container = _;
 
         var finalPattern = self.baseUrl + url.pattern;
         finalPattern = finalPattern.replace('//', '/');
 
-        self.urls[finalPattern] = url.component;
+        self.urls[finalPattern] = routedComponent(url.component);
         self.reverses[url.name] = finalPattern;
       });
     };
@@ -70,7 +74,6 @@
       if (url.substr(0, this.baseUrl.length) !== this.baseUrl) { return; }
 
       // Is link to media/static/avatar server?
-      console.log(staticUrl);
       if (url.substr(0, staticUrl.length) === staticUrl) { return; }
 
       if (url.substr(0, mediaUrl.length) === mediaUrl) { return; }
@@ -107,6 +110,40 @@
 
     this.staticUrl = prefixUrl(staticUrl);
     this.mediaUrl = prefixUrl(mediaUrl);
+
+    // Errors
+    this.error403 = function(error) {
+      if (error.ban) {
+        var component = routedComponent(Misago.ErrorBannedRoute);
+      } else {
+        var component = routedComponent(Misago.Error403Route);
+      }
+
+      component.vm = error;
+      m.mount(this.fixture, component);
+    };
+
+    this.error404 = function(error) {
+      m.mount(this.fixture, routedComponent(Misago.Error404Route));
+    };
+
+    this.error500 = function() {
+      m.mount(this.fixture, routedComponent(Misago.Error500Route));
+    };
+
+    this.errorPage = function(error) {
+      if (error.status === 500) {
+        this.error500();
+      }
+
+      if (error.status === 404) {
+        this.error404();
+      }
+
+      if (error.status === 403) {
+        this.error403(error);
+      }
+    };
   };
 
   Misago.RouterFactory = function(_) {

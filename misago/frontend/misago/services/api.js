@@ -7,7 +7,7 @@
     this.csrfToken = Misago.get(document.cookie.match(cookie_regex), 0).split('=')[1];
 
     this.ajax = function(method, url, data, progress) {
-      var deferred = m.deferred();
+      var promise = m.deferred();
 
       var ajax_settings = {
         url: url,
@@ -20,10 +20,15 @@
         dataType: 'json',
 
         success: function(data) {
-          deferred.resolve(data);
+          promise.resolve(data);
         },
         error: function(jqXHR) {
-          deferred.reject(jqXHR);
+          var rejection = jqXHR.responseJSON || {};
+
+          rejection.status = jqXHR.status;
+          rejection.statusText = jqXHR.statusText;
+
+          promise.reject(rejection);
         }
       };
 
@@ -32,7 +37,7 @@
       }
 
       $.ajax(ajax_settings);
-      return deferred.promise;
+      return promise.promise;
     };
 
     this.get = function(url) {

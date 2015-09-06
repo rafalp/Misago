@@ -1,8 +1,12 @@
 (function (Misago) {
   'use strict';
 
-  Misago.UrlConfInvalidComponentError = function() {
-    this.message = 'component argument should be array or object';
+  Misago.UrlConfInvalidComponentError = function(name) {
+    this.message = "route's " + name + " component should be an array or object";
+
+    this.toString = function() {
+      return this.message;
+    };
   };
 
   Misago.UrlConf = function() {
@@ -27,7 +31,7 @@
 
     this.url = function(pattern, component, name) {
       if (typeof component !== 'object') {
-        throw new Misago.UrlConfInvalidComponentError();
+        throw new Misago.UrlConfInvalidComponentError(name);
       }
 
       if (pattern === '') {
