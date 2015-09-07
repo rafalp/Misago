@@ -56,7 +56,8 @@
       this.addService('conf', ns.Conf);
       this.addService('component', ns.ComponentFactory);
       this.addService('router', ns.RouterFactory);
-      this.addService('api', ns.Api);
+      this.addService('ajax', ns.ajax);
+      this.addService('api', ns.api);
       this.addService('outlet', ns.Outlet);
       this.addService('title', ns.PageTitle);
       this.addService('start-routing', ns.startRouting);

@@ -113,17 +113,18 @@
 
     // Errors
     this.error403 = function(error) {
+      var component = null;
       if (error.ban) {
-        var component = routedComponent(Misago.ErrorBannedRoute);
+        component = routedComponent(Misago.ErrorBannedRoute);
       } else {
-        var component = routedComponent(Misago.Error403Route);
+        component = routedComponent(Misago.Error403Route);
       }
 
       component.vm = error;
       m.mount(this.fixture, component);
     };
 
-    this.error404 = function(error) {
+    this.error404 = function() {
       m.mount(this.fixture, routedComponent(Misago.Error404Route));
     };
 

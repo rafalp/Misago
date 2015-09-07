@@ -22,7 +22,7 @@
       var __onunload = controller.onunload || noop;
       controller.onunload = function() {
         __onunload.apply(component, arguments);
-        controller.isActive = false;
+        component.isActive = false;
       };
 
       return controller;
@@ -31,17 +31,14 @@
     // Add state callbacks to View-Model
     if (component.vm && component.vm.init) {
       // wrap vm.init in promise handler
-      component.vm._promise = null;
-
       var __init = component.vm.init;
       component.vm.init = function() {
         var initArgs = arguments;
         var promise = __init.apply(component.vm, initArgs);
 
         if (promise) {
-          component.vm._promise = promise;
           promise.then(function() {
-            if (component.vm._promise === promise && component.vm.ondata) {
+            if (component.isActive && component.vm.ondata) {
               var finalArgs = [];
               for (var i = 0; i < arguments.length; i++) {
                 finalArgs.push(arguments[i]);
@@ -53,7 +50,7 @@
               component.vm.ondata.apply(component.vm, finalArgs);
             }
           }, function(error) {
-            if (component.vm._promise === promise) {
+            if (component.isActive) {
               component.container.router.errorPage(error);
             }
           });

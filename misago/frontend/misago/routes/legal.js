@@ -16,16 +16,12 @@
       },
       vm: {
         isReady: false,
-        isBusy: false,
         init: function(component, _) {
           if (this.isReady) {
             _.setTitle(this.title);
           } else {
             _.setTitle();
-            if (!this.isBusy) {
-              this.isBusy = true;
-              return _.api.one('legal-pages', dashedTypeName);
-            }
+            return _.api.one('legal-pages', dashedTypeName);
           }
         },
         ondata: function(data, component, _) {
