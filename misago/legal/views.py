@@ -90,6 +90,7 @@ API_PAGES = {
 
 @api_view(['GET'])
 def legal_page(request, page):
+    raise Http404()
     if page not in API_PAGES:
         raise Http404()
 
