@@ -1,0 +1,38 @@
+//
+// Error Pages
+// --------------------------------------------------
+
+
+.error-page {}
+
+
+// Small displays
+@media screen and (max-width: @screen-sm-max) {
+  .error-page {
+
+  }
+}
+
+
+// Full displays
+@media screen and (min-width: @screen-md-min) {
+  .error-page {
+    .error-panel {
+      margin: @line-height-computed * 3 auto;
+      max-width: @screen-md-max * .65;
+      overflow: auto;
+    }
+
+    .error-icon {
+      float: left;
+
+      .material-icon {
+        font-size: @error-page-icon-size;
+      }
+    }
+
+    .error-message {
+      margin-left: @error-page-icon-size + @line-height-computed;
+    }
+  }
+}

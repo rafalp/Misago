@@ -132,7 +132,15 @@
       m.mount(this.fixture, routedComponent(Misago.Error500Route));
     };
 
+    this.error0 = function() {
+      m.mount(this.fixture, routedComponent(Misago.Error0Route));
+    };
+
     this.errorPage = function(error) {
+      if (error.status === 0) {
+        this.error0();
+      }
+
       if (error.status === 500) {
         this.error500();
       }

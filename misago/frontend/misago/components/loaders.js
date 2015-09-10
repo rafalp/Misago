@@ -14,7 +14,7 @@
 
   Misago.LoadingPage = {
     view: function(ctrl, _) {
-      return m('.page.page-loading',
+      return m('.page.loading-page',
         _.component(Misago.Loader)
       );
     }

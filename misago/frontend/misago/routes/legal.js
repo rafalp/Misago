@@ -41,7 +41,7 @@
       view: function() {
         var _ = this.container;
 
-        return m('.page.page-legal.page-legal-' + dashedTypeName, [
+        return m('.page.legal-page.' + dashedTypeName + '-page', [
           _.component(Misago.PageHeader, {title: this.vm.title}),
           m('.container',
             m.trust(this.vm.body)

@@ -5,7 +5,10 @@
     var cookieRegex = new RegExp(_.context.CSRF_COOKIE_NAME + '\=([^;]*)');
     this.csrfToken = Misago.get(document.cookie.match(cookieRegex), 0).split('=')[1];
 
-    // list of gets underway
+    /*
+      List of GETs underway
+      We are limiting number of GETs to API to 1 per url
+    */
     var runningGets = {};
 
     this.ajax = function(method, url, data, progress) {
