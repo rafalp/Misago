@@ -40,12 +40,13 @@ gulp.task('misagojs', ['lint'], function() {
   return gulp.src([
       'misago/app.js',
 
+      'misago/utils/**/*.js',
+
       'misago/services/*.js',
       'misago/models/**/*.js',
       'misago/routes/**/*.js',
       'misago/components/**/*.js',
       'misago/templates/**/*.js',
-      'misago/utils/**/*.js',
 
       'misago/urls.js',
     ])

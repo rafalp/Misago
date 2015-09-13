@@ -4,7 +4,6 @@
   'use strict';
 
   window.Misago = function() {
-
     var ns = Object.getPrototypeOf(this);
     var self = this;
 
@@ -12,17 +11,6 @@
     this.context = {
       // Empty settings
       SETTINGS: {}
-    };
-
-    // Services
-    this._services = [];
-    this.addService = function(name, factory, order) {
-      this._services.push({
-        name: name,
-        item: factory,
-        after: this.get(order, 'after'),
-        before: this.get(order, 'before')
-      });
     };
 
     this._initServices = function(services) {
@@ -37,7 +25,7 @@
 
         var serviceInstance = factory(self);
         if (serviceInstance) {
-          self[item.name] = serviceInstance;
+          self[item.key] = serviceInstance;
         }
       });
     };
@@ -52,20 +40,6 @@
       });
     };
 
-    this.registerCoreServices = function() {
-      this.addService('conf', ns.Conf);
-      this.addService('moment-locale', ns.setMomentLocale);
-      this.addService('component', ns.ComponentFactory);
-      this.addService('router', ns.RouterFactory);
-      this.addService('ajax', ns.AjaxFactory);
-      this.addService('api', ns.ApiFactory);
-      this.addService('runloop', ns.RunLoopFactory);
-      this.addService('tick', ns.startTick);
-      this.addService('outlet', ns.OutletFactory);
-      this.addService('title', ns.PageTitle);
-      this.addService('start-routing', ns.startRouting);
-    };
-
     // App init/destory
     this.setup = false;
     this.init = function(setup) {
@@ -74,11 +48,25 @@
         inTest: ns.get(setup, 'inTest', false)
       };
 
-      this._initServices(this._services);
+      this._initServices(ns._services);
     };
 
     this.destroy = function() {
-      this._destroyServices();
+      this._destroyServices(ns._services);
     };
+  };
+
+
+  // Services
+  var proto = window.Misago.prototype
+  proto._services = [];
+
+  proto.addService = function(name, factory, order) {
+    Misago.prototype._services.push({
+      key: name,
+      item: factory,
+      after: proto.get(order, 'after'),
+      before: proto.get(order, 'before')
+    });
   };
 }());

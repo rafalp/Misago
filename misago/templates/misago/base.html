@@ -46,7 +46,6 @@
     <script type="text/javascript" src="{% static 'misago/js/misago.js' %}"></script>
     <script type="text/javascript">
       var misago = new Misago();
-      misago.registerCoreServices();
       {% include "misago/frontend_context.js" %}
       misago.init({
         fixture: 'misago-fixture'

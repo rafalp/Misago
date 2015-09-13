@@ -22,7 +22,7 @@
     };
   };
 
-  Misago.ApiFactory = function(_) {
+  Misago.addService('api', function(_) {
     return new Api(_);
-  };
+  });
 }(Misago.prototype));

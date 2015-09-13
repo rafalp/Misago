@@ -10,8 +10,7 @@
       }
 
       desktopNavbar.push(m('ul.nav.navbar-nav', [
-        m('li', m("a", {config: m.route, href: _.router.url('index')}, 'Index')),
-        m('li', m("a", {config: m.route, href: _.router.url('test')}, 'Test'))
+        m('li', m("a", {config: m.route, href: _.router.url('index')}, 'Index'))
       ]));
 
       return m('nav.navbar.navbar-default.navbar-static-top[role="navigation"]', [

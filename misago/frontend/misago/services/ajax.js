@@ -71,7 +71,7 @@
     };
   };
 
-  Misago.AjaxFactory = function(_) {
+  Misago.addService('ajax', function(_) {
     return new Ajax(_);
-  };
+  });
 }(Misago.prototype));

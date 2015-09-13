@@ -1,7 +1,7 @@
 (function (Misago) {
   'use strict';
 
-  Misago.setMomentLocale = function() {
+  Misago.addService('set-momentjs-locale', function() {
     moment.locale($('html').attr('lang'));
-  };
+  });
 }(Misago.prototype));

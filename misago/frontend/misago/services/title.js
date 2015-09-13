@@ -1,7 +1,7 @@
 (function (Misago) {
   'use strict';
 
-  Misago.PageTitle = function(_) {
+  Misago.addService('page-title', function(_) {
     _._setTitle = function(title) {
       if (typeof title === 'string') {
         title = {title: title};
@@ -27,5 +27,5 @@
         document.title = this.settings.forum_name;
       }
     };
-  };
+  });
 }(Misago.prototype));

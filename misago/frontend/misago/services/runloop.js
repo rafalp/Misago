@@ -31,7 +31,7 @@
     };
   };
 
-  Misago.RunLoopFactory = {
+  Misago.addService('runloop', {
     factory: function(_) {
       return new RunLoop(_);
     },
@@ -39,5 +39,5 @@
     destroy: function(_) {
       _.runloop.stop();
     }
-  };
+  });
 }(Misago.prototype));

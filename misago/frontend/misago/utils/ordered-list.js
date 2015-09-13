@@ -69,7 +69,16 @@
         }
       });
 
-      // Second pass: keep iterating items
+      // Second pass: register items that
+      // specify their before to "_end"
+      unordered.forEach(function (item) {
+        if (item.before === "_end") {
+          ordered.push(item);
+          ordering.push(item.key);
+        }
+      });
+
+      // Third pass: keep iterating items
       // until we hit iterations limit or finish
       // ordering list
       function insertItem(item) {

@@ -4,7 +4,6 @@
   'use strict';
 
   window.Misago = function() {
-
     var ns = Object.getPrototypeOf(this);
     var self = this;
 
@@ -12,17 +11,6 @@
     this.context = {
       // Empty settings
       SETTINGS: {}
-    };
-
-    // Services
-    this._services = [];
-    this.addService = function(name, factory, order) {
-      this._services.push({
-        name: name,
-        item: factory,
-        after: this.get(order, 'after'),
-        before: this.get(order, 'before')
-      });
     };
 
     this._initServices = function(services) {
@@ -37,7 +25,7 @@
 
         var serviceInstance = factory(self);
         if (serviceInstance) {
-          self[item.name] = serviceInstance;
+          self[item.key] = serviceInstance;
         }
       });
     };
@@ -52,20 +40,6 @@
       });
     };
 
-    this.registerCoreServices = function() {
-      this.addService('conf', ns.Conf);
-      this.addService('moment-locale', ns.setMomentLocale);
-      this.addService('component', ns.ComponentFactory);
-      this.addService('router', ns.RouterFactory);
-      this.addService('ajax', ns.AjaxFactory);
-      this.addService('api', ns.ApiFactory);
-      this.addService('runloop', ns.RunLoopFactory);
-      this.addService('tick', ns.startTick);
-      this.addService('outlet', ns.OutletFactory);
-      this.addService('title', ns.PageTitle);
-      this.addService('start-routing', ns.startRouting);
-    };
-
     // App init/destory
     this.setup = false;
     this.init = function(setup) {
@@ -74,14 +48,254 @@
         inTest: ns.get(setup, 'inTest', false)
       };
 
-      this._initServices(this._services);
+      this._initServices(ns._services);
     };
 
     this.destroy = function() {
-      this._destroyServices();
+      this._destroyServices(ns._services);
     };
   };
+
+
+  // Services
+  var proto = window.Misago.prototype
+  proto._services = [];
+
+  proto.addService = function(name, factory, order) {
+    Misago.prototype._services.push({
+      key: name,
+      item: factory,
+      after: proto.get(order, 'after'),
+      before: proto.get(order, 'before')
+    });
+  };
 }());
+
+(function (Misago) {
+  'use strict';
+
+  Misago.has = function(obj, key) {
+    if (obj !== undefined) {
+      return obj.hasOwnProperty(key);
+    } else {
+      return false;
+    }
+  };
+
+  Misago.get = function(obj, key, value) {
+    if (Misago.has(obj, key)) {
+      return obj[key];
+    } else if (value !== undefined) {
+      return value;
+    } else {
+      return undefined;
+    }
+  };
+
+  Misago.pop = function(obj, key, value) {
+    var returnValue = Misago.get(obj, key, value);
+    if (Misago.has(obj, key)) {
+      delete obj[key];
+    }
+    return returnValue;
+  };
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  Misago.OrderedList = function(items) {
+    this.isOrdered = false;
+    this._items = items || [];
+
+    this.add = function(key, item, order) {
+      this._items.push({
+        key: key,
+        item: item,
+        after: Misago.get(order, 'after'),
+        before: Misago.get(order, 'before')
+      });
+    };
+
+    this.get = function(key, value) {
+      for (var i = 0; i < this._items.length; i++) {
+        if (this._items[i].key === key) {
+          return this._items[i].item;
+        }
+      }
+
+      return value;
+    };
+
+    this.has = function(key) {
+      return this.get(key) !== undefined;
+    };
+
+    this.values = function() {
+      var values = [];
+      for (var i = 0; i < this._items.length; i++) {
+        values.push(this._items[i].item);
+      }
+      return values;
+    };
+
+    this.order = function(values_only) {
+      if (!this.isOrdered) {
+        this._items = this._order(this._items);
+        this.isOrdered = true;
+      }
+
+      if (values_only || typeof values_only === 'undefined') {
+        return this.values();
+      } else {
+        return this._items;
+      }
+    };
+
+    this._order = function(unordered) {
+      // Index of unordered items
+      var index = [];
+      unordered.forEach(function (item) {
+        index.push(item.key);
+      });
+
+      // Ordered items
+      var ordered = [];
+      var ordering = [];
+
+      // First pass: register items that
+      // don't specify their order
+      unordered.forEach(function (item) {
+        if (!item.after && !item.before) {
+          ordered.push(item);
+          ordering.push(item.key);
+        }
+      });
+
+      // Second pass: register items that
+      // specify their before to "_end"
+      unordered.forEach(function (item) {
+        if (item.before === "_end") {
+          ordered.push(item);
+          ordering.push(item.key);
+        }
+      });
+
+      // Third pass: keep iterating items
+      // until we hit iterations limit or finish
+      // ordering list
+      function insertItem(item) {
+        var insertAt = -1;
+        if (ordering.indexOf(item.key) === -1) {
+          if (item.after) {
+            insertAt = ordering.indexOf(item.after);
+            if (insertAt !== -1) {
+              insertAt += 1;
+            }
+          } else if (item.before) {
+            insertAt = ordering.indexOf(item.before);
+          }
+
+          if (insertAt !== -1) {
+            ordered.splice(insertAt, 0, item);
+            ordering.splice(insertAt, 0, item.key);
+          }
+        }
+      }
+
+      var iterations = 200;
+      while (iterations > 0 && index.length !== ordering.length) {
+        iterations -= 1;
+        unordered.forEach(insertItem);
+      }
+
+      return ordered;
+    };
+  };
+} (Misago.prototype));
+
+(function (Misago) {
+  Misago.deserializeDatetime = function(deserialized) {
+    return deserialized ? moment(deserialized) : null;
+  };
+
+  Misago.serializeDatetime = function(serialized) {
+    return serialized ? serialized.format() : null;
+  };
+} (Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  Misago.startsWith = function(string, beginning) {
+    return string.indexOf(beginning) === 0;
+  };
+
+  Misago.endsWith = function(string, tail) {
+    return string.indexOf(tail, string.length - tail.length) !== -1;
+  };
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  Misago.UrlConfInvalidComponentError = function(name) {
+    this.message = "route's " + name + " component should be an array or object";
+
+    this.toString = function() {
+      return this.message;
+    };
+  };
+
+  Misago.UrlConf = function() {
+    var self = this;
+    this._patterns = [];
+
+    this.patterns = function() {
+      return this._patterns;
+    };
+
+    var prefixPattern = function(prefix, pattern) {
+      return (prefix + pattern).replace('//', '/');
+    };
+
+    var include = function(prefix, patterns) {
+      for (var i = 0; i < patterns.length; i ++) {
+        self.url(prefixPattern(prefix, patterns[i].pattern),
+                 patterns[i].component,
+                 patterns[i].name);
+      }
+    };
+
+    this.url = function(pattern, component, name) {
+      if (typeof component !== 'object') {
+        throw new Misago.UrlConfInvalidComponentError(name);
+      }
+
+      if (pattern === '') {
+        pattern = '/';
+      }
+
+      if (component instanceof Misago.UrlConf) {
+        include(pattern, component.patterns());
+      } else {
+        this._patterns.push({
+          pattern: pattern,
+          component: component,
+          name: name
+        });
+      }
+    };
+  };
+} (Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  Misago.loadingPage = function(_) {
+    return m('.page.page-loading', _.component(Misago.Loader));
+  };
+} (Misago.prototype));
 
 (function (Misago) {
   'use strict';
@@ -156,9 +370,9 @@
     };
   };
 
-  Misago.AjaxFactory = function(_) {
+  Misago.addService('ajax', function(_) {
     return new Ajax(_);
-  };
+  });
 }(Misago.prototype));
 
 (function (Misago) {
@@ -185,15 +399,15 @@
     };
   };
 
-  Misago.ApiFactory = function(_) {
+  Misago.addService('api', function(_) {
     return new Api(_);
-  };
+  });
 }(Misago.prototype));
 
 (function (Misago) {
   'use strict';
 
-  Misago.ComponentFactory = function(_) {
+  Misago.addService('components-factory', function(_) {
     // Component factory
     _.component = function() {
       var argumentsArray = [];
@@ -204,29 +418,21 @@
       argumentsArray.push(_);
       return m.component.apply(undefined, argumentsArray);
     };
-  };
+  });
 }(Misago.prototype));
 
 (function (Misago) {
   'use strict';
 
-  Misago.Conf = function(_) {
+  Misago.addService('conf', function(_) {
     _.settings = Misago.get(_.context, 'SETTINGS', {});
-  };
+  });
 }(Misago.prototype));
 
 (function (Misago) {
   'use strict';
 
-  Misago.setMomentLocale = function() {
-    moment.locale($('html').attr('lang'));
-  };
-}(Misago.prototype));
-
-(function (Misago) {
-  'use strict';
-
-  Misago.OutletFactory = {
+  Misago.addService('forum-layout', {
     factory: function(_) {
       if (_.setup.fixture) {
         m.mount(document.getElementById(_.setup.fixture),
@@ -239,7 +445,15 @@
         m.mount(_.setup.fixture, null);
       }
     }
-  };
+  }, {before: 'start-routing'});
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  Misago.addService('set-momentjs-locale', function() {
+    moment.locale($('html').attr('lang'));
+  });
 }(Misago.prototype));
 
 (function (Misago) {
@@ -486,14 +700,14 @@
     };
   };
 
-  Misago.RouterFactory = function(_) {
+  Misago.addService('router', function(_) {
     return new Router(_);
-  };
+  });
 
-  Misago.startRouting = function(_) {
+  Misago.addService('start-routing', function(_) {
     _.router.startRouting(Misago.urls, document.getElementById('router-fixture'));
     _.router.delegateClicks(document.getElementById(_.setup.fixture));
-  };
+  }, {before: '_end'});
 }(Misago.prototype));
 
 (function (Misago) {
@@ -529,7 +743,7 @@
     };
   };
 
-  Misago.RunLoopFactory = {
+  Misago.addService('runloop', {
     factory: function(_) {
       return new RunLoop(_);
     },
@@ -537,26 +751,26 @@
     destroy: function(_) {
       _.runloop.stop();
     }
-  };
+  });
 }(Misago.prototype));
 
 (function (Misago) {
   'use strict';
 
-  Misago.startTick = function(_) {
+  Misago.addService('start-tick', function(_) {
     _.runloop.run(function() {
       m.startComputation();
       // just tick once a minute so stuff gets rerendered
       // syncing dynamic timestamps, etc ect
       m.endComputation();
     }, 'tick', 60000);
-  };
+  });
 }(Misago.prototype));
 
 (function (Misago) {
   'use strict';
 
-  Misago.PageTitle = function(_) {
+  Misago.addService('page-title', function(_) {
     _._setTitle = function(title) {
       if (typeof title === 'string') {
         title = {title: title};
@@ -582,7 +796,7 @@
         document.title = this.settings.forum_name;
       }
     };
-  };
+  });
 }(Misago.prototype));
 
 (function (Misago) {
@@ -926,8 +1140,7 @@
       }
 
       desktopNavbar.push(m('ul.nav.navbar-nav', [
-        m('li', m("a", {config: m.route, href: _.router.url('index')}, 'Index')),
-        m('li', m("a", {config: m.route, href: _.router.url('test')}, 'Test'))
+        m('li', m("a", {config: m.route, href: _.router.url('index')}, 'Index'))
       ]));
 
       return m('nav.navbar.navbar-default.navbar-static-top[role="navigation"]', [
@@ -1005,223 +1218,6 @@
     }
   };
 }(Misago.prototype));
-
-(function (Misago) {
-  'use strict';
-
-  Misago.has = function(obj, key) {
-    if (obj !== undefined) {
-      return obj.hasOwnProperty(key);
-    } else {
-      return false;
-    }
-  };
-
-  Misago.get = function(obj, key, value) {
-    if (Misago.has(obj, key)) {
-      return obj[key];
-    } else if (value !== undefined) {
-      return value;
-    } else {
-      return undefined;
-    }
-  };
-
-  Misago.pop = function(obj, key, value) {
-    var returnValue = Misago.get(obj, key, value);
-    if (Misago.has(obj, key)) {
-      delete obj[key];
-    }
-    return returnValue;
-  };
-}(Misago.prototype));
-
-(function (Misago) {
-  'use strict';
-
-  Misago.OrderedList = function(items) {
-    this.isOrdered = false;
-    this._items = items || [];
-
-    this.add = function(key, item, order) {
-      this._items.push({
-        key: key,
-        item: item,
-        after: Misago.get(order, 'after'),
-        before: Misago.get(order, 'before')
-      });
-    };
-
-    this.get = function(key, value) {
-      for (var i = 0; i < this._items.length; i++) {
-        if (this._items[i].key === key) {
-          return this._items[i].item;
-        }
-      }
-
-      return value;
-    };
-
-    this.has = function(key) {
-      return this.get(key) !== undefined;
-    };
-
-    this.values = function() {
-      var values = [];
-      for (var i = 0; i < this._items.length; i++) {
-        values.push(this._items[i].item);
-      }
-      return values;
-    };
-
-    this.order = function(values_only) {
-      if (!this.isOrdered) {
-        this._items = this._order(this._items);
-        this.isOrdered = true;
-      }
-
-      if (values_only || typeof values_only === 'undefined') {
-        return this.values();
-      } else {
-        return this._items;
-      }
-    };
-
-    this._order = function(unordered) {
-      // Index of unordered items
-      var index = [];
-      unordered.forEach(function (item) {
-        index.push(item.key);
-      });
-
-      // Ordered items
-      var ordered = [];
-      var ordering = [];
-
-      // First pass: register items that
-      // don't specify their order
-      unordered.forEach(function (item) {
-        if (!item.after && !item.before) {
-          ordered.push(item);
-          ordering.push(item.key);
-        }
-      });
-
-      // Second pass: keep iterating items
-      // until we hit iterations limit or finish
-      // ordering list
-      function insertItem(item) {
-        var insertAt = -1;
-        if (ordering.indexOf(item.key) === -1) {
-          if (item.after) {
-            insertAt = ordering.indexOf(item.after);
-            if (insertAt !== -1) {
-              insertAt += 1;
-            }
-          } else if (item.before) {
-            insertAt = ordering.indexOf(item.before);
-          }
-
-          if (insertAt !== -1) {
-            ordered.splice(insertAt, 0, item);
-            ordering.splice(insertAt, 0, item.key);
-          }
-        }
-      }
-
-      var iterations = 200;
-      while (iterations > 0 && index.length !== ordering.length) {
-        iterations -= 1;
-        unordered.forEach(insertItem);
-      }
-
-      return ordered;
-    };
-  };
-} (Misago.prototype));
-
-(function (Misago) {
-  Misago.deserializeDatetime = function(deserialized) {
-    return deserialized ? moment(deserialized) : null;
-  };
-
-  Misago.serializeDatetime = function(serialized) {
-    return serialized ? serialized.format() : null;
-  };
-} (Misago.prototype));
-
-(function (Misago) {
-  'use strict';
-
-  Misago.startsWith = function(string, beginning) {
-    return string.indexOf(beginning) === 0;
-  };
-
-  Misago.endsWith = function(string, tail) {
-    return string.indexOf(tail, string.length - tail.length) !== -1;
-  };
-}(Misago.prototype));
-
-(function (Misago) {
-  'use strict';
-
-  Misago.UrlConfInvalidComponentError = function(name) {
-    this.message = "route's " + name + " component should be an array or object";
-
-    this.toString = function() {
-      return this.message;
-    };
-  };
-
-  Misago.UrlConf = function() {
-    var self = this;
-    this._patterns = [];
-
-    this.patterns = function() {
-      return this._patterns;
-    };
-
-    var prefixPattern = function(prefix, pattern) {
-      return (prefix + pattern).replace('//', '/');
-    };
-
-    var include = function(prefix, patterns) {
-      for (var i = 0; i < patterns.length; i ++) {
-        self.url(prefixPattern(prefix, patterns[i].pattern),
-                 patterns[i].component,
-                 patterns[i].name);
-      }
-    };
-
-    this.url = function(pattern, component, name) {
-      if (typeof component !== 'object') {
-        throw new Misago.UrlConfInvalidComponentError(name);
-      }
-
-      if (pattern === '') {
-        pattern = '/';
-      }
-
-      if (component instanceof Misago.UrlConf) {
-        include(pattern, component.patterns());
-      } else {
-        this._patterns.push({
-          pattern: pattern,
-          component: component,
-          name: name
-        });
-      }
-    };
-  };
-} (Misago.prototype));
-
-(function (Misago) {
-  'use strict';
-
-  Misago.loadingPage = function(_) {
-    return m('.page.page-loading', _.component(Misago.Loader));
-  };
-} (Misago.prototype));
 
 (function (Misago, UrlConf) {
   'use strict';
