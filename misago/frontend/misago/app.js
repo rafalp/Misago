@@ -13,6 +13,7 @@
       SETTINGS: {}
     };
 
+    // Services init/destroy
     this._initServices = function(services) {
       var orderedServices = new ns.OrderedList(services).order(false);
       orderedServices.forEach(function (item) {
@@ -57,7 +58,7 @@
   };
 
 
-  // Services
+  // Services registry
   var proto = window.Misago.prototype
   proto._services = [];
 
