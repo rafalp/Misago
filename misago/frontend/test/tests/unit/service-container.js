@@ -2,11 +2,15 @@
   'use strict';
 
   var container = null;
+  var orgServices = Misago.prototype._services;
 
   QUnit.module("Service Container", {
     beforeEach: function() {
+      Misago.prototype._services = [];
       container = new Misago();
-      container._services = [];
+    },
+    afterEach: function() {
+      Misago.prototype._services = orgServices;
     }
   });
 
@@ -17,10 +21,10 @@
       return null;
     };
 
-    container.addService('test', MockServiceFactory);
+    Misago.prototype.addService('test', MockServiceFactory);
 
-    assert.equal(container._services.length, 1, "addService() registered single service in container");
-    assert.equal(container._services[0].item, MockServiceFactory, "addService() registered MockServiceFactory service in container");
+    assert.equal(Misago.prototype._services.length, 1, "addService() registered single service in container");
+    assert.equal(Misago.prototype._services[0].item, MockServiceFactory, "addService() registered MockServiceFactory service in container");
   });
 
   QUnit.test("service factories are called", function(assert) {
@@ -30,7 +34,7 @@
       assert.ok(_, 'MockServiceFactory was called with container as argument.');
     };
 
-    container._initServices([{name: 'test', item: MockServiceFactory}]);
+    container._initServices([{key: 'test', item: MockServiceFactory}]);
   });
 
   QUnit.test("factories return values are set as context on container", function(assert) {
@@ -40,7 +44,7 @@
       return 'ok!';
     };
 
-    container._initServices([{name: 'test', item: MockServiceFactory}]);
+    container._initServices([{key: 'test', item: MockServiceFactory}]);
     assert.equal(container.test, 'ok!', 'MockServiceFactory return value was set on container.');
   });
 
@@ -51,7 +55,7 @@
       'not returning anything';
     };
 
-    container._initServices([{name: 'test', item: MockServiceFactory}]);
+    container._initServices([{key: 'test', item: MockServiceFactory}]);
     assert.equal(container.test, undefined, "MockServiceFactory return value wasn't set on container.");
   });
 
@@ -68,7 +72,7 @@
       }
     };
 
-    var services = [{name: 'test', item: MockService}];
+    var services = [{key: 'test', item: MockService}];
 
     container._initServices(services);
     container._destroyServices(services);
@@ -82,7 +86,7 @@
 
     var services = [
       {
-        name: 'test_1',
+        key: 'test_1',
         item: {
           factory: function() {
             initializationOrder.push(1);
@@ -94,7 +98,7 @@
         }
       },
       {
-        name: 'test_2',
+        key: 'test_2',
         item: {
           factory: function() {
             initializationOrder.push(2);

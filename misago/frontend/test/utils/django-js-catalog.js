@@ -84,4 +84,3 @@
   window.get_format = django.get_format;
 
 }(this));
-

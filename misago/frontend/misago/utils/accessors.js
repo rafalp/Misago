@@ -2,7 +2,7 @@
   'use strict';
 
   Misago.has = function(obj, key) {
-    if (obj !== undefined) {
+    if (obj) {
       return obj.hasOwnProperty(key);
     } else {
       return false;

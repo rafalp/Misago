@@ -1,4 +1,4 @@
-(function (Misago) {
+(function () {
   'use strict';
 
   var MockContainer = function(context) {
@@ -13,8 +13,9 @@
     };
 
     var container = new MockContainer({SETTINGS: settings});
-    Misago.Conf(container);
+    var service = getMisagoService('conf');
+    service(container);
 
     assert.equal(container.settings, settings, "service has set preloaded config as settings attribute on container.");
   });
-}(Misago.prototype));
+}());

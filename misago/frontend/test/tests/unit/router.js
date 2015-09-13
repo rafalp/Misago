@@ -11,7 +11,8 @@
       }
     };
 
-    var router = new Misago.RouterFactory(container);
+    var service = getMisagoService('router');
+    var router = service(container);
 
     assert.equal(router.cleanUrl('/'), '/');
     assert.equal(router.cleanUrl('/lorem-ipsum/'), '/lorem-ipsum/');
@@ -23,7 +24,7 @@
     assert.equal(router.cleanUrl('http://nocookie.somewhere.com/test.png'), undefined);
 
     container.context.STATIC_URL = '/misago/static/';
-    router = new Misago.RouterFactory(container);
+    router = service(container);
     router.baseUrl = '/misago/';
 
     assert.equal(router.cleanUrl('/misago/'), '/misago/');
@@ -48,7 +49,8 @@
       }
     };
 
-    var router = new Misago.RouterFactory(container);
+    var service = getMisagoService('router');
+    var router = service(container);
 
     assert.equal(router.staticUrl('logo.png'), '/static/logo.png', 'staticUrl correctly prefixed url to static asset.');
     assert.equal(router.mediaUrl('avatar_1.png'), 'http://nocookie.somewhere.com/avatar_1.png', 'mediaUrl correctly prefixed url to media asset.');

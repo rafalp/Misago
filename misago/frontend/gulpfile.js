@@ -193,7 +193,6 @@ gulp.task('collecttests', ['cleantest'], function() {
   return gulp.src('test/tests/**/*.js')
     .pipe(jshint(packageJSON.jshintConfig))
     .pipe(jshint.reporter('default'))
-    .pipe(jshint.reporter('fail'))
     .pipe(concat('tests.js'))
     .pipe(gulp.dest('test/dist'));
 });

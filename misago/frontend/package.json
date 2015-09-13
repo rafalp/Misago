@@ -16,6 +16,7 @@
       "Misago",
       "m",
       "moment",
+      "getMisagoService",
       "gettext",
       "ngettext",
       "gettext_noop",

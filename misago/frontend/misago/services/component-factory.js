@@ -1,7 +1,7 @@
 (function (Misago) {
   'use strict';
 
-  Misago.addService('components-factory', function(_) {
+  Misago.addService('component-factory', function(_) {
     // Component factory
     _.component = function() {
       var argumentsArray = [];
