@@ -3,13 +3,18 @@
 // --------------------------------------------------
 
 
-.error-page {}
-
-
 // Small displays
 @media screen and (max-width: @screen-sm-max) {
   .error-page {
+    text-align: center;
 
+    .error-icon {
+      margin: @line-height-computed * 1.5;
+
+      .material-icon {
+        font-size: @error-page-icon-size * 2;
+      }
+    }
   }
 }
 

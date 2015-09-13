@@ -116,11 +116,15 @@
       var component = null;
       if (error.ban) {
         component = routedComponent(Misago.ErrorBannedRoute);
+        component.error = {
+          message: error.detail,
+          ban: Misago.Ban.deserialize(error.ban)
+        };
       } else {
         component = routedComponent(Misago.Error403Route);
+        component.error = error.detail;
       }
 
-      component.vm = error;
       m.mount(this.fixture, component);
     };
 

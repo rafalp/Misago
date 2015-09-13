@@ -54,11 +54,14 @@
 
     this.registerCoreServices = function() {
       this.addService('conf', ns.Conf);
+      this.addService('moment-locale', ns.setMomentLocale);
       this.addService('component', ns.ComponentFactory);
       this.addService('router', ns.RouterFactory);
-      this.addService('ajax', ns.ajax);
-      this.addService('api', ns.api);
-      this.addService('outlet', ns.Outlet);
+      this.addService('ajax', ns.AjaxFactory);
+      this.addService('api', ns.ApiFactory);
+      this.addService('runloop', ns.RunLoopFactory);
+      this.addService('tick', ns.startTick);
+      this.addService('outlet', ns.OutletFactory);
       this.addService('title', ns.PageTitle);
       this.addService('start-routing', ns.startRouting);
     };

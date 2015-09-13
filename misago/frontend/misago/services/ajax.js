@@ -71,7 +71,7 @@
     };
   };
 
-  Misago.ajax = function(_) {
+  Misago.AjaxFactory = function(_) {
     return new Ajax(_);
   };
 }(Misago.prototype));

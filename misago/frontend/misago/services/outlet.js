@@ -1,7 +1,7 @@
 (function (Misago) {
   'use strict';
 
-  Misago.Outlet = {
+  Misago.OutletFactory = {
     factory: function(_) {
       if (_.setup.fixture) {
         m.mount(document.getElementById(_.setup.fixture),

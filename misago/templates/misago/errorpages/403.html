@@ -9,19 +9,20 @@
 
 
 {% block content %}
-<div class="error-page error-403">
+<div class="page error-page error-403">
   <div class="container">
-    <div class="error">
+    <div class="error-panel">
 
       <div class="error-icon">
-        <i class="material-icons">block</i>
+        <i class="material-icon">remove_circle_outline</i>
       </div>
 
       <div class="error-message">
+        <p class="lead">{% trans "This page is not available." %}</p>
         {% if message %}
-        <p class="lead">{{ message|escape|urlize|linebreaksbr }}</p>
+        <p>{{ message|escape|urlize|linebreaksbr }}</p>
         {% else %}
-        <p class="lead">{% trans "You don't have permission to access this page." %}</p>
+        <p>{% trans "You don't have permission to access this page." %}</p>
         {% endif %}
       </div>
 
