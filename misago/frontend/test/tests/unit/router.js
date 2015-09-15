@@ -1,4 +1,4 @@
-(function (Misago) {
+(function () {
   'use strict';
 
   QUnit.module("Router");
@@ -55,4 +55,4 @@
     assert.equal(router.staticUrl('logo.png'), '/static/logo.png', 'staticUrl correctly prefixed url to static asset.');
     assert.equal(router.mediaUrl('avatar_1.png'), 'http://nocookie.somewhere.com/avatar_1.png', 'mediaUrl correctly prefixed url to media asset.');
   });
-}(Misago.prototype));
+}());

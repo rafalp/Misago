@@ -2,7 +2,7 @@
   'use strict';
 
   Misago.addService('page-title', function(_) {
-    _._setTitle = function(title) {
+    var setPageTitle = function(_, title) {
       if (typeof title === 'string') {
         title = {title: title};
       }
@@ -17,12 +17,12 @@
         completeTitle += ' | ' + title.parent;
       }
 
-      document.title = completeTitle + ' | ' + this.settings.forum_name;
+      document.title = completeTitle + ' | ' + _.settings.forum_name;
     };
 
     _.setTitle = function(title) {
       if (title) {
-        this._setTitle(title);
+        setPageTitle(this, title);
       } else {
         document.title = this.settings.forum_name;
       }

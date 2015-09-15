@@ -23,6 +23,7 @@
     list.add('apple', 'apple');
     list.add('banana', 'banana');
     list.add('orange', 'orange');
+    list.add('lichi', 'lichi', {before: '_end'});
     list.add('kiwi', 'kiwi', {before: 'banana'});
     list.add('melon', 'melon', {after: 'potato'});
     list.add('potato', 'potato');
@@ -34,9 +35,10 @@
     assert.equal(unorderedList[0], 'apple', 'unorderedList[0] is apple');
     assert.equal(unorderedList[1], 'banana', 'unorderedList[1] is banana');
     assert.equal(unorderedList[2], 'orange', 'unorderedList[2] is orange');
-    assert.equal(unorderedList[3], 'kiwi', 'unorderedList[3] is kiwi');
-    assert.equal(unorderedList[4], 'melon', 'unorderedList[4] is melon');
-    assert.equal(unorderedList[5], 'potato', 'unorderedList[5] is potato');
+    assert.equal(unorderedList[3], 'lichi', 'unorderedList[3] is lichi');
+    assert.equal(unorderedList[4], 'kiwi', 'unorderedList[4] is kiwi');
+    assert.equal(unorderedList[5], 'melon', 'unorderedList[5] is melon');
+    assert.equal(unorderedList[6], 'potato', 'unorderedList[6] is potato');
 
     var orderedList = list.order();
 
@@ -48,5 +50,6 @@
     assert.equal(orderedList[3], 'orange', 'orderedList[3] is orange');
     assert.equal(orderedList[4], 'potato', 'orderedList[4] is potato');
     assert.equal(orderedList[5], 'melon', 'orderedList[5] is melon');
+    assert.equal(orderedList[6], 'lichi', 'orderedList[6] is lichi');
   });
 }(Misago.prototype));
