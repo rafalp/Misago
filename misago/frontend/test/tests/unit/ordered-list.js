@@ -14,9 +14,11 @@
 
     list.add('valid_key', 'valid_value');
     assert.ok(list.has('valid_key'), "list.has() returned true for existing key");
-    assert.equal(list.get('valid_key'), 'valid_value', "list.get() returned value for existing key");
+    assert.equal(list.get('valid_key'), 'valid_value',
+      "list.get() returned value for existing key");
 
-    assert.equal(list.get('invalid_key', 'fallback'), 'fallback', "list.get() returned fallback value for nonexisting key");
+    assert.equal(list.get('invalid_key', 'fallback'), 'fallback',
+      "list.get() returned fallback value for nonexisting key");
   });
 
   QUnit.test("OrderedList orders and returns items", function(assert) {

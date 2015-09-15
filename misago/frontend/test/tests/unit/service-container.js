@@ -23,8 +23,10 @@
 
     Misago.prototype.addService('test', MockServiceFactory);
 
-    assert.equal(Misago.prototype._services.length, 1, "addService() registered single service in container");
-    assert.equal(Misago.prototype._services[0].item, MockServiceFactory, "addService() registered MockServiceFactory service in container");
+    assert.equal(Misago.prototype._services.length, 1,
+      "addService() registered single service in container");
+    assert.equal(Misago.prototype._services[0].item, MockServiceFactory,
+      "addService() registered MockServiceFactory service in container");
   });
 
   QUnit.test("service factories are called", function(assert) {

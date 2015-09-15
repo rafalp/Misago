@@ -18,7 +18,9 @@
       var completeTitle = title.title;
 
       if (typeof title.page !== 'undefined' && title.page > 1) {
-        completeTitle += ' (' + interpolate(gettext('page %(page)s'), { page:title.page }, true) + ')';
+        var page_label = interpolate(
+          gettext('page %(page)s'), { page:title.page }, true);
+        completeTitle += ' (' + page_label + ')';
       }
 
       if (typeof title.parent !== 'undefined') {
@@ -30,6 +32,6 @@
   };
 
   Misago.addService('page-title', function(_) {
-    _.title = new PageTitle(_.settings.forum_name)
+    _.title = new PageTitle(_.settings.forum_name);
   });
 }(Misago.prototype));

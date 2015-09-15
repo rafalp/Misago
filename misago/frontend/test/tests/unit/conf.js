@@ -16,6 +16,7 @@
     var service = getMisagoService('conf');
     service(container);
 
-    assert.equal(container.settings, settings, "service has set preloaded config as settings attribute on container.");
+    assert.equal(container.settings, settings,
+      "service has set preloaded config as settings attribute on container.");
   });
 }());

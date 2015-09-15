@@ -52,7 +52,9 @@
     var service = getMisagoService('router');
     var router = service(container);
 
-    assert.equal(router.staticUrl('logo.png'), '/static/logo.png', 'staticUrl correctly prefixed url to static asset.');
-    assert.equal(router.mediaUrl('avatar_1.png'), 'http://nocookie.somewhere.com/avatar_1.png', 'mediaUrl correctly prefixed url to media asset.');
+    assert.equal(router.staticUrl('logo.png'), '/static/logo.png',
+      'staticUrl correctly prefixed url to static asset.');
+    assert.equal(router.mediaUrl('avatar_1.png'), 'http://nocookie.somewhere.com/avatar_1.png',
+      'mediaUrl correctly prefixed url to media asset.');
   });
 }());
