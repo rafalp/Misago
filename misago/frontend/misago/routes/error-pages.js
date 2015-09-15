@@ -24,7 +24,7 @@
 
   Misago.ErrorBannedRoute = Misago.route({
     controller: function() {
-      this.container.setTitle(gettext('You are banned'));
+      this.container.title.set(gettext('You are banned'));
     },
     error: null,
     view: function() {
@@ -65,7 +65,7 @@
 
   Misago.Error403Route = Misago.route({
     controller: function() {
-      this.container.setTitle(gettext('Page not available'));
+      this.container.title.set(gettext('Page not available'));
     },
     error: null,
     view: function() {
@@ -80,7 +80,7 @@
 
   Misago.Error404Route = Misago.route({
     controller: function() {
-      this.container.setTitle(gettext('Page not found'));
+      this.container.title.set(gettext('Page not found'));
     },
     view: function() {
       return errorPage({
@@ -94,7 +94,7 @@
 
   Misago.Error500Route = Misago.route({
     controller: function() {
-      this.container.setTitle(gettext('Application error occured'));
+      this.container.title.set(gettext('Application error occured'));
     },
     view: function() {
       return errorPage({
@@ -108,7 +108,7 @@
 
   Misago.Error0Route = Misago.route({
     controller: function() {
-      this.container.setTitle(gettext('Lost connection with application'));
+      this.container.title.set(gettext('Lost connection with application'));
     },
     view: function() {
       return errorPage({

@@ -18,9 +18,9 @@
         isReady: false,
         init: function(component, _) {
           if (this.isReady) {
-            _.setTitle(this.title);
+            _.title.set(this.title);
           } else {
-            _.setTitle();
+            _.title.set();
             return _.api.one('legal-pages', dashedTypeName);
           }
         },
@@ -34,7 +34,7 @@
           m.endComputation();
 
           if (component.isActive) {
-            _.setTitle(data.title);
+            _.title.set(data.title);
           }
         }
       },

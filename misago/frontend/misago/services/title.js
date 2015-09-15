@@ -2,29 +2,33 @@
   'use strict';
 
   Misago.addService('page-title', function(_) {
-    var setPageTitle = function(_, title) {
-      if (typeof title === 'string') {
-        title = {title: title};
-      }
+    _.title = {
+      forum_name: _.settings.forum_name,
 
-      var completeTitle = title.title;
+      set: function(title) {
+        if (title) {
+          this._set_complex(title);
+        } else {
+          document.title = this.forum_name;
+        }
+      },
 
-      if (typeof title.page !== 'undefined' && title.page > 1) {
-        completeTitle += ' (' + interpolate(gettext('page %(page)s'), { page:title.page }, true) + ')';
-      }
+      _set_complex: function(title) {
+        if (typeof title === 'string') {
+          title = {title: title};
+        }
 
-      if (typeof title.parent !== 'undefined') {
-        completeTitle += ' | ' + title.parent;
-      }
+        var completeTitle = title.title;
 
-      document.title = completeTitle + ' | ' + _.settings.forum_name;
-    };
+        if (typeof title.page !== 'undefined' && title.page > 1) {
+          completeTitle += ' (' + interpolate(gettext('page %(page)s'), { page:title.page }, true) + ')';
+        }
 
-    _.setTitle = function(title) {
-      if (title) {
-        setPageTitle(this, title);
-      } else {
-        document.title = this.settings.forum_name;
+        if (typeof title.parent !== 'undefined') {
+          completeTitle += ' | ' + title.parent;
+        }
+
+        document.title = completeTitle + ' | ' + this.forum_name;
       }
     };
   });
