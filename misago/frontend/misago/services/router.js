@@ -164,7 +164,8 @@
   });
 
   Misago.addService('start-routing', function(_) {
-    _.router.startRouting(Misago.urls, document.getElementById('router-fixture'));
+    _.router.startRouting(
+      Misago.urls, document.getElementById('router-fixture'));
     _.router.delegateClicks(document.getElementById(_.setup.fixture));
   }, {before: '_end'});
 }(Misago.prototype));

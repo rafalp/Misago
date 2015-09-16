@@ -14,7 +14,7 @@
     }
   });
 
-  QUnit.test("addService registers service in container", function(assert) {
+  QUnit.test("addService", function(assert) {
     assert.expect(2);
 
     var MockServiceFactory = function() {
@@ -29,17 +29,18 @@
       "addService() registered MockServiceFactory service in container");
   });
 
-  QUnit.test("service factories are called", function(assert) {
+  QUnit.test("_initServices", function(assert) {
     assert.expect(1);
 
     var MockServiceFactory = function(_) {
-      assert.ok(_, 'MockServiceFactory was called with container as argument.');
+      assert.ok(
+        _, 'MockServiceFactory was called with container as argument.');
     };
 
     container._initServices([{key: 'test', item: MockServiceFactory}]);
   });
 
-  QUnit.test("factories return values are set as context on container", function(assert) {
+  QUnit.test("factories return values handling", function(assert) {
     assert.expect(1);
 
     var MockServiceFactory = function() {
@@ -47,10 +48,11 @@
     };
 
     container._initServices([{key: 'test', item: MockServiceFactory}]);
-    assert.equal(container.test, 'ok!', 'MockServiceFactory return value was set on container.');
+    assert.equal(container.test, 'ok!',
+      "MockServiceFactory return value was set on container.");
   });
 
-  QUnit.test("factories returning nothing don't set context on container", function(assert) {
+  QUnit.test("factories returning nothing", function(assert) {
     assert.expect(1);
 
     var MockServiceFactory = function() {
@@ -58,19 +60,22 @@
     };
 
     container._initServices([{key: 'test', item: MockServiceFactory}]);
-    assert.equal(container.test, undefined, "MockServiceFactory return value wasn't set on container.");
+    assert.equal(container.test, undefined,
+      "MockServiceFactory return value wasn't set on container.");
   });
 
-  QUnit.test("services can be destroyed", function(assert) {
+  QUnit.test("_destroyServices", function(assert) {
     assert.expect(2);
 
     var MockService = {
       factory: function(_) {
-        assert.ok(_, "MockService's factory was called with container as argument.");
+        assert.ok(
+          _, "MockService's factory was called with container as argument.");
       },
 
       destroy: function(_) {
-        assert.ok(_, "MockService's destroy was called with container as argument.");
+        assert.ok(
+          _, "MockService's destroy was called with container as argument.");
       }
     };
 
@@ -80,7 +85,7 @@
     container._destroyServices(services);
   });
 
-  QUnit.test("services are initialized and destroyed in right order", function(assert) {
+  QUnit.test("initialize and destroy order", function(assert) {
     assert.expect(2);
 
     var initializationOrder = [];
@@ -116,15 +121,18 @@
     container._initServices(services);
     container._destroyServices(services);
 
-    assert.deepEqual(initializationOrder, [1, 2], 'services were initialized in right order.');
-    assert.deepEqual(destructionOrder, [2, 1], 'services were destroyed in right order.');
+    assert.deepEqual(initializationOrder, [1, 2],
+      'services were initialized in right order.');
+    assert.deepEqual(destructionOrder, [2, 1],
+      'services were destroyed in right order.');
   });
 
-  QUnit.test("initialization data is stored on container", function(assert) {
+  QUnit.test("initialization data storage", function(assert) {
     assert.expect();
 
     container.init({fixture: 'test'});
 
-    assert.equal(container.setup.fixture, 'test', 'container stored initialization data');
+    assert.equal(container.setup.fixture, 'test',
+      'container stored initialization data');
   });
 }());

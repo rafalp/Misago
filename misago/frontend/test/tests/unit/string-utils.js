@@ -3,7 +3,7 @@
 
   QUnit.module("String Utils");
 
-  QUnit.test("startsWith utility", function(assert) {
+  QUnit.test("startsWith", function(assert) {
     assert.expect(4);
 
     assert.ok(startsWith("Boberson", "Bob"),
@@ -15,7 +15,7 @@
     assert.ok(!startsWith("", "Boberson"), 'tested empty string');
   });
 
-  QUnit.test("endsWith utility", function(assert) {
+  QUnit.test("endsWith", function(assert) {
     assert.expect(4);
 
     assert.ok(endsWith("Boberson", "son"),

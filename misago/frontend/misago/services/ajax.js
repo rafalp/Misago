@@ -3,7 +3,8 @@
 
   var Ajax = function(_) {
     var cookieRegex = new RegExp(_.context.CSRF_COOKIE_NAME + '\=([^;]*)');
-    this.csrfToken = Misago.get(document.cookie.match(cookieRegex), 0).split('=')[1];
+    this.csrfToken = Misago.get(
+      document.cookie.match(cookieRegex), 0).split('=')[1];
 
     /*
       List of GETs underway

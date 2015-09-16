@@ -7,7 +7,7 @@
 
   QUnit.module("Conf service");
 
-  QUnit.test("preloaded configuration was stored on container", function(assert) {
+  QUnit.test("service factory", function(assert) {
     var settings = {
       'forum_name': 'Misago Community'
     };

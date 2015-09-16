@@ -10,10 +10,12 @@
   });
 
   QUnit.test("OrderedList stores and returns items", function(assert) {
-    assert.equal(list.has('invalid_key'), false, "list.has() returned false for nonexisting key");
+    assert.equal(list.has('invalid_key'), false,
+      "list.has() returned false for nonexisting key");
 
     list.add('valid_key', 'valid_value');
-    assert.ok(list.has('valid_key'), "list.has() returned true for existing key");
+    assert.ok(list.has('valid_key'),
+      "list.has() returned true for existing key");
     assert.equal(list.get('valid_key'), 'valid_value',
       "list.get() returned value for existing key");
 
@@ -32,7 +34,8 @@
 
     var unorderedList = list.values();
 
-    assert.equal(list.isOrdered, false, "list.values() didn't set isOrdered flag on list");
+    assert.equal(list.isOrdered, false,
+      "list.values() didn't set isOrdered flag on list");
 
     assert.equal(unorderedList[0], 'apple', 'unorderedList[0] is apple');
     assert.equal(unorderedList[1], 'banana', 'unorderedList[1] is banana');

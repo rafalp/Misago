@@ -9,7 +9,9 @@
 
     if (url) {
       return m('li',
-        m('a', {href: url}, Misago.get(_.settings, legalType + '_title', defaultTitle))
+        m('a', {href: url},
+          Misago.get(_.settings, legalType + '_title', defaultTitle)
+        )
       );
     } else {
       return null;
@@ -33,8 +35,10 @@
         items.push(m('li.forum-footnote', m.trust(_.settings.forum_footnote)));
       }
 
-      items.push(legalLink(_, 'terms_of_service', gettext('Terms of service')));
-      items.push(legalLink(_, 'privacy_policy', gettext('Privacy policy')));
+      items.push(
+        legalLink(_, 'terms_of_service', gettext('Terms of service')));
+      items.push(
+        legalLink(_, 'privacy_policy', gettext('Privacy policy')));
 
       return m('ul.list-inline.footer-nav', items);
     }

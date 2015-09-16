@@ -22,7 +22,7 @@
   Misago.pop = function(obj, key, value) {
     var returnValue = Misago.get(obj, key, value);
     if (Misago.has(obj, key)) {
-      delete obj[key];
+      obj[key] = null;
     }
     return returnValue;
   };

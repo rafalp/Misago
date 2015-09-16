@@ -18,10 +18,14 @@
     },
     view: function(ctrl) {
       return m('.container', [
-        m('h1', ['Count: ', m('strong', ctrl.count())]),
+        m('h1', [
+          'Count: ', m('strong', ctrl.count())
+        ]),
         m('p', 'Clicky click button to increase count!.'),
         m('p',
-          m('button.btn.btn-primary', {onclick: ctrl.increment}, 'Clicky clicky!')
+          m('button.btn.btn-primary', {onclick: ctrl.increment},
+            'Clicky clicky!'
+          )
         )
       ]);
     }

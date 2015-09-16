@@ -115,7 +115,13 @@ gulp.task('cleanprod', function(cb) {
   ], {force: true}, cb);
 });
 
-gulp.task('prepareprod', ['cleanprod', 'compressjs', 'compresscss', 'copyfonts', 'copyimg']);
+gulp.task('prepareprod', [
+  'cleanprod',
+  'compressjs',
+  'compresscss',
+  'copyfonts',
+  'copyimg'
+]);
 
 gulp.task('deployjs', ['prepareprod'], function() {
   return gulp.src('dist/js/**/*')
@@ -197,7 +203,14 @@ gulp.task('collecttests', ['cleantest'], function() {
     .pipe(gulp.dest('test/dist'));
 });
 
-gulp.task('starttestserver', ['collecttests', 'collecttestsutils', 'collecttestjs', 'collecttestcss', 'collecttestfonts', 'collecttestimg'], function() {
+gulp.task('starttestserver', [
+    'collecttests',
+    'collecttestsutils',
+    'collecttestjs',
+    'collecttestcss',
+    'collecttestfonts',
+    'collecttestimg'
+], function() {
   connect.server({
     port: 8080,
     root: 'test'

@@ -3,7 +3,7 @@
 
   QUnit.module("Accessors");
 
-  QUnit.test("Misago.has accessor", function(assert) {
+  QUnit.test("Misago.has", function(assert) {
     var testObj = {valid: 'okay'};
 
     assert.equal(Misago.has(testObj, 'invalid'), false,
@@ -12,7 +12,7 @@
       "Misago.has() returned true for existing key");
   });
 
-  QUnit.test("Misago.get accessor", function(assert) {
+  QUnit.test("Misago.get", function(assert) {
     var testObj = {valid: 'okay'};
 
     assert.equal(Misago.get(testObj, 'invalid'), undefined,
@@ -25,7 +25,7 @@
       "Misago.get() returned value for existing key instead of fallback");
   });
 
-  QUnit.test("Misago.pop accessor", function(assert) {
+  QUnit.test("Misago.pop", function(assert) {
     var testObj = {valid: 'okay', other_valid: 'okay'};
 
     assert.equal(Misago.pop(testObj, 'invalid'), undefined,

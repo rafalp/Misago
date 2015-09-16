@@ -2,7 +2,8 @@
   'use strict';
 
   Misago.UrlConfInvalidComponentError = function(name) {
-    this.message = "route's " + name + " component should be an array or object";
+    this.message = "route's " + name + " component " +
+                   "should be an array or object";
 
     this.toString = function() {
       return this.message;

@@ -7,7 +7,9 @@
 
   Misago.MisagoMarkup = {
     view: function(ctrl, content) {
-      return m('article.misago-markup', {config: setupMarkup}, m.trust(content));
+      return m('article.misago-markup', {config: setupMarkup},
+        m.trust(content)
+      );
     }
   };
 }(Misago.prototype));

@@ -12,7 +12,7 @@
     }
   });
 
-  QUnit.test("service sets title.set method on container", function(assert) {
+  QUnit.test("service factory", function(assert) {
     var service = getMisagoService('page-title');
 
     var container = {settings: {forum_name: 'Lorem Ipsum'}};
@@ -21,7 +21,7 @@
     assert.ok(container.title.set, 'title.set is set on container');
   });
 
-  QUnit.test("title.set() call with no arguments sets title to forum name", function(assert) {
+  QUnit.test("title.set() call with no arguments", function(assert) {
     var service = getMisagoService('page-title');
 
     var container = {settings: {forum_name: 'Lorem Ipsum'}};
@@ -32,24 +32,26 @@
       'no argument call for title.set changed title to Lorem Ipsum');
   });
 
-  QUnit.test("title.set() call with string argument sets valid title", function(assert) {
+  QUnit.test("title.set() call with string argument", function(assert) {
     var service = getMisagoService('page-title');
 
     var container = {settings: {forum_name: 'Lorem Ipsum'}};
     service(container);
 
     container.title.set("Hello!");
-    assert.equal(document.title, 'Hello! | Lorem Ipsum', 'string argument changed title');
+    assert.equal(
+      document.title, 'Hello! | Lorem Ipsum', 'string argument changed title');
   });
 
-  QUnit.test("title.set() call with object argument sets valid title", function(assert) {
+  QUnit.test("title.set() call with object argument", function(assert) {
     var service = getMisagoService('page-title');
 
     var container = {settings: {forum_name: 'Lorem Ipsum'}};
     service(container);
 
     container.title.set({title: "Hello!"});
-    assert.equal(document.title, 'Hello! | Lorem Ipsum', 'object argument changed title');
+    assert.equal(
+      document.title, 'Hello! | Lorem Ipsum', 'object argument changed title');
 
     container.title.set({title: "User", page: 1});
     assert.equal(document.title, 'User | Lorem Ipsum',
