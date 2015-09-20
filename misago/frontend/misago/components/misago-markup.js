@@ -5,7 +5,7 @@
     context.retain = true;
   };
 
-  Misago.MisagoMarkup = {
+  Misago.Markup = {
     view: function(ctrl, content) {
       return m('article.misago-markup', {config: setupMarkup},
         m.trust(content)

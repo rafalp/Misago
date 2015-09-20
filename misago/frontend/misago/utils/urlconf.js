@@ -50,4 +50,4 @@
       }
     };
   };
-} (Misago.prototype));
+}(Misago.prototype));

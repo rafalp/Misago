@@ -6,4 +6,4 @@
       _.component(Misago.Loader)
     );
   };
-} (Misago.prototype));
+}(Misago.prototype));

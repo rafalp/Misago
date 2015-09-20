@@ -44,7 +44,7 @@
         return m('.page.legal-page.' + dashedTypeName + '-page', [
           _.component(Misago.PageHeader, {title: this.vm.title}),
           m('.container',
-            _.component(MisagoMarkup. Misago.this.vm.body)
+            _.component(Misago.Markup, Misago.this.vm.body)
           )
         ]);
       }

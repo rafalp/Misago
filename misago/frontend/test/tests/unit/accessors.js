@@ -37,9 +37,9 @@
     assert.equal(Misago.pop(testObj, 'other_valid', 'fallback'), 'okay',
       "Misago.pop() returned value for existing key instead of fallback");
 
-    assert.equal(Misago.has(testObj, 'valid'), false,
+    assert.equal(Misago.get(testObj, 'valid'), null,
       "Misago.pop() removed valid key from object");
-    assert.equal(Misago.has(testObj, 'other_valid'), false,
+    assert.equal(Misago.get(testObj, 'other_valid'), null,
       "Misago.pop() removed other valid key from object");
   });
 }(Misago.prototype));

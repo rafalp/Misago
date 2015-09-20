@@ -6,8 +6,16 @@
 
     this._intervals = {};
 
+    var stopInterval = function(name) {
+      if (self._intervals[name]) {
+        window.clearTimeout(self._intervals[name]);
+        self._intervals[name] = null;
+      }
+    };
+
     this.run = function(callable, name, delay) {
       this._intervals[name] = window.setTimeout(function() {
+        stopInterval(name);
         var result = callable(_);
         if (result !== false) {
           self.run(callable, name, delay);
@@ -17,15 +25,15 @@
 
     this.runOnce = function(callable, name, delay) {
       this._intervals[name] = window.setTimeout(function() {
+        stopInterval(name);
         callable(_);
       }, delay);
     };
 
-    this.stop = function() {
-      for (var name in this._intervals) {
-        if (this._intervals.hasOwnProperty(name)) {
-          window.clearTimeout(this._intervals[name]);
-          delete this._intervals[name];
+    this.stop = function(name) {
+      for (var loop in this._intervals) {
+        if (!name || name === loop) {
+          stopInterval(loop);
         }
       }
     };
