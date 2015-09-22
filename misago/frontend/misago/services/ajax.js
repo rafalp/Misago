@@ -2,9 +2,17 @@
   'use strict';
 
   var Ajax = function(_) {
-    var cookieRegex = new RegExp(_.context.CSRF_COOKIE_NAME + '\=([^;]*)');
-    this.csrfToken = Misago.get(
-      document.cookie.match(cookieRegex), 0).split('=')[1];
+    var getCsrfToken = function(cookie_name) {
+      if (document.cookie.indexOf(cookie_name) !== -1) {
+        var cookieRegex = new RegExp(cookie_name + '\=([^;]*)');
+        var cookie = Misago.get(document.cookie.match(cookieRegex), '');
+        return cookie.split('=')[1];
+      } else {
+        return null;
+      }
+    };
+
+    this.csrfToken = getCsrfToken(_.context.CSRF_COOKIE_NAME);
 
     /*
       List of GETs underway
@@ -69,6 +77,18 @@
 
     this.post = function(url) {
       return this.ajax('POST', url);
+    };
+
+    this.patch = function(url) {
+      return this.ajax('PATCH', url);
+    };
+
+    this.put = function(url) {
+      return this.ajax('PUT', url);
+    };
+
+    this.delete = function(url) {
+      return this.ajax('DELETE', url);
     };
   };
 
