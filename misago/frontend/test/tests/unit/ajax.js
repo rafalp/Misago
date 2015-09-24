@@ -8,7 +8,7 @@
   });
 
   QUnit.test("service factory", function(assert) {
-    var container = { context: { CSRF_COOKIE_NAME: 'doesnt-matter' } };
+    var container = {context: {CSRF_COOKIE_NAME: 'doesnt-matter'}};
 
     var service = getMisagoService('ajax');
     var ajax = service(container);
@@ -61,6 +61,39 @@
       assert.equal(rejection.detail, 'fail',
         'ajax handled error from /failing-url/');
       done();
+    });
+  });
+
+  QUnit.test("get", function(assert) {
+    $.mockjax({
+      url: '/test-url/',
+      status: 200,
+      responseText: {
+        'detail': 'backend'
+      }
+    });
+
+    var container = {
+      context: {
+        CSRF_COOKIE_NAME: 'doesnt-matter',
+        '/test-url/': {
+          'detail': 'preloaded'
+        }
+      }
+    };
+
+    var service = getMisagoService('ajax');
+    var ajax = service(container);
+
+    var done = assert.async();
+
+    ajax.get('/test-url/').then(function(data) {
+      assert.equal(data.detail, 'preloaded', 'get() read preloaded data');
+
+      ajax.get('/test-url/').then(function(data) {
+        assert.equal(data.detail, 'backend', 'get() read backend data');
+        done();
+      });
     });
   });
 }());
