@@ -48,7 +48,8 @@
       var misago = new Misago();
       {% include "misago/frontend_context.js" %}
       misago.init({
-        fixture: 'misago-fixture'
+        fixture: 'misago-fixture',
+        api: '{% url 'misago:api:api-root' %}'
       });
     </script>
 

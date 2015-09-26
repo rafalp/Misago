@@ -1,17 +1,17 @@
 (function (Misago) {
   'use strict';
 
-  var Ajax = function(_) {
-    var getCsrfToken = function(cookie_name) {
-      if (document.cookie.indexOf(cookie_name) !== -1) {
-        var cookieRegex = new RegExp(cookie_name + '\=([^;]*)');
-        var cookie = Misago.get(document.cookie.match(cookieRegex), '');
-        return cookie.split('=')[1];
-      } else {
-        return null;
-      }
-    };
+  var getCsrfToken = function(cookie_name) {
+    if (document.cookie.indexOf(cookie_name) !== -1) {
+      var cookieRegex = new RegExp(cookie_name + '\=([^;]*)');
+      var cookie = Misago.get(document.cookie.match(cookieRegex), 0);
+      return cookie.split('=')[1];
+    } else {
+      return null;
+    }
+  };
 
+  var Ajax = function(_) {
     this.csrfToken = getCsrfToken(_.context.CSRF_COOKIE_NAME);
 
     /*

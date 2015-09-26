@@ -22,14 +22,14 @@
             _.title.set(this.title);
           } else {
             _.title.set();
-            return _.api.one('legal-page', dashedTypeName);
+            return _.api.model('legal-page', dashedTypeName);
           }
         },
-        ondata: function(data, component, _) {
+        ondata: function(page, component, _) {
           m.startComputation();
 
-          data.title = data.title || defaultTitle;
-          this.page = _.models.deserialize('legal-page', data);
+          page.title = page.title || defaultTitle;
+          this.page = page;
           this.isReady = true;
 
           m.endComputation();

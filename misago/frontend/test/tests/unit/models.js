@@ -1,12 +1,12 @@
-(function (Misago) {
+(function () {
   'use strict';
+
+  var service = getMisagoService('models');
 
   QUnit.module("Models");
 
   QUnit.test("service factory", function(assert) {
     var container = {};
-
-    var service = getMisagoService('models');
     var models = service(container);
 
     assert.ok(models,
@@ -15,15 +15,13 @@
 
   QUnit.test("add", function(assert) {
     var container = {};
-
-    var service = getMisagoService('models');
     var models = service(container);
 
     var TestModel = function(data) {
       this.name = data.name || 'Hello';
     };
 
-    var testModelDeserializer = function(data, models) {
+    var testModelDeserializer = function(data) {
       return data;
     };
 
@@ -33,15 +31,13 @@
     });
 
     assert.equal(models.classes['test-model'], TestModel,
-      "test model's class was registered in the service");
+      "test model's class was registered in the service.");
     assert.equal(models.deserializers['test-model'], testModelDeserializer,
-      "test model's deserializer was registered in the service");
+      "test model's deserializer was registered in the service.");
   });
 
   QUnit.test("new", function(assert) {
     var container = {};
-
-    var service = getMisagoService('models');
     var models = service(container);
 
     var TestModel = function(data) {
@@ -54,20 +50,18 @@
 
     var model = models.new('test-model', {name: 'Working!!!'});
     assert.equal(model.name, 'Working!!!',
-      "new() returned model instance");
+      "new() returned model instance.");
   });
 
   QUnit.test("deserialize", function(assert) {
     var container = {};
-
-    var service = getMisagoService('models');
     var models = service(container);
 
     var TestModel = function(data) {
       this.name = data.name;
     };
 
-    var testModelDeserializer = function(data, models) {
+    var testModelDeserializer = function(data) {
       data.name = data.title;
       return data;
     };
@@ -79,7 +73,7 @@
 
     var model = models.deserialize('test-model', {title: 'Testing!'});
     assert.equal(model.name, 'Testing!',
-      "deserialize() returned deserialized model instance");
+      "deserialize() returned deserialized model instance.");
 
     models.add('other-model', {
       class: TestModel
@@ -87,6 +81,17 @@
 
     model = models.deserialize('other-model', {name: 'Other!'});
     assert.equal(model.name, 'Other!',
-      "deserialize() returned model instance without deserialization");
+      "deserialize() returned model instance without deserialization.");
+
+    models.add('model-with-relation', {
+      class: TestModel,
+      relations: {
+        'test': 'test-model'
+      }
+    });
+
+    model = models.deserialize('model-with-relation:test', {title: 'Related'});
+    assert.equal(model.name, 'Related',
+      "deserialize() returned related model instance.");
   });
-}(Misago.prototype));
+}());

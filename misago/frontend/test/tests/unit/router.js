@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var service = getMisagoService('router');
+
   QUnit.module("Router");
 
   QUnit.test("cleanUrl", function(assert) {
@@ -10,8 +12,6 @@
         'MEDIA_URL': 'http://nocookie.somewhere.com/'
       }
     };
-
-    var service = getMisagoService('router');
     var router = service(container);
 
     assert.equal(router.cleanUrl('/'), '/');
@@ -54,7 +54,6 @@
       }
     };
 
-    var service = getMisagoService('router');
     var router = service(container);
 
     assert.equal(router.staticUrl('logo.png'), '/static/logo.png',
