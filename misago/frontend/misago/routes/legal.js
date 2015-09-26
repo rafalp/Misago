@@ -15,26 +15,27 @@
         }
       },
       vm: {
+        page: null,
         isReady: false,
         init: function(component, _) {
           if (this.isReady) {
             _.title.set(this.title);
           } else {
             _.title.set();
-            return _.api.one('legal-pages', dashedTypeName);
+            return _.api.one('legal-page', dashedTypeName);
           }
         },
         ondata: function(data, component, _) {
           m.startComputation();
 
-          this.title = data.title || defaultTitle;
-          this.body = data.body;
+          data.title = data.title || defaultTitle;
+          this.page = _.models.deserialize('legal-page', data);
           this.isReady = true;
 
           m.endComputation();
 
           if (component.isActive) {
-            _.title.set(data.title);
+            _.title.set(this.page.title);
           }
         }
       },
@@ -42,9 +43,9 @@
         var _ = this.container;
 
         return m('.page.legal-page.' + dashedTypeName + '-page', [
-          _.component(Misago.PageHeader, {title: this.vm.title}),
+          _.component(Misago.PageHeader, {title: this.vm.page.title}),
           m('.container',
-            _.component(Misago.Markup, Misago.this.vm.body)
+            _.component(Misago.Markup, this.vm.page.body)
           )
         ]);
       }

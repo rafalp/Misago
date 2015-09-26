@@ -75,16 +75,16 @@
       }
     };
 
-    this.post = function(url) {
-      return this.ajax('POST', url);
+    this.post = function(url, data) {
+      return this.ajax('POST', url, data);
     };
 
-    this.patch = function(url) {
-      return this.ajax('PATCH', url);
+    this.patch = function(url, data) {
+      return this.ajax('PATCH', url, data);
     };
 
-    this.put = function(url) {
-      return this.ajax('PUT', url);
+    this.put = function(url, data) {
+      return this.ajax('PUT', url, data);
     };
 
     this.delete = function(url) {

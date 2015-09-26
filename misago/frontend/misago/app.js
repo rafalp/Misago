@@ -46,7 +46,8 @@
     this.init = function(setup) {
       this.setup = {
         fixture: ns.get(setup, 'fixture', null),
-        inTest: ns.get(setup, 'inTest', false)
+        inTest: ns.get(setup, 'inTest', false),
+        api: ns.get(setup, 'api', '/api/')
       };
 
       this._initServices(ns._services);

@@ -1,9 +1,15 @@
 (function (Misago) {
   'use strict';
 
+  var Query = function(_, model) {
+
+  };
+
   var Api = function(_) {
+    var apiRoot = _.setup.api;
+
     this.buildUrl = function(model, call, querystrings) {
-      var url = _.router.baseUrl;
+      var url = _.setup.api;
       url += 'api/' + model + '/';
       return url;
     };

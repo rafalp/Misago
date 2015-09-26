@@ -118,7 +118,7 @@
         component = routedComponent(Misago.ErrorBannedRoute);
         component.error = {
           message: error.detail,
-          ban: Misago.Ban.deserialize(error.ban)
+          ban: _.models.deserialize('ban', error.ban)
         };
       } else {
         component = routedComponent(Misago.Error403Route);
