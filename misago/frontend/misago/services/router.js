@@ -33,7 +33,11 @@
       populatePatterns(urlconf);
       this.fixture = fixture;
 
-      m.route.mode = 'pathname';
+      if (_.setup.test) {
+        m.route.mode = 'search';
+      } else {
+        m.route.mode = 'pathname';
+      }
       m.route(fixture, '/', this.urls);
     };
 

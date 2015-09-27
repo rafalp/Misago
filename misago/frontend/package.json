@@ -16,13 +16,23 @@
       "Misago",
       "m",
       "moment",
+
+      "initTestMisago",
       "getMisagoService",
+      "click",
+      "then",
+      "onElement",
+
+      "getElement",
+      "getElementText",
+
       "gettext",
       "ngettext",
       "gettext_noop",
       "pgettext",
       "npgettext",
       "interpolate",
+
       "console",
       "document",
       "window",

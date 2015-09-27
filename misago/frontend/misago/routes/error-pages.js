@@ -69,11 +69,15 @@
     },
     error: null,
     view: function() {
+      if (this.error === "Permission denied") {
+        this.error = gettext("You don't have permission to access this page.");
+      }
+
       return errorPage({
         code: 403,
         icon: 'remove_circle_outline',
         message: gettext("This page is not available."),
-        help: this.error || gettext("You don't have permission to access this page.")
+        help: this.error
       });
     }
   });
@@ -112,7 +116,7 @@
     },
     view: function() {
       return errorPage({
-        code: 500,
+        code: 0,
         icon: 'sync_problem',
         message: gettext("Could not connect to application."),
         help: gettext("This may be caused by problems with your connection or application server. Please check your internet connection and refresh page if problem persists.")

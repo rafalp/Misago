@@ -28,14 +28,18 @@
         ondata: function(page, component, _) {
           m.startComputation();
 
-          page.title = page.title || defaultTitle;
-          this.page = page;
-          this.isReady = true;
+          if (page.link) {
+            window.location = page.link;
+          } else {
+            page.title = page.title || defaultTitle;
+            this.page = page;
+            this.isReady = true;
 
-          m.endComputation();
+            m.endComputation();
 
-          if (component.isActive) {
-            _.title.set(this.page.title);
+            if (component.isActive) {
+              _.title.set(this.page.title);
+            }
           }
         }
       },

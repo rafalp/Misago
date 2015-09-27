@@ -172,22 +172,22 @@ gulp.task('cleantest', function(cb) {
 
 gulp.task('collecttestjs', ['cleantest', 'collectjs'], function() {
   return gulp.src('dist/js/**/*')
-    .pipe(gulp.dest('test/dist/js'));
+    .pipe(gulp.dest('test/dist/misago/js'));
 });
 
 gulp.task('collecttestcss', ['cleantest', 'collectcss'], function() {
   return gulp.src('dist/css/**/*')
-    .pipe(gulp.dest('test/dist/css'));
+    .pipe(gulp.dest('test/dist/misago/css'));
 });
 
 gulp.task('collecttestfonts', ['cleantest', 'copyfonts'], function() {
   return gulp.src('dist/fonts/**/*')
-    .pipe(gulp.dest('test/dist/fonts'));
+    .pipe(gulp.dest('test/dist/misago/fonts'));
 });
 
 gulp.task('collecttestimg', ['cleantest', 'copyimg'], function() {
   return gulp.src('dist/img/**/*')
-    .pipe(gulp.dest('test/dist/img'));
+    .pipe(gulp.dest('test/dist/misago/img'));
 });
 
 gulp.task('collecttestslibs', ['cleantest'], function() {
@@ -238,6 +238,8 @@ gulp.task('test', ['starttestserver'], function() {
     'collecttests',
     'collecttestjs',
     'collecttestcss',
+    'collecttestfonts',
+    'collecttestimg',
     'collecttestsutils',
     'collecttestslibs'
   ]);

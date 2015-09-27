@@ -11,7 +11,7 @@
 
     destroy: function(_) {
       if (_.setup.fixture) {
-        m.mount(_.setup.fixture, null);
+        m.mount(document.getElementById(_.setup.fixture), null);
       }
     }
   }, {before: 'start-routing'});

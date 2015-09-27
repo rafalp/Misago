@@ -13,7 +13,7 @@
   var deserializeBan = function(data) {
     data.expires_on = Misago.deserializeDatetime(data.expires_on);
 
-    return new Misago.Ban(data);
+    return data;
   };
 
   Misago.addService('ban-model', function(_) {

@@ -15,5 +15,8 @@
     Misago.PrivacyPolicyRoute,
     'privacy_policy');
 
+  // Catch-all 404 not found route
+  urls.url('/:rest...', Misago.Error404Route, 'not_found');
+
   Misago.urls = urls;
 } (Misago.prototype, Misago.prototype.UrlConf));

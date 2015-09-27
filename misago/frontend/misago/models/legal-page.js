@@ -4,6 +4,7 @@
   var LegalPage = function(data) {
     this.title = data.title;
     this.body = data.body;
+    this.link = data.link;
   };
 
   Misago.addService('legal-page-model', function(_) {
