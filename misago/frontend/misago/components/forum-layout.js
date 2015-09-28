@@ -10,7 +10,8 @@
       return [
         _.component(Misago.ForumNavbar),
         m('#router-fixture', {config: persistent}),
-        _.component(Misago.ForumFooter)
+        _.component(Misago.ForumFooter),
+        m.component(Misago.ForumModal)
       ];
     }
   };

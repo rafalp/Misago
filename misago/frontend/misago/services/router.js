@@ -47,7 +47,6 @@
 
     // Delegate clicks
     this.delegateElement = null;
-    this.delegateName = 'click.misago-router';
 
     this.cleanUrl = function(url) {
       if (!url) { return; }
@@ -88,9 +87,10 @@
       return url;
     };
 
+    var delegateName = 'click.misago-router';
     this.delegateClicks = function(element) {
       this.delegateElement = element;
-      $(this.delegateElement).on(this.delegateName, 'a', function(e) {
+      $(this.delegateElement).on(delegateName, 'a', function(e) {
         var cleanUrl = self.cleanUrl(e.target.href);
         if (cleanUrl) {
           if (cleanUrl != m.route()) {
@@ -102,7 +102,7 @@
     };
 
     this.destroy = function() {
-      $(this.delegateElement).off(this.delegateName);
+      $(this.delegateElement).off(delegateName);
     };
 
     // Media/Static url
