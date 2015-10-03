@@ -3,7 +3,7 @@
 
   var noop = function() {};
 
-  Misago.route = function(component) {
+  var boilerplate = function(component) {
     /*
       Boilerplate for Misago top-level components
     */
@@ -12,16 +12,16 @@
     component.isActive = true;
 
     // Wrap controller to store lifecycle methods
-    var __controller = component.controller || noop;
+    var _controller = component.controller || noop;
     component.controller = function() {
       component.isActive = true;
 
-      var controller = __controller.apply(component, arguments) || {};
+      var controller = _controller.apply(component, arguments) || {};
 
       // wrap onunload for lifestate
-      var __onunload = controller.onunload || noop;
+      var _onunload = controller.onunload || noop;
       controller.onunload = function() {
-        __onunload.apply(component, arguments);
+        _onunload.apply(component, arguments);
         component.isActive = false;
       };
 
@@ -31,10 +31,10 @@
     // Add state callbacks to View-Model
     if (component.vm && component.vm.init) {
       // wrap vm.init in promise handler
-      var __init = component.vm.init;
+      var _init = component.vm.init;
       component.vm.init = function() {
         var initArgs = arguments;
-        var promise = __init.apply(component.vm, initArgs);
+        var promise = _init.apply(component.vm, initArgs);
 
         if (promise) {
           promise.then(function() {
@@ -67,10 +67,10 @@
         };
       }
 
-      var __view = component.view;
+      var _view = component.view;
       component.view = function() {
         if (component.vm.isReady) {
-          return __view.apply(component, arguments);
+          return _view.apply(component, arguments);
         } else {
           return component.loading.apply(component, arguments);
         }
@@ -79,4 +79,16 @@
 
     return component;
   };
+
+  Misago.addService('routes', function(_) {
+    _._routes = {};
+    _.route = function(name, component) {
+      if (name && component) {
+        component.container = _;
+        this._routes[name] = boilerplate(component);
+      } else {
+        return this._routes[name];
+      }
+    };
+  });
 }(Misago.prototype));

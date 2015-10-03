@@ -12,19 +12,12 @@
     this.urls = {};
     this.reverses = {};
 
-    var routedComponent = function(component) {
-      component.container = _;
-      return component;
-    };
-
     var populatePatterns = function(urlconf) {
       urlconf.patterns().forEach(function(url) {
-        // set service container on component
-
         var finalPattern = self.baseUrl + url.pattern;
         finalPattern = finalPattern.replace('//', '/');
 
-        self.urls[finalPattern] = routedComponent(url.component);
+        self.urls[finalPattern] = _.route(url.component);
         self.reverses[url.name] = finalPattern;
       });
     };
@@ -119,13 +112,14 @@
     this.error403 = function(error) {
       var component = null;
       if (error.ban) {
-        component = routedComponent(Misago.ErrorBannedRoute);
+        component = _.route('error:banned');
+        console.log(component);
         component.error = {
           message: error.detail,
           ban: _.models.deserialize('ban', error.ban)
         };
       } else {
-        component = routedComponent(Misago.Error403Route);
+        component = _.route('error:403');
         component.error = error.detail;
       }
 
@@ -133,15 +127,15 @@
     };
 
     this.error404 = function() {
-      m.mount(this.fixture, routedComponent(Misago.Error404Route));
+      m.mount(this.fixture, _.route('error:404'));
     };
 
     this.error500 = function() {
-      m.mount(this.fixture, routedComponent(Misago.Error500Route));
+      m.mount(this.fixture, _.route('error:500'));
     };
 
     this.error0 = function() {
-      m.mount(this.fixture, routedComponent(Misago.Error0Route));
+      m.mount(this.fixture, _.route('error:0'));
     };
 
     this.errorPage = function(error) {

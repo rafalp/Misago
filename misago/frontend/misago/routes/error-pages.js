@@ -22,7 +22,7 @@
     );
   };
 
-  Misago.ErrorBannedRoute = Misago.route({
+  var errorBanned = {
     controller: function() {
       this.container.title.set(gettext('You are banned'));
     },
@@ -61,9 +61,9 @@
         )
       );
     }
-  });
+  };
 
-  Misago.Error403Route = Misago.route({
+  var error403 = {
     controller: function() {
       this.container.title.set(gettext('Page not available'));
     },
@@ -80,9 +80,9 @@
         help: this.error
       });
     }
-  });
+  };
 
-  Misago.Error404Route = Misago.route({
+  var error404 = {
     controller: function() {
       this.container.title.set(gettext('Page not found'));
     },
@@ -94,9 +94,9 @@
         help: gettext("The link you followed was incorrect or the page has been moved or deleted.")
       });
     }
-  });
+  };
 
-  Misago.Error500Route = Misago.route({
+  var error500 = {
     controller: function() {
       this.container.title.set(gettext('Application error occured'));
     },
@@ -108,9 +108,9 @@
         help: gettext("Please try again later or contact site staff if error persists.")
       });
     }
-  });
+  };
 
-  Misago.Error0Route = Misago.route({
+  var error0 = {
     controller: function() {
       this.container.title.set(gettext('Lost connection with application'));
     },
@@ -122,5 +122,16 @@
         help: gettext("This may be caused by problems with your connection or application server. Please check your internet connection and refresh page if problem persists.")
       });
     }
+  };
+
+  Misago.addService('route:error-pages', {
+    factory: function(_) {
+      _.route('error:banned', errorBanned);
+      _.route('error:403', error403);
+      _.route('error:404', error404);
+      _.route('error:500', error500);
+      _.route('error:0', error0);
+    },
+    after: 'routes'
   });
 }(Misago.prototype));

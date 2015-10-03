@@ -1,7 +1,7 @@
 (function (Misago) {
   'use strict';
 
-  Misago.IndexRoute = Misago.route({
+  var index = {
     controller: function() {
       var _ = this.container;
       document.title = _.settings.forum_index_title || _.settings.forum_name;
@@ -29,5 +29,12 @@
         )
       ]);
     }
+  };
+
+  Misago.addService('route:index', {
+    factory: function(_) {
+      _.route('index', index);
+    },
+    after: 'routes'
   });
 }(Misago.prototype));

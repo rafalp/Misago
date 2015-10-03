@@ -18,12 +18,4 @@
     },
     after: 'components'
   });
-
-  Misago.LoadingPage = {
-    view: function(ctrl, _) {
-      return m('.page.loading-page',
-        _.component('loader')
-      );
-    }
-  };
 } (Misago.prototype));

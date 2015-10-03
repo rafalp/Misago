@@ -5,7 +5,7 @@
     context.retain = true;
   }
 
-  var signin = Misago.route({
+  var signin = {
     controller: function() {
       console.log('construct!');
       return {
@@ -65,7 +65,7 @@
         )
       );
     }
-  });
+  };
 
   Misago.addService('component:modal:sign-in', {
     factory: function(_) {

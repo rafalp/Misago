@@ -4,7 +4,7 @@
   var legalPageFactory = function(typeName, defaultTitle) {
     var dashedTypeName = typeName.replace(/_/g, '-');
 
-    return Misago.route({
+    return {
       controller: function() {
         var _ = this.container;
 
@@ -53,11 +53,16 @@
           )
         ]);
       }
-    });
+    };
   };
 
-  Misago.TermsOfServiceRoute = legalPageFactory(
-    'terms_of_service', gettext('Terms of service'));
-  Misago.PrivacyPolicyRoute = legalPageFactory(
-    'privacy_policy', gettext('Privacy policy'));
+  Misago.addService('route:legal-pages', {
+    factory: function(_) {
+      _.route('terms-of-service', legalPageFactory(
+        'terms_of_service', gettext('Terms of service')));
+      _.route('privacy-policy', legalPageFactory(
+        'privacy_policy', gettext('Privacy policy')));
+    },
+    after: 'routes'
+  });
 }(Misago.prototype));

@@ -10,21 +10,27 @@
   });
 
   QUnit.test("url registers pattern in config", function(assert) {
-    var component = {test: 'test'};
-
-    urlconf.url('/test/', component, 'test_url');
+    urlconf.url('/test/', 'route', 'test_url');
     var patterns = urlconf.patterns();
 
     assert.equal(patterns.length, 1,
       'url() has registered single URL in config');
     assert.deepEqual(
       patterns[0],
-      {pattern: '/test/', component: component, name: 'test_url'},
+      {pattern: '/test/', component: 'route', name: 'test_url'},
       'url() has registered valid URL in config');
   });
 
+  QUnit.test("url normalizes route component name", function(assert) {
+    urlconf.url('/test/', 'some_test_route', 'test_url');
+    var patterns = urlconf.patterns();
+
+    assert.equal(patterns[0].component, 'some-test-route',
+      'url() has normalized component name underscores to comas');
+  });
+
   QUnit.test("UrlConf.url(conf) includes child config", function(assert) {
-    var component = {test: 'test'};
+    var component = 'some-test';
     urlconf.url('', component, 'test_url');
     urlconf.url('/test/', component, 'test_url');
 
