@@ -1,12 +1,19 @@
 (function (Misago) {
   'use strict';
 
-  Misago.ForumNavbar = {
+  var navbar = {
     view: function(ctrl, _) {
       var style = '.navbar.navbar-default.navbar-static-top';
       return m('nav' + style + '[role="navigation"]', [
-        _.component(Misago.DesktopForumNavbar)
+        _.component('navbar:desktop')
       ]);
     }
   };
+
+  Misago.addService('component:navbar', {
+    factory: function(_) {
+      _.component('navbar', navbar);
+    },
+    after: 'components'
+  });
 }(Misago.prototype));

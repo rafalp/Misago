@@ -1,7 +1,7 @@
 (function (Misago) {
   'use strict';
 
-  Misago.PageHeader = {
+  var header = {
     view: function(ctrl, options) {
       return m('.page-header',
         m('.container', [
@@ -10,4 +10,11 @@
       );
     }
   };
+
+  Misago.addService('component:header', {
+    factory: function(_) {
+      _.component('header', header);
+    },
+    after: 'components'
+  });
 }(Misago.prototype));

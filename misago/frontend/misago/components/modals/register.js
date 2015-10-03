@@ -5,7 +5,7 @@
     context.retain = true;
   }
 
-  Misago.RegisterModal = {
+  var register = {
     view: function() {
       return m('.modal-dialog.modal-lg[role="document"]',
         {config: persistent},
@@ -25,4 +25,11 @@
       );
     }
   };
+
+  Misago.addService('component:modal:register', {
+    factory: function(_) {
+      _.component('modal:register', register);
+    },
+    after: 'components'
+  });
 }(Misago.prototype));

@@ -18,7 +18,7 @@
     }
   };
 
-  Misago.FooterNav = {
+  var menu = {
     isVisible: function(settings) {
       return [
         !!settings.forum_footnote,
@@ -43,4 +43,11 @@
       return m('ul.list-inline.footer-nav', items);
     }
   };
+
+  Misago.addService('component:footer:menu', {
+    factory: function(_) {
+      _.component('footer:menu', menu);
+    },
+    after: 'components'
+  });
 }(Misago.prototype));

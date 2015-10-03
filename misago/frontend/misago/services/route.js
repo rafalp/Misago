@@ -62,7 +62,7 @@
         component.loading = function () {
           var _ = this.container;
           return m('.page.page-loading',
-            _.component(Misago.Loader)
+            _.component('loader')
           );
         };
       }

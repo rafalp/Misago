@@ -59,10 +59,10 @@
   };
 
 
-  // Services registry
+  // Services
   var proto = window.Misago.prototype;
-  proto._services = [];
 
+  proto._services = [];
   proto.addService = function(name, factory, order) {
     proto._services.push({
       key: name,

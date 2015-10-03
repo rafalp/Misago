@@ -5,14 +5,21 @@
     context.retain = true;
   };
 
-  Misago.ForumLayout = {
+  var forumLayout = {
     view: function(ctrl, _) {
       return [
-        _.component(Misago.ForumNavbar),
+        _.component('navbar'),
         m('#router-fixture', {config: persistent}),
-        _.component(Misago.ForumFooter),
-        m.component(Misago.ForumModal)
+        _.component('footer'),
+        _.component('modal')
       ];
     }
   };
+
+  Misago.addService('component:layout', {
+    factory: function(_) {
+      _.component('forum-layout', forumLayout);
+    },
+    after: 'components'
+  });
 }(Misago.prototype));

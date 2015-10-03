@@ -5,7 +5,7 @@
     factory: function(_) {
       if (_.setup.fixture) {
         m.mount(document.getElementById(_.setup.fixture),
-                _.component(Misago.ForumLayout));
+                _.component('forum-layout'));
       }
     },
 

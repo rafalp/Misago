@@ -3,7 +3,7 @@
 
   Misago.loadingPage = function(_) {
     return m('.page.page-loading',
-      _.component(Misago.Loader)
+      _.component('loader')
     );
   };
 }(Misago.prototype));

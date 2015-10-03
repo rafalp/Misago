@@ -1,15 +1,22 @@
 (function (Misago) {
   'use strict';
 
-  var setupMarkup = function(el, isInit, context) {
+  var persistent = function(el, isInit, context) {
     context.retain = true;
   };
 
-  Misago.Markup = {
+  var markup = {
     view: function(ctrl, content) {
-      return m('article.misago-markup', {config: setupMarkup},
+      return m('article.misago-markup', {config: persistent},
         m.trust(content)
       );
     }
   };
+
+  Misago.addService('component:markup', {
+    factory: function(_) {
+      _.component('markup', markup);
+    },
+    after: 'components'
+  });
 }(Misago.prototype));

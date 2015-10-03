@@ -5,7 +5,7 @@
     context.retain = true;
   }
 
-  Misago.ForumModal = {
+  var modal = {
     view: function() {
       return m(
         '#misago-modal.modal.fade[role="dialog"]',
@@ -17,4 +17,11 @@
       );
     }
   };
+
+  Misago.addService('component:modal', {
+    factory: function(_) {
+      _.component('modal', modal);
+    },
+    after: 'components'
+  });
 }(Misago.prototype));

@@ -1,13 +1,13 @@
 (function (Misago) {
   'use strict';
 
-  Misago.DesktopForumNavbar = {
+  var navbar = {
     view: function(ctrl, _) {
       var menu = [];
 
       if (_.settings.forum_branding_display) {
         menu.push(
-          _.component(Misago.BrandFull, _.settings.forum_branding_text));
+          _.component('navbar:desktop:brand', _.settings.forum_branding_text));
       }
 
       menu.push(m('ul.nav.navbar-nav', [
@@ -16,9 +16,16 @@
         )
       ]));
 
-      menu.push(_.component(Misago.NavbarGuestMenu));
+      menu.push(_.component('navbar:desktop:guest-menu'));
 
       return m('.container.navbar-full.hidden-xs.hidden-sm', menu);
     }
   };
+
+  Misago.addService('component:navbar:desktop', {
+    factory: function(_) {
+      _.component('navbar:desktop', navbar);
+    },
+    after: 'components'
+  });
 }(Misago.prototype));

@@ -1,7 +1,7 @@
 (function (Misago) {
   'use strict';
 
-  Misago.BrandFull = {
+  var brand = {
     view: function(ctrl, branding, _) {
       var children = [
         m('img', {
@@ -17,4 +17,11 @@
       return m('a.navbar-brand', {href: _.router.url('index')}, children);
     }
   };
+
+  Misago.addService('component:navbar:desktop:brand', {
+    factory: function(_) {
+      _.component('navbar:desktop:brand', brand);
+    },
+    after: 'components'
+  });
 }(Misago.prototype));

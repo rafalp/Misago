@@ -47,9 +47,9 @@
         var _ = this.container;
 
         return m('.page.legal-page.' + dashedTypeName + '-page', [
-          _.component(Misago.PageHeader, {title: this.vm.page.title}),
+          _.component('header', {title: this.vm.page.title}),
           m('.container',
-            _.component(Misago.Markup, this.vm.page.body)
+            _.component('markup', this.vm.page.body)
           )
         ]);
       }

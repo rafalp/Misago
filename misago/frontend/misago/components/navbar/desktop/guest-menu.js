@@ -1,7 +1,7 @@
 (function (Misago) {
   'use strict';
 
-  Misago.NavbarGuestMenu = {
+  var menu = {
     view: function(ctrl, _) {
       return m('div.nav.guest-nav', [
         m('button.navbar-btn.btn.btn-default',
@@ -13,4 +13,11 @@
       ]);
     }
   };
+
+  Misago.addService('component:navbar:desktop:guest-menu', {
+    factory: function(_) {
+      _.component('navbar:desktop:guest-menu', menu);
+    },
+    after: 'components'
+  });
 }(Misago.prototype));
