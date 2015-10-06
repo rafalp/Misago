@@ -2,13 +2,23 @@
   'use strict';
 
   var menu = {
-    view: function(ctrl, _) {
+    controller: function(_) {
+      return {
+        showSignIn: function() {
+          _.modal('sign-in');
+        },
+        showRegister: function() {
+          _.modal('register');
+        }
+      };
+    },
+    view: function(ctrl) {
       return m('div.nav.guest-nav', [
         m('button.navbar-btn.btn.btn-default',
-          {onclick: function() {_.modal.show(Misago.SignInModal); }},
+          {onclick: ctrl.showSignIn},
           gettext("Sign in")),
         m('button.navbar-btn.btn.btn-primary',
-          {onclick: function() {_.modal.show(Misago.RegisterModal); }},
+          {onclick: ctrl.showRegister},
           gettext("Register"))
       ]);
     }

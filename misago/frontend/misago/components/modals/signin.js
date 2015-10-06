@@ -7,70 +7,85 @@
 
   var signin = {
     controller: function() {
-      console.log('construct!');
       return {
-        busy: false,
+        busy: m.prop(false),
 
         username: m.prop(''),
         password: m.prop(''),
-
-        validate: function() {
-          return false;
-        },
-
-        submit: function(e) {
-          console.log('SUBMITTING FORM!');
-          return false;
-        }
       };
     },
-    view: function(ctrl) {
+    submit: function(_) {
+      if (this.busy()) {
+        return false;
+      }
+
+      m.startComputation();
+      this.busy(true);
+      m.endComputation();
+
+      var credentials = {
+        username: $.trim(this.username()),
+        password: $.trim(this.password())
+      };
+
+      var self = this;
+
+      _.api.endpoint('auth').post(credentials).then(
+      function(data) {
+        console.log(data);
+      },
+      function(error) {
+        console.log(error);
+      }).then(function() {
+        m.startComputation();
+        self.busy(false);
+        m.endComputation();
+      });
+
+      return false;
+    },
+    view: function(ctrl, _) {
       return m('.modal-dialog.modal-sm.modal-signin[role="document"]',
         {config: persistent},
-        m('.modal-content',
-          m('form', {onsubmit: ctrl.submit}, [
-            m('.modal-header',
-              m('button.close[type="button"]',
-                {'data-dismiss': 'modal', 'aria-label': gettext('Close')},
-                m('span', {'aria-hidden': 'true'}, m.trust('&times;'))
-              ),
-              m('h4#misago-modal-label.modal-title', 'Sign in')
-            ),
+        m('.modal-content', [
+          _.component('modal:header', gettext('Sign in')),
+          m('form', {onsubmit: this.submit.bind(ctrl, _)}, [
             m('.modal-body', [
               m('.form-group',
                 m('.control-input',
-                  m('input.form-control[type="text"]', {
-                    placeholder: gettext("Username or e-mail"),
-                    oninput: m.withAttr('value', ctrl.username),
-                    value: ctrl.username()
+                  Misago.input({
+                    disabled: ctrl.busy(),
+                    value: ctrl.password,
+                    placeholder: gettext("Username or e-mail")
                   })
                 )
               ),
               m('.form-group',
                 m('.control-input',
-                  m('input.form-control[type="password"]', {
-                    placeholder: gettext("Password"),
-                    oninput: m.withAttr('value', ctrl.password),
-                    value: ctrl.password()
+                  Misago.input({
+                    type: 'password',
+                    disabled: ctrl.busy(),
+                    value: ctrl.password,
+                    placeholder: gettext("Password")
                   })
                 )
               )
             ]),
             m('.modal-footer', [
               m('button.btn.btn-primary.btn-block[type="submit"]',
-                gettext('Sign in')
+                ctrl.busy() ? 'Working!!!' : gettext('Sign in')
               )
             ])
           ])
-        )
+        ])
       );
     }
   };
 
-  Misago.addService('component:modal:sign-in', {
+  Misago.addService('modal:sign-in', {
     factory: function(_) {
-      _.component('modal:sign-in', signin);
+      _.modal('sign-in', signin);
     },
-    after: 'components'
+    after: 'modals'
   });
 }(Misago.prototype));

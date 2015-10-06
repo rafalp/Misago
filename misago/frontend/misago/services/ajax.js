@@ -30,7 +30,7 @@
           'X-CSRFToken': this.csrfToken
         },
 
-        data: data | {},
+        data: data || {},
         dataType: 'json',
 
         success: function(data) {

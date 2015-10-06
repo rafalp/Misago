@@ -5,9 +5,7 @@
     var dashedTypeName = typeName.replace(/_/g, '-');
 
     return {
-      controller: function() {
-        var _ = this.container;
-
+      controller: function(_) {
         if (Misago.get(_.settings, typeName + '_link')) {
           window.location = Misago.get(_.settings, typeName + '_link');
         } else {
@@ -43,9 +41,7 @@
           }
         }
       },
-      view: function() {
-        var _ = this.container;
-
+      view: function(ctrl, _) {
         return m('.page.legal-page.' + dashedTypeName + '-page', [
           _.component('header', {title: this.vm.page.title}),
           m('.container',

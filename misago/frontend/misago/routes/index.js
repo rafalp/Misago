@@ -16,17 +16,27 @@
         }
       };
     },
-    view: function(ctrl) {
+    view: function(ctrl, _) {
+      var styles = [
+        'default', 'primary', 'success',
+        'info', 'warning', 'danger'
+      ];
+
       return m('.container', [
-        m('h1', [
-          'Count: ', m('strong', ctrl.count())
-        ]),
-        m('p', 'Clicky click button to increase count!.'),
-        m('p',
-          m('button.btn.btn-primary', {onclick: ctrl.increment},
-            'Clicky clicky!'
-          )
-        )
+        m('h1', 'Buttons'),
+        m('', styles.map(function(item) {
+          return m('', [
+            _.component('button', {
+              class: '.btn-' + item,
+              label: 'Lorem ipsum'
+            }),
+            _.component('button', {
+              class: '.btn-' + item,
+              label: 'Lorem ipsum',
+              loading: true
+            })
+          ]);
+        }))
       ]);
     }
   };
