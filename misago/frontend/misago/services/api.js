@@ -113,6 +113,29 @@
         filters: filters
       });
     };
+
+    this.alert = function(rejection) {
+      // Shorthand for API errors
+      var message = gettext('Unknown error has occured.');
+
+      if (rejection.status === 0) {
+        message = gettext('Lost connection with application.');
+      }
+
+      if (rejection.status === 403) {
+        message = rejection.detail;
+        if (message === 'Permission denied') {
+          message = gettext(
+            "You don't have permission to perform this action.");
+        }
+      }
+
+      if (rejection.status === 404) {
+        message = gettext('Action link is invalid.');
+      }
+
+      _.alert.error(message);
+    };
   };
 
   Misago.addService('api', function(_) {

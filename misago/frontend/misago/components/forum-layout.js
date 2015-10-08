@@ -8,6 +8,7 @@
   var forumLayout = {
     view: function(ctrl, _) {
       return [
+        _.component('alert'),
         _.component('navbar'),
         m('#router-fixture', {config: persistent}),
         _.component('footer'),

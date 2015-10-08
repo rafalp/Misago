@@ -12,7 +12,10 @@
   };
 
   var Ajax = function(_) {
-    this.csrfToken = getCsrfToken(_.context.CSRF_COOKIE_NAME);
+    this.refreshCsrfToken = function() {
+      this.csrfToken = getCsrfToken(_.context.CSRF_COOKIE_NAME);
+    };
+    this.refreshCsrfToken();
 
     /*
       List of GETs underway
