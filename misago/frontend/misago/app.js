@@ -7,12 +7,6 @@
     var ns = Object.getPrototypeOf(this);
     var self = this;
 
-    // Context data
-    this.context = {
-      // Empty settings
-      SETTINGS: {}
-    };
-
     // Services init/destroy
     this._initServices = function(services) {
       var orderedServices = new ns.OrderedList(services).order(false);
@@ -41,14 +35,24 @@
       });
     };
 
+    // Context data
+    this.context = {
+      // Empty settings
+      SETTINGS: {}
+    };
+
     // App init/destory
     this.setup = false;
-    this.init = function(setup) {
+    this.init = function(setup, context) {
       this.setup = {
         fixture: ns.get(setup, 'fixture', null),
         test: ns.get(setup, 'test', false),
         api: ns.get(setup, 'api', '/api/')
       };
+
+      if (context && context.length) {
+        this.context: context;
+      }
 
       this._initServices(ns._services);
     };

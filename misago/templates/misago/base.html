@@ -1,4 +1,4 @@
-{% load pipeline i18n staticfiles %}
+{% load pipeline i18n staticfiles misago_json %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
   <head>
@@ -46,11 +46,10 @@
     <script type="text/javascript" src="{% static 'misago/js/misago.js' %}"></script>
     <script type="text/javascript">
       var misago = new Misago();
-      {% include "misago/frontend_context.js" %}
       misago.init({
         fixture: 'misago-fixture',
         api: '{% url 'misago:api:api-root' %}'
-      });
+      }, {{ frontend_context|as_json }});
     </script>
 
   </body>
