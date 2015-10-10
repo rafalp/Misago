@@ -25,7 +25,7 @@
         return false;
       }
 
-      if (_.validate(ctrl).length) {
+      if (_.validate(ctrl)) {
         _.alert.error(gettext("Fill out both fields."));
         return false;
       }

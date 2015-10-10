@@ -13,7 +13,9 @@
     });
 
     this.destroy = function() {
-      $(element).off(delegateName);
+      $(element).off();
+      $('body').removeClass('modal-open');
+      $('.modal-backdrop').remove();
     };
 
     // Open/close modal

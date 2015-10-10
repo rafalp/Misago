@@ -13,7 +13,7 @@
       };
     },
     view: function(ctrl) {
-      return m('div.nav.guest-nav', [
+      return m('div.nav.nav-guest', [
         m('button.navbar-btn.btn.btn-default',
           {
             onclick: ctrl.showSignIn

@@ -8,7 +8,11 @@
       }
     };
 
-  QUnit.module("API");
+  QUnit.module("API", {
+    afterEach: function() {
+      $.mockjax.clear();
+    }
+  });
 
   QUnit.test("service factory", function(assert) {
     var api = service({});
@@ -79,5 +83,58 @@
     assert.ok(
       !api.endpoint('auth', 124).endpoint('change-password').endpoint,
       "nested endpoint can't be nested further.");
+  });
+
+  QUnit.test("alert", function(assert) {
+
+    var unknownError = assert.async();
+    var disconnectedError = assert.async();
+    var deniedError = assert.async();
+    var notFoundError = assert.async();
+
+    var container = {
+      setup: {
+        api: '/test-api/'
+      },
+      alert: {
+        error: function(message) {
+          if (message === "Unknown error has occured.") {
+            assert.ok(true, "unknown error was handled.");
+            unknownError();
+          }
+
+          if (message === "Lost connection with application.") {
+            assert.ok(true, "error 0 was handled.");
+            disconnectedError();
+          }
+
+          if (message === "You don't have permission to perform this action.") {
+            assert.ok(true, "error 403 was handled.");
+            deniedError();
+          }
+
+          if (message === "Action link is invalid.") {
+            assert.ok(true, "error 404 was handled.");
+            notFoundError();
+          }
+        }
+      }
+    };
+
+    var api = service(container);
+    api.alert({
+      status: 500
+    });
+    api.alert({
+      status: 0
+    });
+    api.alert({
+      status: 403,
+      detail: "Permission denied"
+    });
+    api.alert({
+      status: 404,
+      detail: "Not found"
+    });
   });
 }());

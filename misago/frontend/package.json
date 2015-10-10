@@ -19,12 +19,17 @@
 
       "initTestMisago",
       "getMisagoService",
-      "click",
       "then",
       "onElement",
+      "waitForElement",
+      "waitForElementRemoval",
+      "click",
+      "fillIn",
 
       "getElement",
       "getElementText",
+      "getAlertType",
+      "getAlertMessage",
 
       "gettext",
       "ngettext",

@@ -4,17 +4,13 @@
   var menu = {
     controller: function() {
       return {
-        isBusy: m.prop(false),
         logout: function() {
-          if (!this.isBusy()) {
-            this.isBusy(true);
-            $('#hidden-logout-form').submit();
-          }
+          $('#hidden-logout-form').submit();
         }
       };
     },
     view: function(ctrl, _) {
-      return m('div.nav.user-nav', [
+      return m('div.nav.nav-user', [
         m('p.navbar-text',
           _.user.username
         ),

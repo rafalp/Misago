@@ -36,7 +36,11 @@
       }
     }
 
-    return errors;
+    if (Object.getOwnPropertyNames(errors).length > 0) {
+      return errors;
+    } else {
+      return null;
+    }
   };
 
   Misago.addService('validate', {
