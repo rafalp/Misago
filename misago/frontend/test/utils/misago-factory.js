@@ -4,7 +4,7 @@
   window.initTestMisago = function() {
     var misago = new Misago();
 
-    misago.context = {
+    var context = {
       "CSRF_COOKIE_NAME": "csrftoken",
 
       "STATIC_URL": "/dist/",
@@ -93,7 +93,7 @@
       test: true,
       fixture: 'misago-fixture',
       api: '/test-api/'
-    });
+    }, context);
 
     return misago;
   };

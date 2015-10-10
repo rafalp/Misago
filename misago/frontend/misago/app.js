@@ -50,8 +50,8 @@
         api: ns.get(setup, 'api', '/api/')
       };
 
-      if (context && context.length) {
-        this.context: context;
+      if (context) {
+        this.context = context;
       }
 
       this._initServices(ns._services);

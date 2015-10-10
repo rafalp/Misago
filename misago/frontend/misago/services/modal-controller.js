@@ -43,7 +43,7 @@
       return new Modal();
     },
     destroy: function(_) {
-      _.modal_.destroy();
+      _._modal.destroy();
     }
   },
   {
