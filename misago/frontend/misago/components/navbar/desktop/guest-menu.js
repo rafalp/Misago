@@ -15,11 +15,17 @@
     view: function(ctrl) {
       return m('div.nav.guest-nav', [
         m('button.navbar-btn.btn.btn-default',
-          {onclick: ctrl.showSignIn},
-          gettext("Sign in")),
+          {
+            onclick: ctrl.showSignIn
+          },
+          gettext("Sign in")
+        ),
         m('button.navbar-btn.btn.btn-primary',
-          {onclick: ctrl.showRegister},
-          gettext("Register"))
+          {
+            onclick: ctrl.showRegister
+          },
+          gettext("Register")
+        )
       ]);
     }
   };

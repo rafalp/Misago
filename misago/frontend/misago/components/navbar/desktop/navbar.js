@@ -16,7 +16,11 @@
         )
       ]));
 
-      menu.push(_.component('navbar:desktop:guest-menu'));
+      if (_.user.isAuthenticated) {
+        menu.push(_.component('navbar:desktop:user-menu'));
+      } else {
+        menu.push(_.component('navbar:desktop:guest-menu'));
+      }
 
       return m('.container.navbar-full.hidden-xs.hidden-sm', menu);
     }
