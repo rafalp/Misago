@@ -29,10 +29,10 @@
     }
   };
 
-  Misago.addService('component:alert', {
-    factory: function(_) {
-      _.component('alert', alert);
-    },
+  Misago.addService('component:alert', function(_) {
+    _.component('alert', alert);
+  },
+  {
     after: 'components'
   });
 }(Misago.prototype));

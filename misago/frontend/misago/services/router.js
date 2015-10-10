@@ -112,17 +112,12 @@
     this.error403 = function(error) {
       var component = null;
       if (error.ban) {
-        component = _.route('error:banned');
-        console.log(component);
-        component.error = {
-          message: error.detail,
-          ban: _.models.deserialize('ban', error.ban)
-        };
+        component = _.route('error:banned',
+          error.detail,
+          _.models.deserialize('ban', error.ban));
       } else {
-        component = _.route('error:403');
-        component.error = error.detail;
+        component = _.route('error:403', error.detail);
       }
-
       m.mount(this.fixture, component);
     };
 
@@ -165,5 +160,8 @@
     _.router.startRouting(
       Misago.urls, document.getElementById('router-fixture'));
     _.router.delegateClicks(document.getElementById(_.setup.fixture));
-  }, {before: '_end'});
+  },
+  {
+    before: '_end'
+  });
 }(Misago.prototype));

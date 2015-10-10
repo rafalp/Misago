@@ -22,10 +22,10 @@
     }
   };
 
-  Misago.addService('component:navbar:desktop', {
-    factory: function(_) {
-      _.component('navbar:desktop', navbar);
-    },
+  Misago.addService('component:navbar:desktop', function(_) {
+    _.component('navbar:desktop', navbar);
+  },
+  {
     after: 'components'
   });
 }(Misago.prototype));

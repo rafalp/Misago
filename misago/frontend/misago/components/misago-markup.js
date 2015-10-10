@@ -13,10 +13,10 @@
     }
   };
 
-  Misago.addService('component:markup', {
-    factory: function(_) {
-      _.component('markup', markup);
-    },
+  Misago.addService('component:markup', function(_) {
+    _.component('markup', markup);
+  },
+  {
     after: 'components'
   });
 }(Misago.prototype));

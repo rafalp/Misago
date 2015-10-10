@@ -38,10 +38,10 @@
     },
   };
 
-  Misago.addService('component:button', {
-    factory: function(_) {
-      _.component('button', button);
-    },
+  Misago.addService('component:button', function(_) {
+    _.component('button', button);
+  },
+  {
     after: 'components'
   });
 } (Misago.prototype));

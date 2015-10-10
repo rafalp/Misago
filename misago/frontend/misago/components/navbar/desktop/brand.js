@@ -18,10 +18,10 @@
     }
   };
 
-  Misago.addService('component:navbar:desktop:brand', {
-    factory: function(_) {
-      _.component('navbar:desktop:brand', brand);
-    },
+  Misago.addService('component:navbar:desktop:brand', function(_) {
+    _.component('navbar:desktop:brand', brand);
+  },
+  {
     after: 'components'
   });
 }(Misago.prototype));

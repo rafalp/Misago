@@ -4,10 +4,13 @@
   "version": "0.0.1",
   "dependencies": {
     "jquery": "~2.1.1",
-    "mithril": "*",
+    "mithril.js": "lhorie/mithril.js#80f43c260b",
     "bootstrap": "~3.3.5",
     "ace-builds": "~1.2.0",
     "moment": "~2.10.6",
     "jquery-mockjax": "~2.0.1"
+  },
+  "resolutions": {
+    "mithril.js": "next"
   }
 }

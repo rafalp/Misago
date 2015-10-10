@@ -32,11 +32,20 @@
   Misago.addService('routes', function(_) {
     _._routes = {};
     _.route = function(name, component) {
-      if (name && component) {
-        component.container = _;
-        this._routes[name] = m.component(boilerplate(component), _);
+      if (this._routes[name]) {
+        if (arguments.length > 1) {
+          var argumentsArray = [this._routes[name]];
+          for (var i = 1; i < arguments.length; i += 1) {
+            argumentsArray.push(arguments[i]);
+          }
+          argumentsArray.push(this);
+          return m.component.apply(undefined, argumentsArray);
+        } else {
+          return m.component(this._routes[name], this);
+        }
       } else {
-        return this._routes[name];
+        component.container = _;
+        this._routes[name] = boilerplate(component);
       }
     };
   });

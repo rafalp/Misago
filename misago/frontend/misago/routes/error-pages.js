@@ -26,21 +26,23 @@
     controller: function() {
       this.container.title.set(gettext('You are banned'));
     },
-    error: null,
-    view: function() {
+    view: function(ctrl, message, ban) {
       var error_message = [];
-      if (this.error.ban.message.html) {
-        error_message.push(m('.lead', m.trust(this.error.ban.message.html)));
+
+      if (ban.message.html) {
+        error_message.push(m('.lead', m.trust(ban.message.html)));
+      } else if (message) {
+        error_message.push(m('p.lead', message));
       } else {
-        error_message.push(m('p.lead', this.error.message));
+        error_message.push(m('p.lead', gettext('You are banned.')));
       }
 
       var expirationMessage = null;
-      if (this.error.ban.expires_on) {
-        if (this.error.ban.expires_on.isAfter(moment())) {
+      if (ban.expires_on) {
+        if (ban.expires_on.isAfter(moment())) {
           expirationMessage = interpolate(
             gettext('This ban expires %(expires_on)s.'),
-            { 'expires_on': this.error.ban.expires_on.fromNow() },
+            { 'expires_on': ban.expires_on.fromNow() },
             true);
         } else {
           expirationMessage = gettext('This ban has expired.');
@@ -67,17 +69,16 @@
     controller: function() {
       this.container.title.set(gettext('Page not available'));
     },
-    error: null,
-    view: function() {
-      if (this.error === "Permission denied") {
-        this.error = gettext("You don't have permission to access this page.");
+    view: function(ctrl, message) {
+      if (message === "Permission denied") {
+        message = gettext("You don't have permission to access this page.");
       }
 
       return errorPage({
         code: 403,
         icon: 'remove_circle_outline',
         message: gettext("This page is not available."),
-        help: this.error
+        help: message
       });
     }
   };
@@ -124,14 +125,14 @@
     }
   };
 
-  Misago.addService('route:error-pages', {
-    factory: function(_) {
-      _.route('error:banned', errorBanned);
-      _.route('error:403', error403);
-      _.route('error:404', error404);
-      _.route('error:500', error500);
-      _.route('error:0', error0);
-    },
+  Misago.addService('route:error-pages', function(_) {
+    _.route('error:banned', errorBanned);
+    _.route('error:403', error403);
+    _.route('error:404', error404);
+    _.route('error:500', error500);
+    _.route('error:0', error0);
+  },
+  {
     after: 'routes'
   });
 }(Misago.prototype));

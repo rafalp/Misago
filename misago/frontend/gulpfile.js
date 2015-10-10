@@ -17,7 +17,7 @@ var del = require('del');
 
 var vendors = [
   'bower_components/jquery/dist/jquery.js',
-  'bower_components/mithril/mithril.js',
+  'bower_components/mithril.js/mithril.js',
   'bower_components/moment/min/moment.min.js',
 
   'bower_components/bootstrap/js/transition.js',

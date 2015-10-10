@@ -12,10 +12,10 @@
     }
   };
 
-  Misago.addService('component:loader', {
-    factory: function(_) {
-      _.component('loader', loader);
-    },
+  Misago.addService('component:loader', function(_) {
+    _.component('loader', loader);
+  },
+  {
     after: 'components'
   });
 } (Misago.prototype));

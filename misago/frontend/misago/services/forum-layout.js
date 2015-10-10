@@ -14,5 +14,8 @@
         m.mount(document.getElementById(_.setup.fixture), null);
       }
     }
-  }, {before: 'start-routing'});
+  },
+  {
+    before: 'start-routing'
+  });
 }(Misago.prototype));

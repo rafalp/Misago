@@ -47,10 +47,6 @@
       },
       function(error) {
         self.error(ctrl, error, _);
-      }).then(function() {
-        m.startComputation();
-        ctrl.busy(false);
-        m.endComputation();
       });
 
       return false;
@@ -58,19 +54,25 @@
     success: function(credentials, _) {
       var $form = $('#hidden-login-form');
 
-      // refresh CSRF token because parent api call changed it
+      // refresh CSRF token because api call to /auth/ changed it
       _.ajax.refreshCsrfToken();
 
       // fill out form with user credentials and submit it, this will tell
       // misago to redirect user back to right page, and will trigger browser's
       // key ring feature
-      $form.find('input[name=csrf_token]').val(_.ajax.csrfToken);
-      $form.find('input[name=redirect_to]').val(window.location.href);
-      $form.find('input[name=username]').val(credentials.username);
-      $form.find('input[name=password]').val(credentials.password);
+      $form.find('input[name="csrf_token"]').val(_.ajax.csrfToken);
+      $form.find('input[name="redirect_to"]').val(m.route());
+      $form.find('input[name="username"]').val(credentials.username);
+      $form.find('input[name="password"]').val(credentials.password);
       $form.submit();
     },
     error: function(ctrl, rejection, _) {
+      // activate form again
+      m.startComputation();
+      ctrl.busy(false);
+      m.endComputation();
+
+      // handle returned error
       if (rejection.status === 400) {
         if (rejection.code === 'inactive_admin') {
           _.alert.info(rejection.detail);
@@ -78,7 +80,11 @@
           _.alert.info(rejection.detail);
           ctrl.showActivation(true);
         } else if (rejection.code === 'banned') {
-          // handle ban!
+          _.modal();
+          _.router.error403({
+            message: '',
+            ban: rejection.detail
+          });
         } else {
           _.alert.error(rejection.detail);
         }
@@ -127,10 +133,10 @@
     }
   };
 
-  Misago.addService('modal:sign-in', {
-    factory: function(_) {
-      _.modal('sign-in', signin);
-    },
+  Misago.addService('modal:sign-in', function(_) {
+    _.modal('sign-in', signin);
+  },
+  {
     after: 'modals'
   });
 }(Misago.prototype));

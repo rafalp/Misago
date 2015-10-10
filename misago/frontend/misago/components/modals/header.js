@@ -13,10 +13,10 @@
     }
   };
 
-  Misago.addService('component:modal:header', {
-    factory: function(_) {
-      _.component('modal:header', header);
-    },
+  Misago.addService('component:modal:header', function(_) {
+    _.component('modal:header', header);
+  },
+  {
     after: 'components'
   });
 }(Misago.prototype));

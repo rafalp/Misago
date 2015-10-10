@@ -41,10 +41,10 @@
     }
   };
 
-  Misago.addService('route:index', {
-    factory: function(_) {
-      _.route('index', index);
-    },
+  Misago.addService('route:index', function(_) {
+    _.route('index', index);
+  },
+  {
     after: 'routes'
   });
 }(Misago.prototype));

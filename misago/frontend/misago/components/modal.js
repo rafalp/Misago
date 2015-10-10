@@ -18,10 +18,10 @@
     }
   };
 
-  Misago.addService('component:modal', {
-    factory: function(_) {
-      _.component('modal', modal);
-    },
+  Misago.addService('component:modal', function(_) {
+    _.component('modal', modal);
+  },
+  {
     after: 'components'
   });
 }(Misago.prototype));

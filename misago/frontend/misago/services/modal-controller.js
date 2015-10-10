@@ -45,5 +45,8 @@
     destroy: function(_) {
       _.modal_.destroy();
     }
-  }, {after: 'start-routing'});
+  },
+  {
+    after: 'start-routing'
+  });
 }(Misago.prototype));

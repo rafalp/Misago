@@ -3,12 +3,16 @@
 
   var component = function(name, component) {
     if (this._components[name]) {
-      var argumentsArray = [this._components[name]];
-      for (var i = 1; i < arguments.length; i += 1) {
-        argumentsArray.push(arguments[i]);
+      if (arguments.length > 1) {
+        var argumentsArray = [this._components[name]];
+        for (var i = 1; i < arguments.length; i += 1) {
+          argumentsArray.push(arguments[i]);
+        }
+        argumentsArray.push(this);
+        return m.component.apply(undefined, argumentsArray);
+      } else {
+        return m.component(this._components[name], this);
       }
-      argumentsArray.push(this);
-      return m.component.apply(undefined, argumentsArray);
     } else {
       this._components[name] = component;
     }

@@ -52,13 +52,13 @@
     };
   };
 
-  Misago.addService('route:legal-pages', {
-    factory: function(_) {
-      _.route('terms-of-service', legalPageFactory(
-        'terms_of_service', gettext('Terms of service')));
-      _.route('privacy-policy', legalPageFactory(
-        'privacy_policy', gettext('Privacy policy')));
-    },
+  Misago.addService('route:legal-pages', function(_) {
+    _.route('terms-of-service', legalPageFactory(
+      'terms_of_service', gettext('Terms of service')));
+    _.route('privacy-policy', legalPageFactory(
+      'privacy_policy', gettext('Privacy policy')));
+  },
+  {
     after: 'routes'
   });
 }(Misago.prototype));

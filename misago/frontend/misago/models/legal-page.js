@@ -7,9 +7,12 @@
     this.link = data.link;
   };
 
-  Misago.addService('legal-page-model', function(_) {
+  Misago.addService('model:legal-page', function(_) {
     _.models.add('legal-page', {
       class: LegalPage
     });
-  }, {after: 'models'});
+  },
+  {
+    after: 'models'
+  });
 } (Misago.prototype));

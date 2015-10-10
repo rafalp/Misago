@@ -29,10 +29,10 @@
     }
   };
 
-  Misago.addService('component:footer', {
-    factory: function(_) {
-      _.component('footer', footer);
-    },
+  Misago.addService('component:footer', function(_) {
+    _.component('footer', footer);
+  },
+  {
     after: 'components'
   });
 }(Misago.prototype));

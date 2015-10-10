@@ -26,10 +26,10 @@
     }
   };
 
-  Misago.addService('modal:register', {
-    factory: function(_) {
-      _.modal('register', register);
-    },
+  Misago.addService('modal:register', function(_) {
+    _.modal('register', register);
+  },
+  {
     after: 'modals'
   });
 }(Misago.prototype));

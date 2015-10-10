@@ -16,10 +16,13 @@
     return data;
   };
 
-  Misago.addService('ban-model', function(_) {
+  Misago.addService('model:ban', function(_) {
     _.models.add('ban', {
       class: Ban,
       deserialize: deserializeBan
     });
-  }, {after: 'models'});
+  },
+  {
+    after: 'models'
+  });
 } (Misago.prototype));

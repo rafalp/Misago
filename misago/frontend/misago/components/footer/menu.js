@@ -44,10 +44,10 @@
     }
   };
 
-  Misago.addService('component:footer:menu', {
-    factory: function(_) {
-      _.component('footer:menu', menu);
-    },
+  Misago.addService('component:footer:menu', function(_) {
+    _.component('footer:menu', menu);
+  },
+  {
     after: 'components'
   });
 }(Misago.prototype));

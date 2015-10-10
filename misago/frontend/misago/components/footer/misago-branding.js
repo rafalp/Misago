@@ -9,10 +9,10 @@
     }
   };
 
-  Misago.addService('component:footer:branding', {
-    factory: function(_) {
-      _.component('footer:branding', branding);
-    },
+  Misago.addService('component:footer:branding', function(_) {
+    _.component('footer:branding', branding);
+  },
+  {
     after: 'components'
   });
 }(Misago.prototype));

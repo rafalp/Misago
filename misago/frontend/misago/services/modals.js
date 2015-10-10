@@ -20,11 +20,11 @@
     }
   };
 
-  Misago.addService('modals', {
-    factory: function(_) {
-      _._modals = {};
-      _.modal = modal;
-    },
+  Misago.addService('modals', function(_) {
+    _._modals = {};
+    _.modal = modal;
+  },
+  {
     after: '_modal'
   });
 }(Misago.prototype));

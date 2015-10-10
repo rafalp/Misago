@@ -17,10 +17,10 @@
     }
   };
 
-  Misago.addService('component:layout', {
-    factory: function(_) {
-      _.component('forum-layout', forumLayout);
-    },
+  Misago.addService('component:layout', function(_) {
+    _.component('forum-layout', forumLayout);
+  },
+  {
     after: 'components'
   });
 }(Misago.prototype));

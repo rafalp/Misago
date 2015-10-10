@@ -11,10 +11,10 @@
     }
   };
 
-  Misago.addService('component:header', {
-    factory: function(_) {
-      _.component('header', header);
-    },
+  Misago.addService('component:header', function(_) {
+    _.component('header', header);
+  },
+  {
     after: 'components'
   });
 }(Misago.prototype));

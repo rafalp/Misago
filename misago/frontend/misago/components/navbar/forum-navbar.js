@@ -10,10 +10,10 @@
     }
   };
 
-  Misago.addService('component:navbar', {
-    factory: function(_) {
-      _.component('navbar', navbar);
-    },
+  Misago.addService('component:navbar', function(_) {
+    _.component('navbar', navbar);
+  },
+  {
     after: 'components'
   });
 }(Misago.prototype));

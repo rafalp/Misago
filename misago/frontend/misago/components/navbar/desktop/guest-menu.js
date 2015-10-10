@@ -24,10 +24,10 @@
     }
   };
 
-  Misago.addService('component:navbar:desktop:guest-menu', {
-    factory: function(_) {
-      _.component('navbar:desktop:guest-menu', menu);
-    },
+  Misago.addService('component:navbar:desktop:guest-menu', function(_) {
+    _.component('navbar:desktop:guest-menu', menu);
+  },
+  {
     after: 'components'
   });
 }(Misago.prototype));
