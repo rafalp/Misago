@@ -31,7 +31,7 @@
     var done = assert.async();
 
     click('.footer-nav li:first-child a');
-    onElement('.error-page.error-banned-page .error-message', function() {
+    onElement('.page-error.page-error-banned .error-message', function() {
       assert.ok(true, "Permission denied error page was displayed.");
       assert.equal(
         getElementText('.page .error-message .lead'),
@@ -53,7 +53,7 @@
     var done = assert.async();
 
     click('.footer-nav li:first-child a');
-    onElement('.error-page.error-403-page .error-message', function() {
+    onElement('.page-error.page-error-403 .error-message', function() {
       assert.ok(true, "Permission denied error page was displayed.");
       assert.equal(
         getElementText('.page .error-message .help'),
@@ -75,7 +75,7 @@
     var done = assert.async();
 
     click('.footer-nav li:first-child a');
-    onElement('.error-page.error-403-page .error-message', function() {
+    onElement('.page-error.page-error-403 .error-message', function() {
       assert.ok(true, "Permission denied error page was displayed.");
       assert.equal(
         getElementText('.page .error-message .help'),
@@ -94,7 +94,7 @@
     var done = assert.async();
 
     click('.footer-nav li:first-child a');
-    onElement('.error-page.error-404-page', function() {
+    onElement('.page-error.page-error-404', function() {
       assert.ok(true, "Not found error page was displayed.");
       done();
     });
@@ -103,7 +103,7 @@
   QUnit.test("Error 404 on invalid url", function(assert) {
     var done = assert.async();
     m.route('/some-invalid-url-is-her!');
-    onElement('.error-page.error-404-page', function() {
+    onElement('.page-error.page-error-404', function() {
       assert.ok(true, "Not found error page was displayed.");
       done();
     });
@@ -118,7 +118,7 @@
     var done = assert.async();
 
     click('.footer-nav li:first-child a');
-    onElement('.error-page.error-500-page', function() {
+    onElement('.page-error.page-error-500', function() {
       assert.ok(true, "Backend error page was displayed.");
       done();
     });
@@ -133,7 +133,7 @@
     var done = assert.async();
 
     click('.footer-nav li:first-child a');
-    onElement('.error-page.error-0-page', function() {
+    onElement('.page-error.page-error-0', function() {
       assert.ok(true, "Timeout error page was displayed.");
       done();
     });

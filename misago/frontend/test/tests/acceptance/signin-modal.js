@@ -106,7 +106,7 @@
     fillIn('.modal-signin .form-group:last-child input', 'pass1234');
     click('.modal-signin .btn-primary');
 
-    onElement('.error-banned-page .lead', function() {
+    onElement('.page-error-banned .lead', function() {
       assert.equal(
         getElementText('.page .error-message .lead'),
         "You are banned for trolling.",

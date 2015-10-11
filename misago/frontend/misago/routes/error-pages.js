@@ -10,7 +10,7 @@
       error_message.push(m('p.help', error.help));
     }
 
-    return m('.page.error-page.error-' + error.code + '-page',
+    return m('.page.page-error.page-error-' + error.code,
       m('.container',
         m('.error-panel', [
           m('.error-icon',
@@ -52,7 +52,7 @@
       }
       error_message.push(m('p', expirationMessage));
 
-      return m('.page.error-page.error-banned-page',
+      return m('.page.page-error.page-error-banned',
         m('.container',
           m('.error-panel', [
             m('.error-icon',

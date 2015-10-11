@@ -90,13 +90,13 @@
       "footer nav has no legal pages links");
 
     m.route('/privacy-policy/');
-    onElement('.error-page.error-404-page', function() {
+    onElement('.page-error.page-error-404', function() {
       assert.ok(true, "Unset privacy policy returned 404 page.");
       donePrivacyPolicy();
     });
 
     m.route('/terms-of-service/');
-    onElement('.error-page.error-404-page', function() {
+    onElement('.page-error.page-error-404', function() {
       assert.ok(true, "Unset terms of service returned 404 page.");
       doneTermsOfService();
     });
@@ -117,7 +117,7 @@
     var done = assert.async();
 
     m.route('/privacy-policy/');
-    onElement('.legal-page', function() {
+    onElement('.page-legal', function() {
       assert.equal(
         getElementText('.page-header h1'), 'Backend Policy',
         "Privacy Policy page has been rendered.");
@@ -143,7 +143,7 @@
     var done = assert.async();
 
     m.route('/terms-of-service/');
-    onElement('.legal-page', function() {
+    onElement('.page-legal', function() {
       assert.equal(
         getElementText('.page-header h1'), 'Backend Terms',
         "Terms of Service page has been rendered.");

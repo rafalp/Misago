@@ -42,7 +42,7 @@
         }
       },
       view: function(ctrl, _) {
-        return m('.page.legal-page.' + dashedTypeName + '-page', [
+        return m('.page.page-legal.page-legal-' + dashedTypeName, [
           _.component('header', {title: this.vm.page.title}),
           m('.container',
             _.component('markup', this.vm.page.body)
