@@ -15,10 +15,11 @@
     var controller = {
       username: m.prop(''),
       password: m.prop('ok!'),
+      optional: m.prop(''),
 
       validation: {
-        username: [Misago.validators.required()],
-        password: [Misago.validators.required()]
+        username: [],
+        password: []
       }
     };
 

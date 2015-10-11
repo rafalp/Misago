@@ -15,8 +15,8 @@
         password: m.prop(''),
 
         validation: {
-          'username': [Misago.validators.required()],
-          'password': [Misago.validators.required()]
+          'username': [],
+          'password': []
         }
       };
     },

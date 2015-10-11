@@ -21,16 +21,20 @@
     for (var key in ctrl.validation) {
       if (ctrl.validation.hasOwnProperty(key)) {
         value = ctrl[key]();
+        result = Misago.validators.required()(value);
+        if (result) {
+            errors[key] = [result];
+        } else {
+          for (var i in ctrl.validation[key]) {
+            validator = ctrl.validation[key][i];
+            result = validator(value);
 
-        for (var i in ctrl.validation[key]) {
-          validator = ctrl.validation[key][i];
-          result = validator(value);
-
-          if (result) {
-            if (!errors[key]) {
-              errors[key] = [];
+            if (result) {
+              if (!errors[key]) {
+                errors[key] = [];
+              }
+              errors[key].push(result);
             }
-            errors[key].push(result);
           }
         }
       }
