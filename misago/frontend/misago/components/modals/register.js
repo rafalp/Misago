@@ -7,7 +7,7 @@
 
   var register = {
     view: function() {
-      return m('.modal-dialog.modal-lg[role="document"]',
+      return m('.modal-dialog.modal-register[role="document"]',
         {config: persistent},
         m('.modal-content', [
           m('.modal-header',

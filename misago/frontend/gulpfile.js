@@ -34,6 +34,8 @@ var testLibs = [
   'bower_components/jquery-mockjax/dist/jquery.mockjax.js'
 ];
 
+var zxcvbn = 'bower_components/zxcvbn/dist/*.js';
+
 gulp.task('lint', function() {
   return gulp.src(['misago/*.js', 'misago/**/*.js'])
     .pipe(jshint(packageJSON.jshintConfig))
@@ -70,7 +72,12 @@ gulp.task('acejs', function() {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('collectjs', ['vendorjs', 'misagojs', 'acejs'], function() {
+gulp.task('zxcvbn', function() {
+  return gulp.src(zxcvbn)
+    .pipe(gulp.dest('dist'));
+});
+
+gulp.task('collectjs', ['vendorjs', 'misagojs', 'acejs', 'zxcvbn'], function() {
   return gulp.src('dist/*.js')
     .pipe(gulp.dest('dist/js'));
 });

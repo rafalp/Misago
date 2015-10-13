@@ -14,7 +14,7 @@ urlpatterns = patterns('misago.users.api.auth',
 )
 
 urlpatterns += patterns('misago.users.api.captcha',
-    url(r'^captcha-questions/(?P<question_id>\d+)/$', 'question', name='captcha_question'),
+    url(r'^captcha-question/$', 'question', name='captcha_question'),
 )
 
 router = MisagoApiRouter()

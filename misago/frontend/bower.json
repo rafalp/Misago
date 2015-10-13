@@ -8,7 +8,8 @@
     "bootstrap": "~3.3.5",
     "ace-builds": "~1.2.0",
     "moment": "~2.10.6",
-    "jquery-mockjax": "~2.0.1"
+    "jquery-mockjax": "~2.0.1",
+    "zxcvbn": "~3.5.0"
   },
   "resolutions": {
     "mithril.js": "next"

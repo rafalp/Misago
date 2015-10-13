@@ -1,10 +1,6 @@
 (function (Misago) {
   'use strict';
 
-  var boilerplate = function(component) {
-    return component;
-  };
-
   var modal = function(name, component) {
     if (this._modals[name]) {
       var argumentsArray = [this._modals[name]];
@@ -14,7 +10,7 @@
       argumentsArray.push(this);
       this._modal.show(m.component.apply(m, argumentsArray));
     } else if (name) {
-      this._modals[name] = boilerplate(component);
+      this._modals[name] = component;
     } else {
       this._modal.hide();
     }
