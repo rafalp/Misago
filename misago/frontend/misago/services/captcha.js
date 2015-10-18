@@ -14,11 +14,17 @@
     };
 
     this.value = function() {
-      return 'pass';
+      return null;
+    };
+
+    this.validator = function() {
+      return null;
     };
   };
 
   var QACaptcha = function(_) {
+    var self = this;
+
     this.loading = false;
     this.question = null;
     this.value = m.prop('');
@@ -30,7 +36,6 @@
       if (!this.question && !this.loading) {
         this.loading = true;
 
-        var self = this;
         _.api.endpoint('captcha-question').get().then(function(question) {
           self.question = question;
           deferred.resolve();
@@ -45,16 +50,28 @@
       return deferred.promise;
     };
 
-    this.component = function(validation) {
-      return _.component('form:row', {
+    this.component = function(kwargs) {
+      return _.component('form-group', {
         label: this.question.question,
-        helpText: this.question.help_text,
-        validation: validation
+        labelClass: kwargs.labelClass || null,
+        controlClass: kwargs.controlClass || null,
+        control: _.input({
+          value: _.validate(kwargs.form, 'captcha'),
+          id: 'id_captcha',
+          disabled: kwargs.form.isBusy
+        }),
+        validation: kwargs.form.errors,
+        validationKey: 'captcha',
+        helpText: this.question.help_text
       });
+    };
+
+    this.validator = function() {
+      return [];
     };
   };
 
-  var ReCaptcha = function(_) {
+  var ReCaptcha = function() {
     this.loading = false;
     this.question = null;
 
@@ -69,6 +86,10 @@
 
     this.value = function() {
       return 'pass';
+    };
+
+    this.validator = function() {
+      return [];
     };
   };
 
@@ -85,12 +106,16 @@
       return captcha.load();
     };
 
-    this.component = function() {
-      return captcha.component();
+    this.component = function(kwargs) {
+      return captcha.component(kwargs);
     };
 
     this.value = function() {
       return captcha.value();
+    };
+
+    this.validator = function() {
+      return captcha.validator();
     };
   };
 

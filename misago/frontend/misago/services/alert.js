@@ -9,20 +9,14 @@
   var Alert = function(_) {
     var self = this;
 
-    this.id = 0;
     this.type = 'info';
     this.message = null;
     this.isVisible = false;
 
     var show = function(type, message) {
-      m.startComputation();
-
-      self.id += 1;
       self.type = type;
       self.message = message;
       self.isVisible = true;
-
-      m.endComputation();
 
       var displayTime = ALERT_BASE_DISPLAY_TIME;
       displayTime += message.length * ALERT_LENGTH_FACTOR;
@@ -30,21 +24,23 @@
         displayTime = ALERT_MAX_DISPLAY_TIME;
       }
 
-      var id  = self.id;
       _.runloop.runOnce(function () {
-        if (self.id === id) {
-          m.startComputation();
-          self.isVisible = false;
-          m.endComputation();
-        }
+        m.startComputation();
+        self.isVisible = false;
+        m.endComputation();
       }, 'flash-message-hide', displayTime);
     };
 
     var set = function(type, message) {
+      _.runloop.stop('flash-message-hide');
+      _.runloop.stop('flash-message-show');
+
       if (self.isVisible) {
         self.isVisible = false;
         _.runloop.runOnce(function () {
+          m.startComputation();
           show(type, message);
+          m.endComputation();
         }, 'flash-message-show', ALERT_HIDE_ANIMATION_LENGTH);
       } else {
         show(type, message);

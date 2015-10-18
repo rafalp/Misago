@@ -2,11 +2,7 @@
   'use strict';
 
   var boilerplate = function(component) {
-    /*
-      Boilerplate for Misago top-level components
-    */
-
-    // Component boilerplated (this may happen in tests)
+    // Component already boilerplated (this may happen in tests)
     if (component._hasRouteBoilerplate) {
       return component;
     }

@@ -53,6 +53,7 @@ gulp.task('misagojs', ['lint'], function() {
       'misago/routes/**/*.js',
       'misago/components/**/*.js',
       'misago/templates/**/*.js',
+      'misago/forms/**/*.js',
 
       'misago/urls.js',
     ])
@@ -168,7 +169,12 @@ gulp.task('quickdeploycss', ['collectcss'], function() {
     .pipe(gulp.dest(static_path + 'css'));
 });
 
-gulp.task('watch', ['default'], function() {
+gulp.task('watch', [
+  'quickdeployjs',
+  'quickdeploycss',
+  'deployfonts',
+  'deployimg'
+], function() {
    gulp.watch('misago/**/*.js', ['quickdeployjs']);
    gulp.watch('misago/**/*.less', ['quickdeploycss']);
 });

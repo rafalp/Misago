@@ -53,10 +53,10 @@ Password validators
 def validate_password(value):
     if len(value) < settings.password_length_min:
         message = ungettext(
-            'Valid password must be at least %(limit)s character long.',
-            'Valid password must be at least %(limit)s characters long.',
+            'Valid password must be at least %(limit_value)s character long.',
+            'Valid password must be at least %(limit_value)s characters long.',
             settings.password_length_min)
-        message = message % {'limit': settings.password_length_min}
+        message = message % {'limit_value': settings.password_length_min}
         raise ValidationError(message)
 
 
@@ -92,18 +92,18 @@ def validate_username_content(value):
 def validate_username_length(value):
     if len(value) < settings.username_length_min:
         message = ungettext(
-            "Username must be at least %(limit)s character long.",
-            "Username must be at least %(limit)s characters long.",
+            "Username must be at least %(limit_value)s character long.",
+            "Username must be at least %(limit_value)s characters long.",
             settings.username_length_min)
-        message = message % {'limit': settings.username_length_min}
+        message = message % {'limit_value': settings.username_length_min}
         raise ValidationError(message)
 
     if len(value) > settings.username_length_max:
         message = ungettext(
-            "Username cannot be longer than %(limit)s characters.",
-            "Username cannot be longer than %(limit)s characters.",
+            "Username cannot be longer than %(limit_value)s characters.",
+            "Username cannot be longer than %(limit_value)s characters.",
             settings.username_length_max)
-        message = message % {'limit': settings.username_length_max}
+        message = message % {'limit_value': settings.username_length_max}
         raise ValidationError(message)
 
 

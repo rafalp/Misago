@@ -1,17 +1,29 @@
 (function (Misago) {
   'use strict';
 
+  function persistent(el, isInit, context) {
+    context.retain = true;
+  }
+
   Misago.input = function(kwargs) {
     var options = {
       disabled: kwargs.disabled || false,
-      placeholder: kwargs.placeholder || null,
-      config: kwargs.config || null
+      config: kwargs.config || persistent
     };
+
+    if (kwargs.placeholder) {
+      options.placeholder = kwargs.placeholder;
+    }
+
+    if (kwargs.autocomplete === false) {
+      options.autocomplete = 'off';
+    }
 
     var element = 'input';
 
     if (kwargs.id) {
       element += '#' + kwargs.id;
+      options.key = 'field-' + kwargs.id;
     }
 
     element += '.form-control' + (kwargs.class || '');

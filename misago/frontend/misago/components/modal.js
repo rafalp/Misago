@@ -1,9 +1,9 @@
 (function (Misago) {
   'use strict';
 
-  function persistent(el, isInit, context) {
+  var persistent = function(el, isInit, context) {
     context.retain = true;
-  }
+  };
 
   var modal = {
     view: function() {

@@ -22,7 +22,7 @@
               _.zxcvbn.load(),
               _.captcha.load()
             ]).then(function() {
-              _.alert.success('loaded shizz for registration!');
+              _.modal('register');
             }, function() {
               _.alert.error(gettext('Registation is not available now due to an error.'));
             }).then(function() {
