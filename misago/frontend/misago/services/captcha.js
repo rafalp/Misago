@@ -27,7 +27,7 @@
 
     this.loading = false;
     this.question = null;
-    this.value = m.prop('');
+    this.value = m.prop('asdsadsa');
 
     var deferred = m.deferred();
     this.load = function() {
@@ -102,16 +102,14 @@
 
     var captcha = new types[_.settings.captcha_type](_);
 
+    this.value = captcha.value;
+
     this.load = function() {
       return captcha.load();
     };
 
     this.component = function(kwargs) {
       return captcha.component(kwargs);
-    };
-
-    this.value = function() {
-      return captcha.value();
     };
 
     this.validator = function() {

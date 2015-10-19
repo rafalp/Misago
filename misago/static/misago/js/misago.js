@@ -1,3 +1,3102 @@
-!function(){"use strict";window.Misago=function(){var t=Object.getPrototypeOf(this),e=this;this._initServices=function(n){var o=new t.OrderedList(n).order(!1);o.forEach(function(t){var n=null;n=void 0!==t.item.factory?t.item.factory:t.item;var o=n(e);o&&(e[t.key]=o)})},this._destroyServices=function(n){var o=new t.OrderedList(n).order();o.reverse(),o.forEach(function(t){void 0!==t.destroy&&t.destroy(e)})},this.context={SETTINGS:{}},this.setup=!1,this.init=function(e,n){this.setup={fixture:t.get(e,"fixture",null),test:t.get(e,"test",!1),api:t.get(e,"api","/api/")},n&&(this.context=n),this._initServices(t._services)},this.destroy=function(){this._destroyServices(t._services)}};var t=window.Misago.prototype;t._services=[],t.addService=function(e,n,o){t._services.push({key:e,item:n,after:t.get(o,"after"),before:t.get(o,"before")})}}(),function(t){"use strict";t.has=function(t,e){return t?t.hasOwnProperty(e):!1},t.get=function(e,n,o){return t.has(e,n)?e[n]:void 0!==o?o:void 0},t.pop=function(e,n,o){var r=t.get(e,n,o);return t.has(e,n)&&(e[n]=null),r}}(Misago.prototype),function(t){"use strict";function e(t,e,n){n.retain=!0}t.input=function(t){var n={disabled:t.disabled||!1,config:t.config||e};t.placeholder&&(n.placeholder=t.placeholder),t.autocomplete===!1&&(n.autocomplete="off");var o="input";return t.id&&(o+="#"+t.id,n.key="field-"+t.id),o+=".form-control"+(t["class"]||""),o+='[type="'+(t.type||"text")+'"]',t.value&&(n.value=t.value(),n.oninput=m.withAttr("value",t.value)),m(o,n)}}(Misago.prototype),function(t){"use strict";var e=function(){};t.stateHooks=function(t,n,o){if(t._hasLifecycleHooks)return t;t._hasLifecycleHooks=!0,t.isActive=!0;var r=t.controller||e;if(t.controller=function(){t.isActive=!0;var n=r.apply(t,arguments)||{},o=n.onunload||e;return n.onunload=function(){o.apply(t,arguments),t.isActive=!1},n},t.vm&&t.vm.init){if(!t.loading){var i=n.bind(t);t.loading=i}var s=t.view;t.view=function(){return t.vm.isReady?s.apply(t,arguments):t.loading.apply(t,arguments)};var a=o.bind(t),u=t.vm.init;t.vm.init=function(){var e=arguments,n=u.apply(t.vm,e);n&&n.then(function(){if(t.isActive&&t.vm.ondata){for(var n=[],o=0;o<arguments.length;o++)n.push(arguments[o]);for(var r=0;r<e.length;r++)n.push(e[r]);t.vm.ondata.apply(t.vm,n)}},function(e){t.isActive&&a(e)})}}return t}}(Misago.prototype),function(t){"use strict";t.OrderedList=function(e){this.isOrdered=!1,this._items=e||[],this.add=function(e,n,o){this._items.push({key:e,item:n,after:t.get(o,"after"),before:t.get(o,"before")})},this.get=function(t,e){for(var n=0;n<this._items.length;n++)if(this._items[n].key===t)return this._items[n].item;return e},this.has=function(t){return void 0!==this.get(t)},this.values=function(){for(var t=[],e=0;e<this._items.length;e++)t.push(this._items[e].item);return t},this.order=function(t){return this.isOrdered||(this._items=this._order(this._items),this.isOrdered=!0),t||"undefined"==typeof t?this.values():this._items},this._order=function(t){function e(t){var e=-1;-1===r.indexOf(t.key)&&(t.after?(e=r.indexOf(t.after),-1!==e&&(e+=1)):t.before&&(e=r.indexOf(t.before)),-1!==e&&(o.splice(e,0,t),r.splice(e,0,t.key)))}var n=[];t.forEach(function(t){n.push(t.key)});var o=[],r=[];t.forEach(function(t){t.after||t.before||(o.push(t),r.push(t.key))}),t.forEach(function(t){"_end"===t.before&&(o.push(t),r.push(t.key))});for(var i=200;i>0&&n.length!==r.length;)i-=1,t.forEach(e);return o}}}(Misago.prototype),function(t){t.serializeDatetime=function(t){return t?t.format():null},t.deserializeDatetime=function(t){return t?moment(t):null}}(Misago.prototype),function(t){"use strict";t.startsWith=function(t,e){return 0===t.indexOf(e)},t.endsWith=function(t,e){return-1!==t.indexOf(e,t.length-e.length)}}(Misago.prototype),function(t){"use strict";t.UrlConf=function(){var e=this;this._patterns=[],this.patterns=function(){return this._patterns};var n=function(t,e){return(t+e).replace("//","/")},o=function(t,o){for(var r=0;r<o.length;r++)e.url(n(t,o[r].pattern),o[r].component,o[r].name)};this.url=function(e,n,r){""===e&&(e="/"),n instanceof t.UrlConf?o(e,n.patterns()):this._patterns.push({pattern:e,component:n.replace(/_/g,"-"),name:r||n})}}}(Misago.prototype),function(t){"use strict";t.loadingPage=function(t){return m(".page.page-loading",t.component("loader"))}}(Misago.prototype),function(t){"use strict";var e=function(e){if(-1!==document.cookie.indexOf(e)){var n=new RegExp(e+"=([^;]*)"),o=t.get(document.cookie.match(n),0);return o.split("=")[1]}return null},n=function(n){this.refreshCsrfToken=function(){this.csrfToken=e(n.context.CSRF_COOKIE_NAME)},this.refreshCsrfToken();var o={};this.ajax=function(e,n,r,i){var s=m.deferred(),a={url:n,method:e,headers:{"X-CSRFToken":this.csrfToken},data:r||{},dataType:"json",success:function(r){"GET"===e&&t.pop(o,n),s.resolve(r)},error:function(r){"GET"===e&&t.pop(o,n);var i=r.responseJSON||{};i.status=r.status,i.statusText=r.statusText,s.reject(i)}};return i?void 0:($.ajax(a),s.promise)},this.get=function(e){var r=t.pop(n.context,e);if(r){var i=m.deferred();return i.resolve(r),i.promise}return void 0!==o[e]?o[e]:(o[e]=this.ajax("GET",e),o[e])},this.post=function(t,e){return this.ajax("POST",t,e)},this.patch=function(t,e){return this.ajax("PATCH",t,e)},this.put=function(t,e){return this.ajax("PUT",t,e)},this["delete"]=function(t){return this.ajax("DELETE",t)}};t.addService("ajax",function(t){return new n(t)})}(Misago.prototype),function(t){"use strict";var e=5e3,n=70,o=9e3,r=300,i=function(t){var i=this;this.type="info",this.message=null,this.isVisible=!1;var s=function(r,s){i.type=r,i.message=s,i.isVisible=!0;var a=e;a+=s.length*n,a>o&&(a=o),t.runloop.runOnce(function(){m.startComputation(),i.isVisible=!1,m.endComputation()},"flash-message-hide",a)},a=function(e,n){t.runloop.stop("flash-message-hide"),t.runloop.stop("flash-message-show"),i.isVisible?(i.isVisible=!1,t.runloop.runOnce(function(){m.startComputation(),s(e,n),m.endComputation()},"flash-message-show",r)):s(e,n)};this.info=function(t){a("info",t)},this.success=function(t){a("success",t)},this.warning=function(t){a("warning",t)},this.error=function(t){a("error",t)}};t.addService("alert",{factory:function(t){return new i(t)}})}(Misago.prototype),function(t){"use strict";var e=function(t){if("object"==typeof t){var e=[];for(var n in t)if(t.hasOwnProperty(n)){var o=encodeURIComponent(n),r=encodeURIComponent(t[n]);e.push(o+"="+r)}return"?"+e.join("&")}return t+"/"},n=function(t,o){this.url=o.url||t.setup.api,this.url+=o.path?o.path+"/":o.related?o.related+"/":o.model+"s/",o.filters&&(this.url+=e(o.filters)),!o.url&&o.filters&&(o.model&&(this.related=function(e,r){return new n(t,{url:this.url,relation:o.model,related:e,filters:r})}),this.endpoint=function(e,o){return new n(t,{url:this.url,path:e,filters:o})}),this.get=function(){var e=null;return o.related?e=o.relation+":"+o.related:o.model&&(e=o.model),t.ajax.get(this.url).then(function(n){return e?n.results?(n.results.map(function(n){return t.models["new"](e,n)}),n):t.models["new"](e,n):n})},this.post=function(e){return t.ajax.post(this.url,e)},this.patch=function(e){return t.ajax.patch(this.url,e)},this.put=function(e){return t.ajax.put(this.url,e)},this["delete"]=function(){return t.ajax["delete"](this.url)},this.then=function(t,e){return this.get().then(t,e)}},o=function(t){this.model=function(e,o){return new n(t,{model:e,filters:o})},this.endpoint=function(e,o){return new n(t,{path:e,filters:o})},this.alert=function(e){var n=gettext("Unknown error has occured.");0===e.status&&(n=gettext("Lost connection with application.")),403===e.status&&(n=e.detail,"Permission denied"===n&&(n=gettext("You don't have permission to perform this action."))),404===e.status&&(n=gettext("Action link is invalid.")),t.alert.error(n)}};t.addService("api",function(t){return new o(t)})}(Misago.prototype),function(t){"use strict";var e=function(t){t.user=t.models.deserialize("user",t.context.user)};t.addService("auth",function(t){return new e(t)},{after:"model:user"})}(Misago.prototype),function(t){"use strict";var e=function(){var t=m.deferred();t.resolve(),this.load=function(){return t.promise},this.component=function(){return null},this.value=function(){return null},this.validator=function(){return null}},n=function(t){var e=this;this.loading=!1,this.question=null,this.value=m.prop("");var n=m.deferred();this.load=function(){return this.value(""),this.question||this.loading||(this.loading=!0,t.api.endpoint("captcha-question").get().then(function(t){e.question=t,n.resolve()},function(){t.api.alert(gettext("Failed to load CAPTCHA.")),n.reject()}).then(function(){e.loading=!0})),n.promise},this.component=function(e){return t.component("form-group",{label:this.question.question,labelClass:e.labelClass||null,controlClass:e.controlClass||null,control:t.input({value:t.validate(e.form,"captcha"),id:"id_captcha",disabled:e.form.isBusy}),validation:e.form.errors,validationKey:"captcha",helpText:this.question.help_text})},this.validator=function(){return[]}},o=function(){this.loading=!1,this.question=null;var t=m.deferred();this.load=function(){return t.promise},this.component=function(){return"null"},this.value=function(){return"pass"},this.validator=function(){return[]}},r=function(t){var r={no:e,qa:n,re:o},i=new r[t.settings.captcha_type](t);this.load=function(){return i.load()},this.component=function(t){return i.component(t)},this.value=function(){return i.value()},this.validator=function(){return i.validator()}};t.addService("captcha",function(t){return new r(t)},{after:"include"})}(Misago.prototype),function(t){"use strict";var e=function(t,e){if(this._components[t]){if(arguments.length>1){for(var n=[this._components[t]],o=1;o<arguments.length;o+=1)n.push(arguments[o]);return n.push(this),m.component.apply(void 0,n)}return m.component(this._components[t],this)}this._components[t]=e};t.addService("components",function(t){t._components={},t.component=e})}(Misago.prototype),function(t){"use strict";t.addService("conf",function(e){e.settings=t.get(e.context,"SETTINGS",{})})}(Misago.prototype),function(t){"use strict";var e=function(t){var e=t.submit,n=t.success,o=t.error;return t.isBusy=!1,t.errors=null,t.submit=function(){return t.isBusy?!1:(t.clean?t.clean()&&(t.isBusy=!0,e.apply(t)):t.isBusy=!0,!1)},t.success=function(){m.startComputation(),n.apply(t,arguments),t.isBusy=!1,m.endComputation()},t.error=function(){m.startComputation(),o.apply(t,arguments),t.isBusy=!1,m.endComputation()},t.hasErrors=function(){if(null===t.errors)return!1;for(var e in t.validation)if(t.validation.hasOwnProperty(e)&&t.errors[e]!==!0)return!0;return!1},t},n=function(t,n){return this._forms[t]?e(n?new this._forms[t](n,this):new this._forms[t](this)):void(this._forms[t]=n)};t.addService("forms",function(t){t._forms={},t.form=n})}(Misago.prototype),function(t){"use strict";t.addService("forum-layout",{factory:function(t){t.setup.fixture&&m.mount(document.getElementById(t.setup.fixture),t.component("forum-layout"))},destroy:function(t){t.setup.fixture&&m.mount(document.getElementById(t.setup.fixture),null)}},{before:"start-routing"})}(Misago.prototype),function(t){"use strict";var e=function(t,e){e||(t=this.context.STATIC_URL+t),$.ajax({url:t,cache:!0,dataType:"script"})};t.addService("include",function(t){t.include=e},{after:"conf"})}(Misago.prototype),function(t){"use strict";var e=function(){var t=this,e=document.getElementById("misago-modal"),n="click.misago-modal";$(e).on(n,"a",function(){t.hide()}),this.destroy=function(){$(e).off(),$("body").removeClass("modal-open"),$(".modal-backdrop").remove()};var o=$(e).modal({show:!1});this.open=!1,o.on("hidden.bs.modal",function(){t.open&&(m.mount(e,null),this.open=!1)}),this.show=function(t){this.open=!0,m.mount(e,t),o.modal("show")},this.hide=function(){o.modal("hide")}};t.addService("_modal",{factory:function(){return new e},destroy:function(t){t._modal.destroy()}},{after:"start-routing"})}(Misago.prototype),function(t){"use strict";var e=function(t,e){if(this._modals[t]){for(var n=[this._modals[t]],o=1;o<arguments.length;o+=1)n.push(arguments[o]);n.push(this),this._modal.show(m.component.apply(m,n))}else t?this._modals[t]=e:this._modal.hide()};t.addService("modals",function(t){t._modals={},t.modal=e},{after:"_modal"})}(Misago.prototype),function(t){"use strict";var e=function(){this.classes={},this.deserializers={},this.relations={},this.add=function(t,e){if(e["class"]&&(this.classes[t]=e["class"]),e.deserialize&&(this.deserializers[t]=e.deserialize),e.relations)for(var n in e.relations)e.relations.hasOwnProperty(n)&&(this.relations[t+":"+n]=e.relations[n])},this["new"]=function(t,e){return this.classes[t]?new this.classes[t](e):e},this.deserialize=function(t,e){return this.relations[t]&&(t=this.relations[t]),this.deserializers[t]?this["new"](t,this.deserializers[t](e,this)):this["new"](t,e)}};t.addService("models",function(){return new e})}(Misago.prototype),function(t){"use strict";t.addService("set-momentjs-locale",function(){moment.locale($("html").attr("lang"))})}(Misago.prototype),function(t){"use strict";var e=function(e){var n=this;this.baseUrl=$("base").attr("href");var o=t.get(e.context,"STATIC_URL","/"),r=t.get(e.context,"MEDIA_URL","/");this.urls={},this.reverses={};var i=function(t){t.patterns().forEach(function(t){var o=n.baseUrl+t.pattern;o=o.replace("//","/"),n.urls[o]=e.route(t.component),n.reverses[t.name]=o})};this.startRouting=function(t,n){i(t),this.fixture=n,m.route.mode=e.setup.test?"search":"pathname",m.route(n,"/",this.urls)},this.url=function(t){return this.reverses[t]},this.delegateElement=null,this.cleanUrl=function(t){if(t){var e="/"===t.substr(0,1)&&"//"!==t.substr(0,2);if(!e){var n=window.location;if("//"!==t.substr(0,2)){var i=t.substr(0,n.protocol.length+2);if(i!==n.protocol+"//")return;t=t.substr(n.protocol.length+2)}else t=t.substr(2);if(t.substr(0,n.host.length)!==n.host)return;t=t.substr(n.host.length)}if(t.substr(0,this.baseUrl.length)===this.baseUrl&&t.substr(0,o.length)!==o&&t.substr(0,r.length)!==r){var s="/user-avatar/";if(t.substr(0,s.length)!==s)return t}}};var s="click.misago-router";this.delegateClicks=function(t){this.delegateElement=t,$(this.delegateElement).on(s,"a",function(t){var e=n.cleanUrl(t.target.href);e&&(e!=m.route()&&m.route(e),t.preventDefault())})},this.destroy=function(){$(this.delegateElement).off(s)};var a=function(t){return function(e){return t+e}};this.staticUrl=a(o),this.mediaUrl=a(r),this.error403=function(t){var n=null;n=t.ban?e.route("error:banned",t.detail,e.models.deserialize("ban",t.ban)):e.route("error:403",t.detail),m.mount(this.fixture,n)},this.error404=function(){m.mount(this.fixture,e.route("error:404"))},this.error500=function(){m.mount(this.fixture,e.route("error:500"))},this.error0=function(){m.mount(this.fixture,e.route("error:0"))},this.errorPage=function(t){0===t.status&&this.error0(),500===t.status&&this.error500(),404===t.status&&this.error404(),403===t.status&&this.error403(t)}};t.addService("router",function(t){return new e(t)}),t.addService("start-routing",function(e){e.router.startRouting(t.urls,document.getElementById("router-fixture")),e.router.delegateClicks(document.getElementById(e.setup.fixture))},{before:"_end"})}(Misago.prototype),function(t){"use strict";var e=function(e){if(e._hasRouteBoilerplate)return e;e._hasRouteBoilerplate=!0;var n=function(){var t=this.container;return m(".page.page-loading",t.component("loader"))},o=function(t){this.isActive&&this.container.router.errorPage(t)};return t.stateHooks(e,n,o)};t.addService("routes",function(t){t._routes={},t.route=function(n,o){if(this._routes[n]){if(arguments.length>1){for(var r=[this._routes[n]],i=1;i<arguments.length;i+=1)r.push(arguments[i]);return r.push(this),m.component.apply(void 0,r)}return m.component(this._routes[n],this)}o.container=t,this._routes[n]=e(o)}})}(Misago.prototype),function(t){"use strict";var e=function(t){var e=this;this._intervals={};var n=function(t){e._intervals[t]&&(window.clearTimeout(e._intervals[t]),e._intervals[t]=null)};this.run=function(o,r,i){this._intervals[r]=window.setTimeout(function(){n(r);var s=o(t);s!==!1&&e.run(o,r,i)},i)},this.runOnce=function(e,o,r){this._intervals[o]=window.setTimeout(function(){n(o),e(t)},r)},this.stop=function(t){for(var e in this._intervals)t&&t!==e||n(e)}};t.addService("runloop",{factory:function(t){return new e(t)},destroy:function(t){t.runloop.stop()}})}(Misago.prototype),function(t){"use strict";t.addService("start-tick",function(t){var e=m.prop();t.runloop.run(function(){m.startComputation(),e(e()+1),m.endComputation()},"tick",6e4)})}(Misago.prototype),function(t){"use strict";var e=function(t){this.set=function(e){e?this._set_complex(e):document.title=t},this._set_complex=function(e){"string"==typeof e&&(e={title:e});var n=e.title;if("undefined"!=typeof e.page&&e.page>1){var o=interpolate(gettext("page %(page)s"),{page:e.page},!0);n+=" ("+o+")"}"undefined"!=typeof e.parent&&(n+=" | "+e.parent),document.title=n+" | "+t}};t.addService("page-title",function(t){t.title=new e(t.settings.forum_name)})}(Misago.prototype),function(t){"use strict";var e=/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i,n=new RegExp("^[0-9a-z]+$","i");t.validators={required:function(){return function(t){return 0===$.trim(t).length?gettext("This field is required."):void 0}},email:function(t){return function(n){return e.test(n)?void 0:t||gettext("Enter a valid email address.")}},minLength:function(t,e){return function(n){var o="",r=$.trim(n).length;return t>r?(o=e?e(t,r):ngettext("Ensure this value has at least %(limit_value)d character (it has %(show_value)d).","Ensure this value has at least %(limit_value)d characters (it has %(show_value)d).",t),interpolate(o,{limit_value:t,show_value:r},!0)):void 0}},maxLength:function(t,e){return function(n){var o="",r=$.trim(n).length;return r>t?(o=e?e(t,r):ngettext("Ensure this value has at most %(limit_value)d character (it has %(show_value)d).","Ensure this value has at most %(limit_value)d characters (it has %(show_value)d).",t),interpolate(o,{limit_value:t,show_value:r},!0)):void 0}},usernameMinLength:function(t){var e=function(t){return ngettext("Username must be at least %(limit_value)s character long.","Username must be at least %(limit_value)s characters long.",t)};return this.minLength(t.username_length_min,e)},usernameMaxLength:function(t){var e=function(t){return ngettext("Username cannot be longer than %(limit_value)s characters.","Username cannot be longer than %(limit_value)s characters.",t)};return this.maxLength(t.username_length_max,e)},usernameContent:function(){return function(t){return n.test($.trim(t))?void 0:gettext("Username can only contain latin alphabet letters and digits.")}},passwordMinLenght:function(t){var e=function(t){return ngettext("Valid password must be at least %(limit_value)s character long.","Valid password must be at least %(limit_value)s characters long.",t)};return this.minLength(t.password_length_min,e)}};var o=function(e,n){var o=t.validators.required()(e),r=[];if(o)return[o];for(var i in n)o=n[i](e),o&&r.push(o);return r.length?r:!0},r=function(t){var e={},n=null,r=!0;for(var i in t.validation)t.validation.hasOwnProperty(i)&&(n=t[i](),e[i]=o(t[i](),t.validation[i]),e[i]!==!0&&(r=!1));return t.errors=e,r},i=function(t,e){return e?function(n){var r=null;return"undefined"!=typeof n?(r=o(n,t.validation[e]),r&&(t.errors||(t.errors={}),t.errors[e]=r),t[e](n),t[e](n)):t[e]()}:r(t)};t.addService("validate",{factory:function(){return i}})}(Misago.prototype),function(t){"use strict";var e=function(t){this.included=!1,this.scorePassword=function(t,e){return zxcvbn(t,e).score},this.include=function(){t.include("misago/js/zxcvbn.js"),this.included=!0};var e=function(n){"undefined"!=typeof zxcvbn?n.resolve():t.runloop.runOnce(function(){e(n)},"loading-zxcvbn",150)},n=m.deferred();this.load=function(){return this.included||this.include(),e(n),n.promise}};t.addService("zxcvbn",function(t){return new e(t)},{after:"include"})}(Misago.prototype),function(t){"use strict";var e=function(t){this.message={html:t.message.html,plain:t.message.plain},this.expires_on=t.expires_on},n=function(e){return e.expires_on=t.deserializeDatetime(e.expires_on),e};t.addService("model:ban",function(t){t.models.add("ban",{"class":e,deserialize:n})},{after:"models"})}(Misago.prototype),function(t){"use strict";var e=function(t){this.title=t.title,this.body=t.body,this.link=t.link};t.addService("model:legal-page",function(t){t.models.add("legal-page",{"class":e})},{after:"models"})}(Misago.prototype),function(t){"use strict";var e=function(t){this.id=t.id,this.isAuthenticated=!!this.id,this.isAnonymous=!this.isAuthenticated,this.slug=t.slug,this.username=t.username,this.acl=t.acl,this.rank=t.rank},n=function(e){return e.joined_on&&(e.joined_on=t.deserializeDatetime(e.joined_on)),e};t.addService("model:user",function(t){t.models.add("user",{"class":e,deserialize:n})},{after:"models"})}(Misago.prototype),function(t){"use strict";var e=function(t){var e=[m("p.lead",t.message)];return t.help&&e.push(m("p.help",t.help)),m(".page.page-error.page-error-"+t.code,m(".container",m(".error-panel",[m(".error-icon",m("span.material-icon",t.icon)),m(".error-message",e)])))},n={controller:function(){this.container.title.set(gettext("You are banned"))},view:function(t,e,n){var o=[];o.push(n.message.html?m(".lead",m.trust(n.message.html)):e?m("p.lead",e):m("p.lead",gettext("You are banned.")));var r=null;return r=n.expires_on?n.expires_on.isAfter(moment())?interpolate(gettext("This ban expires %(expires_on)s."),{expires_on:n.expires_on.fromNow()},!0):gettext("This ban has expired."):gettext("This ban is permanent."),o.push(m("p",r)),m(".page.page-error.page-error-banned",m(".container",m(".error-panel",[m(".error-icon",m("span.material-icon","highlight_off")),m(".error-message",o)])))}},o={controller:function(){this.container.title.set(gettext("Page not available"))},view:function(t,n){return"Permission denied"===n&&(n=gettext("You don't have permission to access this page.")),e({code:403,icon:"remove_circle_outline",message:gettext("This page is not available."),help:n})}},r={controller:function(){this.container.title.set(gettext("Page not found"))},view:function(){return e({code:404,icon:"info_outline",message:gettext("Requested page could not be found."),help:gettext("The link you followed was incorrect or the page has been moved or deleted.")})}},i={controller:function(){this.container.title.set(gettext("Application error occured"))},view:function(){return e({code:500,icon:"error_outline",message:gettext("Requested page could not be displayed due to an error."),help:gettext("Please try again later or contact site staff if error persists.")})}},s={controller:function(){this.container.title.set(gettext("Lost connection with application"))},view:function(){return e({code:0,icon:"sync_problem",message:gettext("Could not connect to application."),help:gettext("This may be caused by problems with your connection or application server. Please check your internet connection and refresh page if problem persists.")})}};t.addService("route:error-pages",function(t){t.route("error:banned",n),t.route("error:403",o),t.route("error:404",r),t.route("error:500",i),t.route("error:0",s)},{after:"routes"})}(Misago.prototype),function(t){"use strict";var e={controller:function(){var t=this.container;document.title=t.settings.forum_index_title||t.settings.forum_name;var e=m.prop(0);return{count:e,increment:function(){console.log("increment()"),e(e()+1)}}},view:function(t,e){var n=["default","primary","success","info","warning","danger"];return m(".container",[m("h1","Buttons"),m("",n.map(function(t){return m("",[e.component("button",{"class":".btn-"+t,label:"Lorem ipsum"}),e.component("button",{"class":".btn-"+t,label:"Lorem ipsum",loading:!0})])}))])}};t.addService("route:index",function(t){t.route("index",e)},{after:"routes"})}(Misago.prototype),function(t){"use strict";var e=function(e,n){var o=e.replace(/_/g,"-");return{controller:function(n){t.get(n.settings,e+"_link")?window.location=t.get(n.settings,e+"_link"):this.vm.init(this,n)},vm:{page:null,isReady:!1,init:function(t,e){return this.isReady?void e.title.set(this.title):(e.title.set(),e.api.model("legal-page",o))},ondata:function(t,e,o){m.startComputation(),t.link?window.location=t.link:(t.title=t.title||n,this.page=t,this.isReady=!0,m.endComputation(),e.isActive&&o.title.set(this.page.title))}},view:function(t,e){return m(".page.page-legal.page-legal-"+o,[e.component("header",{title:this.vm.page.title}),m(".container",e.component("markup",this.vm.page.body))])}}};t.addService("route:legal-pages",function(t){t.route("terms-of-service",e("terms_of_service",gettext("Terms of service"))),t.route("privacy-policy",e("privacy_policy",gettext("Privacy policy")))},{after:"routes"})}(Misago.prototype),function(t){"use strict";var e=function(t){return-1!==[!!t.forum_footnote,!!t.terms_of_service,!!t.terms_of_service_link,!!t.privacy_policy,!!t.privacy_policy_link].indexOf(!0)},n={view:function(t,n){var o=null;return e(n.settings)&&(o=n.component("footer:menu")),m("footer.forum-footer",[m(".container",m(".footer-content",[o,n.component("footer:branding")]))])}};t.addService("component:footer",function(t){t.component("footer",n)},{after:"components"})}(Misago.prototype),function(t){"use strict";var e=function(e,n,o){var r=t.get(e.settings,n+"_link");return!r&&t.get(e.settings,n)&&(r=e.router.url(n)),r?m("li",m("a",{href:r},t.get(e.settings,n+"_title",o))):null},n={isVisible:function(t){return-1!==[!!t.forum_footnote,!!t.terms_of_service,!!t.terms_of_service_link,!!t.privacy_policy,!!t.privacy_policy_link].indexOf(!0)},view:function(t,n){var o=[];return n.settings.forum_footnote&&o.push(m("li.forum-footnote",m.trust(n.settings.forum_footnote))),o.push(e(n,"terms_of_service",gettext("Terms of service"))),o.push(e(n,"privacy_policy",gettext("Privacy policy"))),m("ul.list-inline.footer-nav",o)}};t.addService("component:footer:menu",function(t){t.component("footer:menu",n)},{after:"components"})}(Misago.prototype),function(t){"use strict";var e={view:function(){return m("a.misago-branding[href=http://misago-project.org]",["powered by ",m("strong","misago")])}};t.addService("component:footer:branding",function(t){t.component("footer:branding",e)},{after:"components"})}(Misago.prototype),function(t){"use strict";var e={view:function(t,e){return m(".modal-header",[m('button.close[type="button"]',{"data-dismiss":"modal","aria-label":gettext("Close")},m("span",{"aria-hidden":"true"},m.trust("&times;"))),m("h4#misago-modal-label.modal-title",e)])}};t.addService("component:modal:header",function(t){t.component("modal:header",e)},{after:"components"})}(Misago.prototype),function(t){"use strict";function e(t,e,n){n.retain=!0}var n={controller:function(t){return{form:t.form("register")}},view:function(t,n){var o=n.captcha.component({form:t.form,labelClass:".col-md-4",controlClass:".col-md-8"}),r=null,i=n.settings.terms_of_service_link;return!i&&n.settings.terms_of_service&&(i=n.router.url("terms_of_service")),i&&(r=m("a",{href:i},m.trust(interpolate(gettext("By registering you agree to site's %(terms)s."),{terms:"<strong>"+gettext("terms and conditions")+"</strong>"},!0)))),m('.modal-dialog.modal-form.modal-register[role="document"]',{config:e},m(".modal-content",[n.component("modal:header",gettext("Register")),m("form.form-horizontal",{onsubmit:t.form.submit},[m('input[type="text"]',{name:"_username",style:"display: none"}),m('input[type="password"]',{name:"_password",style:"display: none"}),m(".modal-body",[n.component("form-group",{label:gettext("Username"),labelClass:".col-md-4",controlClass:".col-md-8",control:n.input({value:n.validate(t.form,"username"),id:"id_username",disabled:t.form.isBusy}),validation:t.form.errors,validationKey:"username"}),n.component("form-group",{label:gettext("E-mail"),labelClass:".col-md-4",controlClass:".col-md-8",control:n.input({value:n.validate(t.form,"email"),id:"id_email",disabled:t.form.isBusy}),validation:t.form.errors,validationKey:"email"}),n.component("form-group",{label:gettext("Password"),labelClass:".col-md-4",controlClass:".col-md-8",control:n.input({value:n.validate(t.form,"password"),type:"password",id:"id_password",disabled:t.form.isBusy}),validation:t.form.errors,validationKey:"password",helpText:n.component("password-strength",{inputs:[t.form.username(),t.form.email()],password:t.form.password()})}),o]),m(".modal-footer",[r,n.component("button",{"class":".btn-primary",submit:!0,loading:t.form.isBusy,label:gettext("Register account")})])])]))}};t.addService("modal:register",function(t){t.modal("register",n)},{after:"modals"})}(Misago.prototype),function(t){"use strict";function e(t,e,n){n.retain=!0}var n={controller:function(t){return{form:t.form("sign-in")}},view:function(n,o){return m('.modal-dialog.modal-sm.modal-signin[role="document"]',{config:e},m(".modal-content",[o.component("modal:header",gettext("Sign in")),m("form",{onsubmit:n.form.submit},[m(".modal-body",[m(".form-group",m(".control-input",t.input({disabled:n.form.isBusy,value:n.form.username,placeholder:gettext("Username or e-mail")}))),m(".form-group",m(".control-input",t.input({type:"password",disabled:n.form.isBusy,value:n.form.password,placeholder:gettext("Password")})))]),m(".modal-footer",o.component("button",{"class":".btn-primary.btn-block",submit:!0,loading:n.form.isBusy,label:gettext("Sign in")}))])]))}};t.addService("modal:sign-in",function(t){t.modal("sign-in",n)},{after:"modals"})}(Misago.prototype),function(t){"use strict";var e={view:function(t,e){var n=".navbar.navbar-default.navbar-static-top";return m("nav"+n+'[role="navigation"]',[e.component("navbar:desktop")])}};t.addService("component:navbar",function(t){t.component("navbar",e)},{after:"components"})}(Misago.prototype),function(t){"use strict";var e={view:function(t,e,n){var o=[m("img",{src:n.router.staticUrl("misago/img/site-logo.png"),alt:n.settings.forum_name})];return e&&o.push(e),m("a.navbar-brand",{href:n.router.url("index")},o)}};t.addService("component:navbar:desktop:brand",function(t){t.component("navbar:desktop:brand",e)},{after:"components"})}(Misago.prototype),function(t){"use strict";var e={controller:function(t){return{showSignIn:function(){t.modal("sign-in")},isBusy:!1,showRegister:function(){if("closed"===t.settings.account_activation)t.alert.info(gettext("New registrations are currently disabled."));else{m.startComputation(),this.isBusy=!0,m.endComputation();var e=this;m.sync([t.zxcvbn.load(),t.captcha.load()]).then(function(){t.modal("register")},function(){t.alert.error(gettext("Registation is not available now due to an error."))}).then(function(){m.startComputation(),e.isBusy=!1,m.endComputation()})}}}},view:function(t,e){return m("div.nav.nav-guest",[e.component("button",{"class":".navbar-btn.btn-default",onclick:t.showSignIn,disabled:t.isBusy,label:gettext("Sign in")}),e.component("button",{"class":".navbar-btn.btn-primary",onclick:t.showRegister.bind(t),loading:t.isBusy,label:gettext("Register")})])}};t.addService("component:navbar:desktop:guest-menu",function(t){t.component("navbar:desktop:guest-menu",e)},{after:"components"})}(Misago.prototype),function(t){"use strict";var e={view:function(t,e){var n=[];return e.settings.forum_branding_display&&n.push(e.component("navbar:desktop:brand",e.settings.forum_branding_text)),n.push(m("ul.nav.navbar-nav",[m("li",m("a",{config:m.route,href:e.router.url("index")},"Index"))])),n.push(e.user.isAuthenticated?e.component("navbar:desktop:user-menu"):e.component("navbar:desktop:guest-menu")),m(".container.navbar-full.hidden-xs.hidden-sm",n)}};t.addService("component:navbar:desktop",function(t){t.component("navbar:desktop",e)},{after:"components"})}(Misago.prototype),function(t){"use strict";var e={controller:function(){return{logout:function(){$("#hidden-logout-form").submit()}}},view:function(t,e){return m("div.nav.nav-user",[m("p.navbar-text",e.user.username),m("button.navbar-btn.btn.btn-default.navbar-right",{
-onclick:t.logout.bind(t)},gettext("Logout"))])}};t.addService("component:navbar:desktop:user-menu",function(t){t.component("navbar:desktop:user-menu",e)},{after:"components"})}(Misago.prototype),function(t){"use strict";function e(t,e,n){n.retain=!0}var n={classes:{info:"alert-info",success:"alert-success",warning:"alert-warning",error:"alert-danger"},view:function(t,n){return m(".alerts",{config:e,"class":n.alert.isVisible?"in":"out"},m("p.alert",{"class":this.classes[n.alert.type]},n.alert.message))}};t.addService("component:alert",function(t){t.component("alert",n)},{after:"components"})}(Misago.prototype),function(t){"use strict";var e={view:function(t,e){var n={disabled:e.disabled||e.loading||!1,config:e.config||null,loading:e.loading||!1,type:e.submit?"submit":"button",onclick:e.onclick||null},o='button[type="'+n.type+'"].btn';n.loading&&(o+=".btn-loading"),e.id&&(o+="#"+e.id),o+=e["class"]||"";var r=e.label;return n.loading&&(r=[r,m(".loader-compact",[m(".bounce1"),m(".bounce2"),m(".bounce3")])]),m(o,n,r)}};t.addService("component:button",function(t){t.component("button",e)},{after:"components"})}(Misago.prototype),function(t){"use strict";var e=["text","password","email"],n={view:function(t,n){var o=".form-group",r=null,i=null,s=n.control.attrs.type,a=n.control.attrs.id,u=a+"_feedback",c=null,l=null,d=n.validationKey&&null!==n.validation;return n.control.attrs["aria-describedby"]="",d&&n.validation[n.validationKey]&&(l=e.indexOf(s)>=0,n.control.attrs["aria-describedby"]=u,n.validation[n.validationKey]===!0?(o+=".has-success",c=[m("span.material-icon.form-control-feedback",{"aria-hidden":"true"},"check"),m("span.sr-only#"+u,gettext("(success)"))]):(o+=".has-error",r=n.validation[n.validationKey],c=[m("span.material-icon.form-control-feedback",{"aria-hidden":"true"},"clear"),m("span.sr-only#"+u,gettext("(error)"))])),n.helpText&&(i="string"==typeof n.helpText||n.helpText instanceof String?m("p.help-block",n.helpText):n.helpText),m(o,[m("label.control-label"+(n.labelClass||""),{"for":n.labelFor||a},n.label+":"),m(n.controlClass||"",[n.control,l?c:null,r?m(".help-block.errors",r.map(function(t){return m("p",t)})):null,i])])}};t.addService("component:form-group",function(t){t.component("form-group",n)},{after:"components"})}(Misago.prototype),function(t){"use strict";var e=function(t,e,n){n.retain=!0},n={view:function(t,n){return[n.component("alert"),n.component("navbar"),m("#router-fixture",{config:e}),n.component("footer"),n.component("modal")]}};t.addService("component:layout",function(t){t.component("forum-layout",n)},{after:"components"})}(Misago.prototype),function(t){"use strict";var e={view:function(){return m(".loader.sk-folding-cube",[m(".sk-cube1.sk-cube"),m(".sk-cube2.sk-cube"),m(".sk-cube4.sk-cube"),m(".sk-cube3.sk-cube")])}};t.addService("component:loader",function(t){t.component("loader",e)},{after:"components"})}(Misago.prototype),function(t){"use strict";var e=function(t,e,n){n.retain=!0},n={view:function(t,n){return m("article.misago-markup",{config:e},m.trust(n))}};t.addService("component:markup",function(t){t.component("markup",n)},{after:"components"})}(Misago.prototype),function(t){"use strict";var e=function(t,e,n){n.retain=!0},n={view:function(){return m('#misago-modal.modal.fade[role="dialog"]',{config:e,tabindex:"-1","aria-labelledby":"misago-modal-label"})}};t.addService("component:modal",function(t){t.component("modal",n)},{after:"components"})}(Misago.prototype),function(t){"use strict";var e={view:function(t,e){return m(".page-header",m(".container",[m("h1",e.title)]))}};t.addService("component:header",function(t){t.component("header",e)},{after:"components"})}(Misago.prototype),function(t){"use strict";var e=function(t,e,n){n.retain=!0},n=["progress-bar-danger","progress-bar-warning","progress-bar-warning","progress-bar-primary","progress-bar-success"],o=[gettext("Entered password is very weak."),gettext("Entered password is weak."),gettext("Entered password is average."),gettext("Entered password is strong."),gettext("Entered password is very strong.")],r={view:function(t,r,i){var s=i.zxcvbn.scorePassword(r.password,r.inputs),a={config:e,"class":n[s],style:"width: "+(20+20*s)+"%",role:"progressbar","aria-valuenow":s,"aria-valuemin":"0","aria-valuemax":"4"};return m(".help-block.password-strength",{key:"password-strength"},[m(".progress",m(".progress-bar",a,m("span.sr-only",o[s]))),m("p.text-small",o[s])])}};t.addService("component:password-strength",function(t){t.component("password-strength",r)},{after:"components"})}(Misago.prototype),function(t){"use strict";var e=function(e){var n=this;this.showActivation=!1,this.username=m.prop(""),this.email=m.prop(""),this.password=m.prop(""),this.captcha=e.captcha.value,this.errors=null,this.validation={username:[t.validators.usernameContent(),t.validators.usernameMinLength(e.settings),t.validators.usernameMaxLength(e.settings)],email:[t.validators.email()],password:[t.validators.passwordMinLenght(e.settings)],captcha:e.captcha.validator()},this.clean=function(){return null===this.errors&&e.validate(this),this.hasErrors()?(e.alert.error(gettext("Form contains errors")),!1):!0},this.submit=function(){e.api.model("user").post({username:this.username(),email:this.email(),password:this.password(),captcha:this.captcha()}).then(this.success,this.error)},this.success=function(t){console.log(t)},this.error=function(t){400===t.status?"banned"===t.code?(e.modal(),e.router.error403({message:"",ban:t.detail})):(e.alert.error(gettext("Form contains errors")),$.extend(n.errors,t)):e.api.alert(t)}};t.addService("form:register",function(t){t.form("register",e)},{after:"forms"})}(Misago.prototype),function(t){"use strict";var e=function(t){var e=this;this.showActivation=!1,this.username=m.prop(""),this.password=m.prop(""),this.validation={username:[],password:[]},this.clean=function(){return t.validate(this)?!0:(t.alert.error(gettext("Fill out both fields.")),!1)},this.submit=function(){t.api.endpoint("auth").post({username:e.username(),password:e.password()}).then(function(){e.success()},function(t){e.error(t)})},this.success=function(){t.modal();var e=$("#hidden-login-form");t.ajax.refreshCsrfToken(),e.find('input[type="hidden"]').val(t.ajax.csrfToken),e.find('input[name="redirect_to"]').val(m.route()),e.find('input[name="username"]').val(this.username()),e.find('input[name="password"]').val(this.password()),e.submit()},this.error=function(n){400===n.status?"inactive_admin"===n.code?t.alert.info(n.detail):"inactive_user"===n.code?(t.alert.info(n.detail),e.showActivation=!0):"banned"===n.code?(t.modal(),t.router.error403({message:"",ban:n.detail})):t.alert.error(n.detail):t.api.alert(n)}};t.addService("form:sign-in",function(t){t.form("sign-in",e)},{after:"forms"})}(Misago.prototype),function(t,e){"use strict";var n=new e;n.url("/","index"),n.url("/terms-of-service/","terms_of_service"),n.url("/privacy-policy/","privacy_policy"),n.url("/:rest...","error:404","not_found"),t.urls=n}(Misago.prototype,Misago.prototype.UrlConf);
-//# sourceMappingURL=/misago.js.map
+/* global -Misago */
+/* exported Misago */
+(function () {
+  'use strict';
+
+  window.Misago = function() {
+    var ns = Object.getPrototypeOf(this);
+    var self = this;
+
+    // Services init/destroy
+    this._initServices = function(services) {
+      var orderedServices = new ns.OrderedList(services).order(false);
+      orderedServices.forEach(function (item) {
+        var factory = null;
+        if (item.item.factory !== undefined) {
+          factory = item.item.factory;
+        } else {
+          factory = item.item;
+        }
+
+        var serviceInstance = factory(self);
+        if (serviceInstance) {
+          self[item.key] = serviceInstance;
+        }
+      });
+    };
+
+    this._destroyServices = function(services) {
+      var orderedServices = new ns.OrderedList(services).order();
+      orderedServices.reverse();
+      orderedServices.forEach(function (item) {
+        if (item.destroy !== undefined) {
+          item.destroy(self);
+        }
+      });
+    };
+
+    // Context data
+    this.context = {
+      // Empty settings
+      SETTINGS: {}
+    };
+
+    // App init/destory
+    this.setup = false;
+    this.init = function(setup, context) {
+      this.setup = {
+        fixture: ns.get(setup, 'fixture', null),
+        test: ns.get(setup, 'test', false),
+        api: ns.get(setup, 'api', '/api/')
+      };
+
+      if (context) {
+        this.context = context;
+      }
+
+      this._initServices(ns._services);
+    };
+
+    this.destroy = function() {
+      this._destroyServices(ns._services);
+    };
+  };
+
+
+  // Services
+  var proto = window.Misago.prototype;
+
+  proto._services = [];
+  proto.addService = function(name, factory, order) {
+    proto._services.push({
+      key: name,
+      item: factory,
+      after: proto.get(order, 'after'),
+      before: proto.get(order, 'before')
+    });
+  };
+}());
+
+(function (Misago) {
+  'use strict';
+
+  Misago.has = function(obj, key) {
+    if (obj) {
+      return obj.hasOwnProperty(key);
+    } else {
+      return false;
+    }
+  };
+
+  Misago.get = function(obj, key, value) {
+    if (Misago.has(obj, key)) {
+      return obj[key];
+    } else if (value !== undefined) {
+      return value;
+    } else {
+      return undefined;
+    }
+  };
+
+  Misago.pop = function(obj, key, value) {
+    var returnValue = Misago.get(obj, key, value);
+    if (Misago.has(obj, key)) {
+      obj[key] = null;
+    }
+    return returnValue;
+  };
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  function persistent(el, isInit, context) {
+    context.retain = true;
+  }
+
+  Misago.input = function(kwargs) {
+    var options = {
+      disabled: kwargs.disabled || false,
+      config: kwargs.config || persistent
+    };
+
+    if (kwargs.placeholder) {
+      options.placeholder = kwargs.placeholder;
+    }
+
+    if (kwargs.autocomplete === false) {
+      options.autocomplete = 'off';
+    }
+
+    var element = 'input';
+
+    if (kwargs.id) {
+      element += '#' + kwargs.id;
+      options.key = 'field-' + kwargs.id;
+    }
+
+    element += '.form-control' + (kwargs.class || '');
+    element += '[type="' + (kwargs.type || 'text') + '"]';
+
+    if (kwargs.value) {
+      options.value = kwargs.value();
+      options.oninput = m.withAttr('value', kwargs.value);
+    }
+
+    return m(element, options);
+  };
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var noop = function() {};
+
+  Misago.stateHooks = function(component, loadingState, errorState) {
+    /*
+      Boilerplate for Misago components with lifecycles
+    */
+
+    // Component boilerplated (this may happen in tests)
+    if (component._hasLifecycleHooks) {
+      return component;
+    }
+    component._hasLifecycleHooks = true;
+
+    // Component active state
+    component.isActive = true;
+
+    // Wrap controller to store lifecycle methods
+    var _controller = component.controller || noop;
+    component.controller = function() {
+      component.isActive = true;
+
+      var controller = _controller.apply(component, arguments) || {};
+
+      // wrap onunload for lifestate
+      var _onunload = controller.onunload || noop;
+      controller.onunload = function() {
+        _onunload.apply(component, arguments);
+        component.isActive = false;
+      };
+
+      return controller;
+    };
+
+    // Add state callbacks to View-Model
+    if (component.vm && component.vm.init) {
+      // setup default loading view
+      if (!component.loading) {
+        var loadingHandler = loadingState.bind(component);
+        component.loading = loadingHandler;
+      }
+
+      var _view = component.view;
+      component.view = function() {
+        if (component.vm.isReady) {
+          return _view.apply(component, arguments);
+        } else {
+          return component.loading.apply(component, arguments);
+        }
+      };
+
+      var errorHandler = errorState.bind(component);
+
+      // wrap vm.init in promise handler
+      var _init = component.vm.init;
+      component.vm.init = function() {
+        var initArgs = arguments;
+        var promise = _init.apply(component.vm, initArgs);
+
+        if (promise) {
+          promise.then(function() {
+            if (component.isActive && component.vm.ondata) {
+              var finalArgs = [];
+              for (var i = 0; i < arguments.length; i++) {
+                finalArgs.push(arguments[i]);
+              }
+              for (var f = 0; f < initArgs.length; f++) {
+                finalArgs.push(initArgs[f]);
+              }
+
+              component.vm.ondata.apply(component.vm, finalArgs);
+            }
+          }, function(error) {
+            if (component.isActive) {
+              errorHandler(error);
+            }
+          });
+        }
+      };
+    }
+
+    return component;
+  };
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  Misago.OrderedList = function(items) {
+    this.isOrdered = false;
+    this._items = items || [];
+
+    this.add = function(key, item, order) {
+      this._items.push({
+        key: key,
+        item: item,
+        after: Misago.get(order, 'after'),
+        before: Misago.get(order, 'before')
+      });
+    };
+
+    this.get = function(key, value) {
+      for (var i = 0; i < this._items.length; i++) {
+        if (this._items[i].key === key) {
+          return this._items[i].item;
+        }
+      }
+
+      return value;
+    };
+
+    this.has = function(key) {
+      return this.get(key) !== undefined;
+    };
+
+    this.values = function() {
+      var values = [];
+      for (var i = 0; i < this._items.length; i++) {
+        values.push(this._items[i].item);
+      }
+      return values;
+    };
+
+    this.order = function(values_only) {
+      if (!this.isOrdered) {
+        this._items = this._order(this._items);
+        this.isOrdered = true;
+      }
+
+      if (values_only || typeof values_only === 'undefined') {
+        return this.values();
+      } else {
+        return this._items;
+      }
+    };
+
+    this._order = function(unordered) {
+      // Index of unordered items
+      var index = [];
+      unordered.forEach(function (item) {
+        index.push(item.key);
+      });
+
+      // Ordered items
+      var ordered = [];
+      var ordering = [];
+
+      // First pass: register items that
+      // don't specify their order
+      unordered.forEach(function (item) {
+        if (!item.after && !item.before) {
+          ordered.push(item);
+          ordering.push(item.key);
+        }
+      });
+
+      // Second pass: register items that
+      // specify their before to "_end"
+      unordered.forEach(function (item) {
+        if (item.before === "_end") {
+          ordered.push(item);
+          ordering.push(item.key);
+        }
+      });
+
+      // Third pass: keep iterating items
+      // until we hit iterations limit or finish
+      // ordering list
+      function insertItem(item) {
+        var insertAt = -1;
+        if (ordering.indexOf(item.key) === -1) {
+          if (item.after) {
+            insertAt = ordering.indexOf(item.after);
+            if (insertAt !== -1) {
+              insertAt += 1;
+            }
+          } else if (item.before) {
+            insertAt = ordering.indexOf(item.before);
+          }
+
+          if (insertAt !== -1) {
+            ordered.splice(insertAt, 0, item);
+            ordering.splice(insertAt, 0, item.key);
+          }
+        }
+      }
+
+      var iterations = 200;
+      while (iterations > 0 && index.length !== ordering.length) {
+        iterations -= 1;
+        unordered.forEach(insertItem);
+      }
+
+      return ordered;
+    };
+  };
+} (Misago.prototype));
+
+(function (Misago) {
+  Misago.serializeDatetime = function(serialized) {
+    return serialized ? serialized.format() : null;
+  };
+
+  Misago.deserializeDatetime = function(deserialized) {
+    return deserialized ? moment(deserialized) : null;
+  };
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  Misago.startsWith = function(string, beginning) {
+    return string.indexOf(beginning) === 0;
+  };
+
+  Misago.endsWith = function(string, tail) {
+    return string.indexOf(tail, string.length - tail.length) !== -1;
+  };
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  Misago.UrlConf = function() {
+    var self = this;
+    this._patterns = [];
+
+    this.patterns = function() {
+      return this._patterns;
+    };
+
+    var prefixPattern = function(prefix, pattern) {
+      return (prefix + pattern).replace('//', '/');
+    };
+
+    var include = function(prefix, patterns) {
+      for (var i = 0; i < patterns.length; i ++) {
+        self.url(prefixPattern(prefix, patterns[i].pattern),
+                 patterns[i].component,
+                 patterns[i].name);
+      }
+    };
+
+    this.url = function(pattern, component, name) {
+      if (pattern === '') {
+        pattern = '/';
+      }
+
+      if (component instanceof Misago.UrlConf) {
+        include(pattern, component.patterns());
+      } else {
+        this._patterns.push({
+          pattern: pattern,
+          component: component.replace(/_/g, '-'),
+          name: name || component
+        });
+      }
+    };
+  };
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  Misago.loadingPage = function(_) {
+    return m('.page.page-loading',
+      _.component('loader')
+    );
+  };
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var getCsrfToken = function(cookie_name) {
+    if (document.cookie.indexOf(cookie_name) !== -1) {
+      var cookieRegex = new RegExp(cookie_name + '\=([^;]*)');
+      var cookie = Misago.get(document.cookie.match(cookieRegex), 0);
+      return cookie.split('=')[1];
+    } else {
+      return null;
+    }
+  };
+
+  var Ajax = function(_) {
+    this.refreshCsrfToken = function() {
+      this.csrfToken = getCsrfToken(_.context.CSRF_COOKIE_NAME);
+    };
+    this.refreshCsrfToken();
+
+    /*
+      List of GETs underway
+      We are limiting number of GETs to API to 1 per url
+    */
+    var runningGets = {};
+
+    this.ajax = function(method, url, data, progress) {
+      var promise = m.deferred();
+
+      var ajax_settings = {
+        url: url,
+        method: method,
+        headers: {
+          'X-CSRFToken': this.csrfToken
+        },
+
+        data: data || {},
+        dataType: 'json',
+
+        success: function(data) {
+          if (method === 'GET') {
+            Misago.pop(runningGets, url);
+          }
+          promise.resolve(data);
+        },
+        error: function(jqXHR) {
+          if (method === 'GET') {
+            Misago.pop(runningGets, url);
+          }
+
+          var rejection = jqXHR.responseJSON || {};
+
+          rejection.status = jqXHR.status;
+          rejection.statusText = jqXHR.statusText;
+
+          promise.reject(rejection);
+        }
+      };
+
+      if (progress) {
+        return; // not implemented... yet!
+      }
+
+      $.ajax(ajax_settings);
+      return promise.promise;
+    };
+
+    this.get = function(url) {
+      var preloaded = Misago.pop(_.context, url);
+      if (preloaded) {
+        var deferred = m.deferred();
+        deferred.resolve(preloaded);
+        return deferred.promise;
+      } else if (runningGets[url] !== undefined) {
+        return runningGets[url];
+      } else {
+        runningGets[url] = this.ajax('GET', url);
+        return runningGets[url];
+      }
+    };
+
+    this.post = function(url, data) {
+      return this.ajax('POST', url, data);
+    };
+
+    this.patch = function(url, data) {
+      return this.ajax('PATCH', url, data);
+    };
+
+    this.put = function(url, data) {
+      return this.ajax('PUT', url, data);
+    };
+
+    this.delete = function(url) {
+      return this.ajax('DELETE', url);
+    };
+  };
+
+  Misago.addService('ajax', function(_) {
+    return new Ajax(_);
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var ALERT_BASE_DISPLAY_TIME = 5 * 1000;
+  var ALERT_LENGTH_FACTOR = 70;
+  var ALERT_MAX_DISPLAY_TIME = 9 * 1000;
+  var ALERT_HIDE_ANIMATION_LENGTH = 300;
+
+  var Alert = function(_) {
+    var self = this;
+
+    this.type = 'info';
+    this.message = null;
+    this.isVisible = false;
+
+    var show = function(type, message) {
+      self.type = type;
+      self.message = message;
+      self.isVisible = true;
+
+      var displayTime = ALERT_BASE_DISPLAY_TIME;
+      displayTime += message.length * ALERT_LENGTH_FACTOR;
+      if (displayTime > ALERT_MAX_DISPLAY_TIME) {
+        displayTime = ALERT_MAX_DISPLAY_TIME;
+      }
+
+      _.runloop.runOnce(function () {
+        m.startComputation();
+        self.isVisible = false;
+        m.endComputation();
+      }, 'flash-message-hide', displayTime);
+    };
+
+    var set = function(type, message) {
+      _.runloop.stop('flash-message-hide');
+      _.runloop.stop('flash-message-show');
+
+      if (self.isVisible) {
+        self.isVisible = false;
+        _.runloop.runOnce(function () {
+          m.startComputation();
+          show(type, message);
+          m.endComputation();
+        }, 'flash-message-show', ALERT_HIDE_ANIMATION_LENGTH);
+      } else {
+        show(type, message);
+      }
+    };
+
+    this.info = function(message) {
+      set('info', message);
+    };
+
+    this.success = function(message) {
+      set('success', message);
+    };
+
+    this.warning = function(message) {
+      set('warning', message);
+    };
+
+    this.error = function(message) {
+      set('error', message);
+    };
+  };
+
+  Misago.addService('alert', {
+    factory: function(_) {
+      return new Alert(_);
+    }
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var filtersUrl = function(filters) {
+    if (typeof filters === 'object') {
+      var values = [];
+      for (var key in filters) {
+        if (filters.hasOwnProperty(key)) {
+          var encodedKey = encodeURIComponent(key);
+          var encodedValue = encodeURIComponent(filters[key]);
+          values.push(encodedKey + '=' + encodedValue);
+        }
+      }
+      return '?' + values.join('&');
+    } else {
+      return filters + '/';
+    }
+  };
+
+  var Query = function(_, call) {
+    this.url = call.url || _.setup.api;
+
+    if (call.path) {
+      this.url += call.path + '/';
+    } else if (call.related) {
+      this.url += call.related + '/';
+    } else {
+      this.url += call.model + 's' + '/';
+    }
+
+    if (call.filters) {
+      this.url += filtersUrl(call.filters);
+    }
+
+    if (!call.url && call.filters) {
+      if (call.model) {
+        this.related = function(model, filters) {
+          return new Query(_, {
+            url: this.url,
+            relation: call.model,
+            related: model,
+            filters: filters,
+          });
+        };
+      }
+
+      this.endpoint = function(path, filters) {
+        return new Query(_, {
+          url: this.url,
+          path: path,
+          filters: filters
+        });
+      };
+    }
+
+    this.get = function() {
+      var model = null;
+      if (call.related) {
+        model = call.relation + ':' + call.related;
+      } else if (call.model) {
+        model = call.model;
+      }
+
+      return _.ajax.get(this.url).then(function(data) {
+        if (model) {
+          if (data.results) {
+            data.results.map(function(item) {
+              return _.models.new(model, item);
+            });
+            return data;
+          } else {
+            return _.models.new(model, data);
+          }
+        } else {
+          return data;
+        }
+      });
+    };
+
+    this.post = function(data) {
+      return _.ajax.post(this.url, data);
+    };
+
+    this.patch = function(data) {
+      return _.ajax.patch(this.url, data);
+    };
+
+    this.put = function(data) {
+      return _.ajax.put(this.url, data);
+    };
+
+    this.delete = function() {
+      return _.ajax.delete(this.url);
+    };
+
+    // shortcut for get()
+    this.then = function(resolve, reject) {
+      return this.get().then(resolve, reject);
+    };
+  };
+
+  var Api = function(_) {
+    this.model = function(model, filters) {
+      return new Query(_, {
+        model: model,
+        filters: filters,
+      });
+    };
+
+    this.endpoint = function(path, filters) {
+      return new Query(_, {
+        path: path,
+        filters: filters
+      });
+    };
+
+    this.alert = function(rejection) {
+      // Shorthand for API errors
+      var message = gettext("Unknown error has occured.");
+
+      if (rejection.status === 0) {
+        message = gettext("Lost connection with application.");
+      }
+
+      if (rejection.status === 403) {
+        message = rejection.detail;
+        if (message === "Permission denied") {
+          message = gettext(
+            "You don't have permission to perform this action.");
+        }
+      }
+
+      if (rejection.status === 404) {
+        message = gettext("Action link is invalid.");
+      }
+
+      _.alert.error(message);
+    };
+  };
+
+  Misago.addService('api', function(_) {
+    return new Api(_);
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var Auth = function(_) {
+    _.user = _.models.deserialize('user', _.context.user);
+  };
+
+  Misago.addService('auth', function(_) {
+    return new Auth(_);
+  },
+  {
+    after: 'model:user'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var NoCaptcha = function() {
+    var deferred = m.deferred();
+    deferred.resolve();
+
+    this.load = function() {
+      return deferred.promise;
+    };
+
+    this.component = function() {
+      return null;
+    };
+
+    this.value = function() {
+      return null;
+    };
+
+    this.validator = function() {
+      return null;
+    };
+  };
+
+  var QACaptcha = function(_) {
+    var self = this;
+
+    this.loading = false;
+    this.question = null;
+    this.value = m.prop('asdsadsa');
+
+    var deferred = m.deferred();
+    this.load = function() {
+      this.value('');
+
+      if (!this.question && !this.loading) {
+        this.loading = true;
+
+        _.api.endpoint('captcha-question').get().then(function(question) {
+          self.question = question;
+          deferred.resolve();
+        }, function() {
+          _.api.alert(gettext('Failed to load CAPTCHA.'));
+          deferred.reject();
+        }).then(function() {
+          self.loading = true;
+        });
+      }
+
+      return deferred.promise;
+    };
+
+    this.component = function(kwargs) {
+      return _.component('form-group', {
+        label: this.question.question,
+        labelClass: kwargs.labelClass || null,
+        controlClass: kwargs.controlClass || null,
+        control: _.input({
+          value: _.validate(kwargs.form, 'captcha'),
+          id: 'id_captcha',
+          disabled: kwargs.form.isBusy
+        }),
+        validation: kwargs.form.errors,
+        validationKey: 'captcha',
+        helpText: this.question.help_text
+      });
+    };
+
+    this.validator = function() {
+      return [];
+    };
+  };
+
+  var ReCaptcha = function() {
+    this.loading = false;
+    this.question = null;
+
+    var deferred = m.deferred();
+    this.load = function() {
+      return deferred.promise;
+    };
+
+    this.component = function() {
+      return 'null';
+    };
+
+    this.value = function() {
+      return 'pass';
+    };
+
+    this.validator = function() {
+      return [];
+    };
+  };
+
+  var Captcha = function(_) {
+    var types = {
+      'no': NoCaptcha,
+      'qa': QACaptcha,
+      're': ReCaptcha
+    };
+
+    var captcha = new types[_.settings.captcha_type](_);
+
+    this.value = captcha.value;
+
+    this.load = function() {
+      return captcha.load();
+    };
+
+    this.component = function(kwargs) {
+      return captcha.component(kwargs);
+    };
+
+    this.validator = function() {
+      return captcha.validator();
+    };
+  };
+
+  Misago.addService('captcha', function(_) {
+    return new Captcha(_);
+  },
+  {
+    after: 'include'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var component = function(name, component) {
+    if (this._components[name]) {
+      if (arguments.length > 1) {
+        var argumentsArray = [this._components[name]];
+        for (var i = 1; i < arguments.length; i += 1) {
+          argumentsArray.push(arguments[i]);
+        }
+        argumentsArray.push(this);
+        return m.component.apply(undefined, argumentsArray);
+      } else {
+        return m.component(this._components[name], this);
+      }
+    } else {
+      this._components[name] = component;
+    }
+  };
+
+  Misago.addService('components', function(_) {
+    _._components = {};
+    _.component = component;
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  Misago.addService('conf', function(_) {
+    _.settings = Misago.get(_.context, 'SETTINGS', {});
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var boilerplate = function(form) {
+    var _submit = form.submit;
+    var _success = form.success;
+    var _error = form.error;
+
+    form.isBusy = false;
+
+    form.errors = null;
+
+    form.submit = function() {
+      if (form.isBusy) {
+        return false;
+      }
+
+      if (form.clean) {
+        if (form.clean()) {
+          form.isBusy = true;
+          _submit.apply(form);
+        }
+      } else {
+        form.isBusy = true;
+      }
+      return false;
+    };
+
+    form.success = function() {
+      m.startComputation();
+
+      _success.apply(form, arguments);
+      form.isBusy = false;
+
+      m.endComputation();
+    };
+
+    form.error = function() {
+      m.startComputation();
+
+      _error.apply(form, arguments);
+      form.isBusy = false;
+
+      m.endComputation();
+    };
+
+    form.hasErrors = function() {
+      if (form.errors === null) {
+        return false;
+      }
+
+      for (var key in form.validation) {
+        if (form.validation.hasOwnProperty(key)) {
+          if (form.errors[key] !== true) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    };
+
+    return form;
+  };
+
+  var form = function(name, constructor) {
+    if (this._forms[name]) {
+      if (constructor) {
+        return boilerplate(new this._forms[name](constructor, this));
+      } else {
+        return boilerplate(new this._forms[name](this));
+      }
+    } else {
+      this._forms[name] = constructor;
+    }
+  };
+
+  Misago.addService('forms', function(_) {
+    _._forms = {};
+    _.form = form;
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  Misago.addService('forum-layout', {
+    factory: function(_) {
+      if (_.setup.fixture) {
+        m.mount(document.getElementById(_.setup.fixture),
+                _.component('forum-layout'));
+      }
+    },
+
+    destroy: function(_) {
+      if (_.setup.fixture) {
+        m.mount(document.getElementById(_.setup.fixture), null);
+      }
+    }
+  },
+  {
+    before: 'start-routing'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var include = function(script, remote) {
+    if (!remote) {
+      script = this.context.STATIC_URL + script;
+    }
+
+    $.ajax({
+      url: script,
+      cache: true,
+      dataType: 'script'
+    });
+  };
+
+  Misago.addService('include', function(_) {
+    _.include = include;
+  },
+  {
+    after: 'conf'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var Modal = function() {
+    var self = this;
+
+    var element = document.getElementById('misago-modal');
+
+    // href clicks within modal should close it
+    var delegateName = 'click.misago-modal';
+    $(element).on(delegateName, 'a', function() {
+      self.hide();
+    });
+
+    this.destroy = function() {
+      $(element).off();
+      $('body').removeClass('modal-open');
+      $('.modal-backdrop').remove();
+    };
+
+    // Open/close modal
+    var modal = $(element).modal({show: false});
+    this.open = false;
+
+    modal.on('hidden.bs.modal', function () {
+      if (self.open) {
+        m.mount(element, null);
+        this.open = false;
+      }
+    });
+
+    this.show = function(component) {
+      this.open = true;
+      m.mount(element, component);
+      modal.modal('show');
+    };
+
+    this.hide = function() {
+      modal.modal('hide');
+    };
+  };
+
+  Misago.addService('_modal', {
+    factory: function() {
+      return new Modal();
+    },
+    destroy: function(_) {
+      _._modal.destroy();
+    }
+  },
+  {
+    after: 'start-routing'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var modal = function(name, component) {
+    if (this._modals[name]) {
+      var argumentsArray = [this._modals[name]];
+      for (var i = 1; i < arguments.length; i += 1) {
+        argumentsArray.push(arguments[i]);
+      }
+      argumentsArray.push(this);
+      this._modal.show(m.component.apply(m, argumentsArray));
+    } else if (name) {
+      this._modals[name] = component;
+    } else {
+      this._modal.hide();
+    }
+  };
+
+  Misago.addService('modals', function(_) {
+    _._modals = {};
+    _.modal = modal;
+  },
+  {
+    after: '_modal'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var Models = function() {
+    this.classes = {};
+    this.deserializers = {};
+    this.relations = {};
+
+    this.add = function(name, kwargs) {
+      if (kwargs.class) {
+        this.classes[name] = kwargs.class;
+      }
+
+      if (kwargs.deserialize) {
+        this.deserializers[name] = kwargs.deserialize;
+      }
+
+      if (kwargs.relations) {
+        for (var key in kwargs.relations) {
+          if (kwargs.relations.hasOwnProperty(key)) {
+            this.relations[name + ':' + key] = kwargs.relations[key];
+          }
+        }
+      }
+    };
+
+    this.new = function(name, data) {
+      if (this.classes[name]) {
+        return new this.classes[name](data);
+      } else {
+        return data;
+      }
+    };
+
+    this.deserialize = function(name, json) {
+      if (this.relations[name]) {
+        name = this.relations[name];
+      }
+
+      if (this.deserializers[name]) {
+        return this.new(name, this.deserializers[name](json, this));
+      } else {
+        return this.new(name, json);
+      }
+    };
+  };
+
+  Misago.addService('models', function() {
+    return new Models();
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  Misago.addService('set-momentjs-locale', function() {
+    moment.locale($('html').attr('lang'));
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var Router = function(_) {
+    var self = this;
+    this.baseUrl = $('base').attr('href');
+
+    var staticUrl = Misago.get(_.context, 'STATIC_URL', '/');
+    var mediaUrl = Misago.get(_.context, 'MEDIA_URL', '/');
+
+    // Routing
+    this.urls = {};
+    this.reverses = {};
+
+    var populatePatterns = function(urlconf) {
+      urlconf.patterns().forEach(function(url) {
+        var finalPattern = self.baseUrl + url.pattern;
+        finalPattern = finalPattern.replace('//', '/');
+
+        self.urls[finalPattern] = _.route(url.component);
+        self.reverses[url.name] = finalPattern;
+      });
+    };
+
+    this.startRouting = function(urlconf, fixture) {
+      populatePatterns(urlconf);
+      this.fixture = fixture;
+
+      if (_.setup.test) {
+        m.route.mode = 'search';
+      } else {
+        m.route.mode = 'pathname';
+      }
+      m.route(fixture, '/', this.urls);
+    };
+
+    this.url = function(name) {
+      return this.reverses[name];
+    };
+
+    // Delegate clicks
+    this.delegateElement = null;
+
+    this.cleanUrl = function(url) {
+      if (!url) { return; }
+
+      // Is link relative?
+      var isRelative = url.substr(0, 1) === '/' && url.substr(0, 2) !== '//';
+
+      // If link contains host, validate to see if its outgoing
+      if (!isRelative) {
+        var location = window.location;
+
+        // If protocol matches current one, strip it from string
+        // otherwhise stop handler
+        if (url.substr(0, 2) !== '//') {
+          var protocol = url.substr(0, location.protocol.length + 2);
+          if (protocol !== location.protocol + '//') { return; }
+          url = url.substr(location.protocol.length + 2);
+        } else {
+          url = url.substr(2);
+        }
+
+        // Host checks out?
+        if (url.substr(0, location.host.length) !== location.host) { return; }
+        url = url.substr(location.host.length);
+      }
+
+      // Is link within Ember app?
+      if (url.substr(0, this.baseUrl.length) !== this.baseUrl) { return; }
+
+      // Is link to media/static/avatar server?
+      if (url.substr(0, staticUrl.length) === staticUrl) { return; }
+
+      if (url.substr(0, mediaUrl.length) === mediaUrl) { return; }
+
+      var avatarsUrl = '/user-avatar/';
+      if (url.substr(0, avatarsUrl.length) === avatarsUrl) { return; }
+
+      return url;
+    };
+
+    var delegateName = 'click.misago-router';
+    this.delegateClicks = function(element) {
+      this.delegateElement = element;
+      $(this.delegateElement).on(delegateName, 'a', function(e) {
+        var cleanUrl = self.cleanUrl(e.target.href);
+        if (cleanUrl) {
+          if (cleanUrl != m.route()) {
+            m.route(cleanUrl);
+          }
+          e.preventDefault();
+        }
+      });
+    };
+
+    this.destroy = function() {
+      $(this.delegateElement).off(delegateName);
+    };
+
+    // Media/Static url
+    var prefixUrl = function(prefix) {
+      return function(url) {
+        return prefix + url;
+      };
+    };
+
+    this.staticUrl = prefixUrl(staticUrl);
+    this.mediaUrl = prefixUrl(mediaUrl);
+
+    // Errors
+    this.error403 = function(error) {
+      var component = null;
+      if (error.ban) {
+        component = _.route('error:banned',
+          error.detail,
+          _.models.deserialize('ban', error.ban));
+      } else {
+        component = _.route('error:403', error.detail);
+      }
+      m.mount(this.fixture, component);
+    };
+
+    this.error404 = function() {
+      m.mount(this.fixture, _.route('error:404'));
+    };
+
+    this.error500 = function() {
+      m.mount(this.fixture, _.route('error:500'));
+    };
+
+    this.error0 = function() {
+      m.mount(this.fixture, _.route('error:0'));
+    };
+
+    this.errorPage = function(error) {
+      if (error.status === 0) {
+        this.error0();
+      }
+
+      if (error.status === 500) {
+        this.error500();
+      }
+
+      if (error.status === 404) {
+        this.error404();
+      }
+
+      if (error.status === 403) {
+        this.error403(error);
+      }
+    };
+  };
+
+  Misago.addService('router', function(_) {
+    return new Router(_);
+  });
+
+  Misago.addService('start-routing', function(_) {
+    _.router.startRouting(
+      Misago.urls, document.getElementById('router-fixture'));
+    _.router.delegateClicks(document.getElementById(_.setup.fixture));
+  },
+  {
+    before: '_end'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var boilerplate = function(component) {
+    // Component already boilerplated (this may happen in tests)
+    if (component._hasRouteBoilerplate) {
+      return component;
+    }
+    component._hasRouteBoilerplate = true;
+
+    // Add lifecycle hooks
+    var loadingView = function () {
+      var _ = this.container;
+      return m('.page.page-loading',
+        _.component('loader')
+      );
+    };
+
+    var errorHandler = function(error) {
+      if (this.isActive) {
+        this.container.router.errorPage(error);
+      }
+    };
+
+    return Misago.stateHooks(component, loadingView, errorHandler);
+  };
+
+  Misago.addService('routes', function(_) {
+    _._routes = {};
+    _.route = function(name, component) {
+      if (this._routes[name]) {
+        if (arguments.length > 1) {
+          var argumentsArray = [this._routes[name]];
+          for (var i = 1; i < arguments.length; i += 1) {
+            argumentsArray.push(arguments[i]);
+          }
+          argumentsArray.push(this);
+          return m.component.apply(undefined, argumentsArray);
+        } else {
+          return m.component(this._routes[name], this);
+        }
+      } else {
+        component.container = _;
+        this._routes[name] = boilerplate(component);
+      }
+    };
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var RunLoop = function(_) {
+    var self = this;
+
+    this._intervals = {};
+
+    var stopInterval = function(name) {
+      if (self._intervals[name]) {
+        window.clearTimeout(self._intervals[name]);
+        self._intervals[name] = null;
+      }
+    };
+
+    this.run = function(callable, name, delay) {
+      this._intervals[name] = window.setTimeout(function() {
+        stopInterval(name);
+        var result = callable(_);
+        if (result !== false) {
+          self.run(callable, name, delay);
+        }
+      }, delay);
+    };
+
+    this.runOnce = function(callable, name, delay) {
+      this._intervals[name] = window.setTimeout(function() {
+        stopInterval(name);
+        callable(_);
+      }, delay);
+    };
+
+    this.stop = function(name) {
+      for (var loop in this._intervals) {
+        if (!name || name === loop) {
+          stopInterval(loop);
+        }
+      }
+    };
+  };
+
+  Misago.addService('runloop', {
+    factory: function(_) {
+      return new RunLoop(_);
+    },
+
+    destroy: function(_) {
+      _.runloop.stop();
+    }
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  Misago.addService('start-tick', function(_) {
+    var ticks = m.prop();
+
+    _.runloop.run(function() {
+      m.startComputation();
+      // just tick once a minute so stuff gets rerendered
+      ticks(ticks() + 1);
+      // syncing dynamic timestamps, etc ect
+      m.endComputation();
+    }, 'tick', 60000);
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var PageTitle = function(forum_name) {
+    this.set = function(title) {
+      if (title) {
+        this._set_complex(title);
+      } else {
+        document.title = forum_name;
+      }
+    };
+
+    this._set_complex = function(title) {
+      if (typeof title === 'string') {
+        title = {title: title};
+      }
+
+      var completeTitle = title.title;
+
+      if (typeof title.page !== 'undefined' && title.page > 1) {
+        var page_label = interpolate(
+          gettext('page %(page)s'), { page:title.page }, true);
+        completeTitle += ' (' + page_label + ')';
+      }
+
+      if (typeof title.parent !== 'undefined') {
+        completeTitle += ' | ' + title.parent;
+      }
+
+      document.title = completeTitle + ' | ' + forum_name;
+    };
+  };
+
+  Misago.addService('page-title', function(_) {
+    _.title = new PageTitle(_.settings.forum_name);
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var EMAIL = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+  var USERNAME = new RegExp('^[0-9a-z]+$', 'i');
+
+  // Validators namespace
+  Misago.validators = {
+    required: function() {
+      return function(value) {
+        if ($.trim(value).length === 0) {
+          return gettext("This field is required.");
+        }
+      };
+    },
+    email: function(message) {
+      return function(value) {
+        if (!EMAIL.test(value)) {
+          return message || gettext('Enter a valid email address.');
+        }
+      };
+    },
+    minLength: function(limit_value, message) {
+      return function(value) {
+        var returnMessage = '';
+        var length = $.trim(value).length;
+
+        if (length < limit_value) {
+          if (message) {
+            returnMessage = message(limit_value, length);
+          } else {
+            returnMessage = ngettext(
+              "Ensure this value has at least %(limit_value)d character (it has %(show_value)d).",
+              "Ensure this value has at least %(limit_value)d characters (it has %(show_value)d).",
+              limit_value);
+          }
+          return interpolate(returnMessage, {
+            limit_value: limit_value,
+            show_value: length
+          }, true);
+        }
+      };
+    },
+    maxLength: function(limit_value, message) {
+      return function(value) {
+        var returnMessage = '';
+        var length = $.trim(value).length;
+
+        if (length > limit_value) {
+          if (message) {
+            returnMessage = message(limit_value, length);
+          } else {
+            returnMessage = ngettext(
+              "Ensure this value has at most %(limit_value)d character (it has %(show_value)d).",
+              "Ensure this value has at most %(limit_value)d characters (it has %(show_value)d).",
+              limit_value);
+          }
+          return interpolate(returnMessage, {
+            limit_value: limit_value,
+            show_value: length
+          }, true);
+        }
+      };
+    },
+    usernameMinLength: function(settings) {
+      var message = function(limit_value) {
+        return ngettext(
+          "Username must be at least %(limit_value)s character long.",
+          "Username must be at least %(limit_value)s characters long.",
+          limit_value);
+      };
+      return this.minLength(settings.username_length_min, message);
+    },
+    usernameMaxLength: function(settings) {
+      var message = function(limit_value) {
+        return ngettext(
+          "Username cannot be longer than %(limit_value)s characters.",
+          "Username cannot be longer than %(limit_value)s characters.",
+          limit_value);
+      };
+      return this.maxLength(settings.username_length_max, message);
+    },
+    usernameContent: function() {
+      return function(value) {
+        if (!USERNAME.test($.trim(value))) {
+          return gettext("Username can only contain latin alphabet letters and digits.");
+        }
+      };
+    },
+    passwordMinLenght: function(settings) {
+      var message = function(limit_value) {
+        return ngettext(
+          "Valid password must be at least %(limit_value)s character long.",
+          "Valid password must be at least %(limit_value)s characters long.",
+          limit_value);
+      };
+      return this.minLength(settings.password_length_min, message);
+    }
+  };
+
+  var validateField = function(value, validators) {
+    var result = Misago.validators.required()(value);
+    var errors = [];
+
+    if (result) {
+      return [result];
+    } else {
+      for (var i in validators) {
+        result = validators[i](value);
+
+        if (result) {
+          errors.push(result);
+        }
+      }
+    }
+
+    return errors.length ? errors : true;
+  };
+
+  var validateForm = function(form) {
+    var errors = {};
+    var value = null;
+
+    var isValid = true;
+
+    for (var key in form.validation) {
+      if (form.validation.hasOwnProperty(key)) {
+        value = form[key]();
+        errors[key] = validateField(form[key](), form.validation[key]);
+        if (errors[key] !== true) {
+          isValid = false;
+        }
+      }
+    }
+
+    form.errors = errors;
+    return isValid;
+  };
+
+  var validate = function(form, name) {
+    if (name) {
+      return function(value) {
+        var errors = null;
+        if (typeof value !== 'undefined') {
+          errors = validateField(value, form.validation[name]);
+          if (errors) {
+            if (!form.errors) {
+              form.errors = {};
+            }
+            form.errors[name] = errors;
+          }
+          form[name](value);
+          return form[name](value);
+        } else {
+          return form[name]();
+        }
+      };
+    } else {
+      return validateForm(form);
+    }
+  };
+
+  Misago.addService('validate', {
+    factory: function() {
+      return validate;
+    }
+  });
+}(Misago.prototype));
+
+/* global zxcvbn */
+(function (Misago) {
+  'use strict';
+
+  var Zxcvbn = function(_) {
+    this.included = false;
+
+    this.scorePassword = function(password, inputs) {
+      // 0-4 score, the more the stronger password
+      return zxcvbn(password, inputs).score;
+    };
+
+    // loading
+    this.include = function() {
+      _.include('misago/js/zxcvbn.js');
+      this.included = true;
+    };
+
+    var wait = function(promise) {
+      if (typeof zxcvbn !== "undefined") {
+        promise.resolve();
+      } else {
+        _.runloop.runOnce(function() {
+          wait(promise);
+        }, 'loading-zxcvbn', 150);
+      }
+    };
+
+    var deferred = m.deferred();
+    this.load = function() {
+      if (!this.included) {
+        this.include();
+      }
+      wait(deferred);
+      return deferred.promise;
+    };
+  };
+
+  Misago.addService('zxcvbn', function(_) {
+    return new Zxcvbn(_);
+  },
+  {
+    after: 'include'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var Ban = function(data) {
+    this.message = {
+      html: data.message.html,
+      plain: data.message.plain,
+    };
+
+    this.expires_on = data.expires_on;
+  };
+
+  var deserializeBan = function(data) {
+    data.expires_on = Misago.deserializeDatetime(data.expires_on);
+
+    return data;
+  };
+
+  Misago.addService('model:ban', function(_) {
+    _.models.add('ban', {
+      class: Ban,
+      deserialize: deserializeBan
+    });
+  },
+  {
+    after: 'models'
+  });
+} (Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var LegalPage = function(data) {
+    this.title = data.title;
+    this.body = data.body;
+    this.link = data.link;
+  };
+
+  Misago.addService('model:legal-page', function(_) {
+    _.models.add('legal-page', {
+      class: LegalPage
+    });
+  },
+  {
+    after: 'models'
+  });
+} (Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var User = function(data) {
+    this.id = data.id;
+
+    this.isAuthenticated = !!this.id;
+    this.isAnonymous = !this.isAuthenticated;
+
+    this.slug = data.slug;
+    this.username = data.username;
+
+    this.acl = data.acl;
+    this.rank = data.rank;
+  };
+
+  var deserializeUser = function(data) {
+    if (data.joined_on) {
+      data.joined_on = Misago.deserializeDatetime(data.joined_on);
+    }
+
+    return data;
+  };
+
+  Misago.addService('model:user', function(_) {
+    _.models.add('user', {
+      class: User,
+      deserialize: deserializeUser
+    });
+  },
+  {
+    after: 'models'
+  });
+} (Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var errorPage = function(error) {
+    var error_message = [
+      m('p.lead', error.message)
+    ];
+
+    if (error.help) {
+      error_message.push(m('p.help', error.help));
+    }
+
+    return m('.page.page-error.page-error-' + error.code,
+      m('.container',
+        m('.error-panel', [
+          m('.error-icon',
+            m('span.material-icon', error.icon)
+          ),
+          m('.error-message', error_message)
+        ])
+      )
+    );
+  };
+
+  var errorBanned = {
+    controller: function() {
+      this.container.title.set(gettext('You are banned'));
+    },
+    view: function(ctrl, message, ban) {
+      var error_message = [];
+
+      if (ban.message.html) {
+        error_message.push(m('.lead', m.trust(ban.message.html)));
+      } else if (message) {
+        error_message.push(m('p.lead', message));
+      } else {
+        error_message.push(m('p.lead', gettext('You are banned.')));
+      }
+
+      var expirationMessage = null;
+      if (ban.expires_on) {
+        if (ban.expires_on.isAfter(moment())) {
+          expirationMessage = interpolate(
+            gettext('This ban expires %(expires_on)s.'),
+            { 'expires_on': ban.expires_on.fromNow() },
+            true);
+        } else {
+          expirationMessage = gettext('This ban has expired.');
+        }
+      } else {
+        expirationMessage = gettext('This ban is permanent.');
+      }
+      error_message.push(m('p', expirationMessage));
+
+      return m('.page.page-error.page-error-banned',
+        m('.container',
+          m('.error-panel', [
+            m('.error-icon',
+              m('span.material-icon', 'highlight_off')
+            ),
+            m('.error-message', error_message)
+          ])
+        )
+      );
+    }
+  };
+
+  var error403 = {
+    controller: function() {
+      this.container.title.set(gettext('Page not available'));
+    },
+    view: function(ctrl, message) {
+      if (message === "Permission denied") {
+        message = gettext("You don't have permission to access this page.");
+      }
+
+      return errorPage({
+        code: 403,
+        icon: 'remove_circle_outline',
+        message: gettext("This page is not available."),
+        help: message
+      });
+    }
+  };
+
+  var error404 = {
+    controller: function() {
+      this.container.title.set(gettext('Page not found'));
+    },
+    view: function() {
+      return errorPage({
+        code: 404,
+        icon: 'info_outline',
+        message: gettext("Requested page could not be found."),
+        help: gettext("The link you followed was incorrect or the page has been moved or deleted.")
+      });
+    }
+  };
+
+  var error500 = {
+    controller: function() {
+      this.container.title.set(gettext('Application error occured'));
+    },
+    view: function() {
+      return errorPage({
+        code: 500,
+        icon: 'error_outline',
+        message: gettext("Requested page could not be displayed due to an error."),
+        help: gettext("Please try again later or contact site staff if error persists.")
+      });
+    }
+  };
+
+  var error0 = {
+    controller: function() {
+      this.container.title.set(gettext('Lost connection with application'));
+    },
+    view: function() {
+      return errorPage({
+        code: 0,
+        icon: 'sync_problem',
+        message: gettext("Could not connect to application."),
+        help: gettext("This may be caused by problems with your connection or application server. Please check your internet connection and refresh page if problem persists.")
+      });
+    }
+  };
+
+  Misago.addService('route:error-pages', function(_) {
+    _.route('error:banned', errorBanned);
+    _.route('error:403', error403);
+    _.route('error:404', error404);
+    _.route('error:500', error500);
+    _.route('error:0', error0);
+  },
+  {
+    after: 'routes'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var index = {
+    controller: function() {
+      var _ = this.container;
+      document.title = _.settings.forum_index_title || _.settings.forum_name;
+
+      var count = m.prop(0);
+
+      return {
+        count: count,
+        increment: function() {
+          console.log('increment()');
+          count(count() + 1);
+        }
+      };
+    },
+    view: function(ctrl, _) {
+      var styles = [
+        'default', 'primary', 'success',
+        'info', 'warning', 'danger'
+      ];
+
+      return m('.container', [
+        m('h1', 'Buttons'),
+        m('', styles.map(function(item) {
+          return m('', [
+            _.component('button', {
+              class: '.btn-' + item,
+              label: 'Lorem ipsum'
+            }),
+            _.component('button', {
+              class: '.btn-' + item,
+              label: 'Lorem ipsum',
+              loading: true
+            })
+          ]);
+        }))
+      ]);
+    }
+  };
+
+  Misago.addService('route:index', function(_) {
+    _.route('index', index);
+  },
+  {
+    after: 'routes'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var legalPageFactory = function(typeName, defaultTitle) {
+    var dashedTypeName = typeName.replace(/_/g, '-');
+
+    return {
+      controller: function(_) {
+        if (Misago.get(_.settings, typeName + '_link')) {
+          window.location = Misago.get(_.settings, typeName + '_link');
+        } else {
+          this.vm.init(this, _);
+        }
+      },
+      vm: {
+        page: null,
+        isReady: false,
+        init: function(component, _) {
+          if (this.isReady) {
+            _.title.set(this.title);
+          } else {
+            _.title.set();
+            return _.api.model('legal-page', dashedTypeName);
+          }
+        },
+        ondata: function(page, component, _) {
+          m.startComputation();
+
+          if (page.link) {
+            window.location = page.link;
+          } else {
+            page.title = page.title || defaultTitle;
+            this.page = page;
+            this.isReady = true;
+
+            m.endComputation();
+
+            if (component.isActive) {
+              _.title.set(this.page.title);
+            }
+          }
+        }
+      },
+      view: function(ctrl, _) {
+        return m('.page.page-legal.page-legal-' + dashedTypeName, [
+          _.component('header', {title: this.vm.page.title}),
+          m('.container',
+            _.component('markup', this.vm.page.body)
+          )
+        ]);
+      }
+    };
+  };
+
+  Misago.addService('route:legal-pages', function(_) {
+    _.route('terms-of-service', legalPageFactory(
+      'terms_of_service', gettext('Terms of service')));
+    _.route('privacy-policy', legalPageFactory(
+      'privacy_policy', gettext('Privacy policy')));
+  },
+  {
+    after: 'routes'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var isMenuVisible = function(settings) {
+    return [
+      !!settings.forum_footnote,
+      !!settings.terms_of_service,
+      !!settings.terms_of_service_link,
+      !!settings.privacy_policy,
+      !!settings.privacy_policy_link
+    ].indexOf(true) !== -1;
+  };
+
+  var footer = {
+    view: function(ctrl, _) {
+      var nav = null;
+      if (isMenuVisible(_.settings)) {
+        nav = _.component('footer:menu');
+      }
+
+      return m('footer.forum-footer', [
+        m('.container',
+          m('.footer-content', [
+            nav,
+            _.component('footer:branding')
+          ])
+        )
+      ]);
+    }
+  };
+
+  Misago.addService('component:footer', function(_) {
+    _.component('footer', footer);
+  },
+  {
+    after: 'components'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var legalLink = function(_, legalType, defaultTitle) {
+    var url = Misago.get(_.settings, legalType + '_link');
+    if (!url && Misago.get(_.settings, legalType)) {
+      url = _.router.url(legalType);
+    }
+
+    if (url) {
+      return m('li',
+        m('a', {href: url},
+          Misago.get(_.settings, legalType + '_title', defaultTitle)
+        )
+      );
+    } else {
+      return null;
+    }
+  };
+
+  var menu = {
+    isVisible: function(settings) {
+      return [
+        !!settings.forum_footnote,
+        !!settings.terms_of_service,
+        !!settings.terms_of_service_link,
+        !!settings.privacy_policy,
+        !!settings.privacy_policy_link
+      ].indexOf(true) !== -1;
+    },
+    view: function(ctrl, _) {
+      var items = [];
+
+      if (_.settings.forum_footnote) {
+        items.push(m('li.forum-footnote', m.trust(_.settings.forum_footnote)));
+      }
+
+      items.push(
+        legalLink(_, 'terms_of_service', gettext('Terms of service')));
+      items.push(
+        legalLink(_, 'privacy_policy', gettext('Privacy policy')));
+
+      return m('ul.list-inline.footer-nav', items);
+    }
+  };
+
+  Misago.addService('component:footer:menu', function(_) {
+    _.component('footer:menu', menu);
+  },
+  {
+    after: 'components'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var branding = {
+    view: function() {
+      return m('a.misago-branding[href=http://misago-project.org]', [
+        "powered by ", m('strong', "misago")
+      ]);
+    }
+  };
+
+  Misago.addService('component:footer:branding', function(_) {
+    _.component('footer:branding', branding);
+  },
+  {
+    after: 'components'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var header = {
+    view: function(ctrl, title) {
+      return m('.modal-header', [
+        m('button.close[type="button"]',
+          {'data-dismiss': 'modal', 'aria-label': gettext('Close')},
+          m('span', {'aria-hidden': 'true'}, m.trust('&times;'))
+        ),
+        m('h4#misago-modal-label.modal-title', title)
+      ]);
+    }
+  };
+
+  Misago.addService('component:modal:header', function(_) {
+    _.component('modal:header', header);
+  },
+  {
+    after: 'components'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  function persistent(el, isInit, context) {
+    context.retain = true;
+  }
+
+  var register = {
+    controller: function(_) {
+      return {
+        form: _.form('register')
+      };
+    },
+    view: function(ctrl, _) {
+      var captcha = _.captcha.component({
+        form: ctrl.form,
+
+        labelClass: '.col-md-4',
+        controlClass: '.col-md-8'
+      });
+
+      var footnote = null;
+      var termsUrl = _.settings.terms_of_service_link;
+
+      if (!termsUrl && _.settings.terms_of_service) {
+        termsUrl = _.router.url('terms_of_service');
+      }
+
+      if (termsUrl) {
+        footnote = m('a', {href: termsUrl},
+          m.trust(interpolate(gettext("By registering you agree to site's %(terms)s."), {
+            terms: '<strong>' + gettext("terms and conditions") + '</strong>'
+          }, true))
+        );
+      }
+
+      return m('.modal-dialog.modal-form.modal-register[role="document"]',
+        {config: persistent},
+        m('.modal-content', [
+          _.component('modal:header', gettext('Register')),
+          m('form.form-horizontal',
+          {
+            onsubmit: ctrl.form.submit
+          },
+          [
+            m('input[type="text"]', {
+              name:'_username',
+              style: 'display: none'
+            }),
+            m('input[type="password"]', {
+              name:'_password',
+              style: 'display: none'
+            }),
+            m('.modal-body', [
+              _.component('form-group', {
+                label: gettext("Username"),
+                labelClass: '.col-md-4',
+                controlClass: '.col-md-8',
+                control: _.input({
+                  value: _.validate(ctrl.form, 'username'),
+                  id: 'id_username',
+                  disabled: ctrl.form.isBusy
+                }),
+                validation: ctrl.form.errors,
+                validationKey: 'username'
+              }),
+              _.component('form-group', {
+                label: gettext("E-mail"),
+                labelClass: '.col-md-4',
+                controlClass: '.col-md-8',
+                control: _.input({
+                  value: _.validate(ctrl.form, 'email'),
+                  id: 'id_email',
+                  disabled: ctrl.form.isBusy
+                }),
+                validation: ctrl.form.errors,
+                validationKey: 'email'
+              }),
+              _.component('form-group', {
+                label: gettext("Password"),
+                labelClass: '.col-md-4',
+                controlClass: '.col-md-8',
+                control: _.input({
+                  value: _.validate(ctrl.form, 'password'),
+                  type: 'password',
+                  id: 'id_password',
+                  disabled: ctrl.form.isBusy
+                }),
+                validation: ctrl.form.errors,
+                validationKey: 'password',
+                helpText: _.component('password-strength', {
+                  inputs: [
+                    ctrl.form.username(),
+                    ctrl.form.email()
+                  ],
+                  password: ctrl.form.password()
+                })
+              }),
+              captcha
+            ]),
+            m('.modal-footer', [
+              footnote,
+              _.component('button', {
+                class: '.btn-primary',
+                submit: true,
+                loading: ctrl.form.isBusy,
+                label: gettext("Register account")
+              })
+            ])
+          ])
+        ])
+      );
+    }
+  };
+
+  Misago.addService('modal:register', function(_) {
+    _.modal('register', register);
+  },
+  {
+    after: 'modals'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  function persistent(el, isInit, context) {
+    context.retain = true;
+  }
+
+  var signin = {
+    controller: function(_) {
+      return {
+        form: _.form('sign-in')
+      };
+    },
+    view: function(ctrl, _) {
+      return m('.modal-dialog.modal-sm.modal-signin[role="document"]',
+        {config: persistent},
+        m('.modal-content', [
+          _.component('modal:header', gettext("Sign in")),
+          m('form', {onsubmit: ctrl.form.submit}, [
+            m('.modal-body', [
+              m('.form-group',
+                m('.control-input',
+                  Misago.input({
+                    disabled: ctrl.form.isBusy,
+                    value: ctrl.form.username,
+                    placeholder: gettext("Username or e-mail")
+                  })
+                )
+              ),
+              m('.form-group',
+                m('.control-input',
+                  Misago.input({
+                    type: 'password',
+                    disabled: ctrl.form.isBusy,
+                    value: ctrl.form.password,
+                    placeholder: gettext("Password")
+                  })
+                )
+              )
+            ]),
+            m('.modal-footer',
+              _.component('button', {
+                class: '.btn-primary.btn-block',
+                submit: true,
+                loading: ctrl.form.isBusy,
+                label: gettext("Sign in")
+              })
+            )
+          ])
+        ])
+      );
+    }
+  };
+
+  Misago.addService('modal:sign-in', function(_) {
+    _.modal('sign-in', signin);
+  },
+  {
+    after: 'modals'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var navbar = {
+    view: function(ctrl, _) {
+      var style = '.navbar.navbar-default.navbar-static-top';
+      return m('nav' + style + '[role="navigation"]', [
+        _.component('navbar:desktop')
+      ]);
+    }
+  };
+
+  Misago.addService('component:navbar', function(_) {
+    _.component('navbar', navbar);
+  },
+  {
+    after: 'components'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var brand = {
+    view: function(ctrl, branding, _) {
+      var children = [
+        m('img', {
+          src: _.router.staticUrl('misago/img/site-logo.png'),
+          alt: _.settings.forum_name
+        })
+      ];
+
+      if (branding) {
+        children.push(branding);
+      }
+
+      return m('a.navbar-brand', {href: _.router.url('index')}, children);
+    }
+  };
+
+  Misago.addService('component:navbar:desktop:brand', function(_) {
+    _.component('navbar:desktop:brand', brand);
+  },
+  {
+    after: 'components'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var menu = {
+    controller: function(_) {
+      return {
+        showSignIn: function() {
+          _.modal('sign-in');
+        },
+
+        isBusy: false,
+        showRegister: function() {
+          if (_.settings.account_activation === 'closed') {
+            _.alert.info(gettext("New registrations are currently disabled."));
+          } else {
+            m.startComputation();
+            this.isBusy = true;
+            m.endComputation();
+
+            var self = this;
+            m.sync([
+              _.zxcvbn.load(),
+              _.captcha.load()
+            ]).then(function() {
+              _.modal('register');
+            }, function() {
+              _.alert.error(gettext('Registation is not available now due to an error.'));
+            }).then(function() {
+              m.startComputation();
+              self.isBusy = false;
+              m.endComputation();
+            });
+          }
+        }
+      };
+    },
+    view: function(ctrl, _) {
+      return m('div.nav.nav-guest', [
+        _.component('button', {
+          class: '.navbar-btn.btn-default',
+          onclick: ctrl.showSignIn,
+          disabled: ctrl.isBusy,
+          label: gettext('Sign in')
+        }),
+        _.component('button', {
+          class: '.navbar-btn.btn-primary',
+          onclick: ctrl.showRegister.bind(ctrl),
+          loading: ctrl.isBusy,
+          label: gettext('Register')
+        })
+      ]);
+    }
+  };
+
+  Misago.addService('component:navbar:desktop:guest-menu', function(_) {
+    _.component('navbar:desktop:guest-menu', menu);
+  },
+  {
+    after: 'components'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var navbar = {
+    view: function(ctrl, _) {
+      var menu = [];
+
+      if (_.settings.forum_branding_display) {
+        menu.push(
+          _.component('navbar:desktop:brand', _.settings.forum_branding_text));
+      }
+
+      menu.push(m('ul.nav.navbar-nav', [
+        m('li',
+          m("a", {config: m.route, href: _.router.url('index')}, 'Index')
+        )
+      ]));
+
+      if (_.user.isAuthenticated) {
+        menu.push(_.component('navbar:desktop:user-menu'));
+      } else {
+        menu.push(_.component('navbar:desktop:guest-menu'));
+      }
+
+      return m('.container.navbar-full.hidden-xs.hidden-sm', menu);
+    }
+  };
+
+  Misago.addService('component:navbar:desktop', function(_) {
+    _.component('navbar:desktop', navbar);
+  },
+  {
+    after: 'components'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var menu = {
+    controller: function() {
+      return {
+        logout: function() {
+          $('#hidden-logout-form').submit();
+        }
+      };
+    },
+    view: function(ctrl, _) {
+      return m('div.nav.nav-user', [
+        m('p.navbar-text',
+          _.user.username
+        ),
+        m('button.navbar-btn.btn.btn-default.navbar-right',
+          {
+            onclick: ctrl.logout.bind(ctrl)
+          },
+          gettext("Logout")
+        )
+      ]);
+    }
+  };
+
+  Misago.addService('component:navbar:desktop:user-menu', function(_) {
+    _.component('navbar:desktop:user-menu', menu);
+  },
+  {
+    after: 'components'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  function persistent(el, isInit, context) {
+    context.retain = true;
+  }
+
+  var alert = {
+    classes: {
+      'info': 'alert-info',
+      'success': 'alert-success',
+      'warning': 'alert-warning',
+      'error': 'alert-danger'
+    },
+    view: function(ctrl, _) {
+      return m(
+        '.alerts',
+        {
+          config: persistent,
+          class: _.alert.isVisible ? 'in' : 'out'
+        },
+        m('p.alert',
+          {
+            class: this.classes[_.alert.type]
+          },
+          _.alert.message
+        )
+      );
+    }
+  };
+
+  Misago.addService('component:alert', function(_) {
+    _.component('alert', alert);
+  },
+  {
+    after: 'components'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var button = {
+    view: function(ctrl, kwargs) {
+      var options = {
+        disabled: kwargs.disabled || kwargs.loading || false,
+        config: kwargs.config || null,
+        loading: kwargs.loading || false,
+        type: kwargs.submit ? 'submit' : 'button',
+        onclick: kwargs.onclick || null
+      };
+
+      var element = 'button[type="' + options.type + '"].btn';
+      if (options.loading) {
+        element += '.btn-loading';
+      }
+
+      if (kwargs.id) {
+        element += '#' + kwargs.id;
+      }
+
+      element += (kwargs.class || '');
+
+      var label = kwargs.label;
+      if (options.loading) {
+        label = [
+          label,
+          m('.loader-compact', [
+            m('.bounce1'),
+            m('.bounce2'),
+            m('.bounce3')
+          ])
+        ];
+      }
+
+      return m(element, options, label);
+    },
+  };
+
+  Misago.addService('component:button', function(_) {
+    _.component('button', button);
+  },
+  {
+    after: 'components'
+  });
+} (Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var textFields = ['text', 'password', 'email'];
+
+  var formGroup = {
+    view: function(ctrl, kwargs) {
+      var groupClass = '.form-group';
+      var errors = null;
+      var helpText = null;
+
+      var controlType = kwargs.control.attrs.type;
+      var controlId = kwargs.control.attrs.id;
+
+      var feedbackId = controlId + '_feedback';
+      var feedbackIcon = null;
+      var showFeedbackIcon = null;
+
+      var isValidated = kwargs.validationKey && kwargs.validation !== null;
+
+      kwargs.control.attrs['aria-describedby'] = '';
+
+      if (isValidated && kwargs.validation[kwargs.validationKey]) {
+        showFeedbackIcon = textFields.indexOf(controlType) >= 0;
+        kwargs.control.attrs['aria-describedby'] = feedbackId;
+
+        if (kwargs.validation[kwargs.validationKey] === true) {
+          groupClass += '.has-success';
+          feedbackIcon = [
+            m('span.material-icon.form-control-feedback',
+              {
+                'aria-hidden': 'true'
+              },
+              'check'
+            ),
+            m('span.sr-only#' + feedbackId, gettext("(success)"))
+          ];
+        } else {
+          groupClass += '.has-error';
+          errors = kwargs.validation[kwargs.validationKey];
+          feedbackIcon = [
+            m('span.material-icon.form-control-feedback',
+              {
+                'aria-hidden': 'true'
+              },
+              'clear'
+            ),
+            m('span.sr-only#' + feedbackId, gettext("(error)"))
+          ];
+        }
+      }
+
+      if (kwargs.helpText) {
+        if (typeof kwargs.helpText === 'string' ||
+            kwargs.helpText instanceof String) {
+          helpText = m('p.help-block', kwargs.helpText);
+        } else {
+          helpText = kwargs.helpText;
+        }
+      }
+
+      return m(groupClass, [
+        m('label.control-label' + (kwargs.labelClass || ''),
+          {
+            for: kwargs.labelFor || controlId
+          },
+          kwargs.label + ':'
+        ),
+        m(kwargs.controlClass || '', [
+          kwargs.control,
+          showFeedbackIcon ? feedbackIcon : null,
+          errors ? m('.help-block.errors', errors.map(function(item) {
+            return m('p', item);
+          })) : null,
+          helpText
+        ])
+      ]);
+    },
+  };
+
+  Misago.addService('component:form-group', function(_) {
+    _.component('form-group', formGroup);
+  },
+  {
+    after: 'components'
+  });
+} (Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var persistent = function(el, isInit, context) {
+    context.retain = true;
+  };
+
+  var forumLayout = {
+    view: function(ctrl, _) {
+      return [
+        _.component('alert'),
+        _.component('navbar'),
+        m('#router-fixture', {config: persistent}),
+        _.component('footer'),
+        _.component('modal')
+      ];
+    }
+  };
+
+  Misago.addService('component:layout', function(_) {
+    _.component('forum-layout', forumLayout);
+  },
+  {
+    after: 'components'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var loader = {
+    view: function() {
+      return m('.loader.sk-folding-cube', [
+        m('.sk-cube1.sk-cube'),
+        m('.sk-cube2.sk-cube'),
+        m('.sk-cube4.sk-cube'),
+        m('.sk-cube3.sk-cube')
+      ]);
+    }
+  };
+
+  Misago.addService('component:loader', function(_) {
+    _.component('loader', loader);
+  },
+  {
+    after: 'components'
+  });
+} (Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var persistent = function(el, isInit, context) {
+    context.retain = true;
+  };
+
+  var markup = {
+    view: function(ctrl, content) {
+      return m('article.misago-markup', {config: persistent},
+        m.trust(content)
+      );
+    }
+  };
+
+  Misago.addService('component:markup', function(_) {
+    _.component('markup', markup);
+  },
+  {
+    after: 'components'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var persistent = function(el, isInit, context) {
+    context.retain = true;
+  };
+
+  var modal = {
+    view: function() {
+      return m(
+        '#misago-modal.modal.fade[role="dialog"]',
+        {
+          config: persistent,
+          tabindex: "-1",
+          "aria-labelledby": "misago-modal-label"
+        }
+      );
+    }
+  };
+
+  Misago.addService('component:modal', function(_) {
+    _.component('modal', modal);
+  },
+  {
+    after: 'components'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var header = {
+    view: function(ctrl, options) {
+      return m('.page-header',
+        m('.container', [
+          m('h1', options.title),
+        ])
+      );
+    }
+  };
+
+  Misago.addService('component:header', function(_) {
+    _.component('header', header);
+  },
+  {
+    after: 'components'
+  });
+}(Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var persistent = function(el, isInit, context) {
+    context.retain = true;
+  };
+
+  var styles = [
+    'progress-bar-danger',
+    'progress-bar-warning',
+    'progress-bar-warning',
+    'progress-bar-primary',
+    'progress-bar-success'
+  ];
+
+  var labels = [
+    gettext('Entered password is very weak.'),
+    gettext('Entered password is weak.'),
+    gettext('Entered password is average.'),
+    gettext('Entered password is strong.'),
+    gettext('Entered password is very strong.')
+  ];
+
+  var passwordStrength = {
+    view: function(ctrl, kwargs, _) {
+      var score = _.zxcvbn.scorePassword(kwargs.password, kwargs.inputs);
+      var options = {
+        config: persistent,
+        class: styles[score],
+        style: "width: " + (20 + (20 * score)) + '%',
+        'role': "progressbar",
+        'aria-valuenow': score,
+        'aria-valuemin': "0",
+        'aria-valuemax': "4"
+      };
+
+      return m('.help-block.password-strength', {key: 'password-strength'}, [
+        m('.progress',
+          m('.progress-bar', options,
+            m('span.sr-only', labels[score])
+          )
+        ),
+        m('p.text-small', labels[score])
+      ]);
+    },
+  };
+
+  Misago.addService('component:password-strength', function(_) {
+    _.component('password-strength', passwordStrength);
+  },
+  {
+    after: 'components'
+  });
+} (Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var Register = function(_) {
+    var self = this;
+
+    this.showActivation = false;
+
+    this.username = m.prop('');
+    this.email = m.prop('');
+    this.password = m.prop('');
+
+    this.captcha = _.captcha.value;
+
+    this.errors = null;
+
+    this.validation = {
+      'username': [
+        Misago.validators.usernameContent(),
+        Misago.validators.usernameMinLength(_.settings),
+        Misago.validators.usernameMaxLength(_.settings)
+      ],
+      'email': [
+        Misago.validators.email()
+      ],
+      'password': [
+        Misago.validators.passwordMinLenght(_.settings)
+      ],
+      'captcha': _.captcha.validator()
+    };
+
+    this.clean = function() {
+      if (this.errors === null) {
+        _.validate(this);
+      }
+
+      if (this.hasErrors()) {
+        _.alert.error(gettext("Form contains errors"));
+        return false;
+      } else {
+        return true;
+      }
+    };
+
+    this.submit = function() {
+      _.api.model('user').post({
+        username: this.username(),
+        email: this.email(),
+        password: this.password(),
+        captcha: this.captcha()
+      }).then(this.success, this.error);
+    };
+
+    this.success = function(data) {
+      console.log(data);
+    };
+
+    this.error = function(rejection) {
+      if (rejection.status === 400) {
+        if (rejection.code === 'banned') {
+          _.modal();
+          _.router.error403({
+            message: '',
+            ban: rejection.detail
+          });
+        } else {
+          _.alert.error(gettext("Form contains errors"));
+          $.extend(self.errors, rejection);
+        }
+      } else {
+        _.api.alert(rejection);
+      }
+    };
+  };
+
+  Misago.addService('form:register', function(_) {
+    _.form('register', Register);
+  },
+  {
+    after: 'forms'
+  });
+} (Misago.prototype));
+
+(function (Misago) {
+  'use strict';
+
+  var SignIn = function(_) {
+    var self = this;
+
+    this.showActivation = false;
+
+    this.username = m.prop('');
+    this.password = m.prop('');
+
+    this.validation = {
+      'username': [],
+      'password': []
+    };
+
+    this.clean = function() {
+      if (!_.validate(this)) {
+        _.alert.error(gettext("Fill out both fields."));
+        return false;
+      } else {
+        return true;
+      }
+    };
+
+    this.submit = function() {
+      _.api.endpoint('auth').post({
+        username: self.username(),
+        password: self.password()
+      }).then(function() {
+        self.success();
+      }, function(error) {
+        self.error(error);
+      });
+    };
+
+    this.success = function() {
+      _.modal();
+
+      var $form = $('#hidden-login-form');
+
+      // refresh CSRF token because api call to /auth/ changed it
+      _.ajax.refreshCsrfToken();
+
+      // fill out form with user credentials and submit it, this will tell
+      // misago to redirect user back to right page, and will trigger browser's
+      // key ring feature
+      $form.find('input[type="hidden"]').val(_.ajax.csrfToken);
+      $form.find('input[name="redirect_to"]').val(m.route());
+      $form.find('input[name="username"]').val(this.username());
+      $form.find('input[name="password"]').val(this.password());
+      $form.submit();
+    };
+
+    this.error = function(rejection) {
+      if (rejection.status === 400) {
+        if (rejection.code === 'inactive_admin') {
+          _.alert.info(rejection.detail);
+        } else if (rejection.code === 'inactive_user') {
+          _.alert.info(rejection.detail);
+          self.showActivation = true;
+        } else if (rejection.code === 'banned') {
+          _.modal();
+          _.router.error403({
+            message: '',
+            ban: rejection.detail
+          });
+        } else {
+          _.alert.error(rejection.detail);
+        }
+      } else {
+        _.api.alert(rejection);
+      }
+    };
+  };
+
+  Misago.addService('form:sign-in', function(_) {
+    _.form('sign-in', SignIn);
+  },
+  {
+    after: 'forms'
+  });
+} (Misago.prototype));
+
+(function (Misago, UrlConf) {
+  'use strict';
+
+  var urls = new UrlConf();
+  urls.url('/', 'index');
+
+  // Legal pages
+  urls.url(
+    '/terms-of-service/',
+    'terms_of_service');
+
+  urls.url(
+    '/privacy-policy/',
+    'privacy_policy');
+
+  // Catch-all 404 not found route
+  urls.url('/:rest...', 'error:404', 'not_found');
+
+  Misago.urls = urls;
+} (Misago.prototype, Misago.prototype.UrlConf));

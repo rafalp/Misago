@@ -9,6 +9,7 @@
     this.username = m.prop('');
     this.email = m.prop('');
     this.password = m.prop('');
+
     this.captcha = _.captcha.value;
 
     this.errors = null;
