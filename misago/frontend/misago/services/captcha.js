@@ -1,3 +1,4 @@
+/* global grecaptcha */
 (function (Misago) {
   'use strict';
 
@@ -9,15 +10,7 @@
       return deferred.promise;
     };
 
-    this.component = function() {
-      return null;
-    };
-
     this.value = function() {
-      return null;
-    };
-
-    this.validator = function() {
       return null;
     };
   };
@@ -27,7 +20,7 @@
 
     this.loading = false;
     this.question = null;
-    this.value = m.prop('asdsadsa');
+    this.value = m.prop('');
 
     var deferred = m.deferred();
     this.load = function() {
@@ -71,21 +64,78 @@
     };
   };
 
-  var ReCaptcha = function() {
-    this.loading = false;
+  var ReCaptcha = function(_) {
+    this.included = false;
     this.question = null;
 
     var deferred = m.deferred();
+
+    var wait = function(promise) {
+      if (typeof grecaptcha !== "undefined") {
+        promise.resolve();
+      } else {
+        _.runloop.runOnce(function() {
+          wait(promise);
+        }, 'loading-grecaptcha', 150);
+      }
+    };
+
     this.load = function() {
+      if (typeof grecaptcha !== "undefined") {
+        grecaptcha.reset();
+      }
+
+      if (!this.included) {
+        _.include('https://www.google.com/recaptcha/api.js', true);
+        this.included = true;
+      }
+
+      wait(deferred);
+
       return deferred.promise;
     };
 
-    this.component = function() {
-      return 'null';
+    var controlConfig = function(el, isInit, context) {
+      context.retain = true;
+
+      if (!isInit) {
+        grecaptcha.render('recaptcha', {
+          'sitekey': _.settings.recaptcha_site_key
+        });
+      }
+    };
+
+    this.component = function(kwargs) {
+      var control = m('#recaptcha', {
+        config: controlConfig
+      });
+
+      return _.component('form-group', {
+        label: gettext("Security test"),
+        labelClass: kwargs.labelClass || null,
+        controlClass: kwargs.controlClass || null,
+        control: control,
+        validation: kwargs.form.errors,
+        validationKey: 'captcha'
+      });
     };
 
     this.value = function() {
-      return 'pass';
+      if (typeof grecaptcha !== "undefined") {
+        return grecaptcha.getResponse();
+      } else {
+        return '';
+      }
+    };
+
+    this.clean = function(form) {
+      if (!this.value()) {
+        form.errors.captcha = [
+          gettext('This field is required.')
+        ];
+      } else {
+        form.errors.captcha = true;
+      }
     };
 
     this.validator = function() {
@@ -109,11 +159,27 @@
     };
 
     this.component = function(kwargs) {
-      return captcha.component(kwargs);
+      if (captcha.component) {
+        return captcha.component(kwargs);
+      } else {
+        return null;
+      }
     };
 
     this.validator = function() {
-      return captcha.validator();
+      if (captcha.validator) {
+        return captcha.validator();
+      } else {
+        return null;
+      }
+    };
+
+    this.clean = function(form) {
+      if (captcha.clean) {
+        captcha.clean(form);
+      } else {
+        form.errors.captcha = true;
+      }
     };
   };
 

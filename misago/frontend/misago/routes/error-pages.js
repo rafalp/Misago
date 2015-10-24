@@ -42,7 +42,7 @@
         if (ban.expires_on.isAfter(moment())) {
           expirationMessage = interpolate(
             gettext('This ban expires %(expires_on)s.'),
-            { 'expires_on': ban.expires_on.fromNow() },
+            {'expires_on': ban.expires_on.fromNow()},
             true);
         } else {
           expirationMessage = gettext('This ban has expired.');

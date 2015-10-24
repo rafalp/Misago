@@ -45,19 +45,18 @@ def create_endpoint(request):
             form.cleaned_data['email'])
     except PermissionDenied:
         staff_message = _("This ban was automatically imposed on "
-                          "%(date)s due to denied register attempt.")
+                          "%(date)s due to denied registration attempt.")
 
         message_formats = {'date': date_format(timezone.now())}
         staff_message = staff_message % message_formats
-        validation_ban = ban_ip(
+        ban_ip(
             request.user_ip,
             staff_message=staff_message,
-            length={'days': 1}
+            length={'days': 14}
         )
 
         raise PermissionDenied(
-            _("Your IP address is banned from performing this action."),
-            {'ban': validation_ban.get_serialized_message()})
+            _("Your IP address is banned from registering on this site."))
 
     activation_kwargs = {}
     if settings.account_activation == 'user':
@@ -110,9 +109,9 @@ def create_endpoint(request):
             })
 
         if activation_by_admin:
-            activation_method = 'activation_by_admin'
+            activation_method = 'by_admin'
         else:
-            activation_method = 'activation_by_user'
+            activation_method = 'by_user'
 
         return Response({
             'activation': activation_method,

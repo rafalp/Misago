@@ -34,6 +34,8 @@
         _.validate(this);
       }
 
+      _.captcha.clean(this);
+
       if (this.hasErrors()) {
         _.alert.error(gettext("Form contains errors"));
         return false;
@@ -52,21 +54,13 @@
     };
 
     this.success = function(data) {
-      console.log(data);
+      _.modal('register-complete', data);
     };
 
     this.error = function(rejection) {
       if (rejection.status === 400) {
-        if (rejection.code === 'banned') {
-          _.modal();
-          _.router.error403({
-            message: '',
-            ban: rejection.detail
-          });
-        } else {
-          _.alert.error(gettext("Form contains errors"));
-          $.extend(self.errors, rejection);
-        }
+        _.alert.error(gettext("Form contains errors"));
+        $.extend(self.errors, rejection);
       } else {
         _.api.alert(rejection);
       }

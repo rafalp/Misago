@@ -1,0 +1,41 @@
+//
+// Misago Modals
+// --------------------------------------------------
+
+
+// Modals displaying messages
+// --------------------------------------------------
+
+
+// Small displays
+@media screen and (max-width: @screen-sm-max) {
+  .modal-message {
+    text-align: center;
+
+    .message-icon {
+      margin: @line-height-computed * 1.5;
+
+      .material-icon {
+        font-size: @error-page-icon-size * 2;
+      }
+    }
+  }
+}
+
+
+// Full displays
+@media screen and (min-width: @screen-md-min) {
+  .modal-message {
+    .message-icon {
+      float: left;
+
+      .material-icon {
+        font-size: @error-page-icon-size;
+      }
+    }
+
+    .message-body {
+      margin-left: @error-page-icon-size + @line-height-computed;
+    }
+  }
+}
