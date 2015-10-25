@@ -63,7 +63,7 @@ class UserCreateTests(UserTestCase):
                                           'password': 'pass123'})
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('activation_by_user', response.content)
+        self.assertIn('user', response.content)
         self.assertIn('Bob', response.content)
         self.assertIn('bob@bob.com', response.content)
 
@@ -83,7 +83,7 @@ class UserCreateTests(UserTestCase):
                                           'password': 'pass123'})
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('activation_by_admin', response.content)
+        self.assertIn('admin', response.content)
         self.assertIn('Bob', response.content)
         self.assertIn('bob@bob.com', response.content)
 

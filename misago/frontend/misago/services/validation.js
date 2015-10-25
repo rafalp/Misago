@@ -1,7 +1,7 @@
 (function (Misago) {
   'use strict';
 
-  var EMAIL = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+  var EMAIL = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
   var USERNAME = new RegExp('^[0-9a-z]+$', 'i');
 
   // Validators namespace
@@ -30,8 +30,8 @@
             returnMessage = message(limit_value, length);
           } else {
             returnMessage = ngettext(
-              "Ensure this value has at least %(limit_value)d character (it has %(show_value)d).",
-              "Ensure this value has at least %(limit_value)d characters (it has %(show_value)d).",
+              "Ensure this value has at least %(limit_value)s character (it has %(show_value)s).",
+              "Ensure this value has at least %(limit_value)s characters (it has %(show_value)s).",
               limit_value);
           }
           return interpolate(returnMessage, {
@@ -51,8 +51,8 @@
             returnMessage = message(limit_value, length);
           } else {
             returnMessage = ngettext(
-              "Ensure this value has at most %(limit_value)d character (it has %(show_value)d).",
-              "Ensure this value has at most %(limit_value)d characters (it has %(show_value)d).",
+              "Ensure this value has at most %(limit_value)s character (it has %(show_value)s).",
+              "Ensure this value has at most %(limit_value)s characters (it has %(show_value)s).",
               limit_value);
           }
           return interpolate(returnMessage, {
@@ -74,7 +74,7 @@
     usernameMaxLength: function(settings) {
       var message = function(limit_value) {
         return ngettext(
-          "Username cannot be longer than %(limit_value)s characters.",
+          "Username cannot be longer than %(limit_value)s character.",
           "Username cannot be longer than %(limit_value)s characters.",
           limit_value);
       };
@@ -87,7 +87,7 @@
         }
       };
     },
-    passwordMinLenght: function(settings) {
+    passwordMinLength: function(settings) {
       var message = function(limit_value) {
         return ngettext(
           "Valid password must be at least %(limit_value)s character long.",

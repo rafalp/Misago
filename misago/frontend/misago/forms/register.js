@@ -24,7 +24,7 @@
         Misago.validators.email()
       ],
       'password': [
-        Misago.validators.passwordMinLenght(_.settings)
+        Misago.validators.passwordMinLength(_.settings)
       ],
       'captcha': _.captcha.validator()
     };
@@ -37,7 +37,7 @@
       _.captcha.clean(this);
 
       if (this.hasErrors()) {
-        _.alert.error(gettext("Form contains errors"));
+        _.alert.error(gettext("Form contains errors."));
         return false;
       } else {
         return true;
@@ -59,7 +59,7 @@
 
     this.error = function(rejection) {
       if (rejection.status === 400) {
-        _.alert.error(gettext("Form contains errors"));
+        _.alert.error(gettext("Form contains errors."));
         $.extend(self.errors, rejection);
       } else {
         _.api.alert(rejection);

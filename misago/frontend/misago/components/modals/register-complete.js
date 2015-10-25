@@ -60,10 +60,10 @@
       var lead = null;
       var help = null;
 
-      if (message.activation === 'by_user') {
+      if (message.activation === 'user') {
         lead = gettext("%(username)s, your account has been created but you need to activate it before you will be able to sign in.");
         help = gettext("We have sent an e-mail to %(email)s with link that you have to click to activate your account.");
-      } else if (message.activation === 'by_admin') {
+      } else if (message.activation === 'admin') {
         lead = gettext("%(username)s, your account has been created but board administrator will have to activate it before you will be able to sign in.");
         help = gettext("We will send an e-mail to %(email)s when this takes place.");
       }

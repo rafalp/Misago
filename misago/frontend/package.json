@@ -28,6 +28,7 @@
 
       "getElement",
       "getElementText",
+      "getFieldFeedback",
       "getAlertType",
       "getAlertMessage",
 

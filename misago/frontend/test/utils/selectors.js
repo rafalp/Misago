@@ -28,4 +28,8 @@
   window.getAlertMessage = function() {
     return getElementText('.alerts .alert');
   };
+
+  window.getFieldFeedback = function(fieldId) {
+    return $.trim($('#' + fieldId).parent().find('.errors').text());
+  };
 }());

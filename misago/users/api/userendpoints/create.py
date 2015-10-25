@@ -109,9 +109,9 @@ def create_endpoint(request):
             })
 
         if activation_by_admin:
-            activation_method = 'by_admin'
+            activation_method = 'admin'
         else:
-            activation_method = 'by_user'
+            activation_method = 'user'
 
         return Response({
             'activation': activation_method,
