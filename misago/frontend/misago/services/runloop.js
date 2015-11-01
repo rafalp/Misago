@@ -43,7 +43,6 @@
     factory: function(_) {
       return new RunLoop(_);
     },
-
     destroy: function(_) {
       _.runloop.stop();
     }

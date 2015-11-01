@@ -8,6 +8,7 @@
   var forumLayout = {
     view: function(ctrl, _) {
       return [
+        _.component('auth-changed-message'),
         _.component('alert'),
         _.component('navbar'),
         m('#router-fixture', {config: persistent}),
