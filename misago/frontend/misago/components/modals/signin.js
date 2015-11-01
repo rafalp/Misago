@@ -12,6 +12,15 @@
       };
     },
     view: function(ctrl, _) {
+      var activateButton = null;
+
+      if (ctrl.form.showActivation) {
+        activateButton = m('a.btn.btn-block.btn-success',
+          {href: _.router.url('request_activation')},
+          gettext('Activate account')
+        );
+      }
+
       return m('.modal-dialog.modal-sm.modal-signin[role="document"]',
         {config: persistent},
         m('.modal-content', [
@@ -38,14 +47,15 @@
                 )
               )
             ]),
-            m('.modal-footer',
+            m('.modal-footer', [
+              activateButton,
               _.component('button', {
                 class: '.btn-primary.btn-block',
                 submit: true,
                 loading: ctrl.form.isBusy,
                 label: gettext("Sign in")
               })
-            )
+            ])
           ])
         ])
       );

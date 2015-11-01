@@ -13,8 +13,10 @@
       } else {
         return m.component(this._components[name], this);
       }
-    } else {
+    } else if (component) {
       this._components[name] = component;
+    } else {
+      throw '"' + name + '" component is not registered and can\'t be created';
     }
   };
 

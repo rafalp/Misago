@@ -31,11 +31,16 @@
       } else {
         m.route.mode = 'pathname';
       }
+
       m.route(fixture, '/', this.urls);
     };
 
     this.url = function(name) {
       return this.reverses[name];
+    };
+
+    this.route = function(url) {
+      m.route(url);
     };
 
     // Delegate clicks
@@ -87,7 +92,7 @@
         var cleanUrl = self.cleanUrl(e.target.href);
         if (cleanUrl) {
           if (cleanUrl != m.route()) {
-            m.route(cleanUrl);
+            self.route(cleanUrl);
           }
           e.preventDefault();
         }

@@ -6,5 +6,5 @@
 {% blocktrans trimmed with user=recipient %}
 {{ user }}, to activate your account click the below link:
 {% endblocktrans %}
-{{ SITE_ADDRESS }}{% url 'misago:activate_by_token' user_id=recipient.id token=activation_token %}"
+{{ SITE_ADDRESS }}{% url 'misago:activate_by_token' user_id=recipient.id token=activation_token %}
 {% endblock content %}

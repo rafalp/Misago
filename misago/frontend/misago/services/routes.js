@@ -17,8 +17,14 @@
     };
 
     var errorHandler = function(error) {
-      if (this.isActive) {
-        this.container.router.errorPage(error);
+      if (this.isActive && error.status) {
+        if (this.vm && this.vm.onerror) {
+          this.vm.onerror(error, this.container);
+        } else {
+          this.container.router.errorPage(error);
+        }
+      } else {
+        throw error;
       }
     };
 
@@ -39,9 +45,11 @@
         } else {
           return m.component(this._routes[name], this);
         }
-      } else {
+      } else if (component) {
         component.container = _;
         this._routes[name] = boilerplate(component);
+      } else {
+        throw '"' + name + '" route is not registered and can\'t be created';
       }
     };
   });

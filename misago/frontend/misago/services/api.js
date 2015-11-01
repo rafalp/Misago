@@ -32,26 +32,24 @@
       this.url += filtersUrl(call.filters);
     }
 
-    if (!call.url && call.filters) {
-      if (call.model) {
-        this.related = function(model, filters) {
-          return new Query(_, {
-            url: this.url,
-            relation: call.model,
-            related: model,
-            filters: filters,
-          });
-        };
-      }
-
-      this.endpoint = function(path, filters) {
+    if (call.model) {
+      this.related = function(model, filters) {
         return new Query(_, {
           url: this.url,
-          path: path,
-          filters: filters
+          relation: call.model,
+          related: model,
+          filters: filters,
         });
       };
     }
+
+    this.endpoint = function(path, filters) {
+      return new Query(_, {
+        url: this.url,
+        path: path,
+        filters: filters
+      });
+    };
 
     this.get = function() {
       var model = null;

@@ -2,16 +2,17 @@
   'use strict';
 
   var urls = new UrlConf();
+
+  // Board index
   urls.url('/', 'index');
 
-  // Legal pages
-  urls.url(
-    '/terms-of-service/',
-    'terms_of_service');
+  // Account activation
+  urls.url('/activation/', 'request_activation');
+  urls.url('/activation/:user_id/:token/', 'activate_by_token');
 
-  urls.url(
-    '/privacy-policy/',
-    'privacy_policy');
+  // Legal pages
+  urls.url('/terms-of-service/', 'terms_of_service');
+  urls.url('/privacy-policy/', 'privacy_policy');
 
   // Catch-all 404 not found route
   urls.url('/:rest...', 'error:404', 'not_found');

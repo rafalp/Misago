@@ -8,7 +8,9 @@
     var wrappedBeforeEach = conf.beforeEach;
     conf.beforeEach = function() {
       m.deps(window.mock());
-      wrappedBeforeEach();
+      if (wrappedBeforeEach) {
+        wrappedBeforeEach();
+      }
     };
 
     var wrappedAfterEach = conf.afterEach;

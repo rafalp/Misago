@@ -1,18 +1,18 @@
 //
-// Error Pages
+// Message Pages
 // --------------------------------------------------
 
 
 // Small displays
 @media screen and (max-width: @screen-sm-max) {
-  .page-error {
+  .page-message, .page-error {
     text-align: center;
 
-    .error-icon {
+    .message-icon {
       margin: @line-height-computed * 1.5;
 
       .material-icon {
-        font-size: @error-page-icon-size * 2;
+        font-size: @message-page-icon-size * 2;
       }
     }
   }
@@ -21,23 +21,23 @@
 
 // Full displays
 @media screen and (min-width: @screen-md-min) {
-  .page-error {
-    .error-panel {
+  .page-message, .page-error {
+    .message-panel {
       margin: @line-height-computed * 3 auto;
       max-width: @screen-md-max * .65;
       overflow: auto;
     }
 
-    .error-icon {
+    .message-icon {
       float: left;
 
       .material-icon {
-        font-size: @error-page-icon-size;
+        font-size: @message-page-icon-size;
       }
     }
 
-    .error-message {
-      margin-left: @error-page-icon-size + @line-height-computed;
+    .message-body {
+      margin-left: @message-page-icon-size + @line-height-computed;
     }
   }
 }

@@ -128,10 +128,9 @@ def activate_account(request, user_id, token):
     user.requires_activation = False
     user.save(update_fields=['requires_activation'])
 
-    message = _("%(user)s, your account has been activated.")
     return Response({
-            'detail': message % {'user': user.username}
-        })
+        'username': user.username
+    })
 
 
 """

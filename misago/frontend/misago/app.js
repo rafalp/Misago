@@ -62,7 +62,6 @@
     };
   };
 
-
   // Services
   var proto = window.Misago.prototype;
 
@@ -74,5 +73,15 @@
       after: proto.get(order, 'after'),
       before: proto.get(order, 'before')
     });
+  };
+
+  // Exceptions
+  proto.PermissionDenied = function(message) {
+    this.detail = message;
+    this.status = 403;
+
+    this.toString = function() {
+      return this.detail || 'Permission denied';
+    };
   };
 }());

@@ -16,7 +16,7 @@
     email: function(message) {
       return function(value) {
         if (!EMAIL.test(value)) {
-          return message || gettext('Enter a valid email address.');
+          return message || gettext("Enter a valid email address.");
         }
       };
     },

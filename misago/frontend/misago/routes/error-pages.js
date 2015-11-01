@@ -12,11 +12,11 @@
 
     return m('.page.page-error.page-error-' + error.code,
       m('.container',
-        m('.error-panel', [
-          m('.error-icon',
+        m('.message-panel', [
+          m('.message-icon',
             m('span.material-icon', error.icon)
           ),
-          m('.error-message', error_message)
+          m('.message-body', error_message)
         ])
       )
     );
@@ -54,11 +54,11 @@
 
       return m('.page.page-error.page-error-banned',
         m('.container',
-          m('.error-panel', [
-            m('.error-icon',
+          m('.message-panel', [
+            m('.message-icon',
               m('span.material-icon', 'highlight_off')
             ),
-            m('.error-message', error_message)
+            m('.message-body', error_message)
           ])
         )
       );

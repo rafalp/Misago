@@ -19,6 +19,7 @@
 
       "initTestMisago",
       "getMisagoService",
+      "mockUser",
       "then",
       "onElement",
       "waitForElement",

@@ -17,21 +17,26 @@
     // Component active state
     component.isActive = true;
 
+    var errorHandler = errorState.bind(component);
+
     // Wrap controller to store lifecycle methods
     var _controller = component.controller || noop;
     component.controller = function() {
-      component.isActive = true;
+      try {
+        component.isActive = true;
+        var controller = _controller.apply(component, arguments) || {};
 
-      var controller = _controller.apply(component, arguments) || {};
+        // wrap onunload for lifestate
+        var _onunload = controller.onunload || noop;
+        controller.onunload = function() {
+          _onunload.apply(component, arguments);
+          component.isActive = false;
+        };
 
-      // wrap onunload for lifestate
-      var _onunload = controller.onunload || noop;
-      controller.onunload = function() {
-        _onunload.apply(component, arguments);
-        component.isActive = false;
-      };
-
-      return controller;
+        return controller;
+      } catch (e) {
+        errorHandler(e);
+      }
     };
 
     // Add state callbacks to View-Model
@@ -50,8 +55,6 @@
           return component.loading.apply(component, arguments);
         }
       };
-
-      var errorHandler = errorState.bind(component);
 
       // wrap vm.init in promise handler
       var _init = component.vm.init;

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  window.initTestMisago = function() {
+  window.initTestMisago = function(options) {
     var misago = new Misago();
 
     var context = {
@@ -88,6 +88,17 @@
         }
       }
     };
+
+    if (options) {
+      if (options.acl) {
+        context.user.acl = $.extend(context.user.acl, options.acl);
+      }
+
+      if (options.user) {
+        context.user = $.extend(context.user, options.user);
+        context.isAuthenticated = !!context.user.id;
+      }
+    }
 
     misago.init({
       test: true,
