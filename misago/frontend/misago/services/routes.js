@@ -17,7 +17,7 @@
     };
 
     var errorHandler = function(error) {
-      if (this.isActive && error.status) {
+      if (this.isActive && typeof error.status !== "undefined") {
         if (this.vm && this.vm.onerror) {
           this.vm.onerror(error, this.container);
         } else {

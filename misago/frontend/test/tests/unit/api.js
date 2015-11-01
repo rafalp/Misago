@@ -81,8 +81,8 @@
       "nested endpoint constructed valid url with integer pk.");
 
     assert.ok(
-      !api.endpoint('auth', 124).endpoint('change-password').endpoint,
-      "nested endpoint can't be nested further.");
+      api.endpoint('auth', 124).endpoint('change-password').endpoint,
+      "nested endpoint can be nested further.");
   });
 
   QUnit.test("alert", function(assert) {

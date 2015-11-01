@@ -9,7 +9,7 @@
   var Alert = function(_) {
     var self = this;
 
-    this.type = 'info';
+    this.type = '';
     this.message = null;
     this.isVisible = false;
 

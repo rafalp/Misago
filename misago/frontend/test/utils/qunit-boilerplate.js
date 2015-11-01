@@ -7,6 +7,7 @@
 
     var wrappedBeforeEach = conf.beforeEach;
     conf.beforeEach = function() {
+      resetTestPromise();
       m.deps(window.mock());
       if (wrappedBeforeEach) {
         wrappedBeforeEach();

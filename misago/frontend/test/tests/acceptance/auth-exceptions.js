@@ -18,10 +18,10 @@
 
     app.router.route('/activation/');
 
-    onElement('.page-error.page-error-403 .error-message', function() {
+    onElement('.page-error.page-error-403 .message-body', function() {
       assert.ok(true, "Permission denied error page was displayed.");
       assert.equal(
-        getElementText('.page .error-message p:last-child'),
+        getElementText('.page .message-body p:last-child'),
         "You have to be signed out to activate account.",
         "Route access was denied with valid error.");
       done();

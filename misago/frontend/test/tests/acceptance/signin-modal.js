@@ -81,6 +81,66 @@
     });
   });
 
+  QUnit.test('to admin-activated account', function(assert) {
+    var message = "This account has to be activated by admin.";
+    $.mockjax({
+      url: '/test-api/auth/',
+      status: 400,
+      responseText: {
+        'detail': message,
+        'code': 'inactive_admin'
+      }
+    });
+
+    var done = assert.async();
+
+    waitForElement('.navbar .nav-guest .btn-default');
+    click('.navbar .nav-guest .btn-default');
+    waitForElement('.modal-signin');
+    fillIn('.modal-signin .form-group:first-child input', 'SomeFake');
+    fillIn('.modal-signin .form-group:last-child input', 'pass1234');
+    click('.modal-signin .btn-primary');
+
+    onElement('.alerts .alert-info', function() {
+      assert.equal(getAlertMessage(), message,
+        "login form raised alert about admin-activated account.");
+      done();
+    });
+  });
+
+  QUnit.test('to user-activated account', function(assert) {
+    var message = "This account has to be activated.";
+    $.mockjax({
+      url: '/test-api/auth/',
+      status: 400,
+      responseText: {
+        'detail': message,
+        'code': 'inactive_user'
+      }
+    });
+
+    var doneAlert = assert.async();
+    var doneBtn = assert.async();
+
+    waitForElement('.navbar .nav-guest .btn-default');
+    click('.navbar .nav-guest .btn-default');
+    waitForElement('.modal-signin');
+    fillIn('.modal-signin .form-group:first-child input', 'SomeFake');
+    fillIn('.modal-signin .form-group:last-child input', 'pass1234');
+    click('.modal-signin .btn-primary');
+
+    onElement('.alerts .alert-info', function() {
+      assert.equal(getAlertMessage(), message,
+        "login form raised alert about admin-activated account.");
+      doneAlert();
+    });
+
+    onElement('.modal-signin .btn-success', function() {
+      assert.ok(true, "login form displayed account activation button.");
+      doneBtn();
+    });
+  });
+
   QUnit.test('to banned account', function(assert) {
     $.mockjax({
       url: '/test-api/auth/',
@@ -108,7 +168,7 @@
 
     onElement('.page-error-banned .lead', function() {
       assert.equal(
-        getElementText('.page .error-message .lead'),
+        getElementText('.page .message-body .lead'),
         "You are banned for trolling.",
         "login form displayed error banned page with ban message.");
 

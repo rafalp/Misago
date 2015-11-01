@@ -12,7 +12,11 @@ class ActivationViewsTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_activate_view_returns_200(self):
-        """activate account view returns 200"""
+        """
+        activate account view returns 200
+
+        all views return 200 because real validation occurs via JS and API
+        """
         User = get_user_model()
         test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 

@@ -57,7 +57,7 @@
       }
     },
     success: function(username) {
-      var message = gettext('%(username)s, your account has been successfully activated!');
+      var message = gettext("%(username)s, your account has been successfully activated!");
 
       return m('.page.page-message.page-message-success',
         m('.container',

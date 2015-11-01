@@ -20,6 +20,7 @@
       "initTestMisago",
       "getMisagoService",
       "mockUser",
+      "resetTestPromise",
       "then",
       "onElement",
       "waitForElement",

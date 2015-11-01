@@ -1,11 +1,20 @@
 (function () {
   'use strict';
 
-  var deferred = m.deferred();
-  window._promise = deferred.promise;
-  window.setTimeout(function() {
-    deferred.resolve();
-  }, 50);
+  window.resetTestPromise = function() {
+    if (window._deferred) {
+      window._deferred.reject();
+    }
+
+    var deferred = m.deferred();
+
+    window._deferred = deferred;
+    window._promise = deferred.promise;
+    window.setTimeout(function() {
+      deferred.resolve();
+    }, 50);
+  };
+  resetTestPromise();
 
   var getElement = function(selector) {
     var deferred = m.deferred();

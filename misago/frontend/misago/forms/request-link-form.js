@@ -37,14 +37,12 @@
 
     this.error = function(rejection) {
       if (rejection.status === 400) {
-        if (rejection.code === 'banned') {
-          _.router.error403({
-            message: '',
-            ban: rejection.detail
-          });
-        } else {
           options.error(rejection, _);
-        }
+      } else if (rejection.status === 403 && rejection.ban) {
+        _.router.error403({
+          message: '',
+          ban: rejection.ban
+        });
       } else {
         _.api.alert(rejection);
       }

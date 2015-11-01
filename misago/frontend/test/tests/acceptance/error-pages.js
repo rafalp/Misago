@@ -31,10 +31,10 @@
     var done = assert.async();
 
     click('.footer-nav li:first-child a');
-    onElement('.page-error.page-error-banned .error-message', function() {
+    onElement('.page-error.page-error-banned .message-body', function() {
       assert.ok(true, "Permission denied error page was displayed.");
       assert.equal(
-        getElementText('.page .error-message .lead'),
+        getElementText('.page .message-body .lead'),
         "This is test ban.",
         "Banned page displayed ban message.");
       done();
@@ -53,10 +53,10 @@
     var done = assert.async();
 
     click('.footer-nav li:first-child a');
-    onElement('.page-error.page-error-403 .error-message', function() {
+    onElement('.page-error.page-error-403 .message-body', function() {
       assert.ok(true, "Permission denied error page was displayed.");
       assert.equal(
-        getElementText('.page .error-message .help'),
+        getElementText('.page .message-body .help'),
         "I can't let you do this Dave.",
         "Permission denied error page used backend message.");
       done();
@@ -75,10 +75,10 @@
     var done = assert.async();
 
     click('.footer-nav li:first-child a');
-    onElement('.page-error.page-error-403 .error-message', function() {
+    onElement('.page-error.page-error-403 .message-body', function() {
       assert.ok(true, "Permission denied error page was displayed.");
       assert.equal(
-        getElementText('.page .error-message .help'),
+        getElementText('.page .message-body .help'),
         "You don't have permission to access this page.",
         "Permission denied error page used default message.");
       done();
