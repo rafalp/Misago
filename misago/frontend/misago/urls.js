@@ -10,6 +10,10 @@
   urls.url('/activation/', 'request_activation');
   urls.url('/activation/:user_id/:token/', 'activate_by_token');
 
+  // Password reset
+  urls.url('/forgotten-password/', 'request_password_change');
+  urls.url('/forgotten-password/:user_id/:token/', 'change_password');
+
   // Legal pages
   urls.url('/terms-of-service/', 'terms_of_service');
   urls.url('/privacy-policy/', 'privacy_policy');

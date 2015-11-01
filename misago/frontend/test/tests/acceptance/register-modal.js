@@ -51,7 +51,7 @@
 
     waitForElement('.navbar .nav-guest .btn-primary');
     click('.navbar .nav-guest .btn-primary');
-    waitForElement('.modal-signin');
+    waitForElement('.modal-register');
     fillIn('#id_username', '###');
     fillIn('#id_email', 'notemail');
     fillIn('#id_password', 'nah');
@@ -96,7 +96,7 @@
 
     waitForElement('.navbar .nav-guest .btn-primary');
     click('.navbar .nav-guest .btn-primary');
-    waitForElement('.modal-signin');
+    waitForElement('.modal-register');
     fillIn('#id_username', 'bob');
     fillIn('#id_email', 'bob@boberson.com');
     fillIn('#id_password', 'Som3S3cureP4ss!!!');
@@ -131,7 +131,7 @@
 
     waitForElement('.navbar .nav-guest .btn-primary');
     click('.navbar .nav-guest .btn-primary');
-    waitForElement('.modal-signin');
+    waitForElement('.modal-register');
     fillIn('#id_username', 'bob');
     fillIn('#id_email', 'bob@boberson.com');
     fillIn('#id_password', 'Som3S3cureP4ss!!!');
@@ -165,7 +165,7 @@
 
     waitForElement('.navbar .nav-guest .btn-primary');
     click('.navbar .nav-guest .btn-primary');
-    waitForElement('.modal-signin');
+    waitForElement('.modal-register');
     fillIn('#id_username', 'bob');
     fillIn('#id_email', 'bob@boberson.com');
     fillIn('#id_password', 'Som3S3cureP4ss!!!');
@@ -199,7 +199,7 @@
 
     waitForElement('.navbar .nav-guest .btn-primary');
     click('.navbar .nav-guest .btn-primary');
-    waitForElement('.modal-signin');
+    waitForElement('.modal-register');
     fillIn('#id_username', 'bob');
     fillIn('#id_email', 'bob@boberson.com');
     fillIn('#id_password', 'Som3S3cureP4ss!!!');

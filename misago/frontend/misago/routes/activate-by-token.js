@@ -5,6 +5,7 @@
     error: null,
     username: null,
     isReady: false,
+
     init: function(_) {
       this.error = null;
       this.user = null;

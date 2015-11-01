@@ -17,7 +17,7 @@
       if (ctrl.form.showActivation) {
         activateButton = m('a.btn.btn-block.btn-success',
           {href: _.router.url('request_activation')},
-          gettext('Activate account')
+          gettext("Activate account")
         );
       }
 
@@ -54,7 +54,11 @@
                 submit: true,
                 loading: ctrl.form.isBusy,
                 label: gettext("Sign in")
-              })
+              }),
+              m('a.btn.btn-block.btn-default',
+                {href: _.router.url('request_password_change')},
+                gettext("Forgot password?")
+              )
             ])
           ])
         ])

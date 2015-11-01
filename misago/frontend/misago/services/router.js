@@ -162,9 +162,21 @@
   });
 
   Misago.addService('start-routing', function(_) {
-    _.router.startRouting(
-      Misago.urls, document.getElementById('router-fixture'));
-    _.router.delegateClicks(document.getElementById(_.setup.fixture));
+    // In edge cases layout gets rendered in same frame routing starts
+    // which causes getElementById to return null and crash Mithril.js
+    var waitForFixture = function() {
+      var fixture = document.getElementById('router-fixture');
+      if (fixture) {
+        _.router.startRouting(
+          Misago.urls, document.getElementById('router-fixture'));
+        _.router.delegateClicks(document.getElementById(_.setup.fixture));
+      } else {
+        window.setTimeout(function() {
+          waitForFixture();
+        }, 10);
+      }
+    };
+    waitForFixture();
   },
   {
     before: '_end'

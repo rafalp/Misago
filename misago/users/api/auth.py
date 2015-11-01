@@ -129,8 +129,8 @@ def activate_account(request, user_id, token):
     user.save(update_fields=['requires_activation'])
 
     return Response({
-        'username': user.username
-    })
+            'username': user.username
+        })
 
 
 """
@@ -138,15 +138,14 @@ POST /auth/send-password-form/ with CSRF token and email
 will mail change password form link to requester
 """
 @api_view(['POST'])
-@permission_classes((UnbannedAnonOnly,))
+@permission_classes((UnbannedOnly,))
 @csrf_protect
 def send_password_form(request):
     form = ResetPasswordForm(request.data)
     if form.is_valid():
         requesting_user = form.user_cache
 
-        mail_subject = _("Change %(user)s password "
-                         "on %(forum_title)s forums")
+        mail_subject = _("Change %(user)s password on %(forum_title)s forums")
         subject_formats = {'user': requesting_user.username,
                            'forum_title': settings.forum_name}
         mail_subject = mail_subject % subject_formats
@@ -216,4 +215,6 @@ def process_forgotten_password_form(request, user):
     except ValidationError as e:
         return Response({'detail': e.messages[0]},
                         status=status.HTTP_400_BAD_REQUEST)
-    return Response({'detail': 'ok'})
+    return Response({
+            'username': user.username
+        })

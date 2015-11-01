@@ -1,7 +1,7 @@
 (function (Misago) {
   'use strict';
 
-  var RequestLink = function(options, _) {
+  var RequestLink = function(vm, _) {
     var self = this;
 
     this.email = m.prop('');
@@ -22,7 +22,7 @@
     };
 
     this.submit = function() {
-      _.api.endpoint('auth').endpoint(options.endpoint).post({
+      _.api.endpoint('auth').endpoint(vm.endpoint).post({
         email: self.email()
       }).then(function(user) {
         self.success(user);
@@ -32,12 +32,12 @@
     };
 
     this.success = function(user) {
-      options.success(user);
+      vm.success(user);
     };
 
     this.error = function(rejection) {
       if (rejection.status === 400) {
-          options.error(rejection, _);
+          vm.error(rejection, _);
       } else if (rejection.status === 403 && rejection.ban) {
         _.router.error403({
           message: '',
@@ -50,7 +50,7 @@
 
     this.reset = function() {
       this.email('');
-      options.reset();
+      vm.reset();
     };
   };
 

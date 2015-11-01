@@ -1,14 +1,15 @@
 (function (Misago) {
   'use strict';
 
-  var formOptions = {
-    endpoint: 'send-activation',
-    user: null,
+  var ViewModel = function() {
+    this.endpoint = 'send-activation';
+    this.user = null;
 
-    success: function(user) {
+    this.success = function(user) {
       this.user = user;
-    },
-    error: function(rejection, _) {
+    };
+
+    this.error = function(rejection, _) {
       if (rejection.code === 'already_active') {
         _.alert.info(rejection.detail);
         _.modal('sign-in');
@@ -17,10 +18,11 @@
       } else {
         _.alert.error(rejection.detail);
       }
-    },
-    reset: function() {
+    };
+
+    this.reset = function() {
       this.user = null;
-    }
+    };
   };
 
   var requestActivation = {
@@ -30,18 +32,21 @@
 
       _.title.set(gettext("Activate your account"));
 
+      var vm = new ViewModel();
+
       return {
-        form: _.form('request-link', formOptions)
+        vm: vm,
+        form: _.form('request-link', vm)
       };
     },
     view: function(ctrl, _) {
-      if (formOptions.user) {
-        return this.completed(ctrl.form, formOptions, _);
+      if (ctrl.vm.user) {
+        return this.completed(ctrl.form, ctrl.vm, _);
       } else {
         return this.form(ctrl.form, _);
       }
     },
-    completed: function(form, formOptions, _) {
+    completed: function(form, vm, _) {
       var message = gettext("%(username)s, we have sent your activation link to %(email)s.");
 
       return m('.page.page-message.page-message-success',
@@ -56,8 +61,8 @@
               ),
               m('p',
                 interpolate(message, {
-                  username: formOptions.user.username,
-                  email: formOptions.user.email
+                  username: vm.user.username,
+                  email: vm.user.email
                 }, true)
               ),
               m('p',
