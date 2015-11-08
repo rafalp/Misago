@@ -122,7 +122,7 @@
         getElementText('.page-header h1'), 'Backend Policy',
         "Privacy Policy page has been rendered.");
       assert.equal(
-        getElementText('.container p'), 'Lorem ipsum dolor met sit amet elit.',
+        getElementText('.page .container p'), 'Lorem ipsum dolor met sit amet elit.',
         "Privacy Policy body has been rendered.");
       done();
     });
@@ -148,7 +148,7 @@
         getElementText('.page-header h1'), 'Backend Terms',
         "Terms of Service page has been rendered.");
       assert.equal(
-        getElementText('.container p'), 'Lorem ipsum dolor met sit amet elit.',
+        getElementText('.page .container p'), 'Lorem ipsum dolor met sit amet elit.',
         "Terms of Service body has been rendered.");
       done();
     });

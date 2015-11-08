@@ -2,7 +2,7 @@
   'use strict';
 
   var User = function(data) {
-    this.id = data.id ? String(data.id) : null;
+    this.id = data.id;
 
     this.isAuthenticated = !!this.id;
     this.isAnonymous = !this.isAuthenticated;

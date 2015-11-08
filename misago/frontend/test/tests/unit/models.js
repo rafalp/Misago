@@ -41,6 +41,7 @@
     var models = service(container);
 
     var TestModel = function(data) {
+      this.id = data.id;
       this.name = data.name || 'Hello';
     };
 
@@ -48,9 +49,11 @@
       class: TestModel
     });
 
-    var model = models.new('test-model', {name: 'Working!!!'});
+    var model = models.new('test-model', {id: 123, name: 'Working!!!'});
     assert.equal(model.name, 'Working!!!',
       "new() returned model instance.");
+    assert.deepEqual(model.id, '123',
+      "new() coalesced model's id to string.");
   });
 
   QUnit.test("deserialize", function(assert) {

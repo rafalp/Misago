@@ -17,6 +17,11 @@
 
     this.new = function(name, data) {
       if (this.classes[name]) {
+        // Coerce ID to string
+        // This is done to avoid type comparisions gotchas
+        // later into app
+        data.id = data.id ? String(data.id) : null;
+
         return new this.classes[name](data);
       } else {
         return data;
