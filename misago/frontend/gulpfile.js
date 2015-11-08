@@ -6,6 +6,7 @@ var gulp = require('gulp');
 
 var concat = require('gulp-concat');
 var connect = require('gulp-connect');
+var imageop = require('gulp-image-optimization');
 var jshint = require('gulp-jshint');
 var less = require('gulp-less');
 var minify = require('gulp-minify-css');
@@ -116,6 +117,9 @@ gulp.task('copyfonts', function() {
 
 gulp.task('copyimg', function() {
   return gulp.src('static/img/**/*')
+    .pipe(imageop({
+      optimizationLevel: 9
+    }))
     .pipe(gulp.dest('dist/img'));
 });
 
