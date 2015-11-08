@@ -44,6 +44,7 @@
       "console",
       "document",
       "window",
+      "confirm",
       "_"
     ]
   },

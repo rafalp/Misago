@@ -3,6 +3,11 @@
 // --------------------------------------------------
 
 
+// Remove bottom margin from navbar
+.navbar {
+  margin-bottom: 0px;
+}
+
 // Desktop navbar
 .navbar .navbar-full {
   // Brand
@@ -20,10 +25,50 @@
   .nav-guest, .nav-user {
     float: right;
   }
+
+  // User avatar size
+  .nav-user .dropdown-toggle {
+    padding: (@navbar-height - @navbar-avatar-size) / 2;
+
+    img {
+      width: @navbar-avatar-size;
+      height: @navbar-avatar-size;
+    }
+  }
 }
 
 
 // Compact (mobile) navbar
-.navbar .navbar-compact {
+.navbar ul.navbar-compact-nav {
+  margin: 0px;
+  display: table;
+  width: 100%;
 
+  &>li {
+    display: table-cell;
+  }
+
+  &>li>a {
+    margin: 0px;
+    width: 100%;
+
+    text-align: center;
+  }
+
+  &>li>a>img {
+    width: @navbar-compact-item-size;
+    height: @navbar-compact-item-size;
+  }
+
+  &>li>a>.material-icon {
+    font-size: @navbar-compact-item-size;
+    line-height: @navbar-compact-item-size;
+  }
+}
+
+// Make navbar's height match compact nav
+@media (max-width: (@grid-float-breakpoint - 1)) {
+  .navbar.navbar-misago {
+    min-height: auto;
+  }
 }

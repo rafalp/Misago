@@ -2,27 +2,26 @@
   'use strict';
 
   var navbar = {
-    view: function(ctrl, _) {
-      var menu = [];
+    view: function(ctrl, mainNav, _) {
+      var brand = null;
+      var user = null;
 
       if (_.settings.forum_branding_display) {
-        menu.push(
-          _.component('navbar:desktop:brand', _.settings.forum_branding_text));
+        brand = _.component(
+          'navbar:desktop:brand', _.settings.forum_branding_text);
       }
-
-      menu.push(m('ul.nav.navbar-nav', [
-        m('li',
-          m("a", {config: m.route, href: _.router.url('index')}, 'Index')
-        )
-      ]));
 
       if (_.user.isAuthenticated) {
-        menu.push(_.component('navbar:desktop:user-menu'));
+        user = _.component('navbar:desktop:user-nav');
       } else {
-        menu.push(_.component('navbar:desktop:guest-menu'));
+        user = _.component('navbar:desktop:guest-nav');
       }
 
-      return m('.container.navbar-full.hidden-xs.hidden-sm', menu);
+      return m('.container.navbar-full.hidden-xs.hidden-sm', [
+        brand,
+        _.component('navbar:desktop:main-nav', mainNav),
+        user
+      ]);
     }
   };
 

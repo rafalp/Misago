@@ -4,8 +4,6 @@
 
 
 // Modals displaying messages
-// --------------------------------------------------
-
 
 // Small displays
 @media screen and (max-width: @screen-sm-max) {
@@ -36,6 +34,25 @@
 
     .message-body {
       margin-left: @message-page-icon-size + @line-height-computed;
+    }
+  }
+}
+
+
+// Registration modal
+@media screen and (max-width: @screen-sm-max) {
+  .modal-register .modal-footer {
+    text-align: center;
+
+    a {
+      display: block;
+    }
+
+    .btn {
+      display: block;
+      float: none;
+      margin-top: @line-height-computed / 2;
+      width: 100%;
     }
   }
 }

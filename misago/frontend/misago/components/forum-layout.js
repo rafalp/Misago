@@ -11,6 +11,9 @@
         _.component('auth-changed-message'),
         _.component('alert'),
         _.component('navbar'),
+        m('.navbar-dropdown',
+          _.dropdown.slot('navbar-dropdown')
+        ),
         m('#router-fixture', {config: persistent}),
         _.component('footer'),
         _.component('modal')

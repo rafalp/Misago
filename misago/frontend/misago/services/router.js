@@ -86,10 +86,12 @@
     };
 
     var delegateName = 'click.misago-router';
+    var delegateSelector = 'a:not([data-misago-routed="false"])';
+
     this.delegateClicks = function(element) {
       this.delegateElement = element;
-      $(this.delegateElement).on(delegateName, 'a', function(e) {
-        var cleanUrl = self.cleanUrl(e.target.href);
+      $(this.delegateElement).on(delegateName, delegateSelector, function(e) {
+        var cleanUrl = self.cleanUrl(e.currentTarget.href);
         if (cleanUrl) {
           if (cleanUrl != m.route()) {
             self.route(cleanUrl);

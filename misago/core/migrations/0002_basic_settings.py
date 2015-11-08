@@ -62,7 +62,7 @@ def create_basic_settings_group(apps, schema_editor):
                     'name': _("Branding text"),
                     'description': _("Optional text displayed besides "
                                      "brand image in navbar."),
-                    'value': "isago",
+                    'value': "Misago",
                     'field_extra': {
                         'max_length': 255
                     },

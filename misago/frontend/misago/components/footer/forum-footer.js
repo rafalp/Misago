@@ -1,21 +1,20 @@
 (function (Misago) {
   'use strict';
 
-  var isMenuVisible = function(settings) {
-    return [
-      !!settings.forum_footnote,
-      !!settings.terms_of_service,
-      !!settings.terms_of_service_link,
-      !!settings.privacy_policy,
-      !!settings.privacy_policy_link
-    ].indexOf(true) !== -1;
-  };
-
   var footer = {
+    hasNav: function(_) {
+      return [
+        !!_.settings.forum_footnote,
+        !!_.settings.terms_of_service,
+        !!_.settings.terms_of_service_link,
+        !!_.settings.privacy_policy,
+        !!_.settings.privacy_policy_link
+      ].indexOf(true) !== -1;
+    },
     view: function(ctrl, _) {
       var nav = null;
-      if (isMenuVisible(_.settings)) {
-        nav = _.component('footer:menu');
+      if (this.hasNav(_)) {
+        nav = _.component('footer:nav');
       }
 
       return m('footer.forum-footer', [

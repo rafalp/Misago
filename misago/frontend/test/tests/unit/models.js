@@ -82,16 +82,5 @@
     model = models.deserialize('other-model', {name: 'Other!'});
     assert.equal(model.name, 'Other!',
       "deserialize() returned model instance without deserialization.");
-
-    models.add('model-with-relation', {
-      class: TestModel,
-      relations: {
-        'test': 'test-model'
-      }
-    });
-
-    model = models.deserialize('model-with-relation:test', {title: 'Related'});
-    assert.equal(model.name, 'Related',
-      "deserialize() returned related model instance.");
   });
 }());
