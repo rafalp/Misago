@@ -25,7 +25,7 @@ If you can run Python apps on your hosting and you are looking for modern soluti
 Don't use this branch in production!
 ====================================
 
-This branch contains in-development code of next major Misago release, 0.6. If you are looking at running "real" forum on Misago, please use latest 0.5 release instead.
+This branch contains in-development code of next major Misago release, 0.6. **It's not feature-complete.** If you are looking at running "real" forum on Misago, please use latest 0.5 release instead.
 
 **There is no update path for 0.6 installations!**
 
@@ -65,9 +65,7 @@ If nothing is wrong with your setup, Django developer server will start, enablin
 Frontend
 --------
 
-With exception of Admin Panel, Misago frontend is powered by Ember.js application backed by Django API. This application relies on Ember-CLI toolkit for development.
-
-To learn more about it please see README file located in emberapp directory.
+With exception of Admin Panel, Misago frontend is powered by Mithril.js application backed by Django API. This application relies on custom Node.js-based toolkit for development.
 
 
 Bug reports, features and feedback
