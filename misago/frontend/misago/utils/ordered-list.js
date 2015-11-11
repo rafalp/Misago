@@ -9,6 +9,7 @@
       this._items.push({
         key: key,
         item: item,
+
         after: Misago.get(order, 'after'),
         before: Misago.get(order, 'before')
       });

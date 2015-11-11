@@ -31,11 +31,11 @@
           ])
         ),
         m('li',
-          m('a', {href: '/not-yet/'}, [
+          m('a', {href: _.router.url('options')}, [
             m('span.material-icon',
               'done_all'
             ),
-            gettext("Edit account")
+            gettext("Change options")
           ])
         ),
         m('li',

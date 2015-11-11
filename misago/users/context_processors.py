@@ -1,6 +1,6 @@
-from misago.users.serializers import (AuthenticatedUserSerializer,
-                                      AnonymousUserSerializer)
-from misago.users.sites import usercp, users_list, user_profile
+from misago.users.pages import usercp, users_list, user_profile
+from misago.users.serializers import (
+    AuthenticatedUserSerializer, AnonymousUserSerializer)
 
 
 def sites_links(request):

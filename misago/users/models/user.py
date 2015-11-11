@@ -18,10 +18,10 @@ from misago.core.signals import secret_key_changed
 
 from misago.users.models.rank import Rank
 from misago.users import avatars
+from misago.users.pages import user_profile
 from misago.users.signals import delete_user_content, username_changed
 from misago.users.signatures import (is_user_signature_valid,
                                      make_signature_checksum)
-from misago.users.sites import user_profile
 from misago.users.utils import hash_email
 
 

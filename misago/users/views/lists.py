@@ -14,9 +14,9 @@ from misago.core.shortcuts import get_object_or_404, paginate
 
 from misago.users.models import Rank
 from misago.users.online.utils import get_online_queryset
+from misago.users.pages import users_list
 from misago.users.permissions.profiles import (allow_browse_users_list,
                                                allow_see_users_online_list)
-from misago.users.sites import users_list
 
 
 def render(request, template, context):

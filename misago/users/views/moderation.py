@@ -20,6 +20,7 @@ from misago.users.forms.rename import ChangeUsernameForm
 from misago.users.forms.modusers import (BanForm, ModerateAvatarForm,
                                          ModerateSignatureForm, WarnUserForm)
 from misago.users.models import Ban
+from misago.users.pages import user_profile
 from misago.users.permissions.moderation import (allow_rename_user,
                                                  allow_moderate_avatar,
                                                  allow_moderate_signature,
@@ -31,7 +32,6 @@ from misago.users.permissions.warnings import (allow_warn_user,
                                                allow_delete_warning)
 from misago.users.permissions.delete import allow_delete_user
 from misago.users.signatures import set_user_signature
-from misago.users.sites import user_profile
 
 
 def user_moderation_view(required_permission=None):

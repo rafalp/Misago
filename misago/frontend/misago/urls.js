@@ -14,6 +14,12 @@
   urls.url('/forgotten-password/', 'request_password_change');
   urls.url('/forgotten-password/:user_id/:token/', 'change_password');
 
+  // User control panel
+  urls.url('/options/', 'options');
+  urls.url('/options/forum/', 'options_forum');
+  urls.url('/options/email/', 'options_email');
+  urls.url('/options/password/', 'options_password');
+
   // Legal pages
   urls.url('/terms-of-service/', 'terms_of_service');
   urls.url('/privacy-policy/', 'privacy_policy');

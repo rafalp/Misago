@@ -17,9 +17,9 @@ from misago.threads.permissions import allow_message_user
 from misago.users.bans import get_user_ban
 from misago.users.decorators import deny_guests
 from misago.users.online.utils import get_user_state
+from misago.users.pages import user_profile
 from misago.users.permissions.profiles import (allow_follow_user,
                                                allow_block_user)
-from misago.users.sites import user_profile
 from misago.users.warnings import (get_warning_levels, get_user_warning_level,
                                    get_user_warning_obj)
 

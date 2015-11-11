@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 from django.utils.translation import ugettext_lazy as _
-from misago.users.sites import usercp, users_list, user_profile
+from misago.users.pages import usercp, users_list, user_profile
 
 
 class MisagoUsersConfig(AppConfig):
@@ -17,32 +17,44 @@ class MisagoUsersConfig(AppConfig):
         def show_signature_cp(request):
             return request.user.acl['can_have_signature']
 
-        usercp.add_page(link='misago:usercp_change_forum_options',
-                        name=_('Change forum options'),
-                        icon='fa fa-check-square-o')
-        usercp.add_page(link='misago:usercp_change_avatar',
-                        name=_('Change avatar'),
-                        icon='fa fa-image')
-        usercp.add_page(link='misago:usercp_edit_signature',
-                        name=_('Edit your signature'),
+        usercp.add_section(
+            link='misago:usercp_change_forum_options',
+            name=_('Change forum options'),
+            icon='fa fa-check-square-o')
+
+        usercp.add_section(
+            link='misago:usercp_change_avatar',
+            name=_('Change avatar'),
+            icon='fa fa-image')
+
+        usercp.add_section(
+            link='misago:usercp_edit_signature',
+            name=_('Edit your signature'),
                         icon='fa fa-pencil',
-                        visible_if=show_signature_cp)
-        usercp.add_page(link='misago:usercp_change_username',
-                        name=_('Change username'),
-                        icon='fa fa-credit-card')
-        usercp.add_page(link='misago:usercp_change_email_password',
-                        name=_('Change email or password'),
-                        icon='fa fa-ticket')
+            visible_if=show_signature_cp)
+
+        usercp.add_section(
+            link='misago:usercp_change_username',
+            name=_('Change username'),
+            icon='fa fa-credit-card')
+
+        usercp.add_section(
+            link='misago:usercp_change_email_password',
+            name=_('Change email or password'),
+            icon='fa fa-ticket')
 
     def register_default_users_list_pages(self):
         def can_see_online_list(request):
             return request.user.acl['can_see_users_online_list']
 
-        users_list.add_page(link='misago:users_active_posters',
-                            name=_('Active posters'))
-        users_list.add_page(link='misago:users_online',
-                            name=_('Online'),
-                            visible_if=can_see_online_list)
+        users_list.add_section(
+            link='misago:users_active_posters',
+            name=_('Active posters'))
+
+        users_list.add_section(
+            link='misago:users_online',
+            name=_('Online'),
+            visible_if=can_see_online_list)
 
     def register_default_user_profile_pages(self):
         def posts_badge(request, profile):
@@ -84,24 +96,38 @@ class MisagoUsersConfig(AppConfig):
             else:
                 return False
 
-        user_profile.add_page(link='misago:user_posts',
-                              name=_("Posts"),
-                              badge=posts_badge)
-        user_profile.add_page(link='misago:user_threads',
-                              name=_("Threads"),
-                              badge=threads_badge)
-        user_profile.add_page(link='misago:user_followers',
-                              name=_("Followers"),
-                              badge=followers_badge)
-        user_profile.add_page(link='misago:user_follows',
-                              name=_("Follows"),
-                              badge=following_badge)
-        user_profile.add_page(link='misago:user_name_history',
-                              name=_("Name history"),
-                              visible_if=can_see_names_history)
-        user_profile.add_page(link='misago:user_warnings',
-                              name=_("Warnings"),
-                              visible_if=can_see_warnings)
-        user_profile.add_page(link='misago:user_ban',
-                              name=_("Ban"),
-                              visible_if=can_see_ban_details)
+        user_profile.add_section(
+            link='misago:user_posts',
+            name=_("Posts"),
+            get_metadata=posts_badge)
+
+        user_profile.add_section(
+            link='misago:user_threads',
+            name=_("Threads"),
+            get_metadata=threads_badge)
+
+        user_profile.add_section(
+            link='misago:user_followers',
+            name=_("Followers"),
+            get_metadata=followers_badge)
+
+        user_profile.add_section(
+            link='misago:user_follows',
+            name=_("Follows"),
+            get_metadata=following_badge)
+
+        user_profile.add_section(
+            link='misago:user_name_history',
+            name=_("Name history"),
+            visible_if=can_see_names_history)
+
+        user_profile.add_section(
+            link='misago:user_warnings',
+            name=_("Warnings"),
+            visible_if=can_see_warnings)
+
+        user_profile.add_section(
+            link='misago:user_ban',
+            name=_("Ban"),
+            visible_if=can_see_ban_details)
+
