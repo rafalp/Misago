@@ -14,5 +14,5 @@ path.py==7.0
 pillow==2.7.0
 psycopg2==2.5.4
 pytz
-requests==2.5.1
+requests<3
 unidecode
