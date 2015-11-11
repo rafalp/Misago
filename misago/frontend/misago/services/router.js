@@ -43,6 +43,10 @@
       m.route(url);
     };
 
+    this.redirect = function(name) {
+      this.route(this.url(name));
+    };
+
     // Delegate clicks
     this.delegateElement = null;
 
@@ -71,7 +75,7 @@
         url = url.substr(location.host.length);
       }
 
-      // Is link within Ember app?
+      // Is link within JS app?
       if (url.substr(0, this.baseUrl.length) !== this.baseUrl) { return; }
 
       // Is link to media/static/avatar server?
