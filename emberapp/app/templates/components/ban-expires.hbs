@@ -1,7 +1,0 @@
-{{#if isPermanent}}
-{{gettext "This ban is permanent."}}
-{{else if isExpired}}
-{{gettext "This ban expired %(expires)s. Please try again." expires=(from-now expiresOn tick=clock.tick)}}
-{{else}}
-{{gettext "This ban expires %(expires)s." expires=(from-now expiresOn tick=clock.tick)}}
-{{/if}}
