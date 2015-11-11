@@ -68,11 +68,6 @@ PIPELINE_COMPILERS = (
     'pipeline.compilers.less.LessCompiler',
 )
 
-PIPELINE_TEMPLATE_EXT = '.hbs'
-PIPELINE_TEMPLATE_FUNC = 'Ember.Handlebars.compile'
-PIPELINE_TEMPLATE_NAMESPACE = 'window.Ember.TEMPLATES'
-PIPELINE_TEMPLATE_SEPARATOR = '/'
-
 PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'
 PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'
 
@@ -117,7 +112,6 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'misago.core.middleware.embercliredirects.EmberCLIRedirectsMiddleware',
     'misago.users.middleware.AvatarServerMiddleware',
     'misago.users.middleware.RealIPMiddleware',
     'misago.core.middleware.frontendcontext.FrontendContextMiddleware',
@@ -359,12 +353,6 @@ MISAGO_SENDFILE_LOCATIONS_PATH = ''
 
 # Default forms templates
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
-
-
-# Ember-CLI dev server address, used in rewriting redirects in dev
-# If you are using different port to run Ember-CLI dev server,
-# override this setting in your settings.py.
-MISAGO_EMBER_CLI_ORIGIN = 'http://localhost:4200'
 
 
 # Rest Framework Configuration
