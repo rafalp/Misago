@@ -8,8 +8,6 @@ Misago
 .. image:: https://coveralls.io/repos/rafalp/Misago/badge.png?branch=master
   :target: https://coveralls.io/r/rafalp/Misago?branch=master
 
-.. image:: https://ci.appveyor.com/api/projects/status/3v4ewukx2kvjpvpn/branch/master
-  :target: https://ci.appveyor.com/project/rafalp/misago/branch/master
 
 **Development Status: Pre-Alpha**
 
