@@ -1,9 +1,19 @@
+from django.core.urlresolvers import reverse
+
 from misago.users.pages import usercp, users_list, user_profile
 from misago.users.serializers import (
     AuthenticatedUserSerializer, AnonymousUserSerializer)
 
 
-def sites_links(request):
+def user_links(request):
+    request.frontend_context.update({
+        'REQUEST_ACTIVATION_URL': reverse('misago:request_activation'),
+        'FORGOTTEN_PASSWORD_URL': reverse('misago:forgotten_password'),
+
+        'USERCP_URL': reverse('misago:options'),
+        'USERS_LIST_URL': reverse('misago:users'),
+    })
+
     return {
         'USERCP_URL': usercp.get_default_link(),
         'USERS_LIST_URL': users_list.get_default_link(),

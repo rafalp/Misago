@@ -52,12 +52,9 @@ gulp.task('misagojs', ['lint'], function() {
 
       'misago/services/*.js',
       'misago/models/**/*.js',
-      'misago/routes/**/*.js',
       'misago/components/**/*.js',
-      'misago/templates/**/*.js',
       'misago/forms/**/*.js',
-
-      'misago/urls.js',
+      'misago/mounts/*.js'
     ])
     .pipe(concat('misago.js'))
     .pipe(gulp.dest('dist'));

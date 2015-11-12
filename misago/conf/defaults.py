@@ -138,12 +138,15 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
+
     'misago.core.context_processors.site_address',
     'misago.conf.context_processors.settings',
-    'misago.users.context_processors.sites_links',
+    'misago.users.context_processors.user_links',
+
     # Data preloaders
     'misago.conf.context_processors.preload_settings_json',
     'misago.users.context_processors.preload_user_json',
+
     # Note: keep frontend_context processor last for previous processors
     # to be able to add data to request.frontend_context
     'misago.core.context_processors.frontend_context',

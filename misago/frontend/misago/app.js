@@ -45,7 +45,6 @@
     this.setup = false;
     this.init = function(setup, context) {
       this.setup = {
-        fixture: ns.get(setup, 'fixture', null),
         test: ns.get(setup, 'test', false),
         api: ns.get(setup, 'api', '/api/')
       };

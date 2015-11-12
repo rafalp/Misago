@@ -2,10 +2,10 @@
   'use strict';
 
   var nav = {
-    controller: function() {
+    controller: function(_) {
       return {
         dropdownToggle: {
-          href: '/not-yet/',
+          href: _.user.absolute_url,
 
           'data-toggle': 'dropdown',
           'data-misago-routed': 'false',

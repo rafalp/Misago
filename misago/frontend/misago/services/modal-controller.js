@@ -6,12 +6,6 @@
 
     var element = document.getElementById('misago-modal');
 
-    // href clicks within modal should close it
-    var delegateName = 'click.misago-modal';
-    $(element).on(delegateName, 'a', function() {
-      self.hide();
-    });
-
     this.destroy = function() {
       $(element).off();
       $('body').removeClass('modal-open');
@@ -49,6 +43,6 @@
     }
   },
   {
-    after: 'start-routing'
+    before: 'mount:page-component'
   });
 }(Misago.prototype));

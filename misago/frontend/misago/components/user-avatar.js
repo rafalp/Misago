@@ -5,7 +5,7 @@
     defaultSize: 100,
 
     src: function(user, size, _) {
-      var src = _.router.baseUrl + 'user-avatar/';
+      var src = _.baseUrl + 'user-avatar/';
 
       if (user && user.id) {
         // just avatar hash, size and user id

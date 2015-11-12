@@ -20,6 +20,7 @@ __all__ = [
 
 
 class AuthenticatedUserSerializer(serializers.ModelSerializer):
+    absolute_url = serializers.SerializerMethodField()
     acl = serializers.SerializerMethodField()
     rank = RankSerializer(many=False, read_only=True)
 
@@ -44,11 +45,15 @@ class AuthenticatedUserSerializer(serializers.ModelSerializer):
             'subscribe_to_replied_threads',
             'threads',
             'posts',
-            'acl'
+            'acl',
+            'absolute_url',
         )
 
     def get_acl(self, obj):
         return serialize_acl(obj)
+
+    def get_absolute_url(self, obj):
+        return obj.get_absolute_url()
 
 
 class AnonymousUserSerializer(serializers.Serializer):
@@ -60,14 +65,20 @@ class AnonymousUserSerializer(serializers.Serializer):
 
 
 class BasicUserSerializer(serializers.ModelSerializer):
+    absolute_url = serializers.SerializerMethodField()
+
     class Meta:
         model = get_user_model()
         fields = (
             'id',
             'username',
             'slug',
-            'avatar_hash'
+            'avatar_hash',
+            'absolute_url',
         )
+
+    def get_absolute_url(self, obj):
+        return obj.get_absolute_url()
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -88,6 +99,7 @@ class UserSerializer(serializers.ModelSerializer):
             'threads',
             'posts',
             'state',
+            'absolute_url',
         )
 
     def get_state(self, obj):

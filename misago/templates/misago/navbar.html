@@ -1,9 +1,9 @@
 {% load i18n staticfiles %}
-<nav class="navbar navbar-primary navbar-default navbar-static-top" role="navigation">
+<nav class="navbar navbar-misago navbar-default navbar-static-top" role="navigation">
 
-  <div class="container">
+  <div class="container navbar-full hidden-xs hidden-sm">
     {% if misago_settings.forum_branding_display %}
-    <a href="{% url 'misago:index' %}" class="navbar-brand hidden-xs hidden-sm">
+    <a href="{% url 'misago:index' %}" class="navbar-brand">
       <img src="{% static 'misago/img/site-logo.png' %}" alt="">
       {% if misago_settings.forum_branding_text %}
         <span class="hidden-xs hidden-sm">{{ misago_settings.forum_branding_text}}</span>
@@ -11,24 +11,19 @@
     </a>
     {% endif %}
 
-    <ul class="nav navbar-nav hidden-xs hidden-sm">
+    <ul class="nav navbar-nav">
       <li>
-        <a href="#">
+        <a href="{% url 'misago:index' %}">
           {% trans "Threads" %}
         </a>
       </li>
       <li>
         <a href="#">
-          {% trans "Forums" %}
+          {% trans "Categories" %}
         </a>
       </li>
       <li>
-        <a href="#">
-          {% trans "Feeds" %}
-        </a>
-      </li>
-      <li>
-        <a href="#">
+        <a href="{% url 'misago:users' %}">
           {% trans "Users" %}
         </a>
       </li>
@@ -38,11 +33,13 @@
         </a>
       </li>
     </ul>
+
+    <div id="misago-user-menu-mount"></div>
   </div><!-- /full navbar -->
 
-  <ul class="nav navbar-nav navbar-compact-nav hidden-md hidden-lg {{ misago_settings.forum_branding_display|yesno:"with-6-links,with-5-links" }}">
+  <ul class="nav navbar-nav navbar-compact-nav hidden-md hidden-lg">
     {% if misago_settings.forum_branding_display %}
-    <li class="compact-brand">
+    <li>
       <a href="{% url 'misago:index' %}">
         <img src="{% static 'misago/img/site-icon.png' %}" alt="">
       </a>
@@ -50,17 +47,7 @@
     {% endif %}
     <li>
       <a href="#">
-        <i class="material-icons">chat</i>
-      </a>
-    </li>
-    <li>
-      <a href="#">
         <i class="material-icons">forum</i>
-      </a>
-    </li>
-    <li>
-      <a href="#">
-        <i class="material-icons">favorite_border</i>
       </a>
     </li>
     <li>
@@ -68,11 +55,9 @@
         <i class="material-icons">group</i>
       </a>
     </li>
-    <li>
-      <a href="#">
-        <i class="material-icons">search</i>
-      </a>
-    </li>
+    <li id="misago-user-menu-compact-mount"></li>
   </ul>
-  <!-- /.compact navbar -->
+  <!-- /compact navbar -->
 </nav>
+
+<div id="mithril-navbar-outlet"></div>

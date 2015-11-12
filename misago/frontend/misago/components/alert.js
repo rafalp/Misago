@@ -13,16 +13,13 @@
       'error': 'alert-danger'
     },
     view: function(ctrl, _) {
-      return m(
-        '.alerts',
-        {
-          config: persistent,
-          class: _.alert.isVisible ? 'in' : 'out'
-        },
-        m('p.alert',
-          {
-            class: this.classes[_.alert.type]
-          },
+      var config = {
+        config: persistent,
+        class: _.alert.isVisible ? 'in' : 'out'
+      };
+
+      return m('.alerts', config,
+        m('p.alert', {class: this.classes[_.alert.type]},
           _.alert.message
         )
       );

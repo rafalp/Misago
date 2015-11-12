@@ -18,6 +18,8 @@
     this.avatar_hash = data.avatar_hash;
 
     this.acl = data.acl;
+
+    this.absolute_url = data.absolute_url;
   };
 
   var deserializeUser = function(data, models) {

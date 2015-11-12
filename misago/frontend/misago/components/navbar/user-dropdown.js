@@ -23,7 +23,7 @@
         ),
         m('li.divider'),
         m('li',
-          m('a', {href: '/not-yet/'}, [
+          m('a', {href: _.user.absolute_url}, [
             m('span.material-icon',
               'account_circle'
             ),
@@ -31,7 +31,7 @@
           ])
         ),
         m('li',
-          m('a', {href: _.router.url('options')}, [
+          m('a', {href: _.context.USERCP_URL}, [
             m('span.material-icon',
               'done_all'
             ),
