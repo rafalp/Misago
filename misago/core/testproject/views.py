@@ -6,7 +6,7 @@ from misago.core import errorpages, mail
 from misago.core.decorators import require_POST
 from misago.core.shortcuts import paginate, validate_slug
 from misago.core.testproject.models import Model
-from misago.core.views import noscript
+from misago.core.views import home_redirect
 
 
 def test_mail_user(request):
@@ -64,8 +64,8 @@ def raise_404(request):
     raise Http404()
 
 
-def test_noscript(request):
-    return noscript(request, **request.POST)
+def test_redirect(request):
+    return home_redirect(request)
 
 
 @require_POST

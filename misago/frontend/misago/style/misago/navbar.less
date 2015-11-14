@@ -48,16 +48,31 @@
     display: table-cell;
   }
 
-  &>li>a {
+  &>li>a, &>li>button {
+    background: none;
+    border: none;
     margin: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     width: 100%;
 
+    color: @navbar-default-link-color;
     text-align: center;
+
+    &:hover, &:focus {
+      color: @navbar-default-link-hover-color;
+      background-color: @navbar-default-link-hover-bg;
+    }
+
+    &>img {
+      width: @navbar-compact-item-size;
+      height: @navbar-compact-item-size;
+    }
   }
 
-  &>li>a>img {
-    width: @navbar-compact-item-size;
-    height: @navbar-compact-item-size;
+  &>li>button {
+    padding-top:    10px;
+    padding-bottom: 10px;
   }
 
   &>li>a>.material-icon {

@@ -60,11 +60,8 @@
           _.alert.info(rejection.detail);
           self.showActivation = true;
         } else if (rejection.code === 'banned') {
+          _.showBannedPage(rejection.detail);
           _.modal();
-          _.router.error403({
-            message: '',
-            ban: rejection.detail
-          });
         } else {
           _.alert.error(rejection.detail);
         }

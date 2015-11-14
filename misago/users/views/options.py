@@ -1,8 +1,6 @@
 from django.shortcuts import redirect, render
 from django.utils.translation import ugettext as _
 
-from misago.core.views import noscript
-
 from misago.users.decorators import deflect_guests
 
 

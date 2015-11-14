@@ -33,8 +33,6 @@
         error_message.push(m('.lead', m.trust(ban.message.html)));
       } else if (message) {
         error_message.push(m('p.lead', message));
-      } else {
-        error_message.push(m('p.lead', gettext('You are banned.')));
       }
 
       var expirationMessage = null;

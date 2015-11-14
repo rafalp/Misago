@@ -20,14 +20,9 @@
       });
 
       var footnote = null;
-      var termsUrl = _.settings.terms_of_service_link;
 
-      if (!termsUrl && _.settings.terms_of_service) {
-        termsUrl = _.router.url('terms_of_service');
-      }
-
-      if (termsUrl) {
-        footnote = m('a', {href: termsUrl},
+      if (_.context.TERMS_OF_SERVICE_URL) {
+        footnote = m('a', {href: _.context.TERMS_OF_SERVICE_URL},
           m.trust(interpolate(gettext("By registering you agree to site's %(terms)s."), {
             terms: '<strong>' + gettext("terms and conditions") + '</strong>'
           }, true))

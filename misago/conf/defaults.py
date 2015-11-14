@@ -142,6 +142,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'misago.core.context_processors.site_address',
     'misago.conf.context_processors.settings',
     'misago.users.context_processors.user_links',
+    'misago.legal.context_processors.legal_links',
 
     # Data preloaders
     'misago.conf.context_processors.preload_settings_json',

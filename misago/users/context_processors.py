@@ -10,6 +10,8 @@ def user_links(request):
         'REQUEST_ACTIVATION_URL': reverse('misago:request_activation'),
         'FORGOTTEN_PASSWORD_URL': reverse('misago:forgotten_password'),
 
+        'BANNED_URL': reverse('misago:banned'),
+
         'USERCP_URL': reverse('misago:options'),
         'USERS_LIST_URL': reverse('misago:users'),
     })

@@ -64,9 +64,14 @@ class AnonymousUserSerializer(serializers.Serializer):
         return serialize_acl(obj)
 
 
-class BasicUserSerializer(serializers.ModelSerializer):
+class BaseSerializer(serializers.ModelSerializer):
     absolute_url = serializers.SerializerMethodField()
 
+    def get_absolute_url(self, obj):
+        return obj.get_absolute_url()
+
+
+class BasicUserSerializer(BaseSerializer):
     class Meta:
         model = get_user_model()
         fields = (
@@ -77,11 +82,8 @@ class BasicUserSerializer(serializers.ModelSerializer):
             'absolute_url',
         )
 
-    def get_absolute_url(self, obj):
-        return obj.get_absolute_url()
 
-
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(BaseSerializer):
     rank = RankSerializer(many=False, read_only=True)
     state = serializers.SerializerMethodField()
     signature = serializers.SerializerMethodField()
