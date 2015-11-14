@@ -38,17 +38,17 @@ $(function() {
       pick12HourFormat: false
     });
 
-    function update_value() {
+    function updateValue() {
       var input = moment($date.val() + " " + $time.val(), 'MM-DD-YYYY HH:mm');
       if (input.isValid()) {
-        $input.val(input.format());
+        $input.val(input.utc().format());
       } else {
         $input.val('');
       }
     }
 
-    $date.change(update_value);
-    $time.change(update_value);
+    $date.change(updateValue);
+    $time.change(updateValue);
   }
 
   // discover formatted fields
