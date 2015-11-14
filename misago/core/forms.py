@@ -39,7 +39,7 @@ def YesNoSwitch(**kwargs):
 
 class IsoDateTimeField(DateTimeField):
     input_formats = ['iso8601']
-    iso8601_formats = ("%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M:%S.%f")
+    iso8601_formats = ("%Y-%m-%dT%H:%M:%S+00:00", "%Y-%m-%dT%H:%M:%S.%f+00:00")
 
     def prepare_value(self, value):
         try:
