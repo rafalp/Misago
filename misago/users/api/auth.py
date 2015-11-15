@@ -73,8 +73,10 @@ def send_activation(request):
 
         mail_subject = _("Activate %(user)s account "
                          "on %(forum_title)s forums")
-        subject_formats = {'user': requesting_user.username,
-                           'forum_title': settings.forum_name}
+        subject_formats = {
+            'user': requesting_user.username,
+            'forum_title': settings.forum_name,
+        }
         mail_subject = mail_subject % subject_formats
 
         mail_user(request, requesting_user, mail_subject,
@@ -103,8 +105,10 @@ def send_password_form(request):
         requesting_user = form.user_cache
 
         mail_subject = _("Change %(user)s password on %(forum_title)s forums")
-        subject_formats = {'user': requesting_user.username,
-                           'forum_title': settings.forum_name}
+        subject_formats = {
+            'user': requesting_user.username,
+            'forum_title': settings.forum_name,
+        }
         mail_subject = mail_subject % subject_formats
 
         confirmation_token = make_password_change_token(requesting_user)

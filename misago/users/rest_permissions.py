@@ -3,7 +3,10 @@ from rest_framework.permissions import BasePermission, AllowAny, SAFE_METHODS
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 
+from misago.core.exceptions import Banned
+
 from misago.users.bans import get_request_ip_ban
+from misago.users.models import Ban, BAN_IP
 
 
 __all__ = [
@@ -27,9 +30,11 @@ class UnbannedOnly(BasePermission):
     def is_request_banned(self, request):
         ban = get_request_ip_ban(request)
         if ban:
-            raise PermissionDenied(
-                _("Your IP address is banned from performing this action."),
-                {'ban': ban.get_serialized_message()})
+            hydrated_ban = Ban(
+                check_type=BAN_IP,
+                user_message=ban['message'],
+                expires_on=ban['expires_on'])
+            raise Banned(hydrated_ban)
 
     def has_permission(self, request, view):
         self.is_request_banned(request)
