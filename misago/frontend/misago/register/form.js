@@ -54,7 +54,7 @@
     };
 
     this.success = function(data) {
-      _.modal('register-complete', data);
+      _.modal('register:complete', data);
     };
 
     this.error = function(rejection) {

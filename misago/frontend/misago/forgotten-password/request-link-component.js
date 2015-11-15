@@ -16,7 +16,7 @@
 
     this.error = function(rejection, _) {
       if (['inactive_user', 'inactive_admin'].indexOf(rejection.code) > -1) {
-        var component = _.component('inactive-page', {
+        var component = _.component('forgotten-password:inactive-page', {
           'type': rejection.code,
           'message': rejection.detail
         });

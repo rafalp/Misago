@@ -91,7 +91,7 @@
     }
   };
 
-  Misago.addService('component:request-link-form', function(_) {
+  Misago.addService('component:request-activation-link-form', function(_) {
     _.component('request-activation-link-form', form);
   },
   {

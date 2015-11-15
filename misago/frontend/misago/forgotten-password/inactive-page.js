@@ -13,7 +13,7 @@
         );
       }
 
-      return m('.page.page-message.page-message-info',
+      return m('.page.page-message.page-message-info.page-forgotten-password-inactive',
         m('.container',
           m('.message-panel', [
             m('.message-icon',
@@ -34,8 +34,8 @@
     }
   };
 
-  Misago.addService('component:inactive-page', function(_) {
-    _.component('inactive-page', inactivePage);
+  Misago.addService('component:forgotten-password:inactive-page', function(_) {
+    _.component('forgotten-password:inactive-page', inactivePage);
   },
   {
     after: 'components'

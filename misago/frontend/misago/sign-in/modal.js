@@ -5,7 +5,7 @@
     context.retain = true;
   }
 
-  var signin = {
+  var modal = {
     controller: function(_) {
       return {
         form: _.form('sign-in')
@@ -67,7 +67,7 @@
   };
 
   Misago.addService('modal:sign-in', function(_) {
-    _.modal('sign-in', signin);
+    _.modal('sign-in', modal);
   },
   {
     after: 'modals'

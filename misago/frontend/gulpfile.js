@@ -17,7 +17,11 @@ var uglify = require('gulp-uglify');
 var del = require('del');
 
 var apps = [
-  'forgotten-password'
+  'activation',
+  'forgotten-password',
+  'forum-navbar',
+  'register',
+  'sign-in',
 ];
 
 var vendors = [

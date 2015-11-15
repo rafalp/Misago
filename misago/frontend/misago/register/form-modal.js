@@ -5,7 +5,7 @@
     context.retain = true;
   };
 
-  var register = {
+  var modal = {
     controller: function(_) {
       return {
         form: _.form('register')
@@ -109,7 +109,7 @@
   };
 
   Misago.addService('modal:register', function(_) {
-    _.modal('register', register);
+    _.modal('register', modal);
   },
   {
     after: 'modals'

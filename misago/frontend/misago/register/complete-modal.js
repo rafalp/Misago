@@ -9,7 +9,7 @@
     document.location.reload();
   };
 
-  var registerComplete = {
+  var modal = {
     controller: function(message, _) {
       if (message.activation === 'active') {
         _.runloop.runOnce(
@@ -84,8 +84,8 @@
     }
   };
 
-  Misago.addService('modal:register-complete', function(_) {
-    _.modal('register-complete', registerComplete);
+  Misago.addService('modal:register:complete', function(_) {
+    _.modal('register:complete', modal);
   },
   {
     after: 'modals'

@@ -15,7 +15,7 @@
       var button = 'button.btn.btn-primary[type="button"]';
       var message = gettext("%(username)s, your password has been changed successfully.");
 
-      return m('.page.page-message.page-message-success.page-password-reset-done',
+      return m('.page.page-message.page-message-success.page-forgotten-password-done',
         m('.container',
           m('.message-panel', [
             m('.message-icon',
