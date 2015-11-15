@@ -1,41 +1,21 @@
-=====================================
-Preloading Data for Ember.js Frontend
-=====================================
+=========================================
+Preloading Data for Mithril.js Components
+=========================================
 
-When user visits Misago site for first time, his/hers HTTP request is handled by Django which outputs simple version of requested page. If user has JavaScript enabled in browser, full version of page is then ran by Ember.js.
+When user visits Misago site for first time, his/hers HTTP request is handled by Django which outputs basic version of requested page. If user has JavaScript enabled in browser, blank spaces are then filled by the Mithril.js components.
 
-To keep this process as fast as possible, Misago already includes ("preloads") some of data within initial response. This data is assigned to global ``MisagoData`` object and accessed via ``MisagoPreloadStore`` helper.
+To enable those components easy access to application's state, Misago provides simple "frontend context".
 
 
-Preloading Custom Data
-----------------------
+Exposing Data to Mithril.js
+---------------------------
 
-Misago creates empty dict and makes it available as ``preloaded_ember_data`` attribute on ``HttpRequest`` object. This dict is converted into JSON when initial page is rendered by Django.
+Misago creates empty dict and makes it available as ``frontend_context`` attribute on current ``HttpRequest`` object. This dict is converted into JSON when initial page is rendered by Django.
 
-This means that as long as initial page wasn't rendered yet, you can preload data in any place that has access to request object.
+This means that as long as initial page wasn't rendered yet, you can preload data in any place that has access to request object, but for performance reasons views and context processors are prefereable place to do this.
 
 
 Accessing Preloaded Data
 ------------------------
 
-Misago provides utility object defined within ``misago/utils/preloadstore`` module that provides simple API for accessing keys defined in ``MisagoData``::
-
-
-    // some .js module that wants to access preloaded data
-    import MisagoPreloadStore from 'misago/utils/preloadstore';
-
-    // see if required key is defined
-    if (MisagoPreloadStore.has('thread')) {
-        // get key value from store
-        var preloadedThread = MisagoPreloadStore.get('thread');
-    }
-
-    // or use default if key isn't set
-    var somethingElse = MisagoPreloadStore.get('nonexistantKey', {'default': 'Value'})
-
-    // pop value so future code doesn't access it
-    var preloadedThread = MisagoPreloadStore.pop('thread');
-    console.log(MisagoPreloadStore.get('thread')); // prints "undefined" in console
-
-    // finally set values in store (useful for testing, but terrible for global state)
-    MisagoPreloadStore.get('fakeValue', {'mock': 'Value'})
+The data exposed to Mithril.js by Misago lives in plain JavaScript object available as ``context`` attribute on services containter instance.

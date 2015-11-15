@@ -23,6 +23,15 @@ While Misago raises plenty of exceptions, only four are allowed to leave views. 
    You should never raise those exceptions yourself. If you want to redirect user to certain page, return proper redirect response instead.
 
 
+Banned
+------
+
+:py:class:`misago.core.exceptions.Banned`
+
+Raising this exception with ``Ban`` or ``BanCache`` instance as its only argument will cause Misago to display "You are banned" error page to the user.
+
+
+
 ExplicitFirstPage
 -----------------
 
