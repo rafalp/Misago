@@ -46,7 +46,7 @@
       // misago to redirect user back to right page, and will trigger browser's
       // key ring feature
       $form.find('input[type="hidden"]').val(_.ajax.csrfToken);
-      $form.find('input[name="redirect_to"]').val(m.route());
+      $form.find('input[name="redirect_to"]').val(window.location.pathname);
       $form.find('input[name="username"]').val(this.username());
       $form.find('input[name="password"]').val(this.password());
       $form.submit();
