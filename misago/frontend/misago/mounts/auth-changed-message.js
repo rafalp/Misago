@@ -1,7 +1,7 @@
 (function (Misago) {
   'use strict';
 
-  var mount = document.getElementById('misago-auth-changed-message-mount');
+  var mount = document.getElementById('auth-changed-message-mount');
 
   Misago.addService('mount:auth-changed-message', {
     factory: function(_) {

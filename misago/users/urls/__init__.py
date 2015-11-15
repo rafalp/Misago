@@ -13,8 +13,8 @@ urlpatterns += patterns('misago.users.views.auth',
 
 
 urlpatterns += patterns('misago.users.views.activation',
-    url(r'^activation/$', 'activation_noscript', name="request_activation"),
-    url(r'^activation/(?P<user_id>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'activation_noscript', name="activate_by_token"),
+    url(r'^request-activation/$', 'request_activation', name="request_activation"),
+    url(r'^activation/(?P<user_id>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'activate_by_token', name="activate_by_token"),
 )
 
 

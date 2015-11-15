@@ -2,14 +2,11 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Page not found" %} | {{ block.super }}{% endblock %}
-
-
-{% block meta_description %}{% trans "The link you clicked was incorrect or the page has been moved or deleted." %}{% endblock meta_description %}
+{% block title %}{% trans "Activation failed" %} | {{ block.super }}{% endblock %}
 
 
 {% block content %}
-<div class="page page-error page-error-404">
+<div class="page page-error page-activation-error">
   <div class="container">
     <div class="message-panel">
 
@@ -18,8 +15,13 @@
       </div>
 
       <div class="message-body">
-        <p class="lead">{% trans "Requested page could not be found." %}</p>
+        <p class="lead">{% trans "Account activation has failed." %}</p>
         <p>{% trans "The link you followed was incorrect or the page has been moved or deleted." %}</p>
+        <p>
+          <a href="{% url 'misago:request_activation' %}">
+            Request another activation link.
+          </a>
+        </p>
       </div>
 
     </div>

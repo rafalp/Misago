@@ -142,12 +142,11 @@ class GetUserForm(MisagoAuthMixin, forms.Form):
         return data
 
     def confirm_allowed(self, user):
-        raise NotImplementedError("confirm_allowed method must be defined "
-                                  "by inheriting classes")
+        """override this method to include additional checks"""
 
 
 class ResendActivationForm(GetUserForm):
-    def confirm_can_be_activated(self, user):
+    def confirm_allowed(self, user):
         username_format = {'user': user.username}
 
         if not user.requires_activation:
@@ -161,21 +160,7 @@ class ResendActivationForm(GetUserForm):
             raise forms.ValidationError(message % username_format,
                                         code='inactive_admin')
 
-    def confirm_allowed(self, user):
-        self.confirm_user_not_banned(user)
-        self.confirm_can_be_activated(user)
-
-
 
 class ResetPasswordForm(GetUserForm):
-    error_messages = {
-        'inactive_user': _("You have to activate your account before "
-                           "you will be able to request new password."),
-        'inactive_admin': _("Your account has to be activated by "
-                            "Administrator before you will be able to request "
-                            "new password."),
-    }
-
     def confirm_allowed(self, user):
-        self.confirm_user_not_banned(user)
         self.confirm_user_active(user)

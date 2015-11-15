@@ -5,7 +5,7 @@
     controller: function(_) {
       return {
         openUserMenu: function() {
-          _.dropdown.toggle('misago-navbar-dropdown', 'navbar:dropdown:user');
+          _.dropdown.toggle('navbar-dropdown', 'navbar:dropdown:user');
           return false;
         }
       };

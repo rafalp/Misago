@@ -12,11 +12,17 @@ def _ajax_error(code=406, message=None):
 
 @admin_error_page
 def _error_page(request, code, message=None):
-    response = render(request,
-                      'misago/errorpages/%s.html' % code,
-                      {'message': message})
-    response.status_code = code
-    return response
+    return render(request, 'misago/errorpages/%s.html' % code, {
+            'message': message
+        }, status=code)
+
+
+def banned(request, ban):
+    request.frontend_context['ban'] = ban
+
+    return render(request, 'misago/errorpages/banned.html', {
+            'ban': ban
+        }, status=403)
 
 
 def permission_denied(request, message=None):

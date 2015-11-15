@@ -1,7 +1,7 @@
 (function (Misago) {
   'use strict';
 
-  var mount = document.getElementById('misago-alert-mount');
+  var mount = document.getElementById('alert-mount');
 
   Misago.addService('mount:alert', {
     factory: function(_) {

@@ -4,9 +4,12 @@ from django.http import Http404, HttpResponse
 
 from misago.core import errorpages, mail
 from misago.core.decorators import require_POST
+from misago.core.exceptions import Banned
 from misago.core.shortcuts import paginate, validate_slug
 from misago.core.testproject.models import Model
 from misago.core.views import home_redirect
+
+from misago.users.models import Ban
 
 
 def test_mail_user(request):
@@ -42,6 +45,11 @@ def validate_slug_view(request, model_id, model_slug):
     model = Model(int(model_id), 'eric-the-fish')
     validate_slug(model, model_slug)
     return HttpResponse("Allright!")
+
+
+def raise_misago_banned(request):
+    ban = Ban(user_message="Banned for test!")
+    raise Banned(ban)
 
 
 def raise_misago_403(request):

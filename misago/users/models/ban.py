@@ -135,6 +135,16 @@ class BanCache(models.Model):
         except IntegrityError:
             pass # first come is first serve with ban cache
 
+    def get_serialized_message(self):
+        from misago.users.serializers import BanMessageSerializer
+        temp_ban = Ban(
+            id=1,
+            check_type=BAN_USERNAME,
+            user_message=self.user_message,
+            staff_message=self.staff_message,
+            expires_on=self.expires_on)
+        return BanMessageSerializer(temp_ban).data
+
     @property
     def is_banned(self):
         return bool(self.ban)

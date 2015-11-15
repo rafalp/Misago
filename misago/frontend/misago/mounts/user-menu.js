@@ -1,8 +1,8 @@
 (function (Misago) {
   'use strict';
 
-  var mountDesktop = document.getElementById('misago-user-menu-mount');
-  var mountCompact = document.getElementById('misago-user-menu-compact-mount');
+  var mountDesktop = document.getElementById('user-menu-mount');
+  var mountCompact = document.getElementById('user-menu-compact-mount');
 
   Misago.addService('mount:user-menu', {
     factory: function(_) {

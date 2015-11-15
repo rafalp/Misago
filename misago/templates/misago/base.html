@@ -24,20 +24,20 @@
   </head>
   <body>
 
-    <div id="misago-auth-changed-message-mount"></div>
-    <div id="misago-alert-mount"></div>
+    <div id="auth-changed-message-mount"></div>
+    <div id="alert-mount"></div>
 
     {% include "misago/jumbotron.html" %}
     {% include "misago/navbar.html" %}
 
-    <div id="misago-page-mount">
+    <div id="page-mount">
       {% block content %}{% endblock content %}
     </div>
 
     {% include "misago/footer.html" %}
     {% include "misago/auth.html" %}
 
-    <div class="modal fade" id="misago-modal" tabindex="-1" role="dialog" aria-labelledby="misago-modal-label"></div>
+    <div class="modal fade" id="modal-mount" tabindex="-1" role="dialog" aria-labelledby="misago-modal-label"></div>
 
     <script type="text/javascript" src="/django-i18n.js"></script>
     <script type="text/javascript" src="{% static 'misago/js/vendor.js' %}"></script>

@@ -7,8 +7,7 @@ from misago.users.api.usernamechanges import UsernameChangesViewSet
 
 urlpatterns = patterns('misago.users.api.auth',
     url(r'^auth/$', 'gateway'),
-    url(r'^auth/send-activation/$', 'send_activation'),
-    url(r'^auth/activate-account/(?P<user_id>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'activate_account'),
+    url(r'^auth/send-activation/$', 'send_activation', name='send_activation'),
     url(r'^auth/send-password-form/$', 'send_password_form'),
     url(r'^auth/change-password/(?P<user_id>\d+)/(?P<token>[a-zA-Z0-9]+)/$', 'change_forgotten_password'),
 )

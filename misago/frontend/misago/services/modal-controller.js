@@ -4,7 +4,7 @@
   var Modal = function() {
     var self = this;
 
-    var element = document.getElementById('misago-modal');
+    var element = document.getElementById('modal-mount');
 
     this.destroy = function() {
       $(element).off();

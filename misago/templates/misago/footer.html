@@ -1,12 +1,14 @@
 {% load i18n %}
-<footer class="site-footer">
+<footer class="misago-footer">
   <div class="container">
     <div class="footer-content">
 
-      <p class="site-noscript">
-        <i class="material-icon hidden-xs hidden-sm">info_outline</i>
-        {% trans "For complete experience please enable JavaScript." %}
-      </p>
+      <noscript>
+        <p class="noscript-message">
+          <i class="material-icon hidden-xs hidden-sm">info_outline</i>
+          {% trans "For complete experience please enable JavaScript." %}
+        </p>
+      </noscript>
 
       {% if misago_settings.terms_of_service or misago_settings.terms_of_service_link or misago_settings.privacy_policy or misago_settings.privacy_policy_link or misago_settings.forum_footnote %}
         <ul class="list-inline footer-nav">

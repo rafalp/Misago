@@ -2,29 +2,16 @@
   'use strict';
 
   var bannedPage = {
-    view: function(ctrl, ban) {
+    view: function(ctrl, ban, _) {
       var error_message = [];
 
       if (ban.message.html) {
         error_message.push(m('.lead', m.trust(ban.message.html)));
       } else {
-        error_message.push(m('p.lead', gettext('You are banned.')));
+        error_message.push(m('p.lead', ban.message.plain));
       }
 
-      var expirationMessage = null;
-      if (ban.expires_on) {
-        if (ban.expires_on.isAfter(moment())) {
-          expirationMessage = interpolate(
-            gettext('This ban expires %(expires_on)s.'),
-            {'expires_on': ban.expires_on.fromNow()},
-            true);
-        } else {
-          expirationMessage = gettext('This ban has expired.');
-        }
-      } else {
-        expirationMessage = gettext('This ban is permanent.');
-      }
-      error_message.push(m('p', expirationMessage));
+      error_message.push(_.component('ban-expiration-message', ban));
 
       return m('.page.page-error.page-error-banned',
         m('.container',

@@ -6,10 +6,11 @@ from django.utils.translation import gettext as _
 from rest_framework.views import exception_handler as rest_exception_handler
 
 from misago.core import errorpages
-from misago.core.exceptions import AjaxError, ExplicitFirstPage, OutdatedSlug
+from misago.core.exceptions import (
+    AjaxError, Banned, ExplicitFirstPage, OutdatedSlug)
 
 
-HANDLED_EXCEPTIONS = (AjaxError, ExplicitFirstPage, Http404,
+HANDLED_EXCEPTIONS = (AjaxError, Banned, ExplicitFirstPage, Http404,
                       OutdatedSlug, PermissionDenied)
 
 
@@ -20,6 +21,10 @@ def is_misago_exception(exception):
 def handle_ajax_error(request, exception):
     json = {'is_error': 1, 'message': unicode(exception.message)}
     return JsonResponse(json, status=exception.code)
+
+
+def handle_banned_exception(request, exception):
+    return errorpages.banned(request, exception.ban)
 
 
 def handle_explicit_first_page_exception(request, exception):
@@ -61,6 +66,7 @@ def handle_permission_denied_exception(request, exception):
 
 EXCEPTION_HANDLERS = (
     (AjaxError, handle_ajax_error),
+    (Banned, handle_banned_exception),
     (Http404, handle_http404_exception),
     (ExplicitFirstPage, handle_explicit_first_page_exception),
     (OutdatedSlug, handle_outdated_slug_exception),
@@ -85,13 +91,11 @@ def handle_misago_exception(request, exception):
 def handle_api_exception(exception, context):
     response = rest_exception_handler(exception, context)
     if response:
-        if isinstance(exception, PermissionDenied):
+        if isinstance(exception, Banned):
+            response.data['ban'] = exception.ban
+        elif isinstance(exception, PermissionDenied):
             try:
                 response.data['detail'] = exception.args[0]
-                try:
-                    response.data.update(exception.args[1])
-                except IndexError:
-                    pass
             except IndexError:
                 pass
         return response

@@ -1,0 +1,37 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{% trans "You are banned" %} | {{ block.super }}{% endblock %}
+
+
+{% block meta_description %}{% trans "You are banned from accessing this page." %}{% endblock meta_description %}
+
+
+{% block content %}
+<div class="page page-error page-error-403 page-error-banned">
+  <div class="container">
+    <div class="message-panel">
+
+      <div class="message-icon">
+        <span class="material-icon">highlight_off</span>
+      </div>
+
+      <div class="message-body">
+        {% if ban.message.html %}
+        <div class="lead">
+          {{ ban.message.html|safe }}
+        </div>
+        {% else %}
+        <p class="lead">
+          {{ ban.message.plain }}
+        </p>
+        {% endif %}
+
+        <div id="page-component" data-component-name="ban-expiration-message"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock content %}

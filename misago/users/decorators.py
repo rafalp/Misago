@@ -2,6 +2,8 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 
+from misago.core.exceptions import Banned
+
 from misago.users.bans import get_request_ip_ban
 
 
@@ -29,9 +31,7 @@ def deny_banned_ips(f):
     def decorator(request, *args, **kwargs):
         ban = get_request_ip_ban(request)
         if ban:
-            raise PermissionDenied(
-                _("Your IP address is banned from performing this action."),
-                {'ban': ban.get_serialized_message()})
+            raise Banned(ban)
         else:
             return f(request, *args, **kwargs)
     return decorator

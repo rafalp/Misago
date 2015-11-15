@@ -22,7 +22,7 @@
     };
 
     this.submit = function() {
-      _.api.endpoint('auth').endpoint(vm.endpoint).post({
+      _.ajax.post(vm.api, {
         email: self.email()
       }).then(function(user) {
         self.success(user);
@@ -38,11 +38,6 @@
     this.error = function(rejection) {
       if (rejection.status === 400) {
           vm.error(rejection, _);
-      } else if (rejection.status === 403 && rejection.ban) {
-        _.router.error403({
-          message: '',
-          ban: rejection.ban
-        });
       } else {
         _.api.alert(rejection);
       }
