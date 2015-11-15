@@ -1,15 +1,15 @@
 from django.shortcuts import redirect, render
 from django.utils.translation import ugettext as _
 
-from misago.users.decorators import deflect_guests
+from misago.users.decorators import deny_guests
 
 
-@deflect_guests
+@deny_guests
 def index(request):
-    return redirect('misago:options_form', form_name='forum-options')
+    return redirect('misago:index')
 
 
-@deflect_guests
+@deny_guests
 def form(request, form_name, token=None):
     return noscript(request, **{
         'title': _("Options"),
