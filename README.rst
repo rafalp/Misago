@@ -63,11 +63,11 @@ If nothing is wrong with your setup, Django developer server will start, enablin
 Frontend
 --------
 
-With exception of Admin Panel, Misago frontend is powered by Mithril.js application backed by Django API. This application relies on custom Gulp.js-based toolkit for development. As of current, Misago's ``gulpfile.js`` defines following tasks::
+With exception of Admin Panel, Misago frontend is powered by Mithril.js application backed by Django API. This application relies on custom Gulp.js-based toolkit for development. As of current, Misago's ``gulpfile.js`` defines following tasks:
 
-    default - this task does production build of Misago's assets, concating and minifying javascripts, css and images, as well as moving them to misago/static directory
-    watch - task does quick build for assets (concat assets into single files, compile less, deploy to misago/static but don't minify/optimize) as well as runs re-build when less/js changes
-    test - runs QUnit tests suite for Misago's javascript
+* **default** does production build of Misago's assets, concating and minifying javascripts, css and images, as well as moving them to misago/static directory
+* **watch** does quick build for assets (concat assets into single files, compile less, deploy to misago/static but don't minify/optimize) as well as runs re-build when less/js changes
+* **test** runs QUnit tests suite for Misago's javascript
 
 To start work on custom frontend for Misago, fork and install it locally to have development forum setup. You can now develop custom theme by modifing assets in misago/frontend directory, however special care should be taken when changing source javascripts.
 
