@@ -45,8 +45,10 @@
     <script type="text/javascript" src="/moment-i18n.js"></script>
     {% endif %}
     <script type="text/javascript" src="{% static 'misago/js/misago.js' %}"></script>
+    {% include "misago/scripts.html" %}
     <script type="text/javascript">
       var misago = new Misago();
+      {% include "misago/extra.js" %}
       misago.init({
         api: '{% url 'misago:api:api-root' %}'
       }, {{ frontend_context|as_json }});

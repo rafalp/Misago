@@ -25,7 +25,7 @@ Don't use this branch in production!
 
 This branch contains in-development code of next major Misago release, 0.6. **It's not feature-complete.** If you are looking at running "real" forum on Misago, please use latest 0.5 release instead.
 
-**There is no update path for 0.6 installations!**
+**There is no update path for pre-release 0.6 installations!** If you run your site off codebase pulled straight from git branch instead of release or pypi install, you'll won't be able to do smooth update via ``python manage.py migrate``.
 
 
 Development
@@ -63,7 +63,18 @@ If nothing is wrong with your setup, Django developer server will start, enablin
 Frontend
 --------
 
-With exception of Admin Panel, Misago frontend is powered by Mithril.js application backed by Django API. This application relies on custom Node.js-based toolkit for development.
+With exception of Admin Panel, Misago frontend is powered by Mithril.js application backed by Django API. This application relies on custom Gulp.js-based toolkit for development. As of current, Misago's ``gulpfile.js`` defines following tasks:
+
+    default - this task does production build of Misago's assets, concating and minifying javascripts, css and images, as well as moving them to misago/static directory
+    watch - task does quick build for assets (concat assets into single files, compile less, deploy to misago/static but don't minify/optimize) as well as runs re-build when less/js changes
+    test - runs QUnit tests suite for Misago's javascript
+
+To start work on custom frontend for Misago, fork and install it locally to have development forum setup. You can now develop custom theme by modifing assets in misago/frontend directory, however special care should be taken when changing source javascripts.
+
+Misago defines two templates that allow you to include custom html and js code before Misago's JavaScript app is ran:
+
+* **scripts.html** template is included before final ``<script>`` element, allowing you to include and/or init 3rd party libraries such as Google Analytics, Facebook SDK, etc ect.
+* **extra.js** template is included after ``misago`` javascript object is created, but before ``misago.init`` is called, allowing you to run custom code registering new services adding custom features or modifing existing ones.
 
 
 Bug reports, features and feedback
