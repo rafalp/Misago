@@ -14,12 +14,11 @@ from misago.users.bans import get_user_ban
 from misago.users.forms.auth import (
     AuthenticationForm, ResendActivationForm, ResetPasswordForm)
 from misago.users.rest_permissions import UnbannedAnonOnly, UnbannedOnly
-from misago.users.serializers import (AuthenticatedUserSerializer,
-                                      AnonymousUserSerializer)
-from misago.users.tokens import (make_activation_token,
-                                 is_activation_token_valid,
-                                 make_password_change_token,
-                                 is_password_change_token_valid)
+from misago.users.serializers import (
+    AuthenticatedUserSerializer, AnonymousUserSerializer)
+from misago.users.tokens import (
+    make_activation_token, make_password_change_token,
+    is_password_change_token_valid)
 from misago.users.validators import validate_password
 
 
@@ -150,21 +149,18 @@ def change_forgotten_password(request, user_id, token):
             raise PasswordChangeFailed(invalid_message)
         if not is_password_change_token_valid(user, token):
             raise PasswordChangeFailed(invalid_message)
-        if get_user_ban(user):
-            raise PasswordChangeFailed(expired_message)
 
-        try:
-            form = ResetPasswordForm()
-            form.confirm_allowed(user)
-        except ValidationError:
+        if user.requires_activation:
+            raise PasswordChangeFailed(expired_message)
+        if get_user_ban(user):
             raise PasswordChangeFailed(expired_message)
     except PasswordChangeFailed as e:
         return Response({
                 'detail': e.args[0]
             }, status=status.HTTP_400_BAD_REQUEST)
 
-    new_password = request.data.get('password', '').strip()
     try:
+        new_password = request.data.get('password', '').strip()
         validate_password(new_password)
         user.set_password(new_password)
         user.save()

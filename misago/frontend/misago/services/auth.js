@@ -50,19 +50,24 @@
 
     syncSession();
 
-    // Access controls
-    this.denyAuthenticated = function(message) {
-      if (_.user.isAuthenticated) {
-        throw new Misago.PermissionDenied(
-          message || gettext("This page is not available to signed in users."));
-      }
-    };
+    // Shorthand for signing user out
+    this.signOut = function() {
+      _.user.isAuthenticated = false;
+      _.user.isAnonymous = true;
 
-    this.denyAnonymous = function(message) {
-      if (_.user.isAnonymous) {
-        throw new Misago.PermissionDenied(
-          message || gettext("This page is not available to guests."));
-      }
+      syncSession();
+
+      var desktopMount = document.getElementById('user-menu-mount');
+      var compactMount = document.getElementById('user-menu-compact-mount');
+
+      var desktopComponent = desktopMount.dataset.componentName;
+      var compactComponent = compactMount.dataset.componentName;
+
+      var newDesktopName = desktopComponent.replace('user-nav', 'guest-nav');
+      var newCompactName = compactComponent.replace('user-nav', 'guest-nav');
+
+      m.mount(desktopMount, _.component(newDesktopName));
+      m.mount(compactMount, _.component(newCompactName));
     };
   };
 

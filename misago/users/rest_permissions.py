@@ -32,9 +32,7 @@ class UnbannedOnly(BasePermission):
                 {'ban': ban.get_serialized_message()})
 
     def has_permission(self, request, view):
-        if request.user.is_authenticated():
-            raise PermissionDenied(
-                _("This action is not available to signed in users."))
+        self.is_request_banned(request)
         return True
 
 

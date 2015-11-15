@@ -162,5 +162,13 @@ class ResendActivationForm(GetUserForm):
 
 
 class ResetPasswordForm(GetUserForm):
+    error_messages = {
+        'inactive_user': _("You have to activate your account before "
+                           "you will be able to request new password."),
+        'inactive_admin': _("Administrator has to activate your account "
+                            "before you will be able to request "
+                            "new password."),
+    }
+
     def confirm_allowed(self, user):
         self.confirm_user_active(user)

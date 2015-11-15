@@ -2,11 +2,11 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Activation error" %} | {{ block.super }}{% endblock %}
+{% block title %}{% trans "Change forgotten password error" %} | {{ block.super }}{% endblock %}
 
 
 {% block content %}
-<div class="page page-error page-activation-error">
+<div class="page page-error page-reset-password-error">
   <div class="container">
     <div class="message-panel">
 
@@ -15,11 +15,11 @@
       </div>
 
       <div class="message-body">
-        <p class="lead">{% trans "Can't activate account." %}</p>
+        <p class="lead">{% trans "Can't change forgotten password." %}</p>
         <p>{{ message }}</p>
         <p>
-          <a href="{% url 'misago:request_activation' %}">
-            Request another activation link.
+          <a href="{% url 'misago:forgotten_password' %}">
+            Request another password change link.
           </a>
         </p>
       </div>

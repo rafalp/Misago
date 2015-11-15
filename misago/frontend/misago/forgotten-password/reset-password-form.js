@@ -1,10 +1,9 @@
 (function (Misago) {
   'use strict';
 
-  var ChangePassword = function(_) {
+  var ResetPassword = function(vm, _) {
     var self = this;
 
-    this.username = null;
     this.password = m.prop('');
 
     this.validation = {
@@ -27,11 +26,7 @@
     };
 
     this.submit = function() {
-      var endpoint = _.api.endpoint('auth').endpoint('change-password');
-      endpoint = endpoint.endpoint(m.route.param('user_id'));
-      endpoint = endpoint.endpoint(m.route.param('token'));
-
-      endpoint.post({
+      _.ajax.post(vm.api, {
         password: self.password()
       }).then(function(user) {
         self.success(user);
@@ -41,25 +36,16 @@
     };
 
     this.success = function(user) {
-      this.username = user.username;
+      vm.success(user, _);
     };
 
     this.error = function(rejection) {
-      if (rejection.status === 403 && rejection.ban) {
-        _.router.error403({
-          message: '',
-          ban: rejection.ban
-        });
-      } else if (rejection.status === 400) {
-        _.alert.error(rejection.detail);
-      } else {
-        _.api.alert(rejection);
-      }
+      _.api.alert(rejection);
     };
   };
 
-  Misago.addService('form:change-password', function(_) {
-    _.form('change-password', ChangePassword);
+  Misago.addService('form:reset-password', function(_) {
+    _.form('reset-password', ResetPassword);
   },
   {
     after: 'forms'

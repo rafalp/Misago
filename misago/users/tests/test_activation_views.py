@@ -66,24 +66,6 @@ class ActivationViewsTests(TestCase):
         test_user = User.objects.get(pk=test_user.pk)
         self.assertEqual(test_user.requires_activation, 0)
 
-    def test_view_activate_admin_activated(self):
-        """activate inactive user passess"""
-        User = get_user_model()
-        test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123',
-                                             requires_activation=2)
-
-        activation_token = make_activation_token(test_user)
-
-        response = self.client.get(
-            reverse('misago:activate_by_token',
-                    kwargs={'user_id': test_user.pk,
-                            'token': activation_token}))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("only by one of the administrators", response.content)
-
-        test_user = User.objects.get(pk=test_user.pk)
-        self.assertEqual(test_user.requires_activation, 2)
-
     def test_view_activate_inactive(self):
         """activate inactive user passess"""
         User = get_user_model()

@@ -16,6 +16,10 @@ var uglify = require('gulp-uglify');
 
 var del = require('del');
 
+var apps = [
+  'forgotten-password'
+];
+
 var vendors = [
   'bower_components/jquery/dist/jquery.js',
   'bower_components/mithril.js/mithril.js',
@@ -45,6 +49,10 @@ gulp.task('lint', function() {
 });
 
 gulp.task('misagojs', ['lint'], function() {
+  var appPath = function(app) {
+    return 'misago/' + app + '/**/*.js'
+  };
+
   return gulp.src([
       'misago/app.js',
 
@@ -54,7 +62,7 @@ gulp.task('misagojs', ['lint'], function() {
       'misago/models/**/*.js',
       'misago/components/**/*.js',
       'misago/forms/**/*.js'
-    ])
+    ].concat(apps.map(appPath)))
     .pipe(concat('misago.js'))
     .pipe(gulp.dest('dist'));
 });

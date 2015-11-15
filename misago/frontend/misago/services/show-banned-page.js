@@ -7,7 +7,7 @@
         'banned-page', _.models.deserialize('ban', ban));
 
       if (typeof changeState === 'undefined' || !changeState) {
-        _.title.set(gettext('You are banned'));
+        _.title.set(gettext("You are banned"));
         window.history.pushState({}, "", _.context.BANNED_URL);
       }
 

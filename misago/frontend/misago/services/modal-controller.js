@@ -43,6 +43,6 @@
     }
   },
   {
-    before: 'mount:page-component'
+    before: 'mount-components'
   });
 }(Misago.prototype));

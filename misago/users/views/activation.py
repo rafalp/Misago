@@ -47,11 +47,6 @@ def activate_by_token(request, user_id, token):
             message = _("%(user)s, your account is already active.")
             message = message % {'user': inactive_user.username}
             raise ActivationStopped(message)
-        if inactive_user.requires_activation_by_admin:
-            message = _("%(user)s, your account can be activated "
-                        "only by one of the administrators.")
-            message = message % {'user': inactive_user.username}
-            raise ActivationStopped(message)
 
         if not is_activation_token_valid(inactive_user, token):
             message = _("%(user)s, your activation link is invalid. "
