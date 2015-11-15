@@ -34,7 +34,7 @@
       </li>
     </ul>
 
-    <div id="user-menu-mount"></div>
+    <div id="user-menu-mount" data-component-name="navbar:desktop:{{ user.is_authenticated|yesno:'user,guest' }}-nav"></div>
   </div><!-- /full navbar -->
 
   <ul class="nav navbar-nav navbar-compact-nav hidden-md hidden-lg">
@@ -60,7 +60,7 @@
         <i class="material-icon">search</i>
       </a>
     </li>
-    <li id="user-menu-compact-mount"></li>
+    <li id="user-menu-compact-mount" data-component-name="navbar:compact:{{ user.is_authenticated|yesno:'user,guest' }}-nav"></li>
   </ul>
   <!-- /compact navbar -->
 </nav>
