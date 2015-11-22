@@ -42,6 +42,9 @@
       // refresh CSRF token because api call to /auth/ changed it
       _.ajax.refreshCsrfToken();
 
+      $form.append('<input type="text" name="username" />');
+      $form.append('<input type="password" name="password" />');
+
       // fill out form with user credentials and submit it, this will tell
       // misago to redirect user back to right page, and will trigger browser's
       // key ring feature
