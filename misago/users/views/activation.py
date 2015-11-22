@@ -24,7 +24,7 @@ def activation_view(f):
 @activation_view
 def request_activation(request):
     request.frontend_context.update({
-        'SEND_ACTIVATION_API_URL': reverse('misago:api:send_activation')
+        'SEND_ACTIVATION_API': reverse('misago:api:send_activation')
     })
     return render(request, 'misago/activation/request.html')
 

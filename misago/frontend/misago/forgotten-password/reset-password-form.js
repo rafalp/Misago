@@ -40,7 +40,7 @@
     };
 
     this.error = function(rejection) {
-      _.api.alert(rejection);
+      _.ajax.error(rejection);
     };
   };
 

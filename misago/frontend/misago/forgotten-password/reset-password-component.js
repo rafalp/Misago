@@ -14,7 +14,7 @@
 
   var component = {
     controller: function(_) {
-      var vm = new ViewModel(_.context.CHANGE_PASSWORD_API_URL);
+      var vm = new ViewModel(_.context.CHANGE_PASSWORD_API);
 
       return {
         form: _.form('reset-password', vm)

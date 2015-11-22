@@ -71,8 +71,7 @@ def send_activation(request):
     if form.is_valid():
         requesting_user = form.user_cache
 
-        mail_subject = _("Activate %(user)s account "
-                         "on %(forum_title)s forums")
+        mail_subject = _("Activate %(user)s account on %(forum_title)s forums")
         subject_formats = {
             'user': requesting_user.username,
             'forum_title': settings.forum_name,

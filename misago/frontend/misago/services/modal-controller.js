@@ -1,23 +1,19 @@
 (function (Misago) {
   'use strict';
 
-  var Modal = function() {
+  var Modal = function(_) {
     var self = this;
 
     var element = document.getElementById('modal-mount');
-
-    this.destroy = function() {
-      $(element).off();
-      $('body').removeClass('modal-open');
-      $('.modal-backdrop').remove();
-    };
 
     // Open/close modal
     var modal = $(element).modal({show: false});
     this.open = false;
 
     modal.on('hidden.bs.modal', function () {
-      if (self.open) {
+      // m() object is stateful, so in tests we don't
+      // unmount the components, as this breaks it
+      if (self.open && !_.setup.test) {
         m.mount(element, null);
         this.open = false;
       }
@@ -25,8 +21,8 @@
 
     this.show = function(component) {
       this.open = true;
-      m.mount(element, component);
-      modal.modal('show');
+      m.mount(document.getElementById('modal-mount'), component);
+      $(element).modal('show');
     };
 
     this.hide = function() {
@@ -34,13 +30,8 @@
     };
   };
 
-  Misago.addService('_modal', {
-    factory: function() {
-      return new Modal();
-    },
-    destroy: function(_) {
-      _._modal.destroy();
-    }
+  Misago.addService('_modal', function(_) {
+    return new Modal(_);
   },
   {
     before: 'mount-components'

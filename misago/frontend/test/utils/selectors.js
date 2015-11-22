@@ -2,7 +2,7 @@
   'use strict';
 
   window.getElement = function(selector) {
-    return $('#misago-fixture ' + selector);
+    return $('#qunit-fixture ' + selector);
   };
 
   window.getElementText = function(selector) {

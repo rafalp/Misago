@@ -6,35 +6,20 @@
   QUnit.acceptance("Register", {
     beforeEach: function() {
       app = initTestMisago();
+
+      app.settings.account_activation = 'none';
+      app.context.USERS_API = '/test-api/users/';
     },
     afterEach: function() {
       app.destroy();
     }
   });
 
-  QUnit.test('registration disabled', function(assert) {
-    app.settings.account_activation = 'closed';
-
-    var done = assert.async();
-
-    waitForElement('.navbar .nav-guest .btn-primary');
-    click('.navbar .nav-guest .btn-primary');
-
-    onElement('.alerts .alert-info', function() {
-      assert.equal(
-        getAlertMessage(), "New registrations are currently disabled.",
-        "registration closed message was displayed.");
-      done();
-    });
-  });
-
   QUnit.test('registration with empty credentials', function(assert) {
-    app.settings.account_activation = 'none';
-
     var done = assert.async();
 
-    waitForElement('.navbar .nav-guest .btn-primary');
-    click('.navbar .nav-guest .btn-primary');
+    app.modal('register');
+
     click('.modal-register .btn-primary');
 
     onElement('.alerts .alert-danger', function() {
@@ -45,12 +30,10 @@
   });
 
   QUnit.test('registration with invalid credentials', function(assert) {
-    app.settings.account_activation = 'none';
-
     var done = assert.async();
 
-    waitForElement('.navbar .nav-guest .btn-primary');
-    click('.navbar .nav-guest .btn-primary');
+    app.modal('register');
+
     waitForElement('.modal-register');
     fillIn('#id_username', '###');
     fillIn('#id_email', 'notemail');
@@ -79,6 +62,45 @@
     });
   });
 
+  QUnit.test('from banned ip', function(assert) {
+    $.mockjax({
+      url: '/test-api/users/',
+      status: 403,
+      responseText: {
+        'ban': {
+          'expires_on': null,
+          'message': {
+            'plain': 'Your ip is banned for spamming.',
+            'html': '<p>Your ip is banned for spamming.</p>',
+          }
+        }
+      }
+    });
+
+    var done = assert.async();
+
+    app.modal('register');
+
+    waitForElement('.modal-register');
+    fillIn('#id_username', 'bob');
+    fillIn('#id_email', 'bob@boberson.com');
+    fillIn('#id_password', 'Som3S3cureP4ss!!!');
+    click('.modal-register .btn-primary');
+
+    onElement('.page-error-banned .lead', function() {
+      assert.equal(
+        getElementText('.page .message-body .lead'),
+        "Your ip is banned for spamming.",
+        "login form displayed error banned page with ban message.");
+
+      waitForElementRemoval('.modal-signin');
+      then(function() {
+        assert.ok(true, "signin modal was closed.");
+        done();
+      });
+    });
+  });
+
   QUnit.test('registration with backend-rejected credentials', function(assert) {
     $.mockjax({
       url: '/test-api/users/',
@@ -90,12 +112,10 @@
       }
     });
 
-    app.settings.account_activation = 'none';
-
     var done = assert.async();
 
-    waitForElement('.navbar .nav-guest .btn-primary');
-    click('.navbar .nav-guest .btn-primary');
+    app.modal('register');
+
     waitForElement('.modal-register');
     fillIn('#id_username', 'bob');
     fillIn('#id_email', 'bob@boberson.com');
@@ -125,12 +145,10 @@
       }
     });
 
-    app.settings.account_activation = 'none';
-
     var done = assert.async();
 
-    waitForElement('.navbar .nav-guest .btn-primary');
-    click('.navbar .nav-guest .btn-primary');
+    app.modal('register');
+
     waitForElement('.modal-register');
     fillIn('#id_username', 'bob');
     fillIn('#id_email', 'bob@boberson.com');
@@ -159,12 +177,10 @@
       }
     });
 
-    app.settings.account_activation = 'none';
-
     var done = assert.async();
 
-    waitForElement('.navbar .nav-guest .btn-primary');
-    click('.navbar .nav-guest .btn-primary');
+    app.modal('register');
+
     waitForElement('.modal-register');
     fillIn('#id_username', 'bob');
     fillIn('#id_email', 'bob@boberson.com');
@@ -193,12 +209,10 @@
       }
     });
 
-    app.settings.account_activation = 'none';
-
     var done = assert.async();
 
-    waitForElement('.navbar .nav-guest .btn-primary');
-    click('.navbar .nav-guest .btn-primary');
+    app.modal('register');
+
     waitForElement('.modal-register');
     fillIn('#id_username', 'bob');
     fillIn('#id_email', 'bob@boberson.com');

@@ -34,7 +34,7 @@
         }
       });
     },
-    destroy: function() {
+    destroy: function(_) {
       _._mounts.forEach(function(elementId) {
         var mount = document.getElementById(elementId);
         if (mount && mount.hasChildNodes()) {

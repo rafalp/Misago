@@ -19,6 +19,7 @@
       "initTestMisago",
       "getMisagoService",
       "mockUser",
+      "mockMount",
       "resetTestPromise",
       "then",
       "onElement",
@@ -57,7 +58,8 @@
     "gulp-open": "^1.0.0",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^1.2.0",
-    "less": "^2.5.1"
+    "less": "^2.5.1",
+    "qunitjs": "^1.20.0"
   },
   "devDependencies": {
     "del": "^1.2.1",

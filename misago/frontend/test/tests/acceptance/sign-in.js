@@ -10,6 +10,7 @@
         return false;
       });
       app = initTestMisago();
+      app.context.AUTH_API = '/test-api/auth/';
     },
     afterEach: function() {
       $('#hidden-login-form').off('submit.stopInTest');
@@ -20,8 +21,8 @@
   QUnit.test('with empty credentials', function(assert) {
     var done = assert.async();
 
-    waitForElement('.navbar .nav-guest .btn-default');
-    click('.navbar .nav-guest .btn-default');
+    app.modal('sign-in');
+
     waitForElement('.modal-signin');
     click('.modal-signin .btn-primary');
 
@@ -40,8 +41,8 @@
 
     var done = assert.async();
 
-    waitForElement('.navbar .nav-guest .btn-default');
-    click('.navbar .nav-guest .btn-default');
+    app.modal('sign-in');
+
     waitForElement('.modal-signin');
     fillIn('.modal-signin .form-group:first-child input', 'SomeFake');
     fillIn('.modal-signin .form-group:last-child input', 'pass1234');
@@ -67,8 +68,8 @@
 
     var done = assert.async();
 
-    waitForElement('.navbar .nav-guest .btn-default');
-    click('.navbar .nav-guest .btn-default');
+    app.modal('sign-in');
+
     waitForElement('.modal-signin');
     fillIn('.modal-signin .form-group:first-child input', 'SomeFake');
     fillIn('.modal-signin .form-group:last-child input', 'pass1234');
@@ -94,8 +95,8 @@
 
     var done = assert.async();
 
-    waitForElement('.navbar .nav-guest .btn-default');
-    click('.navbar .nav-guest .btn-default');
+    app.modal('sign-in');
+
     waitForElement('.modal-signin');
     fillIn('.modal-signin .form-group:first-child input', 'SomeFake');
     fillIn('.modal-signin .form-group:last-child input', 'pass1234');
@@ -122,8 +123,8 @@
     var doneAlert = assert.async();
     var doneBtn = assert.async();
 
-    waitForElement('.navbar .nav-guest .btn-default');
-    click('.navbar .nav-guest .btn-default');
+    app.modal('sign-in');
+
     waitForElement('.modal-signin');
     fillIn('.modal-signin .form-group:first-child input', 'SomeFake');
     fillIn('.modal-signin .form-group:last-child input', 'pass1234');
@@ -138,6 +139,44 @@
     onElement('.modal-signin .btn-success', function() {
       assert.ok(true, "login form displayed account activation button.");
       doneBtn();
+    });
+  });
+
+  QUnit.test('from banned ip', function(assert) {
+    $.mockjax({
+      url: '/test-api/auth/',
+      status: 403,
+      responseText: {
+        'ban': {
+          'expires_on': null,
+          'message': {
+            'plain': 'Your ip is banned for spamming.',
+            'html': '<p>Your ip is banned for spamming.</p>',
+          }
+        }
+      }
+    });
+
+    var done = assert.async();
+
+    app.modal('sign-in');
+
+    waitForElement('.modal-signin');
+    fillIn('.modal-signin .form-group:first-child input', 'SomeFake');
+    fillIn('.modal-signin .form-group:last-child input', 'pass1234');
+    click('.modal-signin .btn-primary');
+
+    onElement('.page-error-banned .lead', function() {
+      assert.equal(
+        getElementText('.page .message-body .lead'),
+        "Your ip is banned for spamming.",
+        "login form displayed error banned page with ban message.");
+
+      waitForElementRemoval('.modal-signin');
+      then(function() {
+        assert.ok(true, "signin modal was closed.");
+        done();
+      });
     });
   });
 
@@ -159,8 +198,8 @@
 
     var done = assert.async();
 
-    waitForElement('.navbar .nav-guest .btn-default');
-    click('.navbar .nav-guest .btn-default');
+    app.modal('sign-in');
+
     waitForElement('.modal-signin');
     fillIn('.modal-signin .form-group:first-child input', 'SomeFake');
     fillIn('.modal-signin .form-group:last-child input', 'pass1234');
@@ -191,8 +230,8 @@
 
     var done = assert.async();
 
-    waitForElement('.navbar .nav-guest .btn-default');
-    click('.navbar .nav-guest .btn-default');
+    app.modal('sign-in');
+
     waitForElement('.modal-signin');
     fillIn('.modal-signin .form-group:first-child input', 'SomeFake');
     fillIn('.modal-signin .form-group:last-child input', 'pass1234');

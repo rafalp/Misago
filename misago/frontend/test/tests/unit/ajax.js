@@ -87,10 +87,7 @@
 
     var container = {
       context: {
-        CSRF_COOKIE_NAME: 'doesnt-matter',
-        '/test-url/': {
-          'detail': 'preloaded'
-        }
+        CSRF_COOKIE_NAME: 'doesnt-matter'
       }
     };
 
@@ -100,12 +97,8 @@
     var done = assert.async();
 
     ajax.get('/test-url/').then(function(data) {
-      assert.equal(data.detail, 'preloaded', 'get() read preloaded data');
-
-      ajax.get('/test-url/').then(function(data) {
-        assert.equal(data.detail, 'backend', 'get() read backend data');
-        done();
-      });
+      assert.equal(data.detail, 'backend', 'get() read backend data');
+      done();
     });
   });
 
@@ -181,6 +174,63 @@
     ajax.delete('/test-url/').then(function(data) {
       assert.equal(data.detail, 'deleted', 'delete() call succeeded');
       doneDelete();
+    });
+  });
+
+  QUnit.test("alert", function(assert) {
+    var unknownError = assert.async();
+    var disconnectedError = assert.async();
+    var deniedError = assert.async();
+    var notFoundError = assert.async();
+
+    var container = {
+      context: {
+        CSRF_COOKIE_NAME: 'doesnt-matter'
+      },
+      setup: {
+        api: '/test-api/'
+      },
+      alert: {
+        error: function(message) {
+          if (message === "Unknown error has occured.") {
+            assert.ok(true, "unknown error was handled.");
+            unknownError();
+          }
+
+          if (message === "Lost connection with application.") {
+            assert.ok(true, "error 0 was handled.");
+            disconnectedError();
+          }
+
+          if (message === "You don't have permission to perform this action.") {
+            assert.ok(true, "error 403 was handled.");
+            deniedError();
+          }
+
+          if (message === "Action link is invalid.") {
+            assert.ok(true, "error 404 was handled.");
+            notFoundError();
+          }
+        }
+      }
+    };
+
+    var service = getMisagoService('ajax');
+    var ajax = service(container);
+
+    ajax.alert({
+      status: 500
+    });
+    ajax.alert({
+      status: 0
+    });
+    ajax.alert({
+      status: 403,
+      detail: "Permission denied"
+    });
+    ajax.alert({
+      status: 404,
+      detail: "Not found"
     });
   });
 }());

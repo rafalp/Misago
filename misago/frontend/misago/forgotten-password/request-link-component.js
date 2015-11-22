@@ -36,7 +36,7 @@
 
   var component = {
     controller: function(_) {
-      var vm = new ViewModel(_.context.SEND_PASSWORD_RESET_API_URL);
+      var vm = new ViewModel(_.context.SEND_PASSWORD_RESET_API);
 
       return {
         vm: vm,

@@ -41,7 +41,12 @@ var ace = [
 ];
 
 var testLibs = [
+  'node_modules/qunitjs/qunit/qunit.js',
   'bower_components/jquery-mockjax/dist/jquery.mockjax.js'
+];
+
+var testStyles = [
+  'node_modules/qunitjs/qunit/qunit.css',
 ];
 
 var zxcvbn = 'bower_components/zxcvbn/dist/*.js';
@@ -222,11 +227,16 @@ gulp.task('collecttestslibs', ['cleantest'], function() {
     .pipe(gulp.dest('test/dist'));
 });
 
+gulp.task('collecttestsstyles', ['cleantest'], function() {
+  return gulp.src(testStyles)
+    .pipe(concat('test-styles.css'))
+    .pipe(gulp.dest('test/dist'));
+});
+
 gulp.task('collecttestsutils', ['cleantest'], function() {
   return gulp.src('test/utils/**/*.js')
     .pipe(jshint(packageJSON.jshintConfig))
     .pipe(jshint.reporter('default'))
-    .pipe(jshint.reporter('fail'))
     .pipe(concat('utils.js'))
     .pipe(gulp.dest('test/dist'));
 });
@@ -243,6 +253,7 @@ gulp.task('starttestserver', [
     'collecttests',
     'collecttestsutils',
     'collecttestslibs',
+    'collecttestsstyles',
     'collecttestjs',
     'collecttestcss',
     'collecttestfonts',
@@ -259,7 +270,10 @@ gulp.task('starttestserver', [
 
 gulp.task('test', ['starttestserver'], function() {
   gulp.watch([
-    'test/tests/**/*.js', 'misago/**/*.js', 'misago/**/*.less'
+    'test/tests/**/*.js',
+    'test/utils/**/*.js',
+    'misago/**/*.js',
+    'misago/**/*.less'
   ], [
     'collecttests',
     'collecttestjs',
@@ -267,6 +281,7 @@ gulp.task('test', ['starttestserver'], function() {
     'collecttestfonts',
     'collecttestimg',
     'collecttestsutils',
-    'collecttestslibs'
+    'collecttestslibs',
+    'collecttestsstyles'
   ]);
 });

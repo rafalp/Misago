@@ -50,24 +50,26 @@
 
     syncSession();
 
-    // Shorthand for signing user out
+    // Shorthand for signing user components out
+    var switchMount = function(mountId) {
+      var mount = document.getElementById(mountId);
+      var component = null;
+
+      if (mount) {
+        component = mount.dataset.componentName;
+        m.mount(
+          mount, _.component(component.replace('user-nav', 'guest-nav')));
+      }
+    };
+
     this.signOut = function() {
       _.user.isAuthenticated = false;
       _.user.isAnonymous = true;
 
       syncSession();
 
-      var desktopMount = document.getElementById('user-menu-mount');
-      var compactMount = document.getElementById('user-menu-compact-mount');
-
-      var desktopComponent = desktopMount.dataset.componentName;
-      var compactComponent = compactMount.dataset.componentName;
-
-      var newDesktopName = desktopComponent.replace('user-nav', 'guest-nav');
-      var newCompactName = compactComponent.replace('user-nav', 'guest-nav');
-
-      m.mount(desktopMount, _.component(newDesktopName));
-      m.mount(compactMount, _.component(newCompactName));
+      switchMount('user-menu-mount');
+      switchMount('user-menu-compact-mount');
     };
   };
 

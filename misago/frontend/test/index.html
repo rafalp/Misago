@@ -3,15 +3,20 @@
 <head>
   <meta charset="utf-8">
   <title>Misago QUnit</title>
-  <link rel="stylesheet" href="//code.jquery.com/qunit/qunit-1.18.0.css">
+  <link rel="stylesheet" href="/dist/test-styles.css">
   <link rel="stylesheet" href="/dist/misago/css/misago.css">
   <base href="/">
 </head>
 <body>
   <div id="qunit"></div>
-  <div id="qunit-fixture"></div>
-  <div id="misago-fixture"></div>
-  <script src="//code.jquery.com/qunit/qunit-1.18.0.js"></script>
+
+  <div id="qunit-fixture">
+    <div id="alert-mount" data-component-name="alert"></div>
+    <div id="component-mount"></div>
+    <div id="page-mount"></div>
+    <div class="modal fade" id="modal-mount" tabindex="-1" role="dialog" aria-labelledby="misago-modal-label"></div>
+  </div>
+
   <script src="/dist/misago/js/vendor.js"></script>
   <script src="/dist/libs.js"></script>
   <script src="/dist/utils.js"></script>
@@ -25,6 +30,7 @@
     <input name="password" type="password">
     <input type="submit" id="signin-button" value="Sign in">
   </form>
+
   <form id="hidden-logout-form" method="post" style="display: none;">
     <input name="csrf_token" type="hidden">
     <input type="submit" id="signin-button" value="Log out">

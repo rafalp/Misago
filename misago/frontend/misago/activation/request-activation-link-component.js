@@ -29,7 +29,7 @@
 
   var form = {
     controller: function(_) {
-      var vm = new ViewModel(_.context.SEND_ACTIVATION_API_URL);
+      var vm = new ViewModel(_.context.SEND_ACTIVATION_API);
 
       return {
         vm: vm,

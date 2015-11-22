@@ -130,9 +130,9 @@
   QUnit.test("initialization data storage", function(assert) {
     assert.expect();
 
-    container.init({fixture: 'test'});
+    container.init({api: 'test-api/'});
 
-    assert.equal(container.setup.fixture, 'test',
+    assert.equal(container.setup.api, 'test-api/',
       'container stored initialization data');
   });
 }());

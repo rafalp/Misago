@@ -24,7 +24,7 @@
     };
 
     this.submit = function() {
-      _.api.endpoint('auth').post({
+      _.ajax.post(_.context.AUTH_API, {
         username: self.username(),
         password: self.password()
       }).then(function() {
@@ -66,7 +66,7 @@
           _.alert.error(rejection.detail);
         }
       } else {
-        _.api.alert(rejection);
+        _.ajax.error(rejection);
       }
     };
   };

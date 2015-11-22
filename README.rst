@@ -71,10 +71,7 @@ With exception of Admin Panel, Misago frontend is powered by Mithril.js applicat
 
 To start work on custom frontend for Misago, fork and install it locally to have development forum setup. You can now develop custom theme by modifing assets in misago/frontend directory, however special care should be taken when changing source javascripts.
 
-Misago defines two templates that allow you to include custom html and js code before Misago's JavaScript app is ran:
-
-* **scripts.html** template is included before final ``<script>`` element, allowing you to include and/or init 3rd party libraries such as Google Analytics, Facebook SDK, etc ect.
-* **extra.js** template is included after ``misago`` javascript object is created, but before ``misago.init`` is called, allowing you to run custom code registering new services adding custom features or modifing existing ones.
+Misago defines template that allows you to include custom html and js code before Misago's JavaScript app is ran, named **scripts.html**.
 
 
 Bug reports, features and feedback

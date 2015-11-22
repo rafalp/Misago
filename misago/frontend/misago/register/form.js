@@ -45,7 +45,7 @@
     };
 
     this.submit = function() {
-      _.api.model('user').post({
+      _.ajax.post(_.context.USERS_API, {
         username: this.username(),
         email: this.email(),
         password: this.password(),
@@ -62,7 +62,7 @@
         _.alert.error(gettext("Form contains errors."));
         $.extend(self.errors, rejection);
       } else {
-        _.api.alert(rejection);
+        _.ajax.error(rejection);
       }
     };
   };

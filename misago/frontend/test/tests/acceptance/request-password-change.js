@@ -3,40 +3,40 @@
 
   var app = null;
 
-  QUnit.acceptance("Request Password Change Link", {
+  QUnit.acceptance("Request Change Password E-mail", {
     beforeEach: function() {
       app = initTestMisago();
+      app.context.SEND_PASSWORD_RESET_API = '/test-api/auth/send-password-form/';
+
+      var mount = document.getElementById('component-mount');
+      m.mount(mount, app.component('forgotten-password:request-link'));
     },
     afterEach: function() {
       app.destroy();
     }
   });
 
-  QUnit.test('with empty input', function(assert) {
-    app.router.route('/forgotten-password/');
-
+  QUnit.test('submit empty form', function(assert) {
     var done = assert.async();
 
-    click('.well-form .btn-primary');
+    click('#component-mount .btn-primary');
 
     onElement('.alerts .alert-danger', function() {
       assert.equal(getAlertMessage(), "Enter a valid email address.",
-        "request form raised alert about empty input.");
+        "form raised alert about empty input.");
       done();
     });
   });
 
-  QUnit.test('with invalid email', function(assert) {
-    app.router.route('/forgotten-password/');
-
+  QUnit.test('submit invalid form', function(assert) {
     var done = assert.async();
 
-    fillIn('.well-form input', 'not-email');
-    click('.well-form .btn-primary');
+    fillIn('#component-mount input[type="text"]', 'not-an-email!');
+    click('#component-mount .btn-primary');
 
     onElement('.alerts .alert-danger', function() {
       assert.equal(getAlertMessage(), "Enter a valid email address.",
-        "request form raised alert about empty input.");
+        "form raised alert about invalid input.");
       done();
     });
   });
@@ -46,7 +46,6 @@
       url: '/test-api/auth/send-password-form/',
       status: 403,
       responseText: {
-        'detail': 'You are banned!',
         'ban': {
           'expires_on': null,
           'message': {
@@ -57,14 +56,12 @@
       }
     });
 
-    app.router.route('/forgotten-password/');
-
     var done = assert.async();
 
-    fillIn('.well-form input', 'valid@email.com');
-    click('.well-form .btn-primary');
+    fillIn('#component-mount input[type="text"]', 'valid@email.com');
+    click('#component-mount .btn-primary');
 
-    onElement('.page-error.page-error-banned .message-body', function() {
+    onElement('.page-error-banned .message-body', function() {
       assert.ok(true, "Permission denied error page was displayed.");
       assert.equal(
         getElementText('.page .message-body .lead'),
@@ -84,12 +81,10 @@
       }
     });
 
-    app.router.route('/forgotten-password/');
-
     var done = assert.async();
 
-    fillIn('.well-form input', 'valid@email.com');
-    click('.well-form .btn-primary');
+    fillIn('#component-mount input[type="text"]', 'valid@email.com');
+    click('#component-mount .btn-primary');
 
     onElement('.alerts .alert-danger', function() {
       assert.equal(getAlertMessage(), message,
@@ -109,12 +104,10 @@
       }
     });
 
-    app.router.route('/forgotten-password/');
-
     var done = assert.async();
 
-    fillIn('.well-form input', 'valid@email.com');
-    click('.well-form .btn-primary');
+    fillIn('#component-mount input[type="text"]', 'valid@email.com');
+    click('#component-mount .btn-primary');
 
     onElement('.message-body p', function() {
       assert.equal(
@@ -125,25 +118,22 @@
   });
 
   QUnit.test('without user activation', function(assert) {
-    var message = "Your account needs activation!";
+    var message = "Your account needs admin activation!";
     $.mockjax({
       url: '/test-api/auth/send-password-form/',
       status: 400,
       responseText: {
-        'code': 'inactive_user',
+        'code': 'inactive_admin',
         'detail': message
       }
     });
 
-    app.router.route('/forgotten-password/');
-
     var done = assert.async();
 
-    fillIn('.well-form input', 'valid@email.com');
-    click('.well-form .btn-primary');
+    fillIn('#component-mount input[type="text"]', 'valid@email.com');
+    click('#component-mount .btn-primary');
 
-    onElement('.message-body .btn-primary', function() {
-      assert.ok(true, "link to activation form displayed.");
+    onElement('.message-body p', function() {
       assert.equal(
         getElementText('.message-body p:nth-child(2)'), message,
         "request form displayed user activation message.");
@@ -161,17 +151,15 @@
       }
     });
 
-    app.router.route('/forgotten-password/');
-
     var done = assert.async();
 
-    fillIn('.well-form input', 'valid@email.com');
-    click('.well-form .btn-primary');
+    fillIn('#component-mount input[type="text"]', 'valid@email.com');
+    click('#component-mount .btn-primary');
 
-    onElement('.message-body p', function() {
+    onElement('.well-done .message-body p', function() {
       assert.equal(
-        getElementText('.message-body p:nth-child(2)'),
-        "Bob, we have sent link to your password change form to bob@boberson.com.",
+        getElementText('.message-body p'),
+        "Reset password link sent to bob@boberson.com.",
         "request form displayed success message.");
       done();
     });
@@ -187,17 +175,14 @@
       }
     });
 
-    app.router.route('/forgotten-password/');
-
     var done = assert.async();
 
-    fillIn('.well-form input', 'valid@email.com');
-    click('.well-form .btn-primary');
-    waitForElement('.message-body .btn-default');
-    click('.message-body .btn-default');
+    fillIn('#component-mount input[type="text"]', 'valid@email.com');
+    click('#component-mount .btn-primary');
+    click('#component-mount .btn-default');
 
     onElement('.well-form', function() {
-      assert.ok(true, 'reset button took client back to previous screen.');
+      assert.ok(true, 'reset button reset component state.');
       done();
     });
   });

@@ -14,6 +14,9 @@ def user_links(request):
 
         'USERCP_URL': reverse('misago:options'),
         'USERS_LIST_URL': reverse('misago:users'),
+
+        'AUTH_API': reverse('misago:api:auth'),
+        'USERS_API': reverse('misago:api:user-list'),
     })
 
     return {

@@ -39,7 +39,7 @@
       if (rejection.status === 400) {
           vm.error(rejection, _);
       } else {
-        _.api.alert(rejection);
+        _.ajax.error(rejection);
       }
     };
 

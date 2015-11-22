@@ -16,12 +16,18 @@
   };
   resetTestPromise();
 
+  var queueAction = function(action) {
+    window._promise.then(function() {
+      window._promise = action();
+    });
+  };
+
   var getElement = function(selector) {
     var deferred = m.deferred();
 
     var _getElement = function() {
       window.setTimeout(function() {
-        var $element = $('#misago-fixture ' + selector);
+        var $element = $('#qunit-fixture ' + selector);
         if ($element.length >= 1) {
           deferred.resolve($element);
         } else {
@@ -33,12 +39,6 @@
     _getElement();
 
     return deferred.promise;
-  };
-
-  var queueAction = function(action) {
-    window._promise.then(function() {
-      window._promise = action();
-    });
   };
 
   window.click = function(selector) {
@@ -128,22 +128,5 @@
       });
       return deferred.promise;
     });
-  };
-
-  window.onCleanUp = function(callback) {
-    var waitForFixtureCleanUp = function() {
-      window.setTimeout(function() {
-        var content = $.trim($('#misago-fixture').html());
-        if (!content) {
-          window.setTimeout(function() {
-            callback();
-          }, 250);
-        } else {
-          waitForFixtureCleanUp();
-        }
-      }, 50);
-    };
-
-    waitForFixtureCleanUp();
   };
 }());

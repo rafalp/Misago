@@ -1,10 +1,9 @@
 (function (Misago) {
   'use strict';
 
-  var mount = document.getElementById('page-mount');
-
   Misago.addService('mount-page', function(_) {
     _.mountPage = function(component) {
+      var mount = document.getElementById('page-mount');
       m.mount(mount, component);
     };
   });

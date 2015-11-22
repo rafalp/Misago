@@ -33,7 +33,7 @@
           self.question = question;
           deferred.resolve();
         }, function() {
-          _.api.alert(gettext('Failed to load CAPTCHA.'));
+          _.ajax.alert(gettext('Failed to load CAPTCHA.'));
           deferred.reject();
         }).then(function() {
           self.loading = true;

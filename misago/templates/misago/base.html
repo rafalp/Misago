@@ -48,7 +48,6 @@
     {% include "misago/scripts.html" %}
     <script type="text/javascript">
       var misago = new Misago();
-      {% include "misago/extra.js" %}
       misago.init({
         api: '{% url 'misago:api:api-root' %}'
       }, {{ frontend_context|as_json }});
