@@ -1,0 +1,8 @@
+{
+  "presets": ["es2015", "stage-2", "react"],
+  "plugins": [
+    ["babel-plugin-module-alias", [
+      { "src": "./src", "expose": "misago" }
+    ]]
+  ]
+}

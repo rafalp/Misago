@@ -1,0 +1,45 @@
+//
+// Buttons
+// --------------------------------------------------
+
+
+// Button loading style
+.btn.btn-loading {
+  &, &:link, &:active, &:visited, &:hover, &:focus {
+    // make text transparent, but still take place in button
+    color: transparent;
+
+    // position loader over the text
+    .loader-compact {
+      margin-top: @line-height-computed * -1;
+      height: 20px;
+
+      position: relative;
+      top: 0px;
+    }
+  }
+
+  &.btn-default .loader-compact > div {
+    background-color: @btn-default-color;
+  }
+
+  &.btn-primary .loader-compact > div {
+    background-color: @btn-primary-color;
+  }
+
+  &.btn-success .loader-compact > div {
+    background-color: @btn-success-color;
+  }
+
+  &.btn-info .loader-compact > div {
+    background-color: @btn-info-color;
+  }
+
+  &.btn-warning .loader-compact > div {
+    background-color: @btn-warning-color;
+  }
+
+  &.btn-danger .loader-compact > div {
+    background-color: @btn-danger-color;
+  }
+}

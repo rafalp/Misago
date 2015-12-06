@@ -1,0 +1,22 @@
+{
+  "undef": true,
+  "unused": true,
+  "esnext": true,
+  "predef": [
+    "global",
+    "console",
+    "window",
+    "document",
+
+    "gettext",
+    "ngettext",
+    "gettext_noop",
+    "pgettext",
+    "npgettext",
+    "interpolate",
+
+    "beforeEach",
+    "describe",
+    "it"
+  ]
+}

@@ -24,8 +24,8 @@
   </head>
   <body>
 
-    <div id="auth-changed-message-mount" data-component-name="auth-changed-message"></div>
-    <div id="alert-mount" data-component-name="alert"></div>
+    <div id="auth-changed-message-mount"></div>
+    <div id="alert-mount"></div>
 
     {% include "misago/jumbotron.html" %}
     {% include "misago/navbar.html" %}
@@ -40,17 +40,14 @@
     <div class="modal fade" id="modal-mount" tabindex="-1" role="dialog" aria-labelledby="misago-modal-label"></div>
 
     <script type="text/javascript" src="/django-i18n.js"></script>
-    <script type="text/javascript" src="{% static 'misago/js/vendor.js' %}"></script>
     {% if LANGUAGE_CODE != "en-us" %}
     <script type="text/javascript" src="/moment-i18n.js"></script>
     {% endif %}
+    <script type="text/javascript" src="{% static 'misago/js/vendor.js' %}"></script>
     <script type="text/javascript" src="{% static 'misago/js/misago.js' %}"></script>
     {% include "misago/scripts.html" %}
     <script type="text/javascript">
-      var misago = new Misago();
-      misago.init({
-        api: '{% url 'misago:api:api-root' %}'
-      }, {{ frontend_context|as_json }});
+      misago.init({{ frontend_context|as_json }});
     </script>
 
   </body>

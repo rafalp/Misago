@@ -1,0 +1,4 @@
+# dependencies
+/node_modules
+/bower_components
+.cache-require-paths.json
