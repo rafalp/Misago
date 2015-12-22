@@ -9,7 +9,7 @@ describe('Misago', function() {
 
     misago.addInitializer({
       name: 'test',
-      init: null
+      initalizer: null
     });
 
     assert.equal(misago._initializers[0].key, 'test',
@@ -26,8 +26,9 @@ describe('Misago', function() {
 
     misago.addInitializer({
       name: 'test',
-      init: function(options) {
-        assert.equal(options, 'tru', "initializer was called with options");
+      initalizer: function(misago) {
+        assert.equal(misago, misago, "initializer was called with context");
+        assert.equal(misago._context, 'tru', "context is preserved");
       }
     });
 
@@ -39,45 +40,69 @@ describe('Misago', function() {
 
     misago.addInitializer({
       name: 'carrot',
-      init: function(options) {
-        assert.equal(options.next, 'carrot',
+      initalizer: function(misago) {
+        assert.equal(misago._context.next, 'carrot',
           "first initializer was called in right order");
 
-        options.next = 'apple';
+        misago._context.next = 'apple';
       },
       before: 'apple'
     });
 
     misago.addInitializer({
       name: 'apple',
-      init: function(options) {
-        assert.equal(options.next, 'apple',
+      initalizer: function(misago) {
+        assert.equal(misago._context.next, 'apple',
           "second initializer was called in right order");
 
-        options.next = 'orange';
+        misago._context.next = 'orange';
       }
     });
 
     misago.addInitializer({
       name: 'orange',
-      init: function(options) {
-        assert.equal(options.next, 'orange',
+      initalizer: function(misago) {
+        assert.equal(misago._context.next, 'orange',
           "pen-ultimate initializer was called in right order");
 
-        options.next = 'banana';
+        misago._context.next = 'banana';
       },
       before: '_end'
     });
 
     misago.addInitializer({
       name: 'banana',
-      init: function(options) {
-        assert.equal(options.next, 'banana',
+      initalizer: function(misago) {
+        assert.equal(misago._context.next, 'banana',
           "ultimate initializer was called in right order");
       },
       after: 'orange'
     });
 
     misago.init({next: 'carrot'});
+  });
+
+  it("has() tests if context has value", function() {
+    misago = new Misago();
+    misago.init({valid: 'okay'});
+
+    assert.equal(misago.has('invalid'), false,
+      "has() returned false for nonexisting key");
+    assert.equal(misago.has('valid'), true,
+      "has() returned true for existing key");
+  });
+
+  it("get() allows access to context values", function() {
+    misago = new Misago();
+    misago.init({valid: 'okay'});
+
+    assert.equal(misago.get('invalid'), undefined,
+      "get() returned undefined for nonexisting key");
+    assert.equal(misago.get('invalid', 'fallback'), 'fallback',
+      "get() returned fallback value for nonexisting key");
+    assert.equal(misago.get('valid'), 'okay',
+      "get() returned value for existing key");
+    assert.equal(misago.get('valid', 'fallback'), 'okay',
+      "get() returned value for existing key instead of fallback");
   });
 });

@@ -28,14 +28,14 @@ gulp.task('watch', ['fastbuild'], function() {
   gulp.watch('style/**/*.less', ['faststyle']);
 });
 
-gulp.task('deploy', ['build']);
-
 // Builds
 
-gulp.task('fastbuild', ['fastsource', 'faststyle', 'faststatic']);
+gulp.task('fastbuild', [
+  'fastsource', 'faststyle', 'faststatic', 'fastvendorsources'
+]);
 
 gulp.task('build', [
-  'source', 'style', 'static'
+  'source', 'style', 'static', 'vendorsources'
 ]);
 
 // Source tasks
@@ -66,7 +66,14 @@ gulp.task('lintsource', function() {
 });
 
 gulp.task('fastsource', ['lintsource'], function() {
-  return browserify(getSources())
+  return browserify({
+      entries: getSources(),
+      debug: true
+    })
+    .external('react')
+    .external('react-dom')
+    .external('redux')
+    .external('react-redux')
     .transform(babelify)
     .bundle()
     .pipe(source('misago.js'))
@@ -77,7 +84,14 @@ gulp.task('fastsource', ['lintsource'], function() {
 gulp.task('source', ['lintsource'], function() {
   process.env.NODE_ENV = 'production';
 
-  return browserify(getSources())
+  return browserify({
+      entries: getSources(),
+      debug: false
+    })
+    .external('react')
+    .external('react-dom')
+    .external('redux')
+    .external('react-redux')
     .transform(babelify)
     .bundle()
     .pipe(source('misago.js'))
@@ -135,6 +149,42 @@ gulp.task('static', ['copyfonts', 'copyimages']);
 
 // Vendor tasks
 
+gulp.task('fastvendorsources', function() {
+  return browserify({
+      entries: 'src/vendor.js',
+      debug: true
+    })
+    .transform('browserify-shim')
+    .require('react')
+    .require('react-dom')
+    .require('redux')
+    .require('react-redux')
+    .bundle()
+    .pipe(source('vendor.js'))
+    .pipe(buffer())
+    .pipe(gulp.dest(misago + 'js'));
+});
+
+gulp.task('vendorsources', function() {
+  process.env.NODE_ENV = 'production';
+
+  return browserify({
+      entries: 'src/vendor.js',
+      debug: false
+    })
+    .require('react')
+    .require('react-dom')
+    .require('redux')
+    .require('react-redux')
+    .transform(babelify)
+    .bundle()
+    .pipe(source('vendor.js'))
+    .pipe(buffer())
+    .pipe(sourcemaps.init())
+    .pipe(uglify())
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(misago + 'js'));
+});
 
 // Test task
 

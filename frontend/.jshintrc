@@ -7,6 +7,7 @@
     "console",
     "window",
     "document",
+    "require",
 
     "gettext",
     "ngettext",
@@ -17,6 +18,9 @@
 
     "beforeEach",
     "describe",
-    "it"
+    "it",
+
+    "$",
+    "jQuery"
   ]
 }

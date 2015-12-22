@@ -8,6 +8,15 @@
   },
   "author": "Rafal Piton",
   "license": "GPL-2.0",
+  "browser": {
+    "bootstrap-transition": "./node_modules/bootstrap/js/transition.js",
+    "bootstrap-affix": "./node_modules/bootstrap/js/affix.js",
+    "bootstrap-modal": "./node_modules/bootstrap/js/modal.js",
+    "bootstrap-dropdown": "./node_modules/bootstrap/js/dropdown.js"
+  },
+  "browserify-shim": {
+    "jquery": "jQuery"
+  },
   "dependencies": {
     "babel": "^6.3.13",
     "babel-plugin-module-alias": "^1.0.0",
@@ -15,8 +24,10 @@
     "babel-preset-react": "^6.1.18",
     "babel-preset-stage-2": "^6.1.18",
     "babelify": "^7.2.0",
+    "bootstrap": "^3.3.6",
     "bower": "^1.6.9",
     "browserify": "^12.0.1",
+    "browserify-shim": "^3.8.11",
     "cache-require-paths": "^0.1.2",
     "del": "^2.1.0",
     "glob": "^6.0.1",
@@ -28,6 +39,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.5.1",
+    "jquery": "^2.1.4",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
     "vinyl-buffer": "^1.0.0",
