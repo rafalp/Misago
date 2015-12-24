@@ -1,7 +1,7 @@
 import misago from 'misago/index';
 import modal from 'misago/services/modal';
 
-export default function initalizer() {
+export default function initializer() {
   let element = document.getElementById('modal-mount');
   if (element) {
     modal.init(element);
@@ -10,6 +10,6 @@ export default function initalizer() {
 
 misago.addInitializer({
   name: 'modal',
-  initalizer: initalizer,
+  initializer: initializer,
   before: 'store'
 });

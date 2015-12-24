@@ -2,7 +2,7 @@ import misago from 'misago/index';
 import reducer from 'misago/reducers/auth';
 import store from 'misago/services/store';
 
-export default function initalizer(context) {
+export default function initializer(context) {
   store.addReducer('auth', reducer, {
     'isAuthenticated': context.get('isAuthenticated'),
     'isAnonymous': !context.get('isAuthenticated'),
@@ -13,6 +13,6 @@ export default function initalizer(context) {
 
 misago.addInitializer({
   name: 'reducer:auth',
-  initalizer: initalizer,
+  initializer: initializer,
   before: 'store'
 });

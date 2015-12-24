@@ -3,12 +3,12 @@ import misago from 'misago/index';
 import { UserMenu, select } from 'misago/components/user-menu/root';
 import mount from 'misago/utils/mount-component';
 
-export default function initalizer() {
+export default function initializer() {
   mount(connect(select)(UserMenu), 'user-menu-mount');
 }
 
 misago.addInitializer({
   name: 'component:user-menu',
-  initalizer: initalizer,
+  initializer: initializer,
   after: 'store'
 });

@@ -10,7 +10,7 @@ export class Misago {
     this._initializers.push({
       key: initializer.name,
 
-      item: initializer.initalizer,
+      item: initializer.initializer,
 
       after: initializer.after,
       before: initializer.before

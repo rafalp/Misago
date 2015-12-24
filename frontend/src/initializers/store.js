@@ -1,12 +1,12 @@
 import misago from 'misago/index';
 import store from 'misago/services/store';
 
-export default function initalizer() {
+export default function initializer() {
   store.init();
 }
 
 misago.addInitializer({
   name: 'store',
-  initalizer: initalizer,
+  initializer: initializer,
   before: '_end'
 });

@@ -9,7 +9,7 @@ describe('Misago', function() {
 
     misago.addInitializer({
       name: 'test',
-      initalizer: null
+      initializer: null
     });
 
     assert.equal(misago._initializers[0].key, 'test',
@@ -26,7 +26,7 @@ describe('Misago', function() {
 
     misago.addInitializer({
       name: 'test',
-      initalizer: function(misago) {
+      initializer: function(misago) {
         assert.equal(misago, misago, "initializer was called with context");
         assert.equal(misago._context, 'tru', "context is preserved");
       }
@@ -40,7 +40,7 @@ describe('Misago', function() {
 
     misago.addInitializer({
       name: 'carrot',
-      initalizer: function(misago) {
+      initializer: function(misago) {
         assert.equal(misago._context.next, 'carrot',
           "first initializer was called in right order");
 
@@ -51,7 +51,7 @@ describe('Misago', function() {
 
     misago.addInitializer({
       name: 'apple',
-      initalizer: function(misago) {
+      initializer: function(misago) {
         assert.equal(misago._context.next, 'apple',
           "second initializer was called in right order");
 
@@ -61,7 +61,7 @@ describe('Misago', function() {
 
     misago.addInitializer({
       name: 'orange',
-      initalizer: function(misago) {
+      initializer: function(misago) {
         assert.equal(misago._context.next, 'orange',
           "pen-ultimate initializer was called in right order");
 
@@ -72,7 +72,7 @@ describe('Misago', function() {
 
     misago.addInitializer({
       name: 'banana',
-      initalizer: function(misago) {
+      initializer: function(misago) {
         assert.equal(misago._context.next, 'banana',
           "ultimate initializer was called in right order");
       },
