@@ -1,4 +1,3 @@
-import React from 'react';
 import Button from 'misago/components/button';
 
 

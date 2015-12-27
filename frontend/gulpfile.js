@@ -197,6 +197,7 @@ gulp.task('linttests', function() {
 gulp.task('test', ['linttests', 'lintsource'], function() {
   var mochify = require('mochify');
   mochify('tests/**/*.js')
+    .add('src/vendor-tests.js')
     .transform(babelify)
     .bundle();
 });

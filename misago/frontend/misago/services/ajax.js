@@ -65,7 +65,7 @@
     };
 
     this.get = function(url) {
-      if (runningGets[url] !== undefined) {
+      if (runningGets[url]) {
         return runningGets[url];
       } else {
         runningGets[url] = this.ajax('GET', url);
@@ -87,6 +87,16 @@
 
     this.delete = function(url) {
       return this.ajax('DELETE', url);
+    };
+
+    this.buildApiUrl = function(path) {
+      var url = _.setup.api;
+
+      if (path) {
+        url += path.join('/') + '/';
+      }
+
+      return url;
     };
 
     // Shorthand for handling backend errors

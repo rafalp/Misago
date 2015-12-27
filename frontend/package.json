@@ -9,6 +9,8 @@
   "author": "Rafal Piton",
   "license": "GPL-2.0",
   "browser": {
+    "jquery": "./node_modules/jquery/dist/jquery.min.js",
+    "jquery-mockjax": "./node_modules/jquery-mockjax/dist/jquery.mockjax.js",
     "bootstrap-transition": "./node_modules/bootstrap/js/transition.js",
     "bootstrap-affix": "./node_modules/bootstrap/js/affix.js",
     "bootstrap-modal": "./node_modules/bootstrap/js/modal.js",
@@ -20,6 +22,7 @@
   "dependencies": {
     "babel": "^6.3.13",
     "babel-plugin-module-alias": "^1.0.0",
+    "babel-polyfill": "^6.3.14",
     "babel-preset-es2015": "^6.1.18",
     "babel-preset-react": "^6.1.18",
     "babel-preset-stage-2": "^6.1.18",
@@ -40,6 +43,7 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.5.1",
     "jquery": "^2.1.4",
+    "jquery-mockjax": "^2.0.1",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
     "vinyl-buffer": "^1.0.0",

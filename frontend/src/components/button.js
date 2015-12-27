@@ -1,11 +1,12 @@
 import React from 'react';
+import Loader from 'misago/components/loader'; // jshint ignore:line
 
 export default class Button extends React.Component {
   render() {
     let content = null;
     if (this.props.loading) {
       /* jshint ignore:start */
-      content = <b>loading!</b>;
+      content = <Loader />;
       /* jshint ignore:end */
     } else {
       content = this.props.children;

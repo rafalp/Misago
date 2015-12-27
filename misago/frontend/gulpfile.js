@@ -18,6 +18,7 @@ var del = require('del');
 
 var apps = [
   'activation',
+  'change-avatar',
   'forgotten-password',
   'forum-navbar',
   'register',

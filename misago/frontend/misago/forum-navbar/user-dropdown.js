@@ -4,8 +4,11 @@
   var dropdown = {
     class: '.dropdown-menu.user-dropdown.dropdown-menu-right',
 
-    controller: function() {
+    controller: function(_) {
       return {
+        openAvatarOptions: function() {
+          _.modal('change-avatar', _.user);
+        },
         logout: function() {
           var decision = confirm(gettext("Are you sure you want to sign out?"));
           if (decision) {
@@ -15,6 +18,9 @@
       };
     },
     view: function(ctrl, _) {
+      var changeAvatarConfig = {onclick: ctrl.openAvatarOptions};
+      var logoutConfig = {onclick: ctrl.logout};
+
       return m('ul' + this.class + '[role="menu"]', [
         m('li.dropdown-header',
           m('strong',
@@ -39,7 +45,7 @@
           ])
         ),
         m('li',
-          m('button.btn-link[type="button"]', [
+          m('button.btn-link[type="button"]', changeAvatarConfig, [
             m('span.material-icon',
               'face'
             ),
@@ -48,7 +54,7 @@
         ),
         m('li.divider'),
         m('li.dropdown-footer',
-          m('button.btn.btn-default.btn-block', {onclick: ctrl.logout},
+          m('button.btn.btn-default.btn-block', logoutConfig,
             gettext("Logout")
           )
         )
