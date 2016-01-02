@@ -2,6 +2,7 @@
   "undef": true,
   "unused": true,
   "esnext": true,
+  
   "predef": [
     "global",
     "console",

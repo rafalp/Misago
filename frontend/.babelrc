@@ -3,6 +3,7 @@
   "plugins": [
     ["babel-plugin-module-alias", [
       { "src": "./src", "expose": "misago" }
-    ]]
+    ]],
+    "transform-class-properties"
   ]
 }

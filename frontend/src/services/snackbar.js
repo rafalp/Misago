@@ -28,6 +28,7 @@ export class Snackbar {
   }
 
   // shorthands for message types
+
   info(message) {
     this.alert(message, 'info');
   }
@@ -42,6 +43,33 @@ export class Snackbar {
 
   error(message) {
     this.alert(message, 'error');
+  }
+
+  // shorthand for api errors
+  apiError(rejection) {
+    let message = gettext("Unknown error has occured.");
+
+    if (rejection.status === 0) {
+      message = gettext("Lost connection with application.");
+    }
+
+    if (rejection.status === 400 && rejection.detail) {
+      message = rejection.detail;
+    }
+
+    if (rejection.status === 403) {
+      message = rejection.detail;
+      if (message === "Permission denied") {
+        message = gettext(
+          "You don't have permission to perform this action.");
+      }
+    }
+
+    if (rejection.status === 404) {
+      message = gettext("Action link is invalid.");
+    }
+
+    this.error(message);
   }
 }
 

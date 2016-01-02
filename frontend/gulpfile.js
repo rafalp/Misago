@@ -51,8 +51,6 @@ function getSources() {
   };
 
   include('src/initializers/*.js');
-  include('src/components/*.js');
-  include('src/components/**/root.js');
 
   return sources.map(function(path) {
     return path;
@@ -70,6 +68,7 @@ gulp.task('fastsource', ['lintsource'], function() {
       entries: getSources(),
       debug: true
     })
+    .external('moment')
     .external('react')
     .external('react-dom')
     .external('redux')
@@ -88,6 +87,7 @@ gulp.task('source', ['lintsource'], function() {
       entries: getSources(),
       debug: false
     })
+    .external('moment')
     .external('react')
     .external('react-dom')
     .external('redux')
@@ -155,6 +155,7 @@ gulp.task('fastvendorsources', function() {
       debug: true
     })
     .transform('browserify-shim')
+    .require('moment')
     .require('react')
     .require('react-dom')
     .require('redux')
@@ -172,6 +173,7 @@ gulp.task('vendorsources', function() {
       entries: 'src/vendor.js',
       debug: false
     })
+    .require('moment')
     .require('react')
     .require('react-dom')
     .require('redux')
@@ -196,8 +198,7 @@ gulp.task('linttests', function() {
 
 gulp.task('test', ['linttests', 'lintsource'], function() {
   var mochify = require('mochify');
-  mochify('tests/**/*.js')
-    .add('src/vendor-tests.js')
+  mochify('src/test-setup.js tests/**/*.js')
     .transform(babelify)
     .bundle();
 });

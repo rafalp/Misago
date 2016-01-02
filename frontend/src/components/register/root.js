@@ -1,9 +1,9 @@
 import React from 'react';
 
-export default class RegisterModal extends React.Component {
+export default class extends React.Component {
   render() {
     /* jshint ignore:start */
-    return <div className="modal-dialog">
+    return <div className="modal-dialog modal-register">
       <div className="modal-content">
         <div className="modal-header">
           <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

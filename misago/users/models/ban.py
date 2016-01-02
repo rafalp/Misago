@@ -61,7 +61,9 @@ class BansManager(models.Manager):
             queryset = queryset.filter(check_type__in=checks)
 
         for ban in queryset.order_by('-id').iterator():
-            if (ban.check_type == BAN_USERNAME and username and
+            if ban.is_expired:
+                continue
+            elif (ban.check_type == BAN_USERNAME and username and
                     ban.check_value(username)):
                 return ban
             elif (ban.check_type == BAN_EMAIL and email and
