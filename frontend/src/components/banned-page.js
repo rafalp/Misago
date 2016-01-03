@@ -17,20 +17,20 @@ export default class extends React.Component {
     if (this.props.expires) {
       if (this.props.expires.isAfter(moment())) {
         return interpolate(
-          gettext('This ban expires %(expires_on)s.'),
+          gettext("This ban expires %(expires_on)s."),
           {'expires_on': this.props.expires.fromNow()},
           true);
       } else {
-        return gettext('This ban has expired.');
+        return gettext("This ban has expired.");
       }
     } else {
-      return gettext('This ban is permanent.');
+      return gettext("This ban is permanent.");
     }
   }
 
   render() {
     /* jshint ignore:start */
-    return <div className="page page-error page-error-baned">
+    return <div className="page page-error page-error-banned">
       <div className="container">
         <div className="message-panel">
 
@@ -39,7 +39,7 @@ export default class extends React.Component {
           </div>
           <div className="message-body">
             {this.getReasonMessage()}
-            <p>{this.getExpirationMessage()}</p>
+            <p className="message-footnote">{this.getExpirationMessage()}</p>
           </div>
         </div>
       </div>

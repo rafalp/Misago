@@ -1,47 +1,96 @@
 import React from 'react';
 import { required } from 'misago/utils/validators';
 
+let validateRequired = required();
+
 export default class extends React.Component {
   validate() {
-    let isValid = true;
     let errors = {};
 
-    for (var key in this.state.validators) {
-      if (this.state.validators.hasOwnProperty(key)) {
-        let value = this.state[key];
-        errors[key] = this.validateField(value, this.state.validators[key]);
-        if (errors[key] !== null) {
-          isValid = false;
+    let validators = {
+      required: this.state.validators.required || this.state.validators,
+      optional: this.state.validators.optional || {}
+    };
+
+    let validatedFields = [];
+
+    // add required fields to validation
+    for (let name in validators.required) {
+      if (validators.required.hasOwnProperty(name)) {
+        validatedFields.push(name);
+      }
+    }
+
+    // add optional fields to validation
+    for (let name in validators.optional) {
+      if (validators.optional.hasOwnProperty(name)) {
+        validatedFields.push(name);
+      }
+    }
+
+    // validate fields values
+    for (let i in validatedFields) {
+      let name = validatedFields[i];
+      let fieldErrors = this.validateField(name, this.state[name]);
+
+      if (fieldErrors === null) {
+        errors[name] = null;
+      } else if (fieldErrors) {
+        errors[name] = fieldErrors;
+      }
+    }
+
+    return errors;
+  }
+
+  isValid() {
+    let errors = this.validate();
+    for (let field in errors) {
+      if (errors.hasOwnProperty(field)) {
+        if (errors[field] !== null) {
+          return false;
         }
       }
     }
 
-    return isValid ? null : errors;
+    return true;
   }
 
-  validateField(value, validators) {
-    let result = required()(value);
+  validateField(name, value) {
     let errors = [];
 
-    if (result) {
-      return [result];
-    } else {
-      for (let i in validators) {
-        result = validators[i](value);
-        if (result) {
-          errors.push(result);
+    let validators = {
+      required: (this.state.validators.required || this.state.validators)[name],
+      optional: (this.state.validators.optional || {})[name]
+    };
+
+    let requiredError = validateRequired(value) || false;
+
+    if (validators.required) {
+      if (requiredError) {
+        errors = [requiredError];
+      } else {
+        for (let i in validators.required) {
+          let validationError = validators.required[i](value);
+          if (validationError) {
+            errors.push(validationError);
+          }
         }
       }
+
+      return errors.length ? errors : null;
+    } else if (requiredError === false && validators.optional) {
+      for (let i in validators.optional) {
+        let validationError = validators.optional[i](value);
+        if (validationError) {
+          errors.push(validationError);
+        }
+      }
+
+      return errors.length ? errors : null;
     }
 
-    return errors.length ? errors : null;
-  }
-
-  changeValue(name, value) {
-    let errors = null;
-    if (this.state.validators.name) {
-      errors = this.validateField(name, value);
-    }
+    return false; // false === field wasn't validated
   }
 
   /* jshint ignore:start */
@@ -49,6 +98,11 @@ export default class extends React.Component {
     return (event) => {
       let newState = {};
       newState[name] = event.target.value;
+
+      let formErrors = this.state.errors || {};
+      formErrors[name] = this.validateField(name, newState[name]);
+      newState.errors = formErrors;
+
       this.setState(newState);
     }
   }
