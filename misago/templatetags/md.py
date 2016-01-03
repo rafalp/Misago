@@ -26,8 +26,9 @@ def short_markdown(value, length=300):
     value = ' '.join(value.splitlines())
     value = value[0:length]
 
-    while value[-1] != ' ':
-        value = value[0:-1]
+    if ' ' in value:
+        while value[-1] != ' ':
+            value = value[0:-1]
 
     value = value.strip()
     if value[-3:3] != '...':
