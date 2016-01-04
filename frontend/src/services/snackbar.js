@@ -46,6 +46,7 @@ export class Snackbar {
   }
 
   // shorthand for api errors
+
   apiError(rejection) {
     let message = gettext("Unknown error has occured.");
 

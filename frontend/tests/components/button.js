@@ -1,7 +1,6 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
 import ReactDOM from 'react-dom'; // jshint ignore:line
-import ReactTestUtils from 'react-addons-test-utils';
 import Button from 'misago/components/button'; // jshint ignore:line
 
 describe("Button", function() {
@@ -43,7 +42,7 @@ describe("Button", function() {
     let element = $('#test-mount button');
     assert.ok(element.length, "component rendered");
     assert.equal(element.attr('type'), 'button', "component is regular button");
-    ReactTestUtils.Simulate.click(element.get(0));
+    window.simulateClick('#test-mount button');
   });
 
   it('renders disabled', function() {

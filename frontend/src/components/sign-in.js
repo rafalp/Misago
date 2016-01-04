@@ -26,7 +26,7 @@ export default class extends Form {
   }
 
   clean() {
-    if (this.validate()) {
+    if (!this.isValid()) {
       snackbar.error(gettext("Fill out both fields."));
       return false;
     } else {
@@ -74,6 +74,9 @@ export default class extends Form {
       } else {
         snackbar.error(rejection.detail);
       }
+    } else if (rejection.status === 403 && rejection.ban) {
+      showBannedPage(rejection.ban);
+      modal.hide();
     } else {
       snackbar.apiError(rejection);
     }

@@ -63,7 +63,7 @@ describe("Banned page", function() {
     assert.equal(
       $('#test-mount .page-error-banned p.message-footnote').text().trim(),
       "This ban expires in 7 days.",
-      "component renders with past ban expiration");
+      "component renders with future ban expiration");
   });
 
   it('renders with past expiration date', function() {

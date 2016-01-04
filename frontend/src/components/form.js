@@ -125,8 +125,7 @@ export default class extends React.Component {
 
   handleSubmit = (event) => {
     // we don't reload page on submissions
-    event.preventDefault();
-
+    event.preventDefault()
     if (this.state.isLoading) {
       return;
     }
@@ -137,11 +136,11 @@ export default class extends React.Component {
 
       if (promise) {
         promise.then((success) => {
+          this.setState({'isLoading': false});
           this.handleSuccess(success);
-          this.setState({'isLoading': false});
         }, (rejection) => {
-          this.handleError(rejection);
           this.setState({'isLoading': false});
+          this.handleError(rejection);
         });
       } else {
         this.setState({'isLoading': false});

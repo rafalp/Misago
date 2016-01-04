@@ -88,4 +88,68 @@ describe("Snackbar", function() {
       isVisible: true
     }, "service set success message in store");
   });
+
+  it("provides shortcut for backend disconnection", function() {
+    snackbar.apiError({
+      status: 0
+    });
+
+    assert.deepEqual(store.getState().snackbar, {
+      type: 'error',
+      message: "Lost connection with application.",
+      isVisible: true
+    }, "service set disconnected message in store");
+  });
+
+  it("provides shortcut for backend permission denied", function() {
+    snackbar.apiError({
+      status: 403,
+      detail: "Permission denied"
+    });
+
+    assert.deepEqual(store.getState().snackbar, {
+      type: 'error',
+      message: "You don't have permission to perform this action.",
+      isVisible: true
+    }, "service set default 403 message in store");
+  });
+
+  it("provides shortcut for custom backend permission denied", function() {
+    snackbar.apiError({
+      status: 403,
+      detail: "REJECTION!"
+    });
+
+    assert.deepEqual(store.getState().snackbar, {
+      type: 'error',
+      message: "REJECTION!",
+      isVisible: true
+    }, "service set custom 403 message in store");
+  });
+
+  it("provides shortcut for backend rejection", function() {
+    snackbar.apiError({
+      status: 400,
+      detail: "NOPE!"
+    });
+
+    assert.deepEqual(store.getState().snackbar, {
+      type: 'error',
+      message: "NOPE!",
+      isVisible: true
+    }, "service set custom 400 message in store");
+  });
+
+  it("provides shortcut for backend 404 error", function() {
+    snackbar.apiError({
+      status: 404,
+      detail: "NOT FOUND"
+    });
+
+    assert.deepEqual(store.getState().snackbar, {
+      type: 'error',
+      message: "Action link is invalid.",
+      isVisible: true
+    }, "service set not found message in store");
+  });
 });

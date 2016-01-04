@@ -15,6 +15,8 @@ let RedrawedBannedPage = connect(select)(BannedPage);
 /* jshint ignore:end */
 
 export default function(ban, changeState) {
+  ReactDOM.unmountComponentAtNode(document.getElementById('page-mount'));
+
   ReactDOM.render(
     /* jshint ignore:start */
     <Provider store={store.getStore()}>
