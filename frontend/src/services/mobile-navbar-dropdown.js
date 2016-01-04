@@ -16,6 +16,16 @@ export class MobileNavbarDropdown {
     }
   }
 
+  showConnected(name, component) {
+    if (this._component === name) {
+      this.hide();
+    } else {
+      this._component = name;
+      mount(component, this._element.id, true);
+      $(this._element).addClass('open');
+    }
+  }
+
   hide() {
     $(this._element).removeClass('open');
     this._component = null;

@@ -1,3 +1,7 @@
 export default function auth(state={}, action=null) {
-  return state;
+  if (action.type == 'NOT_YET') {
+    return {};
+  } else {
+    return state;
+  }
 }

@@ -9,6 +9,7 @@
     "window",
     "document",
     "require",
+    "confirm",
 
     "gettext",
     "ngettext",

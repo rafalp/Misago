@@ -32,7 +32,67 @@ global.emptyTestContainers = function() {
   ReactDOM.unmountComponentAtNode(document.getElementById('test-mount'));
 };
 
-// global utility function for store init
+// global utility for mocking context
+global.contextClear = function(misago) {
+  misago._context = {};
+};
+
+global.contextGuest = function(misago) {
+  misago._context = Object.assign({}, misago._context, {
+    isAuthenticated: false,
+
+    user: {
+      id : null,
+
+      acl: {}
+    }
+  });
+};
+
+global.contextAuthenticated = function(misago, overrides) {
+  misago._context = Object.assign({}, misago._context, {
+    isAuthenticated: true,
+
+    user: {
+      id : 42,
+      absolute_url: "/user/loremipsum-1/",
+      avatar_hash: "5c6a04b4",
+      email: "test@example.com",
+      full_title: "Forum team",
+      is_hiding_presence: false,
+      joined_on: "2015-05-09T16:13:33.973603Z",
+      limits_private_thread_invites_to: 0,
+      new_notifications: 0,
+      posts: 30,
+      rank: {
+        id: 1,
+
+        css_class: "team",
+        description: '<p>Lorem ipsum dolor met sit amet elit, si vis pacem para bellum.</p>\n<p>To help see <a href="http://wololo.com/something.php?page=2131">http://wololo.com/something.php?page=2131</a></p>',
+        is_tab: true,
+        name: "Forum team",
+        slug: "forum-team",
+        title: "Team"
+      },
+      short_title: "Team",
+      slug: "loremipsum",
+      subscribe_to_replied_threads: 2,
+      subscribe_to_started_threads: 1,
+      threads: 0,
+      title: "",
+      unread_private_threads: 0,
+      username: "LoremIpsum",
+
+      acl: {}
+    }
+  });
+
+  if (overrides) {
+    Object.assign(misago._context.user, overrides);
+  }
+};
+
+// global utility function for store mocking
 global.initEmptyStore = function(store) {
   store.constructor();
   store.addReducer('test', function(state={}, action=null) { return {}; }, {}); // jshint ignore:line
@@ -93,7 +153,7 @@ global.simulateChange = function(selector, value) {
 global.afterAjax = function(component, callback) {
   window.setTimeout(function() {
     component.forceUpdate(callback);
-  }, 150);
+  }, 200);
 };
 
 global.onElement = function(selector, callback) {

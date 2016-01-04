@@ -1,11 +1,10 @@
 import React from 'react';
-import Button from 'misago/components/button'; // jshint ignore:line
-
-import modal from 'misago/services/modal';
-import dropdown from 'misago/services/mobile-navbar-dropdown';
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
+import Button from 'misago/components/button'; // jshint ignore:line
 import SignInModal from 'misago/components/sign-in.js';
 import RegisterModal from 'misago/components/register/root.js';
+import dropdown from 'misago/services/mobile-navbar-dropdown';
+import modal from 'misago/services/modal';
 
 export class GuestMenu extends React.Component {
   showSignInModal() {
@@ -28,8 +27,9 @@ export class GuestMenu extends React.Component {
         <div className="row">
 
           <div className="col-xs-6">
-            <button type="button" className="btn btn-default btn-block">
-              Thy Sign In
+            <button type="button" className="btn btn-default btn-block"
+                    onClick={this.showSignInModal}>
+              Sign in
             </button>
 
           </div>
@@ -51,13 +51,11 @@ export class GuestNav extends GuestMenu {
   render() {
     /* jshint ignore:start */
     return <div className="nav nav-guest">
-      <Button type="button"
-              className="navbar-btn btn-default"
+      <button type="button" className="btn navbar-btn btn-default"
               onClick={this.showSignInModal}>
         Sign in
-      </Button>
-      <Button type="button"
-              className="navbar-btn btn-primary"
+      </button>
+      <Button type="button" className="navbar-btn btn-primary"
               onClick={this.showRegisterModal}>
         Register
       </Button>

@@ -42,8 +42,6 @@ export default class extends Form {
   }
 
   handleSuccess() {
-    modal.hide();
-
     let form = $('#hidden-login-form');
 
     form.append('<input type="text" name="username" />');
@@ -57,6 +55,11 @@ export default class extends Form {
     form.find('input[name="username"]').val(this.state.username);
     form.find('input[name="password"]').val(this.state.password);
     form.submit();
+
+    // keep form loading
+    this.setState({
+      'isLoading': true
+    });
   }
 
   handleError(rejection) {

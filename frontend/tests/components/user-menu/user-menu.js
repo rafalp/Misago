@@ -1,25 +1,22 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
 import ReactDOM from 'react-dom'; // jshint ignore:line
-import { GuestMenu, GuestNav, CompactGuestNav } from 'misago/components/user-menu/guest-nav'; // jshint ignore:line
+import { UserMenu, UserNav, CompactUserNav } from 'misago/components/user-menu/user-nav'; // jshint ignore:line
 import misago from 'misago/index';
 import dropdown from 'misago/services/mobile-navbar-dropdown';
-import modal from 'misago/services/modal';
 import store from 'misago/services/store';
 
-describe("GuestMenu", function() {
+describe("UserMenu", function() {
   beforeEach(function() {
+    window.contextClear(misago);
+    window.contextAuthenticated(misago);
+
     window.initEmptyStore(store);
     window.initDropdown(dropdown);
-    window.initModal(modal);
-
-    misago._context = {
-      'FORGOTTEN_PASSWORD_URL': '/forgotten-password/'
-    };
 
     /* jshint ignore:start */
     ReactDOM.render(
-      <GuestMenu />,
+      <UserMenu user={misago._context.user} />,
       document.getElementById('test-mount')
     );
     /* jshint ignore:end */
@@ -33,30 +30,19 @@ describe("GuestMenu", function() {
     let element = $('#test-mount .dropdown-menu');
     assert.ok(element.length, "component renders");
   });
-
-  it('opens sign in modal on click', function(done) {
-    window.simulateClick('#test-mount .btn-default');
-
-    window.onElement('#modal-mount .modal-sign-in', function() {
-      assert.ok(true, "sign in modal was displayed");
-      done();
-    });
-  });
 });
 
-describe("GuestNav", function() {
+describe("UserNav", function() {
   beforeEach(function() {
+    window.contextClear(misago);
+    window.contextAuthenticated(misago);
+
     window.initEmptyStore(store);
     window.initDropdown(dropdown);
-    window.initModal(modal);
-
-    misago._context = {
-      'FORGOTTEN_PASSWORD_URL': '/forgotten-password/'
-    };
 
     /* jshint ignore:start */
     ReactDOM.render(
-      <GuestNav />,
+      <UserNav user={misago._context.user} />,
       document.getElementById('test-mount')
     );
     /* jshint ignore:end */
@@ -67,28 +53,34 @@ describe("GuestNav", function() {
   });
 
   it('renders', function() {
-    let element = $('#test-mount .nav-guest');
+    let element = $('#test-mount .user-dropdown');
     assert.ok(element.length, "component renders");
-  });
-
-  it('opens sign in modal on click', function(done) {
-    window.simulateClick('#test-mount .btn-default');
-
-    window.onElement('#modal-mount .modal-sign-in', function() {
-      assert.ok(true, "sign in modal was displayed");
-      done();
-    });
   });
 });
 
-describe("CompactGuestNav", function() {
+describe("CompactUserNav", function() {
   beforeEach(function() {
-    window.initEmptyStore(store);
+    window.contextClear(misago);
+    window.contextAuthenticated(misago);
+
+    store.constructor();
+    store.addReducer('auth', function(state={}, action=null){
+      if (action) {
+        return state;
+      }
+    }, {
+      'isAuthenticated': misago.get('isAuthenticated'),
+      'isAnonymous': !misago.get('isAuthenticated'),
+
+      'user': misago.get('user')
+    });
+    store.init();
+
     window.initDropdown(dropdown);
 
     /* jshint ignore:start */
     ReactDOM.render(
-      <CompactGuestNav />,
+      <CompactUserNav user={misago._context.user} />,
       document.getElementById('test-mount')
     );
     /* jshint ignore:end */
@@ -106,7 +98,7 @@ describe("CompactGuestNav", function() {
   it('opens dropdown on click', function() {
     window.simulateClick('#test-mount button');
 
-    let element = $('#dropdown-mount>.dropdown-menu');
+    let element = $('#dropdown-mount>.user-dropdown');
     assert.ok(element.length, "component opened dropdown");
   });
 });
