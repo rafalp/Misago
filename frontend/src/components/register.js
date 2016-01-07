@@ -23,6 +23,7 @@ export class RegisterForm extends Form {
       'username': '',
       'email': '',
       'password': '',
+      'captcha': '',
 
       'validators': {
         'username': [
