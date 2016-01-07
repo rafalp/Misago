@@ -31,11 +31,11 @@ gulp.task('watch', ['fastbuild'], function() {
 // Builds
 
 gulp.task('fastbuild', [
-  'fastsource', 'faststyle', 'faststatic', 'fastvendorsources'
+  'fastsource', 'faststyle', 'faststatic', 'fastvendorsources', 'copyvendors'
 ]);
 
 gulp.task('build', [
-  'source', 'style', 'static', 'vendorsources'
+  'source', 'style', 'static', 'vendorsources', 'copyvendors'
 ]);
 
 // Source tasks
@@ -185,6 +185,15 @@ gulp.task('vendorsources', function() {
     .pipe(sourcemaps.init())
     .pipe(uglify())
     .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(misago + 'js'));
+});
+
+gulp.task('copyvendors', function() {
+  return gulp.src([
+      'zxcvbn/dist/*'
+    ].map(function(item) {
+      return 'node_modules/' + item;
+    }))
     .pipe(gulp.dest(misago + 'js'));
 });
 

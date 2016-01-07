@@ -36,8 +36,6 @@ def create_endpoint(request):
     if not form.is_valid():
         return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    captcha.reset_session(request.session)
-
     try:
         validate_new_registration(
             request.user_ip,

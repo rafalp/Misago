@@ -1,18 +1,13 @@
 import React from 'react';
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
-import Button from 'misago/components/button'; // jshint ignore:line
+import RegisterButton from 'misago/components/register-button'; // jshint ignore:line
 import SignInModal from 'misago/components/sign-in.js';
-import RegisterModal from 'misago/components/register/root.js';
 import dropdown from 'misago/services/mobile-navbar-dropdown';
 import modal from 'misago/services/modal';
 
 export class GuestMenu extends React.Component {
   showSignInModal() {
     modal.show(SignInModal);
-  }
-
-  showRegisterModal() {
-    modal.show(RegisterModal);
   }
 
   render() {
@@ -25,19 +20,19 @@ export class GuestMenu extends React.Component {
           {gettext('Sign in or register to start and participate in discussions.')}
         </p>
         <div className="row">
-
           <div className="col-xs-6">
+
             <button type="button" className="btn btn-default btn-block"
                     onClick={this.showSignInModal}>
-              Sign in
+              {gettext("Sign in")}
             </button>
 
           </div>
           <div className="col-xs-6">
 
-            <button type="button" className="btn btn-primary btn-block">
-              Thy Registry
-            </button>
+            <RegisterButton className="btn-primary btn-block">
+              {gettext("Register")}
+            </RegisterButton>
 
           </div>
         </div>
@@ -53,12 +48,11 @@ export class GuestNav extends GuestMenu {
     return <div className="nav nav-guest">
       <button type="button" className="btn navbar-btn btn-default"
               onClick={this.showSignInModal}>
-        Sign in
+        {gettext("Sign in")}
       </button>
-      <Button type="button" className="navbar-btn btn-primary"
-              onClick={this.showRegisterModal}>
-        Register
-      </Button>
+      <RegisterButton className="navbar-btn btn-primary">
+        {gettext("Register")}
+      </RegisterButton>
     </div>;
     /* jshint ignore:end */
   }

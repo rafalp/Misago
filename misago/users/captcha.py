@@ -8,21 +8,6 @@ from misago.core import forms
 
 
 """
-Session flagging
-"""
-def session_already_passed_test(session):
-    return session.get('passed_captcha')
-
-
-def mark_session_as_passing(session):
-    session['passed_captcha'] = True
-
-
-def reset_session(session):
-    session.pop('passed_captcha', None)
-
-
-"""
 Captcha tests
 """
 def recaptcha_test(request):
@@ -61,8 +46,4 @@ CAPTCHA_TESTS = {
 }
 
 def test_request(request):
-    if not session_already_passed_test(request.session):
-        # run test and if it didn't raise validation error,
-        # mark session as passing so we don't troll uses anymore
-        CAPTCHA_TESTS[settings.captcha_type](request)
-        mark_session_as_passing(request.session)
+    CAPTCHA_TESTS[settings.captcha_type](request)

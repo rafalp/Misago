@@ -3,42 +3,34 @@
 // --------------------------------------------------
 
 
-.auth-changed-message {
+.auth-message {
+  background-color: @auth-changed-bg;
+  padding: @line-height-computed 0px;
   width: 100%;
 
   position: fixed;
-  top: 0px;
+  top: -100%;
   left: 0px;
 
   z-index: @zindex-auth-message;
 
   transition: top 300ms ease;
 
-  &>div {
-    position: absolute;
-    bottom: 0px;
-    width: 100%;
-
-    background-color: @auth-changed-bg;
-    padding: @line-height-computed 0px;
-  }
-
-  &.show > div {
+  &.show {
     top: 0px;
     bottom: auto;
   }
 
   p {
-    padding: @line-height-computed / 2 0px;
+    padding: @line-height-computed / 4 0px;
 
     color: @auth-changed-color;
-    font-size: @font-size-large;
   }
 }
 
 // Small displays
 @media screen and (max-width: @screen-sm-max) {
-  .auth-changed-message {
+  .auth-message {
     text-align: center;
 
     .btn {

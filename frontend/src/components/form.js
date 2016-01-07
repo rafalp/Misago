@@ -16,14 +16,16 @@ export default class extends React.Component {
 
     // add required fields to validation
     for (let name in validators.required) {
-      if (validators.required.hasOwnProperty(name)) {
+      if (validators.required.hasOwnProperty(name) &&
+          validators.required[name]) {
         validatedFields.push(name);
       }
     }
 
     // add optional fields to validation
     for (let name in validators.optional) {
-      if (validators.optional.hasOwnProperty(name)) {
+      if (validators.optional.hasOwnProperty(name) &&
+          validators.optional[name]) {
         validatedFields.push(name);
       }
     }

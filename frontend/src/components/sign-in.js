@@ -18,7 +18,7 @@ export default class extends Form {
       'username': '',
       'password': '',
 
-      validators: {
+      'validators': {
         'username': [],
         'password': []
       }
@@ -100,7 +100,8 @@ export default class extends Form {
 
   render() {
     /* jshint ignore:start */
-    return <div className="modal-dialog modal-sm modal-sign-in">
+    return <div className="modal-dialog modal-sm modal-sign-in"
+                role="document">
       <div className="modal-content">
         <div className="modal-header">
           <button type="button" className="close" data-dismiss="modal"

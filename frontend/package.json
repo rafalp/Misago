@@ -52,7 +52,8 @@
     "react-redux": "^4.0.6",
     "redux": "^3.0.5",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "zxcvbn": "^4.2.0"
   },
   "devDependencies": {
     "jshint": "^2.8.0",
