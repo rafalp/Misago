@@ -35,6 +35,7 @@ describe("Sign In", function() {
 
   afterEach(function() {
     window.emptyTestContainers();
+    window.snackbarClear(snackbar);
     $.mockjax.clear();
   });
 

@@ -4,12 +4,11 @@ import Form from 'misago/components/form';
 import FormGroup from 'misago/components/form-group'; // jshint ignore:line
 import PasswordStrength from 'misago/components/password-strength'; // jshint ignore:line
 import misago from 'misago/index';
-import { signIn } from 'misago/reducers/auth'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
+import auth from 'misago/services/auth'; // jshint ignore:line
 import captcha from 'misago/services/captcha';
 import modal from 'misago/services/modal';
 import snackbar from 'misago/services/snackbar';
-import store from 'misago/services/store'; // jshint ignore:line
 import showBannedPage from 'misago/utils/banned-page';
 import * as validators from 'misago/utils/validators';
 
@@ -234,7 +233,7 @@ export default class extends React.Component {
   completeRegistration = (apiResponse) => {
     if (apiResponse.activation === 'active') {
       modal.hide();
-      store.dispatch(signIn(apiResponse));
+      auth.signIn(apiResponse);
     } else {
       this.setState({
         'complete': apiResponse

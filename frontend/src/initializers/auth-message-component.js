@@ -10,5 +10,5 @@ export default function initializer() {
 misago.addInitializer({
   name: 'component:auth-message',
   initializer: initializer,
-  after: 'store'
+  before: 'auth'
 });

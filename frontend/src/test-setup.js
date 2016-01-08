@@ -10,7 +10,7 @@ require('bootstrap-dropdown');
 
 require('jquery-mockjax')(jQuery, window);
 $.mockjaxSettings.logging = false;
-$.mockjaxSettings.responseTime = 100;
+$.mockjaxSettings.responseTime = 50;
 
 require("babel-polyfill");
 
@@ -123,6 +123,18 @@ global.initDropdown = function(dropdown) {
   dropdown.init(document.getElementById('dropdown-mount'));
 };
 
+// global util for reseting snackbar
+global.snackbarClear = function(snackbar) {
+  // NOTE: Never ever cause situation when snackbar is triggered more than once
+  // in the single test, because this results in race condition within tests
+  // suite where one tests check's snackbar state before it has reopened with
+  // new message set by current test
+  if (snackbar._timeout) {
+    window.clearTimeout(snackbar._timeout);
+    snackbar._timeout = null;
+  }
+};
+
 // global util functions for events
 var ReactTestUtils = require('react-addons-test-utils');
 global.simulateClick = function(selector) {
@@ -153,7 +165,7 @@ global.simulateChange = function(selector, value) {
 global.afterAjax = function(component, callback) {
   window.setTimeout(function() {
     component.forceUpdate(callback);
-  }, 200);
+  }, 100);
 };
 
 global.onElement = function(selector, callback) {
