@@ -202,7 +202,7 @@ describe("ReCaptcha", function() {
     assert.deepEqual(captcha.validator(), [], "recaptcha is required");
   });
 
-  it("renders component", function(done) {
+  it("renders component", function(done) { // jshint ignore:line
     captcha = new ReCaptcha();
     captcha.init({
       get: function(setting) {
