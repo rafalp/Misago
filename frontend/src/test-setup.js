@@ -128,6 +128,7 @@ global.snackbarStoreMock = function() {
 
 // global init function for modal and dropdown services
 global.initModal = function(modal) {
+  $('#modal-mount').off();
   modal.init(document.getElementById('modal-mount'));
 };
 

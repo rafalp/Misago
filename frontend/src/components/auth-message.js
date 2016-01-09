@@ -1,6 +1,6 @@
 import React from 'react';
 
-export class AuthMessage extends React.Component {
+export default class extends React.Component {
   refresh() {
     window.location.reload();
   }

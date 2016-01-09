@@ -78,13 +78,13 @@ describe("Modal", function() {
       assert.ok(element.length, "component was rendered");
 
       modal.show(TestModalB);
-    }, 400);
 
-    window.setTimeout(function() {
-      let element = $('#modal-mount .modal-b');
-      assert.ok(element.length, "component was toggled");
-      done();
-    }, 500);
+      window.setTimeout(function() {
+        let element = $('#modal-mount .modal-b');
+        assert.ok(element.length, "component was toggled");
+        done();
+      }, 200);
+    }, 400);
   });
 
   it('hides component', function(done) {
@@ -94,12 +94,12 @@ describe("Modal", function() {
       let element = $('#modal-mount .modal-a');
       assert.ok(element.length, "component was rendered");
       modal.hide();
-    }, 400);
 
-    window.setTimeout(function() {
-      let element = $('#modal-mount');
-      assert.equal(element.children().length, 0, "modal was emptied");
-      done();
-    }, 1000);
+      window.setTimeout(function() {
+        let element = $('#modal-mount');
+        assert.equal(element.children().length, 0, "modal was emptied");
+        done();
+      }, 600);
+    }, 400);
   });
 });

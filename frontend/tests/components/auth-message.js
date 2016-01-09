@@ -1,7 +1,7 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
 import ReactDOM from 'react-dom'; // jshint ignore:line
-import { AuthMessage } from 'misago/components/auth-message'; // jshint ignore:line
+import AuthMessage from 'misago/components/auth-message'; // jshint ignore:line
 
 describe("Auth Message", function() {
   afterEach(function() {
