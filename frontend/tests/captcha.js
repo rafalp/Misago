@@ -138,7 +138,8 @@ describe("QACaptcha", function() {
                 captcha: ''
               },
 
-              bindInput: function() {
+              bindInput: function(field) {
+                assert.equal(field, 'captcha', "captcha is bound to state");
                 return function() {
                   /* noop */
                 };
@@ -163,9 +164,109 @@ describe("QACaptcha", function() {
 });
 
 describe("ReCaptcha", function() {
+  afterEach(function() {
+    delete window.grecaptcha;
+
+    window.emptyTestContainers();
+    window.snackbarClear(snackbar);
+    $.mockjax.clear();
+  });
+
+  it("loads library", function(done) {
+    captcha = new ReCaptcha();
+    captcha.init({
+      get: function(setting) {
+        assert.equal(setting, 'SETTINGS', "settings object is accessed");
+        return {
+          recaptcha_site_key: 'aabbcc'
+        };
+      }
+    }, {}, {
+      include: function(url) {
+        assert.ok(url, "library is requested from google servers");
+      }
+    }, {});
+
+    captcha.load().then(function() {
+      assert.ok('promise resolves');
+      done();
+    });
+
+    window.setTimeout(function() {
+      window.grecaptcha = {};
+    }, 100);captcha = new ReCaptcha();
+  });
+
   it("is required", function() {
     captcha = new ReCaptcha();
     assert.deepEqual(captcha.validator(), [], "recaptcha is required");
+  });
+
+  it("renders component", function(done) {
+    captcha = new ReCaptcha();
+    captcha.init({
+      get: function(setting) {
+        assert.equal(setting, 'SETTINGS', "settings object is accessed");
+        return {
+          recaptcha_site_key: 'aabbcc'
+        };
+      }
+    }, {}, {
+      include: function(url) {
+        assert.ok(url, "library is requested from google servers");
+      }
+    }, {});
+
+    captcha.load().then(function() {
+      /* jshint ignore:start */
+      ReactDOM.render(
+        <div>
+          {captcha.component({
+            form: {
+              state: {
+                errors: {},
+                captcha: ''
+              },
+
+              bindInput: function() {
+                return function(value) {
+                  assert.deepEqual(value, {
+                    target: {
+                      value: 'valid-captcha'
+                    }
+                  }, "captcha is called");
+
+                  done();
+                };
+              }
+            }
+          })}
+        </div>,
+        document.getElementById('test-mount')
+      );
+      /* jshint ignore:end */
+
+      let element = $('#test-mount');
+      assert.ok(element.length, "component renders");
+      assert.equal(element.find('label').text().trim(), "Captcha:",
+        "label is valid");
+      assert.equal(element.find('p.help-block').text().trim(),
+        "Please solve the quick test.",
+        "field's help text is displayed");
+    });
+
+    window.setTimeout(function() {
+      window.grecaptcha = {
+        render: function(field, options) {
+          assert.equal(field, 'recaptcha', "component is rendered in outlet");
+          assert.equal(options.sitekey, 'aabbcc', "sitekey is passed to api");
+
+          window.setTimeout(function() {
+            options.callback('valid-captcha');
+          }, 100);
+        }
+      };
+    }, 100);
   });
 });
 
