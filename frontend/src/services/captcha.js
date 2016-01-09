@@ -8,7 +8,6 @@ export class BaseCaptcha {
     this._ajax = ajax;
     this._include = include;
     this._snackbar = snackbar;
-    this.state = {};
   }
 }
 

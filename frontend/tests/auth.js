@@ -144,7 +144,7 @@ describe("Auth Reducer", function() {
   it("signs user in", function() {
     let state = {
       signedIn: false
-    }
+    };
 
     assert.deepEqual(reducer(state, signIn({username: 'Weebl'})), {
       signedIn: {
@@ -159,7 +159,7 @@ describe("Auth Reducer", function() {
       isAnonymous: true,
       signedIn: false,
       signedOut: true
-    }
+    };
 
     assert.deepEqual(reducer(state, signOut()), {
       isAuthenticated: false,

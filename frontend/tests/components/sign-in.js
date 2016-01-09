@@ -6,7 +6,6 @@ import SignIn from 'misago/components/sign-in'; // jshint ignore:line
 import modal from 'misago/services/modal';
 import snackbar from 'misago/services/snackbar';
 
-let component = null;
 let snackbarStore = null;
 
 describe("Sign In", function() {
@@ -26,7 +25,7 @@ describe("Sign In", function() {
     };
 
     /* jshint ignore:start */
-    component = ReactDOM.render(
+    ReactDOM.render(
       <SignIn />,
       document.getElementById('test-mount')
     );
@@ -51,52 +50,66 @@ describe("Sign In", function() {
       "forgotten password form url is valid");
   });
 
-  it("handles empty submit", function() {
-    window.simulateSubmit('#test-mount form');
+  it("handles empty submit", function(done) {
+    snackbarStore.callback(function(message) {
+      assert.deepEqual(message, {
+        message: "Fill out both fields.",
+        type: 'error'
+      }, "form validation rejected empty form");
+      done();
+    });
 
-    assert.deepEqual(snackbarStore.message, {
-      message: "Fill out both fields.",
-      type: 'error'
-    }, "form validation rejected empty form");
+    window.simulateSubmit('#test-mount form');
   });
 
-  it("handles partial submit", function() {
+  it("handles partial submit", function(done) {
+    snackbarStore.callback(function(message) {
+      assert.deepEqual(message, {
+        message: "Fill out both fields.",
+        type: 'error'
+      }, "form validation rejected empty form");
+      done();
+    });
+
     window.simulateChange('#id_username', 'loremipsum');
     window.simulateSubmit('#test-mount form');
-
-    assert.deepEqual(snackbarStore.message, {
-      message: "Fill out both fields.",
-      type: 'error'
-    }, "form validation rejected empty form");
   });
 
   it("handles backend error", function(done) {
-    $.mockjax({
-      url: '/test-api/auth/',
-      status: 500
-    });
-
-    window.simulateChange('#id_username', 'SomeFake');
-    window.simulateChange('#id_password', 'pass1234');
-    window.simulateSubmit('#test-mount form');
-
-    window.afterAjax(component, function() {
-      assert.deepEqual(snackbarStore.message, {
+    snackbarStore.callback(function(message) {
+      assert.deepEqual(message, {
         message: "Unknown error has occured.",
         type: 'error'
       }, "form raised alert about backend error");
       done();
     });
+
+    $.mockjax({
+      url: '/test-api/auth/',
+      status: 500,
+    });
+
+    window.simulateChange('#id_username', 'SomeFake');
+    window.simulateChange('#id_password', 'pass1234');
+    window.simulateSubmit('#test-mount form');
   });
 
   it("handles invalid credentials", function(done) {
-    let message = 'Login or password is incorrect.';
+    let testMessage = 'Login or password is incorrect.';
+
+    snackbarStore.callback(function(message) {
+      assert.deepEqual(message, {
+        message: testMessage,
+        type: 'error'
+      }, "form raised alert about invalid credentials");
+      done();
+    });
 
     $.mockjax({
       url: '/test-api/auth/',
       status: 400,
       responseText: {
-        'detail': message,
+        'detail': testMessage,
         'code': 'invalid_login'
       }
     });
@@ -104,24 +117,24 @@ describe("Sign In", function() {
     window.simulateChange('#id_username', 'SomeFake');
     window.simulateChange('#id_password', 'pass1234');
     window.simulateSubmit('#test-mount form');
-
-    window.afterAjax(component, function() {
-      assert.deepEqual(snackbarStore.message, {
-        message: message,
-        type: 'error'
-      }, "form raised alert about invalid credentials");
-      done();
-    });
   });
 
   it("to admin-activated account", function(done) {
-    let message = "This account has to be activated by admin.";
+    let testMessage = "This account has to be activated by admin.";
+
+    snackbarStore.callback(function(message) {
+      assert.deepEqual(message, {
+        message: testMessage,
+        type: 'info'
+      }, "form raised alert about admin-activated account");
+      done();
+    });
 
     $.mockjax({
       url: '/test-api/auth/',
       status: 400,
       responseText: {
-        'detail': message,
+        'detail': testMessage,
         'code': 'inactive_admin'
       }
     });
@@ -129,35 +142,14 @@ describe("Sign In", function() {
     window.simulateChange('#id_username', 'SomeFake');
     window.simulateChange('#id_password', 'pass1234');
     window.simulateSubmit('#test-mount form');
-
-    window.afterAjax(component, function() {
-      assert.deepEqual(snackbarStore.message, {
-        message: message,
-        type: 'info'
-      }, "form raised alert about admin-activated account");
-      done();
-    });
   });
 
   it("to user-activated account", function(done) {
-    let message = "This account has to be activated.";
+    let testMessage = "This account has to be activated.";
 
-    $.mockjax({
-      url: '/test-api/auth/',
-      status: 400,
-      responseText: {
-        'detail': message,
-        'code': 'inactive_user'
-      }
-    });
-
-    window.simulateChange('#id_username', 'SomeFake');
-    window.simulateChange('#id_password', 'pass1234');
-    window.simulateSubmit('#test-mount form');
-
-    window.afterAjax(component, function() {
-      assert.deepEqual(snackbarStore.message, {
-        message: message,
+    snackbarStore.callback(function(message) {
+      assert.deepEqual(message, {
+        message: testMessage,
         type: 'info'
       }, "form raised alert about user-activated account");
 
@@ -169,6 +161,19 @@ describe("Sign In", function() {
 
       done();
     });
+
+    $.mockjax({
+      url: '/test-api/auth/',
+      status: 400,
+      responseText: {
+        'detail': testMessage,
+        'code': 'inactive_user'
+      }
+    });
+
+    window.simulateChange('#id_username', 'SomeFake');
+    window.simulateChange('#id_password', 'pass1234');
+    window.simulateSubmit('#test-mount form');
   });
 
   it("from banned IP", function(done) {

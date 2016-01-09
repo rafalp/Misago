@@ -74,7 +74,7 @@ export default class extends React.Component {
              htmlFor={this.props.for || ''}>
         {this.props.label}:
       </label>
-      <div className={this.props.controlClass}>
+      <div className={this.props.controlClass || ''}>
         {this.props.children}
         {this.getFeedbackIcon()}
         {this.getFeedbackDescription()}

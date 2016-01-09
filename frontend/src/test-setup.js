@@ -101,7 +101,12 @@ global.initEmptyStore = function(store) {
 
 global.snackbarStoreMock = function() {
   return {
-    message: [],
+    message: null,
+    _callback: null,
+
+    callback: function(callback) {
+      this._callback = callback;
+    },
 
     dispatch: function(action) {
       if (action.type === 'SHOW_SNACKBAR') {
@@ -109,6 +114,13 @@ global.snackbarStoreMock = function() {
           message: action.message,
           type: action.messageType
         };
+
+        if (this._callback) {
+          var self = this;
+          window.setTimeout(function() {
+            self._callback(self.message);
+          }, 100);
+        }
       }
     }
   };
@@ -162,10 +174,10 @@ global.simulateChange = function(selector, value) {
   }
 };
 
-global.afterAjax = function(component, callback) {
+global.afterAjax = function(callback) {
   window.setTimeout(function() {
-    component.forceUpdate(callback);
-  }, 100);
+    callback();
+  }, 200);
 };
 
 global.onElement = function(selector, callback) {
