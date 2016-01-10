@@ -10,7 +10,7 @@ let component = null;
 let snackbarStore = null;
 
 describe("Register Form", function() {
-    beforeEach(function() {
+  beforeEach(function() {
     snackbarStore = window.snackbarStoreMock();
     snackbar.init(snackbarStore);
     window.initModal(modal);

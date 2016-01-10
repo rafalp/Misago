@@ -24,7 +24,7 @@ def admin_index(request):
         'threads': Thread.objects.count(),
         'posts': Post.objects.count(),
         'users': User.objects.count(),
-        'inactive_users': User.objects.filter(**inactive_users)
+        'inactive_users': User.objects.filter(**inactive_users).count()
     }
 
     return render(request, 'misago/admin/index.html', {
