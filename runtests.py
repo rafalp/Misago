@@ -95,13 +95,20 @@ DATABASES = {
     setup()
     setup_test_environment()
 
+    verbosity = 1
+
     if __name__ == '__main__':
         args = sys.argv[1:]
     else:
         args = []
 
+    verbosity = 1  
+    if '--verbose' in args:
+        verbosity = 2
+        args.remove('--verbose')
+
     from django.core.management.commands import test
-    sys.exit(test.Command().execute(*args, verbosity=1, noinput=True))
+    sys.exit(test.Command().execute(*args, verbosity=verbosity, noinput=True))
 
 
 if __name__ == '__main__':
