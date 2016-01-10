@@ -11,7 +11,7 @@ class AjaxError(Exception):
 class Banned(PermissionDenied):
     def __init__(self, ban=None):
         if ban:
-            self.ban = ban.get_serialized_message()
+            self.ban = ban
 
 
 class ExplicitFirstPage(Exception):

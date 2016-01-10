@@ -66,9 +66,6 @@ class UserViewSet(viewsets.GenericViewSet):
         return users_count
 
     def list(self, request):
-        import time
-        time.sleep(10)
-
         allow_browse_users_list(request.user)
 
         response_dict = {

@@ -27,7 +27,7 @@ export default function(ban, changeState) {
     document.getElementById('page-mount')
   );
 
-  if (typeof changeState === 'undefined' || !changeState) {
+  if (typeof changeState === 'undefined' || changeState) {
     let forumName = misago.get('SETTINGS').forum_name;
     document.title = gettext("You are banned") + ' | ' + forumName;
     window.history.pushState({}, "", misago.get('BANNED_URL'));

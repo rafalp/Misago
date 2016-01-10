@@ -95,11 +95,15 @@ describe("Modal", function() {
       assert.ok(element.length, "component was rendered");
       modal.hide();
 
-      window.setTimeout(function() {
-        let element = $('#modal-mount');
-        assert.equal(element.children().length, 0, "modal was emptied");
-        done();
-      }, 600);
+      let wait = function() {
+        if($('#modal-mount').children().length === 0) {
+          assert.ok(true, "modal was emptied");
+          done();
+        } else {
+          window.setTimeout(wait, 100);
+        }
+      };
+      wait();
     }, 400);
   });
 });

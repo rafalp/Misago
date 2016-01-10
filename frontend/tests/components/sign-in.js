@@ -86,7 +86,7 @@ describe("Sign In", function() {
 
     $.mockjax({
       url: '/test-api/auth/',
-      status: 500,
+      status: 500
     });
 
     window.simulateChange('#id_username', 'SomeFake');

@@ -92,7 +92,7 @@ def handle_api_exception(exception, context):
     response = rest_exception_handler(exception, context)
     if response:
         if isinstance(exception, Banned):
-            response.data['ban'] = exception.ban
+            response.data['ban'] = exception.ban.get_serialized_message()
         elif isinstance(exception, PermissionDenied):
             try:
                 response.data['detail'] = exception.args[0]

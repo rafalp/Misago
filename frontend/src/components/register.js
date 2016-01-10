@@ -70,10 +70,10 @@ export class RegisterForm extends Form {
 
   handleError(rejection) {
     if (rejection.status === 400) {
-      snackbar.error(gettext("Form contains errors."));
       this.setState({
         'errors': Object.assign({}, this.state.errors, rejection)
       });
+      snackbar.error(gettext("Form contains errors."));
     } else if (rejection.status === 403 && rejection.ban) {
       showBannedPage(rejection.ban);
       modal.hide();

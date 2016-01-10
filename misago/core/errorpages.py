@@ -18,7 +18,7 @@ def _error_page(request, code, message=None):
 
 
 def banned(request, ban):
-    request.frontend_context['ban'] = ban
+    request.frontend_context['BAN_MESSAGE'] = ban.get_serialized_message()
 
     return render(request, 'misago/errorpages/banned.html', {
             'ban': ban

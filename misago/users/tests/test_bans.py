@@ -127,6 +127,15 @@ class UserBansTests(TestCase):
         self.assertIsNone(get_user_ban(self.user))
         self.assertFalse(self.user.ban_cache.is_banned)
 
+    def test_expired_non_flagged_ban(self):
+        """user is not caught by expired but checked ban"""
+        Ban.objects.create(banned_value='bo*',
+                           expires_on=timezone.now() - timedelta(days=7))
+        Ban.objects.update(is_checked=True)
+
+        self.assertIsNone(get_user_ban(self.user))
+        self.assertFalse(self.user.ban_cache.is_banned)
+
 
 class FakeRequest(object):
     def __init__(self):

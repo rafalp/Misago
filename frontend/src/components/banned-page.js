@@ -39,7 +39,9 @@ export default class extends React.Component {
           </div>
           <div className="message-body">
             {this.getReasonMessage()}
-            <p className="message-footnote">{this.getExpirationMessage()}</p>
+            <p className="message-footnote">
+              {this.getExpirationMessage()}
+            </p>
           </div>
         </div>
       </div>
