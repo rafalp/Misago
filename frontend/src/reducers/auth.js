@@ -13,9 +13,10 @@ export function signIn(user) {
   };
 }
 
-export function signOut() {
+export function signOut(soft=false) {
   return {
-    type: SIGN_OUT
+    type: SIGN_OUT,
+    soft
   };
 }
 
@@ -30,7 +31,7 @@ export default function auth(state=initialState, action=null) {
       return Object.assign({}, state, {
         isAuthenticated: false,
         isAnonymous: true,
-        signedOut: true
+        signedOut: !action.soft
       });
 
     default:

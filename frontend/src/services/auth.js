@@ -52,6 +52,13 @@ export class Auth {
       isAuthenticated: false
     });
   }
+
+  softSignOut() {
+    this._store.dispatch(signOut(true));
+    this._local.set('auth', {
+      isAuthenticated: false
+    });
+  }
 }
 
 export default new Auth();

@@ -1,4 +1,5 @@
 import React from 'react'; // jshint ignore:line
+import ReactDOM from 'react-dom'; // jshint ignore:line
 import misago from 'misago/index';
 import Button from 'misago/components/button'; // jshint ignore:line
 import Form from 'misago/components/form';
@@ -7,7 +8,7 @@ import snackbar from 'misago/services/snackbar';
 import * as validators from 'misago/utils/validators';
 import showBannedPage from 'misago/utils/banned-page';
 
-export class RequestLinkForm extends Form {
+export class RequestResetForm extends Form {
   constructor(props) {
     super(props);
 
@@ -34,7 +35,7 @@ export class RequestLinkForm extends Form {
   }
 
   send() {
-    return ajax.post(misago.get('SEND_ACTIVATION_API'), {
+    return ajax.post(misago.get('SEND_PASSWORD_RESET_API'), {
       'email': this.state.email
     });
   }
@@ -44,8 +45,8 @@ export class RequestLinkForm extends Form {
   }
 
   handleError(rejection) {
-    if (['already_active', 'inactive_admin'].indexOf(rejection.code) > -1) {
-      snackbar.info(rejection.detail);
+    if (['inactive_user', 'inactive_admin'].indexOf(rejection.code) > -1) {
+      this.props.showInactivePage(rejection);
     } else if (rejection.status === 403 && rejection.ban) {
       showBannedPage(rejection.ban);
     } else {
@@ -55,7 +56,7 @@ export class RequestLinkForm extends Form {
 
   render() {
     /* jshint ignore:start */
-    return <div className="well well-form well-form-request-activation-link">
+    return <div className="well well-form well-form-request-password-reset">
       <form onSubmit={this.handleSubmit}>
         <div className="form-group">
           <div className="control-input">
@@ -82,14 +83,14 @@ export class RequestLinkForm extends Form {
 
 export class LinkSent extends React.Component {
   getMessage() {
-    return interpolate(gettext("Activation link was sent to %(email)s"), {
+    return interpolate(gettext("Reset password link was sent to %(email)s"), {
       email: this.props.user.email
     }, true);
   }
 
   render() {
     /* jshint ignore:start */
-    return <div className="well well-form well-form-request-activation-link well-done">
+    return <div className="well well-form well-form-request-password-reset well-done">
       <div className="done-message">
         <div className="message-icon">
           <span className="material-icon">
@@ -105,6 +106,50 @@ export class LinkSent extends React.Component {
                 onClick={this.props.callback}>
           {gettext("Request another link")}
         </button>
+      </div>
+    </div>;
+    /* jshint ignore:end */
+  }
+}
+
+export class AccountInactivePage extends React.Component {
+  getActivateButton() {
+    if (this.props.activation === 'inactive_user') {
+      /* jshint ignore:start */
+      return <p>
+        <a href={misago.get('REQUEST_ACTIVATION_URL')}>
+          {gettext("Activate your account.")}
+        </a>
+      </p>;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
+  render() {
+    /* jshint ignore:start */
+    return <div className="page page-message page-message-info page-forgotten-password-inactive">
+      <div className="container">
+        <div className="message-panel">
+
+          <div className="message-icon">
+            <span className="material-icon">
+              info_outline
+            </span>
+          </div>
+
+          <div className="message-body">
+            <p className="lead">
+              {gettext("Your account is inactive.")}
+            </p>
+            <p>
+              {this.props.message}
+            </p>
+            {this.getActivateButton()}
+          </div>
+
+        </div>
       </div>
     </div>;
     /* jshint ignore:end */
@@ -132,6 +177,14 @@ export default class extends React.Component {
       complete: false
     });
   }
+
+  showInactivePage(apiResponse) {
+    ReactDOM.render(
+      <AccountInactivePage activation={apiResponse.code}
+                           message={apiResponse.detail} />,
+      document.getElementById('page-mount')
+    );
+  }
   /* jshint ignore:end */
 
   render() {
@@ -139,7 +192,8 @@ export default class extends React.Component {
     if (this.state.complete) {
       return <LinkSent user={this.state.complete} callback={this.reset} />;
     } else {
-      return <RequestLinkForm callback={this.complete} />;
+      return <RequestResetForm callback={this.complete}
+                               showInactivePage={this.showInactivePage} />;
     };
     /* jshint ignore:end */
   }

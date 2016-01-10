@@ -115,7 +115,8 @@ describe("Auth", function() {
       },
       dispatch(action) {
         assert.deepEqual(action, {
-          type: SIGN_OUT
+          type: SIGN_OUT,
+          soft: false
         }, "action was dispatched");
         done();
       }
@@ -167,5 +168,21 @@ describe("Auth Reducer", function() {
       signedIn: false,
       signedOut: true
     }, "reducer changed store state for sign out");
+  });
+
+  it("soflty signs user out", function() {
+    let state = {
+      isAuthenticated: true,
+      isAnonymous: true,
+      signedIn: false,
+      signedOut: true
+    };
+
+    assert.deepEqual(reducer(state, signOut(true)), {
+      isAuthenticated: false,
+      isAnonymous: true,
+      signedIn: false,
+      signedOut: false
+    }, "reducer changed store state for soft sign out");
   });
 });
