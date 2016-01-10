@@ -1,11 +1,10 @@
 {% load i18n %}
-{% if user.is_anonymous %}
 <form id="hidden-login-form" method="post" action="{% url LOGIN_URL %}" style="display: none;">
   {% csrf_token %}
   <input name="redirect_to" type="text">
   <input type="submit" id="signin-button" value="{% trans "Sign in" %}">
 </form>
-{% else %}
+{% if user.is_authenticated %}
 <form id="hidden-logout-form" method="post" action="{% url LOGOUT_URL %}" style="display: none;">
   {% csrf_token %}
   <input type="submit" id="signin-button" value="{% trans "Log out" %}">
