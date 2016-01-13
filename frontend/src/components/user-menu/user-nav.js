@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
+import ChangeAvatarModal, { select } from 'misago/components/change-avatar/root'; // jshint ignore:line
 import misago from 'misago/index'; // jshint ignore:line
 import dropdown from 'misago/services/mobile-navbar-dropdown';
+import modal from 'misago/services/modal';
 
 export class UserMenu extends React.Component {
   logout() {
@@ -10,6 +12,10 @@ export class UserMenu extends React.Component {
     if (decision) {
       $('#hidden-logout-form').submit();
     }
+  }
+
+  changeAvatar() {
+    modal.show(connect(select)(ChangeAvatarModal));
   }
 
   render() {
@@ -33,7 +39,7 @@ export class UserMenu extends React.Component {
         </a>
       </li>
       <li>
-        <button type="button" className="btn-link">
+        <button type="button" className="btn-link" onClick={this.changeAvatar}>
           <span className="material-icon">face</span>
           {gettext("Change avatar")}
         </button>

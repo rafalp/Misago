@@ -1,0 +1,48 @@
+//
+// Change Avatar Modal
+// --------------------------------------------------
+
+// Index page
+.modal-change-avatar .modal-avatar-index {
+  .avatar-preview {
+    border-radius: @border-radius-large;
+    margin: 0px auto;
+    overflow: hidden;
+    position: relative;
+
+    width: 200px;
+    height: 200px;
+
+    .loader {
+      display: none;
+
+      position: absolute;
+      top: 50px;
+      height: 100px;
+
+      .loader-spinning-wheel {
+        border-width: 10px;
+        border-color: #fff;
+        border-left-color: transparent;
+        border-right-color: transparent;
+
+        width: 100px;
+        height: 100px;
+      }
+    }
+
+    &.preview-loading {
+      img {
+        .opacity(0.33);
+      }
+
+      .loader {
+        display: block;
+      }
+    }
+  }
+
+  .btn {
+    text-align: left;
+  }
+}

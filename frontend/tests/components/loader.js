@@ -3,7 +3,7 @@ import React from 'react'; // jshint ignore:line
 import ReactDOM from 'react-dom'; // jshint ignore:line
 import Loader from 'misago/components/loader'; // jshint ignore:line
 
-describe("Snackbar", function() {
+describe("Loader", function() {
   afterEach(function() {
     window.emptyTestContainers();
   });
@@ -16,7 +16,7 @@ describe("Snackbar", function() {
     );
     /* jshint ignore:end */
 
-    assert.ok($('#test-mount .loader-compact .loader-spinning-wheel').length,
+    assert.ok($('#test-mount .loader .loader-spinning-wheel').length,
       "component renders");
   });
 });

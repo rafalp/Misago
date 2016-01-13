@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.urlresolvers import reverse
 
 from rest_framework import serializers
 
@@ -20,9 +21,11 @@ __all__ = [
 
 
 class AuthenticatedUserSerializer(serializers.ModelSerializer):
-    absolute_url = serializers.SerializerMethodField()
     acl = serializers.SerializerMethodField()
     rank = RankSerializer(many=False, read_only=True)
+
+    absolute_url = serializers.SerializerMethodField()
+    avatar_api_url = serializers.SerializerMethodField()
 
     class Meta:
         model = get_user_model()
@@ -47,6 +50,7 @@ class AuthenticatedUserSerializer(serializers.ModelSerializer):
             'posts',
             'acl',
             'absolute_url',
+            'avatar_api_url'
         )
 
     def get_acl(self, obj):
@@ -54,6 +58,9 @@ class AuthenticatedUserSerializer(serializers.ModelSerializer):
 
     def get_absolute_url(self, obj):
         return obj.get_absolute_url()
+
+    def get_avatar_api_url(self, obj):
+        return reverse('misago:api:user-avatar', kwargs={'pk': obj.pk})
 
 
 class AnonymousUserSerializer(serializers.Serializer):

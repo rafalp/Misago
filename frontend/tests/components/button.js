@@ -70,7 +70,7 @@ describe("Button", function() {
     );
     /* jshint ignore:end */
 
-    let element = $('#test-mount button>.loader-compact');
+    let element = $('#test-mount button>.loader');
     assert.ok(element.length, "component rendered with loader");
     assert.equal(element.parent().attr('disabled'), 'disabled', "component is disabled");
   });
