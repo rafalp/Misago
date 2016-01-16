@@ -5,7 +5,7 @@ import * as testUtils from 'misago/utils/test-utils';
 
 describe("Form Group", function() {
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it('renders', function() {

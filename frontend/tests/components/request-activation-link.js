@@ -25,7 +25,7 @@ describe("Request Activation Link Form", function() {
   });
 
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
     testUtils.snackbarClear(snackbar);
     $.mockjax.clear();
   });
@@ -178,7 +178,7 @@ describe("Request Activation Link Form", function() {
 
 describe("Activation Link Sent", function() {
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it("renders message", function(done) { // jshint ignore:line

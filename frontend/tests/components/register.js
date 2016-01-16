@@ -42,7 +42,7 @@ describe("Register Form", function() {
 
   afterEach(function() {
     delete window.zxcvbn;
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
     testUtils.snackbarClear(snackbar);
     $.mockjax.clear();
   });
@@ -208,7 +208,7 @@ describe("Register Form", function() {
 
 describe("Register Complete", function() {
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it("renders user-activated message", function() {

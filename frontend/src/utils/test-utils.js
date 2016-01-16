@@ -13,7 +13,7 @@ export function render(containerOrComponent, Component) {
   }
 }
 
-export function emptyTestContainers() {
+export function unmountComponents() {
   ReactDOM.unmountComponentAtNode(document.getElementById('dropdown-mount'));
   ReactDOM.unmountComponentAtNode(document.getElementById('modal-mount'));
   ReactDOM.unmountComponentAtNode(document.getElementById('page-mount'));

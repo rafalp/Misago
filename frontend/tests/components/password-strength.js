@@ -6,7 +6,7 @@ import * as testUtils from 'misago/utils/test-utils';
 
 describe("Password Strength", function() {
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
     delete window.zxcvbn;
   });
 

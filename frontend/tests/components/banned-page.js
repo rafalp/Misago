@@ -6,7 +6,7 @@ import * as testUtils from 'misago/utils/test-utils';
 
 describe("Banned page", function() {
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it('renders', function() {

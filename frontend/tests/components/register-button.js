@@ -24,7 +24,7 @@ describe("RegisterButton", function() {
 
   afterEach(function() {
     delete window.zxcvbn;
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it('renders', function() {

@@ -5,7 +5,7 @@ import * as testUtils from 'misago/utils/test-utils';
 
 describe("Auth Message", function() {
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it('renders stateless', function() {

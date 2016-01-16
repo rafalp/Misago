@@ -23,7 +23,7 @@ describe("GuestMenu", function() {
   });
 
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it('renders', function() {
@@ -57,7 +57,7 @@ describe("GuestNav", function() {
   });
 
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it('renders', function() {
@@ -86,7 +86,7 @@ describe("CompactGuestNav", function() {
   });
 
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it('renders', function() {

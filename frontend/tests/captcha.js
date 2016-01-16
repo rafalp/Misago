@@ -37,7 +37,7 @@ describe("QACaptcha", function() {
   });
 
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
     testUtils.snackbarClear(snackbar);
     $.mockjax.clear();
   });
@@ -166,7 +166,7 @@ describe("ReCaptcha", function() {
   afterEach(function() {
     delete window.grecaptcha;
 
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
     testUtils.snackbarClear(snackbar);
     $.mockjax.clear();
   });

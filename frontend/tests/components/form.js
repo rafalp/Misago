@@ -44,7 +44,7 @@ describe("Form", function() {
   });
 
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it("validates individual field", function() {

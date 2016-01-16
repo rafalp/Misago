@@ -32,7 +32,7 @@ describe('Show Banned Page', function() {
   });
 
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it("renders banned page", function(done) {

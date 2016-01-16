@@ -25,7 +25,7 @@ describe("Request Password Reset Form", function() {
   });
 
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
     testUtils.snackbarClear(snackbar);
     $.mockjax.clear();
   });
@@ -186,7 +186,7 @@ describe("Request Password Reset Form", function() {
 
 describe("Reset Link Sent", function() {
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it("renders message", function(done) { // jshint ignore:line
@@ -221,7 +221,7 @@ describe("Account Inactive Page", function() {
   });
 
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it("renders page for user-activated user", function() {

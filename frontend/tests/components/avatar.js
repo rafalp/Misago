@@ -5,7 +5,7 @@ import * as testUtils from 'misago/utils/test-utils';
 
 describe("Avatar", function() {
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it('renders guest avatar', function() {

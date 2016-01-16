@@ -37,7 +37,7 @@ describe("Dropdown", function() {
   });
 
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it('shows component', function(done) {

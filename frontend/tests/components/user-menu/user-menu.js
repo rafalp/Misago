@@ -20,7 +20,7 @@ describe("UserMenu", function() {
   });
 
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it('renders', function() {
@@ -43,7 +43,7 @@ describe("UserNav", function() {
   });
 
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it('renders', function() {
@@ -78,7 +78,7 @@ describe("CompactUserNav", function() {
   });
 
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it('renders', function() {

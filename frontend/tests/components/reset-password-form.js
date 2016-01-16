@@ -27,7 +27,7 @@ describe("Reset Password Form", function() {
   });
 
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
     testUtils.snackbarClear(snackbar);
     $.mockjax.clear();
   });
@@ -168,7 +168,7 @@ describe("Password Changed Page", function() {
   });
 
   afterEach(function() {
-    testUtils.emptyTestContainers();
+    testUtils.unmountComponents();
   });
 
   it("renders", function() {

@@ -186,12 +186,21 @@ gulp.task('vendorsources', function() {
     .pipe(gulp.dest(misago + 'js'));
 });
 
-gulp.task('copyvendors', function() {
+gulp.task('copyvendors', ['copyzxcvbn'], function() {
   return gulp.src([
-      'zxcvbn/dist/*'
+      'cropit/dist/jquery.cropit.js',
+      'dropzone/dist/dropzone.js'
     ].map(function(item) {
       return 'node_modules/' + item;
     }))
+    .pipe(sourcemaps.init())
+    .pipe(uglify())
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(misago + 'js'));
+});
+
+gulp.task('copyzxcvbn', function() {
+  return gulp.src('node_modules/zxcvbn/dist/*')
     .pipe(gulp.dest(misago + 'js'));
 });
 

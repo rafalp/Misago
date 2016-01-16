@@ -4,6 +4,8 @@ import Loader from 'misago/components/modal-loader'; // jshint ignore:line
 import misago from 'misago/index';
 import { updateAvatar } from 'misago/reducers/users'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
+import cropit from 'misago/services/cropit';
+import dropzone from 'misago/services/dropzone';
 import store from 'misago/services/store'; // jshint ignore:line
 
 export class ChangeAvatarError extends React.Component {
@@ -39,7 +41,9 @@ export class ChangeAvatarError extends React.Component {
 export default class extends React.Component {
   componentDidMount() {
     Promise.all([
-      ajax.get(misago.get('user').avatar_api_url)
+      ajax.get(misago.get('user').avatar_api_url),
+      cropit.load(),
+      dropzone.load()
     ]).then((resolutions) => {
       this.setState({
         'component': AvatarIndex,
