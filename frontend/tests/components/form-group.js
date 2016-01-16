@@ -14,8 +14,7 @@ describe("Form Group", function() {
       <FormGroup label="Lorem Ipsum"
                  for="test_input">
         <input name="lorem" type="text" />
-      </FormGroup>,
-      'test-mount'
+      </FormGroup>
     );
     /* jshint ignore:end */
 
@@ -39,8 +38,7 @@ describe("Form Group", function() {
                  controlClass="test-control"
                  for="test_input">
         <input name="lorem" type="text" />
-      </FormGroup>,
-      'test-mount'
+      </FormGroup>
     );
     /* jshint ignore:end */
 
@@ -60,8 +58,7 @@ describe("Form Group", function() {
                  for="test_input"
                  validation={null}>
         <input name="lorem" type="text" />
-      </FormGroup>,
-      'test-mount'
+      </FormGroup>
     );
     /* jshint ignore:end */
 
@@ -84,8 +81,7 @@ describe("Form Group", function() {
                  for="test_input"
                  validation={["First issue.", "Second issue."]}>
         <input name="lorem" type="text" />
-      </FormGroup>,
-      'test-mount'
+      </FormGroup>
     );
     /* jshint ignore:end */
 
@@ -119,8 +115,7 @@ describe("Form Group", function() {
                  for="test_input"
                  helpText="Lorem ipsum dolor met.">
         <input name="lorem" type="text" />
-      </FormGroup>,
-      'test-mount'
+      </FormGroup>
     );
     /* jshint ignore:end */
 
@@ -139,8 +134,7 @@ describe("Form Group", function() {
                  for="test_input"
                  extra={<p id="row-extra">Extra!!!</p>}>
         <input name="lorem" type="text" />
-      </FormGroup>,
-      'test-mount'
+      </FormGroup>
     );
     /* jshint ignore:end */
 

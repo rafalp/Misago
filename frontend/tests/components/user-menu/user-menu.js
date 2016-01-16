@@ -15,7 +15,7 @@ describe("UserMenu", function() {
     testUtils.initDropdown(dropdown);
 
     /* jshint ignore:start */
-    testUtils.render(<UserMenu user={misago._context.user} />, 'test-mount');
+    testUtils.render(<UserMenu user={misago._context.user} />);
     /* jshint ignore:end */
   });
 
@@ -38,7 +38,7 @@ describe("UserNav", function() {
     testUtils.initDropdown(dropdown);
 
     /* jshint ignore:start */
-    testUtils.render(<UserNav user={misago._context.user} />, 'test-mount');
+    testUtils.render(<UserNav user={misago._context.user} />);
     /* jshint ignore:end */
   });
 
@@ -73,10 +73,7 @@ describe("CompactUserNav", function() {
     testUtils.initDropdown(dropdown);
 
     /* jshint ignore:start */
-    testUtils.render(
-      <CompactUserNav user={misago._context.user} />,
-      'test-mount'
-    );
+    testUtils.render(<CompactUserNav user={misago._context.user} />);
     /* jshint ignore:end */
   });
 

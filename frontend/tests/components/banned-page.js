@@ -12,8 +12,7 @@ describe("Banned page", function() {
   it('renders', function() {
     /* jshint ignore:start */
     testUtils.render(
-      <BannedPage message={{html: '<p>Lorem ipsum!</p>'}} expires={null} />,
-      'test-mount'
+      <BannedPage message={{html: '<p>Lorem ipsum!</p>'}} expires={null} />
     );
     /* jshint ignore:end */
 
@@ -26,8 +25,7 @@ describe("Banned page", function() {
   it('renders with fallback message', function() {
     /* jshint ignore:start */
     testUtils.render(
-      <BannedPage message={{plain: 'Lorem ipsum plain!'}} expires={null} />,
-      'test-mount'
+      <BannedPage message={{plain: 'Lorem ipsum plain!'}} expires={null} />
     );
     /* jshint ignore:end */
 
@@ -40,8 +38,7 @@ describe("Banned page", function() {
   it('renders with permanent expiration date', function() {
     /* jshint ignore:start */
     testUtils.render(
-      <BannedPage message={{plain: 'Lorem ipsum plain!'}} expires={null} />,
-      'test-mount'
+      <BannedPage message={{plain: 'Lorem ipsum plain!'}} expires={null} />
     );
     /* jshint ignore:end */
 
@@ -55,8 +52,7 @@ describe("Banned page", function() {
     /* jshint ignore:start */
     let expires = moment().add(7, 'days');
     testUtils.render(
-      <BannedPage message={{plain: 'Lorem ipsum plain!'}} expires={expires} />,
-      'test-mount'
+      <BannedPage message={{plain: 'Lorem ipsum plain!'}} expires={expires} />
     );
     /* jshint ignore:end */
 
@@ -70,8 +66,7 @@ describe("Banned page", function() {
     /* jshint ignore:start */
     let expires = moment().subtract(7, 'days');
     testUtils.render(
-      <BannedPage message={{plain: 'Lorem ipsum plain!'}} expires={expires} />,
-      'test-mount'
+      <BannedPage message={{plain: 'Lorem ipsum plain!'}} expires={expires} />
     );
     /* jshint ignore:end */
 

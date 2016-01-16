@@ -18,7 +18,7 @@ describe("GuestMenu", function() {
     };
 
     /* jshint ignore:start */
-    testUtils.render(<GuestMenu />, 'test-mount');
+    testUtils.render(<GuestMenu />);
     /* jshint ignore:end */
   });
 
@@ -52,7 +52,7 @@ describe("GuestNav", function() {
     };
 
     /* jshint ignore:start */
-    testUtils.render(<GuestNav />, 'test-mount');
+    testUtils.render(<GuestNav />);
     /* jshint ignore:end */
   });
 
@@ -81,7 +81,7 @@ describe("CompactGuestNav", function() {
     testUtils.initDropdown(dropdown);
 
     /* jshint ignore:start */
-    testUtils.render(<CompactGuestNav />, 'test-mount');
+    testUtils.render(<CompactGuestNav />);
     /* jshint ignore:end */
   });
 

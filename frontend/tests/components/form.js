@@ -39,7 +39,7 @@ class TestForm extends Form { // jshint ignore:line
 describe("Form", function() {
   beforeEach(function() {
     /* jshint ignore:start */
-    form = testUtils.render(<TestForm />, 'test-mount');
+    form = testUtils.render(<TestForm />);
     /* jshint ignore:end */
   });
 

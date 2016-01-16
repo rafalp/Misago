@@ -25,7 +25,7 @@ describe("Sign In", function() {
     };
 
     /* jshint ignore:start */
-    testUtils.render(<SignIn />, 'test-mount');
+    testUtils.render(<SignIn />);
     /* jshint ignore:end */
   });
 

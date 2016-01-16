@@ -10,7 +10,7 @@ describe("Auth Message", function() {
 
   it('renders stateless', function() {
     /* jshint ignore:start */
-    testUtils.render(<AuthMessage />, 'test-mount');
+    testUtils.render(<AuthMessage />);
     /* jshint ignore:end */
 
     let element = $('#test-mount .auth-message');
@@ -23,8 +23,7 @@ describe("Auth Message", function() {
     testUtils.render(
       <AuthMessage user={{username: 'Boberson'}}
                    signedOut={true}
-                   signedIn={false} />,
-      'test-mount'
+                   signedIn={false} />
     );
     /* jshint ignore:end */
 
@@ -38,8 +37,7 @@ describe("Auth Message", function() {
     testUtils.render(
       <AuthMessage user={null}
                    signedOut={false}
-                   signedIn={{username: 'Boberson'}} />,
-      'test-mount'
+                   signedIn={{username: 'Boberson'}} />
     );
     /* jshint ignore:end */
 

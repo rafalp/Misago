@@ -146,8 +146,7 @@ describe("QACaptcha", function() {
               }
             }
           })}
-        </div>,
-        'test-mount'
+        </div>
       );
       /* jshint ignore:end */
 
@@ -241,8 +240,7 @@ describe("ReCaptcha", function() {
               }
             }
           })}
-        </div>,
-        'test-mount'
+        </div>
       );
       /* jshint ignore:end */
 

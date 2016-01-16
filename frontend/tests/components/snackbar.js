@@ -10,10 +10,7 @@ describe("Snackbar", function() {
 
   it('renders', function() {
     /* jshint ignore:start */
-    testUtils.render(
-      <Snackbar isVisible={false} message="" type="info" />,
-      'test-mount'
-    );
+    testUtils.render(<Snackbar isVisible={false} message="" type="info" />);
     /* jshint ignore:end */
 
     assert.ok($('.alerts-snackbar').hasClass('out'), "component is hidden");
@@ -21,8 +18,7 @@ describe("Snackbar", function() {
     /* jshint ignore:start */
     testUtils.render(
       <Snackbar isVisible={true} type="success"
-                message="Lorem ipsum dolor met." />,
-      'test-mount'
+                message="Lorem ipsum dolor met." />
     );
     /* jshint ignore:end */
 
@@ -37,8 +33,7 @@ describe("Snackbar", function() {
     /* jshint ignore:start */
     testUtils.render(
       <Snackbar isVisible={true} type="info"
-                message="Lorem ipsum dolor met." />,
-      'test-mount'
+                message="Lorem ipsum dolor met." />
     );
     /* jshint ignore:end */
     assert.ok($('.alerts-snackbar p').hasClass('alert-info'),
@@ -47,8 +42,7 @@ describe("Snackbar", function() {
     /* jshint ignore:start */
     testUtils.render(
       <Snackbar isVisible={true} type="warning"
-                message="Lorem ipsum dolor met." />,
-      'test-mount'
+                message="Lorem ipsum dolor met." />
     );
     /* jshint ignore:end */
     assert.ok($('.alerts-snackbar p').hasClass('alert-warning'),
@@ -57,8 +51,7 @@ describe("Snackbar", function() {
     /* jshint ignore:start */
     testUtils.render(
       <Snackbar isVisible={true} type="error"
-                message="Lorem ipsum dolor met." />,
-      'test-mount'
+                message="Lorem ipsum dolor met." />
     );
     /* jshint ignore:end */
     assert.ok($('.alerts-snackbar p').hasClass('alert-danger'),

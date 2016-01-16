@@ -30,8 +30,7 @@ describe("Password Strength", function() {
 
     /* jshint ignore:start */
     testUtils.render(
-      <PasswordStrength password="very-weak" inputs={['a', 'b', 'c']} />,
-      'test-mount'
+      <PasswordStrength password="very-weak" inputs={['a', 'b', 'c']} />
     );
     /* jshint ignore:end */
 
@@ -72,8 +71,7 @@ describe("Password Strength", function() {
 
     /* jshint ignore:start */
     testUtils.render(
-      <PasswordStrength password="weak" inputs={['a', 'b', 'c']} />,
-      'test-mount'
+      <PasswordStrength password="weak" inputs={['a', 'b', 'c']} />
     );
     /* jshint ignore:end */
 
@@ -114,8 +112,7 @@ describe("Password Strength", function() {
 
     /* jshint ignore:start */
     testUtils.render(
-      <PasswordStrength password="average" inputs={['a', 'b', 'c']} />,
-      'test-mount'
+      <PasswordStrength password="average" inputs={['a', 'b', 'c']} />
     );
     /* jshint ignore:end */
 
@@ -156,8 +153,7 @@ describe("Password Strength", function() {
 
     /* jshint ignore:start */
     testUtils.render(
-      <PasswordStrength password="stronk" inputs={['a', 'b', 'c']} />,
-      'test-mount'
+      <PasswordStrength password="stronk" inputs={['a', 'b', 'c']} />
     );
     /* jshint ignore:end */
 
@@ -198,8 +194,7 @@ describe("Password Strength", function() {
 
     /* jshint ignore:start */
     testUtils.render(
-      <PasswordStrength password="very-stronk" inputs={['a', 'b', 'c']} />,
-      'test-mount'
+      <PasswordStrength password="very-stronk" inputs={['a', 'b', 'c']} />
     );
     /* jshint ignore:end */
 

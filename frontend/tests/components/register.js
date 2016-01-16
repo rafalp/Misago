@@ -36,10 +36,7 @@ describe("Register Form", function() {
     };
 
     /* jshint ignore:start */
-    component = testUtils.render(
-      <RegisterForm />,
-      'test-mount'
-    );
+    component = testUtils.render(<RegisterForm />);
     /* jshint ignore:end */
   });
 
@@ -188,10 +185,7 @@ describe("Register Form", function() {
       done();
     };
 
-    component = testUtils.render(
-      <RegisterForm callback={callback}/>,
-      'test-mount'
-    );
+    component = testUtils.render(<RegisterForm callback={callback}/>);
     /* jshint ignore:end */
 
     $.mockjax({
@@ -222,8 +216,7 @@ describe("Register Complete", function() {
     testUtils.render(
       <RegisterComplete activation="user"
                         username="Bob"
-                        email="bob@boberson.com" />,
-      'test-mount'
+                        email="bob@boberson.com" />
     );
     /* jshint ignore:end */
 
@@ -244,8 +237,7 @@ describe("Register Complete", function() {
     testUtils.render(
       <RegisterComplete activation="admin"
                         username="Bob"
-                        email="bob@boberson.com" />,
-      'test-mount'
+                        email="bob@boberson.com" />
     );
     /* jshint ignore:end */
 

@@ -20,7 +20,7 @@ describe("Request Password Reset Form", function() {
     };
 
     /* jshint ignore:start */
-    testUtils.render(<RequestResetForm />, 'test-mount');
+    testUtils.render(<RequestResetForm />);
     /* jshint ignore:end */
   });
 
@@ -122,10 +122,7 @@ describe("Request Password Reset Form", function() {
       done();
     };
 
-    testUtils.render(
-      <RequestResetForm showInactivePage={showInactivePage}/>,
-      'test-mount'
-    );
+    testUtils.render(<RequestResetForm showInactivePage={showInactivePage} />);
     /* jshint ignore:end */
 
     testUtils.simulateChange('#test-mount input', 'lorem@ipsum.com');
@@ -179,7 +176,7 @@ describe("Request Password Reset Form", function() {
       done();
     };
 
-    testUtils.render(<RequestResetForm callback={callback} />, 'test-mount');
+    testUtils.render(<RequestResetForm callback={callback} />);
     /* jshint ignore:end */
 
     testUtils.simulateChange('#test-mount input', 'lorem@ipsum.com');
@@ -201,8 +198,7 @@ describe("Reset Link Sent", function() {
 
     testUtils.render(
       <LinkSent user={{email: 'bob@boberson.com' }}
-                callback={callback} />,
-      'test-mount'
+                callback={callback} />
     );
     /* jshint ignore:end */
 
@@ -232,8 +228,7 @@ describe("Account Inactive Page", function() {
     /* jshint ignore:start */
     testUtils.render(
       <AccountInactivePage activation='inactive_user'
-                           message="Lorem ipsum dolor met." />,
-      'test-mount'
+                           message="Lorem ipsum dolor met." />
     );
     /* jshint ignore:end */
 
@@ -253,8 +248,7 @@ describe("Account Inactive Page", function() {
     /* jshint ignore:start */
     testUtils.render(
       <AccountInactivePage activation='inactive_admin'
-                           message="Lorem ipsum dolor met admin." />,
-      'test-mount'
+                           message="Lorem ipsum dolor met admin." />
     );
     /* jshint ignore:end */
 

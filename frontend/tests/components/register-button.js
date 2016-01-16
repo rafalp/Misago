@@ -18,7 +18,7 @@ describe("RegisterButton", function() {
     testUtils.contextClear(misago);
 
     /* jshint ignore:start */
-    testUtils.render(<RegisterButton />, 'test-mount');
+    testUtils.render(<RegisterButton />);
     /* jshint ignore:end */
   });
 

@@ -10,12 +10,13 @@ describe("Avatar", function() {
 
   it('renders guest avatar', function() {
     /* jshint ignore:start */
-    testUtils.render(<Avatar size="42" />, 'test-mount');
+    testUtils.render(<Avatar size="42" />);
     /* jshint ignore:end */
 
     let element = $('#test-mount img.user-avatar');
     assert.ok(element.length, "component renders for guest");
-    assert.equal(element.attr('src'), '/test-runner/user-avatar/42.png', "component builds valid avatar url");
+    assert.equal(element.attr('src'), '/test-runner/user-avatar/42.png',
+      "component builds valid avatar url");
   });
 
   it('renders user avatar', function() {
@@ -25,7 +26,7 @@ describe("Avatar", function() {
       avatar_hash: 'aabbccddeeff'
     };
 
-    testUtils.render(<Avatar user={user} size="42" />, 'test-mount');
+    testUtils.render(<Avatar user={user} size="42" />);
     /* jshint ignore:end */
 
     let element = $('#test-mount img.user-avatar');

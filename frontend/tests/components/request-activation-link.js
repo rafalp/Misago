@@ -20,7 +20,7 @@ describe("Request Activation Link Form", function() {
     };
 
     /* jshint ignore:start */
-    testUtils.render(<RequestLinkForm />, 'test-mount');
+    testUtils.render(<RequestLinkForm />);
     /* jshint ignore:end */
   });
 
@@ -168,7 +168,7 @@ describe("Request Activation Link Form", function() {
       done();
     };
 
-    testUtils.render(<RequestLinkForm callback={callback} />, 'test-mount');
+    testUtils.render(<RequestLinkForm callback={callback} />);
     /* jshint ignore:end */
 
     testUtils.simulateChange('#test-mount input', 'lorem@ipsum.com');
@@ -188,7 +188,9 @@ describe("Activation Link Sent", function() {
       done();
     };
 
-    testUtils.render(<LinkSent user={{email: 'bob@boberson.com' }} callback={callback} />, 'test-mount');
+    testUtils.render(
+      <LinkSent user={{email: 'bob@boberson.com' }} callback={callback} />
+    );
     /* jshint ignore:end */
 
     let element = $('#test-mount .well-done');

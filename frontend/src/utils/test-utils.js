@@ -3,8 +3,14 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-addons-test-utils';
 
 // clean test mounts from components
-export function render(Component, containerId) {
-  return ReactDOM.render(Component, document.getElementById(containerId));
+export function render(containerOrComponent, Component) {
+  if (Component) {
+    return ReactDOM.render(
+      Component, document.getElementById(containerOrComponent + '-mount'));
+  } else {
+    return ReactDOM.render(
+      containerOrComponent, document.getElementById('test-mount'));
+  }
 }
 
 export function emptyTestContainers() {

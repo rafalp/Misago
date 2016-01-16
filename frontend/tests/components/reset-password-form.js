@@ -22,7 +22,7 @@ describe("Reset Password Form", function() {
     };
 
     /* jshint ignore:start */
-    testUtils.render(<ResetPasswordForm />, 'test-mount');
+    testUtils.render(<ResetPasswordForm />);
     /* jshint ignore:end */
   });
 
@@ -146,7 +146,7 @@ describe("Reset Password Form", function() {
       done();
     };
 
-    testUtils.render(<ResetPasswordForm callback={callback} />, 'test-mount');
+    testUtils.render(<ResetPasswordForm callback={callback} />);
     /* jshint ignore:end */
 
     testUtils.simulateChange('#test-mount input', 'Som3L33tP455');
@@ -163,7 +163,7 @@ describe("Password Changed Page", function() {
     };
 
     /* jshint ignore:start */
-    testUtils.render(<PasswordChangedPage user={{username: 'BobBoberson'}} />, 'test-mount');
+    testUtils.render(<PasswordChangedPage user={{username: 'BobBoberson'}} />);
     /* jshint ignore:end */
   });
 

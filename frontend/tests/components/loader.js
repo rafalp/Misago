@@ -10,7 +10,7 @@ describe("Loader", function() {
 
   it('renders', function() {
     /* jshint ignore:start */
-    testUtils.render(<Loader />, 'test-mount');
+    testUtils.render(<Loader />);
     /* jshint ignore:end */
 
     assert.ok($('#test-mount .loader .loader-spinning-wheel').length,
