@@ -239,7 +239,7 @@ export default class extends React.Component {
         'complete': apiResponse
       });
     }
-  }
+  };
   /* jshint ignore:end */
 
   render() {

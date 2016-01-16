@@ -1,7 +1,5 @@
 'use strict';
 
-require('cache-require-paths');
-
 var gulp = require('gulp');
 
 var babelify = require('babelify');
@@ -207,7 +205,10 @@ gulp.task('linttests', function() {
 
 gulp.task('test', ['linttests', 'lintsource'], function() {
   var mochify = require('mochify');
-  mochify('src/test-setup.js tests/**/*.js')
+  //mochify('src/test-setup.js tests/**/*.js', {
+  mochify('src/test-setup.js tests/navbar-dropdown.js', {
+      reporter: 'spec'
+    })
     .transform(babelify)
     .bundle();
 });

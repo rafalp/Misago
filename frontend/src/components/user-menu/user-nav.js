@@ -73,8 +73,9 @@ export class UserNav extends React.Component {
   }
 }
 
-export function selectUserMenu(store) {
-  return {user: store.auth.user};
+export function selectUserMenu(state) {
+  console.log(state);
+  return {user: state.auth.user};
 }
 
 export class CompactUserNav extends React.Component {

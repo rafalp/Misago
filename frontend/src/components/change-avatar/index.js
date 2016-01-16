@@ -48,11 +48,11 @@ export default class extends React.Component {
   /* jshint ignore:start */
   setGravatar = () => {
     this.callApi('gravatar');
-  }
+  };
 
   setGenerated = () => {
     this.callApi('generated');
-  }
+  };
   /* jshint ignore:end */
 
   getGravatarButton() {

@@ -55,7 +55,7 @@ export default class extends React.Component {
     this.setState({
       error
     });
-  }
+  };
 
   updateAvatar = (avatarHash, options) => {
     store.dispatch(updateAvatar(this.props.user, avatarHash));
@@ -64,13 +64,13 @@ export default class extends React.Component {
       'component': AvatarIndex,
       options
     });
-  }
+  };
 
   showIndex = () => {
     this.setState({
       'component': AvatarIndex
     });
-  }
+  };
   /* jshint ignore:end */
 
   getBody() {

@@ -37,6 +37,7 @@ describe('Ajax', function() {
     $.mockjax({
       url: '/working-url/',
       status: 200,
+      dataType: 'json',
       responseText: {
         'detail': 'ok'
       }

@@ -41,7 +41,7 @@ export default class extends React.Component {
         modal.show(RegisterModal);
       });
     }
-  }
+  };
   /* jshint ignore:end */
 
   getClassName() {

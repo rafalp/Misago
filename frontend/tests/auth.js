@@ -33,8 +33,14 @@ describe("Auth", function() {
       }
     };
 
+    let modal = {
+      hide: function() {
+        /* noop */
+      }
+    };
+
     auth = new Auth();
-    auth.init(store, local);
+    auth.init(store, local, modal);
   });
 
   it("synces anonymous session", function(done) {
@@ -61,8 +67,14 @@ describe("Auth", function() {
       }
     };
 
+    let modal = {
+      hide: function() {
+        /* noop */
+      }
+    };
+
     auth = new Auth();
-    auth.init(store, local);
+    auth.init(store, local, modal);
   });
 
   it("watches session sign in", function(done) {
@@ -100,8 +112,14 @@ describe("Auth", function() {
       }
     };
 
+    let modal = {
+      hide: function() {
+        /* noop */
+      }
+    };
+
     auth = new Auth();
-    auth.init(store, local);
+    auth.init(store, local, modal);
   });
 
   it("watches session sign out", function(done) {
@@ -136,8 +154,14 @@ describe("Auth", function() {
       }
     };
 
+    let modal = {
+      hide: function() {
+        assert.ok(true, 'modal was hidden');
+      }
+    };
+
     auth = new Auth();
-    auth.init(store, local);
+    auth.init(store, local, modal);
   });
 });
 

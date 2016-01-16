@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'; // jshint ignore:line
 import store from 'misago/services/store'; // jshint ignore:line
 
-export default function mount(Component, rootElementId, connected=true) {
+export default function(Component, rootElementId, connected=true) {
   let rootElement = document.getElementById(rootElementId);
+  console.log('mount(): ' + ReactDOM.__misago);
 
   if (rootElement) {
     if (connected) {

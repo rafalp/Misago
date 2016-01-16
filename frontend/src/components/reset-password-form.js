@@ -143,7 +143,7 @@ export default class extends React.Component {
       <PasswordChangedPage user={apiResponse} />,
       document.getElementById('page-mount')
     );
-  }
+  };
   /* jshint ignore:end */
 
   render() {

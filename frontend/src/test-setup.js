@@ -8,11 +8,13 @@ require('bootstrap-affix');
 require('bootstrap-modal');
 require('bootstrap-dropdown');
 
+document.__misago = 'yus';
+
 require('jquery-mockjax')(jQuery, window);
 $.mockjaxSettings.logging = false;
 $.mockjaxSettings.responseTime = 50;
 
-require("babel-polyfill");
+//require("babel-polyfill");
 
 // Mock base href element
 $('head').append('<base href="/test-runner/">');
@@ -25,7 +27,11 @@ $('body').append('<div id="test-mount"></div>');
 
 // set global utility function for cleaning test containers
 var ReactDOM = require('react-dom');
+ReactDOM.__misago = 'ONE ReactDOM';
+
 global.emptyTestContainers = function() {
+  var ReactDOM = require('react-dom');
+  console.log(ReactDOM.__misago);
   ReactDOM.unmountComponentAtNode(document.getElementById('dropdown-mount'));
   ReactDOM.unmountComponentAtNode(document.getElementById('modal-mount'));
   ReactDOM.unmountComponentAtNode(document.getElementById('page-mount'));
@@ -95,7 +101,7 @@ global.contextAuthenticated = function(misago, overrides) {
 // global utility function for store mocking
 global.initEmptyStore = function(store) {
   store.constructor();
-  store.addReducer('test', function(state={}, action=null) { return {}; }, {}); // jshint ignore:line
+  store.addReducer('test', function(state={}, action=null) { /*throw new Error("goddamit");*/ return {}; }, {}); // jshint ignore:line
   store.init();
 };
 

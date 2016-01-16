@@ -107,7 +107,7 @@ export default class extends React.Component {
 
       this.setState(newState);
     }
-  }
+  };
 
   clean() {
     return true;
@@ -148,6 +148,6 @@ export default class extends React.Component {
         this.setState({'isLoading': false});
       }
     }
-  }
+  };
   /* jshint ignore:end */
 }

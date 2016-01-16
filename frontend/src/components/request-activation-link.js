@@ -125,13 +125,13 @@ export default class extends React.Component {
     this.setState({
       complete: apiResponse
     });
-  }
+  };
 
   reset = () => {
     this.setState({
       complete: false
     });
-  }
+  };
   /* jshint ignore:end */
 
   render() {

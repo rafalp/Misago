@@ -1,9 +1,10 @@
 import { signIn, signOut } from 'misago/reducers/auth'; // jshint ignore:line
 
 export class Auth {
-  init(store, local) {
+  init(store, local, modal) {
     this._store = store;
     this._local = local;
+    this._modal = modal;
 
     // tell other tabs what auth state is because we are most current with it
     this.syncSession();
@@ -36,6 +37,7 @@ export class Auth {
         this._store.dispatch(signOut());
       }
     });
+    this._modal.hide();
   }
 
   signIn(user) {
@@ -44,6 +46,7 @@ export class Auth {
       isAuthenticated: true,
       username: user.username
     });
+    this._modal.hide();
   }
 
   signOut() {
@@ -51,6 +54,7 @@ export class Auth {
     this._local.set('auth', {
       isAuthenticated: false
     });
+    this._modal.hide();
   }
 
   softSignOut() {
@@ -58,6 +62,7 @@ export class Auth {
     this._local.set('auth', {
       isAuthenticated: false
     });
+    this._modal.hide();
   }
 }
 

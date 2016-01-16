@@ -12,7 +12,7 @@ let ban = {
   expires_on: moment().add(7, 'days')
 };
 
-describe('showBannedPage', function() {
+describe('Show Banned Page', function() {
   beforeEach(function() {
     misago._context = {
       'SETTINGS': {
