@@ -3,6 +3,7 @@ import moment from 'moment';
 import misago from 'misago/index';
 import store from 'misago/services/store'; // jshint ignore:line
 import showBannedPage from 'misago/utils/banned-page';
+import * as testUtils from 'misago/utils/test-utils';
 
 let ban = {
   message: {
@@ -31,7 +32,7 @@ describe('Show Banned Page', function() {
   });
 
   afterEach(function() {
-    window.emptyTestContainers();
+    testUtils.emptyTestContainers();
   });
 
   it("renders banned page", function(done) {

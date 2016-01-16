@@ -1,8 +1,8 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom'; // jshint ignore:line
 import Form from 'misago/components/form';
 import { email, minLength } from 'misago/utils/validators'; // jshint ignore:line
+import * as testUtils from 'misago/utils/test-utils';
 
 var form = null;
 
@@ -39,15 +39,12 @@ class TestForm extends Form { // jshint ignore:line
 describe("Form", function() {
   beforeEach(function() {
     /* jshint ignore:start */
-    form = ReactDOM.render(
-      <TestForm />,
-      document.getElementById('test-mount')
-    );
+    form = testUtils.render(<TestForm />, 'test-mount');
     /* jshint ignore:end */
   });
 
   afterEach(function() {
-    window.emptyTestContainers();
+    testUtils.emptyTestContainers();
   });
 
   it("validates individual field", function() {

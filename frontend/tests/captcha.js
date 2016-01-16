@@ -1,9 +1,9 @@
 import assert from "assert";
 import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
 import { NoCaptcha, QACaptcha, ReCaptcha, Captcha } from 'misago/services/captcha';
 import snackbar from 'misago/services/snackbar';
+import * as testUtils from 'misago/utils/test-utils';
 
 let captcha = null;
 let snackbarStore = null;
@@ -32,13 +32,13 @@ describe("NoCaptcha", function() {
 
 describe("QACaptcha", function() {
   beforeEach(function() {
-    snackbarStore = window.snackbarStoreMock();
+    snackbarStore = testUtils.snackbarStoreMock();
     snackbar.init(snackbarStore);
   });
 
   afterEach(function() {
-    window.emptyTestContainers();
-    window.snackbarClear(snackbar);
+    testUtils.emptyTestContainers();
+    testUtils.snackbarClear(snackbar);
     $.mockjax.clear();
   });
 
@@ -127,7 +127,7 @@ describe("QACaptcha", function() {
 
     captcha.load().then(function() {
       /* jshint ignore:start */
-      ReactDOM.render(
+      testUtils.render(
         <div>
           {captcha.component({
             form: {
@@ -147,7 +147,7 @@ describe("QACaptcha", function() {
             }
           })}
         </div>,
-        document.getElementById('test-mount')
+        'test-mount'
       );
       /* jshint ignore:end */
 
@@ -167,8 +167,8 @@ describe("ReCaptcha", function() {
   afterEach(function() {
     delete window.grecaptcha;
 
-    window.emptyTestContainers();
-    window.snackbarClear(snackbar);
+    testUtils.emptyTestContainers();
+    testUtils.snackbarClear(snackbar);
     $.mockjax.clear();
   });
 
@@ -219,7 +219,7 @@ describe("ReCaptcha", function() {
 
     captcha.load().then(function() {
       /* jshint ignore:start */
-      ReactDOM.render(
+      testUtils.render(
         <div>
           {captcha.component({
             form: {
@@ -242,7 +242,7 @@ describe("ReCaptcha", function() {
             }
           })}
         </div>,
-        document.getElementById('test-mount')
+        'test-mount'
       );
       /* jshint ignore:end */
 

@@ -74,7 +74,6 @@ export class UserNav extends React.Component {
 }
 
 export function selectUserMenu(state) {
-  console.log(state);
   return {user: state.auth.user};
 }
 

@@ -1,21 +1,16 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom'; // jshint ignore:line
 import Button from 'misago/components/button'; // jshint ignore:line
+import * as testUtils from 'misago/utils/test-utils';
 
 describe("Button", function() {
   afterEach(function() {
-    window.emptyTestContainers();
+    testUtils.emptyTestContainers();
   });
 
   it('renders', function() {
     /* jshint ignore:start */
-    ReactDOM.render(
-      <Button>
-        Lorem ipsum
-      </Button>,
-      document.getElementById('test-mount')
-    );
+    testUtils.render(<Button>Lorem ipsum</Button>, 'test-mount');
     /* jshint ignore:end */
 
     let element = $('#test-mount button');
@@ -31,28 +26,18 @@ describe("Button", function() {
       done();
     }
 
-    ReactDOM.render(
-      <Button onClick={click}>
-        Lorem ipsum
-      </Button>,
-      document.getElementById('test-mount')
-    );
+    testUtils.render(<Button onClick={click}>Lorem ipsum</Button>, 'test-mount');
     /* jshint ignore:end */
 
     let element = $('#test-mount button');
     assert.ok(element.length, "component rendered");
     assert.equal(element.attr('type'), 'button', "component is regular button");
-    window.simulateClick('#test-mount button');
+    testUtils.simulateClick('#test-mount button');
   });
 
   it('renders disabled', function() {
     /* jshint ignore:start */
-    ReactDOM.render(
-      <Button disabled={true}>
-        Lorem ipsum
-      </Button>,
-      document.getElementById('test-mount')
-    );
+    testUtils.render(<Button disabled={true}>Lorem ipsum</Button>, 'test-mount');
     /* jshint ignore:end */
 
     let element = $('#test-mount button');
@@ -62,12 +47,7 @@ describe("Button", function() {
 
   it('renders loading', function() {
     /* jshint ignore:start */
-    ReactDOM.render(
-      <Button loading={true}>
-        Lorem ipsum
-      </Button>,
-      document.getElementById('test-mount')
-    );
+    testUtils.render(<Button loading={true}>Lorem ipsum</Button>, 'test-mount');
     /* jshint ignore:end */
 
     let element = $('#test-mount button>.loader');

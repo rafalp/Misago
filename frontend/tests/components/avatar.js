@@ -1,19 +1,16 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom'; // jshint ignore:line
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
+import * as testUtils from 'misago/utils/test-utils';
 
 describe("Avatar", function() {
   afterEach(function() {
-    window.emptyTestContainers();
+    testUtils.emptyTestContainers();
   });
 
   it('renders guest avatar', function() {
     /* jshint ignore:start */
-    ReactDOM.render(
-      <Avatar size="42" />,
-      document.getElementById('test-mount')
-    );
+    testUtils.render(<Avatar size="42" />, 'test-mount');
     /* jshint ignore:end */
 
     let element = $('#test-mount img.user-avatar');
@@ -28,10 +25,7 @@ describe("Avatar", function() {
       avatar_hash: 'aabbccddeeff'
     };
 
-    ReactDOM.render(
-      <Avatar user={user} size="42" />,
-      document.getElementById('test-mount')
-    );
+    testUtils.render(<Avatar user={user} size="42" />, 'test-mount');
     /* jshint ignore:end */
 
     let element = $('#test-mount img.user-avatar');

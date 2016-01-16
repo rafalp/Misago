@@ -1,29 +1,26 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom'; // jshint ignore:line
 import { UserMenu, UserNav, CompactUserNav } from 'misago/components/user-menu/user-nav'; // jshint ignore:line
 import misago from 'misago/index';
 import dropdown from 'misago/services/mobile-navbar-dropdown';
 import store from 'misago/services/store';
+import * as testUtils from 'misago/utils/test-utils';
 
 describe("UserMenu", function() {
   beforeEach(function() {
-    window.contextClear(misago);
-    window.contextAuthenticated(misago);
+    testUtils.contextClear(misago);
+    testUtils.contextAuthenticated(misago);
 
-    window.initEmptyStore(store);
-    window.initDropdown(dropdown);
+    testUtils.initEmptyStore(store);
+    testUtils.initDropdown(dropdown);
 
     /* jshint ignore:start */
-    ReactDOM.render(
-      <UserMenu user={misago._context.user} />,
-      document.getElementById('test-mount')
-    );
+    testUtils.render(<UserMenu user={misago._context.user} />, 'test-mount');
     /* jshint ignore:end */
   });
 
   afterEach(function() {
-    window.emptyTestContainers();
+    testUtils.emptyTestContainers();
   });
 
   it('renders', function() {
@@ -34,22 +31,19 @@ describe("UserMenu", function() {
 
 describe("UserNav", function() {
   beforeEach(function() {
-    window.contextClear(misago);
-    window.contextAuthenticated(misago);
+    testUtils.contextClear(misago);
+    testUtils.contextAuthenticated(misago);
 
-    window.initEmptyStore(store);
-    window.initDropdown(dropdown);
+    testUtils.initEmptyStore(store);
+    testUtils.initDropdown(dropdown);
 
     /* jshint ignore:start */
-    ReactDOM.render(
-      <UserNav user={misago._context.user} />,
-      document.getElementById('test-mount')
-    );
+    testUtils.render(<UserNav user={misago._context.user} />, 'test-mount');
     /* jshint ignore:end */
   });
 
   afterEach(function() {
-    window.emptyTestContainers();
+    testUtils.emptyTestContainers();
   });
 
   it('renders', function() {
@@ -60,8 +54,8 @@ describe("UserNav", function() {
 
 describe("CompactUserNav", function() {
   beforeEach(function() {
-    window.contextClear(misago);
-    window.contextAuthenticated(misago);
+    testUtils.contextClear(misago);
+    testUtils.contextAuthenticated(misago);
 
     store.constructor();
     store.addReducer('auth', function(state={}, action=null){
@@ -76,18 +70,18 @@ describe("CompactUserNav", function() {
     });
     store.init();
 
-    window.initDropdown(dropdown);
+    testUtils.initDropdown(dropdown);
 
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <CompactUserNav user={misago._context.user} />,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
   });
 
   afterEach(function() {
-    window.emptyTestContainers();
+    testUtils.emptyTestContainers();
   });
 
   it('renders', function() {
@@ -96,7 +90,7 @@ describe("CompactUserNav", function() {
   });
 
   it('opens dropdown on click', function() {
-    window.simulateClick('#test-mount button');
+    testUtils.simulateClick('#test-mount button');
 
     let element = $('#dropdown-mount>.user-dropdown');
     assert.ok(element.length, "component opened dropdown");

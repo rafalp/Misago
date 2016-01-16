@@ -1,19 +1,19 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom'; // jshint ignore:line
 import misago from 'misago/index';
 import { RegisterForm, RegisterComplete } from 'misago/components/register'; // jshint ignore:line
 import modal from 'misago/services/modal';
 import snackbar from 'misago/services/snackbar';
+import * as testUtils from 'misago/utils/test-utils';
 
 let component = null;
 let snackbarStore = null;
 
 describe("Register Form", function() {
   beforeEach(function() {
-    snackbarStore = window.snackbarStoreMock();
+    snackbarStore = testUtils.snackbarStoreMock();
     snackbar.init(snackbarStore);
-    window.initModal(modal);
+    testUtils.initModal(modal);
 
     window.zxcvbn = function() {
       return {
@@ -36,17 +36,17 @@ describe("Register Form", function() {
     };
 
     /* jshint ignore:start */
-    component = ReactDOM.render(
+    component = testUtils.render(
       <RegisterForm />,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
   });
 
   afterEach(function() {
     delete window.zxcvbn;
-    window.emptyTestContainers();
-    window.snackbarClear(snackbar);
+    testUtils.emptyTestContainers();
+    testUtils.snackbarClear(snackbar);
     $.mockjax.clear();
   });
 
@@ -71,7 +71,7 @@ describe("Register Form", function() {
       done();
     });
 
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateSubmit('#test-mount form');
   });
 
   it("handles invalid submit", function(done) {
@@ -83,11 +83,11 @@ describe("Register Form", function() {
       done();
     });
 
-    window.simulateChange('#id_username', 'lo');
-    window.simulateChange('#id_email', 'nope');
-    window.simulateChange('#id_password', 'sh');
+    testUtils.simulateChange('#id_username', 'lo');
+    testUtils.simulateChange('#id_email', 'nope');
+    testUtils.simulateChange('#id_password', 'sh');
 
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateSubmit('#test-mount form');
   });
 
   it("handles backend error", function(done) {
@@ -104,11 +104,11 @@ describe("Register Form", function() {
       status: 500
     });
 
-    window.simulateChange('#id_username', 'SomeFake');
-    window.simulateChange('#id_email', 'lorem@ipsum.com');
-    window.simulateChange('#id_password', 'pass1234');
+    testUtils.simulateChange('#id_username', 'SomeFake');
+    testUtils.simulateChange('#id_email', 'lorem@ipsum.com');
+    testUtils.simulateChange('#id_password', 'pass1234');
 
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateSubmit('#test-mount form');
   });
 
   it("handles rejected data", function(done) {
@@ -139,11 +139,11 @@ describe("Register Form", function() {
       }
     });
 
-    window.simulateChange('#id_username', 'SomeFake');
-    window.simulateChange('#id_email', 'lorem@ipsum.com');
-    window.simulateChange('#id_password', 'pass1234');
+    testUtils.simulateChange('#id_username', 'SomeFake');
+    testUtils.simulateChange('#id_email', 'lorem@ipsum.com');
+    testUtils.simulateChange('#id_password', 'pass1234');
 
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateSubmit('#test-mount form');
   });
 
   it("from banned IP", function(done) {
@@ -161,13 +161,13 @@ describe("Register Form", function() {
       }
     });
 
-    window.simulateChange('#id_username', 'SomeFake');
-    window.simulateChange('#id_email', 'lorem@ipsum.com');
-    window.simulateChange('#id_password', 'pass1234');
+    testUtils.simulateChange('#id_username', 'SomeFake');
+    testUtils.simulateChange('#id_email', 'lorem@ipsum.com');
+    testUtils.simulateChange('#id_password', 'pass1234');
 
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateSubmit('#test-mount form');
 
-    window.onElement('.page-error-banned .lead', function() {
+    testUtils.onElement('.page-error-banned .lead', function() {
       assert.equal(
         $('.page .message-body .lead p').text().trim(),
         "Your ip is banned from registering.",
@@ -188,9 +188,9 @@ describe("Register Form", function() {
       done();
     };
 
-    component = ReactDOM.render(
+    component = testUtils.render(
       <RegisterForm callback={callback}/>,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 
@@ -204,26 +204,26 @@ describe("Register Form", function() {
       }
     });
 
-    window.simulateChange('#id_username', 'SomeFake');
-    window.simulateChange('#id_email', 'lorem@ipsum.com');
-    window.simulateChange('#id_password', 'pass1234');
+    testUtils.simulateChange('#id_username', 'SomeFake');
+    testUtils.simulateChange('#id_email', 'lorem@ipsum.com');
+    testUtils.simulateChange('#id_password', 'pass1234');
 
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateSubmit('#test-mount form');
   });
 });
 
 describe("Register Complete", function() {
   afterEach(function() {
-    window.emptyTestContainers();
+    testUtils.emptyTestContainers();
   });
 
   it("renders user-activated message", function() {
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <RegisterComplete activation="user"
                         username="Bob"
                         email="bob@boberson.com" />,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 
@@ -241,11 +241,11 @@ describe("Register Complete", function() {
 
   it("renders admin-activated message", function() {
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <RegisterComplete activation="admin"
                         username="Bob"
                         email="bob@boberson.com" />,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 

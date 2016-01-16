@@ -1,19 +1,16 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom'; // jshint ignore:line
 import AuthMessage from 'misago/components/auth-message'; // jshint ignore:line
+import * as testUtils from 'misago/utils/test-utils';
 
 describe("Auth Message", function() {
   afterEach(function() {
-    window.emptyTestContainers();
+    testUtils.emptyTestContainers();
   });
 
   it('renders stateless', function() {
     /* jshint ignore:start */
-    ReactDOM.render(
-      <AuthMessage />,
-      document.getElementById('test-mount')
-    );
+    testUtils.render(<AuthMessage />, 'test-mount');
     /* jshint ignore:end */
 
     let element = $('#test-mount .auth-message');
@@ -23,11 +20,11 @@ describe("Auth Message", function() {
 
   it('renders signed out', function() {
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <AuthMessage user={{username: 'Boberson'}}
                    signedOut={true}
                    signedIn={false} />,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 
@@ -38,11 +35,11 @@ describe("Auth Message", function() {
 
   it('renders signed in', function() {
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <AuthMessage user={null}
                    signedOut={false}
                    signedIn={{username: 'Boberson'}} />,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 

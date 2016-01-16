@@ -1,8 +1,8 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom'; // jshint ignore:line
 import store from 'misago/services/store';
 import { MobileNavbarDropdown } from 'misago/services/mobile-navbar-dropdown';
+import * as testUtils from 'misago/utils/test-utils';
 
 var dropdown = null;
 
@@ -37,11 +37,7 @@ describe("Dropdown", function() {
   });
 
   afterEach(function() {
-    console.log('test(): ' + ReactDOM.__misago);
-    window.emptyTestContainers();
-    console.log('================');
-    console.log(document.getElementById('dropdown-mount').innerHTML);
-    console.log('================');
+    testUtils.emptyTestContainers();
   });
 
   it('shows component', function(done) {
@@ -53,7 +49,7 @@ describe("Dropdown", function() {
       done();
     }, 100);
   });
-/*
+
   it('shows and cycles component', function(done) {
     dropdown.show(TestComponentA);
 
@@ -69,5 +65,5 @@ describe("Dropdown", function() {
       assert.ok(element.length, "component was toggled");
       done();
     }, 300);
-  });*/
+  });
 });

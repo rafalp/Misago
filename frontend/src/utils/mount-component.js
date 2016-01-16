@@ -5,7 +5,6 @@ import store from 'misago/services/store'; // jshint ignore:line
 
 export default function(Component, rootElementId, connected=true) {
   let rootElement = document.getElementById(rootElementId);
-  console.log('mount(): ' + ReactDOM.__misago);
 
   if (rootElement) {
     if (connected) {

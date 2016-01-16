@@ -1,21 +1,21 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom'; // jshint ignore:line
 import FormGroup from 'misago/components/form-group'; // jshint ignore:line
+import * as testUtils from 'misago/utils/test-utils';
 
 describe("Form Group", function() {
   afterEach(function() {
-    window.emptyTestContainers();
+    testUtils.emptyTestContainers();
   });
 
   it('renders', function() {
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <FormGroup label="Lorem Ipsum"
                  for="test_input">
         <input name="lorem" type="text" />
       </FormGroup>,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 
@@ -33,14 +33,14 @@ describe("Form Group", function() {
 
   it('renders label and control classes', function() {
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <FormGroup label="Lorem Ipsum"
                  labelClass="test-label"
                  controlClass="test-control"
                  for="test_input">
         <input name="lorem" type="text" />
       </FormGroup>,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 
@@ -55,13 +55,13 @@ describe("Form Group", function() {
 
   it('renders positive feedback', function() {
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <FormGroup label="Lorem Ipsum"
                  for="test_input"
                  validation={null}>
         <input name="lorem" type="text" />
       </FormGroup>,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 
@@ -79,13 +79,13 @@ describe("Form Group", function() {
 
   it('renders negative feedback', function() {
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <FormGroup label="Lorem Ipsum"
                  for="test_input"
                  validation={["First issue.", "Second issue."]}>
         <input name="lorem" type="text" />
       </FormGroup>,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 
@@ -114,13 +114,13 @@ describe("Form Group", function() {
 
   it('renders help text', function() {
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <FormGroup label="Lorem Ipsum"
                  for="test_input"
                  helpText="Lorem ipsum dolor met.">
         <input name="lorem" type="text" />
       </FormGroup>,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 
@@ -134,13 +134,13 @@ describe("Form Group", function() {
 
   it('renders extra', function() {
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <FormGroup label="Lorem Ipsum"
                  for="test_input"
                  extra={<p id="row-extra">Extra!!!</p>}>
         <input name="lorem" type="text" />
       </FormGroup>,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 

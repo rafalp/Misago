@@ -1,9 +1,7 @@
-import ReactDOM from 'react-dom';
 import mount from 'misago/utils/mount-component';
 
 export class MobileNavbarDropdown {
   init(element) {
-    console.log('init(): ' + ReactDOM.__misago);
     this._element = element;
     this._component = null;
   }

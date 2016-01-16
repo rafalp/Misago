@@ -1,12 +1,12 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom'; // jshint ignore:line
 import PasswordStrength from 'misago/components/password-strength'; // jshint ignore:line
 import zxcvbn from 'misago/services/zxcvbn';
+import * as testUtils from 'misago/utils/test-utils';
 
 describe("Password Strength", function() {
   afterEach(function() {
-    window.emptyTestContainers();
+    testUtils.emptyTestContainers();
     delete window.zxcvbn;
   });
 
@@ -29,9 +29,9 @@ describe("Password Strength", function() {
     zxcvbn.load();
 
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <PasswordStrength password="very-weak" inputs={['a', 'b', 'c']} />,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 
@@ -71,9 +71,9 @@ describe("Password Strength", function() {
     zxcvbn.load();
 
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <PasswordStrength password="weak" inputs={['a', 'b', 'c']} />,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 
@@ -113,9 +113,9 @@ describe("Password Strength", function() {
     zxcvbn.load();
 
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <PasswordStrength password="average" inputs={['a', 'b', 'c']} />,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 
@@ -155,9 +155,9 @@ describe("Password Strength", function() {
     zxcvbn.load();
 
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <PasswordStrength password="stronk" inputs={['a', 'b', 'c']} />,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 
@@ -197,9 +197,9 @@ describe("Password Strength", function() {
     zxcvbn.load();
 
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <PasswordStrength password="very-stronk" inputs={['a', 'b', 'c']} />,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 

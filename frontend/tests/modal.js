@@ -1,8 +1,8 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom'; // jshint ignore:line
 import store from 'misago/services/store';
 import { Modal } from 'misago/services/modal';
+import * as testUtils from 'misago/utils/test-utils';
 
 var modal = null;
 
@@ -53,11 +53,11 @@ describe("Modal", function() {
     modal = new Modal();
     modal.init(document.getElementById('modal-mount'));
 
-    window.initEmptyStore(store);
+    testUtils.initEmptyStore(store);
   });
 
   afterEach(function() {
-    window.emptyTestContainers();
+    testUtils.emptyTestContainers();
   });
 
   it('shows component', function(done) {

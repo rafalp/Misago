@@ -1,18 +1,18 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom'; // jshint ignore:line
 import misago from 'misago/index';
 import SignIn from 'misago/components/sign-in'; // jshint ignore:line
 import modal from 'misago/services/modal';
 import snackbar from 'misago/services/snackbar';
+import * as testUtils from 'misago/utils/test-utils';
 
 let snackbarStore = null;
 
 describe("Sign In", function() {
   beforeEach(function() {
-    snackbarStore = window.snackbarStoreMock();
+    snackbarStore = testUtils.snackbarStoreMock();
     snackbar.init(snackbarStore);
-    window.initModal(modal);
+    testUtils.initModal(modal);
 
     misago._context = {
       'SETTINGS': {
@@ -25,16 +25,13 @@ describe("Sign In", function() {
     };
 
     /* jshint ignore:start */
-    ReactDOM.render(
-      <SignIn />,
-      document.getElementById('test-mount')
-    );
+    testUtils.render(<SignIn />, 'test-mount');
     /* jshint ignore:end */
   });
 
   afterEach(function() {
-    window.emptyTestContainers();
-    window.snackbarClear(snackbar);
+    testUtils.emptyTestContainers();
+    testUtils.snackbarClear(snackbar);
     $.mockjax.clear();
   });
 
@@ -59,7 +56,7 @@ describe("Sign In", function() {
       done();
     });
 
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateSubmit('#test-mount form');
   });
 
   it("handles partial submit", function(done) {
@@ -71,8 +68,8 @@ describe("Sign In", function() {
       done();
     });
 
-    window.simulateChange('#id_username', 'loremipsum');
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateChange('#id_username', 'loremipsum');
+    testUtils.simulateSubmit('#test-mount form');
   });
 
   it("handles backend error", function(done) {
@@ -89,9 +86,9 @@ describe("Sign In", function() {
       status: 500
     });
 
-    window.simulateChange('#id_username', 'SomeFake');
-    window.simulateChange('#id_password', 'pass1234');
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateChange('#id_username', 'SomeFake');
+    testUtils.simulateChange('#id_password', 'pass1234');
+    testUtils.simulateSubmit('#test-mount form');
   });
 
   it("handles invalid credentials", function(done) {
@@ -114,9 +111,9 @@ describe("Sign In", function() {
       }
     });
 
-    window.simulateChange('#id_username', 'SomeFake');
-    window.simulateChange('#id_password', 'pass1234');
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateChange('#id_username', 'SomeFake');
+    testUtils.simulateChange('#id_password', 'pass1234');
+    testUtils.simulateSubmit('#test-mount form');
   });
 
   it("to admin-activated account", function(done) {
@@ -139,9 +136,9 @@ describe("Sign In", function() {
       }
     });
 
-    window.simulateChange('#id_username', 'SomeFake');
-    window.simulateChange('#id_password', 'pass1234');
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateChange('#id_username', 'SomeFake');
+    testUtils.simulateChange('#id_password', 'pass1234');
+    testUtils.simulateSubmit('#test-mount form');
   });
 
   it("to user-activated account", function(done) {
@@ -171,9 +168,9 @@ describe("Sign In", function() {
       }
     });
 
-    window.simulateChange('#id_username', 'SomeFake');
-    window.simulateChange('#id_password', 'pass1234');
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateChange('#id_username', 'SomeFake');
+    testUtils.simulateChange('#id_password', 'pass1234');
+    testUtils.simulateSubmit('#test-mount form');
   });
 
   it("from banned IP", function(done) {
@@ -191,11 +188,11 @@ describe("Sign In", function() {
       }
     });
 
-    window.simulateChange('#id_username', 'SomeFake');
-    window.simulateChange('#id_password', 'pass1234');
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateChange('#id_username', 'SomeFake');
+    testUtils.simulateChange('#id_password', 'pass1234');
+    testUtils.simulateSubmit('#test-mount form');
 
-    window.onElement('.page-error-banned .lead', function() {
+    testUtils.onElement('.page-error-banned .lead', function() {
       assert.equal(
         $('.page .message-body .lead p').text().trim(),
         "Your ip is banned for spamming.",
@@ -221,11 +218,11 @@ describe("Sign In", function() {
       }
     });
 
-    window.simulateChange('#id_username', 'SomeFake');
-    window.simulateChange('#id_password', 'pass1234');
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateChange('#id_username', 'SomeFake');
+    testUtils.simulateChange('#id_password', 'pass1234');
+    testUtils.simulateSubmit('#test-mount form');
 
-    window.onElement('.page-error-banned .lead', function() {
+    testUtils.onElement('.page-error-banned .lead', function() {
       assert.equal(
         $('.page .message-body .lead p').text().trim(),
         "You are banned for trolling.",
@@ -261,8 +258,8 @@ describe("Sign In", function() {
       return false;
     });
 
-    window.simulateChange('#id_username', 'SomeFake');
-    window.simulateChange('#id_password', 'pass1234');
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateChange('#id_username', 'SomeFake');
+    testUtils.simulateChange('#id_password', 'pass1234');
+    testUtils.simulateSubmit('#test-mount form');
   });
 });

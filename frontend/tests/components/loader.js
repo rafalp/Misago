@@ -1,19 +1,16 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom'; // jshint ignore:line
 import Loader from 'misago/components/loader'; // jshint ignore:line
+import * as testUtils from 'misago/utils/test-utils';
 
 describe("Loader", function() {
   afterEach(function() {
-    window.emptyTestContainers();
+    testUtils.emptyTestContainers();
   });
 
   it('renders', function() {
     /* jshint ignore:start */
-    ReactDOM.render(
-      <Loader />,
-      document.getElementById('test-mount')
-    );
+    testUtils.render(<Loader />, 'test-mount');
     /* jshint ignore:end */
 
     assert.ok($('#test-mount .loader .loader-spinning-wheel').length,

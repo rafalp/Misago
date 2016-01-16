@@ -205,8 +205,7 @@ gulp.task('linttests', function() {
 
 gulp.task('test', ['linttests', 'lintsource'], function() {
   var mochify = require('mochify');
-  //mochify('src/test-setup.js tests/**/*.js', {
-  mochify('src/test-setup.js tests/navbar-dropdown.js', {
+  mochify('src/test-setup.js tests/**/*.js', {
       reporter: 'spec'
     })
     .transform(babelify)

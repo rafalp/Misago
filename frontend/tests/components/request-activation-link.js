@@ -1,13 +1,13 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
 import misago from 'misago/index';
-import { RequestResetForm, LinkSent, AccountInactivePage } from 'misago/components/request-password-reset'; // jshint ignore:line
+import { RequestLinkForm, LinkSent } from 'misago/components/request-activation-link'; // jshint ignore:line
 import snackbar from 'misago/services/snackbar';
 import * as testUtils from 'misago/utils/test-utils';
 
 let snackbarStore = null;
 
-describe("Request Password Reset Form", function() {
+describe("Request Activation Link Form", function() {
   beforeEach(function() {
     snackbarStore = testUtils.snackbarStoreMock();
     snackbar.init(snackbarStore);
@@ -16,11 +16,11 @@ describe("Request Password Reset Form", function() {
       'SETTINGS': {
         'forum_name': 'Test forum'
       },
-      'SEND_PASSWORD_RESET_API': '/test-api/request-password-reset/'
+      'SEND_ACTIVATION_API': '/test-api/send-activation/'
     };
 
     /* jshint ignore:start */
-    testUtils.render(<RequestResetForm />, 'test-mount');
+    testUtils.render(<RequestLinkForm />, 'test-mount');
     /* jshint ignore:end */
   });
 
@@ -31,7 +31,7 @@ describe("Request Password Reset Form", function() {
   });
 
   it("renders", function() {
-    let element = $('#test-mount .well-form-request-password-reset');
+    let element = $('#test-mount .well-form-request-activation-link');
     assert.ok(element.length, "component renders");
   });
 
@@ -70,7 +70,7 @@ describe("Request Password Reset Form", function() {
     });
 
     $.mockjax({
-      url: '/test-api/request-password-reset/',
+      url: '/test-api/send-activation/',
       status: 500
     });
 
@@ -88,7 +88,7 @@ describe("Request Password Reset Form", function() {
     });
 
     $.mockjax({
-      url: '/test-api/request-password-reset/',
+      url: '/test-api/send-activation/',
       status: 400,
       responseText: {
         detail: "Nope nope nope!"
@@ -99,34 +99,23 @@ describe("Request Password Reset Form", function() {
     testUtils.simulateSubmit('#test-mount form');
   });
 
-  it("displays activation required message", function(done) { // jshint ignore:line
-    $.mockjax({
-      url: '/test-api/request-password-reset/',
-      status: 400,
-      responseText: {
-        code: 'inactive_user',
-        detail: "Your account is inactive!"
-      }
+  it("handles backend info", function(done) {
+    snackbarStore.callback(function(message) {
+      assert.deepEqual(message, {
+        message: "Your account is already active!",
+        type: 'info'
+      }, "form raised alert about backend info");
+      done();
     });
 
-    /* jshint ignore:start */
-    let showInactivePage = function(apiResponse) {
-      assert.deepEqual({
-        code: apiResponse.code,
-        detail: apiResponse.detail
-      }, {
-        code: 'inactive_user',
-        detail: "Your account is inactive!"
-      }, "component calls inactive page callback");
-
-      done();
-    };
-
-    testUtils.render(
-      <RequestResetForm showInactivePage={showInactivePage}/>,
-      'test-mount'
-    );
-    /* jshint ignore:end */
+    $.mockjax({
+      url: '/test-api/send-activation/',
+      status: 400,
+      responseText: {
+        code: 'already_active',
+        detail: "Your account is already active!"
+      }
+    });
 
     testUtils.simulateChange('#test-mount input', 'lorem@ipsum.com');
     testUtils.simulateSubmit('#test-mount form');
@@ -134,7 +123,7 @@ describe("Request Password Reset Form", function() {
 
   it("from banned IP", function(done) {
     $.mockjax({
-      url: '/test-api/request-password-reset/',
+      url: '/test-api/send-activation/',
       status: 403,
       responseText: {
         'ban': {
@@ -162,7 +151,7 @@ describe("Request Password Reset Form", function() {
 
   it("handles success", function(done) { // jshint ignore:line
     $.mockjax({
-      url: '/test-api/request-password-reset/',
+      url: '/test-api/send-activation/',
       status: 200,
       responseText: {
         'username': 'Bob',
@@ -179,7 +168,7 @@ describe("Request Password Reset Form", function() {
       done();
     };
 
-    testUtils.render(<RequestResetForm callback={callback} />, 'test-mount');
+    testUtils.render(<RequestLinkForm callback={callback} />, 'test-mount');
     /* jshint ignore:end */
 
     testUtils.simulateChange('#test-mount input', 'lorem@ipsum.com');
@@ -187,7 +176,7 @@ describe("Request Password Reset Form", function() {
   });
 });
 
-describe("Reset Link Sent", function() {
+describe("Activation Link Sent", function() {
   afterEach(function() {
     testUtils.emptyTestContainers();
   });
@@ -199,74 +188,16 @@ describe("Reset Link Sent", function() {
       done();
     };
 
-    testUtils.render(
-      <LinkSent user={{email: 'bob@boberson.com' }}
-                callback={callback} />,
-      'test-mount'
-    );
+    testUtils.render(<LinkSent user={{email: 'bob@boberson.com' }} callback={callback} />, 'test-mount');
     /* jshint ignore:end */
 
     let element = $('#test-mount .well-done');
     assert.ok(element.length, "component renders");
 
     assert.equal(element.find('p').text().trim(),
-      "Reset password link was sent to bob@boberson.com",
+      "Activation link was sent to bob@boberson.com",
       "component renders valid message");
 
     testUtils.simulateClick('#test-mount .btn-primary');
-  });
-});
-
-describe("Account Inactive Page", function() {
-  beforeEach(function() {
-    misago._context = {
-      'REQUEST_ACTIVATION_URL': '/activate-thy-account/'
-    };
-  });
-
-  afterEach(function() {
-    testUtils.emptyTestContainers();
-  });
-
-  it("renders page for user-activated user", function() {
-    /* jshint ignore:start */
-    testUtils.render(
-      <AccountInactivePage activation='inactive_user'
-                           message="Lorem ipsum dolor met." />,
-      'test-mount'
-    );
-    /* jshint ignore:end */
-
-    let element = $('#test-mount .page-forgotten-password-inactive');
-    assert.ok(element.length, "component renders");
-
-    assert.equal(
-      $('#test-mount .page .message-body p:eq(1)').text().trim(),
-      "Lorem ipsum dolor met.",
-      "displayed error inactive page with backend message.");
-
-    assert.equal($('#test-mount a').attr('href'), '/activate-thy-account/',
-      "activate account link is displayed on inactive error page");
-  });
-
-  it("renders page for admin-activated user", function() {
-    /* jshint ignore:start */
-    testUtils.render(
-      <AccountInactivePage activation='inactive_admin'
-                           message="Lorem ipsum dolor met admin." />,
-      'test-mount'
-    );
-    /* jshint ignore:end */
-
-    let element = $('#test-mount .page-forgotten-password-inactive');
-    assert.ok(element.length, "component renders");
-
-    assert.equal(
-      $('#test-mount .page .message-body p:eq(1)').text().trim(),
-      "Lorem ipsum dolor met admin.",
-      "displayed error inactive page with backend message.");
-
-    assert.ok(!$('#test-mount a').length,
-      "activate account link is not displayed on admin-activated error page");
   });
 });

@@ -1,28 +1,28 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom'; // jshint ignore:line
 import { Snackbar } from 'misago/components/snackbar'; // jshint ignore:line
+import * as testUtils from 'misago/utils/test-utils';
 
 describe("Snackbar", function() {
   afterEach(function() {
-    window.emptyTestContainers();
+    testUtils.emptyTestContainers();
   });
 
   it('renders', function() {
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <Snackbar isVisible={false} message="" type="info" />,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 
     assert.ok($('.alerts-snackbar').hasClass('out'), "component is hidden");
 
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <Snackbar isVisible={true} type="success"
                 message="Lorem ipsum dolor met." />,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
 
@@ -35,30 +35,30 @@ describe("Snackbar", function() {
       "message is inserted");
 
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <Snackbar isVisible={true} type="info"
                 message="Lorem ipsum dolor met." />,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
     assert.ok($('.alerts-snackbar p').hasClass('alert-info'),
       "component has alert-info class");
 
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <Snackbar isVisible={true} type="warning"
                 message="Lorem ipsum dolor met." />,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
     assert.ok($('.alerts-snackbar p').hasClass('alert-warning'),
       "component has alert-warning class");
 
     /* jshint ignore:start */
-    ReactDOM.render(
+    testUtils.render(
       <Snackbar isVisible={true} type="error"
                 message="Lorem ipsum dolor met." />,
-      document.getElementById('test-mount')
+      'test-mount'
     );
     /* jshint ignore:end */
     assert.ok($('.alerts-snackbar p').hasClass('alert-danger'),

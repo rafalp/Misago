@@ -1,16 +1,16 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom'; // jshint ignore:line
 import misago from 'misago/index';
 import { ResetPasswordForm, PasswordChangedPage } from 'misago/components/reset-password-form'; // jshint ignore:line
 import modal from 'misago/services/modal';
 import snackbar from 'misago/services/snackbar';
+import * as testUtils from 'misago/utils/test-utils';
 
 let snackbarStore = null;
 
 describe("Reset Password Form", function() {
   beforeEach(function() {
-    snackbarStore = window.snackbarStoreMock();
+    snackbarStore = testUtils.snackbarStoreMock();
     snackbar.init(snackbarStore);
 
     misago._context = {
@@ -22,16 +22,13 @@ describe("Reset Password Form", function() {
     };
 
     /* jshint ignore:start */
-    ReactDOM.render(
-      <ResetPasswordForm />,
-      document.getElementById('test-mount')
-    );
+    testUtils.render(<ResetPasswordForm />, 'test-mount');
     /* jshint ignore:end */
   });
 
   afterEach(function() {
-    window.emptyTestContainers();
-    window.snackbarClear(snackbar);
+    testUtils.emptyTestContainers();
+    testUtils.snackbarClear(snackbar);
     $.mockjax.clear();
   });
 
@@ -49,7 +46,7 @@ describe("Reset Password Form", function() {
       done();
     });
 
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateSubmit('#test-mount form');
   });
 
   it("handles invalid submit", function(done) {
@@ -61,8 +58,8 @@ describe("Reset Password Form", function() {
       done();
     });
 
-    window.simulateChange('#test-mount input', 'abc');
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateChange('#test-mount input', 'abc');
+    testUtils.simulateSubmit('#test-mount form');
   });
 
   it("handles backend error", function(done) {
@@ -79,8 +76,8 @@ describe("Reset Password Form", function() {
       status: 500
     });
 
-    window.simulateChange('#test-mount input', 'Som3L33tP455');
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateChange('#test-mount input', 'Som3L33tP455');
+    testUtils.simulateSubmit('#test-mount form');
   });
 
   it("handles backend rejection", function(done) {
@@ -100,8 +97,8 @@ describe("Reset Password Form", function() {
       }
     });
 
-    window.simulateChange('#test-mount input', 'Som3L33tP455');
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateChange('#test-mount input', 'Som3L33tP455');
+    testUtils.simulateSubmit('#test-mount form');
   });
 
   it("from banned IP", function(done) {
@@ -119,10 +116,10 @@ describe("Reset Password Form", function() {
       }
     });
 
-    window.simulateChange('#test-mount input', 'Som3L33tP455');
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateChange('#test-mount input', 'Som3L33tP455');
+    testUtils.simulateSubmit('#test-mount form');
 
-    window.onElement('.page-error-banned .lead', function() {
+    testUtils.onElement('.page-error-banned .lead', function() {
       assert.equal(
         $('.page .message-body .lead p').text().trim(),
         "Your ip is banned for spamming.",
@@ -149,35 +146,29 @@ describe("Reset Password Form", function() {
       done();
     };
 
-    ReactDOM.render(
-      <ResetPasswordForm callback={callback} />,
-      document.getElementById('test-mount')
-    );
+    testUtils.render(<ResetPasswordForm callback={callback} />, 'test-mount');
     /* jshint ignore:end */
 
-    window.simulateChange('#test-mount input', 'Som3L33tP455');
-    window.simulateSubmit('#test-mount form');
+    testUtils.simulateChange('#test-mount input', 'Som3L33tP455');
+    testUtils.simulateSubmit('#test-mount form');
   });
 });
 
 describe("Password Changed Page", function() {
   beforeEach(function() {
-    window.initModal(modal);
+    testUtils.initModal(modal);
 
     misago._context = {
       'FORGOTTEN_PASSWORD_URL': '/forgotten-password/'
     };
 
     /* jshint ignore:start */
-    ReactDOM.render(
-      <PasswordChangedPage user={{username: 'BobBoberson'}} />,
-      document.getElementById('test-mount')
-    );
+    testUtils.render(<PasswordChangedPage user={{username: 'BobBoberson'}} />, 'test-mount');
     /* jshint ignore:end */
   });
 
   afterEach(function() {
-    window.emptyTestContainers();
+    testUtils.emptyTestContainers();
   });
 
   it("renders", function() {
@@ -191,9 +182,9 @@ describe("Password Changed Page", function() {
   });
 
   it('opens sign in modal on click', function(done) {
-    window.simulateClick('#test-mount .btn-primary');
+    testUtils.simulateClick('#test-mount .btn-primary');
 
-    window.onElement('#modal-mount .modal-sign-in', function() {
+    testUtils.onElement('#modal-mount .modal-sign-in', function() {
       assert.ok(true, "sign in modal was displayed");
       done();
     });
