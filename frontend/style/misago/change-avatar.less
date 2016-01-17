@@ -2,7 +2,8 @@
 // Change Avatar Modal
 // --------------------------------------------------
 
-// Index page
+
+// Index
 .modal-change-avatar .modal-avatar-index {
   .avatar-preview {
     border-radius: @border-radius-large;
@@ -40,9 +41,71 @@
         display: block;
       }
     }
+
+    @media (max-width: (@grid-float-breakpoint - 1)) {
+      margin-bottom: @line-height-computed;
+
+      width: 150px;
+      height: 150px;
+
+      img {
+        width: 150px;
+        height: 150px;
+      }
+
+      .loader {
+        top: 25px;
+        height: 100px;
+
+        .loader-spinning-wheel {
+          width: 100px;
+          height: 100px;
+        }
+      }
+    }
   }
 
   .btn {
     text-align: left;
+  }
+}
+
+
+// Gallery
+.modal-change-avatar .modal-avatar-gallery {
+  padding-bottom: 0px;
+
+  .avatars-gallery {
+    margin-bottom: @line-height-computed;
+
+    h3 {
+      margin-top: 0px;
+    }
+  }
+
+  .avatars-gallery-images {
+    .row {
+      margin-bottom: @line-height-computed / 2;
+    }
+
+    .btn {
+      border-radius: @border-radius-base + 2px;
+      border: 2px solid @gray-lighter;
+      background: none;
+      padding: 2px;
+
+      &:hover, &:focus {
+        border-color: @gray-light;
+      }
+
+      &.avatar-selected, &:active {
+        border-color: @link-color;
+      }
+
+      img {
+        border-radius: @border-radius-base;
+        width: 100%;
+      }
+    }
   }
 }

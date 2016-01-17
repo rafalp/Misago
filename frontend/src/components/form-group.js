@@ -72,7 +72,7 @@ export default class extends React.Component {
     return <div className={this.getClassName()}>
       <label className={'control-label ' + (this.props.labelClass || '')}
              htmlFor={this.props.for || ''}>
-        {this.props.label}:
+        {this.props.label + ':'}
       </label>
       <div className={this.props.controlClass || ''}>
         {this.props.children}

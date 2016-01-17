@@ -69,6 +69,20 @@ export default class extends React.Component {
     }
   }
 
+  getGalleryButton() {
+    if (this.props.options.galleries) {
+      /* jshint ignore:start */
+      return <Button onClick={this.props.showGallery}
+              disabled={this.state.isLoading}
+              className="btn-default btn-block btn-avatar-gallery">
+        {gettext("Pick avatar from gallery")}
+      </Button>;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
   getAvatarPreview() {
     if (this.state.isLoading) {
       /* jshint ignore:start */
@@ -104,6 +118,8 @@ export default class extends React.Component {
                   className="btn-default btn-block btn-avatar-generate">
             {gettext("Generate my individual avatar")}
           </Button>
+
+          {this.getGalleryButton()}
 
         </div>
       </div>

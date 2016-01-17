@@ -182,6 +182,34 @@ describe("Change Avatar", function() {
       done();
     });
   });
+
+  it("switches to gallery and back", function(done) {
+    $.mockjax({
+      url: '/test-api/users/123/avatar/',
+      status: 200,
+      responseText: apiResponse
+    });
+
+    /* jshint ignore:start */
+    testUtils.render(<ChangeAvatar user={misago.get('user')} />);
+    /* jshint ignore:end */
+
+    testUtils.onElement('#test-mount .btn-avatar-gallery', function() {
+      testUtils.simulateClick('#test-mount .btn-avatar-gallery');
+    });
+
+    testUtils.onElement('#test-mount .modal-avatar-gallery', function() {
+      assert.ok($('#test-mount .modal-avatar-gallery').length,
+        "gallery was displayed via showGallery");
+
+      testUtils.simulateClick('#test-mount .modal-footer .btn-default');
+
+      testUtils.onElement('#test-mount .modal-avatar-index', function() {
+        assert.ok(true, 'returned to index via showIndex');
+        done();
+      });
+    });
+  });
 });
 
 describe("Change Avatar Error", function() {

@@ -100,6 +100,22 @@ describe("Change Avatar Index", function() {
     });
   });
 
+  it("renders without gallery button", function(done) {
+    /* jshint ignore:start */
+    let amendedOptions = Object.assign({}, apiResponse, {galleries: false});
+    testUtils.render(
+      <ChangeAvatarIndex user={misago.get('user')}
+                         options={amendedOptions} />
+    );
+    /* jshint ignore:end */
+
+    testUtils.onElement('#test-mount .modal-avatar-index', function() {
+      assert.ok(!$('#test-mount .btn-avatar-gallery').length,
+        "gallery option is hidden");
+      done();
+    });
+  });
+
   it("shows alert with error on rejection", function(done) {
     $.mockjax({
       url: '/test-api/users/123/avatar/',

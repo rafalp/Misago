@@ -1,5 +1,6 @@
 import React from 'react';
 import AvatarIndex from 'misago/components/change-avatar/index'; // jshint ignore:line
+import AvatarGallery from 'misago/components/change-avatar/gallery'; // jshint ignore:line
 import Loader from 'misago/components/modal-loader'; // jshint ignore:line
 import { updateAvatar } from 'misago/reducers/users'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
@@ -61,6 +62,12 @@ export default class extends React.Component {
     });
   };
 
+  showGallery = () => {
+    this.setState({
+      'component': AvatarGallery
+    });
+  };
+
   completeFlow = (avatarHash, options) => {
     store.dispatch(updateAvatar(this.props.user, avatarHash));
 
@@ -82,9 +89,10 @@ export default class extends React.Component {
         /* jshint ignore:start */
         return <this.state.component options={this.state.options}
                                      user={this.props.user}
-                                     onComplete={this.onComplete}
+                                     onComplete={this.completeFlow}
                                      showError={this.showError}
-                                     showIndex={this.showIndex} />;
+                                     showIndex={this.showIndex}
+                                     showGallery={this.showGallery} />;
         /* jshint ignore:end */
       }
     } else {
