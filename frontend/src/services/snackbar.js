@@ -51,7 +51,7 @@ export class Snackbar {
     let message = gettext("Unknown error has occured.");
 
     if (rejection.status === 0) {
-      message = gettext("Lost connection with application.");
+      message = rejection.detail;
     }
 
     if (rejection.status === 400 && rejection.detail) {

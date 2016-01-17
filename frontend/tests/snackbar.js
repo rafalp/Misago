@@ -91,12 +91,13 @@ describe("Snackbar", function() {
 
   it("provides shortcut for backend disconnection", function() {
     snackbar.apiError({
-      status: 0
+      status: 0,
+      detail: "You got disconnected!"
     });
 
     assert.deepEqual(store.getState().snackbar, {
       type: 'error',
-      message: "Lost connection with application.",
+      message: "You got disconnected!",
       isVisible: true
     }, "service set disconnected message in store");
   });

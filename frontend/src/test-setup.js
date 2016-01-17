@@ -8,7 +8,8 @@ require('bootstrap-affix');
 require('bootstrap-modal');
 require('bootstrap-dropdown');
 
-document.__misago = 'yus';
+require('dropzone');
+require('cropit');
 
 require('jquery-mockjax')(jQuery, window);
 $.mockjaxSettings.logging = false;

@@ -7,3 +7,6 @@ require('bootstrap-transition');
 require('bootstrap-affix');
 require('bootstrap-modal');
 require('bootstrap-dropdown');
+
+require('dropzone');
+require('cropit');

@@ -6,7 +6,7 @@ import dropdown from 'misago/services/mobile-navbar-dropdown';
 import store from 'misago/services/store';
 import * as testUtils from 'misago/utils/test-utils';
 
-describe("UserMenu", function() {
+describe("User Menu", function() {
   beforeEach(function() {
     testUtils.contextClear(misago);
     testUtils.contextAuthenticated(misago);
@@ -29,7 +29,7 @@ describe("UserMenu", function() {
   });
 });
 
-describe("UserNav", function() {
+describe("User Nav", function() {
   beforeEach(function() {
     testUtils.contextClear(misago);
     testUtils.contextAuthenticated(misago);
@@ -52,7 +52,7 @@ describe("UserNav", function() {
   });
 });
 
-describe("CompactUserNav", function() {
+describe("Compact User Nav", function() {
   beforeEach(function() {
     testUtils.contextClear(misago);
     testUtils.contextAuthenticated(misago);

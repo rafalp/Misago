@@ -67,6 +67,22 @@ describe('Ajax', function() {
     });
   });
 
+  it("normalizes disconnection error", function(done) {
+    $.mockjax({
+      url: '/failing-url/',
+      isTimeout: true
+    });
+
+    ajax.request('GET', '/failing-url/').then(function() {
+      assert.fail("request to /failing-url/ should be rejected");
+    }, function(rejection) {
+      assert.equal(rejection.status, 0, "rejection status code is preserved");
+      assert.equal(rejection.detail, "Lost connection with application.",
+        "ajax handled disconnection from /failing-url/");
+      done();
+    });
+  });
+
   it("makes GET request", function(done) {
     $.mockjax({
       url: '/test-url/',

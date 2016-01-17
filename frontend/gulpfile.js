@@ -29,11 +29,19 @@ gulp.task('watch', ['fastbuild'], function() {
 // Builds
 
 gulp.task('fastbuild', [
-  'fastsource', 'faststyle', 'faststatic', 'fastvendorsources', 'copyvendors'
+  'fastsource',
+  'faststyle',
+  'faststatic',
+  'fastvendorsources',
+  'copyzxcvbn'
 ]);
 
 gulp.task('build', [
-  'source', 'style', 'static', 'vendorsources', 'copyvendors'
+  'source',
+  'style',
+  'static',
+  'vendorsources',
+  'copyzxcvbn'
 ]);
 
 // Source tasks
@@ -69,6 +77,7 @@ gulp.task('fastsource', ['lintsource'], function() {
     .external('moment')
     .external('react')
     .external('react-dom')
+    .external('react-router')
     .external('redux')
     .external('react-redux')
     .transform(babelify)
@@ -88,6 +97,7 @@ gulp.task('source', ['lintsource'], function() {
     .external('moment')
     .external('react')
     .external('react-dom')
+    .external('react-router')
     .external('redux')
     .external('react-redux')
     .transform(babelify)
@@ -156,6 +166,7 @@ gulp.task('fastvendorsources', function() {
     .require('moment')
     .require('react')
     .require('react-dom')
+    .require('react-router')
     .require('redux')
     .require('react-redux')
     .bundle()
@@ -174,25 +185,13 @@ gulp.task('vendorsources', function() {
     .require('moment')
     .require('react')
     .require('react-dom')
+    .require('react-router')
     .require('redux')
     .require('react-redux')
     .transform(babelify)
     .bundle()
     .pipe(source('vendor.js'))
     .pipe(buffer())
-    .pipe(sourcemaps.init())
-    .pipe(uglify())
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(misago + 'js'));
-});
-
-gulp.task('copyvendors', ['copyzxcvbn'], function() {
-  return gulp.src([
-      'cropit/dist/jquery.cropit.js',
-      'dropzone/dist/dropzone.js'
-    ].map(function(item) {
-      return 'node_modules/' + item;
-    }))
     .pipe(sourcemaps.init())
     .pipe(uglify())
     .pipe(sourcemaps.write('.'))

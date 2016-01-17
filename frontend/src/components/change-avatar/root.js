@@ -1,11 +1,8 @@
 import React from 'react';
 import AvatarIndex from 'misago/components/change-avatar/index'; // jshint ignore:line
 import Loader from 'misago/components/modal-loader'; // jshint ignore:line
-import misago from 'misago/index';
 import { updateAvatar } from 'misago/reducers/users'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
-import cropit from 'misago/services/cropit';
-import dropzone from 'misago/services/dropzone';
 import store from 'misago/services/store'; // jshint ignore:line
 
 export class ChangeAvatarError extends React.Component {
@@ -40,14 +37,11 @@ export class ChangeAvatarError extends React.Component {
 
 export default class extends React.Component {
   componentDidMount() {
-    Promise.all([
-      ajax.get(misago.get('user').avatar_api_url),
-      cropit.load(),
-      dropzone.load()
-    ]).then((resolutions) => {
+    ajax.get(this.props.user.avatar_api_url).then((options) => {
       this.setState({
         'component': AvatarIndex,
-        'options': resolutions[0]
+        'options': options,
+        'error': null
       });
     }, (rejection) => {
       this.showError(rejection);
@@ -61,18 +55,18 @@ export default class extends React.Component {
     });
   };
 
-  updateAvatar = (avatarHash, options) => {
+  showIndex = () => {
+    this.setState({
+      'component': AvatarIndex
+    });
+  };
+
+  completeFlow = (avatarHash, options) => {
     store.dispatch(updateAvatar(this.props.user, avatarHash));
 
     this.setState({
       'component': AvatarIndex,
       options
-    });
-  };
-
-  showIndex = () => {
-    this.setState({
-      'component': AvatarIndex
     });
   };
   /* jshint ignore:end */
@@ -88,7 +82,8 @@ export default class extends React.Component {
         /* jshint ignore:start */
         return <this.state.component options={this.state.options}
                                      user={this.props.user}
-                                     updateAvatar={this.updateAvatar}
+                                     onComplete={this.onComplete}
+                                     showError={this.showError}
                                      showIndex={this.showIndex} />;
         /* jshint ignore:end */
       }

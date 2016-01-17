@@ -40,6 +40,11 @@ export class Ajax {
           var rejection = jqXHR.responseJSON || {};
 
           rejection.status = jqXHR.status;
+
+          if (rejection.status === 0) {
+            rejection.detail = gettext("Lost connection with application.");
+          }
+
           rejection.statusText = jqXHR.statusText;
 
           reject(rejection);

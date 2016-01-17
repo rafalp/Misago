@@ -7,7 +7,7 @@ import modal from 'misago/services/modal';
 import store from 'misago/services/store';
 import * as testUtils from 'misago/utils/test-utils';
 
-describe("GuestMenu", function() {
+describe("Guest Menu", function() {
   beforeEach(function() {
     testUtils.initEmptyStore(store);
     testUtils.initDropdown(dropdown);
@@ -41,7 +41,7 @@ describe("GuestMenu", function() {
   });
 });
 
-describe("GuestNav", function() {
+describe("Guest Nav", function() {
   beforeEach(function() {
     testUtils.initEmptyStore(store);
     testUtils.initDropdown(dropdown);
@@ -75,7 +75,7 @@ describe("GuestNav", function() {
   });
 });
 
-describe("CompactGuestNav", function() {
+describe("Compact Guest Nav", function() {
   beforeEach(function() {
     testUtils.initEmptyStore(store);
     testUtils.initDropdown(dropdown);

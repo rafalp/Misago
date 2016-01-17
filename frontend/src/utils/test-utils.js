@@ -44,6 +44,7 @@ export function contextAuthenticated(misago, overrides) {
     user: {
       id : 42,
       absolute_url: "/user/loremipsum-1/",
+      avatar_api_url: "/test-api/users/42/avatar/",
       avatar_hash: "5c6a04b4",
       email: "test@example.com",
       full_title: "Forum team",
