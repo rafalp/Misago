@@ -35,13 +35,12 @@ export default class extends React.Component {
     }, (rejection) => {
       if (rejection.status === 400) {
         snackbar.error(rejection.detail);
+        this.setState({
+          'isLoading': false
+        });
       } else {
         this.props.showError(rejection);
       }
-
-      this.setState({
-        'isLoading': false
-      });
     });
   }
 
@@ -62,6 +61,34 @@ export default class extends React.Component {
               disabled={this.state.isLoading}
               className="btn-default btn-block btn-avatar-gravatar">
         {gettext("Download my Gravatar")}
+      </Button>;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
+  getCropButton() {
+    if (this.props.options.crop_org) {
+      /* jshint ignore:start */
+      return <Button onClick={this.props.showCrop}
+              disabled={this.state.isLoading}
+              className="btn-default btn-block btn-avatar-crop">
+        {gettext("Re-crop uploaded image")}
+      </Button>;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
+  getUploadButton() {
+    if (this.props.options.upload) {
+      /* jshint ignore:start */
+      return <Button onClick={this.props.showUpload}
+              disabled={this.state.isLoading}
+              className="btn-default btn-block btn-avatar-upload">
+        {gettext("Upload new image")}
       </Button>;
       /* jshint ignore:end */
     } else {
@@ -119,6 +146,8 @@ export default class extends React.Component {
             {gettext("Generate my individual avatar")}
           </Button>
 
+          {this.getCropButton()}
+          {this.getUploadButton()}
           {this.getGalleryButton()}
 
         </div>

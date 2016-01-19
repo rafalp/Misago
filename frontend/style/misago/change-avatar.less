@@ -71,6 +71,63 @@
 }
 
 
+// Upload
+.modal-change-avatar .modal-avatar-upload {
+  text-align: center;
+
+  .btn-pick-file {
+    background: transparent;
+    border: 2px solid @gray-lighter;
+    border-radius: @border-radius-large;
+    padding: @padding-large-vertical @padding-large-horizontal * 1.5;
+    .box-shadow(none);
+
+    color: @gray-light;
+    font-size: @font-size-large;
+    text-align: center;
+
+    &>.material-icon {
+      display: block;
+      margin: 0px auto;
+      margin-bottom: @line-height-computed * .66;
+
+      font-size: @line-height-computed * 2.5;
+      width: @line-height-computed * 2.5;
+      height: @line-height-computed * 2.5;
+    }
+
+    &:hover, &:active {
+      border-color: @gray-light;
+    }
+  }
+
+  .text-muted {
+    margin-top: @line-height-computed * 0.66;
+  }
+
+  .upload-progress {
+    img {
+      border-radius: @border-radius-base;
+      margin-bottom: @line-height-computed;
+
+      max-height: 80px;
+      width: auto;
+    }
+
+    .progress {
+      width: 70%;
+      margin: 0px auto;
+    }
+  }
+}
+
+
+// Crop
+.modal-avatar-crop .crop-form {
+  margin: 0px auto;
+}
+
+
 // Gallery
 .modal-change-avatar .modal-avatar-gallery {
   padding-bottom: 0px;

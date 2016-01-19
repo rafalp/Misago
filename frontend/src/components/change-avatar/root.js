@@ -1,5 +1,7 @@
 import React from 'react';
 import AvatarIndex from 'misago/components/change-avatar/index'; // jshint ignore:line
+import AvatarCrop from 'misago/components/change-avatar/crop'; // jshint ignore:line
+import AvatarUpload from 'misago/components/change-avatar/upload'; // jshint ignore:line
 import AvatarGallery from 'misago/components/change-avatar/gallery'; // jshint ignore:line
 import Loader from 'misago/components/modal-loader'; // jshint ignore:line
 import { updateAvatar } from 'misago/reducers/users'; // jshint ignore:line
@@ -62,6 +64,18 @@ export default class extends React.Component {
     });
   };
 
+  showUpload = () => {
+    this.setState({
+      'component': AvatarUpload
+    });
+  };
+
+  showCrop = () => {
+    this.setState({
+      'component': AvatarCrop
+    });
+  };
+
   showGallery = () => {
     this.setState({
       'component': AvatarGallery
@@ -92,6 +106,8 @@ export default class extends React.Component {
                                      onComplete={this.completeFlow}
                                      showError={this.showError}
                                      showIndex={this.showIndex}
+                                     showCrop={this.showCrop}
+                                     showUpload={this.showUpload}
                                      showGallery={this.showGallery} />;
         /* jshint ignore:end */
       }

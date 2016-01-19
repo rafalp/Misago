@@ -103,13 +103,12 @@ export default class extends React.Component {
     }, (rejection) => {
       if (rejection.status === 400) {
         snackbar.error(rejection.detail);
+        this.setState({
+          'isLoading': false
+        });
       } else {
         this.props.showError(rejection);
       }
-
-      this.setState({
-        'isLoading': false
-      });
     });
   };
   /* jshint ignore:end */

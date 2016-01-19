@@ -10,14 +10,12 @@
   "license": "GPL-2.0",
   "private": true,
   "browser": {
-    "jquery": "./node_modules/jquery/dist/jquery.min.js",
     "jquery-mockjax": "./node_modules/jquery-mockjax/dist/jquery.mockjax.js",
     "bootstrap-transition": "./node_modules/bootstrap/js/transition.js",
     "bootstrap-affix": "./node_modules/bootstrap/js/affix.js",
     "bootstrap-modal": "./node_modules/bootstrap/js/modal.js",
     "bootstrap-dropdown": "./node_modules/bootstrap/js/dropdown.js",
-    "dropzone": "./node_modules/dropzone/dist/dropzone.js",
-    "cropit": "./node_modules/cropit/dist/jquery.cropit.js"
+    "dropzone": "./node_modules/dropzone/dist/dropzone.js"
   },
   "browserify-shim": {
     "jquery": "jQuery"

@@ -75,6 +75,7 @@ gulp.task('fastsource', ['lintsource'], function() {
       debug: true
     })
     .external('moment')
+    .external('cropit')
     .external('react')
     .external('react-dom')
     .external('react-router')
@@ -95,6 +96,7 @@ gulp.task('source', ['lintsource'], function() {
       debug: false
     })
     .external('moment')
+    .external('cropit')
     .external('react')
     .external('react-dom')
     .external('react-router')
@@ -164,6 +166,7 @@ gulp.task('fastvendorsources', function() {
     })
     .transform('browserify-shim')
     .require('moment')
+    .require('cropit')
     .require('react')
     .require('react-dom')
     .require('react-router')
@@ -182,7 +185,9 @@ gulp.task('vendorsources', function() {
       entries: 'src/vendor.js',
       debug: false
     })
+    .transform('browserify-shim')
     .require('moment')
+    .require('cropit')
     .require('react')
     .require('react-dom')
     .require('react-router')

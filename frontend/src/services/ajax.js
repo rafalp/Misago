@@ -11,8 +11,8 @@ export class Ajax {
 
   getCsrfToken() {
     if (document.cookie.indexOf(this._cookieName) !== -1) {
-      var cookieRegex = new RegExp(this._cookieName + '\=([^;]*)');
-      var cookie = document.cookie.match(cookieRegex)[0];
+      let cookieRegex = new RegExp(this._cookieName + '\=([^;]*)');
+      let cookie = document.cookie.match(cookieRegex)[0];
       return cookie ? cookie.split('=')[1] : null;
     } else {
       return null;
@@ -20,16 +20,17 @@ export class Ajax {
   }
 
   request(method, url, data) {
-    var self = this;
+    let self = this;
     return new Promise(function(resolve, reject) {
-      var xhr = {
+      let xhr = {
         url: url,
         method: method,
         headers: {
           'X-CSRFToken': self._csrfToken
         },
 
-        data: data || {},
+        data: (data ? JSON.stringify(data) : null),
+        contentType: "application/json; charset=utf-8",
         dataType: 'json',
 
         success: function(data) {
@@ -37,7 +38,7 @@ export class Ajax {
         },
 
         error: function(jqXHR) {
-          var rejection = jqXHR.responseJSON || {};
+          let rejection = jqXHR.responseJSON || {};
 
           rejection.status = jqXHR.status;
 
@@ -73,6 +74,53 @@ export class Ajax {
 
   delete(url) {
     return this.request('DELETE', url);
+  }
+
+  upload(url, data, progress) {
+    let self = this;
+    return new Promise(function(resolve, reject) {
+      let xhr = {
+        url: url,
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': self._csrfToken
+        },
+
+        data: data,
+        contentType: false,
+        processData: false,
+
+        xhr: function() {
+          let xhr = new window.XMLHttpRequest();
+          xhr.upload.addEventListener("progress", function(evt) {
+            if (evt.lengthComputable) {
+              progress(Math.round(evt.loaded / evt.total * 100));
+            }
+          }, false);
+          return xhr;
+        },
+
+        success: function(response) {
+          resolve(response);
+        },
+
+        error: function(jqXHR) {
+          let rejection = jqXHR.responseJSON || {};
+
+          rejection.status = jqXHR.status;
+
+          if (rejection.status === 0) {
+            rejection.detail = gettext("Lost connection with application.");
+          }
+
+          rejection.statusText = jqXHR.statusText;
+
+          reject(rejection);
+        }
+      };
+
+      $.ajax(xhr);
+    });
   }
 }
 
