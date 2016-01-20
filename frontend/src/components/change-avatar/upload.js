@@ -17,26 +17,16 @@ export default class extends React.Component {
     };
   }
 
-  /* jshint ignore:start */
-  pickFile = () => {
-    document.getElementById('avatar-hidden-upload').click();
-  };
-
-  uploadFile = () => {
-    let image = document.getElementById('avatar-hidden-upload').files[0];
-
+  validateFile(image) {
     if (image.size > this.props.options.upload.limit) {
-      snackbar.error(interpolate(gettext("Selected file is too big. (%(filesize)s)"), {
-        'filesize': fileSize(this.props.options.upload.limit)
-      }, true));
-
-      return;
+      return interpolate(gettext("Selected file is too big. (%(filesize)s)"), {
+        'filesize': fileSize(image.size)
+      }, true);
     }
 
-    let invalidTypeMsg = gettext('Selected file type is not supported.');
+    let invalidTypeMsg = gettext("Selected file type is not supported.");
     if (this.props.options.upload.allowed_mime_types.indexOf(image.type) === -1) {
-      snackbar.error(invalidTypeMsg);
-      return;
+      return invalidTypeMsg;
     }
 
     let extensionFound = false;
@@ -48,7 +38,23 @@ export default class extends React.Component {
     });
 
     if (!extensionFound) {
-      snackbar.error(invalidTypeMsg);
+      return invalidTypeMsg;
+    }
+
+    return false;
+  }
+
+  /* jshint ignore:start */
+  pickFile = () => {
+    document.getElementById('avatar-hidden-upload').click();
+  };
+
+  uploadFile = () => {
+    let image = document.getElementById('avatar-hidden-upload').files[0];
+
+    let validationError = this.validateFile(image);
+    if (validationError) {
+      snackbar.error(validationError);
       return;
     }
 
