@@ -1,20 +1,35 @@
-from django.shortcuts import redirect, render
+from django.core.urlresolvers import reverse
+from django.shortcuts import render
 from django.utils.translation import ugettext as _
 
 from misago.users.decorators import deny_guests
 
 
 @deny_guests
-def index(request):
-    return redirect('misago:index')
+def index(request, *args, **kwargs):
+    request.frontend_context.update({
+        'USERNAME_CHANGES_API': reverse('misago:api:usernamechange-list'),
 
+        'USER_OPTIONS': [
+            {
+                'name': _("Forum options"),
+                'icon': 'settings',
+                'component': 'forum-options',
+            },
+            {
+                'name': _("Change username"),
+                'icon': 'card_membership',
+                'component': 'change-username',
+            },
+            {
+                'name': _("Change sign-in credentials"),
+                'icon': 'vpn_key',
+                'component': 'sign-in-credentials',
+            },
+        ]
+    });
 
-@deny_guests
-def form(request, form_name, token=None):
-    return noscript(request, **{
-        'title': _("Options"),
-        'message': _("To change options enable JavaScript."),
-    })
+    return render(request, 'misago/options/noscript.html')
 
 
 # DEPRECATED VIEWS - DELETE AFTER USER CP IS DONE

@@ -25,7 +25,7 @@ class AuthenticatedUserSerializer(serializers.ModelSerializer):
     rank = RankSerializer(many=False, read_only=True)
 
     absolute_url = serializers.SerializerMethodField()
-    avatar_api_url = serializers.SerializerMethodField()
+    api_url = serializers.SerializerMethodField()
 
     class Meta:
         model = get_user_model()
@@ -50,7 +50,7 @@ class AuthenticatedUserSerializer(serializers.ModelSerializer):
             'posts',
             'acl',
             'absolute_url',
-            'avatar_api_url'
+            'api_url'
         )
 
     def get_acl(self, obj):
@@ -59,9 +59,19 @@ class AuthenticatedUserSerializer(serializers.ModelSerializer):
     def get_absolute_url(self, obj):
         return obj.get_absolute_url()
 
-    def get_avatar_api_url(self, obj):
-        return reverse('misago:api:user-avatar', kwargs={'pk': obj.pk})
-
+    def get_api_url(self, obj):
+        return {
+            'avatar': reverse(
+                'misago:api:user-avatar', kwargs={'pk': obj.pk}),
+            'options': reverse(
+                'misago:api:user-forum-options', kwargs={'pk': obj.pk}),
+            'username': reverse(
+                'misago:api:user-username', kwargs={'pk': obj.pk}),
+            'change_password': reverse(
+                'misago:api:user-change-password', kwargs={'pk': obj.pk}),
+            'change_email': reverse(
+                'misago:api:user-change-email', kwargs={'pk': obj.pk}),
+        }
 
 class AnonymousUserSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()

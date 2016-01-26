@@ -40,7 +40,7 @@ export class ChangeAvatarError extends React.Component {
 
 export default class extends React.Component {
   componentDidMount() {
-    ajax.get(this.props.user.avatar_api_url).then((options) => {
+    ajax.get(this.props.user.api_url.avatar).then((options) => {
       this.setState({
         'component': AvatarIndex,
         'options': options,

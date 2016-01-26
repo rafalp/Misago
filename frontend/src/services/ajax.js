@@ -56,7 +56,10 @@ export class Ajax {
     });
   }
 
-  get(url) {
+  get(url, params) {
+    if (params) {
+      url += '?' + $.param(params);
+    }
     return this.request('GET', url);
   }
 

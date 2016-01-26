@@ -6,6 +6,9 @@ let validateRequired = required();
 export default class extends React.Component {
   validate() {
     let errors = {};
+    if (!this.state.validators) {
+      return errors;
+    }
 
     let validators = {
       required: this.state.validators.required || this.state.validators,
@@ -60,6 +63,9 @@ export default class extends React.Component {
 
   validateField(name, value) {
     let errors = [];
+    if (!this.state.validators) {
+      return errors;
+    }
 
     let validators = {
       required: (this.state.validators.required || this.state.validators)[name],

@@ -59,7 +59,9 @@ describe("Change Avatar Index", function() {
       'user': {
         'id': 123,
         'avatar_hash': 'aabbccdd',
-        'avatar_api_url': '/test-api/users/123/avatar/'
+        'api_url': {
+          'avatar': '/test-api/users/123/avatar/'
+        }
       }
     };
   });

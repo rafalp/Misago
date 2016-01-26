@@ -1,0 +1,81 @@
+//
+// Username History
+// --------------------------------------------------
+
+
+.username-history {
+  .username-change-avatar {
+    float: left;
+
+    .user-avatar {
+      margin-right: @line-height-computed / 2;
+
+      img {
+        width: 42px;
+        height: 42px;
+      }
+    }
+  }
+
+  .username-change {
+    .material-icon {
+      margin: 0px @font-size-base / 2;
+    }
+  }
+
+  .username-change-date {
+    color: @text-muted;
+    font-size: @font-size-small;
+  }
+}
+
+
+// Full displays
+@media screen and (min-width: @screen-md-min) {
+  .username-history {
+    li {
+      overflow: auto;
+
+      &.empty-message {
+        text-align: center;
+      }
+    }
+
+    .username-change-avatar {
+      float: left;
+
+      .user-avatar {
+        margin-right: @line-height-computed / 2;
+
+        img {
+          width: 18px;
+          height: 18px;
+
+          position: relative;
+          bottom: 1px;
+        }
+      }
+    }
+    .username-change-author {
+      float: left;
+      width: 30%;
+    }
+
+    .username-change {
+      float: left;
+      width: 40%;
+    }
+
+    .username-change-date {
+      float: left;
+      width: 20%;
+    }
+
+    &.ui-ready {
+      .username-change-date {
+        position: relative;
+        top: 2px;
+      }
+    }
+  }
+}

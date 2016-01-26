@@ -1,0 +1,70 @@
+//
+// UI Preview
+// --------------------------------------------------
+
+
+// Animation
+.ui-preview, .ui-preview-text, .ui-preview-img {
+  background: @ui-preview-light;
+  border-radius: @border-radius-base + 1px;
+
+  color: @ui-preview-light;
+
+  .animation(ui-preview-animation 1.5s linear infinite);
+}
+
+@-webkit-keyframes ui-preview-animation {
+  0% {
+    background: @ui-preview-light;
+    color: @ui-preview-light;
+  }
+  50% {
+    background: @ui-preview-dark;
+    color: @ui-preview-dark;
+  }
+  100% {
+    background: @ui-preview-light;
+    color: @ui-preview-light;
+  }
+}
+
+@keyframes ui-preview-animation {
+  0% {
+    background: @ui-preview-light;
+    color: @ui-preview-light;
+  }
+  50% {
+    background: @ui-preview-dark;
+    color: @ui-preview-dark;
+  }
+  100% {
+    background: @ui-preview-light;
+    color: @ui-preview-light;
+  }
+}
+
+
+// Text
+.ui-preview-text {
+  border-radius: @border-radius-large;
+  display: inline-block;
+  height: @font-size-base;
+
+  position: relative;
+  top: (@line-height-computed - @font-size-base) / 2;
+}
+
+
+// List
+.ui-preview .list-group {
+  padding: 1px;
+
+  &>li {
+    border: none;
+    margin-bottom: 1px;
+  }
+
+  &>li:last-child {
+    margin-bottom: 0px;
+  }
+}

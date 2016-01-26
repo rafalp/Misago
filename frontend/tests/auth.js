@@ -1,5 +1,5 @@
 import assert from 'assert';
-import reducer, { SIGN_IN, SIGN_OUT, signIn, signOut } from 'misago/reducers/auth';
+import reducer, { SIGN_IN, SIGN_OUT, signIn, signOut, patchUser } from 'misago/reducers/auth';
 import { Auth } from 'misago/services/auth';
 
 let auth = null;
@@ -166,6 +166,24 @@ describe("Auth", function() {
 });
 
 describe("Auth Reducer", function() {
+  it("patches auth user", function() {
+    let state = {
+      user: {
+        username: 'Original'
+      }
+    };
+
+    assert.deepEqual(reducer(state, patchUser({
+      username: 'Patched!',
+      new_attr: 'Set'
+    })), {
+      user: {
+        username: 'Patched!',
+        new_attr: 'Set'
+      }
+    }, "reducer changed store state for sign out");
+  });
+
   it("signs user in", function() {
     let state = {
       signedIn: false

@@ -5,8 +5,16 @@ export var initialState = {
   signedOut: false
 };
 
+export const PATCH_USER = 'PATCH_USER';
 export const SIGN_IN = 'SIGN_IN';
 export const SIGN_OUT = 'SIGN_OUT';
+
+export function patchUser(patch) {
+  return {
+    type: PATCH_USER,
+    patch
+  };
+}
 
 export function signIn(user) {
   return {
@@ -24,6 +32,11 @@ export function signOut(soft=false) {
 
 export default function auth(state=initialState, action=null) {
   switch (action.type) {
+    case PATCH_USER:
+        let newState = Object.assign({}, state);
+        newState.user = Object.assign({}, state.user, action.patch);
+        return newState;
+
     case SIGN_IN:
       return Object.assign({}, state, {
         signedIn: action.user

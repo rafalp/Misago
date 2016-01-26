@@ -1,0 +1,35 @@
+//
+// Page header
+// --------------------------------------------------
+
+
+// Common styles
+.page-header {
+  margin: 0px;
+  margin-bottom: @line-height-computed;
+}
+
+
+// Small displays
+@media screen and (max-width: @screen-sm-max) {
+  .container {
+    h1 {
+      font-size: @font-size-large * 1.25;
+    }
+
+    &>.btn {
+      float: right;
+      margin-top: @line-height-computed - 7px;
+    }
+
+    &>.btn-dropdown-toggle {
+      .material-icon {
+        width: 24px;
+        height: 24px;
+
+        font-size: 24px;
+        line-height: 24px;
+      }
+    }
+  }
+}

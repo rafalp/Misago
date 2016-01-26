@@ -109,7 +109,7 @@ export default class extends React.Component {
     let avatarType = this.props.upload ? 'crop_tmp' : 'crop_org';
     let cropit = $('.crop-form');
 
-    ajax.post(this.props.user.avatar_api_url, {
+    ajax.post(this.props.user.api_url.avatar, {
       'avatar': avatarType,
       'crop': {
         'offset': cropit.cropit('offset'),

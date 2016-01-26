@@ -45,12 +45,18 @@
 
 
 // Always displayed on mobile dropdown
-.mobile-dropdown {
+.mobile-dropdown, .compact-nav {
   position: static;
   margin: 0px;
+  overflow: auto;
+
+  &.open {
+    margin-top: @line-height-computed * -1;
+    margin-bottom: @line-height-computed;
+  }
 }
 
-.mobile-dropdown.open>.dropdown-menu {
+.mobile-dropdown.open>.dropdown-menu, .compact-nav.open>.dropdown-menu {
   border: none;
   border-radius: 0;
   .box-shadow(none);

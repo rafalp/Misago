@@ -40,7 +40,7 @@ export class UserMenu extends React.Component {
       </li>
       <li>
         <button type="button" className="btn-link" onClick={this.changeAvatar}>
-          <span className="material-icon">face</span>
+          <span className="material-icon">portrait</span>
           {gettext("Change avatar")}
         </button>
       </li>
