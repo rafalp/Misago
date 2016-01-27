@@ -1,0 +1,57 @@
+//
+// Panels
+// --------------------------------------------------
+
+
+// Messages
+@media screen and (max-width: @screen-sm-max) {
+  .panel-message-body {
+    text-align: center;
+
+    .message-icon {
+      margin: @line-height-computed * 1.5;
+
+      .material-icon {
+        font-size: @message-page-icon-size * 2;
+      }
+    }
+  }
+}
+
+
+// Full displays
+@media screen and (min-width: @screen-md-min) {
+  .panel-message-body {
+    padding: @line-height-computed;
+    padding-bottom: @line-height-computed * 1.5;
+
+    .message-icon {
+      float: left;
+
+      .material-icon {
+        font-size: @line-height-computed * 2.5;
+      }
+    }
+
+    .message-body {
+      margin-left: @line-height-computed * 3.75;
+      margin-top: @line-height-computed * .6 - 2px;
+
+      .lead {
+        margin-bottom: 0px;
+      }
+
+      .help-text {
+        margin-top: @line-height-computed * .66;
+      }
+    }
+  }
+}
+
+
+// Loading
+.panel-body-loading {
+  padding: 0px;
+
+  text-align: center;
+}

@@ -139,19 +139,19 @@ export default class extends React.Component {
     }
 
     if (this.clean()) {
-      this.setState({'isLoading': true});
+      this.setState({isLoading: true});
       let promise = this.send();
 
       if (promise) {
         promise.then((success) => {
-          this.setState({'isLoading': false});
+          this.setState({isLoading: false});
           this.handleSuccess(success);
         }, (rejection) => {
-          this.setState({'isLoading': false});
+          this.setState({isLoading: false});
           this.handleError(rejection);
         });
       } else {
-        this.setState({'isLoading': false});
+        this.setState({isLoading: false});
       }
     }
   };

@@ -1,8 +1,18 @@
-import { UPDATE_AVATAR } from 'misago/reducers/users';
+import { UPDATE_AVATAR, UPDATE_USERNAME } from 'misago/reducers/users';
 
 import moment from 'moment';
 
+export const ADD_NAME_CHANGE = 'ADD_NAME_CHANGE';
 export const DEHYDRATE_RESULT = 'DEHYDRATE_RESULT';
+
+export function addNameChange(change, user, changedBy) {
+  return {
+    type: ADD_NAME_CHANGE,
+    change,
+    user,
+    changedBy
+  };
+}
 
 export function dehydrate(items) {
   return {
@@ -13,6 +23,17 @@ export function dehydrate(items) {
 
 export default function username(state=[], action=null){
   switch (action.type) {
+    case ADD_NAME_CHANGE:
+      let newState = state.slice();
+      newState.unshift({
+        changed_by: action.changedBy,
+        changed_by_username: action.changedBy.username,
+        changed_on: moment(),
+        new_username: action.change.username,
+        old_username: action.user.username
+      });
+      return newState;
+
     case DEHYDRATE_RESULT:
       return action.items.map(function(item) {
         return Object.assign({}, item, {
@@ -25,6 +46,18 @@ export default function username(state=[], action=null){
         if (item.changed_by && item.changed_by.id === action.userId) {
           item.changed_by = Object.assign({}, item.changed_by, {
             'avatar_hash': action.avatarHash
+          });
+        }
+
+        return Object.assign({}, item);
+      });
+
+    case UPDATE_USERNAME:
+      return state.map(function(item) {
+        if (item.changed_by && item.changed_by.id === action.userId) {
+          item.changed_by = Object.assign({}, item.changed_by, {
+            'username': action.username,
+            'slug': action.slug
           });
         }
 

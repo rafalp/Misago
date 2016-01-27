@@ -1,4 +1,4 @@
-import { UPDATE_AVATAR } from 'misago/reducers/users';
+import { UPDATE_AVATAR, UPDATE_USERNAME } from 'misago/reducers/users';
 
 export var initialState = {
   signedIn: false,
@@ -54,6 +54,17 @@ export default function auth(state=initialState, action=null) {
         let newState = Object.assign({}, state);
         newState.user = Object.assign({}, state.user, {
           'avatar_hash': action.avatarHash
+        });
+        return newState;
+      }
+      return state;
+
+    case UPDATE_USERNAME:
+      if (state.isAuthenticated && state.user.id === action.userId) {
+        let newState = Object.assign({}, state);
+        newState.user = Object.assign({}, state.user, {
+          username: action.username,
+          slug: action.slug
         });
         return newState;
       }
