@@ -10,5 +10,5 @@
 {% blocktrans trimmed %}
 To confirm this change, click the link below:
 {% endblocktrans %}
-{{ SITE_ADDRESS }}{% url 'misago:options_form' form_name='change-email' token=token %}
+{{ SITE_ADDRESS }}{% url 'misago:options_confirm_email_change' token=token %}
 {% endblock content %}

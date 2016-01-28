@@ -93,7 +93,7 @@ export class ChangeUsername extends Form {
   }
 
   handleError(rejection) {
-    snackbar.error(rejection.detail);
+    snackbar.apiError(rejection.detail);
   }
 
   render() {
