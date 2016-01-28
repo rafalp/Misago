@@ -32,12 +32,6 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
         else:
             self.fail("E-mail sent didn't contain confirmation url")
 
-        response = self.client.post(self.link, data={'token': token})
-        self.assertEqual(response.status_code, 200)
-
-        self.reload_user()
-        self.assertEqual(self.user.email, 'new@email.com')
-
     def test_invalid_password(self):
         """api errors correctly for invalid password"""
         response = self.client.post(self.link, data={
@@ -74,42 +68,3 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
         })
         self.assertEqual(response.status_code, 400)
         self.assertIn('not available', response.content)
-
-    def test_invalid_token(self):
-        """api handles invalid token"""
-        response = self.client.post(self.link, data={
-            'new_email': 'new@email.com',
-            'password': self.USER_PASSWORD
-        })
-        self.assertEqual(response.status_code, 200)
-
-        response = self.client.post(self.link, data={'token': 'invalid-token'})
-        self.assertEqual(response.status_code, 400)
-
-        self.reload_user()
-        self.assertTrue(self.user.email != 'new@email.com')
-
-    def test_expired_token(self):
-        """api handles invalid token"""
-        response = self.client.post(self.link, data={
-            'new_email': 'new@email.com',
-            'password': self.USER_PASSWORD
-        })
-        self.assertEqual(response.status_code, 200)
-
-        for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
-            if line.startswith('http://'):
-                token = line.rstrip('/').split('/')[-1]
-                break
-        else:
-            self.fail("E-mail sent didn't contain confirmation url")
-
-        self.user.set_password('L0lN0p3!')
-        self.user.save()
-        self.login_user(self.user, 'L0lN0p3!')
-
-        response = self.client.post(self.link, data={'token': 'invalid-token'})
-        self.assertEqual(response.status_code, 400)
-
-        self.reload_user()
-        self.assertTrue(self.user.email != 'new@email.com')

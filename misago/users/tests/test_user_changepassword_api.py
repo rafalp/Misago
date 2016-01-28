@@ -32,12 +32,6 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
         else:
             self.fail("E-mail sent didn't contain confirmation url")
 
-        response = self.client.post(self.link, data={'token': token})
-        self.assertEqual(response.status_code, 200)
-
-        self.reload_user()
-        self.assertTrue(self.user.check_password('N3wP@55w0rd'))
-
     def test_invalid_password(self):
         """api errors correctly for invalid password"""
         response = self.client.post(self.link, data={
@@ -63,41 +57,3 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
         })
         self.assertEqual(response.status_code, 400)
         self.assertIn('password must be', response.content)
-
-    def test_invalid_token(self):
-        """api handles invalid token"""
-        response = self.client.post(self.link, data={
-            'new_password': 'N3wP@55w0rd',
-            'password': self.USER_PASSWORD
-        })
-        self.assertEqual(response.status_code, 200)
-
-        response = self.client.post(self.link, data={'token': 'invalid-token'})
-        self.assertEqual(response.status_code, 400)
-
-        self.reload_user()
-        self.assertFalse(self.user.check_password('N3wP@55w0rd'))
-
-    def test_expired_token(self):
-        """api handles invalid token"""
-        response = self.client.post(self.link, data={
-            'new_password': 'N3wP@55w0rd',
-            'password': self.USER_PASSWORD
-        })
-        self.assertEqual(response.status_code, 200)
-
-        for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
-            if line.startswith('http://'):
-                token = line.rstrip('/').split('/')[-1]
-                break
-        else:
-            self.fail("E-mail sent didn't contain confirmation url")
-
-        self.user.set_email('new@email.com')
-        self.user.save()
-
-        response = self.client.post(self.link, data={'token': 'invalid-token'})
-        self.assertEqual(response.status_code, 400)
-
-        self.reload_user()
-        self.assertFalse(self.user.check_password('N3wP@55w0rd'))

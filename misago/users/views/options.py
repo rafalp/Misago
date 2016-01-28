@@ -1,7 +1,10 @@
+from django.contrib.auth import update_session_auth_hash
 from django.core.urlresolvers import reverse
+from django.db import IntegrityError
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 
+from misago.users.credentialchange import read_new_credential
 from misago.users.decorators import deny_guests
 
 
@@ -42,41 +45,40 @@ def confirm_change_view(f):
         try:
             return f(request, token)
         except ChangeError as e:
-            return render(request, 'misago/options/credentials_error.html', {
-                'message': e.args[0],
-            }, status=400)
+            return render(request, 'misago/options/credentials_error.html',
+                status=400)
     return decorator
 
 
 @confirm_change_view
 def confirm_email_change(request, token):
-    new_credentials = get_new_credentials(request.user, token)
-    if not (new_credentials and new_credentials.get('email')):
-        raise ChangeError(_("Confirmation link is invalid."))
+    new_credential = read_new_credential(request, 'email', token)
+    if not new_credential:
+        raise ChangeError()
 
     try:
-        request.user.set_email(new_credentials['email'])
-        request.user.save(update_fields=['email', 'email_hash']])
+        request.user.set_email(new_credential)
+        request.user.save(update_fields=['email', 'email_hash'])
     except IntegrityError:
         raise ChangeError()
 
     message = _("%(user)s, your e-mail has been changed.")
     return render(request, 'misago/options/credentials_changed.html', {
-            'message': message % {'user': inactive_user.username},
+            'message': message % {'user': request.user.username},
         })
 
 
 @confirm_change_view
 def confirm_password_change(request, token):
-    new_credentials = get_new_credentials(request.user, token)
-    if not (new_credentials and new_credentials.get('password')):
+    new_credential = read_new_credential(request, 'password', token)
+    if not new_credential:
         raise ChangeError()
 
-    request.user.password = new_credentials['password']
+    request.user.set_password(new_credential)
     update_session_auth_hash(request, request.user)
     request.user.save(update_fields=['password'])
 
     message = _("%(user)s, your password has been changed.")
     return render(request, 'misago/options/credentials_changed.html', {
-            'message': message % {'user': inactive_user.username},
+            'message': message % {'user': request.user.username},
         })
