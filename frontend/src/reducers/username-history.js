@@ -26,6 +26,7 @@ export default function username(state=[], action=null){
     case ADD_NAME_CHANGE:
       let newState = state.slice();
       newState.unshift({
+        id: Math.floor(Date.now() / 1000), // just small hax for getting id
         changed_by: action.changedBy,
         changed_by_username: action.changedBy.username,
         changed_on: moment(),
@@ -43,6 +44,7 @@ export default function username(state=[], action=null){
 
     case UPDATE_AVATAR:
       return state.map(function(item) {
+        item = Object.assign({}, item);
         if (item.changed_by && item.changed_by.id === action.userId) {
           item.changed_by = Object.assign({}, item.changed_by, {
             'avatar_hash': action.avatarHash
@@ -54,6 +56,7 @@ export default function username(state=[], action=null){
 
     case UPDATE_USERNAME:
       return state.map(function(item) {
+        item = Object.assign({}, item);
         if (item.changed_by && item.changed_by.id === action.userId) {
           item.changed_by = Object.assign({}, item.changed_by, {
             'username': action.username,

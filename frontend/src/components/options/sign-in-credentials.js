@@ -4,6 +4,7 @@ import Form from 'misago/components/form';
 import FormGroup from 'misago/components/form-group'; // jshint ignore:line
 import misago from 'misago/index';
 import ajax from 'misago/services/ajax';
+import title from 'misago/services/page-title';
 import snackbar from 'misago/services/snackbar';
 import * as validators from 'misago/utils/validators';
 
@@ -70,7 +71,7 @@ export class ChangeEmail extends Form {
         snackbar.error(rejection.password);
       }
     } else {
-      snackbar.apiError(rejection.detail);
+      snackbar.apiError(rejection);
     }
   }
 
@@ -193,7 +194,7 @@ export class ChangePassword extends Form {
         snackbar.error(rejection.password);
       }
     } else {
-      snackbar.apiError(rejection.detail);
+      snackbar.apiError(rejection);
     }
   }
 
@@ -253,11 +254,27 @@ export class ChangePassword extends Form {
 }
 
 export default class extends React.Component {
+  componentDidMount() {
+    title.set({
+      title: gettext("Change sign-in credentials"),
+      parent: gettext("Change your options")
+    });
+  }
+
   render() {
     /* jshint ignore:start */
     return <div>
       <ChangeEmail user={this.props.user} />
       <ChangePassword user={this.props.user} />
+
+      <p className="message-line">
+        <span className="material-icon">
+          warning
+        </span>
+        <a href={misago.get('FORGOTTEN_PASSWORD_URL')}>
+          {gettext("Change forgotten password")}
+        </a>
+      </p>
     </div>
     /* jshint ignore:end */
   }

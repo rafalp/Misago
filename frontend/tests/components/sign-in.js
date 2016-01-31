@@ -4,6 +4,7 @@ import misago from 'misago/index';
 import SignIn from 'misago/components/sign-in'; // jshint ignore:line
 import modal from 'misago/services/modal';
 import snackbar from 'misago/services/snackbar';
+import store from 'misago/services/store';
 import * as testUtils from 'misago/utils/test-utils';
 
 let snackbarStore = null;
@@ -13,6 +14,7 @@ describe("Sign In", function() {
     snackbarStore = testUtils.snackbarStoreMock();
     snackbar.init(snackbarStore);
     testUtils.initModal(modal);
+    testUtils.initEmptyStore(store);
 
     misago._context = {
       'SETTINGS': {

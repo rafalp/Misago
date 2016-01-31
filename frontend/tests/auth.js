@@ -1,4 +1,5 @@
 import assert from 'assert';
+import { updateAvatar, updateUsername } from 'misago/reducers/users';
 import reducer, { SIGN_IN, SIGN_OUT, signIn, signOut, patchUser } from 'misago/reducers/auth';
 import { Auth } from 'misago/services/auth';
 
@@ -181,7 +182,70 @@ describe("Auth Reducer", function() {
         username: 'Patched!',
         new_attr: 'Set'
       }
-    }, "reducer changed store state for sign out");
+    }, "reducer patched authenticated user");
+  });
+
+  it("updates avatar", function() {
+    let state = {
+      isAuthenticated: true,
+      user: {
+        id: 321,
+        avatar_hash: 'aabbccdd'
+      }
+    };
+
+    assert.deepEqual(reducer(state, updateAvatar({
+      id: 321
+    }, '11223344')), {
+      isAuthenticated: true,
+      user: {
+        id: 321,
+        avatar_hash: '11223344'
+      }
+    }, "reducer changed authenticated user's avatar hash");
+
+    assert.deepEqual(reducer(state, updateAvatar({
+      id: 322
+    }, '11223344')), {
+      isAuthenticated: true,
+      user: {
+        id: 321,
+        avatar_hash: 'aabbccdd'
+      }
+    }, "reducer validates user id");
+  });
+
+  it("updates username", function() {
+    let state = {
+      isAuthenticated: true,
+      user: {
+        id: 321,
+        username: 'Bob',
+        slug: 'bob'
+      }
+    };
+
+    assert.deepEqual(reducer(state, updateUsername({
+      id: 321
+    }, 'Weebl', 'weebl')), {
+      isAuthenticated: true,
+      user: {
+        id: 321,
+        username: 'Weebl',
+        slug: 'weebl'
+      }
+    }, "reducer changed authenticated user's name");
+
+    assert.deepEqual(reducer(state, updateUsername({
+      id: 322
+    }, 'Weebl', 'weebl')), {
+      isAuthenticated: true,
+      user: {
+        id: 321,
+        username: 'Bob',
+        slug: 'bob'
+      }
+    }, "reducer validates user id");
   });
 
   it("signs user in", function() {

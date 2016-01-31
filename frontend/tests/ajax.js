@@ -98,6 +98,21 @@ describe('Ajax', function() {
     });
   });
 
+  it("makes GET request with querystring", function(done) {
+    $.mockjax({
+      url: '/test-url/?user=123&text=lorem',
+      status: 200,
+      responseText: {
+        'detail': 'ok'
+      }
+    });
+
+    ajax.get('/test-url/', {user: 123, text: 'lorem'}).then(function(data) {
+      assert.equal(data.detail, 'ok', "GET with querystring succeeded");
+      done();
+    });
+  });
+
   it("makes PATCH request", function(done) {
     $.mockjax({
       type: 'PATCH',

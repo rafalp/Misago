@@ -7,11 +7,11 @@ export class SideNav extends React.Component {
   render() {
     // jshint ignore:start
     return <div className="list-group nav-side">
-      {misago.get('USER_OPTIONS').map(function(option, i) {
-        return <Link to={misago.get('USERCP_URL') + option.component + '/'}
+      {this.props.options.map((option) => {
+        return <Link to={this.props.baseUrl + option.component + '/'}
                      className="list-group-item"
                      activeClassName="active"
-                     key={i}>
+                     key={option.component}>
           <span className="material-icon">
             {option.icon}
           </span>
@@ -27,10 +27,10 @@ export class CompactNav extends React.Component {
   render() {
     // jshint ignore:start
     return <ul className="dropdown-menu" role="menu">
-      {misago.get('USER_OPTIONS').map(function(option, i) {
-        return <Li path={misago.get('USERCP_URL') + option.component + '/'}
-                   key={i}>
-          <Link to={misago.get('USERCP_URL') + option.component + '/'}>
+      {this.props.options.map((option) => {
+        return <Li path={this.props.baseUrl + option.component + '/'}
+                   key={option.component}>
+          <Link to={this.props.baseUrl + option.component + '/'}>
             <span className="material-icon">
               {option.icon}
             </span>

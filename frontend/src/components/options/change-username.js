@@ -9,6 +9,7 @@ import misago from 'misago/index';
 import { dehydrate, addNameChange } from 'misago/reducers/username-history'; // jshint ignore:line
 import { updateUsername } from 'misago/reducers/users'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
+import title from 'misago/services/page-title';
 import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
 import * as random from 'misago/utils/random'; // jshint ignore:line
@@ -62,7 +63,7 @@ export class ChangeUsername extends Form {
       }, true));
     }
 
-    return phrases.join(' ');
+    return phrases.length ? phrases.join(' ') : null;
   }
 
   clean() {
@@ -93,7 +94,7 @@ export class ChangeUsername extends Form {
   }
 
   handleError(rejection) {
-    snackbar.apiError(rejection.detail);
+    snackbar.apiError(rejection);
   }
 
   render() {
@@ -160,7 +161,7 @@ export class NoChangesLeft extends React.Component {
           <p className="lead">
             {gettext("You can't change your username at the moment.")}
           </p>
-          <p className="help-text">
+          <p className="help-block">
             {this.getHelpText()}
           </p>
         </div>
@@ -225,8 +226,8 @@ export class UsernameHistory extends React.Component {
     /* jshint ignore:start */
     return <div className="username-history ui-ready">
       <ul className="list-group">
-        {this.props.changes.map((item, i) => {
-          return <li className="list-group-item" key={i}>
+        {this.props.changes.map((item) => {
+          return <li className="list-group-item" key={item.id}>
             <div className="username-change-avatar">
               {this.renderUserAvatar(item)}
             </div>
@@ -319,6 +320,11 @@ export default class extends React.Component {
   }
 
   componentDidMount() {
+    title.set({
+      title: gettext("Change username"),
+      parent: gettext("Change your options")
+    });
+
     Promise.all([
       ajax.get(this.props.user.api_url.username),
       ajax.get(misago.get('USERNAME_CHANGES_API'), {user: this.props.user.id})

@@ -25,6 +25,54 @@ export function contextClear(misago) {
   misago._context = {};
 }
 
+export function mockUser(overrides) {
+  let user = {
+    id : 42,
+    absolute_url: "/user/loremipsum-42/",
+    api_url: {
+      avatar: "/test-api/users/42/avatar/",
+      change_email: "/test-api/users/42/change-email/",
+      change_password: "/test-api/users/42/change-password/",
+      options: "/test-api/users/42/forum-options/",
+      username: "/test-api/users/42/username/"
+    },
+    avatar_hash: "5c6a04b4",
+    email: "test@example.com",
+    full_title: "Forum team",
+    is_hiding_presence: false,
+    joined_on: "2015-05-09T16:13:33.973603Z",
+    limits_private_thread_invites_to: 0,
+    new_notifications: 0,
+    posts: 30,
+    rank: {
+      id: 1,
+
+      css_class: "team",
+      description: '<p>Lorem ipsum dolor met sit amet elit, si vis pacem para bellum.</p>\n<p>To help see <a href="http://wololo.com/something.php?page=2131">http://wololo.com/something.php?page=2131</a></p>',
+      is_tab: true,
+      name: "Forum team",
+      slug: "forum-team",
+      title: "Team"
+    },
+    short_title: "Team",
+    slug: "loremipsum",
+    subscribe_to_replied_threads: 2,
+    subscribe_to_started_threads: 1,
+    threads: 0,
+    title: "",
+    unread_private_threads: 0,
+    username: "LoremIpsum",
+
+    acl: {}
+  };
+
+  if (overrides) {
+    return Object.assign(user, overrides);
+  } else {
+    return user;
+  }
+}
+
 export function contextGuest(misago) {
   misago._context = Object.assign({}, misago._context, {
     isAuthenticated: false,
@@ -41,52 +89,14 @@ export function contextAuthenticated(misago, overrides) {
   misago._context = Object.assign({}, misago._context, {
     isAuthenticated: true,
 
-    user: {
-      id : 42,
-      absolute_url: "/user/loremipsum-1/",
-      api_url: {
-        avatar: "/test-api/users/42/avatar/"
-      },
-      avatar_hash: "5c6a04b4",
-      email: "test@example.com",
-      full_title: "Forum team",
-      is_hiding_presence: false,
-      joined_on: "2015-05-09T16:13:33.973603Z",
-      limits_private_thread_invites_to: 0,
-      new_notifications: 0,
-      posts: 30,
-      rank: {
-        id: 1,
-
-        css_class: "team",
-        description: '<p>Lorem ipsum dolor met sit amet elit, si vis pacem para bellum.</p>\n<p>To help see <a href="http://wololo.com/something.php?page=2131">http://wololo.com/something.php?page=2131</a></p>',
-        is_tab: true,
-        name: "Forum team",
-        slug: "forum-team",
-        title: "Team"
-      },
-      short_title: "Team",
-      slug: "loremipsum",
-      subscribe_to_replied_threads: 2,
-      subscribe_to_started_threads: 1,
-      threads: 0,
-      title: "",
-      unread_private_threads: 0,
-      username: "LoremIpsum",
-
-      acl: {}
-    }
+    user: mockUser(overrides)
   });
-
-  if (overrides) {
-    Object.assign(misago._context.user, overrides);
-  }
 }
 
 // global utility function for store mocking
 export function initEmptyStore(store) {
   store.constructor();
-  store.addReducer('test', function(state={}, action=null) { return {}; }, {}); // jshint ignore:line
+  store.addReducer('tick', function(state={}, action=null) { return {}; }, {}); // jshint ignore:line
   store.init();
 }
 

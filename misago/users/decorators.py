@@ -12,7 +12,7 @@ def deny_authenticated(f):
     def decorator(request, *args, **kwargs):
         if request.user.is_authenticated():
             raise PermissionDenied(
-                _("This action is not available to signed in users."))
+                _("This page is not available to signed in users."))
         else:
             return f(request, *args, **kwargs)
     return decorator
@@ -22,7 +22,7 @@ def deny_guests(f):
     def decorator(request, *args, **kwargs):
         if request.user.is_anonymous():
             raise PermissionDenied(
-                _("This action is not available to guests."))
+                _("You have to sign in to access this page."))
         else:
             return f(request, *args, **kwargs)
     return decorator

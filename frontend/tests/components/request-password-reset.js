@@ -3,6 +3,7 @@ import React from 'react'; // jshint ignore:line
 import misago from 'misago/index';
 import { RequestResetForm, LinkSent, AccountInactivePage } from 'misago/components/request-password-reset'; // jshint ignore:line
 import snackbar from 'misago/services/snackbar';
+import store from 'misago/services/store';
 import * as testUtils from 'misago/utils/test-utils';
 
 let snackbarStore = null;
@@ -11,6 +12,7 @@ describe("Request Password Reset Form", function() {
   beforeEach(function() {
     snackbarStore = testUtils.snackbarStoreMock();
     snackbar.init(snackbarStore);
+    testUtils.initEmptyStore(store);
 
     misago._context = {
       'SETTINGS': {

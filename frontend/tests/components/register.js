@@ -4,6 +4,7 @@ import misago from 'misago/index';
 import { RegisterForm, RegisterComplete } from 'misago/components/register'; // jshint ignore:line
 import modal from 'misago/services/modal';
 import snackbar from 'misago/services/snackbar';
+import store from 'misago/services/store';
 import * as testUtils from 'misago/utils/test-utils';
 
 let component = null;
@@ -14,6 +15,7 @@ describe("Register Form", function() {
     snackbarStore = testUtils.snackbarStoreMock();
     snackbar.init(snackbarStore);
     testUtils.initModal(modal);
+    testUtils.initEmptyStore(store);
 
     window.zxcvbn = function() {
       return {

@@ -6,6 +6,7 @@ import Select from 'misago/components/select'; // jshint ignore:line
 import YesNoSwitch from 'misago/components/yes-no-switch'; // jshint ignore:line
 import { patchUser } from 'misago/reducers/auth';
 import ajax from 'misago/services/ajax';
+import title from 'misago/services/page-title';
 import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
 
@@ -77,7 +78,7 @@ export default class extends Form {
       'subscribe_to_started_threads': this.state.subscribe_to_started_threads,
       'subscribe_to_replied_threads': this.state.subscribe_to_replied_threads
     }));
-    snackbar.success(gettext("Your forum options have been changed"));
+    snackbar.success(gettext("Your forum options have been changed."));
   }
 
   handleError(rejection) {
@@ -86,6 +87,13 @@ export default class extends Form {
     } else {
       snackbar.apiError(rejection);
     }
+  }
+
+  componentDidMount() {
+    title.set({
+      title: gettext("Forum options"),
+      parent: gettext("Change your options")
+    });
   }
 
   render() {

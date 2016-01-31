@@ -4,6 +4,7 @@ import misago from 'misago/index';
 import { ResetPasswordForm, PasswordChangedPage } from 'misago/components/reset-password-form'; // jshint ignore:line
 import modal from 'misago/services/modal';
 import snackbar from 'misago/services/snackbar';
+import store from 'misago/services/store';
 import * as testUtils from 'misago/utils/test-utils';
 
 let snackbarStore = null;
@@ -12,6 +13,7 @@ describe("Reset Password Form", function() {
   beforeEach(function() {
     snackbarStore = testUtils.snackbarStoreMock();
     snackbar.init(snackbarStore);
+    testUtils.initEmptyStore(store);
 
     misago._context = {
       'SETTINGS': {

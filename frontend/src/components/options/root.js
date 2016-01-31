@@ -67,14 +67,16 @@ export class Options extends React.Component {
       </div>
 
       <div className={this.getCompactNavClassName()}>
-        <CompactNav />
+        <CompactNav options={misago.get('USER_OPTIONS')}
+                    baseUrl={misago.get('USERCP_URL')} />
       </div>
 
       <div className="container">
         <div className="row">
           <div className="col-md-3 hidden-xs hidden-sm">
 
-            <SideNav />
+            <SideNav options={misago.get('USER_OPTIONS')}
+                     baseUrl={misago.get('USERCP_URL')} />
 
           </div>
           <div className="col-md-9">
