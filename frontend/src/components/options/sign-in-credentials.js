@@ -256,7 +256,7 @@ export class ChangePassword extends Form {
 export default class extends React.Component {
   componentDidMount() {
     title.set({
-      title: gettext("Change sign-in credentials"),
+      title: gettext("Change email or password"),
       parent: gettext("Change your options")
     });
   }

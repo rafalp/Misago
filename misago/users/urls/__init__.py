@@ -27,6 +27,11 @@ urlpatterns += patterns('misago.users.views.forgottenpassword',
 urlpatterns += patterns('misago.users.views.options',
     url(r'^options/$', 'index', name='options'),
     url(r'^options/(?P<form_name>[-a-zA-Z]+)/$', 'index', name='options_form'),
+
+    url(r'^options/forum-options/$', 'index', name='usercp_change_forum_options'),
+    url(r'^options/change-username/$', 'index', name='usercp_change_username'),
+    url(r'^options/sign-in-credentials/$', 'index', name='usercp_change_email_password'),
+
     url(r'^options/change-email/(?P<token>[a-zA-Z0-9]+)/$', 'confirm_email_change', name='options_confirm_email_change'),
     url(r'^options/change-password/(?P<token>[a-zA-Z0-9]+)/$', 'confirm_password_change', name='options_confirm_password_change'),
 )

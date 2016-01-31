@@ -6,30 +6,22 @@ from django.utils.translation import ugettext as _
 
 from misago.users.credentialchange import read_new_credential
 from misago.users.decorators import deny_guests
+from misago.users.pages import usercp
 
 
 @deny_guests
 def index(request, *args, **kwargs):
+    user_options = []
+    for section in usercp.get_sections(request):
+        user_options.append({
+            'name': unicode(section['name']),
+            'icon': section['icon'],
+            'component': section['component'],
+        })
+
     request.frontend_context.update({
         'USERNAME_CHANGES_API': reverse('misago:api:usernamechange-list'),
-
-        'USER_OPTIONS': [
-            {
-                'name': _("Forum options"),
-                'icon': 'settings',
-                'component': 'forum-options',
-            },
-            {
-                'name': _("Change username"),
-                'icon': 'card_membership',
-                'component': 'change-username',
-            },
-            {
-                'name': _("Change sign-in credentials"),
-                'icon': 'vpn_key',
-                'component': 'sign-in-credentials',
-            },
-        ]
+        'USER_OPTIONS': user_options
     });
 
     return render(request, 'misago/options/noscript.html')

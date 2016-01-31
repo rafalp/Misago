@@ -19,29 +19,21 @@ class MisagoUsersConfig(AppConfig):
 
         usercp.add_section(
             link='misago:usercp_change_forum_options',
-            name=_('Change forum options'),
-            icon='fa fa-check-square-o')
-
-        usercp.add_section(
-            link='misago:usercp_change_avatar',
-            name=_('Change avatar'),
-            icon='fa fa-image')
-
-        usercp.add_section(
-            link='misago:usercp_edit_signature',
-            name=_('Edit your signature'),
-                        icon='fa fa-pencil',
-            visible_if=show_signature_cp)
+            name=_('Forum options'),
+            component='forum-options',
+            icon='settings')
 
         usercp.add_section(
             link='misago:usercp_change_username',
             name=_('Change username'),
-            icon='fa fa-credit-card')
+            component='change-username',
+            icon='card_membership')
 
         usercp.add_section(
             link='misago:usercp_change_email_password',
             name=_('Change email or password'),
-            icon='fa fa-ticket')
+            component='sign-in-credentials',
+            icon='vpn_key')
 
     def register_default_users_list_pages(self):
         def can_see_online_list(request):
