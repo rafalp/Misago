@@ -16,8 +16,6 @@ Admin Permissions Form
 CAN_BROWSE_USERS_LIST = forms.YesNoSwitch(
     label=_("Can browse users list"),
     initial=1)
-CAN_SEE_USERS_ONLINE_LIST = forms.YesNoSwitch(
-    label=_("Can see users online list"))
 CAN_SEARCH_USERS = forms.YesNoSwitch(
     label=_("Can search user profiles"),
     initial=1)
@@ -33,7 +31,6 @@ class LimitedPermissionsForm(forms.Form):
     legend = _("User profiles")
 
     can_browse_users_list = CAN_BROWSE_USERS_LIST
-    can_see_users_online_list = CAN_SEE_USERS_ONLINE_LIST
     can_search_users = CAN_SEARCH_USERS
     can_search_users = CAN_SEARCH_USERS
     can_see_users_name_history = CAN_SEE_USER_NAME_HISTORY
@@ -42,7 +39,6 @@ class LimitedPermissionsForm(forms.Form):
 
 class PermissionsForm(LimitedPermissionsForm):
     can_browse_users_list = CAN_BROWSE_USERS_LIST
-    can_see_users_online_list = CAN_SEE_USERS_ONLINE_LIST
     can_search_users = CAN_SEARCH_USERS
     can_follow_users = forms.YesNoSwitch(
         label=_("Can follow other users"),
@@ -76,7 +72,6 @@ ACL Builder
 def build_acl(acl, roles, key_name):
     new_acl = {
         'can_browse_users_list': 0,
-        'can_see_users_online_list': 0,
         'can_search_users': 0,
         'can_follow_users': 0,
         'can_be_blocked': 1,
@@ -90,7 +85,6 @@ def build_acl(acl, roles, key_name):
 
     return algebra.sum_acls(new_acl, roles=roles, key=key_name,
         can_browse_users_list=algebra.greater,
-        can_see_users_online_list=algebra.greater,
         can_search_users=algebra.greater,
         can_follow_users=algebra.greater,
         can_be_blocked=algebra.lower,
@@ -135,12 +129,6 @@ def allow_browse_users_list(user):
     if not user.acl['can_browse_users_list']:
         raise PermissionDenied(_("You can't browse users list."))
 can_browse_users_list = return_boolean(allow_browse_users_list)
-
-
-def allow_see_users_online_list(user):
-    if not user.acl['can_see_users_online_list']:
-        raise PermissionDenied(_("You can't browse users online list."))
-can_see_users_online_list = return_boolean(allow_see_users_online_list)
 
 
 @authenticated_only

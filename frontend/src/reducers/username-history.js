@@ -21,7 +21,7 @@ export function dehydrate(items) {
   };
 }
 
-export default function username(state=[], action=null){
+export default function username(state=[], action=null) {
   switch (action.type) {
     case ADD_NAME_CHANGE:
       let newState = state.slice();

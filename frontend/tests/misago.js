@@ -105,4 +105,16 @@ describe('Misago', function() {
     assert.equal(misago.get('valid', 'fallback'), 'okay',
       "get() returned value for existing key instead of fallback");
   });
+
+  it("pop() allows single time access to context values", function() {
+    misago = new Misago();
+    misago.init({valid: 'okay'});
+
+    assert.equal(misago.pop('invalid'), undefined,
+      "pop() returned undefined for nonexisting key");
+    assert.equal(misago.pop('valid'), 'okay',
+      "pop() returned value for existing key");
+    assert.equal(misago.get('valid'), null,
+      "get() returned null for popped value");
+  });
 });

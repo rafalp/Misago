@@ -1,0 +1,70 @@
+{% extends "misago/userslists/base.html" %}
+{% load humanize i18n misago_avatars %}
+
+{% block content %}
+{{ block.super }}
+
+<div class="active-posters-list">
+  <div class="container">
+
+    {% if users_count %}
+      <p class="lead">
+        {% blocktrans trimmed with posters=users_count|intcomma days=tracked_period count counter=users_count %}
+        {{ posters }} most active poster from last {{ days }} days.
+        {% plural %}
+        {{ posters }} most active posters from last {{ days }} days.
+        {% endblocktrans %}
+      </p>
+
+      <div class="active-posters ui-ready">
+        <ul class="list-group">
+          {% for ranked in users %}
+            {% url USER_PROFILE_URL user_slug=ranked.slug user_id=ranked.id as user_url %}
+            <li class="list-group-item{% if ranked.rank.css_class %} list-group-rank-{{ ranked.rank.css_class }}{% endif %}">
+              <div class="rank-user-avatar">
+                <a href="{{ user_url }}">
+                  <img src="{{ ranked|avatar:50 }}" alt="{% trans "Avatar" %}" class="avatar">
+                </a>
+              </div>
+              <div class="rank-user">
+                <div class="user-name">
+                  <a href="{{ user_url }}" class="item-title">{{ ranked }}</a>
+                </div>
+                {% if ranked.rank.is_tab %}
+                <a href="{% url 'misago:users_rank' rank_slug=ranked.rank.slug %}" class="rank-name">{{ ranked.rank.name }}</a>
+                {% else %}
+                <span class="rank-name">{{ ranked.rank.name }}</span>
+                {% endif %}
+                {% if ranked.title %}
+                <span class="user-title">
+                  {{ ranked.title }}
+                </span>
+                {% endif %}
+              </div>
+              <div class="rank-position">
+                <div class="stat-value">#{{ forloop.counter }}</div>
+                <div class="text-muted">{% trans "Rank" %}</div>
+              </div>
+              <div class="rank-posts-counted">
+                <div class="stat-value">{{ ranked.score }}</div>
+                <div class="text-muted">{% trans "Ranked posts" %}</div>
+              </div>
+              <div class="rank-posts-total">
+                <div class="stat-value">{{ ranked.posts }}</div>
+                <div class="text-muted">{% trans "Total posts" %}</div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% else %}
+      <p class="lead">
+        {% blocktrans trimmed with days=tracked_period %}
+        No users have posted any new messages during last {{ days }} days.
+        {% endblocktrans %}
+      </p>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock content %}

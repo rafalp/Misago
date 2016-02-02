@@ -1,0 +1,85 @@
+//
+// Users Lists
+// --------------------------------------------------
+
+
+// Active posters list
+.active-posters {
+  li {
+    display: block;
+    overflow: auto;
+  }
+
+  .rank-user {
+    .rank-name, .user-title {
+      font-size: @font-size-small;
+    }
+  }
+}
+
+
+// Compact displays
+@media screen and (max-width: @screen-sm-max) {
+  .active-posters {
+    .rank-user-avatar {
+      float: left;
+    }
+
+    .rank-user {
+      float: left;
+      margin-left: @line-height-computed * .8;
+      width: 40%;
+
+      .item-title {
+        margin-top: 4px;
+
+        font-size: @font-size-large;
+      }
+    }
+
+    .rank-position, .rank-posts-total, .rank-posts-counted {
+      font-size: @font-size-small;
+
+      div {
+        display: inline-block;
+      }
+    }
+  }
+}
+
+
+// Full displays
+@media screen and (min-width: @screen-md-min) {
+  .active-posters {
+    li>* {
+      float: left;
+    }
+
+    .rank-user {
+      width: 25%;
+    }
+
+    .rank-position {
+      width: 15%;
+    }
+
+    .rank-posts-total {
+      width: 20%;
+    }
+
+    .rank-posts-counted {
+      width: 20%;
+    }
+
+    .rank-position, .rank-posts-total, .rank-posts-counted {
+      font-size: @font-size-large;
+      font-weight: bold;
+      text-align: center;
+
+      .text-muted {
+        font-size: @font-size-small;
+        font-weight: normal;
+      }
+    }
+  }
+}

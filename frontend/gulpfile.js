@@ -26,6 +26,10 @@ gulp.task('watch', ['fastbuild'], function() {
   gulp.watch('style/**/*.less', ['faststyle']);
 });
 
+gulp.task('watchstyle', ['faststyle', 'faststatic'], function() {
+  gulp.watch('style/**/*.less', ['faststyle']);
+});
+
 // Builds
 
 gulp.task('fastbuild', [

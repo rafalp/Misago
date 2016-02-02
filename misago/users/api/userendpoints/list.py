@@ -11,10 +11,8 @@ from misago.core.cache import cache
 from misago.core.shortcuts import get_object_or_404
 from misago.forums.models import Forum
 
-from misago.users.online.utils import get_online_queryset
-from misago.users.permissions.profiles import allow_see_users_online_list
 from misago.users.models import Rank
-from misago.users.serializers import OnlineUserSerializer, ScoredUserSerializer
+from misago.users.serializers import ScoredUserSerializer
 
 
 def active(request, queryset):
@@ -36,9 +34,9 @@ def real_active():
     queryset = User.objects.filter(posts__gt=0)
     queryset = queryset.filter(post__posted_on__gte=tracked_since,
                                post__forum__in=ranked_forums)
-    queryset = queryset.annotate(num_posts=Count('post'))
+    queryset = queryset.annotate(score=Count('post'))
     queryset = queryset.select_related('user__rank')
-    queryset = queryset.order_by('-num_posts', 'slug')
+    queryset = queryset.order_by('-score', 'slug')
 
     users_ranking = []
     for result in queryset[:settings.MISAGO_RANKING_SIZE]:
@@ -50,29 +48,6 @@ def real_active():
             'ranking_length': settings.MISAGO_RANKING_LENGTH
         }
     }
-
-
-def online(request, queryset):
-    allow_see_users_online_list(request.user)
-
-    cache_key = 'users_online_cache_%s' % request.user.acl_key
-    online_list = cache.get(cache_key, False)
-    if online_list is False:
-        online_list = real_online(request)
-        cache.set(cache_key, online_list, settings.MISAGO_ONLINE_LIST_CACHE)
-    return online_list
-
-
-def real_online(request):
-    queryset = get_online_queryset(request.user).order_by('last_click')
-    queryset = queryset[:settings.MISAGO_ONLINE_LIST_SIZE]
-
-    users_online = []
-    for result in queryset:
-        result.user.last_click = result.last_click
-        users_online.append(result.user)
-
-    return {'results': OnlineUserSerializer(users_online, many=True).data}
 
 
 def rank(request, queryset):
@@ -88,7 +63,6 @@ def rank(request, queryset):
 
 LISTS = {
     'active': active,
-    'online': online,
     'rank': rank,
 }
 

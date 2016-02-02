@@ -11,19 +11,16 @@ const history = new createHistory();
 
 export default function(options) {
   let routes = {
-    'component': options.component,
-    'childRoutes': [
+    component: options.component,
+    childRoutes: [
       {
-        'path': options.root,
-        'onEnter': function(nextState, replaceState) {
+        path: options.root,
+        onEnter: function(nextState, replaceState) {
           replaceState(null, options.paths[0].path);
         }
       }
     ].concat(options.paths.map(function(path) {
-      return {
-        'path': path.path,
-        'component': path.component
-      };
+      return path;
     }))
   };
 

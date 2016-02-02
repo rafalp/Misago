@@ -1,20 +1,20 @@
-import Options, { paths } from 'misago/components/options/root';
+import Users, { paths } from 'misago/components/users/root';
 import misago from 'misago/index';
 import store from 'misago/services/store';
 import mount from 'misago/utils/routed-component';
 
 export default function initializer(context) {
-  if (context.has('USER_OPTIONS')) {
+  if (context.has('USERS_LISTS')) {
     mount({
-      root: misago.get('USERCP_URL'),
-      component: Options,
+      root: misago.get('USERS_LIST_URL'),
+      component: Users,
       paths: paths(store)
     });
   }
 }
 
 misago.addInitializer({
-  name: 'component:options',
+  name: 'component:users',
   initializer: initializer,
   after: 'store'
 });

@@ -11,19 +11,25 @@ from django.utils import timezone
 from misago.forums.models import Forum
 from misago.core.cache import cache
 from misago.core.shortcuts import get_object_or_404, paginate
+from misago.core.utils import format_plaintext_for_html
 
 from misago.users.models import Rank
-from misago.users.online.utils import get_online_queryset
 from misago.users.pages import users_list
-from misago.users.permissions.profiles import (allow_browse_users_list,
-                                               allow_see_users_online_list)
+from misago.users.permissions.profiles import allow_browse_users_list
+from misago.users.serializers import ScoredUserSerializer
 
 
 def render(request, template, context):
-    context['pages'] = users_list.get_pages(request)
+    request.frontend_context['USERS_LISTS'] = []
+
+    context['pages'] = users_list.get_sections(request)
 
     for page in context['pages']:
         page['reversed_link'] = reverse(page['link'])
+        request.frontend_context['USERS_LISTS'].append({
+            'name': unicode(page['name']),
+            'component': page['component'],
+        })
 
     active_rank = context.get('rank')
     for rank in Rank.objects.filter(is_tab=True).order_by('order'):
@@ -34,6 +40,22 @@ def render(request, template, context):
             'is_active': active_rank.pk == rank.pk if active_rank else None
         })
 
+        if rank.description:
+            description = {
+                'plain': rank.description,
+                'html': format_plaintext_for_html(rank.description)
+            }
+        else:
+            description = None
+
+        request.frontend_context['USERS_LISTS'].append({
+            'name': rank.name,
+            'slug': rank.slug,
+            'css_class': rank.css_class,
+            'description': description,
+            'component': 'rank',
+        })
+
     for page in context['pages']:
         if page['is_active']:
             context['active_page'] = page
@@ -42,18 +64,14 @@ def render(request, template, context):
     return django_render(request, template, context)
 
 
-def allow_see_list(permission=None):
-    def permission_decorator(f):
-        def decorator(request, *args, **kwargs):
-            allow_browse_users_list(request.user)
-            if permission:
-                permission(request.user)
-            return f(request, *args, **kwargs)
-        return decorator
-    return permission_decorator
+def allow_see_list(f):
+    def decorator(request, *args, **kwargs):
+        allow_browse_users_list(request.user)
+        return f(request, *args, **kwargs)
+    return decorator
 
 
-@allow_see_list()
+@allow_see_list
 def lander(request):
     default = users_list.get_default_link()
     return redirect(default)
@@ -65,9 +83,15 @@ def list_view(request, template, queryset, page, context=None):
     return render(request, template, context)
 
 
-@allow_see_list()
-def active_posters(request, page=0):
+@allow_see_list
+def active_posters(request):
     ranking = get_active_posters_rankig()
+
+    request.frontend_context['USERS'] = {
+        'tracked_period': settings.MISAGO_RANKING_LENGTH,
+        'results': ScoredUserSerializer(ranking['users'], many=True).data,
+        'count': ranking['users_count']
+    }
 
     template = "misago/userslists/active_posters.html"
     return render(request, template, {
@@ -96,9 +120,9 @@ def get_real_active_posts_ranking():
     queryset = User.objects.filter(posts__gt=0)
     queryset = queryset.filter(post__posted_on__gte=tracked_since,
                                post__forum__in=ranked_forums)
-    queryset = queryset.annotate(num_posts=Count('post'))
+    queryset = queryset.annotate(score=Count('post'))
     queryset = queryset.select_related('user__rank')
-    queryset = queryset.order_by('-num_posts')
+    queryset = queryset.order_by('-score')
 
     queryset = queryset[:settings.MISAGO_RANKING_SIZE]
 
@@ -108,21 +132,7 @@ def get_real_active_posts_ranking():
     }
 
 
-@allow_see_list(allow_see_users_online_list)
-def online(request, page=0):
-    queryset = get_online_queryset(request.user).order_by('user__slug')
-    queryset = queryset.select_related('user__rank')
-
-    template = "misago/userslists/online.html"
-    try:
-        return list_view(request, template, queryset, page, {
-            'data_from': timezone.now()
-        })
-    except Http404:
-        return redirect('misago:users_online')
-
-
-@allow_see_list()
+@allow_see_list
 def rank(request, rank_slug, page=0):
     rank = get_object_or_404(Rank.objects.filter(is_tab=True), slug=rank_slug)
     queryset = rank.user_set.order_by('slug')

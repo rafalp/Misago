@@ -14,8 +14,7 @@ from misago.core.apipaginator import ApiPaginator
 from misago.core.cache import cache
 
 from misago.users.forms.options import ForumOptionsForm
-from misago.users.permissions.profiles import (allow_browse_users_list,
-                                               allow_see_users_online_list)
+from misago.users.permissions.profiles import allow_browse_users_list
 
 from misago.users.rest_permissions import (BasePermission,
     IsAuthenticatedOrReadOnly, UnbannedAnonOnly)

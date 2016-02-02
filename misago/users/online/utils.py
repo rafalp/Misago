@@ -9,18 +9,8 @@ from misago.users.models import Online
 ACTIVITY_CUTOFF = timedelta(minutes=15)
 
 
-def get_online_queryset(viewer=None):
-    min_last_click = timezone.now() - ACTIVITY_CUTOFF
-    queryset = Online.objects.filter(last_click__gte=min_last_click)
-
-    if viewer and not viewer.acl['can_see_hidden_users']:
-        queryset = queryset.filter(user__is_hiding_presence=False)
-
-    return queryset.select_related('user', 'user__rank')
-
-
-def get_user_state(user, acl):
-    user_state = {
+def get_user_status(user, acl):
+    user_status = {
         'is_banned': False,
         'is_hidden': user.is_hiding_presence,
         'is_online_hidden': False,
@@ -34,30 +24,30 @@ def get_user_state(user, acl):
 
     user_ban = get_user_ban(user)
     if user_ban:
-        user_state['is_banned'] = True
-        user_state['banned_until'] = user_ban.expires_on
+        user_status['is_banned'] = True
+        user_status['banned_until'] = user_ban.expires_on
 
     try:
         if not user.is_hiding_presence or acl['can_see_hidden_users']:
             online_tracker = user.online_tracker
             if online_tracker.last_click >= timezone.now() - ACTIVITY_CUTOFF:
-                user_state['is_online'] = True
-                user_state['last_click'] = online_tracker.last_click
+                user_status['is_online'] = True
+                user_status['last_click'] = online_tracker.last_click
     except Online.DoesNotExist:
         pass
 
-    if user_state['is_hidden']:
+    if user_status['is_hidden']:
         if acl['can_see_hidden_users']:
-            if user_state['is_online']:
-                user_state['is_online_hidden'] = True
+            if user_status['is_online']:
+                user_status['is_online_hidden'] = True
             else:
-                user_state['is_offline_hidden'] = True
+                user_status['is_offline_hidden'] = True
         else:
-            user_state['is_hidden'] = True
+            user_status['is_hidden'] = True
     else:
-        if user_state['is_online']:
-            user_state['is_online'] = True
+        if user_status['is_online']:
+            user_status['is_online'] = True
         else:
-            user_state['is_offline'] = True
+            user_status['is_offline'] = True
 
-    return user_state
+    return user_status

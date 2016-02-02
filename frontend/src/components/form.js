@@ -104,8 +104,9 @@ export default class extends React.Component {
   /* jshint ignore:start */
   bindInput = (name) => {
     return (event) => {
-      let newState = {};
-      newState[name] = event.target.value;
+      let newState = {
+        [name]: event.target.value
+      };
 
       let formErrors = this.state.errors || {};
       formErrors[name] = this.validateField(name, newState[name]);

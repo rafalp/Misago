@@ -16,7 +16,7 @@ from misago.threads.permissions import allow_message_user
 
 from misago.users.bans import get_user_ban
 from misago.users.decorators import deny_guests
-from misago.users.online.utils import get_user_state
+from misago.users.online.utils import get_user_status
 from misago.users.pages import user_profile
 from misago.users.permissions.profiles import (allow_follow_user,
                                                allow_block_user)
@@ -104,7 +104,7 @@ def render(request, template, context):
     else:
         context['show_email'] = False
 
-    context['state'] = get_user_state(context['profile'], user_acl)
+    context['status'] = get_user_status(context['profile'], user_acl)
 
     if request.user.is_authenticated():
         try:

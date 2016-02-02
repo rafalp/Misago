@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 from misago.acl import serialize_acl
 
-from misago.users.online.utils import get_user_state
+from misago.users.online.utils import get_user_status
 from misago.users.serializers import RankSerializer
 
 
@@ -14,7 +14,6 @@ __all__ = [
     'AnonymousUserSerializer',
     'BasicUserSerializer',
     'UserSerializer',
-    'OnlineUserSerializer',
     'ScoredUserSerializer',
     'UserProfileSerializer',
 ]
@@ -102,7 +101,7 @@ class BasicUserSerializer(BaseSerializer):
 
 class UserSerializer(BaseSerializer):
     rank = RankSerializer(many=False, read_only=True)
-    state = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
     signature = serializers.SerializerMethodField()
 
     class Meta:
@@ -117,13 +116,13 @@ class UserSerializer(BaseSerializer):
             'signature',
             'threads',
             'posts',
-            'state',
+            'status',
             'absolute_url',
         )
 
-    def get_state(self, obj):
+    def get_status(self, obj):
         if 'user' in self.context:
-            return get_user_state(obj, self.context['user'].acl)
+            return get_user_status(obj, self.context['user'].acl)
         else:
             return {}
 
@@ -132,28 +131,6 @@ class UserSerializer(BaseSerializer):
             return obj.signature.signature_parsed
         else:
             return None
-
-
-class OnlineUserSerializer(UserSerializer):
-    last_click = serializers.SerializerMethodField()
-
-    class Meta:
-        model = get_user_model()
-        fields = (
-            'id',
-            'username',
-            'slug',
-            'avatar_hash',
-            'title',
-            'rank',
-            'signature',
-            'threads',
-            'posts',
-            'last_click',
-        )
-
-    def get_last_click(self, obj):
-        return obj.last_click
 
 
 class ScoredUserSerializer(UserSerializer):
@@ -172,6 +149,7 @@ class ScoredUserSerializer(UserSerializer):
             'threads',
             'posts',
             'meta',
+            'absolute_url',
         )
 
     def get_meta(self, obj):
@@ -201,7 +179,7 @@ class UserProfileSerializer(UserSerializer):
             'posts',
             'is_followed',
             'is_blocked',
-            'state',
+            'status',
             'acl',
         )
 

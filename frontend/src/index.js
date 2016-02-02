@@ -28,7 +28,7 @@ export class Misago {
 
   // context accessors
   has(key) {
-    return this._context.hasOwnProperty(key);
+    return !!this._context[key];
   }
 
   get(key, fallback) {
@@ -36,6 +36,16 @@ export class Misago {
       return this._context[key];
     } else {
       return fallback || undefined;
+    }
+  }
+
+  pop(key) {
+    if (this.has(key)) {
+      let value = this._context[key];
+      this._context[key] = null;
+      return value;
+    } else {
+      return undefined;
     }
   }
 }

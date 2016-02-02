@@ -6,7 +6,7 @@ import ChangeUsername from 'misago/components/options/change-username';
 import ChangeSignInCredentials from 'misago/components/options/sign-in-credentials';
 import misago from 'misago/index';
 
-export class Options extends React.Component {
+export default class extends React.Component {
   constructor(props) {
     super(props);
 
@@ -47,7 +47,7 @@ export class Options extends React.Component {
 
   render() {
     /* jshint ignore:start */
-    return <div>
+    return <div className="page page-options">
       <div className="page-header">
         <div className="container">
 
@@ -65,13 +65,14 @@ export class Options extends React.Component {
 
         </div>
       </div>
-
       <div className={this.getCompactNavClassName()}>
+
         <CompactNav options={misago.get('USER_OPTIONS')}
                     baseUrl={misago.get('USERCP_URL')} />
-      </div>
 
+      </div>
       <div className="container">
+
         <div className="row">
           <div className="col-md-3 hidden-xs hidden-sm">
 
@@ -85,8 +86,8 @@ export class Options extends React.Component {
 
           </div>
         </div>
-      </div>
 
+      </div>
     </div>;
     /* jshint ignore:end */
   }
