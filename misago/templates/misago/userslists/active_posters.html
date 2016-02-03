@@ -26,6 +26,7 @@
                   <img src="{{ ranked|avatar:50 }}" alt="{% trans "Avatar" %}" class="avatar">
                 </a>
               </div>
+
               <div class="rank-user">
                 <div class="user-name">
                   <a href="{{ user_url }}" class="item-title">{{ ranked }}</a>
@@ -41,14 +42,17 @@
                 </span>
                 {% endif %}
               </div>
+
               <div class="rank-position">
                 <div class="stat-value">#{{ forloop.counter }}</div>
                 <div class="text-muted">{% trans "Rank" %}</div>
               </div>
+
               <div class="rank-posts-counted">
                 <div class="stat-value">{{ ranked.score }}</div>
                 <div class="text-muted">{% trans "Ranked posts" %}</div>
               </div>
+
               <div class="rank-posts-total">
                 <div class="stat-value">{{ ranked.posts }}</div>
                 <div class="text-muted">{% trans "Total posts" %}</div>

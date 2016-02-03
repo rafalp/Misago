@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router'; // jshint ignore:line
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
+import Status, { StatusIcon, StatusLabel } from 'misago/components/user-status'; // jshint ignore:line
 import misago from 'misago/index';
 import { dehydrate } from 'misago/reducers/users';
 import title from 'misago/services/page-title';
@@ -12,6 +13,31 @@ export class ActivePoster extends React.Component {
       return "list-group-item list-group-rank-" + this.props.rank.css_class;
     } else {
       return "list-group-item";
+    }
+  }
+
+  getUserStatus() {
+    if (this.props.user.status) {
+      /* jshint ignore:start */
+      return <Status user={this.props.user} status={this.props.user.status}>
+        <StatusIcon user={this.props.user}
+                    status={this.props.user.status} />
+        <StatusLabel user={this.props.user}
+                     status={this.props.user.status}
+                     className="status-label hidden-xs hidden-sm" />
+      </Status>;
+      /* jshint ignore:end */
+    } else {
+      /* jshint ignore:start */
+      return <span className="user-status">
+        <span className="status-icon ui-preview">
+          &nbsp;
+        </span>
+        <span className="status-label ui-preview hidden-xs hidden-sm">
+          &nbsp;
+        </span>
+      </span>;
+      /* jshint ignore:end */
     }
   }
 
@@ -35,7 +61,7 @@ export class ActivePoster extends React.Component {
   getUserTitle() {
     if (this.props.user.title) {
       /* jshint ignore:start */
-      return <span className="user-title">
+      return <span className="user-title hidden-xs hidden-sm">
         {this.props.user.title}
       </span>;
       /* jshint ignore:end */
@@ -59,6 +85,7 @@ export class ActivePoster extends React.Component {
             {this.props.user.username}
           </a>
         </div>
+        {this.getUserStatus()}
         {this.getRankName()}
         {this.getUserTitle()}
       </div>
@@ -90,9 +117,9 @@ export class ActivePosters extends React.Component {
         this.props.count);
 
     return interpolate(message, {
-        posters: this.props.count,
-        days: this.props.trackedPeriod
-      }, true);
+      posters: this.props.count,
+      days: this.props.trackedPeriod
+    }, true);
   }
 
   render() {

@@ -14,6 +14,14 @@
     .rank-name, .user-title {
       font-size: @font-size-small;
     }
+
+    .status-icon {
+      width: 18px;
+      height: 18px;
+
+      font-size: 18px;
+      line-height: 18px;
+    }
   }
 }
 
@@ -35,6 +43,15 @@
 
         font-size: @font-size-large;
       }
+
+      .user-status {
+        margin-right: 4px;
+
+        .status-icon {
+          position: relative;
+          top: 1px;
+        }
+      }
     }
 
     .rank-position, .rank-posts-total, .rank-posts-counted {
@@ -42,6 +59,13 @@
 
       div {
         display: inline-block;
+      }
+
+      .stat-value {
+        width: 34px;
+        padding-right: 4px;
+
+        text-align: right;
       }
     }
   }
@@ -53,22 +77,49 @@
   .active-posters {
     li>* {
       float: left;
+      padding-top: 4px;
+    }
+
+    .rank-user-avatar {
+      padding-top: 0px;
     }
 
     .rank-user {
+      padding-top: 0px;
+      padding-left: @line-height-computed * .8;
       width: 25%;
+
+      .item-title {
+        margin-top: 2px;
+
+        font-size: @font-size-large;
+      }
+
+      .user-status {
+        margin-left: @line-height-computed * .8;
+
+        .status-icon {
+          position: relative;
+          top: 2px;
+        }
+
+        .status-label {
+          font-size: @font-size-small;
+          line-height: @font-size-small;
+        }
+      }
     }
 
     .rank-position {
-      width: 15%;
+      width: 23%;
     }
 
     .rank-posts-total {
-      width: 20%;
+      width: 23%;
     }
 
     .rank-posts-counted {
-      width: 20%;
+      width: 23%;
     }
 
     .rank-position, .rank-posts-total, .rank-posts-counted {

@@ -5375,6 +5375,12 @@ input.hidden-file-upload {
     line-height: 24px;
   }
 }
+.page-header.tabbed {
+  padding-bottom: 0px;
+}
+.page-header.tabbed .page-tabs .nav > li > a {
+  border-radius: 0px;
+}
 @media screen and (max-width: 991px) {
   .panel-message-body {
     text-align: center;
@@ -5479,6 +5485,18 @@ input.hidden-file-upload {
 }
 .ui-preview .list-group > li:last-child {
   margin-bottom: 0px;
+}
+.user-status > .status-icon.ui-preview {
+  display: inline-block;
+  border-radius: 100px;
+  width: 20px;
+  height: 20px;
+  font-weight: 0px;
+}
+.user-status > .status-label.ui-preview {
+  display: inline-block;
+  margin-left: 6px;
+  width: 40px;
 }
 .item-title {
   color: #333333;
@@ -5747,6 +5765,12 @@ a.item-title:hover {
 .active-posters .rank-user .user-title {
   font-size: 12px;
 }
+.active-posters .rank-user .status-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  line-height: 18px;
+}
 @media screen and (max-width: 991px) {
   .active-posters .rank-user-avatar {
     float: left;
@@ -5760,6 +5784,13 @@ a.item-title:hover {
     margin-top: 4px;
     font-size: 18px;
   }
+  .active-posters .rank-user .user-status {
+    margin-right: 4px;
+  }
+  .active-posters .rank-user .user-status .status-icon {
+    position: relative;
+    top: 1px;
+  }
   .active-posters .rank-position,
   .active-posters .rank-posts-total,
   .active-posters .rank-posts-counted {
@@ -5770,22 +5801,50 @@ a.item-title:hover {
   .active-posters .rank-posts-counted div {
     display: inline-block;
   }
+  .active-posters .rank-position .stat-value,
+  .active-posters .rank-posts-total .stat-value,
+  .active-posters .rank-posts-counted .stat-value {
+    width: 34px;
+    padding-right: 4px;
+    text-align: right;
+  }
 }
 @media screen and (min-width: 992px) {
   .active-posters li > * {
     float: left;
+    padding-top: 4px;
+  }
+  .active-posters .rank-user-avatar {
+    padding-top: 0px;
   }
   .active-posters .rank-user {
+    padding-top: 0px;
+    padding-left: 16px;
     width: 25%;
   }
+  .active-posters .rank-user .item-title {
+    margin-top: 2px;
+    font-size: 18px;
+  }
+  .active-posters .rank-user .user-status {
+    margin-left: 16px;
+  }
+  .active-posters .rank-user .user-status .status-icon {
+    position: relative;
+    top: 2px;
+  }
+  .active-posters .rank-user .user-status .status-label {
+    font-size: 12px;
+    line-height: 12px;
+  }
   .active-posters .rank-position {
-    width: 15%;
+    width: 23%;
   }
   .active-posters .rank-posts-total {
-    width: 20%;
+    width: 23%;
   }
   .active-posters .rank-posts-counted {
-    width: 20%;
+    width: 23%;
   }
   .active-posters .rank-position,
   .active-posters .rank-posts-total,
