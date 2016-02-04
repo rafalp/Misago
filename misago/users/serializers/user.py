@@ -19,6 +19,18 @@ __all__ = [
 ]
 
 
+class StatusSerializer(serializers.Serializer):
+    is_offline = serializers.BooleanField()
+    is_online = serializers.BooleanField()
+    is_hidden = serializers.BooleanField()
+    is_offline_hidden = serializers.BooleanField()
+    is_online_hidden = serializers.BooleanField()
+    last_click = serializers.DateTimeField()
+
+    is_banned = serializers.BooleanField()
+    banned_until = serializers.DateTimeField()
+
+
 class AuthenticatedUserSerializer(serializers.ModelSerializer):
     acl = serializers.SerializerMethodField()
     rank = RankSerializer(many=False, read_only=True)
@@ -121,10 +133,10 @@ class UserSerializer(BaseSerializer):
         )
 
     def get_status(self, obj):
-        if 'user' in self.context:
-            return get_user_status(obj, self.context['user'].acl)
-        else:
-            return {}
+        try:
+            return StatusSerializer(obj.status).data
+        except AttributeError:
+            return None
 
     def get_signature(self, obj):
         if obj.has_valid_signature:
@@ -149,6 +161,7 @@ class ScoredUserSerializer(UserSerializer):
             'threads',
             'posts',
             'meta',
+            'status',
             'absolute_url',
         )
 

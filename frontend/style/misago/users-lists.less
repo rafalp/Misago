@@ -19,6 +19,8 @@
       width: 18px;
       height: 18px;
 
+      margin-right: 2px;
+
       font-size: 18px;
       line-height: 18px;
     }
@@ -49,7 +51,12 @@
 
         .status-icon {
           position: relative;
-          top: 1px;
+          top: -1px;
+
+          &.ui-preview {
+            position: relative;
+            top: 1px;
+          }
         }
       }
     }
@@ -69,11 +76,44 @@
       }
     }
   }
+
+  .active-posters.ui-preview {
+    .rank-user .rank-name {
+      position: relative;
+      bottom: 1px;
+
+      .ui-preview-text {
+        height: @font-size-small;
+      }
+    }
+
+    .rank-position, .rank-posts-total, .rank-posts-counted {
+      .stat-value {
+        position: relative;
+        bottom: 1px;
+
+        .ui-preview-text {
+          height: @font-size-small;
+        }
+      }
+    }
+  }
 }
 
 
 // Full displays
 @media screen and (min-width: @screen-md-min) {
+  .active-posters.ui-preview {
+    .rank-user {
+      .user-status {
+        .status-icon {
+          position: relative;
+          top: 2px;
+        }
+      }
+    }
+  }
+
   .active-posters {
     li>* {
       float: left;
@@ -96,17 +136,25 @@
       }
 
       .user-status {
-        margin-left: @line-height-computed * .8;
+        margin-right: @line-height-computed * .6;
 
         .status-icon {
           position: relative;
-          top: 2px;
+          top: -1px;
+
+          &.ui-preview {
+            top: 2px;
+          }
         }
 
         .status-label {
           font-size: @font-size-small;
           line-height: @font-size-small;
         }
+      }
+
+      .rank-name {
+        margin-right: @line-height-computed * .6;
       }
     }
 

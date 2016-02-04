@@ -1,6 +1,23 @@
 {% extends "misago/userslists/base.html" %}
 {% load humanize i18n misago_avatars %}
 
+
+{% block title %}{% trans "Active posters" %} | {{ block.super }}{% endblock %}
+{% block meta-description %}
+  {% if users_count %}
+    {% blocktrans trimmed with posters=users_count|intcomma days=tracked_period count counter=users_count %}
+      {{ posters }} most active poster from last {{ days }} days.
+    {% plural %}
+      {{ posters }} most active posters from last {{ days }} days.
+    {% endblocktrans %}
+  {% else %}
+    {% blocktrans trimmed with days=tracked_period %}
+      No users have posted any new messages during last {{ days }} days.
+    {% endblocktrans %}
+  {% endif %}
+{% endblock %}
+
+
 {% block content %}
 {{ block.super }}
 

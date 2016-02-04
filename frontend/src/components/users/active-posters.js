@@ -4,8 +4,10 @@ import Avatar from 'misago/components/avatar'; // jshint ignore:line
 import Status, { StatusIcon, StatusLabel } from 'misago/components/user-status'; // jshint ignore:line
 import misago from 'misago/index';
 import { dehydrate } from 'misago/reducers/users';
+import ajax from 'misago/services/ajax';
 import title from 'misago/services/page-title';
 import store from 'misago/services/store';
+import * as random from 'misago/utils/random'; // jshint ignore:line
 
 export class ActivePoster extends React.Component {
   getClassName() {
@@ -151,7 +153,69 @@ export class ActivePostersLoading extends React.Component {
     /* jshint ignore:start */
     return <div className="active-posters-list">
       <div className="container">
-        This is UI preview!
+        <p className="lead ui-preview-paragraph">
+          {random.range(3, 4).map((i) => {
+            return <span key={i} className="ui-preview-text" style={{width: random.int(50, 120) + "px"}}>&nbsp;</span>
+          })}
+        </p>
+
+        <div className="active-posters ui-preview">
+          <ul className="list-group">
+            {random.range(5, 10).map((i, counter) => {
+              return <li key={i} className="list-group-item">
+                <div className="rank-user-avatar">
+                  <span>
+                    <Avatar size="50" />
+                  </span>
+                </div>
+
+                <div className="rank-user">
+                  <div className="user-name">
+                    <span className="item-title">
+                      <span className="ui-preview-text" style={{width: random.int(30, 80) + "px"}}>&nbsp;</span>
+                    </span>
+                  </div>
+
+                  <span className="user-status">
+                    <span className="status-icon ui-preview">
+                      &nbsp;
+                    </span>
+                    <span className="status-label ui-preview hidden-xs hidden-sm">
+                      &nbsp;
+                    </span>
+                  </span>
+                  <span className="rank-name">
+                    <span className="ui-preview-text" style={{width: random.int(30, 50) + "px"}}>&nbsp;</span>
+                  </span>
+                  <span className="user-title hidden-xs hidden-sm">
+                    <span className="ui-preview-text" style={{width: random.int(30, 50) + "px"}}>&nbsp;</span>
+                  </span>
+                </div>
+
+                <div className="rank-position">
+                  <div className="stat-value">
+                    <span className="ui-preview-text" style={{width: "30px"}}>&nbsp;</span>
+                  </div>
+                  <div className="text-muted">{gettext("Rank")}</div>
+                </div>
+
+                <div className="rank-posts-counted">
+                  <div className="stat-value">
+                    <span className="ui-preview-text" style={{width: "30px"}}>&nbsp;</span>
+                  </div>
+                  <div className="text-muted">{gettext("Ranked posts")}</div>
+                </div>
+
+                <div className="rank-posts-total">
+                  <div className="stat-value">
+                    <span className="ui-preview-text" style={{width: "30px"}}>&nbsp;</span>
+                  </div>
+                  <div className="text-muted">{gettext("Total posts")}</div>
+                </div>
+              </li>;
+            })}
+          </ul>
+        </div>
       </div>
     </div>;
     /* jshint ignore:end */
@@ -187,6 +251,9 @@ export default class extends React.Component {
     } else {
       this.initWithoutPreloadedData();
     }
+
+    this.poolId = null;
+    this.startPooling();
   }
 
   initWithPreloadedData(data) {
@@ -206,11 +273,36 @@ export default class extends React.Component {
     };
   }
 
+  startPooling() {
+    let poolServer = () => {
+      ajax.get(misago.get('USERS_API'), {list: 'active'}).then((data) => {
+        this.setState({
+          isLoaded: true,
+
+          trackedPeriod: data.tracked_period,
+          count: data.count
+        });
+
+        store.dispatch(dehydrate(data.results));
+
+        this.poolId = window.setTimeout(poolServer, 90 * 1000);
+      });
+    };
+
+    poolServer();
+  }
+
   componentDidMount() {
     title.set({
       title: this.props.route.extra.name,
       parent: gettext("Users")
     });
+  }
+
+  componentWillUnmount() {
+    if (this.poolId) {
+      window.clearTimeout(this.poolId);
+    }
   }
 
   render() {

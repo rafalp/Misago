@@ -11,42 +11,20 @@ from misago.core.cache import cache
 from misago.core.shortcuts import get_object_or_404
 from misago.forums.models import Forum
 
+from misago.users.views.lists import get_active_posters_rankig
 from misago.users.models import Rank
+from misago.users.online.utils import make_users_status_aware
 from misago.users.serializers import ScoredUserSerializer
 
 
-def active(request, queryset):
-    cache_key = 'misago_active_posters_ranking'
-    ranking = cache.get(cache_key, False)
-    if ranking is False:
-        ranking = real_active()
-        cache.set(cache_key, ranking, 18*3600)
-    return ranking
+def active(request):
+    ranking = get_active_posters_rankig()
+    make_users_status_aware(ranking['users'], request.user.acl)
 
-
-def real_active():
-    tracked_period = settings.MISAGO_RANKING_LENGTH
-    tracked_since = timezone.now() - timedelta(days=tracked_period)
-
-    ranked_forums = [forum.pk for forum in Forum.objects.all_forums()]
-
-    User = get_user_model()
-    queryset = User.objects.filter(posts__gt=0)
-    queryset = queryset.filter(post__posted_on__gte=tracked_since,
-                               post__forum__in=ranked_forums)
-    queryset = queryset.annotate(score=Count('post'))
-    queryset = queryset.select_related('user__rank')
-    queryset = queryset.order_by('-score', 'slug')
-
-    users_ranking = []
-    for result in queryset[:settings.MISAGO_RANKING_SIZE]:
-        result.score = result.num_posts
-        users_ranking.append(result)
     return {
-        'results': ScoredUserSerializer(users_ranking, many=True).data,
-        'meta': {
-            'ranking_length': settings.MISAGO_RANKING_LENGTH
-        }
+        'tracked_period': settings.MISAGO_RANKING_LENGTH,
+        'results': ScoredUserSerializer(ranking['users'], many=True).data,
+        'count': ranking['users_count']
     }
 
 
@@ -67,11 +45,11 @@ LISTS = {
 }
 
 
-def list_endpoint(request, queryset):
+def list_endpoint(request):
     list_type = request.query_params.get('list')
     list_handler = LISTS.get(list_type)
 
     if list_handler:
-        return list_handler(request, queryset)
+        return list_handler(request)
     else:
         return

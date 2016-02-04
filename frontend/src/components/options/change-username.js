@@ -289,7 +289,7 @@ export class UsernameHistory extends React.Component {
             <div className="username-change-date">
               <span className="ui-preview-text" style={{width: random.int(50, 100) + "px"}}>&nbsp;</span>
             </div>
-          </li>
+          </li>;
         })}
       </ul>
     </div>;

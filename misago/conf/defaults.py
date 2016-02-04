@@ -315,13 +315,6 @@ MISAGO_RANKING_LENGTH = 30
 MISAGO_RANKING_SIZE = 50
 
 
-# Controls max number of items displayed on online list
-MISAGO_ONLINE_LIST_SIZE = 50
-
-# For how long should online list be cached (in seconds)
-MISAGO_ONLINE_LIST_CACHE = 40
-
-
 # Controls number of users displayed on single page
 MISAGO_USERS_PER_PAGE = 12
 

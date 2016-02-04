@@ -35,14 +35,16 @@
 }
 
 
-// Tabbed
-.page-header.tabbed {
-  padding-bottom: 0px;
+// Tabbed on full display
+@media screen and (min-width: @screen-md-min) {
+  .page-header.tabbed {
+    padding-bottom: 0px;
 
-  .page-tabs {
-    .nav>li {
-      &>a {
-        border-radius: 0px;
+    .page-tabs {
+      .nav>li {
+        &>a {
+          border-radius: 0px;
+        }
       }
     }
   }

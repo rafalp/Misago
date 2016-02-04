@@ -48,7 +48,7 @@ export class StatusIcon extends React.Component {
 
   render() {
     /* jshint ignore:start */
-    return <span className="status-icon">
+    return <span className="material-icon status-icon">
       {this.getIcon()}
     </span>;
     /* jshint ignore:end */
@@ -80,7 +80,7 @@ export class StatusLabel extends React.Component {
     } else if (this.props.status.is_offline_hidden) {
       return interpolate(gettext("%(username)s was last seen %(last_click)s (hidden)"), {
         username: this.props.user.username,
-        last_click: this.props.state.lastClick.fromNow()
+        last_click: this.props.status.last_click.fromNow()
       }, true);
     } else if (this.props.status.is_online) {
       return interpolate(gettext("%(username)s is online"), {
@@ -89,7 +89,7 @@ export class StatusLabel extends React.Component {
     } else if (this.props.status.is_offline) {
       return interpolate(gettext("%(username)s was last seen %(last_click)s"), {
         username: this.props.user.username,
-        last_click: this.props.state.lastClick.fromNow()
+        last_click: this.props.status.last_click.fromNow()
       }, true);
     }
   }

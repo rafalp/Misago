@@ -51,7 +51,7 @@ export default class extends React.Component {
       <div className="page-header tabbed">
         <div className="container">
 
-          <h1>{gettext("Users")}</h1>
+          <h1 className="pull-left">{gettext("Users")}</h1>
 
           <button className="btn btn-default btn-icon btn-dropdown-toggle hidden-md hidden-lg"
                   type="button"

@@ -72,31 +72,7 @@ class UserViewSet(viewsets.GenericViewSet):
             'users': self.get_users_count(),
         }
 
-        list_dict = list_endpoint(request, self.get_queryset())
-        if not list_dict:
-            return Response([])
-
-        if list_dict.get('meta'):
-            response_dict.update(list_dict['meta'])
-
-        if list_dict.get('results'):
-            response_dict['results'] = list_dict['results']
-        elif list_dict.get('queryset'):
-            queryset = list_dict['queryset']
-            if list_dict.get('paginate'):
-                queryset = self.paginate_queryset(list_dict['queryset'])
-                response_dict.update(self.paginator.get_meta())
-
-            if list_dict.get('serializer'):
-                SerializerClass = list_dict.get('serializer')
-            else:
-                SerializerClass = self.serializer_class
-
-            serializer = SerializerClass(
-                queryset, many=True, context={'user': request.user})
-            response_dict['results'] = serializer.data
-
-        return Response(response_dict)
+        return Response(list_endpoint(request))
 
     def create(self, request):
         return create_endpoint(request)

@@ -294,18 +294,6 @@ MISAGO_NOTIFICATIONS_MAX_AGE
 Max age, in days, of notifications stored in database. Notifications older than this will be delted.
 
 
-MISAGO_ONLINE_LIST_SIZE
------------------------
-
-Controls number of users displayed on online list.
-
-
-MISAGO_ONLINE_LIST_CACHE
-------------------------
-
-For how long should online list be cached, in seconds.
-
-
 MISAGO_POSTING_MIDDLEWARES
 --------------------------
 

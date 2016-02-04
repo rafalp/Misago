@@ -3,10 +3,10 @@ from datetime import timedelta
 from django.utils import timezone
 
 from misago.users.bans import get_user_ban
-from misago.users.models import Online
+from misago.users.models import Online, BanCache
 
 
-ACTIVITY_CUTOFF = timedelta(minutes=15)
+ACTIVITY_CUTOFF = timedelta(minutes=1)
 
 
 def get_user_status(user, acl):
@@ -51,3 +51,21 @@ def get_user_status(user, acl):
             user_status['is_offline'] = True
 
     return user_status
+
+
+def make_users_status_aware(users, acl):
+    users_dict = {}
+    for user in users:
+        users_dict[user.pk] = user
+
+    # Fill ban cache on users
+    for ban_cache in BanCache.objects.filter(user__in=users_dict.keys()):
+        user.ban_cache = ban_cache
+
+    # Fill user online trackers
+    for online_tracker in Online.objects.filter(user__in=users_dict.keys()):
+        user.online_tracker = online_tracker
+
+    # Fill user states
+    for user in users:
+        user.status = get_user_status(user, acl)
