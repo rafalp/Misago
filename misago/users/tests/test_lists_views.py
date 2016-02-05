@@ -50,33 +50,6 @@ class ActivePostersTests(UsersListTestCase):
         response = self.client.get(view_link)
         self.assertEqual(response.status_code, 200)
 
-        for page in xrange(2, 6):
-            response = self.client.get(reverse('misago:users_active_posters',
-                                               kwargs={'page': page}))
-        self.assertEqual(response.status_code, 200)
-
-
-class OnlineUsersTests(UsersListTestCase):
-    def test_no_permission(self):
-        """online list returns 403 if user has no permission"""
-        override_acl(self.user, {
-            'can_browse_users_list': 1,
-            'can_see_users_online_list': 0,
-        })
-
-        response = self.client.get(reverse('misago:users_online'))
-        self.assertEqual(response.status_code, 403)
-
-    def test_with_permission(self):
-        """online list returns 200 if user has permission"""
-        override_acl(self.user, {
-            'can_browse_users_list': 1,
-            'can_see_users_online_list': 1,
-        })
-
-        response = self.client.get(reverse('misago:users_online'))
-        self.assertEqual(response.status_code, 200)
-
 
 class UsersRankTests(UsersListTestCase):
     def test_ranks(self):

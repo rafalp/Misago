@@ -144,7 +144,7 @@ describe("Change Password Form", function() {
       SETTINGS: {
         password_length_min: 4
       }
-    }
+    };
   });
 
   afterEach(function() {
@@ -305,7 +305,7 @@ describe("Change Sign In Credentials Root", function() {
       SETTINGS: {
         password_length_min: 4
       }
-    }
+    };
   });
 
   it("renders", function(done) {

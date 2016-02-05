@@ -51,7 +51,7 @@ export default function username(state=[], action=null) {
           });
         }
 
-        return Object.assign({}, item);
+        return item;
       });
 
     case UPDATE_USERNAME:

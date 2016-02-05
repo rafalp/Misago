@@ -14,12 +14,12 @@ from misago.users.models import Online, Rank
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
-class ActiveUsersListTests(AuthenticatedUserTestCase):
+class ActivePostersListTests(AuthenticatedUserTestCase):
     """
-    tests for active users list (GET /users/?list=active)
+    tests for active posters list (GET /users/?list=active)
     """
     def setUp(self):
-        super(ActiveUsersListTests, self).setUp()
+        super(ActivePostersListTests, self).setUp()
         self.link = '/api/users/?list=active'
 
         cache.clear()
@@ -44,83 +44,19 @@ class ActiveUsersListTests(AuthenticatedUserTestCase):
         self.user.posts = 1
         self.user.save()
 
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.user.username, response.content)
+        self.assertIn('"is_online":true', response.content)
+        self.assertIn('"is_offline":false', response.content)
+
         self.logout_user()
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.user.username, response.content)
-
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(self.user.username, response.content)
-
-
-class OnlineListTests(AuthenticatedUserTestCase):
-    """
-    tests for online list (GET /users/?list=online)
-    """
-    def setUp(self):
-        super(OnlineListTests, self).setUp()
-        self.link = '/api/users/?list=online'
-
-        cache.clear()
-        threadstore.clear()
-
-    def test_no_permission(self):
-        """online list returns 403 if user has no permission"""
-        override_acl(self.user, {
-            'can_browse_users_list': 1,
-            'can_see_users_online_list': 0,
-        })
-
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 403)
-
-    def test_empty_list(self):
-        """empty online list returns 200"""
-        override_acl(self.user, {
-            'can_browse_users_list': 1,
-            'can_see_users_online_list': 1,
-        })
-
-        Online.objects.all().update(
-            last_click=timezone.now() - timedelta(days=5))
-
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 200)
-        self.assertNotIn(self.user.username, response.content)
-
-        override_acl(self.user, {
-            'can_browse_users_list': 1,
-            'can_see_users_online_list': 1,
-        })
-
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 200)
-        self.assertNotIn(self.user.username, response.content)
-
-    def test_filled_list(self):
-        """filled online list returns 200"""
-        override_acl(self.user, {
-            'can_browse_users_list': 1,
-            'can_see_users_online_list': 1,
-        })
-
-        Online.objects.all().update(
-            last_click=timezone.now())
-
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(self.user.username, response.content)
-
-        override_acl(self.user, {
-            'can_browse_users_list': 1,
-            'can_see_users_online_list': 1,
-        })
-
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(self.user.username, response.content)
+        self.assertIn('"is_online":false', response.content)
+        self.assertIn('"is_offline":true', response.content)
 
 
 class RankListTests(AuthenticatedUserTestCase):

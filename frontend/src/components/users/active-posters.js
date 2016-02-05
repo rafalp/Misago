@@ -5,8 +5,9 @@ import Status, { StatusIcon, StatusLabel } from 'misago/components/user-status';
 import misago from 'misago/index';
 import { dehydrate } from 'misago/reducers/users';
 import ajax from 'misago/services/ajax';
-import title from 'misago/services/page-title';
+import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
+import title from 'misago/services/page-title';
 import * as random from 'misago/utils/random'; // jshint ignore:line
 
 export class ActivePoster extends React.Component {
@@ -281,6 +282,8 @@ export default class extends React.Component {
 
           trackedPeriod: data.tracked_period,
           count: data.count
+        }, (rejection) => {
+          snackbar.apiError(rejection);
         });
 
         store.dispatch(dehydrate(data.results));

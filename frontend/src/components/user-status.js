@@ -60,17 +60,17 @@ export class StatusLabel extends React.Component {
   getHelp() {
     if (this.props.status.is_banned) {
       if (this.props.status.banned_until) {
-        return interpolate(gettext("%(username)s is hiding banned until %(ban_expires)s"), {
+        return interpolate(gettext("%(username)s is banned until %(ban_expires)s"), {
           username: this.props.user.username,
           ban_expires: this.props.status.banned_until.format('LL, LT')
         }, true);
       } else {
-        return interpolate(gettext("%(username)s is hiding banned"), {
+        return interpolate(gettext("%(username)s is banned"), {
           username: this.props.user.username
         }, true);
       }
     } else if (this.props.status.is_hidden) {
-      return interpolate(gettext("%(username)s is hiding activity"), {
+      return interpolate(gettext("%(username)s is hiding presence"), {
         username: this.props.user.username
       }, true);
     } else if (this.props.status.is_online_hidden) {
@@ -98,7 +98,7 @@ export class StatusLabel extends React.Component {
     if (this.props.status.is_banned) {
       return gettext("Banned");
     } else if (this.props.status.is_hidden) {
-      return gettext("Hiding activity");
+      return gettext("Hidden");
     } else if (this.props.status.is_online_hidden) {
       return gettext("Online (hidden)");
     } else if (this.props.status.is_offline_hidden) {

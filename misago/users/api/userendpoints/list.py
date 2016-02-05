@@ -5,8 +5,10 @@ from django.db.models import Count
 from django.utils import timezone
 
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
 
 from misago.conf import settings
+from misago.core.apipaginator import ApiPaginator
 from misago.core.cache import cache
 from misago.core.shortcuts import get_object_or_404
 from misago.forums.models import Forum
@@ -14,29 +16,39 @@ from misago.forums.models import Forum
 from misago.users.views.lists import get_active_posters_rankig
 from misago.users.models import Rank
 from misago.users.online.utils import make_users_status_aware
-from misago.users.serializers import ScoredUserSerializer
+from misago.users.serializers import UserSerializer, ScoredUserSerializer
+
+
+Paginator = ApiPaginator(settings.MISAGO_USERS_PER_PAGE, 4)
 
 
 def active(request):
     ranking = get_active_posters_rankig()
-    make_users_status_aware(ranking['users'], request.user.acl)
+    make_users_status_aware(
+        ranking['users'], request.user.acl, fetch_state=True)
 
-    return {
+    return Response({
         'tracked_period': settings.MISAGO_RANKING_LENGTH,
         'results': ScoredUserSerializer(ranking['users'], many=True).data,
         'count': ranking['users_count']
-    }
+    })
 
 
-def rank(request, queryset):
+def rank(request):
     rank_slug = request.query_params.get('rank')
     if not rank_slug:
         return
 
-    rank = get_object_or_404(Rank.objects.filter(is_tab=True), slug=rank_slug)
-    queryset = queryset.filter(rank=rank).order_by('slug')
+    rank = get_object_or_404(Rank.objects, slug=rank_slug, is_tab=True)
+    queryset = rank.user_set.select_related(
+        'rank', 'ban_cache', 'online_tracker')
 
-    return {'queryset': queryset, 'paginate': True}
+    paginator = Paginator()
+    users = paginator.paginate_queryset(queryset, request)
+
+    make_users_status_aware(users, request.user.acl)
+    return paginator.get_paginated_response(
+        UserSerializer(users, many=True).data)
 
 
 LISTS = {

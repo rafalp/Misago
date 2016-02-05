@@ -11,6 +11,17 @@ export function dehydrate(items) {
   };
 }
 
+export function dehydrateStatus(status) {
+  if (status) {
+    return Object.assign({}, status, {
+      last_click: status.last_click ? moment(status.last_click) : null,
+      banned_until: status.banned_until ? moment(status.banned_until) : null
+    });
+  } else {
+    return null;
+  }
+}
+
 export function updateAvatar(user, avatarHash) {
   return {
     type: UPDATE_AVATAR,
@@ -32,17 +43,21 @@ export default function user(state=[], action=null) {
   switch (action.type) {
     case DEHYDRATE_RESULT:
       return action.items.map(function(item) {
-        let status = item.status || null;
-        if (status) {
-          status = Object.assign({}, status, {
-            last_click: status.last_click ? moment(status.last_click) : null,
-            banned_until: status.banned_until ? moment(status.banned_until) : null
-          });
-        }
+        let status = dehydrateStatus(item.status);
 
         return Object.assign({}, item, {
           status
         });
+      });
+
+    case UPDATE_AVATAR:
+      return state.map(function(item) {
+        item = Object.assign({}, item);
+        if (item.id === action.userId) {
+          item.avatar_hash = action.avatarHash;
+        }
+
+        return item;
       });
 
     default:

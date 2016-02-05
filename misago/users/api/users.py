@@ -10,7 +10,6 @@ from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
 
 from misago.acl import add_acl
-from misago.core.apipaginator import ApiPaginator
 from misago.core.cache import cache
 
 from misago.users.forms.options import ForumOptionsForm
@@ -51,7 +50,6 @@ class UserViewSet(viewsets.GenericViewSet):
     parser_classes=(JSONParser, MultiPartParser)
     serializer_class = UserSerializer
     queryset = get_user_model().objects
-    pagination_class = ApiPaginator(settings.MISAGO_USERS_PER_PAGE, 4)
 
     def get_queryset(self):
         relations = ('rank', 'online_tracker', 'ban_cache')
@@ -66,13 +64,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
     def list(self, request):
         allow_browse_users_list(request.user)
-
-        response_dict = {
-            'results': [],
-            'users': self.get_users_count(),
-        }
-
-        return Response(list_endpoint(request))
+        return list_endpoint(request)
 
     def create(self, request):
         return create_endpoint(request)
