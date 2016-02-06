@@ -63,6 +63,8 @@ export function mockUser(overrides) {
     unread_private_threads: 0,
     username: "LoremIpsum",
 
+    status: null,
+
     acl: {}
   };
 

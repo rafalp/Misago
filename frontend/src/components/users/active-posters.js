@@ -4,8 +4,7 @@ import Avatar from 'misago/components/avatar'; // jshint ignore:line
 import Status, { StatusIcon, StatusLabel } from 'misago/components/user-status'; // jshint ignore:line
 import misago from 'misago/index';
 import { dehydrate } from 'misago/reducers/users';
-import ajax from 'misago/services/ajax';
-import snackbar from 'misago/services/snackbar';
+import polls from 'misago/services/polls';
 import store from 'misago/services/store';
 import title from 'misago/services/page-title';
 import * as random from 'misago/utils/random'; // jshint ignore:line
@@ -253,8 +252,7 @@ export default class extends React.Component {
       this.initWithoutPreloadedData();
     }
 
-    this.poolId = null;
-    this.startPooling();
+    this.startPolling();
   }
 
   initWithPreloadedData(data) {
@@ -274,26 +272,30 @@ export default class extends React.Component {
     };
   }
 
-  startPooling() {
-    let poolServer = () => {
-      ajax.get(misago.get('USERS_API'), {list: 'active'}).then((data) => {
-        this.setState({
-          isLoaded: true,
-
-          trackedPeriod: data.tracked_period,
-          count: data.count
-        }, (rejection) => {
-          snackbar.apiError(rejection);
-        });
-
-        store.dispatch(dehydrate(data.results));
-
-        this.poolId = window.setTimeout(poolServer, 90 * 1000);
-      });
-    };
-
-    poolServer();
+  startPolling() {
+    polls.start({
+      poll: 'active-posters',
+      url: misago.get('USERS_API'),
+      data: {
+        list: 'active'
+      },
+      frequency: 90 * 1000,
+      update: this.update
+    });
   }
+
+  /* jshint ignore:start */
+  update = (data) => {
+    this.setState({
+      isLoaded: true,
+
+      trackedPeriod: data.tracked_period,
+      count: data.count
+    });
+
+    store.dispatch(dehydrate(data.results));
+  };
+  /* jshint ignore:end */
 
   componentDidMount() {
     title.set({
@@ -303,9 +305,7 @@ export default class extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.poolId) {
-      window.clearTimeout(this.poolId);
-    }
+    polls.stop('active-posters');
   }
 
   render() {
