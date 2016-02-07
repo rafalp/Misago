@@ -38,10 +38,13 @@ def get_user_status(user, acl):
 
     if user_status['is_hidden']:
         if acl['can_see_hidden_users']:
+            user_status['is_hidden'] = False
             if user_status['is_online']:
                 user_status['is_online_hidden'] = True
+                user_status['is_online'] = False
             else:
                 user_status['is_offline_hidden'] = True
+                user_status['is_offline'] = False
         else:
             user_status['is_hidden'] = True
     else:

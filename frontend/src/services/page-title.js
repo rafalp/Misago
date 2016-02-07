@@ -11,7 +11,7 @@ export class PageTitle {
     let finalTitle = title.title;
 
     if (title.page) {
-      let pageLabel = interpolate(gettext('page %(page)s'), {
+      let pageLabel = interpolate(gettext('page: %(page)s'), {
         page: title.page
       }, true);
 

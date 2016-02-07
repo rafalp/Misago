@@ -101,6 +101,16 @@ export function paths() {
   misago.get('USERS_LISTS').forEach(function(item) {
     if (item.component === 'rank') {
       paths.push({
+        path: misago.get('USERS_LIST_URL') + item.slug + '/:page/',
+        component: connect(select)(Rank),
+        rank: {
+          name: item.name,
+          slug: item.slug,
+          css_class: item.css_class,
+          description: item.description
+        }
+      });
+      paths.push({
         path: misago.get('USERS_LIST_URL') + item.slug + '/',
         component: connect(select)(Rank),
         rank: {

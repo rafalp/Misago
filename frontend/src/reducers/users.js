@@ -44,8 +44,8 @@ export default function user(state=[], action=null) {
     case DEHYDRATE_RESULT:
       return action.items.map(function(item) {
         let status = dehydrateStatus(item.status);
-
         return Object.assign({}, item, {
+          joined_on: moment(item.joined_on),
           status
         });
       });

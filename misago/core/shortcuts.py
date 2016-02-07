@@ -1,4 +1,5 @@
 from django.shortcuts import *  # noqa
+from rest_framework.compat import OrderedDict
 
 
 def paginate(object_list, page, per_page, orphans=0,
@@ -18,6 +19,47 @@ def paginate(object_list, page, per_page, orphans=0,
             allow_empty_first_page=allow_empty_first_page).page(page)
     except EmptyPage:
         raise Http404()
+
+
+def pagination_dict(page):
+    pagination = {
+        'page': page.number,
+        'pages': page.paginator.num_pages,
+        'page_range': page.paginator.page_range,
+        'first': None,
+        'previous': None,
+        'next': None,
+        'last': None,
+        'before': 0,
+        'more': 0,
+    }
+
+    if page.has_previous():
+        pagination['first'] = 1
+        if page.previous_page_number() > 1:
+            pagination['previous'] = page.previous_page_number()
+
+    if page.has_next():
+        pagination['last'] = page.paginator.num_pages
+        if page.next_page_number() <= page.paginator.num_pages:
+            pagination['next'] = page.next_page_number()
+
+    if page.start_index():
+        pagination['before'] = page.start_index() - 1
+    pagination['more'] = page.paginator.count - page.end_index()
+
+    return OrderedDict([
+        ('count', page.paginator.count),
+        ('page', pagination['page']),
+        ('pages', pagination['pages']),
+        ('page_range', pagination['page_range']),
+        ('first', pagination['first']),
+        ('previous', pagination['previous']),
+        ('next', pagination['next']),
+        ('last', pagination['last']),
+        ('before', pagination['before']),
+        ('more', pagination['more'])
+    ])
 
 
 def validate_slug(model, slug):

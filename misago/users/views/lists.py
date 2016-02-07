@@ -4,19 +4,18 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.db.models import Count
-from django.http import Http404
 from django.shortcuts import redirect, render as django_render
 from django.utils import timezone
 
 from misago.forums.models import Forum
 from misago.core.cache import cache
-from misago.core.shortcuts import get_object_or_404, paginate
+from misago.core.shortcuts import get_object_or_404, paginate, pagination_dict
 from misago.core.utils import format_plaintext_for_html
 
 from misago.users.models import Rank
 from misago.users.pages import users_list
 from misago.users.permissions.profiles import allow_browse_users_list
-from misago.users.serializers import ScoredUserSerializer
+from misago.users.serializers import UserSerializer, ScoredUserSerializer
 
 
 def render(request, template, context):
@@ -77,12 +76,6 @@ def lander(request):
     return redirect(default)
 
 
-def list_view(request, template, queryset, page, context=None):
-    context = context or {}
-    context['users'] = paginate(queryset, page, 6 * 3, 5)
-    return render(request, template, context)
-
-
 @allow_see_list
 def active_posters(request):
     ranking = get_active_posters_rankig()
@@ -135,7 +128,28 @@ def get_real_active_posts_ranking():
 @allow_see_list
 def rank(request, rank_slug, page=0):
     rank = get_object_or_404(Rank.objects.filter(is_tab=True), slug=rank_slug)
-    queryset = rank.user_set.order_by('slug')
+    queryset = rank.user_set.select_related('rank').order_by('slug')
+
+    page = paginate(queryset, page, settings.MISAGO_USERS_PER_PAGE, 4)
+    paginator = pagination_dict(page)
+
+    request.frontend_context['USERS'] = dict(
+        results=UserSerializer(page.object_list, many=True).data,
+        **paginator
+    )
+
+    if rank.description:
+        description = {
+            'plain': rank.description,
+            'html': format_plaintext_for_html(rank.description)
+        }
+    else:
+        description = None
 
     template = "misago/userslists/rank.html"
-    return list_view(request, template, queryset, page, {'rank': rank})
+    return render(request, template, {
+        'rank': rank,
+        'users': page.object_list,
+
+        'paginator': paginator
+    })

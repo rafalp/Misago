@@ -8,10 +8,12 @@ export class Polls {
 
   start(kwargs) {
     let poolServer = () => {
+      this._polls[kwargs.poll] = kwargs;
+
       this._ajax.get(kwargs.url, kwargs.data || null).then((data) => {
         kwargs.update(data);
 
-        this._polls[kwargs.poll] = window.setTimeout(
+        this._polls[kwargs.poll].timeout = window.setTimeout(
           poolServer, kwargs.frequency);
       }, (rejection) => {
         if (kwargs.error) {
@@ -27,7 +29,7 @@ export class Polls {
 
   stop(pollId) {
     if (this._polls[pollId]) {
-      window.clearTimeout(this._polls[pollId]);
+      window.clearTimeout(this._polls[pollId].timeout);
     }
   }
 }

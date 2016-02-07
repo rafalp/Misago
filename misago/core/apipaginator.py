@@ -1,8 +1,12 @@
 from django.core.paginator import InvalidPage, Paginator as DjangoPaginator
+from django.utils import six
+
 from rest_framework.compat import OrderedDict
 from rest_framework.exceptions import NotFound
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+
+from misago.core.shortcuts import pagination_dict
 
 
 class BaseApiPaginator(PageNumberPagination):
@@ -31,40 +35,7 @@ class BaseApiPaginator(PageNumberPagination):
         return list(self.page)
 
     def get_meta(self):
-        pagination = {
-            'pages': self.page.paginator.num_pages,
-            'first': None,
-            'previous': None,
-            'next': None,
-            'last': None,
-            'before': 0,
-            'more': 0,
-        }
-
-        if self.page.has_previous():
-            pagination['first'] = 1
-            if self.page.previous_page_number() > 1:
-                pagination['previous'] = self.page.previous_page_number()
-
-        if self.page.has_next():
-            pagination['last'] = self.page.paginator.num_pages
-            if self.page.next_page_number() < self.page.paginator.num_pages:
-                pagination['next'] = self.page.next_page_number()
-
-        if self.page.start_index():
-            pagination['before'] = self.page.start_index() - 1
-        pagination['more'] = self.page.paginator.count - self.page.end_index()
-
-        return OrderedDict([
-            ('count', self.page.paginator.count),
-            ('pages', pagination['pages']),
-            ('first', pagination['first']),
-            ('previous', pagination['previous']),
-            ('next', pagination['next']),
-            ('last', pagination['last']),
-            ('before', pagination['before']),
-            ('more', pagination['more'])
-        ])
+        return pagination_dict(self.page)
 
     def get_paginated_response(self, data):
         response_data = self.get_meta()

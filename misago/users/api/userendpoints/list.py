@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.db.models import Count
+from django.http import Http404
 from django.utils import timezone
 
 from rest_framework.pagination import PageNumberPagination
@@ -37,11 +38,11 @@ def active(request):
 def rank(request):
     rank_slug = request.query_params.get('rank')
     if not rank_slug:
-        return
+        raise Http404()
 
     rank = get_object_or_404(Rank.objects, slug=rank_slug, is_tab=True)
     queryset = rank.user_set.select_related(
-        'rank', 'ban_cache', 'online_tracker')
+        'rank', 'ban_cache', 'online_tracker').order_by('slug')
 
     paginator = Paginator()
     users = paginator.paginate_queryset(queryset, request)
@@ -64,4 +65,4 @@ def list_endpoint(request):
     if list_handler:
         return list_handler(request)
     else:
-        return
+        raise Http404()
