@@ -26,6 +26,26 @@ class SplitThreadForm(Form, ValidateThreadNameMixin):
         return new_forum
 
 
+def get_thread_from_url(request, thread_url):
+        from django.core.urlresolvers import resolve
+        from django.http import Http404
+
+        try:
+            thread_url = thread_url[len(settings.BOARD_ADDRESS):]
+            match = resolve(thread_url)
+            if not match.url_name.startswith('thread'):
+                raise forms.ValidationError(_("This is not a correct thread URL."))
+            thread = Thread.objects.get(pk=match.kwargs['thread'])
+            request.acl.threads.allow_thread_view(request.user, thread)
+            if thread.pk == self.thread.pk:
+                raise forms.ValidationError(_("New thread is same as current one."))
+            return thread
+        except (Http404, KeyError):
+            raise forms.ValidationError(_("This is not a correct thread URL."))
+        except (Thread.DoesNotExist, ACLError403, ACLError404):
+            raise forms.ValidationError(_("Thread could not be found."))
+
+
 class MovePostsForm(Form, ValidateThreadNameMixin):
     error_source = 'thread_url'
 
@@ -38,20 +58,5 @@ class MovePostsForm(Form, ValidateThreadNameMixin):
                                                     help_text=_("To select new thread, simply copy and paste here its link."))
 
     def clean_thread_url(self):
-        from django.core.urlresolvers import resolve
-        from django.http import Http404
-        thread_url = self.cleaned_data['thread_url']
-        try:
-            thread_url = thread_url[len(settings.BOARD_ADDRESS):]
-            match = resolve(thread_url)
-            if match.url_name[0:len(self.type_prefix)] != self.type_prefix:
-                raise forms.ValidationError(_("This is not a correct thread URL."))
-            thread = Thread.objects.get(pk=match.kwargs['thread'])
-            self.request.acl.threads.allow_thread_view(self.request.user, thread)
-            if thread.pk == self.thread.pk:
-                raise forms.ValidationError(_("New thread is same as current one."))
-            return thread
-        except (Http404, KeyError):
-            raise forms.ValidationError(_("This is not a correct thread URL."))
-        except (Thread.DoesNotExist, ACLError403, ACLError404):
-            raise forms.ValidationError(_("Thread could not be found."))
+        return get_thread_from_url(
+            self.request, self.cleaned_data['thread_url'])
