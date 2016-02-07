@@ -66,7 +66,7 @@ class PaginatorTests(TestCase):
         self.assertEqual(meta['pages'], 3)
         self.assertEqual(meta['first'], 1)
         self.assertEqual(meta['previous'], None)
-        self.assertEqual(meta['next'], None)
+        self.assertEqual(meta['next'], 3)
         self.assertEqual(meta['last'], 3)
         self.assertEqual(meta['before'], 6)
         self.assertEqual(meta['more'], 8)

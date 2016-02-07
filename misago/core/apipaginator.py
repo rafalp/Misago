@@ -1,7 +1,6 @@
 from django.core.paginator import InvalidPage, Paginator as DjangoPaginator
 from django.utils import six
 
-from rest_framework.compat import OrderedDict
 from rest_framework.exceptions import NotFound
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response

@@ -28,7 +28,7 @@ describe('Page Title', function() {
       title: "Lorem ipsum",
       page: 4
     });
-    assert.equal(document.title, "Lorem ipsum (page 4) | Test Forum",
+    assert.equal(document.title, "Lorem ipsum (page: 4) | Test Forum",
       "object with title and page props is used to set valid title");
 
     title.set({
@@ -36,7 +36,7 @@ describe('Page Title', function() {
       parent: "Dolor",
       page: 4
     });
-    assert.equal(document.title, "Lorem ipsum (page 4) | Dolor | Test Forum",
+    assert.equal(document.title, "Lorem ipsum (page: 4) | Dolor | Test Forum",
       "object with title, parent and page props is used to set valid title");
   });
 });

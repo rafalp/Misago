@@ -1,5 +1,5 @@
+from collections import OrderedDict
 from django.shortcuts import *  # noqa
-from rest_framework.compat import OrderedDict
 
 
 def paginate(object_list, page, per_page, orphans=0,

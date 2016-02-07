@@ -212,7 +212,7 @@ export class RankUsersLoading extends React.Component {
   render() {
     /* jshint ignore:start */
     return <div>
-      <div className="users-cards-list ui-ready">
+      <div className="users-cards-list ui-preview">
         <div className="row">
           {[0, 1, 2, 3].map((i) => {
             return <div className="col-md-3" key={i}>
@@ -279,7 +279,6 @@ export default class extends React.Component {
     this.state = Object.assign(data, {
       isLoaded: true
     });
-
     store.dispatch(dehydrate(data.results));
   }
 
@@ -369,7 +368,6 @@ export default class extends React.Component {
         /* jshint ignore:start */
         let baseUrl = misago.get('USERS_LIST_URL') + this.props.route.rank.slug + '/';
         return <RankUsers baseUrl={baseUrl}
-                          rank={this.props.route.rank}
                           users={this.props.users}
                           {...this.state} />;
         /* jshint ignore:end */
