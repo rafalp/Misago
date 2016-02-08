@@ -1,7 +1,11 @@
 import assert from 'assert';
 import moment from 'moment';
 import React from 'react'; // jshint ignore:line
-import Root, { RankUsers, RankUsersPager, RankUserCard, RankUsersLoading } from 'misago/components/users/rank'; // jshint ignore:line
+import ListItem from 'misago/components/users/rank/list-item' // jshint ignore:line
+import ListLoading from 'misago/components/users/rank/list-loading' // jshint ignore:line
+import List from 'misago/components/users/rank/list' // jshint ignore:line
+import Pager from 'misago/components/users/rank/pager' // jshint ignore:line
+import Root from 'misago/components/users/rank/root'; // jshint ignore:line
 import misago from 'misago/index';
 import reducer from 'misago/reducers/users';
 import ajax from 'misago/services/ajax';
@@ -47,9 +51,9 @@ describe("Rank Users List", function() {
     };
 
     testUtils.render(
-      <RankUsers baseUrl='/users/'
-                 users={users}
-                 {...state} />
+      <List baseUrl='/users/'
+            users={users}
+            {...state} />
     );
     /* jshint ignore:end */
 
@@ -67,7 +71,7 @@ describe("Rank Users List", function() {
   });
 });
 
-describe("Rank User Card", function() {
+describe("Rank Users List Item", function() {
   afterEach(function() {
     testUtils.unmountComponents();
   });
@@ -80,7 +84,7 @@ describe("Rank User Card", function() {
 
     /* jshint ignore:start */
     testUtils.render(
-      <RankUserCard user={user} />
+      <ListItem user={user} />
     );
     /* jshint ignore:end */
 
@@ -105,7 +109,7 @@ describe("Rank User Card", function() {
 
     /* jshint ignore:start */
     testUtils.render(
-      <RankUserCard user={user} />
+      <ListItem user={user} />
     );
     /* jshint ignore:end */
 
@@ -123,7 +127,7 @@ describe("Rank User Card", function() {
   });
 });
 
-describe("Rank Users Pager", function() {
+describe("Rank Users List Pager", function() {
   afterEach(function() {
     testUtils.unmountComponents();
   });
@@ -146,7 +150,7 @@ describe("Rank Users Pager", function() {
     };
 
     testUtils.render(
-      <RankUsersPager {...state} />
+      <Pager {...state} />
     );
     /* jshint ignore:end */
 
@@ -184,7 +188,7 @@ describe("Rank Users Pager", function() {
     };
 
     testUtils.render(
-      <RankUsersPager {...state} />
+      <Pager {...state} />
     );
     /* jshint ignore:end */
 
@@ -222,7 +226,7 @@ describe("Rank Users Pager", function() {
     };
 
     testUtils.render(
-      <RankUsersPager {...state} />
+      <Pager {...state} />
     );
     /* jshint ignore:end */
 
@@ -244,24 +248,25 @@ describe("Rank Users Pager", function() {
   });
 });
 
-describe("Rank Users Loading", function() {
+describe("Rank Users List Loading", function() {
   afterEach(function() {
     testUtils.unmountComponents();
   });
 
   it("renders", function(done) {
     /* jshint ignore:start */
-    testUtils.render(<RankUsersLoading />);
+    testUtils.render(<ListLoading />);
     /* jshint ignore:end */
 
-    testUtils.onElement('#test-mount .users-cards-list.ui-preview', function() {
+    testUtils.onElement('#test-mount .users-cards-list', function() {
       assert.ok(true, "component renders");
 
       done();
     });
   });
 });
-describe("Rank Users Root", function() {
+
+describe("Rank Users List Root", function() {
   beforeEach(function() {
     snackbarStore = testUtils.snackbarStoreMock();
     snackbar.init(snackbarStore);

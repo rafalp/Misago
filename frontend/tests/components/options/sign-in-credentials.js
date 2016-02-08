@@ -1,6 +1,8 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
-import Root, { ChangeEmail, ChangePassword } from 'misago/components/options/sign-in-credentials'; // jshint ignore:line
+import Root from 'misago/components/options/sign-in-credentials/root'; // jshint ignore:line
+import ChangeEmail from 'misago/components/options/sign-in-credentials/change-email'; // jshint ignore:line
+import ChangePassword from 'misago/components/options/sign-in-credentials/change-password'; // jshint ignore:line
 import misago from 'misago/index';
 import snackbar from 'misago/services/snackbar';
 import * as testUtils from 'misago/utils/test-utils';

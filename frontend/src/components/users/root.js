@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { TabsNav, CompactNav } from 'misago/components/users/navs'; // jshint ignore:line
-import ActivePosters from 'misago/components/users/active-posters';
-import Rank from 'misago/components/users/rank';
+import ActivePosters from 'misago/components/users/active-posters/root'; // jshint ignore:line
+import Rank from 'misago/components/users/rank/root';
 import misago from 'misago/index';
 
 export default class extends React.Component {

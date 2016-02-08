@@ -1,7 +1,11 @@
 import assert from 'assert';
 import moment from 'moment'; // jshint ignore:line
 import React from 'react'; // jshint ignore:line
-import Root, { ChangeUsername, NoChangesLeft, ChangeUsernameLoading, UsernameHistory } from 'misago/components/options/change-username'; // jshint ignore:line
+import FormLoading from 'misago/components/options/change-username/form-loading'; // jshint ignore:line
+import FormLocked from 'misago/components/options/change-username/form-locked'; // jshint ignore:line
+import Form from 'misago/components/options/change-username/form'; // jshint ignore:line
+import Root from 'misago/components/options/change-username/root'; // jshint ignore:line
+import UsernameHistory from 'misago/components/options/change-username/username-history'; // jshint ignore:line
 import misago from 'misago/index';
 import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
@@ -34,8 +38,8 @@ describe("Change Username Form", function() {
     };
 
     testUtils.render(
-      <ChangeUsername user={user}
-                      options={options} />
+      <Form user={user}
+            options={options} />
     );
     /* jshint ignore:end */
 
@@ -59,8 +63,8 @@ describe("Change Username Form", function() {
     };
 
     testUtils.render(
-      <ChangeUsername user={user}
-                      options={options} />
+      <Form user={user}
+            options={options} />
     );
     /* jshint ignore:end */
 
@@ -88,8 +92,8 @@ describe("Change Username Form", function() {
     };
 
     testUtils.render(
-      <ChangeUsername user={user}
-                      options={options} />
+      <Form user={user}
+            options={options} />
     );
     /* jshint ignore:end */
 
@@ -126,8 +130,8 @@ describe("Change Username Form", function() {
     };
 
     testUtils.render(
-      <ChangeUsername user={user}
-                      options={options} />
+      <Form user={user}
+            options={options} />
     );
     /* jshint ignore:end */
 
@@ -161,8 +165,8 @@ describe("Change Username Form", function() {
     };
 
     testUtils.render(
-      <ChangeUsername user={user}
-                      options={options} />
+      <Form user={user}
+            options={options} />
     );
     /* jshint ignore:end */
 
@@ -219,9 +223,9 @@ describe("Change Username Form", function() {
     };
 
     testUtils.render(
-      <ChangeUsername user={user}
-                      options={options}
-                      complete={callback} />
+      <Form user={user}
+            options={options}
+            complete={callback} />
     );
     /* jshint ignore:end */
 
@@ -232,7 +236,7 @@ describe("Change Username Form", function() {
   });
 });
 
-describe("No Changes Left Message", function() {
+describe("Change Username Form Locked", function() {
   afterEach(function() {
     testUtils.unmountComponents();
   });
@@ -246,7 +250,7 @@ describe("No Changes Left Message", function() {
       next_on: null
     };
 
-    testUtils.render(<NoChangesLeft options={options} />);
+    testUtils.render(<FormLocked options={options} />);
     /* jshint ignore:end */
 
     testUtils.onElement('#test-mount .panel-message-body', function() {
@@ -268,7 +272,7 @@ describe("No Changes Left Message", function() {
       next_on: moment().add(5, 'days')
     };
 
-    testUtils.render(<NoChangesLeft options={options} />);
+    testUtils.render(<FormLocked options={options} />);
     /* jshint ignore:end */
 
     testUtils.onElement('#test-mount .panel-message-body', function() {
@@ -281,19 +285,18 @@ describe("No Changes Left Message", function() {
   });
 });
 
-describe("Change Username Loading", function() {
+describe("Change Username Form Loading", function() {
   afterEach(function() {
     testUtils.unmountComponents();
   });
 
   it("renders", function(done) {
     /* jshint ignore:start */
-    testUtils.render(<ChangeUsernameLoading />);
+    testUtils.render(<FormLoading />);
     /* jshint ignore:end */
 
     testUtils.onElement('#test-mount .panel-body-loading', function() {
       assert.ok(true, "component renders");
-
       done();
     });
   });

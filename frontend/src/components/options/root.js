@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { SideNav, CompactNav } from 'misago/components/options/navs'; // jshint ignore:line
 import ChangeForumOptions from 'misago/components/options/forum-options';
-import ChangeUsername from 'misago/components/options/change-username';
-import ChangeSignInCredentials from 'misago/components/options/sign-in-credentials';
+import ChangeUsername from 'misago/components/options/change-username/root';
+import ChangeSignInCredentials from 'misago/components/options/sign-in-credentials/root';
 import misago from 'misago/index';
 
 export default class extends React.Component {

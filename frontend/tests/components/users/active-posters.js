@@ -1,6 +1,10 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
-import Root, { ActivePosters, ActivePoster, ActivePostersLoading, NoActivePosters } from 'misago/components/users/active-posters'; // jshint ignore:line
+import ListEmpty from 'misago/components/users/active-posters/list-empty'; // jshint ignore:line
+import ListItem from 'misago/components/users/active-posters/list-item'; // jshint ignore:line
+import ListLoading from 'misago/components/users/active-posters/list-loading'; // jshint ignore:line
+import List from 'misago/components/users/active-posters/list'; // jshint ignore:line
+import Root from 'misago/components/users/active-posters/root'; // jshint ignore:line
 import misago from 'misago/index';
 import reducer from 'misago/reducers/users';
 import ajax from 'misago/services/ajax';
@@ -33,9 +37,9 @@ describe("Active Posters List", function() {
     ];
 
     testUtils.render(
-      <ActivePosters users={users}
-                     trackedPeriod={30}
-                     count={2} />
+      <List users={users}
+            trackedPeriod={30}
+            count={2} />
     );
     /* jshint ignore:end */
 
@@ -54,7 +58,7 @@ describe("Active Posters List", function() {
   });
 });
 
-describe("Active Poster", function() {
+describe("Active Posters List Item", function() {
   afterEach(function() {
     testUtils.unmountComponents();
   });
@@ -66,7 +70,8 @@ describe("Active Poster", function() {
 
     /* jshint ignore:start */
     testUtils.render(
-      <ActivePoster user={user} rank={user.rank} />
+      <ListItem user={user}
+                rank={user.rank} />
     );
     /* jshint ignore:end */
 
@@ -96,7 +101,8 @@ describe("Active Poster", function() {
 
     /* jshint ignore:start */
     testUtils.render(
-      <ActivePoster user={user} rank={user.rank} />
+      <ListItem user={user}
+                rank={user.rank} />
     );
     /* jshint ignore:end */
 
@@ -123,14 +129,14 @@ describe("Active Poster", function() {
   });
 });
 
-describe("Active Posters Loading", function() {
+describe("Active Posters List Loading", function() {
   afterEach(function() {
     testUtils.unmountComponents();
   });
 
   it("renders", function(done) {
     /* jshint ignore:start */
-    testUtils.render(<ActivePostersLoading />);
+    testUtils.render(<ListLoading />);
     /* jshint ignore:end */
 
     testUtils.onElement('#test-mount .active-posters.ui-preview', function() {
@@ -141,14 +147,14 @@ describe("Active Posters Loading", function() {
   });
 });
 
-describe("No Active Posters", function() {
+describe("Active Posters Empty List", function() {
   afterEach(function() {
     testUtils.unmountComponents();
   });
 
   it("renders", function(done) {
     /* jshint ignore:start */
-    testUtils.render(<NoActivePosters trackedPeriod="30" />);
+    testUtils.render(<ListEmpty trackedPeriod="30" />);
     /* jshint ignore:end */
 
     testUtils.onElement('#test-mount .active-posters-list p.lead', function() {
