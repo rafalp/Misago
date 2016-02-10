@@ -111,7 +111,8 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn('No file was sent.', response.content)
 
-        with open('%s/%s' % (settings.MEDIA_ROOT, 'misago.png')) as avatar:
+        avatar_path = (settings.MEDIA_ROOT, 'avatars', 'blank.png')
+        with open('/'.join(avatar_path)) as avatar:
             response = self.client.post(self.link,
                                         data={
                                             'avatar': 'upload',
