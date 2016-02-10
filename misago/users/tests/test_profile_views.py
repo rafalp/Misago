@@ -29,7 +29,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
                                            kwargs=self.link_kwargs))
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('posted no messages', response.content)
+        self.assertIn('no messages posted', response.content)
 
     def test_user_threads_list(self):
         """user profile threads list has no showstoppers"""
@@ -37,7 +37,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
                                            kwargs=self.link_kwargs))
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('started no threads', response.content)
+        self.assertIn('no started threads', response.content)
 
     def test_user_followers(self):
         """user profile followers list has no showstoppers"""
@@ -47,7 +47,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
                                            kwargs=self.link_kwargs))
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('No users are following you', response.content)
+        self.assertIn('You have no followers.', response.content)
 
         followers = []
         for i in xrange(10):
@@ -69,7 +69,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
                                            kwargs=self.link_kwargs))
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Your are not following any users', response.content)
+        self.assertIn('You are not following any users.', response.content)
 
         followers = []
         for i in xrange(10):
@@ -83,60 +83,12 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         for i in xrange(10):
             self.assertIn("Follower%s" % i, response.content)
 
-    def test_user_follow(self):
-        """user profile follows list has no showstoppers"""
-        User = get_user_model()
-        test_user = User.objects.create_user(
-            "Other", "other@test.com", "Pass.123")
-        link_kwargs = {'user_slug': test_user.slug, 'user_id': test_user.pk}
-
-        response = self.client.post(reverse('misago:follow_user',
-                                            kwargs=link_kwargs))
-        self.assertEqual(response.status_code, 302)
-
-        test_admin = User.objects.get(id=self.user.pk)
-        self.assertEqual(test_admin.following, 1)
-
-        test_user = User.objects.get(id=test_user.pk)
-        self.assertEqual(test_user.followers, 1)
-
-        self.assertIn(test_admin, test_user.followed_by.all())
-
-        response = self.client.post(reverse('misago:follow_user',
-                                            kwargs=link_kwargs))
-        self.assertEqual(response.status_code, 302)
-
-        test_admin = User.objects.get(id=self.user.pk)
-        self.assertEqual(test_admin.following, 0)
-
-        test_user = User.objects.get(id=test_user.pk)
-        self.assertEqual(test_user.followers, 0)
-
-        self.assertNotIn(test_admin, test_user.followed_by.all())
-
-    def test_user_block(self):
-        """user profile follows list has no showstoppers"""
-        User = get_user_model()
-        test_user = User.objects.create_user(
-            "Other", "other@test.com", "Pass.123")
-        link_kwargs = {'user_slug': test_user.slug, 'user_id': test_user.pk}
-
-        response = self.client.post(reverse('misago:block_user',
-                                            kwargs=link_kwargs))
-        self.assertEqual(response.status_code, 302)
-        self.assertIn(self.user, test_user.blocked_by.all())
-
-        response = self.client.post(reverse('misago:block_user',
-                                            kwargs=link_kwargs))
-        self.assertEqual(response.status_code, 302)
-        self.assertNotIn(self.user, test_user.blocked_by.all())
-
-    def test_user_name_history_list(self):
+    def test_username_history_list(self):
         """user name changes history list has no showstoppers"""
         response = self.client.get(reverse('misago:user_name_history',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Your username was never changed', response.content)
+        self.assertIn('Your username was never changed.', response.content)
 
         self.user.set_username('RenamedAdmin')
         self.user.save()
@@ -146,10 +98,10 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         response = self.client.get(reverse('misago:user_name_history',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
-        self.assertIn("TestUser</strong> changed name to <strong>Renamed",
-                      response.content)
+        self.assertIn("TestUser", response.content)
+        self.assertIn("RenamedAdmin", response.content)
 
-    def test_user_ban(self):
+    def test_user_ban_details(self):
         """user ban details page has no showstoppers"""
         override_acl(self.user, {
             'can_see_ban_details': 0,
@@ -167,9 +119,19 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
             'can_see_ban_details': 1,
         })
 
+        response = self.client.get(reverse('misago:user_ban',
+                                           kwargs=link_kwargs))
+        self.assertEqual(response.status_code, 404)
+
+        override_acl(self.user, {
+            'can_see_ban_details': 1,
+        })
+        test_user.ban_cache.delete()
+
         Ban.objects.create(banned_value=test_user.username,
                            user_message="User m3ss4ge.",
-                           staff_message="Staff m3ss4ge.")
+                           staff_message="Staff m3ss4ge.",
+                           is_checked=True)
 
         response = self.client.get(reverse('misago:user_ban',
                                            kwargs=link_kwargs))

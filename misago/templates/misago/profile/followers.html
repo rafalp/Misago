@@ -1,0 +1,64 @@
+{% extends "misago/profile/base.html" %}
+{% load i18n misago_avatars misago_batch %}
+
+{% block title %}{% trans "Followers" %} | {{ block.super }}{% endblock %}
+
+
+{% block section %}
+<div class="profile-followers">
+
+  {% for row in followers|batch:3 %}
+    <div class="row">
+      {% for user in row %}
+        <div class="col-md-4">
+
+          <div class="user-card {% if user.rank.css_class %} user-card-{{ user.rank.css_class }}{% endif %}">
+            <div class="user-card-bg-image">
+              <img src="{{ user|avatar:400 }}" alt="" class="bg-image">
+
+              <div class="user-card-bg">
+                <div class="user-details">
+
+                  <div class="user-avatar">
+                    <a href="{{ user.get_absolute_url }}">
+                      <img src="{{ user|avatar:400 }}" alt="">
+                    </a>
+                  </div>
+
+                  <h4 class="user-name">
+                    <a href="{{ user.get_absolute_url }}" class="item-title">
+                      {{ user.username }}
+                    </a>
+                  </h4>
+
+                  <p class="user-subscript">
+                  {% if user.title %}
+                    <span class="user-title">{{ user.title }}</span>
+                  {% endif %}
+                    <span class="user-joined-on">
+                      <abbr title="{% blocktrans trimmed with joined_on=user.joined_on|date %}Member since {{ joined_on }}{% endblocktrans %}">{{ user.joined_on|date }}</abbr>
+                    </span>
+                  </p>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+  {% empty %}
+    <p class="lead">
+      {% if is_authenticated_user %}
+        {% trans "You have no followers." %}
+      {% else %}
+        {% blocktrans trimmed with username=profile.username %}
+          {{ username }} has no followers.
+        {% endblocktrans %}
+      {% endif %}
+    </p>
+  {% endfor %}
+
+</div>
+{% endblock section %}

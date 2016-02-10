@@ -1,8 +1,8 @@
 {% extends "misago/userslists/base.html" %}
-{% load i18n misago_avatars misago_batch %}
+{% load i18n misago_avatars misago_batch misago_pagetitle %}
 
 
-{% block title %}{{ rank.name }}{% if paginator.page > 1 %} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}){% endif %} | {{ block.super }}{% endblock %}
+{% block title %}{% pagetitle rank.name page=paginator.page %} | {{ block.super }}{% endblock %}
 {% block meta-description %}
 {% blocktrans trimmed with rank=rank.name users=users.paginator.count count counter=users.paginator.count %}
 There is {{ users }} user with {{ rank }} rank.
@@ -58,8 +58,8 @@ There are {{ users }} users with {{ rank }} rank.
                         {% if user.title %}
                           <span class="user-title">{{ user.title }}</span>
                         {% endif %}
-                          <span class="user-joined-on" title="{% blocktrans trimmed with joined_on=user.joined_on|date %}Member since {{ joined_on }}{% endblocktrans %}">
-                            {{ user.joined_on|date }}
+                          <span class="user-joined-on">
+                            <abbr title="{% blocktrans trimmed with joined_on=user.joined_on|date %}Member since {{ joined_on }}{% endblocktrans %}">{{ user.joined_on|date }}</abbr>
                           </span>
                         </p>
 

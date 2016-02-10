@@ -14,133 +14,62 @@
   .status-icon, .status-icon.ui-preview {
     display: none;
   }
-}
 
+  .user-card-bg-image{
+    background: @body-bg;
 
-// Compact displays
-@media screen and (max-width: @screen-sm-max) {
-  .user-card {
-    .user-card-bg-image{
-      background: @body-bg;
-
-      &  > img {
-        display: none;
-      }
-    }
-
-    .user-details {
-      padding: @padding-base-vertical @padding-base-horizontal;
-      overflow: auto;
-
-      .user-avatar {
-        float: left;
-
-        img {
-          width: 60px;
-          height: 60px;
-        }
-      }
-
-      .user-name {
-        margin-left: 76px;
-
-        .item-title {
-          font-size: @font-size-large;
-        }
-      }
-
-      .user-subscript {
-        margin-left: 76px;
-
-        color: @text-muted;
-        font-size: @font-size-base * 0.66;
-
-        &>span {
-          margin-right: 4px;
-
-          .status-label.ui-preview {
-            height: @font-size-base * 0.66;
-          }
-        }
-      }
+    &  > img {
+      display: none;
     }
   }
 
-  .user-card.ui-preview {
-    .user-name .ui-preview-text {
-      height: @font-size-large;
-    }
+  .user-details {
+    padding: @padding-base-vertical @padding-base-horizontal;
+    overflow: auto;
 
-    .user-subscript .ui-preview-text {
-      height: @font-size-base * 0.66;
+    .user-avatar {
+      float: left;
 
-      position: relative;
-      top: 0px;
-    }
-  }
-}
-
-
-// Full displays
-@media screen and (min-width: @screen-md-min) {
-  .user-card {
-    .user-card-bg-image {
-      position: relative;
-
-      &>img {
-        width: 100%;
+      img {
+        width: 60px;
+        height: 60px;
       }
     }
 
-    .user-card-bg {
-      background: fadeOut(@body-bg, 10%);
+    .user-name {
+      margin-left: 76px;
 
-      position: absolute;
-      bottom: 0px;
-
-      width: 100%;
-    }
-
-    .user-details {
-      padding: @padding-large-vertical @padding-base-horizontal;
-
-      text-align: center;
-
-      .user-avatar {
-        display: none;
-      }
-
-      .user-name {
+      .item-title {
         font-size: @font-size-large;
       }
+    }
 
-      .user-subscript {
-        font-size: @font-size-small;
+    .user-subscript {
+      margin-left: 76px;
 
-        &>span {
-          margin: 0px 4px;
+      color: @text-muted;
+      font-size: @font-size-base * 0.66;
 
-          .ui-preview, .status-label.ui-preview {
-            height: @font-size-small;
+      &>span {
+        margin-right: 8px;
 
-            position: relative;
-            top: 2px;
-          }
+        .status-label.ui-preview {
+          height: @font-size-base * 0.66;
         }
       }
     }
   }
+}
 
-  .user-card.ui-preview {
-    .user-name .ui-preview-text {
-      height: @font-size-large;
-    }
+.user-card.ui-preview {
+  .user-name .ui-preview-text {
+    height: @font-size-large;
+  }
 
-    .user-subscript .ui-preview-text {
-      height: @font-size-small;
+  .user-subscript .ui-preview-text {
+    height: @font-size-base * 0.66;
 
-      position: relative;
-      top: 2px;
-    }
+    position: relative;
+    top: 0px;
   }
 }

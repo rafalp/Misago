@@ -20,7 +20,6 @@ def index(request, *args, **kwargs):
         })
 
     request.frontend_context.update({
-        'USERNAME_CHANGES_API': reverse('misago:api:usernamechange-list'),
         'USER_OPTIONS': user_options
     });
 

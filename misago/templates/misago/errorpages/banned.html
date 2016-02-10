@@ -29,13 +29,13 @@
         {% endif %}
 
         <p className="message-footnote">
-        {% if ban.expires_on %}
-          {% blocktrans trimmed with expires_on=ban.expires_on|date:"DATETIME_FORMAT" %}
-            This ban expires {{ expires_on }}.
-          {% endblocktrans %}
-        {% else %}
-          {% trans "This ban is permanent." %}
-        {% endif %}
+          {% if ban.expires_on %}
+            {% blocktrans trimmed with expires_on=ban.expires_on|date:"DATETIME_FORMAT" %}
+              This ban expires on {{ expires_on }}.
+            {% endblocktrans %}
+          {% else %}
+            {% trans "This ban is permanent." %}
+          {% endif %}
         </p>
       </div>
 

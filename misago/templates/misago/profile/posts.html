@@ -1,0 +1,21 @@
+{% extends "misago/profile/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Posts" %} | {{ block.super }}{% endblock %}
+
+
+{% block section %}
+<div class="profile-posts">
+
+  <p class="lead">
+    {% if is_authenticated_user %}
+      {% trans "You have no messages posted." %}
+    {% else %}
+      {% blocktrans trimmed with username=profile.username %}
+        {{ username }} posted no messages.
+      {% endblocktrans %}
+    {% endif %}
+  </p>
+
+</div>
+{% endblock section %}

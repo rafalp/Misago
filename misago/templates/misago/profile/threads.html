@@ -1,0 +1,21 @@
+{% extends "misago/profile/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Threads" %} | {{ block.super }}{% endblock %}
+
+
+{% block section %}
+<div class="profile-threads">
+
+  <p class="lead">
+    {% if is_authenticated_user %}
+      {% trans "You have no started threads." %}
+    {% else %}
+      {% blocktrans trimmed with username=profile.username %}
+        {{ username }} has no started threads.
+      {% endblocktrans %}
+    {% endif %}
+  </p>
+
+</div>
+{% endblock section %}

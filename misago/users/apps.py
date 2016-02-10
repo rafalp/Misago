@@ -62,15 +62,6 @@ class MisagoUsersConfig(AppConfig):
             else:
                 return False
 
-        def can_see_warnings(request, profile):
-            if request.user.is_authenticated():
-                is_account_owner = profile.pk == request.user.pk
-                user_acl = request.user.acl
-                has_permission = user_acl['can_see_other_users_warnings']
-                return is_account_owner or has_permission
-            else:
-                return False
-
         def can_see_ban_details(request, profile):
             if request.user.is_authenticated():
                 if request.user.acl['can_see_ban_details']:
@@ -84,35 +75,36 @@ class MisagoUsersConfig(AppConfig):
         user_profile.add_section(
             link='misago:user_posts',
             name=_("Posts"),
+            icon='message',
             get_metadata=posts_badge)
 
         user_profile.add_section(
             link='misago:user_threads',
             name=_("Threads"),
+            icon='forum',
             get_metadata=threads_badge)
-
-        user_profile.add_section(
-            link='misago:user_followers',
-            name=_("Followers"),
-            get_metadata=followers_badge)
 
         user_profile.add_section(
             link='misago:user_follows',
             name=_("Follows"),
+            icon='favorite',
             get_metadata=following_badge)
 
         user_profile.add_section(
+            link='misago:user_followers',
+            name=_("Followers"),
+            icon='favorite_border',
+            get_metadata=followers_badge)
+
+        user_profile.add_section(
             link='misago:user_name_history',
-            name=_("Name history"),
+            name=_("Username history"),
+            icon='card_membership',
             visible_if=can_see_names_history)
 
         user_profile.add_section(
-            link='misago:user_warnings',
-            name=_("Warnings"),
-            visible_if=can_see_warnings)
-
-        user_profile.add_section(
             link='misago:user_ban',
-            name=_("Ban"),
+            name=_("Ban details"),
+            icon='remove_circle_outline',
             visible_if=can_see_ban_details)
 

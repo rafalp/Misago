@@ -1,0 +1,20 @@
+{% load misago_avatars misago_shorthands %}
+<div class="profile-side-avatar">
+  <img src="{{ profile|avatar:400 }}" alt="">
+</div>
+
+<div class="list-group nav-side">
+  {% for section in sections %}
+    <a href="{% url section.link user_slug=profile.slug user_id=profile.id %}" class="list-group-item{{ section.is_active|iftrue:' active' }}">
+      <span class="material-icon">
+        {{ section.icon }}
+      </span>
+
+      {{ section.name }}
+
+      {% if 'metadata' in section %}
+        <span class="badge">{{ section.metadata }}</span>
+      {% endif %}
+    </a>
+  {% endfor %}
+</div>

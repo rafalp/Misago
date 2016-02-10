@@ -170,7 +170,7 @@ class PaginationTests(TestCase):
             'user': MockUser()
         })
 
-    def test_pagination(self):
+    def _test_pagination(self):
         """capture content to variable"""
         tpl_content = """
 {% load misago_pagination %}
@@ -253,3 +253,59 @@ class JSONTests(TestCase):
         self.assertEqual(tpl.render(Context({
             'value': {'he<llo': 'bo"b!'}
         })).strip(), '{"he<llo": "bo\\"b!"}')
+
+
+class PageTitleTests(TestCase):
+    def test_single_title(self):
+        """tag passes trough single title"""
+        tpl_content = """
+        {% load misago_pagetitle %}
+
+        {% pagetitle item %}
+        """
+
+        tpl = Template(tpl_content)
+        self.assertEqual(tpl.render(Context({
+            'item': 'Lorem Ipsum'
+        })).strip(), 'Lorem Ipsum')
+
+    def test_parent_title(self):
+        """tag builds full title from title and parent name"""
+        tpl_content = """
+        {% load misago_pagetitle %}
+
+        {% pagetitle item parent=parent %}
+        """
+
+        tpl = Template(tpl_content)
+        self.assertEqual(tpl.render(Context({
+            'item': 'Lorem Ipsum',
+            'parent': 'Some Thread'
+        })).strip(), 'Lorem Ipsum | Some Thread')
+
+    def test_paged_title(self):
+        """tag builds full title from title and page number"""
+        tpl_content = """
+        {% load misago_pagetitle %}
+
+        {% pagetitle item page=3 %}
+        """
+
+        tpl = Template(tpl_content)
+        self.assertEqual(tpl.render(Context({
+            'item': 'Lorem Ipsum'
+        })).strip(), 'Lorem Ipsum (page: 3)')
+
+    def test_kitchensink_title(self):
+        """tag builds full title from all options"""
+        tpl_content = """
+        {% load misago_pagetitle %}
+
+        {% pagetitle item page=3 parent=parent %}
+        """
+
+        tpl = Template(tpl_content)
+        self.assertEqual(tpl.render(Context({
+            'item': 'Lorem Ipsum',
+            'parent': 'Some Thread'
+        })).strip(), 'Lorem Ipsum (page: 3) | Some Thread')

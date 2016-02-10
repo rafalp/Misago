@@ -1,0 +1,30 @@
+//
+// Forum Profile
+// --------------------------------------------------
+
+
+// Small displays
+@media screen and (max-width: @screen-sm-max) {
+  .user-profile .page-header h1 img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .user-profile .profile-side-avatar {
+    display: none;
+  }
+}
+
+// Tabbed on full display
+@media screen and (min-width: @screen-md-min) {
+  .user-profile .page-header h1 img {
+    display: none;
+  }
+
+  .user-profile .profile-side-avatar img {
+    width: 100%;
+    height: auto;
+    margin-top: @line-height-computed * -5.5;
+    margin-bottom: @line-height-computed;
+  }
+}

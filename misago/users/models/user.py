@@ -18,7 +18,6 @@ from misago.core.signals import secret_key_changed
 
 from misago.users.models.rank import Rank
 from misago.users import avatars
-from misago.users.pages import user_profile
 from misago.users.signals import delete_user_content, username_changed
 from misago.users.signatures import (is_user_signature_valid,
                                      make_signature_checksum)
@@ -328,7 +327,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.is_staff = False
 
     def get_absolute_url(self):
-        return reverse(user_profile.get_default_link(), kwargs={
+        return reverse('misago:user', kwargs={
             'user_slug': self.slug,
             'user_id': self.id,
         })
