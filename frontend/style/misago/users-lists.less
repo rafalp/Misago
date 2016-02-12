@@ -25,6 +25,12 @@
       line-height: 18px;
     }
   }
+
+  .rank-position, .rank-posts-total, .rank-posts-counted {
+    small {
+      color: @text-muted;
+    }
+  }
 }
 
 
@@ -33,17 +39,25 @@
   .active-posters {
     .rank-user-avatar {
       float: left;
+
+      img {
+        width: 36px;
+        height: 36px;
+
+        position: relative;
+        top: 3px;
+      }
     }
 
     .rank-user {
       float: left;
-      margin-left: @line-height-computed * .8;
+      margin-left: @line-height-computed * .66;
       width: 40%;
 
       .item-title {
         margin-top: 4px;
 
-        font-size: @font-size-large;
+        font-size: @font-size-base;
       }
 
       .user-status {
@@ -62,17 +76,27 @@
     }
 
     .rank-position, .rank-posts-total, .rank-posts-counted {
-      font-size: @font-size-small;
+      float: right;
+      width: 40%;
 
-      div {
+      position: relative;
+      bottom: 2px;
+
+      line-height: @font-size-base;
+
+      strong, small {
         display: inline-block;
+
+        font-size: @font-size-base * .66;
+        line-height: @font-size-base * .66;
       }
 
-      .stat-value {
+      strong {
         width: 34px;
         padding-right: 4px;
 
         text-align: right;
+        font-weight: normal;
       }
     }
   }
@@ -88,12 +112,12 @@
     }
 
     .rank-position, .rank-posts-total, .rank-posts-counted {
-      .stat-value {
+      strong {
         position: relative;
-        bottom: 1px;
+        bottom: 3px;
 
         .ui-preview-text {
-          height: @font-size-small;
+          height: @font-size-base * .66;
         }
       }
     }
@@ -175,7 +199,13 @@
       font-weight: bold;
       text-align: center;
 
-      .text-muted {
+      strong {
+        display: block;
+      }
+
+      small {
+        display: block;
+
         font-size: @font-size-small;
         font-weight: normal;
       }

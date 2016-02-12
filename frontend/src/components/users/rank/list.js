@@ -18,10 +18,10 @@ export default class extends React.Component {
     /* jshint ignore:start */
     return <div>
       <div className="users-cards-list ui-ready">
-        {batch(this.props.users, 4).map((row, r) => {
+        {batch(this.props.users, 3).map((row, r) => {
           return <div className="row" key={r}>
             {row.map((user) => {
-              return <div className="col-md-3" key={user.id}>
+              return <div className="col-md-4" key={user.id}>
                 <ListItem user={user} />
               </div>;
             })}

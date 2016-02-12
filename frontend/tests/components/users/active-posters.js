@@ -86,7 +86,7 @@ describe("Active Posters List Item", function() {
       assert.equal($('#test-mount .user-title').text().trim(), user.title,
         "user title is rendered");
 
-      assert.equal($('#test-mount .rank-posts-counted .stat-value').text(), 42,
+      assert.equal($('#test-mount .rank-posts-counted strong').text(), 42,
         "user score is rendered");
 
       done();
@@ -121,7 +121,7 @@ describe("Active Posters List Item", function() {
       assert.equal($('#test-mount .user-title').text().trim(), user.title,
         "user title is rendered");
 
-      assert.equal($('#test-mount .rank-posts-counted .stat-value').text(), 42,
+      assert.equal($('#test-mount .rank-posts-counted strong').text(), 42,
         "user score is rendered");
 
       done();

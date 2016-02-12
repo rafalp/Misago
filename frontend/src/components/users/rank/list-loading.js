@@ -9,7 +9,7 @@ export default class extends React.Component {
       <div className="users-cards-list">
         <div className="row">
           {[0, 1, 2, 3].map((i) => {
-            return <div className="col-md-3" key={i}>
+            return <div className="col-md-4" key={i}>
               <div className='user-card ui-preview'>
                 <div className="user-card-bg-image">
                   <Avatar size="400" className="bg-image" />
@@ -42,6 +42,30 @@ export default class extends React.Component {
                         </span>
 
                       </p>
+
+                    </div>
+                    <div className="user-card-stats">
+
+                      <ul className="list-unstyled">
+                        <li className="user-posts-count">
+                          <strong>
+                            <span className="ui-preview-text">&nbsp;</span>
+                          </strong>
+                          <small>{gettext("posts")}</small>
+                        </li>
+                        <li className="user-threads-count">
+                          <strong>
+                            <span className="ui-preview-text">&nbsp;</span>
+                          </strong>
+                          <small>{gettext("threads")}</small>
+                        </li>
+                        <li className="user-followers-count">
+                          <strong>
+                            <span className="ui-preview-text">&nbsp;</span>
+                          </strong>
+                          <small>{gettext("followers")}</small>
+                        </li>
+                      </ul>
 
                     </div>
                   </div>

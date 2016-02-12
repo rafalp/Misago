@@ -59,6 +59,35 @@
       }
     }
   }
+
+  .user-card-stats {
+    border-top: 1px solid @gray-lighter;
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+
+    ul {
+      display: table-row;
+
+      li {
+        display: table-cell;
+        padding: @padding-base-vertical @padding-base-horizontal;
+
+        text-align: center;
+
+        strong {
+          font-size: @font-size-small;
+        }
+
+        small {
+          margin-left: 3px;
+
+          color: @text-muted;
+          font-size: @font-size-small;
+        }
+      }
+    }
+  }
 }
 
 .user-card.ui-preview {
@@ -71,5 +100,16 @@
 
     position: relative;
     top: 0px;
+  }
+
+  .user-card-stats .ui-preview-text {
+    height: @font-size-small;
+    width: 14px;
+
+    position: relative;
+    top: 0px;
+
+    font-size: @font-size-small;
+    line-height: @font-size-small;
   }
 }

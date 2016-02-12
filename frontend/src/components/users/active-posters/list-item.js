@@ -88,18 +88,18 @@ export default class extends React.Component {
       </div>
 
       <div className="rank-position">
-        <div className="stat-value">#{this.props.counter}</div>
-        <div className="text-muted">{gettext("Rank")}</div>
+        <strong>#{this.props.counter}</strong>
+        <small>{gettext("Rank")}</small>
       </div>
 
       <div className="rank-posts-counted">
-        <div className="stat-value">{this.props.user.meta.score}</div>
-        <div className="text-muted">{gettext("Ranked posts")}</div>
+        <strong>{this.props.user.meta.score}</strong>
+        <small>{gettext("Ranked posts")}</small>
       </div>
 
       <div className="rank-posts-total">
-        <div className="stat-value">{this.props.user.posts}</div>
-        <div className="text-muted">{gettext("Total posts")}</div>
+        <strong>{this.props.user.posts}</strong>
+        <small>{gettext("Total posts")}</small>
       </div>
     </li>;
     /* jshint ignore:end */

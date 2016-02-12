@@ -52,8 +52,12 @@ export default class extends React.Component {
       'joined_on': this.props.user.joined_on.format('LL, LT')
     }, true);
 
+    let age = interpolate(gettext("Member for %(joined_on)s"), {
+      'joined_on': this.props.user.joined_on.fromNow(true)
+    }, true);
+
     return <span className="user-joined-on" title={title}>
-      {this.props.user.joined_on.fromNow()}
+      {age}
     </span>;
     /* jshint ignore:end */
   }
@@ -84,6 +88,24 @@ export default class extends React.Component {
               {this.getUserTitle()}
               {this.getUserJoinedOn()}
             </p>
+
+          </div>
+          <div className="user-card-stats">
+
+            <ul className="list-unstyled">
+              <li className="user-posts-count">
+                <strong>{this.props.user.posts}</strong>
+                <small>{gettext("posts")}</small>
+              </li>
+              <li className="user-threads-count">
+                <strong>{this.props.user.threads}</strong>
+                <small>{gettext("threads")}</small>
+              </li>
+              <li className="user-followers-count">
+                <strong>{this.props.user.followers}</strong>
+                <small>{gettext("followers")}</small>
+              </li>
+            </ul>
 
           </div>
         </div>

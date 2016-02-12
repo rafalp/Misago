@@ -61,18 +61,18 @@
               </div>
 
               <div class="rank-position">
-                <div class="stat-value">#{{ forloop.counter }}</div>
-                <div class="text-muted">{% trans "Rank" %}</div>
+                <strong>#{{ forloop.counter }}</strong>
+                <small>{% trans "Rank" %}</small>
               </div>
 
               <div class="rank-posts-counted">
-                <div class="stat-value">{{ ranked.score }}</div>
-                <div class="text-muted">{% trans "Ranked posts" %}</div>
+                <strong>{{ ranked.score }}</strong>
+                <small>{% trans "Ranked posts" %}</small>
               </div>
 
               <div class="rank-posts-total">
-                <div class="stat-value">{{ ranked.posts }}</div>
-                <div class="text-muted">{% trans "Total posts" %}</div>
+                <strong>{{ ranked.posts }}</strong>
+                <small>{% trans "Total posts" %}</small>
               </div>
             </li>
           {% endfor %}

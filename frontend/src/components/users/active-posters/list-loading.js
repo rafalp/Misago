@@ -47,24 +47,24 @@ export default class extends React.Component {
                 </div>
 
                 <div className="rank-position">
-                  <div className="stat-value">
+                  <strong>
                     <span className="ui-preview-text" style={{width: "30px"}}>&nbsp;</span>
-                  </div>
-                  <div className="text-muted">{gettext("Rank")}</div>
+                  </strong>
+                  <small>{gettext("Rank")}</small>
                 </div>
 
                 <div className="rank-posts-counted">
-                  <div className="stat-value">
+                  <strong>
                     <span className="ui-preview-text" style={{width: "30px"}}>&nbsp;</span>
-                  </div>
-                  <div className="text-muted">{gettext("Ranked posts")}</div>
+                  </strong>
+                  <small>{gettext("Ranked posts")}</small>
                 </div>
 
                 <div className="rank-posts-total">
-                  <div className="stat-value">
+                  <strong>
                     <span className="ui-preview-text" style={{width: "30px"}}>&nbsp;</span>
-                  </div>
-                  <div className="text-muted">{gettext("Total posts")}</div>
+                  </strong>
+                  <small>{gettext("Total posts")}</small>
                 </div>
               </li>;
             })}

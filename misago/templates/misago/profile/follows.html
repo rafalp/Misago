@@ -7,10 +7,10 @@
 {% block section %}
 <div class="profile-follows">
 
-  {% for row in follows|batch:3 %}
+  {% for row in follows|batch:2 %}
     <div class="row">
       {% for user in row %}
-        <div class="col-md-4">
+        <div class="col-md-6">
 
           <div class="user-card {% if user.rank.css_class %} user-card-{{ user.rank.css_class }}{% endif %}">
             <div class="user-card-bg-image">
@@ -36,9 +36,27 @@
                     <span class="user-title">{{ user.title }}</span>
                   {% endif %}
                     <span class="user-joined-on">
-                      <abbr title="{% blocktrans trimmed with joined_on=user.joined_on|date %}Member since {{ joined_on }}{% endblocktrans %}">{{ user.joined_on|date }}</abbr>
+                      {% blocktrans trimmed with joined_on=user.joined_on|date %}Member since {{ joined_on }}{% endblocktrans %}
                     </span>
                   </p>
+
+                </div>
+                <div class="user-card-stats">
+
+                  <ul class="list-unstyled">
+                    <li class="user-posts-count">
+                      <strong>{{ user.posts }}</strong>
+                      <small>{% trans "posts" %}</small>
+                    </li>
+                    <li class="user-threads-count">
+                      <strong>{{ user.threads }}</strong>
+                      <small>{% trans "threads" %}</small>
+                    </li>
+                    <li class="user-followers-count">
+                      <strong>{{ user.followers }}</strong>
+                      <small>{% trans "followers" %}</small>
+                    </li>
+                  </ul>
 
                 </div>
               </div>
