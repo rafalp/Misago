@@ -14,12 +14,12 @@ let listUrl = function(baseUrl, list) {
   return url + '/';
 };
 
-let navLinks = function(baseUrl, lists) {
+let navLinks = function(baseUrl, lists, hideNav) {
     return lists.map(function(list) {
       let url = listUrl(baseUrl, list);
       return <Li path={url}
                  key={url}>
-        <Link to={url}>
+        <Link to={url} onClick={hideNav}>
           {list.name}
         </Link>
       </Li>;
@@ -41,7 +41,7 @@ export class CompactNav extends React.Component {
   render() {
     // jshint ignore:start
     return <ul className="dropdown-menu" role="menu">
-      {navLinks(this.props.baseUrl, this.props.lists)}
+      {navLinks(this.props.baseUrl, this.props.lists, this.props.hideNav)}
     </ul>;
     // jshint ignore:end
   }

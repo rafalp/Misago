@@ -27,6 +27,12 @@ export default class extends React.Component {
       });
     }
   };
+
+  hideNav = () => {
+    this.setState({
+      dropdown: false
+    });
+  };
   /* jshint ignore:end */
 
   getToggleNavClassName() {
@@ -68,7 +74,8 @@ export default class extends React.Component {
       <div className={this.getCompactNavClassName()}>
 
         <CompactNav options={misago.get('USER_OPTIONS')}
-                    baseUrl={misago.get('USERCP_URL')} />
+                    baseUrl={misago.get('USERCP_URL')}
+                    hideNav={this.hideNav} />
 
       </div>
       <div className="container">

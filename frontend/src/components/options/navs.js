@@ -30,7 +30,8 @@ export class CompactNav extends React.Component {
       {this.props.options.map((option) => {
         return <Li path={this.props.baseUrl + option.component + '/'}
                    key={option.component}>
-          <Link to={this.props.baseUrl + option.component + '/'}>
+          <Link to={this.props.baseUrl + option.component + '/'}
+                onClick={this.props.hideNav}>
             <span className="material-icon">
               {option.icon}
             </span>
