@@ -325,10 +325,18 @@ class RankForm(forms.ModelForm):
             'is_on_index',
         ]
 
-    def clean(self):
-        data = super(RankForm, self).clean()
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        self.instance.set_name(data)
 
-        self.instance.set_name(data.get('name'))
+        unique_qs = Rank.objects.filter(slug=self.instance.slug)
+        if self.instance.pk:
+            unique_qs = unique_qs.exclude(pk=self.instance.pk)
+
+        if unique_qs.exists():
+            raise forms.ValidationError(
+                _("This name collides with other rank."))
+
         return data
 
 

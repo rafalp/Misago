@@ -22,7 +22,7 @@ class RankManager(models.Manager):
 
 class Rank(models.Model):
     name = models.CharField(max_length=255)
-    slug = models.CharField(max_length=255)
+    slug = models.CharField(unique=True, max_length=255)
     description = models.TextField(null=True, blank=True)
     title = models.CharField(max_length=255, null=True, blank=True)
     roles = models.ManyToManyField('misago_acl.Role', null=True, blank=True)

@@ -59,13 +59,77 @@ class ActivePostersListTests(AuthenticatedUserTestCase):
         self.assertIn('"is_offline":true', response.content)
 
 
+class FollowersListTests(AuthenticatedUserTestCase):
+    """
+    tests for generic list (GET /users/) filtered by followers
+    """
+    def setUp(self):
+        super(FollowersListTests, self).setUp()
+        self.link = '/api/users/?&followers='
+
+    def test_nonexistent_user(self):
+        """list for non-existing user returns 404"""
+        response = self.client.get(self.link + 'this-user-is-fake')
+        self.assertEqual(response.status_code, 404)
+
+    def test_empty_list(self):
+        """user without followers returns 200"""
+        rank_slug = self.user.rank.slug
+
+        response = self.client.get(self.link + self.user.slug)
+        self.assertEqual(response.status_code, 200)
+
+    def test_filled_list(self):
+        """user with followers returns 200"""
+        User = get_user_model()
+        test_follower = User.objects.create_user(
+            "TestFollower", "test@follower.com", self.USER_PASSWORD)
+        self.user.followed_by.add(test_follower)
+
+        response = self.client.get(self.link + self.user.slug)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_follower.username, response.content)
+
+
+class FollowsListTests(AuthenticatedUserTestCase):
+    """
+    tests for generic list (GET /users/) filtered by follows
+    """
+    def setUp(self):
+        super(FollowsListTests, self).setUp()
+        self.link = '/api/users/?&follows='
+
+    def test_nonexistent_user(self):
+        """list for non-existing user returns 404"""
+        response = self.client.get(self.link + 'this-user-is-fake')
+        self.assertEqual(response.status_code, 404)
+
+    def test_empty_list(self):
+        """user without follows returns 200"""
+        rank_slug = self.user.rank.slug
+
+        response = self.client.get(self.link + self.user.slug)
+        self.assertEqual(response.status_code, 200)
+
+    def test_filled_list(self):
+        """user with follows returns 200"""
+        User = get_user_model()
+        test_follower = User.objects.create_user(
+            "TestFollower", "test@follower.com", self.USER_PASSWORD)
+        self.user.follows.add(test_follower)
+
+        response = self.client.get(self.link + self.user.slug)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_follower.username, response.content)
+
+
 class RankListTests(AuthenticatedUserTestCase):
     """
-    tests for rank list (GET /users/?list=rank&rank=slug)
+    tests for generic list (GET /users/) filtered by rank
     """
     def setUp(self):
         super(RankListTests, self).setUp()
-        self.link = '/api/users/?list=rank&rank='
+        self.link = '/api/users/?rank='
 
     def test_nonexistent_rank(self):
         """list for non-existing rank returns 404"""
@@ -74,16 +138,17 @@ class RankListTests(AuthenticatedUserTestCase):
 
     def test_empty_list(self):
         """tab rank without members returns 200"""
-        rank_slug = self.user.rank.slug
+        test_rank = Rank.objects.create(
+            name="Test rank",
+            slug="test-rank",
+            is_tab=True
+        )
 
-        self.user.rank = Rank.objects.filter(is_tab=False)[:1][0]
-        self.user.rank.save()
-
-        response = self.client.get(self.link + rank_slug)
-        self.assertEqual(response.status_code, 404)
+        response = self.client.get(self.link + test_rank.slug)
+        self.assertEqual(response.status_code, 200)
 
     def test_disabled_list(self):
-        """non-tab rank with members returns 404"""
+        """non-tab rank returns 404"""
         self.user.rank.is_tab = False
         self.user.rank.save()
 
@@ -96,6 +161,26 @@ class RankListTests(AuthenticatedUserTestCase):
         self.user.rank.save()
 
         response = self.client.get(self.link + self.user.rank.slug)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.user.username, response.content)
+
+
+class SearchNamesListTests(AuthenticatedUserTestCase):
+    """
+    tests for generic list (GET /users/) filtered by username
+    """
+    def setUp(self):
+        super(SearchNamesListTests, self).setUp()
+        self.link = '/api/users/?&name='
+
+    def test_empty_list(self):
+        """empty list returns 200"""
+        response = self.client.get(self.link + 'this-user-is-fake')
+        self.assertEqual(response.status_code, 200)
+
+    def test_filled_list(self):
+        """filled list returns 200"""
+        response = self.client.get(self.link + self.user.slug)
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.user.username, response.content)
 

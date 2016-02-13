@@ -35,17 +35,31 @@ def active(request):
     })
 
 
-def rank(request):
-    rank_slug = request.query_params.get('rank')
-    if not rank_slug:
-        raise Http404()
+def generic(request):
+    queryset = get_user_model().objects
+    if request.query_params.get('followers'):
+        queryset = get_object_or_404(
+            queryset, slug=request.query_params.get('followers')).followed_by
+    elif request.query_params.get('follows'):
+        queryset = get_object_or_404(
+            queryset, slug=request.query_params.get('follows')).follows
 
-    rank = get_object_or_404(Rank.objects, slug=rank_slug, is_tab=True)
-    queryset = rank.user_set.select_related(
-        'rank', 'ban_cache', 'online_tracker').order_by('slug')
+    if request.query_params.get('rank'):
+        rank_slug = request.query_params.get('rank')
+        rank = get_object_or_404(Rank.objects, slug=rank_slug, is_tab=True)
+        queryset = queryset.filter(rank=rank)
+
+    if request.query_params.get('name'):
+        name_starts_with = request.query_params.get('name').strip().lower()
+        if name_starts_with:
+            queryset = queryset.filter(slug__startswith=name_starts_with)
+        else:
+            raise Http404()
+
+    queryset = queryset.select_related('rank', 'ban_cache', 'online_tracker')
 
     paginator = Paginator()
-    users = paginator.paginate_queryset(queryset, request)
+    users = paginator.paginate_queryset(queryset.order_by('slug'), request)
 
     make_users_status_aware(users, request.user.acl)
     return paginator.get_paginated_response(
@@ -54,7 +68,6 @@ def rank(request):
 
 LISTS = {
     'active': active,
-    'rank': rank,
 }
 
 
@@ -65,4 +78,4 @@ def list_endpoint(request):
     if list_handler:
         return list_handler(request)
     else:
-        raise Http404()
+        return generic(request)

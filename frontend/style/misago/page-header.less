@@ -42,17 +42,40 @@
 }
 
 
-// Tabbed on full display
+// Tabs
+.page-header .page-tabs .nav {
+  &>li {
+    margin: 0px;
+
+    &>a {
+      border-radius: 0px;
+    }
+  }
+}
+
+
+@media screen and (max-width: @screen-sm-max) {
+  .page-header .page-tabs {
+    margin-top: ((@line-height-computed / 2) - 1);
+    margin-bottom: ((@line-height-computed / 2) - 1) * -1;
+  }
+
+  .page-header .page-tabs .container {
+    padding: 0px;
+    width: 100%;
+
+    .nav-pills {
+      li {
+        display: block;
+        float: inherit;
+        width: auto;
+      }
+    }
+  }
+}
+
 @media screen and (min-width: @screen-md-min) {
   .page-header.tabbed {
     padding-bottom: 0px;
-
-    .page-tabs {
-      .nav>li {
-        &>a {
-          border-radius: 0px;
-        }
-      }
-    }
   }
 }

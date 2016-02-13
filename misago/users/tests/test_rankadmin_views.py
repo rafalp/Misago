@@ -215,3 +215,44 @@ class RankAdminViewsTests(AdminTestCase):
 
         self.assertTrue(test_rank.name not in response.content)
         self.assertTrue(test_rank.title not in response.content)
+
+    def test_uniquess(self):
+        """rank slug uniqueness is enforced by admin forms"""
+        test_role_a = Role.objects.create(name='Test Role A')
+
+        response = self.client.post(
+            reverse('misago:admin:users:ranks:new'),
+            data={
+                'name': 'Members',
+                'description': 'Colliding rank',
+                'title': 'Test Title',
+                'style': 'test',
+                'is_tab': '1',
+                'roles': [test_role_a.pk],
+            })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("This name collides with other rank.", response.content)
+
+        self.client.post(
+            reverse('misago:admin:users:ranks:new'),
+            data={
+                'name': 'Test rank',
+                'description': 'Colliding rank',
+                'title': 'Test Title',
+                'style': 'test',
+                'is_tab': '1',
+                'roles': [test_role_a.pk],
+            })
+
+        test_rank = Rank.objects.get(slug='test-rank')
+
+        response = self.client.post(
+            reverse('misago:admin:users:ranks:edit',
+                    kwargs={'rank_id': test_rank.pk}),
+            data={
+                'name': 'Members',
+                'roles': [test_role_a.pk],
+            })
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("This name collides with other rank.", response.content)
