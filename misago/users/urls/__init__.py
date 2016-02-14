@@ -61,21 +61,6 @@ urlpatterns += patterns('',
 
 
 urlpatterns += patterns('',
-    url(r'^mod-user/(?P<user_slug>[a-zA-Z0-9]+)-(?P<user_id>\d+)/', include(patterns('misago.users.views.moderation',
-        url(r'^warn/$', 'warn', name='warn_user'),
-        url(r'^warn/(?P<warning_id>\d+)/cancel/$', 'cancel_warning', name='cancel_warning'),
-        url(r'^warn/(?P<warning_id>\d+)/delete/$', 'delete_warning', name='delete_warning'),
-        url(r'^rename/$', 'rename', name='rename_user'),
-        url(r'^avatar/$', 'moderate_avatar', name='moderate_avatar'),
-        url(r'^signature/$', 'moderate_signature', name='moderate_signature'),
-        url(r'^ban/$', 'ban_user', name='ban_user'),
-        url(r'^lift-ban/$', 'lift_user_ban', name='lift_user_ban'),
-        url(r'^delete/$', 'delete', name='delete_user'),
-    )))
-)
-
-
-urlpatterns += patterns('',
     url(r'^user-avatar/', include(patterns('misago.users.views.avatarserver',
         url(r'^(?P<hash>[a-f0-9]+)/(?P<size>\d+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar', name="user_avatar"),
         url(r'^(?P<secret>[a-f0-9]+):(?P<hash>[a-f0-9]+)/(?P<user_id>\d+)\.png$', 'serve_user_avatar_source', name="user_avatar_source"),
