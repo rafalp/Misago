@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.db import models, transaction
 
 from misago.acl import version as acl_version
@@ -50,6 +51,11 @@ class Rank(models.Model):
     def delete(self, *args, **kwargs):
         acl_version.invalidate()
         return super(Rank, self).delete(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('misago:users_rank', kwargs={
+            'rank_slug': self.slug
+        })
 
     def set_name(self, name):
         self.name = name

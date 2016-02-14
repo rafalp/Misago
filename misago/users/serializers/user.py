@@ -5,7 +5,6 @@ from rest_framework import serializers
 
 from misago.acl import serialize_acl
 
-from misago.users.online.utils import get_user_status
 from misago.users.serializers import RankSerializer
 
 
@@ -182,6 +181,7 @@ class UserProfileSerializer(UserSerializer):
     is_followed = serializers.SerializerMethodField()
     is_blocked = serializers.SerializerMethodField()
     acl = serializers.SerializerMethodField()
+    api_url = serializers.SerializerMethodField()
 
     class Meta:
         model = get_user_model()
@@ -205,6 +205,8 @@ class UserProfileSerializer(UserSerializer):
             'is_blocked',
             'status',
             'acl',
+            'absolute_url',
+            'api_url',
         )
 
     def get_email(self, obj):
@@ -228,3 +230,9 @@ class UserProfileSerializer(UserSerializer):
             return self.context['user'].is_blocking(obj)
         else:
             return False
+
+    def get_api_url(self, obj):
+        return {
+            'root': reverse('misago:api:user-detail', kwargs={'pk': obj.pk}),
+            'follow': reverse('misago:api:user-follow', kwargs={'pk': obj.pk}),
+        }

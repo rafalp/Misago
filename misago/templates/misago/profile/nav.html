@@ -13,7 +13,7 @@
       {{ section.name }}
 
       {% if 'metadata' in section %}
-        <span class="badge">{{ section.metadata }}</span>
+        <span class="badge">{{ section.metadata.value }}</span>
       {% endif %}
     </a>
   {% endfor %}

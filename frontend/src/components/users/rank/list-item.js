@@ -48,12 +48,12 @@ export default class extends React.Component {
 
   getUserJoinedOn() {
     /* jshint ignore:start */
-    let title = interpolate(gettext("Member since %(joined_on)s"), {
+    let title = interpolate(gettext("Joined on %(joined_on)s"), {
       'joined_on': this.props.user.joined_on.format('LL, LT')
     }, true);
 
-    let age = interpolate(gettext("Member for %(joined_on)s"), {
-      'joined_on': this.props.user.joined_on.fromNow(true)
+    let age = interpolate(gettext("Joined %(joined_on)s"), {
+      'joined_on': this.props.user.joined_on.fromNow()
     }, true);
 
     return <span className="user-joined-on" title={title}>

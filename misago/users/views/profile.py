@@ -59,11 +59,20 @@ def profile_view_restricted_visibility(f):
 
 
 def render(request, template, context):
+    request.frontend_context['PROFILE_PAGES'] = []
+
     context['sections'] = user_profile.get_sections(request, context['profile'])
+
     for section in context['sections']:
+        request.frontend_context['PROFILE_PAGES'].append({
+            'name': unicode(section['name']),
+            'icon': section['icon'],
+            'meta': section.get('metadata'),
+            'component': section['component'],
+        })
+
         if section['is_active']:
             context['active_section'] = section
-            break
 
     if request.user.is_authenticated():
         is_authenticated_user = context['profile'].pk == request.user.pk
@@ -80,7 +89,7 @@ def render(request, template, context):
     else:
         context['show_email'] = False
 
-    context['status'] = get_user_status(context['profile'], user_acl)
+    context['profile'].status = get_user_status(context['profile'], user_acl)
 
     if request.user.is_authenticated():
         try:
@@ -154,7 +163,7 @@ def follows(request, profile):
 
 
 @profile_view_restricted_visibility
-def name_history(request, profile):
+def username_history(request, profile):
     queryset = profile.namechanges.select_related('user', 'changed_by')
     queryset = queryset.order_by('-id')
 
@@ -166,7 +175,7 @@ def name_history(request, profile):
         **paginator
     )
 
-    return render(request, 'misago/profile/name_history.html', {
+    return render(request, 'misago/profile/username_history.html', {
         'profile': profile,
         'history': page.object_list,
     })

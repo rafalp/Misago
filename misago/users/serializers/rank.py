@@ -8,6 +8,7 @@ __all__ = ['RankSerializer']
 
 class RankSerializer(serializers.ModelSerializer):
     description = serializers.SerializerMethodField()
+    absolute_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Rank
@@ -18,10 +19,15 @@ class RankSerializer(serializers.ModelSerializer):
             'description',
             'title',
             'css_class',
-            'is_tab')
+            'is_tab',
+            'absolute_url',
+        )
 
     def get_description(self, obj):
         if obj.description:
             return format_plaintext_for_html(obj.description)
         else:
             return ''
+
+    def get_absolute_url(self, obj):
+        return obj.get_absolute_url()

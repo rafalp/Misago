@@ -10,15 +10,10 @@
   margin-bottom: @line-height-computed;
   overflow: hidden;
 
-  // we defautly hide status icons from cards
-  .status-icon, .status-icon.ui-preview {
-    display: none;
-  }
-
   .user-card-bg-image{
     background: @body-bg;
 
-    &  > img {
+    &>img {
       display: none;
     }
   }
@@ -52,6 +47,27 @@
 
       &>span {
         margin-right: 8px;
+
+        .status-icon {
+          width: 14px;
+          height: 14px;
+
+          margin-right: 2px;
+
+          position: relative;
+          bottom: 2px;
+
+          font-size: 14px;
+          line-height: 14px;
+        }
+
+        .status-icon.ui-preview {
+          height: @font-size-base * 0.66;
+          width: @font-size-base * 0.66;
+
+          position: relative;
+          bottom: -3px;
+        }
 
         .status-label.ui-preview {
           height: @font-size-base * 0.66;

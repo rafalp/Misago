@@ -59,7 +59,7 @@ export default class extends React.Component {
 
           <h1 className="pull-left">{gettext("Users")}</h1>
 
-          <button className="btn btn-default btn-icon btn-dropdown-toggle hidden-md hidden-lg"
+          <button className="btn btn-default btn-aligned btn-icon btn-dropdown-toggle hidden-md hidden-lg"
                   type="button"
                   onClick={this.toggleNav}
                   aria-haspopup="true"

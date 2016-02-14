@@ -85,7 +85,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
     def test_username_history_list(self):
         """user name changes history list has no showstoppers"""
-        response = self.client.get(reverse('misago:user_name_history',
+        response = self.client.get(reverse('misago:username_history',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
         self.assertIn('Your username was never changed.', response.content)
@@ -95,7 +95,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.user.set_username('TestUser')
         self.user.save()
 
-        response = self.client.get(reverse('misago:user_name_history',
+        response = self.client.get(reverse('misago:username_history',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
         self.assertIn("TestUser", response.content)

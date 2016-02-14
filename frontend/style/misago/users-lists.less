@@ -16,13 +16,13 @@
     }
 
     .status-icon {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
 
       margin-right: 2px;
 
-      font-size: 18px;
-      line-height: 18px;
+      font-size: 16px;
+      line-height: 16px;
     }
   }
 
@@ -54,10 +54,14 @@
       margin-left: @line-height-computed * .66;
       width: 40%;
 
-      .item-title {
+      .user-name .item-title {
         margin-top: 4px;
 
         font-size: @font-size-base;
+      }
+
+      .rank-name {
+        font-weight: normal;
       }
 
       .user-status {
@@ -153,7 +157,7 @@
       padding-left: @line-height-computed * .8;
       width: 25%;
 
-      .item-title {
+      .user-name .item-title {
         margin-top: 2px;
 
         font-size: @font-size-large;

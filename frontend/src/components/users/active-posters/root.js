@@ -52,14 +52,14 @@ export default class extends React.Component {
 
   /* jshint ignore:start */
   update = (data) => {
+    store.dispatch(dehydrate(data.results));
+
     this.setState({
       isLoaded: true,
 
       trackedPeriod: data.tracked_period,
       count: data.count
     });
-
-    store.dispatch(dehydrate(data.results));
   };
   /* jshint ignore:end */
 

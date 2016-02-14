@@ -7,7 +7,7 @@
 
         <h1>
           <img src="{{ profile|avatar:100 }}" alt="">
-          {{ profile.username }}
+          <span class="user-name">{{ profile.username }}</span>
         </h1>
 
       </div>
@@ -20,13 +20,15 @@
 
           <ul class="list-inline">
             {% if profile.rank.is_tab %}
-            <li>
-              <a href="{% url 'misago:users_rank' rank_slug=profile.rank.slug %}">
+            <li class="user-rank">
+              <a href="{% url 'misago:users_rank' rank_slug=profile.rank.slug %}" class="item-title">
                 {{ profile.rank.name }}
               </a>
             </li>
             {% else %}
-            <li>{{ profile.rank.name }}</li>
+            <li class="user-rank">
+              <span class="item-title">{{ profile.rank.name }}</span>
+            </li>
             {% endif %}
             {% if profile.title %}
             <li class="user-title">{{ profile.title }}</li>
@@ -35,7 +37,9 @@
             {% endif %}
             <li class="user-joined-on">
               <abbr title="{% blocktrans trimmed with joined_on=user.joined_on|date %}Member since {{ joined_on }}{% endblocktrans %}">
-                {{ profile.joined_on|date }}
+                {% blocktrans trimmed with joined_on=profile.joined_on|date %}
+                  Member since {{ joined_on }}
+                {% endblocktrans %}
               </abbr>
             </li>
           </ul>

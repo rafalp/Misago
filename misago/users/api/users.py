@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
+from django.db import transaction
+from django.db.models import F
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
 
@@ -13,7 +15,9 @@ from misago.acl import add_acl
 from misago.core.cache import cache
 
 from misago.users.forms.options import ForumOptionsForm
-from misago.users.permissions.profiles import allow_browse_users_list
+from misago.users.online.utils import get_user_status
+from misago.users.permissions.profiles import (allow_browse_users_list,
+                                               allow_follow_user)
 
 from misago.users.rest_permissions import (BasePermission,
     IsAuthenticatedOrReadOnly, UnbannedAnonOnly)
@@ -55,13 +59,6 @@ class UserViewSet(viewsets.GenericViewSet):
         relations = ('rank', 'online_tracker', 'ban_cache')
         return self.queryset.select_related(*relations)
 
-    def get_users_count(self):
-        users_count = cache.get('users_count')
-        if not users_count:
-            users_count = self.queryset.count()
-            cache.set('users_count', users_count, 15 * 60)
-        return users_count
-
     def list(self, request):
         allow_browse_users_list(request.user)
         return list_endpoint(request)
@@ -70,10 +67,10 @@ class UserViewSet(viewsets.GenericViewSet):
         return create_endpoint(request)
 
     def retrieve(self, request, pk=None):
-        qs = self.get_queryset()
         profile = get_object_or_404(self.get_queryset(), id=pk)
 
         add_acl(request.user, profile)
+        profile.status = get_user_status(profile, request.user.acl)
 
         serializer = UserProfileSerializer(
             profile, context={'user': request.user})
@@ -127,3 +124,34 @@ class UserViewSet(viewsets.GenericViewSet):
                         _("You can't change other users e-mail addresses."))
 
         return change_email_endpoint(request)
+
+    @detail_route(methods=['post'])
+    def follow(self, request, pk=None):
+        profile = get_object_or_404(self.get_queryset(), id=pk)
+        allow_follow_user(request.user, profile)
+
+        profile_followers = profile.followers
+
+        with transaction.atomic():
+            if request.user.is_following(profile):
+                request.user.follows.remove(profile)
+                followed = False
+
+                profile_followers -= 1
+                profile.followers = F('followers') - 1
+                request.user.following = F('following') - 1
+            else:
+                request.user.follows.add(profile)
+                followed = True
+
+                profile_followers += 1
+                profile.followers = F('followers') + 1
+                request.user.following = F('following') + 1
+
+            profile.save(update_fields=['followers'])
+            request.user.save(update_fields=['following'])
+
+            return Response({
+                'is_followed': followed,
+                'followers': profile_followers
+            })

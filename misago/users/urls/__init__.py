@@ -54,7 +54,7 @@ urlpatterns += patterns('',
         url(r'^threads/$', 'threads', name="user_threads"),
         url(r'^followers/$', 'followers', name="user_followers"),
         url(r'^follows/$', 'follows', name="user_follows"),
-        url(r'^name-history/$', 'name_history', name="user_name_history"),
+        url(r'^username-history/$', 'username_history', name="username_history"),
         url(r'^ban-details/$', 'user_ban', name="user_ban"),
     )))
 )

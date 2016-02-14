@@ -42,13 +42,13 @@ export default class extends React.Component {
     if (this.props.rank.is_tab) {
       /* jshint ignore:start */
       let rankUrl = misago.get('USERS_LIST_URL') + this.props.rank.slug + '/';
-      return <Link to={rankUrl} className="rank-name">
+      return <Link to={rankUrl} className="item-title rank-name">
         {this.props.rank.name}
       </Link>;
       /* jshint ignore:end */
     } else {
       /* jshint ignore:start */
-      return <span className="rank-name">
+      return <span className="item-title rank-name">
         {this.props.rank.name}
       </span>;
       /* jshint ignore:end */

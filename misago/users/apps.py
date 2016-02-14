@@ -43,16 +43,28 @@ class MisagoUsersConfig(AppConfig):
 
     def register_default_user_profile_pages(self):
         def posts_badge(request, profile):
-            return profile.posts
+            return {
+                'value': profile.posts,
+                'attr': 'posts',
+            }
 
         def threads_badge(request, profile):
-            return profile.threads
+            return {
+                'value': profile.threads,
+                'attr': 'threads',
+            }
 
         def followers_badge(request, profile):
-            return profile.followers
+            return {
+                'value': profile.followers,
+                'attr': 'followers',
+            }
 
         def following_badge(request, profile):
-            return profile.following
+            return {
+                'value': profile.following,
+                'attr': 'following',
+            }
 
         def can_see_names_history(request, profile):
             if request.user.is_authenticated():
@@ -76,35 +88,41 @@ class MisagoUsersConfig(AppConfig):
             link='misago:user_posts',
             name=_("Posts"),
             icon='message',
+            component='posts',
             get_metadata=posts_badge)
 
         user_profile.add_section(
             link='misago:user_threads',
             name=_("Threads"),
             icon='forum',
+            component='threads',
             get_metadata=threads_badge)
-
-        user_profile.add_section(
-            link='misago:user_follows',
-            name=_("Follows"),
-            icon='favorite',
-            get_metadata=following_badge)
 
         user_profile.add_section(
             link='misago:user_followers',
             name=_("Followers"),
-            icon='favorite_border',
+            icon='favorite',
+            component='followers',
             get_metadata=followers_badge)
 
         user_profile.add_section(
-            link='misago:user_name_history',
+            link='misago:user_follows',
+            name=_("Follows"),
+            icon='favorite_border',
+            component='follows',
+            get_metadata=following_badge)
+
+        user_profile.add_section(
+            link='misago:username_history',
             name=_("Username history"),
             icon='card_membership',
+            component='username-history',
             visible_if=can_see_names_history)
 
         user_profile.add_section(
             link='misago:user_ban',
             name=_("Ban details"),
             icon='remove_circle_outline',
+            component='ban-details',
             visible_if=can_see_ban_details)
 

@@ -7,6 +7,11 @@
 .page-header {
   margin: 0px;
   margin-bottom: @line-height-computed;
+
+  .btn-aligned {
+    float: right;
+    margin-top: @line-height-computed + 3px;
+  }
 }
 
 
@@ -17,12 +22,12 @@
       font-size: @font-size-large * 1.25;
     }
 
-    &>.btn {
+    .btn-aligned {
       float: right;
       margin-top: @line-height-computed - 7px;
     }
 
-    &>.btn-dropdown-toggle {
+    .btn-icon {
       .material-icon {
         width: 24px;
         height: 24px;
@@ -32,7 +37,28 @@
       }
     }
   }
+}
 
+
+// Stats
+.header-stats .list-inline li {
+  margin-right: 8px;
+
+  .status-icon {
+    width: 18px;
+    height: 18px;
+
+    margin-right: 4px;
+
+    position: relative;
+    bottom: 1px;
+
+    font-size: 18px;
+    line-height: 18px;
+  }
+}
+
+@media screen and (max-width: @screen-sm-max) {
   .header-stats .list-inline {
     margin-top: @line-height-computed / 2;
     margin-bottom: 0px;

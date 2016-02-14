@@ -1,7 +1,4 @@
-from datetime import timedelta
-
 from django.contrib.auth import get_user_model
-from django.utils import timezone
 
 from misago.acl.testutils import override_acl
 from misago.conf import settings
@@ -10,7 +7,7 @@ from misago.core.cache import cache
 from misago.forums.models import Forum
 from misago.threads.testutils import post_thread
 
-from misago.users.models import Online, Rank
+from misago.users.models import Rank
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -222,3 +219,75 @@ class UserForumOptionsTests(AuthenticatedUserTestCase):
         self.assertEqual(self.user.limits_private_thread_invites_to, 1)
         self.assertEqual(self.user.subscribe_to_started_threads, 2)
         self.assertEqual(self.user.subscribe_to_replied_threads, 1)
+
+
+class UserFollowTests(AuthenticatedUserTestCase):
+    """
+    tests for user follow RPC (POST to /api/users/1/follow/)
+    """
+    def setUp(self):
+        super(UserFollowTests, self).setUp()
+
+        User = get_user_model()
+        self.other_user = User.objects.create_user(
+            "OtherUser", "other@user.com", "pass123")
+
+        self.link = '/api/users/%s/follow/' % self.other_user.pk
+
+    def test_follow_unauthenticated(self):
+        """you have to sign in to follow users"""
+        self.logout_user()
+
+        response = self.client.post(self.link)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("action is not available to guests", response.content)
+
+    def test_follow_myself(self):
+        """you can't follow yourself"""
+        response = self.client.post('/api/users/%s/follow/' % self.user.pk)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("can't add yourself to followed", response.content)
+
+    def test_cant_follow(self):
+        """no permission to follow users"""
+        override_acl(self.user, {
+            'can_follow_users': 0,
+        })
+
+        response = self.client.post(self.link)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("can't follow other users", response.content)
+
+    def test_follow(self):
+        """follow and unfollow other user"""
+        response = self.client.post(self.link)
+        self.assertEqual(response.status_code, 200)
+
+        User = get_user_model()
+
+        user = User.objects.get(pk=self.user.pk)
+        self.assertEqual(user.followers, 0)
+        self.assertEqual(user.following, 1)
+        self.assertEqual(user.follows.count(), 1)
+        self.assertEqual(user.followed_by.count(), 0)
+
+        followed = User.objects.get(pk=self.other_user.pk)
+        self.assertEqual(followed.followers, 1)
+        self.assertEqual(followed.following, 0)
+        self.assertEqual(followed.follows.count(), 0)
+        self.assertEqual(followed.followed_by.count(), 1)
+
+        response = self.client.post(self.link)
+        self.assertEqual(response.status_code, 200)
+
+        user = User.objects.get(pk=self.user.pk)
+        self.assertEqual(user.followers, 0)
+        self.assertEqual(user.following, 0)
+        self.assertEqual(user.follows.count(), 0)
+        self.assertEqual(user.followed_by.count(), 0)
+
+        followed = User.objects.get(pk=self.other_user.pk)
+        self.assertEqual(followed.followers, 0)
+        self.assertEqual(followed.following, 0)
+        self.assertEqual(followed.follows.count(), 0)
+        self.assertEqual(followed.followed_by.count(), 0)

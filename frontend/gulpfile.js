@@ -61,6 +61,7 @@ function getSources() {
   };
 
   include('src/initializers/*.js');
+  include('src/initializers/**/*.js');
 
   return sources.map(function(path) {
     return path;

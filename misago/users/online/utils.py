@@ -6,7 +6,7 @@ from misago.users.bans import get_user_ban
 from misago.users.models import Online, BanCache
 
 
-ACTIVITY_CUTOFF = timedelta(minutes=1)
+ACTIVITY_CUTOFF = timedelta(minutes=2)
 
 
 def get_user_status(user, acl):

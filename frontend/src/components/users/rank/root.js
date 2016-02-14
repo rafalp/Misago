@@ -48,10 +48,10 @@ export default class extends React.Component {
 
   /* jshint ignore:start */
   update = (data) => {
+    store.dispatch(dehydrate(data.results));
+
     data.isLoaded = true;
     this.setState(data);
-
-    store.dispatch(dehydrate(data.results));
   };
   /* jshint ignore:end */
 

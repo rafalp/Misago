@@ -32,11 +32,13 @@
                   </h4>
 
                   <p class="user-subscript">
-                  {% if user.title %}
-                    <span class="user-title">{{ user.title }}</span>
-                  {% endif %}
+                    {% if user.title %}
+                      <span class="user-title">{{ user.title }}</span>
+                    {% endif %}
                     <span class="user-joined-on">
-                      {% blocktrans trimmed with joined_on=user.joined_on|date %}Member since {{ joined_on }}{% endblocktrans %}
+                      {% blocktrans trimmed with joined_on=user.joined_on|date %}
+                        Joined on {{ joined_on }}
+                      {% endblocktrans %}
                     </span>
                   </p>
 

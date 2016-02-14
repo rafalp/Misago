@@ -1,6 +1,5 @@
 import Users, { paths } from 'misago/components/users/root';
 import misago from 'misago/index';
-import store from 'misago/services/store';
 import mount from 'misago/utils/routed-component';
 
 export default function initializer(context) {
@@ -8,7 +7,7 @@ export default function initializer(context) {
     mount({
       root: misago.get('USERS_LIST_URL'),
       component: Users,
-      paths: paths(store)
+      paths: paths()
     });
   }
 }

@@ -49,9 +49,13 @@
                   <a href="{{ user_url }}" class="item-title">{{ ranked }}</a>
                 </div>
                 {% if ranked.rank.is_tab %}
-                <a href="{% url 'misago:users_rank' rank_slug=ranked.rank.slug %}" class="rank-name">{{ ranked.rank.name }}</a>
+                <a href="{% url 'misago:users_rank' rank_slug=ranked.rank.slug %}" class="item-title rank-name">
+                  {{ ranked.rank.name }}
+                </a>
                 {% else %}
-                <span class="rank-name">{{ ranked.rank.name }}</span>
+                <span class="item-title rank-name">
+                  {{ ranked.rank.name }}
+                </span>
                 {% endif %}
                 {% if ranked.title %}
                 <span class="user-title">

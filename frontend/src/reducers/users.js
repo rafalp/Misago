@@ -1,13 +1,13 @@
 import moment from 'moment';
 
-export const DEHYDRATE_RESULT = 'DEHYDRATE_RESULT';
+export const DEHYDRATE_USERS = 'DEHYDRATE_USERS';
 export const UPDATE_AVATAR = 'UPDATE_AVATAR';
 export const UPDATE_USERNAME = 'UPDATE_USERNAME';
 
 export function dehydrate(items) {
   return {
-    type: DEHYDRATE_RESULT,
-    items: items
+    type: DEHYDRATE_USERS,
+    items
   };
 }
 
@@ -41,12 +41,11 @@ export function updateUsername(user, username, slug) {
 
 export default function user(state=[], action=null) {
   switch (action.type) {
-    case DEHYDRATE_RESULT:
+    case DEHYDRATE_USERS:
       return action.items.map(function(item) {
-        let status = dehydrateStatus(item.status);
         return Object.assign({}, item, {
           joined_on: moment(item.joined_on),
-          status
+          status: dehydrateStatus(item.status)
         });
       });
 
