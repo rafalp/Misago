@@ -5,18 +5,35 @@
 
 // Small displays
 @media screen and (max-width: @screen-sm-max) {
-  .page-user-profile .page-header h1 img {
-    width: 40px;
-    height: 40px;
-  }
+  .page-user-profile .page-header {
+    h1 img {
+      width: 40px;
+      height: 40px;
+    }
 
-  h1.pull-left img {
-    margin-right: 6px;
-  }
+    h1.pull-left img {
+      margin-right: 6px;
+    }
 
-  .page-user-profile .page-header .btn-aligned {
-    position: relative;
-    top: 8px;
+    h1 .user-name {
+      position: relative;
+      top: 2px;
+    }
+
+    .btn-aligned {
+      position: relative;
+      top: 8px;
+    }
+
+    .header-stats ul {
+      text-align: center;
+
+      li {
+        display: block-inline;
+
+        white-space: nowrap;
+      }
+    }
   }
 
   .page-user-profile .profile-side-avatar {

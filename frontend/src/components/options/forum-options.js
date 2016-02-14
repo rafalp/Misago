@@ -64,19 +64,19 @@ export default class extends Form {
 
   send() {
     return ajax.post(this.props.user.api_url.options, {
-      'is_hiding_presence': this.state.is_hiding_presence,
-      'limits_private_thread_invites_to': this.state.limits_private_thread_invites_to,
-      'subscribe_to_started_threads': this.state.subscribe_to_started_threads,
-      'subscribe_to_replied_threads': this.state.subscribe_to_replied_threads
+      is_hiding_presence: this.state.is_hiding_presence,
+      limits_private_thread_invites_to: this.state.limits_private_thread_invites_to,
+      subscribe_to_started_threads: this.state.subscribe_to_started_threads,
+      subscribe_to_replied_threads: this.state.subscribe_to_replied_threads
     });
   }
 
   handleSuccess() {
     store.dispatch(patchUser({
-      'is_hiding_presence': this.state.is_hiding_presence,
-      'limits_private_thread_invites_to': this.state.limits_private_thread_invites_to,
-      'subscribe_to_started_threads': this.state.subscribe_to_started_threads,
-      'subscribe_to_replied_threads': this.state.subscribe_to_replied_threads
+      is_hiding_presence: this.state.is_hiding_presence,
+      limits_private_thread_invites_to: this.state.limits_private_thread_invites_to,
+      subscribe_to_started_threads: this.state.subscribe_to_started_threads,
+      subscribe_to_replied_threads: this.state.subscribe_to_replied_threads
     }));
     snackbar.success(gettext("Your forum options have been changed."));
   }
@@ -114,10 +114,10 @@ export default class extends Form {
                        labelClass="col-sm-4" controlClass="col-sm-8">
               <YesNoSwitch id="id_is_hiding_presence"
                            disabled={this.state.isLoading}
-                           iconOn="visibility"
-                           iconOff="visibility_off"
-                           labelOn={gettext("Show my presence to other users")}
-                           labelOff={gettext("Hide my presence from other users")}
+                           iconOn="visibility_off"
+                           iconOff="visibility"
+                           labelOn={gettext("Hide my presence from other users")}
+                           labelOff={gettext("Show my presence to other users")}
                            onChange={this.bindInput('is_hiding_presence')}
                            value={this.state.is_hiding_presence} />
             </FormGroup>

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { UPDATE_AVATAR, dehydrateStatus } from 'misago/reducers/users';
+import { UPDATE_AVATAR, UPDATE_USERNAME, dehydrateStatus } from 'misago/reducers/users';
 
 export const DEHYDRATE_PROFILE = 'DEHYDRATE_PROFILE';
 export const PATCH_PROFILE = 'PATCH_PROFILE';
@@ -32,7 +32,16 @@ export default function auth(state={}, action=null) {
     case UPDATE_AVATAR:
       if (state.id === action.userId) {
         return Object.assign({}, state, {
-          'avatar_hash': action.avatarHash
+          avatar_hash: action.avatarHash
+        });
+      }
+      return state;
+
+    case UPDATE_USERNAME:
+      if (state.id === action.userId) {
+        return Object.assign({}, state, {
+          username: action.username,
+          slug: action.slug
         });
       }
       return state;

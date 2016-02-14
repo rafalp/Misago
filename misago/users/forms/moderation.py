@@ -26,23 +26,9 @@ class WarnUserForm(forms.Form):
 
 
 class ModerateAvatarForm(forms.ModelForm):
-    is_avatar_locked = forms.YesNoSwitch(
-        label=_("Lock avatar"),
-        help_text=_("Setting this to yes will stop user from "
-                    "changing his/her avatar, and will reset "
-                    "his/her avatar to procedurally generated one."))
-    avatar_lock_user_message = forms.CharField(
-        label=_("User message"),
-        help_text=_("Optional message for user explaining "
-                    "why he/she is banned form changing avatar."),
-        widget=forms.Textarea(attrs={'rows': 3}),
-        required=False)
-    avatar_lock_staff_message = forms.CharField(
-        label=_("Staff message"),
-        help_text=_("Optional message for forum team members explaining "
-                    "why user is banned form changing avatar."),
-        widget=forms.Textarea(attrs={'rows': 3}),
-        required=False)
+    is_avatar_locked = forms.YesNoSwitch()
+    avatar_lock_user_message = forms.CharField(required=False)
+    avatar_lock_staff_message = forms.CharField(required=False)
 
     class Meta:
         model = get_user_model()

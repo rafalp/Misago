@@ -100,7 +100,6 @@ export default class extends React.Component {
 
   getModerationButton() {
     if (this.props.profile.acl.can_moderate) {
-      console.log(this.props.profile.acl);
       /* jshint ignore:start */
       return <div className="btn-group btn-aligned hidden-xs hidden-sm">
         <button className="btn btn-default btn-moderate dropdown-toggle"

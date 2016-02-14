@@ -1,4 +1,3 @@
-from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError
 from django.utils.translation import ugettext as _
 
@@ -61,3 +60,29 @@ def change_username(request):
     else:
         return Response({'detail': form.non_field_errors()[0]},
                         status=status.HTTP_400_BAD_REQUEST)
+
+
+def moderate_username_endpoint(request, profile):
+    if request.method == 'POST':
+        form = ChangeUsernameForm(request.data, user=profile)
+        if form.is_valid():
+            try:
+                form.change_username(changed_by=request.user)
+                return Response({
+                    'username': profile.username,
+                    'slug': profile.slug,
+                })
+            except IntegrityError:
+                return Response({
+                    'detail': _("Error changing username. Please try again."),
+                    'options': options
+                },
+                status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({'detail': form.non_field_errors()[0]},
+                            status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({
+            'length_min': settings.username_length_min,
+            'length_max': settings.username_length_max,
+        })

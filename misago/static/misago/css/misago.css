@@ -5235,6 +5235,8 @@ a.badge:focus {
   }
   .modal-message .message-icon {
     float: left;
+    position: relative;
+    left: 7px;
   }
   .modal-message .message-icon .material-icon {
     font-size: 50px;
@@ -5243,7 +5245,11 @@ a.badge:focus {
     margin-left: 75px;
     margin-top: 10px;
   }
+  .modal-message .message-body p {
+    margin-top: 20px;
+  }
   .modal-message .message-body .lead {
+    margin-top: 0px;
     margin-bottom: 0px;
   }
 }
@@ -5420,6 +5426,12 @@ input.hidden-file-upload {
 .dropdown-menu .dropdown-footer {
   padding: 6px 20px;
 }
+.dropdown-menu .dropdown-buttons {
+  padding: 2px 20px;
+}
+.dropdown-menu .dropdown-buttons .btn {
+  margin: 4px 0px;
+}
 .mobile-dropdown,
 .compact-nav {
   position: static;
@@ -5428,8 +5440,10 @@ input.hidden-file-upload {
 }
 .mobile-dropdown.open,
 .compact-nav.open {
-  margin-top: -20px;
   margin-bottom: 20px;
+}
+.compact-nav.open {
+  margin-top: -20px;
 }
 .mobile-dropdown.open > .dropdown-menu,
 .compact-nav.open > .dropdown-menu {
@@ -6205,12 +6219,23 @@ a.item-title:hover {
     width: 40px;
     height: 40px;
   }
-  h1.pull-left img {
+  .page-user-profile .page-header h1.pull-left img {
     margin-right: 6px;
+  }
+  .page-user-profile .page-header h1 .user-name {
+    position: relative;
+    top: 2px;
   }
   .page-user-profile .page-header .btn-aligned {
     position: relative;
     top: 8px;
+  }
+  .page-user-profile .page-header .header-stats ul {
+    text-align: center;
+  }
+  .page-user-profile .page-header .header-stats ul li {
+    display: block-inline;
+    white-space: nowrap;
   }
   .page-user-profile .profile-side-avatar {
     display: none;

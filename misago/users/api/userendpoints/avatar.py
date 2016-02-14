@@ -10,6 +10,7 @@ from misago.conf import settings
 from misago.core.utils import format_plaintext_for_html
 
 from misago.users import avatars
+from misago.users.forms.moderation import ModerateAvatarForm
 
 
 def avatar_endpoint(request, pk=None):
@@ -35,6 +36,8 @@ def avatar_endpoint(request, pk=None):
 
 def get_avatar_options(user):
     options = {
+        'avatar_hash': user.avatar_hash,
+
         'generated': True,
         'gravatar': False,
         'crop_org': False,
@@ -186,3 +189,29 @@ AVATAR_TYPES = {
     'crop_org': avatar_crop_org,
     'crop_tmp': avatar_crop_tmp,
 }
+
+
+def moderate_avatar_endpoint(request, profile):
+    if request.method == "POST":
+        is_avatar_locked = profile.is_avatar_locked
+        form = ModerateAvatarForm(request.data, instance=profile)
+        if form.is_valid():
+            if form.cleaned_data['is_avatar_locked'] and not is_avatar_locked:
+                avatars.dynamic.set_avatar(profile)
+                profile.avatar_hash = avatars.get_avatar_hash(profile)
+            form.save()
+
+            return Response({
+                'avatar_hash': profile.avatar_hash,
+                'is_avatar_locked': int(profile.is_avatar_locked),
+                'avatar_lock_user_message': profile.avatar_lock_user_message,
+                'avatar_lock_staff_message': profile.avatar_lock_staff_message,
+            })
+        else:
+            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({
+            'is_avatar_locked': int(profile.is_avatar_locked),
+            'avatar_lock_user_message': profile.avatar_lock_user_message,
+            'avatar_lock_staff_message': profile.avatar_lock_staff_message,
+        })

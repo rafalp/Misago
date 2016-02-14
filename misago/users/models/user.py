@@ -252,7 +252,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def delete(self, *args, **kwargs):
         if kwargs.pop('delete_content', False):
             self.delete_content()
+
         avatars.delete_avatar(self)
+
         return super(User, self).delete(*args, **kwargs)
 
     def delete_content(self):

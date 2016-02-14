@@ -111,17 +111,24 @@ export default class extends React.Component {
   }
 
   getAvatarPreview() {
+    /* jshint ignore:start */
+    let userPeview = {
+      id: this.props.user.id,
+      avatar_hash: this.props.options.avatar_hash
+    }
+    /* jshint ignore:end */
+
     if (this.state.isLoading) {
       /* jshint ignore:start */
       return <div className="avatar-preview preview-loading">
-        <Avatar user={this.props.user} size="200" />
+        <Avatar user={userPeview} size="200" />
         <Loader />
       </div>;
       /* jshint ignore:end */
     } else {
       /* jshint ignore:start */
       return <div className="avatar-preview">
-        <Avatar user={this.props.user} size="200" />
+        <Avatar user={userPeview} size="200" />
       </div>;
       /* jshint ignore:end */
     }

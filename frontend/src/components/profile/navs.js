@@ -52,7 +52,7 @@ export class CompactNav extends SideNav {
   }
 
   getModerationButton() {
-    if (this.props.profile.acl.can_follow) {
+    if (this.props.profile.acl.can_moderate) {
       /* jshint ignore:start */
       return <button type="button" className="btn btn-default btn-block"
                      onClick={this.props.toggleModeration}>
@@ -70,7 +70,7 @@ export class CompactNav extends SideNav {
   getSpecialOptions() {
     if (this.showSpecialOptions()) {
       /* jshint ignore:start */
-      return <li className="dropdown-footer">
+      return <li className="dropdown-buttons">
         {this.getFollowButton()}
         {this.getModerationButton()}
       </li>;

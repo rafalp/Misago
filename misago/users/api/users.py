@@ -13,9 +13,15 @@ from rest_framework.response import Response
 
 from misago.acl import add_acl
 from misago.core.cache import cache
+from misago.forums.models import Forum
+from misago.threads.moderation.posts import hide_post
+from misago.threads.moderation.threads import hide_thread
 
 from misago.users.forms.options import ForumOptionsForm
 from misago.users.online.utils import get_user_status
+from misago.users.permissions.delete import allow_delete_user
+from misago.users.permissions.moderation import (allow_rename_user,
+                                                 allow_moderate_avatar)
 from misago.users.permissions.profiles import (allow_browse_users_list,
                                                allow_follow_user)
 
@@ -24,10 +30,12 @@ from misago.users.rest_permissions import (BasePermission,
 from misago.users.serializers import UserSerializer, UserProfileSerializer
 
 from misago.users.api.userendpoints.list import list_endpoint
-from misago.users.api.userendpoints.avatar import avatar_endpoint
+from misago.users.api.userendpoints.avatar import (avatar_endpoint,
+                                                   moderate_avatar_endpoint)
 from misago.users.api.userendpoints.create import create_endpoint
 from misago.users.api.userendpoints.signature import signature_endpoint
-from misago.users.api.userendpoints.username import username_endpoint
+from misago.users.api.userendpoints.username import (username_endpoint,
+                                                     moderate_username_endpoint)
 from misago.users.api.userendpoints.changeemail import change_email_endpoint
 from misago.users.api.userendpoints.changepassword import change_password_endpoint
 
@@ -155,3 +163,52 @@ class UserViewSet(viewsets.GenericViewSet):
                 'is_followed': followed,
                 'followers': profile_followers
             })
+
+    @detail_route(methods=['get', 'post'])
+    def moderate_avatar(self, request, pk=None):
+        profile = get_object_or_404(self.get_queryset(), id=pk)
+        allow_moderate_avatar(request.user, profile)
+
+        return moderate_avatar_endpoint(request, profile)
+
+    @detail_route(methods=['get', 'post'])
+    def moderate_username(self, request, pk=None):
+        profile = get_object_or_404(self.get_queryset(), id=pk)
+        allow_rename_user(request.user, profile)
+
+        return moderate_username_endpoint(request, profile)
+
+    @detail_route(methods=['get', 'post'])
+    def delete(self, request, pk=None):
+        profile = get_object_or_404(self.get_queryset(), id=pk)
+        allow_delete_user(request.user, profile)
+
+        if request.method == 'POST':
+            with transaction.atomic():
+                profile.lock()
+
+                if request.data.get('with_content'):
+                    profile.delete_content()
+                else:
+                    forums_to_sync = set()
+
+                    threads = profile.thread_set.select_related('first_post')
+                    for thread in threads.filter(is_hidden=False).iterator():
+                        forums_to_sync.add(thread.forum_id)
+                        hide_thread(request.user, thread)
+
+                    posts = profile.post_set.select_related('thread')
+                    for post in posts.filter(is_hidden=False).iterator():
+                        forums_to_sync.add(post.forum_id)
+                        hide_post(request.user, post)
+                        post.thread.synchronize()
+                        post.thread.save()
+
+                    forums = Forum.objects.filter(id__in=forums_to_sync)
+                    for forum in forums.iterator():
+                        forum.synchronize()
+                        forum.save()
+
+                profile.delete()
+
+        return Response({'detail': 'ok'})

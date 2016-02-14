@@ -55,6 +55,16 @@
 }
 
 
+// Dropdown buttons container
+.dropdown-menu .dropdown-buttons {
+  padding: 2px 20px;
+
+  .btn {
+    margin: 4px 0px;
+  }
+}
+
+
 // Always displayed on mobile dropdown
 .mobile-dropdown, .compact-nav {
   position: static;
@@ -62,9 +72,12 @@
   overflow: auto;
 
   &.open {
-    margin-top: @line-height-computed * -1;
     margin-bottom: @line-height-computed;
   }
+}
+
+.compact-nav.open {
+  margin-top: @line-height-computed * -1;
 }
 
 .mobile-dropdown.open>.dropdown-menu, .compact-nav.open>.dropdown-menu {

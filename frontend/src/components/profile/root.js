@@ -54,7 +54,6 @@ export default class extends React.Component {
         dropdown: false
       });
     } else {
-      console.log('show moderation!');
       this.setState({
         dropdown: 'moderation'
       });

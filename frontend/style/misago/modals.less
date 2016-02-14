@@ -31,6 +31,8 @@
 
     .message-icon {
       float: left;
+      position: relative;
+      left: 7px;
 
       .material-icon {
         font-size: @line-height-computed * 2.5;
@@ -41,7 +43,12 @@
       margin-left: @line-height-computed * 3.75;
       margin-top: @line-height-computed * .6 - 2px;
 
+      p {
+        margin-top: @line-height-computed;
+      }
+
       .lead {
+        margin-top: 0px;
         margin-bottom: 0px;
       }
     }

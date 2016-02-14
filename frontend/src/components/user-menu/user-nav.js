@@ -45,7 +45,7 @@ export class UserMenu extends React.Component {
         </button>
       </li>
       <li className="divider" />
-      <li className="dropdown-footer">
+      <li className="dropdown-buttons">
           <button type="button" className="btn btn-default btn-block"
                   onClick={this.logout}>
             {gettext("Log out")}

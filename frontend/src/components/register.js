@@ -17,29 +17,29 @@ export class RegisterForm extends Form {
     super(props);
 
     this.state = {
-      'isLoading': false,
+      isLoading: false,
 
-      'username': '',
-      'email': '',
-      'password': '',
-      'captcha': '',
+      username: '',
+      email: '',
+      password: '',
+      captcha: '',
 
-      'validators': {
-        'username': [
+      validators: {
+        username: [
           validators.usernameContent(),
           validators.usernameMinLength(misago.get('SETTINGS')),
           validators.usernameMaxLength(misago.get('SETTINGS'))
         ],
-        'email': [
+        email: [
           validators.email()
         ],
-        'password': [
+        password: [
           validators.passwordMinLength(misago.get('SETTINGS'))
         ],
-        'captcha': captcha.validator()
+        captcha: captcha.validator()
       },
 
-      'errors': {}
+      errors: {}
     };
   }
 
@@ -49,7 +49,7 @@ export class RegisterForm extends Form {
     } else {
       snackbar.error(gettext("Form contains errors."));
       this.setState({
-        'errors': this.validate()
+        errors: this.validate()
       });
       return false;
     }
@@ -57,10 +57,10 @@ export class RegisterForm extends Form {
 
   send() {
     return ajax.post(misago.get('USERS_API'), {
-      'username': this.state.username,
-      'email': this.state.email,
-      'password': this.state.password,
-      'captcha': this.state.captcha
+      username: this.state.username,
+      email: this.state.email,
+      password: this.state.password,
+      captcha: this.state.captcha
     });
   }
 
@@ -225,7 +225,7 @@ export default class extends React.Component {
     super(props);
 
     this.state = {
-      'complete': false
+      complete: false
     };
   }
 
@@ -236,7 +236,7 @@ export default class extends React.Component {
       auth.signIn(apiResponse);
     } else {
       this.setState({
-        'complete': apiResponse
+        complete: apiResponse
       });
     }
   };
