@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
 import Header from 'misago/components/profile/Header'; // jshint ignore:line
+import ModerationNav from 'misago/components/profile/moderation/nav'; // jshint ignore:line
 import { SideNav, CompactNav } from 'misago/components/profile/navs'; // jshint ignore:line
 import misago from 'misago/index';
 import { dehydrate } from 'misago/reducers/profile'; // jshint ignore:line
@@ -36,13 +37,26 @@ export default class extends React.Component {
 
   /* jshint ignore:start */
   toggleNav = () => {
-    if (this.state.dropdown) {
+    if (this.state.dropdown === 'pages') {
       this.setState({
         dropdown: false
       });
     } else {
       this.setState({
-        dropdown: true
+        dropdown: 'pages'
+      });
+    }
+  };
+
+  toggleModeration = () => {
+    if (this.state.dropdown === 'moderation') {
+      this.setState({
+        dropdown: false
+      });
+    } else {
+      console.log('show moderation!');
+      this.setState({
+        dropdown: 'moderation'
       });
     }
   };
@@ -70,6 +84,26 @@ export default class extends React.Component {
     }
   }
 
+  getNavDropdown() {
+    if (this.state.dropdown === 'pages') {
+      /* jshint ignore:start */
+      return <CompactNav pages={misago.get('PROFILE_PAGES')}
+                         baseUrl={misago.get('PROFILE').absolute_url}
+                         profile={this.props.profile}
+                         toggleModeration={this.toggleModeration}
+                         hideNav={this.hideNav} />;
+      /* jshint ignore:end */
+    } else if (this.state.dropdown === 'moderation') {
+      /* jshint ignore:start */
+      return <ModerationNav profile={this.props.profile}
+                            toggleNav={this.toggleNav}
+                            hideNav={this.hideNav} />;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
   getClassName() {
     const baseClass = 'page page-user-profile';
     if (false && this.props.profile.rank.css_class) {
@@ -85,16 +119,11 @@ export default class extends React.Component {
 
       <Header user={this.props.user}
               profile={this.props.profile}
-              toggleNav={this.toggleNav} />
+              toggleNav={this.toggleNav}
+              toggleModeration={this.toggleModeration} />
 
       <div className={this.getCompactNavClassName()}>
-
-        <CompactNav pages={misago.get('PROFILE_PAGES')}
-                    baseUrl={misago.get('PROFILE').absolute_url}
-                    profile={this.props.profile}
-                    hideNav={this.hideNav}
-                    dropdown={this.state.dropdown} />
-
+        {this.getNavDropdown()}
       </div>
       <div className="container">
 

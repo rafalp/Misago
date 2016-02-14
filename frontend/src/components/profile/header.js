@@ -1,6 +1,7 @@
 import React from 'react';
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
 import FollowButton from 'misago/components/profile/follow-button'; // jshint ignore:line
+import ModerationNav from 'misago/components/profile/moderation/nav'; // jshint ignore:line
 import Status, { StatusIcon, StatusLabel } from 'misago/components/user-status'; // jshint ignore:line
 
 export default class extends React.Component {
@@ -72,11 +73,48 @@ export default class extends React.Component {
     /* jshint ignore:end */
   }
 
+  getEmail() {
+    if (this.props.profile.email) {
+      /* jshint ignore:start */
+      return <li className="user-email">
+        <a href={'mailto:' + this.props.profile.email} className="item-title">
+          {this.props.profile.email}
+        </a>
+      </li>;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
   getFollowButton() {
     if (this.props.profile.acl.can_follow) {
       /* jshint ignore:start */
-      return <FollowButton className='btn btn-aligned'
+      return <FollowButton className="btn btn-aligned hidden-xs hidden-sm"
                            profile={this.props.profile} />;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
+  getModerationButton() {
+    if (this.props.profile.acl.can_moderate) {
+      console.log(this.props.profile.acl);
+      /* jshint ignore:start */
+      return <div className="btn-group btn-aligned hidden-xs hidden-sm">
+        <button className="btn btn-default btn-moderate dropdown-toggle"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+          <span className="material-icon">
+            tonality
+          </span>
+          {gettext("Moderation")}
+        </button>
+        <ModerationNav profile={this.props.profile} />
+      </div>;
       /* jshint ignore:end */
     } else {
       return null;
@@ -96,8 +134,8 @@ export default class extends React.Component {
               <span className="user-name">{this.props.profile.username}</span>
             </h1>
 
-
             {this.getFollowButton()}
+            {this.getModerationButton()}
 
             <button className="btn btn-default btn-aligned btn-icon btn-dropdown-toggle hidden-md hidden-lg"
                     type="button"
@@ -123,6 +161,7 @@ export default class extends React.Component {
                 {this.getUserRank()}
                 {this.getUserTitle()}
                 {this.getJoinedOn()}
+                {this.getEmail()}
               </ul>
 
             </div>

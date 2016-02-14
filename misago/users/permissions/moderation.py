@@ -60,16 +60,15 @@ def build_acl(acl, roles, key_name):
     }
     new_acl.update(acl)
 
-    return algebra.sum_acls(
-            new_acl, roles=roles, key=key_name,
-            can_rename_users=algebra.greater,
-            can_moderate_avatars=algebra.greater,
-            can_moderate_signatures=algebra.greater,
-            can_ban_users=algebra.greater,
-            max_ban_length=algebra.greater_or_zero,
-            can_lift_bans=algebra.greater,
-            max_lifted_ban_length=algebra.greater_or_zero
-            )
+    return algebra.sum_acls(new_acl, roles=roles, key=key_name,
+        can_rename_users=algebra.greater,
+        can_moderate_avatars=algebra.greater,
+        can_moderate_signatures=algebra.greater,
+        can_ban_users=algebra.greater,
+        max_ban_length=algebra.greater_or_zero,
+        can_lift_bans=algebra.greater,
+        max_lifted_ban_length=algebra.greater_or_zero
+    )
 
 
 """
