@@ -41,7 +41,7 @@
         </div>
         {% endif %}
 
-        <form action="{{ url('forum', forum=forum.pk, slug=forum.slug) }}" method="post">
+        <form method="post">
           {{ form_theme.hidden_fields(form) }}
           <input type="hidden" name="origin" value="merge_form">
           <input type="hidden" name="list_action" value="merge">

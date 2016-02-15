@@ -36,7 +36,7 @@
         </div>
         {% endif %}
 
-        <form action="{{ url('thread', thread=thread.pk, slug=thread.slug) }}" method="post">
+        <form method="post">
           {{ form_theme.hidden_fields(form) }}
           <input type="hidden" name="origin" value="thread_form">
           <input type="hidden" name="thread_action" value="move">
