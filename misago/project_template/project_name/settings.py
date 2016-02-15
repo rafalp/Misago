@@ -14,7 +14,7 @@ from misago.conf.defaults import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -89,11 +89,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # You can use those directories to easily customize and add your own
 # assets and templates to your site
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'theme/static'),
+    os.path.join(BASE_DIR, 'theme', 'static'),
 ) + STATICFILES_DIRS
 
 TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'theme/templates'),
+    os.path.join(BASE_DIR, 'theme', 'templates'),
 ) + TEMPLATE_DIRS
 
 
