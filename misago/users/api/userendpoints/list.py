@@ -14,7 +14,7 @@ from misago.core.cache import cache
 from misago.core.shortcuts import get_object_or_404
 from misago.forums.models import Forum
 
-from misago.users.views.lists import get_active_posters_rankig
+from misago.users.activepostersranking import get_active_posters_ranking
 from misago.users.models import Rank
 from misago.users.online.utils import make_users_status_aware
 from misago.users.serializers import UserSerializer, ScoredUserSerializer
@@ -24,7 +24,7 @@ Paginator = ApiPaginator(settings.MISAGO_USERS_PER_PAGE, 4)
 
 
 def active(request):
-    ranking = get_active_posters_rankig()
+    ranking = get_active_posters_ranking()
     make_users_status_aware(
         ranking['users'], request.user.acl, fetch_state=True)
 

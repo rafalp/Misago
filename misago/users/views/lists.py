@@ -1,17 +1,12 @@
-from datetime import timedelta
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.db.models import Count
 from django.shortcuts import redirect, render as django_render
-from django.utils import timezone
 
-from misago.forums.models import Forum
-from misago.core.cache import cache
 from misago.core.shortcuts import get_object_or_404, paginate, pagination_dict
 from misago.core.utils import format_plaintext_for_html
 
+from misago.users.activepostersranking import get_active_posters_ranking
 from misago.users.models import Rank
 from misago.users.pages import users_list
 from misago.users.permissions.profiles import allow_browse_users_list
@@ -78,7 +73,7 @@ def lander(request):
 
 @allow_see_list
 def active_posters(request):
-    ranking = get_active_posters_rankig()
+    ranking = get_active_posters_ranking()
 
     request.frontend_context['USERS'] = {
         'tracked_period': settings.MISAGO_RANKING_LENGTH,
@@ -92,37 +87,6 @@ def active_posters(request):
         'users': ranking['users'],
         'users_count': ranking['users_count']
     })
-
-
-def get_active_posters_rankig():
-    cache_key = 'misago_active_posters_ranking'
-    ranking = cache.get(cache_key, 'nada')
-    if ranking == 'nada':
-        ranking = get_real_active_posts_ranking()
-        cache.set(cache_key, ranking, 18*3600)
-    return ranking
-
-
-def get_real_active_posts_ranking():
-    tracked_period = settings.MISAGO_RANKING_LENGTH
-    tracked_since = timezone.now() - timedelta(days=tracked_period)
-
-    ranked_forums = [forum.pk for forum in Forum.objects.all_forums()]
-
-    User = get_user_model()
-    queryset = User.objects.filter(posts__gt=0)
-    queryset = queryset.filter(post__posted_on__gte=tracked_since,
-                               post__forum__in=ranked_forums)
-    queryset = queryset.annotate(score=Count('post'))
-    queryset = queryset.select_related('user__rank')
-    queryset = queryset.order_by('-score')
-
-    queryset = queryset[:settings.MISAGO_RANKING_SIZE]
-
-    return {
-        'users': [user for user in queryset],
-        'users_count': queryset.count()
-    }
 
 
 @allow_see_list

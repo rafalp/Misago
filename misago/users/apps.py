@@ -9,6 +9,8 @@ class MisagoUsersConfig(AppConfig):
     verbose_name = "Misago Auth"
 
     def ready(self):
+        from misago.users import signals
+
         self.register_default_usercp_pages()
         self.register_default_users_list_pages()
         self.register_default_user_profile_pages()

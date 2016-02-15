@@ -1,0 +1,46 @@
+from datetime import timedelta
+
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.db.models import Count
+from django.utils import timezone
+
+from misago.forums.models import Forum
+from misago.core.cache import cache
+
+
+ACTIVE_POSTERS_CACHE = 'misago_active_posters_ranking'
+
+
+def get_active_posters_ranking():
+    ranking = cache.get(ACTIVE_POSTERS_CACHE, 'nada')
+    if ranking == 'nada':
+        ranking = get_real_active_posts_ranking()
+        cache.set(ACTIVE_POSTERS_CACHE, ranking, 18*3600)
+    return ranking
+
+
+def get_real_active_posts_ranking():
+    tracked_period = settings.MISAGO_RANKING_LENGTH
+    tracked_since = timezone.now() - timedelta(days=tracked_period)
+
+    ranked_forums = [forum.pk for forum in Forum.objects.all_forums()]
+
+    User = get_user_model()
+    queryset = User.objects.filter(posts__gt=0)
+    queryset = queryset.filter(post__posted_on__gte=tracked_since,
+                               post__forum__in=ranked_forums)
+    queryset = queryset.annotate(score=Count('post'))
+    queryset = queryset.select_related('user__rank')
+    queryset = queryset.order_by('-score')
+
+    queryset = queryset[:settings.MISAGO_RANKING_SIZE]
+
+    return {
+        'users': [user for user in queryset],
+        'users_count': queryset.count()
+    }
+
+
+def clear_active_posters_ranking():
+    cache.delete(ACTIVE_POSTERS_CACHE)

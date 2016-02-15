@@ -14,11 +14,9 @@ from misago.acl import get_user_acl
 from misago.acl.models import Role
 from misago.conf import settings
 from misago.core.utils import slugify
-from misago.core.signals import secret_key_changed
 
 from misago.users.models.rank import Rank
 from misago.users import avatars
-from misago.users.signals import delete_user_content, username_changed
 from misago.users.signatures import (is_user_signature_valid,
                                      make_signature_checksum)
 from misago.users.utils import hash_email
@@ -258,6 +256,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return super(User, self).delete(*args, **kwargs)
 
     def delete_content(self):
+        from misago.users.signals import delete_user_content
         delete_user_content.send(sender=self)
 
     @property
@@ -356,6 +355,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                 changed_by = changed_by or self
                 self.record_name_change(
                     changed_by, new_username, old_username)
+
+                from misago.users.signals import username_changed
                 username_changed.send(sender=self)
 
     def record_name_change(self, changed_by, new_username, old_username):
@@ -474,15 +475,3 @@ class AnonymousUser(DjangoAnonymousUser):
 
     def update_acl_key(self):
         raise TypeError("Can't update ACL key on anonymous users")
-
-
-"""
-Signal handlers
-"""
-@receiver(secret_key_changed)
-def update_signatures_checksums(sender, **kwargs):
-    for user in User.objects.iterator():
-        if user.signature:
-            new_checksum = make_signature_checksum(user.signature_parsed, user)
-            user.signature_checksum = new_checksum
-            user.save(update_fields=['signature_checksum'])
