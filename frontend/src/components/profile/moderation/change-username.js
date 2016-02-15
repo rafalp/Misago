@@ -3,6 +3,7 @@ import Button from 'misago/components/button'; // jshint ignore:line
 import Form from 'misago/components/form';
 import FormGroup from 'misago/components/form-group'; // jshint ignore:line
 import Loader from 'misago/components/modal-loader'; // jshint ignore:line
+import ModalMessage from 'misago/components/profile/moderation/modal-message'; // jshint ignore:line
 import misago from 'misago/index';
 import { addNameChange } from 'misago/reducers/username-history'; // jshint ignore:line
 import { updateUsername } from 'misago/reducers/users'; // jshint ignore:line
@@ -72,7 +73,7 @@ export default class extends Form {
     snackbar.success(gettext("Username has been changed."));
   }
 
-  getForm() {
+  getFormBody() {
     /* jshint ignore:start */
     return <form onSubmit={this.handleSubmit}>
       <div className="modal-body">
@@ -97,36 +98,25 @@ export default class extends Form {
     /* jshint ignore:end */
   }
 
+  getModalBody() {
+    if (this.state.error) {
+      /* jshint ignore:start */
+      return <ModalMessage message={this.state.error} />
+      /* jshint ignore:end */
+    } else if (this.state.isLoaded) {
+      return this.getFormBody();
+    } else {
+      /* jshint ignore:start */
+      return <Loader />;
+      /* jshint ignore:end */
+    }
+  }
+
   getClassName() {
     if (this.state.error) {
       return "modal-dialog modal-message modal-rename-user";
     } else {
       return "modal-dialog modal-rename-user";
-    }
-  }
-
-  getBody() {
-    if (this.state.error) {
-      /* jshint ignore:start */
-      return <div className="modal-body">
-        <div className="message-icon">
-          <span className="material-icon">
-            remove_circle_outline
-          </span>
-        </div>
-        <div className="message-body">
-          <p className="lead">
-            {this.state.error}
-          </p>
-        </div>
-      </div>;
-      /* jshint ignore:end */
-    } else if (this.state.isLoaded) {
-      return this.getForm();
-    } else {
-      /* jshint ignore:start */
-      return <Loader />;
-      /* jshint ignore:end */
     }
   }
 
@@ -142,7 +132,7 @@ export default class extends Form {
           </button>
           <h4 className="modal-title">{gettext("Change username")}</h4>
         </div>
-        {this.getBody()}
+        {this.getModalBody()}
       </div>
     </div>;
     /* jshint ignore:end */

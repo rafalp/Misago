@@ -3,6 +3,7 @@ import Button from 'misago/components/button'; // jshint ignore:line
 import Form from 'misago/components/form';
 import FormGroup from 'misago/components/form-group'; // jshint ignore:line
 import Loader from 'misago/components/modal-loader'; // jshint ignore:line
+import ModalMessage from 'misago/components/profile/moderation/modal-message'; // jshint ignore:line
 import YesNoSwitch from 'misago/components/yes-no-switch'; // jshint ignore:line
 import misago from 'misago/index'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
@@ -129,7 +130,7 @@ export default class extends Form {
     /* jshint ignore:end */
   }
 
-  getDeleted() {
+  getDeletedBody() {
     /* jshint ignore:start */
     return <div className="modal-body">
       <div className="message-icon">
@@ -151,33 +152,14 @@ export default class extends Form {
     /* jshint ignore:end */
   }
 
-  getClassName() {
-    if (this.state.error || this.state.isDeleted) {
-      return "modal-dialog modal-message modal-delete-account";
-    } else {
-      return "modal-dialog modal-delete-account";
-    }
-  }
-
-  getBody() {
+  getModalBody() {
     if (this.state.error) {
       /* jshint ignore:start */
-      return <div className="modal-body">
-        <div className="message-icon">
-          <span className="material-icon">
-            remove_circle_outline
-          </span>
-        </div>
-        <div className="message-body">
-          <p className="lead">
-            {this.state.error}
-          </p>
-        </div>
-      </div>;
+      return <ModalMessage message={this.state.error} />
       /* jshint ignore:end */
     } else if (this.state.isLoaded) {
       if (this.state.isDeleted) {
-        return this.getDeleted();
+        return this.getDeletedBody();
       } else {
         return this.getForm();
       }
@@ -185,6 +167,14 @@ export default class extends Form {
       /* jshint ignore:start */
       return <Loader />;
       /* jshint ignore:end */
+    }
+  }
+
+  getClassName() {
+    if (this.state.error || this.state.isDeleted) {
+      return "modal-dialog modal-message modal-delete-account";
+    } else {
+      return "modal-dialog modal-delete-account";
     }
   }
 
@@ -200,7 +190,7 @@ export default class extends Form {
           </button>
           <h4 className="modal-title">{gettext("Delete user account")}</h4>
         </div>
-        {this.getBody()}
+        {this.getModalBody()}
       </div>
     </div>;
     /* jshint ignore:end */
