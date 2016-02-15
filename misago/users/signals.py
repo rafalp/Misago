@@ -33,6 +33,8 @@ def recache_active_users_list_on_active_user_delete(sender, **kwargs):
 from misago.core.signals import secret_key_changed
 @receiver(secret_key_changed)
 def update_signatures_checksums(sender, **kwargs):
+    User = get_user_model()
+
     for user in User.objects.iterator():
         if user.signature:
             new_checksum = make_signature_checksum(user.signature_parsed, user)
