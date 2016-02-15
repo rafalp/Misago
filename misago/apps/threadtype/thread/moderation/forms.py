@@ -32,13 +32,12 @@ def get_thread_from_url(request, thread_url):
 
         try:
             thread_url = thread_url[len(settings.BOARD_ADDRESS):]
+
             match = resolve(thread_url)
             if not match.url_name.startswith('thread'):
                 raise forms.ValidationError(_("This is not a correct thread URL."))
             thread = Thread.objects.get(pk=match.kwargs['thread'])
             request.acl.threads.allow_thread_view(request.user, thread)
-            if thread.pk == self.thread.pk:
-                raise forms.ValidationError(_("New thread is same as current one."))
             return thread
         except (Http404, KeyError):
             raise forms.ValidationError(_("This is not a correct thread URL."))
@@ -58,5 +57,9 @@ class MovePostsForm(Form, ValidateThreadNameMixin):
                                                     help_text=_("To select new thread, simply copy and paste here its link."))
 
     def clean_thread_url(self):
-        return get_thread_from_url(
-            self.request, self.cleaned_data['thread_url'])
+        thread = get_thread_from_url(self.request, self.cleaned_data['thread_url'])
+
+        if thread.pk == self.thread.pk:
+            raise forms.ValidationError(_("New thread is same as current one."))
+
+        return thread
