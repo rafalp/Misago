@@ -71,7 +71,7 @@ ACL tests
 def allow_delete_user(user, target):
     newer_than = user.acl['can_delete_users_newer_than']
     less_posts_than = user.acl['can_delete_users_with_less_posts_than']
-    if not (newer_than or less_posts_than):
+    if not newer_than and not less_posts_than:
         raise PermissionDenied(_("You can't delete users."))
 
     if user.pk == target.pk:

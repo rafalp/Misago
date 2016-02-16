@@ -20,7 +20,7 @@ Fields
 class YesNoSwitchBase(TypedChoiceField):
     def prepare_value(self, value):
         """normalize bools to binary 1/0 so field works on them too"""
-        return 1 if value in [True, 'True', 1, '1'] else 0
+        return value in (True, 'True', 'true', 1, '1')
 
     def clean(self, value):
         return self.prepare_value(value)
@@ -103,7 +103,7 @@ class AutoStripWhitespacesMixin(object):
             if (field.__class__ in TEXT_BASED_FIELDS and
                     not name in self.autostrip_exclude):
                 try:
-                    self.data[name] = self.data[name].strip()
+                    self.data[name] = (self.data[name] or '').strip()
                 except KeyError:
                     pass
         return super(AutoStripWhitespacesMixin, self).full_clean()

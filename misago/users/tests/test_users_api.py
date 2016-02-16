@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib.auth import get_user_model
 
 from misago.acl.testutils import override_acl
@@ -5,6 +7,7 @@ from misago.conf import settings
 from misago.core import threadstore
 from misago.core.cache import cache
 from misago.forums.models import Forum
+from misago.threads.models import Thread, Post
 from misago.threads.testutils import post_thread
 
 from misago.users.models import Rank
@@ -291,3 +294,155 @@ class UserFollowTests(AuthenticatedUserTestCase):
         self.assertEqual(followed.following, 0)
         self.assertEqual(followed.follows.count(), 0)
         self.assertEqual(followed.followed_by.count(), 0)
+
+
+class UserDeleteTests(AuthenticatedUserTestCase):
+    """
+    tests for user delete RPC (POST to /api/users/1/delete/)
+    """
+    def setUp(self):
+        super(UserDeleteTests, self).setUp()
+
+        User = get_user_model()
+        self.other_user = User.objects.create_user(
+            "OtherUser", "other@user.com", "pass123")
+
+        self.link = '/api/users/%s/delete/' % self.other_user.pk
+
+        self.threads = Thread.objects.count()
+        self.posts = Post.objects.count()
+
+        self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
+
+        post_thread(self.forum, poster=self.other_user)
+        self.other_user.posts = 1
+        self.other_user.threads = 1
+        self.other_user.save()
+
+    def test_delete_no_permission(self):
+        """raises 403 error when no permission to delete"""
+        override_acl(self.user, {
+            'can_delete_users_newer_than': 0,
+            'can_delete_users_with_less_posts_than': 0,
+        })
+
+        response = self.client.post(self.link)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("can't delete users", response.content)
+
+    def test_delete_too_many_posts(self):
+        """raises 403 error when user has too many posts"""
+        override_acl(self.user, {
+            'can_delete_users_newer_than': 0,
+            'can_delete_users_with_less_posts_than': 5,
+        })
+
+        self.other_user.posts = 6
+        self.other_user.save()
+
+        response = self.client.post(self.link)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("can't delete users", response.content)
+
+    def test_delete_too_many_posts(self):
+        """raises 403 error when user has too many posts"""
+        override_acl(self.user, {
+            'can_delete_users_newer_than': 0,
+            'can_delete_users_with_less_posts_than': 5,
+        })
+
+        self.other_user.posts = 6
+        self.other_user.save()
+
+        response = self.client.post(self.link)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("can't delete users", response.content)
+        self.assertIn("made more than 5 posts", response.content)
+
+    def test_delete_too_old_member(self):
+        """raises 403 error when user is too old"""
+        override_acl(self.user, {
+            'can_delete_users_newer_than': 5,
+            'can_delete_users_with_less_posts_than': 0,
+        })
+
+        self.other_user.joined_on -= timedelta(days=6)
+        self.other_user.save()
+
+        response = self.client.post(self.link)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("can't delete users", response.content)
+        self.assertIn("members for more than 5 days", response.content)
+
+    def test_delete_self(self):
+        """raises 403 error when attempting to delete oneself"""
+        override_acl(self.user, {
+            'can_delete_users_newer_than': 10,
+            'can_delete_users_with_less_posts_than': 10,
+        })
+
+        response = self.client.post('/api/users/%s/delete/' % self.user.pk)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("can't delete yourself", response.content)
+
+    def test_delete_admin(self):
+        """raises 403 error when attempting to delete admin"""
+        override_acl(self.user, {
+            'can_delete_users_newer_than': 10,
+            'can_delete_users_with_less_posts_than': 10,
+        })
+
+        self.other_user.is_staff = True
+        self.other_user.save()
+
+        response = self.client.post(self.link)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("can't delete administrators", response.content)
+
+    def test_delete_superadmin(self):
+        """raises 403 error when attempting to delete superadmin"""
+        override_acl(self.user, {
+            'can_delete_users_newer_than': 10,
+            'can_delete_users_with_less_posts_than': 10,
+        })
+
+        self.other_user.is_superuser = True
+        self.other_user.save()
+
+        response = self.client.post(self.link)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("can't delete administrators", response.content)
+
+    def test_delete_with_content(self):
+        """returns 200 and deletes user with content"""
+        override_acl(self.user, {
+            'can_delete_users_newer_than': 10,
+            'can_delete_users_with_less_posts_than': 10,
+        })
+
+        response = self.client.post(self.link, data={'with_content': True})
+        self.assertEqual(response.status_code, 200)
+
+        User = get_user_model()
+        with self.assertRaises(User.DoesNotExist):
+            User.objects.get(pk=self.other_user.pk)
+
+        self.assertEqual(Thread.objects.count(), self.threads)
+        self.assertEqual(Post.objects.count(), self.posts)
+
+    def test_delete_without_content(self):
+        """returns 200 and deletes user without content"""
+        override_acl(self.user, {
+            'can_delete_users_newer_than': 10,
+            'can_delete_users_with_less_posts_than': 10,
+        })
+
+        response = self.client.post(self.link, data={'with_content': False})
+        self.assertEqual(response.status_code, 200)
+
+        User = get_user_model()
+        with self.assertRaises(User.DoesNotExist):
+            User.objects.get(pk=self.other_user.pk)
+
+        self.assertEqual(Thread.objects.count(), self.threads + 1)
+        self.assertEqual(Post.objects.count(), self.posts + 1)

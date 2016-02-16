@@ -98,3 +98,120 @@ class UserUsernameTests(AuthenticatedUserTestCase):
 
         self.assertEqual(self.user.namechanges.last().new_username,
                          new_username)
+
+
+class UserUsernameModerationTests(AuthenticatedUserTestCase):
+    """
+    tests for moderate username RPC (/api/users/1/moderate-username/)
+    """
+    def setUp(self):
+        super(UserUsernameModerationTests, self).setUp()
+
+        User = get_user_model()
+        self.other_user = User.objects.create_user(
+            "OtherUser", "other@user.com", "pass123")
+
+        self.link = '/api/users/%s/moderate-username/' % self.other_user.pk
+
+    def test_no_permission(self):
+        """no permission to moderate avatar"""
+        override_acl(self.user, {
+            'can_rename_users': 0,
+        })
+
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("can't rename users", response.content)
+
+        override_acl(self.user, {
+            'can_rename_users': 0,
+        })
+
+        response = self.client.post(self.link)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("can't rename users", response.content)
+
+    def test_moderate_username(self):
+        """moderate username"""
+        override_acl(self.user, {
+            'can_rename_users': 1,
+        })
+
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+
+        options = json.loads(response.content)
+        self.assertEqual(options['length_min'],
+                         settings.username_length_min)
+        self.assertEqual(options['length_max'],
+                         settings.username_length_max)
+
+        override_acl(self.user, {
+            'can_rename_users': 1,
+        })
+
+        response = self.client.post(self.link, json.dumps({
+                'username': '',
+            }),
+            content_type="application/json")
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("Enter new username", response.content)
+
+        override_acl(self.user, {
+            'can_rename_users': 1,
+        })
+
+        response = self.client.post(self.link, json.dumps({
+                'username': '$$$',
+            }),
+            content_type="application/json")
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(
+            "Username can only contain latin alphabet letters and digits.",
+            response.content)
+
+        override_acl(self.user, {
+            'can_rename_users': 1,
+        })
+
+        response = self.client.post(self.link, json.dumps({
+                'username': 'a',
+            }),
+            content_type="application/json")
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(
+            "Username must be at least 3 characters long.", response.content)
+
+        override_acl(self.user, {
+            'can_rename_users': 1,
+        })
+
+        response = self.client.post(self.link, json.dumps({
+                'username': 'BobBoberson',
+            }),
+            content_type="application/json")
+
+        self.assertEqual(response.status_code, 200)
+
+        User = get_user_model()
+        other_user = User.objects.get(pk=self.other_user.pk)
+
+        self.assertEqual('BobBoberson', other_user.username)
+        self.assertEqual('bobboberson', other_user.slug)
+
+        options = json.loads(response.content)
+        self.assertEqual(options['username'], other_user.username)
+        self.assertEqual(options['slug'], other_user.slug)
+
+    def test_moderate_own_username(self):
+        """moderate own username"""
+        override_acl(self.user, {
+            'can_rename_users': 1,
+        })
+
+        response = self.client.get(
+            '/api/users/%s/moderate-username/' % self.user.pk)
+        self.assertEqual(response.status_code, 200)
