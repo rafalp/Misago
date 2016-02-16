@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.dispatch import receiver, Signal
 
 
@@ -17,7 +18,6 @@ def handle_name_change(sender, **kwargs):
                                     canceler_slug=sender.slug)
 
 
-from django.contrib.auth import get_user_model
 from django.db.models.signals import pre_delete
 @receiver(pre_delete, sender=get_user_model())
 def recache_active_users_list_on_active_user_delete(sender, **kwargs):
