@@ -8,7 +8,7 @@ from django.test.utils import setup_test_environment
 
 
 def runtests():
-    test_runner_path = os.path.dirname(__file__)
+    test_runner_path = os.path.dirname(os.path.abspath(__file__))
     project_template_path = os.path.join(
         test_runner_path, 'misago/project_template')
     project_package_path = os.path.join(
@@ -17,25 +17,23 @@ def runtests():
     test_project_path = os.path.join(test_runner_path, "testproject")
     if not os.path.exists(test_project_path):
         shutil.copytree(project_template_path, test_project_path)
-        for filename in os.listdir(project_package_path):
-            src_path = os.path.join(project_package_path, filename)
-            dst_path = os.path.join(test_project_path, filename)
-            shutil.copy2(src_path, dst_path)
 
-        settings_path = os.path.join(test_project_path, "settings.py")
+        module_init_path = os.path.join(test_project_path, '__init__.py')
+        with open(module_init_path, "w") as py_file:
+            py_file.write('')
+
+        settings_path = os.path.join(
+            test_project_path, 'project_name', 'settings.py')
+
         with open(settings_path, "r") as py_file:
             settings_file = py_file.read()
 
             # Do some configuration magic
-
             settings_file = settings_file.replace(
-                "os.path.dirname(os.path.dirname(__file__))",
-                "os.path.dirname(__file__)")
+                '{{ project_name }}', 'testproject.project_name')
+            settings_file = settings_file.replace(
+                '{{ secret_key }}', 't3stpr0j3ct')
 
-            settings_file = settings_file.replace("{{ project_name }}",
-                                                   "testproject")
-            settings_file = settings_file.replace("{{ secret_key }}",
-                                                  "t3stpr0j3ct")
             settings_file += """
 # disable account validation via API's
 MISAGO_NEW_REGISTRATIONS_VALIDATORS = ()
@@ -90,7 +88,8 @@ DATABASES = {
         with open(settings_path, "w") as py_file:
             py_file.write(settings_file)
 
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "testproject.settings")
+    os.environ.setdefault(
+        "DJANGO_SETTINGS_MODULE", "testproject.project_name.settings")
 
     setup()
     setup_test_environment()
@@ -102,7 +101,7 @@ DATABASES = {
     else:
         args = []
 
-    verbosity = 1  
+    verbosity = 1
     if '--verbose' in args:
         verbosity = 2
         args.remove('--verbose')
