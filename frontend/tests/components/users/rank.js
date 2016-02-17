@@ -342,7 +342,7 @@ describe("Rank Users List Root", function() {
     };
 
     $.mockjax({
-      url: '/test-api/users/?list=rank&rank=forum-team&page=1',
+      url: '/test-api/users/?rank=forum-team&page=1',
       status: 200,
       responseText: data
     });
@@ -407,7 +407,7 @@ describe("Rank Users List Root", function() {
     };
 
     $.mockjax({
-      url: '/test-api/users/?list=rank&rank=forum-team&page=1',
+      url: '/test-api/users/?rank=forum-team&page=1',
       status: 200,
       responseText: data
     });
@@ -445,7 +445,7 @@ describe("Rank Users List Root", function() {
 
   it("handles backend error", function(done) {
     $.mockjax({
-      url: '/test-api/users/?list=rank&rank=forum-team&page=1',
+      url: '/test-api/users/?rank=forum-team&page=1',
       status: 500
     });
 

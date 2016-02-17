@@ -32,9 +32,9 @@ export default class extends React.Component {
 
   getLabel() {
     if (this.props.profile.is_followed) {
-      return gettext('Following');
+      return gettext("Following");
     } else {
-      return gettext('Follow');
+      return gettext("Follow");
     }
   }
 
@@ -62,11 +62,11 @@ export default class extends React.Component {
       });
 
       store.dispatch(patchProfile(data));
-    }, function(rejection) {
-      snackbar.apiError(rejection);
+    }, (rejection) => {
       this.setState({
         isLoading: false
       });
+      snackbar.apiError(rejection);
     });
   };
   /* jshint ignore:end */
