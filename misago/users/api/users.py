@@ -1,5 +1,3 @@
-from distutils.util import strtobool
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
@@ -189,7 +187,7 @@ class UserViewSet(viewsets.GenericViewSet):
             with transaction.atomic():
                 profile.lock()
 
-                if strtobool(request.data.get('with_content', '')):
+                if request.data.get('with_content'):
                     profile.delete_content()
                 else:
                     forums_to_sync = set()

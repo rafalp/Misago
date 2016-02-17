@@ -1,4 +1,5 @@
 from datetime import timedelta
+import json
 
 from django.contrib.auth import get_user_model
 
@@ -420,7 +421,9 @@ class UserDeleteTests(AuthenticatedUserTestCase):
             'can_delete_users_with_less_posts_than': 10,
         })
 
-        response = self.client.post(self.link, data={'with_content': True})
+        response = self.client.post(self.link, json.dumps({
+            'with_content': True
+        }), content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
         User = get_user_model()
@@ -437,7 +440,9 @@ class UserDeleteTests(AuthenticatedUserTestCase):
             'can_delete_users_with_less_posts_than': 10,
         })
 
-        response = self.client.post(self.link, data={'with_content': False})
+        response = self.client.post(self.link, json.dumps({
+            'with_content': False
+        }), content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
         User = get_user_model()
