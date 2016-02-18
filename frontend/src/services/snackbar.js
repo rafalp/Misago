@@ -48,26 +48,18 @@ export class Snackbar {
   // shorthand for api errors
 
   apiError(rejection) {
-    let message = gettext("Unknown error has occured.");
+    let message = rejection.detail;
 
-    if (rejection.status === 0) {
-      message = rejection.detail;
-    }
-
-    if (rejection.status === 400 && rejection.detail) {
-      message = rejection.detail;
-    }
-
-    if (rejection.status === 403) {
-      message = rejection.detail;
-      if (message === "Permission denied") {
-        message = gettext(
-          "You don't have permission to perform this action.");
+    if (!message) {
+      if (rejection.status === 404) {
+        message = gettext("Action link is invalid.");
+      } else {
+        message = gettext("Unknown error has occured.");
       }
     }
 
-    if (rejection.status === 404) {
-      message = gettext("Action link is invalid.");
+    if (rejection.status === 403 && message === "Permission denied") {
+      message = gettext("You don't have permission to perform this action.");
     }
 
     this.error(message);

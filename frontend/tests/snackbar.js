@@ -149,7 +149,7 @@ describe("Snackbar", function() {
 
     assert.deepEqual(store.getState().snackbar, {
       type: 'error',
-      message: "Action link is invalid.",
+      message: "NOT FOUND",
       isVisible: true
     }, "service set not found message in store");
   });

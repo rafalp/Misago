@@ -46,6 +46,16 @@ export class Ajax {
             rejection.detail = gettext("Lost connection with application.");
           }
 
+          if (rejection.status === 404) {
+            if (!rejection.detail || rejection.detail === 'NOT FOUND') {
+              rejection.detail = gettext("Action link is invalid.");
+            }
+          }
+
+          if (rejection.status === 500 && !rejection.detail) {
+            rejection.detail = gettext("Unknown error has occured.");
+          }
+
           rejection.statusText = jqXHR.statusText;
 
           reject(rejection);
@@ -114,6 +124,16 @@ export class Ajax {
 
           if (rejection.status === 0) {
             rejection.detail = gettext("Lost connection with application.");
+          }
+
+          if (rejection.status === 404) {
+            if (!rejection.detail || rejection.detail === 'NOT FOUND') {
+              rejection.detail = gettext("Action link is invalid.");
+            }
+          }
+
+          if (rejection.status === 500 && !rejection.detail) {
+            rejection.detail = gettext("Unknown error has occured.");
           }
 
           rejection.statusText = jqXHR.statusText;
