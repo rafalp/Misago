@@ -1,11 +1,15 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
 import AvatarControls from 'misago/components/profile/moderation/avatar-controls'; // jshint ignore:line
+import reducer from 'misago/reducers/profile';
 import snackbar from 'misago/services/snackbar';
+import store from 'misago/services/store';
 import * as testUtils from 'misago/utils/test-utils';
 
 let snackbarStore = null;
 let profileMock = {
+  avatar_hash: 'original_hash',
+
   is_followed: false,
   followers: 0,
 
@@ -18,6 +22,22 @@ describe("User Profile Moderation Avatar Controls", function() {
   beforeEach(function() {
     snackbarStore = testUtils.snackbarStoreMock();
     snackbar.init(snackbarStore);
+
+    store.constructor();
+    store.addReducer('profile', reducer, profileMock);
+
+    store.addReducer('auth', function(state, action) {
+      if (action || true) {
+        return testUtils.mockUser();
+      }
+    }, {});
+    store.addReducer('tick', function(state, action) {
+      if (action || true) {
+        return {'tick': 123};
+      }
+    }, {});
+
+    store.init();
   });
 
   afterEach(function() {
@@ -84,6 +104,80 @@ describe("User Profile Moderation Avatar Controls", function() {
         "error message renders");
 
       done();
+    });
+  });
+
+  it("handles failed submission", function(done) {
+    $.mockjax({
+      url: profileMock.api_url.moderate_avatar,
+      type: 'GET',
+      status: 200,
+      responseText: {
+        is_avatar_locked: false,
+        avatar_lock_user_message: null,
+        avatar_lock_staff_message: null
+      }
+    });
+
+    $.mockjax({
+      url: profileMock.api_url.moderate_avatar,
+      type: 'POST',
+      status: 400,
+      responseText: {
+        detail: "Can't do it now!"
+      }
+    });
+
+    /* jshint ignore:start */
+    testUtils.render(<AvatarControls profile={profileMock} />);
+    /* jshint ignore:end */
+
+    snackbarStore.callback(function(message) {
+      assert.equal(message.message, "Can't do it now!",
+        "Rejection message is shown in snackbar.");
+
+      done();
+    });
+
+    testUtils.onElement('#test-mount form', function() {
+      testUtils.simulateSubmit('#test-mount form');
+    });
+  });
+
+  it("handles submission", function(done) {
+    $.mockjax({
+      url: profileMock.api_url.moderate_avatar,
+      type: 'GET',
+      status: 200,
+      responseText: {
+        is_avatar_locked: false,
+        avatar_lock_user_message: null,
+        avatar_lock_staff_message: null
+      }
+    });
+
+    $.mockjax({
+      url: profileMock.api_url.moderate_avatar,
+      type: 'POST',
+      status: 200,
+      responseText: {
+        avatar_hash: 'yolo'
+      }
+    });
+
+    /* jshint ignore:start */
+    testUtils.render(<AvatarControls profile={profileMock} />);
+    /* jshint ignore:end */
+
+    testUtils.onElement('#test-mount form', function() {
+      testUtils.simulateSubmit('#test-mount form');
+
+      window.setTimeout(function() {
+        assert.equal(store.getState().profile.avatar_hash, 'yolo',
+          "profile's avatar hash was updated");
+
+        done();
+      }, 200);
     });
   });
 });

@@ -1,5 +1,6 @@
 import React from 'react';
 import { required } from 'misago/utils/validators';
+import snackbar from 'misago/services/snackbar'; // jshint ignore:line
 
 let validateRequired = required();
 
@@ -129,7 +130,7 @@ export default class extends React.Component {
   }
 
   handleError(rejection) {
-    return;
+    snackbar.apiError(rejection);
   }
 
   handleSubmit = (event) => {
