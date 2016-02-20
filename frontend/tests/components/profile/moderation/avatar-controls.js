@@ -8,6 +8,7 @@ import * as testUtils from 'misago/utils/test-utils';
 
 let snackbarStore = null;
 let profileMock = {
+  id: 242,
   avatar_hash: 'original_hash',
 
   is_followed: false,

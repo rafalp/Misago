@@ -49,7 +49,7 @@ export default class extends Form {
           countdown: this.state.countdown - 1,
         });
         this.countdown();
-      } else {
+      } else if (!this.state.confirm) {
         this.setState({
           confirm: true
         });
