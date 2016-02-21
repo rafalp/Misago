@@ -16,7 +16,7 @@
           You have {{ users }} followers.
         {% endblocktrans %}
       {% else %}
-        {% blocktrans trimmed count username=profile users=count %}
+        {% blocktrans trimmed count users=count with username=profile %}
           {{ username }} has {{ users }} follower.
         {% plural %}
           {{ username }} has {{ users }} followers.

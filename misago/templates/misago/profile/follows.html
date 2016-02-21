@@ -16,7 +16,7 @@
           You are following {{ users }} users.
         {% endblocktrans %}
       {% else %}
-        {% blocktrans trimmed count username=profile users=count %}
+        {% blocktrans trimmed count users=count with username=profile %}
           {{ username }} is following {{ users }} user.
         {% plural %}
           {{ username }} is following {{ users }} users.
