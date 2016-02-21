@@ -9,13 +9,21 @@
 <div class="profile-username-history">
 
   <nav class="toolbar">
-    <p class="toolbar-left">
-      {% blocktrans trimmed count changes=count %}
-        Found {{ changes }} username change.
-      {% plural %}
-        Found {{ changes }} username changes.
-      {% endblocktrans %}
-    </p>
+    <h3 class="toolbar-left">
+      {% if is_authenticated_user %}
+        {% blocktrans trimmed count changes=count %}
+          Your username was changed {{ changes }} time.
+        {% plural %}
+          Your username was changed {{ changes }} times.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed count changes=count with username=profile %}
+          {{ username }}'s username was changed {{ changes }} time.
+        {% plural %}
+          {{ username }}'s username was changed {{ changes }} times.
+        {% endblocktrans %}
+      {% endif %}
+    </h3>
   </nav>
 
   <div class="username-history ui-ready">

@@ -7,6 +7,24 @@
 {% block section %}
 <div class="profile-follows">
 
+  <nav class="toolbar">
+    <h3 class="toolbar-left">
+      {% if is_authenticated_user %}
+        {% blocktrans trimmed count users=count %}
+          You are following {{ users }} user.
+        {% plural %}
+          You are following {{ users }} users.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans trimmed count username=profile users=count %}
+          {{ username }} is following {{ users }} user.
+        {% plural %}
+          {{ username }} is following {{ users }} users.
+        {% endblocktrans %}
+      {% endif %}
+    </h3>
+  </nav>
+
   {% for row in follows|batch:2 %}
     <div class="row">
       {% for user in row %}

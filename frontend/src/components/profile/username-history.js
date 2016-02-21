@@ -121,7 +121,9 @@ export default class extends React.Component {
   /* jshint ignore:end */
 
   getLabel() {
-    if (this.state.isLoaded) {
+    if (!this.state.isLoaded) {
+      return gettext('Loading...');
+    } else if (this.state.search) {
       let message = ngettext(
         "Found %(changes)s username change.",
         "Found %(changes)s username changes.",
@@ -130,8 +132,25 @@ export default class extends React.Component {
       return interpolate(message, {
         'changes': this.state.count
       }, true);
+    } else if (this.props.profile.id === this.props.user.id) {
+      let message = ngettext(
+        "Your username was changed %(changes)s time.",
+        "Your username was changed %(changes)s times.",
+        this.state.count);
+
+      return interpolate(message, {
+        'changes': this.state.count
+      }, true);
     } else {
-      return gettext('Loading...');
+      let message = ngettext(
+        "%(username)s's username was changed %(changes)s time.",
+        "%(username)s's username was changed %(changes)s times.",
+        this.state.count);
+
+      return interpolate(message, {
+        'username': this.profile.username,
+        'changes': this.state.count
+      }, true);
     }
   }
 
@@ -169,9 +188,9 @@ export default class extends React.Component {
     return <div className="profile-username-history">
 
       <nav className="toolbar">
-        <p className="toolbar-left">
+        <h3 className="toolbar-left">
           {this.getLabel()}
-        </p>
+        </h3>
 
         <input type="text"
                className="form-control toolbar-right"
