@@ -17,17 +17,20 @@ from misago.forums.models import Forum
 from misago.threads.moderation.posts import hide_post
 from misago.threads.moderation.threads import hide_thread
 
+from misago.users.bans import get_user_ban
 from misago.users.forms.options import ForumOptionsForm
 from misago.users.online.utils import get_user_status
 from misago.users.permissions.delete import allow_delete_user
 from misago.users.permissions.moderation import (allow_rename_user,
                                                  allow_moderate_avatar)
 from misago.users.permissions.profiles import (allow_browse_users_list,
-                                               allow_follow_user)
+                                               allow_follow_user,
+                                               allow_see_ban_details)
 
 from misago.users.rest_permissions import (BasePermission,
     IsAuthenticatedOrReadOnly, UnbannedAnonOnly)
-from misago.users.serializers import UserSerializer, UserProfileSerializer
+from misago.users.serializers import (UserSerializer, UserProfileSerializer,
+                                      BanDetailsSerializer)
 
 from misago.users.api.userendpoints.list import list_endpoint
 from misago.users.api.userendpoints.avatar import (avatar_endpoint,
@@ -163,6 +166,17 @@ class UserViewSet(viewsets.GenericViewSet):
                 'is_followed': followed,
                 'followers': profile_followers
             })
+
+    @detail_route()
+    def ban(self, request, pk=None):
+        profile = get_object_or_404(self.get_queryset(), id=pk)
+        allow_see_ban_details(request.user, profile)
+
+        ban = get_user_ban(profile)
+        if (ban):
+            return Response(BanDetailsSerializer(ban).data)
+        else:
+            return Response({})
 
     @detail_route(methods=['get', 'post'])
     def moderate_avatar(self, request, pk=None):

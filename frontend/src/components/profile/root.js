@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
+import BanDetails from 'misago/components/profile/ban-details'; // jshint ignore:line
 import Header from 'misago/components/profile/Header'; // jshint ignore:line
 import ModerationNav from 'misago/components/profile/moderation/nav'; // jshint ignore:line
 import { SideNav, CompactNav } from 'misago/components/profile/navs'; // jshint ignore:line
@@ -177,7 +178,7 @@ const COMPONENTS = {
   'followers': Placeholder,
   'follows': Placeholder,
   'username-history': Placeholder,
-  'ban-details': Placeholder
+  'ban-details': BanDetails
 };
 
 export function paths() {

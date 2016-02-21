@@ -7,7 +7,20 @@ from misago.core.utils import format_plaintext_for_html
 from misago.users.models import Ban, BAN_IP
 
 
-__all__ = ['BanMessageSerializer']
+__all__ = [
+    'BanMessageSerializer',
+    'BanDetailsSerializer',
+]
+
+
+def serialize_message(message):
+    if message:
+        return {
+            'plain': message,
+            'html': format_plaintext_for_html(message)
+        }
+    else:
+        return None
 
 
 class BanMessageSerializer(serializers.ModelSerializer):
@@ -25,7 +38,19 @@ class BanMessageSerializer(serializers.ModelSerializer):
         else:
             message = _("You are banned.")
 
-        return {
-            'plain': message,
-            'html': format_plaintext_for_html(message)
-        }
+        return serialize_message(message)
+
+
+class BanDetailsSerializer(serializers.ModelSerializer):
+    user_message = serializers.SerializerMethodField()
+    staff_message = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Ban
+        fields = ('user_message', 'staff_message', 'expires_on')
+
+    def get_user_message(self, obj):
+        return serialize_message(obj.user_message)
+
+    def get_staff_message(self, obj):
+        return serialize_message(obj.staff_message)

@@ -235,6 +235,7 @@ class UserProfileSerializer(UserSerializer):
         return {
             'root': reverse('misago:api:user-detail', kwargs={'pk': obj.pk}),
             'follow': reverse('misago:api:user-follow', kwargs={'pk': obj.pk}),
+            'ban': reverse('misago:api:user-ban', kwargs={'pk': obj.pk}),
             'moderate_avatar': reverse(
                 'misago:api:user-moderate-avatar',kwargs={'pk': obj.pk}),
             'moderate_username': reverse(

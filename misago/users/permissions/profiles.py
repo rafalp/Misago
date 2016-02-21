@@ -150,3 +150,10 @@ def allow_block_user(user, target):
         message = _("%(user)s can't be blocked.") % {'user': target.username}
         raise PermissionDenied(message)
 can_block_user = return_boolean(allow_block_user)
+
+
+@authenticated_only
+def allow_see_ban_details(user, target):
+    if not user.acl['can_see_ban_details']:
+        raise PermissionDenied(_("You can't see users bans details."))
+can_see_ban_details = return_boolean(allow_see_ban_details)

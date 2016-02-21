@@ -27,12 +27,12 @@ describe("RegisterButton", function() {
     testUtils.unmountComponents();
   });
 
-  it('renders', function() {
+  it("renders", function() {
     let element = $('#test-mount button');
     assert.ok(element.length, "component rendered");
   });
 
-  it('alerts about closed registration', function(done) {
+  it("alerts about closed registration", function(done) {
     misago._context = {
       SETTINGS: {
         account_activation: 'closed'
@@ -50,7 +50,7 @@ describe("RegisterButton", function() {
     testUtils.simulateClick('#test-mount button');
   });
 
-  it('opens registration modal', function(done) {
+  it("opens registration modal", function(done) {
     misago._context = {
       SETTINGS: {
         captcha_type: 'no',

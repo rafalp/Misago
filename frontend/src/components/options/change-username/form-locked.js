@@ -1,4 +1,5 @@
 import React from 'react';
+import PanelMessage from 'misago/components/panel-message'; // jshint ignore:line
 
 export default class extends React.Component {
   getHelpText() {
@@ -17,23 +18,10 @@ export default class extends React.Component {
       <div className="panel-heading">
         <h3 className="panel-title">{gettext("Change username")}</h3>
       </div>
-      <div className="panel-body panel-message-body">
 
-        <div className="message-icon">
-          <span className="material-icon">
-            info_outline
-          </span>
-        </div>
-        <div className="message-body">
-          <p className="lead">
-            {gettext("You can't change your username at the moment.")}
-          </p>
-          <p className="help-block">
-            {this.getHelpText()}
-          </p>
-        </div>
+      <PanelMessage message={gettext("You can't change your username at the moment.")}
+                    helpText={this.getHelpText()} />
 
-      </div>
     </div>;
     /* jshint ignore:end */
   }

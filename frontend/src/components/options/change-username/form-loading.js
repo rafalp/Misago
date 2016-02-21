@@ -1,5 +1,5 @@
 import React from 'react';
-import Loader from 'misago/components/loader'; // jshint ignore:line
+import PanelLoader from 'misago/components/panel-loader'; // jshint ignore:line
 
 export default class extends React.Component {
   render() {
@@ -8,11 +8,9 @@ export default class extends React.Component {
       <div className="panel-heading">
         <h3 className="panel-title">{gettext("Change username")}</h3>
       </div>
-      <div className="panel-body panel-body-loading">
 
-        <Loader className="loader loader-spaced" />
+      <PanelLoader />
 
-      </div>
     </div>;
     /* jshint ignore:end */
   }

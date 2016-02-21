@@ -184,7 +184,6 @@ describe("User Profile Deletion", function() {
       });
 
       testUtils.onElement('#test-mount .modal-message', function(element) {
-        console.log(element.find('p.lead').text());
         assert.equal(element.find('p.lead').text(),
           "BobBoberson's account has been deleted and other content has been hidden.",
           "valid account deletion message was displayed");
@@ -229,7 +228,6 @@ describe("User Profile Deletion", function() {
       });
 
       testUtils.onElement('#test-mount .modal-message', function(element) {
-        console.log(element.find('p.lead').text());
         assert.equal(element.find('p.lead').text(),
           "BobBoberson's account, threads, posts and other content has been deleted.",
           "valid account deletion message was displayed");

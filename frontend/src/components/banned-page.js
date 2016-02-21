@@ -5,8 +5,9 @@ export default class extends React.Component {
   getReasonMessage() {
     /* jshint ignore:start */
     if (this.props.message.html) {
-      return <div className="lead"
-                  dangerouslySetInnerHTML={{__html: this.props.message.html}} />;
+      return <div className="lead" dangerouslySetInnerHTML={{
+          __html: this.props.message.html
+        }} />;
     } else {
       return <p className="lead">{this.props.message.plain}</p>;
     }
@@ -16,10 +17,21 @@ export default class extends React.Component {
   getExpirationMessage() {
     if (this.props.expires) {
       if (this.props.expires.isAfter(moment())) {
-        return interpolate(
-          gettext("This ban expires %(expires_on)s."),
-          {'expires_on': this.props.expires.fromNow()},
-          true);
+        /* jshint ignore:start */
+        let title = interpolate(
+          gettext("This ban expires on %(expires_on)s."), {
+            'expires_on': this.props.expires.format('LL, LT')
+          }, true);
+
+        let message = interpolate(
+          gettext("This ban expires %(expires_on)s."), {
+            'expires_on': this.props.expires.fromNow()
+          }, true);
+
+        return <abbr title={title}>
+          {message}
+        </abbr>;
+        /* jshint ignore:end */
       } else {
         return gettext("This ban has expired.");
       }

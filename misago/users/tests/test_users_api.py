@@ -11,7 +11,7 @@ from misago.forums.models import Forum
 from misago.threads.models import Thread, Post
 from misago.threads.testutils import post_thread
 
-from misago.users.models import Rank
+from misago.users.models import Ban, BAN_USERNAME, Rank
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -295,6 +295,57 @@ class UserFollowTests(AuthenticatedUserTestCase):
         self.assertEqual(followed.following, 0)
         self.assertEqual(followed.follows.count(), 0)
         self.assertEqual(followed.followed_by.count(), 0)
+
+
+class UserBanTests(AuthenticatedUserTestCase):
+    """
+    tests for ban endpoint (GET to /api/users/1/ban/)
+    """
+    def setUp(self):
+        super(UserBanTests, self).setUp()
+
+        User = get_user_model()
+        self.other_user = User.objects.create_user(
+            "OtherUser", "other@user.com", "pass123")
+
+        self.link = '/api/users/%s/ban/' % self.other_user.pk
+
+    def test_no_permission(self):
+        """user has no permission to access ban"""
+        override_acl(self.user, {
+            'can_see_ban_details': 0
+        })
+
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("can't see users bans details", response.content)
+
+    def test_no_ban(self):
+        """api returns empty json"""
+        override_acl(self.user, {
+            'can_see_ban_details': 1
+        })
+
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, '{}')
+
+    def test_ban_details(self):
+        """api returns ban json"""
+        override_acl(self.user, {
+            'can_see_ban_details': 1
+        })
+
+        Ban.objects.create(check_type=BAN_USERNAME,
+                           banned_value=self.other_user.username,
+                           user_message='Nope!')
+
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+
+        ban_json = json.loads(response.content)
+        self.assertEqual(ban_json['user_message']['plain'], 'Nope!')
+        self.assertEqual(ban_json['user_message']['html'], '<p>Nope!</p>')
 
 
 class UserDeleteTests(AuthenticatedUserTestCase):

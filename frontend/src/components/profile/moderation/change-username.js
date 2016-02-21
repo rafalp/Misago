@@ -3,7 +3,7 @@ import Button from 'misago/components/button'; // jshint ignore:line
 import Form from 'misago/components/form';
 import FormGroup from 'misago/components/form-group'; // jshint ignore:line
 import Loader from 'misago/components/modal-loader'; // jshint ignore:line
-import ModalMessage from 'misago/components/profile/moderation/modal-message'; // jshint ignore:line
+import ModalMessage from 'misago/components/modal-message'; // jshint ignore:line
 import misago from 'misago/index';
 import { addNameChange } from 'misago/reducers/username-history'; // jshint ignore:line
 import { updateUsername } from 'misago/reducers/users'; // jshint ignore:line
@@ -101,7 +101,8 @@ export default class extends Form {
   getModalBody() {
     if (this.state.error) {
       /* jshint ignore:start */
-      return <ModalMessage message={this.state.error} />
+      return <ModalMessage icon="remove_circle_outline"
+                           message={this.state.error} />;
       /* jshint ignore:end */
     } else if (this.state.isLoaded) {
       return this.getFormBody();

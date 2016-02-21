@@ -4,7 +4,7 @@ import Form from 'misago/components/form';
 import FormGroup from 'misago/components/form-group'; // jshint ignore:line
 import Loader from 'misago/components/modal-loader'; // jshint ignore:line
 import YesNoSwitch from 'misago/components/yes-no-switch'; // jshint ignore:line
-import ModalMessage from 'misago/components/profile/moderation/modal-message'; // jshint ignore:line
+import ModalMessage from 'misago/components/modal-message'; // jshint ignore:line
 import { updateAvatar } from 'misago/reducers/users'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
 import snackbar from 'misago/services/snackbar';
@@ -120,7 +120,8 @@ export default class extends Form {
   getModalBody() {
     if (this.state.error) {
       /* jshint ignore:start */
-      return <ModalMessage message={this.state.error} />
+      return <ModalMessage icon="remove_circle_outline"
+                           message={this.state.error} />;
       /* jshint ignore:end */
     } else if (this.state.isLoaded) {
       return this.getFormBody();

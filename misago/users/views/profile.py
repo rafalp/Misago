@@ -22,7 +22,8 @@ from misago.users.online.utils import get_user_status
 from misago.users.pages import user_profile
 from misago.users.permissions.profiles import (allow_follow_user,
                                                allow_block_user)
-from misago.users.serializers import UserSerializer, UserProfileSerializer
+from misago.users.serializers import (UserSerializer, UserProfileSerializer,
+                                      BanDetailsSerializer)
 from misago.users.serializers.usernamechange import  UsernameChangeSerializer
 from misago.users.warnings import (get_warning_levels, get_user_warning_level,
                                    get_user_warning_obj)
@@ -185,7 +186,7 @@ def username_history(request, profile):
 def user_ban(request, profile):
     ban = get_user_ban(profile)
 
-    request.frontend_context['PROFILE_BAN'] = ban.get_serialized_message()
+    request.frontend_context['PROFILE_BAN'] = BanDetailsSerializer(ban).data
 
     return render(request, 'misago/profile/ban_details.html', {
         'profile': profile,

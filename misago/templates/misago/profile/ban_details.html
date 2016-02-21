@@ -7,46 +7,51 @@
 
 {% block section %}
 <div class="profile-ban-details">
-  {% if ban.user_message %}
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title">{% trans "User-shown ban message" %}</h3>
+      <h3 class="panel-title">{% trans "Ban details" %}</h3>
     </div>
-    <div class="panel-body">
+    <div>
 
-      <div class="lead">
-        {{ ban.user_message|escape|urlize|linebreaks }}
+      {% if ban.user_message %}
+      <div class="panel-body ban-message ban-user-message">
+
+        <h4>{% trans "User-shown ban message" %}</h4>
+        <div class="lead">
+          {{ ban.user_message|escape|urlize|linebreaks }}
+        </div>
+
+      </div>
+      {% endif %}
+
+      {% if ban.staff_message %}
+      <div class="panel-body ban-message ban-staff-message">
+
+        <h4>{% trans "Team-shown ban message" %}</h4>
+        <div class="lead">
+          {{ ban.staff_message|escape|urlize|linebreaks }}
+        </div>
+
+      </div>
+      {% endif %}
+
+      <div class="panel-body ban-expires">
+        <h4>{% trans "Ban expiration" %}</h4>
+
+        <p class="lead">
+          {% if ban.expires_on %}
+            {% blocktrans trimmed with username=profile.username expires_on=ban.expires_on|date:"DATETIME_FORMAT" %}
+              {{ username }}'s ban expires on {{ expires_on }}.
+            {% endblocktrans %}
+          {% else %}
+            {% blocktrans trimmed with username=profile.username %}
+              {{ username }}'s ban is permanent.
+            {% endblocktrans %}
+          {% endif %}
+        </p>
       </div>
 
     </div>
   </div>
-  {% endif %}
-
-  {% if ban.staff_message %}
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h3 class="panel-title">{% trans "Team-shown ban message" %}</h3>
-    </div>
-    <div class="panel-body">
-
-      <div class="lead">
-        {{ ban.staff_message|escape|urlize|linebreaks }}
-      </div>
-
-    </div>
-  </div>
-  {% endif %}
-
-  <p>
-    {% if ban.expires_on %}
-      {% blocktrans trimmed with username=profile.username expires_on=ban.expires_on|date:"DATETIME_FORMAT" %}
-        {{ username }}'s ban expires on {{ expires_on }}.
-      {% endblocktrans %}
-    {% else %}
-      {% blocktrans trimmed with username=profile.username %}
-        {{ username }}'s ban is permanent.
-      {% endblocktrans %}
-    {% endif %}
-  </p>
 </div>
 {% endblock section %}
