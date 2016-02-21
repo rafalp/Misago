@@ -1,0 +1,48 @@
+//
+// Misago Toolbar
+// --------------------------------------------------
+
+
+.toolbar {
+  display: block;
+  overflow: auto;
+  margin-bottom: @padding-large-vertical;
+
+  &.toolbar-bottom {
+    margin-top: @padding-large-vertical;
+    margin-bottom: @line-height-computed;
+  }
+
+  &>p {
+    padding: @padding-base-vertical 0px;
+
+    text-align: center;
+  }
+}
+
+
+// Full displays
+@media screen and (min-width: @screen-md-min) {
+  .toolbar {
+    .toolbar-left {
+      float: left;
+    }
+
+    .toolbar-right {
+      float: right;
+    }
+
+    &>.form-control {
+      margin: 0px;
+      width: auto;
+    }
+
+    &>p {
+      min-height: @input-height-base;
+      margin: 0px;
+      padding-top: @padding-base-vertical;
+
+      text-align: left;
+    }
+  }
+}

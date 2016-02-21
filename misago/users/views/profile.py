@@ -131,7 +131,7 @@ def threads(request, profile):
 def followers(request, profile):
     queryset = profile.followed_by.select_related('rank').order_by('slug')
 
-    page = paginate(queryset, None, 20, 5)
+    page = paginate(queryset, None, 12, 4)
     paginator = pagination_dict(page)
 
     request.frontend_context['PROFILE_FOLLOWERS'] = dict(
@@ -142,6 +142,7 @@ def followers(request, profile):
     return render(request, 'misago/profile/followers.html', {
         'profile': profile,
         'followers': page.object_list,
+        'count': paginator['count'],
     })
 
 
@@ -160,6 +161,7 @@ def follows(request, profile):
     return render(request, 'misago/profile/follows.html', {
         'profile': profile,
         'follows': page.object_list,
+        'count': paginator['count'],
     })
 
 
@@ -179,6 +181,7 @@ def username_history(request, profile):
     return render(request, 'misago/profile/username_history.html', {
         'profile': profile,
         'history': page.object_list,
+        'count': paginator['count'],
     })
 
 

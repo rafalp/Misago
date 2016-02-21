@@ -1,4 +1,5 @@
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from django.utils.translation import ugettext as _
 
 from rest_framework import status, viewsets, mixins
@@ -30,14 +31,24 @@ class UsernameChangesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = (UsernameChangesViewSetPermission,)
     serializer_class = UsernameChangeSerializer
     queryset = UsernameChange.objects
-    pagination_class = ApiPaginator(20, 5)
+    pagination_class = ApiPaginator(12, 4)
 
     def get_queryset(self):
         queryset = UsernameChange.objects.select_related('user', 'changed_by')
+
         user = self.request.query_params.get('user', None)
         if user is not None:
             try:
                 queryset = queryset.filter(user_id=int(user))
             except (ValueError, TypeError):
                 queryset = queryset.none()
+
+        if self.request.query_params.get('search'):
+            search_phrase = self.request.query_params.get('search').strip()
+            if search_phrase:
+                queryset = queryset.filter(
+                    Q(changed_by_username__istartswith=search_phrase) |
+                    Q(new_username__istartswith=search_phrase) |
+                    Q(old_username__istartswith=search_phrase))
+
         return queryset.order_by('-id')

@@ -6,7 +6,18 @@
 
 
 {% block section %}
-<div class="profile-name-history">
+<div class="profile-username-history">
+
+  <nav class="toolbar">
+    <p class="toolbar-left">
+      {% blocktrans trimmed count changes=count %}
+        Found {{ changes }} username change.
+      {% plural %}
+        Found {{ changes }} username changes.
+      {% endblocktrans %}
+    </p>
+  </nav>
+
   <div class="username-history ui-ready">
     <ul class="list-group">
       {% for change in history %}

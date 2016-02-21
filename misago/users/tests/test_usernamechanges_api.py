@@ -30,6 +30,24 @@ class UsernameChangesApiTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('[]', response.content)
 
+    def test_list_handles_search(self):
+        """list returns found username changes"""
+        self.user.set_username('NewUsername', self.user)
+
+        override_acl(self.user, {'can_see_users_name_history': False})
+
+        response = self.client.get(
+            '%s?user=%s&search=new' % (self.link, self.user.pk))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.user.username, response.content)
+
+        response = self.client.get(
+            '%s?user=%s&search=usernew' % (self.link, self.user.pk))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('[]', response.content)
+
     def test_list_denies_permission(self):
         """list denies permission for other user (or all) if no access"""
         override_acl(self.user, {'can_see_users_name_history': False})

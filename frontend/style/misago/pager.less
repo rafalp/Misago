@@ -31,3 +31,28 @@
     }
   }
 }
+
+
+// "Load more" button
+.pager-more {
+  text-align: center;
+}
+
+
+// Small displays
+@media screen and (max-width: @screen-sm-max) {
+  .pager-more .btn {
+    display: block;
+
+    text-align: center;
+  }
+}
+
+
+// Large displays
+@media screen and (min-width: @screen-md-min) {
+  .pager-more .btn {
+    padding-left: @line-height-computed;
+    padding-right: @line-height-computed;
+  }
+}

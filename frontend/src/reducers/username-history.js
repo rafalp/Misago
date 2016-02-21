@@ -3,6 +3,7 @@ import { UPDATE_AVATAR, UPDATE_USERNAME } from 'misago/reducers/users';
 import moment from 'moment';
 
 export const ADD_NAME_CHANGE = 'ADD_NAME_CHANGE';
+export const APPEND_HISTORY = 'APPEND_HISTORY';
 export const DEHYDRATE_HISTORY = 'DEHYDRATE_HISTORY';
 
 export function addNameChange(change, user, changedBy) {
@@ -11,6 +12,13 @@ export function addNameChange(change, user, changedBy) {
     change,
     user,
     changedBy
+  };
+}
+
+export function append(items) {
+  return {
+    type: APPEND_HISTORY,
+    items: items
   };
 }
 
@@ -34,6 +42,13 @@ export default function username(state=[], action=null) {
         old_username: action.user.username
       });
       return newState;
+
+    case APPEND_HISTORY:
+      return state.concat(action.items.map(function(item) {
+        return Object.assign({}, item, {
+          changed_on: moment(item.changed_on)
+        });
+      }));
 
     case DEHYDRATE_HISTORY:
       return action.items.map(function(item) {

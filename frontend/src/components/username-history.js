@@ -66,12 +66,20 @@ export default class extends React.Component {
     /* jshint ignore:end */
   }
 
+  getEmptyMessage() {
+    if (this.props.emptyMessage) {
+      return this.props.emptyMessage;
+    } else {
+      return gettext("No name changes have been recorded for your account.");
+    }
+  }
+
   renderEmptyHistory() {
     /* jshint ignore:start */
     return <div className="username-history ui-ready">
       <ul className="list-group">
         <li className="list-group-item empty-message">
-          {gettext("No name changes have been recorded for your account.")}
+          {this.getEmptyMessage()}
         </li>
       </ul>
     </div>;

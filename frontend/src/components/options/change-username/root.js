@@ -3,7 +3,7 @@ import React from 'react';
 import FormLoading from 'misago/components/options/change-username/form-loading'; // jshint ignore:line
 import FormLocked from 'misago/components/options/change-username/form-locked'; // jshint ignore:line
 import Form from 'misago/components/options/change-username/form'; // jshint ignore:line
-import UsernameHistory from 'misago/components/options/change-username/username-history'; // jshint ignore:line
+import UsernameHistory from 'misago/components/username-history'; // jshint ignore:line
 import misago from 'misago/index';
 import { dehydrate, addNameChange } from 'misago/reducers/username-history'; // jshint ignore:line
 import { updateUsername } from 'misago/reducers/users'; // jshint ignore:line
@@ -32,6 +32,8 @@ export default class extends React.Component {
       ajax.get(this.props.user.api_url.username),
       ajax.get(misago.get('USERNAME_CHANGES_API'), {user: this.props.user.id})
     ]).then((data) => {
+      store.dispatch(dehydrate(data[1].results));
+
       this.setState({
         isLoaded: true,
         options: {
@@ -41,8 +43,6 @@ export default class extends React.Component {
           next_on: data[0].next_on ? moment(data[0].next_on) : null,
         }
       });
-
-      store.dispatch(dehydrate(data[1].results));
     });
   }
 
