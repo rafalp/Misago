@@ -23,9 +23,32 @@
   }
 }
 
+
 // Hidden file input
 input.hidden-file-upload {
   position: absolute;
   top: -9999px;
   left: -9999px;
+}
+
+
+// Search field
+.form-search {
+  position: relative;
+
+  .form-control {
+    padding-right: 30px;
+  }
+
+  .material-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+
+    color: @gray-light;
+    font-size: 24px;
+    line-height: 24px;
+
+    pointer-events: none;
+  }
 }

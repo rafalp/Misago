@@ -2,6 +2,7 @@ export class Ajax {
   constructor() {
     this._cookieName = null;
     this._csrfToken = null;
+    this._locks = {};
   }
 
   init(cookieName) {
@@ -66,11 +67,94 @@ export class Ajax {
     });
   }
 
-  get(url, params) {
+  get(url, params, lock) {
     if (params) {
       url += '?' + $.param(params);
     }
-    return this.request('GET', url);
+
+    if (lock) {
+      let self = this;
+
+        // update url in existing lock?
+      if (this._locks[lock]) {
+        this._locks[lock].url = url;
+      }
+
+      // immediately dereference promise handlers without doing anything
+      if (this._locks[lock] && this._locks[lock].waiter) {
+        return {
+          then: function() {
+            return;
+          }
+        };
+
+      // return promise that will begin when original one resolves
+      } else if (this._locks[lock] && this._locks[lock].wait) {
+        this._locks[lock].waiter = true;
+
+        return new Promise(function(resolve, reject) {
+          let wait = function(url) {
+            // keep waiting on promise
+            if (self._locks[lock].wait) {
+              window.setTimeout(function() {
+                wait(url);
+              }, 300);
+
+            // pool for new url
+            } else if (self._locks[lock].url !== url) {
+              wait(self._locks[lock].url);
+
+            // ajax backend for response
+            } else {
+              self._locks[lock].waiter = false;
+              self.request('GET', self._locks[lock].url).then(function(data) {
+                if (self._locks[lock].url === url) {
+                  resolve(data);
+                } else {
+                  self._locks[lock].waiter = true;
+                  wait(self._locks[lock].url);
+                }
+              }, function(rejection) {
+                if (self._locks[lock].url === url) {
+                  reject(rejection);
+                } else {
+                  self._locks[lock].waiter = true;
+                  wait(self._locks[lock].url);
+                }
+              });
+            }
+          };
+
+          window.setTimeout(function() {
+            wait(url);
+          }, 300);
+        });
+
+      // setup new lock without waiter
+      } else {
+        this._locks[lock] = {
+          url,
+          wait: true,
+          waiter: false
+        };
+
+        return new Promise(function(resolve, reject) {
+          self.request('GET', url).then(function(data) {
+            self._locks[lock].wait = false;
+            if (self._locks[lock].url === url) {
+              resolve(data);
+            }
+          }, function(rejection) {
+            self._locks[lock].wait = false;
+            if (self._locks[lock].url === url) {
+              reject(rejection);
+            }
+          });
+        });
+      }
+    } else {
+      return this.request('GET', url);
+    }
   }
 
   post(url, data) {

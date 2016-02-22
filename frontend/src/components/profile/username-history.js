@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from 'misago/components/button'; // jshint ignore:line
+import Search from 'misago/components/search'; // jshint ignore:line
 import UsernameHistory from 'misago/components/username-history'; // jshint ignore:line
 import misago from 'misago/index';
 import { dehydrate, append } from 'misago/reducers/username-history'; // jshint ignore:line
@@ -54,17 +55,11 @@ export default class extends React.Component {
   }
 
   loadChanges(page=1, search=null) {
-    let searchState = search;
-
     ajax.get(misago.get('USERNAME_CHANGES_API'), {
-      user: this.props.user.id,
+      user: this.props.profile.id,
       search: search,
       page: page || 1
-    }).then((data) => {
-      if (searchState !== null && searchState !== this.state.search) {
-        return; // discard result
-      }
-
+    }, 'search-username-history').then((data) => {
       if (page === 1) {
         store.dispatch(dehydrate(data.results));
       } else {
@@ -148,7 +143,7 @@ export default class extends React.Component {
         this.state.count);
 
       return interpolate(message, {
-        'username': this.profile.username,
+        'username': this.props.profile.username,
         'changes': this.state.count
       }, true);
     }
@@ -192,11 +187,10 @@ export default class extends React.Component {
           {this.getLabel()}
         </h3>
 
-        <input type="text"
-               className="form-control toolbar-right"
-               value={this.state.search}
-               onChange={this.search}
-               placeholder={gettext("Search history...")} />
+        <Search className="toolbar-right"
+                value={this.state.search}
+                onChange={this.search}
+                placeholder={gettext("Search history...")} />
       </nav>
 
       <UsernameHistory isLoaded={this.state.isLoaded}

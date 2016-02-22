@@ -2,6 +2,7 @@ import assert from 'assert';
 import moment from 'moment';
 import React from 'react'; // jshint ignore:line
 import BanDetails from 'misago/components/profile/ban-details'; // jshint ignore:line
+import misago from 'misago/index';
 import ajax from 'misago/services/ajax';
 import polls from 'misago/services/polls';
 import * as testUtils from 'misago/utils/test-utils';
@@ -13,7 +14,7 @@ let profileMock = {
     ban: '/test-api/users/123/just-ban/'
   }
 };
-let expires_on = moment().add('days', 5);
+let expires_on = moment().add(5, 'days');
 
 describe("User Profile Ban Details", function() {
   beforeEach(function() {
@@ -24,6 +25,40 @@ describe("User Profile Ban Details", function() {
     testUtils.unmountComponents();
     $.mockjax.clear();
     polls.stop('ban-details');
+  });
+
+  it("preloads", function(done) {
+    misago._context.PROFILE_BAN = {
+      user_message: null,
+      staff_message: null,
+      expires_on: null
+    };
+
+    $.mockjax({
+      url: profileMock.api_url.ban,
+      status: 200,
+      responseText: {
+        user_message: null,
+        staff_message: null,
+        expires_on: null
+      }
+    });
+
+    /* jshint ignore:start */
+    testUtils.render(<BanDetails profile={profileMock} />);
+    /* jshint ignore:end */
+
+    testUtils.onElement('#test-mount .ban-expires p.lead', function(element) {
+      assert.equal(element.text(), "BobBoberson's ban is permanent.",
+        "expiration message is displayed");
+
+      assert.ok(!$('#test-mount .ban-user-message').length,
+        "user message is hidden");
+      assert.ok(!$('#test-mount .ban-staff-message').length,
+        "staff message is hidden");
+
+      done();
+    });
   });
 
   it("loads", function(done) {

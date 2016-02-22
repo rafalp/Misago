@@ -1,7 +1,7 @@
 import moment from 'moment';
 import assert from 'assert';
 import { updateAvatar, updateUsername } from 'misago/reducers/users';
-import reducer, { addNameChange, dehydrate } from 'misago/reducers/username-history';
+import reducer, { addNameChange, dehydrate, append } from 'misago/reducers/username-history';
 
 describe("Username History Reducer", function() {
   it("dehydrates result", function() {
@@ -16,6 +16,24 @@ describe("Username History Reducer", function() {
     assert.equal(state[0].changed_on.format(), timestamp,
       "reducer converted changed_on timestamp to moment.js object");
     assert.equal(state[0].something, 'ok', "other keys were unconverted");
+  });
+
+  it("appends result", function() {
+    let timestamp = moment().format();
+    let state = reducer([
+      {
+        order: 'first',
+        changed_on: timestamp
+      }
+    ], append([
+      {
+        order: 'second',
+        changed_on: timestamp
+      }
+    ]));
+
+    assert.equal(state[0].order, 'first', "original item was kept");
+    assert.equal(state[1].order, 'second', "new item was appended");
   });
 
   it("prepends namechange", function() {
