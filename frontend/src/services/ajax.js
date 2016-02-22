@@ -75,7 +75,7 @@ export class Ajax {
     if (lock) {
       let self = this;
 
-        // update url in existing lock?
+      // update url in existing lock?
       if (this._locks[lock]) {
         this._locks[lock].url = url;
       }
