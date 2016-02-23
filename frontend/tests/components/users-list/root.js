@@ -16,7 +16,7 @@ let users = [
 ];
 /* jshint ignore:end */
 
-describe("Users List Item", function() {
+describe("Users List", function() {
   afterEach(function() {
     testUtils.unmountComponents();
   });

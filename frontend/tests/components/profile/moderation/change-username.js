@@ -1,6 +1,7 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
 import ChangeUsername from 'misago/components/profile/moderation/change-username'; // jshint ignore:line
+import misago from 'misago/index';
 import reducer from 'misago/reducers/profile';
 import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
@@ -21,6 +22,13 @@ let profileMock = {
 
 describe("User Profile Moderation Change Username", function() {
   beforeEach(function() {
+    misago._context = {
+      SETTINGS: {
+        username_length_min: 3,
+        username_length_max: 8
+      }
+    };
+
     snackbarStore = testUtils.snackbarStoreMock();
     snackbar.init(snackbarStore);
 

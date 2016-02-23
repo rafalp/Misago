@@ -26,7 +26,7 @@ describe("Users List Item", function() {
       assert.ok($('#test-mount .status-label.ui-preview').length,
         "status preview is rendered");
 
-      assert.equal($('#test-mount .user-title').text().trim(), user.title,
+      assert.equal($('#test-mount .user-title').text(), user.title,
         "user title is rendered");
 
       done();
@@ -51,10 +51,10 @@ describe("Users List Item", function() {
     testUtils.onElement('#test-mount .user-card.ui-ready', function() {
       assert.ok(true, "component renders");
 
-      assert.equal($('#test-mount .status-label').text().trim(), 'Online',
+      assert.equal($('#test-mount .status-label').text(), 'Online',
         "status label is rendered");
 
-      assert.equal($('#test-mount .user-title').text().trim(), user.title,
+      assert.equal($('#test-mount .user-title').text(), user.title,
         "user title is rendered");
 
       done();
@@ -79,8 +79,78 @@ describe("Users List Item", function() {
 
       assert.ok(!$('#test-mount .user-status').length, "status is hidden");
 
-      assert.equal($('#test-mount .user-title').text().trim(), user.title,
+      assert.equal($('#test-mount .user-title').text(), user.title,
         "user title is rendered");
+
+      done();
+    });
+  });
+
+  it("renders with rank", function(done) {
+    let user = testUtils.mockUser({
+      title: "Lorem ipsum",
+      status: {is_online: true},
+      joined_on: moment(),
+      rank: {
+        name: 'Some Yolo',
+        is_tab: false,
+        absolute_url: '/users/ranks/some-yolo/'
+      }
+    });
+
+    /* jshint ignore:start */
+    testUtils.render(
+      <UserCard user={user} showRank={true} />
+    );
+    /* jshint ignore:end */
+
+    testUtils.onElement('#test-mount .user-card.ui-ready', function() {
+      assert.ok(true, "component renders");
+
+      assert.ok(!$('#test-mount .user-status').length, "status is hidden");
+
+      assert.equal($('#test-mount .user-title').text(), user.title,
+        "user title is rendered");
+
+      assert.equal($('#test-mount .rank-name').text(), user.rank.name,
+        "user rank is rendered");
+
+      done();
+    });
+  });
+
+  it("renders with rank url", function(done) {
+    let user = testUtils.mockUser({
+      title: "Lorem ipsum",
+      status: {is_online: true},
+      joined_on: moment(),
+      rank: {
+        name: 'Some Yolo',
+        is_tab: true,
+        absolute_url: '/users/ranks/some-yolo/'
+      }
+    });
+
+    /* jshint ignore:start */
+    testUtils.render(
+      <UserCard user={user} showRank={true} />
+    );
+    /* jshint ignore:end */
+
+    testUtils.onElement('#test-mount .user-card.ui-ready', function() {
+      assert.ok(true, "component renders");
+
+      assert.ok(!$('#test-mount .user-status').length, "status is hidden");
+
+      assert.equal($('#test-mount .user-title').text(), user.title,
+        "user title is rendered");
+
+      assert.equal($('#test-mount .rank-name').text(), user.rank.name,
+        "user rank is rendered");
+
+      assert.equal($('#test-mount .rank-name').attr('href'),
+        user.rank.absolute_url,
+        "user rank is url to rank users list");
 
       done();
     });

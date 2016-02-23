@@ -33,7 +33,9 @@ export default class extends React.Component {
         return <div className="row" key={r}>
           {row.map((user) => {
             return <div className={this.getColClassName()} key={user.id}>
-              <UserCard user={user} showStatus={this.props.showStatus} />
+              <UserCard user={user}
+                        showStatus={this.props.showStatus}
+                        showRank={this.props.showRank} />
             </div>;
           })}
         </div>;

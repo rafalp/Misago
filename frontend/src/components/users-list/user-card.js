@@ -40,6 +40,27 @@ export default class extends React.Component {
     }
   }
 
+  getRankName() {
+    if (this.props.showRank) {
+      if (this.props.user.rank.is_tab) {
+        /* jshint ignore:start */
+        return <a href={this.props.user.rank.absolute_url}
+                  className="item-title rank-name">
+          {this.props.user.rank.name}
+        </a>;
+        /* jshint ignore:end */
+      } else {
+        /* jshint ignore:start */
+        return <span className="item-title rank-name">
+          {this.props.user.rank.name}
+        </span>;
+        /* jshint ignore:end */
+      }
+    } else {
+      return null;
+    }
+  }
+
   getUserTitle() {
     if (this.props.user.title) {
       /* jshint ignore:start */
@@ -89,6 +110,7 @@ export default class extends React.Component {
 
             <p className="user-subscript">
               {this.getUserStatus()}
+              {this.getRankName()}
               {this.getUserTitle()}
               {this.getUserJoinedOn()}
             </p>
