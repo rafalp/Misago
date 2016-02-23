@@ -133,9 +133,9 @@ class ActionsTests(AuthenticatedUserTestCase):
 
 class SortingTests(TestCase):
     def setUp(self):
-        self.sorting = Sorting('misago:forum', {
-            'forum_slug': "test-forum",
-            'forum_id': 42,
+        self.sorting = Sorting('misago:category', {
+            'category_slug': "test-category",
+            'category_id': 42,
         })
 
     def test_clean_kwargs_removes_default_sorting(self):

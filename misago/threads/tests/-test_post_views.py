@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 
 from misago.acl.testutils import override_acl
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads.models import Thread, Post
@@ -12,12 +12,12 @@ class PostViewTestCase(AuthenticatedUserTestCase):
     def setUp(self):
         super(PostViewTestCase, self).setUp()
 
-        self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
-        self.forum.labels = []
+        self.category = Category.objects.all_categories().filter(role='forum')[:1][0]
+        self.category.labels = []
 
-        self.thread = post_thread(self.forum)
+        self.thread = post_thread(self.category)
 
-    def override_acl(self, new_acl, forum=None):
+    def override_acl(self, new_acl, category=None):
         new_acl.update({
             'can_see': True,
             'can_browse': True,
@@ -25,12 +25,12 @@ class PostViewTestCase(AuthenticatedUserTestCase):
             'can_see_own_threads': False
         })
 
-        forum = forum or self.forum
+        category = category or self.category
 
-        forums_acl = self.user.acl
-        forums_acl['visible_forums'].append(forum.pk)
-        forums_acl['forums'][forum.pk] = new_acl
-        override_acl(self.user, forums_acl)
+        categories_acl = self.user.acl
+        categories_acl['visible_categories'].append(category.pk)
+        categories_acl['categories'][category.pk] = new_acl
+        override_acl(self.user, categories_acl)
 
 
 class ApprovePostViewTests(PostViewTestCase):

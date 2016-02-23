@@ -10,7 +10,7 @@ from misago.threads.checksums import update_post_checksum, is_post_valid
 
 
 class Post(models.Model):
-    forum = models.ForeignKey('misago_forums.Forum')
+    category = models.ForeignKey('misago_categories.Category')
     thread = models.ForeignKey('misago_threads.Thread')
     poster = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
                                on_delete=models.SET_NULL)
@@ -82,13 +82,13 @@ class Post(models.Model):
     def move(self, new_thread):
         from misago.threads.signals import move_post
 
-        self.forum = new_thread.forum
+        self.category = new_thread.category
         self.thread = new_thread
         move_post.send(sender=self)
 
     @property
     def thread_type(self):
-        return self.forum.thread_type
+        return self.category.thread_type
 
     def get_absolute_url(self):
         return self.thread_type.get_post_absolute_url(self)

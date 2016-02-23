@@ -24,22 +24,22 @@ class ModeratedPostsListView(ViewBase):
         if not request.is_ajax():
             return not_allowed(request)
 
-        relations = ['forum']
+        relations = ['category']
         thread = self.fetch_thread(request, select_related=relations, **kwargs)
-        forum = thread.forum
+        category = thread.category
 
-        self.check_forum_permissions(request, forum)
+        self.check_category_permissions(request, category)
         self.check_thread_permissions(request, thread)
 
         self.allow_action(thread)
 
         posts_qs = self.exclude_invisible_posts(
-            thread.post_set, request.user, forum, thread)
+            thread.post_set, request.user, category, thread)
         posts_qs = self.filter_posts_queryset(posts_qs)
         final_posts_qs = posts_qs.select_related('poster').order_by('-id')[:15]
 
         return self.render(request, {
-            'forum': forum,
+            'category': category,
             'thread': thread,
 
             'posts_count': posts_qs.count(),

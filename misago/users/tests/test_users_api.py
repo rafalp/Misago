@@ -4,10 +4,10 @@ import json
 from django.contrib.auth import get_user_model
 
 from misago.acl.testutils import override_acl
+from misago.categories.models import Category
 from misago.conf import settings
 from misago.core import threadstore
 from misago.core.cache import cache
-from misago.forums.models import Forum
 from misago.threads.models import Thread, Post
 from misago.threads.testutils import post_thread
 
@@ -26,8 +26,8 @@ class ActivePostersListTests(AuthenticatedUserTestCase):
         cache.clear()
         threadstore.clear()
 
-        self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
-        self.forum.labels = []
+        self.category = Category.objects.all_categories().filter(role='forum')[:1][0]
+        self.category.labels = []
 
     def test_empty_list(self):
         """empty list is served"""
@@ -41,7 +41,7 @@ class ActivePostersListTests(AuthenticatedUserTestCase):
 
     def test_filled_list(self):
         """filled list is served"""
-        post_thread(self.forum, poster=self.user)
+        post_thread(self.category, poster=self.user)
         self.user.posts = 1
         self.user.save()
 
@@ -186,12 +186,12 @@ class SearchNamesListTests(AuthenticatedUserTestCase):
         self.assertIn(self.user.username, response.content)
 
 
-class UserForumOptionsTests(AuthenticatedUserTestCase):
+class UserCategoriesOptionsTests(AuthenticatedUserTestCase):
     """
     tests for user forum options RPC (POST to /api/users/1/forum-options/)
     """
     def setUp(self):
-        super(UserForumOptionsTests, self).setUp()
+        super(UserCategoriesOptionsTests, self).setUp()
         self.link = '/api/users/%s/forum-options/' % self.user.pk
 
     def test_empty_request(self):
@@ -364,9 +364,9 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         self.threads = Thread.objects.count()
         self.posts = Post.objects.count()
 
-        self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
+        self.category = Categories.objects.all_categories().filter(role='forum')[:1][0]
 
-        post_thread(self.forum, poster=self.other_user)
+        post_thread(self.category, poster=self.other_user)
         self.other_user.posts = 1
         self.other_user.threads = 1
         self.other_user.save()

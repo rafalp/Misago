@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Count
 from django.utils import timezone
 
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.core.cache import cache
 
 
@@ -24,12 +24,14 @@ def get_real_active_posts_ranking():
     tracked_period = settings.MISAGO_RANKING_LENGTH
     tracked_since = timezone.now() - timedelta(days=tracked_period)
 
-    ranked_forums = [forum.pk for forum in Forum.objects.all_forums()]
+    ranked_categories = []
+    for category in Category.objects.all_categories():
+        ranked_categories.append(category.pk)
 
     User = get_user_model()
     queryset = User.objects.filter(posts__gt=0)
     queryset = queryset.filter(post__posted_on__gte=tracked_since,
-                               post__forum__in=ranked_forums)
+                               post__category__in=ranked_categories)
     queryset = queryset.annotate(score=Count('post'))
     queryset = queryset.select_related('user__rank')
     queryset = queryset.order_by('-score')

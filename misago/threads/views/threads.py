@@ -1,7 +1,7 @@
 from misago.threads.views import generic
 
 
-class ForumView(generic.ForumView):
+class CategoryView(generic.CategoryView):
     pass
 
 

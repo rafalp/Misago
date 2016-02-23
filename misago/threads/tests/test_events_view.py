@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 
 from misago.acl.testutils import override_acl
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads.models import Thread, Event
@@ -14,10 +14,10 @@ class EventsViewTestCase(AuthenticatedUserTestCase):
     def setUp(self):
         super(EventsViewTestCase, self).setUp()
 
-        self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
-        self.forum.labels = []
+        self.category = Category.objects.all_categories().filter(role='forum')[:1][0]
+        self.category.labels = []
 
-        self.thread = post_thread(self.forum)
+        self.thread = post_thread(self.category)
 
     def override_acl(self, new_acl):
         new_acl.update({
@@ -28,10 +28,10 @@ class EventsViewTestCase(AuthenticatedUserTestCase):
             'can_pin_threads': True
         })
 
-        forums_acl = self.user.acl
-        forums_acl['visible_forums'].append(self.forum.pk)
-        forums_acl['forums'][self.forum.pk] = new_acl
-        override_acl(self.user, forums_acl)
+        categories_acl = self.user.acl
+        categories_acl['visible_categories'].append(self.category.pk)
+        categories_acl['categories'][self.category.pk] = new_acl
+        override_acl(self.user, categories_acl)
 
     def test_hide_event(self):
         """its possible to hide event"""

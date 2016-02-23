@@ -105,7 +105,7 @@ INSTALLED_APPS = (
     'misago.markup',
     'misago.notifications',
     'misago.legal',
-    'misago.forums',
+    'misago.categories',
     'misago.threads',
     'misago.readtracker',
     'misago.faker',
@@ -159,7 +159,7 @@ MISAGO_ACL_EXTENSIONS = (
     'misago.users.permissions.warnings',
     'misago.users.permissions.moderation',
     'misago.users.permissions.delete',
-    'misago.forums.permissions',
+    'misago.categories.permissions',
     'misago.threads.permissions.threads',
     'misago.threads.permissions.privatethreads',
 )
@@ -182,9 +182,10 @@ MISAGO_POSTING_MIDDLEWARES = (
 
 MISAGO_THREAD_TYPES = (
     # category and redirect types
-    'misago.forums.forumtypes.RootCategory',
-    'misago.forums.forumtypes.Category',
-    'misago.forums.forumtypes.Redirect',
+    'misago.categories.forumtypes.RootCategory',
+    'misago.categories.forumtypes.Category',
+    'misago.categories.forumtypes.Redirect',
+
     # real thread types
     'misago.threads.threadtypes.forumthread.ForumThread',
     'misago.threads.threadtypes.privatethread.PrivateThread',

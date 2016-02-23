@@ -6,11 +6,11 @@ from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 
+from misago.categories.models import Category
 from misago.core.decorators import require_POST
-from misago.forums.models import Forum
 from misago.users.decorators import deny_guests
 
-from misago.readtracker import forumstracker
+from misago.readtracker import categoriestracker
 from misago.readtracker.signals import all_read
 
 
@@ -32,14 +32,14 @@ def read_all(request):
 
     all_read.send(sender=request.user)
 
-    messages.info(request, _("All forums and threads were marked as read."))
+    messages.info(request, _("All categories and threads were marked as read."))
     return redirect('misago:index')
 
 
 @read_view
-def read_forum(request, forum_id):
-    forum = get_object_or_404(Forum.objects, id=forum_id)
-    forumstracker.read_forum(request.user, forum)
+def read_category(request, category_id):
+    category = get_object_or_404(Category.objects, id=category_id)
+    categoriestracker.read_category(request.user, category)
 
     messages.info(request, _("Threads were marked as read."))
-    return redirect(forum.get_absolute_url())
+    return redirect(category.get_absolute_url())

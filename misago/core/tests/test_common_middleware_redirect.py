@@ -1,7 +1,7 @@
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
-class ChangeForumOptionsTests(AuthenticatedUserTestCase):
+class CommonMiddlewareRedirectTests(AuthenticatedUserTestCase):
     def test_slashless_redirect(self):
         """
         Regression test for https://github.com/rafalp/Misago/issues/450

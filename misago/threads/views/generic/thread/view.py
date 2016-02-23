@@ -3,8 +3,8 @@ from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
+from misago.categories.lists import get_category_path
 from misago.core.shortcuts import validate_slug
-from misago.forums.lists import get_forum_path
 from misago.readtracker import threadstracker
 
 from misago.threads.events import add_events_to_posts
@@ -27,16 +27,16 @@ class ThreadView(ViewBase):
     PostsActions = PostsActions
     template = 'misago/thread/replies.html'
 
-    def get_posts(self, user, forum, thread, kwargs):
-        queryset = self.get_posts_queryset(user, forum, thread)
-        queryset = self.exclude_invisible_posts(queryset, user, forum, thread)
+    def get_posts(self, user, category, thread, kwargs):
+        queryset = self.get_posts_queryset(user, category, thread)
+        queryset = self.exclude_invisible_posts(queryset, user, category, thread)
         page = paginate(queryset, kwargs.get('page', 0),
                         settings.MISAGO_POSTS_PER_PAGE,
                         settings.MISAGO_THREAD_TAIL)
 
         posts = []
         for post in page.object_list:
-            post.forum = forum
+            post.category = category
             post.thread = thread
 
             add_acl(user, post)
@@ -50,7 +50,7 @@ class ThreadView(ViewBase):
 
         return page, posts
 
-    def get_posts_queryset(self, user, forum, thread):
+    def get_posts_queryset(self, user, category, thread):
         return thread.post_set.select_related(
             'poster',
             'poster__rank',
@@ -62,11 +62,11 @@ class ThreadView(ViewBase):
         allow_reply_thread(user, thread)
 
     def dispatch(self, request, *args, **kwargs):
-        relations = ['forum', 'starter', 'last_poster', 'first_post']
+        relations = ['category', 'starter', 'last_poster', 'first_post']
         thread = self.fetch_thread(request, select_related=relations, **kwargs)
-        forum = thread.forum
+        category = thread.category
 
-        self.check_forum_permissions(request, forum)
+        self.check_category_permissions(request, category)
         self.check_thread_permissions(request, thread)
 
         validate_slug(thread, kwargs['thread_slug'])
@@ -82,12 +82,12 @@ class ThreadView(ViewBase):
                 if response:
                     return response
             if posts_actions.query_key in request.POST:
-                queryset = self.get_posts_queryset(request.user, forum, thread)
+                queryset = self.get_posts_queryset(request.user, category, thread)
                 response = posts_actions.handle_post(request, queryset)
                 if response:
                     return response
 
-        page, posts = self.get_posts(request.user, forum, thread, kwargs)
+        page, posts = self.get_posts(request.user, category, thread, kwargs)
         make_posts_reports_aware(request.user, thread, posts)
 
         threadstracker.make_posts_read_aware(request.user, thread, posts)
@@ -105,8 +105,8 @@ class ThreadView(ViewBase):
                 'thread_id': thread.id, 'thread_slug': thread.slug
             },
 
-            'forum': forum,
-            'path': get_forum_path(forum),
+            'category': category,
+            'path': get_category_path(category),
 
             'thread': thread,
             'thread_actions': thread_actions,

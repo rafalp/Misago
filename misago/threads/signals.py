@@ -1,8 +1,8 @@
 from django.db import transaction
 from django.dispatch import receiver, Signal
 
+from misago.categories.models import Category
 from misago.core.pgutils import batch_update, batch_delete
-from misago.forums.models import Forum
 
 from misago.threads.models import Thread, Post, Event, Label
 
@@ -22,58 +22,59 @@ Signal handlers
 @receiver(merge_thread)
 def merge_threads_posts(sender, **kwargs):
     other_thread = kwargs['other_thread']
-    other_thread.post_set.update(forum=sender.forum, thread=sender)
+    other_thread.post_set.update(category=sender.category, thread=sender)
 
 
 @receiver(move_thread)
 def move_thread_content(sender, **kwargs):
-    sender.post_set.update(forum=sender.forum)
-    sender.event_set.update(forum=sender.forum)
+    sender.post_set.update(category=sender.category)
+    sender.event_set.update(category=sender.category)
 
     # remove unavailable labels
     if sender.label_id:
-        new_forum_labels = Label.objects.get_forum_labels(sender.forum)
-        if sender.label_id not in [l.pk for l in new_forum_labels]:
+        new_category_labels = Label.objects.get_category_labels(sender.category)
+        if sender.label_id not in [l.pk for l in new_category_labels]:
             sender.label = None
 
 
-from misago.forums.signals import delete_forum_content, move_forum_content
-@receiver(delete_forum_content)
-def delete_forum_threads(sender, **kwargs):
+from misago.categories.signals import (delete_category_content,
+                                       move_category_content)
+@receiver(delete_category_content)
+def delete_category_threads(sender, **kwargs):
     sender.event_set.all().delete()
     sender.thread_set.all().delete()
     sender.post_set.all().delete()
 
 
-@receiver(move_forum_content)
-def move_forum_threads(sender, **kwargs):
-    new_forum = kwargs['new_forum']
-    Thread.objects.filter(forum=sender).update(forum=new_forum)
-    Post.objects.filter(forum=sender).update(forum=new_forum)
-    Event.objects.filter(forum=sender).update(forum=new_forum)
+@receiver(move_category_content)
+def move_category_threads(sender, **kwargs):
+    new_category = kwargs['new_category']
+    Thread.objects.filter(category=sender).update(category=new_category)
+    Post.objects.filter(category=sender).update(category=new_category)
+    Event.objects.filter(category=sender).update(category=new_category)
 
     # move labels
-    old_forum_labels = Label.objects.get_forum_labels(sender)
-    new_forum_labels = Label.objects.get_forum_labels(new_forum)
+    old_category_labels = Label.objects.get_category_labels(sender)
+    new_category_labels = Label.objects.get_category_labels(new_category)
 
-    for label in old_forum_labels:
-        if label not in new_forum_labels:
-            label.forums.add(new_forum_labels)
+    for label in old_category_labels:
+        if label not in new_category_labels:
+            label.categories.add(new_category_labels)
 
 
 from misago.users.signals import delete_user_content, username_changed
 @receiver(delete_user_content)
 def delete_user_threads(sender, **kwargs):
-    recount_forums = set()
+    recount_categories = set()
     recount_threads = set()
 
     for thread in batch_delete(sender.thread_set.all(), 50):
-        recount_forums.add(thread.forum_id)
+        recount_categories.add(thread.category_id)
         with transaction.atomic():
             thread.delete()
 
     for post in batch_delete(sender.post_set.all(), 50):
-        recount_forums.add(post.forum_id)
+        recount_categories.add(post.category_id)
         recount_threads.add(post.thread_id)
         with transaction.atomic():
             post.delete()
@@ -84,10 +85,10 @@ def delete_user_threads(sender, **kwargs):
             thread.synchronize()
             thread.save()
 
-    if recount_forums:
-        for forum in Forum.objects.filter(id__in=recount_forums):
-            forum.synchronize()
-            forum.save()
+    if recount_categories:
+        for category in Category.objects.filter(id__in=recount_categories):
+            category.synchronize()
+            category.save()
 
 
 @receiver(username_changed)

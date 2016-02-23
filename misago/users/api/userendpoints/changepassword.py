@@ -16,8 +16,8 @@ def change_password_endpoint(request, pk=None):
         token = store_new_credential(
             request, 'password', form.cleaned_data['new_password'])
 
-        mail_subject = _("Confirm password change on %(forum_title)s forums")
-        mail_subject = mail_subject % {'forum_title': settings.forum_name}
+        mail_subject = _("Confirm password change on %(forum_name)s forums")
+        mail_subject = mail_subject % {'forum_name': settings.forum_name}
 
         mail_user(request, request.user, mail_subject,
                   'misago/emails/change_password',

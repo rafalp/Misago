@@ -10,7 +10,7 @@ from django.template.defaultfilters import linebreaks_filter
 from django.utils import timezone
 
 from misago.core.management.progressbar import show_progress
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.threads.checksums import update_post_checksum
 from misago.threads.models import Thread, Post
 
@@ -27,7 +27,9 @@ class Command(BaseCommand):
             self.stderr.write("\nOptional argument should be integer.")
             sys.exit(1)
 
-        forums = [f for f in Forum.objects.all_forums().filter(role='forum')]
+        categories = []
+        for category in Category.objects.all_categories().filter(role='forum'):
+            categories.append(category)
 
         fake = Factory.create()
 
@@ -44,7 +46,7 @@ class Command(BaseCommand):
         for i in xrange(fake_threads_to_create):
             with atomic():
                 datetime = timezone.now()
-                forum = random.choice(forums)
+                category = random.choice(categories)
                 user = User.objects.order_by('?')[:1][0]
 
                 thread_is_moderated = random.randint(0, 100) > 90
@@ -52,7 +54,7 @@ class Command(BaseCommand):
                 thread_is_closed = random.randint(0, 100) > 90
 
                 thread = Thread(
-                    forum=forum,
+                    category=category,
                     started_on=datetime,
                     starter_name='-',
                     starter_slug='-',
@@ -68,7 +70,7 @@ class Command(BaseCommand):
 
                 fake_message = "\n\n".join(fake.paragraphs())
                 post = Post.objects.create(
-                    forum=forum,
+                    category=category,
                     thread=thread,
                     poster=user,
                     poster_name=user.username,
@@ -108,7 +110,7 @@ class Command(BaseCommand):
                         is_hidden = False
 
                     post = Post.objects.create(
-                        forum=forum,
+                        category=category,
                         thread=thread,
                         poster=user,
                         poster_name=user.username,
@@ -139,8 +141,8 @@ class Command(BaseCommand):
             thread.is_pinned = True
             thread.save()
 
-        for forum in forums:
-            forum.synchronize()
-            forum.save()
+        for category in categories:
+            category.synchronize()
+            category.save()
 
         self.stdout.write(message % created_threads)

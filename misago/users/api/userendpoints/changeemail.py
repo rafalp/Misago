@@ -16,8 +16,8 @@ def change_email_endpoint(request, pk=None):
         token = store_new_credential(
             request, 'email', form.cleaned_data['new_email'])
 
-        mail_subject = _("Confirm e-mail change on %(forum_title)s forums")
-        mail_subject = mail_subject % {'forum_title': settings.forum_name}
+        mail_subject = _("Confirm e-mail change on %(forum_name)s forums")
+        mail_subject = mail_subject % {'forum_name': settings.forum_name}
 
         # swap address with new one so email is sent to new address
         request.user.email = form.cleaned_data['new_email']

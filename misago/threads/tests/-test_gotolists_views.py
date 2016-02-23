@@ -1,6 +1,6 @@
 from misago.acl import add_acl
 from misago.acl.testutils import override_acl
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads.testutils import post_thread, reply_thread
@@ -12,10 +12,10 @@ class GotoListsViewsTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(GotoListsViewsTests, self).setUp()
 
-        self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
-        self.forum.labels = []
+        self.category = Category.objects.all_categories().filter(role='category')[:1][0]
+        self.category.labels = []
 
-        self.thread = post_thread(self.forum)
+        self.thread = post_thread(self.category)
 
     def override_acl(self, new_acl):
         new_acl.update({
@@ -24,13 +24,13 @@ class GotoListsViewsTests(AuthenticatedUserTestCase):
             'can_see_all_threads': True,
         })
 
-        forums_acl = self.user.acl
-        forums_acl['visible_forums'].append(self.forum.pk)
-        forums_acl['forums'][self.forum.pk] = new_acl
-        override_acl(self.user, forums_acl)
+        categories_acl = self.user.acl
+        categories_acl['visible_categories'].append(self.category.pk)
+        categories_acl['categories'][self.category.pk] = new_acl
+        override_acl(self.user, categories_acl)
 
-        self.forum.acl = {}
-        add_acl(self.user, self.forum)
+        self.category.acl = {}
+        add_acl(self.user, self.category)
 
     def test_moderated_list(self):
         """moderated posts list works"""

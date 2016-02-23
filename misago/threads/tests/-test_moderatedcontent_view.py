@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 from misago.acl.testutils import override_acl
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.users.testutils import UserTestCase, AuthenticatedUserTestCase
 
 from misago.threads import testutils
@@ -17,14 +17,14 @@ class AuthenticatedTests(AuthenticatedUserTestCase):
             'can_review_moderated_content': True,
         }
 
-        forums_acl = self.user.acl
+        categories_acl = self.user.acl
 
-        for forum in Forum.objects.all():
-            forums_acl['visible_forums'].append(forum.pk)
-            forums_acl['can_review_moderated_content'].append(forum.pk)
-            forums_acl['forums'][forum.pk] = new_acl
+        for category in Category.objects.all():
+            categories_acl['visible_categories'].append(category.pk)
+            categories_acl['can_review_moderated_content'].append(category.pk)
+            categories_acl['categories'][category.pk] = new_acl
 
-        override_acl(self.user, forums_acl)
+        override_acl(self.user, categories_acl)
 
     def test_cant_see_threads_list(self):
         """user has no permission to see moderated list"""
@@ -34,8 +34,8 @@ class AuthenticatedTests(AuthenticatedUserTestCase):
 
     def test_empty_threads_list(self):
         """empty threads list is rendered"""
-        forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
-        [testutils.post_thread(forum) for t in xrange(10)]
+        category = Category.objects.all_categories().filter(role="category")[:1][0]
+        [testutils.post_thread(category) for t in xrange(10)]
 
         self.override_acl();
         response = self.client.get(reverse('misago:moderated_content'))
@@ -44,14 +44,14 @@ class AuthenticatedTests(AuthenticatedUserTestCase):
 
     def test_filled_threads_list(self):
         """filled threads list is rendered"""
-        forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
+        category = Category.objects.all_categories().filter(role="category")[:1][0]
 
         threads = []
         for t in xrange(10):
-            threads.append(testutils.post_thread(forum, is_moderated=True))
+            threads.append(testutils.post_thread(category, is_moderated=True))
 
         for t in xrange(10):
-            threads.append(testutils.post_thread(forum))
+            threads.append(testutils.post_thread(category))
             testutils.reply_thread(threads[-1], is_moderated=True)
 
         self.override_acl();

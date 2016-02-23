@@ -7,8 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 from misago.acl import add_acl, algebra
 from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
+from misago.categories.models import Category
 from misago.core import forms
-from misago.forums.models import Forum
 
 
 __all__ = [
@@ -87,12 +87,12 @@ def build_acl(acl, roles, key_name):
     if not new_acl['can_use_private_threads']:
         return new_acl
 
-    private_forum = Forum.objects.private_threads()
+    private_category = Category.objects.private_threads()
 
     if new_acl['can_moderate_private_threads']:
-        new_acl['can_review_moderated_content'].append(private_forum.pk)
+        new_acl['can_review_moderated_content'].append(private_category.pk)
 
-    forum_acl = {
+    category_acl = {
         'can_see': 1,
         'can_browse': 1,
         'can_see_all_threads': 1,
@@ -117,7 +117,7 @@ def build_acl(acl, roles, key_name):
     }
 
     if new_acl['can_moderate_private_threads']:
-        forum_acl.update({
+        category_acl.update({
             'can_edit_threads': 2,
             'can_edit_posts': 2,
             'can_hide_threads': 2,
@@ -130,7 +130,7 @@ def build_acl(acl, roles, key_name):
             'can_hide_events': 2,
         })
 
-    new_acl['forums'][private_forum.pk] = forum_acl
+    new_acl['categories'][private_category.pk] = category_acl
 
     return new_acl
 

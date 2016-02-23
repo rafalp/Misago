@@ -1,11 +1,11 @@
 from django.dispatch import receiver, Signal
 
-from misago.forums.signals import move_forum_content
+from misago.categorues.signals import move_category_content
 from misago.threads.signals import move_thread, remove_thread_participant
 
 
 all_read = Signal()
-forum_read = Signal(providing_args=["forum"])
+category_read = Signal(providing_args=["category"])
 thread_tracked = Signal(providing_args=["thread"])
 thread_read = Signal(providing_args=["thread"])
 
@@ -13,9 +13,9 @@ thread_read = Signal(providing_args=["thread"])
 """
 Signal handlers
 """
-@receiver(move_forum_content)
-def delete_forum_tracker(sender, **kwargs):
-    sender.forumread_set.all().delete()
+@receiver(move_category_content)
+def delete_category_tracker(sender, **kwargs):
+    sender.categoryread_set.all().delete()
     sender.threadread_set.all().delete()
 
 

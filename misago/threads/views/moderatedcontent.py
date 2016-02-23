@@ -12,7 +12,7 @@ from misago.threads.permissions import exclude_invisible_threads
 class ModeratedContent(Threads):
     def get_queryset(self):
         queryset = Thread.objects.filter(has_moderated_posts=True)
-        queryset = queryset.select_related('forum')
+        queryset = queryset.select_related('category')
         queryset = exclude_invisible_threads(queryset, self.user)
         return queryset
 

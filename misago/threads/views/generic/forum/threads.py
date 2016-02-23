@@ -1,5 +1,5 @@
 from misago.core.shortcuts import paginate
-from misago.readtracker import forumstracker, threadstracker
+from misago.readtracker import categoriestracker, threadstracker
 
 from misago.threads.permissions import exclude_invisible_threads
 from misago.threads.views.generic.threads import Threads
@@ -9,11 +9,11 @@ __all__ = ['ForumThreads']
 
 
 class ForumThreads(Threads):
-    def __init__(self, user, forum):
+    def __init__(self, user, category):
         self.user = user
-        self.forum = forum
+        self.category = category
 
-        forumstracker.make_read_aware(user, forum)
+        categoriestracker.make_read_aware(user, category)
 
         self.pinned_count = 0
         self.filter_by = None
@@ -38,23 +38,23 @@ class ForumThreads(Threads):
             threads.append(thread)
 
         for thread in threads:
-            thread.forum = self.forum
+            thread.category = self.category
 
-        self.label_threads(threads, self.forum.labels)
+        self.label_threads(threads, self.category.labels)
         self.make_threads_read_aware(threads)
 
         return threads
 
     def get_queryset(self):
         queryset = exclude_invisible_threads(
-            self.forum.thread_set, self.user, self.forum)
+            self.category.thread_set, self.user, self.category)
         return self.filter_threads(queryset)
 
     def filter_threads(self, queryset):
         if self.filter_by == 'my-threads':
             return queryset.filter(starter_id=self.user.id)
         else:
-            if self.forum.acl['can_see_own_threads']:
+            if self.category.acl['can_see_own_threads']:
                 if self.user.is_authenticated():
                     queryset = queryset.filter(starter_id=self.user.id)
                 else:
@@ -66,11 +66,11 @@ class ForumThreads(Threads):
             elif self.filter_by == 'moderated-posts':
                 return queryset.filter(has_moderated_posts=True)
             else:
-                for label in self.forum.labels:
+                for label in self.category.labels:
                     if label.slug == self.filter_by:
                         return queryset.filter(label_id=label.pk)
                 else:
                     return queryset
 
     def make_threads_read_aware(self, threads):
-        threadstracker.make_threads_read_aware(self.user, threads, self.forum)
+        threadstracker.make_threads_read_aware(self.user, threads, self.category)

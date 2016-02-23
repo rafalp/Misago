@@ -74,8 +74,8 @@ def create_endpoint(request):
                                         set_default_avatar=True,
                                         **activation_kwargs)
 
-    mail_subject = _("Welcome on %(forum_title)s forums!")
-    mail_subject = mail_subject % {'forum_title': settings.forum_name}
+    mail_subject = _("Welcome on %(forum_name)s forums!")
+    mail_subject = mail_subject % {'forum_name': settings.forum_name}
 
     if settings.account_activation == 'none':
         authenticated_user = authenticate(

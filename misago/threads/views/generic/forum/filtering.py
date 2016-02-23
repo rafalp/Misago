@@ -4,12 +4,12 @@ from django.utils.translation import ugettext as _
 from misago.threads.views.generic.threads import ThreadsFiltering
 
 
-__all__ = ['ForumFiltering']
+__all__ = ['CategoryFiltering']
 
 
-class ForumFiltering(ThreadsFiltering):
-    def __init__(self, forum, link_name, link_params):
-        self.forum = forum
+class CategoryFiltering(ThreadsFiltering):
+    def __init__(self, category, link_name, link_params):
+        self.category = category
         self.link_name = link_name
         self.link_params = link_params.copy()
 
@@ -18,21 +18,21 @@ class ForumFiltering(ThreadsFiltering):
     def get_available_filters(self):
         filters = []
 
-        if self.forum.acl['can_see_all_threads']:
+        if self.category.acl['can_see_all_threads']:
             filters.append({
                 'type': 'my-threads',
                 'name': _("My threads"),
                 'is_label': False,
             })
 
-        if self.forum.acl['can_see_reports']:
+        if self.category.acl['can_see_reports']:
             filters.append({
                 'type': 'reported',
                 'name': _("With reported posts"),
                 'is_label': False,
             })
 
-        if self.forum.acl['can_review_moderated_content']:
+        if self.category.acl['can_review_moderated_content']:
             filters.extend(({
                 'type': 'moderated-threads',
                 'name': _("Moderated threads"),
@@ -44,7 +44,7 @@ class ForumFiltering(ThreadsFiltering):
                 'is_label': False,
             }))
 
-        for label in self.forum.labels:
+        for label in self.category.labels:
             filters.append({
                 'type': label.slug,
                 'name': label.name,
@@ -57,7 +57,7 @@ class ForumFiltering(ThreadsFiltering):
     def create_dicts(self):
         dicts = []
 
-        if self.forum.acl['can_see_all_threads']:
+        if self.category.acl['can_see_all_threads']:
             default_name = _("All threads")
         else:
             default_name = _("Your threads")

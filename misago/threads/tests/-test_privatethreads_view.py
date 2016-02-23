@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.utils import timezone
 
 from misago.acl.testutils import override_acl
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.users.testutils import UserTestCase, AuthenticatedUserTestCase
 
 from misago.threads import testutils
@@ -30,9 +30,9 @@ class AuthenticatedTests(AuthenticatedUserTestCase):
         """private threads list displays threads user participates in"""
         override_acl(self.user, {'can_moderate_private_threads': False})
 
-        forum = Forum.objects.private_threads()
-        invisible_threads = [testutils.post_thread(forum) for t in xrange(10)]
-        visible_threads = [testutils.post_thread(forum) for t in xrange(10)]
+        category = Category.objects.private_threads()
+        invisible_threads = [testutils.post_thread(category) for t in xrange(10)]
+        visible_threads = [testutils.post_thread(category) for t in xrange(10)]
 
         for thread in visible_threads:
             ThreadParticipant.objects.set_owner(thread, self.user)
@@ -50,9 +50,9 @@ class AuthenticatedTests(AuthenticatedUserTestCase):
         """private threads list displays threads with reports"""
         override_acl(self.user, {'can_moderate_private_threads': True})
 
-        forum = Forum.objects.private_threads()
-        invisible_threads = [testutils.post_thread(forum) for t in xrange(10)]
-        visible_threads = [testutils.post_thread(forum) for t in xrange(10)]
+        category = Category.objects.private_threads()
+        invisible_threads = [testutils.post_thread(category) for t in xrange(10)]
+        visible_threads = [testutils.post_thread(category) for t in xrange(10)]
 
         for thread in visible_threads:
             thread.has_reported_posts = True

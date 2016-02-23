@@ -5,7 +5,7 @@ from misago.core.utils import slugify
 
 
 class Thread(models.Model):
-    forum = models.ForeignKey('misago_forums.Forum')
+    category = models.ForeignKey('misago_categories.Category')
     label = models.ForeignKey('misago_threads.Label',
                               null=True, blank=True,
                               on_delete=models.SET_NULL)
@@ -49,9 +49,9 @@ class Thread(models.Model):
 
     class Meta:
         index_together = [
-            ['forum', 'id'],
-            ['forum', 'last_post_on'],
-            ['forum', 'replies'],
+            ['category', 'id'],
+            ['category', 'last_post_on'],
+            ['category', 'replies'],
         ]
 
     def __unicode__(self):
@@ -73,10 +73,10 @@ class Thread(models.Model):
         from misago.threads.signals import merge_thread
         merge_thread.send(sender=self, other_thread=other_thread)
 
-    def move(self, new_forum):
+    def move(self, new_category):
         from misago.threads.signals import move_thread
 
-        self.forum = new_forum
+        self.category = new_category
         move_thread.send(sender=self)
 
     def synchronize(self):
@@ -116,7 +116,7 @@ class Thread(models.Model):
 
     @property
     def thread_type(self):
-        return self.forum.thread_type
+        return self.category.thread_type
 
     def get_absolute_url(self):
         return self.thread_type.get_thread_absolute_url(self)

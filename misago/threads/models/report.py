@@ -5,7 +5,7 @@ from misago.conf import settings
 
 
 class Report(models.Model):
-    forum = models.ForeignKey('misago_forums.Forum')
+    category = models.ForeignKey('misago_categories.Category')
     thread = models.ForeignKey('misago_threads.Thread')
     post = models.ForeignKey('misago_threads.Post')
     reported_by = models.ForeignKey(settings.AUTH_USER_MODEL,

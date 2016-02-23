@@ -35,22 +35,22 @@ class EventsView(ViewBase):
         @atomic
         def real_view(request, event_id):
             queryset = Event.objects.select_for_update()
-            queryset = queryset.select_related('forum', 'thread')
+            queryset = queryset.select_related('category', 'thread')
             event = get_object_or_404(queryset, id=event_id)
 
-            forum = event.forum
+            category = event.category
             thread = event.thread
-            thread.forum = forum
+            thread.category = category
 
-            self.check_forum_permissions(request, forum)
+            self.check_category_permissions(request, category)
             self.check_thread_permissions(request, thread)
 
             if request.POST.get('action') == 'toggle':
-                if not forum.acl.get('can_hide_events'):
+                if not category.acl.get('can_hide_events'):
                     raise PermissionDenied(_("You can't hide events."))
                 return toggle_event(request, event)
             elif request.POST.get('action') == 'delete':
-                if forum.acl.get('can_hide_events') != 2:
+                if category.acl.get('can_hide_events') != 2:
                     raise PermissionDenied(_("You can't delete events."))
                 return delete_event(request, event)
             else:

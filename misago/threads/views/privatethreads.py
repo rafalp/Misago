@@ -7,10 +7,10 @@ from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import ugettext as _, ungettext
 
 from misago.acl import add_acl
+from misago.categories.models import Category
 from misago.core.errorpages import not_allowed
 from misago.core.exceptions import AjaxError
 from misago.core.uiviews import uiview
-from misago.forums.models import Forum
 from misago.users.decorators import deny_guests
 
 from misago.threads import participants
@@ -41,13 +41,13 @@ class PrivateThreadsMixin(object):
     """
     Mixin is used to make views use different permission tests
     """
-    def get_forum(self, request, lock=False, **kwargs):
-        forum = Forum.objects.private_threads()
-        add_acl(request.user, forum)
-        return forum
+    def get_category(self, request, lock=False, **kwargs):
+        category = Category.objects.private_threads()
+        add_acl(request.user, category)
+        return category
 
-    def check_forum_permissions(self, request, forum):
-        add_acl(request.user, forum)
+    def check_category_permissions(self, request, category):
+        add_acl(request.user, category)
         allow_use_private_threads(request.user)
 
     def fetch_thread(self, request, lock=False, select_related=None,
@@ -57,18 +57,18 @@ class PrivateThreadsMixin(object):
             queryset = queryset.select_for_update()
 
         select_related = select_related or []
-        if not 'forum' in select_related:
-            select_related.append('forum')
+        if not 'category' in select_related:
+            select_related.append('category')
         queryset = queryset.select_related(*select_related)
 
         where = {'id': kwargs.get('thread_id')}
         thread = get_object_or_404(queryset, **where)
-        if thread.forum.special_role != 'private_threads':
+        if thread.category.special_role != 'private_threads':
             raise Http404()
         return thread
 
     def check_thread_permissions(self, request, thread):
-        add_acl(request.user, thread.forum)
+        add_acl(request.user, thread.category)
         add_acl(request.user, thread)
 
         participants.make_thread_participants_aware(request.user, thread)
@@ -77,7 +77,7 @@ class PrivateThreadsMixin(object):
         allow_use_private_threads(request.user)
 
     def check_post_permissions(self, request, post):
-        add_acl(request.user, post.forum)
+        add_acl(request.user, post.category)
         add_acl(request.user, post.thread)
         add_acl(request.user, post)
 
@@ -87,7 +87,7 @@ class PrivateThreadsMixin(object):
         allow_see_private_thread(request.user, post.thread)
         allow_use_private_threads(request.user)
 
-    def exclude_invisible_posts(self, queryset, user, forum, thread):
+    def exclude_invisible_posts(self, queryset, user, category, thread):
         return queryset
 
 
@@ -95,7 +95,7 @@ class PrivateThreads(generic.Threads):
     fetch_pinned_threads = False
 
     def get_queryset(self):
-        threads_qs = Forum.objects.private_threads().thread_set
+        threads_qs = Category.objects.private_threads().thread_set
         return exclude_invisible_private_threads(threads_qs, self.user)
 
 
@@ -254,7 +254,7 @@ class ThreadParticipantsView(PrivateThreadsMixin, generic.ViewBase):
         participants_qs = participants_qs.select_related('user', 'user__rank')
 
         return self.render(request, {
-            'forum': thread.forum,
+            'category': thread.category,
             'thread': thread,
             'participants': participants_qs.order_by('-is_owner', 'user__slug')
         })
@@ -318,7 +318,7 @@ class AddThreadParticipantsView(BaseEditThreadParticipantView):
         participants_list = [p for p in participants_qs]
 
         participants_list_html = self.render(request, {
-            'forum': thread.forum,
+            'category': thread.category,
             'thread': thread,
             'participants': participants_list,
         }).content

@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 
 from misago.acl.testutils import override_acl
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads.models import Thread, Label
@@ -12,20 +12,20 @@ class ThreadViewTestCase(AuthenticatedUserTestCase):
     def setUp(self):
         super(ThreadViewTestCase, self).setUp()
 
-        self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
-        self.forum.labels = []
+        self.category = Category.objects.all_categories().filter(role='forum')[:1][0]
+        self.category.labels = []
 
-        self.thread = post_thread(self.forum)
+        self.thread = post_thread(self.category)
 
-    def override_acl(self, new_acl, forum=None):
-        forum = forum or self.forum
+    def override_acl(self, new_acl, category=None):
+        category = category or self.category
 
         new_acl.update({'can_see': True, 'can_browse': True})
 
-        forums_acl = self.user.acl
-        forums_acl['visible_forums'].append(forum.pk)
-        forums_acl['forums'][forum.pk] = new_acl
-        override_acl(self.user, forums_acl)
+        categories_acl = self.user.acl
+        categories_acl['visible_categories'].append(category.pk)
+        categories_acl['categories'][category.pk] = new_acl
+        override_acl(self.user, categories_acl)
 
     def reload_thread(self):
         self.thread = Thread.objects.get(id=self.thread.id)
@@ -44,7 +44,7 @@ class ThreadViewTests(ThreadViewTestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_can_see_all_threads_false_owned_thread(self):
-        """user can see thread he started in private forum"""
+        """user can see thread he started in private category"""
         self.override_acl({
             'can_see_all_threads': False,
             'can_see_own_threads': True
@@ -78,12 +78,12 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         super(ThreadViewModerationTests, self).tearDown()
         Label.objects.clear_cache()
 
-    def override_acl(self, new_acl, forum=None):
+    def override_acl(self, new_acl, category=None):
         new_acl.update({
             'can_see_all_threads': True,
             'can_see_own_threads': False
         })
-        super(ThreadViewModerationTests, self).override_acl(new_acl, forum)
+        super(ThreadViewModerationTests, self).override_acl(new_acl, category)
 
     def test_label_thread(self):
         """its possible to set thread label"""
@@ -98,7 +98,7 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         self.assertNotIn("Thread actions", response.content)
 
         test_label = Label.objects.create(name="Foxtrot", slug="foxtrot")
-        test_label.forums.add(self.forum)
+        test_label.categories.add(self.category)
         Label.objects.clear_cache()
 
         self.override_acl({'can_change_threads_labels': 0})
@@ -122,9 +122,9 @@ class ThreadViewModerationTests(ThreadViewTestCase):
     def test_change_thread_label(self):
         """its possible to change thread label"""
         test_label = Label.objects.create(name="Foxtrot", slug="foxtrot")
-        test_label.forums.add(self.forum)
+        test_label.categories.add(self.category)
         other_label = Label.objects.create(name="Uniform", slug="uniform")
-        other_label.forums.add(self.forum)
+        other_label.categories.add(self.category)
 
         Label.objects.clear_cache()
 
@@ -155,7 +155,7 @@ class ThreadViewModerationTests(ThreadViewTestCase):
     def test_unlabel_thread(self):
         """its possible to unset thread label"""
         test_label = Label.objects.create(name="Foxtrot", slug="foxtrot")
-        test_label.forums.add(self.forum)
+        test_label.categories.add(self.category)
         Label.objects.clear_cache()
 
         self.thread.label = test_label
@@ -267,24 +267,26 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         response = self.client.post(self.thread.get_absolute_url(),
                                     data={'thread_action': 'move'})
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Move thread to forum:", response.content)
+        self.assertIn("Move thread to category:", response.content)
 
-        new_forum = Forum(name="New Forum",
-                          slug="new-forum",
-                          role="forum")
-        new_forum.insert_at(self.forum.parent, save=True)
+        new_category = Category(
+            name="New Category",
+            slug="new-category",
+            role='forum'
+        )
+        new_category.insert_at(self.category.parent, save=True)
 
         self.override_acl({'can_move_threads': 1})
-        self.override_acl({'can_move_threads': 1}, new_forum)
+        self.override_acl({'can_move_threads': 1}, new_category)
         response = self.client.post(self.thread.get_absolute_url(), data={
             'thread_action': 'move',
-            'new_forum': unicode(new_forum.id),
+            'new_category': unicode(new_category.id),
             'submit': '1'
         })
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.reload_thread().forum, new_forum)
+        self.assertEqual(self.reload_thread().category, new_category)
 
-        # we made forum "empty", assert that board index renders
+        # we made category "empty", assert that board index renders
         response = self.client.get(reverse('misago:index'))
         self.assertEqual(response.status_code, 200)
 
@@ -301,7 +303,7 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(self.reload_thread().is_hidden)
 
-        # we made forum "empty", assert that board index renders
+        # we made category "empty", assert that board index renders
         response = self.client.get(reverse('misago:index'))
         self.assertEqual(response.status_code, 200)
 
@@ -330,7 +332,7 @@ class ThreadViewModerationTests(ThreadViewTestCase):
                                     data={'thread_action': 'delete'})
         self.assertEqual(response.status_code, 302)
 
-        # we made forum empty, assert that board index renders
+        # we made category empty, assert that board index renders
         response = self.client.get(reverse('misago:index'))
         self.assertEqual(response.status_code, 200)
 
@@ -461,7 +463,7 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         response = self.client.post(self.thread.get_absolute_url(), data={
             'action': 'move',
             'item': [p.pk for p in posts],
-            'new_thread_url': self.forum.get_absolute_url(),
+            'new_thread_url': self.category.get_absolute_url(),
             'submit': ''
         })
         self.assertEqual(response.status_code, 200)
@@ -485,7 +487,7 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('Move posts', response.content)
 
-        other_thread = post_thread(self.forum)
+        other_thread = post_thread(self.category)
 
         self.override_acl(test_acl)
         response = self.client.post(self.thread.get_absolute_url(), data={
@@ -543,7 +545,7 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         response = self.client.post(self.thread.get_absolute_url(), data={
             'action': 'split',
             'item': [p.pk for p in posts[:3]],
-            'forum': self.forum.id,
+            'category': self.category.id,
             'thread_title': 'Split thread',
             'submit': ''
         })
@@ -556,7 +558,7 @@ class ThreadViewModerationTests(ThreadViewTestCase):
         response = self.client.post(self.thread.get_absolute_url(), data={
             'action': 'split',
             'item': [posts[-1].pk],
-            'forum': self.forum.id,
+            'category': self.category.id,
             'thread_title': 'Split thread',
             'follow': ''
         })

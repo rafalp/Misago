@@ -5,15 +5,15 @@ from django.db import models
 from django.utils import timezone
 
 
-class ForumRead(models.Model):
+class CategoryRead(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    forum = models.ForeignKey('misago_forums.Forum')
+    category = models.ForeignKey('misago_categories.Category')
     last_read_on = models.DateTimeField()
 
 
 class ThreadRead(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    forum = models.ForeignKey('misago_forums.Forum')
+    category = models.ForeignKey('misago_categories.Category')
     thread = models.ForeignKey('misago_threads.Thread')
     read_replies =  models.PositiveIntegerField(default=0)
     last_read_on = models.DateTimeField()

@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from misago.acl.testutils import override_acl
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads.models import Label, Thread
@@ -19,9 +19,9 @@ class StartThreadTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(StartThreadTests, self).setUp()
 
-        self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
+        self.category = Category.objects.all_categories().filter(role='forum')[:1][0]
         self.link = reverse('misago:start_thread', kwargs={
-            'forum_id': self.forum.id
+            'category_id': self.category.id
         })
 
         Label.objects.clear_cache()
@@ -30,59 +30,59 @@ class StartThreadTests(AuthenticatedUserTestCase):
         Label.objects.clear_cache()
 
     def allow_start_thread(self, extra_acl=None):
-        forums_acl = self.user.acl
-        forums_acl['visible_forums'].append(self.forum.pk)
-        forums_acl['forums'][self.forum.pk] = {
+        categories_acl = self.user.acl
+        categories_acl['visible_categories'].append(self.category.pk)
+        categories_acl['categories'][self.category.pk] = {
             'can_see': 1,
             'can_browse': 1,
             'can_start_threads': 1,
         }
 
         if extra_acl:
-            forums_acl['forums'][self.forum.pk].update(extra_acl)
-        override_acl(self.user, forums_acl)
+            categories_acl['categories'][self.category.pk].update(extra_acl)
+        override_acl(self.user, categories_acl)
 
     def test_cant_see(self):
-        """has no permission to see forum"""
-        forums_acl = self.user.acl
-        forums_acl['visible_forums'].remove(self.forum.pk)
-        forums_acl['forums'][self.forum.pk] = {
+        """has no permission to see category"""
+        categories_acl = self.user.acl
+        categories_acl['visible_categories'].remove(self.category.pk)
+        categories_acl['categories'][self.category.pk] = {
             'can_see': 0,
             'can_browse': 0,
             'can_start_threads': 1,
         }
-        override_acl(self.user, forums_acl)
+        override_acl(self.user, categories_acl)
 
         response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 404)
 
     def test_cant_browse(self):
-        """has no permission to browse forum"""
-        forums_acl = self.user.acl
-        forums_acl['visible_forums'].append(self.forum.pk)
-        forums_acl['forums'][self.forum.pk] = {
+        """has no permission to browse category"""
+        categories_acl = self.user.acl
+        categories_acl['visible_categories'].append(self.category.pk)
+        categories_acl['categories'][self.category.pk] = {
             'can_see': 1,
             'can_browse': 0,
             'can_start_threads': 1,
         }
-        override_acl(self.user, forums_acl)
+        override_acl(self.user, categories_acl)
 
         response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 403)
 
-    def test_cant_start_thread_in_locked_forum(self):
-        """can't post in closed forum"""
-        self.forum.is_closed = True
-        self.forum.save()
+    def test_cant_start_thread_in_locked_category(self):
+        """can't post in closed category"""
+        self.category.is_closed = True
+        self.category.save()
 
-        forums_acl = self.user.acl
-        forums_acl['visible_forums'].append(self.forum.pk)
-        forums_acl['forums'][self.forum.pk] = {
+        categories_acl = self.user.acl
+        categories_acl['visible_categories'].append(self.category.pk)
+        categories_acl['categories'][self.category.pk] = {
             'can_see': 1,
             'can_browse': 1,
             'can_start_threads': 1,
         }
-        override_acl(self.user, forums_acl)
+        override_acl(self.user, categories_acl)
 
         response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 403)
@@ -136,7 +136,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(updated_user.threads, 1)
         self.assertEqual(updated_user.posts, 1)
 
-        self.assertEqual(last_thread.forum_id, self.forum.pk)
+        self.assertEqual(last_thread.category_id, self.category.pk)
         self.assertEqual(last_thread.title, "Hello, I am test thread!")
         self.assertEqual(last_thread.starter_id, updated_user.id)
         self.assertEqual(last_thread.starter_name, updated_user.username)
@@ -146,22 +146,22 @@ class StartThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(last_thread.last_poster_slug, updated_user.slug)
 
         last_post = self.user.post_set.all()[:1][0]
-        self.assertEqual(last_post.forum_id, self.forum.pk)
+        self.assertEqual(last_post.category_id, self.category.pk)
         self.assertEqual(last_post.original, 'Lorem ipsum dolor met!')
         self.assertEqual(last_post.poster_id, updated_user.id)
         self.assertEqual(last_post.poster_name, updated_user.username)
 
-        updated_forum = Forum.objects.get(id=self.forum.id)
-        self.assertEqual(updated_forum.threads, 1)
-        self.assertEqual(updated_forum.posts, 1)
-        self.assertEqual(updated_forum.last_thread_id, last_thread.id)
-        self.assertEqual(updated_forum.last_thread_title, last_thread.title)
-        self.assertEqual(updated_forum.last_thread_slug, last_thread.slug)
+        updated_category = Category.objects.get(id=self.category.id)
+        self.assertEqual(updated_category.threads, 1)
+        self.assertEqual(updated_category.posts, 1)
+        self.assertEqual(updated_category.last_thread_id, last_thread.id)
+        self.assertEqual(updated_category.last_thread_title, last_thread.title)
+        self.assertEqual(updated_category.last_thread_slug, last_thread.slug)
 
-        self.assertEqual(updated_forum.last_poster_id, updated_user.id)
-        self.assertEqual(updated_forum.last_poster_name,
+        self.assertEqual(updated_category.last_poster_id, updated_user.id)
+        self.assertEqual(updated_category.last_poster_name,
                          updated_user.username)
-        self.assertEqual(updated_forum.last_poster_slug, updated_user.slug)
+        self.assertEqual(updated_category.last_poster_slug, updated_user.slug)
 
     def test_start_closed_thread(self):
         """can post closed thread"""
@@ -215,7 +215,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
         field_name = '%s-label' % prefix
 
         label = Label.objects.create(name="Label", slug="label")
-        label.forums.add(self.forum)
+        label.categories.add(self.category)
 
         self.allow_start_thread({'can_change_threads_labels': 1})
         response = self.client.get(self.link, **self.ajax_header)

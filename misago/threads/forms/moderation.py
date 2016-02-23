@@ -5,9 +5,10 @@ from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 
 from misago.acl import add_acl
+from misago.categories.forms import CategoryChoiceField
+from misago.categories.permissions import (allow_see_category,
+                                           allow_browse_category)
 from misago.core import forms
-from misago.forums.forms import ForumChoiceField
-from misago.forums.permissions import allow_see_forum, allow_browse_forum
 
 from misago.threads.models import Thread
 from misago.threads.permissions import allow_see_thread
@@ -31,39 +32,39 @@ class MergeThreadsForm(forms.Form):
 
 
 class MoveThreadsForm(forms.Form):
-    new_forum = ForumChoiceField(label=_("Move threads to forum"),
-                                 empty_label=None)
+    new_category = CategoryChoiceField(label=_("Move threads to category"),
+                                       empty_label=None)
 
     def __init__(self, *args, **kwargs):
-        self.forum = kwargs.pop('forum')
+        self.category = kwargs.pop('category')
         acl = kwargs.pop('acl')
 
         super(MoveThreadsForm, self).__init__(*args, **kwargs)
 
-        self.fields['new_forum'].set_acl(acl)
+        self.fields['new_category'].set_acl(acl)
 
     def clean(self):
         data = super(MoveThreadsForm, self).clean()
 
-        new_forum = data.get('new_forum')
-        if new_forum:
-            if new_forum.is_category:
+        new_category = data.get('new_category')
+        if new_category:
+            if new_category.is_category:
                 message = _("You can't move threads to category.")
                 raise forms.ValidationError(message)
-            if new_forum.is_redirect:
+            if new_category.is_redirect:
                 message = _("You can't move threads to redirect.")
                 raise forms.ValidationError(message)
-            if new_forum.pk == self.forum.pk:
-                message = _("New forum is same as current one.")
+            if new_category.pk == self.category.pk:
+                message = _("New category is same as current one.")
                 raise forms.ValidationError(message)
         else:
-            raise forms.ValidationError(_("You have to select forum."))
+            raise forms.ValidationError(_("You have to select category."))
         return data
 
 
 class MoveThreadForm(MoveThreadsForm):
-    new_forum = ForumChoiceField(label=_("Move thread to forum"),
-                                 empty_label=None)
+    new_category = CategoryChoiceField(label=_("Move thread to category"),
+                                       empty_label=None)
 
 
 class MovePostsForm(forms.Form):
@@ -90,14 +91,14 @@ class MovePostsForm(forms.Form):
             if not 'thread_id' in resolution.kwargs:
                 raise Http404()
 
-            queryset = Thread.objects.select_related('forum')
+            queryset = Thread.objects.select_related('category')
             self.new_thread = queryset.get(id=resolution.kwargs['thread_id'])
 
-            add_acl(self.user, self.new_thread.forum)
+            add_acl(self.user, self.new_thread.category)
             add_acl(self.user, self.new_thread)
 
-            allow_see_forum(self.user, self.new_thread.forum)
-            allow_browse_forum(self.user, self.new_thread.forum)
+            allow_see_category(self.user, self.new_thread.category)
+            allow_browse_category(self.user, self.new_thread.category)
             allow_see_thread(self.user, self.new_thread)
 
         except (Http404, Thread.DoesNotExist):
@@ -108,7 +109,7 @@ class MovePostsForm(forms.Form):
             message = _("New thread is same as current one.")
             raise forms.ValidationError(message)
 
-        if self.new_thread.forum.special_role:
+        if self.new_thread.category.special_role:
             message = _("You can't move posts to special threads.")
             raise forms.ValidationError(message)
 
@@ -116,7 +117,7 @@ class MovePostsForm(forms.Form):
 
 
 class SplitThreadForm(forms.Form):
-    forum = ForumChoiceField(label=_("New thread forum"),
+    category = CategoryChoiceField(label=_("New thread category"),
                                  empty_label=None)
 
     thread_title = forms.CharField(label=_("New thread title"),
@@ -127,21 +128,21 @@ class SplitThreadForm(forms.Form):
 
         super(SplitThreadForm, self).__init__(*args, **kwargs)
 
-        self.fields['forum'].set_acl(acl)
+        self.fields['category'].set_acl(acl)
 
     def clean(self):
         data = super(SplitThreadForm, self).clean()
 
-        forum = data.get('forum')
-        if forum:
-            if forum.is_category:
+        category = data.get('category')
+        if category:
+            if category.is_category:
                 message = _("You can't start threads in category.")
                 raise forms.ValidationError(message)
-            if forum.is_redirect:
+            if category.is_redirect:
                 message = _("You can't start threads in redirect.")
                 raise forms.ValidationError(message)
         else:
-            raise forms.ValidationError(_("You have to select forum."))
+            raise forms.ValidationError(_("You have to select category."))
 
         thread_title = data.get('thread_title')
         if thread_title:

@@ -4,33 +4,34 @@ from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
 from misago.acl.testutils import override_acl
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads import testutils
 from misago.threads.models import Thread, Label
 from misago.threads.moderation import ModerationError
-from misago.threads.views.generic.forum import (ForumActions, ForumFiltering,
-                                                ForumThreads)
+from misago.threads.views.generic.category import (CategoryActions,
+                                                   CategoryFiltering,
+                                                   CategoryThreads)
 
 
-class ForumViewHelperTestCase(AuthenticatedUserTestCase):
+class CategoryViewHelperTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ForumViewHelperTestCase, self).setUp()
+        super(CategoryViewHelperTestCase, self).setUp()
 
-        self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
-        self.forum.labels = []
+        self.category = Category.objects.all_categories().filter(role='category')[:1][0]
+        self.category.labels = []
 
     def override_acl(self, new_acl):
         new_acl.update({'can_browse': True})
 
-        forums_acl = self.user.acl
-        forums_acl['visible_forums'].append(self.forum.pk)
-        forums_acl['forums'][self.forum.pk] = new_acl
-        override_acl(self.user, forums_acl)
+        categories_acl = self.user.acl
+        categories_acl['visible_categories'].append(self.category.pk)
+        categories_acl['categories'][self.category.pk] = new_acl
+        override_acl(self.user, categories_acl)
 
-        self.forum.acl = {}
-        add_acl(self.user, self.forum)
+        self.category.acl = {}
+        add_acl(self.user, self.category)
 
 
 class MockRequest(object):
@@ -39,10 +40,10 @@ class MockRequest(object):
         self.user = user
         self.user_ip = '127.0.0.1'
         self.session = {}
-        self.path = '/forum/fake-forum-1/'
+        self.path = '/category/fake-category-1/'
 
 
-class ActionsTests(ForumViewHelperTestCase):
+class ActionsTests(CategoryViewHelperTestCase):
     def setUp(self):
         super(ActionsTests, self).setUp()
         Label.objects.clear_cache()
@@ -52,32 +53,32 @@ class ActionsTests(ForumViewHelperTestCase):
         Label.objects.clear_cache()
 
     def test_label_actions(self):
-        """ForumActions initializes list with label actions"""
+        """CategoryActions initializes list with label actions"""
         self.override_acl({
             'can_change_threads_labels': 0,
         })
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [])
 
         self.override_acl({
             'can_change_threads_labels': 1,
         })
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [])
 
         self.override_acl({
             'can_change_threads_labels': 2,
         })
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [])
 
         label = Label.objects.create(name="Mock Label", slug="mock-label")
-        self.forum.labels = [label]
+        self.category.labels = [label]
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [
             {
                 'action': 'label:%s' % label.slug,
@@ -92,19 +93,19 @@ class ActionsTests(ForumViewHelperTestCase):
         ])
 
     def test_pin_unpin_actions(self):
-        """ForumActions initializes list with pin and unpin actions"""
+        """CategoryActions initializes list with pin and unpin actions"""
         self.override_acl({
             'can_pin_threads': 0,
         })
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [])
 
         self.override_acl({
             'can_pin_threads': 1,
         })
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [
             {
                 'action': 'pin',
@@ -119,19 +120,19 @@ class ActionsTests(ForumViewHelperTestCase):
         ])
 
     def test_approve_action(self):
-        """ForumActions initializes list with approve threads action"""
+        """CategoryActions initializes list with approve threads action"""
         self.override_acl({
             'can_review_moderated_content': 0,
         })
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [])
 
         self.override_acl({
             'can_review_moderated_content': 1,
         })
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [
             {
                 'action': 'approve',
@@ -141,19 +142,19 @@ class ActionsTests(ForumViewHelperTestCase):
         ])
 
     def test_move_action(self):
-        """ForumActions initializes list with move threads action"""
+        """CategoryActions initializes list with move threads action"""
         self.override_acl({
             'can_move_threads': 0,
         })
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [])
 
         self.override_acl({
             'can_move_threads': 1,
         })
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [
             {
                 'action': 'move',
@@ -163,19 +164,19 @@ class ActionsTests(ForumViewHelperTestCase):
         ])
 
     def test_merge_action(self):
-        """ForumActions initializes list with merge threads action"""
+        """CategoryActions initializes list with merge threads action"""
         self.override_acl({
             'can_merge_threads': 0,
         })
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [])
 
         self.override_acl({
             'can_merge_threads': 1,
         })
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [
             {
                 'action': 'merge',
@@ -185,19 +186,19 @@ class ActionsTests(ForumViewHelperTestCase):
         ])
 
     def test_close_open_actions(self):
-        """ForumActions initializes list with close and open actions"""
+        """CategoryActions initializes list with close and open actions"""
         self.override_acl({
             'can_close_threads': 0,
         })
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [])
 
         self.override_acl({
             'can_close_threads': 1,
         })
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [
             {
                 'action': 'open',
@@ -212,19 +213,19 @@ class ActionsTests(ForumViewHelperTestCase):
         ])
 
     def test_hide_delete_actions(self):
-        """ForumActions initializes list with hide/delete actions"""
+        """CategoryActions initializes list with hide/delete actions"""
         self.override_acl({
             'can_hide_threads': 0,
         })
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [])
 
         self.override_acl({
             'can_hide_threads': 1,
         })
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [
             {
                 'action': 'unhide',
@@ -242,7 +243,7 @@ class ActionsTests(ForumViewHelperTestCase):
             'can_hide_threads': 2,
         })
 
-        actions = ForumActions(user=self.user, forum=self.forum)
+        actions = CategoryActions(user=self.user, category=self.category)
         self.assertEqual(actions.available_actions, [
             {
                 'action': 'unhide',
@@ -264,17 +265,17 @@ class ActionsTests(ForumViewHelperTestCase):
         ])
 
 
-class ForumFilteringTests(ForumViewHelperTestCase):
+class CategoryFilteringTests(CategoryViewHelperTestCase):
     def setUp(self):
-        super(ForumFilteringTests, self).setUp()
+        super(CategoryFilteringTests, self).setUp()
         Label.objects.clear_cache()
 
     def tearDown(self):
-        super(ForumFilteringTests, self).tearDown()
+        super(CategoryFilteringTests, self).tearDown()
         Label.objects.clear_cache()
 
     def test_get_available_filters(self):
-        """get_available_filters returns filters varying on forum acl"""
+        """get_available_filters returns filters varying on category acl"""
         default_acl = {
             'can_see_all_threads': False,
             'can_see_reports': False,
@@ -289,9 +290,9 @@ class ForumFilteringTests(ForumViewHelperTestCase):
 
         for permission, filter_type in cases:
             self.override_acl(default_acl)
-            filtering = ForumFiltering(self.forum, 'misago:forum', {
-                'forum_id': self.forum.id,
-                'forum_slug': self.forum.slug,
+            filtering = CategoryFiltering(self.category, 'misago:category', {
+                'category_id': self.category.id,
+                'category_slug': self.category.slug,
             })
 
             available_filters = filtering.get_available_filters()
@@ -302,16 +303,16 @@ class ForumFilteringTests(ForumViewHelperTestCase):
             acl[permission] = True
             self.override_acl(acl)
 
-            filtering = ForumFiltering(self.forum, 'misago:forum', {
-                'forum_id': self.forum.id,
-                'forum_slug': self.forum.slug,
+            filtering = CategoryFiltering(self.category, 'misago:category', {
+                'category_id': self.category.id,
+                'category_slug': self.category.slug,
             })
 
             available_filters = filtering.get_available_filters()
             available_filters = [f['type'] for f in available_filters]
             self.assertIn(filter_type, available_filters)
 
-        self.forum.labels = [
+        self.category.labels = [
             Label(name='Label A', slug='label-a'),
             Label(name='Label B', slug='label-b'),
             Label(name='Label C', slug='label-c'),
@@ -319,16 +320,16 @@ class ForumFilteringTests(ForumViewHelperTestCase):
         ]
 
         self.override_acl(default_acl)
-        ForumFiltering(self.forum, 'misago:forum', {
-                'forum_id': self.forum.id,
-                'forum_slug': self.forum.slug,
+        CategoryFiltering(self.category, 'misago:category', {
+                'category_id': self.category.id,
+                'category_slug': self.category.slug,
             })
 
         available_filters = filtering.get_available_filters()
         available_filters = [f['type'] for f in available_filters]
 
-        self.assertEqual(len(available_filters), len(self.forum.labels))
-        for label in self.forum.labels:
+        self.assertEqual(len(available_filters), len(self.category.labels))
+        for label in self.category.labels:
             self.assertIn(label.slug, available_filters)
 
     def test_clean_kwargs(self):
@@ -339,9 +340,9 @@ class ForumFilteringTests(ForumViewHelperTestCase):
             'can_review_moderated_content': True,
         })
 
-        filtering = ForumFiltering(self.forum, 'misago:forum', {
-            'forum_id': self.forum.id,
-            'forum_slug': self.forum.slug,
+        filtering = CategoryFiltering(self.category, 'misago:category', {
+            'category_id': self.category.id,
+            'category_slug': self.category.slug,
         })
 
         available_filters = filtering.get_available_filters()
@@ -387,9 +388,9 @@ class ForumFilteringTests(ForumViewHelperTestCase):
         )
 
         for filter_type, name in test_cases:
-            filtering = ForumFiltering(self.forum, 'misago:forum', {
-                'forum_id': self.forum.id,
-                'forum_slug': self.forum.slug,
+            filtering = CategoryFiltering(self.category, 'misago:category', {
+                'category_id': self.category.id,
+                'category_slug': self.category.slug,
             })
             filtering.clean_kwargs({'show': filter_type})
             self.assertEqual(filtering.current['name'], name)
@@ -410,9 +411,9 @@ class ForumFilteringTests(ForumViewHelperTestCase):
         )
 
         for filter_type in test_cases:
-            filtering = ForumFiltering(self.forum, 'misago:forum', {
-                'forum_id': self.forum.id,
-                'forum_slug': self.forum.slug,
+            filtering = CategoryFiltering(self.category, 'misago:category', {
+                'category_id': self.category.id,
+                'category_slug': self.category.slug,
             })
             filtering.clean_kwargs({'show': filter_type})
 
@@ -420,7 +421,7 @@ class ForumFilteringTests(ForumViewHelperTestCase):
             self.assertNotIn(filter_type, choices)
 
 
-class ForumThreadsTests(ForumViewHelperTestCase):
+class CategoryThreadsTests(CategoryViewHelperTestCase):
     def test_empty_list(self):
         """list returns empty list of items"""
         self.override_acl({
@@ -428,7 +429,7 @@ class ForumThreadsTests(ForumViewHelperTestCase):
             'can_review_moderated_content': False
         })
 
-        threads = ForumThreads(self.user, self.forum)
+        threads = CategoryThreads(self.user, self.category)
         threads_list = threads.list()
 
         self.assertEqual(threads_list, [])
@@ -443,7 +444,7 @@ class ForumThreadsTests(ForumViewHelperTestCase):
             'can_review_moderated_content': False
         })
 
-        threads = ForumThreads(self.user, self.forum)
+        threads = CategoryThreads(self.user, self.category)
 
         with self.assertRaises(AttributeError):
             threads.page
@@ -455,22 +456,22 @@ class ForumThreadsTests(ForumViewHelperTestCase):
         """list returns list of visible threads"""
         test_threads = [
             testutils.post_thread(
-                forum=self.forum,
+                category=self.category,
                 title="Hello, I am thread",
                 is_moderated=False,
                 poster=self.user),
             testutils.post_thread(
-                forum=self.forum,
+                category=self.category,
                 title="Hello, I am moderated thread",
                 is_moderated=True,
                 poster=self.user),
             testutils.post_thread(
-                forum=self.forum,
+                category=self.category,
                 title="Hello, I am other user thread",
                 is_moderated=False,
                 poster="Bob"),
             testutils.post_thread(
-                forum=self.forum,
+                category=self.category,
                 title="Hello, I am other user moderated thread",
                 is_moderated=True,
                 poster="Bob"),
@@ -481,7 +482,7 @@ class ForumThreadsTests(ForumViewHelperTestCase):
             'can_review_moderated_content': False
         })
 
-        threads = ForumThreads(self.user, self.forum)
+        threads = CategoryThreads(self.user, self.category)
         self.assertEqual(threads.list(), [test_threads[1], test_threads[0]])
 
         self.override_acl({
@@ -489,7 +490,7 @@ class ForumThreadsTests(ForumViewHelperTestCase):
             'can_review_moderated_content': False
         })
 
-        threads = ForumThreads(self.user, self.forum)
+        threads = CategoryThreads(self.user, self.category)
         self.assertEqual(threads.list(),
                          [test_threads[2], test_threads[1], test_threads[0]])
 
@@ -498,7 +499,7 @@ class ForumThreadsTests(ForumViewHelperTestCase):
             'can_review_moderated_content': True
         })
 
-        threads = ForumThreads(self.user, self.forum)
+        threads = CategoryThreads(self.user, self.category)
         test_threads.reverse()
         self.assertEqual(threads.list(), test_threads)
 
@@ -506,33 +507,33 @@ class ForumThreadsTests(ForumViewHelperTestCase):
         self.assertTrue(threads.paginator)
 
 
-class ForumThreadsViewTests(AuthenticatedUserTestCase):
+class CategoryThreadsViewTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ForumThreadsViewTests, self).setUp()
+        super(CategoryThreadsViewTests, self).setUp()
 
-        self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
-        self.link = self.forum.get_absolute_url()
-        self.forum.delete_content()
+        self.category = Category.objects.all_categories().filter(role='category')[:1][0]
+        self.link = self.category.get_absolute_url()
+        self.category.delete_content()
 
         Label.objects.clear_cache()
 
     def tearDown(self):
-        super(ForumThreadsViewTests, self).tearDown()
+        super(CategoryThreadsViewTests, self).tearDown()
         Label.objects.clear_cache()
 
-    def override_acl(self, new_acl, forum=None):
-        forum = forum or self.forum
+    def override_acl(self, new_acl, category=None):
+        category = category or self.category
 
-        forums_acl = self.user.acl
+        categories_acl = self.user.acl
         if new_acl['can_see']:
-            forums_acl['visible_forums'].append(forum.pk)
+            categories_acl['visible_categories'].append(category.pk)
         else:
-            forums_acl['visible_forums'].remove(forum.pk)
-        forums_acl['forums'][forum.pk] = new_acl
-        override_acl(self.user, forums_acl)
+            categories_acl['visible_categories'].remove(category.pk)
+        categories_acl['categories'][category.pk] = new_acl
+        override_acl(self.user, categories_acl)
 
     def test_cant_see(self):
-        """has no permission to see forum"""
+        """has no permission to see category"""
         self.override_acl({
             'can_see': 0,
             'can_browse': 0,
@@ -542,7 +543,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_cant_browse(self):
-        """has no permission to browse forum"""
+        """has no permission to browse category"""
         self.override_acl({
             'can_see': 1,
             'can_browse': 0,
@@ -552,7 +553,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_can_browse_empty(self):
-        """has permission to browse forum, sees empty list"""
+        """has permission to browse category, sees empty list"""
         self.override_acl({
             'can_see': 1,
             'can_browse': 1,
@@ -575,20 +576,20 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
 
         other_moderated_title = "Test other user moderated thread"
         testutils.post_thread(
-            forum=self.forum, title=other_moderated_title, is_moderated=True)
+            category=self.category, title=other_moderated_title, is_moderated=True)
 
         other_title = "Test other user thread"
-        testutils.post_thread(forum=self.forum, title=other_title)
+        testutils.post_thread(category=self.category, title=other_title)
 
         owned_title = "Test authenticated user thread"
         testutils.post_thread(
-            forum=self.forum,
+            category=self.category,
             title=owned_title,
             poster=self.user)
 
         owned_moderated_title = "Test authenticated user moderated thread"
         testutils.post_thread(
-            forum=self.forum,
+            category=self.category,
             title=owned_moderated_title,
             poster=self.user,
             is_moderated=True)
@@ -613,7 +614,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
 
         test_title = "Test moderated thread"
         thread = testutils.post_thread(
-            forum=self.forum, title=test_title, is_moderated=True)
+            category=self.category, title=test_title, is_moderated=True)
 
         self.override_acl(test_acl)
         response = self.client.get(self.link)
@@ -622,7 +623,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
 
         test_title = "Test owned moderated thread"
         thread = testutils.post_thread(
-            forum=self.forum,
+            category=self.category,
             title=test_title,
             is_moderated=True,
             poster=self.user)
@@ -643,20 +644,20 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
 
         other_moderated_title = "Test other user moderated thread"
         testutils.post_thread(
-            forum=self.forum, title=other_moderated_title, is_moderated=True)
+            category=self.category, title=other_moderated_title, is_moderated=True)
 
         other_title = "Test other user thread"
-        testutils.post_thread(forum=self.forum, title=other_title)
+        testutils.post_thread(category=self.category, title=other_title)
 
         owned_title = "Test authenticated user thread"
         testutils.post_thread(
-            forum=self.forum,
+            category=self.category,
             title=owned_title,
             poster=self.user)
 
         owned_moderated_title = "Test authenticated user moderated thread"
         testutils.post_thread(
-            forum=self.forum,
+            category=self.category,
             title=owned_moderated_title,
             poster=self.user,
             is_moderated=True)
@@ -671,9 +672,9 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertIn('show-my-threads', response.content)
 
         self.override_acl(test_acl)
-        response = self.client.get(reverse('misago:forum', kwargs={
-                'forum_id': self.forum.id,
-                'forum_slug': self.forum.slug,
+        response = self.client.get(reverse('misago:category', kwargs={
+                'category_id': self.category.id,
+                'category_slug': self.category.slug,
                 'show': 'my-threads',
             }))
 
@@ -693,15 +694,15 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         }
 
         not_moderated_title = "Not moderated thread"
-        testutils.post_thread(forum=self.forum, title=not_moderated_title)
+        testutils.post_thread(category=self.category, title=not_moderated_title)
 
         hidden_title = "Test moderated thread"
         testutils.post_thread(
-            forum=self.forum, title=hidden_title, is_moderated=True)
+            category=self.category, title=hidden_title, is_moderated=True)
 
         visible_title = "Test owned moderated thread"
         testutils.post_thread(
-            forum=self.forum,
+            category=self.category,
             title=visible_title,
             is_moderated=True,
             poster=self.user)
@@ -716,17 +717,17 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertNotIn('show-moderated-posts', response.content)
 
         self.override_acl(test_acl)
-        response = self.client.get(reverse('misago:forum', kwargs={
-                'forum_id': self.forum.id,
-                'forum_slug': self.forum.slug,
+        response = self.client.get(reverse('misago:category', kwargs={
+                'category_id': self.category.id,
+                'category_slug': self.category.slug,
                 'show': 'moderated-threads',
             }))
         self.assertEqual(response.status_code, 302)
 
         self.override_acl(test_acl)
-        response = self.client.get(reverse('misago:forum', kwargs={
-                'forum_id': self.forum.id,
-                'forum_slug': self.forum.slug,
+        response = self.client.get(reverse('misago:category', kwargs={
+                'category_id': self.category.id,
+                'category_slug': self.category.slug,
                 'show': 'moderated-posts',
             }))
         self.assertEqual(response.status_code, 302)
@@ -748,9 +749,9 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertIn('show-moderated-posts', response.content)
 
         self.override_acl(test_acl)
-        response = self.client.get(reverse('misago:forum', kwargs={
-                'forum_id': self.forum.id,
-                'forum_slug': self.forum.slug,
+        response = self.client.get(reverse('misago:category', kwargs={
+                'category_id': self.category.id,
+                'category_slug': self.category.slug,
                 'show': 'moderated-threads',
             }))
 
@@ -764,7 +765,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
     def test_anonymous_request(self):
         """view renders to anonymous users"""
         anon_title = "Hello Anon!"
-        testutils.post_thread(forum=self.forum, title=anon_title)
+        testutils.post_thread(category=self.category, title=anon_title)
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
@@ -772,7 +773,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
 
     def test_change_threads_labels(self):
         """moderation allows for changing threads labels"""
-        threads = [testutils.post_thread(self.forum) for t in xrange(10)]
+        threads = [testutils.post_thread(self.category) for t in xrange(10)]
 
         test_acl = {
             'can_see': 1,
@@ -787,7 +788,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         ]
         for label in labels:
             label.save()
-            label.forums.add(self.forum)
+            label.categories.add(self.category)
 
         self.override_acl(test_acl)
         response = self.client.get(self.link)
@@ -879,8 +880,8 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Pin threads", response.content)
 
-        pinned = testutils.post_thread(self.forum, is_pinned=True)
-        thread = testutils.post_thread(self.forum, is_pinned=False)
+        pinned = testutils.post_thread(self.category, is_pinned=True)
+        thread = testutils.post_thread(self.category, is_pinned=False)
 
         # pin nothing
         self.override_acl(test_acl)
@@ -953,8 +954,8 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Approve threads", response.content)
 
-        thread = testutils.post_thread(self.forum, is_moderated=False)
-        moderated_thread = testutils.post_thread(self.forum, is_moderated=True)
+        thread = testutils.post_thread(self.category, is_moderated=False)
+        moderated_thread = testutils.post_thread(self.category, is_moderated=True)
 
         # approve approved thread
         self.override_acl(test_acl)
@@ -982,10 +983,10 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
 
     def test_move_threads(self):
         """moderation allows for moving threads"""
-        new_forum = Forum(name="New Forum",
-                          slug="new-forum",
-                          role="forum")
-        new_forum.insert_at(self.forum, save=True)
+        new_category = Category(name="New Category",
+                          slug="new-category",
+                          role='category')
+        new_category.insert_at(self.category, save=True)
 
         test_acl = {
             'can_see': 1,
@@ -999,7 +1000,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Move threads", response.content)
 
-        threads = [testutils.post_thread(self.forum) for t in xrange(10)]
+        threads = [testutils.post_thread(self.category) for t in xrange(10)]
 
         # see move threads form
         self.override_acl(test_acl)
@@ -1011,26 +1012,26 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         for thread in threads[:5]:
             self.assertIn(thread.title, response.content)
 
-        # submit form with non-existing forum
+        # submit form with non-existing category
         self.override_acl(test_acl)
         response = self.client.post(self.link, data={
             'action': 'move',
             'item': [t.pk for t in threads[:5]],
             'submit': '',
-            'new_forum': new_forum.pk + 1234
+            'new_category': new_category.pk + 1234
         })
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Select valid forum.", response.content)
+        self.assertIn("Select valid category.", response.content)
 
         # attempt move to category
         self.override_acl(test_acl)
 
-        category = Forum.objects.all_forums().filter(role="category")[:1][0]
+        category = Category.objects.all_categories().filter(role='category')[:1][0]
         response = self.client.post(self.link, data={
             'action': 'move',
             'item': [t.pk for t in threads[:5]],
             'submit': '',
-            'new_forum': category.pk
+            'new_category': category.pk
         })
         self.assertEqual(response.status_code, 200)
         self.assertIn("You can&#39;t move threads to category.",
@@ -1039,37 +1040,37 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         # attempt move to redirect
         self.override_acl(test_acl)
 
-        redirect = Forum.objects.all_forums().filter(role="redirect")[:1][0]
+        redirect = Category.objects.all_categories().filter(role="redirect")[:1][0]
         response = self.client.post(self.link, data={
             'action': 'move',
             'item': [t.pk for t in threads[:5]],
             'submit': '',
-            'new_forum': redirect.pk
+            'new_category': redirect.pk
         })
         self.assertEqual(response.status_code, 200)
         self.assertIn("You can&#39;t move threads to redirect.",
                       response.content)
 
-        # move to new_forum
+        # move to new_category
         self.override_acl(test_acl)
-        self.override_acl(test_acl, new_forum)
+        self.override_acl(test_acl, new_category)
         response = self.client.post(self.link, data={
             'action': 'move',
             'item': [t.pk for t in threads[:5]],
             'submit': '',
-            'new_forum': new_forum.pk
+            'new_category': new_category.pk
         })
         self.assertEqual(response.status_code, 302)
 
         self.override_acl(test_acl)
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
-        self.assertIn("5 threads were moved to &quot;New Forum&quot;.",
+        self.assertIn("5 threads were moved to &quot;New Category&quot;.",
                       response.content)
 
-        for thread in new_forum.thread_set.all():
+        for thread in new_category.thread_set.all():
             self.assertIn(thread, threads[:5])
-        for thread in self.forum.thread_set.all():
+        for thread in self.category.thread_set.all():
             self.assertIn(thread, threads[5:])
 
     def test_merge_threads(self):
@@ -1086,7 +1087,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Merge threads", response.content)
 
-        threads = [testutils.post_thread(self.forum) for t in xrange(10)]
+        threads = [testutils.post_thread(self.category) for t in xrange(10)]
 
         # see merge threads form
         self.override_acl(test_acl)
@@ -1156,7 +1157,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertIn("Close threads", response.content)
         self.assertIn("Open threads", response.content)
 
-        threads = [testutils.post_thread(self.forum) for t in xrange(10)]
+        threads = [testutils.post_thread(self.category) for t in xrange(10)]
 
         # close threads
         self.override_acl(test_acl)
@@ -1221,7 +1222,7 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertIn("Reveal threads", response.content)
         self.assertIn("Hide threads", response.content)
 
-        threads = [testutils.post_thread(self.forum) for t in xrange(10)]
+        threads = [testutils.post_thread(self.category) for t in xrange(10)]
 
         # hide threads
         self.override_acl(test_acl)
@@ -1273,10 +1274,10 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
 
     def test_delete_threads(self):
         """moderation allows for deleting threads"""
-        threads = [testutils.post_thread(self.forum) for t in xrange(10)]
+        threads = [testutils.post_thread(self.category) for t in xrange(10)]
 
-        self.forum.synchronize()
-        self.assertEqual(self.forum.threads, 10)
+        self.category.synchronize()
+        self.assertEqual(self.category.threads, 10)
 
         test_acl = {
             'can_see': 1,
@@ -1297,14 +1298,14 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response['location'].endswith(self.link))
 
-        forum = Forum.objects.get(pk=self.forum.pk)
-        self.assertEqual(forum.threads, 0)
+        category = Category.objects.get(pk=self.category.pk)
+        self.assertEqual(category.threads, 0)
 
-        threads = [testutils.post_thread(self.forum) for t in xrange(60)]
+        threads = [testutils.post_thread(self.category) for t in xrange(60)]
 
-        second_page_link = reverse('misago:forum', kwargs={
-            'forum_id': self.forum.id,
-            'forum_slug': self.forum.slug,
+        second_page_link = reverse('misago:category', kwargs={
+            'category_id': self.category.id,
+            'category_slug': self.category.slug,
             'page': 2
         })
 
@@ -1315,8 +1316,8 @@ class ForumThreadsViewTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response['location'].endswith(second_page_link))
 
-        forum = Forum.objects.get(pk=self.forum.pk)
-        self.assertEqual(forum.threads, 40)
+        category = Category.objects.get(pk=self.category.pk)
+        self.assertEqual(category.threads, 40)
 
         self.override_acl(test_acl)
         response = self.client.post(second_page_link, data={

@@ -7,4 +7,4 @@ from misago.threads.views.generic.posting import *
 from misago.threads.views.generic.post import *
 from misago.threads.views.generic.thread import *
 from misago.threads.views.generic.threads import *
-from misago.threads.views.generic.forum import *
+from misago.threads.views.generic.category import *

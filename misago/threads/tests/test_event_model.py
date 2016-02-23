@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.forums.models import Forum
+from misago.categories.models import Category
 
 from misago.threads.checksums import is_event_valid, update_event_checksum
 from misago.threads.models import Thread, Event
@@ -15,9 +15,9 @@ class EventModelTests(TestCase):
 
         datetime = timezone.now()
 
-        self.forum = Forum.objects.filter(role="forum")[:1][0]
+        self.category = Category.objects.filter(role='forum')[:1][0]
         self.thread = Thread(
-            forum=self.forum,
+            category=self.category,
             started_on=datetime,
             starter_name='Tester',
             starter_slug='tester',
@@ -31,7 +31,7 @@ class EventModelTests(TestCase):
     def test_is_event_valid(self):
         """event is_valid flag returns valid value"""
         event = Event.objects.create(
-            forum=self.forum,
+            category=self.category,
             thread=self.thread,
             author=self.user,
             message="Lorem ipsum",

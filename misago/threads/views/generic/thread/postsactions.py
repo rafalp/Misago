@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.translation import ungettext, ugettext_lazy, ugettext as _
 
-from misago.forums.lists import get_forum_path
+from misago.categories.lists import get_category_path
 
 from misago.threads import moderation
 from misago.threads.forms.moderation import MovePostsForm, SplitThreadForm
@@ -37,9 +37,9 @@ def changes_thread_state(f):
             self.thread.synchronize()
             self.thread.save()
 
-            self.forum.lock()
-            self.forum.synchronize()
-            self.forum.save()
+            self.category.lock()
+            self.category.synchronize()
+            self.category.save()
 
             return response
     return decorator
@@ -67,7 +67,7 @@ class PostsActions(ActionsBase):
 
     def get_available_actions(self, kwargs):
         self.thread = kwargs['thread']
-        self.forum = self.thread.forum
+        self.category = self.thread.category
 
         actions = []
 
@@ -79,28 +79,28 @@ class PostsActions(ActionsBase):
                     'name': _("Approve posts")
                 })
 
-        if self.forum.acl['can_merge_posts']:
+        if self.category.acl['can_merge_posts']:
             actions.append({
                 'action': 'merge',
                 'icon': 'compress',
                 'name': _("Merge posts into one")
             })
 
-        if self.forum.acl['can_move_posts']:
+        if self.category.acl['can_move_posts']:
             actions.append({
                 'action': 'move',
                 'icon': 'arrow-right',
                 'name': _("Move posts to other thread")
             })
 
-        if self.forum.acl['can_split_threads']:
+        if self.category.acl['can_split_threads']:
             actions.append({
                 'action': 'split',
                 'icon': 'code-fork',
                 'name': _("Split posts to new thread")
             })
 
-        if self.forum.acl['can_protect_posts']:
+        if self.category.acl['can_protect_posts']:
             actions.append({
                 'action': 'unprotect',
                 'icon': 'unlock-alt',
@@ -112,7 +112,7 @@ class PostsActions(ActionsBase):
                 'name': _("Protect posts")
             })
 
-        if self.forum.acl['can_hide_posts']:
+        if self.category.acl['can_hide_posts']:
             actions.append({
                 'action': 'unhide',
                 'icon': 'eye',
@@ -123,7 +123,7 @@ class PostsActions(ActionsBase):
                 'icon': 'eye-slash',
                 'name': _("Hide posts")
             })
-        if self.forum.acl['can_hide_posts'] == 2:
+        if self.category.acl['can_hide_posts'] == 2:
             actions.append({
                 'action': 'delete',
                 'icon': 'times',
@@ -201,10 +201,10 @@ class PostsActions(ActionsBase):
                 form.new_thread.synchronize()
                 form.new_thread.save()
 
-                if form.new_thread.forum != self.forum:
-                    form.new_thread.forum.lock()
-                    form.new_thread.forum.synchronize()
-                    form.new_thread.forum.save()
+                if form.new_thread.category != self.category:
+                    form.new_thread.category.lock()
+                    form.new_thread.category.synchronize()
+                    form.new_thread.category.save()
 
                 changed_posts = len(posts)
                 message = ungettext(
@@ -228,9 +228,9 @@ class PostsActions(ActionsBase):
 
         return render(request, template, {
             'form': form,
-            'forum': self.forum,
+            'category': self.category,
             'thread': self.thread,
-            'path': get_forum_path(self.forum),
+            'path': get_category_path(self.category),
 
             'posts': posts
         })
@@ -250,7 +250,7 @@ class PostsActions(ActionsBase):
             form = SplitThreadForm(request.POST, acl=request.user.acl)
             if form.is_valid():
                 split_thread = Thread()
-                split_thread.forum = form.cleaned_data['forum']
+                split_thread.category = form.cleaned_data['category']
                 split_thread.set_title(
                     form.cleaned_data['thread_title'])
                 split_thread.starter_name = "-"
@@ -268,10 +268,10 @@ class PostsActions(ActionsBase):
                 split_thread.synchronize()
                 split_thread.save()
 
-                if split_thread.forum != self.forum:
-                    split_thread.forum.lock()
-                    split_thread.forum.synchronize()
-                    split_thread.forum.save()
+                if split_thread.category != self.category:
+                    split_thread.category.lock()
+                    split_thread.category.synchronize()
+                    split_thread.category.save()
 
                 changed_posts = len(posts)
                 message = ungettext(
@@ -295,9 +295,9 @@ class PostsActions(ActionsBase):
 
         return render(request, template, {
             'form': form,
-            'forum': self.forum,
+            'category': self.category,
             'thread': self.thread,
-            'path': get_forum_path(self.forum),
+            'path': get_category_path(self.category),
 
             'posts': posts
         })

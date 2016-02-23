@@ -1,22 +1,21 @@
 from django.db.models import F
-
 from misago.threads.posting import PostingMiddleware, START, REPLY, EDIT
 
 
 class UpdateStatsMiddleware(PostingMiddleware):
     def save(self, form):
         self.update_thread()
-        self.update_forum()
+        self.update_category()
         self.update_user()
 
-    def update_forum(self):
+    def update_category(self):
         if self.mode == START:
-            self.forum.threads = F('threads') + 1
+            self.category.threads = F('threads') + 1
 
         if self.mode != EDIT:
-            self.forum.set_last_thread(self.thread)
-            self.forum.posts = F('posts') + 1
-            self.forum.update_all = True
+            self.category.set_last_thread(self.thread)
+            self.category.posts = F('posts') + 1
+            self.category.update_all = True
 
     def update_thread(self):
         if self.mode == START:

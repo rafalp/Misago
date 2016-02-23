@@ -1,4 +1,4 @@
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads import moderation, testutils
@@ -9,8 +9,8 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(ThreadsModerationTests, self).setUp()
 
-        self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
-        self.thread = testutils.post_thread(self.forum)
+        self.category = Category.objects.all_categories().filter(role='forum')[:1][0]
+        self.thread = testutils.post_thread(self.category)
         Label.objects.clear_cache()
 
     def tearDown(self):
@@ -97,7 +97,7 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
 
     def test_approve_thread(self):
         """approve_thread approves moderated thread"""
-        thread = testutils.post_thread(self.forum, is_moderated=True)
+        thread = testutils.post_thread(self.category, is_moderated=True)
 
         self.assertTrue(thread.is_moderated)
         self.assertTrue(thread.first_post.is_moderated)
@@ -114,28 +114,28 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
 
     def test_move_thread(self):
         """moves_thread moves moderated thread to other froum"""
-        new_forum = Forum.objects.all_forums().filter(role="category")[:1][0]
+        new_category = Category.objects.all_categories().filter(role='forum')[:1][0]
 
-        self.assertEqual(self.thread.forum, self.forum)
+        self.assertEqual(self.thread.category, self.category)
         self.assertTrue(
-            moderation.move_thread(self.user, self.thread, new_forum))
+            moderation.move_thread(self.user, self.thread, new_category))
 
         self.reload_thread()
-        self.assertEqual(self.thread.forum, new_forum)
+        self.assertEqual(self.thread.category, new_category)
         self.assertTrue(self.thread.has_events)
         event = self.thread.event_set.last()
 
         self.assertIn("moved thread", event.message)
         self.assertEqual(event.icon, "arrow-right")
 
-    def test_move_thread_to_same_forum(self):
-        """moves_thread does not move thread to same forum it is in"""
-        self.assertEqual(self.thread.forum, self.forum)
+    def test_move_thread_to_same_category(self):
+        """moves_thread does not move thread to same category it is in"""
+        self.assertEqual(self.thread.category, self.category)
         self.assertFalse(
-            moderation.move_thread(self.user, self.thread, self.forum))
+            moderation.move_thread(self.user, self.thread, self.category))
 
         self.reload_thread()
-        self.assertEqual(self.thread.forum, self.forum)
+        self.assertEqual(self.thread.category, self.category)
         self.assertFalse(self.thread.has_events)
 
     def test_close_thread(self):

@@ -9,7 +9,7 @@ from misago.threads.forms.admin import LabelForm
 
 
 class LabelsAdmin(generic.AdminBaseMixin):
-    root_link = 'misago:admin:forums:labels:index'
+    root_link = 'misago:admin:categories:labels:index'
     Model = Label
     Form = LabelForm
     templates_dir = 'misago/admin/labels'
@@ -17,9 +17,9 @@ class LabelsAdmin(generic.AdminBaseMixin):
 
     def handle_form(self, form, request, target):
         target.save()
-        target.forums.clear()
-        if form.cleaned_data.get('forums'):
-            target.forums.add(*[f for f in form.cleaned_data.get('forums')])
+        target.categories.clear()
+        if form.cleaned_data.get('categories'):
+            target.categories.add(*[f for f in form.cleaned_data.get('categories')])
         Label.objects.clear_cache()
 
         if self.message_submit:

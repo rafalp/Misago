@@ -30,7 +30,7 @@ class UnreadThreads(Threads):
             cutoff_date = self.user.unread_threads_cutoff
 
         queryset = Thread.objects.filter(last_post_on__gte=cutoff_date)
-        queryset = queryset.select_related('forum')
+        queryset = queryset.select_related('category')
         queryset = queryset.filter(threadread__user=self.user)
         queryset = queryset.filter(
             threadread__last_read_on__lt=F('last_post_on'))

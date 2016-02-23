@@ -6,9 +6,9 @@ from django.utils import html
 from django.utils.translation import ugettext as _
 from django.views.generic import View
 
+from misago.categories.lists import get_category_path
 from misago.core.errorpages import not_allowed
 from misago.core.exceptions import AjaxError
-from misago.forums.lists import get_forum_path
 
 from misago.threads import goto
 from misago.threads.posting import (PostingInterrupt, EditorFormset,
@@ -36,19 +36,19 @@ class PostingView(ViewBase):
         if is_submit:
             request.user.lock()
 
-        forum = None
+        category = None
         thread = None
         post = None
 
         if 'post_id' in kwargs:
             post = self.get_post(request, lock=is_submit, **kwargs)
-            forum = post.forum
+            category = post.category
             thread = post.thread
         elif 'thread_id' in kwargs:
             thread = self.get_thread(request, lock=is_submit, **kwargs)
-            forum = thread.forum
+            category = thread.category
         else:
-            forum = self.get_forum(request, lock=is_submit, **kwargs)
+            category = self.get_category(request, lock=is_submit, **kwargs)
 
         if thread:
             if post:
@@ -57,26 +57,26 @@ class PostingView(ViewBase):
                 mode = REPLY
         else:
             mode = START
-            thread = Thread(forum=forum)
+            thread = Thread(category=category)
 
         if not post:
-            post = Post(forum=forum, thread=thread)
+            post = Post(category=category, thread=thread)
 
-        return mode, forum, thread, post
+        return mode, category, thread, post
 
-    def allow_mode(self, user, mode, forum, thread, post):
+    def allow_mode(self, user, mode, category, thread, post):
         """
         Second step: check start/reply/edit permissions
         """
         if mode == START:
-            self.allow_start(user, forum)
+            self.allow_start(user, category)
         if mode == REPLY:
             self.allow_reply(user, thread)
         if mode == EDIT:
             self.allow_edit(user, post)
 
-    def allow_start(self, user, forum):
-        allow_start_thread(user, forum)
+    def allow_start(self, user, category):
+        allow_start_thread(user, category)
 
     def allow_reply(self, user, thread):
         allow_reply_thread(user, thread)
@@ -97,13 +97,13 @@ class PostingView(ViewBase):
     def real_dispatch(self, request, *args, **kwargs):
         mode_context = self.find_mode(request, *args, **kwargs)
         self.allow_mode(request.user, *mode_context)
-        mode, forum, thread, post = mode_context
+        mode, category, thread, post = mode_context
 
-        forum.labels = Label.objects.get_forum_labels(forum)
+        category.labels = Label.objects.get_category_labels(category)
         formset = EditorFormset(request=request,
                                 mode=mode,
                                 user=request.user,
-                                forum=forum,
+                                category=category,
                                 thread=thread,
                                 post=post)
 
@@ -128,15 +128,15 @@ class PostingView(ViewBase):
             'forms': formset.get_forms_list(),
             'main_forms': formset.get_main_forms(),
             'supporting_forms': formset.get_supporting_forms(),
-            'forum': forum,
-            'path': get_forum_path(forum),
+            'category': category,
+            'path': get_category_path(category),
             'thread': thread,
             'post': post,
             'api_url': request.path
         })
 
     def handle_submit(self, request, formset):
-        mode, forum, thread, post = (formset.mode, formset.forum,
+        mode, category, thread, post = (formset.mode, formset.category,
                                      formset.thread, formset.post)
         if mode == EDIT:
             message = _("Changes saved.")
@@ -149,7 +149,7 @@ class PostingView(ViewBase):
 
         posts_qs = self.exclude_invisible_posts(thread.post_set,
                                                 request.user,
-                                                forum,
+                                                category,
                                                 thread)
         post_url = goto.post(thread, posts_qs, post)
 

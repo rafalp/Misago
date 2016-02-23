@@ -12,8 +12,8 @@ from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.response import Response
 
 from misago.acl import add_acl
+from misago.categories.models import Category
 from misago.core.cache import cache
-from misago.forums.models import Forum
 from misago.threads.moderation.posts import hide_post
 from misago.threads.moderation.threads import hide_thread
 
@@ -204,24 +204,26 @@ class UserViewSet(viewsets.GenericViewSet):
                 if request.data.get('with_content'):
                     profile.delete_content()
                 else:
-                    forums_to_sync = set()
+                    categories_to_sync = set()
 
                     threads = profile.thread_set.select_related('first_post')
                     for thread in threads.filter(is_hidden=False).iterator():
-                        forums_to_sync.add(thread.forum_id)
+                        categories_to_sync.add(thread.category_id)
                         hide_thread(request.user, thread)
 
                     posts = profile.post_set.select_related('thread')
                     for post in posts.filter(is_hidden=False).iterator():
-                        forums_to_sync.add(post.forum_id)
+                        categories_to_sync.add(post.category_id)
                         hide_post(request.user, post)
                         post.thread.synchronize()
                         post.thread.save()
 
-                    forums = Forum.objects.filter(id__in=forums_to_sync)
-                    for forum in forums.iterator():
-                        forum.synchronize()
-                        forum.save()
+                    categories = Category.objects.filter(
+                        id__in=categories_to_sync).iterator()
+
+                    for category in categories:
+                        category.synchronize()
+                        category.save()
 
                 profile.delete()
 

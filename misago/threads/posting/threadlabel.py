@@ -7,7 +7,8 @@ from misago.threads.posting import PostingMiddleware, START, EDIT
 
 class ThreadLabelFormMiddleware(PostingMiddleware):
     def use_this_middleware(self):
-        if self.forum.labels and self.forum.acl['can_change_threads_labels']:
+        if (self.category.labels and
+                self.category.acl['can_change_threads_labels']):
             self.label_id = self.thread.label_id
 
             if self.mode == START:
@@ -21,11 +22,11 @@ class ThreadLabelFormMiddleware(PostingMiddleware):
     def make_form(self):
         if self.request.method == 'POST':
             return ThreadLabelForm(self.request.POST, prefix=self.prefix,
-                                    labels=self.forum.labels)
+                                    labels=self.category.labels)
         else:
             initial = {'label_id': self.label_id}
             return ThreadLabelForm(prefix=self.prefix,
-                                    labels=self.forum.labels,
+                                    labels=self.category.labels,
                                     initial=initial)
 
     def pre_save(self, form):

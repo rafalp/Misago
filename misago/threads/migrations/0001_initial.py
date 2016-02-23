@@ -12,7 +12,7 @@ from misago.core.pgutils import CreatePartialIndex, CreatePartialCompositeIndex
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('misago_forums', '0001_initial'),
+        ('misago_categories', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('slug', models.SlugField(max_length=255)),
                 ('css_class', models.CharField(max_length=255, null=True, blank=True)),
-                ('forums', models.ManyToManyField(to='misago_forums.Forum')),
+                ('categories', models.ManyToManyField(to='misago_categories.Category')),
             ],
             options={
             },
@@ -55,7 +55,7 @@ class Migration(migrations.Migration):
                 ('is_moderated', models.BooleanField(default=False, db_index=True)),
                 ('is_hidden', models.BooleanField(default=False)),
                 ('is_protected', models.BooleanField(default=False)),
-                ('forum', models.ForeignKey(to='misago_forums.Forum')),
+                ('category', models.ForeignKey(to='misago_categories.Category')),
                 ('last_editor', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
                 ('mentions', models.ManyToManyField(related_name='mention_set', to=settings.AUTH_USER_MODEL)),
                 ('poster', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
@@ -132,7 +132,7 @@ class Migration(migrations.Migration):
                 ('checksum', models.CharField(max_length=64, default='-')),
                 ('is_hidden', models.BooleanField(default=False)),
                 ('author', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
-                ('forum', models.ForeignKey(to='misago_forums.Forum')),
+                ('category', models.ForeignKey(to='misago_categories.Category')),
                 ('thread', models.ForeignKey(to='misago_threads.Thread')),
             ],
             options={
@@ -154,7 +154,7 @@ class Migration(migrations.Migration):
                 ('closed_by_slug', models.CharField(max_length=255)),
                 ('closed_by', models.ForeignKey(related_name='closedreport_set', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
                 ('closed_on', models.DateTimeField(default=django.utils.timezone.now)),
-                ('forum', models.ForeignKey(to='misago_forums.Forum')),
+                ('category', models.ForeignKey(to='misago_categories.Category')),
                 ('post', models.ForeignKey(to='misago_threads.Post')),
                 ('reported_by', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
                 ('thread', models.ForeignKey(to='misago_threads.Thread')),
@@ -192,8 +192,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='thread',
-            name='forum',
-            field=models.ForeignKey(to='misago_forums.Forum'),
+            name='category',
+            field=models.ForeignKey(to='misago_categories.Category'),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -223,9 +223,9 @@ class Migration(migrations.Migration):
         migrations.AlterIndexTogether(
             name='thread',
             index_together=set([
-                ('forum', 'id'),
-                ('forum', 'last_post_on'),
-                ('forum', 'replies'),
+                ('category', 'id'),
+                ('category', 'last_post_on'),
+                ('category', 'replies'),
             ]),
         ),
         CreatePartialCompositeIndex(

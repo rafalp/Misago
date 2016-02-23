@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db.models import F
 from django.dispatch import receiver
 
-from misago.forums.models import Forum
+from misago.categories.models import Category
 
 from misago.threads.views.moderatedcontent import ModeratedContent
 from misago.threads.views.newthreads import NewThreads
@@ -98,7 +98,8 @@ def sync_user_unread_private_threads_count(user):
 
     all_threads_count = threads_qs.count()
 
-    read_qs = user.threadread_set.filter(forum=Forum.objects.private_threads())
+    read_qs = user.threadread_set.filter(
+        category=Category.objects.private_threads())
     read_qs = read_qs.filter(last_read_on__gte=F('thread__last_post_on'))
     read_threads_count = read_qs.count()
 

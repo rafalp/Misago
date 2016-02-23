@@ -3,28 +3,28 @@ from django.core.urlresolvers import reverse
 from misago.threads.threadtypes import ThreadTypeBase
 
 
-class ForumThread(ThreadTypeBase):
-    type_name = 'forum'
+class CategoryThread(ThreadTypeBase):
+    type_name = 'category'
 
-    def get_forum_absolute_url(self, forum):
-            return reverse('misago:%s' % forum.role, kwargs={
-                'forum_id': forum.id, 'forum_slug': forum.slug
+    def get_category_absolute_url(self, category):
+            return reverse('misago:%s' % category.role, kwargs={
+                'category_id': category.id, 'category_slug': category.slug
             })
 
-    def get_new_thread_url(self, forum):
+    def get_new_thread_url(self, category):
         return reverse('misago:thread_new', kwargs={
-            'forum_id': forum.id, 'forum_slug': forum.slug
+            'category_id': category.id, 'category_slug': category.slug
         })
 
     def get_reply_url(self, thread):
         return reverse('misago:reply_thread', kwargs={
-            'forum_id': thread.forum.id,
+            'category_id': thread.category.id,
             'thread_id': thread.id,
         })
 
     def get_edit_post_url(self, post):
         return reverse('misago:edit_post', kwargs={
-            'forum_id': post.forum_id,
+            'category_id': post.category_id,
             'thread_id': post.thread_id,
             'post_id': post.id
         })

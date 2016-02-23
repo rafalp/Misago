@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.users.testutils import UserTestCase, AuthenticatedUserTestCase
 
 from misago.threads import testutils
@@ -16,8 +16,8 @@ class AuthenticatedTests(AuthenticatedUserTestCase):
 
     def test_single_page_threads_list(self):
         """filled threads list is rendered"""
-        forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
-        threads = [testutils.post_thread(forum) for t in xrange(10)]
+        category = Category.objects.all_categories().filter(role='forum')[:1][0]
+        threads = [testutils.post_thread(category) for t in xrange(10)]
 
         response = self.client.get(reverse('misago:new_threads'))
         self.assertEqual(response.status_code, 200)
@@ -45,8 +45,8 @@ class AuthenticatedTests(AuthenticatedUserTestCase):
 
     def test_multipage_threads_list(self):
         """multipage threads list is rendered"""
-        forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
-        threads = [testutils.post_thread(forum) for t in xrange(80)]
+        category = Category.objects.all_categories().filter(role='forum')[:1][0]
+        threads = [testutils.post_thread(category) for t in xrange(80)]
 
         response = self.client.get(reverse('misago:new_threads'))
         self.assertEqual(response.status_code, 200)

@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy, ugettext as _, ungettext
 
-from misago.forums.lists import get_forum_path
+from misago.categories.lists import get_category_path
 
 from misago.threads import moderation
 from misago.threads.forms.moderation import MergeThreadsForm, MoveThreadsForm
@@ -17,26 +17,26 @@ __all__ = ['ForumActions', 'ReloadAfterDelete']
 
 class ForumActions(Actions):
     def get_available_actions(self, kwargs):
-        self.forum = kwargs['forum']
+        self.category = kwargs['category']
 
         actions = []
 
-        if self.forum.acl['can_change_threads_labels'] == 2:
-            for label in self.forum.labels:
+        if self.category.acl['can_change_threads_labels'] == 2:
+            for label in self.category.labels:
                 actions.append({
                     'action': 'label:%s' % label.slug,
                     'icon': 'tag',
                     'name': _('Label as "%(label)s"') % {'label': label.name}
                 })
 
-            if self.forum.labels:
+            if self.category.labels:
                 actions.append({
                     'action': 'unlabel',
                     'icon': 'times-circle',
                     'name': _("Remove labels")
                 })
 
-        if self.forum.acl['can_pin_threads']:
+        if self.category.acl['can_pin_threads']:
             actions.append({
                 'action': 'pin',
                 'icon': 'star',
@@ -48,28 +48,28 @@ class ForumActions(Actions):
                 'name': _("Unpin threads")
             })
 
-        if self.forum.acl['can_review_moderated_content']:
+        if self.category.acl['can_review_moderated_content']:
             actions.append({
                 'action': 'approve',
                 'icon': 'check',
                 'name': _("Approve threads")
             })
 
-        if self.forum.acl['can_move_threads']:
+        if self.category.acl['can_move_threads']:
             actions.append({
                 'action': 'move',
                 'icon': 'arrow-right',
                 'name': _("Move threads")
             })
 
-        if self.forum.acl['can_merge_threads']:
+        if self.category.acl['can_merge_threads']:
             actions.append({
                 'action': 'merge',
                 'icon': 'reply-all',
                 'name': _("Merge threads")
             })
 
-        if self.forum.acl['can_close_threads']:
+        if self.category.acl['can_close_threads']:
             actions.append({
                 'action': 'open',
                 'icon': 'unlock-alt',
@@ -81,7 +81,7 @@ class ForumActions(Actions):
                 'name': _("Close threads")
             })
 
-        if self.forum.acl['can_hide_threads']:
+        if self.category.acl['can_hide_threads']:
             actions.append({
                 'action': 'unhide',
                 'icon': 'eye',
@@ -92,7 +92,7 @@ class ForumActions(Actions):
                 'icon': 'eye-slash',
                 'name': _("Hide threads")
             })
-        if self.forum.acl['can_hide_threads'] == 2:
+        if self.category.acl['can_hide_threads'] == 2:
             actions.append({
                 'action': 'delete',
                 'icon': 'times',
@@ -104,7 +104,7 @@ class ForumActions(Actions):
         return actions
 
     def action_label(self, request, threads, label_slug):
-        for label in self.forum.labels:
+        for label in self.category.labels:
             if label.slug == label_slug:
                 break
         else:
@@ -196,34 +196,34 @@ class ForumActions(Actions):
     move_threads_modal_template = 'misago/threads/move/modal.html'
 
     def action_move(self, request, threads):
-        form = MoveThreadsForm(acl=request.user.acl, forum=self.forum)
+        form = MoveThreadsForm(acl=request.user.acl, category=self.category)
 
         if 'submit' in request.POST:
             form = MoveThreadsForm(
-                request.POST, acl=request.user.acl, forum=self.forum)
+                request.POST, acl=request.user.acl, category=self.category)
             if form.is_valid():
-                new_forum = form.cleaned_data['new_forum']
+                new_category = form.cleaned_data['new_category']
                 with atomic():
 
                     for thread in threads:
-                        moderation.move_thread(request.user, thread, new_forum)
+                        moderation.move_thread(request.user, thread, new_category)
 
-                    self.forum.lock()
-                    new_forum.lock()
+                    self.category.lock()
+                    new_category.lock()
 
-                    self.forum.synchronize()
-                    self.forum.save()
-                    new_forum.synchronize()
-                    new_forum.save()
+                    self.category.synchronize()
+                    self.category.save()
+                    new_category.synchronize()
+                    new_category.save()
 
                 changed_threads = len(threads)
                 message = ungettext(
-                    '%(changed)d thread was moved to "%(forum)s".',
-                    '%(changed)d threads were moved to "%(forum)s".',
+                    '%(changed)d thread was moved to "%(category)s".',
+                    '%(changed)d threads were moved to "%(category)s".',
                 changed_threads)
                 messages.success(request, message % {
                     'changed': changed_threads,
-                    'forum': new_forum.name
+                    'category': new_category.name
                 })
 
                 return None # trigger threads list refresh
@@ -235,8 +235,8 @@ class ForumActions(Actions):
 
         return render(request, template, {
             'form': form,
-            'forum': self.forum,
-            'path': get_forum_path(self.forum),
+            'category': self.category,
+            'path': get_category_path(self.category),
             'threads': threads
         })
 
@@ -255,7 +255,7 @@ class ForumActions(Actions):
             if form.is_valid():
                 with atomic():
                     merged_thread = Thread()
-                    merged_thread.forum = self.forum
+                    merged_thread.category = self.category
                     merged_thread.set_title(
                         form.cleaned_data['merged_thread_title'])
                     merged_thread.starter_name = "-"
@@ -275,9 +275,9 @@ class ForumActions(Actions):
                     merged_thread.synchronize()
                     merged_thread.save()
 
-                    self.forum.lock()
-                    self.forum.synchronize()
-                    self.forum.save()
+                    self.category.lock()
+                    self.category.synchronize()
+                    self.category.save()
 
                 changed_threads = len(threads)
                 message = ungettext(
@@ -298,8 +298,8 @@ class ForumActions(Actions):
 
         return render(request, template, {
             'form': form,
-            'forum': self.forum,
-            'path': get_forum_path(self.forum),
+            'category': self.category,
+            'path': get_category_path(self.category),
             'threads': threads
         })
 
@@ -343,9 +343,9 @@ class ForumActions(Actions):
 
         if changed_threads:
             with atomic():
-                self.forum.lock()
-                self.forum.synchronize()
-                self.forum.save()
+                self.category.lock()
+                self.category.synchronize()
+                self.category.save()
 
             message = ungettext(
                 '%(changed)d thread was made visible.',
@@ -364,9 +364,9 @@ class ForumActions(Actions):
 
         if changed_threads:
             with atomic():
-                self.forum.lock()
-                self.forum.synchronize()
-                self.forum.save()
+                self.category.lock()
+                self.category.synchronize()
+                self.category.save()
 
         if changed_threads:
             message = ungettext(
@@ -386,9 +386,9 @@ class ForumActions(Actions):
 
         if changed_threads:
             with atomic():
-                self.forum.lock()
-                self.forum.synchronize()
-                self.forum.save()
+                self.category.lock()
+                self.category.synchronize()
+                self.category.save()
 
         if changed_threads:
             message = ungettext(

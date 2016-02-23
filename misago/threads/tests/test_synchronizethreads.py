@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.utils.six import StringIO
 
-from misago.forums.models import Forum
+from misago.categories.models import Category
 
 from misago.threads import testutils
 from misago.threads.management.commands import synchronizethreads
@@ -20,9 +20,9 @@ class SynchronizeThreadsTests(TestCase):
 
     def test_threads_sync(self):
         """command synchronizes threads"""
-        forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
+        category = Category.objects.all_categories().filter(role='forum')[:1][0]
 
-        threads = [testutils.post_thread(forum) for t in xrange(10)]
+        threads = [testutils.post_thread(category) for t in xrange(10)]
         for i, thread in enumerate(threads):
             [testutils.reply_thread(thread) for r in xrange(i)]
             thread.replies = 0
@@ -34,7 +34,7 @@ class SynchronizeThreadsTests(TestCase):
         command.execute(stdout=out)
 
         for i, thread in enumerate(threads):
-            db_thread = forum.thread_set.get(id=thread.id)
+            db_thread = category.thread_set.get(id=thread.id)
             self.assertEqual(db_thread.replies, i)
 
         command_output = out.getvalue().splitlines()[-1].strip()

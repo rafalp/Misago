@@ -7,13 +7,13 @@ from misago.core.utils import slugify
 from misago.threads.models import Thread, Post
 
 
-def post_thread(forum, title='Test thread', poster='Tester', is_pinned=False,
-                is_moderated=False, is_hidden=False, is_closed=False,
-                started_on=None):
+def post_thread(category, title='Test thread', poster='Tester',
+                is_pinned=False, is_moderated=False, is_hidden=False,
+                is_closed=False, started_on=None):
     started_on = started_on or timezone.now()
 
     kwargs = {
-        'forum': forum,
+        'category': category,
         'title': title,
         'slug': slugify(title),
         'started_on': started_on,
@@ -56,7 +56,7 @@ def reply_thread(thread, poster="Tester", message='I am test message',
     posted_on = posted_on or thread.last_post_on + timedelta(minutes=5)
 
     kwargs = {
-        'forum': thread.forum,
+        'category': thread.category,
         'thread': thread,
         'original': message,
         'parsed': message,
@@ -78,7 +78,7 @@ def reply_thread(thread, poster="Tester", message='I am test message',
     post = Post.objects.create(**kwargs)
     thread.synchronize()
     thread.save()
-    thread.forum.synchronize()
-    thread.forum.save()
+    thread.category.synchronize()
+    thread.category.save()
 
     return post

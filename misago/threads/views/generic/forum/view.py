@@ -1,13 +1,13 @@
 from django.shortcuts import redirect
 
+from misago.categories.lists import get_categories_list, get_category_path
 from misago.core.shortcuts import validate_slug
-from misago.forums.lists import get_forums_list, get_forum_path
-from misago.readtracker import forumstracker
+from misago.readtracker import categoriestracker
 
 from misago.threads.models import Label
-from misago.threads.views.generic.forum.actions import ForumActions
-from misago.threads.views.generic.forum.filtering import ForumFiltering
-from misago.threads.views.generic.forum.threads import ForumThreads
+from misago.threads.views.generic.category.actions import ForumActions
+from misago.threads.views.generic.category.filtering import ForumFiltering
+from misago.threads.views.generic.category.threads import ForumThreads
 from misago.threads.views.generic.threads import Sorting, ThreadsView
 
 
@@ -16,9 +16,9 @@ __all__ = ['ForumView']
 
 class ForumView(ThreadsView):
     """
-    Basic view for forum threads lists
+    Basic view for category threads lists
     """
-    template = 'misago/threads/forum.html'
+    template = 'misago/threads/category.html'
 
     Threads = ForumThreads
     Sorting = Sorting
@@ -26,15 +26,15 @@ class ForumView(ThreadsView):
     Actions = ForumActions
 
     def dispatch(self, request, *args, **kwargs):
-        forum = self.get_forum(request, **kwargs)
-        validate_slug(forum, kwargs['forum_slug'])
+        category = self.get_category(request, **kwargs)
+        validate_slug(category, kwargs['category_slug'])
 
-        forum.labels = Label.objects.get_forum_labels(forum)
+        category.labels = Label.objects.get_category_labels(category)
 
-        if forum.lft + 1 < forum.rght:
-            forum.subforums = get_forums_list(request.user, forum)
+        if category.lft + 1 < category.rght:
+            category.subcategories = get_categories_list(request.user, category)
         else:
-            forum.subforums = []
+            category.subcategories = []
 
         page_number = kwargs.pop('page', None)
         cleaned_kwargs = self.clean_kwargs(request, kwargs)
@@ -44,17 +44,17 @@ class ForumView(ThreadsView):
         sorting = self.Sorting(link_name, cleaned_kwargs)
         cleaned_kwargs = sorting.clean_kwargs(cleaned_kwargs)
 
-        filtering = self.Filtering(forum, link_name, cleaned_kwargs)
+        filtering = self.Filtering(category, link_name, cleaned_kwargs)
         cleaned_kwargs = filtering.clean_kwargs(cleaned_kwargs)
 
         if cleaned_kwargs != kwargs:
             return redirect(link_name, **cleaned_kwargs)
 
-        threads = self.Threads(request.user, forum)
+        threads = self.Threads(request.user, category)
         sorting.sort(threads)
         filtering.filter(threads)
 
-        actions = self.Actions(user=request.user, forum=forum)
+        actions = self.Actions(user=request.user, category=category)
         if request.method == 'POST':
             response = actions.handle_post(request, threads.get_queryset())
             if response:
@@ -64,8 +64,8 @@ class ForumView(ThreadsView):
             'link_name': link_name,
             'links_params': cleaned_kwargs,
 
-            'forum': forum,
-            'path': get_forum_path(forum),
+            'category': category,
+            'path': get_category_path(category),
 
             'threads': threads.list(page_number),
             'threads_count': threads.count(),

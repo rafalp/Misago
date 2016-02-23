@@ -1,17 +1,17 @@
 from django.conf.urls import patterns, include, url
 
 
-# forum view
-from misago.threads.views.threads import ForumView
+# category view
+from misago.threads.views.threads import CategoryView
 urlpatterns = patterns('',
-    url(r'^forum/(?P<forum_slug>[\w\d-]+)-(?P<forum_id>\d+)/$', ForumView.as_view(), name='forum'),
-    url(r'^forum/(?P<forum_slug>[\w\d-]+)-(?P<forum_id>\d+)/(?P<page>\d+)/$', ForumView.as_view(), name='forum'),
-    url(r'^forum/(?P<forum_slug>[\w\d-]+)-(?P<forum_id>\d+)/sort-(?P<sort>[\w-]+)/$', ForumView.as_view(), name='forum'),
-    url(r'^forum/(?P<forum_slug>[\w\d-]+)-(?P<forum_id>\d+)/sort-(?P<sort>[\w-]+)/(?P<page>\d+)/$', ForumView.as_view(), name='forum'),
-    url(r'^forum/(?P<forum_slug>[\w\d-]+)-(?P<forum_id>\d+)/show-(?P<show>[\w-]+)/$', ForumView.as_view(), name='forum'),
-    url(r'^forum/(?P<forum_slug>[\w\d-]+)-(?P<forum_id>\d+)/show-(?P<show>[\w-]+)/(?P<page>\d+)/$', ForumView.as_view(), name='forum'),
-    url(r'^forum/(?P<forum_slug>[\w\d-]+)-(?P<forum_id>\d+)/sort-(?P<sort>[\w-]+)/show-(?P<show>[\w-]+)/$', ForumView.as_view(), name='forum'),
-    url(r'^forum/(?P<forum_slug>[\w\d-]+)-(?P<forum_id>\d+)/sort-(?P<sort>[\w-]+)/show-(?P<show>[\w-]+)/(?P<page>\d+)/$', ForumView.as_view(), name='forum'),
+    url(r'^category/(?P<category_slug>[\w\d-]+)-(?P<category_id>\d+)/$', CategoryView.as_view(), name='category'),
+    url(r'^category/(?P<category_slug>[\w\d-]+)-(?P<category_id>\d+)/(?P<page>\d+)/$', CategoryView.as_view(), name='category'),
+    url(r'^category/(?P<category_slug>[\w\d-]+)-(?P<category_id>\d+)/sort-(?P<sort>[\w-]+)/$', CategoryView.as_view(), name='category'),
+    url(r'^category/(?P<category_slug>[\w\d-]+)-(?P<category_id>\d+)/sort-(?P<sort>[\w-]+)/(?P<page>\d+)/$', CategoryView.as_view(), name='category'),
+    url(r'^category/(?P<category_slug>[\w\d-]+)-(?P<category_id>\d+)/show-(?P<show>[\w-]+)/$', CategoryView.as_view(), name='category'),
+    url(r'^category/(?P<category_slug>[\w\d-]+)-(?P<category_id>\d+)/show-(?P<show>[\w-]+)/(?P<page>\d+)/$', CategoryView.as_view(), name='category'),
+    url(r'^category/(?P<category_slug>[\w\d-]+)-(?P<category_id>\d+)/sort-(?P<sort>[\w-]+)/show-(?P<show>[\w-]+)/$', CategoryView.as_view(), name='category'),
+    url(r'^category/(?P<category_slug>[\w\d-]+)-(?P<category_id>\d+)/sort-(?P<sort>[\w-]+)/show-(?P<show>[\w-]+)/(?P<page>\d+)/$', CategoryView.as_view(), name='category'),
 )
 
 
@@ -66,9 +66,9 @@ urlpatterns += patterns('',
 # posting views
 from misago.threads.views.threads import PostingView
 urlpatterns += patterns('',
-    url(r'^start-thread/(?P<forum_id>\d+)/$', PostingView.as_view(), name='start_thread'),
-    url(r'^reply-thread/(?P<forum_id>\d+)/(?P<thread_id>\d+)/$', PostingView.as_view(), name='reply_thread'),
-    url(r'^edit-post/(?P<forum_id>\d+)/(?P<thread_id>\d+)/(?P<post_id>\d+)/edit/$', PostingView.as_view(), name='edit_post'),
+    url(r'^start-thread/(?P<category_id>\d+)/$', PostingView.as_view(), name='start_thread'),
+    url(r'^reply-thread/(?P<category_id>\d+)/(?P<thread_id>\d+)/$', PostingView.as_view(), name='reply_thread'),
+    url(r'^edit-post/(?P<category_id>\d+)/(?P<thread_id>\d+)/(?P<post_id>\d+)/edit/$', PostingView.as_view(), name='edit_post'),
 )
 
 

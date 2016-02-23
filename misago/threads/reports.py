@@ -39,7 +39,7 @@ def report_post(request, post, message):
         message = message['parsed_text']
 
     report = Report.objects.create(
-        forum=post.forum,
+        category=post.category,
         thread=post.thread,
         post=post,
         reported_by=request.user,

@@ -19,14 +19,15 @@ class BaseGotoView(ViewBase):
                                   "should define get_redirect method")
 
     def dispatch(self, request, *args, **kwargs):
-        thread = self.fetch_thread(request, select_related=['forum'], **kwargs)
-        forum = thread.forum
+        relations = ['categorys']
+        thread = self.fetch_thread(request, select_related=relations, **kwargs)
+        categorys = thread.categorys
 
-        self.check_forum_permissions(request, forum)
+        self.check_categorys_permissions(request, categorys)
         self.check_thread_permissions(request, thread)
 
         posts_qs = self.exclude_invisible_posts(
-            thread.post_set, request.user, forum, thread)
+            thread.post_set, request.user, categorys, thread)
 
         return redirect(self.get_redirect(request.user, thread, posts_qs))
 
@@ -47,16 +48,16 @@ class GotoPostView(BaseGotoView):
 
     def dispatch(self, request, *args, **kwargs):
         post = self.fetch_post(
-            request, select_related=['thread', 'forum'], **kwargs)
-        forum = post.forum
+            request, select_related=['thread', 'categorys'], **kwargs)
+        categorys = post.categorys
         thread = post.thread
 
-        self.check_forum_permissions(request, forum)
-        thread.forum = forum
+        self.check_categorys_permissions(request, categorys)
+        thread.categorys = categorys
         self.check_thread_permissions(request, thread)
         self.check_post_permissions(request, post)
 
         posts_qs = self.exclude_invisible_posts(
-            thread.post_set, request.user, thread.forum, thread)
+            thread.post_set, request.user, thread.categorys, thread)
 
         return redirect(self.get_redirect(thread, posts_qs, post))

@@ -55,7 +55,7 @@ class PostView(ViewBase):
     def redirect_to_post(self, user, post):
         posts_qs = self.exclude_invisible_posts(post.thread.post_set,
                                                 user,
-                                                post.forum,
+                                                post.category,
                                                 post.thread)
         return redirect(goto.post(post.thread, posts_qs, post))
 
@@ -86,8 +86,8 @@ class ApprovePostView(PostView):
 
         post.thread.synchronize()
         post.thread.save()
-        post.forum.synchronize()
-        post.forum.save()
+        post.category.synchronize()
+        post.category.save()
 
 
 class UnhidePostView(PostView):
@@ -117,14 +117,14 @@ class DeletePostView(PostView):
 
         post.thread.synchronize()
         post.thread.save()
-        post.forum.synchronize()
-        post.forum.save()
+        post.category.synchronize()
+        post.category.save()
 
         posts_qs = self.exclude_invisible_posts(post.thread.post_set,
                                                 request.user,
-                                                post.forum,
+                                                post.category,
                                                 post.thread)
-        posts_qs = posts_qs.select_related('thread', 'forum')
+        posts_qs = posts_qs.select_related('thread', 'category')
 
         if post_id < post.thread.last_post_id:
             target_post = posts_qs.order_by('id').filter(id__gt=post_id)
@@ -132,9 +132,9 @@ class DeletePostView(PostView):
             target_post = posts_qs.order_by('-id').filter(id__lt=post_id)
 
         target_post = target_post[:1][0]
-        target_post.thread.forum = target_post.forum
+        target_post.thread.category = target_post.category
 
-        add_acl(request.user, target_post.forum)
+        add_acl(request.user, target_post.category)
         add_acl(request.user, target_post.thread)
         add_acl(request.user, target_post)
 
@@ -192,7 +192,7 @@ class ReportPostView(PostView):
 
     def render_alerts(self, request, post):
         return render(request, self.alerts_template, {
-            'forum': post.forum,
+            'category': post.category,
             'thread': post.thread,
             'post': post
         }).content

@@ -8,7 +8,7 @@ from misago.threads.checksums import is_event_valid
 
 
 class Event(models.Model):
-    forum = models.ForeignKey('misago_forums.Forum')
+    category = models.ForeignKey('misago_categories.Category')
     thread = models.ForeignKey('Thread')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
                                on_delete=models.SET_NULL)
@@ -31,7 +31,7 @@ class Event(models.Model):
 
     @property
     def thread_type(self):
-        return self.forum.thread_type
+        return self.category.thread_type
 
     def get_edit_url(self):
         return self.thread_type.get_event_edit_url(self)

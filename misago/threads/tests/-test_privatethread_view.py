@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from misago.acl.testutils import override_acl
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads import testutils
@@ -13,8 +13,8 @@ class PrivateThreadTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(PrivateThreadTests, self).setUp()
 
-        self.forum = Forum.objects.private_threads()
-        self.thread = testutils.post_thread(self.forum)
+        self.category = Category.objects.private_threads()
+        self.thread = testutils.post_thread(self.category)
 
     def test_anon_access_to_view(self):
         """anonymous user has no access to private thread"""

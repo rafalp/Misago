@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
 
+from misago.categories.models import Category
 from misago.core import threadstore
 from misago.core.cache import cache
-from misago.forums.models import Forum
 from misago.threads.testutils import post_thread
 
 from misago.users.testutils import AuthenticatedUserTestCase
@@ -18,7 +18,7 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         cache.clear()
         threadstore.clear()
 
-        self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
+        self.category = Category.objects.all_categories(role='forum').filter()[:1][0]
 
     def tearDown(self):
         super(TestActivePostersRanking, self).tearDown()
@@ -42,7 +42,7 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         other_user.posts = 1
         other_user.save()
 
-        post_thread(self.forum, poster=other_user)
+        post_thread(self.category, poster=other_user)
 
         ranking = get_real_active_posts_ranking()
 
@@ -50,8 +50,8 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         self.assertEqual(ranking['users_count'], 1)
 
         # two users in ranking
-        post_thread(self.forum, poster=self.user)
-        post_thread(self.forum, poster=self.user)
+        post_thread(self.category, poster=self.user)
+        post_thread(self.category, poster=self.user)
 
         self.user.posts = 2
         self.user.save()
@@ -72,8 +72,8 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         self.assertEqual(ranking['users_count'], 0)
 
         # post something
-        post_thread(self.forum, poster=self.user)
-        post_thread(self.forum, poster=self.user)
+        post_thread(self.category, poster=self.user)
+        post_thread(self.category, poster=self.user)
 
         self.user.posts = 2
         self.user.save()

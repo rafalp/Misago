@@ -12,7 +12,6 @@ from misago.conf import settings
 from misago.core.apipaginator import ApiPaginator
 from misago.core.cache import cache
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
-from misago.forums.models import Forum
 
 from misago.users.activepostersranking import get_active_posters_ranking
 from misago.users.models import Rank

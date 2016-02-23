@@ -5,7 +5,7 @@ from misago.threads.posting import PostingMiddleware, START
 
 class ThreadCloseFormMiddleware(PostingMiddleware):
     def use_this_middleware(self):
-        if self.forum.acl['can_close_threads']:
+        if self.category.acl['can_close_threads']:
             self.is_closed = self.thread.is_closed
             return True
         else:

@@ -7,5 +7,5 @@ from misago.threads.threadtypes import ThreadTypeBase
 class Report(ThreadTypeBase):
     type_name = 'reports'
 
-    def get_forum_name(self, forum):
+    def get_category_name(self, category):
         return _('Reports')

@@ -1,7 +1,5 @@
 from django.test import TestCase
-
-from misago.forums.models import Forum
-
+from misago.categories.models import Category
 from misago.threads.models import Label
 
 
@@ -31,9 +29,9 @@ class LabelsManagerTests(TestCase):
         for label in test_labels:
             self.assertEqual(db_labels[label.pk], label)
 
-    def test_get_forum_labels(self):
-        """get_forum_labels returns labels for forum"""
-        forum = Forum.objects.all_forums().filter(role='forum')[:1][0]
+    def test_get_category_labels(self):
+        """get_category_labels returns labels for category"""
+        category = Category.objects.all_categories().filter(role='forum')[:1][0]
 
         test_labels = (
             Label.objects.create(name="Label 1", slug="label-1"),
@@ -42,12 +40,12 @@ class LabelsManagerTests(TestCase):
             Label.objects.create(name="Label 4", slug="label-4"),
         )
 
-        test_labels[0].forums.add(forum)
-        test_labels[2].forums.add(forum)
+        test_labels[0].categories.add(category)
+        test_labels[2].categories.add(category)
 
-        forum_labels = Label.objects.get_forum_labels(forum)
-        self.assertEqual(len(forum_labels), 2)
-        self.assertIn(test_labels[0], forum_labels)
-        self.assertIn(test_labels[2], forum_labels)
-        self.assertNotIn(test_labels[1], forum_labels)
-        self.assertNotIn(test_labels[3], forum_labels)
+        category_labels = Label.objects.get_category_labels(category)
+        self.assertEqual(len(category_labels), 2)
+        self.assertIn(test_labels[0], category_labels)
+        self.assertIn(test_labels[2], category_labels)
+        self.assertNotIn(test_labels[1], category_labels)
+        self.assertNotIn(test_labels[3], category_labels)

@@ -71,10 +71,10 @@ def send_activation(request):
     if form.is_valid():
         requesting_user = form.user_cache
 
-        mail_subject = _("Activate %(user)s account on %(forum_title)s forums")
+        mail_subject = _("Activate %(user)s account on %(forum_name)s forums")
         subject_formats = {
             'user': requesting_user.username,
-            'forum_title': settings.forum_name,
+            'forum_name': settings.forum_name,
         }
         mail_subject = mail_subject % subject_formats
 
@@ -103,10 +103,10 @@ def send_password_form(request):
     if form.is_valid():
         requesting_user = form.user_cache
 
-        mail_subject = _("Change %(user)s password on %(forum_title)s forums")
+        mail_subject = _("Change %(user)s password on %(forum_name)s forums")
         subject_formats = {
             'user': requesting_user.username,
-            'forum_title': settings.forum_name,
+            'forum_name': settings.forum_name,
         }
         mail_subject = mail_subject % subject_formats
 

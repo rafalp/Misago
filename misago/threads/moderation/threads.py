@@ -68,16 +68,16 @@ def unpin_thread(user, thread):
 
 
 @atomic
-def move_thread(user, thread, new_forum):
-    if thread.forum_id != new_forum.pk:
-        message = _("%(user)s moved thread from %(forum)s.")
+def move_thread(user, thread, new_category):
+    if thread.category_id != new_category.pk:
+        message = _("%(user)s moved thread from %(category)s.")
         record_event(user, thread, "arrow-right", message, {
             'user': user,
-            'forum': thread.forum
+            'category': thread.category
         })
 
-        thread.move(new_forum)
-        thread.save(update_fields=['has_events', 'forum'])
+        thread.move(new_category)
+        thread.save(update_fields=['has_events', 'category'])
         return True
     else:
         return False

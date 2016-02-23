@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 
 from misago.acl.models import Role
 from misago.admin.testutils import AdminTestCase
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.threads.testutils import post_thread, reply_thread
 
 from misago.users.models import Ban, Rank
@@ -215,8 +215,8 @@ class UserAdminViewsTests(AdminTestCase):
         test_link = reverse('misago:admin:users:accounts:delete_threads',
                             kwargs={'user_id': test_user.pk})
 
-        forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
-        [post_thread(forum, poster=test_user) for i in xrange(10)]
+        category = Category.objects.all_categories().filter(role='forum')[:1][0]
+        [post_thread(category, poster=test_user) for i in xrange(10)]
 
         response = self.client.post(test_link, **self.ajax_header)
         self.assertEqual(response.status_code, 200)
@@ -239,8 +239,8 @@ class UserAdminViewsTests(AdminTestCase):
         test_link = reverse('misago:admin:users:accounts:delete_posts',
                             kwargs={'user_id': test_user.pk})
 
-        forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
-        thread = post_thread(forum)
+        category = Category.objects.all_categories().filter(role='forum')[:1][0]
+        thread = post_thread(category)
         [reply_thread(thread, poster=test_user) for i in xrange(10)]
 
         response = self.client.post(test_link, **self.ajax_header)

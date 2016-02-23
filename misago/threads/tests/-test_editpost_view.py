@@ -4,7 +4,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from misago.acl.testutils import override_acl
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads.models import Label, Thread, Post
@@ -17,10 +17,11 @@ class EditPostTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(EditPostTests, self).setUp()
 
-        self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
-        self.thread = post_thread(self.forum, poster=self.user)
+        self.category = Category.objects.all_categories().filter(
+            role='category')[:1][0]
+        self.thread = post_thread(self.category, poster=self.user)
         self.link = reverse('misago:edit_post', kwargs={
-            'forum_id': self.forum.id,
+            'category_id': self.category.id,
             'thread_id': self.thread.id,
             'post_id': self.thread.first_post_id,
         })
@@ -30,69 +31,69 @@ class EditPostTests(AuthenticatedUserTestCase):
     def tearDown(self):
         Label.objects.clear_cache()
 
-    def override_forum_acl(self, extra_acl=None):
-        forums_acl = self.user.acl
-        forums_acl['visible_forums'].append(self.forum.pk)
-        forums_acl['forums'][self.forum.pk] = {
+    def override_category_acl(self, extra_acl=None):
+        categories_acl = self.user.acl
+        categories_acl['visible_categories'].append(self.category.pk)
+        categories_acl['categories'][self.category.pk] = {
             'can_see': 1,
             'can_browse': 1,
             'can_see_all_threads': 1,
         }
         if extra_acl:
-            forums_acl['forums'][self.forum.pk].update(extra_acl)
-        override_acl(self.user, forums_acl)
+            categories_acl['categories'][self.category.pk].update(extra_acl)
+        override_acl(self.user, categories_acl)
 
     def test_cant_see(self):
-        """has no permission to see forum"""
-        forums_acl = self.user.acl
-        forums_acl['visible_forums'].remove(self.forum.pk)
-        forums_acl['forums'][self.forum.pk] = {
+        """has no permission to see category"""
+        categories_acl = self.user.acl
+        categories_acl['visible_categories'].remove(self.category.pk)
+        categories_acl['categories'][self.category.pk] = {
             'can_see': 0,
             'can_browse': 0,
             'can_see_all_threads': 1,
             'can_reply_threads': 1,
         }
-        override_acl(self.user, forums_acl)
+        override_acl(self.user, categories_acl)
 
         response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 404)
 
     def test_cant_browse(self):
-        """has no permission to browse forum"""
-        forums_acl = self.user.acl
-        forums_acl['visible_forums'].append(self.forum.pk)
-        forums_acl['forums'][self.forum.pk] = {
+        """has no permission to browse category"""
+        categories_acl = self.user.acl
+        categories_acl['visible_categories'].append(self.category.pk)
+        categories_acl['categories'][self.category.pk] = {
             'can_see': 1,
             'can_browse': 0,
             'can_see_all_threads': 1,
             'can_reply_threads': 1,
         }
-        override_acl(self.user, forums_acl)
+        override_acl(self.user, categories_acl)
 
         response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 404)
 
-    def test_cant_edit_own_post_in_locked_forum(self):
-        """can't edit own post in closed forum"""
-        self.forum.is_closed = True
-        self.forum.save()
+    def test_cant_edit_own_post_in_locked_category(self):
+        """can't edit own post in closed category"""
+        self.category.is_closed = True
+        self.category.save()
 
-        self.override_forum_acl({'can_edit_threads': 1})
+        self.override_category_acl({'can_edit_threads': 1})
 
         response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 403)
 
-    def test_cant_edit_other_user_post_in_locked_forum(self):
-        """can't edit other user post in closed forum"""
-        self.forum.is_closed = True
-        self.forum.save()
+    def test_cant_edit_other_user_post_in_locked_category(self):
+        """can't edit other user post in closed category"""
+        self.category.is_closed = True
+        self.category.save()
 
         self.thread.first_post.poster = None
         self.thread.first_post.save()
         self.thread.synchronize()
         self.thread.save()
 
-        self.override_forum_acl({'can_edit_threads': 2})
+        self.override_category_acl({'can_edit_threads': 2})
 
         response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 403)
@@ -102,14 +103,14 @@ class EditPostTests(AuthenticatedUserTestCase):
         self.thread.is_closed = True
         self.thread.save()
 
-        self.override_forum_acl({'can_edit_threads': 1})
+        self.override_category_acl({'can_edit_threads': 1})
 
         response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 403)
 
     def test_cant_edit_other_user_post_in_locked_thread(self):
         """can't edit other user post in closed thread"""
-        self.override_forum_acl({'can_edit_threads': 2})
+        self.override_category_acl({'can_edit_threads': 2})
 
         self.thread.first_post.poster = None
         self.thread.first_post.save()
@@ -122,14 +123,14 @@ class EditPostTests(AuthenticatedUserTestCase):
 
     def test_cant_edit_own_post(self):
         """can't edit own post"""
-        self.override_forum_acl({'can_edit_posts': 0})
+        self.override_category_acl({'can_edit_posts': 0})
 
         response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 403)
 
     def test_cant_edit_other_user_post(self):
         """can't edit other user post"""
-        self.override_forum_acl({'can_edit_posts': 1})
+        self.override_category_acl({'can_edit_posts': 1})
 
         self.thread.first_post.poster = None
         self.thread.first_post.save()
@@ -141,7 +142,7 @@ class EditPostTests(AuthenticatedUserTestCase):
 
     def test_cant_edit_protected_post(self):
         """can't edit post that was protected by moderator"""
-        self.override_forum_acl({'can_edit_posts': 1, 'can_protect_posts': 0})
+        self.override_category_acl({'can_edit_posts': 1, 'can_protect_posts': 0})
 
         self.thread.first_post.is_protected = True
         self.thread.first_post.save()
@@ -151,13 +152,13 @@ class EditPostTests(AuthenticatedUserTestCase):
 
     def test_can_edit_own_post(self):
         """can edit own post"""
-        self.override_forum_acl({'can_edit_posts': 1, 'can_edit_threads': 0})
+        self.override_category_acl({'can_edit_posts': 1, 'can_edit_threads': 0})
 
         response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 200)
         self.assertNotIn('thread-title', response.content)
 
-        self.override_forum_acl({'can_edit_posts': 1, 'can_edit_threads': 0})
+        self.override_category_acl({'can_edit_posts': 1, 'can_edit_threads': 0})
         response = self.client.post(self.link, data={
             'post': 'Edited reply!',
             'submit': True,
@@ -174,7 +175,7 @@ class EditPostTests(AuthenticatedUserTestCase):
 
     def test_empty_edit_form(self):
         """empty edit form has no crashes"""
-        self.override_forum_acl({'can_edit_posts': 2, 'can_edit_threads': 2})
+        self.override_category_acl({'can_edit_posts': 2, 'can_edit_threads': 2})
 
         response = self.client.post(self.link, data={
             'submit': True,
@@ -184,7 +185,7 @@ class EditPostTests(AuthenticatedUserTestCase):
 
     def test_can_edit_other_user_post(self):
         """can edit other user post"""
-        self.override_forum_acl({'can_edit_posts': 2, 'can_edit_threads': 0})
+        self.override_category_acl({'can_edit_posts': 2, 'can_edit_threads': 0})
 
         self.thread.first_post.poster = None
         self.thread.first_post.save()
@@ -195,7 +196,7 @@ class EditPostTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertNotIn('thread-title', response.content)
 
-        self.override_forum_acl({'can_edit_posts': 2, 'can_edit_threads': 0})
+        self.override_category_acl({'can_edit_posts': 2, 'can_edit_threads': 0})
         response = self.client.post(self.link, data={
             'post': 'Edited reply!',
             'submit': True,
@@ -212,13 +213,13 @@ class EditPostTests(AuthenticatedUserTestCase):
 
     def test_can_edit_own_thread(self):
         """can edit own thread"""
-        self.override_forum_acl({'can_edit_posts': 1, 'can_edit_threads': 1})
+        self.override_category_acl({'can_edit_posts': 1, 'can_edit_threads': 1})
 
         response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 200)
         self.assertIn('thread-title', response.content)
 
-        self.override_forum_acl({'can_edit_posts': 1, 'can_edit_threads': 1})
+        self.override_category_acl({'can_edit_posts': 1, 'can_edit_threads': 1})
         response = self.client.post(self.link, data={
             'title': 'Edited title!',
             'post': self.thread.first_post.original,
@@ -239,7 +240,7 @@ class EditPostTests(AuthenticatedUserTestCase):
 
     def test_can_edit_other_user_thread(self):
         """can edit other user thread"""
-        self.override_forum_acl({'can_edit_posts': 2, 'can_edit_threads': 2})
+        self.override_category_acl({'can_edit_posts': 2, 'can_edit_threads': 2})
 
         self.thread.first_post.poster = None
         self.thread.first_post.save()
@@ -250,7 +251,7 @@ class EditPostTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('thread-title', response.content)
 
-        self.override_forum_acl({'can_edit_posts': 2, 'can_edit_threads': 2})
+        self.override_category_acl({'can_edit_posts': 2, 'can_edit_threads': 2})
         response = self.client.post(self.link, data={
             'title': 'Edited title!',
             'post': self.thread.first_post.original,
@@ -271,13 +272,13 @@ class EditPostTests(AuthenticatedUserTestCase):
 
     def test_no_change_edit(self):
         """user edited post but submited no changes"""
-        self.override_forum_acl({'can_edit_posts': 1, 'can_edit_threads': 1})
+        self.override_category_acl({'can_edit_posts': 1, 'can_edit_threads': 1})
 
         response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 200)
         self.assertIn('thread-title', response.content)
 
-        self.override_forum_acl({'can_edit_posts': 1, 'can_edit_threads': 1})
+        self.override_category_acl({'can_edit_posts': 1, 'can_edit_threads': 1})
         response = self.client.post(self.link, data={
             'title': self.thread.title,
             'post': self.thread.first_post.original,
@@ -297,13 +298,13 @@ class EditPostTests(AuthenticatedUserTestCase):
         """user edited post to close and open thread"""
         prefix = 'misago.threads.posting.threadclose.ThreadCloseFormMiddleware'
         field_name = '%s-is_closed' % prefix
-        self.override_forum_acl({'can_edit_posts': 1, 'can_close_threads': 1})
+        self.override_category_acl({'can_edit_posts': 1, 'can_close_threads': 1})
 
         response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 200)
         self.assertIn(field_name, response.content)
 
-        self.override_forum_acl({'can_edit_posts': 1, 'can_close_threads': 1})
+        self.override_category_acl({'can_edit_posts': 1, 'can_close_threads': 1})
         response = self.client.post(self.link, data={
             'post': self.thread.first_post.original,
             field_name: 1,
@@ -321,7 +322,7 @@ class EditPostTests(AuthenticatedUserTestCase):
         self.user.last_posted_on = None
         self.user.save()
 
-        self.override_forum_acl({'can_edit_posts': 1, 'can_close_threads': 1})
+        self.override_category_acl({'can_edit_posts': 1, 'can_close_threads': 1})
         response = self.client.post(self.link, data={
             'post': self.thread.first_post.original,
             field_name: 0,
@@ -340,13 +341,13 @@ class EditPostTests(AuthenticatedUserTestCase):
         """user edited post to pin and unpin thread"""
         prefix = 'misago.threads.posting.threadpin.ThreadPinFormMiddleware'
         field_name = '%s-is_pinned' % prefix
-        self.override_forum_acl({'can_edit_posts': 1, 'can_pin_threads': 1})
+        self.override_category_acl({'can_edit_posts': 1, 'can_pin_threads': 1})
 
         response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 200)
         self.assertIn(field_name, response.content)
 
-        self.override_forum_acl({'can_edit_posts': 1, 'can_pin_threads': 1})
+        self.override_category_acl({'can_edit_posts': 1, 'can_pin_threads': 1})
         response = self.client.post(self.link, data={
             'post': self.thread.first_post.original,
             field_name: 1,
@@ -364,7 +365,7 @@ class EditPostTests(AuthenticatedUserTestCase):
         self.user.last_posted_on = None
         self.user.save()
 
-        self.override_forum_acl({'can_edit_posts': 1, 'can_pin_threads': 1})
+        self.override_category_acl({'can_edit_posts': 1, 'can_pin_threads': 1})
         response = self.client.post(self.link, data={
             'post': self.thread.first_post.original,
             field_name: 0,
@@ -385,19 +386,19 @@ class EditPostTests(AuthenticatedUserTestCase):
         field_name = '%s-label' % prefix
 
         label = Label.objects.create(name="Label", slug="label")
-        label.forums.add(self.forum)
+        label.categories.add(self.category)
 
         acls = {
             'can_edit_posts': 1,
             'can_edit_threads': 1,
             'can_change_threads_labels': 1
         }
-        self.override_forum_acl(acls)
+        self.override_category_acl(acls)
         response = self.client.get(self.link, **self.ajax_header)
         self.assertEqual(response.status_code, 200)
         self.assertIn(field_name, response.content)
 
-        self.override_forum_acl(acls)
+        self.override_category_acl(acls)
         response = self.client.post(self.link, data={
             field_name: label.pk,
             'title': self.thread.title,
@@ -413,7 +414,7 @@ class EditPostTests(AuthenticatedUserTestCase):
         self.user.last_posted_on = None
         self.user.save()
 
-        self.override_forum_acl(acls)
+        self.override_category_acl(acls)
         response = self.client.post(self.link, data={
             field_name: 0,
             'title': self.thread.title,
@@ -434,7 +435,7 @@ class EditPostTests(AuthenticatedUserTestCase):
             'can_change_threads_labels': 1
         }
 
-        self.override_forum_acl(acls)
+        self.override_category_acl(acls)
         response = self.client.post(self.link, data={
             'title': '',
             'post': '',
@@ -442,7 +443,7 @@ class EditPostTests(AuthenticatedUserTestCase):
         **self.ajax_header)
         self.assertEqual(response.status_code, 200)
 
-        self.override_forum_acl(acls)
+        self.override_category_acl(acls)
         response = self.client.post(self.link, data={
             'title': '',
             'post': '',

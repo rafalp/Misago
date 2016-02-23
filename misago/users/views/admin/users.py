@@ -7,10 +7,10 @@ from django.utils.translation import ugettext_lazy as _
 
 from misago.admin.auth import start_admin_session
 from misago.admin.views import generic
+from misago.categories.models import Category
 from misago.conf import settings
 from misago.core.mail import mail_users
 from misago.core.pgutils import batch_update
-from misago.forums.models import Forum
 from misago.threads.models import Thread
 
 from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
@@ -101,9 +101,9 @@ class UsersList(UserAdmin, generic.ListView):
             queryset = User.objects.filter(pk__in=activated_users_pks)
             queryset.update(requires_activation=ACTIVATION_REQUIRED_NONE)
 
-            mail_subject = _("Your account on %(forum_title)s "
+            mail_subject = _("Your account on %(forum_name)s "
                              "forums has been activated")
-            subject_formats = {'forum_title': settings.forum_name}
+            subject_formats = {'forum_name': settings.forum_name}
             mail_subject = mail_subject % subject_formats
 
             mail_subject = mail_subject
@@ -326,21 +326,21 @@ class DeletionStep(UserAdmin, generic.ButtonView):
 
 class DeleteThreadsStep(DeletionStep):
     def execute_step(self, user):
-        recount_forums = set()
+        recount_categories = set()
 
         deleted_threads = 0
         is_completed = False
 
         for thread in user.thread_set.order_by('-id')[:50]:
-            recount_forums.add(thread.forum_id)
+            recount_categories.add(thread.category_id)
             with transaction.atomic():
                 thread.delete()
                 deleted_threads += 1
 
-        if recount_forums:
-            for forum in Forum.objects.filter(id__in=recount_forums):
-                forum.synchronize()
-                forum.save()
+        if recount_categories:
+            for category in Category.objects.filter(id__in=recount_categories):
+                category.synchronize()
+                category.save()
         else:
             is_completed = True
 
@@ -352,28 +352,28 @@ class DeleteThreadsStep(DeletionStep):
 
 class DeletePostsStep(DeletionStep):
     def execute_step(self, user):
-        recount_forums = set()
+        recount_categories = set()
         recount_threads = set()
 
         deleted_posts = 0
         is_completed = False
 
         for post in user.post_set.order_by('-id')[:50]:
-            recount_forums.add(post.forum_id)
+            recount_categories.add(post.category_id)
             recount_threads.add(post.thread_id)
             with transaction.atomic():
                 post.delete()
                 deleted_posts += 1
 
-        if recount_forums:
+        if recount_categories:
             changed_threads_qs = Thread.objects.filter(id__in=recount_threads)
             for thread in batch_update(changed_threads_qs, 50):
                 thread.synchronize()
                 thread.save()
 
-            for forum in Forum.objects.filter(id__in=recount_forums):
-                forum.synchronize()
-                forum.save()
+            for category in Category.objects.filter(id__in=recount_categories):
+                category.synchronize()
+                category.save()
         else:
             is_completed = True
 

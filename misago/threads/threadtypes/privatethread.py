@@ -7,13 +7,13 @@ from misago.threads.threadtypes import ThreadTypeBase
 class PrivateThread(ThreadTypeBase):
     type_name = 'private_threads'
 
-    def get_forum_name(self, forum):
+    def get_category_name(self, category):
         return _('Private Threads')
 
-    def get_forum_absolute_url(self, forum):
+    def get_category_absolute_url(self, category):
         return reverse('misago:private_threads')
 
-    def get_new_thread_url(self, forum):
+    def get_new_thread_url(self, category):
         return reverse('misago:private_thread_new')
 
     def get_reply_url(self, thread):
@@ -23,7 +23,7 @@ class PrivateThread(ThreadTypeBase):
 
     def get_edit_post_url(self, post):
         return reverse('misago:edit_private_post', kwargs={
-            'forum_id': post.forum_id,
+            'category_id': post.category_id,
             'thread_id': post.thread_id,
             'post_id': post.id
         })

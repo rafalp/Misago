@@ -5,7 +5,7 @@ from misago.threads.posting import PostingMiddleware, START
 
 class ThreadPinFormMiddleware(PostingMiddleware):
     def use_this_middleware(self):
-        if self.forum.acl['can_pin_threads']:
+        if self.category.acl['can_pin_threads']:
             self.is_pinned = self.thread.is_pinned
             return True
         else:

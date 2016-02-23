@@ -8,10 +8,10 @@ CACHE_NAME = 'misago_threads_labels'
 
 
 class LabelManager(models.Manager):
-    def get_forum_labels(self, forum):
+    def get_category_labels(self, category):
         labels = []
         for label in self.get_cached_labels():
-            if forum.pk in label.forums_ids:
+            if category.pk in label.categories_ids:
                 labels.append(label)
         return labels
 
@@ -22,9 +22,9 @@ class LabelManager(models.Manager):
         labels = cache.get(CACHE_NAME, 'nada')
         if labels == 'nada':
             labels = []
-            labels_qs = self.all().prefetch_related('forums')
+            labels_qs = self.all().prefetch_related('categories')
             for label in labels_qs.order_by('name'):
-                label.forums_ids = [f.pk for f in label.forums.all()]
+                label.categories_ids = [f.pk for f in label.categories.all()]
                 labels.append(label)
             cache.set(CACHE_NAME, labels)
         return labels
@@ -34,7 +34,7 @@ class LabelManager(models.Manager):
 
 
 class Label(models.Model):
-    forums = models.ManyToManyField('misago_forums.Forum')
+    categories = models.ManyToManyField('misago_categories.Category')
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
     css_class = models.CharField(max_length=255, null=True, blank=True)
@@ -56,8 +56,8 @@ class Label(models.Model):
 
     def strip_inavailable_labels(self):
         qs = self.thread_set
-        if self.forums:
-            qs = qs.exclude(forum__in=self.forums.all())
+        if self.categories:
+            qs = qs.exclude(category__in=self.categories.all())
         qs.update(label=None)
 
     def set_name(self, name):

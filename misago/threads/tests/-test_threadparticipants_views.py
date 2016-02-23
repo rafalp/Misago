@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.utils import timezone
 
 from misago.acl.testutils import override_acl
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads import testutils
@@ -16,8 +16,8 @@ class ThreadParticipantsTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(ThreadParticipantsTests, self).setUp()
 
-        self.forum = Forum.objects.private_threads()
-        self.thread = testutils.post_thread(self.forum)
+        self.category = Category.objects.private_threads()
+        self.thread = testutils.post_thread(self.category)
 
     def test_participants_list(self):
         """participants list displays thread participants"""

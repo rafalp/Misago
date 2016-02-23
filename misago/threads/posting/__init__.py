@@ -28,7 +28,7 @@ class EditorFormset(object):
         self._forms_list = []
         self._forms_dict = {}
 
-        is_private = kwargs['forum'].special_role == "private_threads"
+        is_private = kwargs['category'].special_role == 'private_threads'
         kwargs['is_private'] = is_private
 
         self.kwargs = kwargs

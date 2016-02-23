@@ -1,7 +1,7 @@
 from django.conf import settings
 
 from misago.acl import add_acl
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.readtracker import threadstracker
 from misago.users.testutils import AuthenticatedUserTestCase
 
@@ -27,11 +27,11 @@ class GotoTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(GotoTests, self).setUp()
 
-        self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
-        self.forum.labels = []
+        self.category = Category.objects.all_categories().filter(role='forum')[:1][0]
+        self.category.labels = []
 
-        self.thread = post_thread(self.forum)
-        add_acl(self.user, self.forum)
+        self.thread = post_thread(self.category)
+        add_acl(self.user, self.category)
         add_acl(self.user, self.thread)
 
     def test_get_thread_pages(self):

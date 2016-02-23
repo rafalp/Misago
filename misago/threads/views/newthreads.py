@@ -29,7 +29,7 @@ class NewThreads(Threads):
             cutoff_date = self.user.new_threads_cutoff
 
         queryset = Thread.objects.filter(started_on__gte=cutoff_date)
-        queryset = queryset.select_related('forum')
+        queryset = queryset.select_related('category')
 
         tracked_threads = self.user.threadread_set.all()
         queryset = queryset.exclude(id__in=tracked_threads.values('thread_id'))
