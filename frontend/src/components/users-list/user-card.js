@@ -5,34 +5,38 @@ import Status, { StatusIcon, StatusLabel } from 'misago/components/user-status';
 export default class extends React.Component {
   getClassName() {
     if (this.props.user.rank.css_class) {
-      return 'user-card user-card-' + this.props.user.rank.css_class;
+      return 'user-card user-card-' + this.props.user.rank.css_class + ' ui-ready';
     } else {
-      return 'user-card';
+      return 'user-card ui-ready';
     }
   }
 
   getUserStatus() {
-    if (this.props.user.status) {
-      /* jshint ignore:start */
-      return <Status user={this.props.user} status={this.props.user.status}>
-        <StatusIcon user={this.props.user}
-                    status={this.props.user.status} />
-        <StatusLabel user={this.props.user}
-                     status={this.props.user.status}
-                     className="status-label" />
-      </Status>;
-      /* jshint ignore:end */
+    if (this.props.showStatus) {
+      if (this.props.user.status) {
+        /* jshint ignore:start */
+        return <Status user={this.props.user} status={this.props.user.status}>
+          <StatusIcon user={this.props.user}
+                      status={this.props.user.status} />
+          <StatusLabel user={this.props.user}
+                       status={this.props.user.status}
+                       className="status-label" />
+        </Status>;
+        /* jshint ignore:end */
+      } else {
+        /* jshint ignore:start */
+        return <span className="user-status">
+          <span className="status-icon ui-preview">
+            &nbsp;
+          </span>
+          <span className="status-label ui-preview">
+            &nbsp;
+          </span>
+        </span>;
+        /* jshint ignore:end */
+      }
     } else {
-      /* jshint ignore:start */
-      return <span className="user-status">
-        <span className="status-icon ui-preview">
-          &nbsp;
-        </span>
-        <span className="status-label ui-preview">
-          &nbsp;
-        </span>
-      </span>;
-      /* jshint ignore:end */
+      return null;
     }
   }
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import ListLoading from 'misago/components/users/rank/list-loading' // jshint ignore:line
 import List from 'misago/components/users/rank/list' // jshint ignore:line
+import ListLoading from 'misago/components/users/rank/list-loading' // jshint ignore:line
 import misago from 'misago/index';
 import { dehydrate } from 'misago/reducers/users';
 import polls from 'misago/services/polls';

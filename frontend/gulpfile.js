@@ -223,7 +223,23 @@ gulp.task('linttests', function() {
 
 gulp.task('test', ['linttests', 'lintsource'], function() {
   var mochify = require('mochify');
-  mochify('src/test-setup.js tests/**/*.js', {
+
+  var flag = process.argv.indexOf('--limit');
+  var value = process.argv[flag + 1];
+
+  var tests = ['src/test-setup.js'];
+  if (flag !== -1 && value) {
+    var pattern = value.trim();
+    glob.sync('tests/**/*.js').map(function(path) {
+      if (path.indexOf(pattern) !== -1) {
+        tests.push(path);
+      }
+    });
+  } else {
+    tests.push('tests/**/*.js');
+  }
+
+  mochify(tests.join(" "), {
       reporter: 'spec'
     })
     .transform(babelify)

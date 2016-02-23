@@ -1,7 +1,6 @@
 import assert from 'assert';
-import moment from 'moment';
+import moment from 'moment'; // jshint ignore:line
 import React from 'react'; // jshint ignore:line
-import ListItem from 'misago/components/users/rank/list-item' // jshint ignore:line
 import ListLoading from 'misago/components/users/rank/list-loading' // jshint ignore:line
 import List from 'misago/components/users/rank/list' // jshint ignore:line
 import Pager from 'misago/components/users/rank/pager' // jshint ignore:line
@@ -65,62 +64,6 @@ describe("Rank Users List", function() {
 
       assert.equal($('#test-mount .user-card').length, 2,
         "two users are rendered");
-
-      done();
-    });
-  });
-});
-
-describe("Rank Users List Item", function() {
-  afterEach(function() {
-    testUtils.unmountComponents();
-  });
-
-  it("renders with ui-preview", function(done) {
-    let user = testUtils.mockUser({
-      title: "Lorem ipsum",
-      joined_on: moment()
-    });
-
-    /* jshint ignore:start */
-    testUtils.render(
-      <ListItem user={user} />
-    );
-    /* jshint ignore:end */
-
-    testUtils.onElement('#test-mount .user-card', function() {
-      assert.ok(true, "component renders");
-      assert.ok($('#test-mount .status-label.ui-preview').length,
-        "status preview is rendered");
-
-      assert.equal($('#test-mount .user-title').text().trim(), user.title,
-        "user title is rendered");
-
-      done();
-    });
-  });
-
-  it("renders", function(done) {
-    let user = testUtils.mockUser({
-      title: "Lorem ipsum",
-      status: {is_online: true},
-      joined_on: moment()
-    });
-
-    /* jshint ignore:start */
-    testUtils.render(
-      <ListItem user={user} />
-    );
-    /* jshint ignore:end */
-
-    testUtils.onElement('#test-mount .user-card', function() {
-      assert.ok(true, "component renders");
-
-      assert.equal($('#test-mount .status-label').text().trim(), 'Online',
-        "status label is rendered");
-
-      assert.equal($('#test-mount .user-title').text().trim(), user.title,
-        "user title is rendered");
 
       done();
     });

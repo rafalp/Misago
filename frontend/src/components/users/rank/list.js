@@ -1,7 +1,6 @@
 import React from 'react';
-import ListItem from 'misago/components/users/rank/list-item' // jshint ignore:line
 import Pager from 'misago/components/users/rank/pager' // jshint ignore:line
-import batch from 'misago/utils/batch'; // jshint ignore:line
+import UsersList from 'misago/components/users-list/root' // jshint ignore:line
 
 export default class extends React.Component {
   getPager() {
@@ -17,17 +16,11 @@ export default class extends React.Component {
   render() {
     /* jshint ignore:start */
     return <div>
-      <div className="users-cards-list ui-ready">
-        {batch(this.props.users, 3).map((row, r) => {
-          return <div className="row" key={r}>
-            {row.map((user) => {
-              return <div className="col-md-4" key={user.id}>
-                <ListItem user={user} />
-              </div>;
-            })}
-          </div>;
-        })}
-      </div>
+      <UsersList users={this.props.users}
+                 showStatus={true}
+                 cols={3}
+                 isLoaded={true} />
+
       {this.getPager()}
     </div>;
     /* jshint ignore:end */
