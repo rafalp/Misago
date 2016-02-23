@@ -1,8 +1,16 @@
 import moment from 'moment';
 
+export const APPEND_USERS = 'APPEND_USERS';
 export const DEHYDRATE_USERS = 'DEHYDRATE_USERS';
 export const UPDATE_AVATAR = 'UPDATE_AVATAR';
 export const UPDATE_USERNAME = 'UPDATE_USERNAME';
+
+export function append(items) {
+  return {
+    type: APPEND_USERS,
+    items
+  };
+}
 
 export function dehydrate(items) {
   return {
@@ -41,6 +49,14 @@ export function updateUsername(user, username, slug) {
 
 export default function user(state=[], action=null) {
   switch (action.type) {
+    case APPEND_USERS:
+      return state.concat(action.items.map(function(item) {
+        return Object.assign({}, item, {
+          joined_on: moment(item.joined_on),
+          status: dehydrateStatus(item.status)
+        });
+      }));
+
     case DEHYDRATE_USERS:
       return action.items.map(function(item) {
         return Object.assign({}, item, {

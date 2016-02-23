@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
 import BanDetails from 'misago/components/profile/ban-details'; // jshint ignore:line
+import Followers from 'misago/components/profile/followers'; // jshint ignore:line
+import Follows from 'misago/components/profile/follows'; // jshint ignore:line
 import UsernameHistory from 'misago/components/profile/username-history'; // jshint ignore:line
 import Header from 'misago/components/profile/Header'; // jshint ignore:line
 import ModerationNav from 'misago/components/profile/moderation/nav'; // jshint ignore:line
@@ -176,8 +178,8 @@ class Placeholder extends React.Component {
 const COMPONENTS = {
   'posts': Placeholder,
   'threads': Placeholder,
-  'followers': Placeholder,
-  'follows': Placeholder,
+  'followers': Followers,
+  'follows': Follows,
   'username-history': UsernameHistory,
   'ban-details': BanDetails
 };
