@@ -66,18 +66,18 @@ class FollowersListTests(AuthenticatedUserTestCase):
     """
     def setUp(self):
         super(FollowersListTests, self).setUp()
-        self.link = '/api/users/?&followers='
+        self.link = '/api/users/?&followers=%s'
 
     def test_nonexistent_user(self):
         """list for non-existing user returns 404"""
-        response = self.client.get(self.link + 'this-user-is-fake')
+        response = self.client.get(self.link % 31242)
         self.assertEqual(response.status_code, 404)
 
     def test_empty_list(self):
         """user without followers returns 200"""
         rank_slug = self.user.rank.slug
 
-        response = self.client.get(self.link + self.user.slug)
+        response = self.client.get(self.link % self.user.pk)
         self.assertEqual(response.status_code, 200)
 
     def test_filled_list(self):
@@ -87,7 +87,7 @@ class FollowersListTests(AuthenticatedUserTestCase):
             "TestFollower", "test@follower.com", self.USER_PASSWORD)
         self.user.followed_by.add(test_follower)
 
-        response = self.client.get(self.link + self.user.slug)
+        response = self.client.get(self.link % self.user.pk)
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_follower.username, response.content)
 
@@ -98,18 +98,18 @@ class FollowsListTests(AuthenticatedUserTestCase):
     """
     def setUp(self):
         super(FollowsListTests, self).setUp()
-        self.link = '/api/users/?&follows='
+        self.link = '/api/users/?&follows=%s'
 
     def test_nonexistent_user(self):
         """list for non-existing user returns 404"""
-        response = self.client.get(self.link + 'this-user-is-fake')
+        response = self.client.get(self.link % 1321)
         self.assertEqual(response.status_code, 404)
 
     def test_empty_list(self):
         """user without follows returns 200"""
         rank_slug = self.user.rank.slug
 
-        response = self.client.get(self.link + self.user.slug)
+        response = self.client.get(self.link % self.user.pk)
         self.assertEqual(response.status_code, 200)
 
     def test_filled_list(self):
@@ -119,7 +119,7 @@ class FollowsListTests(AuthenticatedUserTestCase):
             "TestFollower", "test@follower.com", self.USER_PASSWORD)
         self.user.follows.add(test_follower)
 
-        response = self.client.get(self.link + self.user.slug)
+        response = self.client.get(self.link % self.user.pk)
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_follower.username, response.content)
 
@@ -130,11 +130,11 @@ class RankListTests(AuthenticatedUserTestCase):
     """
     def setUp(self):
         super(RankListTests, self).setUp()
-        self.link = '/api/users/?rank='
+        self.link = '/api/users/?rank=%s'
 
     def test_nonexistent_rank(self):
         """list for non-existing rank returns 404"""
-        response = self.client.get(self.link + 'this-rank-is-non-existing')
+        response = self.client.get(self.link % 1421)
         self.assertEqual(response.status_code, 404)
 
     def test_empty_list(self):
@@ -145,7 +145,7 @@ class RankListTests(AuthenticatedUserTestCase):
             is_tab=True
         )
 
-        response = self.client.get(self.link + test_rank.slug)
+        response = self.client.get(self.link % test_rank.pk)
         self.assertEqual(response.status_code, 200)
 
     def test_disabled_list(self):
@@ -153,7 +153,7 @@ class RankListTests(AuthenticatedUserTestCase):
         self.user.rank.is_tab = False
         self.user.rank.save()
 
-        response = self.client.get(self.link + self.user.rank.slug)
+        response = self.client.get(self.link % self.user.rank.pk)
         self.assertEqual(response.status_code, 404)
 
     def test_filled_list(self):
@@ -161,7 +161,7 @@ class RankListTests(AuthenticatedUserTestCase):
         self.user.rank.is_tab = True
         self.user.rank.save()
 
-        response = self.client.get(self.link + self.user.rank.slug)
+        response = self.client.get(self.link % self.user.rank.pk)
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.user.username, response.content)
 

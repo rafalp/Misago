@@ -81,6 +81,7 @@ export class Ajax {
       }
 
       // immediately dereference promise handlers without doing anything
+      // we are already waiting for existing response to resolve
       if (this._locks[lock] && this._locks[lock].waiter) {
         return {
           then: function() {
@@ -100,7 +101,7 @@ export class Ajax {
                 wait(url);
               }, 300);
 
-            // pool for new url
+            // poll for new url
             } else if (self._locks[lock].url !== url) {
               wait(self._locks[lock].url);
 

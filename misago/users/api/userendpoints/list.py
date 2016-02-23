@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from misago.conf import settings
 from misago.core.apipaginator import ApiPaginator
 from misago.core.cache import cache
-from misago.core.shortcuts import get_object_or_404
+from misago.core.shortcuts import get_int_or_404, get_object_or_404
 from misago.forums.models import Forum
 
 from misago.users.activepostersranking import get_active_posters_ranking
@@ -38,15 +38,15 @@ def active(request):
 def generic(request):
     queryset = get_user_model().objects
     if request.query_params.get('followers'):
-        queryset = get_object_or_404(
-            queryset, slug=request.query_params.get('followers')).followed_by
+        user_pk = get_int_or_404(request.query_params.get('followers'))
+        queryset = get_object_or_404(queryset, pk=user_pk).followed_by
     elif request.query_params.get('follows'):
-        queryset = get_object_or_404(
-            queryset, slug=request.query_params.get('follows')).follows
+        user_pk = get_int_or_404(request.query_params.get('follows'))
+        queryset = get_object_or_404(queryset, pk=user_pk).follows
 
     if request.query_params.get('rank'):
-        rank_slug = request.query_params.get('rank')
-        rank = get_object_or_404(Rank.objects, slug=rank_slug, is_tab=True)
+        rank_pk = get_int_or_404(request.query_params.get('rank'))
+        rank = get_object_or_404(Rank.objects, pk=rank_pk, is_tab=True)
         queryset = queryset.filter(rank=rank)
 
     if request.query_params.get('name'):

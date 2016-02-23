@@ -1,5 +1,8 @@
 from django.core.urlresolvers import reverse
+from django.http import Http404
 from django.test import TestCase
+
+from misago.core.shortcuts import get_int_or_404
 
 
 class PaginateTests(TestCase):
@@ -49,3 +52,35 @@ class ValidateSlugTests(TestCase):
 
         valid_url = "http://testserver/forum/test-valid-slug/eric-the-fish-1/"
         self.assertEqual(response['Location'], valid_url)
+
+
+class GetIntOr404(TestCase):
+    def test_valid_inputs(self):
+        """get_int_or_404 returns int for valid values"""
+        VALID_VALUES = (
+            ('0', 0),
+            ('123', 123),
+            ('000123', 123),
+            ('1', 1),
+        )
+
+        for value, result in VALID_VALUES:
+            self.assertEqual(get_int_or_404(value), result)
+
+    def test_invalid_inputs(self):
+        """get_int_or_404 raises Http404 for invalid values"""
+        INVALID_VALUES = (
+            None,
+            '',
+            'bob',
+            '1bob',
+            'b0b',
+            'bob123',
+            '12.321',
+            '.4',
+            '5.',
+        )
+
+        for value in INVALID_VALUES:
+            with self.assertRaises(Http404):
+                get_int_or_404(value)

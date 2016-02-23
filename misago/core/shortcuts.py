@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from django.http import Http404
 from django.shortcuts import *  # noqa
 
 
@@ -66,3 +67,10 @@ def validate_slug(model, slug):
     from misago.core.exceptions import OutdatedSlug
     if model.slug != slug:
         raise OutdatedSlug(model)
+
+
+def get_int_or_404(value):
+    if unicode(value).isdigit():
+        return int(value)
+    else:
+        raise Http404()

@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.utils.translation import ugettext as _
@@ -6,6 +7,7 @@ from rest_framework import status, viewsets, mixins
 from rest_framework.response import Response
 
 from misago.core.apipaginator import ApiPaginator
+from misago.core.shortcuts import get_int_or_404, get_object_or_404
 
 from misago.users.models import UsernameChange
 from misago.users.rest_permissions import BasePermission
@@ -34,14 +36,12 @@ class UsernameChangesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     pagination_class = ApiPaginator(12, 4)
 
     def get_queryset(self):
-        queryset = UsernameChange.objects.select_related('user', 'changed_by')
+        queryset = UsernameChange.objects
 
-        user = self.request.query_params.get('user', None)
-        if user is not None:
-            try:
-                queryset = queryset.filter(user_id=int(user))
-            except (ValueError, TypeError):
-                queryset = queryset.none()
+        if self.request.query_params.get('user'):
+            user_pk = get_int_or_404(self.request.query_params.get('user'))
+            queryset = get_object_or_404(
+                get_user_model().objects, pk=user_pk).namechanges
 
         if self.request.query_params.get('search'):
             search_phrase = self.request.query_params.get('search').strip()
@@ -51,4 +51,4 @@ class UsernameChangesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                     Q(new_username__istartswith=search_phrase) |
                     Q(old_username__istartswith=search_phrase))
 
-        return queryset.order_by('-id')
+        return queryset.select_related('user', 'changed_by').order_by('-id')

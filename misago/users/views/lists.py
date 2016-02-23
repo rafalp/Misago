@@ -43,6 +43,7 @@ def render(request, template, context):
             description = None
 
         request.frontend_context['USERS_LISTS'].append({
+            'id': rank.pk,
             'name': rank.name,
             'slug': rank.slug,
             'css_class': rank.css_class,

@@ -38,7 +38,7 @@ export default class extends React.Component {
       poll: 'rank-users',
       url: misago.get('USERS_API'),
       data: {
-        rank: this.props.route.rank.slug,
+        rank: this.props.route.rank.id,
         page: page
       },
       frequency: 90 * 1000,

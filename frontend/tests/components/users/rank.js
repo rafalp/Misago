@@ -282,6 +282,7 @@ describe("Rank Users List Root", function() {
       USERS_LISTS: [
         {
           component: "rank",
+          id: 424,
           name: "Forum team",
           slug: 'forum-team',
           css_class: 'forum-team',
@@ -342,7 +343,7 @@ describe("Rank Users List Root", function() {
     };
 
     $.mockjax({
-      url: '/test-api/users/?rank=forum-team&page=1',
+      url: '/test-api/users/?rank=424&page=1',
       status: 200,
       responseText: data
     });
@@ -351,6 +352,7 @@ describe("Rank Users List Root", function() {
 
     /* jshint ignore:start */
     let rank = {
+      id: 424,
       name: "Forum team",
       slug: 'forum-team',
       css_class: 'forum-team',
@@ -407,13 +409,14 @@ describe("Rank Users List Root", function() {
     };
 
     $.mockjax({
-      url: '/test-api/users/?rank=forum-team&page=1',
+      url: '/test-api/users/?rank=424&page=1',
       status: 200,
       responseText: data
     });
 
     /* jshint ignore:start */
     let rank = {
+      id: 424,
       name: "Forum team",
       slug: 'forum-team',
       css_class: 'forum-team',
@@ -445,12 +448,13 @@ describe("Rank Users List Root", function() {
 
   it("handles backend error", function(done) {
     $.mockjax({
-      url: '/test-api/users/?rank=forum-team&page=1',
+      url: '/test-api/users/?rank=424&page=1',
       status: 500
     });
 
     /* jshint ignore:start */
     let rank = {
+      id: 424,
       name: "Forum team",
       slug: 'forum-team',
       css_class: 'forum-team',

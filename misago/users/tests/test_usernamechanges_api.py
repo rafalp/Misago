@@ -21,14 +21,22 @@ class UsernameChangesApiTests(AuthenticatedUserTestCase):
         self.assertIn(self.user.username, response.content)
 
     def test_list_handles_invalid_filter(self):
-        """list returns no username changes for invalid filter"""
+        """list raises 404 for invalid filter"""
         self.user.set_username('NewUsername', self.user)
 
         override_acl(self.user, {'can_see_users_name_history': True})
 
         response = self.client.get('%s?user=abcd' % self.link)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('[]', response.content)
+        self.assertEqual(response.status_code, 404)
+
+    def test_list_handles_nonexisting_user(self):
+        """list raises 404 for invalid user id"""
+        self.user.set_username('NewUsername', self.user)
+
+        override_acl(self.user, {'can_see_users_name_history': True})
+
+        response = self.client.get('%s?user=142141' % self.link)
+        self.assertEqual(response.status_code, 404)
 
     def test_list_handles_search(self):
         """list returns found username changes"""

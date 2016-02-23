@@ -110,22 +110,12 @@ export function paths() {
       paths.push({
         path: misago.get('USERS_LIST_URL') + item.slug + '/:page/',
         component: connect(select)(Rank),
-        rank: {
-          name: item.name,
-          slug: item.slug,
-          css_class: item.css_class,
-          description: item.description
-        }
+        rank: item
       });
       paths.push({
         path: misago.get('USERS_LIST_URL') + item.slug + '/',
         component: connect(select)(Rank),
-        rank: {
-          name: item.name,
-          slug: item.slug,
-          css_class: item.css_class,
-          description: item.description
-        }
+        rank: item
       });
     } else if (item.component === 'active-posters'){
       paths.push({
