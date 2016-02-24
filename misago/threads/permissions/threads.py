@@ -48,14 +48,19 @@ class PermissionsForm(forms.Form):
         label=_("Can see threads"),
         coerce=int,
         initial=0,
-        choices=((0, _("Started threads")), (1, _("All threads"))))
+        choices=((0, _("Started threads")), (1, _("All threads")))
+    )
+
     can_start_threads = forms.YesNoSwitch(label=_("Can start threads"))
     can_reply_threads = forms.YesNoSwitch(label=_("Can reply to threads"))
+
     can_edit_threads = forms.TypedChoiceField(
         label=_("Can edit threads"),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads"))))
+        choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads")))
+    )
+
     can_hide_own_threads = forms.TypedChoiceField(
         label=_("Can hide own threads"),
         help_text=_("Only threads started within time limit and "
@@ -66,12 +71,15 @@ class PermissionsForm(forms.Form):
             (0, _("No")),
             (1, _("Hide threads")),
             (2, _("Delete threads"))
-        ))
+        )
+    )
+
     thread_edit_time = forms.IntegerField(
         label=_("Time limit for own threads edits, in minutes"),
         help_text=_("Enter 0 to don't limit time for editing own threads."),
         initial=0,
         min_value=0)
+
     can_hide_threads = forms.TypedChoiceField(
         label=_("Can hide all threads"),
         coerce=int,
@@ -80,12 +88,16 @@ class PermissionsForm(forms.Form):
             (0, _("No")),
             (1, _("Hide threads")),
             (2, _("Delete threads"))
-        ))
+        )
+    )
+
     can_edit_posts = forms.TypedChoiceField(
         label=_("Can edit posts"),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Own posts")), (2, _("All posts"))))
+        choices=((0, _("No")), (1, _("Own posts")), (2, _("All posts")))
+    )
+
     can_hide_own_posts = forms.TypedChoiceField(
         label=_("Can hide own posts"),
         help_text=_("Only last posts to thread made within "
@@ -96,12 +108,15 @@ class PermissionsForm(forms.Form):
             (0, _("No")),
             (1, _("Hide posts")),
             (2, _("Delete posts"))
-        ))
+        )
+    )
+
     post_edit_time = forms.IntegerField(
         label=_("Time limit for own post edits, in minutes"),
         help_text=_("Enter 0 to don't limit time for editing own posts."),
         initial=0,
         min_value=0)
+
     can_hide_posts = forms.TypedChoiceField(
         label=_("Can hide all posts"),
         coerce=int,
@@ -110,7 +125,9 @@ class PermissionsForm(forms.Form):
             (0, _("No")),
             (1, _("Hide posts")),
             (2, _("Delete posts"))
-        ))
+        )
+    )
+
     can_protect_posts = forms.YesNoSwitch(
         label=_("Can protect posts"),
         help_text=_("Only users with this permission "
@@ -136,6 +153,7 @@ class PermissionsForm(forms.Form):
         help_text=_("Will see and be able to accept moderated content."))
     can_report_content = forms.YesNoSwitch(label=_("Can report posts"))
     can_see_reports = forms.YesNoSwitch(label=_("Can see reports"))
+
     can_hide_events = forms.TypedChoiceField(
         label=_("Can hide events"),
         coerce=int,
@@ -144,7 +162,8 @@ class PermissionsForm(forms.Form):
             (0, _("No")),
             (1, _("Hide events")),
             (2, _("Delete events"))
-        ))
+        )
+    )
 
 
 def change_permissions_form(role):
@@ -422,8 +441,7 @@ def allow_reply_thread(user, target):
                 _("You can't reply to closed threads in this category."))
 
     if not category_acl['can_reply_threads']:
-        raise PermissionDenied(
-            _("You can't reply to threads in this category."))
+        raise PermissionDenied(_("You can't reply to threads in this category."))
 can_reply_thread = return_boolean(allow_reply_thread)
 
 
@@ -517,8 +535,7 @@ def allow_unhide_post(user, target):
 
     if not category_acl['can_hide_posts']:
         if not category_acl['can_hide_own_posts']:
-            raise PermissionDenied(
-                _("You can't reveal posts in this category."))
+            raise PermissionDenied(_("You can't reveal posts in this category."))
 
         if user.id != target.poster_id:
             raise PermissionDenied(

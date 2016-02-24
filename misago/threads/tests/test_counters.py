@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
-from misago.categories.models import Category
+from misago.forums.models import Forum
 from misago.readtracker.models import ThreadRead
 from misago.users.testutils import AuthenticatedUserTestCase
 
@@ -18,14 +18,14 @@ class TestNewThreadsCount(AuthenticatedUserTestCase):
     def setUp(self):
         super(TestNewThreadsCount, self).setUp()
 
-        self.category = Category.objects.all_categories().filter(role='category')[:1][0]
+        self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
 
     def test_cast_to_int(self):
         """counter is castable to int"""
         counter = NewThreadsCount(self.user, {})
         self.assertEqual(int(counter), 0)
 
-        threads = [testutils.post_thread(self.category) for t in xrange(42)]
+        threads = [testutils.post_thread(self.forum) for t in xrange(42)]
         counter = NewThreadsCount(self.user, {})
         self.assertEqual(int(counter), 42)
 
@@ -34,7 +34,7 @@ class TestNewThreadsCount(AuthenticatedUserTestCase):
         counter = NewThreadsCount(self.user, {})
         self.assertFalse(counter)
 
-        threads = [testutils.post_thread(self.category) for t in xrange(42)]
+        threads = [testutils.post_thread(self.forum) for t in xrange(42)]
         counter = NewThreadsCount(self.user, {})
         self.assertTrue(counter)
 
@@ -69,7 +69,7 @@ class TestNewThreadsCount(AuthenticatedUserTestCase):
         self.assertEqual(counter.get_current_count_dict()['threads'], 0)
 
         # create 10 new threads
-        threads = [testutils.post_thread(self.category) for t in xrange(10)]
+        threads = [testutils.post_thread(self.forum) for t in xrange(10)]
         self.assertEqual(counter.get_current_count_dict()['threads'], 10)
 
         # create new counter
@@ -110,7 +110,7 @@ class TestSyncUnreadPrivateThreadsCount(AuthenticatedUserTestCase):
     def setUp(self):
         super(TestSyncUnreadPrivateThreadsCount, self).setUp()
 
-        self.category = Category.objects.private_threads()
+        self.forum = Forum.objects.private_threads()
         self.user.sync_unread_private_threads = True
 
     def test_user_with_no_threads(self):
@@ -118,7 +118,7 @@ class TestSyncUnreadPrivateThreadsCount(AuthenticatedUserTestCase):
         for i in range(5):
             # post 5 invisible threads
             testutils.post_thread(
-                self.category, started_on=timezone.now() - timedelta(days=2))
+                self.forum, started_on=timezone.now() - timedelta(days=2))
 
         sync_user_unread_private_threads_count(self.user)
         self.assertEqual(self.user.unread_private_threads, 0)
@@ -128,10 +128,10 @@ class TestSyncUnreadPrivateThreadsCount(AuthenticatedUserTestCase):
         for i in range(5):
             # post 5 invisible threads
             testutils.post_thread(
-                self.category, started_on=timezone.now() - timedelta(days=2))
+                self.forum, started_on=timezone.now() - timedelta(days=2))
 
         thread = testutils.post_thread(
-            self.category, started_on=timezone.now() - timedelta(days=2))
+            self.forum, started_on=timezone.now() - timedelta(days=2))
         thread.threadparticipant_set.create(user=self.user)
 
         sync_user_unread_private_threads_count(self.user)
@@ -142,15 +142,15 @@ class TestSyncUnreadPrivateThreadsCount(AuthenticatedUserTestCase):
         for i in range(5):
             # post 5 invisible threads
             testutils.post_thread(
-                self.category, started_on=timezone.now() - timedelta(days=2))
+                self.forum, started_on=timezone.now() - timedelta(days=2))
 
         thread = testutils.post_thread(
-            self.category, started_on=timezone.now() - timedelta(days=2))
+            self.forum, started_on=timezone.now() - timedelta(days=2))
         thread.threadparticipant_set.create(user=self.user)
 
         ThreadRead.objects.create(
             user=self.user,
-            category=self.category,
+            forum=self.forum,
             thread=thread,
             last_read_on=timezone.now() - timedelta(days=3))
 

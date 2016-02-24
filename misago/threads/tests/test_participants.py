@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.categories.models import Category
+from misago.forums.models import Forum
 
 from misago.threads.models import Thread, ThreadParticipant, Post
 from misago.threads.participants import (thread_has_participants,
@@ -10,16 +10,17 @@ from misago.threads.participants import (thread_has_participants,
                                          set_thread_owner,
                                          set_user_unread_private_threads_sync,
                                          add_owner,
-                                         remove_participant)
+                                         remove_participant
+                                         )
 
 
 class ParticipantsTests(TestCase):
     def setUp(self):
         datetime = timezone.now()
 
-        self.category = Category.objects.filter(role='forum')[:1][0]
+        self.forum = Forum.objects.filter(role="forum")[:1][0]
         self.thread = Thread(
-            category=self.category,
+            forum=self.forum,
             started_on=datetime,
             starter_name='Tester',
             starter_slug='tester',
@@ -31,7 +32,7 @@ class ParticipantsTests(TestCase):
         self.thread.save()
 
         post = Post.objects.create(
-            category=self.category,
+            forum=self.forum,
             thread=self.thread,
             poster_name='Tester',
             poster_ip='127.0.0.1',

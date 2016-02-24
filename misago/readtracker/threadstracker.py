@@ -5,7 +5,7 @@ from misago.notifications import read_user_notifications
 
 from misago.readtracker import categoriestracker, signals
 from misago.readtracker.dates import is_date_tracked
-from misago.readtracker.models import CategoyRead, ThreadRead
+from misago.readtracker.models import CategoryRead, ThreadRead
 
 
 __all__ = ['make_read_aware', 'read_thread']
@@ -135,7 +135,7 @@ def make_thread_read_aware(user, thread):
             else:
                 thread.is_read = True
                 thread.is_new = False
-        except CategoyRead.DoesNotExist:
+        except CategoryRead.DoesNotExist:
             categoriestracker.start_record(user, thread.category)
 
 

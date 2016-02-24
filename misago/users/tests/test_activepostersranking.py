@@ -18,7 +18,7 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         cache.clear()
         threadstore.clear()
 
-        self.category = Category.objects.all_categories(role='forum').filter()[:1][0]
+        self.category = Category.objects.all_categories()[:1][0]
 
     def tearDown(self):
         super(TestActivePostersRanking, self).tearDown()

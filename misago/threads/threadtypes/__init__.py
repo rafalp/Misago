@@ -7,8 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 class ThreadTypeBase(object):
     type_name = 'undefined'
 
-    def get_category_name(self, category):
-        return category.name
+    def get_forum_name(self, forum):
+        return forum.name
 
 
 def load_types(types_list):

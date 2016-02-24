@@ -126,7 +126,7 @@ MIDDLEWARE_CLASSES = (
     'misago.core.middleware.exceptionhandler.ExceptionHandlerMiddleware',
     'misago.users.middleware.OnlineTrackerMiddleware',
     'misago.admin.middleware.AdminAuthMiddleware',
-    'misago.threads.middleware.UnreadThreadsCountMiddleware',
+    #'misago.threads.middleware.UnreadThreadsCountMiddleware',
     'misago.core.middleware.threadstore.ThreadStoreMiddleware',
 )
 
@@ -182,14 +182,12 @@ MISAGO_POSTING_MIDDLEWARES = (
 
 MISAGO_THREAD_TYPES = (
     # category and redirect types
-    'misago.categories.forumtypes.RootCategory',
-    'misago.categories.forumtypes.Category',
-    'misago.categories.forumtypes.Redirect',
+    'misago.categories.categorytypes.RootCategory',
+    'misago.categories.categorytypes.Category',
 
     # real thread types
-    'misago.threads.threadtypes.forumthread.ForumThread',
+    'misago.threads.threadtypes.thread.Thread',
     'misago.threads.threadtypes.privatethread.PrivateThread',
-    'misago.threads.threadtypes.report.Report',
 )
 
 

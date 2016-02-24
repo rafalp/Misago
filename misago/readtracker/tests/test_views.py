@@ -12,7 +12,7 @@ from misago.readtracker.categoriestracker import make_read_aware
 class AuthenticatedTests(AuthenticatedUserTestCase):
     def test_read_all_threads(self):
         """read_all view updates reads cutoff on user model"""
-        category = Category.objects.all_categories().filter(role='forum')[:1][0]
+        category = Category.objects.all_categories()[:1][0]
         threads = [testutils.post_thread(category) for t in xrange(10)]
 
         category = Category.objects.get(id=category.id)
@@ -30,14 +30,14 @@ class AuthenticatedTests(AuthenticatedUserTestCase):
 
     def test_read_category(self):
         """read_category view updates reads cutoff on category tracker"""
-        category = Category.objects.all_categories().filter(role='forum')[:1][0]
+        category = Category.objects.all_categories()[:1][0]
         threads = [testutils.post_thread(category) for t in xrange(10)]
 
         category = Category.objects.get(id=category.id)
         make_read_aware(self.user, [category])
         self.assertFalse(category.is_read)
 
-        response = self.client.post(everse('misago:read_category', kwargs={
+        response = self.client.post(reverse('misago:read_category', kwargs={
             'category_id': category.id
         }))
 

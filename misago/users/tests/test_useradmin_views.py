@@ -68,10 +68,12 @@ class UserAdminViewsTests(AdminTestCase):
 
         user_pks = []
         for i in xrange(10):
-            test_user = User.objects.create_user('Bob%s' % i,
-                                                 'bob%s@test.com' % i,
-                                                 'pass123',
-                                                 requires_activation=1)
+            test_user = User.objects.create_user(
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+                requires_activation=1
+            )
             user_pks.append(test_user.pk)
 
         response = self.client.post(
@@ -90,10 +92,12 @@ class UserAdminViewsTests(AdminTestCase):
 
         user_pks = []
         for i in xrange(10):
-            test_user = User.objects.create_user('Bob%s' % i,
-                                                 'bob%s@test.com' % i,
-                                                 'pass123',
-                                                 requires_activation=1)
+            test_user = User.objects.create_user(
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+                requires_activation=1
+            )
             user_pks.append(test_user.pk)
 
         response = self.client.post(
@@ -121,10 +125,12 @@ class UserAdminViewsTests(AdminTestCase):
 
         user_pks = []
         for i in xrange(10):
-            test_user = User.objects.create_user('Bob%s' % i,
-                                                 'bob%s@test.com' % i,
-                                                 'pass123',
-                                                 requires_activation=1)
+            test_user = User.objects.create_user(
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+                requires_activation=1
+            )
             user_pks.append(test_user.pk)
 
         response = self.client.post(
@@ -139,10 +145,12 @@ class UserAdminViewsTests(AdminTestCase):
 
         user_pks = []
         for i in xrange(10):
-            test_user = User.objects.create_user('Bob%s' % i,
-                                                 'bob%s@test.com' % i,
-                                                 'pass123',
-                                                 requires_activation=1)
+            test_user = User.objects.create_user(
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+                requires_activation=1
+            )
             user_pks.append(test_user.pk)
 
         response = self.client.post(
@@ -184,23 +192,22 @@ class UserAdminViewsTests(AdminTestCase):
         response = self.client.get(test_link)
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.post(test_link,
-            data={
-                'username': 'Bawww',
-                'rank': unicode(test_user.rank_id),
-                'roles': unicode(test_user.roles.all()[0].pk),
-                'email': 'reg@stered.com',
-                'new_password': 'pass123',
-                'staff_level': '0',
-                'signature': 'Hello world!',
-                'is_signature_locked': '1',
-                'is_hiding_presence': '0',
-                'limits_private_thread_invites_to': '0',
-                'signature_lock_staff_message': 'Staff message',
-                'signature_lock_user_message': 'User message',
-                'subscribe_to_started_threads': '2',
-                'subscribe_to_replied_threads': '2',
-            })
+        response = self.client.post(test_link, data={
+            'username': 'Bawww',
+            'rank': unicode(test_user.rank_id),
+            'roles': unicode(test_user.roles.all()[0].pk),
+            'email': 'reg@stered.com',
+            'new_password': 'pass123',
+            'staff_level': '0',
+            'signature': 'Hello world!',
+            'is_signature_locked': '1',
+            'is_hiding_presence': '0',
+            'limits_private_thread_invites_to': '0',
+            'signature_lock_staff_message': 'Staff message',
+            'signature_lock_user_message': 'User message',
+            'subscribe_to_started_threads': '2',
+            'subscribe_to_replied_threads': '2',
+        })
         self.assertEqual(response.status_code, 302)
 
         User.objects.get_by_username('Bawww')
@@ -215,7 +222,7 @@ class UserAdminViewsTests(AdminTestCase):
         test_link = reverse('misago:admin:users:accounts:delete_threads',
                             kwargs={'user_id': test_user.pk})
 
-        category = Category.objects.all_categories().filter(role='forum')[:1][0]
+        category = Category.objects.all_categories()[:1][0]
         [post_thread(category, poster=test_user) for i in xrange(10)]
 
         response = self.client.post(test_link, **self.ajax_header)
@@ -239,7 +246,7 @@ class UserAdminViewsTests(AdminTestCase):
         test_link = reverse('misago:admin:users:accounts:delete_posts',
                             kwargs={'user_id': test_user.pk})
 
-        category = Category.objects.all_categories().filter(role='forum')[:1][0]
+        category = Category.objects.all_categories()[:1][0]
         thread = post_thread(category)
         [reply_thread(thread, poster=test_user) for i in xrange(10)]
 

@@ -1,21 +1,16 @@
-from django.conf import settings
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.translation import get_language
 from django.views import i18n
 from django.views.decorators.http import last_modified
-from django.views.decorators.cache import cache_page, never_cache
-
-from misago.forums.lists import get_forums_list
+from django.views.decorators.cache import cache_page
 
 from misago.core import momentjs
 
 
 def forum_index(request):
-    return render(request, 'misago/index.html', {
-        'categories': get_forums_list(request.user),
-    })
+    return render(request, 'misago/index.html')
 
 
 def home_redirect(*args, **kwargs):
@@ -38,6 +33,6 @@ def momentjs_catalog(request):
             locale = locale_file.read()
     else:
         locale = "";
-    return HttpResponse(locale,
-                        content_type='application/javascript; charset=utf-8')
+    return HttpResponse(
+        locale, content_type='application/javascript; charset=utf-8')
 

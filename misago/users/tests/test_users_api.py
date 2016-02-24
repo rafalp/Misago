@@ -26,7 +26,7 @@ class ActivePostersListTests(AuthenticatedUserTestCase):
         cache.clear()
         threadstore.clear()
 
-        self.category = Category.objects.all_categories().filter(role='forum')[:1][0]
+        self.category = Category.objects.all_categories()[:1][0]
         self.category.labels = []
 
     def test_empty_list(self):
@@ -364,7 +364,7 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         self.threads = Thread.objects.count()
         self.posts = Post.objects.count()
 
-        self.category = Categories.objects.all_categories().filter(role='forum')[:1][0]
+        self.category = Category.objects.all_categories()[:1][0]
 
         post_thread(self.category, poster=self.other_user)
         self.other_user.posts = 1

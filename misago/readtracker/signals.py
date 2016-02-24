@@ -1,6 +1,6 @@
 from django.dispatch import receiver, Signal
 
-from misago.categorues.signals import move_category_content
+from misago.categories.signals import move_category_content
 from misago.threads.signals import move_thread, remove_thread_participant
 
 

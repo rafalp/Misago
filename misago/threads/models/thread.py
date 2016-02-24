@@ -6,9 +6,6 @@ from misago.core.utils import slugify
 
 class Thread(models.Model):
     category = models.ForeignKey('misago_categories.Category')
-    label = models.ForeignKey('misago_threads.Label',
-                              null=True, blank=True,
-                              on_delete=models.SET_NULL)
     title = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
     replies = models.PositiveIntegerField(default=0, db_index=True)
@@ -18,22 +15,42 @@ class Thread(models.Model):
     has_hidden_posts = models.BooleanField(default=False)
     has_events = models.BooleanField(default=False)
     started_on = models.DateTimeField(db_index=True)
-    first_post = models.ForeignKey('misago_threads.Post', related_name='+',
-                                   null=True, blank=True,
-                                   on_delete=models.SET_NULL)
-    starter = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                null=True, blank=True,
-                                on_delete=models.SET_NULL)
+
+    first_post = models.ForeignKey(
+        'misago_threads.Post',
+        related_name='+',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+
+    starter = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+
     starter_name = models.CharField(max_length=255)
     starter_slug = models.CharField(max_length=255)
     last_post_on = models.DateTimeField(db_index=True)
-    last_post = models.ForeignKey('misago_threads.Post', related_name='+',
-                                  null=True, blank=True,
-                                  on_delete=models.SET_NULL)
-    last_poster = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                    related_name='last_poster_set',
-                                    null=True, blank=True,
-                                    on_delete=models.SET_NULL)
+
+    last_post = models.ForeignKey(
+        'misago_threads.Post',
+        related_name='+',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+
+    last_poster = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='last_poster_set',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
     last_poster_slug = models.CharField(max_length=255, null=True, blank=True)
     is_pinned = models.BooleanField(default=False, db_index=True)
@@ -42,10 +59,12 @@ class Thread(models.Model):
     is_hidden = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
 
-    participants = models.ManyToManyField(settings.AUTH_USER_MODEL,
-                                          related_name='private_thread_set',
-                                          through='ThreadParticipant',
-                                          through_fields=('thread', 'user'))
+    participants = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='private_thread_set',
+        through='ThreadParticipant',
+        through_fields=('thread', 'user')
+    )
 
     class Meta:
         index_together = [

@@ -14,7 +14,7 @@ from misago.readtracker import categoriestracker, threadstracker
 
 class ReadTrackerTests(TestCase):
     def setUp(self):
-        self.categories = [f for f in Category.objects.filter(role='forum')[:1]]
+        self.categories = list(Category.objects.all_categories()[:1])
         self.category = self.categories[0]
 
         User = get_user_model()

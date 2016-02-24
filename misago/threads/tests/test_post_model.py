@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.categories.models import Category
+from misago.forums.models import Forum
 
 from misago.threads.checksums import update_post_checksum
 from misago.threads.models import Thread, Post
@@ -17,9 +17,9 @@ class PostModelTests(TestCase):
 
         datetime = timezone.now()
 
-        self.category = Category.objects.filter(role='forum')[:1][0]
+        self.forum = Forum.objects.filter(role="forum")[:1][0]
         self.thread = Thread(
-            category=self.category,
+            forum=self.forum,
             started_on=datetime,
             starter_name='Tester',
             starter_slug='tester',
@@ -31,7 +31,7 @@ class PostModelTests(TestCase):
         self.thread.save()
 
         self.post = Post.objects.create(
-            category=self.category,
+            forum=self.forum,
             thread=self.thread,
             poster=self.user,
             poster_name=self.user.username,
@@ -58,7 +58,7 @@ class PostModelTests(TestCase):
         other_user = User.objects.create_user("Jeff", "Je@ff.com", "Pass.123")
 
         other_post = Post.objects.create(
-            category=self.category,
+            forum=self.forum,
             thread=self.thread,
             poster=other_user,
             poster_name=other_user.username,
@@ -73,7 +73,7 @@ class PostModelTests(TestCase):
             self.post.merge(other_post)
 
         other_thread = Thread.objects.create(
-            category=self.category,
+            forum=self.forum,
             started_on=timezone.now(),
             starter_name='Tester',
             starter_slug='tester',
@@ -82,7 +82,7 @@ class PostModelTests(TestCase):
             last_poster_slug='tester')
 
         other_post = Post.objects.create(
-            category=self.category,
+            forum=self.forum,
             thread=other_thread,
             poster=self.user,
             poster_name=self.user.username,
@@ -97,7 +97,7 @@ class PostModelTests(TestCase):
             self.post.merge(other_post)
 
         other_post = Post.objects.create(
-            category=self.category,
+            forum=self.forum,
             thread=self.thread,
             poster_name=other_user.username,
             poster_ip='127.0.0.1',
@@ -115,7 +115,7 @@ class PostModelTests(TestCase):
     def test_merge(self):
         """merge method merges two posts into one"""
         other_post = Post.objects.create(
-            category=self.category,
+            forum=self.forum,
             thread=self.thread,
             poster=self.user,
             poster_name=self.user.username,
@@ -135,7 +135,7 @@ class PostModelTests(TestCase):
     def test_move(self):
         """move method moves post to other thread"""
         new_thread = Thread.objects.create(
-            category=self.category,
+            forum=self.forum,
             started_on=timezone.now(),
             starter_name='Tester',
             starter_slug='tester',

@@ -27,9 +27,7 @@ class Command(BaseCommand):
             self.stderr.write("\nOptional argument should be integer.")
             sys.exit(1)
 
-        categories = []
-        for category in Category.objects.all_categories().filter(role='forum'):
-            categories.append(category)
+        categories = list(Category.objects.all_categories())
 
         fake = Factory.create()
 
@@ -64,7 +62,8 @@ class Command(BaseCommand):
                     replies=0,
                     is_moderated=thread_is_moderated,
                     is_hidden=thread_is_hidden,
-                    is_closed=thread_is_closed)
+                    is_closed=thread_is_closed
+                )
                 thread.set_title(fake.sentence())
                 thread.save()
 
@@ -78,7 +77,8 @@ class Command(BaseCommand):
                     original=fake_message,
                     parsed=linebreaks_filter(fake_message),
                     posted_on=datetime,
-                    updated_on=datetime)
+                    updated_on=datetime
+                )
                 update_post_checksum(post)
                 post.save(update_fields=['checksum'])
 
@@ -120,7 +120,8 @@ class Command(BaseCommand):
                         is_hidden=is_hidden,
                         is_moderated=is_moderated,
                         posted_on=datetime,
-                        updated_on=datetime)
+                        updated_on=datetime
+                    )
                     update_post_checksum(post)
                     post.save(update_fields=['checksum'])
 

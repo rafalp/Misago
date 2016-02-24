@@ -89,8 +89,8 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @detail_route(methods=['get', 'post'])
     def avatar(self, request, pk=None):
-        allow_self_only(
-            request.user, pk, _("You can't change other users avatars."))
+        allow_self_only(request.user, pk,
+                        _("You can't change other users avatars."))
 
         return avatar_endpoint(request)
 
@@ -110,22 +110,22 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @detail_route(methods=['get', 'post'])
     def username(self, request, pk=None):
-        allow_self_only(
-            request.user, pk, _("You can't change other users names."))
+        allow_self_only(request.user, pk,
+                        _("You can't change other users names."))
 
         return username_endpoint(request)
 
     @detail_route(methods=['get', 'post'])
     def signature(self, request, pk=None):
-        allow_self_only(
-            request.user, pk, _("You can't change other users signatures."))
+        allow_self_only(request.user, pk,
+                        _("You can't change other users signatures."))
 
         return signature_endpoint(request)
 
     @detail_route(methods=['post'])
     def change_password(self, request, pk=None):
-        allow_self_only(
-            request.user, pk, _("You can't change other users passwords."))
+        allow_self_only(request.user, pk,
+                        _("You can't change other users passwords."))
 
         return change_password_endpoint(request)
 
