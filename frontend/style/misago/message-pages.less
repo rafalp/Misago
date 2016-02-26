@@ -6,7 +6,9 @@
 // Small displays
 @media screen and (max-width: @screen-sm-max) {
   .page-message, .page-error {
-    text-align: center;
+    .message-panel {
+      text-align: center;
+    }
 
     .message-icon {
       margin: @line-height-computed * 1.5;
@@ -37,6 +39,7 @@
     }
 
     .message-body {
+      margin-top: @line-height-computed / 5;
       margin-left: @message-page-icon-size + @line-height-computed;
     }
   }

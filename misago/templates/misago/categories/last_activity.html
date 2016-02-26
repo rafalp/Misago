@@ -1,0 +1,47 @@
+{% load i18n %}
+<ul class="list-inline category-last-activity">
+  {% if category.acl.can_browse %}
+    {% if not category.acl.can_see_all_threads %}
+    <li class="thread-message">
+      <span class="material-icon">
+        info_outline
+      </span>
+      {% trans "This category is private. You can see only your own threads within it." %}
+    </li>
+    {% elif category.last_thread_title %}
+      <li class="thread-title">
+        <a href="{{ category.get_last_thread_url }}" class="item-title">
+          {{ category.last_thread_title }}
+        </a>
+      </li>
+      <li class="poster-name">
+        {% if category.last_poster_id %}
+        <a href="{% url 'misago:user' user_slug=category.last_poster_slug user_id=category.last_poster_id %}" class="item-title">
+          {{ category.last_poster_name }}
+        </a>
+        {% else %}
+        <span class="item-title">
+          {{ category.last_poster_name }}
+        </span>
+        {% endif %}
+      </li>
+      <li class="thread-date">
+        {{ category.last_post_on|date }}
+      </li>
+    {% else %}
+    <li class="thread-message">
+      <span class="material-icon">
+        error_outline
+      </span>
+      {% trans "This category is empty." %}
+    </li>
+    {% endif %}
+  {% else %}
+  <li class="thread-message">
+    <span class="material-icon">
+      highlight_off
+    </span>
+    {% trans "This category is protected. You can't browse it's contents." %}
+  </li>
+  {% endif %}
+</ul>

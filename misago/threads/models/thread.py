@@ -140,29 +140,6 @@ class Thread(models.Model):
     def get_absolute_url(self):
         return self.thread_type.get_thread_absolute_url(self)
 
-    def get_post_url(self, post, page):
-        try:
-            post_id = post.id
-        except AttributeError:
-            post_id = post
-
-        return self.thread_type.get_thread_post_url(self, post_id, page)
-
-    def get_last_reply_url(self):
-        return self.thread_type.get_thread_last_reply_url(self)
-
-    def get_new_reply_url(self):
-        return self.thread_type.get_thread_new_reply_url(self)
-
-    def get_moderated_url(self):
-        return self.thread_type.get_thread_moderated_url(self)
-
-    def get_reported_url(self):
-        return self.thread_type.get_thread_reported_url(self)
-
-    def get_reply_api_url(self):
-        return self.thread_type.get_reply_url(self)
-
     def set_title(self, title):
         self.title = title
         self.slug = slugify(title)

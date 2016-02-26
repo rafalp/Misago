@@ -1,0 +1,127 @@
+//
+// Category block
+// --------------------------------------------------
+
+
+// Alone heading
+.panel-category {
+  .panel-heading.heading-alone {
+    border-radius: @border-radius-base;
+    border-bottom: none;
+  }
+}
+
+
+// Category titles
+.panel-category {
+  .panel-title, h4 {
+    margin: 0px;
+    padding: 0px;
+
+    font-size: @font-size-large;
+
+    .material-icon.read-status {
+      margin: -4px 0px;
+      margin-right: 2px;
+      width: 26px;
+
+      position: relative;
+      bottom: 2px;
+
+      color: @read-status-old;
+      font-size: 24px;
+      line-height: 24px;
+      text-align: center;
+
+      &.item-new {
+        color: @read-status-new;
+      }
+    }
+  }
+}
+
+// Even category description
+.panel-category .category-description,
+.panel-category .subcategory-description {
+  p:last-child {
+    margin-bottom: 0px;
+  }
+}
+
+
+.panel-category .subcategory-description {
+  margin-top: @line-height-computed / 2;
+
+  font-size: @font-size-small;
+}
+
+
+// Subcategories upper margin
+.panel-category .subcategory-subcategories {
+  margin-top: @line-height-computed / 2;
+}
+
+
+// Last activity
+.category-last-activity {
+  .thread-message {
+    .material-icon {
+      margin: -2px 0px;
+
+      font-size: 18px;
+      line-height: 18px;
+    }
+  }
+}
+
+// Compact displays
+@media screen and (max-width: @screen-sm-max) {
+  .panel-category {
+    // Add little extra top margin over category names
+    .panel-title, h4 {
+      margin-top: 3px;
+    }
+
+    // Put top margin over stats, make it small
+    .category-stats {
+      display: none;
+    }
+
+    // Don't break thread titles into many lines
+    .category-last-activity {
+      margin-bottom: 0px;
+
+      .thread-title {
+        display: block;
+        overflow: hidden;
+        margin-top: @line-height-computed / 2;
+        margin-bottom: @line-height-computed / 5;
+        padding-right: 0px;
+
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .poster-name, .thread-date {
+        font-size: @font-size-small;
+      }
+    }
+  }
+}
+
+
+// Full displays
+@media screen and (min-width: @screen-md-min) {
+  .panel-category {
+    // Pull category stats to the right
+    .category-stats {
+      float: right;
+      margin-top: @line-height-computed * -1;
+    }
+
+    .category-last-activity {
+      margin-top: @line-height-computed / 2;
+      margin-bottom: 0px;
+    }
+  }
+}

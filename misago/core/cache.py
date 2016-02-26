@@ -1,5 +1,5 @@
-from django.core.cache import (caches, cache as default_cache,
-                               InvalidCacheBackendError)
+from django.core.cache import (
+    caches, cache as default_cache, InvalidCacheBackendError)
 
 
 try:

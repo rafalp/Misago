@@ -1,7 +1,6 @@
 from django.utils.translation import ugettext as _
 
 from misago.core.mail import mail_user
-from misago.notifications import notify_user
 
 from misago.threads.models import ThreadParticipant
 from misago.threads.signals import remove_thread_participant
@@ -40,14 +39,6 @@ def add_participant(request, thread, user):
     notify user about being added to thread and mail him about it
     """
     ThreadParticipant.objects.add_participant(thread, user)
-
-    notify_user(
-        user,
-        _("%(user)s added you to %(thread)s private thread."),
-        thread.get_new_reply_url(),
-        'see_thread_%s' % thread.pk,
-        {'user': request.user.username, 'thread': thread.title},
-        request.user)
 
     set_user_unread_private_threads_sync(user)
 

@@ -36,11 +36,9 @@
             <li class="user-title">{{ profile.rank.title }}</li>
             {% endif %}
             <li class="user-joined-on">
-              <abbr title="{% blocktrans trimmed with joined_on=user.joined_on|date %}Member since {{ joined_on }}{% endblocktrans %}">
-                {% blocktrans trimmed with joined_on=profile.joined_on|date %}
-                  Member since {{ joined_on }}
-                {% endblocktrans %}
-              </abbr>
+              {% blocktrans trimmed with joined_on=profile.joined_on|date %}
+                Member since {{ joined_on }}
+              {% endblocktrans %}
             </li>
           </ul>
 

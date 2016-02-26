@@ -1,0 +1,56 @@
+{% load i18n misago_shorthands %}
+<div id="panel-category-{{ category.pk }}" class="panel panel-default panel-category {% if category.css_class %} panel-category-{{ category.css_class }}{% endif %}">
+  <div class="panel-heading {{ category.subcategories|iffalse:'heading-alone' }}">
+    <div class="panel-heading-inblock">
+      <div class="panel-heading-top-row">
+        <h3 class="panel-title">
+          {% include "misago/categories/read_icon.html" with category=category %}
+          <a href="{{ category.get_absolute_url }}" class="item-title">{{ category.name }}</a>
+        </h3>
+        {% include "misago/categories/stats.html" with category=category %}
+      </div>
+      {% include "misago/categories/last_activity.html" with category=category %}
+    </div>
+  </div>
+  {% if category.description %}
+  <div class="panel-body category-description">
+    {{ category.description|escape|urlize|linebreaks }}
+  </div>
+  {% endif %}
+  {% if category.subcategories%}
+  <ul class="list-group category-subcategories">
+    {% for subcategory in category.subcategories %}
+    <li class="list-group-item category-subcategory">
+      <div class="title-row">
+        <h4>
+          {% include "misago/categories/read_icon.html" with category=subcategory %}
+          <a href="{{ subcategory.get_absolute_url }}" class="item-title">{{ subcategory.name }}</a>
+        </h4>
+
+        {% include "misago/categories/stats.html" with category=category %}
+      </div>
+
+      {% include "misago/categories/last_activity.html" with category=category %}
+
+      {% if subcategory.description %}
+      <div class="subcategory-description">
+        {{ subcategory.description|escape|urlize|linebreaks }}
+      </div>
+      {% endif %}
+
+      {% if subcategory.subcategories %}
+      <ul class="list-inline subcategory-subcategories">
+        {% for subsubcategory in subcategory.subcategories %}
+        <li>
+          <a href="{{ subsubcategory.get_absolute_url }}" class="subcategory {% if subsubcategory.css_class %}subcategory-{{ subsubcategory.css_class }}{% endif %}">
+            {{ subsubcategory.name }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>

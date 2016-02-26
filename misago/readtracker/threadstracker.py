@@ -1,8 +1,6 @@
 from django.db.transaction import atomic
 from django.utils import timezone
 
-from misago.notifications import read_user_notifications
-
 from misago.readtracker import categoriestracker, signals
 from misago.readtracker.dates import is_date_tracked
 from misago.readtracker.models import CategoryRead, ThreadRead
@@ -85,7 +83,7 @@ def fetch_categories_cutoffs_for_threads(user, threads):
             categories.append(thread.category_id)
 
     categories_dict = {}
-    for record in user.categoriesread_set.filter(category__in=categories):
+    for record in user.categoryread_set.filter(category__in=categories):
         categories_dict[record.category_id] = record.last_read_on
     return categories_dict
 
@@ -119,7 +117,7 @@ def make_thread_read_aware(user, thread):
         thread.is_new = True
 
         try:
-            category_record = user.categoriesread_set.get(
+            category_record = user.categoryread_set.get(
                 category_id=thread.category_id)
 
             if thread.last_post_on > category_record.last_read_on:
@@ -184,8 +182,6 @@ def sync_record(user, thread, last_read_reply):
     if last_read_reply.posted_on == thread.last_post_on:
         signals.thread_read.send(sender=user, thread=thread)
         categoriestracker.sync_record(user, thread.category)
-
-    read_user_notifications(user, notification_triggers, False)
 
 
 def count_read_replies(user, thread, last_read_reply):

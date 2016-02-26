@@ -103,7 +103,6 @@ INSTALLED_APPS = (
     'misago.core',
     'misago.conf',
     'misago.markup',
-    'misago.notifications',
     'misago.legal',
     'misago.categories',
     'misago.threads',
@@ -269,6 +268,10 @@ MISAGO_ADMIN_NAMESPACES = (
 # How long (in minutes) since previous request to admin namespace should
 # admin session last.
 MISAGO_ADMIN_SESSION_EXPIRATION = 60
+
+
+# Display categories on forum index in place of threads list?
+MISAGO_CATEGORIES_ON_INDEX = False
 
 
 # Max age of notifications in days

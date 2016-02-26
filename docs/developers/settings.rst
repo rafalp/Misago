@@ -214,6 +214,12 @@ MISAGO_AVATARS_SIZES
 Misago uses avatar cache that prescales avatars to requested sizes. Enter here sizes to which those should be optimized.
 
 
+MISAGO_CATEGORIES_ON_INDEX
+--------------------------
+
+Change this setting to ``True`` to display categories list instead of threads list on board index.
+
+
 MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH
 ------------------------------------
 
@@ -259,7 +265,7 @@ MISAGO_FRESH_CONTENT_PERIOD
 Controls amount of data used in building "New threads" and "Threads with unread replies" lists. Active forums can try lowering this value while less active ones may wish to increase this number.
 
 
-MISAGO_HOURL_POST_LIMIT
+MISAGO_HOURLY_POST_LIMIT
 -----------------------
 
 Hourly limit of posts that may be posted from single account. Fail-safe for situations when forum is flooded by spam bot. Change to 0 to lift this restriction.

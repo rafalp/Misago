@@ -1,0 +1,17 @@
+{% load i18n %}
+<ul class="list-inline category-stats">
+  <li class="category-threads">
+    {% blocktrans trimmed count threads=category.threads %}
+    {{ threads }} thread
+    {% plural %}
+    {{ threads }} threads
+    {% endblocktrans %}
+  </li>
+  <li class="category-posts">
+    {% blocktrans trimmed count posts=category.posts %}
+    {{ posts }} post
+    {% plural %}
+    {{ posts }} posts
+    {% endblocktrans %}
+  </li>
+</ul>

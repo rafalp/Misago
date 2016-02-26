@@ -2,7 +2,16 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 
 
-urlpatterns = patterns('misago.core.views',
+# Register Misago Apps
+urlpatterns = patterns('',
+    url(r'^', include('misago.legal.urls')),
+    url(r'^', include('misago.users.urls')),
+    url(r'^', include('misago.categories.urls')),
+    url(r'^', include('misago.threads.urls.threads')),
+    url(r'^', include('misago.readtracker.urls')),
+)
+
+urlpatterns += patterns('misago.core.views',
     # "misago:index" link symbolises "root" of Misago links space
     # any request with path that falls below this one is assumed to be directed
     # at Misago and will be handled by misago.views.exceptionhandler if it
@@ -10,19 +19,9 @@ urlpatterns = patterns('misago.core.views',
     url(r'^$', 'forum_index', name='index'),
 )
 
-# Register Misago Apps
-urlpatterns += patterns('',
-    url(r'^', include('misago.legal.urls')),
-    url(r'^', include('misago.users.urls')),
-    #url(r'^', include('misago.categories.urls')),
-    #url(r'^', include('misago.threads.urls')),
-    url(r'^', include('misago.readtracker.urls')),
-    # UI Server view that handles realtime updates of Misago UI
-    url(r'^ui-server/$', 'misago.core.uiviews.uiserver', name="ui_server"),
-)
-
 # Register API
 apipatterns = patterns('',
+    url(r'^', include('misago.categories.urls.api')),
     url(r'^', include('misago.users.urls.api')),
 )
 

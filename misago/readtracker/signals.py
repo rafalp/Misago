@@ -24,20 +24,6 @@ def delete_thread_tracker(sender, **kwargs):
     sender.threadread_set.all().delete()
 
 
-@receiver(thread_tracked)
-def decrease_new_threads_count(sender, **kwargs):
-    user = sender
-    thread = kwargs['thread']
-    user.new_threads.decrease()
-
-
-@receiver(thread_read)
-def decrease_unread_count(sender, **kwargs):
-    user = sender
-    thread = kwargs['thread']
-    user.unread_threads.decrease()
-
-
 @receiver(thread_read)
 def decrease_unread_private_count(sender, **kwargs):
     user = sender
@@ -45,12 +31,6 @@ def decrease_unread_private_count(sender, **kwargs):
     if user.pk != thread.starter_id and user.unread_private_threads:
         user.unread_private_threads -= 1
         user.save(update_fields=['unread_private_threads'])
-
-
-@receiver(all_read)
-def zero_unread_counters(sender, **kwargs):
-    sender.new_threads.set(0)
-    sender.unread_threads.set(0)
 
 
 @receiver(remove_thread_participant)

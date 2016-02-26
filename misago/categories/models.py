@@ -61,7 +61,11 @@ class CategoryManager(TreeManager):
 
 class Category(MPTTModel):
     parent = TreeForeignKey(
-        'self', null=True, blank=True, related_name='children')
+        'self',
+        null=True,
+        blank=True,
+        related_name='children'
+    )
     special_role = models.CharField(max_length=255, null=True, blank=True)
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
@@ -70,30 +74,40 @@ class Category(MPTTModel):
     threads = models.PositiveIntegerField(default=0)
     posts = models.PositiveIntegerField(default=0)
     last_post_on = models.DateTimeField(null=True, blank=True)
-    last_thread = models.ForeignKey('misago_threads.Thread', related_name='+',
-                                    null=True, blank=True,
-                                    on_delete=models.SET_NULL)
+    last_thread = models.ForeignKey(
+        'misago_threads.Thread',
+        related_name='+',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
     last_thread_title = models.CharField(max_length=255, null=True, blank=True)
     last_thread_slug = models.CharField(max_length=255, null=True, blank=True)
-    last_poster = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                    related_name='+',
-                                    null=True, blank=True,
-                                    on_delete=models.SET_NULL)
+    last_poster = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='+',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
     last_poster_slug = models.CharField(max_length=255, null=True, blank=True)
     prune_started_after = models.PositiveIntegerField(default=0)
     prune_replied_after = models.PositiveIntegerField(default=0)
-    archive_pruned_in = models.ForeignKey('self',
-                                          related_name='pruned_archive',
-                                          null=True, blank=True,
-                                          on_delete=models.SET_NULL)
+    archive_pruned_in = models.ForeignKey(
+        'self',
+        related_name='pruned_archive',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
     css_class = models.CharField(max_length=255, null=True, blank=True)
 
     objects = CategoryManager()
 
     @property
     def thread_type(self):
-        return threadtypes.get(self.special_role or 'thread')
+        return threadtypes.get(self.special_role or 'category')
 
     def __unicode__(self):
         return unicode(self.thread_type.get_category_name(self))
@@ -132,6 +146,9 @@ class Category(MPTTModel):
 
     def get_absolute_url(self):
         return self.thread_type.get_category_absolute_url(self)
+
+    def get_last_thread_url(self):
+        return self.thread_type.get_last_thread_url(self)
 
     def set_name(self, name):
         self.name = name
