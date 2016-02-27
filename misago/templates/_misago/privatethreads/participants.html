@@ -1,9 +1,0 @@
-{% load i18n misago_avatars %}
-<ul class="list-unstyled participants-popover">
-  {% for participant in participants %}
-  <li>
-    <a href="{{ participant.user.get_absolute_url }}" ><img src="{{ participant.user|avatar:20 }}" alt="{% trans "Avatar" %}"></a>
-    <a href="{{ participant.user.get_absolute_url }}" class="item-title">{{ participant.user }}</a>
-  </li>
-  {% endfor %}
-</ul>

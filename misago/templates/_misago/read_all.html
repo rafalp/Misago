@@ -1,8 +1,0 @@
-{% load i18n %}
-<form class="read-all-form" action="{% url 'misago:read_all' %}" method="POST">
-  {% csrf_token %}
-  <button type="submit" class="btn btn-default btn-block btn-lg">
-    <span class="fa fa-circle-o fa-fw"></span>
-    {% trans "Mark all threads as read" %}
-  </button>
-</form>

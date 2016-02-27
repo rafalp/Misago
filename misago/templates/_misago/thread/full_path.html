@@ -1,8 +1,0 @@
-{% for crumb in path %}
-<li>
-  <a href="{{ crumb.get_absolute_url }}">{{ crumb }}</a><span class="fa fa-chevron-right"></span>
-</li>
-{% endfor %}
-<li>
-  <a href="{{ thread.get_absolute_url }}">{{ thread }}</a>
-</li>
