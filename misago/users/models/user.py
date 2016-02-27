@@ -423,7 +423,6 @@ class Online(models.Model):
                                 related_name='online_tracker')
     current_ip = models.GenericIPAddressField()
     last_click = models.DateTimeField(default=timezone.now)
-    is_visible_on_index = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         try:

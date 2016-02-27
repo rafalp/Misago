@@ -88,7 +88,6 @@ class Migration(migrations.Migration):
             fields=[
                 ('current_ip', models.GenericIPAddressField()),
                 ('last_click', models.DateTimeField(default=django.utils.timezone.now)),
-                ('is_visible_on_index', models.BooleanField(default=False)),
                 ('user', models.OneToOneField(related_name='online_tracker', primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
             ],
             options={
@@ -122,7 +121,6 @@ class Migration(migrations.Migration):
                 ('css_class', models.CharField(max_length=255, null=True, blank=True)),
                 ('is_default', models.BooleanField(default=False)),
                 ('is_tab', models.BooleanField(default=False)),
-                ('is_on_index', models.BooleanField(default=False)),
                 ('order', models.IntegerField(default=0)),
                 ('roles', models.ManyToManyField(to='misago_acl.Role', null=True, blank=True)),
             ],

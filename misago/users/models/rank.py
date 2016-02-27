@@ -30,7 +30,6 @@ class Rank(models.Model):
     css_class = models.CharField(max_length=255, null=True, blank=True)
     is_default = models.BooleanField(default=False)
     is_tab = models.BooleanField(default=False)
-    is_on_index = models.BooleanField(default=False)
     order = models.IntegerField(default=0)
 
     objects = RankManager()

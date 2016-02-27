@@ -16,14 +16,15 @@ def create_default_ranks(apps, schema_editor):
         title=_("Team"),
         css_class='team',
         is_tab=True,
-        is_on_index=True,
-        order=0)
+        order=0
+    )
 
     member = Rank.objects.create(
         name=_("Members"),
         slug=slugify(_("Members")),
         is_default=True,
-        order=1)
+        order=1
+    )
 
     Role = apps.get_model('misago_acl', 'Role')
 
