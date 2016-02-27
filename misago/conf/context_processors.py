@@ -36,6 +36,8 @@ def preload_settings_json(request):
         'MEDIA_URL': dj_settings.MEDIA_URL,
 
         'CSRF_COOKIE_NAME': dj_settings.CSRF_COOKIE_NAME,
+
+        'CATEGORIES_ON_INDEX': dj_settings.MISAGO_CATEGORIES_ON_INDEX,
     })
 
     return {}

@@ -16,6 +16,7 @@ class CategorySerializer(serializers.ModelSerializer):
     absolute_url = serializers.SerializerMethodField()
     last_poster_url = serializers.SerializerMethodField()
     last_thread_url = serializers.SerializerMethodField()
+    acl = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
@@ -35,6 +36,7 @@ class CategorySerializer(serializers.ModelSerializer):
             'absolute_url',
             'last_thread_url',
             'last_poster_url',
+            'acl',
         )
 
     def get_description(self, obj):
@@ -72,3 +74,9 @@ class CategorySerializer(serializers.ModelSerializer):
             })
         else:
             return None
+
+    def get_acl(self, obj):
+        try:
+            return obj.acl
+        except AttributeError:
+            return []

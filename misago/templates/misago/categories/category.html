@@ -12,15 +12,17 @@
       {% include "misago/categories/last_activity.html" with category=category %}
     </div>
   </div>
+
   {% if category.description %}
   <div class="panel-body category-description">
     {{ category.description|escape|urlize|linebreaks }}
   </div>
   {% endif %}
-  {% if category.subcategories%}
+
+  {% if category.subcategories %}
   <ul class="list-group category-subcategories">
     {% for subcategory in category.subcategories %}
-    <li class="list-group-item category-subcategory">
+    <li class="list-group-item category-subcategory {% if subcategory.css_class %}subcategory-{{ subcategory.css_class }}{% endif %}">
       <div class="title-row">
         <h4>
           {% include "misago/categories/read_icon.html" with category=subcategory %}
