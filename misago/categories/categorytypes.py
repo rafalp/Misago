@@ -18,13 +18,10 @@ class Category(ThreadTypeBase):
         return category.name
 
     def get_category_absolute_url(self, category):
-        if category.level == 1:
-            formats = (reverse('misago:categories'), category.slug, category.id)
-            return '%s#%s-%s' % formats
-        else:
-            return reverse('misago:category', kwargs={
-                'category_id': category.id, 'category_slug': category.slug
-            })
+        return reverse('misago:category', kwargs={
+            'category_slug': category.slug,
+            'category_id': category.id,
+        })
 
     def get_last_thread_url(self, category):
         if category.last_thread_id:

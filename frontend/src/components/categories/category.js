@@ -63,7 +63,7 @@ export default class extends React.Component {
   }
 
   getSubcategorySubcategories(category) {
-    if (category.subcategories) {
+    if (category.subcategories.length) {
       /* jshint ignore:start */
       return <ul className="list-inline subcategory-subcategories">
         {category.subcategories.map((category) => {
@@ -82,11 +82,11 @@ export default class extends React.Component {
   }
 
   getSubcategories() {
-    if (this.props.category.subcategories) {
+    if (this.props.category.subcategories.length) {
       /* jshint ignore:start */
       return <ul className="list-group category-subcategories">
         {this.props.category.subcategories.map((category) => {
-          return <li className="list-group-item category-subcategory"
+          return <li className={this.getSubcategoryClass(category)}
                      key={category.id}>
             <div className="title-row">
               <h4>

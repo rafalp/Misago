@@ -145,6 +145,16 @@ let categories = [
   }
 ];
 
+let noopAjax = {
+  get: function() {
+    return {
+      then: function() {
+        /* noop */
+      }
+    };
+  }
+};
+
 describe("Categories List", function() {
   beforeEach(function() {
     misago._context = {
@@ -165,7 +175,7 @@ describe("Categories List", function() {
     $.mockjax.clear();
   });
 
-  it('renders and loads', function(done) {
+  it("renders and loads", function(done) {
     $.mockjax({
       url: '/test-api/categories/',
       status: 200,
@@ -190,7 +200,7 @@ describe("Categories List", function() {
     }, 200);
   });
 
-  it('renders and loads empty list', function(done) {
+  it("renders and loads empty list", function(done) {
     misago._context.CATEGORIES = [];
 
     $.mockjax({
@@ -217,7 +227,7 @@ describe("Categories List", function() {
     }, 200);
   });
 
-  it('renders and empties list', function(done) {
+  it("renders and empties list", function(done) {
     $.mockjax({
       url: '/test-api/categories/',
       status: 200,
@@ -242,7 +252,7 @@ describe("Categories List", function() {
     });
   });
 
-  it('renders empty and populates list', function(done) {
+  it("renders empty and populates list", function(done) {
     misago._context.CATEGORIES = [];
 
     $.mockjax({
@@ -266,15 +276,11 @@ describe("Categories List", function() {
     });
   });
 
-  it('has valid header if not forum index', function() {
+  it("has valid header if not forum index", function() {
     misago._context.CATEGORIES = [];
     misago._context.CATEGORIES_ON_INDEX = false;
 
-    $.mockjax({
-      url: '/test-api/categories/',
-      status: 200,
-      responseText: []
-    });
+    polls.init(noopAjax, snackbar);
 
     /* jshint ignore:start */
     testUtils.render(<CategoriesList />);
@@ -284,18 +290,14 @@ describe("Categories List", function() {
       "renders with non-home header");
   });
 
-  it('has valid header if forum index', function() {
+  it("has valid header if forum index", function() {
     misago._context.CATEGORIES = [];
     misago._context.CATEGORIES_ON_INDEX = true;
     misago._context.SETTINGS = {
       forum_name: "Test Misago Forum"
     };
 
-    $.mockjax({
-      url: '/test-api/categories/',
-      status: 200,
-      responseText: []
-    });
+    polls.init(noopAjax, snackbar);
 
     /* jshint ignore:start */
     testUtils.render(<CategoriesList />);
@@ -303,5 +305,48 @@ describe("Categories List", function() {
 
     assert.equal($('#test-mount h1').text(), "Test Misago Forum",
       "renders with forum name in header");
+  });
+
+  it("handles backend error", function(done) {
+    $.mockjax({
+      url: '/test-api/categories/',
+      status: 500
+    });
+
+    snackbarStore.callback(function(message) {
+      assert.deepEqual(message, {
+        message: "Unknown error has occured.",
+        type: 'error'
+      }, "error message was shown");
+
+      done();
+    });
+
+    /* jshint ignore:start */
+    testUtils.render(<CategoriesList />);
+    /* jshint ignore:end */
+  });
+
+  it("handles backend rejection", function(done) {
+    $.mockjax({
+      url: '/test-api/categories/',
+      status: 403,
+      responseText: {
+        detail: "You can't see it yo!"
+      }
+    });
+
+    snackbarStore.callback(function(message) {
+      assert.deepEqual(message, {
+        message: "You can't see it yo!",
+        type: 'error'
+      }, "backend returned error message was shown");
+
+      done();
+    });
+
+    /* jshint ignore:start */
+    testUtils.render(<CategoriesList />);
+    /* jshint ignore:end */
   });
 });
