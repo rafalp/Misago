@@ -1,8 +1,47 @@
 {% extends "misago/threadslist/base.html" %}
+{% load i18n misago_pagetitle %}
 
 
-{% block content %}
-<div class="container">
-  <p class="lead">This is placeholder for threads list.</p>
+{% block title %}
+{% if list_name %}
+  {% if paginator.page > 1 %}
+    {% trans "Threads" %} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {% trans "Threads" %} | {{ block.super }}
+  {% else %}
+    {% trans "Threads" %} | {{ category.name }} | {{ block.super }}
+  {% endif %}
+{% elif is_index and paginator.page == 1 %}
+  {% if misago_settings.forum_index_title %}
+  {{ misago_settings.forum_index_title }}
+  {% else %}
+  {{ misago_settings.forum_name }}
+  {% endif %}
+{% elif paginator.page > 1 %}
+  {% trans "Threads" %} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ block.super }}
+{% else %}
+  {% trans "Threads" %} | {{ block.super }}
+{% endif %}
+{% endblock title %}
+
+
+{% block meta-description %}
+{% if is_index and misago_settings.forum_index_meta_description %}
+  {{ misago_settings.forum_index_meta_description }}
+{% endif %}
+{% endblock meta-description %}
+
+
+{% block page-header %}
+<div class="page-header">
+  <div class="container">
+    {% if is_index %}
+      {% if misago_settings.forum_index_title %}
+        <h1>{{ misago_settings.forum_index_title }}</h1>
+      {% else %}
+        <h1>{{ misago_settings.forum_name }}</h1>
+      {% endif %}
+    {% else %}
+      <h1>{% trans "Threads" %}</h1>
+    {% endif %}
+  </div>
 </div>
-{% endblock content %}
+{% endblock page-header %}

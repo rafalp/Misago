@@ -7,7 +7,7 @@ urlpatterns = patterns('',
     url(r'^', include('misago.legal.urls')),
     url(r'^', include('misago.users.urls')),
     url(r'^', include('misago.categories.urls')),
-    url(r'^', include('misago.threads.urls.threads')),
+    url(r'^', include('misago.threads.urls')),
     url(r'^', include('misago.readtracker.urls')),
 )
 

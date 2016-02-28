@@ -2,8 +2,7 @@ from misago.acl.testutils import override_acl
 from misago.core import threadstore
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from misago.categories.utils import (
-    get_categories_tree, get_category_path, get_category_next_parent)
+from misago.categories.utils import get_categories_tree, get_category_path
 from misago.categories.models import Category
 
 
@@ -100,24 +99,3 @@ class CategoriesUtilsTests(AuthenticatedUserTestCase):
         for node in get_categories_tree(self.user):
             parent_nodes = len(get_category_path(node))
             self.assertEqual(parent_nodes, node.level)
-
-    def test_get_category_next_parent(self):
-        """get_category_next_parent returns next parent of node"""
-        parent = get_category_next_parent(self.category_a)
-        self.assertIsNone(parent)
-
-        parent = get_category_next_parent(
-            Category.objects.get(slug='subcategory-f'), self.root)
-        self.assertEqual(parent, Category.objects.get(slug='category-e'))
-
-        parent = get_category_next_parent(
-            Category.objects.get(slug='category-b'), self.root)
-        self.assertEqual(parent, Category.objects.get(slug='category-a'))
-
-        parent = get_category_next_parent(
-            Category.objects.get(slug='subcategory-c'), self.root)
-        self.assertEqual(parent, Category.objects.get(slug='category-a'))
-
-        parent = get_category_next_parent(
-            Category.objects.get(slug='subcategory-d'), self.root)
-        self.assertEqual(parent, Category.objects.get(slug='category-a'))

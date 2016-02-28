@@ -282,7 +282,7 @@ describe("Categories List Category", function() {
     testUtils.render(<Category category={category} />);
     /* jshint ignore:end */
 
-    let element = $('#test-mount .subcategory-subcategories');
+    let element = $('#test-mount .list-inline.subcategories-list');
 
     assert.equal(element.length, 1, "component renders subsubcategory");
 

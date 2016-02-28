@@ -27,25 +27,27 @@
   <div class="page-header">
     <div class="container">
       {% if is_index %}
-        <h1>{{ misago_settings.forum_name }}</h1>
+        {% if misago_settings.forum_index_title %}
+          <h1>{{ misago_settings.forum_index_title }}</h1>
+        {% else %}
+          <h1>{{ misago_settings.forum_name }}</h1>
+        {% endif %}
       {% else %}
         <h1>{% trans "Categories" %}</h1>
       {% endif %}
     </div>
   </div>
+  <div class="container">
 
-  {% if categories %}
-    <div class="container">
-
-      <div class="categories-list">
-        {% for category in categories %}
-          {% include "misago/categories/category.html" with category=category %}
-        {% endfor %}
+    {% if categories %}
+      <div id="categories-mount">
+        <div class="categories-list">
+          {% for category in categories %}
+            {% include "misago/categories/category.html" with category=category %}
+          {% endfor %}
+        </div>
       </div>
-
-    </div>
-  {% else %}
-    <div class="container">
+    {% else %}
       <div class="message-panel">
 
         <div class="message-icon">
@@ -58,7 +60,8 @@
         </div>
 
       </div>
-    </div>
-  {% endif %}
+    {% endif %}
+
+  </div>
 </div>
 {% endblock content %}

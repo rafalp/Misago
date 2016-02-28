@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from misago.acl import add_acl
-from misago.forums.models import Forum
+from misago.categories.models import Category
 
 from misago.threads.events import record_event, add_events_to_posts
 from misago.threads.models import Thread, Event
@@ -18,20 +18,21 @@ class EventsAPITests(TestCase):
 
         datetime = timezone.now()
 
-        self.forum = Forum.objects.filter(role="forum")[:1][0]
+        self.category = Category.objects.all_categories()[:1][0]
         self.thread = Thread(
-            forum=self.forum,
+            category=self.category,
             started_on=datetime,
             starter_name='Tester',
             starter_slug='tester',
             last_post_on=datetime,
             last_poster_name='Tester',
-            last_poster_slug='tester')
+            last_poster_slug='tester'
+        )
 
         self.thread.set_title("Test thread")
         self.thread.save()
 
-        add_acl(self.user, self.forum)
+        add_acl(self.user, self.category)
         add_acl(self.user, self.thread)
 
     def test_record_event(self):

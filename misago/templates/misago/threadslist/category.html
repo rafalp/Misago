@@ -1,0 +1,43 @@
+{% extends "misago/threadslist/base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+{% if list_name %}
+  {% if paginator.page > 1 %}
+    {{ list_name }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ category.name }} | {{ block.super }}
+  {% else %}
+    {{ list_name }} | {{ category.name }} | {{ block.super }}
+  {% endif %}
+{% elif paginator.page > 1 %}
+  {{ category.name }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ block.super }}
+{% else %}
+  {{ category.name }} | {{ block.super }}
+{% endif %}
+{% endblock title %}
+
+
+{% block meta-description %}
+{% if category.description %}
+  {{ category.description }}
+{% endif %}
+{% endblock meta-description %}
+
+
+{% block extra-css %}
+{% if category.css_class %}
+  page-{{ category.css_class }}
+{% endif %}
+{% endblock extra-css %}
+
+
+{% block page-header %}
+<div class="page-header">
+  <div class="container">
+    <h1>
+      <a href="{{ category.parent.get_absolute_url }}">&lt;</a>
+      {{ category.name }}
+    </h1>
+  </div>
+</div>
+{% endblock page-header %}

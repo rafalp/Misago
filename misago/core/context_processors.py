@@ -11,7 +11,8 @@ def site_address(request):
     return {
         'SITE_PROTOCOL': site_protocol,
         'SITE_HOST': host,
-        'SITE_ADDRESS': address_template % host
+        'SITE_ADDRESS': address_template % host,
+        'REQUEST_PATH': request.path_info,
     }
 
 

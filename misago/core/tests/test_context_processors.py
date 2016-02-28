@@ -3,6 +3,8 @@ from misago.core import context_processors
 
 
 class MockRequest(object):
+    path_info = '/'
+
     def __init__(self, secure, host):
         self.secure = secure
         self.host = host
@@ -21,6 +23,7 @@ class SiteAddressTests(TestCase):
         self.assertEqual(
             context_processors.site_address(mock_request),
             {
+                'REQUEST_PATH': '/',
                 'SITE_ADDRESS': 'http://somewhere.com',
                 'SITE_HOST': 'somewhere.com',
                 'SITE_PROTOCOL': 'http',
@@ -32,6 +35,7 @@ class SiteAddressTests(TestCase):
         self.assertEqual(
             context_processors.site_address(mock_request),
             {
+                'REQUEST_PATH': '/',
                 'SITE_ADDRESS': 'https://somewhere.com',
                 'SITE_HOST': 'somewhere.com',
                 'SITE_PROTOCOL': 'https',

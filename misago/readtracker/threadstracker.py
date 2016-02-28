@@ -16,16 +16,12 @@ def make_read_aware(user, target):
         make_thread_read_aware(user, target)
 
 
-def make_threads_read_aware(user, threads, category=None):
+def make_threads_read_aware(user, threads):
     if not threads:
         return None
 
     if user.is_anonymous():
         make_read(threads)
-        return None
-
-    if category:
-        make_category_threads_read_aware(user, category, threads)
     else:
         make_categories_threads_read_aware(user, threads)
 
@@ -35,25 +31,6 @@ def make_read(threads):
         thread.unread_replies = 0
         thread.is_read = True
         thread.is_new = False
-
-
-def make_category_threads_read_aware(user, category, threads):
-    if category.is_read:
-        make_read(threads)
-    else:
-        threads_dict = {}
-        for thread in threads:
-            thread.is_read = not is_date_tracked(
-                thread.last_post_on, user, category.last_read_on)
-            thread.is_new = True
-            if thread.is_read:
-                thread.unread_replies = 0
-            else:
-                thread.unread_replies = thread.replies
-                threads_dict[thread.pk] = thread
-
-        if threads_dict:
-            make_threads_dict_read_aware(user, threads_dict)
 
 
 def make_categories_threads_read_aware(user, threads):

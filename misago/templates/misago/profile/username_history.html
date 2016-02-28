@@ -29,7 +29,7 @@
   <div class="username-history ui-ready">
     <ul class="list-group">
       {% for change in history %}
-        <li class="list-group-item" key={item.id}>
+        <li class="list-group-item">
           <div class="username-change-avatar">
             {% if change.changed_by %}
               <a href="{{ change.changed_by.get_absolute_url }}" class="user-avatar">

@@ -1,4 +1,4 @@
-from misago.forums.models import Forum
+from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads import moderation, testutils
@@ -9,8 +9,8 @@ class PostsModerationTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(PostsModerationTests, self).setUp()
 
-        self.forum = Forum.objects.all_forums().filter(role="forum")[:1][0]
-        self.thread = testutils.post_thread(self.forum)
+        self.category = Category.objects.all_categories()[:1][0]
+        self.thread = testutils.post_thread(self.category)
         self.post = testutils.reply_thread(self.thread)
 
     def reload_thread(self):

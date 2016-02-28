@@ -85,17 +85,3 @@ def get_category_path(category):
         category_path.append(category)
         category = categories_dict[category.parent_id]
     return [f for f in reversed(category_path)]
-
-
-def get_category_next_parent(category, parent=None):
-    if not parent:
-        return None
-
-    cache_key = 'path_next_parent_item_%s_%s' % (category.parent_id, parent.id)
-    if threadstore.get(cache_key, 'nada') == 'nada':
-        if parent.pk == category.parent_id:
-            threadstore.set(cache_key, None)
-        else:
-            path = get_category_path(category)
-            threadstore.set(cache_key, path[parent.level])
-    return threadstore.get(cache_key)

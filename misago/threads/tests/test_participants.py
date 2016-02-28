@@ -2,37 +2,34 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.forums.models import Forum
+from misago.categories.models import Category
 
 from misago.threads.models import Thread, ThreadParticipant, Post
-from misago.threads.participants import (thread_has_participants,
-                                         make_thread_participants_aware,
-                                         set_thread_owner,
-                                         set_user_unread_private_threads_sync,
-                                         add_owner,
-                                         remove_participant
-                                         )
+from misago.threads.participants import (
+    thread_has_participants, make_thread_participants_aware, set_thread_owner,
+    set_user_unread_private_threads_sync, add_owner, remove_participant)
 
 
 class ParticipantsTests(TestCase):
     def setUp(self):
         datetime = timezone.now()
 
-        self.forum = Forum.objects.filter(role="forum")[:1][0]
+        self.category = Category.objects.all_categories()[:1][0]
         self.thread = Thread(
-            forum=self.forum,
+            category=self.category,
             started_on=datetime,
             starter_name='Tester',
             starter_slug='tester',
             last_post_on=datetime,
             last_poster_name='Tester',
-            last_poster_slug='tester')
+            last_poster_slug='tester'
+        )
 
         self.thread.set_title("Test thread")
         self.thread.save()
 
         post = Post.objects.create(
-            forum=self.forum,
+            category=self.category,
             thread=self.thread,
             poster_name='Tester',
             poster_ip='127.0.0.1',
@@ -40,7 +37,8 @@ class ParticipantsTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime)
+            updated_on=datetime
+        )
 
         self.thread.first_post = post
         self.thread.last_post = post

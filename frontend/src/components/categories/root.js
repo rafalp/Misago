@@ -1,7 +1,6 @@
 import moment from 'moment';
 import React from 'react';
 import Category from 'misago/components/categories/category'; // jshint ignore:line
-import EmptyMessage from 'misago/components/categories/empty-message'; // jshint ignore:line
 import misago from 'misago/index';
 import polls from 'misago/services/polls';
 
@@ -40,52 +39,12 @@ export default class extends React.Component {
   };
   /* jshint ignore:end */
 
-  getClassName() {
-    if (this.state.categories.length) {
-      return 'page page-categories';
-    } else {
-      return 'page page-categories page-message';
-    }
-  }
-
-  getHeading() {
-    if (misago.get('CATEGORIES_ON_INDEX')) {
-      return misago.get('SETTINGS').forum_name;
-    } else {
-      return gettext("Categories");
-    }
-  }
-
-  getCategoriesList() {
-    if (this.state.categories.length) {
-      /* jshint ignore:start */
-      return <div className="categories-list">
-        {this.state.categories.map(function(category) {
-          return <Category category={category} key={category.id} />;
-        })}
-      </div>;
-      /* jshint ignore:end */
-    } else {
-      /* jshint ignore:start */
-      return <EmptyMessage />;
-    /* jshint ignore:end */
-    }
-  }
-
   render() {
     /* jshint ignore:start */
-    return <div className={this.getClassName()}>
-
-      <div className="page-header">
-        <div className="container">
-          <h1>{this.getHeading()}</h1>
-        </div>
-      </div>
-
-      <div className="container">
-        {this.getCategoriesList()}
-      </div>
-
+    return <div className="categories-list">
+      {this.state.categories.map(function(category) {
+        return <Category category={category} key={category.id} />;
+      })}
     </div>;
     /* jshint ignore:end */
   }

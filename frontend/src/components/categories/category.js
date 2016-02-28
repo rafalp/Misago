@@ -65,7 +65,7 @@ export default class extends React.Component {
   getSubcategorySubcategories(category) {
     if (category.subcategories.length) {
       /* jshint ignore:start */
-      return <ul className="list-inline subcategory-subcategories">
+      return <ul className="list-inline subcategories-list">
         {category.subcategories.map((category) => {
           return <li key={category.id}>
             <a href={category.absolute_url}

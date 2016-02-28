@@ -10,6 +10,9 @@ class RootCategory(ThreadTypeBase):
     def get_category_name(self, category):
         return _('None (will become top level category)')
 
+    def get_category_absolute_url(self, category):
+        return reverse('misago:threads')
+
 
 class Category(ThreadTypeBase):
     type_name = 'category'
@@ -22,6 +25,9 @@ class Category(ThreadTypeBase):
             'category_slug': category.slug,
             'category_id': category.id,
         })
+
+    def get_thread_absolute_url(self, thread):
+        return '/thread/not-yet-%s/' % thread.pk
 
     def get_last_thread_url(self, category):
         if category.last_thread_id:

@@ -41,7 +41,7 @@
       {% endif %}
 
       {% if subcategory.subcategories %}
-      <ul class="list-inline subcategory-subcategories">
+      <ul class="list-inline subcategories-list">
         {% for subsubcategory in subcategory.subcategories %}
         <li>
           <a href="{{ subsubcategory.get_absolute_url }}" class="subcategory {% if subsubcategory.css_class %}subcategory-{{ subsubcategory.css_class }}{% endif %}">

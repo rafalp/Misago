@@ -8,11 +8,6 @@
     <title>{% spaceless %}{% block title %}{{ misago_settings.forum_name }}{% endblock %}{% endspaceless %}</title>
     <meta name="description" content="{% spaceless %}{% block meta-description %}{% endblock %}{% endspaceless %}">
     <base href="{% url 'misago:index' %}">
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
     <link href="{% static 'misago/css/misago.css' %}" rel="stylesheet">
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="{% static 'apple-touch-icon-152-precomposed.png' %}">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static 'apple-touch-icon-144-precomposed.png' %}">

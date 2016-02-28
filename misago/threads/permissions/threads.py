@@ -695,13 +695,6 @@ def has_time_to_edit_post(user, target):
 """
 Queryset helpers
 """
-def exclude_invisible_threads(queryset, user, category=None):
-    if category:
-        return exclude_invisible_category_threads(queryset, user, category)
-    else:
-        return exclude_all_invisible_threads(queryset, user)
-
-
 def exclude_invisible_category_threads(queryset, user, category):
     if user.is_authenticated():
         condition_author = Q(starter_id=user.id)
@@ -727,11 +720,11 @@ def exclude_invisible_category_threads(queryset, user, category):
     return queryset
 
 
-def exclude_all_invisible_threads(queryset, user):
+def exclude_invisible_threads(user, categories, queryset):
     categories_in = []
     conditions = None
 
-    for category in Category.objects.all_categories():
+    for category in categories:
         add_acl(user, category)
 
         condition_category = Q(category=category)

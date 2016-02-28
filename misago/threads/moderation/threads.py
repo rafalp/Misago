@@ -6,41 +6,6 @@ from misago.threads.events import record_event
 
 
 @atomic
-def label_thread(user, thread, label):
-    if not thread.label_id or thread.label_id != label.pk:
-        if thread.label_id:
-            message = _("%(user)s changed thread label to %(label)s.")
-        else:
-            message = _("%(user)s set thread label to %(label)s.")
-
-        record_event(user, thread, "tag", message, {
-            'user': user,
-            'label': label.name
-        })
-
-        thread.label = label
-
-        thread.save(update_fields=['has_events', 'label'])
-        return True
-    else:
-        return False
-
-
-@atomic
-def unlabel_thread(user, thread):
-    if thread.label_id:
-        thread.label = None
-
-        message = _("%(user)s removed thread label.")
-        record_event(user, thread, "tag", message, {'user': user})
-
-        thread.save(update_fields=['has_events', 'label'])
-        return True
-    else:
-        return False
-
-
-@atomic
 def pin_thread(user, thread):
     if not thread.is_pinned:
         thread.is_pinned = True
@@ -68,16 +33,16 @@ def unpin_thread(user, thread):
 
 
 @atomic
-def move_thread(user, thread, new_forum):
-    if thread.forum_id != new_forum.pk:
-        message = _("%(user)s moved thread from %(forum)s.")
+def move_thread(user, thread, new_category):
+    if thread.category_id != new_category.pk:
+        message = _("%(user)s moved thread from %(category)s.")
         record_event(user, thread, "arrow-right", message, {
             'user': user,
-            'forum': thread.forum
+            'category': thread.category
         })
 
-        thread.move(new_forum)
-        thread.save(update_fields=['has_events', 'forum'])
+        thread.move(new_category)
+        thread.save(update_fields=['has_events', 'category'])
         return True
     else:
         return False

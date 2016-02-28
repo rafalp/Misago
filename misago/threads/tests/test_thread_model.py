@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.forums.models import Forum
+from misago.categories.models import Category
 
 from misago.threads.models import Thread, ThreadParticipant, Post, Event
 
@@ -13,21 +13,22 @@ class ThreadModelTests(TestCase):
     def setUp(self):
         datetime = timezone.now()
 
-        self.forum = Forum.objects.filter(role="forum")[:1][0]
+        self.category = Category.objects.all_categories()[:1][0]
         self.thread = Thread(
-            forum=self.forum,
+            category=self.category,
             started_on=datetime,
             starter_name='Tester',
             starter_slug='tester',
             last_post_on=datetime,
             last_poster_name='Tester',
-            last_poster_slug='tester')
+            last_poster_slug='tester'
+        )
 
         self.thread.set_title("Test thread")
         self.thread.save()
 
         post = Post.objects.create(
-            forum=self.forum,
+            category=self.category,
             thread=self.thread,
             poster_name='Tester',
             poster_ip='127.0.0.1',
@@ -35,7 +36,8 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime)
+            updated_on=datetime
+        )
 
         self.thread.first_post = post
         self.thread.last_post = post
@@ -50,7 +52,7 @@ class ThreadModelTests(TestCase):
 
         datetime = timezone.now() + timedelta(5)
         post = Post.objects.create(
-            forum=self.forum,
+            category=self.category,
             thread=self.thread,
             poster=user,
             poster_name=user.username,
@@ -59,7 +61,8 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime)
+            updated_on=datetime
+        )
 
         # first sync call, updates last thread
         self.thread.synchronize()
@@ -77,7 +80,7 @@ class ThreadModelTests(TestCase):
 
         # add moderated post
         moderated_post = Post.objects.create(
-            forum=self.forum,
+            category=self.category,
             thread=self.thread,
             poster=user,
             poster_name=user.username,
@@ -87,7 +90,8 @@ class ThreadModelTests(TestCase):
             checksum="nope",
             posted_on=datetime + timedelta(5),
             updated_on=datetime + timedelta(5),
-            is_moderated=True)
+            is_moderated=True
+        )
 
         self.thread.synchronize()
         self.assertEqual(self.thread.last_post, post)
@@ -103,7 +107,7 @@ class ThreadModelTests(TestCase):
 
         # add hidden post
         hidden_post = Post.objects.create(
-            forum=self.forum,
+            category=self.category,
             thread=self.thread,
             poster=user,
             poster_name=user.username,
@@ -113,7 +117,8 @@ class ThreadModelTests(TestCase):
             checksum="nope",
             posted_on=datetime + timedelta(10),
             updated_on=datetime + timedelta(10),
-            is_hidden=True)
+            is_hidden=True
+        )
 
         self.thread.synchronize()
         self.assertEqual(self.thread.last_post, hidden_post)
@@ -163,11 +168,12 @@ class ThreadModelTests(TestCase):
 
         # add event
         event = Event.objects.create(
-            forum=self.forum,
+            category=self.category,
             thread=self.thread,
             author_name=user.username,
             author_slug=user.slug,
-            message="How bout nope?")
+            message="How bout nope?"
+        )
 
         # sync set has_events flag
         self.thread.synchronize()
@@ -186,7 +192,7 @@ class ThreadModelTests(TestCase):
         datetime = timezone.now() + timedelta(5)
 
         post = Post.objects.create(
-            forum=self.forum,
+            category=self.category,
             thread=self.thread,
             poster=user,
             poster_name=user.username,
@@ -195,7 +201,8 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime)
+            updated_on=datetime
+        )
 
         self.thread.set_first_post(post)
         self.assertEqual(self.thread.first_post, post)
@@ -212,7 +219,7 @@ class ThreadModelTests(TestCase):
         datetime = timezone.now() + timedelta(5)
 
         post = Post.objects.create(
-            forum=self.forum,
+            category=self.category,
             thread=self.thread,
             poster=user,
             poster_name=user.username,
@@ -221,7 +228,8 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime)
+            updated_on=datetime
+        )
 
         self.thread.set_last_post(post)
         self.assertEqual(self.thread.last_post, post)
@@ -231,15 +239,20 @@ class ThreadModelTests(TestCase):
         self.assertEqual(self.thread.last_poster_slug, user.slug)
 
     def test_move(self):
-        """move(new_forum) moves thread to other forum"""
-        # pick category instead of forum (so we don't have to create one)
-        new_forum = Forum.objects.filter(role="category")[:1][0]
+        """move(new_category) moves thread to other category"""
+        # pick category instead of category (so we don't have to create one)
+        root_category = Category.objects.root_category()
+        Category(
+            name='New Category',
+            slug='new-category',
+        ).insert_at(root_category, position='last-child', save=True)
+        new_category = Category.objects.get(slug='new-category')
 
-        self.thread.move(new_forum)
-        self.assertEqual(self.thread.forum, new_forum)
+        self.thread.move(new_category)
+        self.assertEqual(self.thread.category, new_category)
 
         for post in self.thread.post_set.all():
-            self.assertEqual(post.forum_id, new_forum.id)
+            self.assertEqual(post.category_id, new_category.id)
 
     def test_merge(self):
         """merge(other_thread) moves other thread content to this thread"""
@@ -249,19 +262,20 @@ class ThreadModelTests(TestCase):
         datetime = timezone.now() + timedelta(5)
 
         other_thread = Thread(
-            forum=self.forum,
+            category=self.category,
             started_on=datetime,
             starter_name='Tester',
             starter_slug='tester',
             last_post_on=datetime,
             last_poster_name='Tester',
-            last_poster_slug='tester')
+            last_poster_slug='tester'
+        )
 
         other_thread.set_title("Other thread")
         other_thread.save()
 
         post = Post.objects.create(
-            forum=self.forum,
+            category=self.category,
             thread=other_thread,
             poster_name='Admin',
             poster_ip='127.0.0.1',
@@ -269,7 +283,8 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am other message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime)
+            updated_on=datetime
+        )
 
         other_thread.first_post = post
         other_thread.last_post = post

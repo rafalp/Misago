@@ -62,7 +62,7 @@ def sync_record(user, category):
 
     recorded_threads = category.thread_set.filter(last_post_on__gt=cutoff_date)
     recorded_threads = exclude_invisible_threads(
-        recorded_threads, user, category)
+        user, [category], recorded_threads)
 
     all_threads_count = recorded_threads.count()
 

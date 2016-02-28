@@ -3,9 +3,9 @@ import Categories, { select } from 'misago/components/categories/root';
 import misago from 'misago/index';
 import mount from 'misago/utils/mount-component';
 
-export default function initializer(context) {
-  if (context.has('CATEGORIES')) {
-    mount(connect(select)(Categories), 'page-mount');
+export default function initializer() {
+  if (document.getElementById('categories-mount')) {
+    mount(connect(select)(Categories), 'categories-mount');
   }
 }
 

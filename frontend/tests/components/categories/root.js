@@ -145,16 +145,6 @@ let categories = [
   }
 ];
 
-let noopAjax = {
-  get: function() {
-    return {
-      then: function() {
-        /* noop */
-      }
-    };
-  }
-};
-
 describe("Categories List", function() {
   beforeEach(function() {
     misago._context = {
@@ -190,7 +180,7 @@ describe("Categories List", function() {
       "two categories rendered initially");
 
     window.setTimeout(function() {
-      let element = $('#test-mount .page-categories');
+      let element = $('#test-mount .categories-list');
       assert.ok(element.length, "component renders");
 
       assert.equal(element.find('.panel-category').length, 2,
@@ -198,113 +188,6 @@ describe("Categories List", function() {
 
       done();
     }, 200);
-  });
-
-  it("renders and loads empty list", function(done) {
-    misago._context.CATEGORIES = [];
-
-    $.mockjax({
-      url: '/test-api/categories/',
-      status: 200,
-      responseText: []
-    });
-
-    /* jshint ignore:start */
-    testUtils.render(<CategoriesList />);
-    /* jshint ignore:end */
-
-    assert.equal($('#test-mount .panel-category').length, 0,
-      "no categories rendered initially");
-
-    window.setTimeout(function() {
-      let element = $('#test-mount .page-message .message-body');
-      assert.ok(element.length, "component renders message about no data");
-
-      assert.equal(element.find('.panel-category').length, 0,
-        "no categories rendered");
-
-      done();
-    }, 200);
-  });
-
-  it("renders and empties list", function(done) {
-    $.mockjax({
-      url: '/test-api/categories/',
-      status: 200,
-      responseText: []
-    });
-
-    /* jshint ignore:start */
-    testUtils.render(<CategoriesList />);
-    /* jshint ignore:end */
-
-    assert.equal($('#test-mount .panel-category').length, 2,
-      "two categories rendered initially");
-
-    testUtils.onElement('#test-mount .page-message .message-body', function() {
-      let element = $('#test-mount .page-message .message-body');
-      assert.ok(element.length, "component renders message about no data");
-
-      assert.equal(element.find('.panel-category').length, 0,
-        "no categories rendered");
-
-      done();
-    });
-  });
-
-  it("renders empty and populates list", function(done) {
-    misago._context.CATEGORIES = [];
-
-    $.mockjax({
-      url: '/test-api/categories/',
-      status: 200,
-      responseText: categories
-    });
-
-    /* jshint ignore:start */
-    testUtils.render(<CategoriesList />);
-    /* jshint ignore:end */
-
-    assert.equal($('#test-mount .panel-category').length, 0,
-      "no categories rendered initially");
-
-    testUtils.onElement('#test-mount .categories-list', function(element) {
-      assert.equal(element.find('.panel-category').length, 2,
-        "two categories rendered");
-
-      done();
-    });
-  });
-
-  it("has valid header if not forum index", function() {
-    misago._context.CATEGORIES = [];
-    misago._context.CATEGORIES_ON_INDEX = false;
-
-    polls.init(noopAjax, snackbar);
-
-    /* jshint ignore:start */
-    testUtils.render(<CategoriesList />);
-    /* jshint ignore:end */
-
-    assert.equal($('#test-mount h1').text(), "Categories",
-      "renders with non-home header");
-  });
-
-  it("has valid header if forum index", function() {
-    misago._context.CATEGORIES = [];
-    misago._context.CATEGORIES_ON_INDEX = true;
-    misago._context.SETTINGS = {
-      forum_name: "Test Misago Forum"
-    };
-
-    polls.init(noopAjax, snackbar);
-
-    /* jshint ignore:start */
-    testUtils.render(<CategoriesList />);
-    /* jshint ignore:end */
-
-    assert.equal($('#test-mount h1').text(), "Test Misago Forum",
-      "renders with forum name in header");
   });
 
   it("handles backend error", function(done) {
