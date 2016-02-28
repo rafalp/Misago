@@ -45,7 +45,8 @@ def post_thread(category, title='Test thread', poster='Tester',
     reply_thread(thread,
         poster=poster,
         posted_on=thread.last_post_on,
-        is_moderated=is_moderated
+        is_hidden=is_hidden,
+        is_moderated=is_moderated,
     )
 
     return thread

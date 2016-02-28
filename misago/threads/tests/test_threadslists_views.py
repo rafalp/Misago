@@ -75,7 +75,7 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
 
         self.access_all_categories()
 
-    def access_all_categories(self):
+    def access_all_categories(self, extra=None):
         categories_acl = {'categories': {}, 'visible_categories': []}
         for category in Category.objects.all_categories():
             categories_acl['visible_categories'].append(category.pk)
@@ -84,7 +84,13 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
                 'can_browse': 1,
                 'can_see_all_threads': 1,
                 'can_see_own_threads': 0,
+                'can_hide_threads': 0,
+                'can_review_moderated_content': 0,
             }
+
+            if extra:
+                categories_acl['categories'][category.pk].update(extra)
+
         override_acl(self.user, categories_acl)
         return categories_acl
 
@@ -186,7 +192,7 @@ class ThreadsListTests(ThreadsListTestCase):
         self.assertNotIn(self.category_c.get_absolute_url(), response.content)
 
     def test_list_renders_hidden_thread(self):
-        """list renders empty due to no permissions"""
+        """list renders empty due to no permission to see thread"""
         Category(
             name='Hidden Category',
             slug='hidden-category',
@@ -201,6 +207,101 @@ class ThreadsListTests(ThreadsListTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("empty-message", response.content)
 
+    def test_list_user_see_own_moderated_thread(self):
+        """list renders moderated thread that belongs to viewer"""
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            poster=self.user,
+            is_moderated=True,
+        )
+
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_user_cant_see_moderated_thread(self):
+        """list hides moderated thread that belongs to other user"""
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            is_moderated=True,
+        )
+
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_user_cant_see_hidden_thread(self):
+        """list hides hidden thread that belongs to other user"""
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            is_hidden=True,
+        )
+
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_user_cant_see_own_hidden_thread(self):
+        """list hides hidden thread that belongs to viewer"""
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            poster=self.user,
+            is_hidden=True,
+        )
+
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_user_can_see_own_hidden_thread(self):
+        """list shows hidden thread that belongs to viewer due to permission"""
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            poster=self.user,
+            is_hidden=True,
+        )
+
+        self.access_all_categories({
+            'can_hide_threads': 1
+        })
+
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_user_can_see_hidden_thread(self):
+        """
+        list shows hidden thread that belongs to other user due to permission
+        """
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            is_hidden=True,
+        )
+
+        self.access_all_categories({
+            'can_hide_threads': 1
+        })
+
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_user_can_see_moderated_thread(self):
+        """
+        list shows hidden thread that belongs to other user due to permission
+        """
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            is_moderated=True,
+        )
+
+        self.access_all_categories({
+            'can_review_moderated_content': 1
+        })
+
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
 
 class CategoryThreadsListTests(ThreadsListTestCase):
     def test_list_renders_empty(self):
@@ -270,3 +371,136 @@ class CategoryThreadsListTests(ThreadsListTestCase):
 
             response = self.client.get(test_category.get_absolute_url() + url)
             self.assertEqual(response.status_code, 403)
+
+    def test_list_renders_test_thread(self):
+        """list renders test thread with valid top category"""
+        Category(
+            name='Hidden Category',
+            slug='hidden-category',
+        ).insert_at(self.root, position='last-child', save=True)
+        test_category = Category.objects.get(slug='hidden-category')
+
+        test_thread = testutils.post_thread(
+            category=self.category_c,
+        )
+
+        response = self.client.get(self.category_a.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+
+        self.assertIn(self.category_a.get_absolute_url(), response.content)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+        # real thread's category is hidden away from user
+        self.assertNotIn(self.category_c.get_absolute_url(), response.content)
+
+    def test_list_renders_hidden_thread(self):
+        """list renders empty due to no permission to see thread"""
+        Category(
+            name='Hidden Category',
+            slug='hidden-category',
+        ).insert_at(self.root, position='last-child', save=True)
+        test_category = Category.objects.get(slug='hidden-category')
+
+        test_thread = testutils.post_thread(
+            category=test_category,
+        )
+
+        response = self.client.get(self.category_a.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("empty-message", response.content)
+
+    def test_list_user_see_own_moderated_thread(self):
+        """list renders moderated thread that belongs to viewer"""
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            poster=self.user,
+            is_moderated=True,
+        )
+
+        response = self.client.get(self.category_a.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_user_cant_see_moderated_thread(self):
+        """list hides moderated thread that belongs to other user"""
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            is_moderated=True,
+        )
+
+        response = self.client.get(self.category_a.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_user_cant_see_hidden_thread(self):
+        """list hides hidden thread that belongs to other user"""
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            is_hidden=True,
+        )
+
+        response = self.client.get(self.category_a.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_user_cant_see_own_hidden_thread(self):
+        """list hides hidden thread that belongs to viewer"""
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            poster=self.user,
+            is_hidden=True,
+        )
+
+        response = self.client.get(self.category_a.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_user_can_see_own_hidden_thread(self):
+        """list shows hidden thread that belongs to viewer due to permission"""
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            poster=self.user,
+            is_hidden=True,
+        )
+
+        self.access_all_categories({
+            'can_hide_threads': 1
+        })
+
+        response = self.client.get(self.category_a.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_user_can_see_hidden_thread(self):
+        """
+        list shows hidden thread that belongs to other user due to permission
+        """
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            is_hidden=True,
+        )
+
+        self.access_all_categories({
+            'can_hide_threads': 1
+        })
+
+        response = self.client.get(self.category_a.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_user_can_see_moderated_thread(self):
+        """
+        list shows hidden thread that belongs to other user due to permission
+        """
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            is_moderated=True,
+        )
+
+        self.access_all_categories({
+            'can_review_moderated_content': 1
+        })
+
+        response = self.client.get(self.category_a.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)

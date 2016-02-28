@@ -1,7 +1,33 @@
 //
-// Category block
+// Categories Lists
 // --------------------------------------------------
 
+
+// Subcategories list
+// --------------------------------------------------
+.list-inline.subcategories-list {
+  li {
+    a, a:link, a:visited, a:active, a:hover, a:focus {
+      background-color: @gray-lighter;
+      border: 1px solid darken(@gray-lighter, 5%);
+      border-radius: @border-radius-base;
+      display: inline-block;
+      padding: @padding-base-vertical @padding-base-horizontal;
+
+      color: @gray;
+    }
+
+    &:focus, a:hover, a:active {
+      background-color: darken(@gray-lighter, 5%);
+
+      color: @text-color;
+      text-decoration: none;
+    }
+  }
+}
+
+// Category Block
+// --------------------------------------------------
 
 // Alone heading
 .panel-category {
@@ -57,8 +83,16 @@
 
 
 // Subcategories upper margin
-.panel-category .subcategory-subcategories {
-  margin-top: @line-height-computed / 2;
+.panel-category .category-subcategories {
+  .subcategories-list {
+    margin-top: @line-height-computed / 2;
+
+    a, a:link, a:visited, a:active, a:hover, a:focus {
+      padding: @padding-small-vertical @padding-small-horizontal;
+
+      font-size: @font-size-small;
+    }
+  }
 }
 
 

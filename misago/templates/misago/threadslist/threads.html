@@ -1,13 +1,13 @@
 {% extends "misago/threadslist/base.html" %}
-{% load i18n misago_pagetitle %}
+{% load i18n misago_shorthands %}
 
 
 {% block title %}
 {% if list_name %}
   {% if paginator.page > 1 %}
-    {% trans "Threads" %} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {% trans "Threads" %} | {{ block.super }}
+    {{ list_name }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {% trans "Threads" %} | {{ block.super }}
   {% else %}
-    {% trans "Threads" %} | {{ category.name }} | {{ block.super }}
+    {{ list_name }} | {% trans "Threads" %} | {{ block.super }}
   {% endif %}
 {% elif is_index and paginator.page == 1 %}
   {% if misago_settings.forum_index_title %}
@@ -31,7 +31,7 @@
 
 
 {% block page-header %}
-<div class="page-header">
+<div class="page-header {{ user.is_authenticated|iftrue:"tabbed" }}">
   <div class="container">
     {% if is_index %}
       {% if misago_settings.forum_index_title %}
@@ -43,5 +43,8 @@
       <h1>{% trans "Threads" %}</h1>
     {% endif %}
   </div>
+  {% if user.is_authenticated %}
+    {% include "misago/threadslist/tabs.html" %}
+  {% endif %}
 </div>
 {% endblock page-header %}

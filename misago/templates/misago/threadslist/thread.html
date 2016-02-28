@@ -1,0 +1,41 @@
+{% load i18n %}
+<li class="list-group-item">
+  <div>
+    {% if thread.is_read %}
+    [read]
+    {% else %}
+    [new]
+    {% endif %}
+
+    <a href="{{ thread.get_absolute_url }}" class="item-title lead">
+      {{ thread.title }}
+    </a>
+  </div>
+  <ul class="list-inline">
+
+    {% if thread.top_category %}
+    <li>
+      <a href="{{ thread.top_category.get_absolute_url }}">
+        {{ thread.top_category.name }}
+      </a>
+    </li>
+    {% endif %}
+
+    <li>
+      {% blocktrans trimmed count replies=thread.replies %}
+      {{ replies }} reply
+      {% plural %}
+      {{ replies }} replies
+      {% endblocktrans %}
+    </li>
+
+    <li>
+      {{ thread.last_poster_name }}
+    </li>
+
+    <li>
+      {{ thread.last_post_on|date }}
+    </li>
+
+  </ul>
+</li>

@@ -60,7 +60,6 @@ class PermissionsForm(forms.Form):
         initial=0,
         choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads")))
     )
-
     can_hide_own_threads = forms.TypedChoiceField(
         label=_("Can hide own threads"),
         help_text=_("Only threads started within time limit and "
@@ -73,13 +72,12 @@ class PermissionsForm(forms.Form):
             (2, _("Delete threads"))
         )
     )
-
     thread_edit_time = forms.IntegerField(
         label=_("Time limit for own threads edits, in minutes"),
         help_text=_("Enter 0 to don't limit time for editing own threads."),
         initial=0,
-        min_value=0)
-
+        min_value=0
+    )
     can_hide_threads = forms.TypedChoiceField(
         label=_("Can hide all threads"),
         coerce=int,
@@ -90,14 +88,12 @@ class PermissionsForm(forms.Form):
             (2, _("Delete threads"))
         )
     )
-
     can_edit_posts = forms.TypedChoiceField(
         label=_("Can edit posts"),
         coerce=int,
         initial=0,
         choices=((0, _("No")), (1, _("Own posts")), (2, _("All posts")))
     )
-
     can_hide_own_posts = forms.TypedChoiceField(
         label=_("Can hide own posts"),
         help_text=_("Only last posts to thread made within "
@@ -110,13 +106,12 @@ class PermissionsForm(forms.Form):
             (2, _("Delete posts"))
         )
     )
-
     post_edit_time = forms.IntegerField(
         label=_("Time limit for own post edits, in minutes"),
         help_text=_("Enter 0 to don't limit time for editing own posts."),
         initial=0,
-        min_value=0)
-
+        min_value=0
+    )
     can_hide_posts = forms.TypedChoiceField(
         label=_("Can hide all posts"),
         coerce=int,
@@ -131,26 +126,29 @@ class PermissionsForm(forms.Form):
     can_protect_posts = forms.YesNoSwitch(
         label=_("Can protect posts"),
         help_text=_("Only users with this permission "
-                    "can edit protected posts."))
-    can_move_posts = forms.YesNoSwitch(
-        label=_("Can move posts"))
-    can_merge_posts = forms.YesNoSwitch(
-        label=_("Can merge posts"))
+                    "can edit protected posts.")
+    )
+    can_move_posts = forms.YesNoSwitch(label=_("Can move posts"))
+    can_merge_posts = forms.YesNoSwitch(label=_("Can merge posts"))
     can_change_threads_labels = forms.TypedChoiceField(
-        label=_("Can change threads labels"), coerce=int, initial=0,
-        choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads"))))
-    can_pin_threads = forms.YesNoSwitch(
-        label=_("Can pin threads"))
+        label=_("Can change threads labels"),
+        coerce=int,
+        initial=0,
+        choices=(
+            (0, _("No")),
+            (1, _("Own threads")),
+            (2, _("All threads")),
+        )
+    )
+    can_pin_threads = forms.YesNoSwitch(label=_("Can pin threads"))
     can_close_threads = forms.YesNoSwitch(label=_("Can close threads"))
-    can_move_threads = forms.YesNoSwitch(
-        label=_("Can move threads"))
-    can_merge_threads = forms.YesNoSwitch(
-        label=_("Can merge threads"))
-    can_split_threads = forms.YesNoSwitch(
-        label=_("Can split threads"))
+    can_move_threads = forms.YesNoSwitch(label=_("Can move threads"))
+    can_merge_threads = forms.YesNoSwitch(label=_("Can merge threads"))
+    can_split_threads = forms.YesNoSwitch(label=_("Can split threads"))
     can_review_moderated_content = forms.YesNoSwitch(
         label=_("Can review moderated content"),
-        help_text=_("Will see and be able to accept moderated content."))
+        help_text=_("Will see and be able to accept moderated content.")
+    )
     can_report_content = forms.YesNoSwitch(label=_("Can report posts"))
     can_see_reports = forms.YesNoSwitch(label=_("Can see reports"))
 
@@ -721,48 +719,101 @@ def exclude_invisible_category_threads(queryset, user, category):
 
 
 def exclude_invisible_threads(user, categories, queryset):
-    categories_in = []
-    conditions = None
+    show_all = []
+    show_accepted_visible = []
+    show_accepted = []
+    show_visible = []
+    show_owned = []
+    show_owned_visible = []
 
     for category in categories:
         add_acl(user, category)
 
-        condition_category = Q(category=category)
-        condition_author = Q(starter_id=user.id)
-
-        # can see all threads?
+        can_hide = category.acl['can_hide_threads']
         if category.acl['can_see_all_threads']:
             can_mod = category.acl['can_review_moderated_content']
-            can_hide = category.acl['can_hide_threads']
 
-            if not can_mod or not can_hide:
+            if can_mod and can_hide:
+                show_all.append(category)
+            elif user.is_authenticated():
                 if not can_mod and not can_hide:
-                    condition = Q(is_moderated=False) & Q(is_hidden=False)
+                    show_accepted_visible.append(category)
                 elif not can_mod:
-                    condition = Q(is_moderated=False)
+                    show_accepted.append(category)
                 elif not can_hide:
-                    condition = Q(is_hidden=False)
-                visibility_condition = condition_author | condition
-                visibility_condition = condition_category & visibility_condition
+                    show_visible.append(category)
             else:
-                # user can see everything so don't bother with rest of routine
-                categories_in.append(category.pk)
-                continue
+                show_accepted_visible.append(category)
+        elif user.is_authenticated():
+            if can_hide:
+                show_owned.append(category)
+            else:
+                show_owned_visible.append(category)
+
+    conditions = None
+    if show_all:
+        conditions = Q(category__in=show_all)
+
+    if show_accepted_visible:
+        if user.is_authenticated():
+            condition = Q(
+                Q(starter=user) | Q(is_moderated=False),
+                category__in=show_accepted_visible,
+                is_hidden=False,
+            )
         else:
-            # show all threads in category made by user
-            visibility_condition = condition_category & condition_author
+            condition = Q(
+                category__in=show_accepted_visible,
+                is_hidden=False,
+                is_moderated=False,
+            )
 
         if conditions:
-            conditions = conditions | visibility_condition
+            conditions = conditions | condition
         else:
-            conditions = visibility_condition
+            conditions = condition
 
-    if conditions and categories_in:
-        return queryset.filter(Q(category_id__in=categories_in) | conditions)
-    elif conditions:
-        return queryset.filter(conditions)
-    elif categories_in:
-        return queryset.filter(category_id__in=categories_in)
+    if show_accepted:
+        condition = Q(
+            Q(starter=user) | Q(is_moderated=False),
+            category__in=show_accepted,
+        )
+
+        if conditions:
+            conditions = conditions | condition
+        else:
+            conditions = condition
+
+    if show_visible:
+        condition = Q(category__in=show_visible, is_hidden=False)
+
+        if conditions:
+            conditions = conditions | condition
+        else:
+            conditions = condition
+
+    if show_owned:
+        condition = Q(category__in=show_owned, starter=user)
+
+        if conditions:
+            conditions = conditions | condition
+        else:
+            conditions = condition
+
+    if show_owned_visible:
+        condition = Q(
+            category__in=show_owned_visible,
+            starter=user,
+            is_hidden=False,
+        )
+
+        if conditions:
+            conditions = conditions | condition
+        else:
+            conditions = condition
+
+    if conditions:
+        return Thread.objects.filter(conditions)
     else:
         return Thread.objects.none()
 

@@ -1,5 +1,5 @@
 {% extends "misago/threadslist/base.html" %}
-{% load i18n %}
+{% load i18n misago_shorthands %}
 
 
 {% block title %}
@@ -32,12 +32,26 @@
 
 
 {% block page-header %}
-<div class="page-header">
+<div class="page-header {{ user.is_authenticated|iftrue:"tabbed" }}">
   <div class="container">
     <h1>
-      <a href="{{ category.parent.get_absolute_url }}">&lt;</a>
+      <a href="{{ category.parent.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}">&lt;</a>
       {{ category.name }}
     </h1>
   </div>
+  {% if user.is_authenticated %}
+    {% include "misago/threadslist/tabs.html" %}
+  {% endif %}
 </div>
 {% endblock page-header %}
+
+
+{% block list-container %}
+  {% if category.description %}
+  <div class="lead category-description">
+    {{ category.description|escape|urlize|linebreaks|safe }}
+  </div>
+  {% endif %}
+
+  {{ block.super }}
+{% endblock list-container%}
