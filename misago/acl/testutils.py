@@ -27,8 +27,11 @@ def override_acl(user, new_acl):
     final_cache = user.acl
     final_cache.update(new_acl)
 
-    user._acl_cache = final_cache
-    user.acl_key = md5(unicode(user.pk)).hexdigest()[:8]
-    user.save(update_fields=['acl_key'])
+    if user.is_authenticated():
+        user._acl_cache = final_cache
+        user.acl_key = md5(unicode(user.pk)).hexdigest()[:8]
+        user.save(update_fields=['acl_key'])
 
-    threadstore.set('acl_%s' % user.acl_key, final_cache)
+        threadstore.set('acl_%s' % user.acl_key, final_cache)
+    else:
+        threadstore.set('acl_%s' % user.acl_key, final_cache)

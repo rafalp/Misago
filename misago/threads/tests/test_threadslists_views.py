@@ -7,6 +7,15 @@ from misago.users.testutils import AuthenticatedUserTestCase
 from misago.threads import testutils
 
 
+LISTS_URLS = (
+    '',
+    'my/',
+    'new/',
+    'unread/',
+    'subscribed/'
+)
+
+
 class ThreadsListTestCase(AuthenticatedUserTestCase):
     def setUp(self):
         super(ThreadsListTestCase, self).setUp()
@@ -70,12 +79,12 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
 
         self.category_f = Category.objects.get(slug='category-f')
 
-        cache.clear()
-        threadstore.clear()
-
         self.access_all_categories()
 
     def access_all_categories(self, extra=None):
+        cache.clear()
+        threadstore.clear()
+
         categories_acl = {'categories': {}, 'visible_categories': []}
         for category in Category.objects.all_categories():
             categories_acl['visible_categories'].append(category.pk)
@@ -95,36 +104,47 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
         return categories_acl
 
 
-class ThreadsListTests(ThreadsListTestCase):
+class ListsTests(ThreadsListTestCase):
     def test_list_renders_empty(self):
         """empty threads list renders"""
-        LISTS_URLS = (
-            '/',
-            '/my/',
-            '/new/',
-            '/unread/',
-            '/subscribed/'
-        )
-
         for url in LISTS_URLS:
             self.access_all_categories()
 
-            response = self.client.get(url)
+            response = self.client.get('/' + url)
             self.assertEqual(response.status_code, 200)
+            self.assertIn("empty-message", response.content)
+
+            self.access_all_categories()
+
+            response = self.client.get(self.category_b.get_absolute_url() + url)
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(self.category_b.name, response.content)
             self.assertIn("empty-message", response.content)
 
     def test_list_authenticated_only_views(self):
         """authenticated only views return 403 for guests"""
-        LISTS_URLS = (
-            '/my/',
-            '/new/',
-            '/unread/',
-            '/subscribed/'
-        )
+        for url in LISTS_URLS:
+            self.access_all_categories()
+
+            response = self.client.get('/' + url)
+            self.assertEqual(response.status_code, 200)
+
+            self.access_all_categories()
+
+            response = self.client.get(self.category_b.get_absolute_url() + url)
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(self.category_b.name, response.content)
 
         self.logout_user()
-        for url in LISTS_URLS:
-            response = self.client.get(url)
+        self.user = self.get_anonymous_user()
+        for url in LISTS_URLS[1:]:
+            self.access_all_categories()
+
+            response = self.client.get('/' + url)
+            self.assertEqual(response.status_code, 403)
+
+            self.access_all_categories()
+            response = self.client.get(self.category_b.get_absolute_url() + url)
             self.assertEqual(response.status_code, 403)
 
     def test_empty_list_hides_categories_picker(self):
@@ -135,11 +155,18 @@ class ThreadsListTests(ThreadsListTestCase):
         ).insert_at(self.root, position='last-child', save=True)
         test_category = Category.objects.get(slug='hidden-category')
 
+        self.access_all_categories()
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
 
         self.assertNotIn(self.category_a.get_absolute_url(), response.content)
         self.assertNotIn(self.category_e.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+        response = self.client.get(self.category_a.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+
+        self.assertNotIn(self.category_b.get_absolute_url(), response.content)
 
     def test_list_renders_categories_picker(self):
         """categories picker renders valid categories"""
@@ -150,7 +177,7 @@ class ThreadsListTests(ThreadsListTestCase):
         test_category = Category.objects.get(slug='hidden-category')
 
         testutils.post_thread(
-            category=self.category_a,
+            category=self.category_b,
         )
 
         response = self.client.get('/')
@@ -167,161 +194,21 @@ class ThreadsListTests(ThreadsListTestCase):
         # hidden category
         self.assertNotIn(test_category.get_absolute_url(), response.content)
 
-    def test_list_renders_test_thread(self):
-        """list renders test thread with valid top category"""
-        Category(
-            name='Hidden Category',
-            slug='hidden-category',
-        ).insert_at(self.root, position='last-child', save=True)
-        test_category = Category.objects.get(slug='hidden-category')
+        # test category view
+        self.access_all_categories()
 
-        test_thread = testutils.post_thread(
-            category=self.category_c,
-        )
-
-        response = self.client.get('/')
+        response = self.client.get(self.category_a.get_absolute_url())
         self.assertEqual(response.status_code, 200)
 
-        self.assertIn(self.category_a.get_absolute_url(), response.content)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertIn(self.category_b.get_absolute_url(), response.content)
 
-        # other top category is hidden from user
-        self.assertNotIn(self.category_e.get_absolute_url(), response.content)
-
-        # real thread's category is hidden away from user
+        # readable categories, but non-accessible directly
         self.assertNotIn(self.category_c.get_absolute_url(), response.content)
+        self.assertNotIn(self.category_d.get_absolute_url(), response.content)
+        self.assertNotIn(self.category_f.get_absolute_url(), response.content)
 
-    def test_list_renders_hidden_thread(self):
-        """list renders empty due to no permission to see thread"""
-        Category(
-            name='Hidden Category',
-            slug='hidden-category',
-        ).insert_at(self.root, position='last-child', save=True)
-        test_category = Category.objects.get(slug='hidden-category')
-
-        test_thread = testutils.post_thread(
-            category=test_category,
-        )
-
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("empty-message", response.content)
-
-    def test_list_user_see_own_moderated_thread(self):
-        """list renders moderated thread that belongs to viewer"""
-        test_thread = testutils.post_thread(
-            category=self.category_a,
-            poster=self.user,
-            is_moderated=True,
-        )
-
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
-
-    def test_list_user_cant_see_moderated_thread(self):
-        """list hides moderated thread that belongs to other user"""
-        test_thread = testutils.post_thread(
-            category=self.category_a,
-            is_moderated=True,
-        )
-
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
-
-    def test_list_user_cant_see_hidden_thread(self):
-        """list hides hidden thread that belongs to other user"""
-        test_thread = testutils.post_thread(
-            category=self.category_a,
-            is_hidden=True,
-        )
-
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
-
-    def test_list_user_cant_see_own_hidden_thread(self):
-        """list hides hidden thread that belongs to viewer"""
-        test_thread = testutils.post_thread(
-            category=self.category_a,
-            poster=self.user,
-            is_hidden=True,
-        )
-
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
-
-    def test_list_user_can_see_own_hidden_thread(self):
-        """list shows hidden thread that belongs to viewer due to permission"""
-        test_thread = testutils.post_thread(
-            category=self.category_a,
-            poster=self.user,
-            is_hidden=True,
-        )
-
-        self.access_all_categories({
-            'can_hide_threads': 1
-        })
-
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
-
-    def test_list_user_can_see_hidden_thread(self):
-        """
-        list shows hidden thread that belongs to other user due to permission
-        """
-        test_thread = testutils.post_thread(
-            category=self.category_a,
-            is_hidden=True,
-        )
-
-        self.access_all_categories({
-            'can_hide_threads': 1
-        })
-
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
-
-    def test_list_user_can_see_moderated_thread(self):
-        """
-        list shows hidden thread that belongs to other user due to permission
-        """
-        test_thread = testutils.post_thread(
-            category=self.category_a,
-            is_moderated=True,
-        )
-
-        self.access_all_categories({
-            'can_review_moderated_content': 1
-        })
-
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
 
 class CategoryThreadsListTests(ThreadsListTestCase):
-    def test_list_renders_empty(self):
-        """empty threads list renders"""
-        LISTS_URLS = (
-            '',
-            'my/',
-            'new/',
-            'unread/',
-            'subscribed/'
-        )
-
-        for url in LISTS_URLS:
-            self.access_all_categories()
-
-            response = self.client.get(self.category_b.get_absolute_url() + url)
-            self.assertEqual(response.status_code, 200)
-            self.assertIn(self.category_b.name, response.content)
-            self.assertIn("empty-message", response.content)
-
     def test_access_hidden_category(self):
         """hidden category returns 404"""
         Category(
@@ -329,14 +216,6 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             slug='hidden-category',
         ).insert_at(self.root, position='last-child', save=True)
         test_category = Category.objects.get(slug='hidden-category')
-
-        LISTS_URLS = (
-            '',
-            'my/',
-            'new/',
-            'unread/',
-            'subscribed/'
-        )
 
         for url in LISTS_URLS:
             response = self.client.get(test_category.get_absolute_url() + url)
@@ -349,14 +228,6 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             slug='hidden-category',
         ).insert_at(self.root, position='last-child', save=True)
         test_category = Category.objects.get(slug='hidden-category')
-
-        LISTS_URLS = (
-            '',
-            'my/',
-            'new/',
-            'unread/',
-            'subscribed/'
-        )
 
         for url in LISTS_URLS:
             override_acl(self.user, {
@@ -372,26 +243,35 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             response = self.client.get(test_category.get_absolute_url() + url)
             self.assertEqual(response.status_code, 403)
 
+
+class ThreadsVisibilityTests(ThreadsListTestCase):
     def test_list_renders_test_thread(self):
         """list renders test thread with valid top category"""
-        Category(
-            name='Hidden Category',
-            slug='hidden-category',
-        ).insert_at(self.root, position='last-child', save=True)
-        test_category = Category.objects.get(slug='hidden-category')
-
         test_thread = testutils.post_thread(
             category=self.category_c,
         )
 
-        response = self.client.get(self.category_a.get_absolute_url())
+        response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
 
-        self.assertIn(self.category_a.get_absolute_url(), response.content)
         self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertIn(self.category_a.get_absolute_url(), response.content)
+
+        # other top category is hidden from user
+        self.assertNotIn(self.category_e.get_absolute_url(), response.content)
 
         # real thread's category is hidden away from user
         self.assertNotIn(self.category_c.get_absolute_url(), response.content)
+
+        # test category view
+        self.access_all_categories()
+        response = self.client.get(self.category_b.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+
+        # thread displays
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertIn(self.category_c.get_absolute_url(), response.content)
+        self.assertNotIn(self.category_d.get_absolute_url(), response.content)
 
     def test_list_renders_hidden_thread(self):
         """list renders empty due to no permission to see thread"""
@@ -405,7 +285,7 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             category=test_category,
         )
 
-        response = self.client.get(self.category_a.get_absolute_url())
+        response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertIn("empty-message", response.content)
 
@@ -417,7 +297,7 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             is_moderated=True,
         )
 
-        response = self.client.get(self.category_a.get_absolute_url())
+        response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_thread.get_absolute_url(), response.content)
 
@@ -428,7 +308,7 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             is_moderated=True,
         )
 
-        response = self.client.get(self.category_a.get_absolute_url())
+        response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
 
@@ -439,7 +319,7 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             is_hidden=True,
         )
 
-        response = self.client.get(self.category_a.get_absolute_url())
+        response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
 
@@ -451,7 +331,7 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             is_hidden=True,
         )
 
-        response = self.client.get(self.category_a.get_absolute_url())
+        response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
 
@@ -467,7 +347,7 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             'can_hide_threads': 1
         })
 
-        response = self.client.get(self.category_a.get_absolute_url())
+        response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_thread.get_absolute_url(), response.content)
 
@@ -484,7 +364,7 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             'can_hide_threads': 1
         })
 
-        response = self.client.get(self.category_a.get_absolute_url())
+        response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_thread.get_absolute_url(), response.content)
 
@@ -501,6 +381,6 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             'can_review_moderated_content': 1
         })
 
-        response = self.client.get(self.category_a.get_absolute_url())
+        response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_thread.get_absolute_url(), response.content)
