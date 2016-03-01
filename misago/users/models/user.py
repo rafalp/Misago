@@ -235,8 +235,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_searched_on = models.DateTimeField(null=True, blank=True)
 
     reads_cutoff = models.DateTimeField(default=timezone.now)
-    new_threads_cutoff = models.DateTimeField(default=timezone.now)
-    unread_threads_cutoff = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = 'slug'
     REQUIRED_FIELDS = ['email']

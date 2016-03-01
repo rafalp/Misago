@@ -28,9 +28,14 @@ def make_threads_read_aware(user, threads):
 
 def make_read(threads):
     for thread in threads:
-        thread.unread_replies = 0
         thread.is_read = True
         thread.is_new = False
+
+
+def make_unread(threads):
+    for thread in threads:
+        thread.is_read = False
+        thread.is_new = True
 
 
 def make_categories_threads_read_aware(user, threads):
@@ -43,10 +48,7 @@ def make_categories_threads_read_aware(user, threads):
             thread.last_post_on, user, category_cutoff)
         thread.is_new = True
 
-        if thread.is_read:
-            thread.unread_replies = 0
-        else:
-            thread.unread_replies = thread.replies
+        if not thread.is_read:
             threads_dict[thread.pk] = thread
 
     if threads_dict:
@@ -71,12 +73,6 @@ def make_threads_dict_read_aware(user, threads_dict):
             thread = threads_dict[record.thread_id]
             thread.is_new = False
             thread.is_read = record.last_read_on >= thread.last_post_on
-            if thread.is_read:
-                thread.unread_replies = 0
-            else:
-                thread.unread_replies = thread.replies - record.read_replies
-                if thread.unread_replies < 1:
-                    thread.unread_replies = 1
 
 
 def make_thread_read_aware(user, thread):
@@ -142,16 +138,13 @@ def read_thread(user, thread, last_read_reply):
 def sync_record(user, thread, last_read_reply):
     notification_triggers = ['read_thread_%s' % thread.pk]
 
-    read_replies = count_read_replies(user, thread, last_read_reply)
     if thread.read_record:
-        thread.read_record.read_replies = read_replies
         thread.read_record.last_read_on = last_read_reply.posted_on
-        thread.read_record.save(update_fields=['read_replies', 'last_read_on'])
+        thread.read_record.save(update_fields=['last_read_on'])
     else:
         user.threadread_set.create(
             category=thread.category,
             thread=thread,
-            read_replies=read_replies,
             last_read_on=last_read_reply.posted_on)
         signals.thread_tracked.send(sender=user, thread=thread)
         notification_triggers.append('see_thread_%s' % thread.pk)
@@ -159,10 +152,3 @@ def sync_record(user, thread, last_read_reply):
     if last_read_reply.posted_on == thread.last_post_on:
         signals.thread_read.send(sender=user, thread=thread)
         categoriestracker.sync_record(user, thread.category)
-
-
-def count_read_replies(user, thread, last_read_reply):
-    last_reply_date = last_read_reply.posted_on
-    queryset = thread.post_set.filter(posted_on__lte=last_reply_date)
-    queryset = queryset.filter(is_moderated=False)
-    return queryset.count() - 1 # - starters post

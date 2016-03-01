@@ -51,7 +51,9 @@ def filter_threads_queryset(user, categories, list_type, queryset):
         if list_type == 'new':
             # new threads have no entry in reads table
             # AND were started after cutoff date
-            read_threads = user.threadread_set.values('thread_id')
+            read_threads = user.threadread_set.filter(
+                category__in=categories
+            ).values('thread_id')
 
             if categories_dict:
                 condition = Q(
@@ -75,6 +77,7 @@ def filter_threads_queryset(user, categories, list_type, queryset):
             # unread threads were read in past but have new posts
             # after cutoff date
             read_threads = user.threadread_set.filter(
+                category__in=categories,
                 thread__last_post_on__gt=cutoff_date,
                 last_read_on__lt=F('thread__last_post_on')
             ).values('thread_id')
@@ -166,7 +169,13 @@ class BaseList(View):
         page = paginate(queryset, page, 24, 6)
         paginator = pagination_dict(page)
 
-        threadstracker.make_threads_read_aware(request.user, page.object_list)
+        if list_type in ('new', 'unread'):
+            """we already know all threads on list are unread"""
+            threadstracker.make_unread(page.object_list)
+        else:
+            threadstracker.make_threads_read_aware(
+                request.user, page.object_list)
+
         add_categories_to_threads(categories, page.object_list)
 
         visible_subcategories = []

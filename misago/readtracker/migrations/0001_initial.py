@@ -29,7 +29,6 @@ class Migration(migrations.Migration):
             name='ThreadRead',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('read_replies', models.PositiveIntegerField(default=0)),
                 ('last_read_on', models.DateTimeField()),
                 ('category', models.ForeignKey(to='misago_categories.Category')),
                 ('thread', models.ForeignKey(to='misago_threads.Thread')),

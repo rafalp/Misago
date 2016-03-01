@@ -125,7 +125,7 @@ MIDDLEWARE_CLASSES = (
     'misago.core.middleware.exceptionhandler.ExceptionHandlerMiddleware',
     'misago.users.middleware.OnlineTrackerMiddleware',
     'misago.admin.middleware.AdminAuthMiddleware',
-    #'misago.threads.middleware.UnreadThreadsCountMiddleware',
+    'misago.threads.middleware.UnreadThreadsCountMiddleware',
     'misago.core.middleware.threadstore.ThreadStoreMiddleware',
 )
 

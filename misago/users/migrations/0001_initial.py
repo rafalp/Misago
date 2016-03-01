@@ -65,8 +65,6 @@ class Migration(migrations.Migration):
                 ('last_posted_on', models.DateTimeField(null=True, blank=True)),
                 ('last_searched_on', models.DateTimeField(null=True, blank=True)),
                 ('reads_cutoff', models.DateTimeField(default=django.utils.timezone.now)),
-                ('new_threads_cutoff', models.DateTimeField(default=django.utils.timezone.now)),
-                ('unread_threads_cutoff', models.DateTimeField(default=django.utils.timezone.now))
             ],
             options={
                 'abstract': False,
