@@ -1,7 +1,13 @@
+from datetime import timedelta
+
+from django.conf import settings
+from django.utils import timezone
+
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.core import threadstore
 from misago.core.cache import cache
+from misago.readtracker import categoriestracker, threadstracker
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads import testutils
@@ -384,3 +390,369 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_thread.get_absolute_url(), response.content)
+
+
+class MyThreadsListTests(ThreadsListTestCase):
+    def test_list_renders_empty(self):
+        """list renders empty"""
+        self.access_all_categories()
+
+        response = self.client.get('/my/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("empty-message", response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(self.category_a.get_absolute_url() + 'my/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("empty-message", response.content)
+
+    def test_list_renders_test_thread(self):
+        """list renders only threads posted by user"""
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            poster=self.user,
+        )
+
+        other_thread = testutils.post_thread(
+            category=self.category_a,
+        )
+
+        self.access_all_categories()
+
+        response = self.client.get('/my/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotIn(other_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(self.category_a.get_absolute_url() + 'my/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotIn(other_thread.get_absolute_url(), response.content)
+
+
+class NewThreadsListTests(ThreadsListTestCase):
+    def test_list_renders_empty(self):
+        """list renders empty"""
+        self.access_all_categories()
+
+        response = self.client.get('/new/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("empty-message", response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(self.category_a.get_absolute_url() + 'new/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("empty-message", response.content)
+
+    def test_list_renders_new_thread(self):
+        """list renders new thread"""
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+        )
+
+        self.access_all_categories()
+
+        response = self.client.get('/new/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(self.category_a.get_absolute_url() + 'new/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_renders_thread_bumped_after_user_cutoff(self):
+        """list renders new thread bumped after user cutoff"""
+        self.user.reads_cutoff = timezone.now() - timedelta(days=10)
+        self.user.joined_on = self.user.reads_cutoff
+        self.user.save()
+
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            started_on=self.user.reads_cutoff - timedelta(days=2)
+        )
+
+        testutils.reply_thread(test_thread,
+            posted_on=self.user.reads_cutoff + timedelta(days=4)
+        )
+
+        self.access_all_categories()
+
+        response = self.client.get('/new/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(
+            self.category_a.get_absolute_url() + 'new/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_hides_global_cutoff_thread(self):
+        """list hides thread started before global cutoff"""
+        self.user.reads_cutoff = timezone.now() - timedelta(days=10)
+        self.user.joined_on = self.user.reads_cutoff
+        self.user.save()
+
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            started_on=timezone.now() - timedelta(
+                days=settings.MISAGO_FRESH_CONTENT_PERIOD + 1
+            )
+        )
+
+        self.access_all_categories()
+
+        response = self.client.get('/new/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(self.category_a.get_absolute_url() + 'new/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_hides_user_cutoff_thread(self):
+        """list hides thread started before users cutoff"""
+        self.user.reads_cutoff = timezone.now() - timedelta(days=5)
+        self.user.joined_on = self.user.reads_cutoff
+        self.user.save()
+
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            started_on=self.user.reads_cutoff - timedelta(minutes=1)
+        )
+
+        self.access_all_categories()
+
+        response = self.client.get('/new/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(self.category_a.get_absolute_url() + 'new/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_hides_user_read_thread(self):
+        """list hides thread already read by user"""
+        self.user.reads_cutoff = timezone.now() - timedelta(days=5)
+        self.user.joined_on = self.user.reads_cutoff
+        self.user.save()
+
+        test_thread = testutils.post_thread(
+            category=self.category_a
+        )
+
+        threadstracker.make_thread_read_aware(self.user, test_thread)
+        threadstracker.read_thread(
+            self.user, test_thread, test_thread.last_post)
+
+        self.access_all_categories()
+
+        response = self.client.get('/new/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(self.category_a.get_absolute_url() + 'new/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_hides_category_read_thread(self):
+        """list hides thread already read by user"""
+        self.user.reads_cutoff = timezone.now() - timedelta(days=5)
+        self.user.joined_on = self.user.reads_cutoff
+        self.user.save()
+
+        test_thread = testutils.post_thread(
+            category=self.category_a
+        )
+
+        self.user.categoryread_set.create(
+            category=self.category_a,
+            last_read_on=timezone.now(),
+        )
+
+        self.access_all_categories()
+
+        response = self.client.get('/new/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(self.category_a.get_absolute_url() + 'new/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+
+class UnreadThreadsListTests(ThreadsListTestCase):
+    def test_list_renders_empty(self):
+        """list renders empty"""
+        self.access_all_categories()
+
+        response = self.client.get('/unread/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("empty-message", response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(
+            self.category_a.get_absolute_url() + 'unread/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("empty-message", response.content)
+
+    def test_list_renders_unread_thread(self):
+        """list renders thread with unread posts"""
+        self.user.reads_cutoff = timezone.now() - timedelta(days=5)
+        self.user.joined_on = self.user.reads_cutoff
+        self.user.save()
+
+        test_thread = testutils.post_thread(
+            category=self.category_a
+        )
+
+        threadstracker.make_thread_read_aware(self.user, test_thread)
+        threadstracker.read_thread(
+            self.user, test_thread, test_thread.last_post)
+
+        testutils.reply_thread(test_thread)
+
+        self.access_all_categories()
+
+        response = self.client.get('/unread/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(
+            self.category_a.get_absolute_url() + 'unread/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_hides_never_read_thread(self):
+        """list hides never read thread"""
+        self.user.reads_cutoff = timezone.now() - timedelta(days=5)
+        self.user.joined_on = self.user.reads_cutoff
+        self.user.save()
+
+        test_thread = testutils.post_thread(
+            category=self.category_a
+        )
+
+        self.access_all_categories()
+
+        response = self.client.get('/unread/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(
+            self.category_a.get_absolute_url() + 'unread/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_hides_read_thread(self):
+        """list hides read thread"""
+        self.user.reads_cutoff = timezone.now() - timedelta(days=5)
+        self.user.joined_on = self.user.reads_cutoff
+        self.user.save()
+
+        test_thread = testutils.post_thread(
+            category=self.category_a
+        )
+
+        threadstracker.make_thread_read_aware(self.user, test_thread)
+        threadstracker.read_thread(
+            self.user, test_thread, test_thread.last_post)
+
+        self.access_all_categories()
+
+        response = self.client.get('/unread/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(
+            self.category_a.get_absolute_url() + 'unread/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_hides_global_cutoff_thread(self):
+        """list hides thread replied before global cutoff"""
+        self.user.reads_cutoff = timezone.now() - timedelta(days=10)
+        self.user.joined_on = self.user.reads_cutoff
+        self.user.save()
+
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            started_on=timezone.now() - timedelta(
+                days=settings.MISAGO_FRESH_CONTENT_PERIOD + 5
+            )
+        )
+
+        threadstracker.make_thread_read_aware(self.user, test_thread)
+        threadstracker.read_thread(
+            self.user, test_thread, test_thread.last_post)
+
+        testutils.reply_thread(test_thread,
+            posted_on=test_thread.started_on + timedelta(days=1)
+        )
+
+        self.access_all_categories()
+
+        response = self.client.get('/unread/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(
+            self.category_a.get_absolute_url() + 'unread/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_hides_user_cutoff_thread(self):
+        """list hides thread replied before user cutoff"""
+        self.user.reads_cutoff = timezone.now() - timedelta(days=10)
+        self.user.joined_on = self.user.reads_cutoff
+        self.user.save()
+
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            started_on=self.user.reads_cutoff - timedelta(days=2)
+        )
+
+        threadstracker.make_thread_read_aware(self.user, test_thread)
+        threadstracker.read_thread(
+            self.user, test_thread, test_thread.last_post)
+
+        testutils.reply_thread(test_thread,
+            posted_on=test_thread.started_on + timedelta(days=1)
+        )
+
+        self.access_all_categories()
+
+        response = self.client.get('/unread/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(
+            self.category_a.get_absolute_url() + 'unread/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)

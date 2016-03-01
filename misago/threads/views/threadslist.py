@@ -55,24 +55,17 @@ def filter_threads_queryset(user, categories, list_type, queryset):
                 category__in=categories
             ).values('thread_id')
 
-            if categories_dict:
-                condition = Q(
-                    started_on__lte=cutoff_date,
-                    id__in=read_threads,
-                )
+            condition = Q(last_post_on__lte=cutoff_date)
+            condition = condition | Q(id__in=read_threads)
 
+            if categories_dict:
                 for category_id, category_cutoff in categories_dict.items():
                     condition = condition | Q(
                         category_id=category_id,
-                        started_on__lte=category_cutoff,
+                        last_post_on__lte=category_cutoff,
                     )
 
-                return queryset.exclude(condition)
-            else:
-                return queryset.exclude(
-                    started_on__lte=cutoff_date,
-                    id__in=read_threads,
-                )
+            return queryset.exclude(condition)
         elif list_type == 'unread':
             # unread threads were read in past but have new posts
             # after cutoff date
