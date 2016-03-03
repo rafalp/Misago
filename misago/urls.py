@@ -22,6 +22,7 @@ urlpatterns += patterns('misago.core.views',
 # Register API
 apipatterns = patterns('',
     url(r'^', include('misago.categories.urls.api')),
+    url(r'^', include('misago.threads.urls.api')),
     url(r'^', include('misago.users.urls.api')),
 )
 

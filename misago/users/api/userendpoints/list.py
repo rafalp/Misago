@@ -5,7 +5,6 @@ from django.db.models import Count
 from django.http import Http404
 from django.utils import timezone
 
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from misago.conf import settings

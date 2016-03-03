@@ -22,11 +22,11 @@ def paginate(object_list, page, per_page, orphans=0,
         raise Http404()
 
 
-def pagination_dict(page):
+def pagination_dict(page, include_page_range=True):
     pagination = {
         'page': page.number,
         'pages': page.paginator.num_pages,
-        'page_range': page.paginator.page_range,
+        'page_range': None,
         'first': None,
         'previous': None,
         'next': None,
@@ -34,6 +34,9 @@ def pagination_dict(page):
         'before': 0,
         'more': 0,
     }
+
+    if include_page_range:
+        pagination['page_range'] = page.paginator.page_range
 
     if page.has_previous():
         pagination['first'] = 1

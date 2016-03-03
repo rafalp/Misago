@@ -33,14 +33,14 @@ def get_real_active_posts_ranking():
     queryset = queryset.filter(post__posted_on__gte=tracked_since,
                                post__category__in=ranked_categories)
     queryset = queryset.annotate(score=Count('post'))
-    queryset = queryset.select_related('user__rank')
+    queryset = queryset.select_related('rank')
     queryset = queryset.order_by('-score')
 
-    queryset = queryset[:settings.MISAGO_RANKING_SIZE]
+    users = list(queryset[:settings.MISAGO_RANKING_SIZE])
 
     return {
-        'users': [user for user in queryset],
-        'users_count': queryset.count()
+        'users': users,
+        'users_count': len(users),
     }
 
 

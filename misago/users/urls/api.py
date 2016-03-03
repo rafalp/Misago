@@ -19,5 +19,5 @@ urlpatterns += patterns('misago.users.api.captcha',
 router = MisagoApiRouter()
 router.register(r'ranks', RanksViewSet)
 router.register(r'users', UserViewSet)
-router.register(r'username-changes', UsernameChangesViewSet)
+router.register(r'username-changes', UsernameChangesViewSet, base_name='usernamechange')
 urlpatterns += router.urls

@@ -63,7 +63,6 @@ def allow_self_only(user, pk, message):
 class UserViewSet(viewsets.GenericViewSet):
     permission_classes = (UserViewSetPermission,)
     parser_classes=(JSONParser, MultiPartParser)
-    serializer_class = UserSerializer
     queryset = get_user_model().objects
 
     def get_queryset(self):

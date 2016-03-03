@@ -32,7 +32,6 @@ class UsernameChangesViewSetPermission(BasePermission):
 class UsernameChangesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = (UsernameChangesViewSetPermission,)
     serializer_class = UsernameChangeSerializer
-    queryset = UsernameChange.objects
     pagination_class = ApiPaginator(12, 4)
 
     def get_queryset(self):

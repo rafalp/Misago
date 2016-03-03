@@ -756,3 +756,38 @@ class UnreadThreadsListTests(ThreadsListTestCase):
             self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_hides_category_cutoff_thread(self):
+        """list hides thread replied before category cutoff"""
+        self.user.reads_cutoff = timezone.now() - timedelta(days=10)
+        self.user.joined_on = self.user.reads_cutoff
+        self.user.save()
+
+        test_thread = testutils.post_thread(
+            category=self.category_a,
+            started_on=self.user.reads_cutoff - timedelta(days=2)
+        )
+
+        threadstracker.make_thread_read_aware(self.user, test_thread)
+        threadstracker.read_thread(
+            self.user, test_thread, test_thread.last_post)
+
+        testutils.reply_thread(test_thread)
+
+        self.user.categoryread_set.create(
+            category=self.category_a,
+            last_read_on=timezone.now(),
+        )
+
+        self.access_all_categories()
+
+        response = self.client.get('/unread/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(
+            self.category_a.get_absolute_url() + 'unread/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)

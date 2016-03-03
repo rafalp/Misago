@@ -60,8 +60,8 @@
         {% endblock threads-list %}
       </div>
 
-      {% if paginator.pages > 1 %}
-      <div class="pager-undercontent">
+      <noscript>
+        {% if paginator.pages > 1 %}
         <nav>
           <ul class="pager">
             {% if paginator.previous %}
@@ -92,8 +92,8 @@
             {% endif %}
           </ul>
         </nav>
-      </div>
-      {% endif %}
+        {% endif %}
+      </noscript>
     {% endblock list-container %}
   </div>
 </div>

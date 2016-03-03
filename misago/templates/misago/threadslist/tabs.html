@@ -4,27 +4,32 @@
     <ul class="nav nav-pills">
       <li{% if list_type == 'all' %} class="active"{% endif %}>
         <a href="{{ category.get_absolute_url }}">
-          {% trans "All" %}
+          <span class="hidden-xs hidden-sm">{% trans "All" %}</span>
+          <span class="hidden-md hidden-lg">{% trans "All threads" %}</span>
         </a>
       </li>
       <li{% if list_type == 'my' %} class="active"{% endif %}>
         <a href="{{ category.get_absolute_url }}my/">
-          {% trans "My" %}
+          <span class="hidden-xs hidden-sm">{% trans "My" %}</span>
+          <span class="hidden-md hidden-lg">{% trans "My threads" %}</span>
         </a>
       </li>
       <li{% if list_type == 'new' %} class="active"{% endif %}>
         <a href="{{ category.get_absolute_url }}new/">
-          {% trans "New" %}
+          <span class="hidden-xs hidden-sm">{% trans "New" %}</span>
+          <span class="hidden-md hidden-lg">{% trans "New threads" %}</span>
         </a>
       </li>
       <li{% if list_type == 'unread' %} class="active"{% endif %}>
         <a href="{{ category.get_absolute_url }}unread/">
-          {% trans "Unread" %}
+          <span class="hidden-xs hidden-sm">{% trans "Unread" %}</span>
+          <span class="hidden-md hidden-lg">{% trans "Unread threads" %}</span>
         </a>
       </li>
       <li{% if list_type == 'subscribed' %} class="active"{% endif %}>
         <a href="{{ category.get_absolute_url }}subscribed/">
-          {% trans "Subscribed" %}
+          <span class="hidden-xs hidden-sm">{% trans "Subscribed" %}</span>
+          <span class="hidden-md hidden-lg">{% trans "Subscribed threads" %}</span>
         </a>
       </li>
     </ul>

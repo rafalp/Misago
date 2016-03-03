@@ -42,30 +42,30 @@ def get_categories_tree(user, parent=None):
 
     for category in reversed(visible_categories):
         if category.acl['can_browse']:
-            category_parent = categories_dict.get(category.parent_id)
-            if category_parent:
-                category_parent.threads += category.threads
-                category_parent.posts += category.posts
+            category.parent = categories_dict.get(category.parent_id)
+            if category.parent:
+                category.parent.threads += category.threads
+                category.parent.posts += category.posts
 
-                if category_parent.last_post_on and category.last_post_on:
-                    parent_last_post = category_parent.last_post_on
+                if category.parent.last_post_on and category.last_post_on:
+                    parent_last_post = category.parent.last_post_on
                     category_last_post = category.last_post_on
                     update_last_thead = parent_last_post < category_last_post
-                elif not category_parent.last_post_on and category.last_post_on:
+                elif not category.parent.last_post_on and category.last_post_on:
                     update_last_thead = True
                 else:
                     update_last_thead = False
 
                 if update_last_thead:
-                    category_parent.last_post_on = category.last_post_on
-                    category_parent.last_thread_id = category.last_thread_id
-                    category_parent.last_thread_title = category.last_thread_title
-                    category_parent.last_thread_slug = category.last_thread_slug
-                    category_parent.last_poster_name = category.last_poster_name
-                    category_parent.last_poster_slug = category.last_poster_slug
+                    category.parent.last_post_on = category.last_post_on
+                    category.parent.last_thread_id = category.last_thread_id
+                    category.parent.last_thread_title = category.last_thread_title
+                    category.parent.last_thread_slug = category.last_thread_slug
+                    category.parent.last_poster_name = category.last_poster_name
+                    category.parent.last_poster_slug = category.last_poster_slug
 
                 if not category.is_read:
-                    category_parent.is_read = False
+                    category.parent.is_read = False
 
     flat_list = []
     for category in categories_list:

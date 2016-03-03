@@ -6,10 +6,11 @@ from misago.core.utils import format_plaintext_for_html
 from misago.categories.models import Category
 
 
-__all__ = ['CategorySerializer']
+__all__ = ['BasicCategorySerializer', 'CategorySerializer']
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    parent = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
     is_read = serializers.SerializerMethodField()
     subcategories = serializers.SerializerMethodField()
@@ -22,6 +23,7 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = (
             'id',
+            'parent',
             'name',
             'description',
             'is_closed',
@@ -38,6 +40,15 @@ class CategorySerializer(serializers.ModelSerializer):
             'last_poster_url',
             'acl',
         )
+
+    def get_parent(self, obj):
+        try:
+            if obj.parent:
+                return BasicCategorySerializer(obj.parent).data
+            else:
+                return None
+        except AttributeError:
+            return None
 
     def get_description(self, obj):
         if obj.description:
@@ -79,4 +90,15 @@ class CategorySerializer(serializers.ModelSerializer):
         try:
             return obj.acl
         except AttributeError:
-            return []
+            return {}
+
+
+class BasicCategorySerializer(CategorySerializer):
+    class Meta:
+        model = Category
+        fields = (
+            'id',
+            'name',
+            'css_class',
+            'absolute_url',
+        )
