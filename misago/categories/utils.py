@@ -34,7 +34,7 @@ def get_categories_tree(user, parent=None):
         categories_dict[category.pk] = category
         categories_list.append(category)
 
-        if category.level > parent_level:
+        if category.parent_id and category.level > parent_level:
             categories_dict[category.parent_id].subcategories.append(category)
 
     add_acl(user, categories_list)
@@ -81,7 +81,7 @@ def get_category_path(category):
     categories_dict = Category.objects.get_cached_categories_dict()
 
     category_path = []
-    while category.level > 0:
+    while category and category.level > 0:
         category_path.append(category)
-        category = categories_dict[category.parent_id]
+        category = category.parent
     return [f for f in reversed(category_path)]

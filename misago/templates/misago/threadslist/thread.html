@@ -14,10 +14,20 @@
   <ul class="list-inline">
 
     {% if thread.top_category %}
-    <li>
-      <a href="{{ thread.top_category.get_absolute_url }}">
+    <li class="thread-path">
+      <a href="{{ thread.top_category.get_absolute_url }}" class="thread-category{% if thread.top_category.css_class %} thread-category-{{ thread.top_category.css_class }}{% endif %}">
         {{ thread.top_category.name }}
       </a>
+      {% if thread.category != thread.top_category %}
+      <span class="path-separator">
+        <span class="material-icon">
+          arrow_forward
+        </span>
+      </span>
+      <a href="{{ thread.category.get_absolute_url }}" class="thread-category{% if thread.category.css_class %} thread-category-{{ thread.category.css_class }}{% endif %}">
+        {{ thread.category.name }}
+      </a>
+      {% endif %}
     </li>
     {% endif %}
 

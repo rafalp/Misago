@@ -48,10 +48,12 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
         Category(
             name='Category A',
             slug='category-a',
+            css_class='showing-category-a',
         ).insert_at(self.root, position='last-child', save=True)
         Category(
             name='Category E',
             slug='category-e',
+            css_class='showing-category-e',
         ).insert_at(self.root, position='last-child', save=True)
 
         self.root = Category.objects.root_category()
@@ -61,6 +63,7 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
         Category(
             name='Category B',
             slug='category-b',
+            css_class='showing-category-b',
         ).insert_at(self.category_a, position='last-child', save=True)
 
         self.category_b = Category.objects.get(slug='category-b')
@@ -68,10 +71,12 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
         Category(
             name='Category C',
             slug='category-c',
+            css_class='showing-category-c',
         ).insert_at(self.category_b, position='last-child', save=True)
         Category(
             name='Category D',
             slug='category-d',
+            css_class='showing-category-d',
         ).insert_at(self.category_b, position='last-child', save=True)
 
         self.category_c = Category.objects.get(slug='category-c')
@@ -81,6 +86,7 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
         Category(
             name='Category F',
             slug='category-f',
+            css_class='showing-category-f',
         ).insert_at(self.category_e, position='last-child', save=True)
 
         self.category_f = Category.objects.get(slug='category-f')
@@ -165,14 +171,17 @@ class ListsTests(ThreadsListTestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
 
-        self.assertNotIn(self.category_a.get_absolute_url(), response.content)
-        self.assertNotIn(self.category_e.get_absolute_url(), response.content)
+        self.assertNotIn(
+            'subcategory-%s' % self.category_a.css_class, response.content)
+        self.assertNotIn(
+            'subcategory-%s' % self.category_e.css_class, response.content)
 
         self.access_all_categories()
         response = self.client.get(self.category_a.get_absolute_url())
         self.assertEqual(response.status_code, 200)
 
-        self.assertNotIn(self.category_b.get_absolute_url(), response.content)
+        self.assertNotIn(
+            'subcategory-%s' % self.category_b.css_class, response.content)
 
     def test_list_renders_categories_picker(self):
         """categories picker renders valid categories"""
@@ -189,16 +198,22 @@ class ListsTests(ThreadsListTestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
 
-        self.assertIn(self.category_a.get_absolute_url(), response.content)
+        self.assertIn(
+            'subcategory-%s' % self.category_a.css_class, response.content)
 
         # readable categories, but non-accessible directly
-        self.assertNotIn(self.category_b.get_absolute_url(), response.content)
-        self.assertNotIn(self.category_c.get_absolute_url(), response.content)
-        self.assertNotIn(self.category_d.get_absolute_url(), response.content)
-        self.assertNotIn(self.category_f.get_absolute_url(), response.content)
+        self.assertNotIn(
+            'subcategory-%s' % self.category_b.css_class, response.content)
+        self.assertNotIn(
+            'subcategory-%s' % self.category_c.css_class, response.content)
+        self.assertNotIn(
+            'subcategory-%s' % self.category_d.css_class, response.content)
+        self.assertNotIn(
+            'subcategory-%s' % self.category_f.css_class, response.content)
 
         # hidden category
-        self.assertNotIn(test_category.get_absolute_url(), response.content)
+        self.assertNotIn(
+            'subcategory-%s' % test_category.css_class, response.content)
 
         # test category view
         self.access_all_categories()
@@ -206,12 +221,16 @@ class ListsTests(ThreadsListTestCase):
         response = self.client.get(self.category_a.get_absolute_url())
         self.assertEqual(response.status_code, 200)
 
-        self.assertIn(self.category_b.get_absolute_url(), response.content)
+        self.assertIn(
+            'subcategory-%s' % self.category_b.css_class, response.content)
 
         # readable categories, but non-accessible directly
-        self.assertNotIn(self.category_c.get_absolute_url(), response.content)
-        self.assertNotIn(self.category_d.get_absolute_url(), response.content)
-        self.assertNotIn(self.category_f.get_absolute_url(), response.content)
+        self.assertNotIn(
+            'subcategory-%s' % self.category_c.css_class, response.content)
+        self.assertNotIn(
+            'subcategory-%s' % self.category_d.css_class, response.content)
+        self.assertNotIn(
+            'subcategory-%s' % self.category_f.css_class, response.content)
 
 
 class CategoryThreadsListTests(ThreadsListTestCase):
@@ -261,13 +280,17 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertIn(test_thread.get_absolute_url(), response.content)
-        self.assertIn(self.category_a.get_absolute_url(), response.content)
+
+        self.assertIn(
+            'subcategory-%s' % self.category_a.css_class, response.content)
+        self.assertIn(
+            'thread-category-%s' % self.category_a.css_class, response.content)
+        self.assertIn(
+            'thread-category-%s' % self.category_c.css_class, response.content)
 
         # other top category is hidden from user
-        self.assertNotIn(self.category_e.get_absolute_url(), response.content)
-
-        # real thread's category is hidden away from user
-        self.assertNotIn(self.category_c.get_absolute_url(), response.content)
+        self.assertNotIn(
+            'subcategory-%s' % self.category_e.css_class, response.content)
 
         # test category view
         self.access_all_categories()
@@ -276,8 +299,17 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
 
         # thread displays
         self.assertIn(test_thread.get_absolute_url(), response.content)
-        self.assertIn(self.category_c.get_absolute_url(), response.content)
-        self.assertNotIn(self.category_d.get_absolute_url(), response.content)
+
+        self.assertNotIn(
+            'thread-category-%s' % self.category_b.css_class, response.content)
+        self.assertIn(
+            'thread-category-%s' % self.category_c.css_class, response.content)
+
+        # category picker was update
+        self.assertIn(
+            'subcategory-%s' % self.category_c.css_class, response.content)
+        self.assertNotIn(
+            'subcategory-%s' % self.category_d.css_class, response.content)
 
     def test_list_renders_hidden_thread(self):
         """list renders empty due to no permission to see thread"""
