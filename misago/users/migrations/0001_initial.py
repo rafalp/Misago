@@ -146,6 +146,17 @@ class Migration(migrations.Migration):
             preserve_default=True,
         ),
         migrations.CreateModel(
+            name='ActivityRanking',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('user', models.ForeignKey(related_name='+', to=settings.AUTH_USER_MODEL)),
+                ('score', models.PositiveIntegerField(default=0, db_index=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
             name='Ban',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),

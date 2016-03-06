@@ -6,37 +6,17 @@ from django.db.models import Count
 from django.utils import timezone
 
 from misago.categories.models import Category
-from misago.core.cache import cache
 
-
-ACTIVE_POSTERS_CACHE = 'misago_active_posters_ranking'
+from misago.users.models import ActivityRanking
 
 
 def get_active_posters_ranking():
-    ranking = cache.get(ACTIVE_POSTERS_CACHE, 'nada')
-    if ranking == 'nada':
-        ranking = get_real_active_posts_ranking()
-        cache.set(ACTIVE_POSTERS_CACHE, ranking, 18*3600)
-    return ranking
+    users = []
 
-
-def get_real_active_posts_ranking():
-    tracked_period = settings.MISAGO_RANKING_LENGTH
-    tracked_since = timezone.now() - timedelta(days=tracked_period)
-
-    ranked_categories = []
-    for category in Category.objects.all_categories():
-        ranked_categories.append(category.pk)
-
-    User = get_user_model()
-    queryset = User.objects.filter(posts__gt=0)
-    queryset = queryset.filter(post__posted_on__gte=tracked_since,
-                               post__category__in=ranked_categories)
-    queryset = queryset.annotate(score=Count('post'))
-    queryset = queryset.select_related('rank')
-    queryset = queryset.order_by('-score')
-
-    users = list(queryset[:settings.MISAGO_RANKING_SIZE])
+    queryset = ActivityRanking.objects.select_related('user', 'user__rank')
+    for ranking in queryset.order_by('-score'):
+        ranking.user.score = ranking.score
+        users.append(ranking.user)
 
     return {
         'users': users,
@@ -44,5 +24,23 @@ def get_real_active_posts_ranking():
     }
 
 
-def clear_active_posters_ranking():
-    cache.delete(ACTIVE_POSTERS_CACHE)
+def build_active_posters_ranking():
+    tracked_period = settings.MISAGO_RANKING_LENGTH
+    tracked_since = timezone.now() - timedelta(days=tracked_period)
+
+    ActivityRanking.objects.all().delete()
+
+    ranked_categories = []
+    for category in Category.objects.all_categories():
+        ranked_categories.append(category.pk)
+
+    queryset = get_user_model().objects.filter(posts__gt=0).filter(
+        post__posted_on__gte=tracked_since,
+        post__category__in=ranked_categories
+    ).annotate(score=Count('post'))
+
+    for ranking in queryset[:settings.MISAGO_RANKING_SIZE].iterator():
+        ActivityRanking.objects.create(
+            user=ranking,
+            score=ranking.score
+        )

@@ -18,18 +18,6 @@ def handle_name_change(sender, **kwargs):
                                     canceler_slug=sender.slug)
 
 
-from django.db.models.signals import pre_delete
-@receiver(pre_delete, sender=get_user_model())
-def recache_active_users_list_on_active_user_delete(sender, **kwargs):
-    from misago.core.cache import cache
-    from misago.users.activepostersranking import (get_active_posters_ranking,
-                                                   clear_active_posters_ranking)
-
-    for user in get_active_posters_ranking()['users']:
-        if user == kwargs['instance']:
-            clear_active_posters_ranking()
-
-
 from misago.core.signals import secret_key_changed
 @receiver(secret_key_changed)
 def update_signatures_checksums(sender, **kwargs):

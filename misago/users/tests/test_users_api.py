@@ -11,6 +11,7 @@ from misago.core.cache import cache
 from misago.threads.models import Thread, Post
 from misago.threads.testutils import post_thread
 
+from misago.users.activepostersranking import build_active_posters_ranking
 from misago.users.models import Ban, BAN_USERNAME, Rank
 from misago.users.testutils import AuthenticatedUserTestCase
 
@@ -45,6 +46,8 @@ class ActivePostersListTests(AuthenticatedUserTestCase):
         self.user.posts = 1
         self.user.save()
 
+        build_active_posters_ranking()
+
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.user.username, response.content)
@@ -52,6 +55,7 @@ class ActivePostersListTests(AuthenticatedUserTestCase):
         self.assertIn('"is_offline":false', response.content)
 
         self.logout_user()
+        build_active_posters_ranking()
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
