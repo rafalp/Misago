@@ -1,5 +1,6 @@
 import React from 'react';
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
+import DropdownToggle from 'misago/components/dropdown-toggle'; // jshint ignore:line
 import FollowButton from 'misago/components/profile/follow-button'; // jshint ignore:line
 import ModerationNav from 'misago/components/profile/moderation/nav'; // jshint ignore:line
 import Status, { StatusIcon, StatusLabel } from 'misago/components/user-status'; // jshint ignore:line
@@ -136,15 +137,8 @@ export default class extends React.Component {
             {this.getFollowButton()}
             {this.getModerationButton()}
 
-            <button className="btn btn-default btn-aligned btn-icon btn-dropdown-toggle hidden-md hidden-lg"
-                    type="button"
-                    onClick={this.props.toggleNav}
-                    aria-haspopup="true"
-                    aria-expanded={this.props.dropdown ? 'true' : 'false'}>
-              <i className="material-icon">
-                menu
-              </i>
-            </button>
+            <DropdownToggle toggleNav={this.props.toggleNav}
+                            dropdown={this.props.dropdown} />
 
           </div>
         </div>

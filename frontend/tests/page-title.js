@@ -3,10 +3,14 @@ import title from 'misago/services/page-title';
 
 describe('Page Title', function() {
   beforeEach(function() {
-    title.init('Test Forum');
+    title.init("Home Title", "Test Forum");
   });
 
   it("sets title", function() {
+    title.set();
+    assert.equal(document.title, "Home Title",
+      "no argument is used to set home title");
+
     title.set("Lorem ipsum");
     assert.equal(document.title, "Lorem ipsum | Test Forum",
       "string argument is used to set title");

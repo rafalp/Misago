@@ -11,18 +11,22 @@ const history = new createHistory();
 
 export default function(options) {
   let routes = {
-    component: options.component,
-    childRoutes: [
+    component: options.component || null,
+    childRoutes: []
+  };
+
+  if (options.root) {
+    routes.childRoutes = [
       {
         path: options.root,
         onEnter: function(nextState, replaceState) {
           replaceState(null, options.paths[0].path);
         }
       }
-    ].concat(options.paths.map(function(path) {
-      return path;
-    }))
-  };
+    ].concat(options.paths);
+  } else {
+    routes.childRoutes = options.paths;
+  }
 
   ReactDOM.render(
     <Provider store={store.getStore()}>

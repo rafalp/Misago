@@ -13,12 +13,6 @@ class RootCategory(ThreadTypeBase):
     def get_category_absolute_url(self, category):
         return reverse('misago:threads')
 
-    def get_category_absolute_url(self, category):
-        return reverse('misago:category', kwargs={
-            'category_slug': category.slug,
-            'category_id': category.id,
-        })
-
     def get_thread_absolute_url(self, thread):
         return '/thread/not-yet-%s/' % thread.pk
 
@@ -34,3 +28,9 @@ class Category(RootCategory):
 
     def get_category_name(self, category):
         return category.name
+
+    def get_category_absolute_url(self, category):
+        return reverse('misago:category', kwargs={
+            'category_slug': category.slug,
+            'category_id': category.id,
+        })

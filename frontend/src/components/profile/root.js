@@ -8,18 +8,15 @@ import UsernameHistory from 'misago/components/profile/username-history'; // jsh
 import Header from 'misago/components/profile/Header'; // jshint ignore:line
 import ModerationNav from 'misago/components/profile/moderation/nav'; // jshint ignore:line
 import { SideNav, CompactNav } from 'misago/components/profile/navs'; // jshint ignore:line
+import WithDropdown from 'misago/components/with-dropdown';
 import misago from 'misago/index';
 import { dehydrate } from 'misago/reducers/profile'; // jshint ignore:line
 import polls from 'misago/services/polls';
 import store from 'misago/services/store'; // jshint ignore:line
 
-export default class extends React.Component {
+export default class extends WithDropdown {
   constructor(props) {
     super(props);
-
-    this.state = {
-      dropdown: false
-    };
 
     this.startPolling(props.profile.api_url.root);
   }
@@ -37,9 +34,7 @@ export default class extends React.Component {
   update = (data) => {
     store.dispatch(dehydrate(data));
   };
-  /* jshint ignore:end */
 
-  /* jshint ignore:start */
   toggleNav = () => {
     if (this.state.dropdown === 'pages') {
       this.setState({
@@ -63,29 +58,7 @@ export default class extends React.Component {
       });
     }
   };
-
-  hideNav = () => {
-    this.setState({
-      dropdown: false
-    });
-  };
   /* jshint ignore:end */
-
-  getToggleNavClassName() {
-    if (this.state.dropdown) {
-      return 'btn btn-default btn-icon open';
-    } else {
-      return 'btn btn-default btn-icon';
-    }
-  }
-
-  getCompactNavClassName() {
-    if (this.state.dropdown) {
-      return 'compact-nav open';
-    } else {
-      return 'compact-nav';
-    }
-  }
 
   getNavDropdown() {
     if (this.state.dropdown === 'pages') {

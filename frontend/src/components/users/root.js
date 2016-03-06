@@ -1,55 +1,13 @@
-import React from 'react';
+import React from 'react'; // jshint ignore:line
 import { connect } from 'react-redux';
+import DropdownToggle from 'misago/components/dropdown-toggle'; // jshint ignore:line
 import { TabsNav, CompactNav } from 'misago/components/users/navs'; // jshint ignore:line
 import ActivePosters from 'misago/components/users/active-posters/root'; // jshint ignore:line
 import Rank from 'misago/components/users/rank/root';
+import WithDropdown from 'misago/components/with-dropdown';
 import misago from 'misago/index';
 
-export default class extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      dropdown: false
-    };
-  }
-
-  /* jshint ignore:start */
-  toggleNav = () => {
-    if (this.state.dropdown) {
-      this.setState({
-        dropdown: false
-      });
-    } else {
-      this.setState({
-        dropdown: true
-      });
-    }
-  };
-
-  hideNav = () => {
-    this.setState({
-      dropdown: false
-    });
-  };
-  /* jshint ignore:end */
-
-  getToggleNavClassName() {
-    if (this.state.dropdown) {
-      return 'btn btn-default btn-icon open';
-    } else {
-      return 'btn btn-default btn-icon';
-    }
-  }
-
-  getCompactNavClassName() {
-    if (this.state.dropdown) {
-      return 'compact-nav open';
-    } else {
-      return 'compact-nav';
-    }
-  }
-
+export default class extends WithDropdown {
   render() {
     /* jshint ignore:start */
     return <div className="page page-users-lists">
@@ -59,15 +17,8 @@ export default class extends React.Component {
 
           <h1 className="pull-left">{gettext("Users")}</h1>
 
-          <button className="btn btn-default btn-aligned btn-icon btn-dropdown-toggle hidden-md hidden-lg"
-                  type="button"
-                  onClick={this.toggleNav}
-                  aria-haspopup="true"
-                  aria-expanded={this.state.dropdown ? 'true' : 'false'}>
-            <i className="material-icon">
-              menu
-            </i>
-          </button>
+          <DropdownToggle toggleNav={this.toggleNav}
+                          dropdown={this.state.dropdown} />
 
         </div>
         <div className="page-tabs hidden-xs hidden-sm">

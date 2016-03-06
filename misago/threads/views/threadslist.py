@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import render
 from django.views.generic import View
@@ -33,6 +34,10 @@ class BaseList(View):
 
     def get_extra_context(self, request, category, subcategories, list_type):
         return {}
+
+    def set_extra_frontend_context(self, request, category, subcategories,
+            list_type):
+        pass
 
     def get(self, request, **kwargs):
         try:
@@ -97,6 +102,11 @@ class BaseList(View):
             'CATEGORIES': CategorySerializer(categories, many=True).data,
         })
 
+        if category.special_role:
+            request.frontend_context['CATEGORIES'][0]['special_role'] = True
+
+        self.set_frontend_context(request, category, subcategories, list_type)
+
         return render(request, self.template_name, dict(
             category=category,
             show_toolbar=show_toolbar,
@@ -122,6 +132,11 @@ class ThreadsList(BaseList, ThreadsListMixin):
         return {
             'is_index': not settings.MISAGO_CATEGORIES_ON_INDEX
         }
+
+    def set_frontend_context(self, request, category, subcategories, list_type):
+        request.frontend_context.update({
+            'THREADS_API_URL': reverse('misago:api:thread-list'),
+        })
 
 
 class CategoryThreadsList(ThreadsList, ThreadsListMixin):

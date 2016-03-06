@@ -2,10 +2,14 @@ import React from 'react';
 
 export default class extends React.Component {
   isActive() {
-    if (this.props.path) {
-      return document.location.pathname.indexOf(this.props.path) === 0;
+    if (this.props.isControlled) {
+      return this.props.isActive;
     } else {
-      return false;
+      if (this.props.path) {
+        return document.location.pathname.indexOf(this.props.path) === 0;
+      } else {
+        return false;
+      }
     }
   }
 

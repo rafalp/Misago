@@ -1,9 +1,15 @@
 export class PageTitle {
-  init(forumName) {
+  init(indexTitle, forumName) {
+    this._indexTitle = indexTitle;
     this._forumName = forumName;
   }
 
   set(title) {
+    if (!title) {
+      document.title = this._indexTitle || this._forumName;
+      return;
+    }
+
     if (typeof title === 'string') {
       title = {title: title};
     }
