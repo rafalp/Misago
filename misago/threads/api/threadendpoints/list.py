@@ -7,10 +7,10 @@ from misago.categories.permissions import (
     allow_see_category, allow_browse_category)
 from misago.categories.serializers import BasicCategorySerializer
 from misago.core.shortcuts import (
-    get_object_or_404, paginate, pagination_dict)
+    get_int_or_404, get_object_or_404, paginate, pagination_dict)
 from misago.readtracker import threadstracker
 
-from misago.threads.mixins.lists import ThreadsListMixin
+from misago.threads.mixins.threadslists import ThreadsListMixin
 from misago.threads.serializers import ThreadSerializer
 from misago.threads.utils import add_categories_to_threads
 
@@ -33,7 +33,7 @@ class BaseListEndpoint(object):
         except ValueError:
             raise Http404()
 
-        list_type = request.query_params.get('list', 'all')
+        list_type = request.query_params.get('list') or 'all'
         if list_type not in LIST_TYPES:
             raise Http404()
 
@@ -83,10 +83,11 @@ class BaseListEndpoint(object):
 class ThreadsListEndpoint(ThreadsListMixin, BaseListEndpoint):
     def get_category(self, request):
         if 'category' in request.query_params:
+            category_id = get_int_or_404(request.query_params['category'])
             category = get_object_or_404(
                 Category.objects.select_related('parent'),
                 tree_id=CATEGORIES_TREE_ID,
-                id=request.query_params['category'],
+                id=category_id,
             )
 
             allow_see_category(request.user, category)

@@ -1,4 +1,5 @@
 from datetime import timedelta
+from json import loads as json_loads
 
 from django.conf import settings
 from django.utils import timezone
@@ -25,6 +26,8 @@ LISTS_URLS = (
 class ThreadsListTestCase(AuthenticatedUserTestCase):
     def setUp(self):
         super(ThreadsListTestCase, self).setUp()
+
+        self.api_link = '/api/threads/'
 
         cache.clear()
         threadstore.clear()
@@ -133,6 +136,15 @@ class ListsTests(ThreadsListTestCase):
             self.assertIn(self.category_b.name, response.content)
             self.assertIn("empty-message", response.content)
 
+            self.access_all_categories()
+
+            response = self.client.get(
+                '%s?list=%s' % (self.api_link, url.strip('/')))
+            self.assertEqual(response.status_code, 200)
+
+            response_json = json_loads(response.content)
+            self.assertEqual(len(response_json['results']), 0)
+
     def test_list_authenticated_only_views(self):
         """authenticated only views return 403 for guests"""
         for url in LISTS_URLS:
@@ -147,6 +159,16 @@ class ListsTests(ThreadsListTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn(self.category_b.name, response.content)
 
+            self.access_all_categories()
+
+            self.access_all_categories()
+            response = self.client.get('%s?category=%s&list=%s' % (
+                self.api_link,
+                self.category_b.pk,
+                url.strip('/'),
+            ))
+            self.assertEqual(response.status_code, 200)
+
         self.logout_user()
         self.user = self.get_anonymous_user()
         for url in LISTS_URLS[1:]:
@@ -157,6 +179,14 @@ class ListsTests(ThreadsListTestCase):
 
             self.access_all_categories()
             response = self.client.get(self.category_b.get_absolute_url() + url)
+            self.assertEqual(response.status_code, 403)
+
+            self.access_all_categories()
+            response = self.client.get('%s?category=%s&list=%s' % (
+                self.api_link,
+                self.category_b.pk,
+                url.strip('/'),
+            ))
             self.assertEqual(response.status_code, 403)
 
     def test_empty_list_hides_categories_picker(self):
@@ -182,6 +212,13 @@ class ListsTests(ThreadsListTestCase):
 
         self.assertNotIn(
             'subcategory-%s' % self.category_b.css_class, response.content)
+
+        self.access_all_categories()
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['subcategories']), 0)
 
     def test_list_renders_categories_picker(self):
         """categories picker renders valid categories"""
@@ -215,6 +252,14 @@ class ListsTests(ThreadsListTestCase):
         self.assertNotIn(
             'subcategory-%s' % test_category.css_class, response.content)
 
+        self.access_all_categories()
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(
+            response_json['subcategories'][0]['id'], self.category_a.pk)
+
         # test category view
         self.access_all_categories()
 
@@ -232,6 +277,15 @@ class ListsTests(ThreadsListTestCase):
         self.assertNotIn(
             'subcategory-%s' % self.category_f.css_class, response.content)
 
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?category=%s' % (self.api_link, self.category_a.pk))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(
+            response_json['subcategories'][0]['id'], self.category_b.pk)
+
 
 class CategoryThreadsListTests(ThreadsListTestCase):
     def test_access_hidden_category(self):
@@ -244,6 +298,10 @@ class CategoryThreadsListTests(ThreadsListTestCase):
 
         for url in LISTS_URLS:
             response = self.client.get(test_category.get_absolute_url() + url)
+            self.assertEqual(response.status_code, 404)
+
+            response = self.client.get(
+                '%s?category=%s' % (self.api_link, test_category.pk))
             self.assertEqual(response.status_code, 404)
 
     def test_access_protected_category(self):
@@ -266,6 +324,23 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             });
 
             response = self.client.get(test_category.get_absolute_url() + url)
+            self.assertEqual(response.status_code, 403)
+
+            override_acl(self.user, {
+                'visible_categories': [test_category.pk],
+                'categories': {
+                    test_category.pk: {
+                        'can_see': 1,
+                        'can_browse': 0,
+                    }
+                }
+            });
+
+            response = self.client.get('%s?category=%s&list=%s' % (
+                self.api_link,
+                test_category.pk,
+                url.strip('/'),
+            ))
             self.assertEqual(response.status_code, 403)
 
 
@@ -292,6 +367,17 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         self.assertNotIn(
             'subcategory-%s' % self.category_e.css_class, response.content)
 
+        # api displays same data
+        self.access_all_categories()
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
+        self.assertEqual(len(response_json['subcategories']), 1)
+        self.assertEqual(
+            response_json['subcategories'][0]['id'], self.category_a.pk)
+
         # test category view
         self.access_all_categories()
         response = self.client.get(self.category_b.get_absolute_url())
@@ -305,13 +391,25 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         self.assertIn(
             'thread-category-%s' % self.category_c.css_class, response.content)
 
-        # category picker was update
+        # category picker was changed
         self.assertIn(
             'subcategory-%s' % self.category_c.css_class, response.content)
         self.assertNotIn(
             'subcategory-%s' % self.category_d.css_class, response.content)
 
-    def test_list_renders_hidden_thread(self):
+        # api displays same data
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?category=%s' % (self.api_link, self.category_b.pk))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
+        self.assertEqual(len(response_json['subcategories']), 1)
+        self.assertEqual(
+            response_json['subcategories'][0]['id'], self.category_c.pk)
+
+    def test_list_hides_hidden_thread(self):
         """list renders empty due to no permission to see thread"""
         Category(
             name='Hidden Category',
@@ -327,6 +425,24 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("empty-message", response.content)
 
+    def test_api_hides_hidden_thread(self):
+        """api returns empty due to no permission to see thread"""
+        Category(
+            name='Hidden Category',
+            slug='hidden-category',
+        ).insert_at(self.root, position='last-child', save=True)
+        test_category = Category.objects.get(slug='hidden-category')
+
+        test_thread = testutils.post_thread(
+            category=test_category,
+        )
+
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
     def test_list_user_see_own_moderated_thread(self):
         """list renders moderated thread that belongs to viewer"""
         test_thread = testutils.post_thread(
@@ -339,6 +455,14 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_thread.get_absolute_url(), response.content)
 
+        # test api
+        self.access_all_categories()
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
+
     def test_list_user_cant_see_moderated_thread(self):
         """list hides moderated thread that belongs to other user"""
         test_thread = testutils.post_thread(
@@ -349,6 +473,14 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        # test api
+        self.access_all_categories()
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
 
     def test_list_user_cant_see_hidden_thread(self):
         """list hides hidden thread that belongs to other user"""
@@ -361,6 +493,14 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
 
+        # test api
+        self.access_all_categories()
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
     def test_list_user_cant_see_own_hidden_thread(self):
         """list hides hidden thread that belongs to viewer"""
         test_thread = testutils.post_thread(
@@ -372,6 +512,14 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        # test api
+        self.access_all_categories()
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
 
     def test_list_user_can_see_own_hidden_thread(self):
         """list shows hidden thread that belongs to viewer due to permission"""
@@ -388,6 +536,17 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_thread.get_absolute_url(), response.content)
+
+        # test api
+        self.access_all_categories({
+            'can_hide_threads': 1
+        })
+
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
     def test_list_user_can_see_hidden_thread(self):
         """
@@ -406,6 +565,17 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_thread.get_absolute_url(), response.content)
 
+        # test api
+        self.access_all_categories({
+            'can_hide_threads': 1
+        })
+
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
+
     def test_list_user_can_see_moderated_thread(self):
         """
         list shows hidden thread that belongs to other user due to permission
@@ -423,6 +593,17 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_thread.get_absolute_url(), response.content)
 
+        # test api
+        self.access_all_categories({
+            'can_review_moderated_content': 1
+        })
+
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
+
 
 class MyThreadsListTests(ThreadsListTestCase):
     def test_list_renders_empty(self):
@@ -438,6 +619,21 @@ class MyThreadsListTests(ThreadsListTestCase):
         response = self.client.get(self.category_a.get_absolute_url() + 'my/')
         self.assertEqual(response.status_code, 200)
         self.assertIn("empty-message", response.content)
+
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=my' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=my&category=%s' % (self.api_link, self.category_a.pk))
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
 
     def test_list_renders_test_thread(self):
         """list renders only threads posted by user"""
@@ -464,6 +660,24 @@ class MyThreadsListTests(ThreadsListTestCase):
         self.assertIn(test_thread.get_absolute_url(), response.content)
         self.assertNotIn(other_thread.get_absolute_url(), response.content)
 
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=my' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 1)
+        self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=my&category=%s' % (self.api_link, self.category_a.pk))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 1)
+        self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
+
 
 class NewThreadsListTests(ThreadsListTestCase):
     def test_list_renders_empty(self):
@@ -479,6 +693,21 @@ class NewThreadsListTests(ThreadsListTestCase):
         response = self.client.get(self.category_a.get_absolute_url() + 'new/')
         self.assertEqual(response.status_code, 200)
         self.assertIn("empty-message", response.content)
+
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=new' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
 
     def test_list_renders_new_thread(self):
         """list renders new thread"""
@@ -497,6 +726,24 @@ class NewThreadsListTests(ThreadsListTestCase):
         response = self.client.get(self.category_a.get_absolute_url() + 'new/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_thread.get_absolute_url(), response.content)
+
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=new' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 1)
+        self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 1)
+        self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
     def test_list_renders_thread_bumped_after_user_cutoff(self):
         """list renders new thread bumped after user cutoff"""
@@ -526,6 +773,24 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_thread.get_absolute_url(), response.content)
 
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=new' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 1)
+        self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 1)
+        self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
+
     def test_list_hides_global_cutoff_thread(self):
         """list hides thread started before global cutoff"""
         self.user.reads_cutoff = timezone.now() - timedelta(days=10)
@@ -551,6 +816,22 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
 
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=new' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
     def test_list_hides_user_cutoff_thread(self):
         """list hides thread started before users cutoff"""
         self.user.reads_cutoff = timezone.now() - timedelta(days=5)
@@ -573,6 +854,22 @@ class NewThreadsListTests(ThreadsListTestCase):
         response = self.client.get(self.category_a.get_absolute_url() + 'new/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=new' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
 
     def test_list_hides_user_read_thread(self):
         """list hides thread already read by user"""
@@ -599,6 +896,22 @@ class NewThreadsListTests(ThreadsListTestCase):
         response = self.client.get(self.category_a.get_absolute_url() + 'new/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=new' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
 
     def test_list_hides_category_read_thread(self):
         """list hides thread already read by user"""
@@ -627,6 +940,22 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
 
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=new' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
 
 class UnreadThreadsListTests(ThreadsListTestCase):
     def test_list_renders_empty(self):
@@ -643,6 +972,22 @@ class UnreadThreadsListTests(ThreadsListTestCase):
             self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
         self.assertIn("empty-message", response.content)
+
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=unread' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
 
     def test_list_renders_unread_thread(self):
         """list renders thread with unread posts"""
@@ -673,6 +1018,24 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_thread.get_absolute_url(), response.content)
 
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=unread' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 1)
+        self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 1)
+        self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
+
     def test_list_hides_never_read_thread(self):
         """list hides never read thread"""
         self.user.reads_cutoff = timezone.now() - timedelta(days=5)
@@ -695,6 +1058,22 @@ class UnreadThreadsListTests(ThreadsListTestCase):
             self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=unread' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
 
     def test_list_hides_read_thread(self):
         """list hides read thread"""
@@ -722,6 +1101,22 @@ class UnreadThreadsListTests(ThreadsListTestCase):
             self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=unread' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
 
     def test_list_hides_global_cutoff_thread(self):
         """list hides thread replied before global cutoff"""
@@ -757,6 +1152,22 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
 
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=unread' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
     def test_list_hides_user_cutoff_thread(self):
         """list hides thread replied before user cutoff"""
         self.user.reads_cutoff = timezone.now() - timedelta(days=10)
@@ -788,6 +1199,22 @@ class UnreadThreadsListTests(ThreadsListTestCase):
             self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=unread' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
 
     def test_list_hides_category_cutoff_thread(self):
         """list hides thread replied before category cutoff"""
@@ -823,3 +1250,19 @@ class UnreadThreadsListTests(ThreadsListTestCase):
             self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=unread' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)

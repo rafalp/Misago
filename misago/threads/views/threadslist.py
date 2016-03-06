@@ -15,8 +15,7 @@ from misago.core.shortcuts import (
 from misago.readtracker import threadstracker
 
 from misago.threads.serializers import ThreadSerializer
-from misago.threads.mixins.lists import (
-    ThreadsListMixin, CategoryThreadsListMixin)
+from misago.threads.mixins.threadslists import ThreadsListMixin
 from misago.threads.utils import add_categories_to_threads
 
 
@@ -125,7 +124,7 @@ class ThreadsList(BaseList, ThreadsListMixin):
         }
 
 
-class CategoryThreadsList(ThreadsList, CategoryThreadsListMixin):
+class CategoryThreadsList(ThreadsList, ThreadsListMixin):
     template_name = 'misago/threadslist/category.html'
     preloaded_data_prefix = 'CATEGORY_'
 

@@ -122,14 +122,11 @@ class ThreadsListMixin(object):
     def get_queryset(self, request, categories, list_type):
         # [:1] cos we are cutting off root caregory on forum threads list
         # as it includes nedless extra condition to DB filter
-        return get_threads_queryset(request.user, categories[1:], list_type)
+        if categories[0].special_role:
+            categories = categories[1:]
+        return get_threads_queryset(request.user, categories, list_type)
 
     def get_extra_context(self, request, category, subcategories, list_type):
         return {
             'is_index': not settings.MISAGO_CATEGORIES_ON_INDEX
         }
-
-
-class CategoryThreadsListMixin(ThreadsListMixin):
-    def get_queryset(self, request, categories, list_type):
-        return get_threads_queryset(request.user, categories, list_type)
