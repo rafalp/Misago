@@ -137,7 +137,6 @@ class ThreadsList(BaseList, ThreadsListMixin):
             ).select_related('parent'))
 
     def get_category(self, request, categories, **kwargs):
-        print [c.name for c in categories]
         return categories[0]
 
     def get_extra_context(self, request):

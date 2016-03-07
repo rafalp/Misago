@@ -258,7 +258,7 @@ class ListsTests(ThreadsListTestCase):
 
         response_json = json_loads(response.content)
         self.assertEqual(
-            response_json['subcategories'][0]['id'], self.category_a.pk)
+            response_json['subcategories'][0], self.category_a.pk)
 
         # test category view
         self.access_all_categories()
@@ -284,7 +284,7 @@ class ListsTests(ThreadsListTestCase):
 
         response_json = json_loads(response.content)
         self.assertEqual(
-            response_json['subcategories'][0]['id'], self.category_b.pk)
+            response_json['subcategories'][0], self.category_b.pk)
 
 
 class CategoryThreadsListTests(ThreadsListTestCase):
@@ -376,7 +376,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
         self.assertEqual(len(response_json['subcategories']), 1)
         self.assertEqual(
-            response_json['subcategories'][0]['id'], self.category_a.pk)
+            response_json['subcategories'][0], self.category_a.pk)
 
         # test category view
         self.access_all_categories()
@@ -407,7 +407,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
         self.assertEqual(len(response_json['subcategories']), 1)
         self.assertEqual(
-            response_json['subcategories'][0]['id'], self.category_c.pk)
+            response_json['subcategories'][0], self.category_c.pk)
 
     def test_list_hides_hidden_thread(self):
         """list renders empty due to no permission to see thread"""
