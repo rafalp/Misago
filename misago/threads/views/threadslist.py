@@ -10,12 +10,11 @@ from misago.categories.models import CATEGORIES_TREE_ID, Category
 from misago.categories.permissions import (
     allow_see_category, allow_browse_category)
 from misago.categories.serializers import (
-    BasicCategorySerializer, CategorySerializer)
-from misago.core.shortcuts import (
-    get_object_or_404, paginate, pagination_dict, validate_slug)
+    BasicCategorySerializer, IndexCategorySerializer)
+from misago.core.shortcuts import paginate, pagination_dict, validate_slug
 from misago.readtracker import threadstracker
 
-from misago.threads.serializers import ThreadSerializer
+from misago.threads.serializers import ThreadListSerializer
 from misago.threads.mixins.threadslists import ThreadsListMixin
 from misago.threads.utils import add_categories_to_threads
 
@@ -32,11 +31,17 @@ class BaseList(View):
     template_name = 'misago/threadslist/threads.html'
     preloaded_data_prefix = ''
 
-    def get_extra_context(self, request, category, subcategories, list_type):
+    def get_subcategories(self, category, categories):
+        subcategories = []
+        for subcategory in categories:
+            if category.has_child(subcategory):
+                subcategories.append(subcategory)
+        return subcategories
+
+    def get_extra_context(self, request):
         return {}
 
-    def set_extra_frontend_context(self, request, category, subcategories,
-            list_type):
+    def set_extra_frontend_context(self, request):
         pass
 
     def get(self, request, **kwargs):
@@ -48,15 +53,17 @@ class BaseList(View):
             raise Http404()
 
         list_type = kwargs['list_type']
-        category = self.get_category(request, **kwargs)
+
+        categories = self.get_categories(request)
+        category = self.get_category(request, categories, **kwargs)
 
         self.allow_see_list(request, category, list_type)
+        subcategories = self.get_subcategories(category, categories)
 
-        subcategories = self.get_subcategories(request, category)
-        categories = [category] + subcategories
-
+        threads_categories = [category] + subcategories
         queryset = self.get_queryset(
-            request, categories, list_type).order_by('-last_post_on')
+            request, threads_categories, list_type
+        ).order_by('-last_post_on')
 
         page = paginate(queryset, page, 24, 6)
         paginator = pagination_dict(page, include_page_range=False)
@@ -68,7 +75,7 @@ class BaseList(View):
             threadstracker.make_threads_read_aware(
                 request.user, page.object_list)
 
-        add_categories_to_threads(categories, page.object_list)
+        add_categories_to_threads(threads_categories, page.object_list)
 
         visible_subcategories = []
         for thread in page.object_list:
@@ -81,8 +88,7 @@ class BaseList(View):
             if subcategory.pk in visible_subcategories:
                 category.subcategories.append(subcategory)
 
-        extra_context = self.get_extra_context(
-            request, category, subcategories, list_type)
+        extra_context = self.get_extra_context(request)
 
         show_toolbar = False
         if paginator['count']:
@@ -95,17 +101,16 @@ class BaseList(View):
 
         request.frontend_context.update({
             'THREADS': dict(
-                results=ThreadSerializer(page.object_list, many=True).data,
-                subcategories=BasicCategorySerializer(
-                    category.subcategories, many=True).data,
+                results=ThreadListSerializer(page.object_list, many=True).data,
+                subcategories=[c.pk for c in category.subcategories],
                 **paginator),
-            'CATEGORIES': CategorySerializer(categories, many=True).data,
+            'CATEGORIES': IndexCategorySerializer(categories, many=True).data,
         })
 
-        if category.special_role:
+        if categories[0].special_role:
             request.frontend_context['CATEGORIES'][0]['special_role'] = True
 
-        self.set_frontend_context(request, category, subcategories, list_type)
+        self.set_frontend_context(request)
 
         return render(request, self.template_name, dict(
             category=category,
@@ -125,15 +130,22 @@ class BaseList(View):
 class ThreadsList(BaseList, ThreadsListMixin):
     template_name = 'misago/threadslist/threads.html'
 
-    def get_category(self, request, **kwargs):
-        return Category.objects.root_category()
+    def get_categories(self, request):
+        return [Category.objects.root_category()] + list(
+            Category.objects.all_categories().filter(
+                id__in=request.user.acl['visible_categories']
+            ).select_related('parent'))
 
-    def get_extra_context(self, request, category, subcategories, list_type):
+    def get_category(self, request, categories, **kwargs):
+        print [c.name for c in categories]
+        return categories[0]
+
+    def get_extra_context(self, request):
         return {
             'is_index': not settings.MISAGO_CATEGORIES_ON_INDEX
         }
 
-    def set_frontend_context(self, request, category, subcategories, list_type):
+    def set_frontend_context(self, request):
         request.frontend_context.update({
             'THREADS_API_URL': reverse('misago:api:thread-list'),
         })
@@ -143,19 +155,19 @@ class CategoryThreadsList(ThreadsList, ThreadsListMixin):
     template_name = 'misago/threadslist/category.html'
     preloaded_data_prefix = 'CATEGORY_'
 
-    def get_category(self, request, **kwargs):
-        category = get_object_or_404(Category.objects.select_related('parent'),
-            tree_id=CATEGORIES_TREE_ID,
-            id=kwargs['category_id'],
-        )
+    def get_category(self, request, categories, **kwargs):
+        for category in categories:
+            if category.pk == int(kwargs['category_id']):
+                if category.special_role:
+                    raise Http404()
 
-        allow_see_category(request.user, category)
-        allow_browse_category(request.user, category)
+                allow_see_category(request.user, category)
+                allow_browse_category(request.user, category)
 
-        validate_slug(category, kwargs['category_slug'])
-
-        return category
-
+                validate_slug(category, kwargs['category_slug'])
+                return category
+        else:
+            raise Http404()
 
 
 class PrivateThreadsList(ThreadsList):

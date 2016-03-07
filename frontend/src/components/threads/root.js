@@ -47,6 +47,7 @@ export function getLists() {
 export function paths() {
   let lists = getLists();
   let paths = [];
+
   misago.get('CATEGORIES').forEach(function(category) {
     lists.forEach(function(list) {
       paths.push({

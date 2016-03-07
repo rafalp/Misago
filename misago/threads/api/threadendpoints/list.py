@@ -11,7 +11,7 @@ from misago.core.shortcuts import (
 from misago.readtracker import threadstracker
 
 from misago.threads.mixins.threadslists import ThreadsListMixin
-from misago.threads.serializers import ThreadSerializer
+from misago.threads.serializers import ThreadListSerializer
 from misago.threads.utils import add_categories_to_threads
 
 
@@ -64,19 +64,16 @@ class BaseListEndpoint(object):
                     thread.top_category not in visible_subcategories):
                 visible_subcategories.append(thread.top_category.pk)
 
-        category.subcategories = []
-        for subcategory in subcategories:
-            if subcategory.pk in visible_subcategories:
-                category.subcategories.append(subcategory)
-
         if self.serialize_subcategories:
-            response_dict['subcategories'] = BasicCategorySerializer(
-                category.subcategories, many=True).data
+            response_dict['subcategories'] = []
+            for subcategory in subcategories:
+                if subcategory.pk in visible_subcategories:
+                    response_dict['subcategories'].append(subcategory.pk)
 
         add_acl(request.user, page.object_list)
 
         return Response(dict(
-            results=ThreadSerializer(page.object_list, many=True).data,
+            results=ThreadListSerializer(page.object_list, many=True).data,
             **response_dict))
 
 

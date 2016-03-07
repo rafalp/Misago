@@ -125,8 +125,7 @@ class PermissionsForm(forms.Form):
 
     can_protect_posts = forms.YesNoSwitch(
         label=_("Can protect posts"),
-        help_text=_("Only users with this permission "
-                    "can edit protected posts.")
+        help_text=_("Only users with this permission can edit protected posts.")
     )
     can_move_posts = forms.YesNoSwitch(label=_("Can move posts"))
     can_merge_posts = forms.YesNoSwitch(label=_("Can merge posts"))
@@ -209,7 +208,6 @@ def build_category_acl(acl, category, categories_roles, key_name):
         'can_protect_posts': 0,
         'can_move_posts': 0,
         'can_merge_posts': 0,
-        'can_change_threads_labels': 0,
         'can_pin_threads': 0,
         'can_close_threads': 0,
         'can_move_threads': 0,
@@ -237,7 +235,6 @@ def build_category_acl(acl, category, categories_roles, key_name):
         can_protect_posts=algebra.greater,
         can_move_posts=algebra.greater,
         can_merge_posts=algebra.greater,
-        can_change_threads_labels=algebra.greater,
         can_pin_threads=algebra.greater,
         can_close_threads=algebra.greater,
         can_move_threads=algebra.greater,
@@ -273,7 +270,6 @@ def add_acl_to_category(user, category):
         'can_protect_posts': 0,
         'can_move_posts': 0,
         'can_merge_posts': 0,
-        'can_change_threads_labels': 0,
         'can_pin_threads': 0,
         'can_close_threads': 0,
         'can_move_threads': 0,
@@ -303,7 +299,6 @@ def add_acl_to_category(user, category):
             can_protect_posts=algebra.greater,
             can_move_posts=algebra.greater,
             can_merge_posts=algebra.greater,
-            can_change_threads_labels=algebra.greater,
             can_pin_threads=algebra.greater,
             can_close_threads=algebra.greater,
             can_move_threads=algebra.greater,
@@ -325,7 +320,6 @@ def add_acl_to_thread(user, thread):
         'can_reply': can_reply_thread(user, thread),
         'can_edit': can_edit_thread(user, thread),
         'can_hide': category_acl.get('can_hide_threads'),
-        'can_change_label': category_acl.get('can_change_threads_labels') == 2,
         'can_pin': category_acl.get('can_pin_threads'),
         'can_close': category_acl.get('can_close_threads'),
         'can_move': category_acl.get('can_move_threads'),
@@ -340,14 +334,10 @@ def add_acl_to_thread(user, thread):
         else:
             thread_is_protected = False
 
-        if not thread_is_protected:
-            if not thread.acl['can_change_label']:
-                can_change_label = category_acl.get('can_change_threads_labels')
-                thread.acl['can_change_label'] = can_change_label == 1
-            if not thread.acl['can_hide']:
-                if not thread.replies:
-                    can_hide_thread = category_acl.get('can_hide_own_threads')
-                    thread.acl['can_hide'] = can_hide_thread
+        if not thread_is_protected and not thread.acl['can_hide']:
+            if not thread.replies:
+                can_hide_thread = category_acl.get('can_hide_own_threads')
+                thread.acl['can_hide'] = can_hide_thread
 
 
 def add_acl_to_post(user, post):

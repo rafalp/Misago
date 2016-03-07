@@ -93,7 +93,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    #'debug_toolbar',
+    'debug_toolbar',
     'pipeline',
     'crispy_forms',
     'mptt',

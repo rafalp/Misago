@@ -1,4 +1,5 @@
 import React from 'react'; // jshint ignore:line
+import { Link } from 'react-router'; // jshint ignore:line
 import DropdownToggle from 'misago/components/dropdown-toggle'; // jshint ignore:line
 import { TabsNav, CompactNav } from 'misago/components/threads/navs'; // jshint ignore:line
 import { getPageTitle, getTitle } from 'misago/components/threads/title-utils';
@@ -19,7 +20,7 @@ export default class extends WithDropdown {
     let className = 'page page-threads';
     className += ' page-threads-' + this.props.route.list;
     if (this.props.route.category.css_class) {
-      className += ' page-' + this.props.category.css_class;
+      className += ' page-' + this.props.route.category.css_class;
     }
     return className;
   }
@@ -29,6 +30,21 @@ export default class extends WithDropdown {
       return 'page-header tabbed';
     } else {
       return 'page-header';
+    }
+  }
+
+  getGoBackButton() {
+    if (this.props.route.category.parent) {
+      /* jshint ignore:start */
+      return <Link className="btn btn-default btn-aligned btn-icon btn-go-back pull-left"
+                   to={this.props.route.category.parent.absolute_url + this.props.route.list.path}>
+        <span className="material-icon">
+          keyboard_arrow_left
+        </span>
+      </Link>;
+      /* jshint ignore:end */
+    } else {
+      return null;
     }
   }
 
@@ -74,6 +90,7 @@ export default class extends WithDropdown {
     return <div className={this.getClassName()}>
       <div className={this.getHeaderClassName()}>
         <div className="container">
+          {this.getGoBackButton()}
           <h1 className="pull-left">{this.getTitle()}</h1>
           {this.getCompactNavToggle()}
         </div>
