@@ -3,9 +3,9 @@ import React from 'react';
 export default class extends React.Component {
   getClassName() {
     if (this.props.category.is_read) {
-      return 'material-icon read-status item-read';
+      return 'read-status item-read';
     } else {
-      return 'material-icon read-status item-new';
+      return 'read-status item-new';
     }
   }
 
@@ -43,9 +43,11 @@ export default class extends React.Component {
 
   render() {
     /* jshint ignore:start */
-    return <span className={this.getClassName()} title={this.getTitle()}>
-      {this.getIcon()}
-    </span>;
+    return <div className={this.getClassName()} title={this.getTitle()}>
+      <span className="material-icon">
+        {this.getIcon()}
+      </span>
+    </div>;
     /* jshint ignore:end */
   }
 }

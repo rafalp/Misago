@@ -1,22 +1,30 @@
 {% load i18n %}
 {% if category.is_closed %}
   {% if category.is_read %}
-    <span class="material-icon read-status item-read" title="{% trans "This category has no new posts. (closed)" %}">
-      lock_outline
-    </span>
+    <div class="read-status item-read" title="{% trans "This category has no new posts. (closed)" %}">
+      <span class="material-icon">
+        lock_outline
+      </span>
+    </div>
   {% else %}
-    <span class="material-icon read-status item-new" title="{% trans "This category has new posts. (closed)" %}">
-      lock
-    </span>
+    <div class="read-status item-new" title="{% trans "This category has new posts. (closed)" %}">
+      <span class="material-icon">
+        lock
+      </span>
+    </div>
   {% endif %}
 {% else %}
   {% if category.is_read %}
-    <span class="material-icon read-status item-read" title="{% trans "This category has no new posts." %}">
-      chat_bubble_outline
-    </span>
+    <div class="read-status item-read" title="{% trans "This category has no new posts." %}">
+      <span class="material-icon">
+        chat_bubble_outline
+      </span>
+    </div>
   {% else %}
-    <span class="material-icon read-status item-new" title="{% trans "This category has new posts." %}">
-      chat_bubble
-    </span>
+    <div class="read-status item-new" title="{% trans "This category has new posts." %}">
+      <span class="material-icon">
+        chat_bubble
+      </span>
+    </div>
   {% endif %}
 {% endif %}

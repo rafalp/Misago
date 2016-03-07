@@ -6,7 +6,12 @@
 // Subcategories list
 // --------------------------------------------------
 .list-inline.subcategories-list {
+  overflow: auto;
+
   li {
+    display: block;
+    float: left;
+
     a, a:link, a:visited, a:active, a:hover, a:focus {
       background-color: @gray-lighter;
       border: 1px solid darken(@gray-lighter, 5%);
@@ -41,25 +46,36 @@
 // Category titles
 .panel-category {
   .panel-title, h4 {
+    overflow: auto;
     margin: 0px;
     padding: 0px;
 
     font-size: @font-size-large;
 
-    .material-icon.read-status {
-      margin: -4px 0px;
-      margin-right: 2px;
-      width: 26px;
+    a {
+      display: block;
+      float: left;
+      margin-top: 1px;
+    }
 
-      position: relative;
-      bottom: 1px;
+    .read-status {
+      float: left;
 
-      color: @read-status-old;
-      font-size: 24px;
-      line-height: 24px;
-      text-align: center;
+      .material-icon {
+        margin: 0px;
+        margin-right: 4px;
+        width: 26px;
 
-      &.item-new {
+        position: relative;
+        bottom: 1px;
+
+        color: @read-status-old;
+        font-size: 24px;
+        line-height: 24px;
+        text-align: center;
+      }
+
+      &.item-new .material-icon {
         color: @read-status-new;
       }
     }
@@ -98,9 +114,23 @@
 
 // Last activity
 .category-last-activity {
+  overflow: auto;
+
+  li {
+    display: block;
+    float: left;
+  }
+
   .thread-message {
+    overflow: auto;
+
     .material-icon {
-      margin: -2px 0px;
+      display: block;
+      float: left;
+
+      margin-right: 4px;
+      position: relative;
+      top: 1px;
 
       font-size: 18px;
       line-height: 18px;
@@ -126,7 +156,8 @@
       margin-bottom: 0px;
 
       .thread-title {
-        display: block;
+        float: none;
+        clear: both;
         overflow: hidden;
         margin-top: @line-height-computed / 2;
         margin-bottom: @line-height-computed / 5;
@@ -139,6 +170,22 @@
       .poster-name, .thread-date {
         font-size: @font-size-small;
       }
+
+      .thread-date {
+        position: relative;
+        top: 1px;
+      }
+    }
+
+    .thread-message {
+      padding-top: @line-height-computed / 5;
+
+      font-size: small;
+
+      .material-icon {
+        position: relative;
+        top: -1px;
+      }
     }
   }
 }
@@ -150,11 +197,18 @@
     // Pull category stats to the right
     .category-stats {
       float: right;
-      margin-top: @line-height-computed * -1;
+      margin: 0px;
+      margin-top: @line-height-computed * -1 - 3px;
+      overflow: auto;
+
+      li {
+        display: block;
+        float: left;
+      }
     }
 
     .category-last-activity {
-      margin-top: @line-height-computed / 2;
+      margin-top: @line-height-computed / 5;
       margin-bottom: 0px;
     }
   }

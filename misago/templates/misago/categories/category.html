@@ -29,10 +29,10 @@
           <a href="{{ subcategory.get_absolute_url }}" class="item-title">{{ subcategory.name }}</a>
         </h4>
 
-        {% include "misago/categories/stats.html" with category=category %}
+        {% include "misago/categories/stats.html" with category=subcategory %}
       </div>
 
-      {% include "misago/categories/last_activity.html" with category=category %}
+      {% include "misago/categories/last_activity.html" with category=subcategory %}
 
       {% if subcategory.description %}
       <div class="subcategory-description">
