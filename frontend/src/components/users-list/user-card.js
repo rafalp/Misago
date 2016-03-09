@@ -87,6 +87,39 @@ export default class extends React.Component {
     /* jshint ignore:end */
   }
 
+  getPostsCount() {
+    let message = ngettext(
+      "%(posts)s post",
+      "%(posts)s posts",
+      this.props.user.posts);
+
+    return interpolate(message, {
+      'posts': this.props.user.posts
+    }, true);
+  }
+
+  getThreadsCount() {
+    let message = ngettext(
+      "%(threads)s thread",
+      "%(threads)s threads",
+      this.props.user.threads);
+
+    return interpolate(message, {
+      'threads': this.props.user.threads
+    }, true);
+  }
+
+  getFollowersCount() {
+    let message = ngettext(
+      "%(followers)s follower",
+      "%(followers)s followers",
+      this.props.user.followers);
+
+    return interpolate(message, {
+      'followers': this.props.user.followers
+    }, true);
+  }
+
   render() {
     /* jshint ignore:start */
     return <div className={this.getClassName()}>
@@ -120,16 +153,13 @@ export default class extends React.Component {
 
             <ul className="list-unstyled">
               <li className="user-posts-count">
-                <strong>{this.props.user.posts}</strong>
-                <small>{gettext("posts")}</small>
+                {this.getPostsCount()}
               </li>
               <li className="user-threads-count">
-                <strong>{this.props.user.threads}</strong>
-                <small>{gettext("threads")}</small>
+                {this.getThreadsCount()}
               </li>
               <li className="user-followers-count">
-                <strong>{this.props.user.followers}</strong>
-                <small>{gettext("followers")}</small>
+                {this.getFollowersCount()}
               </li>
             </ul>
 

@@ -67,16 +67,25 @@
 
                     <ul class="list-unstyled">
                       <li class="user-posts-count">
-                        <strong>{{ user.posts }}</strong>
-                        <small>{% trans "posts" %}</small>
+                        {% blocktrans trimmed count posts=user.posts %}
+                          {{ posts }} post
+                        {% plural %}
+                          {{ posts }} posts
+                        {% endblocktrans %}
                       </li>
                       <li class="user-threads-count">
-                        <strong>{{ user.threads }}</strong>
-                        <small>{% trans "threads" %}</small>
+                        {% blocktrans trimmed count threads=user.threads %}
+                          {{ threads }} thread
+                        {% plural %}
+                          {{ threads }} threads
+                        {% endblocktrans %}
                       </li>
                       <li class="user-followers-count">
-                        <strong>{{ user.followers }}</strong>
-                        <small>{% trans "followers" %}</small>
+                        {% blocktrans trimmed count followers=user.followers %}
+                          {{ followers }} follower
+                        {% plural %}
+                          {{ followers }} followers
+                        {% endblocktrans %}
                       </li>
                     </ul>
 

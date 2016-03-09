@@ -7,7 +7,7 @@
   .username-change-avatar {
     float: left;
 
-    .user-avatar {
+    a, span {
       margin-right: @line-height-computed / 2;
 
       img {
@@ -22,8 +22,18 @@
   }
 
   .username-change {
+    overflow: auto;
+
+    span {
+      display: block;
+      float: left;
+    }
+
     .material-icon {
       margin: 0px @font-size-base / 2;
+
+      position: relative;
+      top: 4px;
     }
   }
 
@@ -38,15 +48,12 @@
 @media screen and (min-width: @screen-md-min) {
   .username-history {
     li {
+      display: block;
       overflow: auto;
     }
 
     .username-change-avatar {
-      float: left;
-
-      .user-avatar {
-        margin-right: @line-height-computed / 2;
-
+      a, span {
         img {
           width: 18px;
           height: 18px;
@@ -56,6 +63,7 @@
         }
       }
     }
+
     .username-change-author {
       float: left;
       width: 30%;

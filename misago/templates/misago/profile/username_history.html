@@ -32,11 +32,11 @@
         <li class="list-group-item">
           <div class="username-change-avatar">
             {% if change.changed_by %}
-              <a href="{{ change.changed_by.get_absolute_url }}" class="user-avatar">
+              <a href="{{ change.changed_by.get_absolute_url }}">
                 <img src="{{ change.changed_by|avatar:100 }}" alt="">
               </a>
             {% else %}
-              <span class="user-avatar">
+              <span>
                 <img src="{% blankavatar 100 %}" alt="">
               </span>
             {% endif %}
@@ -53,11 +53,15 @@
             {% endif %}
           </div>
           <div class="username-change">
-            {{ change.old_username }}
+            <span class="change-old-username">
+              {{ change.old_username }}
+            </span>
             <span class="material-icon">
               arrow_forward
             </span>
-            {{ change.new_username }}
+            <span class="change-new-username">
+              {{ change.new_username }}
+            </span>
           </div>
           <div class="username-change-date">
             <abbr title="{{ change.changed_on|date:"DATETIME_FORMAT" }}">

@@ -92,7 +92,7 @@ class Command(BaseCommand):
 
                 thread_type = random.randint(0, 100)
                 if thread_type > 95:
-                    thread_replies = random.randint(200, 500)
+                    thread_replies = random.randint(200, 2500)
                 elif thread_type > 50:
                     thread_replies = random.randint(5, 30)
                 else:

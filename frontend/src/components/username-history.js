@@ -6,13 +6,13 @@ export default class extends React.Component {
   renderUserAvatar(item) {
     if (item.changed_by) {
       /* jshint ignore:start */
-      return <a href={item.changed_by.absolute_url} className="user-avatar">
+      return <a href={item.changed_by.absolute_url} className="user-avatar-wrapper">
         <Avatar user={item.changed_by} size="100" />
       </a>;
       /* jshint ignore:end */
     } else {
       /* jshint ignore:start */
-      return <span className="user-avatar">
+      return <span className="user-avatar-wrapper">
         <Avatar size="100" />
       </span>;
       /* jshint ignore:end */
@@ -48,11 +48,15 @@ export default class extends React.Component {
               {this.renderUsername(item)}
             </div>
             <div className="username-change">
-              {item.old_username}
+              <span className="change-old-username">
+                {item.old_username}
+              </span>
               <span className="material-icon">
                 arrow_forward
               </span>
-              {item.new_username}
+              <span className="change-new-username">
+                {item.new_username}
+              </span>
             </div>
             <div className="username-change-date">
               <abbr title={item.changed_on.format('LLL')}>

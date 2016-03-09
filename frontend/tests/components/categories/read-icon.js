@@ -18,7 +18,7 @@ describe("Categories List Category Read Icon", function() {
     testUtils.render(<ReadIcon category={category} />);
     /* jshint ignore:end */
 
-    assert.equal($('#test-mount .material-icon.read-status.item-read').text(),
+    assert.equal($('#test-mount .read-status.item-read .material-icon').text(),
       'chat_bubble_outline',
       "proper icon is displayed");
 
@@ -37,7 +37,7 @@ describe("Categories List Category Read Icon", function() {
     testUtils.render(<ReadIcon category={category} />);
     /* jshint ignore:end */
 
-    assert.equal($('#test-mount .material-icon.read-status.item-new').text(),
+    assert.equal($('#test-mount .read-status.item-new .material-icon').text(),
       'chat_bubble',
       "proper icon is displayed");
 
@@ -56,7 +56,7 @@ describe("Categories List Category Read Icon", function() {
     testUtils.render(<ReadIcon category={category} />);
     /* jshint ignore:end */
 
-    assert.equal($('#test-mount .material-icon.read-status.item-read').text(),
+    assert.equal($('#test-mount .read-status.item-read .material-icon').text(),
       'lock_outline',
       "proper icon is displayed");
 
@@ -75,7 +75,7 @@ describe("Categories List Category Read Icon", function() {
     testUtils.render(<ReadIcon category={category} />);
     /* jshint ignore:end */
 
-    assert.equal($('#test-mount .material-icon.read-status.item-new').text(),
+    assert.equal($('#test-mount .read-status.item-new .material-icon').text(),
       'lock',
       "proper icon is displayed");
 

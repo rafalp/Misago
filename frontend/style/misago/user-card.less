@@ -41,11 +41,15 @@
 
     .user-subscript {
       margin-left: 76px;
+      overflow: auto;
 
       color: @text-muted;
       font-size: @font-size-base * 0.66;
 
       &>* {
+        display: block;
+        float: left;
+
         margin-right: 8px;
 
         .status-icon {
@@ -87,20 +91,12 @@
 
       li {
         display: table-cell;
+        overflow: auto;
         padding: @padding-base-vertical @padding-base-horizontal;
 
+        font-size: @font-size-small;
+        font-weight: bold;
         text-align: center;
-
-        strong {
-          font-size: @font-size-small;
-        }
-
-        small {
-          margin-left: 3px;
-
-          color: @text-muted;
-          font-size: @font-size-small;
-        }
       }
     }
   }
