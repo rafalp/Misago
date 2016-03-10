@@ -31,8 +31,8 @@ export default class extends Form {
         isLoaded: true,
 
         is_avatar_locked: options.is_avatar_locked,
-        avatar_lock_user_message: options.avatar_lock_user_message,
-        avatar_lock_staff_message: options.avatar_lock_staff_message
+        avatar_lock_user_message: options.avatar_lock_user_message || '',
+        avatar_lock_staff_message: options.avatar_lock_staff_message || ''
       });
     }, (rejection) => {
       this.setState({
