@@ -55,7 +55,7 @@ describe("QACaptcha", function() {
     captcha = new QACaptcha();
     captcha.init({
       get: function(setting) {
-        assert.equal(setting, 'CAPTCHA_API_URL', "valid setting is used");
+        assert.equal(setting, 'CAPTCHA_API', "valid setting is used");
         return '/test-api/captcha/';
       }
     }, ajax, {}, {});
@@ -90,7 +90,7 @@ describe("QACaptcha", function() {
     captcha = new QACaptcha();
     captcha.init({
       get: function(setting) {
-        assert.equal(setting, 'CAPTCHA_API_URL', "valid setting is used");
+        assert.equal(setting, 'CAPTCHA_API', "valid setting is used");
         return '/test-api/captcha/';
       }
     }, ajax, {}, snackbar);
@@ -120,7 +120,7 @@ describe("QACaptcha", function() {
     captcha = new QACaptcha();
     captcha.init({
       get: function(setting) {
-        assert.equal(setting, 'CAPTCHA_API_URL', "valid setting is used");
+        assert.equal(setting, 'CAPTCHA_API', "valid setting is used");
         return '/test-api/captcha/';
       }
     }, ajax, {}, {});

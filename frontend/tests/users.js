@@ -1,11 +1,11 @@
 import moment from 'moment';
 import assert from 'assert';
-import reducer, { updateAvatar, dehydrate, dehydrateStatus } from 'misago/reducers/users';
+import reducer, { updateAvatar, hydrate, hydrateStatus } from 'misago/reducers/users';
 
 describe("Users Reducer", function() {
-  it("dehydrates result", function() {
+  it("hydrates result", function() {
     let timestamp = moment().format();
-    let state = reducer([], dehydrate([
+    let state = reducer([], hydrate([
       {
         something: 'ok',
         status: null
@@ -58,10 +58,10 @@ describe("Users Reducer", function() {
   });
 });
 
-describe("Dehydrate User Status", function() {
-  it("dehydrates status", function() {
+describe("hydrate User Status", function() {
+  it("hydrates status", function() {
     let timestamp = moment().format();
-    let status = dehydrateStatus({
+    let status = hydrateStatus({
       some_key: true,
       last_click: timestamp,
       banned_until: null
@@ -72,6 +72,6 @@ describe("Dehydrate User Status", function() {
       "last click key was hydrated");
     assert.equal(status.banned_until, null, "ban date was hydrated");
 
-    assert.equal(dehydrateStatus(null), null, "null state was handled");
+    assert.equal(hydrateStatus(null), null, "null state was handled");
   });
 });

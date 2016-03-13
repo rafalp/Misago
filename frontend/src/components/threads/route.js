@@ -1,12 +1,14 @@
 import React from 'react'; // jshint ignore:line
+import Button from 'misago/components/button'; // jshint ignore:line
 import CategoryPicker from 'misago/components/threads/category-picker'; // jshint ignore:line
 import Header from 'misago/components/threads/header'; // jshint ignore:line
+import ThreadsListEmpty from 'misago/components/threads/list-empty'; // jshint ignore:line
 import { CompactNav } from 'misago/components/threads/navs'; // jshint ignore:line
 import { getPageTitle, getTitle } from 'misago/components/threads/title-utils';
 import ThreadsList from 'misago/components/threads-list/root'; // jshint ignore:line
 import WithDropdown from 'misago/components/with-dropdown';
 import misago from 'misago/index';
-import { hydrate } from 'misago/reducers/threads'; // jshint ignore:line
+import { append, hydrate } from 'misago/reducers/threads'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
 import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
@@ -25,7 +27,7 @@ export default class extends WithDropdown {
 
   initWithPreloadedData(data) {
     this.state = {
-      isLoaded: true,
+      isLoaded: false,
       isBusy: false,
 
       dropdown: false,
@@ -68,7 +70,11 @@ export default class extends WithDropdown {
       list: this.props.route.list.type,
       page: page || 1
     }, 'threads').then((data) => {
-      store.dispatch(hydrate(data.results));
+      if (page === 1) {
+        store.dispatch(hydrate(data.results));
+      } else {
+        store.dispatch(append(data.results));
+      }
 
       this.setState({
         isLoaded: true,
@@ -91,13 +97,29 @@ export default class extends WithDropdown {
     title.set(getPageTitle(this.props.route));
 
     if (misago.has('THREADS')) {
+      // unlike in other components, routes are root components for threads
+      // so we can't dispatch store action from constructor
       store.dispatch(hydrate(misago.pop('THREADS').results));
+
+      this.setState({
+        isLoaded: true
+      });
     }
   }
 
   getTitle() {
     return getTitle(this.props.route);
   }
+
+  /* jshint ignore:start */
+  loadMore = () => {
+    this.setState({
+      isBusy: true
+    });
+
+    this.loadThreads(this.state.page + 1);
+  };
+  /* jshint ignore:end */
 
   getClassName() {
     let className = 'page page-threads';
@@ -149,6 +171,21 @@ export default class extends WithDropdown {
     }
   }
 
+  getMoreButton() {
+    if (this.state.more) {
+      /* jshint ignore:start */
+      return <div className="pager-more">
+        <Button loading={this.state.isBusy}
+                onClick={this.loadMore}>
+          {gettext("Show more")}
+        </Button>
+      </div>;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
   render() {
     /* jshint ignore:start */
     return <div className={this.getClassName()}>
@@ -165,7 +202,15 @@ export default class extends WithDropdown {
         {this.getCategoryDescription()}
         {this.getToolbar()}
 
-        <ThreadsList />
+        <ThreadsList threads={this.props.threads}
+                     categories={this.props.route.categoriesMap}
+                     isLoaded={this.state.isLoaded}
+                     isBusy={this.state.isBusy}>
+          <ThreadsListEmpty category={this.props.route.category}
+                            list={this.props.route.list} />
+        </ThreadsList>
+
+        {this.getMoreButton()}
 
       </div>
     </div>;
