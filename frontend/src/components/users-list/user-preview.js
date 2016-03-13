@@ -53,22 +53,13 @@ export default class extends React.Component {
 
             <ul className="list-unstyled">
               <li className="user-posts-count">
-                <strong>
-                  <span className="ui-preview-text">&nbsp;</span>
-                </strong>
-                <small>{gettext("posts")}</small>
+                <span className="ui-preview-text" style={{width: random.int(40, 70) + "px"}}>&nbsp;</span>
               </li>
               <li className="user-threads-count">
-                <strong>
-                  <span className="ui-preview-text">&nbsp;</span>
-                </strong>
-                <small>{gettext("threads")}</small>
+                <span className="ui-preview-text" style={{width: random.int(40, 70) + "px"}}>&nbsp;</span>
               </li>
               <li className="user-followers-count">
-                <strong>
-                  <span className="ui-preview-text">&nbsp;</span>
-                </strong>
-                <small>{gettext("followers")}</small>
+                <span className="ui-preview-text" style={{width: random.int(40, 70) + "px"}}>&nbsp;</span>
               </li>
             </ul>
 

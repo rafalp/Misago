@@ -1,9 +1,8 @@
 //
-// Users Lists
+// Active posters list
 // --------------------------------------------------
 
 
-// Active posters list
 .active-posters {
   li {
     display: block;
@@ -14,22 +13,41 @@
     .rank-name, .user-title {
       font-size: @font-size-small;
     }
-
-    .status-icon {
-      width: 16px;
-      height: 16px;
-
-      margin-right: 2px;
-
-      font-size: 16px;
-      line-height: 16px;
-    }
   }
 
   .rank-position, .rank-posts-total, .rank-posts-counted {
     small {
       color: @text-muted;
     }
+  }
+}
+
+
+// User status
+.active-posters .user-status {
+  font-size: @font-size-small;
+
+  @media screen and (min-width: @screen-md-min) {
+    margin-right: @line-height-computed * .6;
+  }
+
+  .status-icon {
+    margin-right: 3px;
+
+    position: relative;
+    bottom: 2px;
+
+    &.ui-preview {
+      width: @font-size-small;
+    }
+  }
+
+  .ui-preview {
+    height: @font-size-small;
+    position: relative;
+
+    top: 2px;
+    bottom: auto;
   }
 }
 
@@ -62,20 +80,6 @@
 
       .rank-name {
         font-weight: normal;
-      }
-
-      .user-status {
-        margin-right: 4px;
-
-        .status-icon {
-          position: relative;
-          top: -1px;
-
-          &.ui-preview {
-            position: relative;
-            top: 1px;
-          }
-        }
       }
     }
 
@@ -131,17 +135,6 @@
 
 // Full displays
 @media screen and (min-width: @screen-md-min) {
-  .active-posters.ui-preview {
-    .rank-user {
-      .user-status {
-        .status-icon {
-          position: relative;
-          top: 2px;
-        }
-      }
-    }
-  }
-
   .active-posters {
     li>* {
       float: left;
@@ -161,24 +154,6 @@
         margin-top: 2px;
 
         font-size: @font-size-large;
-      }
-
-      .user-status {
-        margin-right: @line-height-computed * .6;
-
-        .status-icon {
-          position: relative;
-          top: -1px;
-
-          &.ui-preview {
-            top: 2px;
-          }
-        }
-
-        .status-label {
-          font-size: @font-size-small;
-          line-height: @font-size-small;
-        }
       }
 
       .rank-name {

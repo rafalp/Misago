@@ -41,6 +41,7 @@
 
     .user-subscript {
       margin-left: 76px;
+      margin-bottom: 0px;
       overflow: auto;
 
       color: @text-muted;
@@ -49,32 +50,33 @@
       &>* {
         display: block;
         float: left;
+        height: auto;
 
+        padding: 0px;
+        margin: 0px;
         margin-right: 8px;
 
         .status-icon {
-          width: 14px;
-          height: 14px;
-
-          margin-right: 2px;
+          margin-right: 3px;
 
           position: relative;
-          bottom: 2px;
+          bottom: 1px;
+        }
 
-          font-size: 14px;
-          line-height: 14px;
+        .ui-preview, .ui-preview-text {
+          height: @font-size-base * 0.66;
+
+          position: relative;
+          bottom: 0px;
+
+          font-size: @font-size-base * 0.66;
+          line-height: @font-size-base * 0.66;
         }
 
         .status-icon.ui-preview {
-          height: @font-size-base * 0.66;
           width: @font-size-base * 0.66;
-
-          position: relative;
-          bottom: -3px;
-        }
-
-        .status-label.ui-preview {
-          height: @font-size-base * 0.66;
+          margin-right: 0px;
+          bottom: 0px;
         }
       }
     }
@@ -107,13 +109,6 @@
     height: @font-size-large;
   }
 
-  .user-subscript .ui-preview-text {
-    height: @font-size-base * 0.66;
-
-    position: relative;
-    top: 0px;
-  }
-
   .user-card-stats .ui-preview-text {
     height: @font-size-small;
     width: 14px;
@@ -123,5 +118,28 @@
 
     font-size: @font-size-small;
     line-height: @font-size-small;
+  }
+}
+
+
+// compact down user card on mobile
+@media screen and (max-width: @screen-sm-max) {
+  .user-card {
+    .user-details {
+      .user-avatar img {
+        width: 46px;
+        height: 46px;
+      }
+
+      .user-name {
+        margin-left: 58px;
+        margin-top: @padding-small-vertical;
+        margin-bottom: @padding-base-vertical;
+      }
+
+      .user-subscript {
+        margin-left: 58px;
+      }
+    }
   }
 }

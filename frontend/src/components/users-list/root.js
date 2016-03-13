@@ -45,12 +45,16 @@ export default class extends React.Component {
       /* jshint ignore:start */
       let row = [];
       for (let i = 0; i < this.props.cols; i ++) {
-        row.push(i);
+        if (i === 0) {
+          row.push(this.getColClassName());
+        } else {
+          row.push(this.getColClassName() + ' hidden-xs hidden-sm');
+        }
       }
 
       return <div className="row">
-        {row.map((i) => {
-          return <div className={this.getColClassName()} key={i}>
+        {row.map((className, i) => {
+          return <div className={className} key={i}>
             <UserPreview showStatus={this.props.showStatus} />
           </div>;
         })}
