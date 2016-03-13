@@ -1,0 +1,32 @@
+{% extends "misago/base.html" %}
+{% load i18n misago_shorthands %}
+
+
+{% block title %}
+{% if is_index %}
+  {% if misago_settings.forum_index_title %}
+  {{ misago_settings.forum_index_title }}
+  {% else %}
+  {{ misago_settings.forum_name }}
+  {% endif %}
+{% else %}
+  {% trans "Categories" %} | {{ block.super }}
+{% endif %}
+{% endblock title %}
+
+
+{% block meta-description %}
+{% if is_index and misago_settings.forum_index_meta_description %}
+  {{ misago_settings.forum_index_meta_description }}
+{% endif %}
+{% endblock meta-description %}
+
+
+{% block content %}
+<div class="page page-categories {{ categories|iffalse:'page-message' }}">
+  {% include "misago/categories/header.html" %}
+  <div class="container">
+    {% include "misago/categories/body.html" %}
+  </div>
+</div>
+{% endblock content %}

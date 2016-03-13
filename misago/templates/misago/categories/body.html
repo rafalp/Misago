@@ -1,0 +1,23 @@
+{% load i18n %}
+{% if categories %}
+  <div id="categories-mount">
+    <div class="categories-list">
+      {% for category in categories %}
+        {% include "misago/categories/category.html" with category=category %}
+      {% endfor %}
+    </div>
+  </div>
+{% else %}
+  <div class="message-panel">
+
+    <div class="message-icon">
+      <span class="material-icon">info_outline</span>
+    </div>
+
+    <div class="message-body">
+      <p class="lead">{% trans "No categories are available." %}</p>
+      <p>{% trans "No categories are currently defined or you don't have permission to see them." %}</p>
+    </div>
+
+  </div>
+{% endif %}

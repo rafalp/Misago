@@ -1,0 +1,14 @@
+{% load i18n %}
+<div class="page-header">
+  <div class="container">
+    {% if is_index %}
+      {% if misago_settings.forum_index_title %}
+        <h1>{{ misago_settings.forum_index_title }}</h1>
+      {% else %}
+        <h1>{{ misago_settings.forum_name }}</h1>
+      {% endif %}
+    {% else %}
+      <h1>{% trans "Categories" %}</h1>
+    {% endif %}
+  </div>
+</div>

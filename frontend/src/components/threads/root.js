@@ -47,16 +47,22 @@ export function getLists() {
 export function paths() {
   let lists = getLists();
   let paths = [];
+  let categoriesMap = {};
+
 
   misago.get('CATEGORIES').forEach(function(category) {
     lists.forEach(function(list) {
+      categoriesMap[category.id] = categoriesMap;
+
       paths.push({
         path: category.absolute_url + list.path,
         component: connect(select)(Route),
-        category: category,
 
-        lists: lists,
-        list: list
+        categoriesMap,
+        category,
+
+        lists,
+        list
       });
     });
   });
