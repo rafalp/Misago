@@ -16,5 +16,5 @@ export default function initializer(context) {
 misago.addInitializer({
   name: 'component:profile',
   initializer: initializer,
-  after: 'reducer:profile-dehydrate'
+  after: 'reducer:profile-hydrate'
 });

@@ -3,7 +3,7 @@ import Button from 'misago/components/button'; // jshint ignore:line
 import Search from 'misago/components/search'; // jshint ignore:line
 import UsersList from 'misago/components/users-list/root'; // jshint ignore:line
 import misago from 'misago/index';
-import { dehydrate, append } from 'misago/reducers/users'; // jshint ignore:line
+import { hydrate, append } from 'misago/reducers/users'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
 import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
@@ -42,7 +42,7 @@ export default class extends React.Component {
       pages: data.pages
     };
 
-    store.dispatch(dehydrate(data.results));
+    store.dispatch(hydrate(data.results));
   }
 
   initWithoutPreloadedData() {
@@ -69,7 +69,7 @@ export default class extends React.Component {
       page: page || 1
     }, 'user-' + this.API_FILTER).then((data) => {
       if (page === 1) {
-        store.dispatch(dehydrate(data.results));
+        store.dispatch(hydrate(data.results));
       } else {
         store.dispatch(append(data.results));
       }

@@ -4,12 +4,13 @@ from django.shortcuts import *  # noqa
 
 
 def paginate(object_list, page, per_page, orphans=0,
-             allow_empty_first_page=True):
+             allow_empty_first_page=True,
+             allow_explicit_first_page=False):
     from django.http import Http404
     from django.core.paginator import Paginator, EmptyPage
     from misago.core.exceptions import ExplicitFirstPage
 
-    if page in (1, "1"):
+    if page in (1, "1") and not allow_explicit_first_page:
         raise ExplicitFirstPage()
     elif not page:
         page = 1

@@ -4,10 +4,10 @@ import Category from 'misago/components/categories/category'; // jshint ignore:l
 import misago from 'misago/index';
 import polls from 'misago/services/polls';
 
-let dehydrate = function(category) {
+let hydrate = function(category) {
   return Object.assign({}, category, {
     last_post_on: category.last_post_on ? moment(category.last_post_on) : null,
-    subcategories: category.subcategories.map(dehydrate)
+    subcategories: category.subcategories.map(hydrate)
   });
 };
 
@@ -16,7 +16,7 @@ export default class extends React.Component {
     super(props);
 
     this.state = {
-      categories: misago.get('CATEGORIES').map(dehydrate)
+      categories: misago.get('CATEGORIES').map(hydrate)
     };
 
     this.startPolling(misago.get('CATEGORIES_API'));
@@ -34,7 +34,7 @@ export default class extends React.Component {
   /* jshint ignore:start */
   update = (data) => {
     this.setState({
-      categories: data.map(dehydrate)
+      categories: data.map(hydrate)
     });
   };
   /* jshint ignore:end */

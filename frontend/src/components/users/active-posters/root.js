@@ -3,7 +3,7 @@ import ListEmpty from 'misago/components/users/active-posters/list-empty'; // js
 import ListLoading from 'misago/components/users/active-posters/list-loading'; // jshint ignore:line
 import List from 'misago/components/users/active-posters/list'; // jshint ignore:line
 import misago from 'misago/index';
-import { dehydrate } from 'misago/reducers/users';
+import { hydrate } from 'misago/reducers/users';
 import polls from 'misago/services/polls';
 import store from 'misago/services/store';
 import title from 'misago/services/page-title';
@@ -29,7 +29,7 @@ export default class extends React.Component {
       count: data.count
     };
 
-    store.dispatch(dehydrate(data.results));
+    store.dispatch(hydrate(data.results));
   }
 
   initWithoutPreloadedData() {
@@ -52,7 +52,7 @@ export default class extends React.Component {
 
   /* jshint ignore:start */
   update = (data) => {
-    store.dispatch(dehydrate(data.results));
+    store.dispatch(hydrate(data.results));
 
     this.setState({
       isLoaded: true,

@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 export const APPEND_USERS = 'APPEND_USERS';
-export const DEHYDRATE_USERS = 'DEHYDRATE_USERS';
+export const HYDRATE_USERS = 'HYDRATE_USERS';
 export const UPDATE_AVATAR = 'UPDATE_AVATAR';
 export const UPDATE_USERNAME = 'UPDATE_USERNAME';
 
@@ -12,14 +12,14 @@ export function append(items) {
   };
 }
 
-export function dehydrate(items) {
+export function hydrate(items) {
   return {
-    type: DEHYDRATE_USERS,
+    type: HYDRATE_USERS,
     items
   };
 }
 
-export function dehydrateStatus(status) {
+export function hydrateStatus(status) {
   if (status) {
     return Object.assign({}, status, {
       last_click: status.last_click ? moment(status.last_click) : null,
@@ -53,15 +53,15 @@ export default function user(state=[], action=null) {
       return state.concat(action.items.map(function(item) {
         return Object.assign({}, item, {
           joined_on: moment(item.joined_on),
-          status: dehydrateStatus(item.status)
+          status: hydrateStatus(item.status)
         });
       }));
 
-    case DEHYDRATE_USERS:
+    case HYDRATE_USERS:
       return action.items.map(function(item) {
         return Object.assign({}, item, {
           joined_on: moment(item.joined_on),
-          status: dehydrateStatus(item.status)
+          status: hydrateStatus(item.status)
         });
       });
 

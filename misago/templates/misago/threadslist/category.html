@@ -34,12 +34,13 @@
 {% block page-header %}
 <div class="page-header {{ user.is_authenticated|iftrue:"tabbed" }}">
   <div class="container">
-    <h1>
-      <a href="{{ category.parent.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="btn btn-default btn-aligned btn-icon btn-go-back pull-left">
-        <span class="material-icon">
-          keyboard_arrow_left
-        </span>
-      </a>
+    <a href="{{ category.parent.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="btn btn-default btn-aligned btn-icon btn-go-back pull-left">
+      <span class="material-icon">
+        keyboard_arrow_left
+      </span>
+    </a>
+
+    <h1 class="pull-left">
       {{ category.name }}
     </h1>
   </div>
@@ -52,8 +53,10 @@
 
 {% block list-container %}
   {% if category.description %}
-  <div class="lead category-description">
-    {{ category.description|escape|urlize|linebreaks|safe }}
+  <div class="category-description">
+    <div class="lead">
+      {{ category.description|escape|urlize|linebreaks|safe }}
+    </div>
   </div>
   {% endif %}
 

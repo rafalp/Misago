@@ -32,7 +32,7 @@ export class QACaptcha extends BaseCaptcha {
   load() {
     var self = this;
     return new Promise((resolve, reject) => {
-      self._ajax.get(self._context.get('CAPTCHA_API_URL')).then(
+      self._ajax.get(self._context.get('CAPTCHA_API')).then(
       function(data) {
         self.question = data.question;
         self.helpText = data.help_text;

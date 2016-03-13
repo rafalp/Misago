@@ -1,12 +1,12 @@
 import moment from 'moment';
-import { UPDATE_AVATAR, UPDATE_USERNAME, dehydrateStatus } from 'misago/reducers/users';
+import { UPDATE_AVATAR, UPDATE_USERNAME, hydrateStatus } from 'misago/reducers/users';
 
-export const DEHYDRATE_PROFILE = 'DEHYDRATE_PROFILE';
+export const HYDRATE_PROFILE = 'HYDRATE_PROFILE';
 export const PATCH_PROFILE = 'PATCH_PROFILE';
 
-export function dehydrate(profile) {
+export function hydrate(profile) {
   return {
-    type: DEHYDRATE_PROFILE,
+    type: HYDRATE_PROFILE,
     profile
   };
 }
@@ -20,10 +20,10 @@ export function patchProfile(patch) {
 
 export default function auth(state={}, action=null) {
   switch (action.type) {
-    case DEHYDRATE_PROFILE:
+    case HYDRATE_PROFILE:
       return Object.assign({}, action.profile, {
         joined_on: moment(action.profile.joined_on),
-        status: dehydrateStatus(action.profile.status)
+        status: hydrateStatus(action.profile.status)
       });
 
     case PATCH_PROFILE:

@@ -4,7 +4,7 @@ import moment from 'moment';
 
 export const ADD_NAME_CHANGE = 'ADD_NAME_CHANGE';
 export const APPEND_HISTORY = 'APPEND_HISTORY';
-export const DEHYDRATE_HISTORY = 'DEHYDRATE_HISTORY';
+export const HYDRATE_HISTORY = 'HYDRATE_HISTORY';
 
 export function addNameChange(change, user, changedBy) {
   return {
@@ -22,9 +22,9 @@ export function append(items) {
   };
 }
 
-export function dehydrate(items) {
+export function hydrate(items) {
   return {
-    type: DEHYDRATE_HISTORY,
+    type: HYDRATE_HISTORY,
     items: items
   };
 }
@@ -50,7 +50,7 @@ export default function username(state=[], action=null) {
         });
       }));
 
-    case DEHYDRATE_HISTORY:
+    case HYDRATE_HISTORY:
       return action.items.map(function(item) {
         return Object.assign({}, item, {
           changed_on: moment(item.changed_on)

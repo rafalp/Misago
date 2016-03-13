@@ -1,12 +1,12 @@
 import moment from 'moment';
 import assert from 'assert';
 import { updateAvatar, updateUsername } from 'misago/reducers/users';
-import reducer, { addNameChange, dehydrate, append } from 'misago/reducers/username-history';
+import reducer, { addNameChange, hydrate, append } from 'misago/reducers/username-history';
 
 describe("Username History Reducer", function() {
-  it("dehydrates result", function() {
+  it("hydrates result", function() {
     let timestamp = moment().format();
-    let state = reducer([], dehydrate([
+    let state = reducer([], hydrate([
       {
         something: 'ok',
         changed_on: timestamp

@@ -2,7 +2,7 @@ import React from 'react';
 import List from 'misago/components/users/rank/list' // jshint ignore:line
 import ListLoading from 'misago/components/users/rank/list-loading' // jshint ignore:line
 import misago from 'misago/index';
-import { dehydrate } from 'misago/reducers/users';
+import { hydrate } from 'misago/reducers/users';
 import polls from 'misago/services/polls';
 import store from 'misago/services/store';
 import title from 'misago/services/page-title';
@@ -24,7 +24,7 @@ export default class extends React.Component {
     this.state = Object.assign(data, {
       isLoaded: true
     });
-    store.dispatch(dehydrate(data.results));
+    store.dispatch(hydrate(data.results));
   }
 
   initWithoutPreloadedData() {
@@ -48,7 +48,7 @@ export default class extends React.Component {
 
   /* jshint ignore:start */
   update = (data) => {
-    store.dispatch(dehydrate(data.results));
+    store.dispatch(hydrate(data.results));
 
     data.isLoaded = true;
     this.setState(data);

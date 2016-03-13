@@ -10,7 +10,7 @@ import ModerationNav from 'misago/components/profile/moderation/nav'; // jshint 
 import { SideNav, CompactNav } from 'misago/components/profile/navs'; // jshint ignore:line
 import WithDropdown from 'misago/components/with-dropdown';
 import misago from 'misago/index';
-import { dehydrate } from 'misago/reducers/profile'; // jshint ignore:line
+import { hydrate } from 'misago/reducers/profile'; // jshint ignore:line
 import polls from 'misago/services/polls';
 import store from 'misago/services/store'; // jshint ignore:line
 
@@ -32,7 +32,7 @@ export default class extends WithDropdown {
 
   /* jshint ignore:start */
   update = (data) => {
-    store.dispatch(dehydrate(data));
+    store.dispatch(hydrate(data));
   };
 
   toggleNav = () => {

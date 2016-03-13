@@ -47,7 +47,7 @@ class BaseListEndpoint(object):
         queryset = self.get_queryset(
             request, categories, list_type).order_by('-last_post_on')
 
-        page = paginate(queryset, page, 24, 6)
+        page = paginate(queryset, page, 24, 6, allow_explicit_first_page=True)
         response_dict = pagination_dict(page, include_page_range=False)
 
         if list_type in ('new', 'unread'):
@@ -79,7 +79,7 @@ class BaseListEndpoint(object):
 
 class ThreadsListEndpoint(ThreadsListMixin, BaseListEndpoint):
     def get_category(self, request):
-        if 'category' in request.query_params:
+        if request.query_params.get('category'):
             category_id = get_int_or_404(request.query_params['category'])
             category = get_object_or_404(
                 Category.objects.select_related('parent'),
