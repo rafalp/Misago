@@ -8,6 +8,7 @@ describe("Username History Reducer", function() {
     let timestamp = moment().format();
     let state = reducer([], hydrate([
       {
+        id: 1,
         something: 'ok',
         changed_on: timestamp
       }
@@ -22,11 +23,13 @@ describe("Username History Reducer", function() {
     let timestamp = moment().format();
     let state = reducer([
       {
+        id: 1,
         order: 'first',
         changed_on: timestamp
       }
     ], append([
       {
+        id: 2,
         order: 'second',
         changed_on: timestamp
       }

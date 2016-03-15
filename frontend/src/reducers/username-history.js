@@ -1,6 +1,6 @@
-import { UPDATE_AVATAR, UPDATE_USERNAME } from 'misago/reducers/users';
-
 import moment from 'moment';
+import { UPDATE_AVATAR, UPDATE_USERNAME } from 'misago/reducers/users';
+import concatUnique from 'misago/utils/concat-unique';
 
 export const ADD_NAME_CHANGE = 'ADD_NAME_CHANGE';
 export const APPEND_HISTORY = 'APPEND_HISTORY';
@@ -29,6 +29,12 @@ export function hydrate(items) {
   };
 }
 
+export function hydrateNamechange(namechange) {
+  return Object.assign({}, namechange, {
+    changed_on: moment(namechange.changed_on)
+  });
+}
+
 export default function username(state=[], action=null) {
   switch (action.type) {
     case ADD_NAME_CHANGE:
@@ -44,18 +50,10 @@ export default function username(state=[], action=null) {
       return newState;
 
     case APPEND_HISTORY:
-      return state.concat(action.items.map(function(item) {
-        return Object.assign({}, item, {
-          changed_on: moment(item.changed_on)
-        });
-      }));
+      return concatUnique(state, action.items.map(hydrateNamechange));
 
     case HYDRATE_HISTORY:
-      return action.items.map(function(item) {
-        return Object.assign({}, item, {
-          changed_on: moment(item.changed_on)
-        });
-      });
+      return action.items.map(hydrateNamechange);
 
     case UPDATE_AVATAR:
       return state.map(function(item) {

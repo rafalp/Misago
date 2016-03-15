@@ -1,4 +1,5 @@
 import moment from 'moment';
+import concatUnique from 'misago/utils/concat-unique';
 
 export const APPEND_USERS = 'APPEND_USERS';
 export const HYDRATE_USERS = 'HYDRATE_USERS';
@@ -30,6 +31,13 @@ export function hydrateStatus(status) {
   }
 }
 
+export function hydrateUser(user) {
+  return Object.assign({}, user, {
+    joined_on: moment(user.joined_on),
+    status: hydrateStatus(user.status)
+  });
+}
+
 export function updateAvatar(user, avatarHash) {
   return {
     type: UPDATE_AVATAR,
@@ -50,20 +58,20 @@ export function updateUsername(user, username, slug) {
 export default function user(state=[], action=null) {
   switch (action.type) {
     case APPEND_USERS:
-      return state.concat(action.items.map(function(item) {
-        return Object.assign({}, item, {
-          joined_on: moment(item.joined_on),
-          status: hydrateStatus(item.status)
-        });
-      }));
+      let mergedState = concatUnique(state, action.items.map(hydrateUser));
+
+      return mergedState.sort(function(a, b) {
+        if (a.username < b.username) {
+          return -1;
+        } else if (a.username > b.username) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
 
     case HYDRATE_USERS:
-      return action.items.map(function(item) {
-        return Object.assign({}, item, {
-          joined_on: moment(item.joined_on),
-          status: hydrateStatus(item.status)
-        });
-      });
+      return action.items.map(hydrateUser);
 
     case UPDATE_AVATAR:
       return state.map(function(item) {

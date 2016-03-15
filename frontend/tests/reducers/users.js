@@ -1,6 +1,6 @@
 import moment from 'moment';
 import assert from 'assert';
-import reducer, { updateAvatar, hydrate, hydrateStatus } from 'misago/reducers/users';
+import reducer, { updateAvatar, append, hydrate, hydrateStatus } from 'misago/reducers/users';
 
 describe("Users Reducer", function() {
   it("hydrates result", function() {
@@ -25,6 +25,51 @@ describe("Users Reducer", function() {
     assert.equal(state[1].status.last_click.format(), timestamp,
       "reducer deserialized user's status");
     assert.equal(state[1].something, 'okie', "other keys were unconverted");
+  });
+
+  it("appends users to list", function() {
+    let state = [
+      {
+        id: 123,
+        username: 'Bob',
+        slug: 'bob',
+
+        joined_on: moment().format(),
+
+        status: {
+          is_offline: true
+        }
+      }
+    ];
+
+    let finalState = reducer(state, append([
+      {
+        id: 12,
+        username: 'Adam',
+        slug: 'adam',
+
+        joined_on: moment().format(),
+
+        status: {
+          is_offline: true
+        }
+      },
+      {
+        id: 123,
+        username: 'Bob',
+        slug: 'bob',
+
+        joined_on: moment().format(),
+
+        status: {
+          is_offline: true
+        }
+      }
+    ]));
+
+    assert.equal(finalState.length, 2, "final state has valid length");
+    assert.equal(finalState[0].username, 'Adam', "new user was prepended");
+    assert.equal(finalState[1].username, 'Bob', "Old user was preserved");
   });
 
   it("updates avatar", function() {
@@ -58,7 +103,7 @@ describe("Users Reducer", function() {
   });
 });
 
-describe("hydrate User Status", function() {
+describe("Hydrate User Status", function() {
   it("hydrates status", function() {
     let timestamp = moment().format();
     let status = hydrateStatus({

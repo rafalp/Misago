@@ -2,7 +2,7 @@ import assert from 'assert';
 import { StoreWrapper } from 'misago/services/store';
 import reducer, { initialState, doTick } from 'misago/reducers/tick';
 
-var store = null;
+let store = null;
 
 describe("Tick", function() {
   beforeEach(function() {

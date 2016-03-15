@@ -215,15 +215,7 @@ gulp.task('copyzxcvbn', function() {
 
 // Test task
 
-gulp.task('linttests', function() {
-  return gulp.src(['tests/**/*.js'])
-    .pipe(jshint())
-    .pipe(jshint.reporter('default'));
-});
-
-gulp.task('test', ['linttests', 'lintsource'], function() {
-  var mochify = require('mochify');
-
+var tests = (function() {
   var flag = process.argv.indexOf('--limit');
   var value = process.argv[flag + 1];
 
@@ -238,6 +230,18 @@ gulp.task('test', ['linttests', 'lintsource'], function() {
   } else {
     tests.push('tests/**/*.js');
   }
+
+  return tests;
+})();
+
+gulp.task('linttests', function() {
+  return gulp.src(tests)
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'));
+});
+
+gulp.task('test', ['linttests', 'lintsource'], function() {
+  var mochify = require('mochify');
 
   mochify(tests.join(" "), {
       reporter: 'spec'
