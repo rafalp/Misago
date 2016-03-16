@@ -65,10 +65,10 @@ class ThreadListSerializer(ThreadSerializer):
         )
 
     def get_last_poster_url(self, obj):
-        if self.last_poster_id:
-            return return reverse('misago:user', kwargs={
-                'user_slug': self.last_poster_slug,
-                'user_id': self.last_poster_id,
+        if obj.last_poster_id:
+            return reverse('misago:user', kwargs={
+                'user_slug': obj.last_poster_slug,
+                'user_id': obj.last_poster_id,
             })
         else:
             return None
