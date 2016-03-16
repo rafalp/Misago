@@ -44,6 +44,8 @@ class ThreadSerializer(serializers.ModelSerializer):
 
 class ThreadListSerializer(ThreadSerializer):
     category = serializers.PrimaryKeyRelatedField(read_only=True)
+    last_post = serializers.PrimaryKeyRelatedField(read_only=True)
+    last_poster_url = serializers.SerializerMethodField()
     top_category = serializers.SerializerMethodField()
 
     class Meta:
@@ -53,9 +55,23 @@ class ThreadListSerializer(ThreadSerializer):
             'title',
             'category',
             'top_category',
+            'started_on',
+            'last_post',
+            'last_poster_name',
+            'last_poster_url',
+            'last_post_on',
             'is_read',
             'acl',
         )
+
+    def get_last_poster_url(self, obj):
+        if self.last_poster_id:
+            return return reverse('misago:user', kwargs={
+                'user_slug': self.last_poster_slug,
+                'user_id': self.last_poster_id,
+            })
+        else:
+            return None
 
     def get_top_category(self, obj):
         try:
