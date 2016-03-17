@@ -13,19 +13,17 @@
   <div class="container">
 
     {% block list-container %}
-      {% if show_toolbar %}
+      {% if category.subcategories %}
       <div class="toolbar">
-        {% if category.subcategories %}
-          <ul class="list-inline subcategories-list">
-            {% for subcategory in category.subcategories %}
-            <li>
-              <a href="{{ subcategory.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="subcategory {% if subcategory.css_class %}subcategory-{{ subcategory.css_class }}{% endif %}">
-                {{ subcategory.name }}
-              </a>
-            </li>
-            {% endfor %}
-          </ul>
-        {% endif %}
+        <ul class="list-inline subcategories-list">
+          {% for subcategory in category.subcategories %}
+          <li>
+            <a href="{{ subcategory.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="subcategory {% if subcategory.css_class %}subcategory-{{ subcategory.css_class }}{% endif %}">
+              {{ subcategory.name }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
       </div>
       {% endif %}
 

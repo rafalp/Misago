@@ -88,15 +88,6 @@ class BaseList(View):
             if subcategory.pk in visible_subcategories:
                 category.subcategories.append(subcategory)
 
-        extra_context = self.get_extra_context(request)
-
-        show_toolbar = False
-        if paginator['count']:
-            if category.subcategories:
-                show_toolbar = True
-            if request.user.is_authenticated():
-                show_toolbar = True
-
         add_acl(request.user, page.object_list)
 
         request.frontend_context.update({
@@ -114,7 +105,6 @@ class BaseList(View):
 
         return render(request, self.template_name, dict(
             category=category,
-            show_toolbar=show_toolbar,
 
             list_type=list_type,
             list_name=LISTS_NAMES.get(list_type),
@@ -123,7 +113,7 @@ class BaseList(View):
             paginator=paginator,
             count=paginator['count'],
 
-            **extra_context
+            **self.get_extra_context(request)
         ))
 
 
