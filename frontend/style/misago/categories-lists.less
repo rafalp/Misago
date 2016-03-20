@@ -61,6 +61,8 @@
     .read-status {
       float: left;
 
+      cursor: help;
+
       .material-icon {
         margin: 0px;
         margin-right: 4px;
@@ -69,14 +71,14 @@
         position: relative;
         bottom: 1px;
 
-        color: @read-status-old;
+        color: @category-read-color;
         font-size: 24px;
         line-height: 24px;
         text-align: center;
       }
 
       &.item-new .material-icon {
-        color: @read-status-new;
+        color: @category-new-color;
       }
     }
   }

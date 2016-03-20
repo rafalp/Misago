@@ -5,4 +5,86 @@
 
 .threads-list {
   margin-bottom: @line-height-computed;
+
+  .list-group-item {
+    overflow: auto;
+  }
+}
+
+
+// Thread layout
+// --------------------------------------------------
+
+// Remove left padding from thread row
+.threads-list .thread-new, .threads-list .thread-read {
+  padding-left: 0px;
+}
+
+
+// Read icon
+.threads-list .read-status {
+  float: left;
+  padding-top: @thread-icon-padding;
+  width: @thread-icon-column;
+
+  text-align: center;
+
+  cursor: help;
+
+  .material-icon {
+    width: @thread-icon-width;
+    height: @thread-icon-width;
+
+    color: @thread-read-icon-color;
+    font-size: @thread-icon-width;
+    line-height: @thread-icon-width;
+  }
+}
+
+.threads-list .thread-new .read-status {
+  .material-icon {
+    color: @thread-new-icon-color;
+  }
+}
+
+
+// Thread body
+.threads-list .thread-main {
+  margin-left: @thread-icon-column;
+  overflow: auto;
+}
+
+
+// Thread top row
+// --------------------------------------------------
+
+// Thread title
+.threads-list .thread-title {
+  &, &:link, &:active, &:visited, &:hover, &:focus {
+    color: @thread-read-color;
+    font-size: @font-size-large;
+    font-weight: normal;
+  }
+}
+
+.threads-list .thread-new .thread-title {
+  &, &:link, &:active, &:visited, &:hover, &:focus {
+    color: @thread-new-color;
+  }
+}
+
+
+// Bottom row
+// --------------------------------------------------
+.threads-list .list-inline {
+  display: block;
+  float: none;
+  overflow: auto;
+
+  font-size: @font-size-small;
+
+  li {
+    display: block;
+    float: left;
+  }
 }

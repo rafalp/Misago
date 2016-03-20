@@ -16,6 +16,10 @@ class ThreadSerializer(serializers.ModelSerializer):
     category = BasicCategorySerializer()
     is_read = serializers.SerializerMethodField()
     top_category = BasicCategorySerializer()
+    last_poster_url = serializers.SerializerMethodField()
+    absolute_url = serializers.SerializerMethodField()
+    last_post_url = serializers.SerializerMethodField()
+    new_post_url = serializers.SerializerMethodField()
     acl = serializers.SerializerMethodField()
 
     class Meta:
@@ -25,7 +29,12 @@ class ThreadSerializer(serializers.ModelSerializer):
             'title',
             'category',
             'top_category',
+            'replies',
+            'is_closed',
             'is_read',
+            'absolute_url',
+            'last_post_url',
+            'new_post_url',
             'acl',
         )
 
@@ -34,6 +43,24 @@ class ThreadSerializer(serializers.ModelSerializer):
             return obj.is_read
         except AttributeError:
             return None
+
+    def get_last_poster_url(self, obj):
+        if obj.last_poster_id:
+            return reverse('misago:user', kwargs={
+                'user_slug': obj.last_poster_slug,
+                'user_id': obj.last_poster_id,
+            })
+        else:
+            return None
+
+    def get_absolute_url(self, obj):
+        return obj.get_absolute_url()
+
+    def get_last_post_url(self, obj):
+        return obj.get_last_post_url()
+
+    def get_new_post_url(self, obj):
+        return obj.get_new_post_url()
 
     def get_acl(self, obj):
         try:
@@ -45,7 +72,6 @@ class ThreadSerializer(serializers.ModelSerializer):
 class ThreadListSerializer(ThreadSerializer):
     category = serializers.PrimaryKeyRelatedField(read_only=True)
     last_post = serializers.PrimaryKeyRelatedField(read_only=True)
-    last_poster_url = serializers.SerializerMethodField()
     top_category = serializers.SerializerMethodField()
 
     class Meta:
@@ -55,23 +81,19 @@ class ThreadListSerializer(ThreadSerializer):
             'title',
             'category',
             'top_category',
+            'replies',
             'started_on',
             'last_post',
             'last_poster_name',
             'last_poster_url',
             'last_post_on',
+            'is_closed',
             'is_read',
+            'absolute_url',
+            'last_post_url',
+            'new_post_url',
             'acl',
         )
-
-    def get_last_poster_url(self, obj):
-        if obj.last_poster_id:
-            return reverse('misago:user', kwargs={
-                'user_slug': obj.last_poster_slug,
-                'user_id': obj.last_poster_id,
-            })
-        else:
-            return None
 
     def get_top_category(self, obj):
         try:

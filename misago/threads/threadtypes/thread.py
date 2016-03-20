@@ -15,7 +15,10 @@ class Thread(ThreadTypeBase):
         })
 
     def get_thread_absolute_url(self, thread):
-        return reverse('misago:thread', kwargs={
-            'thread_slug': thread.slug,
-            'thread_id': thread.id
-        })
+        return '/threads/not-implemented-yet-%s/' % thread.pk
+
+    def get_thread_last_post_url(self, thread):
+        return '/threads/not-implemented-yet-%s/last/' % thread.pk
+
+    def get_thread_new_post_url(self, thread):
+        return '/threads/not-implemented-yet-%s/new/' % thread.pk

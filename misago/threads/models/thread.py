@@ -140,6 +140,12 @@ class Thread(models.Model):
     def get_absolute_url(self):
         return self.thread_type.get_thread_absolute_url(self)
 
+    def get_last_post_url(self):
+        return self.thread_type.get_thread_last_post_url(self)
+
+    def get_new_post_url(self):
+        return self.thread_type.get_thread_new_post_url(self)
+
     def set_title(self, title):
         self.title = title
         self.slug = slugify(title)

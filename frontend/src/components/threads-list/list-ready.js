@@ -7,7 +7,10 @@ export default class extends React.Component {
     return <div className="threads-list ui-ready">
       <ul className="list-group">
         {this.props.threads.map((thread) => {
-          return <Thread thread={thread} key={thread.id} />
+          return <Thread categories={this.props.categories}
+                         thread={thread}
+                         list={this.props.list}
+                         key={thread.id} />
         })}
       </ul>
     </div>;

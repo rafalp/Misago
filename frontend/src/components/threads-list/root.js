@@ -10,6 +10,7 @@ export default class extends React.Component {
       if (this.props.threads.length > 0) {
         return <ListReady threads={this.props.threads}
                           categories={this.props.categories}
+                          list={this.props.list}
                           isBusy={this.props.isBusy} />;
       } else {
         return <ListEmpty>

@@ -204,6 +204,7 @@ export default class extends WithDropdown {
 
         <ThreadsList threads={this.props.threads}
                      categories={this.props.route.categoriesMap}
+                     list={this.props.route.list}
                      isLoaded={this.state.isLoaded}
                      isBusy={this.state.isBusy}>
           <ThreadsListEmpty category={this.props.route.category}
