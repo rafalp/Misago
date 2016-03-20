@@ -104,7 +104,7 @@ Authors
 Copyright and license
 =====================
 
-**Misago** - Copyright © 2014 `Rafał Pitoń <http://github.com/ralfp>`_
+**Misago** - Copyright © 2016 `Rafał Pitoń <http://github.com/ralfp>`_
 This program comes with ABSOLUTELY NO WARRANTY.
 
 This is free software and you are welcome to modify and redistribute it under the conditions described in the license.
