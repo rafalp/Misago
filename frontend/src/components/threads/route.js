@@ -4,7 +4,7 @@ import CategoryPicker from 'misago/components/threads/category-picker'; // jshin
 import Header from 'misago/components/threads/header'; // jshint ignore:line
 import ThreadsListEmpty from 'misago/components/threads/list-empty'; // jshint ignore:line
 import { CompactNav } from 'misago/components/threads/navs'; // jshint ignore:line
-import { getPageTitle, getTitle } from 'misago/components/threads/title-utils';
+import { getPageTitle, getTitle } from 'misago/components/threads/utils';
 import ThreadsList from 'misago/components/threads-list/root'; // jshint ignore:line
 import WithDropdown from 'misago/components/with-dropdown';
 import misago from 'misago/index';

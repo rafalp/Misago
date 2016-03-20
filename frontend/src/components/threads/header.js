@@ -43,8 +43,7 @@ export default class extends React.Component {
       /* jshint ignore:start */
       return <TabsNav baseUrl={this.props.route.category.absolute_url}
                       list={this.props.route.list}
-                      lists={this.props.route.lists}
-                      hideNav={this.props.hideNav} />;
+                      lists={this.props.route.lists} />;
       /* jshint ignore:end */
     } else {
       return null;

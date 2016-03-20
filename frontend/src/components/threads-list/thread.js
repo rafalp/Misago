@@ -4,7 +4,11 @@ export default class extends React.Component {
   render () {
     /* jshint ignore:start */
     return <li className="list-group-item">
-      {this.props.thread.title}
+      <div>
+        <a href={this.props.thread.absolute_url} className="item-title thread-title">
+          {this.props.thread.title}
+        </a>
+      </div>
     </li>;
     /* jshint ignore:end */
   }
