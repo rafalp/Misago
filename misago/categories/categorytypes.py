@@ -13,6 +13,18 @@ class RootCategory(Thread):
     def get_category_absolute_url(self, category):
         return reverse('misago:threads')
 
+    def get_last_thread_url(self, category):
+        return '/threads/%s-%s/last/' % (
+            category.last_thread_slug,
+            category.last_thread_id,
+        )
+
+    def get_unread_thread_url(self, category):
+        return '/threads/%s-%s/new/' % (
+            category.last_thread_slug,
+            category.last_thread_id,
+        )
+
 
 class Category(RootCategory):
     type_name = 'category'

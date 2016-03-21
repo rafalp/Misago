@@ -147,7 +147,10 @@ class Category(MPTTModel):
         return self.thread_type.get_category_absolute_url(self)
 
     def get_last_thread_url(self):
-        return self.thread_type.get_last_thread_url(self)
+        if getattr(self, 'is_read', True):
+            return self.thread_type.get_last_thread_url(self)
+        else:
+            return self.thread_type.get_unread_thread_url(self)
 
     def set_name(self, name):
         self.name = name

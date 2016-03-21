@@ -7,10 +7,11 @@ export default class extends React.Component {
     if (this.props.showStatus) {
       /* jshint ignore:start */
       return <span className="user-status">
-        <span className="status-icon ui-preview">
+        <span className="status-icon ui-preview-text">
           &nbsp;
         </span>
-        <span className="status-label ui-preview">
+        <span className="status-label ui-preview-text"
+              style={{width: random.int(30, 50) + "px"}}>
           &nbsp;
         </span>
       </span>;
@@ -35,7 +36,10 @@ export default class extends React.Component {
 
             <h4 className="user-name">
               <span className="item-title">
-                <span className="ui-preview-text" style={{width: random.int(60, 150) + "px"}}>&nbsp;</span>
+                <span className="ui-preview-text"
+                      style={{width: random.int(60, 150) + "px"}}>
+                  &nbsp;
+                </span>
               </span>
             </h4>
 
@@ -43,7 +47,10 @@ export default class extends React.Component {
 
               {this.getUserStatus()}
               <span className="user-joined-on">
-                <span className="ui-preview-text" style={{width: random.int(30, 50) + "px"}}>&nbsp;</span>
+                <span className="ui-preview-text"
+                      style={{width: random.int(30, 50) + "px"}}>
+                  &nbsp;
+                </span>
               </span>
 
             </p>
@@ -53,13 +60,22 @@ export default class extends React.Component {
 
             <ul className="list-unstyled">
               <li className="user-posts-count">
-                <span className="ui-preview-text" style={{width: random.int(40, 70) + "px"}}>&nbsp;</span>
+                <span className="ui-preview-text"
+                      style={{width: random.int(40, 70) + "px"}}>
+                  &nbsp;
+                </span>
               </li>
               <li className="user-threads-count">
-                <span className="ui-preview-text" style={{width: random.int(40, 70) + "px"}}>&nbsp;</span>
+                <span className="ui-preview-text"
+                      style={{width: random.int(40, 70) + "px"}}>
+                  &nbsp;
+                </span>
               </li>
               <li className="user-followers-count">
-                <span className="ui-preview-text" style={{width: random.int(40, 70) + "px"}}>&nbsp;</span>
+                <span className="ui-preview-text"
+                      style={{width: random.int(40, 70) + "px"}}>
+                  &nbsp;
+                </span>
               </li>
             </ul>
 
