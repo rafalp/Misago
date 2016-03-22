@@ -1,16 +1,9 @@
 import React from 'react';
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
 import Status, { StatusIcon, StatusLabel } from 'misago/components/user-status'; // jshint ignore:line
+import * as random from 'misago/utils/random'; // jshint ignore:line
 
 export default class extends React.Component {
-  getClassName() {
-    if (this.props.user.rank.css_class) {
-      return 'user-card user-card-' + this.props.user.rank.css_class + ' ui-ready';
-    } else {
-      return 'user-card ui-ready';
-    }
-  }
-
   getUserStatus() {
     if (this.props.showStatus) {
       if (this.props.user.status) {
@@ -26,10 +19,11 @@ export default class extends React.Component {
       } else {
         /* jshint ignore:start */
         return <span className="user-status">
-          <span className="status-icon ui-preview">
+          <span className="status-icon ui-preview-text">
             &nbsp;
           </span>
-          <span className="status-label ui-preview">
+          <span className="status-label ui-preview-text"
+                style={{width: random.int(30, 50) + "px"}}>
             &nbsp;
           </span>
         </span>;
@@ -118,6 +112,14 @@ export default class extends React.Component {
     return interpolate(message, {
       'followers': this.props.user.followers
     }, true);
+  }
+
+  getClassName() {
+    if (this.props.user.rank.css_class) {
+      return 'user-card user-card-' + this.props.user.rank.css_class + ' ui-ready';
+    } else {
+      return 'user-card ui-ready';
+    }
   }
 
   render() {
