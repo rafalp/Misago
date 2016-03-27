@@ -1,7 +1,7 @@
 import React from 'react';
 import ListEmpty from 'misago/components/users/active-posters/list-empty'; // jshint ignore:line
-import ListLoading from 'misago/components/users/active-posters/list-loading'; // jshint ignore:line
-import List from 'misago/components/users/active-posters/list'; // jshint ignore:line
+import ListPreview from 'misago/components/users/active-posters/list-preview'; // jshint ignore:line
+import ListReady from 'misago/components/users/active-posters/list-ready'; // jshint ignore:line
 import misago from 'misago/index';
 import { hydrate } from 'misago/reducers/users';
 import polls from 'misago/services/polls';
@@ -78,9 +78,9 @@ export default class extends React.Component {
     if (this.state.isLoaded) {
       if (this.state.count > 0) {
         /* jshint ignore:start */
-        return <List users={this.props.users}
-                     trackedPeriod={this.state.trackedPeriod}
-                     count={this.state.count} />;
+        return <ListReady users={this.props.users}
+                          trackedPeriod={this.state.trackedPeriod}
+                          count={this.state.count} />;
         /* jshint ignore:end */
       } else {
         /* jshint ignore:start */
@@ -89,7 +89,7 @@ export default class extends React.Component {
       }
     } else {
       /* jshint ignore:start */
-      return <ListLoading />;
+      return <ListPreview />;
       /* jshint ignore:end */
     }
   }

@@ -4,6 +4,10 @@ import UserPreview from 'misago/components/users-list/user-preview' // jshint ig
 import batch from 'misago/utils/batch'; // jshint ignore:line
 
 export default class extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    return nextProps.isLoaded;
+  }
+
   getPager() {
     if (this.props.pages > 1) {
       /* jshint ignore:start */

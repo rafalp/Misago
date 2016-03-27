@@ -3,87 +3,79 @@
 // --------------------------------------------------
 
 
-.username-history {
-  .username-change-avatar {
-    float: left;
-
-    a, span {
-      margin-right: @line-height-computed / 2;
-
-      img {
-        width: 42px;
-        height: 42px;
-      }
-    }
-  }
-
-  .empty-message {
-    text-align: center;
-  }
-
-  .username-change {
+// Change tabular on larger displays
+.username-history li {
+  @media screen and (min-width: @screen-md-min) {
+    display: block;
     overflow: auto;
-
-    span {
-      display: block;
-      float: left;
-    }
-
-    .material-icon {
-      margin: 0px @font-size-base / 2;
-
-      position: relative;
-      top: 4px;
-    }
-  }
-
-  .username-change-date {
-    color: @text-muted;
-    font-size: @font-size-small;
   }
 }
 
 
-// Full displays
-@media screen and (min-width: @screen-md-min) {
-  .username-history {
-    li {
-      display: block;
-      overflow: auto;
+// Change avatar
+.username-history .change-avatar {
+  float: left;
+
+  a, span {
+    margin-right: @line-height-computed / 2;
+
+    img {
+      width: 42px;
+      height: 42px;
     }
+  }
 
-    .username-change-avatar {
-      a, span {
-        img {
-          width: 18px;
-          height: 18px;
+  @media screen and (min-width: @screen-md-min) {
+    a, span {
+      img {
+        width: 18px;
+        height: 18px;
 
-          position: relative;
-          bottom: 1px;
-        }
-      }
-    }
-
-    .username-change-author {
-      float: left;
-      width: 30%;
-    }
-
-    .username-change {
-      float: left;
-      width: 40%;
-    }
-
-    .username-change-date {
-      float: left;
-      width: 20%;
-    }
-
-    &.ui-ready {
-      .username-change-date {
         position: relative;
-        top: 2px;
+        bottom: 1px;
       }
     }
+  }
+}
+
+
+// Change author
+.username-history .change-author {
+  @media screen and (min-width: @screen-md-min) {
+    float: left;
+    width: 30%;
+  }
+}
+
+
+// Old to new name change
+.username-history .change {
+  min-height: @line-height-computed; // we need that for ui-preview-text
+  overflow: auto;
+
+  span {
+    display: block;
+    float: left;
+  }
+
+  .material-icon {
+    margin: 0px @font-size-base / 2;
+
+    position: relative;
+    top: 4px;
+  }
+
+  @media screen and (min-width: @screen-md-min) {
+    float: left;
+    width: 40%;
+  }
+}
+
+
+// Date
+.username-history .change-date {
+  @media screen and (min-width: @screen-md-min) {
+    float: left;
+    width: 20%;
   }
 }

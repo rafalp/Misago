@@ -3,6 +3,10 @@ import Avatar from 'misago/components/avatar'; // jshint ignore:line
 import * as random from 'misago/utils/random'; // jshint ignore:line
 
 export default class extends React.Component {
+  shouldComponentUpdate() {
+    return false;
+  }
+
   getUserStatus() {
     if (this.props.showStatus) {
       /* jshint ignore:start */

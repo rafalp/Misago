@@ -23,7 +23,7 @@ describe("Users List Item", function() {
 
     testUtils.onElement('#test-mount .user-card.ui-ready', function() {
       assert.ok(true, "component renders");
-      assert.ok($('#test-mount .status-label.ui-preview').length,
+      assert.ok($('#test-mount .status-label.ui-preview-text').length,
         "status preview is rendered");
 
       assert.equal($('#test-mount .user-title').text(), user.title,

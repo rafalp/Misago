@@ -3,7 +3,7 @@ import React from 'react';
 import FormLoading from 'misago/components/options/change-username/form-loading'; // jshint ignore:line
 import FormLocked from 'misago/components/options/change-username/form-locked'; // jshint ignore:line
 import Form from 'misago/components/options/change-username/form'; // jshint ignore:line
-import UsernameHistory from 'misago/components/username-history'; // jshint ignore:line
+import UsernameHistory from 'misago/components/username-history/root'; // jshint ignore:line
 import misago from 'misago/index';
 import { hydrate, addNameChange } from 'misago/reducers/username-history'; // jshint ignore:line
 import { updateUsername } from 'misago/reducers/users'; // jshint ignore:line

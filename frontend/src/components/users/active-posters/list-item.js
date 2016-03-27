@@ -3,6 +3,7 @@ import { Link } from 'react-router'; // jshint ignore:line
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
 import Status, { StatusIcon, StatusLabel } from 'misago/components/user-status'; // jshint ignore:line
 import misago from 'misago/index'; // jshint ignore:line
+import * as random from 'misago/utils/random'; // jshint ignore:line
 
 export default class extends React.Component {
   getClassName() {
@@ -27,10 +28,11 @@ export default class extends React.Component {
     } else {
       /* jshint ignore:start */
       return <span className="user-status">
-        <span className="status-icon ui-preview">
+        <span className="status-icon ui-preview-text">
           &nbsp;
         </span>
-        <span className="status-label ui-preview hidden-xs hidden-sm">
+        <span className="status-label ui-preview-text hidden-xs hidden-sm"
+              style={{width: random.int(30, 50) + "px"}}>
           &nbsp;
         </span>
       </span>;
@@ -42,13 +44,13 @@ export default class extends React.Component {
     if (this.props.rank.is_tab) {
       /* jshint ignore:start */
       let rankUrl = misago.get('USERS_LIST_URL') + this.props.rank.slug + '/';
-      return <Link to={rankUrl} className="item-title rank-name">
+      return <Link to={rankUrl} className="rank-name item-title">
         {this.props.rank.name}
       </Link>;
       /* jshint ignore:end */
     } else {
       /* jshint ignore:start */
-      return <span className="item-title rank-name">
+      return <span className="rank-name item-title">
         {this.props.rank.name}
       </span>;
       /* jshint ignore:end */
@@ -82,9 +84,11 @@ export default class extends React.Component {
             {this.props.user.username}
           </a>
         </div>
-        {this.getUserStatus()}
-        {this.getRankName()}
-        {this.getUserTitle()}
+        <div className="user-details">
+          {this.getUserStatus()}
+          {this.getRankName()}
+          {this.getUserTitle()}
+        </div>
       </div>
 
       <div className="rank-position">

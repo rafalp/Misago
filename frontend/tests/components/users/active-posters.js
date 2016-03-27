@@ -2,8 +2,8 @@ import assert from 'assert';
 import React from 'react'; // jshint ignore:line
 import ListEmpty from 'misago/components/users/active-posters/list-empty'; // jshint ignore:line
 import ListItem from 'misago/components/users/active-posters/list-item'; // jshint ignore:line
-import ListLoading from 'misago/components/users/active-posters/list-loading'; // jshint ignore:line
-import List from 'misago/components/users/active-posters/list'; // jshint ignore:line
+import ListPreview from 'misago/components/users/active-posters/list-preview'; // jshint ignore:line
+import ListReady from 'misago/components/users/active-posters/list-ready'; // jshint ignore:line
 import Root from 'misago/components/users/active-posters/root'; // jshint ignore:line
 import misago from 'misago/index';
 import reducer from 'misago/reducers/users';
@@ -37,9 +37,9 @@ describe("Active Posters List", function() {
     ];
 
     testUtils.render(
-      <List users={users}
-            trackedPeriod={30}
-            count={2} />
+      <ListReady users={users}
+                 trackedPeriod={30}
+                 count={2} />
     );
     /* jshint ignore:end */
 
@@ -136,7 +136,7 @@ describe("Active Posters List Loading", function() {
 
   it("renders", function(done) {
     /* jshint ignore:start */
-    testUtils.render(<ListLoading />);
+    testUtils.render(<ListPreview />);
     /* jshint ignore:end */
 
     testUtils.onElement('#test-mount .active-posters.ui-preview', function() {

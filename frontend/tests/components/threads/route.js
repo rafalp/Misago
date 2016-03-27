@@ -3,7 +3,7 @@ import moment from 'moment'; // jshint ignore:line
 import React from 'react'; // jshint ignore:line
 import Route from 'misago/components/threads/route'; // jshint ignore:line
 import misago from 'misago/index';
-import reducer from 'misago/reducers/threads';
+import reducer, { hydrateThread } from 'misago/reducers/threads'; // jshint ignore:line
 import title from 'misago/services/page-title';
 import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
@@ -105,6 +105,7 @@ let thread = {
   top_category: 1,
   started_on: moment().format(),
   last_post: 3,
+  last_post_url: '/thread/test-thread-132/last/',
   last_poster_name: 'BobBoberson',
   last_poster_url: null,
   last_post_on: moment().format(),
@@ -163,13 +164,14 @@ describe("Threads List Route", function() {
 
     /* jshint ignore:start */
     let threads = [
-      thread
+      hydrateThread(thread)
     ];
     testUtils.render(<Route route={route} threads={threads} />);
     /* jshint ignore:end */
 
     testUtils.onElement('#test-mount .thread-title', function(element) {
-      assert.equal($('.threads-list li').length, 1, "one thread was rendered");
+      assert.equal($('.threads-list .item-read').length, 1,
+        "one thread was rendered");
 
       assert.equal($('.page-header h1').text(), "Lorem",
         "category name is shown in header");

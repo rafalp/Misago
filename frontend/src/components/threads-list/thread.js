@@ -39,7 +39,7 @@ export default class extends React.Component {
       return <li className="thread-path">
         <Category category={top} list={this.props.list} />
         <span className="path-separator material-icon">
-          chevron_right
+          arrow_forward
         </span>
         <Category category={bottom} list={this.props.list} />
       </li>;

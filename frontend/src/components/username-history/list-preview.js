@@ -1,5 +1,5 @@
 import React from 'react';
-import ThreadPreview from 'misago/components/threads-list/thread-preview'; // jshint ignore:line
+import ChangePreview from 'misago/components/username-history/change-preview'; // jshint ignore:line
 
 export default class extends React.Component {
   shouldComponentUpdate() {
@@ -8,10 +8,10 @@ export default class extends React.Component {
 
   render () {
     /* jshint ignore:start */
-    return <div className="threads-list ui-preview">
+    return <div className="username-history ui-preview">
       <ul className="list-group">
         {[0, 1, 2].map((i) => {
-          return <ThreadPreview hiddenOnMobile={i > 0} key={i} />
+          return <ChangePreview hiddenOnMobile={i > 0} key={i} />
         })}
       </ul>
     </div>;
