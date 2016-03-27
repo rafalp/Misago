@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 
 from misago.conf import settings
 
+from misago.users.models import Online
 from misago.users.testutils import UserTestCase
 
 
@@ -46,7 +47,9 @@ class UserCreateTests(UserTestCase):
 
         User = get_user_model()
         User.objects.get_by_username('Bob')
-        User.objects.get_by_email('bob@bob.com')
+
+        test_user = User.objects.get_by_email('bob@bob.com')
+        self.assertEqual(Online.objects.filter(user=test_user).count(), 1)
 
         response = self.client.get(reverse('misago:index'))
         self.assertIn('Bob', response.content)

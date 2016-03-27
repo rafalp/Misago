@@ -1,8 +1,8 @@
 from hashlib import md5
 
-from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
-                                        UserManager as BaseUserManager,
-                                        AnonymousUser as DjangoAnonymousUser)
+from django.contrib.auth.models import (
+    AbstractBaseUser, PermissionsMixin, UserManager as BaseUserManager,
+    AnonymousUser as DjangoAnonymousUser)
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError, models, transaction
@@ -100,8 +100,13 @@ class UserManager(BaseUserManager):
                 extra_fields['subscribe_to_replied_threads'] = new_value
 
             now = timezone.now()
-            user = self.model(is_staff=False, is_superuser=False,
-                              last_login=now, joined_on=now, **extra_fields)
+            user = self.model(
+                is_staff=False,
+                is_superuser=False,
+                last_login=now,
+                joined_on=now,
+                **extra_fields
+            )
 
             user.set_username(username)
             user.set_email(email)
@@ -124,6 +129,13 @@ class UserManager(BaseUserManager):
             user.update_acl_key()
 
             user.save(update_fields=['avatar_hash', 'acl_key'])
+
+            # populate online tracker with default value
+            Online.objects.create(
+                user=user,
+                current_ip=extra_fields['joined_from_ip'],
+                last_click=now,
+            )
 
             return user
 

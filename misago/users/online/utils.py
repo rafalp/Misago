@@ -28,8 +28,10 @@ def get_user_status(user, acl):
         user_status['banned_until'] = user_ban.expires_on
 
     try:
-        if not user.is_hiding_presence or acl['can_see_hidden_users']:
-            online_tracker = user.online_tracker
+        online_tracker = user.online_tracker
+        is_hidden = user.is_hiding_presence and not acl['can_see_hidden_users']
+
+        if online_tracker and not is_hidden:
             if online_tracker.last_click >= timezone.now() - ACTIVITY_CUTOFF:
                 user_status['is_online'] = True
                 user_status['last_click'] = online_tracker.last_click
@@ -64,11 +66,11 @@ def make_users_status_aware(users, acl, fetch_state=False):
     if fetch_state:
         # Fill ban cache on users
         for ban_cache in BanCache.objects.filter(user__in=users_dict.keys()):
-            user.ban_cache = ban_cache
+            users_dict[ban_cache.user_id].ban_cache = ban_cache
 
         # Fill user online trackers
         for online_tracker in Online.objects.filter(user__in=users_dict.keys()):
-            user.online_tracker = online_tracker
+            users_dict[online_tracker.user_id].online_tracker = online_tracker
 
     # Fill user states
     for user in users:
