@@ -1,4 +1,4 @@
-let map = {
+const map = {
   '&': '&amp;',
   '<': '&lt;',
   '>': '&gt;',
@@ -6,6 +6,6 @@ let map = {
   "'": '&#039;'
 };
 
-export default function escapeHtml(text) {
+export default function(text) {
   return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
