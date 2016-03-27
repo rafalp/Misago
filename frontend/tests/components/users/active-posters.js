@@ -63,7 +63,7 @@ describe("Active Posters List Item", function() {
     testUtils.unmountComponents();
   });
 
-  it("renders with ui-preview", function(done) {
+  it("renders with UI preview", function(done) {
     let user = testUtils.mockUser();
     user.meta = {score: 42};
     user.title = "Lorem ipsum";
@@ -77,7 +77,7 @@ describe("Active Posters List Item", function() {
 
     testUtils.onElement('#test-mount .list-group-item', function() {
       assert.ok(true, "component renders");
-      assert.ok($('#test-mount .status-icon.ui-preview').length,
+      assert.ok($('#test-mount .status-icon.ui-preview-text').length,
         "status preview is rendered");
 
       assert.equal($('#test-mount .rank-name').text().trim(), user.rank.name,
