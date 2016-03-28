@@ -24,8 +24,9 @@ describe("Categories List Category", function() {
       "css_class": "accent",
       "is_read": false,
       "subcategories": [],
-      "absolute_url": "/categories/#games-3",
-      "last_thread_url": "/not-yet-implemented/",
+      "absolute_url": "/category/games-3/",
+      "last_thread_url": "/thread/test-thread-132/",
+      "last_post_url": "/thread/test-thread-132/last/",
       "last_poster_url": "/user/raelyn-74/",
       "acl": {
         "can_browse": true,
@@ -67,8 +68,9 @@ describe("Categories List Category", function() {
       "css_class": "accent",
       "is_read": false,
       "subcategories": [],
-      "absolute_url": "/categories/#games-3",
-      "last_thread_url": "/not-yet-implemented/",
+      "absolute_url": "/category/games-3/",
+      "last_thread_url": "/thread/test-thread-132/",
+      "last_post_url": "/thread/test-thread-132/last/",
       "last_poster_url": "/user/raelyn-74/",
       "acl": {
         "can_browse": true,
@@ -118,8 +120,9 @@ describe("Categories List Category", function() {
           "css_class": "subaccent",
           "is_read": false,
           "subcategories": [],
-          "absolute_url": "/categories/#games-3",
-          "last_thread_url": "/not-yet-implemented/",
+          "absolute_url": "/category/games-3/",
+          "last_thread_url": "/thread/test-thread-132/",
+          "last_post_url": "/thread/test-thread-132/last/",
           "last_poster_url": "/user/raelyn-74/",
           "acl": {
             "can_browse": true,
@@ -127,8 +130,9 @@ describe("Categories List Category", function() {
           }
         }
       ],
-      "absolute_url": "/categories/#games-3",
-      "last_thread_url": "/not-yet-implemented/",
+      "absolute_url": "/category/games-3/",
+      "last_thread_url": "/thread/test-thread-132/",
+      "last_post_url": "/thread/test-thread-132/last/",
       "last_poster_url": "/user/raelyn-74/",
       "acl": {
         "can_browse": true,
@@ -181,8 +185,9 @@ describe("Categories List Category", function() {
           "css_class": "subaccent",
           "is_read": false,
           "subcategories": [],
-          "absolute_url": "/categories/#games-3",
-          "last_thread_url": "/not-yet-implemented/",
+          "absolute_url": "/category/games-3/",
+          "last_thread_url": "/thread/test-thread-132/",
+          "last_post_url": "/thread/test-thread-132/last/",
           "last_poster_url": "/user/raelyn-74/",
           "acl": {
             "can_browse": true,
@@ -190,8 +195,9 @@ describe("Categories List Category", function() {
           }
         }
       ],
-      "absolute_url": "/categories/#games-3",
-      "last_thread_url": "/not-yet-implemented/",
+      "absolute_url": "/category/games-3/",
+      "last_thread_url": "/thread/test-thread-132/",
+      "last_post_url": "/thread/test-thread-132/last/",
       "last_poster_url": "/user/raelyn-74/",
       "acl": {
         "can_browse": true,
@@ -252,8 +258,9 @@ describe("Categories List Category", function() {
               "css_class": "subsubaccent",
               "is_read": false,
               "subcategories": [],
-              "absolute_url": "/categories/#games-3",
-              "last_thread_url": "/not-yet-implemented/",
+              "absolute_url": "/category/games-3/",
+              "last_thread_url": "/thread/test-thread-132/",
+              "last_post_url": "/thread/test-thread-132/last/",
               "last_poster_url": "/user/raelyn-74/",
               "acl": {
                 "can_browse": true,
@@ -261,8 +268,9 @@ describe("Categories List Category", function() {
               }
             }
           ],
-          "absolute_url": "/categories/#games-3",
-          "last_thread_url": "/not-yet-implemented/",
+          "absolute_url": "/category/games-3/",
+          "last_thread_url": "/thread/test-thread-132/",
+          "last_post_url": "/thread/test-thread-132/last/",
           "last_poster_url": "/user/raelyn-74/",
           "acl": {
             "can_browse": true,
@@ -270,8 +278,9 @@ describe("Categories List Category", function() {
           }
         }
       ],
-      "absolute_url": "/categories/#games-3",
-      "last_thread_url": "/not-yet-implemented/",
+      "absolute_url": "/category/games-3/",
+      "last_thread_url": "/thread/test-thread-132/",
+      "last_post_url": "/thread/test-thread-132/last/",
       "last_poster_url": "/user/raelyn-74/",
       "acl": {
         "can_browse": true,

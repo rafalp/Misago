@@ -3,9 +3,9 @@ import { Link } from 'react-router'; // jshint ignore:line
 import ReadIcon from 'misago/components/threads-list/read-icon'; // jshint ignore:line
 import escapeHtml from 'misago/utils/escape-html';
 
-const LAST_POSTER_URL = '<a href="%(url)s" class="item-title">%(user)s</a>';
-const LAST_POSTER_SPAN = '<span class="item-title">%(user)s</span>';
-const LAST_REPLY_URL = '<a href="%(url)s" class="goto-last" title="%(absolute)s">%(relative)s</a>';
+const LAST_POSTER_URL = '<a href="%(url)s" class="poster-title">%(user)s</a>';
+const LAST_POSTER_SPAN = '<span class="poster-title">%(user)s</span>';
+const LAST_REPLY_URL = '<a href="%(url)s" class="last-title" title="%(absolute)s">%(relative)s</a>';
 
 export class Category extends React.Component {
   getClassName() {
@@ -124,7 +124,7 @@ export default class extends React.Component {
     /* jshint ignore:start */
     return <li className="thread-last-reply"
                dangerouslySetInnerHTML={{__html: interpolate(
-      escapeHtml(gettext("last reply %(date)s by %(user)s")), {
+      escapeHtml(gettext("last reply by %(user)s %(date)s")), {
         date: this.getLastReplyDate(),
         user: this.getLastPoster()
       }, true)}} />;

@@ -22,8 +22,9 @@ let categories = [
     "css_class": "accent",
     "is_read": false,
     "subcategories": [],
-    "absolute_url": "/categories/#games-3",
-    "last_thread_url": "/not-yet-implemented/",
+    "absolute_url": "/category/games-3/",
+    "last_thread_url": "/thread/test-thread-132/",
+    "last_post_url": "/thread/test-thread-132/last/",
     "last_poster_url": "/user/raelyn-74/",
     "acl": {
       "can_browse": true,
@@ -76,7 +77,8 @@ let categories = [
             "is_read": false,
             "subcategories": [],
             "absolute_url": "/category/multiplayer-7/",
-            "last_thread_url": "/not-yet-implemented/",
+            "last_thread_url": "/thread/test-thread-134/",
+            "last_post_url": "/thread/test-thread-134/last/",
             "last_poster_url": "/user/morton-30/",
             "acl": {
               "can_browse": true,
@@ -97,7 +99,8 @@ let categories = [
             "is_read": false,
             "subcategories": [],
             "absolute_url": "/category/single-player-8/",
-            "last_thread_url": "/not-yet-implemented/",
+            "last_thread_url": "/thread/test-thread-135/",
+            "last_post_url": "/thread/test-thread-135/last/",
             "last_poster_url": "/user/myrna-18/",
             "acl": {
               "can_browse": true,
@@ -106,7 +109,8 @@ let categories = [
           }
         ],
         "absolute_url": "/category/action-5/",
-        "last_thread_url": "/not-yet-implemented/",
+        "last_thread_url": "/thread/test-thread-136/",
+        "last_post_url": "/thread/test-thread-136/last/",
         "last_poster_url": "/user/myrna-52/",
         "acl": {
           "can_browse": true,
@@ -127,7 +131,8 @@ let categories = [
         "is_read": false,
         "subcategories": [],
         "absolute_url": "/category/sandbox-6/",
-        "last_thread_url": "/not-yet-implemented/",
+        "last_thread_url": "/thread/test-thread-137/",
+        "last_post_url": "/thread/test-thread-137/last/",
         "last_poster_url": "/user/camille-29/",
         "acl": {
           "can_browse": true,
@@ -135,8 +140,9 @@ let categories = [
         }
       }
     ],
-    "absolute_url": "/categories/#second-category-4",
-    "last_thread_url": "/not-yet-implemented/",
+    "absolute_url": "/category/second-category-4/",
+    "last_thread_url": "/thread/test-thread-133/",
+    "last_post_url": "/thread/test-thread-133/last/",
     "last_poster_url": "/user/myrna-88/",
     "acl": {
       "can_browse": true,

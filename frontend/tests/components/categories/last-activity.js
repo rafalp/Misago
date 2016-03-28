@@ -20,7 +20,7 @@ describe("Categories List Category Last Activity", function() {
     testUtils.render(<LastActivity category={category} />);
     /* jshint ignore:end */
 
-    let element = $('#test-mount .thread-message');
+    let element = $('#test-mount .category-thread-message');
 
     assert.ok(element.text().indexOf("category is protected") !== 1,
       "category is protected message is displayed");
@@ -40,7 +40,7 @@ describe("Categories List Category Last Activity", function() {
     testUtils.render(<LastActivity category={category} />);
     /* jshint ignore:end */
 
-    let element = $('#test-mount .thread-message');
+    let element = $('#test-mount .category-thread-message');
 
     assert.ok(element.text().indexOf("category is private") !== 1,
       "category is private message is displayed");
@@ -62,7 +62,7 @@ describe("Categories List Category Last Activity", function() {
     testUtils.render(<LastActivity category={category} />);
     /* jshint ignore:end */
 
-    let element = $('#test-mount .thread-message');
+    let element = $('#test-mount .category-thread-message');
 
     assert.ok(element.text().indexOf("category is empty") !== 1,
       "category is empty message is displayed");
@@ -74,6 +74,7 @@ describe("Categories List Category Last Activity", function() {
     let category = {
       last_thread_title: "Misago Test Thread",
       last_thread_url: '/test-thread/url-123/',
+      last_post_url: '/test-thread/url-123/last/',
 
       last_poster_name: 'BobBoberson',
       last_poster_url: null,
@@ -90,27 +91,32 @@ describe("Categories List Category Last Activity", function() {
     testUtils.render(<LastActivity category={category} />);
     /* jshint ignore:end */
 
-    assert.equal($('#test-mount .thread-title a').attr('href'),
+    assert.equal($('#test-mount .thread-title').attr('href'),
       category.last_thread_url,
       "thread url is displayed");
 
-    assert.equal($('#test-mount .thread-title a').text(),
+    assert.equal($('#test-mount .thread-title').text(),
       category.last_thread_title,
       "thread name is displayed");
 
-    assert.equal($('#test-mount .poster-name span.item-title').text(),
+    assert.equal($('#test-mount span.poster-title').text(),
       category.last_poster_name,
       "non-anchor poster name is displayed");
 
-    assert.equal($('#test-mount .thread-date abbr').text(),
+    assert.equal($('#test-mount .last-title').text(),
       "3 days ago",
       "last post date is displayed");
+
+    assert.equal($('#test-mount .last-title').attr('href'),
+      category.last_post_url,
+      "last post url is displayed");
   });
 
   it("renders thread", function() {
     let category = {
       last_thread_title: "Misago Test Thread",
       last_thread_url: '/test-thread/url-123/',
+      last_post_url: '/test-thread/url-123/last/',
 
       last_poster_name: 'BobBoberson',
       last_poster_url: '/user/bobberson-13213/',
@@ -127,24 +133,28 @@ describe("Categories List Category Last Activity", function() {
     testUtils.render(<LastActivity category={category} />);
     /* jshint ignore:end */
 
-    assert.equal($('#test-mount .thread-title a').attr('href'),
+    assert.equal($('#test-mount .thread-title').attr('href'),
       category.last_thread_url,
       "thread url is displayed");
 
-    assert.equal($('#test-mount .thread-title a').text(),
+    assert.equal($('#test-mount .thread-title').text(),
       category.last_thread_title,
       "thread name is displayed");
 
-    assert.equal($('#test-mount .poster-name a.item-title').attr('href'),
+    assert.equal($('#test-mount a.poster-title').attr('href'),
       category.last_poster_url,
       "url to poster's profile is displayed");
 
-    assert.equal($('#test-mount .poster-name a.item-title').text(),
+    assert.equal($('#test-mount a.poster-title').text(),
       category.last_poster_name,
       "non-anchor poster name is displayed");
 
-    assert.equal($('#test-mount .thread-date abbr').text(),
+    assert.equal($('#test-mount .last-title').text(),
       "3 days ago",
       "last post date is displayed");
+
+    assert.equal($('#test-mount .last-title').attr('href'),
+      category.last_post_url,
+      "last post url is displayed");
   });
 });

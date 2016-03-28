@@ -20,6 +20,7 @@ class CategorySerializer(serializers.ModelSerializer):
     subcategories = serializers.SerializerMethodField()
     absolute_url = serializers.SerializerMethodField()
     last_poster_url = serializers.SerializerMethodField()
+    last_post_url = serializers.SerializerMethodField()
     last_thread_url = serializers.SerializerMethodField()
     acl = serializers.SerializerMethodField()
 
@@ -41,6 +42,7 @@ class CategorySerializer(serializers.ModelSerializer):
             'subcategories',
             'absolute_url',
             'last_thread_url',
+            'last_post_url',
             'last_poster_url',
             'acl',
         )
@@ -80,6 +82,9 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def get_last_thread_url(self, obj):
         return obj.get_last_thread_url()
+
+    def get_last_post_url(self, obj):
+        return obj.get_last_post_url()
 
     def get_last_poster_url(self, obj):
         if obj.last_poster_id:

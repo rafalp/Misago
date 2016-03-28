@@ -103,9 +103,10 @@
 // Subcategories upper margin
 .panel-category .category-subcategories {
   .subcategories-list {
-    margin-top: @line-height-computed / 2;
+    margin-top: 0px;
 
     a, a:link, a:visited, a:active, a:hover, a:focus {
+      margin-top: @line-height-computed / 2;
       padding: @padding-small-vertical @padding-small-horizontal;
 
       font-size: @font-size-small;
@@ -115,30 +116,31 @@
 
 
 // Last activity
-.category-last-activity {
-  overflow: auto;
+.category-last-post {
+  margin-top: 6px;
+  margin-bottom: 0px;
+}
 
-  li {
+
+// Category message
+.category-thread-message {
+  overflow: auto;
+  margin-top: 6px;
+  margin-bottom: 0px;
+
+  .material-icon {
     display: block;
     float: left;
-  }
 
-  .thread-message {
-    overflow: auto;
+    margin-right: 4px;
+    position: relative;
+    top: 1px;
 
-    .material-icon {
-      display: block;
-      float: left;
-
-      margin-right: 4px;
-      position: relative;
-      top: 1px;
-
-      font-size: 18px;
-      line-height: 18px;
-    }
+    font-size: 18px;
+    line-height: 18px;
   }
 }
+
 
 // Compact displays
 @media screen and (max-width: @screen-sm-max) {
