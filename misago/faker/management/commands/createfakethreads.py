@@ -139,7 +139,10 @@ class Command(BaseCommand):
         self.stdout.write('\nPinning %s threads...' % pinned_threads)
         for i in xrange(0, pinned_threads):
             thread = Thread.objects.order_by('?')[:1][0]
-            thread.is_pinned = True
+            if random.randint(0, 100) > 75:
+                thread.weight = 2
+            else:
+                thread.weight = 1
             thread.save()
 
         for category in categories:

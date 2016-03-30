@@ -79,7 +79,7 @@ class Migration(migrations.Migration):
                 ('last_post_on', models.DateTimeField(db_index=True)),
                 ('last_poster_name', models.CharField(max_length=255, null=True, blank=True)),
                 ('last_poster_slug', models.CharField(max_length=255, null=True, blank=True)),
-                ('is_pinned', models.BooleanField(default=False, db_index=True)),
+                ('weight', models.PositiveIntegerField(default=0)),
                 ('is_poll', models.BooleanField(default=False)),
                 ('is_moderated', models.BooleanField(default=False, db_index=True)),
                 ('is_hidden', models.BooleanField(default=False)),
@@ -88,6 +88,16 @@ class Migration(migrations.Migration):
             options={
             },
             bases=(models.Model,),
+        ),
+        CreatePartialIndex(
+            field='Thread.weight',
+            index_name='misago_thread_is_global',
+            condition='weight = 2',
+        ),
+        CreatePartialIndex(
+            field='Thread.weight',
+            index_name='misago_thread_is_local',
+            condition='weight < 2',
         ),
         migrations.CreateModel(
             name='ThreadParticipant',
@@ -184,5 +194,19 @@ class Migration(migrations.Migration):
                 ('category', 'last_post_on'),
                 ('category', 'replies'),
             ]),
+        ),
+        migrations.CreateModel(
+            name='Subscription',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('last_read_on', models.DateTimeField(default=django.utils.timezone.now)),
+                ('send_email', models.BooleanField(default=False)),
+                ('category', models.ForeignKey(to='misago_categories.Category')),
+                ('thread', models.ForeignKey(to='misago_threads.Thread')),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
         ),
     ]

@@ -18,7 +18,7 @@ def make_read_aware(user, target):
 
 def make_threads_read_aware(user, threads):
     if not threads:
-        return None
+        return
 
     if user.is_anonymous():
         make_read(threads)

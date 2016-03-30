@@ -13,6 +13,24 @@ __all__ = [
 ]
 
 
+def last_activity_detail(f):
+    """util for serializing last activity details"""
+    def decorator(self, obj):
+        if not obj.last_thread_id:
+            return None
+
+        acl = self.get_acl(obj)
+        if not all(
+                acl.get('can_see'),
+                acl.get('can_browse'),
+                acl.get('can_see_all_threads')
+            ):
+            return None
+
+        return f(self, obj)
+    return decorator
+
+
 class CategorySerializer(serializers.ModelSerializer):
     parent = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
@@ -80,12 +98,15 @@ class CategorySerializer(serializers.ModelSerializer):
     def get_absolute_url(self, obj):
         return obj.get_absolute_url()
 
+    @last_activity_detail
     def get_last_thread_url(self, obj):
         return obj.get_last_thread_url()
 
+    @last_activity_detail
     def get_last_post_url(self, obj):
         return obj.get_last_post_url()
 
+    @last_activity_detail
     def get_last_poster_url(self, obj):
         if obj.last_poster_id:
             return reverse('misago:user', kwargs={

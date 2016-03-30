@@ -1,5 +1,4 @@
 from django.db import models
-
 from misago.conf import settings
 
 

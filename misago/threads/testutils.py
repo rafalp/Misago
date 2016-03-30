@@ -8,8 +8,8 @@ from misago.threads.models import Thread, Post
 
 
 def post_thread(category, title='Test thread', poster='Tester',
-                is_pinned=False, is_moderated=False, is_hidden=False,
-                is_closed=False, started_on=None):
+                is_global=False, is_pinned=False, is_moderated=False,
+                is_hidden=False, is_closed=False, started_on=None):
     started_on = started_on or timezone.now()
 
     kwargs = {
@@ -18,11 +18,15 @@ def post_thread(category, title='Test thread', poster='Tester',
         'slug': slugify(title),
         'started_on': started_on,
         'last_post_on': started_on,
-        'is_pinned': is_pinned,
         'is_moderated': is_moderated,
         'is_hidden': is_hidden,
         'is_closed': is_closed,
     }
+
+    if is_global:
+        kwargs['weight'] = 2
+    elif is_pinned:
+        kwargs['weight'] = 1
 
     try:
         kwargs.update({

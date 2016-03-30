@@ -131,6 +131,34 @@ export default class extends React.Component {
     /* jshint ignore:end */
   }
 
+  getOptions() {
+    /* jshint ignore:start */
+    return <ul className="list-inline thread-options">
+      <li>
+        <button className="btn btn-default">
+          <span className="material-icon">
+            mail_outline
+          </span>
+        </button>
+      </li>
+      <li>
+        <button className="btn btn-default">
+          <span className="material-icon">
+            edit
+          </span>
+        </button>
+      </li>
+      <li>
+        <button className="btn btn-default">
+          <span className="material-icon">
+            check_box_outline_blank
+          </span>
+        </button>
+      </li>
+    </ul>
+    /* jshint ignore:end */
+  }
+
   getClassName() {
     if (this.props.thread.is_read) {
       return 'list-group-item thread-read';
@@ -151,13 +179,14 @@ export default class extends React.Component {
         </a>
 
         <ul className="list-inline">
-          {this.getPath()}
-          {this.getClosedLabel()}
           {this.getNewLabel()}
+          {this.getClosedLabel()}
+          {this.getPath()}
           {this.getRepliesCount()}
           {this.getLastReply()}
         </ul>
       </div>
+      {this.getOptions()}
 
     </li>;
     /* jshint ignore:end */

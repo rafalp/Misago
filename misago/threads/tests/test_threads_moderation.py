@@ -18,47 +18,85 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
     def reload_thread(self):
         self.thread = Thread.objects.get(pk=self.thread.pk)
 
-    def test_pin_thread(self):
-        """pin_thread makes thread pinned"""
-        self.assertFalse(self.thread.is_pinned)
-        self.assertTrue(moderation.pin_thread(self.user, self.thread))
+    def test_announce_thread(self):
+        """announce_thread makes announcement"""
+        self.assertEqual(self.thread.weight, 0)
+        self.assertTrue(moderation.announce_thread(self.user, self.thread))
 
         self.reload_thread()
-        self.assertTrue(self.thread.is_pinned)
+        self.assertEqual(self.thread.weight, 2)
 
         self.assertTrue(self.thread.has_events)
         event = self.thread.event_set.last()
 
         self.assertEqual(event.icon, "star")
-        self.assertIn("pinned thread.", event.message)
+        self.assertIn("into an announcement.", event.message)
 
-    def test_pin_invalid_thread(self):
-        """pin_thread returns false for already pinned thread"""
-        self.thread.is_pinned = True
+    def test_announce_invalid_thread(self):
+        """announce_thread returns false for already announced thread"""
+        self.thread.weight = 2
 
-        self.assertFalse(moderation.pin_thread(self.user, self.thread))
-        self.assertTrue(self.thread.is_pinned)
+        self.assertFalse(moderation.announce_thread(self.user, self.thread))
+        self.assertEqual(self.thread.weight, 2)
 
-    def test_unpin_thread(self):
-        """unpin_thread defaults thread weight"""
-        moderation.pin_thread(self.user, self.thread)
-
-        self.assertTrue(self.thread.is_pinned)
-        self.assertTrue(moderation.unpin_thread(self.user, self.thread))
+    def test_pin_thread(self):
+        """pin_thread makes thread pinned"""
+        self.assertEqual(self.thread.weight, 0)
+        self.assertTrue(moderation.pin_thread(self.user, self.thread))
 
         self.reload_thread()
-        self.assertFalse(self.thread.is_pinned)
+        self.assertEqual(self.thread.weight, 1)
 
         self.assertTrue(self.thread.has_events)
         event = self.thread.event_set.last()
 
-        self.assertIn("unpinned thread.", event.message)
+        self.assertEqual(event.icon, "bookmark")
+        self.assertIn("pinned thread.", event.message)
+
+    def test_pin_invalid_thread(self):
+        """pin_thread returns false for already pinned thread"""
+        self.thread.weight = 1
+
+        self.assertFalse(moderation.pin_thread(self.user, self.thread))
+        self.assertEqual(self.thread.weight, 1)
+
+    def test_remove_announced_thread_weight(self):
+        """unpin_thread defaults announced thread weight"""
+        moderation.announce_thread(self.user, self.thread)
+
+        self.assertEqual(self.thread.weight, 2)
+        self.assertTrue(moderation.remove_thread_weight(self.user, self.thread))
+
+        self.reload_thread()
+        self.assertEqual(self.thread.weight, 0)
+
+        self.assertTrue(self.thread.has_events)
+        event = self.thread.event_set.last()
+
+        self.assertIn("removed thread weight.", event.message)
         self.assertEqual(event.icon, "circle")
 
-    def test_unpin_invalid_thread(self):
-        """unpin_thread returns false for already pinned thread"""
-        self.assertFalse(moderation.unpin_thread(self.user, self.thread))
-        self.assertFalse(self.thread.is_pinned)
+    def test_remove_pinned_thread_weight(self):
+        """unpin_thread defaults pinned thread weight"""
+        moderation.pin_thread(self.user, self.thread)
+
+        self.assertEqual(self.thread.weight, 1)
+        self.assertTrue(moderation.remove_thread_weight(self.user, self.thread))
+
+        self.reload_thread()
+        self.assertEqual(self.thread.weight, 0)
+
+        self.assertTrue(self.thread.has_events)
+        event = self.thread.event_set.last()
+
+        self.assertIn("removed thread weight.", event.message)
+        self.assertEqual(event.icon, "circle")
+
+    def test_remove_weightless_thread_weight(self):
+        """remove_thread_weight returns false for already weightless thread"""
+        self.assertFalse(
+            moderation.remove_thread_weight(self.user, self.thread))
+        self.assertEqual(self.thread.weight, 0)
 
     def test_approve_thread(self):
         """approve_thread approves moderated thread"""

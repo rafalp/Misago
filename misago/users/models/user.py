@@ -26,15 +26,21 @@ __all__ = [
     'ACTIVATION_REQUIRED_NONE',
     'ACTIVATION_REQUIRED_USER',
     'ACTIVATION_REQUIRED_ADMIN',
+
     'AUTO_SUBSCRIBE_NONE',
-    'AUTO_SUBSCRIBE_WATCH',
-    'AUTO_SUBSCRIBE_WATCH_AND_EMAIL',
+    'AUTO_SUBSCRIBE_NOTIFY',
+    'AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL',
     'AUTO_SUBSCRIBE_CHOICES',
+
     'LIMITS_PRIVATE_THREAD_INVITES_TO_NONE',
     'LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED',
     'LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY',
     'PRIVATE_THREAD_INVITES_LIMITS_CHOICES',
-    'AnonymousUser', 'User', 'UsernameChange', 'Online',
+
+    'AnonymousUser',
+    'User',
+    'UsernameChange',
+    'Online',
 ]
 
 
@@ -44,14 +50,14 @@ ACTIVATION_REQUIRED_ADMIN = 2
 
 
 AUTO_SUBSCRIBE_NONE = 0
-AUTO_SUBSCRIBE_WATCH = 1
-AUTO_SUBSCRIBE_WATCH_AND_EMAIL = 2
+AUTO_SUBSCRIBE_NOTIFY = 1
+AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL = 2
 
 AUTO_SUBSCRIBE_CHOICES = (
-    (AUTO_SUBSCRIBE_NONE, _("Do nothing")),
-    (AUTO_SUBSCRIBE_WATCH, _("Bookmark")),
-    (AUTO_SUBSCRIBE_WATCH_AND_EMAIL,
-     _("Bookmark with e-mail notification"))
+    (AUTO_SUBSCRIBE_NONE, _("No")),
+    (AUTO_SUBSCRIBE_NOTIFY, _("Notify")),
+    (AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL,
+     _("Notify with e-mail"))
 )
 
 
@@ -87,8 +93,8 @@ class UserManager(BaseUserManager):
 
             WATCH_DICT = {
                 'no': AUTO_SUBSCRIBE_NONE,
-                'watch': AUTO_SUBSCRIBE_WATCH,
-                'watch_email': AUTO_SUBSCRIBE_WATCH_AND_EMAIL,
+                'watch': AUTO_SUBSCRIBE_NOTIFY,
+                'watch_email': AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL,
             }
 
             if not 'subscribe_to_started_threads' in extra_fields:
@@ -197,15 +203,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         'Rank', null=True, blank=True, on_delete=models.PROTECT)
     title = models.CharField(max_length=255, null=True, blank=True)
     requires_activation = models.PositiveIntegerField(
-        default=ACTIVATION_REQUIRED_NONE)
-    is_staff = models.BooleanField(
-        _('staff status'), default=False,
-        help_text=_('Designates whether the user can log into admin sites.'))
+        default=ACTIVATION_REQUIRED_NONE
+    )
+    is_staff = models.BooleanField(_('staff status'),
+        default=False,
+        help_text=_('Designates whether the user can log into admin sites.'),
+    )
     roles = models.ManyToManyField('misago_acl.Role')
     acl_key = models.CharField(max_length=12, null=True, blank=True)
 
     is_avatar_locked = models.BooleanField(default=False)
-    avatar_hash = models.CharField(max_length=8)
+    avatar_hash = models.CharField(max_length=8, default='-')
     avatar_crop = models.CharField(max_length=255, null=True, blank=True)
     avatar_lock_user_message = models.TextField(null=True, blank=True)
     avatar_lock_staff_message = models.TextField(null=True, blank=True)
@@ -223,22 +231,29 @@ class User(AbstractBaseUser, PermissionsMixin):
     followers = models.PositiveIntegerField(default=0)
     following = models.PositiveIntegerField(default=0)
 
-    follows = models.ManyToManyField(
-        'self', related_name='followed_by', symmetrical=False)
-    blocks = models.ManyToManyField(
-        'self', related_name='blocked_by', symmetrical=False)
+    follows = models.ManyToManyField('self',
+        related_name='followed_by',
+        symmetrical=False,
+    )
+    blocks = models.ManyToManyField('self',
+        related_name='blocked_by',
+        symmetrical=False,
+    )
 
     new_notifications = models.PositiveIntegerField(default=0)
 
     limits_private_thread_invites_to = models.PositiveIntegerField(
-        default=LIMITS_PRIVATE_THREAD_INVITES_TO_NONE)
+        default=LIMITS_PRIVATE_THREAD_INVITES_TO_NONE
+    )
     unread_private_threads = models.PositiveIntegerField(default=0)
     sync_unread_private_threads = models.BooleanField(default=False)
 
     subscribe_to_started_threads = models.PositiveIntegerField(
-        default=AUTO_SUBSCRIBE_NONE)
+        default=AUTO_SUBSCRIBE_NONE
+    )
     subscribe_to_replied_threads = models.PositiveIntegerField(
-        default=AUTO_SUBSCRIBE_NONE)
+        default=AUTO_SUBSCRIBE_NONE
+    )
 
     threads = models.PositiveIntegerField(default=0)
     posts = models.PositiveIntegerField(default=0, db_index=True)

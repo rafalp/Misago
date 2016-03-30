@@ -29,35 +29,35 @@ export default class extends Form {
       {
         'value': 0,
         'icon': 'help_outline',
-        'label': gettext('Everybody')
+        'label': gettext("Everybody")
       },
       {
         'value': 1,
         'icon': 'done_all',
-        'label': gettext('Users I follow')
+        'label': gettext("Users I follow")
       },
       {
         'value': 2,
         'icon': 'highlight_off',
-        'label': gettext('Nobody')
+        'label': gettext("Nobody")
       }
     ];
 
     this.subscribeToChoices = [
       {
         'value': 0,
-        'icon': 'bookmark_border',
-        'label': gettext('No')
+        'icon': 'notifications_none',
+        'label': gettext("No")
       },
       {
         'value': 1,
-        'icon': 'bookmark',
-        'label': gettext('Bookmark')
+        'icon': 'notifications',
+        'label': gettext("Notify")
       },
       {
         'value': 2,
         'icon': 'mail',
-        'label': gettext('Bookmark with e-mail notification')
+        'label': gettext("Notify with e-mail")
       }
     ];
   }
