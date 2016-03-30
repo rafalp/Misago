@@ -5,11 +5,6 @@
 
 .threads-list {
   margin-bottom: @line-height-computed;
-
-  .list-group-item {
-    overflow: auto;
-    position: relative;
-  }
 }
 
 
@@ -80,11 +75,10 @@
 .threads-list .list-inline {
   display: block;
   float: none;
-  overflow: auto;
 
   font-size: @font-size-small;
 
-  li {
+  &>li {
     display: block;
     float: left;
   }
@@ -94,9 +88,30 @@
 // Thread options
 // --------------------------------------------------
 .threads-list .thread-options {
+  float: right;
   margin: 0px;
 
-  position: absolute;
-  top: @padding-large-vertical + 4px;
-  right: @padding-large-horizontal;
+  margin-top: @line-height-computed * -2 + 2px;
+
+  .btn-default {
+    padding: 4px;
+
+    color: @gray-light;
+
+    &:hover, &:active {
+      color: @gray;
+    }
+
+    .material-icon {
+      margin: 0px;
+      position: relative;
+      top: 0px;
+
+      width: 24px;
+      height: 24px;
+
+      font-size: 24px;
+      line-height: 24px;
+    }
+  }
 }

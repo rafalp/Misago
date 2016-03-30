@@ -15,11 +15,12 @@ __all__ = [
 class ThreadSerializer(serializers.ModelSerializer):
     category = BasicCategorySerializer()
     is_read = serializers.SerializerMethodField()
-    top_category = BasicCategorySerializer()
     last_poster_url = serializers.SerializerMethodField()
     absolute_url = serializers.SerializerMethodField()
     last_post_url = serializers.SerializerMethodField()
     new_post_url = serializers.SerializerMethodField()
+    subscription = serializers.SerializerMethodField()
+    api_url = serializers.SerializerMethodField()
     acl = serializers.SerializerMethodField()
 
     class Meta:
@@ -28,13 +29,15 @@ class ThreadSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'category',
-            'top_category',
             'replies',
             'is_closed',
             'is_read',
             'absolute_url',
+            'last_poster_url',
             'last_post_url',
             'new_post_url',
+            'subscription',
+            'api_url',
             'acl',
         )
 
@@ -61,6 +64,18 @@ class ThreadSerializer(serializers.ModelSerializer):
 
     def get_new_post_url(self, obj):
         return obj.get_new_post_url()
+
+    def get_subscription(self, obj):
+        try:
+            return obj.subscription.send_email
+        except AttributeError:
+            return None
+
+    def get_api_url(self, obj):
+        return {
+            'subscribe': reverse(
+                'misago:api:thread-subscribe', kwargs={'pk': obj.pk}),
+        }
 
     def get_acl(self, obj):
         try:
@@ -92,6 +107,8 @@ class ThreadListSerializer(ThreadSerializer):
             'absolute_url',
             'last_post_url',
             'new_post_url',
+            'subscription',
+            'api_url',
             'acl',
         )
 

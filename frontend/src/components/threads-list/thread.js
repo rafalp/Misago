@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router'; // jshint ignore:line
 import ReadIcon from 'misago/components/threads-list/read-icon'; // jshint ignore:line
+import SubscriptionToggle from 'misago/components/threads-list/subscription-toggle'; // jshint ignore:line
 import escapeHtml from 'misago/utils/escape-html';
 
 const LAST_POSTER_URL = '<a href="%(url)s" class="poster-title">%(user)s</a>';
@@ -134,13 +135,7 @@ export default class extends React.Component {
   getOptions() {
     /* jshint ignore:start */
     return <ul className="list-inline thread-options">
-      <li>
-        <button className="btn btn-default">
-          <span className="material-icon">
-            mail_outline
-          </span>
-        </button>
-      </li>
+      <SubscriptionToggle thread={this.props.thread} />
       <li>
         <button className="btn btn-default">
           <span className="material-icon">

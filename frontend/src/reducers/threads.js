@@ -3,6 +3,7 @@ import concatUnique from 'misago/utils/concat-unique';
 
 export const APPEND_THREADS = 'APPEND_THREADS';
 export const HYDRATE_THREADS = 'HYDRATE_THREADS';
+export const PATCH_THREADS = 'PATCH_THREADS';
 
 export function append(items) {
  return {
@@ -15,6 +16,14 @@ export function hydrate(items) {
   return {
     type: HYDRATE_THREADS,
     items
+  };
+}
+
+export function patch(thread, patch) {
+  return {
+    type: PATCH_THREADS,
+    thread,
+    patch
   };
 }
 
@@ -41,6 +50,15 @@ export default function thread(state=[], action=null) {
 
     case HYDRATE_THREADS:
       return action.items.map(hydrateThread);
+
+    case PATCH_THREADS:
+      return state.map(function(item) {
+        if (item.id === action.thread.id) {
+          return Object.assign({}, item, action.patch);
+        } else {
+          return item;
+        }
+      });
 
     default:
       return state;

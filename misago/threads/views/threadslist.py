@@ -14,8 +14,9 @@ from misago.categories.serializers import (
 from misago.core.shortcuts import paginate, pagination_dict, validate_slug
 from misago.readtracker import threadstracker
 
-from misago.threads.serializers import ThreadListSerializer
 from misago.threads.mixins.threadslists import ThreadsListMixin
+from misago.threads.serializers import ThreadListSerializer
+from misago.threads.subscriptions import make_subscription_aware
 from misago.threads.utils import add_categories_to_threads
 
 
@@ -89,6 +90,7 @@ class BaseList(View):
                 category.subcategories.append(subcategory)
 
         add_acl(request.user, page.object_list)
+        make_subscription_aware(request.user, page.object_list)
 
         request.frontend_context.update({
             'THREADS': dict(

@@ -324,14 +324,14 @@ def add_acl_to_thread(user, thread):
     thread.acl.update({
         'can_reply': can_reply_thread(user, thread),
         'can_edit': can_edit_thread(user, thread),
-        'can_hide': category_acl.get('can_hide_threads'),
-        'can_announce': category_acl.get('can_announce_threads'),
-        'can_pin': category_acl.get('can_pin_threads'),
-        'can_close': category_acl.get('can_close_threads'),
-        'can_move': category_acl.get('can_move_threads'),
-        'can_review': category_acl.get('can_review_moderated_content'),
-        'can_report': category_acl.get('can_report_content'),
-        'can_see_reports': category_acl.get('can_see_reports')
+        'can_hide': category_acl.get('can_hide_threads', False),
+        'can_announce': category_acl.get('can_announce_threads', False),
+        'can_pin': category_acl.get('can_pin_threads', False),
+        'can_close': category_acl.get('can_close_threads', False),
+        'can_move': category_acl.get('can_move_threads', False),
+        'can_review': category_acl.get('can_review_moderated_content', False),
+        'can_report': category_acl.get('can_report_content', False),
+        'can_see_reports': category_acl.get('can_see_reports', False),
     })
 
     if can_change_owned_thread(user, thread):
@@ -356,10 +356,10 @@ def add_acl_to_post(user, post):
         'can_unhide': can_unhide_post(user, post),
         'can_hide': can_hide_post(user, post),
         'can_delete': can_delete_post(user, post),
-        'can_protect': category_acl.get('can_protect_posts'),
-        'can_report': category_acl.get('can_report_content'),
-        'can_see_reports': category_acl.get('can_see_reports'),
-        'can_approve': category_acl.get('can_review_moderated_content'),
+        'can_protect': category_acl.get('can_protect_posts', False),
+        'can_report': category_acl.get('can_report_content', False),
+        'can_see_reports': category_acl.get('can_see_reports', False),
+        'can_approve': category_acl.get('can_review_moderated_content', False),
     })
 
     if not post.is_moderated:
@@ -724,6 +724,9 @@ def exclude_invisible_threads(user, categories, queryset):
 
     for category in categories:
         add_acl(user, category)
+
+        if not (category.acl['can_see'] and category.acl['can_browse']):
+            continue
 
         can_hide = category.acl['can_hide_threads']
         if category.acl['can_see_all_threads']:

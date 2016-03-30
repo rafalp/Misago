@@ -1,6 +1,6 @@
 import assert from 'assert';
 import moment from 'moment';
-import reducer, { append, hydrate, hydrateThread } from 'misago/reducers/threads';
+import reducer, { append, hydrate, patch, hydrateThread } from 'misago/reducers/threads';
 
 describe("Threads Reducer", function() {
   it("hydrates thread", function() {
@@ -76,5 +76,31 @@ describe("Threads Reducer", function() {
     assert.equal(threads[0].last_post, 5, "first thread was updated");
     assert.equal(threads[1].id, 2, "new thread was appended as second");
     assert.equal(threads[2].id, 3, "old second thread is now last");
+  });
+
+  it("patches thread", function() {
+    let timestamp = moment().format();
+    let threads = reducer([
+      {
+        id: 1,
+        started_on: timestamp,
+        last_post_on: timestamp,
+        last_post: 4
+      },
+      {
+        id: 3,
+        started_on: timestamp,
+        last_post_on: timestamp,
+        last_post: 1
+      }
+    ], patch({id: 3}, {
+      id: 3,
+      patch: 'yep'
+    }));
+
+    assert.equal(threads.length, 2, "state length remained same");
+
+    assert.equal(threads[0].patch, undefined, "first thread wasn't changed");
+    assert.equal(threads[1].patch, 'yep', "second thread was patched");
   });
 });

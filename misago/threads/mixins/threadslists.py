@@ -20,7 +20,8 @@ def filter_threads_queryset(user, categories, list_type, queryset):
     if list_type == 'my':
         return queryset.filter(starter=user)
     elif list_type == 'subscribed':
-        return queryset # TODO: filter(id__in=[subscribed threads])
+        subscribed_threads = user.subscription_set.values('thread_id')
+        return queryset.filter(id__in=subscribed_threads)
     else:
         # grab cutoffs for categories
         cutoff_date = timezone.now() - timedelta(

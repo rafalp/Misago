@@ -1266,3 +1266,84 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
         response_json = json_loads(response.content)
         self.assertEqual(len(response_json['results']), 0)
+
+
+class SubscribedThreadsListTests(ThreadsListTestCase):
+    def test_list_shows_subscribed_thread(self):
+        """list shows subscribed thread"""
+        test_thread = testutils.post_thread(category=self.category_a)
+        self.user.subscription_set.create(
+            thread=test_thread,
+            category=self.category_a,
+            last_read_on=test_thread.last_post_on,
+        )
+
+        self.access_all_categories()
+
+        response = self.client.get('/subscribed/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(
+            self.category_a.get_absolute_url() + 'subscribed/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=subscribed' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 1)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=subscribed&category=%s' % (
+                self.api_link, self.category_a.pk
+            ))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 1)
+        self.assertIn(test_thread.get_absolute_url(), response.content)
+
+    def test_list_hides_unsubscribed_thread(self):
+        """list shows subscribed thread"""
+        test_thread = testutils.post_thread(category=self.category_a)
+
+        self.access_all_categories()
+
+        response = self.client.get('/subscribed/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+
+        response = self.client.get(
+            self.category_a.get_absolute_url() + 'subscribed/')
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=subscribed' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories()
+        response = self.client.get(
+            '%s?list=subscribed&category=%s' % (
+                self.api_link, self.category_a.pk
+            ))
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json_loads(response.content)
+        self.assertEqual(len(response_json['results']), 0)
+        self.assertNotIn(test_thread.get_absolute_url(), response.content)

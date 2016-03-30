@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models import F
-from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
 
 from rest_framework import mixins, status, viewsets
@@ -14,6 +13,7 @@ from rest_framework.response import Response
 from misago.acl import add_acl
 from misago.categories.models import Category
 from misago.core.cache import cache
+from misago.core.shortcuts import get_int_or_404, get_object_or_404
 from misago.threads.moderation.posts import hide_post
 from misago.threads.moderation.threads import hide_thread
 
@@ -21,24 +21,23 @@ from misago.users.bans import get_user_ban
 from misago.users.forms.options import ForumOptionsForm
 from misago.users.online.utils import get_user_status
 from misago.users.permissions.delete import allow_delete_user
-from misago.users.permissions.moderation import (allow_rename_user,
-                                                 allow_moderate_avatar)
-from misago.users.permissions.profiles import (allow_browse_users_list,
-                                               allow_follow_user,
-                                               allow_see_ban_details)
+from misago.users.permissions.moderation import (
+    allow_rename_user, allow_moderate_avatar)
+from misago.users.permissions.profiles import (
+    allow_browse_users_list, allow_follow_user, allow_see_ban_details)
 
-from misago.users.rest_permissions import (BasePermission,
-    IsAuthenticatedOrReadOnly, UnbannedAnonOnly)
-from misago.users.serializers import (UserSerializer, UserProfileSerializer,
-                                      BanDetailsSerializer)
+from misago.users.rest_permissions import (
+    BasePermission, IsAuthenticatedOrReadOnly, UnbannedAnonOnly)
+from misago.users.serializers import (
+    UserSerializer, UserProfileSerializer, BanDetailsSerializer)
 
 from misago.users.api.userendpoints.list import list_endpoint
-from misago.users.api.userendpoints.avatar import (avatar_endpoint,
-                                                   moderate_avatar_endpoint)
+from misago.users.api.userendpoints.avatar import (
+    avatar_endpoint, moderate_avatar_endpoint)
 from misago.users.api.userendpoints.create import create_endpoint
 from misago.users.api.userendpoints.signature import signature_endpoint
-from misago.users.api.userendpoints.username import (username_endpoint,
-                                                     moderate_username_endpoint)
+from misago.users.api.userendpoints.username import (
+    username_endpoint, moderate_username_endpoint)
 from misago.users.api.userendpoints.changeemail import change_email_endpoint
 from misago.users.api.userendpoints.changepassword import change_password_endpoint
 
@@ -69,6 +68,11 @@ class UserViewSet(viewsets.GenericViewSet):
         relations = ('rank', 'online_tracker', 'ban_cache')
         return self.queryset.select_related(*relations)
 
+    def get_user(self, user_id):
+        return get_object_or_404(self.get_queryset(),
+            id=get_int_or_404(user_id)
+        )
+
     def list(self, request):
         allow_browse_users_list(request.user)
         return list_endpoint(request)
@@ -77,7 +81,7 @@ class UserViewSet(viewsets.GenericViewSet):
         return create_endpoint(request)
 
     def retrieve(self, request, pk=None):
-        profile = get_object_or_404(self.get_queryset(), id=pk)
+        profile = self.get_user(pk)
 
         add_acl(request.user, profile)
         profile.status = get_user_status(profile, request.user.acl)
@@ -88,6 +92,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @detail_route(methods=['get', 'post'])
     def avatar(self, request, pk=None):
+        get_int_or_404(pk)
         allow_self_only(request.user, pk,
                         _("You can't change other users avatars."))
 
@@ -95,6 +100,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @detail_route(methods=['post'])
     def forum_options(self, request, pk=None):
+        get_int_or_404(pk)
         allow_self_only(
             request.user, pk, _("You can't change other users options."))
 
@@ -109,6 +115,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @detail_route(methods=['get', 'post'])
     def username(self, request, pk=None):
+        get_int_or_404(pk)
         allow_self_only(request.user, pk,
                         _("You can't change other users names."))
 
@@ -116,6 +123,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @detail_route(methods=['get', 'post'])
     def signature(self, request, pk=None):
+        get_int_or_404(pk)
         allow_self_only(request.user, pk,
                         _("You can't change other users signatures."))
 
@@ -123,6 +131,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @detail_route(methods=['post'])
     def change_password(self, request, pk=None):
+        get_int_or_404(pk)
         allow_self_only(request.user, pk,
                         _("You can't change other users passwords."))
 
@@ -130,6 +139,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @detail_route(methods=['post'])
     def change_email(self, request, pk=None):
+        get_int_or_404(pk)
         allow_self_only(request.user, pk,
                         _("You can't change other users e-mail addresses."))
 
@@ -137,7 +147,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @detail_route(methods=['post'])
     def follow(self, request, pk=None):
-        profile = get_object_or_404(self.get_queryset(), id=pk)
+        profile = self.get_user(pk)
         allow_follow_user(request.user, profile)
 
         profile_followers = profile.followers
@@ -168,7 +178,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @detail_route()
     def ban(self, request, pk=None):
-        profile = get_object_or_404(self.get_queryset(), id=pk)
+        profile = self.get_user(pk)
         allow_see_ban_details(request.user, profile)
 
         ban = get_user_ban(profile)
@@ -179,21 +189,21 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @detail_route(methods=['get', 'post'])
     def moderate_avatar(self, request, pk=None):
-        profile = get_object_or_404(self.get_queryset(), id=pk)
+        profile = self.get_user(pk)
         allow_moderate_avatar(request.user, profile)
 
         return moderate_avatar_endpoint(request, profile)
 
     @detail_route(methods=['get', 'post'])
     def moderate_username(self, request, pk=None):
-        profile = get_object_or_404(self.get_queryset(), id=pk)
+        profile = self.get_user(pk)
         allow_rename_user(request.user, profile)
 
         return moderate_username_endpoint(request, profile)
 
     @detail_route(methods=['get', 'post'])
     def delete(self, request, pk=None):
-        profile = get_object_or_404(self.get_queryset(), id=pk)
+        profile = self.get_user(pk)
         allow_delete_user(request.user, profile)
 
         if request.method == 'POST':

@@ -12,6 +12,7 @@ from misago.readtracker import threadstracker
 
 from misago.threads.mixins.threadslists import ThreadsListMixin
 from misago.threads.serializers import ThreadListSerializer
+from misago.threads.subscriptions import make_subscription_aware
 from misago.threads.utils import add_categories_to_threads
 
 
@@ -71,6 +72,7 @@ class BaseListEndpoint(object):
                     response_dict['subcategories'].append(subcategory.pk)
 
         add_acl(request.user, page.object_list)
+        make_subscription_aware(request.user, page.object_list)
 
         return Response(dict(
             results=ThreadListSerializer(page.object_list, many=True).data,

@@ -33,6 +33,8 @@ class Command(BaseCommand):
             self.stderr.write("\nSecond optional argument should be integer.")
             sys.exit(1)
 
+        copy_acl_from = list(Category.objects.all_categories())[0]
+
         categories = categories.filter(level__gte=min_level)
         fake = Factory.create()
 
@@ -65,7 +67,6 @@ class Command(BaseCommand):
             )
 
             copied_acls = []
-            copy_acl_from = random.choice(Category.objects.all_categories())
             for acl in copy_acl_from.category_role_set.all():
                 copied_acls.append(RoleCategoryACL(
                     role_id=acl.role_id,
@@ -74,11 +75,11 @@ class Command(BaseCommand):
                 ))
 
             if copied_acls:
-                acl_version.invalidate()
                 RoleCategoryACL.objects.bulk_create(copied_acls)
 
             created_count += 1
             show_progress(
                 self, created_count, fake_cats_to_create, start_time)
 
+        acl_version.invalidate()
         self.stdout.write(message % created_count)
