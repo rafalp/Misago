@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { updateAvatar, updateUsername } from 'misago/reducers/users';
-import reducer, { signIn, signOut, patchUser } from 'misago/reducers/auth';
+import reducer, { signIn, signOut, patch } from 'misago/reducers/auth';
 
 describe("Auth Reducer", function() {
   it("patches auth user", function() {
@@ -10,7 +10,7 @@ describe("Auth Reducer", function() {
       }
     };
 
-    assert.deepEqual(reducer(state, patchUser({
+    assert.deepEqual(reducer(state, patch({
       username: 'Patched!',
       new_attr: 'Set'
     })), {

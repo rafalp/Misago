@@ -4,7 +4,7 @@ import Form from 'misago/components/form';
 import FormGroup from 'misago/components/form-group'; // jshint ignore:line
 import Select from 'misago/components/select'; // jshint ignore:line
 import YesNoSwitch from 'misago/components/yes-no-switch'; // jshint ignore:line
-import { patchUser } from 'misago/reducers/auth';
+import { patch } from 'misago/reducers/auth';
 import ajax from 'misago/services/ajax';
 import title from 'misago/services/page-title';
 import snackbar from 'misago/services/snackbar';
@@ -72,7 +72,7 @@ export default class extends Form {
   }
 
   handleSuccess() {
-    store.dispatch(patchUser({
+    store.dispatch(patch({
       is_hiding_presence: this.state.is_hiding_presence,
       limits_private_thread_invites_to: this.state.limits_private_thread_invites_to,
       subscribe_to_started_threads: this.state.subscribe_to_started_threads,

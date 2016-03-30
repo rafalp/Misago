@@ -11,7 +11,7 @@ export function hydrate(profile) {
   };
 }
 
-export function patchProfile(patch) {
+export function patch(patch) {
   return {
     type: PATCH_PROFILE,
     patch

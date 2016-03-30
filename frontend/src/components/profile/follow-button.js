@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from 'misago/components/button'; // jshint ignore:line
-import { patchProfile } from 'misago/reducers/profile'; // jshint ignore:line
+import { patch } from 'misago/reducers/profile'; // jshint ignore:line
 import ajax from 'misago/services/ajax'; // jshint ignore:line
 import snackbar from 'misago/services/snackbar'; // jshint ignore:line
 import store from 'misago/services/store'; // jshint ignore:line
@@ -45,12 +45,12 @@ export default class extends React.Component {
     });
 
     if (this.props.profile.is_followed) {
-      store.dispatch(patchProfile({
+      store.dispatch(patch({
         is_followed: false,
         followers: this.props.profile.followers - 1
       }));
     } else {
-      store.dispatch(patchProfile({
+      store.dispatch(patch({
         is_followed: true,
         followers: this.props.profile.followers + 1
       }));
@@ -61,7 +61,7 @@ export default class extends React.Component {
         isLoading: false
       });
 
-      store.dispatch(patchProfile(data));
+      store.dispatch(patch(data));
     }, (rejection) => {
       this.setState({
         isLoading: false

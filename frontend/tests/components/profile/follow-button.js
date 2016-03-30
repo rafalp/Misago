@@ -1,7 +1,7 @@
 import assert from 'assert';
 import React from 'react'; // jshint ignore:line
 import FollowButton from 'misago/components/profile/follow-button'; // jshint ignore:line
-import reducer, { patchProfile } from 'misago/reducers/profile';
+import reducer, { patch } from 'misago/reducers/profile';
 import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
 import * as testUtils from 'misago/utils/test-utils';
@@ -153,7 +153,7 @@ describe("Follow Button", function() {
       }
     });
 
-    store.dispatch(patchProfile({
+    store.dispatch(patch({
       is_followed: true,
       followers: 1
     }));

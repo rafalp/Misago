@@ -9,7 +9,7 @@ export const PATCH_USER = 'PATCH_USER';
 export const SIGN_IN = 'SIGN_IN';
 export const SIGN_OUT = 'SIGN_OUT';
 
-export function patchUser(patch) {
+export function patch(patch) {
   return {
     type: PATCH_USER,
     patch

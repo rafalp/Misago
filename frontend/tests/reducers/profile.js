@@ -2,7 +2,7 @@ import assert from 'assert';
 import moment from 'moment';
 import { StoreWrapper } from 'misago/services/store';
 import { updateAvatar, updateUsername } from 'misago/reducers/users';
-import reducer, { hydrate, patchProfile } from 'misago/reducers/profile';
+import reducer, { hydrate, patch } from 'misago/reducers/profile';
 
 let profileMock = null;
 let store = null;
@@ -62,9 +62,9 @@ describe("Profile Reducer", function() {
     assert.equal(profile.id, profileMock.id, "other keys are preserved");
   });
 
-  it("patchProfile action updates user profile", function() {
+  it("patch action updates user profile", function() {
     store.dispatch(hydrate(profileMock));
-    store.dispatch(patchProfile({
+    store.dispatch(patch({
       'email': 'yolo@test.com',
       'lorem': 'ipsum'
     }));
