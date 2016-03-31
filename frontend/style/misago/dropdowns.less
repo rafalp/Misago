@@ -117,3 +117,17 @@
     font-weight: normal;
   }
 }
+
+
+// Category picker
+.category-picker .dropdown-menu {
+  // Make category picker wider on desktops
+  @media screen and (min-width: @screen-md-min) {
+    width: 300px;
+  }
+}
+
+.category-picker .dropdown-menu>li>.btn-link {
+  white-space: normal;
+  word-wrap: break-word;
+}

@@ -124,7 +124,6 @@ export default class extends React.Component {
             </button>
           </li>
         </ul>
-
       </div>
     </li>;
     /* jshint ignore:end */

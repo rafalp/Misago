@@ -1,11 +1,11 @@
 import React from 'react'; // jshint ignore:line
 import Button from 'misago/components/button'; // jshint ignore:line
-import CategoryPicker from 'misago/components/threads/category-picker'; // jshint ignore:line
 import Header from 'misago/components/threads/header'; // jshint ignore:line
-import ThreadsListEmpty from 'misago/components/threads/list-empty'; // jshint ignore:line
 import { CompactNav } from 'misago/components/threads/navs'; // jshint ignore:line
 import { getPageTitle, getTitle } from 'misago/components/threads/utils';
 import ThreadsList from 'misago/components/threads-list/root'; // jshint ignore:line
+import ThreadsListEmpty from 'misago/components/threads/list-empty'; // jshint ignore:line
+import Toolbar from 'misago/components/threads/toolbar'; // jshint ignore:line
 import WithDropdown from 'misago/components/with-dropdown';
 import misago from 'misago/index';
 import { append, hydrate } from 'misago/reducers/threads'; // jshint ignore:line
@@ -168,14 +168,48 @@ export default class extends WithDropdown {
     }
   }
 
+  getToolbarLabel() {
+    if (this.state.isLoaded) {
+      let label = null;
+      if (this.props.route.list.path) {
+        label = ngettext(
+          "%(threads)s thread found.",
+          "%(threads)s threads found.",
+          this.state.count);
+      } else if (this.props.route.category.parent) {
+        label = ngettext(
+          "There is %(threads)s thread in this category.",
+          "There are %(threads)s threads in this category.",
+          this.state.count);
+      } else {
+        label = ngettext(
+          "There is %(threads)s thread on our forums.",
+          "There are %(threads)s threads on our forums.",
+          this.state.count);
+      }
+
+      return interpolate(label, {
+        'threads': this.state.count
+      }, true);
+    } else {
+      return gettext("Loading threads...");
+    }
+  }
+
   getToolbar() {
-    if (this.state.subcategories.length) {
+    if (this.state.subcategories.length || this.props.user.id) {
       /* jshint ignore:start */
-      return <div className="toolbar">
-        <CategoryPicker choices={this.state.subcategories}
-                        categories={this.props.route.categoriesMap}
-                        list={this.props.route.list} />
-      </div>;
+      return <Toolbar subcategories={this.state.subcategories}
+                      categories={this.props.route.categoriesMap}
+                      list={this.props.route.list}
+
+                      threads={this.props.threads}
+                      selection={this.props.selection}
+
+                      isLoaded={this.state.isLoaded}
+                      user={this.props.user}>
+        {this.getToolbarLabel()}
+      </Toolbar>;
       /* jshint ignore:end */
     } else {
       return null;
@@ -221,8 +255,7 @@ export default class extends WithDropdown {
                      selectThread={this.selectThread}
                      selection={this.state.selection}
 
-                     isLoaded={this.state.isLoaded}
-                     isBusy={this.state.isBusy}>
+                     isLoaded={this.state.isLoaded}>
           <ThreadsListEmpty category={this.props.route.category}
                             list={this.props.route.list} />
         </ThreadsList>

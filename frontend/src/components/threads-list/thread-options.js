@@ -28,7 +28,7 @@ export default class extends React.Component {
     if (this.props.thread.moderation.length) {
       /* jshint ignore:start */
       return <li>
-        <button className="btn btn-default btn-select"
+        <button className="btn btn-default btn-checkbox"
                 onClick={this.toggleSelection}>
           <span className="material-icon">
             {this.props.isSelected

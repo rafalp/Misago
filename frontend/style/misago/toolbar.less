@@ -5,7 +5,7 @@
 
 .toolbar {
   display: block;
-  overflow: auto;
+  min-height: 34px;
   margin-bottom: @padding-large-vertical;
 
   &.toolbar-bottom {
@@ -30,10 +30,12 @@
   .toolbar {
     .toolbar-left {
       float: left;
+      margin-right: @padding-large-horizontal;
     }
 
     .toolbar-right {
       float: right;
+      margin-left: @padding-large-horizontal;
     }
 
     .toolbar-control, .toolbar-bottom>.form-control {
@@ -47,6 +49,10 @@
       padding-top: @padding-base-vertical;
 
       text-align: left;
+    }
+
+    &>p {
+      padding-top: @padding-base-vertical + 1px;
     }
   }
 }

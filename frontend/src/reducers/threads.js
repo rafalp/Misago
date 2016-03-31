@@ -8,7 +8,6 @@ export const PATCH_THREADS = 'PATCH_THREADS';
 export const MODERATION_PERMISSIONS = [
   'can_announce',
   'can_close',
-  'can_edit',
   'can_hide',
   'can_move',
   'can_pin',

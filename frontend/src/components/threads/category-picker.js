@@ -10,18 +10,10 @@ export class Subcategory extends React.Component {
     }
   }
 
-  getClassName() {
-    if (this.props.category.css_class) {
-      return 'subcategory subcategory-' + this.props.category.css_class;
-    } else {
-      return 'subcategory';
-    }
-  }
-
   render() {
     /* jshint ignore:start */
     return <li>
-      <Link to={this.getUrl()} className={this.getClassName()}>
+      <Link to={this.getUrl()} className="btn btn-link">
         {this.props.category.name}
       </Link>
     </li>;
@@ -32,17 +24,29 @@ export class Subcategory extends React.Component {
 export default class extends React.Component {
   render() {
     /* jshint ignore:start */
-    return <ul className="list-inline subcategories-list">
-      {this.props.choices.map((id) => {
-        if (this.props.categories[id]) {
-          return <Subcategory category={this.props.categories[id]}
-                              listPath={this.props.list.path}
-                              key={id} />;
-        } else {
-          return null;
-        }
-      })}
-    </ul>;
+    return <div className="btn-group category-picker">
+      <button type="button"
+              className="btn btn-default dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false">
+        <span className="material-icon">
+          more_vert
+        </span>
+        {gettext("Go to")}
+      </button>
+      <ul className="dropdown-menu categories-menu">
+        {this.props.choices.map((id) => {
+          if (this.props.categories[id]) {
+            return <Subcategory category={this.props.categories[id]}
+                                listPath={this.props.list.path}
+                                key={id} />;
+          } else {
+            return null;
+          }
+        })}
+      </ul>
+    </div>;
     /* jshint ignore:end */
   }
 }

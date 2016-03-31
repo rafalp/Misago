@@ -55,7 +55,6 @@ export function paths() {
   let paths = [];
   let categoriesMap = {};
 
-
   misago.get('CATEGORIES').forEach(function(category) {
     lists.forEach(function(list) {
       categoriesMap[category.id] = category;
