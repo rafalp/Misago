@@ -46,17 +46,17 @@ export default class extends Form {
     this.subscribeToChoices = [
       {
         'value': 0,
-        'icon': 'notifications_none',
+        'icon': 'star_border',
         'label': gettext("No")
       },
       {
         'value': 1,
-        'icon': 'notifications',
+        'icon': 'star_half',
         'label': gettext("Notify")
       },
       {
         'value': 2,
-        'icon': 'mail',
+        'icon': 'star',
         'label': gettext("Notify with e-mail")
       }
     ];

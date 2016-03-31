@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router'; // jshint ignore:line
 import ReadIcon from 'misago/components/threads-list/read-icon'; // jshint ignore:line
-import SubscriptionToggle from 'misago/components/threads-list/subscription-toggle'; // jshint ignore:line
+import ThreadOptions from 'misago/components/threads-list/thread-options'; // jshint ignore:line
 import escapeHtml from 'misago/utils/escape-html';
 
 const LAST_POSTER_URL = '<a href="%(url)s" class="poster-title">%(user)s</a>';
@@ -31,6 +31,14 @@ export class Category extends React.Component {
 }
 
 export default class extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isSelected: false
+    };
+  }
+
   getPath() {
     let top = this.props.categories[this.props.thread.top_category];
     let bottom = this.props.categories[this.props.thread.category];
@@ -133,32 +141,30 @@ export default class extends React.Component {
   }
 
   getOptions() {
-    /* jshint ignore:start */
-    return <ul className="list-inline thread-options">
-      <SubscriptionToggle thread={this.props.thread} />
-      <li>
-        <button className="btn btn-default">
-          <span className="material-icon">
-            edit
-          </span>
-        </button>
-      </li>
-      <li>
-        <button className="btn btn-default">
-          <span className="material-icon">
-            check_box_outline_blank
-          </span>
-        </button>
-      </li>
-    </ul>
-    /* jshint ignore:end */
+    if (this.props.user.id) {
+      /* jshint ignore:start */
+      return <ThreadOptions thread={this.props.thread}
+                            selectThread={this.props.selectThread}
+                            isSelected={this.props.isSelected} />;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
   }
 
   getClassName() {
     if (this.props.thread.is_read) {
-      return 'list-group-item thread-read';
+      if (this.props.isSelected) {
+        return 'list-group-item thread-read thread-selected';
+      } else {
+        return 'list-group-item thread-read';
+      }
     } else {
-      return 'list-group-item thread-new';
+      if (this.props.isSelected) {
+        return 'list-group-item thread-new thread-selected';
+      } else {
+        return 'list-group-item thread-new';
+      }
     }
   }
 

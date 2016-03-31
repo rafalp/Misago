@@ -66,11 +66,21 @@ export default class extends React.Component {
 
   getIcon() {
     if (this.props.thread.subscription === true) {
-      return 'mail';
+      return 'star';
     } else if (this.props.thread.subscription === false) {
-      return 'notifications';
+      return 'star_half';
     } else {
-      return 'notifications_none';
+      return 'star_border';
+    }
+  }
+
+  getClassName() {
+    if (this.props.thread.subscription === true) {
+      return "btn btn-default btn-subscribe btn-subscribe-full dropdown-toggle";
+    } else if (this.props.thread.subscription === false) {
+      return "btn btn-default btn-subscribe btn-subscribe-half dropdown-toggle";
+    } else {
+      return "btn btn-default btn-subscribe dropdown-toggle";
     }
   }
 
@@ -79,7 +89,7 @@ export default class extends React.Component {
     return <li>
       <div className="btn-group">
         <button type="button"
-                className="btn btn-default btn-subscribe dropdown-toggle"
+                className={this.getClassName()}
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false"
@@ -92,7 +102,7 @@ export default class extends React.Component {
           <li>
             <button className="btn-link" onClick={this.unsubscribe}>
               <span className="material-icon">
-                notifications_none
+                star_border
               </span>
               {gettext("Unsubscribe")}
             </button>
@@ -100,7 +110,7 @@ export default class extends React.Component {
           <li>
             <button className="btn-link" onClick={this.notify}>
               <span className="material-icon">
-                notifications
+                star_half
               </span>
               {gettext("Subscribe")}
             </button>
@@ -108,7 +118,7 @@ export default class extends React.Component {
           <li>
             <button className="btn-link" onClick={this.email}>
               <span className="material-icon">
-                mail
+                star
               </span>
               {gettext("Subscribe with e-mail")}
             </button>

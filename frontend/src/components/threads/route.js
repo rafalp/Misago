@@ -13,6 +13,7 @@ import ajax from 'misago/services/ajax';
 import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
 import title from 'misago/services/page-title';
+import setToggle from 'misago/utils/set-toggle'; // jshint ignore:line
 
 export default class extends WithDropdown {
   constructor(props) {
@@ -30,6 +31,8 @@ export default class extends WithDropdown {
       isLoaded: false,
       isBusy: false,
 
+      selection: [],
+
       dropdown: false,
       subcategories: data.subcategories,
 
@@ -45,6 +48,8 @@ export default class extends WithDropdown {
     this.state = {
       isLoaded: false,
       isBusy: false,
+
+      selection: [],
 
       dropdown: false,
       subcategories: [],
@@ -118,6 +123,12 @@ export default class extends WithDropdown {
     });
 
     this.loadThreads(this.state.page + 1);
+  };
+
+  selectThread = (thread) => {
+    this.setState({
+      selection: setToggle(this.state.selection, thread)
+    });
   };
   /* jshint ignore:end */
 
@@ -202,9 +213,14 @@ export default class extends WithDropdown {
         {this.getCategoryDescription()}
         {this.getToolbar()}
 
-        <ThreadsList threads={this.props.threads}
+        <ThreadsList user={this.props.user}
+                     threads={this.props.threads}
                      categories={this.props.route.categoriesMap}
                      list={this.props.route.list}
+
+                     selectThread={this.selectThread}
+                     selection={this.state.selection}
+
                      isLoaded={this.state.isLoaded}
                      isBusy={this.state.isBusy}>
           <ThreadsListEmpty category={this.props.route.category}

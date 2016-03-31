@@ -5,6 +5,16 @@ export const APPEND_THREADS = 'APPEND_THREADS';
 export const HYDRATE_THREADS = 'HYDRATE_THREADS';
 export const PATCH_THREADS = 'PATCH_THREADS';
 
+export const MODERATION_PERMISSIONS = [
+  'can_announce',
+  'can_close',
+  'can_edit',
+  'can_hide',
+  'can_move',
+  'can_pin',
+  'can_review'
+];
+
 export function append(items) {
  return {
     type: APPEND_THREADS,
@@ -27,10 +37,21 @@ export function patch(thread, patch) {
   };
 }
 
+export function getThreadModerationOptions(thread_acl) {
+  let options = [];
+  MODERATION_PERMISSIONS.forEach(function(perm) {
+    if (thread_acl[perm]) {
+      options.push(perm);
+    }
+  });
+  return options;
+}
+
 export function hydrateThread(thread) {
   return Object.assign({}, thread, {
     started_on: moment(thread.started_on),
-    last_post_on: moment(thread.last_post_on)
+    last_post_on: moment(thread.last_post_on),
+    moderation: getThreadModerationOptions(thread.acl)
   });
 }
 

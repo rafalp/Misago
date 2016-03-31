@@ -8,9 +8,14 @@ export default class extends React.Component {
     /* jshint ignore:start */
     if (this.props.isLoaded) {
       if (this.props.threads.length > 0) {
-        return <ListReady threads={this.props.threads}
+        return <ListReady user={this.props.user}
+                          threads={this.props.threads}
                           categories={this.props.categories}
                           list={this.props.list}
+
+                          selectThread={this.props.selectThread}
+                          selection={this.props.selection}
+
                           isBusy={this.props.isBusy} />;
       } else {
         return <ListEmpty>
