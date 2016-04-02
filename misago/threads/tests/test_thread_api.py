@@ -22,6 +22,27 @@ class ThreadApiTestCase(AuthenticatedUserTestCase):
         return json.loads(response.content)
 
 
+class ThreadsReadApiTests(ThreadApiTestCase):
+    def setUp(self):
+        super(ThreadSubscribeApiTests, self).setUp()
+        self.api_link = '/api/threads/read/'
+
+    def read_all_threads(self):
+        """api sets all threads as read"""
+        response = self.client.post(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(self.user.categoryread_set.count(), 2)
+
+    def read_threads_in_category(self):
+        """api sets threads in category as read"""
+        response = self.client.post(
+            '%s?category=%s' % (self.api_link, self.category.pk))
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(self.user.categoryread_set.count(), 1)
+
+
 class ThreadSubscribeApiTests(ThreadApiTestCase):
     def setUp(self):
         super(ThreadSubscribeApiTests, self).setUp()

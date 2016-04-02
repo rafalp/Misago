@@ -28,8 +28,8 @@ def filter_threads_queryset(user, categories, list_type, queryset):
             days=settings.MISAGO_FRESH_CONTENT_PERIOD
         )
 
-        if cutoff_date < user.reads_cutoff:
-            cutoff_date = user.reads_cutoff
+        if cutoff_date < user.joined_on:
+            cutoff_date = user.joined_on
 
         categories_dict = {}
         for record in user.categoryread_set.filter(category__in=categories):

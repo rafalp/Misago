@@ -170,6 +170,9 @@ class Thread(models.Model):
     def get_new_post_url(self):
         return self.thread_type.get_thread_new_post_url(self)
 
+    def get_api_subscribe_url(self):
+        return self.thread_type.get_thread_api_subscribe_url(self)
+
     def set_title(self, title):
         self.title = title
         self.slug = slugify(title)

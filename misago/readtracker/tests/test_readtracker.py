@@ -56,14 +56,14 @@ class CategorysTrackerTests(ReadTrackerTests):
 
     def test_make_read_aware_sets_read_flag_for_category_with_old_thread(self):
         """make_read_aware sets read flag on category with old thread"""
-        self.category.last_post_on = self.user.reads_cutoff - timedelta(days=1)
+        self.category.last_post_on = self.user.joined_on - timedelta(days=1)
 
         categoriestracker.make_read_aware(self.user, self.categories)
         self.assertTrue(self.category.is_read)
 
     def test_make_read_aware_sets_unread_flag_for_category_with_new_thread(self):
         """make_read_aware sets unread flag on category with new thread"""
-        self.category.last_post_on = self.user.reads_cutoff + timedelta(days=1)
+        self.category.last_post_on = self.user.joined_on + timedelta(days=1)
 
         categoriestracker.make_read_aware(self.user, self.categories)
         self.assertFalse(self.category.is_read)
@@ -82,7 +82,7 @@ class CategorysTrackerTests(ReadTrackerTests):
         sync_record sets read flag on category with old thread,
         then changes flag to unread when new reply is posted
         """
-        self.post_thread(self.user.reads_cutoff - timedelta(days=1))
+        self.post_thread(self.user.joined_on - timedelta(days=1))
 
         add_acl(self.user, self.categories)
         categoriestracker.sync_record(self.user, self.category)
@@ -91,7 +91,7 @@ class CategorysTrackerTests(ReadTrackerTests):
         categoriestracker.make_read_aware(self.user, self.categories)
         self.assertTrue(self.category.is_read)
 
-        thread = self.post_thread(self.user.reads_cutoff + timedelta(days=1))
+        thread = self.post_thread(self.user.joined_on + timedelta(days=1))
         categoriestracker.sync_record(self.user, self.category)
         categoriestracker.make_read_aware(self.user, self.categories)
         self.assertFalse(self.category.is_read)
@@ -101,7 +101,7 @@ class CategorysTrackerTests(ReadTrackerTests):
         sync_record sets read flag on category with old thread,
         then keeps flag to unread when new reply is posted
         """
-        self.post_thread(self.user.reads_cutoff + timedelta(days=1))
+        self.post_thread(self.user.joined_on + timedelta(days=1))
 
         add_acl(self.user, self.categories)
         categoriestracker.sync_record(self.user, self.category)
@@ -110,16 +110,16 @@ class CategorysTrackerTests(ReadTrackerTests):
         categoriestracker.make_read_aware(self.user, self.categories)
         self.assertFalse(self.category.is_read)
 
-        self.post_thread(self.user.reads_cutoff + timedelta(days=1))
+        self.post_thread(self.user.joined_on + timedelta(days=1))
         categoriestracker.sync_record(self.user, self.category)
         categoriestracker.make_read_aware(self.user, self.categories)
         self.assertFalse(self.category.is_read)
 
     def test_sync_record_for_category_with_deleted_threads(self):
         """unread category reverts to read after its emptied"""
-        self.post_thread(self.user.reads_cutoff + timedelta(days=1))
-        self.post_thread(self.user.reads_cutoff + timedelta(days=1))
-        self.post_thread(self.user.reads_cutoff + timedelta(days=1))
+        self.post_thread(self.user.joined_on + timedelta(days=1))
+        self.post_thread(self.user.joined_on + timedelta(days=1))
+        self.post_thread(self.user.joined_on + timedelta(days=1))
 
         add_acl(self.user, self.categories)
         categoriestracker.sync_record(self.user, self.category)
@@ -135,10 +135,10 @@ class CategorysTrackerTests(ReadTrackerTests):
 
     def test_sync_record_for_category_with_many_threads(self):
         """sync_record sets unread flag on category with many threads"""
-        self.post_thread(self.user.reads_cutoff + timedelta(days=1))
-        self.post_thread(self.user.reads_cutoff - timedelta(days=1))
-        self.post_thread(self.user.reads_cutoff + timedelta(days=1))
-        self.post_thread(self.user.reads_cutoff - timedelta(days=1))
+        self.post_thread(self.user.joined_on + timedelta(days=1))
+        self.post_thread(self.user.joined_on - timedelta(days=1))
+        self.post_thread(self.user.joined_on + timedelta(days=1))
+        self.post_thread(self.user.joined_on - timedelta(days=1))
 
         add_acl(self.user, self.categories)
         categoriestracker.sync_record(self.user, self.category)
@@ -147,10 +147,26 @@ class CategorysTrackerTests(ReadTrackerTests):
         categoriestracker.make_read_aware(self.user, self.categories)
         self.assertFalse(self.category.is_read)
 
-        self.post_thread(self.user.reads_cutoff + timedelta(days=1))
+        self.post_thread(self.user.joined_on + timedelta(days=1))
         categoriestracker.sync_record(self.user, self.category)
         categoriestracker.make_read_aware(self.user, self.categories)
         self.assertFalse(self.category.is_read)
+
+    def test_read_leaf_category(self):
+        """read_category reads leaf category for user"""
+        categoriestracker.read_category(self.user, self.category)
+
+        self.assertTrue(self.user.categoryread_set.get(category=self.category))
+
+    def test_read_root_category(self):
+        """read_category reads category and its subcategories for user"""
+        root_category = Category.objects.root_category()
+        categoriestracker.read_category(self.user, root_category)
+
+        root_read = self.user.categoryread_set.get(category=root_category)
+        child_read = self.user.categoryread_set.get(category=self.category)
+
+        self.assertEqual(root_read.last_read_on, child_read.last_read_on)
 
 
 class ThreadsTrackerTests(ReadTrackerTests):

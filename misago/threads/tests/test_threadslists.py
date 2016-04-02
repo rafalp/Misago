@@ -747,17 +747,16 @@ class NewThreadsListTests(ThreadsListTestCase):
 
     def test_list_renders_thread_bumped_after_user_cutoff(self):
         """list renders new thread bumped after user cutoff"""
-        self.user.reads_cutoff = timezone.now() - timedelta(days=10)
-        self.user.joined_on = self.user.reads_cutoff
+        self.user.joined_on = timezone.now() - timedelta(days=10)
         self.user.save()
 
         test_thread = testutils.post_thread(
             category=self.category_a,
-            started_on=self.user.reads_cutoff - timedelta(days=2)
+            started_on=self.user.joined_on - timedelta(days=2)
         )
 
         testutils.reply_thread(test_thread,
-            posted_on=self.user.reads_cutoff + timedelta(days=4)
+            posted_on=self.user.joined_on + timedelta(days=4)
         )
 
         self.access_all_categories()
@@ -793,8 +792,7 @@ class NewThreadsListTests(ThreadsListTestCase):
 
     def test_list_hides_global_cutoff_thread(self):
         """list hides thread started before global cutoff"""
-        self.user.reads_cutoff = timezone.now() - timedelta(days=10)
-        self.user.joined_on = self.user.reads_cutoff
+        self.user.joined_on = timezone.now() - timedelta(days=10)
         self.user.save()
 
         test_thread = testutils.post_thread(
@@ -834,13 +832,12 @@ class NewThreadsListTests(ThreadsListTestCase):
 
     def test_list_hides_user_cutoff_thread(self):
         """list hides thread started before users cutoff"""
-        self.user.reads_cutoff = timezone.now() - timedelta(days=5)
-        self.user.joined_on = self.user.reads_cutoff
+        self.user.joined_on = timezone.now() - timedelta(days=5)
         self.user.save()
 
         test_thread = testutils.post_thread(
             category=self.category_a,
-            started_on=self.user.reads_cutoff - timedelta(minutes=1)
+            started_on=self.user.joined_on - timedelta(minutes=1)
         )
 
         self.access_all_categories()
@@ -873,8 +870,7 @@ class NewThreadsListTests(ThreadsListTestCase):
 
     def test_list_hides_user_read_thread(self):
         """list hides thread already read by user"""
-        self.user.reads_cutoff = timezone.now() - timedelta(days=5)
-        self.user.joined_on = self.user.reads_cutoff
+        self.user.joined_on = timezone.now() - timedelta(days=5)
         self.user.save()
 
         test_thread = testutils.post_thread(
@@ -915,8 +911,7 @@ class NewThreadsListTests(ThreadsListTestCase):
 
     def test_list_hides_category_read_thread(self):
         """list hides thread already read by user"""
-        self.user.reads_cutoff = timezone.now() - timedelta(days=5)
-        self.user.joined_on = self.user.reads_cutoff
+        self.user.joined_on = timezone.now() - timedelta(days=5)
         self.user.save()
 
         test_thread = testutils.post_thread(
@@ -991,8 +986,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
     def test_list_renders_unread_thread(self):
         """list renders thread with unread posts"""
-        self.user.reads_cutoff = timezone.now() - timedelta(days=5)
-        self.user.joined_on = self.user.reads_cutoff
+        self.user.joined_on = timezone.now() - timedelta(days=5)
         self.user.save()
 
         test_thread = testutils.post_thread(
@@ -1038,8 +1032,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
     def test_list_hides_never_read_thread(self):
         """list hides never read thread"""
-        self.user.reads_cutoff = timezone.now() - timedelta(days=5)
-        self.user.joined_on = self.user.reads_cutoff
+        self.user.joined_on = timezone.now() - timedelta(days=5)
         self.user.save()
 
         test_thread = testutils.post_thread(
@@ -1077,8 +1070,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
     def test_list_hides_read_thread(self):
         """list hides read thread"""
-        self.user.reads_cutoff = timezone.now() - timedelta(days=5)
-        self.user.joined_on = self.user.reads_cutoff
+        self.user.joined_on = timezone.now() - timedelta(days=5)
         self.user.save()
 
         test_thread = testutils.post_thread(
@@ -1120,8 +1112,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
     def test_list_hides_global_cutoff_thread(self):
         """list hides thread replied before global cutoff"""
-        self.user.reads_cutoff = timezone.now() - timedelta(days=10)
-        self.user.joined_on = self.user.reads_cutoff
+        self.user.joined_on = timezone.now() - timedelta(days=10)
         self.user.save()
 
         test_thread = testutils.post_thread(
@@ -1170,13 +1161,12 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
     def test_list_hides_user_cutoff_thread(self):
         """list hides thread replied before user cutoff"""
-        self.user.reads_cutoff = timezone.now() - timedelta(days=10)
-        self.user.joined_on = self.user.reads_cutoff
+        self.user.joined_on = timezone.now() - timedelta(days=10)
         self.user.save()
 
         test_thread = testutils.post_thread(
             category=self.category_a,
-            started_on=self.user.reads_cutoff - timedelta(days=2)
+            started_on=self.user.joined_on - timedelta(days=2)
         )
 
         threadstracker.make_thread_read_aware(self.user, test_thread)
@@ -1218,13 +1208,12 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
     def test_list_hides_category_cutoff_thread(self):
         """list hides thread replied before category cutoff"""
-        self.user.reads_cutoff = timezone.now() - timedelta(days=10)
-        self.user.joined_on = self.user.reads_cutoff
+        self.user.joined_on = timezone.now() - timedelta(days=10)
         self.user.save()
 
         test_thread = testutils.post_thread(
             category=self.category_a,
-            started_on=self.user.reads_cutoff - timedelta(days=2)
+            started_on=self.user.joined_on - timedelta(days=2)
         )
 
         threadstracker.make_thread_read_aware(self.user, test_thread)

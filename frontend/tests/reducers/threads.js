@@ -1,13 +1,14 @@
 import assert from 'assert';
 import moment from 'moment';
-import reducer, { append, hydrate, patch, hydrateThread } from 'misago/reducers/threads';
+import reducer, { append, hydrate, patch, read, hydrateThread } from 'misago/reducers/threads';
 
 describe("Threads Reducer", function() {
   it("hydrates thread", function() {
     let timestamp = moment().format();
     let thread = hydrateThread({
       started_on: timestamp,
-      last_post_on: timestamp
+      last_post_on: timestamp,
+      acl: {}
     });
 
     assert.equal(thread.started_on.format(), timestamp,
@@ -22,12 +23,14 @@ describe("Threads Reducer", function() {
       {
         id: 1,
         started_on: timestamp,
-        last_post_on: timestamp
+        last_post_on: timestamp,
+        acl: {}
       },
       {
         id: 3,
         started_on: timestamp,
-        last_post_on: timestamp
+        last_post_on: timestamp,
+        acl: {}
       }
     ]));
 
@@ -47,26 +50,30 @@ describe("Threads Reducer", function() {
         id: 1,
         started_on: timestamp,
         last_post_on: timestamp,
-        last_post: 4
+        last_post: 4,
+        acl: {}
       },
       {
         id: 3,
         started_on: timestamp,
         last_post_on: timestamp,
-        last_post: 1
+        last_post: 1,
+        acl: {}
       }
     ], append([
       {
         id: 1,
         started_on: timestamp,
         last_post_on: timestamp,
-        last_post: 5
+        last_post: 5,
+        acl: {}
       },
       {
         id: 2,
         started_on: timestamp,
         last_post_on: timestamp,
-        last_post: 3
+        last_post: 3,
+        acl: {}
       }
     ]));
 
@@ -102,5 +109,30 @@ describe("Threads Reducer", function() {
 
     assert.equal(threads[0].patch, undefined, "first thread wasn't changed");
     assert.equal(threads[1].patch, 'yep', "second thread was patched");
+  });
+
+  it("marks threads as read", function() {
+    let timestamp = moment().format();
+    let threads = reducer([
+      {
+        id: 1,
+        started_on: timestamp,
+        last_post_on: timestamp,
+        last_post: 4,
+        is_read: false
+      },
+      {
+        id: 3,
+        started_on: timestamp,
+        last_post_on: timestamp,
+        last_post: 1,
+        is_read: false
+      }
+    ], read());
+
+    assert.equal(threads.length, 2, "state length remained same");
+
+    assert.ok(threads[0].is_read, "first thread was marked as read");
+    assert.ok(threads[1].is_read, "second thread was marked as read");
   });
 });

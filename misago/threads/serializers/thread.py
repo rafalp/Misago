@@ -73,8 +73,7 @@ class ThreadSerializer(serializers.ModelSerializer):
 
     def get_api_url(self, obj):
         return {
-            'subscribe': reverse(
-                'misago:api:thread-subscribe', kwargs={'pk': obj.pk}),
+            'subscribe': obj.get_api_subscribe_url(),
         }
 
     def get_acl(self, obj):

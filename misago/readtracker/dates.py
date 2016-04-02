@@ -8,6 +8,6 @@ def is_date_tracked(date, user, category_read_cutoff=None):
         if category_read_cutoff and category_read_cutoff > date:
             return False
         else:
-            return date > user.reads_cutoff
+            return date > user.joined_on
     else:
         return False

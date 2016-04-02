@@ -8,7 +8,7 @@ from misago.readtracker.dates import is_date_tracked
 
 class MockUser(object):
     def __init__(self):
-        self.reads_cutoff = timezone.now()
+        self.joined_on = timezone.now()
 
 
 class ReadTrackerDatesTests(TestCase):

@@ -21,7 +21,7 @@ def make_read_aware(user, categories):
 
     categories_dict = {}
     for category in categories:
-        category.last_read_on = user.reads_cutoff
+        category.last_read_on = user.joined_on
         category.is_read = not is_date_tracked(category.last_post_on, user)
         if not category.is_read:
             categories_dict[category.pk] = category
@@ -46,12 +46,12 @@ def make_read(categories):
 def start_record(user, category):
     user.categoryread_set.create(
         category=category,
-        last_read_on=user.reads_cutoff,
+        last_read_on=user.joined_on,
     )
 
 
 def sync_record(user, category):
-    cutoff_date = user.reads_cutoff
+    cutoff_date = user.joined_on
 
     try:
         category_record = user.categoryread_set.get(category=category)
@@ -94,15 +94,24 @@ def sync_record(user, category):
 
 
 def read_category(user, category):
-    try:
-        category_record = user.categoryread_set.get(category=category)
-        category_record.last_read_on = timezone.now()
-        category_record.save(update_fields=['last_read_on'])
-    except CategoryRead.DoesNotExist:
-        user.categoryread_set.create(
+    if category.is_leaf_node():
+        categories = [category]
+    else:
+        categories = category.get_descendants(include_self=True)
+
+    user.categoryread_set.filter(category__in=categories).delete()
+
+    now = timezone.now()
+    new_reads = []
+    for category in categories:
+        new_reads.append(CategoryRead(
+            user=user,
             category=category,
-            last_read_on=timezone.now(),
-        )
+            last_read_on=now,
+        ))
+
+    if new_reads:
+        CategoryRead.objects.bulk_create(new_reads)
 
     signals.category_read.send(sender=user, category=category)
 

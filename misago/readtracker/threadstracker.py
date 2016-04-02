@@ -83,7 +83,7 @@ def make_thread_read_aware(user, thread):
     if user.is_anonymous():
         thread.last_read_on = timezone.now()
     else:
-        thread.last_read_on = user.reads_cutoff
+        thread.last_read_on = user.joined_on
 
     if user.is_authenticated() and is_date_tracked(thread.last_post_on, user):
         thread.is_read = False

@@ -236,6 +236,8 @@ export default class extends WithDropdown {
     return <div className={this.getClassName()}>
       <Header title={this.getTitle()}
               route={this.props.route}
+              user={this.props.user}
+              isLoaded={this.state.isLoaded}
               dropdown={this.state.dropdown}
               toggleNav={this.toggleNav}
               hideNav={this.hideNav} />

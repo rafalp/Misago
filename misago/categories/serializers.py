@@ -20,11 +20,11 @@ def last_activity_detail(f):
             return None
 
         acl = self.get_acl(obj)
-        if not all(
-                acl.get('can_see'),
-                acl.get('can_browse'),
-                acl.get('can_see_all_threads')
-            ):
+        if not all((
+                    acl.get('can_see'),
+                    acl.get('can_browse'),
+                    acl.get('can_see_all_threads')
+                )):
             return None
 
         return f(self, obj)
@@ -41,6 +41,7 @@ class CategorySerializer(serializers.ModelSerializer):
     last_post_url = serializers.SerializerMethodField()
     last_thread_url = serializers.SerializerMethodField()
     acl = serializers.SerializerMethodField()
+    api_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
@@ -63,6 +64,7 @@ class CategorySerializer(serializers.ModelSerializer):
             'last_post_url',
             'last_poster_url',
             'acl',
+            'api_url',
         )
 
     def get_parent(self, obj):
@@ -122,6 +124,11 @@ class CategorySerializer(serializers.ModelSerializer):
         except AttributeError:
             return {}
 
+    def get_api_url(self, obj):
+        return {
+            'read': obj.get_api_read_url(),
+        }
+
 
 class IndexCategorySerializer(CategorySerializer):
     class Meta:
@@ -133,6 +140,7 @@ class IndexCategorySerializer(CategorySerializer):
             'description',
             'css_class',
             'absolute_url',
+            'api_url',
         )
 
 

@@ -13,17 +13,20 @@ class RootCategory(Thread):
     def get_category_absolute_url(self, category):
         return reverse('misago:threads')
 
-    def get_last_thread_url(self, category):
+    def get_category_last_thread_url(self, category):
         return '/threads/%s-%s/' % (
             category.last_thread_slug,
             category.last_thread_id,
         )
 
-    def get_last_post_url(self, category):
+    def get_category_last_post_url(self, category):
         return '/threads/%s-%s/last/' % (
             category.last_thread_slug,
             category.last_thread_id,
         )
+
+    def get_category_api_read_url(self, category):
+        return reverse('misago:api:thread-read')
 
 
 class Category(RootCategory):
@@ -37,3 +40,7 @@ class Category(RootCategory):
             'category_slug': category.slug,
             'category_id': category.id,
         })
+
+    def get_category_api_read_url(self, category):
+        return '%s?category=%s' % (
+            reverse('misago:api:thread-read'), category.pk)
