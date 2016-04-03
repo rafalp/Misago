@@ -187,7 +187,7 @@ class UserAdminViewsTests(AdminTestCase):
         User = get_user_model()
         test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
         test_link = reverse('misago:admin:users:accounts:edit',
-                            kwargs={'user_id': test_user.pk})
+                            kwargs={'pk': test_user.pk})
 
         response = self.client.get(test_link)
         self.assertEqual(response.status_code, 200)
@@ -219,8 +219,8 @@ class UserAdminViewsTests(AdminTestCase):
         """delete user threads view deletes threads"""
         User = get_user_model()
         test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
-        test_link = reverse('misago:admin:users:accounts:delete_threads',
-                            kwargs={'user_id': test_user.pk})
+        test_link = reverse('misago:admin:users:accounts:delete-threads',
+                            kwargs={'pk': test_user.pk})
 
         category = Category.objects.all_categories()[:1][0]
         [post_thread(category, poster=test_user) for i in xrange(10)]
@@ -243,8 +243,8 @@ class UserAdminViewsTests(AdminTestCase):
         """delete user posts view deletes posts"""
         User = get_user_model()
         test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
-        test_link = reverse('misago:admin:users:accounts:delete_posts',
-                            kwargs={'user_id': test_user.pk})
+        test_link = reverse('misago:admin:users:accounts:delete-posts',
+                            kwargs={'pk': test_user.pk})
 
         category = Category.objects.all_categories()[:1][0]
         thread = post_thread(category)
@@ -268,8 +268,8 @@ class UserAdminViewsTests(AdminTestCase):
         """delete user account view deletes user account"""
         User = get_user_model()
         test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
-        test_link = reverse('misago:admin:users:accounts:delete_account',
-                            kwargs={'user_id': test_user.pk})
+        test_link = reverse('misago:admin:users:accounts:delete-account',
+                            kwargs={'pk': test_user.pk})
 
         response = self.client.post(test_link, **self.ajax_header)
         self.assertEqual(response.status_code, 200)

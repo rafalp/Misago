@@ -9,18 +9,18 @@ class SiteTests(TestCase):
     def test_pages(self):
         """add_section adds section to page"""
         self.page.add_section(
-            link='misago:user_posts',
+            link='misago:user-posts',
             name='Posts',
-            after='misago:user_threads')
+            after='misago:user-threads')
 
         self.page.add_section(
-            link='misago:user_threads',
+            link='misago:user-threads',
             name='Threads')
 
         self.page.add_section(
-            link='misago:user_follows',
+            link='misago:user-follows',
             name='Follows',
-            before='misago:user_posts')
+            before='misago:user-posts')
 
         self.page.assert_is_finalized()
 
@@ -29,4 +29,4 @@ class SiteTests(TestCase):
         self.assertEqual(sorted_sections[1]['name'], 'Follows')
         self.assertEqual(sorted_sections[2]['name'], 'Posts')
 
-        self.assertEqual(self.page.get_default_link(), 'misago:user_threads')
+        self.assertEqual(self.page.get_default_link(), 'misago:user-threads')

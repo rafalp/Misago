@@ -30,9 +30,10 @@ class GatewayTests(TestCase):
         User = get_user_model()
         user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
-        response = self.client.post(
-            '/api/auth/',
-            data={'username': 'Bob', 'password': 'Pass.123'})
+        response = self.client.post('/api/auth/', data={
+            'username': 'Bob',
+            'password': 'Pass.123',
+        })
 
         self.assertEqual(response.status_code, 200)
 
@@ -54,13 +55,16 @@ class GatewayTests(TestCase):
         User = get_user_model()
         User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
-        ban = Ban.objects.create(check_type=BAN_USERNAME,
-                                 banned_value='bob',
-                                 user_message='You are tragically banned.')
+        ban = Ban.objects.create(
+            check_type=BAN_USERNAME,
+            banned_value='bob',
+            user_message='You are tragically banned.',
+        )
 
-        response = self.client.post(
-            '/api/auth/',
-            data={'username': 'Bob', 'password': 'Pass.123'})
+        response = self.client.post('/api/auth/', data={
+            'username': 'Bob',
+            'password': 'Pass.123',
+        })
         self.assertEqual(response.status_code, 400)
 
         response_json = json.loads(response.content)
@@ -79,12 +83,13 @@ class GatewayTests(TestCase):
     def test_login_inactive_admin(self):
         """login api fails to sign admin-activated user in"""
         User = get_user_model()
-        User.objects.create_user('Bob', 'bob@test.com', 'Pass.123',
-                                 requires_activation=1)
+        User.objects.create_user(
+            'Bob', 'bob@test.com', 'Pass.123', requires_activation=1)
 
-        response = self.client.post(
-            '/api/auth/',
-            data={'username': 'Bob', 'password': 'Pass.123'})
+        response = self.client.post('/api/auth/', data={
+            'username': 'Bob',
+            'password': 'Pass.123',
+        })
         self.assertEqual(response.status_code, 400)
 
         response_json = json.loads(response.content)
@@ -99,12 +104,13 @@ class GatewayTests(TestCase):
     def test_login_inactive_user(self):
         """login api fails to sign user-activated user in"""
         User = get_user_model()
-        User.objects.create_user('Bob', 'bob@test.com', 'Pass.123',
-                                 requires_activation=2)
+        User.objects.create_user(
+            'Bob', 'bob@test.com', 'Pass.123', requires_activation=2)
 
-        response = self.client.post(
-            '/api/auth/',
-            data={'username': 'Bob', 'password': 'Pass.123'})
+        response = self.client.post('/api/auth/', data={
+            'username': 'Bob',
+            'password': 'Pass.123',
+        })
         self.assertEqual(response.status_code, 400)
 
         response_json = json.loads(response.content)
@@ -135,9 +141,11 @@ class SendActivationAPITests(TestCase):
 
     def test_submit_banned(self):
         """request activation link api passes for banned users"""
-        Ban.objects.create(check_type=BAN_USERNAME,
-                           banned_value=self.user.username,
-                           user_message='Nope!')
+        Ban.objects.create(
+            check_type=BAN_USERNAME,
+            banned_value=self.user.username,
+            user_message='Nope!',
+        )
 
         response = self.client.post(self.link, data={'email': self.user.email})
         self.assertEqual(response.status_code, 200)
@@ -207,9 +215,11 @@ class SendPasswordFormAPITests(TestCase):
 
     def test_submit_banned(self):
         """request change password form link api sends reset link mail"""
-        Ban.objects.create(check_type=BAN_USERNAME,
-                           banned_value=self.user.username,
-                           user_message='Nope!')
+        Ban.objects.create(
+            check_type=BAN_USERNAME,
+            banned_value=self.user.username,
+            user_message='Nope!',
+        )
 
         response = self.client.post(self.link, data={'email': self.user.email})
         self.assertEqual(response.status_code, 200)
@@ -261,18 +271,18 @@ class ChangePasswordAPITests(TestCase):
     def test_submit_valid(self):
         """submit change password form api errors for empty body"""
         response = self.client.post(self.link % (
-                self.user.id,
+                self.user.pk,
                 make_password_change_token(self.user)
             ), data={'password': 'n3wp4ss!'})
         self.assertEqual(response.status_code, 200)
 
-        user = get_user_model().objects.get(id=self.user.id)
+        user = get_user_model().objects.get(id=self.user.pk)
         self.assertTrue(user.check_password('n3wp4ss!'))
 
     def test_invalid_token_link(self):
         """request errors on invalid user id link"""
         response = self.client.post(self.link % (
-                self.user.id,
+                self.user.pk,
                 'asda7ad89sa7d9s789as'
             ))
 
@@ -281,12 +291,14 @@ class ChangePasswordAPITests(TestCase):
 
     def test_banned_user_link(self):
         """request errors because user is banned"""
-        Ban.objects.create(check_type=BAN_USERNAME,
-                           banned_value=self.user.username,
-                           user_message='Nope!')
+        Ban.objects.create(
+            check_type=BAN_USERNAME,
+            banned_value=self.user.username,
+            user_message='Nope!',
+        )
 
         response = self.client.post(self.link % (
-                self.user.id,
+                self.user.pk,
                 make_password_change_token(self.user)
             ))
         self.assertEqual(response.status_code, 400)
@@ -298,7 +310,7 @@ class ChangePasswordAPITests(TestCase):
         self.user.save()
 
         response = self.client.post(self.link % (
-                self.user.id,
+                self.user.pk,
                 make_password_change_token(self.user)
             ))
         self.assertEqual(response.status_code, 400)
@@ -308,7 +320,7 @@ class ChangePasswordAPITests(TestCase):
         self.user.save()
 
         response = self.client.post(self.link % (
-                self.user.id,
+                self.user.pk,
                 make_password_change_token(self.user)
             ))
         self.assertEqual(response.status_code, 400)
@@ -317,7 +329,7 @@ class ChangePasswordAPITests(TestCase):
     def test_submit_empty(self):
         """submit change password form api errors for empty body"""
         response = self.client.post(self.link % (
-                self.user.id,
+                self.user.pk,
                 make_password_change_token(self.user)
             ))
         self.assertEqual(response.status_code, 400)

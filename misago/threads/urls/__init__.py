@@ -19,7 +19,7 @@ def threads_list_patterns(root_name, view, patterns):
 
     for i, pattern in enumerate(patterns):
         if i > 0:
-            url_name = '%s_%s' % (root_name, PATTERNS_KWARGS[i]['list_type'])
+            url_name = '%s-%s' % (root_name, PATTERNS_KWARGS[i]['list_type'])
         else:
             url_name = root_name
 
@@ -52,15 +52,15 @@ else:
 
 
 urlpatterns += threads_list_patterns('category', CategoryThreadsList, (
-    r'^category/(?P<category_slug>[-a-zA-Z0-9]+)-(?P<category_id>\d+)/$',
-    r'^category/(?P<category_slug>[-a-zA-Z0-9]+)-(?P<category_id>\d+)/my/$',
-    r'^category/(?P<category_slug>[-a-zA-Z0-9]+)-(?P<category_id>\d+)/new/$',
-    r'^category/(?P<category_slug>[-a-zA-Z0-9]+)-(?P<category_id>\d+)/unread/$',
-    r'^category/(?P<category_slug>[-a-zA-Z0-9]+)-(?P<category_id>\d+)/subscribed/$',
+    r'^category/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/$',
+    r'^category/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/my/$',
+    r'^category/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/new/$',
+    r'^category/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/unread/$',
+    r'^category/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/subscribed/$',
 ))
 
 
-urlpatterns += threads_list_patterns('private_threads', CategoryThreadsList, (
+urlpatterns += threads_list_patterns('private-threads', CategoryThreadsList, (
     r'^private-threads/$',
     r'^private-threads/my/$',
     r'^private-threads/new/$',

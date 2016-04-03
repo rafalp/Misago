@@ -13,10 +13,10 @@ class AvatarServerTests(TestCase):
         test_user = User.objects.create_user('Bob', 'bob@bob.com', 'pass123',
                                              set_default_avatar=True)
 
-        avatar_url = reverse('misago:user_avatar', kwargs={
+        avatar_url = reverse('misago:user-avatar', kwargs={
+            'pk': test_user.pk,
             'hash': test_user.avatar_hash,
-            'user_id': test_user.pk,
-            'size': 150
+            'size': 150,
         })
         response = self.client.get(avatar_url)
 
@@ -25,10 +25,10 @@ class AvatarServerTests(TestCase):
 
     def test_deleted_user_avatar_serving(self):
         """avatar server handles deleted user avatar requests"""
-        avatar_url = reverse('misago:user_avatar', kwargs={
+        avatar_url = reverse('misago:user-avatar', kwargs={
+            'pk': 12345,
             'hash': '12356af',
-            'user_id': 12345,
-            'size': 150
+            'size': 150,
         })
         response = self.client.get(avatar_url)
 
@@ -37,8 +37,9 @@ class AvatarServerTests(TestCase):
 
     def test_blank_avatar_serving(self):
         """avatar server handles blank avatar requests"""
-        response = self.client.get(reverse('misago:blank_avatar',
-                                           kwargs={'size': 150}))
+        response = self.client.get(reverse('misago:blank-avatar', kwargs={
+            'size': 150,
+        }))
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'image/png')

@@ -75,14 +75,14 @@ class RankAdminViewsTests(AdminTestCase):
 
         response = self.client.get(
             reverse('misago:admin:users:ranks:edit',
-                    kwargs={'rank_id': test_rank.pk}))
+                    kwargs={'pk': test_rank.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_rank.name, response.content)
         self.assertIn(test_rank.title, response.content)
 
         response = self.client.post(
             reverse('misago:admin:users:ranks:edit',
-                    kwargs={'rank_id': test_rank.pk}),
+                    kwargs={'pk': test_rank.pk}),
             data={
                 'name': 'Top Lel',
                 'roles': [test_role_b.pk],
@@ -116,7 +116,7 @@ class RankAdminViewsTests(AdminTestCase):
 
         response = self.client.post(
             reverse('misago:admin:users:ranks:default',
-                    kwargs={'rank_id': test_rank.pk}))
+                    kwargs={'pk': test_rank.pk}))
         self.assertEqual(response.status_code, 302)
 
         test_rank = Rank.objects.get(slug='test-rank')
@@ -138,7 +138,7 @@ class RankAdminViewsTests(AdminTestCase):
 
         response = self.client.post(
             reverse('misago:admin:users:ranks:up',
-                    kwargs={'rank_id': test_rank.pk}))
+                    kwargs={'pk': test_rank.pk}))
         self.assertEqual(response.status_code, 302)
 
         changed_rank = Rank.objects.get(slug='test-rank')
@@ -161,11 +161,11 @@ class RankAdminViewsTests(AdminTestCase):
         # Move rank up
         response = self.client.post(
             reverse('misago:admin:users:ranks:up',
-                    kwargs={'rank_id': test_rank.pk}))
+                    kwargs={'pk': test_rank.pk}))
 
         response = self.client.post(
             reverse('misago:admin:users:ranks:down',
-                    kwargs={'rank_id': test_rank.pk}))
+                    kwargs={'pk': test_rank.pk}))
         self.assertEqual(response.status_code, 302)
 
         # Test move down
@@ -187,7 +187,7 @@ class RankAdminViewsTests(AdminTestCase):
         test_rank = Rank.objects.get(slug='test-rank')
 
         response = self.client.get(reverse('misago:admin:users:ranks:users',
-                                           kwargs={'rank_id': test_rank.pk}))
+                                           kwargs={'pk': test_rank.pk}))
         self.assertEqual(response.status_code, 302)
 
     def test_delete_view(self):
@@ -206,7 +206,7 @@ class RankAdminViewsTests(AdminTestCase):
 
         response = self.client.post(
             reverse('misago:admin:users:ranks:delete',
-                    kwargs={'rank_id': test_rank.pk}))
+                    kwargs={'pk': test_rank.pk}))
         self.assertEqual(response.status_code, 302)
 
         self.client.get(reverse('misago:admin:users:ranks:index'))
@@ -249,7 +249,7 @@ class RankAdminViewsTests(AdminTestCase):
 
         response = self.client.post(
             reverse('misago:admin:users:ranks:edit',
-                    kwargs={'rank_id': test_rank.pk}),
+                    kwargs={'pk': test_rank.pk}),
             data={
                 'name': 'Members',
                 'roles': [test_role_a.pk],

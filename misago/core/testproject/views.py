@@ -41,9 +41,9 @@ def test_pagination(request, page=None):
     return HttpResponse(",".join([str(x) for x in page.object_list]))
 
 
-def validate_slug_view(request, model_id, model_slug):
-    model = Model(int(model_id), 'eric-the-fish')
-    validate_slug(model, model_slug)
+def validate_slug_view(request, pk, slug):
+    model = Model(int(pk), 'eric-the-fish')
+    validate_slug(model, slug)
     return HttpResponse("Allright!")
 
 

@@ -33,7 +33,7 @@
 </td>
 <td class="row-action">
   {% if not item.last %}
-  <form action="{% url 'misago:admin:categories:nodes:down' category_id=item.id %}" method="post">
+  <form action="{% url 'misago:admin:categories:nodes:down' pk=item.pk %}" method="post">
     <button class="btn btn-default tooltip-top" title="{% trans "Move down" %}">
       {% csrf_token %}
       <span class="fa fa-chevron-down"></span>
@@ -45,7 +45,7 @@
 </td>
 <td class="row-action">
   {% if not item.first %}
-  <form action="{% url 'misago:admin:categories:nodes:up' category_id=item.id %}" method="post">
+  <form action="{% url 'misago:admin:categories:nodes:up' pk=item.pk %}" method="post">
     <button class="btn btn-default tooltip-top" title="{% trans "Move up" %}">
       {% csrf_token %}
       <span class="fa fa-chevron-up"></span>
@@ -57,18 +57,18 @@
 </td>
 {% for action in extra_actions %}
 <td class="row-action">
-  <a href="{% url action.link category_id=item.id %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+  <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
     <span class="{{ action.icon }}"></span>
   </a>
 </td>
 {% endfor %}
 <td class="row-action">
-  <a href="{% url 'misago:admin:categories:nodes:edit' category_id=item.id %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">
+  <a href="{% url 'misago:admin:categories:nodes:edit' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">
     <span class="fa fa-pencil"></span>
   </a>
 </td>
 <td class="row-action">
-  <a href="{% url 'misago:admin:categories:nodes:delete' category_id=item.id %}" class="btn btn-danger tooltip-top" title="{% trans "Delete" %}">
+  <a href="{% url 'misago:admin:categories:nodes:delete' pk=item.pk %}" class="btn btn-danger tooltip-top" title="{% trans "Delete" %}">
     <span class="fa fa-times"></span>
   </a>
 </td>

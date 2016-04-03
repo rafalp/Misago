@@ -37,8 +37,8 @@ class Category(RootCategory):
 
     def get_category_absolute_url(self, category):
         return reverse('misago:category', kwargs={
-            'category_slug': category.slug,
-            'category_id': category.id,
+            'pk': category.pk,
+            'slug': category.slug,
         })
 
     def get_category_api_read_url(self, category):

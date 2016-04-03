@@ -49,7 +49,7 @@ def handle_outdated_slug_exception(request, exception):
     model = exception.args[0]
     model_name = model.__class__.__name__.lower()
     url_kwargs = request.resolver_match.kwargs
-    url_kwargs['%s_slug' % model_name] = model.slug
+    url_kwargs['slug'] = model.slug
 
     new_url = reverse(view_name, kwargs=url_kwargs)
     return HttpResponsePermanentRedirect(new_url)

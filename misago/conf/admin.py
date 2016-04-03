@@ -8,11 +8,13 @@ class MisagoAdminExtension(object):
 
         urlpatterns.patterns('settings',
             url(r'^$', 'misago.conf.views.index', name='index'),
-            url(r'^(?P<group_key>(\w|-)+)/$', 'misago.conf.views.group', name='group'),
+            url(r'^(?P<key>(\w|-)+)/$', 'misago.conf.views.group', name='group'),
         )
 
     def register_navigation_nodes(self, site):
-        site.add_node(name=_("Settings"),
-                      icon='fa fa-gears',
-                      parent='misago:admin',
-                      link='misago:admin:settings:index')
+        site.add_node(
+            name=_("Settings"),
+            icon='fa fa-gears',
+            parent='misago:admin',
+            link='misago:admin:settings:index',
+        )

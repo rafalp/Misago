@@ -5,7 +5,7 @@
 
 <div class="list-group nav-side">
   {% for section in sections %}
-    <a href="{% url section.link user_slug=profile.slug user_id=profile.id %}" class="list-group-item{{ section.is_active|iftrue:' active' }}">
+    <a href="{% url section.link slug=profile.slug pk=profile.pk %}" class="list-group-item{{ section.is_active|iftrue:' active' }}">
       <span class="material-icon">
         {{ section.icon }}
       </span>

@@ -20,26 +20,27 @@ class MisagoUsersConfig(AppConfig):
             return request.user.acl['can_have_signature']
 
         usercp.add_section(
-            link='misago:usercp_change_forum_options',
+            link='misago:usercp-change-forum-options',
             name=_('Forum options'),
             component='forum-options',
-            icon='settings')
-
+            icon='settings',
+        )
         usercp.add_section(
-            link='misago:usercp_change_username',
+            link='misago:usercp-change-username',
             name=_('Change username'),
             component='change-username',
-            icon='card_membership')
-
+            icon='card_membership',
+        )
         usercp.add_section(
-            link='misago:usercp_change_email_password',
+            link='misago:usercp-change-email-password',
             name=_('Change email or password'),
             component='sign-in-credentials',
-            icon='vpn_key')
+            icon='vpn_key',
+        )
 
     def register_default_users_list_pages(self):
         users_list.add_section(
-            link='misago:users_active_posters',
+            link='misago:users-active-posters',
             component='active-posters',
             name=_('Active posters'))
 
@@ -87,44 +88,44 @@ class MisagoUsersConfig(AppConfig):
                 return False
 
         user_profile.add_section(
-            link='misago:user_posts',
+            link='misago:user-posts',
             name=_("Posts"),
             icon='message',
             component='posts',
-            get_metadata=posts_badge)
-
+            get_metadata=posts_badge,
+        )
         user_profile.add_section(
-            link='misago:user_threads',
+            link='misago:user-threads',
             name=_("Threads"),
             icon='forum',
             component='threads',
-            get_metadata=threads_badge)
-
+            get_metadata=threads_badge,
+        )
         user_profile.add_section(
-            link='misago:user_followers',
+            link='misago:user-followers',
             name=_("Followers"),
             icon='favorite',
             component='followers',
-            get_metadata=followers_badge)
-
+            get_metadata=followers_badge,
+        )
         user_profile.add_section(
-            link='misago:user_follows',
+            link='misago:user-follows',
             name=_("Follows"),
             icon='favorite_border',
             component='follows',
-            get_metadata=following_badge)
-
+            get_metadata=following_badge,
+        )
         user_profile.add_section(
-            link='misago:username_history',
+            link='misago:username-history',
             name=_("Username history"),
             icon='card_membership',
             component='username-history',
-            visible_if=can_see_names_history)
-
+            visible_if=can_see_names_history,
+        )
         user_profile.add_section(
-            link='misago:user_ban',
+            link='misago:user-ban',
             name=_("Ban details"),
             icon='remove_circle_outline',
             component='ban-details',
-            visible_if=can_see_ban_details)
-
+            visible_if=can_see_ban_details,
+        )

@@ -40,18 +40,18 @@
 </td>
 {% for action in extra_actions %}
 <td class="row-action">
-  <a href="{% url action.link ban_id=item.id %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+  <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
     <span class="{{ action.icon }}"></span>
   </a>
 </td>
 {% endfor %}
 <td class="row-action">
-  <a href="{% url 'misago:admin:users:bans:edit' ban_id=item.id %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">
+  <a href="{% url 'misago:admin:users:bans:edit' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">
     <span class="fa fa-pencil"></span>
   </a>
 </td>
 <td class="row-action">
-  <form action="{% url 'misago:admin:users:bans:delete' ban_id=item.id %}" method="post" class="delete-prompt">
+  <form action="{% url 'misago:admin:users:bans:delete' pk=item.pk %}" method="post" class="delete-prompt">
     <button class="btn btn-danger tooltip-top" title="{% trans "Remove" %}">
       {% csrf_token %}
       <span class="fa fa-times"></span>

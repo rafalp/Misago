@@ -12,7 +12,7 @@ class MisagoMailerTests(TestCase):
         User = get_user_model()
         User.objects.create_user('Bob', 'bob@bob.com', 'pass123')
 
-        response = self.client.get(reverse('test_mail_user'))
+        response = self.client.get(reverse('test-mail-user'))
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(mail.outbox[0].subject, "Misago Test Mail")
@@ -28,7 +28,7 @@ class MisagoMailerTests(TestCase):
             User.objects.create_user('Uniform', 'uniform@test.com', 'pass123'),
         )
 
-        response = self.client.get(reverse('test_mail_users'))
+        response = self.client.get(reverse('test-mail-users'))
         self.assertEqual(response.status_code, 200)
 
         spams_sent = 0

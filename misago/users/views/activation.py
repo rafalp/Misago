@@ -24,7 +24,7 @@ def activation_view(f):
 @activation_view
 def request_activation(request):
     request.frontend_context.update({
-        'SEND_ACTIVATION_API': reverse('misago:api:send_activation')
+        'SEND_ACTIVATION_API': reverse('misago:api:send-activation')
     })
     return render(request, 'misago/activation/request.html')
 
@@ -38,9 +38,9 @@ class ActivationError(Exception):
 
 
 @activation_view
-def activate_by_token(request, user_id, token):
+def activate_by_token(request, pk, token):
     User = get_user_model()
-    inactive_user = get_object_or_404(User.objects, pk=user_id)
+    inactive_user = get_object_or_404(User.objects, pk=pk)
 
     try:
         if not inactive_user.requires_activation:

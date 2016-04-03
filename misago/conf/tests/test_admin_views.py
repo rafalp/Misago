@@ -18,8 +18,9 @@ class AdminSettingsViewsTests(AdminTestCase):
 
         self.assertEqual(response.status_code, 200)
         for group in SettingsGroup.objects.all():
-            group_link = reverse('misago:admin:settings:group',
-                                 kwargs={'group_key': group.key})
+            group_link = reverse('misago:admin:settings:group', kwargs={
+                'key': group.key
+            })
             self.assertIn(group.name, response.content)
             self.assertIn(group_link, response.content)
 
@@ -28,8 +29,9 @@ class AdminSettingsViewsTests(AdminTestCase):
         each settings group view returns 200 and contains all settings in group
         """
         for group in SettingsGroup.objects.all():
-            group_link = reverse('misago:admin:settings:group',
-                                 kwargs={'group_key': group.key})
+            group_link = reverse('misago:admin:settings:group', kwargs={
+                'key': group.key
+            })
             response = self.client.get(group_link)
 
             self.assertEqual(response.status_code, 200)

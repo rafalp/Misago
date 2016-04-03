@@ -53,14 +53,16 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         test_role = CategoryRole.objects.get(name='Test CategoryRole')
 
         response = self.client.get(
-            reverse('misago:admin:permissions:categories:edit',
-                    kwargs={'role_id': test_role.pk}))
+            reverse('misago:admin:permissions:categories:edit', kwargs={
+                'pk': test_role.pk
+            }))
         self.assertEqual(response.status_code, 200)
         self.assertIn('Test CategoryRole', response.content)
 
         response = self.client.post(
-            reverse('misago:admin:permissions:categories:edit',
-                    kwargs={'role_id': test_role.pk}),
+            reverse('misago:admin:permissions:categories:edit', kwargs={
+                'pk': test_role.pk
+            }),
             data=fake_data({'name': 'Top Lel'}))
         self.assertEqual(response.status_code, 302)
 
@@ -78,8 +80,9 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
 
         test_role = CategoryRole.objects.get(name='Test CategoryRole')
         response = self.client.post(
-            reverse('misago:admin:permissions:categories:delete',
-                    kwargs={'role_id': test_role.pk}))
+            reverse('misago:admin:permissions:categories:delete', kwargs={
+                'pk': test_role.pk
+            }))
         self.assertEqual(response.status_code, 302)
 
         self.client.get(reverse('misago:admin:permissions:categories:index'))
@@ -142,7 +145,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         # See if form page is rendered
         response = self.client.get(
             reverse('misago:admin:categories:nodes:permissions',
-                    kwargs={'category_id': test_category.pk}))
+                    kwargs={'pk': test_category.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_category.name, response.content)
         self.assertIn(test_role_a.name, response.content)
@@ -153,7 +156,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         # Assign roles to categories
         response = self.client.post(
             reverse('misago:admin:categories:nodes:permissions',
-                    kwargs={'category_id': test_category.pk}),
+                    kwargs={'pk': test_category.pk}),
             data={
                 ('%s-category_role' % test_role_a.pk): role_full.pk,
                 ('%s-category_role' % test_role_b.pk): role_comments.pk,
@@ -183,8 +186,9 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
 
         self.assertEqual(Category.objects.count(), 2)
         response = self.client.get(
-            reverse('misago:admin:permissions:users:categories',
-                    kwargs={'role_id': test_role.pk}))
+            reverse('misago:admin:permissions:users:categories', kwargs={
+                'pk': test_role.pk
+            }))
         self.assertEqual(response.status_code, 302)
 
         """
@@ -232,8 +236,9 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
 
         # See if form page is rendered
         response = self.client.get(
-            reverse('misago:admin:permissions:users:categories',
-                    kwargs={'role_id': test_role.pk}))
+            reverse('misago:admin:permissions:users:categories', kwargs={
+                'pk': test_role.pk
+            }))
         self.assertEqual(response.status_code, 200)
         self.assertIn(category_a.name, response.content)
         self.assertIn(category_b.name, response.content)
@@ -253,16 +258,18 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
 
         # See if form contains those roles
         response = self.client.get(
-            reverse('misago:admin:permissions:users:categories',
-                    kwargs={'role_id': test_role.pk}))
+            reverse('misago:admin:permissions:users:categories', kwargs={
+                'pk': test_role.pk
+            }))
         self.assertEqual(response.status_code, 200)
         self.assertIn(role_comments.name, response.content)
         self.assertIn(role_full.name, response.content)
 
         # Assign roles to categories
         response = self.client.post(
-            reverse('misago:admin:permissions:users:categories',
-                    kwargs={'role_id': test_role.pk}),
+            reverse('misago:admin:permissions:users:categories', kwargs={
+                'pk': test_role.pk
+            }),
             data={
                 ('%s-role' % category_a.pk): role_comments.pk,
                 ('%s-role' % category_b.pk): role_comments.pk,

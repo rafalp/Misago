@@ -130,11 +130,11 @@ class UserAvatarTests(AuthenticatedUserTestCase):
             self.assertTrue(avatar.isfile())
 
             tmp_avatar_kwargs = {
+                'pk': self.user.pk,
                 'secret': response_json['options']['crop_tmp']['secret'],
                 'hash': response_json['avatar_hash'],
-                'user_id': self.user.pk
             }
-            tmp_avatar_path = reverse('misago:user_avatar_source',
+            tmp_avatar_path = reverse('misago:user-avatar-source',
                                       kwargs=tmp_avatar_kwargs)
             response = self.client.get(tmp_avatar_path)
             self.assertEqual(response.status_code, 200)
@@ -163,11 +163,11 @@ class UserAvatarTests(AuthenticatedUserTestCase):
             self.assertTrue(avatar.isfile())
 
             org_avatar_kwargs = {
+                'pk': self.user.pk,
                 'secret': response_json['options']['crop_org']['secret'],
                 'hash': response_json['avatar_hash'],
-                'user_id': self.user.pk
             }
-            org_avatar_path = reverse('misago:user_avatar_source',
+            org_avatar_path = reverse('misago:user-avatar-source',
                                       kwargs=tmp_avatar_kwargs)
             response = self.client.get(org_avatar_path)
             self.assertEqual(response.status_code, 200)

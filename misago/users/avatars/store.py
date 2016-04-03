@@ -108,11 +108,11 @@ def store_new_avatar(user, image):
 def get_avatars_dir_path(user=None):
     if user:
         try:
-            user_id = user.pk
+            user_pk = user.pk
         except AttributeError:
-            user_id = user
+            user_pk = user
 
-        dir_hash = md5(str(user_id)).hexdigest()
+        dir_hash = md5(str(user_pk)).hexdigest()
         hash_path = [dir_hash[0:1], dir_hash[2:3]]
         return Path(os.path.join(AVATARS_STORE, *hash_path))
     else:

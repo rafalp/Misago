@@ -148,14 +148,14 @@ class CategoryThreadsList(ThreadsList, ThreadsListMixin):
 
     def get_category(self, request, categories, **kwargs):
         for category in categories:
-            if category.pk == int(kwargs['category_id']):
+            if category.pk == int(kwargs['pk']):
                 if category.special_role:
                     raise Http404()
 
                 allow_see_category(request.user, category)
                 allow_browse_category(request.user, category)
 
-                validate_slug(category, kwargs['category_slug'])
+                validate_slug(category, kwargs['slug'])
                 return category
         else:
             raise Http404()

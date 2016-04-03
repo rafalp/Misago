@@ -20,7 +20,7 @@ def reset_view(f):
 @reset_view
 def request_reset(request):
     request.frontend_context.update({
-        'SEND_PASSWORD_RESET_API': reverse('misago:api:send_password_form'),
+        'SEND_PASSWORD_RESET_API': reverse('misago:api:send-password-form'),
     })
     return render(request, 'misago/forgottenpassword/request.html')
 
@@ -30,9 +30,9 @@ class ResetError(Exception):
 
 
 @reset_view
-def reset_password_form(request, user_id, token):
+def reset_password_form(request, pk, token):
     User = get_user_model()
-    requesting_user = get_object_or_404(User.objects, pk=user_id)
+    requesting_user = get_object_or_404(User.objects, pk=pk)
 
     try:
         if (request.user.is_authenticated() and
@@ -56,8 +56,8 @@ def reset_password_form(request, user_id, token):
                 'message': e.args[0],
             }, status=400)
 
-    api_url = reverse('misago:api:change_forgotten_password', kwargs={
-        'user_id': user_id,
+    api_url = reverse('misago:api:change-forgotten-password', kwargs={
+        'pk': pk,
         'token': token,
     })
 

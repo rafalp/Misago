@@ -109,7 +109,7 @@ There are {{ users }} users with {{ rank }} rank.
           <ul class="pager">
             {% if paginator.previous %}
             <li class="previous">
-              <a href="{% url 'misago:users_rank' rank_slug=rank.slug page=paginator.previous %}">
+              <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.previous %}">
                 <span aria-hidden="true" class="material-icon">
                   arrow_back
                 </span>
@@ -117,7 +117,7 @@ There are {{ users }} users with {{ rank }} rank.
             </li>
             {% elif paginator.first %}
             <li class="previous">
-              <a href="{% url 'misago:users_rank' rank_slug=rank.slug %}">
+              <a href="{% url 'misago:users-rank' slug=rank.slug %}">
                 <span aria-hidden="true" class="material-icon">
                   arrow_back
                 </span>
@@ -126,7 +126,7 @@ There are {{ users }} users with {{ rank }} rank.
             {% endif %}
             {% if paginator.next %}
             <li class="next">
-              <a href="{% url 'misago:users_rank' rank_slug=rank.slug page=paginator.next %}">
+              <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.next %}">
                 <span aria-hidden="true" class="material-icon">
                   arrow_forward
                 </span>
@@ -138,9 +138,9 @@ There are {{ users }} users with {{ rank }} rank.
             {% for page in paginator.page_range %}
               <li{% if page == paginator.page %} class="active"{% endif %}>
                 {% if page > 1 %}
-                <a href="{% url 'misago:users_rank' rank_slug=rank.slug page=page %}">
+                <a href="{% url 'misago:users-rank' slug=rank.slug page=page %}">
                 {% else %}
-                <a href="{% url 'misago:users_rank' rank_slug=rank.slug %}">
+                <a href="{% url 'misago:users-rank' slug=rank.slug %}">
                 {% endif %}
                   {{ page }}
                 </a>

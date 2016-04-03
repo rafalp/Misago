@@ -23,25 +23,25 @@ class ErrorPageViewsTests(TestCase):
 
     def test_banned_returns_403(self):
         """banned error page has no show-stoppers"""
-        response = self.client.get(reverse('raise_misago_banned'))
+        response = self.client.get(reverse('raise-misago-banned'))
         self.assertEqual(response.status_code, 403)
         self.assertIn("<p>Banned for test!</p>", response.content)
 
     def test_permission_denied_returns_403(self):
         """permission_denied error page has no show-stoppers"""
-        response = self.client.get(reverse('raise_misago_403'))
+        response = self.client.get(reverse('raise-misago-403'))
         self.assertEqual(response.status_code, 403)
         self.assertIn("Page not available", response.content)
 
     def test_page_not_found_returns_404(self):
         """page_not_found error page has no show-stoppers"""
-        response = self.client.get(reverse('raise_misago_404'))
+        response = self.client.get(reverse('raise-misago-404'))
         self.assertEqual(response.status_code, 404)
         self.assertIn("Page not found", response.content)
 
     def test_not_allowed_returns_405(self):
         """not allowed error page has no showstoppers"""
-        response = self.client.get(reverse('raise_misago_405'))
+        response = self.client.get(reverse('raise-misago-405'))
         self.assertEqual(response.status_code, 405)
         self.assertIn("Wrong way", response.content)
 
@@ -51,7 +51,7 @@ class CustomErrorPagesTests(TestCase):
 
     def setUp(self):
         self.misago_request = RequestFactory().get(reverse('misago:index'))
-        self.site_request = RequestFactory().get(reverse('raise_403'))
+        self.site_request = RequestFactory().get(reverse('raise-403'))
 
         self.misago_request.user = AnonymousUser()
         self.site_request.user = AnonymousUser()
@@ -61,9 +61,9 @@ class CustomErrorPagesTests(TestCase):
 
     def test_shared_403_decorator(self):
         """shared_403_decorator calls correct error handler"""
-        response = self.client.get(reverse('raise_misago_403'))
+        response = self.client.get(reverse('raise-misago-403'))
         self.assertEqual(response.status_code, 403)
-        response = self.client.get(reverse('raise_403'))
+        response = self.client.get(reverse('raise-403'))
         self.assertEqual(response.status_code, 403)
         self.assertIn("Custom 403", response.content)
 
@@ -74,9 +74,9 @@ class CustomErrorPagesTests(TestCase):
 
     def test_shared_404_decorator(self):
         """shared_404_decorator calls correct error handler"""
-        response = self.client.get(reverse('raise_misago_404'))
+        response = self.client.get(reverse('raise-misago-404'))
         self.assertEqual(response.status_code, 404)
-        response = self.client.get(reverse('raise_404'))
+        response = self.client.get(reverse('raise-404'))
         self.assertEqual(response.status_code, 404)
         self.assertIn("Custom 404", response.content)
 

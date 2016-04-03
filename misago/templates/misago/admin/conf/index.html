@@ -24,7 +24,7 @@
       <ul class="nav nav-side">
         {% for group in settings_groups %}
         <li {% if group.key == active_group.key %}class="active"{% endif %}>
-          <a href="{% url 'misago:admin:settings:group' group_key=group.key %}">
+          <a href="{% url 'misago:admin:settings:group' key=group.key %}">
             {{ group.name }}
           </a>
         </li>
@@ -39,7 +39,7 @@
         <div class="list-group">
 
           {% for group in settings_groups %}
-          <a href="{% url 'misago:admin:settings:group' group_key=group.key %}" class="list-group-item">
+          <a href="{% url 'misago:admin:settings:group' key=group.key %}" class="list-group-item">
             <h4 class="list-group-item-heading">{{ group.name }}</h4>
             {% if group.description %}
             <p class="list-group-item-text">{{ group.description }}</p>

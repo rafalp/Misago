@@ -238,12 +238,10 @@ class SearchUsersFormBase(forms.Form):
                 email__istartswith=criteria.get('email'))
 
         if criteria.get('rank'):
-            queryset = queryset.filter(
-                rank_id=criteria.get('rank'))
+            queryset = queryset.filter(rank_id=criteria.get('rank'))
 
         if criteria.get('role'):
-            queryset = queryset.filter(
-                roles__id=criteria.get('role'))
+            queryset = queryset.filter(roles__id=criteria.get('role'))
 
         if criteria.get('inactive'):
             queryset = queryset.filter(requires_activation__gt=0)

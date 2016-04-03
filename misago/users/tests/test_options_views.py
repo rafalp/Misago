@@ -11,7 +11,7 @@ class OptionsViewsTests(AuthenticatedUserTestCase):
 
     def test_form_view_returns_200(self):
         """/options/some-form has no show stoppers"""
-        response = self.client.get(reverse('misago:options_form', kwargs={
+        response = self.client.get(reverse('misago:options-form', kwargs={
             'form_name': 'some-fake-form'
         }))
         self.assertEqual(response.status_code, 200)
@@ -36,7 +36,7 @@ class ConfirmChangeEmailTests(AuthenticatedUserTestCase):
     def test_invalid_token(self):
         """invalid token is rejected"""
         response = self.client.get(
-            reverse('misago:options_confirm_email_change', kwargs={
+            reverse('misago:options-confirm-email-change', kwargs={
                 'token': 'invalid'
             }))
 
@@ -73,7 +73,7 @@ class ConfirmChangePasswordTests(AuthenticatedUserTestCase):
     def test_invalid_token(self):
         """invalid token is rejected"""
         response = self.client.get(
-            reverse('misago:options_confirm_password_change', kwargs={
+            reverse('misago:options-confirm-password-change', kwargs={
                 'token': 'invalid'
             }))
 

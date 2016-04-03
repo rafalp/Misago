@@ -24,12 +24,12 @@
   {{ item }}
 </td>
 <td class="row-action">
-  <a href="{% url 'misago:admin:permissions:categories:edit' role_id=item.id %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">
+  <a href="{% url 'misago:admin:permissions:categories:edit' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">
     <span class="fa fa-pencil"></span>
   </a>
 </td>
 <td class="row-action">
-  <form action="{% url 'misago:admin:permissions:categories:delete' role_id=item.id %}" method="post" class="delete-prompt">
+  <form action="{% url 'misago:admin:permissions:categories:delete' pk=item.pk %}" method="post" class="delete-prompt">
     <button class="btn btn-danger tooltip-top" title="{% trans "Delete" %}">
       {% csrf_token %}
       <span class="fa fa-times"></span>

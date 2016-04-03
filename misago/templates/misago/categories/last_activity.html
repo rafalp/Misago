@@ -14,7 +14,7 @@
 
     {% capture trimmed as user %}
       {% if category.last_poster_id %}
-        <a href="{% url 'misago:user' user_slug=category.last_poster_slug user_id=category.last_poster_id %}" class="poster-title">{{ category.last_poster_name }}</a>
+        <a href="{% url 'misago:user' slug=category.last_poster_slug id=category.last_poster_id %}" class="poster-title">{{ category.last_poster_name }}</a>
       {% else %}
         <span class="poster-title">{{ category.last_poster_name }}</span>
       {% endif %}

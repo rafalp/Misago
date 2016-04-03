@@ -69,13 +69,13 @@
 </td>
 {% for action in extra_actions %}
 <td class="row-action">
-  <a href="{% url action.link user_id=item.id %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+  <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
     <span class="{{ action.icon }}"></span>
   </a>
 </td>
 {% endfor %}
 <td class="row-action">
-  <a href="{% url 'misago:admin:users:accounts:edit' user_id=item.id %}" class="btn btn-primary tooltip-top" title="{% trans "Edit user" %}">
+  <a href="{% url 'misago:admin:users:accounts:edit' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Edit user" %}">
     <span class="fa fa-pencil"></span>
   </a>
 </td>

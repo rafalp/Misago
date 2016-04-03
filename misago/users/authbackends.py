@@ -18,11 +18,11 @@ class MisagoBackend(ModelBackend):
             # difference between an existing and a non-existing user (#20760).
             UserModel().set_password(password)
 
-    def get_user(self, user_id):
+    def get_user(self, pk):
         UserModel = get_user_model()
         try:
             manager = UserModel._default_manager
             relations = ('rank', 'online_tracker', 'ban_cache')
-            return manager.select_related(*relations).get(pk=user_id)
+            return manager.select_related(*relations).get(pk=pk)
         except UserModel.DoesNotExist:
             return None

@@ -36,7 +36,7 @@
       <div class="active-posters ui-ready">
         <ul class="list-group">
           {% for ranked in users %}
-            {% url USER_PROFILE_URL user_slug=ranked.slug user_id=ranked.id as user_url %}
+            {% url USER_PROFILE_URL slug=ranked.slug pk=ranked.pk as user_url %}
             <li class="list-group-item{% if ranked.rank.css_class %} list-group-rank-{{ ranked.rank.css_class }}{% endif %}">
               <div class="rank-user-avatar">
                 <a href="{{ user_url }}">
@@ -50,7 +50,7 @@
                 </div>
                 <div class="user-details">
                   {% if ranked.rank.is_tab %}
-                  <a href="{% url 'misago:users_rank' rank_slug=ranked.rank.slug %}" class="rank-name item-title">
+                  <a href="{% url 'misago:users-rank' slug=ranked.rank.slug %}" class="rank-name item-title">
                     {{ ranked.rank.name }}
                   </a>
                   {% else %}

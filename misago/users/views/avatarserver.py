@@ -21,12 +21,12 @@ def serve_blank_avatar(request, size):
 
 
 @cache_control(private=True, must_revalidate=False)
-def serve_user_avatar(request, user_id, hash, size):
+def serve_user_avatar(request, pk, hash, size):
     size = clean_size(size)
 
-    if int(user_id) > 0:
-        avatar_dir = store.get_avatars_dir_path(user_id)
-        avatar_file = get_user_avatar_file(user_id, size)
+    if int(pk) > 0:
+        avatar_dir = store.get_avatars_dir_path(pk)
+        avatar_file = get_user_avatar_file(pk, size)
         avatar_path = os.path.join(avatar_dir, avatar_file)
 
         if Path(avatar_path).exists():
@@ -39,13 +39,13 @@ def serve_user_avatar(request, user_id, hash, size):
 
 
 @never_cache
-def serve_user_avatar_source(request, user_id, secret, hash):
+def serve_user_avatar_source(request, pk, secret, hash):
     fallback_avatar = get_blank_avatar_file(min(settings.MISAGO_AVATARS_SIZES))
     User = get_user_model()
 
-    if user_id > 0:
+    if pk > 0:
         try:
-            user = User.objects.get(id=user_id)
+            user = User.objects.get(pk=pk)
 
             tokens = store.get_user_avatar_tokens(user)
             suffix = tokens.get(secret)
@@ -61,7 +61,7 @@ def serve_user_avatar_source(request, user_id, secret, hash):
     if avatar_file == fallback_avatar:
         avatar_dir = store.get_avatars_dir_path()
     else:
-        avatar_dir = store.get_avatars_dir_path(user_id)
+        avatar_dir = store.get_avatars_dir_path(pk)
 
     avatar_path = os.path.join(avatar_dir, avatar_file)
     return make_file_response(avatar_path, 'image/png')
@@ -78,8 +78,8 @@ def clean_size(size):
     return size
 
 
-def get_user_avatar_file(user_id, size):
-    return '%s_%s.png' % (user_id, size)
+def get_user_avatar_file(pk, size):
+    return '%s_%s.png' % (pk, size)
 
 
 def get_blank_avatar_file(size):

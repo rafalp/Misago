@@ -7,7 +7,7 @@ from misago.conf import settings
 
 class AuthenticateAPITests(TestCase):
     def setUp(self):
-        self.api_link = reverse('misago:api:captcha_question')
+        self.api_link = reverse('misago:api:captcha-question')
 
     def tearDown(self):
         settings.reset_settings()

@@ -34,9 +34,9 @@ def profile_view(f):
 
         relations = ('rank', 'online_tracker', 'ban_cache')
         queryset = User.objects.select_related(*relations)
-        profile = get_object_or_404(queryset, id=kwargs.pop('user_id'))
+        profile = get_object_or_404(queryset, pk=kwargs.pop('pk'))
 
-        validate_slug(profile, kwargs.pop('user_slug'))
+        validate_slug(profile, kwargs.pop('slug'))
         kwargs['profile'] = profile
 
         add_acl(request.user, profile)
@@ -108,8 +108,9 @@ def render(request, template, context):
 @profile_view
 def lander(request, profile):
     return redirect(user_profile.get_default_link(),
-        user_slug=profile.slug,
-        user_id=profile.id)
+        slug=profile.slug,
+        pk=profile.pk,
+    )
 
 
 @profile_view

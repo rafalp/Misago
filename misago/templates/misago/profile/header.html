@@ -21,7 +21,7 @@
           <ul class="list-inline">
             {% if profile.rank.is_tab %}
             <li class="user-rank">
-              <a href="{% url 'misago:users_rank' rank_slug=profile.rank.slug %}" class="item-title">
+              <a href="{% url 'misago:users-rank' slug=profile.rank.slug %}" class="item-title">
                 {{ profile.rank.name }}
               </a>
             </li>

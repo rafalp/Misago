@@ -68,9 +68,9 @@ class UserViewSet(viewsets.GenericViewSet):
         relations = ('rank', 'online_tracker', 'ban_cache')
         return self.queryset.select_related(*relations)
 
-    def get_user(self, user_id):
+    def get_user(self, pk):
         return get_object_or_404(self.get_queryset(),
-            id=get_int_or_404(user_id)
+            pk=get_int_or_404(pk)
         )
 
     def list(self, request):
@@ -228,9 +228,9 @@ class UserViewSet(viewsets.GenericViewSet):
                         post.thread.save()
 
                     categories = Category.objects.filter(
-                        id__in=categories_to_sync).iterator()
+                        id__in=categories_to_sync)
 
-                    for category in categories:
+                    for category in categories.iterator():
                         category.synchronize()
                         category.save()
 

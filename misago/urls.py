@@ -8,7 +8,6 @@ urlpatterns = patterns('',
     url(r'^', include('misago.users.urls')),
     url(r'^', include('misago.categories.urls')),
     url(r'^', include('misago.threads.urls')),
-    url(r'^', include('misago.readtracker.urls')),
 )
 
 urlpatterns += patterns('misago.core.views',

@@ -30,13 +30,13 @@ class UsersListLanderTests(UsersListTestCase):
         response = self.client.get(reverse('misago:users'))
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response['location'].endswith(
-                        reverse('misago:users_active_posters')))
+                        reverse('misago:users-active-posters')))
 
 
 class ActivePostersTests(UsersListTestCase):
     def test_active_posters_list(self):
         """active posters page has no showstoppers"""
-        view_link = reverse('misago:users_active_posters')
+        view_link = reverse('misago:users-active-posters')
 
         response = self.client.get(view_link)
         self.assertEqual(response.status_code, 200)
@@ -44,8 +44,8 @@ class ActivePostersTests(UsersListTestCase):
         # Create 200 test users and see if errors appeared
         User = get_user_model()
         for i in xrange(200):
-            User.objects.create_user('Bob%s' % i, 'm%s@te.com' % i, 'Pass.123',
-                                     posts=12345)
+            User.objects.create_user(
+                'Bob%s' % i, 'm%s@te.com' % i, 'Pass.123', posts=12345)
 
         response = self.client.get(view_link)
         self.assertEqual(response.status_code, 200)
@@ -55,8 +55,7 @@ class UsersRankTests(UsersListTestCase):
     def test_ranks(self):
         """ranks lists are handled correctly"""
         for rank in Rank.objects.iterator():
-            rank_link = reverse('misago:users_rank',
-                                kwargs={'rank_slug': rank.slug})
+            rank_link = reverse('misago:users-rank', kwargs={'slug': rank.slug})
             response = self.client.get(rank_link)
 
             if rank.is_tab:

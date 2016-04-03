@@ -88,8 +88,7 @@ class BanAdminViewsTests(AdminTestCase):
 
         test_ban = Ban.objects.get(banned_value='admin')
         response = self.client.post(
-            reverse('misago:admin:users:bans:edit',
-                    kwargs={'ban_id': test_ban.pk}),
+            reverse('misago:admin:users:bans:edit', kwargs={'pk': test_ban.pk}),
             data={
                 'check_type': '1',
                 'banned_value': 'test@test.com',
@@ -116,8 +115,9 @@ class BanAdminViewsTests(AdminTestCase):
         test_ban = Ban.objects.get(banned_value='testban')
 
         response = self.client.post(
-            reverse('misago:admin:users:bans:delete',
-                    kwargs={'ban_id': test_ban.pk}))
+            reverse('misago:admin:users:bans:delete', kwargs={
+                'pk': test_ban.pk
+            }))
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:users:bans:index'))

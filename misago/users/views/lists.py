@@ -29,8 +29,9 @@ def render(request, template, context):
     for rank in Rank.objects.filter(is_tab=True).order_by('order'):
         context['pages'].append({
             'name': rank.name,
-            'reversed_link': reverse('misago:users_rank',
-                                     kwargs={'rank_slug': rank.slug}),
+            'reversed_link': reverse('misago:users-rank', kwargs={
+                'slug': rank.slug
+            }),
             'is_active': active_rank.pk == rank.pk if active_rank else None
         })
 
@@ -91,8 +92,8 @@ def active_posters(request):
 
 
 @allow_see_list
-def rank(request, rank_slug, page=0):
-    rank = get_object_or_404(Rank.objects.filter(is_tab=True), slug=rank_slug)
+def rank(request, slug, page=0):
+    rank = get_object_or_404(Rank.objects.filter(is_tab=True), slug=slug)
     queryset = rank.user_set.select_related('rank').order_by('slug')
 
     page = paginate(queryset, page, settings.MISAGO_USERS_PER_PAGE, 4)

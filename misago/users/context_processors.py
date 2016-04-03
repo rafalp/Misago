@@ -7,8 +7,8 @@ from misago.users.serializers import (
 
 def user_links(request):
     request.frontend_context.update({
-        'REQUEST_ACTIVATION_URL': reverse('misago:request_activation'),
-        'FORGOTTEN_PASSWORD_URL': reverse('misago:forgotten_password'),
+        'REQUEST_ACTIVATION_URL': reverse('misago:request-activation'),
+        'FORGOTTEN_PASSWORD_URL': reverse('misago:forgotten-password'),
 
         'BANNED_URL': reverse('misago:banned'),
 
@@ -18,7 +18,7 @@ def user_links(request):
         'AUTH_API': reverse('misago:api:auth'),
         'USERS_API': reverse('misago:api:user-list'),
 
-        'CAPTCHA_API': reverse('misago:api:captcha_question'),
+        'CAPTCHA_API': reverse('misago:api:captcha-question'),
         'USERNAME_CHANGES_API': reverse('misago:api:usernamechange-list'),
     })
 

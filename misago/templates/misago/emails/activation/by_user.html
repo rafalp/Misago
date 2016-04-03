@@ -8,6 +8,6 @@
 {% endblocktrans %}
 <br>
 <br>
-<a href="{{ SITE_ADDRESS }}{% url 'misago:activate_by_token' user_id=recipient.id token=activation_token %}">{% trans "Activate my account!" %}</a>
+<a href="{{ SITE_ADDRESS }}{% url 'misago:activate-by-token' pk=recipient.pk token=activation_token %}">{% trans "Activate my account!" %}</a>
 <br>
 {% endblock content %}

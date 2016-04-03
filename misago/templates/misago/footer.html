@@ -19,12 +19,12 @@
         {% endif %}
         {% if misago_settings.terms_of_service or misago_settings.terms_of_service_link %}
           <li>
-            <a href="{% url 'misago:terms_of_service' %}">{% trans "Terms of service" %}</a>
+            <a href="{% url 'misago:terms-of-service' %}">{% trans "Terms of service" %}</a>
           </li>
         {% endif %}
         {% if misago_settings.privacy_policy or misago_settings.privacy_policy_link %}
           <li>
-            <a href="{% url 'misago:privacy_policy' %}">{% trans "Privacy policy" %}</a>
+            <a href="{% url 'misago:privacy-policy' %}">{% trans "Privacy policy" %}</a>
           </li>
         {% endif %}
         </ul>

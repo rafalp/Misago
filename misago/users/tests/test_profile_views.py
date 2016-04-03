@@ -11,21 +11,21 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserProfileViewsTests, self).setUp()
         self.link_kwargs = {
-            'user_slug': self.user.slug,
-            'user_id': self.user.pk
+            'slug': self.user.slug,
+            'pk': self.user.pk
         }
 
     def test_outdated_slugs(self):
         """user profile view redirects to valid slig"""
-        invalid_kwargs = {'user_slug': 'baww', 'user_id': self.user.pk}
-        response = self.client.get(reverse('misago:user_posts',
+        invalid_kwargs = {'slug': 'baww', 'pk': self.user.pk}
+        response = self.client.get(reverse('misago:user-posts',
                                            kwargs=invalid_kwargs))
 
         self.assertEqual(response.status_code, 301)
 
     def test_user_posts_list(self):
         """user profile posts list has no showstoppers"""
-        response = self.client.get(reverse('misago:user_posts',
+        response = self.client.get(reverse('misago:user-posts',
                                            kwargs=self.link_kwargs))
 
         self.assertEqual(response.status_code, 200)
@@ -33,7 +33,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
     def test_user_threads_list(self):
         """user profile threads list has no showstoppers"""
-        response = self.client.get(reverse('misago:user_threads',
+        response = self.client.get(reverse('misago:user-threads',
                                            kwargs=self.link_kwargs))
 
         self.assertEqual(response.status_code, 200)
@@ -43,7 +43,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         """user profile followers list has no showstoppers"""
         User = get_user_model()
 
-        response = self.client.get(reverse('misago:user_followers',
+        response = self.client.get(reverse('misago:user-followers',
                                            kwargs=self.link_kwargs))
 
         self.assertEqual(response.status_code, 200)
@@ -55,7 +55,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
             followers.append(User.objects.create_user(*user_data))
             self.user.followed_by.add(followers[-1])
 
-        response = self.client.get(reverse('misago:user_followers',
+        response = self.client.get(reverse('misago:user-followers',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
         for i in xrange(10):
@@ -65,7 +65,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         """user profile follows list has no showstoppers"""
         User = get_user_model()
 
-        response = self.client.get(reverse('misago:user_follows',
+        response = self.client.get(reverse('misago:user-follows',
                                            kwargs=self.link_kwargs))
 
         self.assertEqual(response.status_code, 200)
@@ -77,7 +77,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
             followers.append(User.objects.create_user(*user_data))
             followers[-1].followed_by.add(self.user)
 
-        response = self.client.get(reverse('misago:user_follows',
+        response = self.client.get(reverse('misago:user-follows',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
         for i in xrange(10):
@@ -85,7 +85,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
     def test_username_history_list(self):
         """user name changes history list has no showstoppers"""
-        response = self.client.get(reverse('misago:username_history',
+        response = self.client.get(reverse('misago:username-history',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
         self.assertIn('Your username was never changed.', response.content)
@@ -95,7 +95,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.user.set_username('TestUser')
         self.user.save()
 
-        response = self.client.get(reverse('misago:username_history',
+        response = self.client.get(reverse('misago:username-history',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
         self.assertIn("TestUser", response.content)
@@ -109,9 +109,9 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
         User = get_user_model()
         test_user = User.objects.create_user("Bob", "bob@bob.com", 'pass.123')
-        link_kwargs = {'user_slug': test_user.slug, 'user_id': test_user.pk}
+        link_kwargs = {'slug': test_user.slug, 'pk': test_user.pk}
 
-        response = self.client.get(reverse('misago:user_ban',
+        response = self.client.get(reverse('misago:user-ban',
                                            kwargs=link_kwargs))
         self.assertEqual(response.status_code, 404)
 
@@ -119,7 +119,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
             'can_see_ban_details': 1,
         })
 
-        response = self.client.get(reverse('misago:user_ban',
+        response = self.client.get(reverse('misago:user-ban',
                                            kwargs=link_kwargs))
         self.assertEqual(response.status_code, 404)
 
@@ -133,7 +133,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
                            staff_message="Staff m3ss4ge.",
                            is_checked=True)
 
-        response = self.client.get(reverse('misago:user_ban',
+        response = self.client.get(reverse('misago:user-ban',
                                            kwargs=link_kwargs))
         self.assertEqual(response.status_code, 200)
         self.assertIn('User m3ss4ge', response.content)

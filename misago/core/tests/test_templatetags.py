@@ -175,7 +175,7 @@ class PaginationTests(TestCase):
         tpl_content = """
 {% load misago_pagination %}
 
-{% pagination page "misago/user/pagination.html" 'misago:user_warnings' user_slug=user.slug user_id=user.pk %}
+{% pagination page "misago/user/pagination.html" 'misago:user_warnings' slug=user.slug pk=user.pk %}
 """
 
         tpl = Template(tpl_content)

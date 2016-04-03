@@ -59,13 +59,13 @@ class WarningsAdminViewsTests(AdminTestCase):
 
         response = self.client.get(
             reverse('misago:admin:users:warnings:edit',
-                    kwargs={'warning_id': test_level.pk}))
+                    kwargs={'pk': test_level.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_level.name, response.content)
 
         response = self.client.post(
             reverse('misago:admin:users:warnings:edit',
-                    kwargs={'warning_id': test_level.pk}),
+                    kwargs={'pk': test_level.pk}),
             data={
                 'name': 'Edited Level',
                 'length_in_minutes': 5,
@@ -105,7 +105,7 @@ class WarningsAdminViewsTests(AdminTestCase):
 
         response = self.client.post(
             reverse('misago:admin:users:warnings:up',
-                    kwargs={'warning_id': test_level_2.pk}))
+                    kwargs={'pk': test_level_2.pk}))
         self.assertEqual(response.status_code, 302)
 
         changed_level_1 = WarningLevel.objects.get(id=test_level_1.pk)
@@ -137,7 +137,7 @@ class WarningsAdminViewsTests(AdminTestCase):
 
         response = self.client.post(
             reverse('misago:admin:users:warnings:down',
-                    kwargs={'warning_id': test_level_1.pk}))
+                    kwargs={'pk': test_level_1.pk}))
         self.assertEqual(response.status_code, 302)
 
         changed_level_1 = WarningLevel.objects.get(id=test_level_1.pk)
@@ -160,7 +160,7 @@ class WarningsAdminViewsTests(AdminTestCase):
 
         response = self.client.post(
             reverse('misago:admin:users:warnings:delete',
-                    kwargs={'warning_id': test_level.pk}))
+                    kwargs={'pk': test_level.pk}))
         self.assertEqual(response.status_code, 302)
 
         self.client.get(reverse('misago:admin:users:warnings:index'))

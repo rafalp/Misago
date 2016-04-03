@@ -17,11 +17,11 @@ from misago.users.serializers.usernamechange import UsernameChangeSerializer
 class UsernameChangesViewSetPermission(BasePermission):
     def has_permission(self, request, view):
         try:
-            user_id = int(request.GET.get('user'))
+            user_pk = int(request.GET.get('user'))
         except (ValueError, TypeError):
-            user_id = -1
+            user_pk = -1
 
-        if user_id == request.user.pk:
+        if user_pk == request.user.pk:
             return True
         elif not request.user.acl.get('can_see_users_name_history'):
             raise PermissionDenied(_("You don't have permission to "
@@ -48,6 +48,7 @@ class UsernameChangesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 queryset = queryset.filter(
                     Q(changed_by_username__istartswith=search_phrase) |
                     Q(new_username__istartswith=search_phrase) |
-                    Q(old_username__istartswith=search_phrase))
+                    Q(old_username__istartswith=search_phrase)
+                )
 
         return queryset.select_related('user', 'changed_by').order_by('-id')

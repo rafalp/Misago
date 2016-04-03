@@ -52,9 +52,7 @@ class Rank(models.Model):
         return super(Rank, self).delete(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('misago:users_rank', kwargs={
-            'rank_slug': self.slug
-        })
+        return reverse('misago:users-rank', kwargs={'slug': self.slug})
 
     def set_name(self, name):
         self.name = name

@@ -79,8 +79,6 @@ class FollowersListTests(AuthenticatedUserTestCase):
 
     def test_empty_list(self):
         """user without followers returns 200"""
-        rank_slug = self.user.rank.slug
-
         response = self.client.get(self.link % self.user.pk)
         self.assertEqual(response.status_code, 200)
 
@@ -111,8 +109,6 @@ class FollowsListTests(AuthenticatedUserTestCase):
 
     def test_empty_list(self):
         """user without follows returns 200"""
-        rank_slug = self.user.rank.slug
-
         response = self.client.get(self.link % self.user.pk)
         self.assertEqual(response.status_code, 200)
 

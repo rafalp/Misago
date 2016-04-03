@@ -115,7 +115,7 @@
       $button.find('.fa').attr("class", "fa fa-refresh fa-fw fa-spin");
       $button.find('.name').text("{% trans "Checking..." %}");
 
-      $.post("{% url 'misago:admin:check_version' %}", $form.serialize(), function(data) {
+      $.post("{% url 'misago:admin:check-version' %}", $form.serialize(), function(data) {
         if (data.is_error) {
           var $message = $('<p class="lead text-danger"><span class="fa fa-times fa-lg fa-fw"></span></p>');
         } else {

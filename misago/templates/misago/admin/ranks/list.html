@@ -49,19 +49,19 @@
 </td>
 {% for action in extra_actions %}
 <td class="row-action">
-  <a href="{% url action.link rank_id=item.id %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+  <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
     <span class="{{ action.icon }}"></span>
   </a>
 </td>
 {% endfor %}
 <td class="row-action">
-  <a href="{% url 'misago:admin:users:ranks:users' rank_id=item.id %}" class="btn btn-primary tooltip-top" title="{% trans "Users with rank" %}">
+  <a href="{% url 'misago:admin:users:ranks:users' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Users with rank" %}">
     <span class="fa fa-users"></span>
   </a>
 </td>
 <td class="row-action">
   {% if not item.is_default %}
-  <form action="{% url 'misago:admin:users:ranks:default' rank_id=item.id %}" method="post">
+  <form action="{% url 'misago:admin:users:ranks:default' pk=item.pk %}" method="post">
     <button class="btn btn-warning tooltip-top" title="{% trans "Make default" %}">
       {% csrf_token %}
       <span class="fa fa-star"></span>
@@ -73,7 +73,7 @@
 </td>
 <td class="row-action">
   {% if not forloop.last %}
-  <form action="{% url 'misago:admin:users:ranks:down' rank_id=item.id %}" method="post">
+  <form action="{% url 'misago:admin:users:ranks:down' pk=item.pk %}" method="post">
     <button class="btn btn-default tooltip-top" title="{% trans "Move down" %}">
       {% csrf_token %}
       <span class="fa fa-chevron-down"></span>
@@ -85,7 +85,7 @@
 </td>
 <td class="row-action">
   {% if not forloop.first %}
-  <form action="{% url 'misago:admin:users:ranks:up' rank_id=item.id %}" method="post">
+  <form action="{% url 'misago:admin:users:ranks:up' pk=item.pk %}" method="post">
     <button class="btn btn-default tooltip-top" title="{% trans "Move up" %}">
       {% csrf_token %}
       <span class="fa fa-chevron-up"></span>
@@ -96,12 +96,12 @@
   {% endif %}
 </td>
 <td class="row-action">
-  <a href="{% url 'misago:admin:users:ranks:edit' rank_id=item.id %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">
+  <a href="{% url 'misago:admin:users:ranks:edit' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">
     <span class="fa fa-pencil"></span>
   </a>
 </td>
 <td class="row-action">
-  <form action="{% url 'misago:admin:users:ranks:delete' rank_id=item.id %}" method="post" class="delete-prompt">
+  <form action="{% url 'misago:admin:users:ranks:delete' pk=item.pk %}" method="post" class="delete-prompt">
     <button class="btn btn-danger tooltip-top" title="{% trans "Delete" %}">
       {% csrf_token %}
       <span class="fa fa-times"></span>

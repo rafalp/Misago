@@ -21,7 +21,7 @@ class TermsOfServiceTests(TestCase):
         self.assertFalse(settings.terms_of_service_link)
         self.assertFalse(settings.terms_of_service)
 
-        response = self.client.get(reverse('misago:terms_of_service'))
+        response = self.client.get(reverse('misago:terms-of-service'))
         self.assertEqual(response.status_code, 404)
 
     def test_301_on_link_tos(self):
@@ -31,7 +31,7 @@ class TermsOfServiceTests(TestCase):
         self.assertTrue(settings.terms_of_service_link)
         self.assertTrue(settings.terms_of_service)
 
-        response = self.client.get(reverse('misago:terms_of_service'))
+        response = self.client.get(reverse('misago:terms-of-service'))
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], 'http://test.com')
 
@@ -42,7 +42,7 @@ class TermsOfServiceTests(TestCase):
         self.assertTrue(settings.terms_of_service_title)
         self.assertTrue(settings.terms_of_service)
 
-        response = self.client.get(reverse('misago:terms_of_service'))
+        response = self.client.get(reverse('misago:terms-of-service'))
         self.assertEqual(response.status_code, 200)
         self.assertIn('Test ToS', response.content)
         self.assertIn('Lorem ipsum dolor', response.content)
@@ -58,7 +58,7 @@ class TermsOfServiceTests(TestCase):
         context_dict = legal_links(MockRequest())
 
         self.assertEqual(context_dict, {
-            'TERMS_OF_SERVICE_URL': reverse('misago:terms_of_service')
+            'TERMS_OF_SERVICE_URL': reverse('misago:terms-of-service')
         })
 
     def test_context_processor_remote_tos(self):
@@ -88,7 +88,7 @@ class PrivacyPolicyTests(TestCase):
         self.assertFalse(settings.privacy_policy_link)
         self.assertFalse(settings.privacy_policy)
 
-        response = self.client.get(reverse('misago:privacy_policy'))
+        response = self.client.get(reverse('misago:privacy-policy'))
         self.assertEqual(response.status_code, 404)
 
     def test_301_on_link_policy(self):
@@ -98,7 +98,7 @@ class PrivacyPolicyTests(TestCase):
         self.assertTrue(settings.privacy_policy_link)
         self.assertTrue(settings.privacy_policy)
 
-        response = self.client.get(reverse('misago:privacy_policy'))
+        response = self.client.get(reverse('misago:privacy-policy'))
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], 'http://test.com')
 
@@ -109,7 +109,7 @@ class PrivacyPolicyTests(TestCase):
         self.assertTrue(settings.privacy_policy_title)
         self.assertTrue(settings.privacy_policy)
 
-        response = self.client.get(reverse('misago:privacy_policy'))
+        response = self.client.get(reverse('misago:privacy-policy'))
         self.assertEqual(response.status_code, 200)
         self.assertIn('Test Policy', response.content)
         self.assertIn('Lorem ipsum dolor', response.content)
@@ -125,7 +125,7 @@ class PrivacyPolicyTests(TestCase):
         context_dict = legal_links(MockRequest())
 
         self.assertEqual(context_dict, {
-            'PRIVACY_POLICY_URL': reverse('misago:privacy_policy')
+            'PRIVACY_POLICY_URL': reverse('misago:privacy-policy')
         })
 
     def test_context_processor_remote_policy(self):

@@ -24,9 +24,9 @@ def index(request):
     return render(request, 'misago/admin/conf/index.html')
 
 
-def group(request, group_key):
+def group(request, key):
     try:
-        active_group = SettingsGroup.objects.get(key=group_key)
+        active_group = SettingsGroup.objects.get(key=key)
     except SettingsGroup.DoesNotExist:
         messages.error(request, _("Settings group could not be found."))
         return redirect('misago:admin:settings:index')
@@ -49,7 +49,7 @@ def group(request, group_key):
 
             messages.success(
                 request, _('Changes in settings have been saved!'))
-            return redirect('misago:admin:settings:group', group_key=group_key)
+            return redirect('misago:admin:settings:group', key=key)
 
     use_single_form_template = (len(fieldsets) == 1 and
                                 not fieldsets[0]['legend'])

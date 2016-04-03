@@ -136,7 +136,7 @@ class PasswordChangeFailed(Exception):
 @api_view(['POST'])
 @permission_classes((UnbannedOnly,))
 @csrf_protect
-def change_forgotten_password(request, user_id, token):
+def change_forgotten_password(request, pk, token):
     User = auth.get_user_model()
 
     invalid_message = _("Form link is invalid. Please try again.")
@@ -144,7 +144,7 @@ def change_forgotten_password(request, user_id, token):
 
     try:
         try:
-            user = User.objects.get(pk=user_id)
+            user = User.objects.get(pk=pk)
         except User.DoesNotExist:
             raise PasswordChangeFailed(invalid_message)
 

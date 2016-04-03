@@ -31,7 +31,7 @@ class UserAdmin(generic.AdminBaseMixin):
 
     def create_form_type(self, request, target):
         if request.user.is_superuser:
-            add_staff_field = request.user.pk != target.id
+            add_staff_field = request.user.pk != target.pk
         else:
             add_staff_field = False
 
@@ -238,7 +238,8 @@ class NewUser(UserAdmin, generic.ModelFormView):
             title=form.cleaned_data['title'],
             rank=form.cleaned_data.get('rank'),
             joined_from_ip=request.user_ip,
-            set_default_avatar=True)
+            set_default_avatar=True
+        )
 
         if form.cleaned_data.get('staff_level'):
             new_user.staff_level = form.cleaned_data['staff_level']
@@ -251,8 +252,7 @@ class NewUser(UserAdmin, generic.ModelFormView):
 
         messages.success(
             request, self.message_submit % {'user': target.username})
-        return redirect('misago:admin:users:accounts:edit',
-                        user_id=new_user.id)
+        return redirect('misago:admin:users:accounts:edit', pk=new_user.pk)
 
 
 class EditUser(UserAdmin, generic.ModelFormView):

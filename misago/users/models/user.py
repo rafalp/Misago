@@ -148,8 +148,10 @@ class UserManager(BaseUserManager):
     def create_superuser(self, username, email, password,
                          set_default_avatar=False):
         with transaction.atomic():
-            user = self.create_user(username, email, password=password,
-                                    set_default_avatar=set_default_avatar)
+            user = self.create_user(username, email,
+                password=password,
+                set_default_avatar=set_default_avatar,
+            )
 
             try:
                 user.rank = Rank.objects.get(name=_("Forum team"))
@@ -268,7 +270,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def lock(self):
         """Locks user in DB"""
-        return User.objects.select_for_update().get(id=self.id)
+        return User.objects.select_for_update().get(pk=self.pk)
 
     def delete(self, *args, **kwargs):
         if kwargs.pop('delete_content', False):
@@ -352,8 +354,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_absolute_url(self):
         return reverse('misago:user', kwargs={
-            'user_slug': self.slug,
-            'user_id': self.id,
+            'slug': self.slug,
+            'pk': self.pk,
         })
 
     def get_username(self):
@@ -383,10 +385,12 @@ class User(AbstractBaseUser, PermissionsMixin):
                 username_changed.send(sender=self)
 
     def record_name_change(self, changed_by, new_username, old_username):
-        self.namechanges.create(new_username=new_username,
-                                old_username=old_username,
-                                changed_by=changed_by,
-                                changed_by_username=changed_by.username)
+        self.namechanges.create(
+            new_username=new_username,
+            old_username=old_username,
+            changed_by=changed_by,
+            changed_by_username=changed_by.username,
+        )
 
     def set_email(self, new_email):
         self.email = UserManager.normalize_email(new_email)
@@ -428,22 +432,24 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def is_following(self, user):
         try:
-            self.follows.get(id=user.pk)
+            self.follows.get(pk=user.pk)
             return True
         except User.DoesNotExist:
             return False
 
     def is_blocking(self, user):
         try:
-            self.blocks.get(id=user.pk)
+            self.blocks.get(pk=user.pk)
             return True
         except User.DoesNotExist:
             return False
 
 
 class Online(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, primary_key=True,
-                                related_name='online_tracker')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+        primary_key=True,
+        related_name='online_tracker',
+    )
     current_ip = models.GenericIPAddressField()
     last_click = models.DateTimeField(default=timezone.now)
 
@@ -456,11 +462,12 @@ class Online(models.Model):
 
 class UsernameChange(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             related_name='namechanges')
+        related_name='namechanges')
     changed_by = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                   null=True, blank=True,
-                                   related_name='user_renames',
-                                   on_delete=models.SET_NULL)
+        null=True, blank=True,
+        related_name='user_renames',
+        on_delete=models.SET_NULL,
+    )
     changed_by_username = models.CharField(max_length=30)
     changed_on = models.DateTimeField(default=timezone.now)
     new_username = models.CharField(max_length=255)

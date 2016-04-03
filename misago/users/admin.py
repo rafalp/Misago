@@ -4,15 +4,15 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 
 from misago.users.views.admin.bans import BansList, NewBan, EditBan, DeleteBan
-from misago.users.views.admin.ranks import (RanksList, NewRank, EditRank,
-                                            DeleteRank, MoveDownRank,
-                                            MoveUpRank, DefaultRank, RankUsers)
-from misago.users.views.admin.users import (UsersList, NewUser, EditUser,
-                                            DeleteThreadsStep, DeletePostsStep,
-                                            DeleteAccountStep)
-from misago.users.views.admin.warnings import (WarningsList, NewWarning,
-                                               EditWarning, MoveDownWarning,
-                                               MoveUpWarning, DeleteWarning)
+from misago.users.views.admin.ranks import (
+    RanksList, NewRank, EditRank, DeleteRank, MoveDownRank, MoveUpRank,
+    DefaultRank, RankUsers)
+from misago.users.views.admin.users import (
+    UsersList, NewUser, EditUser, DeleteThreadsStep, DeletePostsStep,
+    DeleteAccountStep)
+from misago.users.views.admin.warnings import (
+    WarningsList, NewWarning, EditWarning, MoveDownWarning, MoveUpWarning,
+    DeleteWarning)
 
 
 class UserAdmin(djadmin.ModelAdmin):
@@ -48,10 +48,10 @@ class MisagoAdminExtension(object):
             url(r'^$', UsersList.as_view(), name='index'),
             url(r'^(?P<page>\d+)/$', UsersList.as_view(), name='index'),
             url(r'^new/$', NewUser.as_view(), name='new'),
-            url(r'^edit/(?P<user_id>\d+)/$', EditUser.as_view(), name='edit'),
-            url(r'^delete-threads/(?P<user_id>\d+)/$', DeleteThreadsStep.as_view(), name='delete_threads'),
-            url(r'^delete-posts/(?P<user_id>\d+)/$', DeletePostsStep.as_view(), name='delete_posts'),
-            url(r'^delete-account/(?P<user_id>\d+)/$', DeleteAccountStep.as_view(), name='delete_account'),
+            url(r'^edit/(?P<pk>\d+)/$', EditUser.as_view(), name='edit'),
+            url(r'^delete-threads/(?P<pk>\d+)/$', DeleteThreadsStep.as_view(), name='delete-threads'),
+            url(r'^delete-posts/(?P<pk>\d+)/$', DeletePostsStep.as_view(), name='delete-posts'),
+            url(r'^delete-account/(?P<pk>\d+)/$', DeleteAccountStep.as_view(), name='delete-account'),
         )
 
         # Ranks
@@ -59,12 +59,12 @@ class MisagoAdminExtension(object):
         urlpatterns.patterns('users:ranks',
             url(r'^$', RanksList.as_view(), name='index'),
             url(r'^new/$', NewRank.as_view(), name='new'),
-            url(r'^edit/(?P<rank_id>\d+)/$', EditRank.as_view(), name='edit'),
-            url(r'^default/(?P<rank_id>\d+)/$', DefaultRank.as_view(), name='default'),
-            url(r'^move/down/(?P<rank_id>\d+)/$', MoveDownRank.as_view(), name='down'),
-            url(r'^move/up/(?P<rank_id>\d+)/$', MoveUpRank.as_view(), name='up'),
-            url(r'^users/(?P<rank_id>\d+)/$', RankUsers.as_view(), name='users'),
-            url(r'^delete/(?P<rank_id>\d+)/$', DeleteRank.as_view(), name='delete'),
+            url(r'^edit/(?P<pk>\d+)/$', EditRank.as_view(), name='edit'),
+            url(r'^default/(?P<pk>\d+)/$', DefaultRank.as_view(), name='default'),
+            url(r'^move/down/(?P<pk>\d+)/$', MoveDownRank.as_view(), name='down'),
+            url(r'^move/up/(?P<pk>\d+)/$', MoveUpRank.as_view(), name='up'),
+            url(r'^users/(?P<pk>\d+)/$', RankUsers.as_view(), name='users'),
+            url(r'^delete/(?P<pk>\d+)/$', DeleteRank.as_view(), name='delete'),
         )
 
         # Bans
@@ -73,8 +73,8 @@ class MisagoAdminExtension(object):
             url(r'^$', BansList.as_view(), name='index'),
             url(r'^(?P<page>\d+)/$', BansList.as_view(), name='index'),
             url(r'^new/$', NewBan.as_view(), name='new'),
-            url(r'^edit/(?P<ban_id>\d+)/$', EditBan.as_view(), name='edit'),
-            url(r'^delete/(?P<ban_id>\d+)/$', DeleteBan.as_view(), name='delete'),
+            url(r'^edit/(?P<pk>\d+)/$', EditBan.as_view(), name='edit'),
+            url(r'^delete/(?P<pk>\d+)/$', DeleteBan.as_view(), name='delete'),
         )
 
         # Warnings
@@ -82,43 +82,53 @@ class MisagoAdminExtension(object):
         urlpatterns.patterns('users:warnings',
             url(r'^$', WarningsList.as_view(), name='index'),
             url(r'^new/$', NewWarning.as_view(), name='new'),
-            url(r'^edit/(?P<warning_id>\d+)/$', EditWarning.as_view(), name='edit'),
-            url(r'^move/down/(?P<warning_id>\d+)/$', MoveDownWarning.as_view(), name='down'),
-            url(r'^move/up/(?P<warning_id>\d+)/$', MoveUpWarning.as_view(), name='up'),
-            url(r'^delete/(?P<warning_id>\d+)/$', DeleteWarning.as_view(), name='delete'),
+            url(r'^edit/(?P<pk>\d+)/$', EditWarning.as_view(), name='edit'),
+            url(r'^move/down/(?P<pk>\d+)/$', MoveDownWarning.as_view(), name='down'),
+            url(r'^move/up/(?P<pk>\d+)/$', MoveUpWarning.as_view(), name='up'),
+            url(r'^delete/(?P<pk>\d+)/$', DeleteWarning.as_view(), name='delete'),
         )
 
     def register_navigation_nodes(self, site):
-        site.add_node(name=_("Users"),
-                      icon='fa fa-users',
-                      parent='misago:admin',
-                      after='misago:admin:index',
-                      namespace='misago:admin:users',
-                      link='misago:admin:users:accounts:index')
+        site.add_node(
+            name=_("Users"),
+            icon='fa fa-users',
+            parent='misago:admin',
+            after='misago:admin:index',
+            namespace='misago:admin:users',
+            link='misago:admin:users:accounts:index',
+        )
 
-        site.add_node(name=_("User Accounts"),
-                      icon='fa fa-users',
-                      parent='misago:admin:users',
-                      namespace='misago:admin:users:accounts',
-                      link='misago:admin:users:accounts:index')
+        site.add_node(
+            name=_("User Accounts"),
+            icon='fa fa-users',
+            parent='misago:admin:users',
+            namespace='misago:admin:users:accounts',
+            link='misago:admin:users:accounts:index',
+        )
 
-        site.add_node(name=_("Ranks"),
-                      icon='fa fa-graduation-cap',
-                      parent='misago:admin:users',
-                      after='misago:admin:users:accounts:index',
-                      namespace='misago:admin:users:ranks',
-                      link='misago:admin:users:ranks:index')
+        site.add_node(
+            name=_("Ranks"),
+            icon='fa fa-graduation-cap',
+            parent='misago:admin:users',
+            after='misago:admin:users:accounts:index',
+            namespace='misago:admin:users:ranks',
+            link='misago:admin:users:ranks:index',
+        )
 
-        site.add_node(name=_("Bans"),
-                      icon='fa fa-lock',
-                      parent='misago:admin:users',
-                      after='misago:admin:users:ranks:index',
-                      namespace='misago:admin:users:bans',
-                      link='misago:admin:users:bans:index')
+        site.add_node(
+            name=_("Bans"),
+            icon='fa fa-lock',
+            parent='misago:admin:users',
+            after='misago:admin:users:ranks:index',
+            namespace='misago:admin:users:bans',
+            link='misago:admin:users:bans:index',
+        )
 
-        site.add_node(name=_("Warning levels"),
-                      icon='fa fa-exclamation-triangle',
-                      parent='misago:admin:users',
-                      after='misago:admin:users:bans:index',
-                      namespace='misago:admin:users:warnings',
-                      link='misago:admin:users:warnings:index')
+        site.add_node(
+            name=_("Warning levels"),
+            icon='fa fa-exclamation-triangle',
+            parent='misago:admin:users',
+            after='misago:admin:users:bans:index',
+            namespace='misago:admin:users:warnings',
+            link='misago:admin:users:warnings:index',
+        )

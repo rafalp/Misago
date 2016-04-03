@@ -53,13 +53,13 @@ class RoleAdminViewsTests(AdminTestCase):
 
         response = self.client.get(
             reverse('misago:admin:permissions:users:edit',
-                    kwargs={'role_id': test_role.pk}))
+                    kwargs={'pk': test_role.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertIn('Test Role', response.content)
 
         response = self.client.post(
             reverse('misago:admin:permissions:users:edit',
-                    kwargs={'role_id': test_role.pk}),
+                    kwargs={'pk': test_role.pk}),
             data=fake_data({'name': 'Top Lel'}))
         self.assertEqual(response.status_code, 302)
 
@@ -78,7 +78,7 @@ class RoleAdminViewsTests(AdminTestCase):
 
         response = self.client.get(
             reverse('misago:admin:permissions:users:users',
-                    kwargs={'role_id': test_role.pk}))
+                    kwargs={'pk': test_role.pk}))
         self.assertEqual(response.status_code, 302)
 
     def test_delete_view(self):
@@ -90,7 +90,7 @@ class RoleAdminViewsTests(AdminTestCase):
         test_role = Role.objects.get(name='Test Role')
         response = self.client.post(
             reverse('misago:admin:permissions:users:delete',
-                    kwargs={'role_id': test_role.pk}))
+                    kwargs={'pk': test_role.pk}))
         self.assertEqual(response.status_code, 302)
 
         self.client.get(reverse('misago:admin:permissions:users:index'))

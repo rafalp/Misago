@@ -27,15 +27,15 @@
 
     <div class="extra-padding">
       <ul class="list-unstyled">
-        <li class="step queued" data-url="{% url 'misago:admin:users:accounts:delete_threads' user_id=user.id %}" data-total="{{ user.thread_set.count }}">
+        <li class="step queued" data-url="{% url 'misago:admin:users:accounts:delete-threads' pk=user.pk %}" data-total="{{ user.thread_set.count }}">
           <span class="fa fa-clock-o fa-fw text-muted"></span>
           {% trans "Threads" %}: <strong><em class="text-muted">{% trans "queued" %}</em></strong>
         </li>
-        <li class="step queued" data-url="{% url 'misago:admin:users:accounts:delete_posts' user_id=user.id %}" data-total="{{ user.post_set.count }}">
+        <li class="step queued" data-url="{% url 'misago:admin:users:accounts:delete-posts' pk=user.pk %}" data-total="{{ user.post_set.count }}">
           <span class="fa fa-clock-o fa-fw text-muted"></span>
           {% trans "Posts" %}: <strong><em class="text-muted">{% trans "queued" %}</em></strong>
         </li>
-        <li class="step queued" data-url="{% url 'misago:admin:users:accounts:delete_account' user_id=user.id %}">
+        <li class="step queued" data-url="{% url 'misago:admin:users:accounts:delete-account' pk=user.pk %}">
           <span class="fa fa-clock-o fa-fw text-muted"></span>
           {% trans "Account" %}: <strong><em class="text-muted">{% trans "queued" %}</em></strong>
         </li>

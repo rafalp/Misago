@@ -28,7 +28,7 @@ class RedirectViewTests(TestCase):
 
     def test_redirect_view(self):
         """redirect view always redirects to home page"""
-        response = self.client.get(reverse('test_redirect'))
+        response = self.client.get(reverse('test-redirect'))
 
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response['location'].endswith(reverse('misago:index')))
