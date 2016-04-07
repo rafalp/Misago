@@ -140,7 +140,16 @@ class PermissionsForm(forms.Form):
         )
     )
     can_announce_threads = forms.YesNoSwitch(label=_("Can announce threads"))
-    can_pin_threads = forms.YesNoSwitch(label=_("Can pin threads"))
+    can_pin_threads = forms.TypedChoiceField(
+        label=_("Can pin threads"),
+        coerce=int,
+        initial=0,
+        choices=(
+            (0, _("No")),
+            (1, _("Locally")),
+            (2, _("Globally"))
+        )
+    )
     can_close_threads = forms.YesNoSwitch(label=_("Can close threads"))
     can_move_threads = forms.YesNoSwitch(label=_("Can move threads"))
     can_merge_threads = forms.YesNoSwitch(label=_("Can merge threads"))
@@ -326,7 +335,7 @@ def add_acl_to_thread(user, thread):
         'can_edit': can_edit_thread(user, thread),
         'can_hide': category_acl.get('can_hide_threads', False),
         'can_announce': category_acl.get('can_announce_threads', False),
-        'can_pin': category_acl.get('can_pin_threads', False),
+        'can_pin': category_acl.get('can_pin_threads', 0),
         'can_close': category_acl.get('can_close_threads', False),
         'can_move': category_acl.get('can_move_threads', False),
         'can_review': category_acl.get('can_review_moderated_content', False),

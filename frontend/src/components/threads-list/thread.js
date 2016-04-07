@@ -39,6 +39,71 @@ export default class extends React.Component {
     };
   }
 
+  getNewLabel() {
+    if (!this.props.thread.is_read) {
+      /* jshint ignore:start */
+      return <li className="thread-new-posts"
+                 title={gettext("Go to first unread post")}>
+        <a href={this.props.thread.new_post_url}>
+          <span className="material-icon">
+            comment
+          </span>
+          <span>
+            {gettext("New posts")}
+          </span>
+        </a>
+      </li>;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
+  getPinnedLabel() {
+    if (this.props.thread.weight === 2) {
+      /* jshint ignore:start */
+      return <li className="thread-pinned-globally">
+        <span className="material-icon">
+          bookmark_border
+        </span>
+        <span>
+          {gettext("Pinned globally")}
+        </span>
+      </li>;
+      /* jshint ignore:end */
+    } else if (this.props.thread.weight === 1) {
+      /* jshint ignore:start */
+      return <li className="thread-pinned-locally">
+        <span className="material-icon">
+          bookmark_border
+        </span>
+        <span>
+          {gettext("Pinned locally")}
+        </span>
+      </li>;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
+  getClosedLabel() {
+    if (this.props.thread.is_closed) {
+      /* jshint ignore:start */
+      return <li className="thread-closed">
+        <span className="material-icon">
+          lock_outline
+        </span>
+        <span>
+          {gettext("Closed")}
+        </span>
+      </li>;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
   getPath() {
     let top = this.props.categories[this.props.thread.top_category];
     let bottom = this.props.categories[this.props.thread.category];
@@ -64,33 +129,6 @@ export default class extends React.Component {
     }
   }
 
-  getClosedLabel() {
-    if (this.props.thread.is_closed) {
-      /* jshint ignore:start */
-      return <li className="thread-closed">
-        {gettext("Closed")}
-      </li>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
-  }
-
-  getNewLabel() {
-    if (!this.props.thread.is_read) {
-      /* jshint ignore:start */
-      return <li className="thread-new-posts"
-                 title={gettext("Go to first unread post")}>
-        <a href={this.props.thread.new_post_url}>
-          {gettext("New posts")}
-        </a>
-      </li>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
-  }
-
   getRepliesCount() {
     /* jshint ignore:start */
     let message = ngettext(
@@ -100,9 +138,14 @@ export default class extends React.Component {
 
     return <li className="thread-replies">
       <a href={this.props.thread.absolute_url}>
-        {interpolate(message, {
-          replies: this.props.thread.replies,
-        }, true)}
+        <span className="material-icon">
+          forum
+        </span>
+        <span>
+          {interpolate(message, {
+            replies: this.props.thread.replies,
+          }, true)}
+        </span>
       </a>
     </li>;
     /* jshint ignore:end */
@@ -154,13 +197,17 @@ export default class extends React.Component {
 
   getClassName() {
     if (this.props.thread.is_read) {
-      if (this.props.isSelected) {
+      if (this.props.isBusy) {
+        return 'list-group-item thread-read thread-busy';
+      } else if (this.props.isSelected) {
         return 'list-group-item thread-read thread-selected';
       } else {
         return 'list-group-item thread-read';
       }
     } else {
-      if (this.props.isSelected) {
+      if (this.props.isBusy) {
+        return 'list-group-item thread-new thread-busy';
+      } else if (this.props.isSelected) {
         return 'list-group-item thread-new thread-selected';
       } else {
         return 'list-group-item thread-new';
@@ -181,6 +228,7 @@ export default class extends React.Component {
 
         <ul className="list-inline">
           {this.getNewLabel()}
+          {this.getPinnedLabel()}
           {this.getClosedLabel()}
           {this.getPath()}
           {this.getRepliesCount()}

@@ -112,7 +112,13 @@ class ThreadsListMixin(object):
                 raise PermissionDenied(_("You have to sign in to see list of "
                                          "threads you are subscribing."))
 
-    def get_subcategories(self, request, category):
+    def get_categories(self, request):
+        return [Category.objects.root_category()] + list(
+            Category.objects.all_categories().filter(
+                id__in=request.user.acl['visible_categories']
+            ).select_related('parent'))
+
+    def get_subcategories(self, request, category, all_categories):
         if category.is_leaf_node():
             return []
 
@@ -125,7 +131,8 @@ class ThreadsListMixin(object):
         # as it includes nedless extra condition to DB filter
         if categories[0].special_role:
             categories = categories[1:]
-        return get_threads_queryset(request.user, categories, list_type)
+        queryset = get_threads_queryset(request.user, categories, list_type)
+        return queryset.order_by('-last_post_id')
 
     def get_extra_context(self, request, category, subcategories, list_type):
         return {

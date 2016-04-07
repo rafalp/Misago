@@ -39,6 +39,12 @@ class BaseList(View):
                 subcategories.append(subcategory)
         return subcategories
 
+    def get_pinned_threads(self, request, queryset):
+        return []
+
+    def get_rest_queryset(self, request, queryset, threads_categories):
+        return queryset.filter(category__in=threads_categories)
+
     def get_extra_context(self, request):
         return {}
 
@@ -61,27 +67,35 @@ class BaseList(View):
         self.allow_see_list(request, category, list_type)
         subcategories = self.get_subcategories(category, categories)
 
-        threads_categories = [category] + subcategories
-        queryset = self.get_queryset(
-            request, threads_categories, list_type
-        ).order_by('-last_post_on')
+        queryset = self.get_queryset(request, categories, list_type)
 
-        page = paginate(queryset, page, 24, 6)
+        threads_categories = [category] + subcategories
+        rest_queryset = self.get_rest_queryset(queryset, threads_categories)
+
+        page = paginate(rest_queryset, page, 24, 6)
         paginator = pagination_dict(page, include_page_range=False)
+
+        if page.number > 1:
+            threads = list(page.object_list)
+        else:
+            pinned_threads = self.get_pinned_threads(
+                queryset, threads_categories)
+            threads = list(pinned_threads) + list(page.object_list)
 
         if list_type in ('new', 'unread'):
             """we already know all threads on list are unread"""
-            threadstracker.make_unread(page.object_list)
+            threadstracker.make_unread(threads)
         else:
             threadstracker.make_threads_read_aware(
-                request.user, page.object_list)
+                request.user, threads)
 
-        add_categories_to_threads(threads_categories, page.object_list)
+        add_categories_to_threads(category, categories, threads)
 
         visible_subcategories = []
-        for thread in page.object_list:
+        for thread in threads:
             if (thread.top_category and
-                    thread.top_category not in visible_subcategories):
+                    thread.category in threads_categories and
+                    thread.top_category.pk not in visible_subcategories):
                 visible_subcategories.append(thread.top_category.pk)
 
         category.subcategories = []
@@ -89,12 +103,12 @@ class BaseList(View):
             if subcategory.pk in visible_subcategories:
                 category.subcategories.append(subcategory)
 
-        add_acl(request.user, page.object_list)
-        make_subscription_aware(request.user, page.object_list)
+        add_acl(request.user, threads)
+        make_subscription_aware(request.user, threads)
 
         request.frontend_context.update({
             'THREADS': dict(
-                results=ThreadListSerializer(page.object_list, many=True).data,
+                results=ThreadListSerializer(threads, many=True).data,
                 subcategories=[c.pk for c in category.subcategories],
                 **paginator),
             'CATEGORIES': IndexCategorySerializer(categories, many=True).data,
@@ -111,7 +125,7 @@ class BaseList(View):
             list_type=list_type,
             list_name=LISTS_NAMES.get(list_type),
 
-            threads=page.object_list,
+            threads=threads,
             paginator=paginator,
             count=paginator['count'],
 
@@ -122,14 +136,17 @@ class BaseList(View):
 class ThreadsList(BaseList, ThreadsListMixin):
     template_name = 'misago/threadslist/threads.html'
 
-    def get_categories(self, request):
-        return [Category.objects.root_category()] + list(
-            Category.objects.all_categories().filter(
-                id__in=request.user.acl['visible_categories']
-            ).select_related('parent'))
-
     def get_category(self, request, categories, **kwargs):
         return categories[0]
+
+    def get_pinned_threads(self, queryset, threads_categories):
+        return queryset.filter(weight=2)
+
+    def get_rest_queryset(self, queryset, threads_categories):
+        return queryset.filter(
+            weight__lt=2,
+            category__in=threads_categories,
+        )
 
     def get_extra_context(self, request):
         return {
@@ -159,6 +176,18 @@ class CategoryThreadsList(ThreadsList, ThreadsListMixin):
                 return category
         else:
             raise Http404()
+
+    def get_pinned_threads(self, queryset, threads_categories):
+        return list(queryset.filter(weight=2)) + list(queryset.filter(
+            weight=1,
+            category__in=threads_categories
+        ))
+
+    def get_rest_queryset(self, queryset, threads_categories):
+        return queryset.filter(
+            weight=0,
+            category__in=threads_categories,
+        )
 
 
 class PrivateThreadsList(ThreadsList):

@@ -1,4 +1,4 @@
-def add_categories_to_threads(categories, threads):
+def add_categories_to_threads(root_category, categories, threads):
     categories_dict = {}
     for category in categories:
         categories_dict[category.pk] = category
@@ -8,9 +8,9 @@ def add_categories_to_threads(categories, threads):
     for thread in threads:
         thread.category = categories_dict[thread.category_id]
 
-        if thread.category == categories[0]:
+        if thread.category == root_category:
             thread.top_category = None
-        elif thread.category.parent_id == categories[0].pk:
+        elif thread.category.parent_id == root_category.pk:
             thread.top_category = thread.category
         elif thread.category_id in top_categories_map:
             thread.top_category = top_categories_map[thread.category_id]

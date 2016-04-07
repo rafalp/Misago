@@ -28,6 +28,7 @@ class ThreadSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'title',
+            'weight',
             'category',
             'replies',
             'is_closed',
@@ -93,6 +94,7 @@ class ThreadListSerializer(ThreadSerializer):
         fields = (
             'id',
             'title',
+            'weight',
             'category',
             'top_category',
             'replies',

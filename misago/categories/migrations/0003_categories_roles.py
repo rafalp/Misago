@@ -130,7 +130,7 @@ def create_default_categories_roles(apps, schema_editor):
                 'can_merge_posts': 1,
                 'can_change_threads_labels': 2,
                 'can_announce_threads': 1,
-                'can_pin_threads': 1,
+                'can_pin_threads': 2,
                 'can_close_threads': 1,
                 'can_move_threads': 1,
                 'can_merge_threads': 1,

@@ -13,43 +13,18 @@ import ajax from 'misago/services/ajax';
 import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
 import title from 'misago/services/page-title';
-import setToggle from 'misago/utils/set-toggle'; // jshint ignore:line
+import * as sets from 'misago/utils/sets'; // jshint ignore:line
 
 export default class extends WithDropdown {
   constructor(props) {
     super(props);
 
-    if (misago.has('THREADS')) {
-      this.initWithPreloadedData(misago.get('THREADS'));
-    } else {
-      this.initWithoutPreloadedData();
-    }
-  }
-
-  initWithPreloadedData(data) {
     this.state = {
       isLoaded: false,
       isBusy: false,
 
       selection: [],
-
-      dropdown: false,
-      subcategories: data.subcategories,
-
-      count: data.count,
-      more: data.more,
-
-      page: data.page,
-      pages: data.pages
-    };
-  }
-
-  initWithoutPreloadedData() {
-    this.state = {
-      isLoaded: false,
-      isBusy: false,
-
-      selection: [],
+      busyThreads: [],
 
       dropdown: false,
       subcategories: [],
@@ -61,6 +36,26 @@ export default class extends WithDropdown {
       pages: 1
     };
 
+    if (misago.has('THREADS')) {
+      this.initWithPreloadedData(misago.get('THREADS'));
+    } else {
+      this.initWithoutPreloadedData();
+    }
+  }
+
+  initWithPreloadedData(data) {
+    this.state = Object.assign(this.state, {
+      subcategories: data.subcategories,
+
+      count: data.count,
+      more: data.more,
+
+      page: data.page,
+      pages: data.pages
+    });
+  }
+
+  initWithoutPreloadedData() {
     this.loadThreads();
   }
 
@@ -127,7 +122,7 @@ export default class extends WithDropdown {
 
   selectThread = (thread) => {
     this.setState({
-      selection: setToggle(this.state.selection, thread)
+      selection: sets.toggle(this.state.selection, thread)
     });
   };
   /* jshint ignore:end */
@@ -220,7 +215,7 @@ export default class extends WithDropdown {
     if (this.state.more) {
       /* jshint ignore:start */
       return <div className="pager-more">
-        <Button loading={this.state.isBusy}
+        <Button loading={this.state.isBusy || this.state.busyThreads.length}
                 onClick={this.loadMore}>
           {gettext("Show more")}
         </Button>
@@ -256,6 +251,7 @@ export default class extends WithDropdown {
 
                      selectThread={this.selectThread}
                      selection={this.state.selection}
+                     busyThreads={this.state.busyThreads}
 
                      isLoaded={this.state.isLoaded}>
           <ThreadsListEmpty category={this.props.route.category}

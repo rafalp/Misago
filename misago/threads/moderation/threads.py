@@ -6,10 +6,10 @@ from misago.threads.events import record_event
 
 
 @atomic
-def announce_thread(user, thread):
+def pin_thread_globally(user, thread):
     if thread.weight != 2:
-        message = _("%(user)s turned thread into an announcement.")
-        record_event(user, thread, "star", message, {'user': user})
+        message = _("%(user)s pinned thread globally.")
+        record_event(user, thread, "bookmark", message, {'user': user})
 
         thread.weight = 2
         thread.save(update_fields=['has_events', 'weight'])
@@ -19,9 +19,9 @@ def announce_thread(user, thread):
 
 
 @atomic
-def pin_thread(user, thread):
+def pin_thread_locally(user, thread):
     if thread.weight != 1:
-        message = _("%(user)s pinned thread.")
+        message = _("%(user)s pinned thread locally.")
         record_event(user, thread, "bookmark", message, {'user': user})
 
         thread.weight = 1
@@ -32,9 +32,9 @@ def pin_thread(user, thread):
 
 
 @atomic
-def remove_thread_weight(user, thread):
+def unpin_thread(user, thread):
     if thread.weight:
-        message = _("%(user)s removed thread weight.")
+        message = _("%(user)s unpinned thread.")
         record_event(user, thread, "circle", message, {'user': user})
 
         thread.weight = 0

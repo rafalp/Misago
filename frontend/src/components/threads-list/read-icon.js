@@ -2,10 +2,18 @@ import React from 'react';
 
 export default class extends React.Component {
   getClassName() {
-    if (this.props.thread.is_read) {
-      return 'read-status item-read';
+    if (this.props.thread.weight > 0) {
+      if (this.props.thread.is_read) {
+        return 'read-status item-pinned item-read';
+      } else {
+        return 'read-status item-pinned item-new';
+      }
     } else {
-      return 'read-status item-new';
+      if (this.props.thread.is_read) {
+        return 'read-status item-read';
+      } else {
+        return 'read-status item-new';
+      }
     }
   }
 

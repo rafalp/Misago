@@ -14,7 +14,8 @@ export default class extends React.Component {
                           list={this.props.list}
 
                           selectThread={this.props.selectThread}
-                          selection={this.props.selection} />;
+                          selection={this.props.selection}
+                          busyThreads={this.props.busyThreads} />;
       } else {
         return <ListEmpty>
           {this.props.children}
