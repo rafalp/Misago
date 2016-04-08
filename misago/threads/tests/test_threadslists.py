@@ -119,7 +119,7 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
         return categories_acl
 
 
-class ListsTests(ThreadsListTestCase):
+class AllThreadsListTests(ThreadsListTestCase):
     def test_list_renders_empty(self):
         """empty threads list renders"""
         for url in LISTS_URLS:
@@ -286,6 +286,66 @@ class ListsTests(ThreadsListTestCase):
         self.assertEqual(
             response_json['subcategories'][0], self.category_b.pk)
 
+    def test_display_pinned_threads(self):
+        """
+        threads list displays globally pinned threads first
+        and locally ones inbetween other
+        """
+        globally = testutils.post_thread(
+            category=self.first_category,
+            is_global=True,
+        )
+
+        locally = testutils.post_thread(
+            category=self.first_category,
+            is_pinned=True,
+        )
+
+        standard = testutils.post_thread(category=self.first_category)
+
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+
+        positions = {
+            'g': response.content.find(globally.get_absolute_url()),
+            'l': response.content.find(locally.get_absolute_url()),
+            's': response.content.find(standard.get_absolute_url()),
+        }
+
+        # global announcement before others
+        self.assertTrue(positions['g'] < positions['l'])
+        self.assertTrue(positions['g'] < positions['s'])
+
+        # standard in the middle
+        self.assertTrue(positions['s'] < positions['l'])
+        self.assertTrue(positions['s'] > positions['g'])
+
+        # pinned last
+        self.assertTrue(positions['l'] > positions['g'])
+        self.assertTrue(positions['l'] > positions['s'])
+
+        # API behaviour is identic
+        response = self.client.get('/api/threads/')
+        self.assertEqual(response.status_code, 200)
+
+        positions = {
+            'g': response.content.find(globally.get_absolute_url()),
+            'l': response.content.find(locally.get_absolute_url()),
+            's': response.content.find(standard.get_absolute_url()),
+        }
+
+        # global announcement before others
+        self.assertTrue(positions['g'] < positions['l'])
+        self.assertTrue(positions['g'] < positions['s'])
+
+        # standard in the middle
+        self.assertTrue(positions['s'] < positions['l'])
+        self.assertTrue(positions['s'] > positions['g'])
+
+        # pinned last
+        self.assertTrue(positions['l'] > positions['g'])
+        self.assertTrue(positions['l'] > positions['s'])
+
 
 class CategoryThreadsListTests(ThreadsListTestCase):
     def test_access_hidden_category(self):
@@ -342,6 +402,67 @@ class CategoryThreadsListTests(ThreadsListTestCase):
                 url.strip('/'),
             ))
             self.assertEqual(response.status_code, 403)
+
+    def test_display_pinned_threads(self):
+        """
+        category threads list displays globally pinned threads first
+        then locally ones and unpinned last
+        """
+        globally = testutils.post_thread(
+            category=self.first_category,
+            is_global=True,
+        )
+
+        locally = testutils.post_thread(
+            category=self.first_category,
+            is_pinned=True,
+        )
+
+        standard = testutils.post_thread(category=self.first_category)
+
+        response = self.client.get(self.first_category.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+
+        positions = {
+            'g': response.content.find(globally.get_absolute_url()),
+            'l': response.content.find(locally.get_absolute_url()),
+            's': response.content.find(standard.get_absolute_url()),
+        }
+
+        # global announcement before others
+        self.assertTrue(positions['g'] < positions['l'])
+        self.assertTrue(positions['g'] < positions['s'])
+
+        # pinned in the middle
+        self.assertTrue(positions['l'] < positions['s'])
+        self.assertTrue(positions['l'] > positions['g'])
+
+        # standard last
+        self.assertTrue(positions['s'] > positions['g'])
+        self.assertTrue(positions['s'] > positions['g'])
+
+        # API behaviour is identic
+        response = self.client.get(
+            '/api/threads/?category=%s' % self.first_category.pk)
+        self.assertEqual(response.status_code, 200)
+
+        positions = {
+            'g': response.content.find(globally.get_absolute_url()),
+            'l': response.content.find(locally.get_absolute_url()),
+            's': response.content.find(standard.get_absolute_url()),
+        }
+
+        # global announcement before others
+        self.assertTrue(positions['g'] < positions['l'])
+        self.assertTrue(positions['g'] < positions['s'])
+
+        # pinned in the middle
+        self.assertTrue(positions['l'] < positions['s'])
+        self.assertTrue(positions['l'] > positions['g'])
+
+        # standard last
+        self.assertTrue(positions['s'] > positions['g'])
+        self.assertTrue(positions['s'] > positions['g'])
 
 
 class ThreadsVisibilityTests(ThreadsListTestCase):
