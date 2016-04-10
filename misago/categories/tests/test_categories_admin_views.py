@@ -9,7 +9,7 @@ from misago.categories.models import Category
 
 class CategoryAdminViewsTests(AdminTestCase):
     def setUp(self):
-        super(CategoryRoleAdminViewsTests, self).setUp()
+        super(CategoryAdminViewsTests, self).setUp()
 
         cache.clear()
         threadstore.clear()
