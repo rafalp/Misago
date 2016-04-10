@@ -1,19 +1,13 @@
-from django.test import TestCase
-
+from misago.core.testutils import MisagoTestCase
 from misago.categories.models import Category
-from misago.core import threadstore
-from misago.core.cache import cache
 
 from misago.threads import testutils
 from misago.threads.utils import add_categories_to_threads
 
 
-class AddCategoriesToThreadsTests(TestCase):
+class AddCategoriesToThreadsTests(MisagoTestCase):
     def setUp(self):
         super(AddCategoriesToThreadsTests, self).setUp()
-
-        cache.clear()
-        threadstore.clear()
 
         self.root = Category.objects.root_category()
 
@@ -72,8 +66,7 @@ class AddCategoriesToThreadsTests(TestCase):
             css_class='showing-category-f',
         ).insert_at(self.category_e, position='last-child', save=True)
 
-        cache.clear()
-        threadstore.clear()
+        self.clear_state()
 
         Category.objects.partial_rebuild(self.root.tree_id)
 

@@ -5,7 +5,7 @@ from misago.users.testutils import SuperUserTestCase
 
 class AdminTestCase(SuperUserTestCase):
     def setUp(self):
-        self.user = self.get_superuser()
+        super(AdminTestCase, self).setUp()
         self.login_admin(self.user)
 
     def login_admin(self, user):

@@ -1,14 +1,19 @@
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+
+from misago.core.testutils import MisagoTestCase
 
 from misago.users.models import AnonymousUser
 
 
-class UserTestCase(TestCase):
+class UserTestCase(MisagoTestCase):
     USER_PASSWORD = "Pass.123"
 
     def setUp(self):
+        super(UserTestCase, self).setUp()
+        self.get_initial_user()
+
+    def get_initial_user(self):
         self.user = self.get_anonymous_user()
 
     def get_anonymous_user(self):
@@ -37,7 +42,7 @@ class UserTestCase(TestCase):
 
 
 class AuthenticatedUserTestCase(UserTestCase):
-    def setUp(self):
+    def get_initial_user(self):
         self.user = self.get_authenticated_user()
         self.login_user(self.user)
 
@@ -47,6 +52,6 @@ class AuthenticatedUserTestCase(UserTestCase):
 
 
 class SuperUserTestCase(AuthenticatedUserTestCase):
-    def setUp(self):
+    def get_initial_user(self):
         self.user = self.get_superuser()
         self.login_user(self.user)

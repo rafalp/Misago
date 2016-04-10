@@ -1,11 +1,10 @@
-from django.test import TestCase
-
 from misago.core import cachebuster, threadstore
 from misago.core.cache import cache
 from misago.core.models import CacheVersion
+from misago.core.testutils import MisagoTestCase
 
 
-class CacheBusterTests(TestCase):
+class CacheBusterTests(MisagoTestCase):
     def test_register_unregister_cache(self):
         """register and unregister adds/removes cache"""
         test_cache_name = 'eric_the_fish'
@@ -20,10 +19,9 @@ class CacheBusterTests(TestCase):
             CacheVersion.objects.get(cache=test_cache_name)
 
 
-class CacheBusterCacheTests(TestCase):
+class CacheBusterCacheTests(MisagoTestCase):
     def setUp(self):
-        cache.clear()
-        threadstore.clear()
+        super(CacheBusterCacheTests, self).setUp()
 
         self.cache_name = 'eric_the_fish'
         cachebuster.register(self.cache_name)

@@ -1,19 +1,9 @@
 from django.core.urlresolvers import reverse
-
 from misago.admin.testutils import AdminTestCase
-from misago.core import threadstore
-from misago.core.cache import cache
-
 from misago.categories.models import Category
 
 
 class CategoryAdminViewsTests(AdminTestCase):
-    def setUp(self):
-        super(CategoryAdminViewsTests, self).setUp()
-
-        cache.clear()
-        threadstore.clear()
-
     def test_link_registered(self):
         """admin nav contains categories link"""
         response = self.client.get(
