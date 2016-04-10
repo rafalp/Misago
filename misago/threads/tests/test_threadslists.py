@@ -29,9 +29,6 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
 
         self.api_link = '/api/threads/'
 
-        cache.clear()
-        threadstore.clear()
-
         self.root = Category.objects.root_category()
         self.first_category = Category.objects.get(slug='first-category')
 
@@ -94,11 +91,22 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
 
         self.category_f = Category.objects.get(slug='category-f')
 
+        self.clear_state()
+
+        Category.objects.partial_rebuild(self.root.tree_id)
+
+        self.root = Category.objects.root_category()
+        self.category_a = Category.objects.get(slug='category-a')
+        self.category_b = Category.objects.get(slug='category-b')
+        self.category_c = Category.objects.get(slug='category-c')
+        self.category_d = Category.objects.get(slug='category-d')
+        self.category_e = Category.objects.get(slug='category-e')
+        self.category_f = Category.objects.get(slug='category-f')
+
         self.access_all_categories()
 
     def access_all_categories(self, extra=None):
-        cache.clear()
-        threadstore.clear()
+        self.clear_state()
 
         categories_acl = {'categories': {}, 'visible_categories': []}
         for category in Category.objects.all_categories():
