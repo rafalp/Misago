@@ -2,7 +2,7 @@ import React from 'react'; // jshint ignore:line
 import Button from 'misago/components/button'; // jshint ignore:line
 import Header from 'misago/components/threads/header'; // jshint ignore:line
 import { CompactNav } from 'misago/components/threads/navs'; // jshint ignore:line
-import { getPageTitle, getTitle } from 'misago/components/threads/utils';
+import { diffThreads, getPageTitle, getTitle, sortRoot, sortCategory } from 'misago/components/threads/utils'; // jshint ignore:line
 import ThreadsList from 'misago/components/threads-list/root'; // jshint ignore:line
 import ThreadsListEmpty from 'misago/components/threads/list-empty'; // jshint ignore:line
 import Toolbar from 'misago/components/threads/toolbar'; // jshint ignore:line
@@ -10,6 +10,7 @@ import WithDropdown from 'misago/components/with-dropdown';
 import misago from 'misago/index';
 import { append, hydrate } from 'misago/reducers/threads'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
+import polls from 'misago/services/polls';
 import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
 import title from 'misago/services/page-title';
@@ -20,8 +21,14 @@ export default class extends WithDropdown {
     super(props);
 
     this.state = {
+      isMounted: true,
+
       isLoaded: false,
       isBusy: false,
+
+      diff: {
+        results: []
+      },
 
       selection: [],
       busyThreads: [],
@@ -36,14 +43,19 @@ export default class extends WithDropdown {
       pages: 1
     };
 
+    let category = null;
+    if (!this.props.route.category.special_role) {
+      category = this.props.route.category.id;
+    }
+
     if (misago.has('THREADS')) {
-      this.initWithPreloadedData(misago.get('THREADS'));
+      this.initWithPreloadedData(category, misago.get('THREADS'));
     } else {
-      this.initWithoutPreloadedData();
+      this.initWithoutPreloadedData(category);
     }
   }
 
-  initWithPreloadedData(data) {
+  initWithPreloadedData(category, data) {
     this.state = Object.assign(this.state, {
       subcategories: data.subcategories,
 
@@ -53,27 +65,29 @@ export default class extends WithDropdown {
       page: data.page,
       pages: data.pages
     });
+
+    this.startPolling(category);
   }
 
-  initWithoutPreloadedData() {
-    this.loadThreads();
+  initWithoutPreloadedData(category) {
+    this.loadThreads(category);
   }
 
-  loadThreads(page=1) {
-    let category = null;
-    if (!this.props.route.category.special_role) {
-      category = this.props.route.category.id;
-    }
-
+  loadThreads(category, page=1) {
     ajax.get(misago.get('THREADS_API'), {
       category: category,
       list: this.props.route.list.type,
       page: page || 1
     }, 'threads').then((data) => {
+      if (!this.state.isMounted) {
+        // user changed route before loading completion
+        return;
+      }
+
       if (page === 1) {
         store.dispatch(hydrate(data.results));
       } else {
-        store.dispatch(append(data.results));
+        store.dispatch(append(data.results, this.getSorting()));
       }
 
       this.setState({
@@ -88,8 +102,23 @@ export default class extends WithDropdown {
         page: data.page,
         pages: data.pages
       });
+
+      this.startPolling(category);
     }, (rejection) => {
       snackbar.apiError(rejection);
+    });
+  }
+
+  startPolling(category) {
+    polls.start({
+      poll: 'threads',
+      url: misago.get('THREADS_API'),
+      data: {
+        category: category,
+        list: this.props.route.list.type
+      },
+      frequency: 120 * 1000,
+      update: this.pollResponse
     });
   }
 
@@ -107,8 +136,21 @@ export default class extends WithDropdown {
     }
   }
 
+  componentWillUnmount() {
+    this.state.isMounted = false;
+    polls.stop('threads');
+  }
+
   getTitle() {
     return getTitle(this.props.route);
+  }
+
+  getSorting() {
+    if (this.props.route.category.special_role) {
+      return sortRoot;
+    } else {
+      return sortCategory;
+    }
   }
 
   /* jshint ignore:start */
@@ -118,6 +160,24 @@ export default class extends WithDropdown {
     });
 
     this.loadThreads(this.state.page + 1);
+  };
+
+  pollResponse = (data) => {
+    this.setState({
+      diff: Object.assign({}, data, {
+        results: diffThreads(this.props.threads, data.results)
+      })
+    });
+  };
+
+  applyDiff = () => {
+    store.dispatch(append(this.state.diff.results, this.getSorting()));
+
+    this.setState(Object.assign({}, this.state.diff, {
+      diff: {
+        results: []
+      }
+    }));
   };
 
   selectThread = (thread) => {
@@ -184,7 +244,7 @@ export default class extends WithDropdown {
       }
 
       return interpolate(label, {
-        'threads': this.state.count
+        threads: this.state.count
       }, true);
     } else {
       return gettext("Loading threads...");
@@ -248,6 +308,9 @@ export default class extends WithDropdown {
                      threads={this.props.threads}
                      categories={this.props.route.categoriesMap}
                      list={this.props.route.list}
+
+                     diffSize={this.state.diff.results.length + 3}
+                     applyDiff={this.applyDiff}
 
                      selectThread={this.selectThread}
                      selection={this.state.selection}

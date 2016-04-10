@@ -118,10 +118,10 @@ export default class extends React.Component {
         <Category category={bottom} list={this.props.list} />
       </li>;
       /* jshint ignore:end */
-    } else if (top || bottom) {
+    } else if (top) {
       /* jshint ignore:start */
       return <li className="thread-path">
-        <Category category={top || bottom} list={this.props.list} />
+        <Category category={top} list={this.props.list} />
       </li>;
       /* jshint ignore:end */
     } else {

@@ -15,10 +15,11 @@ export const MODERATION_PERMISSIONS = [
   'can_review'
 ];
 
-export function append(items) {
+export function append(items, sorting) {
  return {
     type: APPEND_THREADS,
-    items
+    items,
+    sorting
   };
 }
 
@@ -65,15 +66,7 @@ export default function thread(state=[], action=null) {
   switch (action.type) {
     case APPEND_THREADS:
       let mergedState = concatUnique(action.items.map(hydrateThread), state);
-      return mergedState.sort(function(a, b) {
-        if (a.last_post > b.last_post) {
-          return -1;
-        } else if (a.last_post < b.last_post) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
+      return mergedState.sort(action.sorting);
 
     case HYDRATE_THREADS:
       return action.items.map(hydrateThread);

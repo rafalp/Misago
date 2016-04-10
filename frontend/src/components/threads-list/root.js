@@ -13,11 +13,15 @@ export default class extends React.Component {
                           categories={this.props.categories}
                           list={this.props.list}
 
+                          diffSize={this.props.diffSize}
+                          applyDiff={this.props.applyDiff}
+
                           selectThread={this.props.selectThread}
                           selection={this.props.selection}
                           busyThreads={this.props.busyThreads} />;
       } else {
-        return <ListEmpty>
+        return <ListEmpty diffSize={this.props.diffSize}
+                          applyDiff={this.props.applyDiff}>
           {this.props.children}
         </ListEmpty>;
       }

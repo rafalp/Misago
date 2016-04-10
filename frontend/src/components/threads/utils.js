@@ -47,3 +47,57 @@ export function getTitle(route) {
     return gettext("Threads");
   }
 }
+
+export function isThreadChanged(current, fromDb) {
+  return [
+    current.title === fromDb.title,
+    current.weight === fromDb.weight,
+    current.category === fromDb.category,
+    current.top_category === fromDb.top_category,
+    current.last_post === fromDb.last_post,
+    current.last_poster_name === fromDb.last_poster_name
+  ].indexOf(false) >= 0;
+}
+
+export function diffThreads(current, fromDb) {
+  let currentMap = {};
+  current.forEach(function(thread) {
+    currentMap[thread.id] = thread;
+  });
+
+  return fromDb.filter(function(thread) {
+    if (currentMap[thread.id]) {
+      return isThreadChanged(currentMap[thread.id], thread);
+    } else {
+      return true;
+    }
+  });
+}
+
+export function sortRoot(a, b) {
+  if (a.weight === 2 && a.weight > b.weight) {
+    return -1;
+  } else {
+    if (a.last_post > b.last_post) {
+      return -1;
+    } else if (a.last_post < b.last_post) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+}
+
+export function sortCategory(a, b) {
+  if (a.weight > b.weight) {
+    return -1;
+  } else {
+    if (a.last_post > b.last_post) {
+      return -1;
+    } else if (a.last_post < b.last_post) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+}
