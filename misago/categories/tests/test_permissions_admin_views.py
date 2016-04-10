@@ -3,6 +3,8 @@ from django.core.urlresolvers import reverse
 from misago.acl.models import Role
 from misago.acl.testutils import fake_post_data
 from misago.admin.testutils import AdminTestCase
+from misago.core import threadstore
+from misago.core.cache import cache
 
 from misago.categories.models import Category, CategoryRole
 
@@ -12,6 +14,12 @@ def fake_data(data_dict):
 
 
 class CategoryRoleAdminViewsTests(AdminTestCase):
+    def setUp(self):
+        super(CategoryRoleAdminViewsTests, self).setUp()
+
+        cache.clear()
+        threadstore.clear()
+
     def test_link_registered(self):
         """admin nav contains category roles link"""
         response = self.client.get(
