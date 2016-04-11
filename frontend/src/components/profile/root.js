@@ -5,7 +5,7 @@ import BanDetails from 'misago/components/profile/ban-details'; // jshint ignore
 import Followers from 'misago/components/profile/followers'; // jshint ignore:line
 import Follows from 'misago/components/profile/follows'; // jshint ignore:line
 import UsernameHistory from 'misago/components/profile/username-history'; // jshint ignore:line
-import Header from 'misago/components/profile/Header'; // jshint ignore:line
+import Header from 'misago/components/profile/header'; // jshint ignore:line
 import ModerationNav from 'misago/components/profile/moderation/nav'; // jshint ignore:line
 import { SideNav, CompactNav } from 'misago/components/profile/navs'; // jshint ignore:line
 import WithDropdown from 'misago/components/with-dropdown';
