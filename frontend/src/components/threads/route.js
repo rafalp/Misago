@@ -2,7 +2,7 @@ import React from 'react'; // jshint ignore:line
 import Button from 'misago/components/button'; // jshint ignore:line
 import Header from 'misago/components/threads/header'; // jshint ignore:line
 import { CompactNav } from 'misago/components/threads/navs'; // jshint ignore:line
-import { diffThreads, getPageTitle, getTitle, sortRoot, sortCategory } from 'misago/components/threads/utils'; // jshint ignore:line
+import { diffThreads, getPageTitle, getTitle, compareGlobalWeight, compareWeight } from 'misago/components/threads/utils'; // jshint ignore:line
 import ThreadsList from 'misago/components/threads-list/root'; // jshint ignore:line
 import ThreadsListEmpty from 'misago/components/threads/list-empty'; // jshint ignore:line
 import Toolbar from 'misago/components/threads/toolbar'; // jshint ignore:line
@@ -147,9 +147,9 @@ export default class extends WithDropdown {
 
   getSorting() {
     if (this.props.route.category.special_role) {
-      return sortRoot;
+      return compareGlobalWeight;
     } else {
-      return sortCategory;
+      return compareWeight;
     }
   }
 
@@ -309,7 +309,7 @@ export default class extends WithDropdown {
                      categories={this.props.route.categoriesMap}
                      list={this.props.route.list}
 
-                     diffSize={this.state.diff.results.length + 3}
+                     diffSize={this.state.diff.results.length}
                      applyDiff={this.applyDiff}
 
                      selectThread={this.selectThread}
