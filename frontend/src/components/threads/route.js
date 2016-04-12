@@ -1,8 +1,9 @@
 import React from 'react'; // jshint ignore:line
 import Button from 'misago/components/button'; // jshint ignore:line
+import { compareGlobalWeight, compareWeight } from 'misago/components/threads/compare'; // jshint ignore:line
 import Header from 'misago/components/threads/header'; // jshint ignore:line
 import { CompactNav } from 'misago/components/threads/navs'; // jshint ignore:line
-import { diffThreads, getPageTitle, getTitle, compareGlobalWeight, compareWeight } from 'misago/components/threads/utils'; // jshint ignore:line
+import { diffThreads, getModerationActions, getPageTitle, getTitle } from 'misago/components/threads/utils'; // jshint ignore:line
 import ThreadsList from 'misago/components/threads-list/root'; // jshint ignore:line
 import ThreadsListEmpty from 'misago/components/threads/list-empty'; // jshint ignore:line
 import Toolbar from 'misago/components/threads/toolbar'; // jshint ignore:line
@@ -30,6 +31,7 @@ export default class extends WithDropdown {
         results: []
       },
 
+      moderation: [],
       selection: [],
       busyThreads: [],
 
@@ -57,6 +59,8 @@ export default class extends WithDropdown {
 
   initWithPreloadedData(category, data) {
     this.state = Object.assign(this.state, {
+      moderation: getModerationActions(data.results),
+
       subcategories: data.subcategories,
 
       count: data.count,
@@ -93,6 +97,8 @@ export default class extends WithDropdown {
       this.setState({
         isLoaded: true,
         isBusy: false,
+
+        moderation: getModerationActions(store.getState().threads),
 
         subcategories: data.subcategories,
 
@@ -174,6 +180,8 @@ export default class extends WithDropdown {
     store.dispatch(append(this.state.diff.results, this.getSorting()));
 
     this.setState(Object.assign({}, this.state.diff, {
+      moderation: getModerationActions(store.getState().threads),
+
       diff: {
         results: []
       }
@@ -259,7 +267,8 @@ export default class extends WithDropdown {
                       list={this.props.route.list}
 
                       threads={this.props.threads}
-                      selection={this.props.selection}
+                      moderation={this.state.moderation}
+                      selection={this.state.selection}
 
                       isLoaded={this.state.isLoaded}
                       user={this.props.user}>

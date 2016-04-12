@@ -17,15 +17,18 @@ export default class extends React.Component {
   }
 
   getModerationButton() {
-    if (this.props.user.id) {
+    if (this.props.user.id && this.props.moderation.allow) {
       /* jshint ignore:start */
-      return <button type="button" className="btn btn-default toolbar-right"
-                     disabled={!this.props.isLoaded}>
-        <span className="material-icon">
-          settings
-        </span>
-        {gettext("Moderation")}
-      </button>;
+      return <div class="dropdown toolbar-right">
+        <button type="button"
+                className="btn btn-default"
+                disabled={!this.props.isLoaded || !this.props.selection.length || !this.props.threads.length}>
+          <span className="material-icon">
+            settings
+          </span>
+          {gettext("Moderation")}
+        </button>
+      </div>;
       /* jshint ignore:end */
     } else {
       return null;

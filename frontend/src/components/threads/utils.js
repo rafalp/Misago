@@ -74,32 +74,40 @@ export function diffThreads(current, fromDb) {
   });
 }
 
-export function compareLastPostAge(a, b) {
-  if (a.last_post > b.last_post) {
-    return -1;
-  } else if (a.last_post < b.last_post) {
-    return 1;
-  } else {
-    return 0;
-  }
-}
+export function getModerationActions(threads) {
+  let moderation = {
+    allow: false,
 
-export function compareGlobalWeight(a, b) {
-  if (a.weight === 2 && a.weight > b.weight) {
-    return -1;
-  } else if (b.weight === 2 && a.weight < b.weight) {
-    return 1;
-  } else {
-    return compareLastPostAge(a, b);
-  }
-}
+    can_pin: 0,
+    can_close: 0,
+    can_hide: 0,
+    can_move: 0
+  };
 
-export function compareWeight(a, b) {
-  if (a.weight > b.weight) {
-    return -1;
-  } else if (a.weight < b.weight) {
-    return 1;
-  } else {
-    return compareLastPostAge(a, b);
-  }
+  threads.forEach(function(thread) {
+    if (thread.acl.can_pin > moderation.can_pin) {
+      moderation.can_pin = thread.acl.can_pin;
+    }
+
+    if (thread.acl.can_close > moderation.can_close) {
+      moderation.can_close = thread.acl.can_close;
+    }
+
+    if (thread.acl.can_hide > moderation.can_hide) {
+      moderation.can_hide = thread.acl.can_hide;
+    }
+
+    if (thread.acl.can_move > moderation.can_move) {
+      moderation.can_move = thread.acl.can_move;
+    }
+
+    moderation.allow = (
+      moderation.can_pin ||
+      moderation.can_close ||
+      moderation.can_hide ||
+      moderation.can_move
+    );
+  });
+
+  return moderation;
 }
