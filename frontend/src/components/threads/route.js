@@ -9,7 +9,7 @@ import ThreadsListEmpty from 'misago/components/threads/list-empty'; // jshint i
 import Toolbar from 'misago/components/threads/toolbar'; // jshint ignore:line
 import WithDropdown from 'misago/components/with-dropdown';
 import misago from 'misago/index';
-import { append, hydrate } from 'misago/reducers/threads'; // jshint ignore:line
+import { append, hydrate, patch } from 'misago/reducers/threads'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
 import polls from 'misago/services/polls';
 import snackbar from 'misago/services/snackbar';
@@ -193,6 +193,16 @@ export default class extends WithDropdown {
       selection: sets.toggle(this.state.selection, thread)
     });
   };
+
+  freezeThread = (thread) => {
+    this.setState({
+      busyThreads: sets.toggle(this.state.busyThreads, thread)
+    });
+  };
+
+  updateThread = (thread) => {
+    store.dispatch(patch(thread, thread, this.getSorting()));
+  };
   /* jshint ignore:end */
 
   getClassName() {
@@ -267,8 +277,11 @@ export default class extends WithDropdown {
                       list={this.props.route.list}
 
                       threads={this.props.threads}
-                      moderation={this.state.moderation}
                       selection={this.state.selection}
+                      moderation={this.state.moderation}
+
+                      freezeThread={this.freezeThread}
+                      updateThread={this.updateThread}
 
                       isLoaded={this.state.isLoaded}
                       user={this.props.user}>

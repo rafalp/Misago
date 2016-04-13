@@ -73,9 +73,7 @@ class ThreadSerializer(serializers.ModelSerializer):
             return None
 
     def get_api_url(self, obj):
-        return {
-            'subscribe': obj.get_api_subscribe_url(),
-        }
+        return obj.get_api_url()
 
     def get_acl(self, obj):
         try:

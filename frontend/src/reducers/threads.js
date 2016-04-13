@@ -5,6 +5,7 @@ export const APPEND_THREADS = 'APPEND_THREADS';
 export const HYDRATE_THREADS = 'HYDRATE_THREADS';
 export const PATCH_THREAD = 'PATCH_THREAD';
 export const READ_THREADS = 'READ_THREADS';
+export const SORT_THREADS = 'SORT_THREADS';
 
 export const MODERATION_PERMISSIONS = [
   'can_announce',
@@ -30,17 +31,25 @@ export function hydrate(items) {
   };
 }
 
-export function patch(thread, patch) {
+export function patch(thread, patch, sorting=null) {
   return {
     type: PATCH_THREAD,
     thread,
-    patch
+    patch,
+    sorting
   };
 }
 
 export function read() {
   return {
     type: READ_THREADS
+  };
+}
+
+export function sort(sorting) {
+  return {
+    type: SORT_THREADS,
+    sorting
   };
 }
 
@@ -65,14 +74,14 @@ export function hydrateThread(thread) {
 export default function thread(state=[], action=null) {
   switch (action.type) {
     case APPEND_THREADS:
-      let mergedState = concatUnique(action.items.map(hydrateThread), state);
+      const mergedState = concatUnique(action.items.map(hydrateThread), state);
       return mergedState.sort(action.sorting);
 
     case HYDRATE_THREADS:
       return action.items.map(hydrateThread);
 
     case PATCH_THREAD:
-      return state.map(function(item) {
+      const patchedState = state.map(function(item) {
         if (item.id === action.thread.id) {
           return Object.assign({}, item, action.patch);
         } else {
@@ -80,12 +89,20 @@ export default function thread(state=[], action=null) {
         }
       });
 
+      if (action.sorting) {
+        return patchedState.sort(action.sorting);
+      }
+      return patchedState;
+
     case READ_THREADS:
       return state.map(function(item) {
         return Object.assign({}, item, {
           is_read: true
         });
       });
+
+    case SORT_THREADS:
+      return state.sort(action.sorting);
 
     default:
       return state;

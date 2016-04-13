@@ -139,7 +139,6 @@ class PermissionsForm(forms.Form):
             (2, _("All threads")),
         )
     )
-    can_announce_threads = forms.YesNoSwitch(label=_("Can announce threads"))
     can_pin_threads = forms.TypedChoiceField(
         label=_("Can pin threads"),
         coerce=int,
@@ -218,7 +217,6 @@ def build_category_acl(acl, category, categories_roles, key_name):
         'can_protect_posts': 0,
         'can_move_posts': 0,
         'can_merge_posts': 0,
-        'can_announce_threads': 0,
         'can_pin_threads': 0,
         'can_close_threads': 0,
         'can_move_threads': 0,
@@ -246,7 +244,6 @@ def build_category_acl(acl, category, categories_roles, key_name):
         can_protect_posts=algebra.greater,
         can_move_posts=algebra.greater,
         can_merge_posts=algebra.greater,
-        can_announce_threads=algebra.greater,
         can_pin_threads=algebra.greater,
         can_close_threads=algebra.greater,
         can_move_threads=algebra.greater,
@@ -282,7 +279,6 @@ def add_acl_to_category(user, category):
         'can_protect_posts': 0,
         'can_move_posts': 0,
         'can_merge_posts': 0,
-        'can_announce_threads': 0,
         'can_pin_threads': 0,
         'can_close_threads': 0,
         'can_move_threads': 0,
@@ -312,7 +308,6 @@ def add_acl_to_category(user, category):
             can_protect_posts=algebra.greater,
             can_move_posts=algebra.greater,
             can_merge_posts=algebra.greater,
-            can_announce_threads=algebra.greater,
             can_pin_threads=algebra.greater,
             can_close_threads=algebra.greater,
             can_move_threads=algebra.greater,
@@ -334,7 +329,6 @@ def add_acl_to_thread(user, thread):
         'can_reply': can_reply_thread(user, thread),
         'can_edit': can_edit_thread(user, thread),
         'can_hide': category_acl.get('can_hide_threads', False),
-        'can_announce': category_acl.get('can_announce_threads', False),
         'can_pin': category_acl.get('can_pin_threads', 0),
         'can_close': category_acl.get('can_close_threads', False),
         'can_move': category_acl.get('can_move_threads', False),
