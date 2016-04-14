@@ -1,7 +1,7 @@
-from misago.core.apipatchrouter import ApiPatchRouter
+from misago.core.apipatch import ApiPatch
 from misago.threads.moderation import threads as moderation
 
-thread_patch_endpoint = ApiPatchRouter()
+thread_patch_endpoint = ApiPatch()
 
 
 def patch_weight(request, thread, value):

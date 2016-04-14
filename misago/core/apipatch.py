@@ -12,7 +12,7 @@ class InvalidAction(Exception):
     pass
 
 
-class ApiPatchRouter(object):
+class ApiPatch(object):
     def __init__(self):
         self._actions = []
 
@@ -38,47 +38,55 @@ class ApiPatchRouter(object):
         })
 
     def dispatch(self, request, target):
-        try:
-            return Response(self.run_actions(request, target))
-        except Http404:
-            pass
-        except PermissionDenied as e:
-            pass
-        except InvalidAction as e:
-            pass
-        return Response({})
-
-    def run_actions(self, request, target):
         if not isinstance(request.data, list):
-            raise InvalidAction("PATCH request should be list of operations")
+            return Response({
+                'detail': "PATCH request should be list of operations"
+            }, status=400)
 
+        detail = []
+        is_errored = False
+
+        patch = {'id': target.pk}
         for action in request.data:
-            self.validate_action(action)
-            return self.dispatch_action(request, target, action)
+            try:
+                self.validate_action(action)
+                self.dispatch_action(patch, request, target, action)
+                detail.append('ok')
+            except Http404:
+                is_errored = True
+                detail.append('NOT FOUND')
+                break
+            except (InvalidAction, PermissionDenied) as e:
+                is_errored = True
+                detail.append(e.args[0])
+                break
+
+        patch['detail'] = detail
+        if is_errored:
+            return Response(patch, status=400)
+        else:
+            return Response(patch)
 
     def validate_action(self, action):
+        if not action.get('op'):
+            raise InvalidAction(u"undefined op")
+
         if action.get('op') not in ALLOWED_OPS:
-            if action.get('op'):
-                raise InvalidAction(
-                    u"\"%s\" op is unsupported" % action.get('op'))
-            else:
-                raise InvalidAction(u"server didn't receive valid op")
+            raise InvalidAction(
+                u'"%s" op is unsupported' % action.get('op'))
 
         if not action.get('path'):
             raise InvalidAction(
-                u"\"%s\" op has to define path" % action.get('op'))
+                u'"%s" op has to specify path' % action.get('op'))
 
         if 'value' not in action:
             raise InvalidAction(
-                u"\"%s\" op has to define value" % action.get('op'))
+                u'"%s" op has to specify value' % action.get('op'))
 
-    def dispatch_action(self, request, target, action):
-        patch = {'id': target.pk}
+    def dispatch_action(self, patch, request, target, action):
         for handler in self._actions:
             if (action['op'] == handler['op'] and
                     action['path'] == handler['path']):
                 with transaction.atomic():
                     patch.update(
-                        handler['handler'](request, target, action['value'])
-                    )
-        return patch
+                        handler['handler'](request, target, action['value']))
