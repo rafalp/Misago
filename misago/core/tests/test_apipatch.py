@@ -155,7 +155,6 @@ class ApiPatchTests(TestCase):
                 raise Http404()
             if value == 'perm':
                 raise PermissionDenied("yo ain't doing that!")
-            return {}
         patch.replace('error', action_error)
 
         def action_mutate(request, target, value):
