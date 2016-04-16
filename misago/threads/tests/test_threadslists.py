@@ -19,7 +19,7 @@ LISTS_URLS = (
     'my/',
     'new/',
     'unread/',
-    'subscribed/'
+    'subscribed/',
 )
 
 
@@ -108,8 +108,13 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
     def access_all_categories(self, extra=None):
         self.clear_state()
 
-        categories_acl = {'categories': {}, 'visible_categories': []}
-        for category in Category.objects.all_categories():
+        categories_acl = {
+            'categories': {},
+            'visible_categories': [],
+            'can_approve_content': [],
+        }
+
+        for category in Category.objects.all_categories(include_root=True):
             categories_acl['visible_categories'].append(category.pk)
             categories_acl['categories'][category.pk] = {
                 'can_see': 1,
@@ -117,11 +122,13 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
                 'can_see_all_threads': 1,
                 'can_see_own_threads': 0,
                 'can_hide_threads': 0,
-                'can_review_moderated_content': 0,
+                'can_approve_content': 0,
             }
 
             if extra:
                 categories_acl['categories'][category.pk].update(extra)
+                if extra.get('can_approve_content'):
+                    categories_acl['can_approve_content'].append(category.pk)
 
         override_acl(self.user, categories_acl)
         return categories_acl
@@ -572,12 +579,12 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         response_json = json_loads(response.content)
         self.assertEqual(len(response_json['results']), 0)
 
-    def test_list_user_see_own_moderated_thread(self):
-        """list renders moderated thread that belongs to viewer"""
+    def test_list_user_see_own_unapproved_thread(self):
+        """list renders unapproved thread that belongs to viewer"""
         test_thread = testutils.post_thread(
             category=self.category_a,
             poster=self.user,
-            is_moderated=True,
+            is_unapproved=True,
         )
 
         response = self.client.get('/')
@@ -592,11 +599,11 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         response_json = json_loads(response.content)
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
-    def test_list_user_cant_see_moderated_thread(self):
-        """list hides moderated thread that belongs to other user"""
+    def test_list_user_cant_see_unapproved_thread(self):
+        """list hides unapproved thread that belongs to other user"""
         test_thread = testutils.post_thread(
             category=self.category_a,
-            is_moderated=True,
+            is_unapproved=True,
         )
 
         response = self.client.get('/')
@@ -705,17 +712,17 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         response_json = json_loads(response.content)
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
-    def test_list_user_can_see_moderated_thread(self):
+    def test_list_user_can_see_unapproved_thread(self):
         """
         list shows hidden thread that belongs to other user due to permission
         """
         test_thread = testutils.post_thread(
             category=self.category_a,
-            is_moderated=True,
+            is_unapproved=True,
         )
 
         self.access_all_categories({
-            'can_review_moderated_content': 1
+            'can_approve_content': 1
         })
 
         response = self.client.get('/')
@@ -724,7 +731,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
 
         # test api
         self.access_all_categories({
-            'can_review_moderated_content': 1
+            'can_approve_content': 1
         })
 
         response = self.client.get(self.api_link)
@@ -1465,3 +1472,59 @@ class SubscribedThreadsListTests(ThreadsListTestCase):
         response_json = json_loads(response.content)
         self.assertEqual(len(response_json['results']), 0)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
+
+
+class UnapprovedListTests(ThreadsListTestCase):
+    def test_list_errors_without_permission(self):
+        """list errors if user has no permission to access it"""
+        self.access_all_categories()
+        response = self.client.get('/unapproved/')
+        self.assertEqual(response.status_code, 403)
+
+        self.access_all_categories()
+        response = self.client.get(
+            self.category_a.get_absolute_url() + 'unapproved/')
+        self.assertEqual(response.status_code, 403)
+
+        # test api
+        self.access_all_categories()
+        response = self.client.get('%s?list=unapproved' % self.api_link)
+        self.assertEqual(response.status_code, 403)
+
+    def test_list_shows_right_threads(self):
+        """list shows threads with unapproved posts"""
+        visible_thread = testutils.post_thread(
+            category=self.category_b,
+            is_unapproved=True,
+        )
+
+        hidden_thread = testutils.post_thread(
+            category=self.category_b,
+            is_unapproved=False,
+        )
+
+        self.access_all_categories({
+            'can_approve_content': True
+        })
+        response = self.client.get('/unapproved/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(visible_thread.get_absolute_url(), response.content)
+        self.assertNotIn(hidden_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories({
+            'can_approve_content': True
+        })
+        response = self.client.get(
+            self.category_a.get_absolute_url() + 'unapproved/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(visible_thread.get_absolute_url(), response.content)
+        self.assertNotIn(hidden_thread.get_absolute_url(), response.content)
+
+        # test api
+        self.access_all_categories({
+            'can_approve_content': True
+        })
+        response = self.client.get('%s?list=unapproved' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(visible_thread.get_absolute_url(), response.content)
+        self.assertNotIn(hidden_thread.get_absolute_url(), response.content)

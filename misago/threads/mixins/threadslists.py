@@ -22,6 +22,8 @@ def filter_threads_queryset(user, categories, list_type, queryset):
     elif list_type == 'subscribed':
         subscribed_threads = user.subscription_set.values('thread_id')
         return queryset.filter(id__in=subscribed_threads)
+    elif list_type == 'unapproved':
+        return queryset.filter(has_unapproved_posts=True)
     else:
         # grab cutoffs for categories
         cutoff_date = timezone.now() - timedelta(
@@ -111,6 +113,15 @@ class ThreadsListMixin(object):
             if list_type == 'subscribed':
                 raise PermissionDenied(_("You have to sign in to see list of "
                                          "threads you are subscribing."))
+
+            if list_type == 'unapproved':
+                raise PermissionDenied(_("You have to sign in to see list of "
+                                         "threads with unapproved posts."))
+        else:
+            if (list_type == 'unapproved' and
+                    category.pk not in request.user.acl['can_approve_content']):
+                raise PermissionDenied(_("You don't have permission to "
+                                         "approve content in this category."))
 
     def get_categories(self, request):
         return [Category.objects.root_category()] + list(

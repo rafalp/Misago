@@ -24,7 +24,7 @@ class ThreadApiTestCase(AuthenticatedUserTestCase):
             'can_see_all_threads': 1,
             'can_see_own_threads': 0,
             'can_hide_threads': 0,
-            'can_review_moderated_content': 0,
+            'can_approve_content': 0,
         }
         final_acl.update(acl)
 

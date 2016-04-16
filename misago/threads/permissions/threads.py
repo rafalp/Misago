@@ -143,9 +143,9 @@ class PermissionsForm(forms.Form):
     can_move_threads = forms.YesNoSwitch(label=_("Can move threads"))
     can_merge_threads = forms.YesNoSwitch(label=_("Can merge threads"))
     can_split_threads = forms.YesNoSwitch(label=_("Can split threads"))
-    can_review_moderated_content = forms.YesNoSwitch(
-        label=_("Can review moderated content"),
-        help_text=_("Will see and be able to accept moderated content.")
+    can_approve_content = forms.YesNoSwitch(
+        label=_("Can approve content"),
+        help_text=_("Will be able to see and approve unapproved content.")
     )
     can_report_content = forms.YesNoSwitch(label=_("Can report posts"))
     can_see_reports = forms.YesNoSwitch(label=_("Can see reports"))
@@ -173,19 +173,36 @@ def change_permissions_form(role):
 ACL Builder
 """
 def build_acl(acl, roles, key_name):
-    acl['can_review_moderated_content'] = []
+    acl['can_approve_content'] = []
+    acl['can_pin_threads'] = []
+    acl['can_close_threads'] = []
     acl['can_see_reports'] = []
-    categories_roles = get_categories_roles(roles)
 
-    for category in Category.objects.all_categories():
+    categories_roles = get_categories_roles(roles)
+    categories = list(Category.objects.all_categories(include_root=True))
+
+    approve_in_categories = []
+
+    for category in categories:
         category_acl = acl['categories'].get(category.pk, {'can_browse': 0})
         if category_acl['can_browse']:
             acl['categories'][category.pk] = build_category_acl(
                 category_acl, category, categories_roles, key_name)
-            if acl['categories'][category.pk]['can_review_moderated_content']:
-                acl['can_review_moderated_content'].append(category.pk)
-            if acl['categories'][category.pk]['can_see_reports']:
+            if acl['categories'][category.pk].get('can_pin_threads'):
+                acl['can_pin_threads'].append(category.pk)
+            if acl['categories'][category.pk].get('can_close_threads'):
+                acl['can_close_threads'].append(category.pk)
+            if acl['categories'][category.pk].get('can_see_reports'):
                 acl['can_see_reports'].append(category.pk)
+
+            if acl['categories'][category.pk].get('can_approve_content'):
+                approve_in_categories.append(category)
+
+    for category in categories:
+        for sub in approve_in_categories:
+            if category.has_child(sub) or category == sub:
+                acl['can_approve_content'].append(category.pk)
+
     return acl
 
 
@@ -212,7 +229,7 @@ def build_category_acl(acl, category, categories_roles, key_name):
         'can_move_threads': 0,
         'can_merge_threads': 0,
         'can_split_threads': 0,
-        'can_review_moderated_content': 0,
+        'can_approve_content': 0,
         'can_report_content': 0,
         'can_see_reports': 0,
         'can_hide_events': 0,
@@ -239,7 +256,7 @@ def build_category_acl(acl, category, categories_roles, key_name):
         can_move_threads=algebra.greater,
         can_merge_threads=algebra.greater,
         can_split_threads=algebra.greater,
-        can_review_moderated_content=algebra.greater,
+        can_approve_content=algebra.greater,
         can_report_content=algebra.greater,
         can_see_reports=algebra.greater,
         can_hide_events=algebra.greater,
@@ -274,7 +291,7 @@ def add_acl_to_category(user, category):
         'can_move_threads': 0,
         'can_merge_threads': 0,
         'can_split_threads': 0,
-        'can_review_moderated_content': 0,
+        'can_approve_content': 0,
         'can_report_content': 0,
         'can_see_reports': 0,
         'can_hide_events': 0,
@@ -303,7 +320,7 @@ def add_acl_to_category(user, category):
             can_move_threads=algebra.greater,
             can_merge_threads=algebra.greater,
             can_split_threads=algebra.greater,
-            can_review_moderated_content=algebra.greater,
+            can_approve_content=algebra.greater,
             can_report_content=algebra.greater,
             can_see_reports=algebra.greater,
             can_hide_events=algebra.greater,
@@ -322,7 +339,7 @@ def add_acl_to_thread(user, thread):
         'can_pin': category_acl.get('can_pin_threads', 0),
         'can_close': category_acl.get('can_close_threads', False),
         'can_move': category_acl.get('can_move_threads', False),
-        'can_review': category_acl.get('can_review_moderated_content', False),
+        'can_approve': category_acl.get('can_approve_content', False),
         'can_report': category_acl.get('can_report_content', False),
         'can_see_reports': category_acl.get('can_see_reports', False),
     })
@@ -352,10 +369,10 @@ def add_acl_to_post(user, post):
         'can_protect': category_acl.get('can_protect_posts', False),
         'can_report': category_acl.get('can_report_content', False),
         'can_see_reports': category_acl.get('can_see_reports', False),
-        'can_approve': category_acl.get('can_review_moderated_content', False),
+        'can_approve': category_acl.get('can_approve_content', False),
     })
 
-    if not post.is_moderated:
+    if not post.is_unapproved:
         post.acl['can_approve'] = False
 
     if not post.acl['can_see_hidden']:
@@ -391,8 +408,8 @@ def allow_see_thread(user, target):
     if user.is_anonymous() or user.pk != target.starter_id:
         if not category_acl.get('can_see_all_threads'):
             raise Http404()
-        if target.is_moderated:
-            if not category_acl.get('can_review_moderated_content'):
+        if target.is_unapproved:
+            if not category_acl.get('can_approve_content'):
                 raise Http404()
         if target.is_hidden and not category_acl.get('can_hide_threads'):
             raise Http404()
@@ -466,9 +483,9 @@ can_edit_thread = return_boolean(allow_edit_thread)
 
 
 def allow_see_post(user, target):
-    if target.is_moderated:
+    if target.is_unapproved:
         category_acl = user.acl['categories'].get(target.category_id, {})
-        if not category_acl.get('can_review_moderated_content'):
+        if not category_acl.get('can_approve_content'):
             if user.is_anonymous() or user.pk != target.poster_id:
                 raise Http404()
 can_see_post = return_boolean(allow_see_post)
@@ -686,21 +703,21 @@ def exclude_invisible_category_threads(queryset, user, category):
     if user.is_authenticated():
         condition_author = Q(starter_id=user.id)
 
-        can_mod = category.acl['can_review_moderated_content']
+        can_mod = category.acl['can_approve_content']
         can_hide = category.acl['can_hide_threads']
 
         if not can_mod and not can_hide:
-            condition = Q(is_moderated=False) & Q(is_hidden=False)
+            condition = Q(is_unapproved=False) & Q(is_hidden=False)
             queryset = queryset.filter(condition_author | condition)
         elif not can_mod:
-            condition = Q(is_moderated=False)
+            condition = Q(is_unapproved=False)
             queryset = queryset.filter(condition_author | condition)
         elif not can_hide:
             condition = Q(is_hidden=False)
             queryset = queryset.filter(condition_author | condition)
     else:
-        if not category.acl['can_review_moderated_content']:
-            queryset = queryset.filter(is_moderated=False)
+        if not category.acl['can_approve_content']:
+            queryset = queryset.filter(is_unapproved=False)
         if not category.acl['can_hide_threads']:
             queryset = queryset.filter(is_hidden=False)
 
@@ -723,7 +740,7 @@ def exclude_invisible_threads(user, categories, queryset):
 
         can_hide = category.acl['can_hide_threads']
         if category.acl['can_see_all_threads']:
-            can_mod = category.acl['can_review_moderated_content']
+            can_mod = category.acl['can_approve_content']
 
             if can_mod and can_hide:
                 show_all.append(category)
@@ -749,7 +766,7 @@ def exclude_invisible_threads(user, categories, queryset):
     if show_accepted_visible:
         if user.is_authenticated():
             condition = Q(
-                Q(starter=user) | Q(is_moderated=False),
+                Q(starter=user) | Q(is_unapproved=False),
                 category__in=show_accepted_visible,
                 is_hidden=False,
             )
@@ -757,7 +774,7 @@ def exclude_invisible_threads(user, categories, queryset):
             condition = Q(
                 category__in=show_accepted_visible,
                 is_hidden=False,
-                is_moderated=False,
+                is_unapproved=False,
             )
 
         if conditions:
@@ -767,7 +784,7 @@ def exclude_invisible_threads(user, categories, queryset):
 
     if show_accepted:
         condition = Q(
-            Q(starter=user) | Q(is_moderated=False),
+            Q(starter=user) | Q(is_unapproved=False),
             category__in=show_accepted,
         )
 
@@ -811,12 +828,12 @@ def exclude_invisible_threads(user, categories, queryset):
 
 
 def exclude_invisible_posts(queryset, user, category):
-    if not category.acl['can_review_moderated_content']:
+    if not category.acl['can_approve_content']:
         if user.is_authenticated():
             condition_author = Q(poster_id=user.id)
-            condition = Q(is_moderated=False)
+            condition = Q(is_unapproved=False)
             queryset = queryset.filter(condition_author | condition)
         else:
-            queryset = queryset.filter(is_moderated=False)
+            queryset = queryset.filter(is_unapproved=False)
 
     return queryset

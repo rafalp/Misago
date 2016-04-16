@@ -120,7 +120,7 @@ class Category(MPTTModel):
         return super(Category, self).delete(*args, **kwargs)
 
     def synchronize(self):
-        self.threads = self.thread_set.filter(is_moderated=False).count()
+        self.threads = self.thread_set.filter(is_unapproved=False).count()
 
         if self.threads:
             replies_sum = self.thread_set.aggregate(models.Sum('replies'))
@@ -129,7 +129,7 @@ class Category(MPTTModel):
             self.posts = 0
 
         if self.threads:
-            last_thread_qs = self.thread_set.filter(is_moderated=False)
+            last_thread_qs = self.thread_set.filter(is_unapproved=False)
             last_thread = last_thread_qs.order_by('-last_post_on')[:1][0]
             self.set_last_thread(last_thread)
         else:

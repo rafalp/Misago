@@ -47,7 +47,7 @@ class Command(BaseCommand):
                 category = random.choice(categories)
                 user = User.objects.order_by('?')[:1][0]
 
-                thread_is_moderated = random.randint(0, 100) > 90
+                thread_is_unapproved = random.randint(0, 100) > 90
                 thread_is_hidden = random.randint(0, 100) > 90
                 thread_is_closed = random.randint(0, 100) > 90
 
@@ -60,7 +60,7 @@ class Command(BaseCommand):
                     last_poster_name='-',
                     last_poster_slug='-',
                     replies=0,
-                    is_moderated=thread_is_moderated,
+                    is_unapproved=thread_is_unapproved,
                     is_hidden=thread_is_hidden,
                     is_closed=thread_is_closed
                 )
@@ -103,8 +103,8 @@ class Command(BaseCommand):
                     user = User.objects.order_by('?')[:1][0]
                     fake_message = "\n\n".join(fake.paragraphs())
 
-                    is_moderated = random.randint(0, 100) > 97
-                    if not is_moderated:
+                    is_unapproved = random.randint(0, 100) > 97
+                    if not is_unapproved:
                         is_hidden = random.randint(0, 100) > 97
                     else:
                         is_hidden = False
@@ -118,7 +118,7 @@ class Command(BaseCommand):
                         original=fake_message,
                         parsed=linebreaks_filter(fake_message),
                         is_hidden=is_hidden,
-                        is_moderated=is_moderated,
+                        is_unapproved=is_unapproved,
                         posted_on=datetime,
                         updated_on=datetime
                     )

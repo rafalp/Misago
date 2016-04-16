@@ -102,16 +102,16 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(self.thread.weight, 0)
 
     def test_approve_thread(self):
-        """approve_thread approves moderated thread"""
-        thread = testutils.post_thread(self.category, is_moderated=True)
+        """approve_thread approves unapproved thread"""
+        thread = testutils.post_thread(self.category, is_unapproved=True)
 
-        self.assertTrue(thread.is_moderated)
-        self.assertTrue(thread.first_post.is_moderated)
+        self.assertTrue(thread.is_unapproved)
+        self.assertTrue(thread.first_post.is_unapproved)
         self.assertTrue(moderation.approve_thread(self.user, thread))
 
         self.reload_thread()
-        self.assertFalse(thread.is_moderated)
-        self.assertFalse(thread.first_post.is_moderated)
+        self.assertFalse(thread.is_unapproved)
+        self.assertFalse(thread.first_post.is_unapproved)
         self.assertTrue(thread.has_events)
         event = thread.event_set.last()
 
@@ -119,7 +119,7 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(event.icon, "check")
 
     def test_move_thread(self):
-        """moves_thread moves moderated thread to other category"""
+        """moves_thread moves unapproved thread to other category"""
         root_category = Category.objects.root_category()
         Category(
             name='New Category',

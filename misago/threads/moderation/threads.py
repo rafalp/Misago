@@ -75,15 +75,15 @@ def merge_thread(user, thread, other_thread):
 
 @atomic
 def approve_thread(user, thread):
-    if thread.is_moderated:
+    if thread.is_unapproved:
         message = _("%(user)s approved thread.")
         record_event(user, thread, "check", message, {'user': user})
 
         thread.is_closed = False
-        thread.first_post.is_moderated = False
-        thread.first_post.save(update_fields=['is_moderated'])
+        thread.first_post.is_unapproved = False
+        thread.first_post.save(update_fields=['is_unapproved'])
         thread.synchronize()
-        thread.save(update_fields=['has_events', 'is_moderated'])
+        thread.save(update_fields=['has_events', 'is_unapproved'])
         return True
     else:
         return False

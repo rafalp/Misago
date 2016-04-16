@@ -11,6 +11,7 @@ PATTERNS_KWARGS = (
     {'list_type': 'new'},
     {'list_type': 'unread'},
     {'list_type': 'subscribed'},
+    {'list_type': 'unapproved'},
 )
 
 
@@ -40,6 +41,7 @@ if settings.MISAGO_CATEGORIES_ON_INDEX:
         r'^threads/new/$',
         r'^threads/unread/$',
         r'^threads/subscribed/$',
+        r'^threads/unapproved/$',
     ))
 else:
     urlpatterns = threads_list_patterns('threads', ThreadsList, (
@@ -48,6 +50,7 @@ else:
         r'^new/$',
         r'^unread/$',
         r'^subscribed/$',
+        r'^unapproved/$',
     ))
 
 
@@ -57,6 +60,7 @@ urlpatterns += threads_list_patterns('category', CategoryThreadsList, (
     r'^category/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/new/$',
     r'^category/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/unread/$',
     r'^category/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/subscribed/$',
+    r'^category/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/unapproved/$',
 ))
 
 
@@ -66,4 +70,5 @@ urlpatterns += threads_list_patterns('private-threads', CategoryThreadsList, (
     r'^private-threads/new/$',
     r'^private-threads/unread/$',
     r'^private-threads/subscribed/$',
+    r'^private-threads/unapproved/$',
 ))

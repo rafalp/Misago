@@ -73,13 +73,13 @@ class ThreadModelTests(TestCase):
         self.assertEqual(self.thread.last_poster_name, user.username)
         self.assertEqual(self.thread.last_poster_slug, user.slug)
         self.assertFalse(self.thread.has_reported_posts)
-        self.assertFalse(self.thread.has_moderated_posts)
+        self.assertFalse(self.thread.has_unapproved_posts)
         self.assertFalse(self.thread.has_hidden_posts)
         self.assertFalse(self.thread.has_events)
         self.assertEqual(self.thread.replies, 1)
 
-        # add moderated post
-        moderated_post = Post.objects.create(
+        # add unapproved post
+        unapproved_post = Post.objects.create(
             category=self.category,
             thread=self.thread,
             poster=user,
@@ -90,7 +90,7 @@ class ThreadModelTests(TestCase):
             checksum="nope",
             posted_on=datetime + timedelta(5),
             updated_on=datetime + timedelta(5),
-            is_moderated=True
+            is_unapproved=True
         )
 
         self.thread.synchronize()
@@ -100,7 +100,7 @@ class ThreadModelTests(TestCase):
         self.assertEqual(self.thread.last_poster_name, user.username)
         self.assertEqual(self.thread.last_poster_slug, user.slug)
         self.assertFalse(self.thread.has_reported_posts)
-        self.assertTrue(self.thread.has_moderated_posts)
+        self.assertTrue(self.thread.has_unapproved_posts)
         self.assertFalse(self.thread.has_hidden_posts)
         self.assertFalse(self.thread.has_events)
         self.assertEqual(self.thread.replies, 1)
@@ -127,7 +127,7 @@ class ThreadModelTests(TestCase):
         self.assertEqual(self.thread.last_poster_name, user.username)
         self.assertEqual(self.thread.last_poster_slug, user.slug)
         self.assertFalse(self.thread.has_reported_posts)
-        self.assertTrue(self.thread.has_moderated_posts)
+        self.assertTrue(self.thread.has_unapproved_posts)
         self.assertTrue(self.thread.has_hidden_posts)
         self.assertFalse(self.thread.has_events)
         self.assertEqual(self.thread.replies, 2)
@@ -144,14 +144,14 @@ class ThreadModelTests(TestCase):
         self.assertEqual(self.thread.last_poster_name, user.username)
         self.assertEqual(self.thread.last_poster_slug, user.slug)
         self.assertFalse(self.thread.has_reported_posts)
-        self.assertTrue(self.thread.has_moderated_posts)
+        self.assertTrue(self.thread.has_unapproved_posts)
         self.assertFalse(self.thread.has_hidden_posts)
         self.assertFalse(self.thread.has_events)
         self.assertEqual(self.thread.replies, 2)
 
         # unmoderate post
-        moderated_post.is_moderated = False
-        moderated_post.save()
+        unapproved_post.is_unapproved = False
+        unapproved_post.save()
 
         # last post not changed, but flags and count did
         self.thread.synchronize()
@@ -161,7 +161,7 @@ class ThreadModelTests(TestCase):
         self.assertEqual(self.thread.last_poster_name, user.username)
         self.assertEqual(self.thread.last_poster_slug, user.slug)
         self.assertFalse(self.thread.has_reported_posts)
-        self.assertFalse(self.thread.has_moderated_posts)
+        self.assertFalse(self.thread.has_unapproved_posts)
         self.assertFalse(self.thread.has_hidden_posts)
         self.assertFalse(self.thread.has_events)
         self.assertEqual(self.thread.replies, 3)

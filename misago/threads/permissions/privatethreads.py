@@ -98,7 +98,7 @@ def build_acl(acl, roles, key_name):
     private_category = Category.objects.private_threads()
 
     if new_acl['can_moderate_private_threads']:
-        new_acl['can_review_moderated_content'].append(private_category.pk)
+        new_acl['can_approve_content'].append(private_category.pk)
 
     category_acl = {
         'can_see': 1,
@@ -118,7 +118,7 @@ def build_acl(acl, roles, key_name):
         'can_protect_posts': 0,
         'can_merge_posts': 0,
         'can_close_threads': 0,
-        'can_review_moderated_content': 0,
+        'can_approve_content': 0,
         'can_report_content': new_acl['can_report_private_threads'],
         'can_see_reports': 0,
         'can_hide_events': 0,
@@ -134,7 +134,7 @@ def build_acl(acl, roles, key_name):
             'can_merge_posts': 1,
             'can_see_reports': 1,
             'can_see_reports': 1,
-            'can_review_moderated_content': 1,
+            'can_approve_content': 1,
             'can_hide_events': 2,
         })
 
@@ -156,18 +156,18 @@ can_use_private_threads = return_boolean(allow_use_private_threads)
 
 
 def allow_see_private_thread(user, target):
-    can_see_moderated = user.acl.get('can_moderate_private_threads')
-    can_see_moderated = can_see_moderated and target.has_reported_posts
+    can_see_unapproved = user.acl.get('can_moderate_private_threads')
+    can_see_unapproved = can_see_unapproved and target.has_reported_posts
     can_see_participating = user in [p.user for p in target.participants_list]
 
-    if not (can_see_participating or can_see_moderated):
+    if not (can_see_participating or can_see_unapproved):
         raise Http404()
 can_see_private_thread = return_boolean(allow_see_private_thread)
 
 
 def allow_see_private_post(user, target):
-    can_see_moderated = user.acl.get('can_moderate_private_threads')
-    if not (can_see_moderated and target.thread.has_reported_posts):
+    can_see_unapproved = user.acl.get('can_moderate_private_threads')
+    if not (can_see_unapproved and target.thread.has_reported_posts):
         for participant in target.thread.participants_list:
             if participant.user == user and participant.is_removed:
                 if post.posted_on > target.last_post_on:

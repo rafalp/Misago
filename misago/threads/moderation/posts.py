@@ -6,9 +6,9 @@ from misago.threads.moderation.exceptions import ModerationError
 
 
 def approve_post(user, post):
-    if post.is_moderated:
-        post.is_moderated = False
-        post.save(update_fields=['is_moderated'])
+    if post.is_unapproved:
+        post.is_unapproved = False
+        post.save(update_fields=['is_unapproved'])
         return True
     else:
         return False

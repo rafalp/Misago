@@ -32,6 +32,14 @@
           <span class="hidden-md hidden-lg">{% trans "Subscribed threads" %}</span>
         </a>
       </li>
+      {% if category.pk in user.acl.can_approve_content %}
+        <li{% if list_type == 'unapproved' %} class="active"{% endif %}>
+          <a href="{{ category.get_absolute_url }}unapproved/">
+            <span class="hidden-xs hidden-sm">{% trans "Unapproved" %}</span>
+            <span class="hidden-md hidden-lg">{% trans "Unapproved content" %}</span>
+          </a>
+        </li>
+      {% endif %}
     </ul>
   </div>
 </div>

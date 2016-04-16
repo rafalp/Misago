@@ -175,12 +175,13 @@ class ThreadsTrackerTests(ReadTrackerTests):
 
         self.thread = self.post_thread(timezone.now() - timedelta(days=10))
 
-    def reply_thread(self, is_hidden=False, is_moderated=False):
+    def reply_thread(self, is_hidden=False, is_unapproved=False):
         self.post = testutils.reply_thread(
             thread=self.thread,
             is_hidden=is_hidden,
-            is_moderated=is_moderated,
-            posted_on=timezone.now())
+            is_unapproved=is_unapproved,
+            posted_on=timezone.now()
+        )
         return self.post
 
     def test_thread_read_for_guest(self):

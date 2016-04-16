@@ -22,6 +22,7 @@ LIST_TYPES = (
     'new',
     'unread',
     'subscribed',
+    'unapproved',
 )
 
 
@@ -104,7 +105,10 @@ class ThreadsListEndpoint(ThreadsListMixin, BaseListEndpoint):
 
             for category in categories:
                 if category.pk == category_id:
-                    break;
+                    if category.level:
+                        break;
+                    else:
+                        raise Http404() # disallow root category access
             else:
                 raise Http404()
 

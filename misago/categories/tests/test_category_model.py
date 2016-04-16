@@ -76,16 +76,16 @@ class CategoryModelTests(MisagoTestCase):
 
         thread = self.create_thread()
         hidden = self.create_thread()
-        moderated = self.create_thread()
+        unapproved = self.create_thread()
 
         self.category.synchronize()
         self.assertEqual(self.category.threads, 3)
         self.assertEqual(self.category.posts, 3)
-        self.assertEqual(self.category.last_thread, moderated)
+        self.assertEqual(self.category.last_thread, unapproved)
 
-        moderated.is_moderated = True
-        moderated.post_set.update(is_moderated=True)
-        moderated.save()
+        unapproved.is_unapproved = True
+        unapproved.post_set.update(is_unapproved=True)
+        unapproved.save()
 
         self.category.synchronize()
         self.assertEqual(self.category.threads, 2)
@@ -101,14 +101,14 @@ class CategoryModelTests(MisagoTestCase):
         self.assertEqual(self.category.posts, 2)
         self.assertEqual(self.category.last_thread, hidden)
 
-        moderated.is_moderated = False
-        moderated.post_set.update(is_moderated=False)
-        moderated.save()
+        unapproved.is_unapproved = False
+        unapproved.post_set.update(is_unapproved=False)
+        unapproved.save()
 
         self.category.synchronize()
         self.assertEqual(self.category.threads, 3)
         self.assertEqual(self.category.posts, 3)
-        self.assertEqual(self.category.last_thread, moderated)
+        self.assertEqual(self.category.last_thread, unapproved)
 
     def test_delete_content(self):
         """delete_content empties category"""

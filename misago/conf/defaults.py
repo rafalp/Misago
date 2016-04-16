@@ -328,10 +328,6 @@ MISAGO_USERS_PER_PAGE = 12
 # there will be confidered fresh for "Threads with unread replies" list
 MISAGO_FRESH_CONTENT_PERIOD = 40
 
-# Number of minutes between updates of new content counts like new threads,
-# unread replies or moderated threads/posts
-MISAGO_CONTENT_COUNTING_FREQUENCY = 5
-
 
 # X-Sendfile
 # X-Sendfile is feature provided by Http servers that allows web apps to

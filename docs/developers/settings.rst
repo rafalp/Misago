@@ -236,12 +236,6 @@ Date format used by Misago ``compact_date`` filter for dates in past years.
 Expects standard Django date format, documented `here <https://docs.djangoproject.com/en/dev/ref/templates/builtins/#date>`_
 
 
-MISAGO_CONTENT_COUNTING_FREQUENCY
----------------------------------
-
-Maximum allowed age of content counts cache in minutes. The lower the number, the more accurate will be numbers of new and unread threads in navbar, but greater the stress on database.
-
-
 MISAGO_DIALY_POST_LIMIT
 -----------------------
 

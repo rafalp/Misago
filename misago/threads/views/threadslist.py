@@ -166,7 +166,7 @@ class CategoryThreadsList(ThreadsList, ThreadsListMixin):
     def get_category(self, request, categories, **kwargs):
         for category in categories:
             if category.pk == int(kwargs['pk']):
-                if category.special_role:
+                if not category.level:
                     raise Http404()
 
                 allow_see_category(request.user, category)

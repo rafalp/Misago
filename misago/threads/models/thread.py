@@ -33,7 +33,7 @@ class Thread(models.Model):
     replies = models.PositiveIntegerField(default=0, db_index=True)
     has_reported_posts = models.BooleanField(default=False)
     has_open_reports = models.BooleanField(default=False)
-    has_moderated_posts = models.BooleanField(default=False)
+    has_unapproved_posts = models.BooleanField(default=False)
     has_hidden_posts = models.BooleanField(default=False)
     has_events = models.BooleanField(default=False)
     started_on = models.DateTimeField(db_index=True)
@@ -79,7 +79,7 @@ class Thread(models.Model):
     weight = models.PositiveIntegerField(default=THREAD_WEIGHT_DEFAULT)
 
     is_poll = models.BooleanField(default=False)
-    is_moderated = models.BooleanField(default=False, db_index=True)
+    is_unapproved = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
 
@@ -123,7 +123,7 @@ class Thread(models.Model):
         move_thread.send(sender=self)
 
     def synchronize(self):
-        self.replies = self.post_set.filter(is_moderated=False).count()
+        self.replies = self.post_set.filter(is_unapproved=False).count()
         if self.replies > 0:
             self.replies -= 1
 
@@ -136,8 +136,8 @@ class Thread(models.Model):
         else:
             self.has_open_reports = False
 
-        moderated_post_qs = self.post_set.filter(is_moderated=True)
-        self.has_moderated_posts = moderated_post_qs.exists()
+        unapproved_post_qs = self.post_set.filter(is_unapproved=True)
+        self.has_unapproved_posts = unapproved_post_qs.exists()
 
         hidden_post_qs = self.post_set.filter(is_hidden=True)[:1]
         self.has_hidden_posts = hidden_post_qs.exists()
@@ -147,10 +147,10 @@ class Thread(models.Model):
         first_post = self.post_set.order_by('id')[:1][0]
         self.set_first_post(first_post)
 
-        self.is_moderated = first_post.is_moderated
+        self.is_unapproved = first_post.is_unapproved
         self.is_hidden = first_post.is_hidden
 
-        last_post_qs = self.post_set.filter(is_moderated=False).order_by('-id')
+        last_post_qs = self.post_set.filter(is_unapproved=False).order_by('-id')
         last_post = last_post_qs[:1]
         if last_post:
             self.set_last_post(last_post[0])
@@ -187,7 +187,7 @@ class Thread(models.Model):
         else:
             self.starter_slug = slugify(post.poster_name)
 
-        self.is_moderated = post.is_moderated
+        self.is_unapproved = post.is_unapproved
         self.is_hidden = post.is_hidden
 
     def set_last_post(self, post):

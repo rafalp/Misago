@@ -44,7 +44,7 @@ class Post(models.Model):
 
     has_reports = models.BooleanField(default=False)
     has_open_reports = models.BooleanField(default=False)
-    is_moderated = models.BooleanField(default=False, db_index=True)
+    is_unapproved = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
     is_protected = models.BooleanField(default=False)
 

@@ -8,7 +8,7 @@ from misago.threads.models import Thread, Post
 
 
 def post_thread(category, title='Test thread', poster='Tester',
-                is_global=False, is_pinned=False, is_moderated=False,
+                is_global=False, is_pinned=False, is_unapproved=False,
                 is_hidden=False, is_closed=False, started_on=None):
     started_on = started_on or timezone.now()
 
@@ -18,7 +18,7 @@ def post_thread(category, title='Test thread', poster='Tester',
         'slug': slugify(title),
         'started_on': started_on,
         'last_post_on': started_on,
-        'is_moderated': is_moderated,
+        'is_unapproved': is_unapproved,
         'is_hidden': is_hidden,
         'is_closed': is_closed,
     }
@@ -50,14 +50,14 @@ def post_thread(category, title='Test thread', poster='Tester',
         poster=poster,
         posted_on=thread.last_post_on,
         is_hidden=is_hidden,
-        is_moderated=is_moderated,
+        is_unapproved=is_unapproved,
     )
 
     return thread
 
 
 def reply_thread(thread, poster="Tester", message='I am test message',
-                 is_moderated=False, is_hidden=False, has_reports=False,
+                 is_unapproved=False, is_hidden=False, has_reports=False,
                  has_open_reports=False, posted_on=None, poster_ip='127.0.0.1'):
     posted_on = posted_on or thread.last_post_on + timedelta(minutes=5)
 
@@ -70,7 +70,7 @@ def reply_thread(thread, poster="Tester", message='I am test message',
         'poster_ip': poster_ip,
         'posted_on': posted_on,
         'updated_on': posted_on,
-        'is_moderated': is_moderated,
+        'is_unapproved': is_unapproved,
         'is_hidden': is_hidden,
         'has_reports': has_reports,
         'has_open_reports': has_open_reports,
