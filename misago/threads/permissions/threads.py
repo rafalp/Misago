@@ -129,16 +129,6 @@ class PermissionsForm(forms.Form):
     )
     can_move_posts = forms.YesNoSwitch(label=_("Can move posts"))
     can_merge_posts = forms.YesNoSwitch(label=_("Can merge posts"))
-    can_change_threads_labels = forms.TypedChoiceField(
-        label=_("Can change threads labels"),
-        coerce=int,
-        initial=0,
-        choices=(
-            (0, _("No")),
-            (1, _("Own threads")),
-            (2, _("All threads")),
-        )
-    )
     can_pin_threads = forms.TypedChoiceField(
         label=_("Can pin threads"),
         coerce=int,

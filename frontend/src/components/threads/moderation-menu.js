@@ -47,6 +47,38 @@ export default class extends React.Component {
       value: 0
     }, gettext("Selected threads were unpinned."));
   };
+
+  open = () => {
+    this.callApi({
+      op: 'replace',
+      path: 'is-closed',
+      value: false
+    }, gettext("Selected threads were opened."));
+  };
+
+  close = () => {
+    this.callApi({
+      op: 'replace',
+      path: 'is-closed',
+      value: true
+    }, gettext("Selected threads were closed."));
+  };
+
+  unhide = () => {
+    this.callApi({
+      op: 'replace',
+      path: 'is-hidden',
+      value: false
+    }, gettext("Selected threads were unhidden."));
+  };
+
+  hide = () => {
+    this.callApi({
+      op: 'replace',
+      path: 'is-hidden',
+      value: true
+    }, gettext("Selected threads were hidden."));
+  };
   /* jshint ignore:end */
 
   getPinGloballyButton() {
@@ -117,7 +149,8 @@ export default class extends React.Component {
       /* jshint ignore:start */
       return <li>
         <button type="button"
-                className="btn btn-link">
+                className="btn btn-link"
+                onClick={this.open}>
           {gettext("Open threads")}
         </button>
       </li>;
@@ -132,7 +165,8 @@ export default class extends React.Component {
       /* jshint ignore:start */
       return <li>
         <button type="button"
-                className="btn btn-link">
+                className="btn btn-link"
+                onClick={this.close}>
           {gettext("Close threads")}
         </button>
       </li>;
@@ -142,13 +176,14 @@ export default class extends React.Component {
     }
   }
 
-  getShowButton() {
+  getUnhideButton() {
     if (this.props.moderation.can_hide) {
       /* jshint ignore:start */
       return <li>
         <button type="button"
-                className="btn btn-link">
-          {gettext("Show threads")}
+                className="btn btn-link"
+                onClick={this.unhide}>
+          {gettext("Unhide threads")}
         </button>
       </li>;
       /* jshint ignore:end */
@@ -162,7 +197,8 @@ export default class extends React.Component {
       /* jshint ignore:start */
       return <li>
         <button type="button"
-                className="btn btn-link">
+                className="btn btn-link"
+                onClick={this.hide}>
           {gettext("Hide threads")}
         </button>
       </li>;
@@ -196,7 +232,7 @@ export default class extends React.Component {
       {this.getMoveButton()}
       {this.getOpenButton()}
       {this.getCloseButton()}
-      {this.getShowButton()}
+      {this.getUnhideButton()}
       {this.getHideButton()}
       {this.getDeleteButton()}
     </ul>;

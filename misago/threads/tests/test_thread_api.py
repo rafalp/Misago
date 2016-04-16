@@ -1,9 +1,11 @@
 import json
 
+from misago.acl.testutils import override_acl
 from misago.users.testutils import AuthenticatedUserTestCase
 from misago.categories.models import Category
 
 from misago.threads import testutils
+from misago.threads.models import Thread
 
 
 class ThreadApiTestCase(AuthenticatedUserTestCase):
@@ -13,13 +15,64 @@ class ThreadApiTestCase(AuthenticatedUserTestCase):
         self.category = Category.objects.get(slug='first-category')
 
         self.thread = testutils.post_thread(category=self.category)
-        self.api_link = '/api/threads/%s/' % self.thread.pk
+        self.api_link = self.thread.get_api_url()
+
+    def override_acl(self, acl):
+        final_acl = {
+            'can_see': 1,
+            'can_browse': 1,
+            'can_see_all_threads': 1,
+            'can_see_own_threads': 0,
+            'can_hide_threads': 0,
+            'can_review_moderated_content': 0,
+        }
+        final_acl.update(acl)
+
+        override_acl(self.user, {
+            'categories': {
+                self.category.pk: final_acl
+            }
+        })
 
     def get_thread_json(self):
-        response = self.client.get('/api/threads/%s/' % self.thread.pk)
+        response = self.client.get(self.thread.get_api_url())
         self.assertEqual(response.status_code, 200)
 
         return json.loads(response.content)
+
+
+class ThreadDeleteApiTests(ThreadApiTestCase):
+    def test_delete_thread(self):
+        """DELETE to API link with permission deletes thread"""
+        self.override_acl({
+            'can_hide_threads': 2
+        })
+
+        response = self.client.delete(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        with self.assertRaises(Thread.DoesNotExist):
+            Thread.objects.get(pk=self.thread.pk)
+
+    def test_delete_thread_no_permission(self):
+        """DELETE to API link with no permission to delete fails"""
+        self.override_acl({
+            'can_hide_threads': 1
+        })
+
+        response = self.client.delete(self.api_link)
+        self.assertEqual(response.status_code, 403)
+
+        self.override_acl({
+            'can_hide_threads': 0
+        })
+
+        response_json = json.loads(response.content)
+        self.assertEqual(response_json['detail'],
+            "You don't have permission to delete this thread.")
+
+        response = self.client.delete(self.api_link)
+        self.assertEqual(response.status_code, 403)
 
 
 class ThreadsReadApiTests(ThreadApiTestCase):
@@ -41,76 +94,3 @@ class ThreadsReadApiTests(ThreadApiTestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(self.user.categoryread_set.count(), 1)
-
-
-class ThreadSubscribeApiTests(ThreadApiTestCase):
-    def setUp(self):
-        super(ThreadSubscribeApiTests, self).setUp()
-
-        self.api_link = '/api/threads/%s/subscribe/' % self.thread.pk
-
-    def test_subscribe_thread(self):
-        """api makes it possible to subscribe thread"""
-        response = self.client.post(self.api_link, json.dumps({
-            'notify': True
-        }),
-        content_type="application/json")
-
-        self.assertEqual(response.status_code, 200)
-
-        thread_json = self.get_thread_json()
-        self.assertFalse(thread_json['subscription'])
-
-        subscription = self.user.subscription_set.get(thread=self.thread)
-        self.assertFalse(subscription.send_email)
-
-    def test_subscribe_thread_with_email(self):
-        """api makes it possible to subscribe thread with emails"""
-        response = self.client.post(self.api_link, json.dumps({
-            'email': True
-        }),
-        content_type="application/json")
-
-        self.assertEqual(response.status_code, 200)
-
-        thread_json = self.get_thread_json()
-        self.assertTrue(thread_json['subscription'])
-
-        subscription = self.user.subscription_set.get(thread=self.thread)
-        self.assertTrue(subscription.send_email)
-
-    def test_unsubscribe_thread(self):
-        """api makes it possible to unsubscribe thread"""
-        response = self.client.post(self.api_link, json.dumps({
-            'remove': True
-        }),
-        content_type="application/json")
-
-        self.assertEqual(response.status_code, 200)
-
-        thread_json = self.get_thread_json()
-        self.assertIsNone(thread_json['subscription'])
-
-        self.assertEqual(self.user.subscription_set.count(), 0)
-
-    def test_subscribe_as_guest(self):
-        """api makes it impossible to subscribe thread"""
-        self.logout_user()
-
-        response = self.client.post(self.api_link, json.dumps({
-            'notify': True
-        }),
-        content_type="application/json")
-
-        self.assertEqual(response.status_code, 403)
-
-    def test_subscribe_nonexistant_thread(self):
-        """api makes it impossible to subscribe nonexistant thread"""
-        bad_api_link = self.api_link.replace(
-            unicode(self.thread.pk), unicode(self.thread.pk + 9))
-        response = self.client.post(bad_api_link, json.dumps({
-            'notify': True
-        }),
-        content_type="application/json")
-
-        self.assertEqual(response.status_code, 404)
