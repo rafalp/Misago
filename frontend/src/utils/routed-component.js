@@ -2,12 +2,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router';
-import createHistory from 'history/lib/createBrowserHistory';
+import { Router, browserHistory } from 'react-router';
 import store from 'misago/services/store';
 
 const rootElement = document.getElementById('page-mount');
-const history = new createHistory();
 
 export default function(options) {
   let routes = {
@@ -30,7 +28,7 @@ export default function(options) {
 
   ReactDOM.render(
     <Provider store={store.getStore()}>
-      <Router routes={routes} history={history} />
+      <Router routes={routes} history={browserHistory} />
     </Provider>,
     rootElement
   );

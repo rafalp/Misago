@@ -1,6 +1,7 @@
 'use strict';
 
 var gulp = require('gulp');
+var gutil = require('gulp-util');
 
 var babelify = require('babelify');
 var browserify = require('browserify');
@@ -13,7 +14,9 @@ var rename = require('gulp-rename');
 var source = require('vinyl-source-stream');
 var sourcemaps = require('gulp-sourcemaps');
 var uglify = require('gulp-uglify');
+var watchify = require('watchify');
 
+var fs = require('fs');
 var glob = require('glob');
 var del = require('del');
 
@@ -22,7 +25,6 @@ var misago = '../misago/static/misago/';
 // Entry points
 
 gulp.task('watch', ['fastbuild'], function() {
-  gulp.watch('src/**/*.js', ['fastsource']);
   gulp.watch('style/**/*.less', ['faststyle']);
 });
 
@@ -75,9 +77,15 @@ gulp.task('lintsource', function() {
 });
 
 gulp.task('fastsource', ['lintsource'], function() {
-  return browserify({
+  var b = browserify({
       entries: getSources(),
-      debug: true
+      debug: true,
+      cache: {},
+      packageCache: {}
+    })
+    .plugin(watchify, {
+      delay: 100,
+      poll: true
     })
     .external('moment')
     .external('cropit')
@@ -86,11 +94,18 @@ gulp.task('fastsource', ['lintsource'], function() {
     .external('react-router')
     .external('redux')
     .external('react-redux')
-    .transform(babelify)
-    .bundle()
-    .pipe(source('misago.js'))
-    .pipe(buffer())
-    .pipe(gulp.dest(misago + 'js'));
+    .transform(babelify);
+
+    function bundle() {
+      b.bundle().pipe(fs.createWriteStream(misago + 'js/misago.js'));
+    }
+
+    b.on('update', bundle);
+    bundle();
+
+    b.on('log', function (msg) {
+      gutil.log(gutil.colors.cyan('watchify:'), msg);
+    });
 });
 
 gulp.task('source', ['lintsource'], function() {

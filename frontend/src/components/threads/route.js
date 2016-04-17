@@ -1,5 +1,6 @@
 import React from 'react'; // jshint ignore:line
 import Button from 'misago/components/button'; // jshint ignore:line
+import PageLead from 'misago/components/page-lead'; // jshint ignore:line
 import { compareGlobalWeight, compareWeight } from 'misago/components/threads/compare'; // jshint ignore:line
 import Header from 'misago/components/threads/header'; // jshint ignore:line
 import { CompactNav } from 'misago/components/threads/navs'; // jshint ignore:line
@@ -230,11 +231,8 @@ export default class extends WithDropdown {
   getCategoryDescription() {
     if (this.props.route.category.description) {
       /* jshint ignore:start */
-      return <div className="category-description">
-        <div className="lead" dangerouslySetInnerHTML={{
-          __html: this.props.route.category.description.html
-        }} />
-      </div>;
+      return <PageLead className="category-description"
+                       copy={this.props.route.category.description.html} />;
       /* jshint ignore:end */
     } else {
       return null;
