@@ -36,7 +36,7 @@ class Command(BaseCommand):
 
         self.stdout.write('Creating fake threads...\n')
 
-        message = '\nSuccessfully created %s fake threads'
+        message = '\nSuccessfully created %s fake threads in %s'
 
         created_threads = 0
         start_time = time.time()
@@ -149,4 +149,6 @@ class Command(BaseCommand):
             category.synchronize()
             category.save()
 
-        self.stdout.write(message % created_threads)
+        total_time = time.time() - start_time
+        total_humanized = time.strftime('%H:%M:%S', time.gmtime(total_time))
+        self.stdout.write(message % (created_threads, total_humanized))

@@ -11,6 +11,7 @@ from faker import Factory
 
 from misago.core.management.progressbar import show_progress
 from misago.users.models import Rank
+from misago.users.avatars import dynamic, gallery, get_avatar_hash
 
 
 class Command(BaseCommand):
@@ -33,7 +34,7 @@ class Command(BaseCommand):
         message = 'Creating %s fake user accounts...\n'
         self.stdout.write(message % fake_users_to_create)
 
-        message = '\n\nSuccessfully created %s fake user accounts'
+        message = '\n\nSuccessfully created %s fake user accounts in %s'
 
         created_count = 0
         start_time = time.time()
@@ -44,9 +45,17 @@ class Command(BaseCommand):
                     'rank': random.choice(ranks),
                 }
 
-                User.objects.create_user(fake.first_name(), fake.email(),
-                                         'pass123', set_default_avatar=True,
-                                         **kwargs)
+                user = User.objects.create_user(
+                    fake.first_name(), fake.email(), 'pass123',
+                    set_default_avatar=False, **kwargs)
+
+                if random.randint(0, 100) > 90:
+                    dynamic.set_avatar(user)
+                else:
+                    gallery.set_random_avatar(user)
+
+                user.avatar_hash = get_avatar_hash(user)
+                user.save(update_fields=['avatar_hash'])
             except (ValidationError, IntegrityError):
                 pass
             else:
@@ -54,4 +63,6 @@ class Command(BaseCommand):
                 show_progress(
                     self, created_count, fake_users_to_create, start_time)
 
-        self.stdout.write(message % created_count)
+        total_time = time.time() - start_time
+        total_humanized = time.strftime('%H:%M:%S', time.gmtime(total_time))
+        self.stdout.write(message % (created_count, total_humanized))

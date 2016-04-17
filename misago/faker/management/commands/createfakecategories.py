@@ -41,7 +41,7 @@ class Command(BaseCommand):
         message = 'Creating %s fake categories...\n'
         self.stdout.write(message % fake_cats_to_create)
 
-        message = '\n\nSuccessfully created %s fake categories'
+        message = '\n\nSuccessfully created %s fake categories in %s'
 
         created_count = 0
         start_time = time.time()
@@ -82,4 +82,7 @@ class Command(BaseCommand):
                 self, created_count, fake_cats_to_create, start_time)
 
         acl_version.invalidate()
-        self.stdout.write(message % created_count)
+
+        total_time = time.time() - start_time
+        total_humanized = time.strftime('%H:%M:%S', time.gmtime(total_time))
+        self.stdout.write(message % (created_count, total_humanized))

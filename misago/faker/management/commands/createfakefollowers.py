@@ -1,4 +1,5 @@
 import random
+import time
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
@@ -16,11 +17,12 @@ class Command(BaseCommand):
         message = 'Adding fake followers to %s users...\n'
         self.stdout.write(message % total_users)
 
-        message = '\nSuccessfully added %s fake followers'
+        message = '\nSuccessfully added %s fake followers in %s'
 
         total_followers = 0
         processed_count = 0
 
+        start_time = time.time()
         show_progress(self, processed_count, total_users)
         for user in User.objects.iterator():
             user.followed_by.clear()
@@ -48,4 +50,6 @@ class Command(BaseCommand):
             user.following = user.follows.count()
             user.save(update_fields=['followers', 'following'])
 
-        self.stdout.write(message % total_followers)
+        total_time = time.time() - start_time
+        total_humanized = time.strftime('%H:%M:%S', time.gmtime(total_time))
+        self.stdout.write(message % (total_followers, total_humanized))
