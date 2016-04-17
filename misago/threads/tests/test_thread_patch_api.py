@@ -406,6 +406,42 @@ class ThreadCloseApiTests(ThreadApiTestCase):
         self.assertTrue(thread_json['is_closed'])
 
 
+class ThreadApproveApiTests(ThreadApiTestCase):
+    def test_approve_thread(self):
+        """api makes it possible to approve thread"""
+        self.thread.is_unapproved = True
+        self.thread.save()
+
+        self.override_acl({
+            'can_approve_content': 1
+        })
+
+        response = self.client.patch(self.api_link, json.dumps([
+            {'op': 'replace', 'path': 'is-unapproved', 'value': False}
+        ]),
+        content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+        thread_json = self.get_thread_json()
+        self.assertFalse(thread_json['is_unapproved'])
+
+    def test_unapprove_thread(self):
+        """api returns permission error on approval removal"""
+        self.override_acl({
+            'can_approve_content': 1
+        })
+
+        response = self.client.patch(self.api_link, json.dumps([
+            {'op': 'replace', 'path': 'is-unapproved', 'value': True}
+        ]),
+        content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        response_json = json.loads(response.content)
+        self.assertEqual(response_json['detail'][0],
+            "Content approval can't be reversed.")
+
+
 class ThreadHideApiTests(ThreadApiTestCase):
     def test_hide_thread(self):
         """api makes it possible to hide thread"""
