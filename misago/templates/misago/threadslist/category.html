@@ -1,5 +1,5 @@
 {% extends "misago/threadslist/base.html" %}
-{% load i18n misago_shorthands %}
+{% load i18n misago_shorthands misago_stringutils %}
 
 
 {% block title %}
@@ -58,7 +58,7 @@
 {% block list-container %}
   {% if category.description %}
   <div class="category-description">
-    <div class="lead">
+    <div class="page-lead {{ category.description|escape|linebreaks|isdescriptionshort|iftrue:"lead" }}">
       {{ category.description|escape|urlize|linebreaks|safe }}
     </div>
   </div>

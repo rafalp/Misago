@@ -5,8 +5,6 @@ register = template.Library()
 
 
 @register.filter
-def striplinebreaks(string):
-    if string:
-        return ' '.join([s.strip() for s in string.splitlines() if s.strip()])
-    else:
-        return ''
+def isdescriptionshort(string):
+    string_lowered = string.lower()
+    return string_lowered.count('<p') == 1 and not string_lowered.count('<br')

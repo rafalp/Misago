@@ -1,4 +1,5 @@
 import React from 'react';
+import PageLead from 'misago/components/page-lead' // jshint ignore:line
 import List from 'misago/components/users/rank/list' // jshint ignore:line
 import ListLoading from 'misago/components/users/rank/list-loading' // jshint ignore:line
 import misago from 'misago/index';
@@ -96,9 +97,7 @@ export default class extends React.Component {
     if (this.props.route.rank.description) {
       /* jshint ignore:start */
       return <div className="rank-description">
-        <div className="lead" dangerouslySetInnerHTML={{
-          __html: this.props.route.rank.description.html
-        }} />
+        <PageLead copy={this.props.route.rank.description.html} />
       </div>;
       /* jshint ignore:end */
     } else {

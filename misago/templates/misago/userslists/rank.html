@@ -1,5 +1,5 @@
 {% extends "misago/userslists/base.html" %}
-{% load i18n misago_avatars misago_batch misago_pagetitle %}
+{% load i18n misago_avatars misago_batch misago_pagetitle misago_shorthands misago_stringutils %}
 
 
 {% block title %}{% pagetitle rank.name page=paginator.page %} | {{ block.super }}{% endblock %}
@@ -21,8 +21,8 @@ There are {{ users }} users with {{ rank }} rank.
 
     {% if rank.description %}
     <div class="rank-description">
-      <div class="lead">
-        {{ rank.description|escape|urlize|linebreaks }}
+      <div class="page-lead {{ rank.description|escape|linebreaks|isdescriptionshort|iftrue:"lead" }}">
+        {{ rank.description|escape|urlize|linebreaks|safe }}
       </div>
     </div>
     {% endif %}

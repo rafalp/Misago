@@ -28,16 +28,4 @@ describe("Page Lead", function() {
     assert.ok(element.length, "component renders");
     assert.ok(!element.hasClass('lead'), "lead class is hidden");
   });
-
-  it('renders with custom class', function() {
-    /* jshint ignore:start */
-    testUtils.render(
-      <PageLead className="test-lead"
-                copy='<p>Lorem ipsum dolor.</p>' />
-    );
-    /* jshint ignore:end */
-
-    let element = $('#test-mount .page-lead.test-lead');
-    assert.ok(element.length, "component renders with custom class");
-  });
 });

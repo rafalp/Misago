@@ -231,8 +231,9 @@ export default class extends WithDropdown {
   getCategoryDescription() {
     if (this.props.route.category.description) {
       /* jshint ignore:start */
-      return <PageLead className="category-description"
-                       copy={this.props.route.category.description.html} />;
+      return <div className="category-description">
+        <PageLead copy={this.props.route.category.description.html} />
+      </div>;
       /* jshint ignore:end */
     } else {
       return null;
