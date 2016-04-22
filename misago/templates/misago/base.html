@@ -1,10 +1,10 @@
 {% load pipeline i18n staticfiles misago_json %}
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>{% spaceless %}{% block title %}{{ misago_settings.forum_name }}{% endblock %}{% endspaceless %}</title>
     <meta name="description" content="{% spaceless %}{% block meta-description %}{% endblock %}{% endspaceless %}">
     <base href="{% url 'misago:index' %}">

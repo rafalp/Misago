@@ -2,13 +2,11 @@ import React from 'react'; // jshint ignore:line
 import Button from 'misago/components/button'; // jshint ignore:line
 import PageLead from 'misago/components/page-lead'; // jshint ignore:line
 import { compareGlobalWeight, compareWeight } from 'misago/components/threads/compare'; // jshint ignore:line
-import Header from 'misago/components/threads/header'; // jshint ignore:line
-import { CompactNav } from 'misago/components/threads/navs'; // jshint ignore:line
+import Header from 'misago/components/threads/header/root'; // jshint ignore:line
 import { diffThreads, getModerationActions, getPageTitle, getTitle } from 'misago/components/threads/utils'; // jshint ignore:line
 import ThreadsList from 'misago/components/threads-list/root'; // jshint ignore:line
 import ThreadsListEmpty from 'misago/components/threads/list-empty'; // jshint ignore:line
 import Toolbar from 'misago/components/threads/toolbar'; // jshint ignore:line
-import WithDropdown from 'misago/components/with-dropdown';
 import misago from 'misago/index';
 import { append, hydrate, patch } from 'misago/reducers/threads'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
@@ -18,7 +16,7 @@ import store from 'misago/services/store';
 import title from 'misago/services/page-title';
 import * as sets from 'misago/utils/sets'; // jshint ignore:line
 
-export default class extends WithDropdown {
+export default class extends React.Component {
   constructor(props) {
     super(props);
 
@@ -161,6 +159,9 @@ export default class extends WithDropdown {
   }
 
   /* jshint ignore:start */
+
+  // AJAX
+
   loadMore = () => {
     this.setState({
       isBusy: true
@@ -189,11 +190,35 @@ export default class extends WithDropdown {
     }));
   };
 
+  // Selection
+
+  getSelectedThreads = () => {
+    return this.props.threads.filter((thread) => {
+      return this.state.selection.indexOf(thread.id) >= 0;
+    });
+  };
+
   selectThread = (thread) => {
     this.setState({
       selection: sets.toggle(this.state.selection, thread)
     });
   };
+
+  selectAll = () => {
+    this.setState({
+      selection: this.props.threads.map(function(thread) {
+        return thread.id;
+      })
+    });
+  };
+
+  selectNone = () => {
+    this.setState({
+      selection: []
+    });
+  };
+
+  // Thread state utils
 
   freezeThread = (thread) => {
     this.setState({
@@ -201,19 +226,12 @@ export default class extends WithDropdown {
     });
   };
 
+  // Thread
+
   updateThread = (thread) => {
     store.dispatch(patch(thread, thread, this.getSorting()));
   };
   /* jshint ignore:end */
-
-  getClassName() {
-    let className = 'page page-threads';
-    className += ' page-threads-' + this.props.route.list;
-    if (this.props.route.category.css_class) {
-      className += ' page-' + this.props.route.category.css_class;
-    }
-    return className;
-  }
 
   getCompactNav() {
     if (this.props.route.lists.length > 1) {
@@ -307,19 +325,25 @@ export default class extends WithDropdown {
     }
   }
 
+  getClassName() {
+    let className = 'page page-threads';
+    className += ' page-threads-' + this.props.route.list;
+    if (this.props.route.category.css_class) {
+      className += ' page-' + this.props.route.category.css_class;
+    }
+    return className;
+  }
+
   render() {
     /* jshint ignore:start */
     return <div className={this.getClassName()}>
-      <Header title={this.getTitle()}
+
+      <Header disabled={!this.state.isLoaded}
+              threads={this.props.threads}
+              title={this.getTitle()}
               route={this.props.route}
-              user={this.props.user}
-              isLoaded={this.state.isLoaded}
-              dropdown={this.state.dropdown}
-              toggleNav={this.toggleNav}
-              hideNav={this.hideNav} />
-      <div className={this.getCompactNavClassName()}>
-        {this.getCompactNav()}
-      </div>
+              user={this.props.user} />
+
       <div className="container">
 
         {this.getCategoryDescription()}

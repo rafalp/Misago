@@ -1,6 +1,6 @@
 import React from 'react'; // jshint ignore:line
 import CategoryPicker from 'misago/components/threads/category-picker'; // jshint ignore:line
-import ModerationMenu from 'misago/components/threads/moderation-menu'; // jshint ignore:line
+import ModerationMenu from 'misago/components/threads/moderation/menu'; // jshint ignore:line
 
 export default class extends React.Component {
   getCategoryPicker() {

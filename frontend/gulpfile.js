@@ -94,7 +94,13 @@ gulp.task('fastsource', ['lintsource'], function() {
     .external('react-router')
     .external('redux')
     .external('react-redux')
-    .transform(babelify);
+    .transform(babelify)
+    .on('error', function(err){
+      // print the error (can replace with gulp-util)
+      console.log(err.message);
+      // end this stream
+      this.emit('end');
+    });
 
     function bundle() {
       b.bundle().pipe(fs.createWriteStream(misago + 'js/misago.js'));
