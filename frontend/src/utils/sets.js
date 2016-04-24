@@ -1,7 +1,8 @@
 export function push(array, value) {
   if (array.indexOf(value) === -1) {
-    array.push(value);
-    return array.slice();
+    let copy = array.slice();
+    copy.push(value);
+    return copy;
   } else {
     return array;
   }
@@ -19,8 +20,9 @@ export function remove(array, value) {
 
 export function toggle(array, value) {
   if (array.indexOf(value) === -1) {
-    array.push(value);
-    return array;
+    let copy = array.slice();
+    copy.push(value);
+    return copy;
   } else {
     return array.filter(function(i) {
       return i !== value;
