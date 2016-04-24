@@ -1,12 +1,13 @@
 import React from 'react'; // jshint ignore:line
 import Button from 'misago/components/button'; // jshint ignore:line
-import PageLead from 'misago/components/page-lead'; // jshint ignore:line
 import { compareGlobalWeight, compareWeight } from 'misago/components/threads/compare'; // jshint ignore:line
-import Header from 'misago/components/threads/header/root'; // jshint ignore:line
+import Container from 'misago/components/threads/container'; // jshint ignore:line
+import { CompactNav } from 'misago/components/threads/navs'; // jshint ignore:line
+import Header from 'misago/components/threads/header'; // jshint ignore:line
 import { diffThreads, getModerationActions, getPageTitle, getTitle } from 'misago/components/threads/utils'; // jshint ignore:line
 import ThreadsList from 'misago/components/threads-list/root'; // jshint ignore:line
 import ThreadsListEmpty from 'misago/components/threads/list-empty'; // jshint ignore:line
-import Toolbar from 'misago/components/threads/toolbar'; // jshint ignore:line
+import WithDropdown from 'misago/components/with-dropdown'; // jshint ignore:line
 import misago from 'misago/index';
 import { append, hydrate, patch } from 'misago/reducers/threads'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
@@ -16,7 +17,7 @@ import store from 'misago/services/store';
 import title from 'misago/services/page-title';
 import * as sets from 'misago/utils/sets'; // jshint ignore:line
 
-export default class extends React.Component {
+export default class extends WithDropdown {
   constructor(props) {
     super(props);
 
@@ -44,15 +45,20 @@ export default class extends React.Component {
       pages: 1
     };
 
-    let category = null;
-    if (!this.props.route.category.special_role) {
-      category = this.props.route.category.id;
-    }
+    let category = this.getCategory();
 
     if (misago.has('THREADS')) {
       this.initWithPreloadedData(category, misago.get('THREADS'));
     } else {
       this.initWithoutPreloadedData(category);
+    }
+  }
+
+  getCategory() {
+    if (!this.props.route.category.special_role) {
+      return this.props.route.category.id;
+    } else {
+      return null;
     }
   }
 
@@ -167,7 +173,7 @@ export default class extends React.Component {
       isBusy: true
     });
 
-    this.loadThreads(this.state.page + 1);
+    this.loadThreads(this.getCategory(), this.state.page + 1);
   };
 
   pollResponse = (data) => {
@@ -198,13 +204,13 @@ export default class extends React.Component {
     });
   };
 
-  selectThread = (thread) => {
+  selectThread = (threadId) => {
     this.setState({
-      selection: sets.toggle(this.state.selection, thread)
+      selection: sets.toggle(this.state.selection, threadId)
     });
   };
 
-  selectAll = () => {
+  selectAllThreads = () => {
     this.setState({
       selection: this.props.threads.map(function(thread) {
         return thread.id;
@@ -212,7 +218,7 @@ export default class extends React.Component {
     });
   };
 
-  selectNone = () => {
+  selectNoneThreads = () => {
     this.setState({
       selection: []
     });
@@ -226,8 +232,6 @@ export default class extends React.Component {
     });
   };
 
-  // Thread
-
   updateThread = (thread) => {
     store.dispatch(patch(thread, thread, this.getSorting()));
   };
@@ -236,74 +240,12 @@ export default class extends React.Component {
   getCompactNav() {
     if (this.props.route.lists.length > 1) {
       /* jshint ignore:start */
-      return <CompactNav baseUrl={this.props.route.category.absolute_url}
-                         list={this.props.route.list}
-                         lists={this.props.route.lists}
-                         hideNav={this.hideNav} />;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
-  }
-
-  getCategoryDescription() {
-    if (this.props.route.category.description) {
-      /* jshint ignore:start */
-      return <div className="category-description">
-        <PageLead copy={this.props.route.category.description.html} />
+      return <div className={this.getCompactNavClassName()}>
+        <CompactNav baseUrl={this.props.route.category.absolute_url}
+                    list={this.props.route.list}
+                    lists={this.props.route.lists}
+                    hideNav={this.hideNav} />
       </div>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
-  }
-
-  getToolbarLabel() {
-    if (this.state.isLoaded) {
-      let label = null;
-      if (this.props.route.list.path) {
-        label = ngettext(
-          "%(threads)s thread found.",
-          "%(threads)s threads found.",
-          this.state.count);
-      } else if (this.props.route.category.parent) {
-        label = ngettext(
-          "There is %(threads)s thread in this category.",
-          "There are %(threads)s threads in this category.",
-          this.state.count);
-      } else {
-        label = ngettext(
-          "There is %(threads)s thread on our forums.",
-          "There are %(threads)s threads on our forums.",
-          this.state.count);
-      }
-
-      return interpolate(label, {
-        threads: this.state.count
-      }, true);
-    } else {
-      return gettext("Loading threads...");
-    }
-  }
-
-  getToolbar() {
-    if (this.state.subcategories.length || this.props.user.id) {
-      /* jshint ignore:start */
-      return <Toolbar subcategories={this.state.subcategories}
-                      categories={this.props.route.categoriesMap}
-                      list={this.props.route.list}
-
-                      threads={this.props.threads}
-                      selection={this.state.selection}
-                      moderation={this.state.moderation}
-
-                      freezeThread={this.freezeThread}
-                      updateThread={this.updateThread}
-
-                      isLoaded={this.state.isLoaded}
-                      user={this.props.user}>
-        {this.getToolbarLabel()}
-      </Toolbar>;
       /* jshint ignore:end */
     } else {
       return null;
@@ -341,34 +283,53 @@ export default class extends React.Component {
       <Header disabled={!this.state.isLoaded}
               threads={this.props.threads}
               title={this.getTitle()}
+              toggleNav={this.toggleNav}
               route={this.props.route}
               user={this.props.user} />
 
-      <div className="container">
+      {this.getCompactNav()}
 
-        {this.getCategoryDescription()}
-        {this.getToolbar()}
+      <Container route={this.props.route}
+                 subcategories={this.state.subcategories}
+                 user={this.props.user}
 
-        <ThreadsList user={this.props.user}
-                     threads={this.props.threads}
+                 threads={this.props.threads}
+                 threadsCount={this.state.count}
+
+                 moderation={this.state.moderation}
+                 selection={this.getSelectedThreads()}
+                 selectAllThreads={this.selectAllThreads}
+                 selectNoneThreads={this.selectNoneThreads}
+
+                 busyThreads={this.state.busyThreads}
+                 freezeThread={this.freezeThread}
+                 updateThread={this.updateThread}
+
+                 isLoaded={this.state.isLoaded}
+                 isBusy={this.state.isBusy}>
+
+        <ThreadsList threads={this.props.threads}
                      categories={this.props.route.categoriesMap}
                      list={this.props.route.list}
 
                      diffSize={this.state.diff.results.length}
                      applyDiff={this.applyDiff}
 
-                     selectThread={this.selectThread}
-                     selection={this.state.selection}
-                     busyThreads={this.state.busyThreads}
+                     showOptions={!!this.props.user.id}
 
-                     isLoaded={this.state.isLoaded}>
+                     selection={this.state.selection}
+                     selectThread={this.selectThread}
+
+                     isLoaded={this.state.isLoaded}
+                     busyThreads={this.state.busyThreads}>
           <ThreadsListEmpty category={this.props.route.category}
                             list={this.props.route.list} />
         </ThreadsList>
 
         {this.getMoreButton()}
 
-      </div>
+      </Container>
+
     </div>;
     /* jshint ignore:end */
   }

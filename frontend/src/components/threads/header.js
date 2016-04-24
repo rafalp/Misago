@@ -65,7 +65,7 @@ export default class extends React.Component {
       /* jshint ignore:start */
       return <Button className="btn btn-success btn-aligned hidden-xs hidden-sm"
                      onClick={this.startThread}
-                     disabled={!this.props.isLoaded}>
+                     disabled={this.props.disabled}>
         <span className="material-icon">
           chat
         </span>
@@ -83,7 +83,7 @@ export default class extends React.Component {
       return <Button className="btn btn-default btn-aligned hidden-xs hidden-sm"
                      onClick={this.markAsRead}
                      loading={this.state.isBusy}
-                     disabled={!this.props.isLoaded}>
+                     disabled={this.props.disabled}>
         <span className="material-icon">
           playlist_add_check
         </span>

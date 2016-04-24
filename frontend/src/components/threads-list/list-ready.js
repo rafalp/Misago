@@ -20,15 +20,15 @@ export default class extends React.Component {
       <ul className="list-group">
         {this.getDiffMessage()}
         {this.props.threads.map((thread) => {
-          return <Thread user={this.props.user}
-                         categories={this.props.categories}
+          return <Thread categories={this.props.categories}
                          thread={thread}
                          list={this.props.list}
 
+                         showOptions={this.props.showOptions}
                          selectThread={this.props.selectThread}
                          isSelected={this.props.selection.indexOf(thread.id) >= 0}
-                         isBusy={this.props.busyThreads.indexOf(thread.id) >= 0}
 
+                         isBusy={this.props.busyThreads.indexOf(thread.id) >= 0}
                          key={thread.id} />
         })}
       </ul>

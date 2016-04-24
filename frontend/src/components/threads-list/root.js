@@ -8,16 +8,17 @@ export default class extends React.Component {
     /* jshint ignore:start */
     if (this.props.isLoaded) {
       if (this.props.threads.length > 0) {
-        return <ListReady user={this.props.user}
-                          threads={this.props.threads}
+        return <ListReady threads={this.props.threads}
                           categories={this.props.categories}
                           list={this.props.list}
 
                           diffSize={this.props.diffSize}
                           applyDiff={this.props.applyDiff}
 
-                          selectThread={this.props.selectThread}
+                          showOptions={this.props.showOptions}
                           selection={this.props.selection}
+                          selectThread={this.props.selectThread}
+
                           busyThreads={this.props.busyThreads} />;
       } else {
         return <ListEmpty diffSize={this.props.diffSize}

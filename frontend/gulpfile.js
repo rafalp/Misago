@@ -24,7 +24,7 @@ var misago = '../misago/static/misago/';
 
 // Entry points
 
-gulp.task('watch', ['fastbuild'], function() {
+gulp.task('watch', ['watchifybuild'], function() {
   gulp.watch('style/**/*.less', ['faststyle']);
 });
 
@@ -77,6 +77,25 @@ gulp.task('lintsource', function() {
 });
 
 gulp.task('fastsource', ['lintsource'], function() {
+  return browserify({
+      entries: getSources(),
+      debug: true,
+    })
+    .external('moment')
+    .external('cropit')
+    .external('react')
+    .external('react-dom')
+    .external('react-router')
+    .external('redux')
+    .external('react-redux')
+    .transform(babelify)
+    .bundle()
+    .pipe(source('misago.js'))
+    .pipe(buffer())
+    .pipe(gulp.dest(misago + 'js'));
+});
+
+gulp.task('watchifybuild', ['fastbuild'], function() {
   var b = browserify({
       entries: getSources(),
       debug: true,
@@ -112,7 +131,7 @@ gulp.task('fastsource', ['lintsource'], function() {
     b.on('log', function (msg) {
       gutil.log(gutil.colors.cyan('watchify:'), msg);
     });
-});
+})
 
 gulp.task('source', ['lintsource'], function() {
   process.env.NODE_ENV = 'production';

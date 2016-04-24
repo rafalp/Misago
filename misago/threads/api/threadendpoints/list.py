@@ -106,7 +106,7 @@ class ThreadsListEndpoint(ThreadsListMixin, BaseListEndpoint):
             for category in categories:
                 if category.pk == category_id:
                     if category.level:
-                        break;
+                        break
                     else:
                         raise Http404() # disallow root category access
             else:

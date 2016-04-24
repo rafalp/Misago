@@ -1,34 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router'; // jshint ignore:line
 import ReadIcon from 'misago/components/threads-list/read-icon'; // jshint ignore:line
+import Category from 'misago/components/threads-list/thread-category'; // jshint ignore:line
 import ThreadOptions from 'misago/components/threads-list/thread-options'; // jshint ignore:line
 import escapeHtml from 'misago/utils/escape-html';
 
 const LAST_POSTER_URL = '<a href="%(url)s" class="poster-title">%(user)s</a>';
 const LAST_POSTER_SPAN = '<span class="poster-title">%(user)s</span>';
 const LAST_REPLY_URL = '<a href="%(url)s" class="last-title" title="%(absolute)s">%(relative)s</a>';
-
-export class Category extends React.Component {
-  getClassName() {
-    if (this.props.category.css_class) {
-      return 'thread-category thread-category-' + this.props.category.css_class;
-    } else {
-      return 'thread-category';
-    }
-  }
-
-  getUrl() {
-    return this.props.category.absolute_url + this.props.list.path;
-  }
-
-  render() {
-    /* jshint ignore:start */
-    return <Link to={this.getUrl()} className={this.getClassName()}>
-      {this.props.category.name}
-    </Link>;
-    /* jshint ignore:end */
-  }
-}
 
 export default class extends React.Component {
   constructor(props) {
@@ -184,7 +162,7 @@ export default class extends React.Component {
   }
 
   getOptions() {
-    if (this.props.user.id) {
+    if (this.props.showOptions) {
       /* jshint ignore:start */
       return <ThreadOptions thread={this.props.thread}
                             selectThread={this.props.selectThread}
@@ -220,6 +198,7 @@ export default class extends React.Component {
     return <li className={this.getClassName()}>
 
       <ReadIcon thread={this.props.thread} />
+
       <div className="thread-main">
 
         <a href={this.props.thread.absolute_url} className="item-title thread-title">
@@ -235,6 +214,7 @@ export default class extends React.Component {
           {this.getLastReply()}
         </ul>
       </div>
+
       {this.getOptions()}
 
     </li>;
