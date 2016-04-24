@@ -25,7 +25,6 @@ export default class extends React.Component {
                          list={this.props.list}
 
                          showOptions={this.props.showOptions}
-                         selectThread={this.props.selectThread}
                          isSelected={this.props.selection.indexOf(thread.id) >= 0}
 
                          isBusy={this.props.busyThreads.indexOf(thread.id) >= 0}

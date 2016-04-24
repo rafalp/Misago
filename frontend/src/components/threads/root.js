@@ -4,9 +4,10 @@ import misago from 'misago/index';
 
 export function select(store) {
   return {
+    'selection': store.selection,
+    'threads': store.threads,
     'tick': store.tick.tick,
-    'user': store.auth.user,
-    'threads': store.threads
+    'user': store.auth.user
   };
 }
 

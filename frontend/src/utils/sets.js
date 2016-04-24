@@ -1,9 +1,10 @@
 export function push(array, value) {
   if (array.indexOf(value) === -1) {
     array.push(value);
+    return array.slice();
+  } else {
+    return array;
   }
-
-  return array;
 }
 
 export function remove(array, value) {

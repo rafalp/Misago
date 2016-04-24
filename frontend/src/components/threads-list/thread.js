@@ -165,7 +165,6 @@ export default class extends React.Component {
     if (this.props.showOptions) {
       /* jshint ignore:start */
       return <ThreadOptions thread={this.props.thread}
-                            selectThread={this.props.selectThread}
                             isSelected={this.props.isSelected} />;
       /* jshint ignore:end */
     } else {

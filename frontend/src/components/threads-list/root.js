@@ -17,7 +17,6 @@ export default class extends React.Component {
 
                           showOptions={this.props.showOptions}
                           selection={this.props.selection}
-                          selectThread={this.props.selectThread}
 
                           busyThreads={this.props.busyThreads} />;
       } else {

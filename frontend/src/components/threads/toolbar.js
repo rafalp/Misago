@@ -38,14 +38,19 @@ export default class extends React.Component {
         </button>
 
         <SelectionControls className="dropdown-menu dropdown-menu-right"
-                           selectAll={this.props.selectAllThreads}
-                           selectNone={this.props.selectNoneThreads} />
+                           threads={this.props.threads} />
 
       </div>;
       /* jshint ignore:end */
     } else {
       return null;
     }
+  }
+
+  getSelectedThreads() {
+    return this.props.threads.filter((thread) => {
+      return this.props.selection.indexOf(thread.id) >= 0;
+    });
   }
 
   getModerationButton() {
@@ -66,7 +71,7 @@ export default class extends React.Component {
 
         <ModerationControls className="dropdown-menu dropdown-menu-right"
                             moderation={this.props.moderation}
-                            threads={this.props.selection}
+                            threads={this.getSelectedThreads()}
                             freezeThread={this.props.freezeThread}
                             updateThread={this.props.updateThread} />
 

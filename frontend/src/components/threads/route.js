@@ -9,6 +9,7 @@ import ThreadsList from 'misago/components/threads-list/root'; // jshint ignore:
 import ThreadsListEmpty from 'misago/components/threads/list-empty'; // jshint ignore:line
 import WithDropdown from 'misago/components/with-dropdown'; // jshint ignore:line
 import misago from 'misago/index';
+import * as select from 'misago/reducers/selection'; // jshint ignore:line
 import { append, hydrate, patch } from 'misago/reducers/threads'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
 import polls from 'misago/services/polls';
@@ -32,7 +33,6 @@ export default class extends WithDropdown {
       },
 
       moderation: [],
-      selection: [],
       busyThreads: [],
 
       dropdown: false,
@@ -145,6 +145,8 @@ export default class extends WithDropdown {
         isLoaded: true
       });
     }
+
+    store.dispatch(select.none());
   }
 
   componentWillUnmount() {
@@ -194,34 +196,6 @@ export default class extends WithDropdown {
         results: []
       }
     }));
-  };
-
-  // Selection
-
-  getSelectedThreads = () => {
-    return this.props.threads.filter((thread) => {
-      return this.state.selection.indexOf(thread.id) >= 0;
-    });
-  };
-
-  selectThread = (threadId) => {
-    this.setState({
-      selection: sets.toggle(this.state.selection, threadId)
-    });
-  };
-
-  selectAllThreads = () => {
-    this.setState({
-      selection: this.props.threads.map(function(thread) {
-        return thread.id;
-      })
-    });
-  };
-
-  selectNoneThreads = () => {
-    this.setState({
-      selection: []
-    });
   };
 
   // Thread state utils
@@ -297,9 +271,7 @@ export default class extends WithDropdown {
                  threadsCount={this.state.count}
 
                  moderation={this.state.moderation}
-                 selection={this.getSelectedThreads()}
-                 selectAllThreads={this.selectAllThreads}
-                 selectNoneThreads={this.selectNoneThreads}
+                 selection={this.props.selection}
 
                  busyThreads={this.state.busyThreads}
                  freezeThread={this.freezeThread}
@@ -308,17 +280,15 @@ export default class extends WithDropdown {
                  isLoaded={this.state.isLoaded}
                  isBusy={this.state.isBusy}>
 
-        <ThreadsList threads={this.props.threads}
-                     categories={this.props.route.categoriesMap}
+        <ThreadsList categories={this.props.route.categoriesMap}
                      list={this.props.route.list}
+                     selection={this.props.selection}
+                     threads={this.props.threads}
 
                      diffSize={this.state.diff.results.length}
                      applyDiff={this.applyDiff}
 
                      showOptions={!!this.props.user.id}
-
-                     selection={this.state.selection}
-                     selectThread={this.selectThread}
 
                      isLoaded={this.state.isLoaded}
                      busyThreads={this.state.busyThreads}>

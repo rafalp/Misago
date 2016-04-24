@@ -1,10 +1,12 @@
 import React from 'react';
 import SubscriptionToggle from 'misago/components/threads-list/subscription-toggle'; // jshint ignore:line
+import * as select from 'misago/reducers/selection'; // jshint ignore:line
+import store from 'misago/services/store'; // jshint ignore:line
 
 export default class extends React.Component {
   /* jshint ignore:start */
   toggleSelection = () => {
-    this.props.selectThread(this.props.thread.id);
+    store.dispatch(select.item(this.props.thread.id));
   };
   /* jshint ignore:end */
 
