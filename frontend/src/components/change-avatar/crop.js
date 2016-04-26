@@ -76,6 +76,11 @@ export default class extends React.Component {
               'x': 0,
               'y': offsetY
             });
+          } else {
+            cropit.cropit('offset', {
+              'x': 0,
+              'y': 0
+            });
           }
         } else {
           // use preserved crop
@@ -136,7 +141,7 @@ export default class extends React.Component {
     return <div>
       <div className="modal-body modal-avatar-crop">
         <div className="crop-form">
-          <div className="cropit-image-preview"></div>
+          <div className="cropit-preview"></div>
           <input type="range" className="cropit-image-zoom-input" />
         </div>
       </div>
