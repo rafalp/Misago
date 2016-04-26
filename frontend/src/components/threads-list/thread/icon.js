@@ -41,13 +41,21 @@ export default class extends React.Component {
     }
   }
 
+  getUrl() {
+      if (this.props.thread.is_read) {
+        return this.props.thread.last_post_url;
+      } else {
+        return this.props.thread.new_post_url;
+      }
+  }
+
   render() {
     /* jshint ignore:start */
-    return <div className={this.getClassName()} title={this.getTitle()}>
+    return <a className={this.getClassName()} href={this.getUrl()} title={this.getTitle()}>
       <span className="material-icon">
         {this.getIcon()}
       </span>
-    </div>;
+    </a>;
     /* jshint ignore:end */
   }
 }

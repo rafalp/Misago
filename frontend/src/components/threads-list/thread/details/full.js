@@ -1,7 +1,5 @@
 import React from 'react';
-import ReadIcon from 'misago/components/threads-list/read-icon'; // jshint ignore:line
-import Category from 'misago/components/threads-list/thread-category'; // jshint ignore:line
-import ThreadOptions from 'misago/components/threads-list/thread-options'; // jshint ignore:line
+import Category from 'misago/components/threads-list/thread/category'; // jshint ignore:line
 import escapeHtml from 'misago/utils/escape-html';
 
 const LAST_POSTER_URL = '<a href="%(url)s" class="poster-title">%(user)s</a>';
@@ -9,14 +7,6 @@ const LAST_POSTER_SPAN = '<span class="poster-title">%(user)s</span>';
 const LAST_REPLY_URL = '<a href="%(url)s" class="last-title" title="%(absolute)s">%(relative)s</a>';
 
 export default class extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isSelected: false
-    };
-  }
-
   getNewLabel() {
     if (!this.props.thread.is_read) {
       /* jshint ignore:start */
@@ -26,10 +16,27 @@ export default class extends React.Component {
           <span className="material-icon">
             comment
           </span>
-          <span>
+          <span className="icon-legend">
             {gettext("New posts")}
           </span>
         </a>
+      </li>;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
+  getUnapprovedLabel() {
+    if (this.props.thread.is_unapproved) {
+      /* jshint ignore:start */
+      return <li className="thread-closed">
+        <span className="material-icon">
+          visibility
+        </span>
+        <span className="icon-legend">
+          {gettext("Unapproved")}
+        </span>
       </li>;
       /* jshint ignore:end */
     } else {
@@ -44,7 +51,7 @@ export default class extends React.Component {
         <span className="material-icon">
           bookmark_border
         </span>
-        <span>
+        <span className="icon-legend">
           {gettext("Pinned globally")}
         </span>
       </li>;
@@ -55,7 +62,7 @@ export default class extends React.Component {
         <span className="material-icon">
           bookmark_border
         </span>
-        <span>
+        <span className="icon-legend">
           {gettext("Pinned locally")}
         </span>
       </li>;
@@ -72,7 +79,7 @@ export default class extends React.Component {
         <span className="material-icon">
           lock_outline
         </span>
-        <span>
+        <span className="icon-legend">
           {gettext("Closed")}
         </span>
       </li>;
@@ -119,7 +126,7 @@ export default class extends React.Component {
         <span className="material-icon">
           forum
         </span>
-        <span>
+        <span className="icon-legend">
           {interpolate(message, {
             replies: this.props.thread.replies,
           }, true)}
@@ -161,62 +168,17 @@ export default class extends React.Component {
     /* jshint ignore:end */
   }
 
-  getOptions() {
-    if (this.props.showOptions) {
-      /* jshint ignore:start */
-      return <ThreadOptions thread={this.props.thread}
-                            isSelected={this.props.isSelected} />;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
-  }
-
-  getClassName() {
-    if (this.props.thread.is_read) {
-      if (this.props.isBusy) {
-        return 'list-group-item thread-read thread-busy';
-      } else if (this.props.isSelected) {
-        return 'list-group-item thread-read thread-selected';
-      } else {
-        return 'list-group-item thread-read';
-      }
-    } else {
-      if (this.props.isBusy) {
-        return 'list-group-item thread-new thread-busy';
-      } else if (this.props.isSelected) {
-        return 'list-group-item thread-new thread-selected';
-      } else {
-        return 'list-group-item thread-new';
-      }
-    }
-  }
-
   render () {
     /* jshint ignore:start */
-    return <li className={this.getClassName()}>
-
-      <ReadIcon thread={this.props.thread} />
-
-      <div className="thread-main">
-
-        <a href={this.props.thread.absolute_url} className="item-title thread-title">
-          {this.props.thread.title}
-        </a>
-
-        <ul className="list-inline">
-          {this.getNewLabel()}
-          {this.getPinnedLabel()}
-          {this.getClosedLabel()}
-          {this.getPath()}
-          {this.getRepliesCount()}
-          {this.getLastReply()}
-        </ul>
-      </div>
-
-      {this.getOptions()}
-
-    </li>;
+    return <ul className="thread-details-full list-inline">
+      {this.getNewLabel()}
+      {this.getUnapprovedLabel()}
+      {this.getPinnedLabel()}
+      {this.getClosedLabel()}
+      {this.getPath()}
+      {this.getRepliesCount()}
+      {this.getLastReply()}
+    </ul>;
     /* jshint ignore:end */
   }
 }

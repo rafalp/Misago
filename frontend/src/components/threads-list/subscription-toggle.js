@@ -74,6 +74,16 @@ export default class extends React.Component {
     }
   }
 
+  getLegend() {
+    if (this.props.thread.subscription === true) {
+      return 'Email';
+    } else if (this.props.thread.subscription === false) {
+      return gettext("Enabled");
+    } else {
+      return gettext("Disabled");
+    }
+  }
+
   getClassName() {
     if (this.props.thread.subscription === true) {
       return "btn btn-default btn-subscribe btn-subscribe-full dropdown-toggle";
@@ -96,6 +106,9 @@ export default class extends React.Component {
                 disabled={this.state.isBusy}>
           <span className="material-icon">
             {this.getIcon()}
+          </span>
+          <span className="icon-legend">
+            {this.getLegend()}
           </span>
         </button>
         <ul className="dropdown-menu dropdown-menu-right">

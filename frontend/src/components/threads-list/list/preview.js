@@ -1,5 +1,5 @@
 import React from 'react';
-import ThreadPreview from 'misago/components/threads-list/thread-preview'; // jshint ignore:line
+import ThreadPreview from 'misago/components/threads-list/thread/preview'; // jshint ignore:line
 
 export default class extends React.Component {
   shouldComponentUpdate() {

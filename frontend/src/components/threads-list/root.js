@@ -1,7 +1,7 @@
 import React from 'react';
-import ListEmpty from 'misago/components/threads-list/list-empty'; // jshint ignore:line
-import ListReady from 'misago/components/threads-list/list-ready'; // jshint ignore:line
-import ListPreview from 'misago/components/threads-list/list-preview'; // jshint ignore:line
+import ListEmpty from 'misago/components/threads-list/list/empty'; // jshint ignore:line
+import ListReady from 'misago/components/threads-list/list/ready'; // jshint ignore:line
+import ListPreview from 'misago/components/threads-list/list/preview'; // jshint ignore:line
 
 export default class extends React.Component {
   render () {

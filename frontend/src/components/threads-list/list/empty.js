@@ -1,5 +1,5 @@
 import React from 'react';
-import DiffMessage from 'misago/components/threads-list/diff-message'; // jshint ignore:line
+import DiffMessage from 'misago/components/threads-list/list/diff-message'; // jshint ignore:line
 
 export default class extends React.Component {
   getDiffMessage() {

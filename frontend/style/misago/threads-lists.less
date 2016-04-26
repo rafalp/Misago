@@ -11,29 +11,90 @@
 // Thread layout
 // --------------------------------------------------
 
-// Remove left padding from thread row
+// Remove side padding from thread row
 .threads-list .thread-new, .threads-list .thread-read {
   padding-left: 0px;
+  padding-right: 0px;
+}
+
+// Icon column
+.threads-list .thread-icon {
+  float: left;
+  width: @thread-col-icon;
+
+  @media screen and (max-width: @screen-sm-max) {
+    width: @thread-col-icon-mb;
+  }
+}
+
+// Options column
+.thread-ops-one .thread-options {
+  float: right;
+  width: @thread-col-option;
+
+  @media screen and (max-width: @screen-sm-max) {
+    width: @thread-col-option-mb;
+  }
+}
+
+.thread-ops-two .thread-options {
+  float: right;
+  width: @thread-col-options;
+
+  @media screen and (max-width: @screen-sm-max) {
+    width: @thread-col-options-mb;
+  }
+}
+
+// Thready body left space
+.thread-main {
+  margin-left: @thread-col-icon;
+
+  @media screen and (max-width: @screen-sm-max) {
+    margin-left: @thread-col-icon-mb;
+    padding-top: 2px;
+  }
+}
+
+// Thready body right space
+.thread-main {
+  margin-right: 10px;
+}
+
+.thread-ops-one .thread-main {
+  margin-right: @thread-col-option;
+
+  @media screen and (max-width: @screen-sm-max) {
+    margin-right: @thread-col-option-mb;
+  }
+}
+
+.thread-ops-two .thread-main {
+  margin-right: @thread-col-options;
+
+  @media screen and (max-width: @screen-sm-max) {
+    margin-right: @thread-col-options-mb;
+  }
 }
 
 
-// Read icon
-.threads-list .read-status {
-  float: left;
-  padding-top: @thread-icon-padding;
-  width: @thread-icon-column;
+// Thread icon
+// --------------------------------------------------
+.threads-list .thread-icon {
+  padding-top: 2px;
 
   text-align: center;
+}
 
-  cursor: help;
-
+// Read icon
+.threads-list .read-status {
   .material-icon {
-    width: @thread-icon-width;
-    height: @thread-icon-width;
+    width: 24px;
+    height: 24px;
 
     color: @thread-read-icon-color;
-    font-size: @thread-icon-width;
-    line-height: @thread-icon-width;
+    font-size: 24px;
+    line-height: 24px;
   }
 }
 
@@ -43,11 +104,33 @@
   }
 }
 
+// Thread flags
+.threads-list .thread-flags {
+  display: none;
+  margin-left: auto;
+  margin-right: auto;
 
-// Thread body
-.threads-list .thread-main {
-  margin-left: @thread-icon-column;
-  overflow: auto;
+  position: relative;
+  bottom: 4px;
+
+  color: @text-muted;
+
+  pointer-events: none;
+
+  @media screen and (max-width: @screen-sm-max) {
+    display: block;
+    margin: 0px;
+    padding: 0px;
+  }
+
+  li {
+    margin: 0px 2px;
+  }
+
+  .material-icon {
+    font-size: 10px;
+    line-height: 10px;
+  }
 }
 
 
@@ -60,6 +143,12 @@
     color: @thread-read-color;
     font-size: @font-size-large;
     font-weight: normal;
+    word-wrap: break-word;
+
+    @media screen and (max-width: @screen-sm-max) {
+      font-size: @font-size-base;
+      font-weight: bold;
+    }
   }
 }
 
@@ -72,15 +161,70 @@
 
 // Bottom row
 // --------------------------------------------------
-.threads-list .list-inline {
+
+// Full details used on desktop
+.threads-list .thread-details-full {
   display: block;
   float: none;
+  margin: 0px;
+  margin-top: @line-height-computed * .25;
+  padding: 0px;
+  overflow: auto;
 
   font-size: @font-size-small;
+
+  @media screen and (max-width: @screen-sm-max) {
+    display: none;
+  }
 
   &>li {
     display: block;
     float: left;
+
+    .material-icon {
+      position: relative;
+      top: -1px;
+
+      margin-right: 2px;
+
+      font-size: 14px;
+      line-height: 14px;
+    }
+  }
+}
+
+// Compact details used on mobile
+.threads-list .thread-details-compact {
+  display: none;
+  float: none;
+  margin: 0px;
+  margin-top: @line-height-computed * .25;
+  padding: 0px;
+  overflow: auto;
+
+  color: @text-muted;
+  font-size: @font-size-base * .66;
+
+  @media screen and (max-width: @screen-sm-max) {
+    display: block;
+  }
+
+  &>li {
+    display: block;
+    float: left;
+    margin: 0px;
+    margin-right: 6px;
+    padding: 0px;
+
+    .material-icon {
+      position: relative;
+      top: -1px;
+
+      margin-right: 2px;
+
+      font-size: (@font-size-base * .66) + 1px;
+      line-height: (@font-size-base * .66) + 1px;
+    }
   }
 }
 
@@ -88,9 +232,6 @@
 .threads-list .thread-path {
   .material-icon {
     margin: 0px 2px;
-
-    position: relative;
-    top: -1px;
   }
 }
 
@@ -98,10 +239,13 @@
 // Thread options
 // --------------------------------------------------
 .threads-list .thread-options {
-  float: right;
-  margin: 0px;
+  ul {
+    margin: 0px;
+  }
 
-  margin-top: @line-height-computed * -2 + 3px;
+  li {
+    float: right;
+  }
 
   .btn-default {
     padding: 4px;
@@ -122,6 +266,10 @@
 
       font-size: 22px;
       line-height: 22px;
+    }
+
+    .icon-legend {
+      display: none;
     }
   }
 }
