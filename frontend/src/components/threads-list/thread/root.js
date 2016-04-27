@@ -1,6 +1,6 @@
 import React from 'react';
-import DetailsFull from 'misago/components/threads-list/thread/details/full'; // jshint ignore:line
 import DetailsCompact from 'misago/components/threads-list/thread/details/compact'; // jshint ignore:line
+import DetailsFull from 'misago/components/threads-list/thread/details/full'; // jshint ignore:line
 import Flags from 'misago/components/threads-list/thread/flags'; // jshint ignore:line
 import Icon from 'misago/components/threads-list/thread/icon'; // jshint ignore:line
 import ThreadOptions from 'misago/components/threads-list/thread/options'; // jshint ignore:line

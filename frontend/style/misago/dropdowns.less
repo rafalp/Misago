@@ -5,7 +5,9 @@
 
 // Unify .btn-link appearance with anchors
 .dropdown-menu>li>a,
-.dropdown-menu>li>.btn-link {
+.dropdown-menu>li>.btn-link,
+.modal-menu>li>a,
+.modal-menu>li>.btn-link {
   display: block;
   border: none;
   clear: both;
@@ -40,6 +42,20 @@
   .badge {
     float: right;
   }
+}
+
+
+// Extra overrides for modal nav
+.modal-menu {
+  margin: @line-height-computed 0px;
+  padding: 0px;
+}
+
+.modal-menu>li {
+  margin: @line-height-computed / 3 0px;
+  padding: 0px;
+
+  list-style: none;
 }
 
 

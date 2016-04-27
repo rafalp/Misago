@@ -239,12 +239,27 @@
 // Thread options
 // --------------------------------------------------
 .threads-list .thread-options {
+  @media screen and (max-width: @screen-sm-max) {
+    overflow: visible;
+    position: relative;
+
+    width: 100px;
+  }
+
   ul {
     margin: 0px;
+    padding: 0px;
+
+    @media screen and (max-width: @screen-sm-max) {
+      position: absolute;
+      top: -3px;
+      right: 2px;
+    }
   }
 
   li {
     float: right;
+    overflow: hidden;
   }
 
   .btn-default {
@@ -252,8 +267,18 @@
 
     color: @gray-light;
 
+    @media screen and (max-width: @screen-sm-max) {
+      background: transparent;
+      opacity: .33;
+    }
+
     &:hover, &:active {
       color: @gray;
+
+      @media screen and (max-width: @screen-sm-max) {
+        background: @btn-default-bg;
+        opacity: 1;
+      }
     }
 
     .material-icon {
@@ -261,11 +286,11 @@
       position: relative;
       top: 0px;
 
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
 
-      font-size: 22px;
-      line-height: 22px;
+      font-size: 20px;
+      line-height: 20px;
     }
 
     .icon-legend {

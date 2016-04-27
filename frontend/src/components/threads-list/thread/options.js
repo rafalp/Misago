@@ -1,5 +1,6 @@
 import React from 'react';
-import SubscriptionToggle from 'misago/components/threads-list/subscription-toggle'; // jshint ignore:line
+import SubscriptionCompact from 'misago/components/threads-list/thread/subscription/compact'; // jshint ignore:line
+import SubscriptionFull from 'misago/components/threads-list/thread/subscription/full'; // jshint ignore:line
 import * as select from 'misago/reducers/selection'; // jshint ignore:line
 import store from 'misago/services/store'; // jshint ignore:line
 
@@ -39,7 +40,8 @@ export default class extends React.Component {
     return <div className="thread-options">
       <ul className="list-inline">
         {this.getSelectToggle()}
-        <SubscriptionToggle thread={this.props.thread} />
+        <SubscriptionFull thread={this.props.thread} />
+        <SubscriptionCompact thread={this.props.thread} />
       </ul>
     </div>;
     /* jshint ignore:end */
