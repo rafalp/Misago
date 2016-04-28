@@ -285,7 +285,7 @@ export default class extends WithDropdown {
                      selection={this.props.selection}
                      threads={this.props.threads}
 
-                     diffSize={this.state.diff.results.length}
+                     diffSize={this.state.diff.results.length + 7}
                      applyDiff={this.applyDiff}
 
                      showOptions={!!this.props.user.id}

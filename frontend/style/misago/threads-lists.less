@@ -298,3 +298,42 @@
     }
   }
 }
+
+
+// Threads diff message
+// --------------------------------------------------
+.threads-diff-message {
+  padding: 0px;
+}
+
+.threads-diff-message .btn {
+  border: none;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  padding: @padding-large-vertical @padding-large-horizontal;
+  width: 100%;
+
+  overflow: none;
+
+  text-align: left;
+
+  .material-icon {
+    margin-right: 4px;
+
+    width: 24px;
+    height: 24px;
+
+    font-size: 24px;
+    height: 24px;
+  }
+
+  @media screen and (max-width: @screen-sm-max) {
+    text-align: center;
+    white-space: normal;
+    word-wrap: break-word;
+
+    .material-icon {
+      display: none;
+    }
+  }
+}
