@@ -16,7 +16,8 @@ export default class extends React.Component {
       /* jshint ignore:start */
       return <li>
         <button className="btn btn-default btn-checkbox"
-                onClick={this.toggleSelection}>
+                onClick={this.toggleSelection}
+                disabled={this.props.disabled}>
           <span className="material-icon">
             {this.props.isSelected
               ? 'check_box'
@@ -40,8 +41,10 @@ export default class extends React.Component {
     return <div className="thread-options">
       <ul className="list-inline">
         {this.getSelectToggle()}
-        <SubscriptionFull thread={this.props.thread} />
-        <SubscriptionCompact thread={this.props.thread} />
+        <SubscriptionFull thread={this.props.thread}
+                          disabled={this.props.disabled} />
+        <SubscriptionCompact thread={this.props.thread}
+                             disabled={this.props.disabled} />
       </ul>
     </div>;
     /* jshint ignore:end */

@@ -12,7 +12,9 @@
 // --------------------------------------------------
 
 // Remove side padding from thread row
-.threads-list .thread-new, .threads-list .thread-read {
+.threads-list .thread-new,
+.threads-list .thread-read,
+.threads-list .thread-preview {
   padding-left: 0px;
   padding-right: 0px;
 }
@@ -104,6 +106,25 @@
   }
 }
 
+.threads-list .thread-preview .read-status {
+  .material-icon {
+    color: @ui-preview;
+  }
+}
+
+// Loader
+.threads-list .thread-icon .loader {
+  height: 24px;
+}
+
+.threads-list .thread-icon .loader-spinning-wheel {
+  width: 24px;
+  height: 24px;
+
+  border-color: lighten(@loader-color, 25%) transparent;
+}
+
+
 // Thread flags
 .threads-list .thread-flags {
   display: none;
@@ -145,9 +166,17 @@
     font-weight: normal;
     word-wrap: break-word;
 
+    .ui-preview-text {
+      height: @font-size-large;
+    }
+
     @media screen and (max-width: @screen-sm-max) {
       font-size: @font-size-base;
       font-weight: bold;
+
+      .ui-preview-text {
+        height: @font-size-base;
+      }
     }
   }
 }
@@ -180,6 +209,9 @@
   &>li {
     display: block;
     float: left;
+    margin: 0px;
+    margin-right: 6px;
+    padding: 0px;
 
     .material-icon {
       position: relative;
@@ -189,6 +221,10 @@
 
       font-size: 14px;
       line-height: 14px;
+    }
+
+    .ui-preview-text {
+      height: @font-size-small;
     }
   }
 }
@@ -224,6 +260,10 @@
 
       font-size: (@font-size-base * .66) + 1px;
       line-height: (@font-size-base * .66) + 1px;
+    }
+
+    .ui-preview-text {
+      height: @font-size-base * .66;
     }
   }
 }
@@ -335,5 +375,26 @@
     .material-icon {
       display: none;
     }
+  }
+}
+
+
+// Pulse busy threads
+// --------------------------------------------------
+.threads-list .thread-busy {
+  .thread-flags, .thread-main, .thread-options {
+    .animation(thread-busy-animation 600ms linear infinite);
+  }
+}
+
+@keyframes thread-busy-animation {
+  0% {
+    .opacity(0.2);
+  }
+  50% {
+    .opacity(0.5);
+  }
+  100% {
+    .opacity(0.2);
   }
 }

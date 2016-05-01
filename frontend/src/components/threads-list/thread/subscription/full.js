@@ -38,6 +38,7 @@ export default class extends React.Component {
       <div className="btn-group">
         <button type="button"
                 className={this.getClassName()}
+                disabled={this.props.disabled}
                 data-toggle="dropdown"
                 aria-haspopup="true"
                 aria-expanded="false">

@@ -1,4 +1,5 @@
 import React from 'react';
+import Loader from 'misago/components/loader'; // jshint ignore:line
 import DetailsCompact from 'misago/components/threads-list/thread/details/compact'; // jshint ignore:line
 import DetailsFull from 'misago/components/threads-list/thread/details/full'; // jshint ignore:line
 import Flags from 'misago/components/threads-list/thread/flags'; // jshint ignore:line
@@ -6,10 +7,23 @@ import Icon from 'misago/components/threads-list/thread/icon'; // jshint ignore:
 import ThreadOptions from 'misago/components/threads-list/thread/options'; // jshint ignore:line
 
 export default class extends React.Component {
+  getIcon() {
+    if (this.props.isBusy) {
+      /* jshint ignore:start */
+      return <Loader />;
+      /* jshint ignore:end */
+    } else {
+      /* jshint ignore:start */
+      return <Icon thread={this.props.thread} />;
+      /* jshint ignore:end */
+    }
+  }
+
   getOptions() {
     if (this.props.showOptions) {
       /* jshint ignore:start */
       return <ThreadOptions thread={this.props.thread}
+                            disabled={this.props.isBusy}
                             isSelected={this.props.isSelected} />;
       /* jshint ignore:end */
     } else {
@@ -48,7 +62,7 @@ export default class extends React.Component {
     return <li className={this.getClassName()}>
 
       <div className="thread-icon">
-        <Icon thread={this.props.thread} />
+        {this.getIcon()}
         <Flags thread={this.props.thread} />
       </div>
 

@@ -13,8 +13,9 @@ export default class extends SubscriptionFull {
   render() {
     /* jshint ignore:start */
     return <li className="hidden-md hidden-lg">
-      <button className={this.getClassName()}
-              type="button"
+      <button type="button"
+              className={this.getClassName()}
+              disabled={this.props.disabled}
               onClick={this.showOptions}>
         <span className="material-icon">
           {this.getIcon()}
