@@ -27,23 +27,6 @@ export default class extends React.Component {
     }
   }
 
-  getUnapprovedLabel() {
-    if (this.props.thread.is_unapproved) {
-      /* jshint ignore:start */
-      return <li className="thread-closed">
-        <span className="material-icon">
-          visibility
-        </span>
-        <span className="icon-legend">
-          {gettext("Unapproved")}
-        </span>
-      </li>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
-  }
-
   getPinnedLabel() {
     if (this.props.thread.weight === 2) {
       /* jshint ignore:start */
@@ -64,6 +47,51 @@ export default class extends React.Component {
         </span>
         <span className="icon-legend">
           {gettext("Pinned locally")}
+        </span>
+      </li>;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
+  getUnapprovedLabel() {
+    if (this.props.thread.is_unapproved) {
+      /* jshint ignore:start */
+      return <li className="thread-unapproved">
+        <span className="material-icon">
+          remove_circle
+        </span>
+        <span className="icon-legend">
+          {gettext("Unapproved")}
+        </span>
+      </li>;
+      /* jshint ignore:end */
+    } else if (this.props.thread.has_unapproved_posts) {
+      /* jshint ignore:start */
+      return <li className="thread-unapproved-posts">
+        <span className="material-icon">
+          remove_circle_outline
+        </span>
+        <span className="icon-legend">
+          {gettext("Unapproved posts")}
+        </span>
+      </li>;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
+  getHiddenLabel() {
+    if (this.props.thread.is_hidden) {
+      /* jshint ignore:start */
+      return <li className="thread-hidden">
+        <span className="material-icon">
+          visibility_off
+        </span>
+        <span className="icon-legend">
+          {gettext("Hidden")}
         </span>
       </li>;
       /* jshint ignore:end */
@@ -172,8 +200,9 @@ export default class extends React.Component {
     /* jshint ignore:start */
     return <ul className="thread-details-full list-inline">
       {this.getNewLabel()}
-      {this.getUnapprovedLabel()}
       {this.getPinnedLabel()}
+      {this.getUnapprovedLabel()}
+      {this.getHiddenLabel()}
       {this.getClosedLabel()}
       {this.getPath()}
       {this.getRepliesCount()}

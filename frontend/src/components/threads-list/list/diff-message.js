@@ -21,7 +21,9 @@ export default class extends React.Component {
         <span className="material-icon">
           cached
         </span>
-        {this.getMessage()}
+        <span className="diff-message">
+          {this.getMessage()}
+        </span>
       </button>
     </li>;
     /* jshint ignore:end */

@@ -27,10 +27,11 @@ class ThreadSerializer(serializers.ModelSerializer):
         model = Thread
         fields = (
             'id',
+            'category',
             'title',
             'weight',
-            'category',
             'replies',
+            'has_unapproved_posts',
             'is_read',
             'is_unapproved',
             'is_hidden',
@@ -93,11 +94,12 @@ class ThreadListSerializer(ThreadSerializer):
         model = Thread
         fields = (
             'id',
+            'category',
             'title',
             'weight',
-            'category',
             'top_category',
             'replies',
+            'has_unapproved_posts',
             'started_on',
             'last_post',
             'last_poster_name',
