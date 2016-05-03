@@ -3,7 +3,7 @@ import React from 'react'; // jshint ignore:line
 import ListEmpty from 'misago/components/threads-list/list/empty'; // jshint ignore:line
 import * as testUtils from 'misago/utils/test-utils';
 
-describe("Empty Threads List Preview", function() {
+describe("Empty Threads List", function() {
   afterEach(function() {
     testUtils.unmountComponents();
   });
