@@ -44,10 +44,6 @@ const thread = {
 /* jshint ignore:end */
 
 describe("Threads List Thread Options", function() {
-  beforeEach(function() {
-    testUtils.unmountComponents();
-  });
-
   afterEach(function() {
     testUtils.unmountComponents();
   });
