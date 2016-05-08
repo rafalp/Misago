@@ -33,7 +33,7 @@ export default class extends React.Component {
                 aria-expanded="false"
                 disabled={this.props.disabled}>
           <span className="material-icon">
-            check_box_outline_blank
+            select_all
           </span>
         </button>
 

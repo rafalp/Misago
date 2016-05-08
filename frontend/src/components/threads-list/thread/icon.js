@@ -10,18 +10,10 @@ export default class extends React.Component {
   }
 
   getTitle() {
-    if (this.props.thread.is_closed) {
-      if (this.props.thread.is_read) {
-        return gettext("This thread has no new posts. (closed)");
-      } else {
-        return gettext("This thread has new posts. (closed)");
-      }
+    if (this.props.thread.is_read) {
+      return gettext("This thread has no new posts.");
     } else {
-      if (this.props.thread.is_read) {
-        return gettext("This thread has no new posts.");
-      } else {
-        return gettext("This thread has new posts.");
-      }
+      return gettext("This thread has new posts.");
     }
   }
 

@@ -34,7 +34,7 @@ export default class extends React.Component {
       /* jshint ignore:end */
     } else if (this.props.thread.has_unapproved_posts) {
       /* jshint ignore:start */
-      return <span className="thread-unapproved">
+      return <span className="thread-unapproved-posts">
         <span className="material-icon">
           remove_circle_outline
         </span>
@@ -75,7 +75,7 @@ export default class extends React.Component {
 
   render () {
     /* jshint ignore:start */
-    return <div className="thread-flags spanst-inspanne">
+    return <div className="thread-flags">
       {this.getPinnedIcon()}
       {this.getUnapprovedIcon()}
       {this.getHiddenIcon()}

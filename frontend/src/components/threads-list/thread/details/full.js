@@ -150,16 +150,14 @@ export default class extends React.Component {
         this.props.thread.replies);
 
     return <li className="thread-replies">
-      <a href={this.props.thread.absolute_url}>
-        <span className="material-icon">
-          forum
-        </span>
-        <span className="icon-legend">
-          {interpolate(message, {
-            replies: this.props.thread.replies,
-          }, true)}
-        </span>
-      </a>
+      <span className="material-icon">
+        forum
+      </span>
+      <span className="icon-legend">
+        {interpolate(message, {
+          replies: this.props.thread.replies,
+        }, true)}
+      </span>
     </li>;
     /* jshint ignore:end */
   }

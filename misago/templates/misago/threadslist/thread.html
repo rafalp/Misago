@@ -1,51 +1,210 @@
-{% load i18n %}
-<li class="list-group-item">
-  <div>
+{% load i18n misago_capture %}
+<li class="list-group-item thread-{{ thread.is_read|yesno:'read,new' }}">
+  <div class="thread-icon">
     {% if thread.is_read %}
-    [read]
+    <a href="{{ thread.get_last_post_url }}" class="read-status item-read" title="{% trans "This thread has no new posts." %}">
+      <span class="material-icon">
+        chat_bubble_outline
+      </span>
+    </a>
     {% else %}
-    [new]
+    <a href="{{ thread.get_new_post_url }}" class="read-status item-new" title="{% trans "This thread has new posts." %}">
+      <span class="material-icon">
+        chat_bubble
+      </span>
+    </a>
     {% endif %}
-
+    <div class="thread-flags">
+      {% if thread.weight == 2 %}
+      <span class="thread-pinned-globally">
+        <span class="material-icon">
+          bookmark
+        </span>
+      </span>
+      {% elif thread.weight %}
+      <span class="thread-pinned-locally">
+        <span class="material-icon">
+          bookmark_border
+        </span>
+      </span>
+      {% endif %}
+      {% if thread.is_unapproved %}
+      <span class="thread-unapproved">
+        <span class="material-icon">
+          remove_circle
+        </span>
+      </span>
+      {% elif thread.has_unapproved_posts %}
+      <span class="thread-unapproved-posts">
+        <span class="material-icon">
+          remove_circle_outline
+        </span>
+      </span>
+      {% endif %}
+      {% if thread.is_hidden %}
+      <span class="thread-hidden">
+        <span class="material-icon">
+          visibility_off
+        </span>
+      </span>
+      {% endif %}
+      {% if thread.is_closed %}
+      <span class="thread-closed">
+        <span class="material-icon">
+          lock_outline
+        </span>
+      </span>
+      {% endif %}
+    </div>
+  </div>
+  <div class="thread-main">
     <a href="{{ thread.get_absolute_url }}" class="item-title thread-title">
       {{ thread.title }}
     </a>
-  </div>
-  <ul class="list-inline">
-
-    {% if thread.top_category %}
-    <li class="thread-path">
-      <a href="{{ thread.top_category.get_absolute_url }}" class="thread-category{% if thread.top_category.css_class %} thread-category-{{ thread.top_category.css_class }}{% endif %}">
-        {{ thread.top_category.name }}
-      </a>
-      {% if thread.category != thread.top_category %}
-      <span class="path-separator">
+    <ul class="thread-details-full list-inline">
+      {% if not thread.is_read %}
+      <li class="thread-new-posts" title="{% trans "Go to first unread post" %}">
+        <a href="{{ thread.get_new_post_url }}">
+          <span class="material-icon">
+            comment
+          </span>
+          <span class="icon-legend">
+            {% trans "New posts" %}
+          </span>
+        </a>
+      </li>
+      {% endif %}
+      {% if thread.weight == 2 %}
+      <li class="thread-pinned-globally">
         <span class="material-icon">
-          arrow_forward
+          bookmark_border
+        </span>
+        <span class="icon-legend">
+          {% trans "Pinned globally" %}
+        </span>
+      </li>
+      {% elif thread.weight %}
+      <li class="thread-pinned-locally">
+        <span class="material-icon">
+          bookmark_border
+        </span>
+        <span class="icon-legend">
+          {% trans "Pinned locally" %}
+        </span>
+      </li>
+      {% endif %}
+      {% if thread.is_unapproved %}
+      <li class="thread-unapproved">
+        <span class="material-icon">
+          remove_circle
+        </span>
+        <span class="icon-legend">
+          {% trans "Unapproved" %}
+        </span>
+      </li>
+      {% elif thread.has_unapproved_posts %}
+      <li class="thread-unapproved-posts">
+        <span class="material-icon">
+          remove_circle_outline
+        </span>
+        <span class="icon-legend">
+          {% trans "Unapproved posts" %}
         </span>
       </span>
-      <a href="{{ thread.category.get_absolute_url }}" class="thread-category{% if thread.category.css_class %} thread-category-{{ thread.category.css_class }}{% endif %}">
-        {{ thread.category.name }}
-      </a>
       {% endif %}
-    </li>
-    {% endif %}
-
-    <li>
-      {% blocktrans trimmed count replies=thread.replies %}
-      {{ replies }} reply
-      {% plural %}
-      {{ replies }} replies
-      {% endblocktrans %}
-    </li>
-
-    <li>
-      {{ thread.last_poster_name }}
-    </li>
-
-    <li>
-      {{ thread.last_post_on|date }}
-    </li>
-
-  </ul>
+      {% if thread.is_hidden %}
+      <li class="thread-hidden">
+        <span class="material-icon">
+          visibility_off
+        </span>
+        <span class="icon-legend">
+          {% trans "Hidden" %}
+        </span>
+      </li>
+      {% endif %}
+      {% if thread.is_closed %}
+      <li class="thread-closed">
+        <span class="material-icon">
+          lock_outline
+        </span>
+        <span class="icon-legend">
+          {% trans "Closed" %}
+        </span>
+      </li>
+      {% endif %}
+      {% if thread.top_category %}
+      <li class="thread-path">
+        <a href="{{ thread.top_category.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="thread-category{% if thread.top_category.css_class %} thread-category-{{ thread.top_category.css_class }}{% endif %}">
+          {{ thread.top_category.name }}
+        </a>
+        {% if thread.top_category != thread.category %}
+          <span class="path-separator material-icon">
+            arrow_forward
+          </span>
+          <a href="{{ thread.category.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="thread-category{% if thread.category.css_class %} thread-category-{{ thread.category.css_class }}{% endif %}">
+            {{ thread.category.name }}
+          </a>
+        {% endif %}
+      </li>
+      {% endif %}
+      <li class="thread-replies">
+        <span class="material-icon">
+          forum
+        </span>
+        <span class="icon-legend">
+          {% blocktrans trimmed count replies=thread.replies %}
+            {{ replies }} reply
+          {% plural %}
+            {{ replies }} replies
+          {% endblocktrans %}
+        </span>
+      </li>
+      <li class="thread-last-reply">
+        {% capture trimmed as last_poster %}
+          {% if thread.last_poster_id %}
+            <a href="{% url 'misago:user' slug=thread.last_poster_slug pk=thread.last_poster_id %}" class="poster-title">{{ thread.last_poster_name }}</a>
+          {% else %}
+            <span class="poster-title">{{ thread.last_poster_name }}</span>
+          {% endif %}
+        {% endcapture %}
+        {% blocktrans trimmed with user=last_poster|safe date=thread.last_post_on|date %}
+          last reply by {{ user }} {{ date }}
+        {% endblocktrans %}
+      </li>
+    </ul>
+    <ul class="thread-details-compact list-inline">
+      {% if thread.top_category %}
+        {% if thread.top_category != thread.category %}
+        <li class="thread-path">
+          <a href="{{ thread.category.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="thread-category{% if thread.category.css_class %} thread-category-{{ thread.category.css_class }}{% endif %}">
+            {{ thread.category.name }}
+          </a>
+        </li>
+        {% else %}
+        <li class="thread-path">
+          <a href="{{ thread.top_category.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="thread-category{% if thread.top_category.css_class %} thread-category-{{ thread.top_category.css_class }}{% endif %}">
+            {{ thread.top_category.name }}
+          </a>
+        </li>
+        {% endif %}
+      {% endif %}
+      <li class="thread-replies-count">
+        <span class="material-icon">
+          forum
+        </span>
+        <span class="icon-legend">
+          {{ thread.replies }}
+        </span>
+      </li>
+      <li class="thread-last-reply-clock">
+        <span class="material-icon">
+          schedule
+        </span>
+        <span class="icon-legend">
+          {{ thread.last_post_on|date }}
+        </span>
+      </li>
+    </ul>
+  </div>
+  <div class="clearfix"></div>
 </li>

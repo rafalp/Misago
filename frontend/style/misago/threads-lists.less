@@ -212,19 +212,29 @@
     margin: 0px;
     margin-right: 6px;
     padding: 0px;
+    overflow: auto;
 
     .material-icon {
       position: relative;
-      top: -1px;
+      top: 1px;
 
+      float: left;
       margin-right: 2px;
 
       font-size: 14px;
       line-height: 14px;
     }
 
+    .icon-legend {
+      float: left;
+    }
+
     .ui-preview-text {
       height: @font-size-small;
+    }
+
+    &.thread-path a {
+      float: left;
     }
   }
 }
