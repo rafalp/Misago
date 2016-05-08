@@ -361,6 +361,42 @@ class AllThreadsListTests(ThreadsListTestCase):
         self.assertTrue(positions['l'] > positions['g'])
         self.assertTrue(positions['l'] > positions['s'])
 
+    def test_noscript_pagination(self):
+        """threads list is paginated for users with js disabled"""
+        threads = []
+        for i in xrange(24 * 3):
+            threads.append(testutils.post_thread(category=self.first_category))
+
+        # secondary page renders
+        response = self.client.get('/?page=2')
+        self.assertEqual(response.status_code, 200)
+
+        for thread in threads[:24]:
+            self.assertNotIn(thread.get_absolute_url(), response.content)
+        for thread in threads[24:48]:
+            self.assertIn(thread.get_absolute_url(), response.content)
+        for thread in threads[48:]:
+            self.assertNotIn(thread.get_absolute_url(), response.content)
+
+        self.assertNotIn('/?page=1', response.content)
+        self.assertIn('/?page=3', response.content)
+
+        # third page renders
+        response = self.client.get('/?page=3')
+        self.assertEqual(response.status_code, 200)
+
+        for thread in threads[24:]:
+            self.assertNotIn(thread.get_absolute_url(), response.content)
+        for thread in threads[:24]:
+            self.assertIn(thread.get_absolute_url(), response.content)
+
+        self.assertIn('/?page=2', response.content)
+        self.assertNotIn('/?page=4', response.content)
+
+        # excessive page gives 404
+        response = self.client.get('/?page=4')
+        self.assertEqual(response.status_code, 404)
+
 
 class CategoryThreadsListTests(ThreadsListTestCase):
     def test_access_hidden_category(self):
