@@ -292,8 +292,9 @@ class EditUser(UserAdmin, generic.ModelFormView):
             target.staff_level = form.cleaned_data['staff_level']
 
         target.rank = form.cleaned_data.get('rank')
-        if form.cleaned_data.get('roles'):
-            target.roles.add(*form.cleaned_data['roles'])
+
+        target.roles.clear()
+        target.roles.add(*form.cleaned_data['roles'])
 
         set_user_signature(request, target, form.cleaned_data.get('signature'))
 
