@@ -27,7 +27,9 @@ describe("Threads List Header", function() {
 
   it("renders title", function() {
     /* jshint ignore:start */
-    testUtils.render(<Header route={route} title="Lorem Ipsum" />);
+    testUtils.render(
+      <Header route={route} title="Lorem Ipsum" user={{id: null}} />
+    );
     /* jshint ignore:end */
 
     let element = $('#test-mount .page-header h1');
@@ -37,7 +39,7 @@ describe("Threads List Header", function() {
 
   it("renders without nav", function() {
     /* jshint ignore:start */
-    testUtils.render(<Header route={route} title="Test" />);
+    testUtils.render(<Header route={route} title="Test" user={{id: null}} />);
     /* jshint ignore:end */
 
     let element = $('#test-mount .page-header');
@@ -82,7 +84,8 @@ describe("Threads List Header", function() {
     testUtils.render(
       <Header route={route}
               title="Test"
-              toggleNav={callback} />
+              toggleNav={callback}
+              user={{id: null}} />
     );
     /* jshint ignore:end */
 
@@ -107,10 +110,35 @@ describe("Threads List Header", function() {
       name: "Parent",
       absolute_url: '/parent-12/'
     }
-    testUtils.render(<Header route={route} title="Lorem Ipsum" />);
+    testUtils.render(<Header route={route} title="Test"  user={{id: null}} />);
     /* jshint ignore:end */
 
     let element = $('#test-mount .page-header .btn-go-back');
     assert.ok(element.length, "button renders");
+  });
+
+  it("renders new thread button for authenticated", function() {
+    /* jshint ignore:start */
+    route.list= {
+      name: "New",
+      nameLong: "New threads",
+      path: 'new/'
+    };
+    route.category.parent = {
+      name: "Parent",
+      absolute_url: '/parent-12/'
+    }
+    testUtils.render(<Header route={route} title="Test"  user={{id: null}} />);
+    /* jshint ignore:end */
+
+    let element = $('#test-mount .page-header .btn-success');
+    assert.ok(!element.length, "button is hidden for guest");
+
+    /* jshint ignore:start */
+    testUtils.render(<Header route={route} title="Test"  user={{id: 123}} />);
+    /* jshint ignore:end */
+
+    element = $('#test-mount .page-header .btn-success');
+    assert.ok(element.length, "button is rendered for authenticated");
   });
 });

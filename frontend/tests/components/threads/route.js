@@ -4,7 +4,9 @@ import React from 'react'; // jshint ignore:line
 import Route from 'misago/components/threads/route'; // jshint ignore:line
 import misago from 'misago/index';
 import reducer, { hydrateThread } from 'misago/reducers/threads'; // jshint ignore:line
+import ajax from 'misago/services/ajax';
 import title from 'misago/services/page-title';
+import polls from 'misago/services/polls';
 import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
 import * as testUtils from 'misago/utils/test-utils';
@@ -97,6 +99,10 @@ let route = {
     absolute_url: '/categories/category-1/'
   }
 };
+
+let user = {
+  id: null
+};
 /* jshint ignore:end */
 let thread = {
   id: 1,
@@ -117,6 +123,8 @@ describe("Threads List Route", function() {
   beforeEach(function() {
     snackbarStore = testUtils.snackbarStoreMock();
     snackbar.init(snackbarStore);
+
+    polls.init(ajax, snackbar);
 
     misago._context = {
       CATEGORIES_ON_INDEX: false,
@@ -162,11 +170,29 @@ describe("Threads List Route", function() {
       subcategories: [2, 3]
     };
 
+    $.mockjax({
+      url: '/test-api/threads/?category=1&list=all&page=1',
+      status: 200,
+      responseText: {
+        results: [],
+
+        count: 1,
+        more: 0,
+
+        page: 1,
+        pages: 1,
+
+        subcategories: [2]
+      }
+    });
+
     /* jshint ignore:start */
     let threads = [
       hydrateThread(thread)
     ];
-    testUtils.render(<Route route={route} threads={threads} />);
+    testUtils.render(
+      <Route route={route} selection={[]} threads={threads} user={user} />
+    );
     /* jshint ignore:end */
 
     testUtils.onElement('#test-mount .thread-title', function(element) {
@@ -180,7 +206,7 @@ describe("Threads List Route", function() {
         "Lorem ipsum dolor met sit amet eli.",
         "category description was displayed");
 
-      assert.equal($('.subcategories-list li').length, 2,
+      assert.equal($('.category-picker li').length, 2,
         "categories picker shows two cats");
 
       assert.equal(document.title, "Lorem | Test Forum",
@@ -212,7 +238,9 @@ describe("Threads List Route", function() {
     });
 
     /* jshint ignore:start */
-    testUtils.render(<Route route={route} threads={[]} />);
+    testUtils.render(
+      <Route route={route} selection={[]} threads={[]} user={user} />
+    );
     /* jshint ignore:end */
 
     window.setTimeout(function() {
@@ -220,7 +248,7 @@ describe("Threads List Route", function() {
       assert.equal(state.length, 1, "one thread was loaded into store");
       assert.equal(state[0].title, "Test thread", "test thread was loaded");
 
-      assert.equal($('.subcategories-list li').length, 1,
+      assert.equal($('.category-picker li').length, 1,
         "categories picker shows one category");
 
       done();
@@ -245,14 +273,16 @@ describe("Threads List Route", function() {
     });
 
     /* jshint ignore:start */
-    testUtils.render(<Route route={route} threads={[]} />);
+    testUtils.render(
+      <Route route={route} selection={[]} threads={[]} user={user} />
+    );
     /* jshint ignore:end */
 
     window.setTimeout(function() {
       let state = store.getState().threads;
       assert.equal(state.length, 0, "no threads were loaded into store");
 
-      assert.equal($('.subcategories-list li').length, 0,
+      assert.equal($('.category-picker li').length, 0,
         "categories picker is empty");
 
       done();
@@ -275,7 +305,9 @@ describe("Threads List Route", function() {
     });
 
     /* jshint ignore:start */
-    testUtils.render(<Route route={route} threads={[]} />);
+    testUtils.render(
+      <Route route={route} selection={[]} threads={[]} user={user} />
+    );
     /* jshint ignore:end */
   });
 
@@ -298,7 +330,9 @@ describe("Threads List Route", function() {
     });
 
     /* jshint ignore:start */
-    testUtils.render(<Route route={route} threads={[]} />);
+    testUtils.render(
+      <Route route={route} selection={[]} threads={[]} user={user} />
+    );
     /* jshint ignore:end */
   });
 
@@ -340,7 +374,9 @@ describe("Threads List Route", function() {
     });
 
     /* jshint ignore:start */
-    testUtils.render(<Route route={route} threads={[]} />);
+    testUtils.render(
+      <Route route={route} selection={[]} threads={[]} user={user} />
+    );
     /* jshint ignore:end */
 
     testUtils.onElement('#test-mount .pager-more .btn', function() {
@@ -353,7 +389,7 @@ describe("Threads List Route", function() {
         assert.equal(state[0].title, "Test thread", "test thread was loaded");
         assert.equal(state[1].title, "Other thread", "new thread was added");
 
-        assert.equal($('.subcategories-list li').length, 1,
+        assert.equal($('.category-picker li').length, 1,
           "categories picker shows one category");
 
         done();
@@ -384,7 +420,9 @@ describe("Threads List Route", function() {
         special_role: true
       })
     });
-    testUtils.render(<Route route={finalRoute} threads={[]} />);
+    testUtils.render(
+      <Route route={finalRoute} selection={[]} threads={[]} user={user} />
+    );
     /* jshint ignore:end */
 
     window.setTimeout(function() {
