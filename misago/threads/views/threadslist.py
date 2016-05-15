@@ -21,10 +21,12 @@ from misago.threads.utils import add_categories_to_threads
 
 
 LISTS_NAMES = {
+    'all': None,
     'my': ugettext_lazy("Your threads"),
     'new': ugettext_lazy("New threads"),
     'unread': ugettext_lazy("Unread threads"),
     'subscribed': ugettext_lazy("Subscribed threads"),
+    'unapproved': ugettext_lazy("Unapproved content"),
 }
 
 
@@ -123,7 +125,7 @@ class BaseList(View):
             category=category,
 
             list_type=list_type,
-            list_name=LISTS_NAMES.get(list_type),
+            list_name=LISTS_NAMES[list_type],
 
             threads=threads,
             paginator=paginator,

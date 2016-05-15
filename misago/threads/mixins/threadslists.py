@@ -119,9 +119,9 @@ class ThreadsListMixin(object):
                                          "threads with unapproved posts."))
         else:
             if (list_type == 'unapproved' and
-                    category.pk not in request.user.acl['can_approve_content']):
-                raise PermissionDenied(_("You don't have permission to "
-                                         "approve content in this category."))
+                    not request.user.acl['can_see_unapproved_content_lists']):
+                raise PermissionDenied(_("You don't have permission to see "
+                                         "unapproved content lists."))
 
     def get_categories(self, request):
         return [Category.objects.root_category()] + list(

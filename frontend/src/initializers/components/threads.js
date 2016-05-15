@@ -5,7 +5,7 @@ import mount from 'misago/utils/routed-component';
 export default function initializer(context) {
   if (context.has('THREADS') && context.has('CATEGORIES')) {
     mount({
-      paths: paths()
+      paths: paths(context.get('user'))
     });
   }
 }

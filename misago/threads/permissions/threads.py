@@ -6,6 +6,7 @@ from django.utils.translation import ungettext, ugettext_lazy as _
 
 from misago.acl import add_acl, algebra
 from misago.acl.decorators import return_boolean
+from misago.acl.models import Role
 from misago.categories.models import Category, RoleCategoryACL, CategoryRole
 from misago.categories.permissions import get_categories_roles
 from misago.core import forms
@@ -39,9 +40,32 @@ __all__ = [
 
 
 """
-Admin Permissions Form
+Admin Permissions Forms
 """
-class PermissionsForm(forms.Form):
+class RolePermissionsForm(forms.Form):
+    legend = _("Threads")
+
+    can_see_unapproved_content_lists = forms.YesNoSwitch(
+        label=_("Can see unapproved content list"),
+        help_text=_('Allows access to "unapproved" tab on threads lists for '
+                    "easy listing of threads that are unapproved or contain "
+                    "unapproved posts. Despite the tab being available on all "
+                    "threads lists, it will only display threads belonging to "
+                    "categories in which the user has permission to approve "
+                    "content.")
+    )
+    can_see_reported_content_lists = forms.YesNoSwitch(
+        label=_("Can see reported content list"),
+        help_text=_('Allows access to "reported" tab on threads lists for '
+                    "easy listing of threads that contain reported posts. "
+                    "Despite the tab being available on all categories "
+                    "threads lists, it will only display threads belonging to "
+                    "categories in which the user has permission to see posts "
+                    "reports.")
+    )
+
+
+class CategoryPermissionsForm(forms.Form):
     legend = _("Threads")
 
     can_see_all_threads = forms.TypedChoiceField(
@@ -163,8 +187,10 @@ class PermissionsForm(forms.Form):
 
 
 def change_permissions_form(role):
-    if isinstance(role, CategoryRole):
-        return PermissionsForm
+    if isinstance(role, Role) and role.special_role != 'anonymous':
+        return RolePermissionsForm
+    elif isinstance(role, CategoryRole):
+        return CategoryPermissionsForm
     else:
         return None
 
@@ -173,10 +199,15 @@ def change_permissions_form(role):
 ACL Builder
 """
 def build_acl(acl, roles, key_name):
+    acl['can_see_unapproved_content_lists'] = False
+    acl['can_see_reported_content_lists'] = False
     acl['can_approve_content'] = []
-    acl['can_pin_threads'] = []
-    acl['can_close_threads'] = []
     acl['can_see_reports'] = []
+
+    acl = algebra.sum_acls(acl, roles=roles, key=key_name,
+        can_see_unapproved_content_lists=algebra.greater,
+        can_see_reported_content_lists=algebra.greater
+    )
 
     categories_roles = get_categories_roles(roles)
     categories = list(Category.objects.all_categories(include_root=True))
@@ -188,20 +219,11 @@ def build_acl(acl, roles, key_name):
         if category_acl['can_browse']:
             acl['categories'][category.pk] = build_category_acl(
                 category_acl, category, categories_roles, key_name)
-            if acl['categories'][category.pk].get('can_pin_threads'):
-                acl['can_pin_threads'].append(category.pk)
-            if acl['categories'][category.pk].get('can_close_threads'):
-                acl['can_close_threads'].append(category.pk)
+
             if acl['categories'][category.pk].get('can_see_reports'):
                 acl['can_see_reports'].append(category.pk)
-
             if acl['categories'][category.pk].get('can_approve_content'):
                 approve_in_categories.append(category)
-
-    for category in categories:
-        for sub in approve_in_categories:
-            if category.has_child(sub) or category == sub:
-                acl['can_approve_content'].append(category.pk)
 
     return acl
 

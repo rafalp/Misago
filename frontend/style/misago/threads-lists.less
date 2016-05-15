@@ -296,7 +296,7 @@
     width: 100px;
   }
 
-  ul {
+  &>ul {
     margin: 0px;
     padding: 0px;
 
@@ -305,11 +305,13 @@
       top: -3px;
       right: 2px;
     }
-  }
 
-  li {
-    float: right;
-    overflow: hidden;
+    &>li {
+      float: right;
+      @media screen and (max-width: @screen-sm-max) {
+        overflow: hidden;
+      }
+    }
   }
 
   .btn-default {

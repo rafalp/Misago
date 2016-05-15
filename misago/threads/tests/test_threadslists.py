@@ -105,7 +105,7 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
 
         self.access_all_categories()
 
-    def access_all_categories(self, extra=None):
+    def access_all_categories(self, category_acl=None, base_acl=None):
         self.clear_state()
 
         categories_acl = {
@@ -113,6 +113,9 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
             'visible_categories': [],
             'can_approve_content': [],
         }
+
+        if base_acl:
+            categories_acl.update(base_acl)
 
         for category in Category.objects.all_categories(include_root=True):
             categories_acl['visible_categories'].append(category.pk)
@@ -125,9 +128,9 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
                 'can_approve_content': 0,
             }
 
-            if extra:
-                categories_acl['categories'][category.pk].update(extra)
-                if extra.get('can_approve_content'):
+            if category_acl:
+                categories_acl['categories'][category.pk].update(category_acl)
+                if category_acl.get('can_approve_content'):
                     categories_acl['can_approve_content'].append(category.pk)
 
         override_acl(self.user, categories_acl)
@@ -1513,22 +1516,39 @@ class SubscribedThreadsListTests(ThreadsListTestCase):
 class UnapprovedListTests(ThreadsListTestCase):
     def test_list_errors_without_permission(self):
         """list errors if user has no permission to access it"""
-        self.access_all_categories()
-        response = self.client.get('/unapproved/')
-        self.assertEqual(response.status_code, 403)
+        TEST_URLS = (
+            '/unapproved/',
+            self.category_a.get_absolute_url() + 'unapproved/',
+            '%s?list=unapproved' % self.api_link,
+        )
 
-        self.access_all_categories()
-        response = self.client.get(
-            self.category_a.get_absolute_url() + 'unapproved/')
-        self.assertEqual(response.status_code, 403)
+        for test_url in TEST_URLS:
+            self.access_all_categories()
+            response = self.client.get(test_url)
+            self.assertEqual(response.status_code, 403)
 
-        # test api
-        self.access_all_categories()
-        response = self.client.get('%s?list=unapproved' % self.api_link)
-        self.assertEqual(response.status_code, 403)
+        # approval perm has no influence on visibility
+        for test_url in TEST_URLS:
+            self.access_all_categories({
+                'can_approve_content': True
+            })
 
-    def test_list_shows_right_threads(self):
-        """list shows threads with unapproved posts"""
+            self.access_all_categories()
+            response = self.client.get(test_url)
+            self.assertEqual(response.status_code, 403)
+
+        # approval perm has no influence on visibility
+        for test_url in TEST_URLS:
+            self.access_all_categories(base_acl={
+                'can_see_unapproved_content_lists': True
+            })
+
+            self.access_all_categories()
+            response = self.client.get(test_url)
+            self.assertEqual(response.status_code, 200)
+
+    def test_list_shows_all_threads_for_approving_user(self):
+        """list shows all threads with unapproved posts when user has perm"""
         visible_thread = testutils.post_thread(
             category=self.category_b,
             is_unapproved=True,
@@ -1541,6 +1561,8 @@ class UnapprovedListTests(ThreadsListTestCase):
 
         self.access_all_categories({
             'can_approve_content': True
+        }, {
+            'can_see_unapproved_content_lists': True
         })
         response = self.client.get('/unapproved/')
         self.assertEqual(response.status_code, 200)
@@ -1549,6 +1571,8 @@ class UnapprovedListTests(ThreadsListTestCase):
 
         self.access_all_categories({
             'can_approve_content': True
+        }, {
+            'can_see_unapproved_content_lists': True
         })
         response = self.client.get(
             self.category_a.get_absolute_url() + 'unapproved/')
@@ -1559,6 +1583,49 @@ class UnapprovedListTests(ThreadsListTestCase):
         # test api
         self.access_all_categories({
             'can_approve_content': True
+        }, {
+            'can_see_unapproved_content_lists': True
+        })
+        response = self.client.get('%s?list=unapproved' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(visible_thread.get_absolute_url(), response.content)
+        self.assertNotIn(hidden_thread.get_absolute_url(), response.content)
+
+    def test_list_shows_owned_threads_for_unapproving_user(self):
+        """
+        list shows owned threads with unapproved posts for user without perm
+        """
+        visible_thread = testutils.post_thread(
+            poster=self.user,
+            category=self.category_b,
+            is_unapproved=True,
+        )
+
+        hidden_thread = testutils.post_thread(
+            category=self.category_b,
+            is_unapproved=True,
+        )
+
+        self.access_all_categories(base_acl={
+            'can_see_unapproved_content_lists': True
+        })
+        response = self.client.get('/unapproved/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(visible_thread.get_absolute_url(), response.content)
+        self.assertNotIn(hidden_thread.get_absolute_url(), response.content)
+
+        self.access_all_categories(base_acl={
+            'can_see_unapproved_content_lists': True
+        })
+        response = self.client.get(
+            self.category_a.get_absolute_url() + 'unapproved/')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(visible_thread.get_absolute_url(), response.content)
+        self.assertNotIn(hidden_thread.get_absolute_url(), response.content)
+
+        # test api
+        self.access_all_categories(base_acl={
+            'can_see_unapproved_content_lists': True
         })
         response = self.client.get('%s?list=unapproved' % self.api_link)
         self.assertEqual(response.status_code, 200)

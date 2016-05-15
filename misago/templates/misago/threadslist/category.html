@@ -34,11 +34,7 @@
 {% block page-header %}
 <div class="page-header {{ user.is_authenticated|iftrue:"tabbed" }}">
   <div class="container">
-    {% if list_type == 'unapproved' and category.parent_id in user.acl.can_approve_content %}
-    <a href="{{ category.parent.get_absolute_url }}unapproved/" class="btn btn-default btn-aligned btn-icon btn-go-back pull-left">
-    {% else %}
     <a href="{{ category.parent.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="btn btn-default btn-aligned btn-icon btn-go-back pull-left">
-    {% endif %}
       <span class="material-icon">
         keyboard_arrow_left
       </span>

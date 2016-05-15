@@ -11,7 +11,7 @@ export function select(store) {
   };
 }
 
-export function getLists() {
+export function getLists(user) {
   let lists = [
     {
       type: 'all',
@@ -21,7 +21,7 @@ export function getLists() {
     }
   ];
 
-  if (misago.get('isAuthenticated')) {
+  if (user.id) {
     lists.push({
       type: 'my',
       path: 'my/',
@@ -46,13 +46,22 @@ export function getLists() {
       name: gettext("Subscribed"),
       longName: gettext("Subscribed threads")
     });
+
+    if (user.acl.can_see_unapproved_content_lists) {
+      lists.push({
+        type: 'unapproved',
+        path: 'unapproved/',
+        name: gettext("Unapproved"),
+        longName: gettext("Unapproved content")
+      });
+    }
   }
 
   return lists;
 }
 
-export function paths() {
-  let lists = getLists();
+export function paths(user) {
+  let lists = getLists(user);
   let paths = [];
   let categoriesMap = {};
 
