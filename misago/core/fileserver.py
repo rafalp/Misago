@@ -41,7 +41,7 @@ def rewrite_file_path(file_path):
 
 
 def make_stream_response(file_path, content_type, file_size, attachment=None):
-    response = StreamingHttpResponse(open(file_path, 'r'))
+    response = StreamingHttpResponse(open(file_path, 'rb'))
 
     response['Content-Type'] = content_type
     response['Content-Length'] = file_size
