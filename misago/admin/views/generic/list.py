@@ -1,4 +1,4 @@
-from urllib import urlencode
+from six.moves.urllib.parse import urlencode
 
 from django.contrib import messages
 from django.core.paginator import EmptyPage, Paginator
@@ -106,7 +106,7 @@ class ListView(AdminView):
         return self.clean_filtering_data(form.cleaned_data)
 
     def clean_filtering_data(self, data):
-        for key, value in data.items():
+        for key, value in list(data.items()):
             if not value:
                 del data[key]
         return data

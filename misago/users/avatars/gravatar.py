@@ -1,4 +1,4 @@
-from StringIO import StringIO
+from six import StringIO
 
 import requests
 from PIL import Image
