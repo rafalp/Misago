@@ -112,7 +112,7 @@ def get_avatars_dir_path(user=None):
         except AttributeError:
             user_pk = user
 
-        dir_hash = md5(str(user_pk)).hexdigest()
+        dir_hash = md5(str(user_pk).encode()).hexdigest()
         hash_path = [dir_hash[0:1], dir_hash[2:3]]
         return Path(os.path.join(AVATARS_STORE, *hash_path))
     else:

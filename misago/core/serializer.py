@@ -12,7 +12,7 @@ except ImportError:
 
 
 def _checksum(base):
-    return sha256('%s+%s' % (settings.SECRET_KEY, base)).hexdigest()[:14]
+    return sha256(('%s+%s' % (settings.SECRET_KEY, base)).encode()).hexdigest()[:14]
 
 
 def loads(dry):
@@ -20,7 +20,7 @@ def loads(dry):
     base = dry[14:]
 
     if _checksum(base) == checksum:
-        return pickle.loads(base64.decodestring(base))
+        return pickle.loads(base64.decodestring(base.encode()))
     else:
         raise ValueError("pickle checksum is invalid")
 
