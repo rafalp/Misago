@@ -211,7 +211,9 @@ class ThreadMoveApiTests(ThreadApiTestCase):
         self.override_other_acl({})
 
         response = self.client.patch(self.api_link, json.dumps([
-            {'op': 'replace', 'path': 'category', 'value': self.category_b.pk}
+            {'op': 'replace', 'path': 'category', 'value': self.category_b.pk},
+            {'op': 'add', 'path': 'top-category', 'value': self.category_b.pk},
+            {'op': 'replace', 'path': 'flatten-categories', 'value': None},
         ]),
         content_type="application/json")
         self.assertEqual(response.status_code, 200)

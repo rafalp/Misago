@@ -78,15 +78,16 @@ export function getModerationActions(threads) {
   let moderation = {
     allow: false,
 
-    can_pin: 0,
+    can_approve: 0,
     can_close: 0,
     can_hide: 0,
-    can_move: 0
+    can_move: 0,
+    can_pin: 0
   };
 
   threads.forEach(function(thread) {
-    if (thread.acl.can_pin > moderation.can_pin) {
-      moderation.can_pin = thread.acl.can_pin;
+    if (thread.is_unapproved && thread.acl.can_approve > moderation.can_approve) {
+      moderation.can_approve = thread.acl.can_approve;
     }
 
     if (thread.acl.can_close > moderation.can_close) {
@@ -101,11 +102,16 @@ export function getModerationActions(threads) {
       moderation.can_move = thread.acl.can_move;
     }
 
+    if (thread.acl.can_pin > moderation.can_pin) {
+      moderation.can_pin = thread.acl.can_pin;
+    }
+
     moderation.allow = (
-      moderation.can_pin ||
+      moderation.can_approve ||
       moderation.can_close ||
       moderation.can_hide ||
-      moderation.can_move
+      moderation.can_move ||
+      moderation.can_pin
     );
   });
 

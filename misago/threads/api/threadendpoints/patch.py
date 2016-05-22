@@ -88,6 +88,23 @@ def patch_flatten_categories(request, thread, value):
 thread_patch_endpoint.replace('flatten-categories', patch_flatten_categories)
 
 
+def patch_is_unapproved(request, thread, value):
+    if thread.acl.get('can_approve'):
+        if value:
+            raise PermissionDenied(_("Content approval can't be reversed."))
+
+        moderation.approve_thread(request.user, thread)
+
+        return {
+            'is_unapproved': thread.is_unapproved,
+            'has_unapproved_posts': thread.has_unapproved_posts,
+        }
+    else:
+        raise PermissionDenied(
+            _("You don't have permission to approve this thread."))
+thread_patch_endpoint.replace('is-unapproved', patch_is_unapproved)
+
+
 def patch_is_closed(request, thread, value):
     if thread.acl.get('can_close'):
         if value:
@@ -104,23 +121,6 @@ def patch_is_closed(request, thread, value):
             raise PermissionDenied(
                 _("You don't have permission to open this thread."))
 thread_patch_endpoint.replace('is-closed', patch_is_closed)
-
-
-def patch_is_unapproved(request, thread, value):
-    if thread.acl.get('can_approve'):
-        if value:
-            raise PermissionDenied(_("Content approval can't be reversed."))
-
-        moderation.approve_thread(request.user, thread)
-
-        return {
-            'is_unapproved': thread.is_unapproved,
-            'has_unapproved_posts': thread.has_unapproved_posts,
-        }
-    else:
-        raise PermissionDenied(
-            _("You don't have permission to approve this thread."))
-thread_patch_endpoint.replace('is-unapproved', patch_is_unapproved)
 
 
 def patch_is_hidden(request, thread, value):

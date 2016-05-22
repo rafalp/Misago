@@ -10,7 +10,7 @@ import ThreadsListEmpty from 'misago/components/threads/list-empty'; // jshint i
 import WithDropdown from 'misago/components/with-dropdown'; // jshint ignore:line
 import misago from 'misago/index';
 import * as select from 'misago/reducers/selection'; // jshint ignore:line
-import { append, hydrate, patch } from 'misago/reducers/threads'; // jshint ignore:line
+import { append, deleteThread, hydrate, patch } from 'misago/reducers/threads'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
 import polls from 'misago/services/polls';
 import snackbar from 'misago/services/snackbar';
@@ -201,13 +201,19 @@ export default class extends WithDropdown {
   // Thread state utils
 
   freezeThread = (thread) => {
-    this.setState({
-      busyThreads: sets.toggle(this.state.busyThreads, thread)
+    this.setState(function(currentState) {
+      return {
+        busyThreads: sets.toggle(currentState.busyThreads, thread)
+      };
     });
   };
 
   updateThread = (thread) => {
     store.dispatch(patch(thread, thread, this.getSorting()));
+  };
+
+  deleteThread = (thread) => {
+    store.dispatch(deleteThread(thread));
   };
   /* jshint ignore:end */
 
@@ -275,6 +281,7 @@ export default class extends WithDropdown {
 
                  busyThreads={this.state.busyThreads}
                  freezeThread={this.freezeThread}
+                 deleteThread={this.deleteThread}
                  updateThread={this.updateThread}
 
                  isLoaded={this.state.isLoaded}

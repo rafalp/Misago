@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { getPageTitle, getTitle } from 'misago/components/threads/utils';
+import { getPageTitle, getTitle, getModerationActions } from 'misago/components/threads/utils';
 import misago from 'misago/index';
 
 describe("Threads List Title Utils", function() {
@@ -123,5 +123,199 @@ describe("Threads List Title Utils", function() {
         special_role: true
       }
     }), "Threads", "fallback title was used for forum threads list");
+  });
+});
+
+describe("Threads List Moderation Actions Util", function() {
+  it("shows no moderation for no threads", function() {
+    const moderationActions = getModerationActions([]);
+
+    assert.ok(!moderationActions.allow, "moderation is unavaiable");
+  });
+
+  it("shows no moderation for unmoderable threads", function() {
+    const moderationActions = getModerationActions([
+      {
+        acl: {
+          can_approve: false,
+          can_close: false,
+          can_hide: false,
+          can_move: false,
+          can_pin: false
+        },
+        is_unapproved: false
+      }
+    ]);
+
+    assert.ok(!moderationActions.allow, "moderation is unavaiable");
+  });
+
+  it("shows moderation for unapproved approvable thread", function() {
+    const moderationActions = getModerationActions([
+      {
+        acl: {
+          can_approve: true,
+          can_close: false,
+          can_hide: false,
+          can_move: false,
+          can_pin: false
+        },
+        is_unapproved: true
+      }
+    ]);
+
+    assert.ok(moderationActions.allow, "moderation is allowed");
+    assert.ok(moderationActions.can_approve, "approve action is available");
+  });
+
+  it("shows no moderation for approved approvable thread", function() {
+    const moderationActions = getModerationActions([
+      {
+        acl: {
+          can_approve: true,
+          can_close: false,
+          can_hide: false,
+          can_move: false,
+          can_pin: false
+        },
+        is_unapproved: false
+      }
+    ]);
+
+    assert.ok(!moderationActions.allow, "moderation is unavaiable");
+    assert.ok(!moderationActions.can_approve, "approve action is unavaiable");
+  });
+
+  it("shows moderation for closing thread", function() {
+    const moderationActions = getModerationActions([
+      {
+        acl: {
+          can_approve: false,
+          can_close: true,
+          can_hide: false,
+          can_move: false,
+          can_pin: false
+        },
+        is_unapproved: false
+      }
+    ]);
+
+    assert.ok(moderationActions.allow, "moderation is allowed");
+    assert.ok(moderationActions.can_close, "close action is available");
+  });
+
+  it("shows moderation for hiding thread", function() {
+    const moderationActions = getModerationActions([
+      {
+        acl: {
+          can_approve: false,
+          can_close: false,
+          can_hide: 1,
+          can_move: false,
+          can_pin: false
+        },
+        is_unapproved: false
+      }
+    ]);
+
+    assert.ok(moderationActions.allow, "moderation is allowed");
+    assert.equal(moderationActions.can_hide, 1, "delete action is available");
+  });
+
+  it("shows moderation for deleting thread", function() {
+    const moderationActions = getModerationActions([
+      {
+        acl: {
+          can_approve: false,
+          can_close: false,
+          can_hide: 2,
+          can_move: false,
+          can_pin: false
+        },
+        is_unapproved: false
+      }
+    ]);
+
+    assert.ok(moderationActions.allow, "moderation is allowed");
+    assert.equal(moderationActions.can_hide, 2, "delete action is available");
+  });
+
+  it("shows moderation for moving thread", function() {
+    const moderationActions = getModerationActions([
+      {
+        acl: {
+          can_approve: false,
+          can_close: false,
+          can_hide: false,
+          can_move: true,
+          can_pin: false
+        },
+        is_unapproved: false
+      }
+    ]);
+
+    assert.ok(moderationActions.allow, "moderation is allowed");
+    assert.ok(moderationActions.can_move, "move action is available");
+  });
+
+  it("shows moderation for pinning thread", function() {
+    const moderationActions = getModerationActions([
+      {
+        acl: {
+          can_approve: false,
+          can_close: false,
+          can_hide: false,
+          can_move: false,
+          can_pin: 1
+        },
+        is_unapproved: false
+      }
+    ]);
+
+    assert.ok(moderationActions.allow, "moderation is allowed");
+    assert.equal(moderationActions.can_pin, 1, "pin action is available");
+  });
+
+  it("shows moderation for pinning thread globally", function() {
+    const moderationActions = getModerationActions([
+      {
+        acl: {
+          can_approve: false,
+          can_close: false,
+          can_hide: false,
+          can_move: false,
+          can_pin: 2
+        },
+        is_unapproved: false
+      }
+    ]);
+
+    assert.ok(moderationActions.allow, "moderation is allowed");
+    assert.equal(moderationActions.can_pin, 2, "pin action is available");
+  });
+
+  it("shows moderation kitchensink", function() {
+    const moderationActions = getModerationActions([
+      {
+        acl: {
+          can_approve: true,
+          can_close: true,
+          can_hide: 2,
+          can_move: true,
+          can_pin: 2
+        },
+        is_unapproved: true
+      }
+    ]);
+
+    assert.deepEqual(moderationActions, {
+      allow: true,
+
+      can_approve: true,
+      can_close: true,
+      can_hide: 2,
+      can_move: true,
+      can_pin: 2
+    }, "moderation is allowed");
   });
 });

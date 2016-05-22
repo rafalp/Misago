@@ -73,6 +73,7 @@ export default class extends React.Component {
                             moderation={this.props.moderation}
                             threads={this.getSelectedThreads()}
                             freezeThread={this.props.freezeThread}
+                            deleteThread={this.props.deleteThread}
                             updateThread={this.props.updateThread} />
 
       </div>;

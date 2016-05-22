@@ -389,13 +389,10 @@ def add_acl_to_post(user, post):
         'can_hide': can_hide_post(user, post),
         'can_delete': can_delete_post(user, post),
         'can_protect': category_acl.get('can_protect_posts', False),
+        'can_approve': category_acl.get('can_approve_content', False),
         'can_report': category_acl.get('can_report_content', False),
         'can_see_reports': category_acl.get('can_see_reports', False),
-        'can_approve': category_acl.get('can_approve_content', False),
     })
-
-    if not post.is_unapproved:
-        post.acl['can_approve'] = False
 
     if not post.acl['can_see_hidden']:
         if user.is_authenticated() and user.id == post.poster_id:

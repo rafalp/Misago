@@ -1,27 +1,43 @@
 import React from 'react';
+import ErrorsModal from 'misago/components/threads/moderation/errors-list'; // jshint ignore:line
+import * as select from 'misago/reducers/selection'; // jshint ignore:line
 import ajax from 'misago/services/ajax'; // jshint ignore:line
+import modal from 'misago/services/modal'; // jshint ignore:line
 import snackbar from 'misago/services/snackbar'; // jshint ignore:line
+import store from 'misago/services/store'; // jshint ignore:line
+import Countdown from 'misago/utils/countdown'; // jshint ignore:line
 
 export default class extends React.Component {
   /* jshint ignore:start */
   callApi = (op, successMessage) => {
-    let errors = [];
+    const errors = [];
+    const countdown = new Countdown(() => {
+      if (errors.length) {
+        modal.show(<ErrorsModal errors={errors} />);
+      } else {
+        snackbar.success(successMessage);
+      }
+
+      this.props.threads.forEach((thread) => {
+        this.props.freezeThread(thread.id);
+      });
+    }, this.props.threads.length);
 
     this.props.threads.forEach((thread) => {
       this.props.freezeThread(thread.id);
 
       ajax.patch(thread.api_url, [op]).then((data) => {
-        this.props.freezeThread(thread.id);
         this.props.updateThread(data);
+        countdown.count();
       }, (rejection) => {
-        this.props.freezeThread(thread.id);
-        errors.push(rejection);
+        errors.push({
+          thread: thread,
+          errors: [rejection.detail]
+        });
+
+        countdown.count();
       });
     });
-
-    if (!errors.length) {
-      snackbar.success(successMessage);
-    }
   };
 
   pinGlobally = () => {
@@ -46,6 +62,14 @@ export default class extends React.Component {
       path: 'weight',
       value: 0
     }, gettext("Selected threads were unpinned."));
+  };
+
+  approve = () => {
+    this.callApi({
+      op: 'replace',
+      path: 'is-unapproved',
+      value: false
+    }, gettext("Selected threads were approved."));
   };
 
   open = () => {
@@ -78,6 +102,48 @@ export default class extends React.Component {
       path: 'is-hidden',
       value: true
     }, gettext("Selected threads were hidden."));
+  };
+
+  delete = () => {
+    if (!confirm(gettext("Are you sure you want to delete selected threads?"))) {
+      return;
+    }
+
+    const errors = [];
+    const countdown = new Countdown(() => {
+      if (errors.length) {
+        modal.show(<ErrorsModal errors={errors} />);
+      } else {
+        snackbar.success(gettext("Selected threads were deleted."));
+      }
+
+      // unfreeze non-deleted threads
+      this.props.threads.forEach((thread) => {
+        this.props.freezeThread(thread.id);
+      });
+
+      // reduce selection to non-deleted threads
+      store.dispatch(select.all(this.props.threads.map(function(item) {
+        return item.id;
+      })));
+    }, this.props.threads.length);
+
+    this.props.threads.forEach((thread) => {
+      this.props.freezeThread(thread.id);
+
+      ajax.delete(thread.api_url).then((data) => {
+        this.props.freezeThread(thread.id);
+        this.props.deleteThread(thread);
+        countdown.count();
+      }, (rejection) => {
+        errors.push({
+          thread: thread,
+          errors: [rejection.detail]
+        });
+
+        countdown.count();
+      });
+    });
   };
   /* jshint ignore:end */
 
@@ -136,6 +202,37 @@ export default class extends React.Component {
         <button type="button"
                 className="btn btn-link">
           {gettext("Move threads")}
+        </button>
+      </li>;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
+  getMergeButton() {
+    if (this.props.moderation.can_merge) {
+      /* jshint ignore:start */
+      return <li>
+        <button type="button"
+                className="btn btn-link">
+          {gettext("Merge threads")}
+        </button>
+      </li>;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
+  getApproveButton() {
+    if (this.props.moderation.can_approve) {
+      /* jshint ignore:start */
+      return <li>
+        <button type="button"
+                className="btn btn-link"
+                onClick={this.approve}>
+          {gettext("Approve threads")}
         </button>
       </li>;
       /* jshint ignore:end */
@@ -213,7 +310,8 @@ export default class extends React.Component {
       /* jshint ignore:start */
       return <li>
         <button type="button"
-                className="btn btn-link">
+                className="btn btn-link"
+                onClick={this.delete}>
           {gettext("Delete threads")}
         </button>
       </li>;
@@ -230,6 +328,8 @@ export default class extends React.Component {
       {this.getPinLocallyButton()}
       {this.getUnpinButton()}
       {this.getMoveButton()}
+      {this.getMergeButton()}
+      {this.getApproveButton()}
       {this.getOpenButton()}
       {this.getCloseButton()}
       {this.getUnhideButton()}

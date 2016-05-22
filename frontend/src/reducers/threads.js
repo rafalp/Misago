@@ -2,6 +2,7 @@ import moment from 'moment';
 import concatUnique from 'misago/utils/concat-unique';
 
 export const APPEND_THREADS = 'APPEND_THREADS';
+export const DELETE_THREAD = 'DELETE_THREAD';
 export const HYDRATE_THREADS = 'HYDRATE_THREADS';
 export const PATCH_THREAD = 'PATCH_THREAD';
 export const READ_THREADS = 'READ_THREADS';
@@ -9,9 +10,11 @@ export const SORT_THREADS = 'SORT_THREADS';
 
 export const MODERATION_PERMISSIONS = [
   'can_announce',
+  'can_approve',
   'can_close',
   'can_hide',
   'can_move',
+  'can_merge',
   'can_pin',
   'can_review'
 ];
@@ -21,6 +24,13 @@ export function append(items, sorting) {
     type: APPEND_THREADS,
     items,
     sorting
+  };
+}
+
+export function deleteThread(thread) {
+  return {
+    type: DELETE_THREAD,
+    thread
   };
 }
 
@@ -76,6 +86,11 @@ export default function thread(state=[], action=null) {
     case APPEND_THREADS:
       const mergedState = concatUnique(action.items.map(hydrateThread), state);
       return mergedState.sort(action.sorting);
+
+    case DELETE_THREAD:
+      return state.filter(function(item) {
+        return item.id !== action.thread.id;
+      });
 
     case HYDRATE_THREADS:
       return action.items.map(hydrateThread);
