@@ -84,6 +84,7 @@ class AuthenticatedUserSerializer(serializers.ModelSerializer):
                 'misago:api:user-change-password', kwargs={'pk': obj.pk}),
         }
 
+
 class AnonymousUserSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
     acl = serializers.SerializerMethodField()

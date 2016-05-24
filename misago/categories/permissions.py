@@ -93,7 +93,17 @@ def add_acl_to_category(user, target):
 
 
 def serialize_categories_alcs(serialized_acl):
-    serialized_acl.pop('categories')
+    categories_acl = []
+    for category, acl in serialized_acl.pop('categories').items():
+        if acl['can_browse']:
+            categories_acl.append({
+                'id': category,
+                'can_start_threads': acl.get('can_start_threads', False),
+                'can_reply_threads': acl.get('can_reply_threads', False),
+                'can_pin_threads': acl.get('can_pin_threads', 0),
+                'can_close_threads': acl.get('can_close_threads', False),
+            })
+    serialized_acl['categories'] = categories_acl
 
 
 def register_with(registry):
