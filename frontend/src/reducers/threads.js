@@ -3,6 +3,7 @@ import concatUnique from 'misago/utils/concat-unique';
 
 export const APPEND_THREADS = 'APPEND_THREADS';
 export const DELETE_THREAD = 'DELETE_THREAD';
+export const FILTER_THREADS = 'FILTER_THREADS';
 export const HYDRATE_THREADS = 'HYDRATE_THREADS';
 export const PATCH_THREAD = 'PATCH_THREAD';
 export const READ_THREADS = 'READ_THREADS';
@@ -31,6 +32,14 @@ export function deleteThread(thread) {
   return {
     type: DELETE_THREAD,
     thread
+  };
+}
+
+export function filterThreads(category, categoriesMap) {
+  return {
+    type: FILTER_THREADS,
+    category,
+    categoriesMap
   };
 }
 
@@ -90,6 +99,21 @@ export default function thread(state=[], action=null) {
     case DELETE_THREAD:
       return state.filter(function(item) {
         return item.id !== action.thread.id;
+      });
+
+    case FILTER_THREADS:
+      return state.filter(function(item) {
+        const itemCategory = action.categoriesMap[item.category];
+        if (itemCategory.lft >= action.category.lft && itemCategory.rght <= action.category.rght) {
+          // same or sub category
+          return true;
+        } else if (item.weight == 2) {
+          // globally pinned
+          return true;
+        } else {
+          // thread moved outside displayed scope, hide it
+          return false;
+        }
       });
 
     case HYDRATE_THREADS:

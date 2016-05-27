@@ -65,6 +65,9 @@ class CategorySerializer(serializers.ModelSerializer):
             'last_poster_url',
             'acl',
             'api_url',
+            'level',
+            'lft',
+            'rght',
         )
 
     def get_parent(self, obj):
@@ -138,9 +141,13 @@ class IndexCategorySerializer(CategorySerializer):
             'parent',
             'name',
             'description',
+            'is_closed',
             'css_class',
             'absolute_url',
             'api_url',
+            'level',
+            'lft',
+            'rght',
         )
 
 
@@ -150,6 +157,10 @@ class BasicCategorySerializer(CategorySerializer):
         fields = (
             'id',
             'name',
+            'is_closed',
             'css_class',
             'absolute_url',
+            'level',
+            'lft',
+            'rght',
         )

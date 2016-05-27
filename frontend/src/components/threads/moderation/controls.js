@@ -1,5 +1,6 @@
 import React from 'react';
 import ErrorsModal from 'misago/components/threads/moderation/errors-list'; // jshint ignore:line
+import MoveThreads from 'misago/components/threads/moderation/move-threads'; // jshint ignore:line
 import * as select from 'misago/reducers/selection'; // jshint ignore:line
 import ajax from 'misago/services/ajax'; // jshint ignore:line
 import modal from 'misago/services/modal'; // jshint ignore:line
@@ -9,24 +10,27 @@ import Countdown from 'misago/utils/countdown'; // jshint ignore:line
 
 export default class extends React.Component {
   /* jshint ignore:start */
-  callApi = (op, successMessage) => {
+  callApi = (ops, successMessage, onSuccess=null) => {
     const errors = [];
     const countdown = new Countdown(() => {
+      this.props.threads.forEach((thread) => {
+        this.props.freezeThread(thread.id);
+      });
+
       if (errors.length) {
         modal.show(<ErrorsModal errors={errors} />);
       } else {
         snackbar.success(successMessage);
+        if (onSuccess) {
+          onSuccess();
+        }
       }
-
-      this.props.threads.forEach((thread) => {
-        this.props.freezeThread(thread.id);
-      });
     }, this.props.threads.length);
 
     this.props.threads.forEach((thread) => {
       this.props.freezeThread(thread.id);
 
-      ajax.patch(thread.api_url, [op]).then((data) => {
+      ajax.patch(thread.api_url, ops).then((data) => {
         this.props.updateThread(data);
         countdown.count();
       }, (rejection) => {
@@ -41,67 +45,97 @@ export default class extends React.Component {
   };
 
   pinGlobally = () => {
-    this.callApi({
-      op: 'replace',
-      path: 'weight',
-      value: 2
-    }, gettext("Selected threads were pinned globally."));
+    this.callApi([
+      {
+        op: 'replace',
+        path: 'weight',
+        value: 2
+      }
+    ], gettext("Selected threads were pinned globally."));
   };
 
   pinLocally = () => {
-    this.callApi({
-      op: 'replace',
-      path: 'weight',
-      value: 1
-    }, gettext("Selected threads were pinned locally."));
+    this.callApi([
+      {
+        op: 'replace',
+        path: 'weight',
+        value: 1
+      }
+    ], gettext("Selected threads were pinned locally."));
   };
 
   unpin = () => {
-    this.callApi({
-      op: 'replace',
-      path: 'weight',
-      value: 0
-    }, gettext("Selected threads were unpinned."));
+    this.callApi([
+      {
+        op: 'replace',
+        path: 'weight',
+        value: 0
+      }
+    ], gettext("Selected threads were unpinned."));
   };
 
   approve = () => {
-    this.callApi({
-      op: 'replace',
-      path: 'is-unapproved',
-      value: false
-    }, gettext("Selected threads were approved."));
+    this.callApi([
+      {
+        op: 'replace',
+        path: 'is-unapproved',
+        value: false
+      }
+    ], gettext("Selected threads were approved."));
   };
 
   open = () => {
-    this.callApi({
-      op: 'replace',
-      path: 'is-closed',
-      value: false
-    }, gettext("Selected threads were opened."));
+    this.callApi([
+      {
+        op: 'replace',
+        path: 'is-closed',
+        value: false
+      }
+    ], gettext("Selected threads were opened."));
   };
 
   close = () => {
-    this.callApi({
-      op: 'replace',
-      path: 'is-closed',
-      value: true
-    }, gettext("Selected threads were closed."));
+    this.callApi([
+      {
+        op: 'replace',
+        path: 'is-closed',
+        value: true
+      }
+    ], gettext("Selected threads were closed."));
   };
 
   unhide = () => {
-    this.callApi({
-      op: 'replace',
-      path: 'is-hidden',
-      value: false
-    }, gettext("Selected threads were unhidden."));
+    this.callApi([
+      {
+        op: 'replace',
+        path: 'is-hidden',
+        value: false
+      }
+    ], gettext("Selected threads were unhidden."));
   };
 
   hide = () => {
-    this.callApi({
-      op: 'replace',
-      path: 'is-hidden',
-      value: true
-    }, gettext("Selected threads were hidden."));
+    this.callApi([
+      {
+        op: 'replace',
+        path: 'is-hidden',
+        value: true
+      }
+    ], gettext("Selected threads were hidden."));
+  };
+
+  move = () => {
+    modal.show(
+      <MoveThreads callApi={this.callApi}
+                   categories={this.props.categories}
+                   categoriesMap={this.props.categoriesMap}
+                   route={this.props.route}
+                   user={this.props.user} />
+    );
+  };
+
+  merge = () => {
+    console.log('MERGE THREADS!');
   };
 
   delete = () => {
@@ -200,7 +234,8 @@ export default class extends React.Component {
       /* jshint ignore:start */
       return <li>
         <button type="button"
-                className="btn btn-link">
+                className="btn btn-link"
+                onClick={this.move}>
           {gettext("Move threads")}
         </button>
       </li>;
@@ -215,7 +250,8 @@ export default class extends React.Component {
       /* jshint ignore:start */
       return <li>
         <button type="button"
-                className="btn btn-link">
+                className="btn btn-link"
+                onClick={this.merge}>
           {gettext("Merge threads")}
         </button>
       </li>;

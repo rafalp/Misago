@@ -73,6 +73,7 @@ export function paths(user) {
         path: category.absolute_url + list.path,
         component: connect(select)(Route),
 
+        categories: misago.get('CATEGORIES'),
         categoriesMap,
         category,
 

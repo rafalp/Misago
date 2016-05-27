@@ -51,7 +51,8 @@ export default class extends React.Component {
     if (this.props.subcategories.length || this.props.user.id) {
       /* jshint ignore:start */
       return <Toolbar subcategories={this.props.subcategories}
-                      categories={this.props.route.categoriesMap}
+                      categories={this.props.route.categories}
+                      categoriesMap={this.props.route.categoriesMap}
                       list={this.props.route.list}
 
                       threads={this.props.threads}
@@ -64,6 +65,7 @@ export default class extends React.Component {
                       deleteThread={this.props.deleteThread}
                       updateThread={this.props.updateThread}
 
+                      route={this.props.route}
                       disabled={this.getDisableToolbar()}
                       user={this.props.user}>
         {this.getToolbarLabel()}

@@ -9,7 +9,7 @@ export default class extends React.Component {
       /* jshint ignore:start */
       return <div className="toolbar-left">
         <CategoryPicker choices={this.props.subcategories}
-                        categories={this.props.categories}
+                        categories={this.props.categoriesMap}
                         list={this.props.list} />
       </div>;
       /* jshint ignore:end */
@@ -69,12 +69,18 @@ export default class extends React.Component {
           {gettext("Moderation")}
         </button>
 
-        <ModerationControls className="dropdown-menu dropdown-menu-right"
-                            moderation={this.props.moderation}
-                            threads={this.getSelectedThreads()}
-                            freezeThread={this.props.freezeThread}
-                            deleteThread={this.props.deleteThread}
-                            updateThread={this.props.updateThread} />
+        <ModerationControls
+          categories={this.props.categories}
+          categoriesMap={this.props.categoriesMap}
+          className="dropdown-menu dropdown-menu-right"
+          deleteThread={this.props.deleteThread}
+          freezeThread={this.props.freezeThread}
+          moderation={this.props.moderation}
+          route={this.props.route}
+          threads={this.getSelectedThreads()}
+          updateThread={this.props.updateThread}
+          user={this.props.user}
+        />
 
       </div>;
       /* jshint ignore:end */
