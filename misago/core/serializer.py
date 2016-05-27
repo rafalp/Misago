@@ -26,7 +26,7 @@ def loads(dry):
 
 
 def dumps(wet):
-    base = base64.encodestring(pickle.dumps(wet, pickle.HIGHEST_PROTOCOL))
+    base = base64.encodestring(pickle.dumps(wet, pickle.HIGHEST_PROTOCOL)).decode()
     checksum = _checksum(base)
     return '%s%s' % (checksum, base)
 

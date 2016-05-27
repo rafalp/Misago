@@ -2,6 +2,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
 from django.shortcuts import render
+from django.utils import six
 from django.utils.translation import ugettext as _
 
 from ..credentialchange import read_new_credential
@@ -14,7 +15,7 @@ def index(request, *args, **kwargs):
     user_options = []
     for section in usercp.get_sections(request):
         user_options.append({
-            'name': unicode(section['name']),
+            'name': six.text_type(section['name']),
             'icon': section['icon'],
             'component': section['component'],
         })
