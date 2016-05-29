@@ -358,24 +358,29 @@ def add_acl_to_thread(user, thread):
         'can_reply': can_reply_thread(user, thread),
         'can_edit': can_edit_thread(user, thread),
         'can_hide': category_acl.get('can_hide_threads', False),
-        'can_pin': category_acl.get('can_pin_threads', 0),
+        'can_pin': 0,
         'can_close': category_acl.get('can_close_threads', False),
-        'can_move': category_acl.get('can_move_threads', False),
+        'can_move': False,
+        'can_merge': False,
         'can_approve': category_acl.get('can_approve_content', False),
         'can_report': category_acl.get('can_report_content', False),
         'can_see_reports': category_acl.get('can_see_reports', False),
     })
 
-    if can_change_owned_thread(user, thread):
-        if not category_acl.get('can_close_threads'):
-            thread_is_protected = thread.is_closed or thread.category.is_closed
-        else:
-            thread_is_protected = False
+    if not category_acl.get('can_close_threads'):
+        thread_is_protected = thread.is_closed or thread.category.is_closed
+    else:
+        thread_is_protected = False
 
-        if not thread_is_protected and not thread.acl['can_hide']:
-            if not thread.replies:
-                can_hide_thread = category_acl.get('can_hide_own_threads')
-                thread.acl['can_hide'] = can_hide_thread
+    if (can_change_owned_thread(user, thread) and not thread_is_protected
+            and not thread.replies and not thread.acl['can_hide']):
+        can_hide_thread = category_acl.get('can_hide_own_threads')
+        thread.acl['can_hide'] = can_hide_thread
+
+    if not thread_is_protected:
+        thread.acl['can_pin'] = category_acl.get('can_pin_threads', 0)
+        thread.acl['can_move'] = category_acl.get('can_move_threads', False)
+        thread.acl['can_merge'] = category_acl.get('can_merge_threads', False)
 
 
 def add_acl_to_post(user, post):
@@ -453,9 +458,9 @@ def allow_reply_thread(user, target):
     if user.is_anonymous():
         raise PermissionDenied(_("You have to sign in to reply threads."))
 
-    category_acl = target.category.acl
+    category_acl = user.acl['categories'].get(target.category_id, {})
 
-    if not category_acl['can_close_threads']:
+    if not category_acl.get('can_close_threads', False):
         if target.category.is_closed:
             raise PermissionDenied(
                 _("This category is closed. You can't reply to threads in it."))
@@ -463,7 +468,7 @@ def allow_reply_thread(user, target):
             raise PermissionDenied(
                 _("You can't reply to closed threads in this category."))
 
-    if not category_acl['can_reply_threads']:
+    if not category_acl.get('can_reply_threads', False):
         raise PermissionDenied(_("You can't reply to threads in this category."))
 can_reply_thread = return_boolean(allow_reply_thread)
 
@@ -472,9 +477,9 @@ def allow_edit_thread(user, target):
     if user.is_anonymous():
         raise PermissionDenied(_("You have to sign in to edit threads."))
 
-    category_acl = target.category.acl
+    category_acl = user.acl['categories'].get(target.category_id, {})
 
-    if not category_acl['can_edit_threads']:
+    if not category_acl.get('can_edit_threads', False):
         raise PermissionDenied(_("You can't edit threads in this category."))
 
     if category_acl['can_edit_threads'] == 1:
@@ -679,8 +684,6 @@ can_delete_post = return_boolean(allow_delete_post)
 Permission check helpers
 """
 def can_change_owned_thread(user, target):
-    category_acl = user.acl['categories'].get(target.category_id, {})
-
     if user.is_anonymous() or user.pk != target.starter_id:
         return False
 

@@ -38,7 +38,7 @@ class CategoryManager(TreeManager):
     def all_categories(self, include_root=False):
         qs = self.filter(tree_id=CATEGORIES_TREE_ID)
         if not include_root:
-            qs = self.filter(level__gt=0)
+            qs = qs.filter(level__gt=0)
         return qs.order_by('lft')
 
     def get_cached_categories_dict(self):

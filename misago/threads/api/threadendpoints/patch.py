@@ -10,6 +10,7 @@ from misago.core.apipatch import ApiPatch
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
 
 from misago.threads.moderation import threads as moderation
+from misago.threads.permissions import allow_start_thread
 from misago.threads.utils import add_categories_to_threads
 
 
@@ -49,6 +50,7 @@ def patch_move(request, thread, value):
         add_acl(request.user, new_category)
         allow_see_category(request.user, new_category)
         allow_browse_category(request.user, new_category)
+        allow_start_thread(request.user, new_category)
 
         moderation.move_thread(request.user, thread, new_category)
 
@@ -70,7 +72,6 @@ def patch_top_category(request, thread, value):
         id__in=request.user.acl['visible_categories']
     ))
     add_categories_to_threads(root_category, categories, [thread])
-
     return {'top_category': CategorySerializer(thread.top_category).data}
 thread_patch_endpoint.add('top-category', patch_top_category)
 
@@ -81,9 +82,10 @@ def patch_flatten_categories(request, thread, value):
             'category': thread.category_id,
             'top_category': thread.top_category.pk,
         }
-    except AttributeError:
+    except AttributeError as e:
         return {
             'category': thread.category_id,
+            'top_category': None
         }
 thread_patch_endpoint.replace('flatten-categories', patch_flatten_categories)
 

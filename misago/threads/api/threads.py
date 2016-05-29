@@ -16,6 +16,7 @@ from misago.readtracker.categoriestracker import read_category
 from misago.users.rest_permissions import IsAuthenticatedOrReadOnly
 
 from misago.threads.api.threadendpoints.list import threads_list_endpoint
+from misago.threads.api.threadendpoints.merge import threads_merge_endpoint
 from misago.threads.api.threadendpoints.patch import thread_patch_endpoint
 from misago.threads.models import Thread, Subscription
 from misago.threads.moderation import threads as moderation
@@ -84,3 +85,7 @@ class ThreadViewSet(viewsets.ViewSet):
 
         read_category(request.user, category)
         return Response({'detail': 'ok'})
+
+    @list_route(methods=['post'])
+    def merge(self, request):
+        return threads_merge_endpoint(request)

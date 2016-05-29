@@ -3,10 +3,10 @@ import json
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 
-from misago.threads.tests.test_thread_api import ThreadApiTestCase
+from misago.threads.tests.test_threads_api import ThreadsApiTestCase
 
 
-class ThreadPinGloballyApiTests(ThreadApiTestCase):
+class ThreadPinGloballyApiTests(ThreadsApiTestCase):
     def test_pin_thread(self):
         """api makes it possible to pin globally thread"""
         self.override_acl({
@@ -88,7 +88,7 @@ class ThreadPinGloballyApiTests(ThreadApiTestCase):
         self.assertEqual(thread_json['weight'], 2)
 
 
-class ThreadPinLocallyApiTests(ThreadApiTestCase):
+class ThreadPinLocallyApiTests(ThreadsApiTestCase):
     def test_pin_thread(self):
         """api makes it possible to pin locally thread"""
         self.override_acl({
@@ -170,7 +170,7 @@ class ThreadPinLocallyApiTests(ThreadApiTestCase):
         self.assertEqual(thread_json['weight'], 1)
 
 
-class ThreadMoveApiTests(ThreadApiTestCase):
+class ThreadMoveApiTests(ThreadsApiTestCase):
     def setUp(self):
         super(ThreadMoveApiTests, self).setUp()
 
@@ -203,8 +203,8 @@ class ThreadMoveApiTests(ThreadApiTestCase):
             'categories': categories_acl,
         })
 
-    def test_move_thread(self):
-        """api moves thread to other category"""
+    def test_move_thread_no_top(self):
+        """api moves thread to other category, sets no top category"""
         self.override_acl({
             'can_move_threads': True
         })
@@ -222,6 +222,38 @@ class ThreadMoveApiTests(ThreadApiTestCase):
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category_b.pk)
+
+        reponse_json = json.loads(response.content)
+        self.assertEqual(reponse_json['category'], self.category_b.pk)
+        self.assertEqual(reponse_json['top_category'], None)
+
+    def test_move_thread_with_top(self):
+        """api moves thread to other category, sets top"""
+        self.override_acl({
+            'can_move_threads': True
+        })
+        self.override_other_acl({})
+
+        response = self.client.patch(self.api_link, json.dumps([
+            {'op': 'replace', 'path': 'category', 'value': self.category_b.pk},
+            {
+                'op': 'add',
+                'path': 'top-category',
+                'value': Category.objects.root_category().pk,
+            },
+            {'op': 'replace', 'path': 'flatten-categories', 'value': None},
+        ]),
+        content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+        self.override_other_acl({})
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['category']['id'], self.category_b.pk)
+
+        reponse_json = json.loads(response.content)
+        self.assertEqual(reponse_json['category'], self.category_b.pk)
+        self.assertEqual(reponse_json['top_category'], self.category.pk)
 
     def test_move_thread_no_permission(self):
         """api move thread to other category with no permission fails"""
@@ -326,7 +358,7 @@ class ThreadMoveApiTests(ThreadApiTestCase):
         self.assertEqual(response_json['category'], self.category_b.pk)
 
 
-class ThreadCloseApiTests(ThreadApiTestCase):
+class ThreadCloseApiTests(ThreadsApiTestCase):
     def test_close_thread(self):
         """api makes it possible to close thread"""
         self.override_acl({
@@ -408,7 +440,7 @@ class ThreadCloseApiTests(ThreadApiTestCase):
         self.assertTrue(thread_json['is_closed'])
 
 
-class ThreadApproveApiTests(ThreadApiTestCase):
+class ThreadApproveApiTests(ThreadsApiTestCase):
     def test_approve_thread(self):
         """api makes it possible to approve thread"""
         self.thread.is_unapproved = True
@@ -444,7 +476,7 @@ class ThreadApproveApiTests(ThreadApiTestCase):
             "Content approval can't be reversed.")
 
 
-class ThreadHideApiTests(ThreadApiTestCase):
+class ThreadHideApiTests(ThreadsApiTestCase):
     def test_hide_thread(self):
         """api makes it possible to hide thread"""
         self.override_acl({
@@ -535,7 +567,7 @@ class ThreadHideApiTests(ThreadApiTestCase):
         self.assertEqual(response.status_code, 404)
 
 
-class ThreadSubscribeApiTests(ThreadApiTestCase):
+class ThreadSubscribeApiTests(ThreadsApiTestCase):
     def test_subscribe_thread(self):
         """api makes it possible to subscribe thread"""
         response = self.client.patch(self.api_link, json.dumps([

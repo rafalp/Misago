@@ -8,9 +8,9 @@ from misago.threads import testutils
 from misago.threads.models import Thread
 
 
-class ThreadApiTestCase(AuthenticatedUserTestCase):
+class ThreadsApiTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ThreadApiTestCase, self).setUp()
+        super(ThreadsApiTestCase, self).setUp()
 
         self.category = Category.objects.get(slug='first-category')
 
@@ -41,7 +41,7 @@ class ThreadApiTestCase(AuthenticatedUserTestCase):
         return json.loads(response.content)
 
 
-class ThreadDeleteApiTests(ThreadApiTestCase):
+class ThreadDeleteApiTests(ThreadsApiTestCase):
     def test_delete_thread(self):
         """DELETE to API link with permission deletes thread"""
         self.override_acl({
@@ -75,7 +75,7 @@ class ThreadDeleteApiTests(ThreadApiTestCase):
         self.assertEqual(response.status_code, 403)
 
 
-class ThreadsReadApiTests(ThreadApiTestCase):
+class ThreadsReadApiTests(ThreadsApiTestCase):
     def setUp(self):
         super(ThreadsReadApiTests, self).setUp()
         self.api_link = '/api/threads/read/'
