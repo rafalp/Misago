@@ -4,7 +4,7 @@ from django.utils.translation import ugettext as _
 from rest_framework import serializers
 
 from misago.acl import add_acl
-from misago.categories.models import Category
+from misago.categories.models import CATEGORIES_TREE_ID, Category
 from misago.categories.permissions import can_see_category, can_browse_category
 
 from misago.threads.models import THREAD_WEIGHT_DEFAULT, THREAD_WEIGHT_GLOBAL
@@ -12,11 +12,18 @@ from misago.threads.permissions import allow_start_thread
 from misago.threads.validators import validate_title
 
 
-def validate_category(user, category_id):
+def validate_category(user, category_id, allow_root=False):
     try:
-        category = Category.objects.all_categories().get(id=category_id)
+        category = Category.objects.get(
+            tree_id=CATEGORIES_TREE_ID,
+            id=category_id,
+        )
     except Category.DoesNotExist:
         category = None
+
+    # Skip ACL validation for root category?
+    if allow_root and category and not category.level:
+        return category
 
     if not category or not can_see_category(user, category):
         raise ValidationError(_("Requested category could not be found."))
@@ -43,7 +50,7 @@ class MergeThreadsSerializer(serializers.Serializer):
         return validate_title(title)
 
     def validate_top_category(self, category_id):
-        return validate_category(self.context, category_id)
+        return validate_category(self.context, category_id, allow_root=True)
 
     def validate_category(self, category_id):
         self.category = validate_category(self.context, category_id)

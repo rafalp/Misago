@@ -1,6 +1,7 @@
 import React from 'react';
 import ErrorsModal from 'misago/components/threads/moderation/errors-list'; // jshint ignore:line
-import MoveThreads from 'misago/components/threads/moderation/move-threads'; // jshint ignore:line
+import MergeThreads from 'misago/components/threads/moderation/merge'; // jshint ignore:line
+import MoveThreads from 'misago/components/threads/moderation/move'; // jshint ignore:line
 import * as select from 'misago/reducers/selection'; // jshint ignore:line
 import ajax from 'misago/services/ajax'; // jshint ignore:line
 import modal from 'misago/services/modal'; // jshint ignore:line
@@ -135,7 +136,28 @@ export default class extends React.Component {
   };
 
   merge = () => {
-    console.log('MERGE THREADS!');
+    const errors = [];
+    this.props.threads.forEach((thread) => {
+      if (!thread.acl.can_merge) {
+        errors.append({
+          'id': thread.id,
+          'title': thread.title,
+          'errors': [
+            gettext("You don't have permission to merge this thread with others.")
+          ]
+        });
+      }
+    });
+
+    if (this.props.threads.length < 2) {
+      snackbar.info(
+        gettext("You have to select at least two threads to merge."));
+    } else if (errors.length) {
+      modal.show(<ErrorsModal errors={errors} />);
+      return;
+    } else {
+      modal.show(<MergeThreads {...this.props} />);
+    }
   };
 
   delete = () => {

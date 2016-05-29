@@ -158,6 +158,7 @@ class ThreadsList(BaseList, ThreadsListMixin):
     def set_frontend_context(self, request):
         request.frontend_context.update({
             'THREADS_API': reverse('misago:api:thread-list'),
+            'MERGE_THREADS_API': reverse('misago:api:thread-merge'),
         })
 
 

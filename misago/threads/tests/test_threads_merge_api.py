@@ -2,6 +2,7 @@ import json
 
 from django.core.urlresolvers import reverse
 
+from misago.acl import add_acl
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 
@@ -409,6 +410,9 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         new_thread.subscription = None
         new_thread.top_category = None
 
+        add_acl(self.user, new_thread.category)
+        add_acl(self.user, new_thread)
+
         self.assertEqual(response_json, ThreadListSerializer(new_thread).data)
 
         # did posts move to new thread?
@@ -432,10 +436,10 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         thread = testutils.post_thread(category=self.category)
 
         response = self.client.post(self.api_link, json.dumps({
+            'top_category': self.root.id,
             'threads': [self.thread.id, thread.id],
             'title': 'Merged thread!',
             'category': self.category.id,
-            'top_category': self.category.id,
         }), content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
@@ -445,7 +449,10 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         new_thread = Thread.objects.get(pk=response_json['id'])
         new_thread.is_read = False
         new_thread.subscription = None
-        new_thread.top_category = None
+        new_thread.top_category = self.category
+
+        add_acl(self.user, new_thread.category)
+        add_acl(self.user, new_thread)
 
         self.assertEqual(response_json, ThreadListSerializer(new_thread).data)
 

@@ -61,6 +61,7 @@ export default class extends React.Component {
                       selectAllThreads={this.props.selectAllThreads}
                       selectNoneThreads={this.props.selectNoneThreads}
 
+                      addThreads={this.props.addThreads}
                       freezeThread={this.props.freezeThread}
                       deleteThread={this.props.deleteThread}
                       updateThread={this.props.updateThread}

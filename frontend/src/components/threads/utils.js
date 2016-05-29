@@ -81,6 +81,7 @@ export function getModerationActions(threads) {
     can_approve: 0,
     can_close: 0,
     can_hide: 0,
+    can_merge: 0,
     can_move: 0,
     can_pin: 0
   };
@@ -98,6 +99,10 @@ export function getModerationActions(threads) {
       moderation.can_hide = thread.acl.can_hide;
     }
 
+    if (thread.acl.can_merge > moderation.can_merge) {
+      moderation.can_merge = thread.acl.can_merge;
+    }
+
     if (thread.acl.can_move > moderation.can_move) {
       moderation.can_move = thread.acl.can_move;
     }
@@ -110,6 +115,7 @@ export function getModerationActions(threads) {
       moderation.can_approve ||
       moderation.can_close ||
       moderation.can_hide ||
+      moderation.can_merge ||
       moderation.can_move ||
       moderation.can_pin
     );

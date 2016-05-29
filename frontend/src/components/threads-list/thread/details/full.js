@@ -32,7 +32,7 @@ export default class extends React.Component {
       /* jshint ignore:start */
       return <li className="thread-pinned-globally">
         <span className="material-icon">
-          bookmark_border
+          bookmark
         </span>
         <span className="icon-legend">
           {gettext("Pinned globally")}

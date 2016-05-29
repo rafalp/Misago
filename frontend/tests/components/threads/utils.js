@@ -140,6 +140,7 @@ describe("Threads List Moderation Actions Util", function() {
           can_approve: false,
           can_close: false,
           can_hide: false,
+          can_merge: false,
           can_move: false,
           can_pin: false
         },
@@ -157,6 +158,7 @@ describe("Threads List Moderation Actions Util", function() {
           can_approve: true,
           can_close: false,
           can_hide: false,
+          can_merge: false,
           can_move: false,
           can_pin: false
         },
@@ -175,6 +177,7 @@ describe("Threads List Moderation Actions Util", function() {
           can_approve: true,
           can_close: false,
           can_hide: false,
+          can_merge: false,
           can_move: false,
           can_pin: false
         },
@@ -193,6 +196,7 @@ describe("Threads List Moderation Actions Util", function() {
           can_approve: false,
           can_close: true,
           can_hide: false,
+          can_merge: false,
           can_move: false,
           can_pin: false
         },
@@ -211,6 +215,7 @@ describe("Threads List Moderation Actions Util", function() {
           can_approve: false,
           can_close: false,
           can_hide: 1,
+          can_merge: false,
           can_move: false,
           can_pin: false
         },
@@ -229,6 +234,7 @@ describe("Threads List Moderation Actions Util", function() {
           can_approve: false,
           can_close: false,
           can_hide: 2,
+          can_merge: false,
           can_move: false,
           can_pin: false
         },
@@ -240,6 +246,25 @@ describe("Threads List Moderation Actions Util", function() {
     assert.equal(moderationActions.can_hide, 2, "delete action is available");
   });
 
+  it("shows moderation for mergin thread", function() {
+    const moderationActions = getModerationActions([
+      {
+        acl: {
+          can_approve: false,
+          can_close: false,
+          can_hide: false,
+          can_merge: true,
+          can_move: false,
+          can_pin: false
+        },
+        is_unapproved: false
+      }
+    ]);
+
+    assert.ok(moderationActions.allow, "moderation is allowed");
+    assert.ok(moderationActions.can_merge, "merge action is available");
+  });
+
   it("shows moderation for moving thread", function() {
     const moderationActions = getModerationActions([
       {
@@ -247,6 +272,7 @@ describe("Threads List Moderation Actions Util", function() {
           can_approve: false,
           can_close: false,
           can_hide: false,
+          can_merge: false,
           can_move: true,
           can_pin: false
         },
@@ -265,6 +291,7 @@ describe("Threads List Moderation Actions Util", function() {
           can_approve: false,
           can_close: false,
           can_hide: false,
+          can_merge: false,
           can_move: false,
           can_pin: 1
         },
@@ -283,6 +310,7 @@ describe("Threads List Moderation Actions Util", function() {
           can_approve: false,
           can_close: false,
           can_hide: false,
+          can_merge: false,
           can_move: false,
           can_pin: 2
         },
@@ -301,6 +329,7 @@ describe("Threads List Moderation Actions Util", function() {
           can_approve: true,
           can_close: true,
           can_hide: 2,
+          can_merge: true,
           can_move: true,
           can_pin: 2
         },
@@ -314,6 +343,7 @@ describe("Threads List Moderation Actions Util", function() {
       can_approve: true,
       can_close: true,
       can_hide: 2,
+      can_merge: true,
       can_move: true,
       can_pin: 2
     }, "moderation is allowed");

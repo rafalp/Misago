@@ -2,7 +2,7 @@ import json
 
 from misago.acl.testutils import override_acl
 from misago.users.testutils import AuthenticatedUserTestCase
-from misago.categories.models import Category
+from misago.categories.models import CATEGORIES_TREE_ID, Category
 
 from misago.threads import testutils
 from misago.threads.models import Thread
@@ -12,6 +12,7 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
     def setUp(self):
         super(ThreadsApiTestCase, self).setUp()
 
+        self.root = Category.objects.get(tree_id=CATEGORIES_TREE_ID, level=0)
         self.category = Category.objects.get(slug='first-category')
 
         self.thread = testutils.post_thread(category=self.category)

@@ -70,6 +70,7 @@ export default class extends React.Component {
         </button>
 
         <ModerationControls
+          addThreads={this.props.addThreads}
           categories={this.props.categories}
           categoriesMap={this.props.categoriesMap}
           className="dropdown-menu dropdown-menu-right"

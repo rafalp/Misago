@@ -186,8 +186,12 @@ export default class extends WithDropdown {
     });
   };
 
+  addThreads = (threads) => {
+    store.dispatch(append(threads, this.getSorting()));
+  };
+
   applyDiff = () => {
-    store.dispatch(append(this.state.diff.results, this.getSorting()));
+    this.addThreads(this.state.diff.results);
 
     this.setState(Object.assign({}, this.state.diff, {
       moderation: getModerationActions(store.getState().threads),
@@ -280,6 +284,7 @@ export default class extends WithDropdown {
                  selection={this.props.selection}
 
                  busyThreads={this.state.busyThreads}
+                 addThreads={this.addThreads}
                  freezeThread={this.freezeThread}
                  deleteThread={this.deleteThread}
                  updateThread={this.updateThread}

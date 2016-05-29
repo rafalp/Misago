@@ -128,4 +128,6 @@ def merge_threads(user, validated_data, threads):
         new_thread.top_category = None
 
     new_thread.save()
+
+    add_acl(user, new_thread)
     return new_thread

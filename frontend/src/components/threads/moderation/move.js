@@ -95,8 +95,6 @@ export default class extends Form {
                           choices={this.categoryChoices} />
         </FormGroup>
 
-        <div className="clearfix"></div>
-
       </div>
       <div className="modal-footer">
         <button className="btn btn-primary">
