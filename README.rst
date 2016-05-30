@@ -8,6 +8,9 @@ Misago
 .. image:: https://coveralls.io/repos/rafalp/Misago/badge.png?branch=master
   :target: https://coveralls.io/r/rafalp/Misago?branch=master
 
+.. image:: https://badges.gitter.im/Misago/Misago.svg
+  :target: https://gitter.im/Misago/Misago?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
+
 
 **Development Status: Pre-Alpha**
 
@@ -81,6 +84,8 @@ Bug reports, features and feedback
 If you have found bug, please report it on `issue tracker <https://github.com/rafalp/Misago/issues>`_.
 
 For feature or support requests as well as general feedback please use `official forum <http://misago-project.org>`_ instead. Your feedback means much to the project so please do share your thoughts!
+
+There's also Gitter for those looking for intant-messaging approach for discussing Misago development.
 
 
 Contributing
