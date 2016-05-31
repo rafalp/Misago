@@ -13,9 +13,9 @@ class CategoryViewsTests(AuthenticatedUserTestCase):
         response = self.client.get(reverse('misago:categories'))
 
         for node in get_categories_tree(self.user):
-            self.assertIn(node.name, response.content)
+            self.assertContains(response, node.name)
             if node.level > 1:
-                self.assertIn(node.get_absolute_url(), response.content)
+                self.assertContains(response, node.get_absolute_url())
 
     def test_index_renders_for_guest(self):
         """categories list renders for guest"""
@@ -24,9 +24,9 @@ class CategoryViewsTests(AuthenticatedUserTestCase):
         response = self.client.get(reverse('misago:categories'))
 
         for node in get_categories_tree(self.user):
-            self.assertIn(node.name, response.content)
+            self.assertContains(response, node.name)
             if node.level > 1:
-                self.assertIn(node.get_absolute_url(), response.content)
+                self.assertContains(response, node.get_absolute_url())
 
     def test_index_no_perms_renders(self):
         """categories list renders no visible categories for authenticated"""
@@ -36,7 +36,7 @@ class CategoryViewsTests(AuthenticatedUserTestCase):
         for node in get_categories_tree(self.user):
             self.assertNotIn(node.name, response.content)
             if node.level > 1:
-                self.assertNotIn(node.get_absolute_url(), response.content)
+                self.assertNotContains(response, node.get_absolute_url())
 
     def test_index_no_perms_renders_for_guest(self):
         """categories list renders no visible categories for guest"""
@@ -48,7 +48,7 @@ class CategoryViewsTests(AuthenticatedUserTestCase):
         for node in get_categories_tree(self.user):
             self.assertNotIn(node.name, response.content)
             if node.level > 1:
-                self.assertNotIn(node.get_absolute_url(), response.content)
+                self.assertNotContains(response, node.get_absolute_url())
 
 
 class CategoryAPIViewsTests(AuthenticatedUserTestCase):
@@ -57,9 +57,9 @@ class CategoryAPIViewsTests(AuthenticatedUserTestCase):
         response = self.client.get(reverse('misago:api:categories'))
 
         for node in get_categories_tree(self.user):
-            self.assertIn(node.name, response.content)
+            self.assertContains(response, node.name)
             if node.level > 1:
-                self.assertIn(node.get_absolute_url(), response.content)
+                self.assertNotContains(response, node.get_absolute_url())
 
     def test_index_renders_for_guest(self):
         """api returns categories for guest"""
@@ -68,9 +68,9 @@ class CategoryAPIViewsTests(AuthenticatedUserTestCase):
         response = self.client.get(reverse('misago:api:categories'))
 
         for node in get_categories_tree(self.user):
-            self.assertIn(node.name, response.content)
+            self.assertContains(response, node.name)
             if node.level > 1:
-                self.assertIn(node.get_absolute_url(), response.content)
+                self.assertNotContains(response, node.get_absolute_url())
 
     def test_index_no_perms_renders(self):
         """api returns no categories for authenticated"""
@@ -80,7 +80,7 @@ class CategoryAPIViewsTests(AuthenticatedUserTestCase):
         for node in get_categories_tree(self.user):
             self.assertNotIn(node.name, response.content)
             if node.level > 1:
-                self.assertNotIn(node.get_absolute_url(), response.content)
+                self.assertNotContains(response, node.get_absolute_url())
 
     def test_index_no_perms_renders_for_guest(self):
         """api returns no categories for guest"""
@@ -90,6 +90,6 @@ class CategoryAPIViewsTests(AuthenticatedUserTestCase):
         response = self.client.get(reverse('misago:api:categories'))
 
         for node in get_categories_tree(self.user):
-            self.assertNotIn(node.name, response.content)
+            self.assertNotContains(response, node.name)
             if node.level > 1:
-                self.assertNotIn(node.get_absolute_url(), response.content)
+                self.assertNotContains(response, node.get_absolute_url())

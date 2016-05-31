@@ -114,7 +114,7 @@ class CategoryModelTests(MisagoTestCase):
 
     def test_delete_content(self):
         """delete_content empties category"""
-        for i in xrange(10):
+        for i in range(10):
             self.create_thread()
 
         self.category.synchronize()
@@ -131,7 +131,7 @@ class CategoryModelTests(MisagoTestCase):
 
     def test_move_content(self):
         """move_content moves category threads and posts to other category"""
-        for i in xrange(10):
+        for i in range(10):
             self.create_thread()
         self.category.synchronize()
 

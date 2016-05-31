@@ -44,10 +44,9 @@ class AdminLoginViewTests(TestCase):
         """unauthenticated request to admin index produces login form"""
         response = self.client.get(reverse('misago:admin:index'))
 
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('Sign in', response.content)
-        self.assertIn('Username or e-mail', response.content)
-        self.assertIn('Password', response.content)
+        self.assertContains(response, 'Sign in')
+        self.assertContains(response, 'Username or e-mail')
+        self.assertContains(response, 'Password')
 
     def test_login_returns_200_on_invalid_post(self):
         """form handles invalid data gracefully"""
@@ -55,11 +54,10 @@ class AdminLoginViewTests(TestCase):
             reverse('misago:admin:index'),
             data={'username': 'Nope', 'password': 'Nope'})
 
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('Login or password is incorrect.', response.content)
-        self.assertIn('Sign in', response.content)
-        self.assertIn('Username or e-mail', response.content)
-        self.assertIn('Password', response.content)
+        self.assertContains(response, 'Login or password is incorrect.')
+        self.assertContains(response, 'Sign in')
+        self.assertContains(response, 'Username or e-mail')
+        self.assertContains(response, 'Password')
 
     def test_login_returns_200_on_valid_post(self):
         """form handles valid data correctly"""
@@ -80,12 +78,10 @@ class AdminLogoutTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Your admin session has been closed.", response.content)
+        self.assertContains(response, "Your admin session has been closed.")
 
         response = self.client.get(reverse('misago:index'))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(self.user.username, response.content)
+        self.assertContains(response, self.user.username)
 
     def test_complete_logout(self):
         """complete logout logged from both admin and site"""
@@ -93,12 +89,10 @@ class AdminLogoutTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Sign in", response.content)
+        self.assertContains(response, "Sign in")
 
         response = self.client.get(reverse('misago:index'))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("Sign in", response.content)
+        self.assertContains(response, "Sign in")
 
 
 class AdminIndexViewTests(AdminTestCase):
@@ -106,5 +100,4 @@ class AdminIndexViewTests(AdminTestCase):
         """admin index view returns 200"""
         response = self.client.get(reverse('misago:admin:index'))
 
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(self.user.username, response.content)
+        self.assertContains(response, self.user.username)
