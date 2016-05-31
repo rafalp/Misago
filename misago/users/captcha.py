@@ -1,15 +1,11 @@
 import requests
 
-from recaptcha.client.captcha import displayhtml, submit as submit_recaptcha
-from django.utils.translation import ugettext_lazy as _
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext as _
 
 from misago.conf import settings
-from misago.core import forms
 
 
-"""
-Captcha tests
-"""
 def recaptcha_test(request):
     r = requests.post('https://www.google.com/recaptcha/api/siteverify', data={
         'secret': settings.recaptcha_secret_key,
@@ -20,9 +16,9 @@ def recaptcha_test(request):
     if r.status_code == 200:
         response_json = r.json()
         if not response_json.get('success'):
-            raise forms.ValidationError(_("Please try again."))
+            raise ValidationError(_("Please try again."))
     else:
-        raise forms.ValidationError(_("Failed to contact reCAPTCHA API."))
+        raise ValidationError(_("Failed to contact reCAPTCHA API."))
 
 
 def qacaptcha_test(request):
@@ -32,7 +28,7 @@ def qacaptcha_test(request):
         if answer == predefined_answer:
             break
     else:
-        raise forms.ValidationError(_("Entered answer is incorrect."))
+        raise ValidationError(_("Entered answer is incorrect."))
 
 
 def nocaptcha_test(request):
