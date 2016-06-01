@@ -36,50 +36,6 @@ MISAGO_BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 _MISAGO_JS_DEBUG = False
 
 
-# Assets Pipeline
-# See http://django-pipeline.readthedocs.org/en/latest/configuration.html
-PIPELINE_CSS = {
-    'misago_admin': {
-        'source_filenames': (
-            'misago/admin/css/style.less',
-        ),
-        'output_filename': 'misago_admin.css',
-    },
-}
-
-PIPELINE_JS = {
-    'misago_admin': {
-        'source_filenames': (
-            'misago/admin/js/jquery.js',
-            'misago/admin/js/bootstrap.js',
-            'misago/admin/js/moment.min.js',
-            'misago/admin/js/bootstrap-datetimepicker.min.js',
-            'misago/admin/js/misago-datetimepicker.js',
-            'misago/admin/js/misago-timestamps.js',
-            'misago/admin/js/misago-tooltips.js',
-            'misago/admin/js/misago-tables.js',
-            'misago/admin/js/misago-yesnoswitch.js',
-        ),
-        'output_filename': 'misago_admin.js',
-    },
-}
-
-PIPELINE_COMPILERS = (
-    'pipeline.compilers.less.LessCompiler',
-)
-
-PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'
-PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.yuglify.YuglifyCompressor'
-
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'pipeline.finders.PipelineFinder',
-)
-
-STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
-
-
 # Application definition
 
 INSTALLED_APPS = (
@@ -94,7 +50,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'debug_toolbar',
-    'pipeline',
     'crispy_forms',
     'mptt',
     'rest_framework',

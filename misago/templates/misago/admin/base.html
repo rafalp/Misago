@@ -1,5 +1,5 @@
 {% extends "misago/admin/base_thin.html" %}
-{% load pipeline i18n %}
+{% load staticfiles %}
 
 
 {% block body %}
@@ -20,6 +20,14 @@
 {% include "misago/admin/logout.html" %}
 
 {# We include JavaScript at the end of page body so it renders faster #}
-{% javascript 'misago_admin' %}
+<script type="text/javascript" src="{% static 'misago/admin/js/jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'misago/admin/js/bootstrap.js' %}"></script>
+<script type="text/javascript" src="{% static 'misago/admin/js/moment.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'misago/admin/js/bootstrap-datetimepicker.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'misago/admin/js/misago-datetimepicker.js' %}"></script>
+<script type="text/javascript" src="{% static 'misago/admin/js/misago-timestamps.js' %}"></script>
+<script type="text/javascript" src="{% static 'misago/admin/js/misago-tooltips.js' %}"></script>
+<script type="text/javascript" src="{% static 'misago/admin/js/misago-tables.js' %}"></script>
+<script type="text/javascript" src="{% static 'misago/admin/js/misago-yesnoswitch.js' %}"></script>
 {% block javascripts %}{% endblock javascripts %}
-{% endblock %}
+{% endblock body %}
