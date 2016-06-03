@@ -4,8 +4,7 @@ from misago.core import forms
 
 class MockForm(forms.Form):
     stripme = forms.CharField(required=False)
-    autostrip_exclude = ['dontstripme']
-    dontstripme = forms.CharField(required=False)
+    dontstripme = forms.CharField(required=False, strip=False)
 
 
 class MisagoFormsTests(TestCase):
