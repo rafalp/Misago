@@ -13,4 +13,4 @@ class MisagoRequirementsTests(TestCase):
         command.execute(stdout=out)
         command_output = out.getvalue()
 
-        self.assertIn("django==", command_output)
+        self.assertIn("django", command_output)
