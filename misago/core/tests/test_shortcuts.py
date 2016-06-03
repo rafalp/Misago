@@ -30,7 +30,7 @@ class PaginateTests(TestCase):
         """Explicit page number results in redirect"""
         response = self.client.get(
             reverse('test-pagination', kwargs={'page': 1}))
-        valid_url = "http://testserver/forum/test-pagination/"
+        valid_url = "/forum/test-pagination/"
         self.assertEqual(response['Location'], valid_url)
 
 
@@ -52,7 +52,7 @@ class ValidateSlugTests(TestCase):
             'pk': 1,
         }))
 
-        valid_url = "http://testserver/forum/test-valid-slug/eric-the-fish-1/"
+        valid_url = "/forum/test-valid-slug/eric-the-fish-1/"
         self.assertEqual(response['Location'], valid_url)
 
 
