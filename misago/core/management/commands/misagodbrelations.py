@@ -36,7 +36,7 @@ class Command(BaseCommand):
                             self.stdout.write(field_pattern % (
                                 field.name,
                                 field.__class__.__name__,
-                                field.related.parent_model.__name__,
+                                field.related.model.__name__,
                                 field.rel.on_delete.__name__,
                             ))
 

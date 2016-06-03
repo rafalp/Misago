@@ -27,8 +27,7 @@ DROP INDEX %(index_name)s
 
     def database_forwards(self, app_label, schema_editor,
                           from_state, to_state):
-        apps = from_state.render()
-        model = apps.get_model(app_label, self.model)
+        model = from_state.apps.get_model(app_label, self.model)
 
         statement = self.CREATE_SQL % {
             'index_name': self.index_name,
@@ -89,8 +88,7 @@ DROP INDEX %(index_name)s
 
     def database_forwards(self, app_label, schema_editor,
                           from_state, to_state):
-        apps = from_state.render()
-        model = apps.get_model(app_label, self.model)
+        model = from_state.apps.get_model(app_label, self.model)
 
         statement = self.CREATE_SQL % {
             'index_name': self.index_name,
