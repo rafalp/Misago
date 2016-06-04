@@ -136,6 +136,29 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             },
         ])
 
+    def test_merge_too_many_threads(self):
+        """api rejects too many threads mege"""
+        threads = []
+        for i in xrange(MERGE_LIMIT + 1):
+            threads.append(testutils.post_thread(category=self.category).pk)
+
+        self.override_acl({
+            'can_merge_threads': True,
+            'can_close_threads': False,
+            'can_edit_threads': False,
+            'can_reply_threads': False,
+        })
+
+        response = self.client.post(self.api_link, json.dumps({
+            'threads': threads
+        }), content_type="application/json")
+        self.assertEqual(response.status_code, 403)
+
+        response_json = json.loads(response.content)
+        self.assertEqual(response_json, {
+            'detail': "No more than %s threads can be merged at single time." % MERGE_LIMIT
+        })
+
     def test_merge_no_final_thread(self):
         """api rejects merge because no data to merge threads was specified"""
         self.override_acl({

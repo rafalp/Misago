@@ -65,7 +65,7 @@ def clean_threads_for_merge(request):
             "No more than %(limit)s thread can be merged at single time.",
             "No more than %(limit)s threads can be merged at single time.",
             MERGE_LIMIT)
-        raise MergeError(message % {'limit': settings.thread_title_length_max})
+        raise MergeError(message % {'limit': MERGE_LIMIT})
 
     threads_queryset = Thread.objects.filter(
         id__in=threads_ids,
