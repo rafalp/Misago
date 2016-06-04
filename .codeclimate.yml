@@ -28,3 +28,4 @@ ratings:
     - "**.rb"
 exclude_paths:
   - "misago/locale/momentjs/**/*"
+  - "misago/static/**/*"
