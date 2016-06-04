@@ -137,7 +137,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         ])
 
     def test_merge_too_many_threads(self):
-        """api rejects too many threads mege"""
+        """api rejects too many threads to merge"""
         threads = []
         for i in xrange(MERGE_LIMIT + 1):
             threads.append(testutils.post_thread(category=self.category).pk)
