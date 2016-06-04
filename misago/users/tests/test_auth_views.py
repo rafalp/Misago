@@ -28,7 +28,7 @@ class AuthViewsTests(TestCase):
         })
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], 'http://testserver/redirect/')
+        self.assertEqual(response['location'], '/redirect/')
 
         # invalid redirect (redirects to other site)
         response = self.client.post(reverse('misago:login'), data={
@@ -36,7 +36,7 @@ class AuthViewsTests(TestCase):
         })
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], 'http://testserver/')
+        self.assertEqual(response['location'], '/')
 
     def test_logout_view(self):
         """logout view logs user out on post"""

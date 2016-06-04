@@ -26,7 +26,7 @@ class Rank(models.Model):
     slug = models.CharField(unique=True, max_length=255)
     description = models.TextField(null=True, blank=True)
     title = models.CharField(max_length=255, null=True, blank=True)
-    roles = models.ManyToManyField('misago_acl.Role', null=True, blank=True)
+    roles = models.ManyToManyField('misago_acl.Role', blank=True)
     css_class = models.CharField(max_length=255, null=True, blank=True)
     is_default = models.BooleanField(default=False)
     is_tab = models.BooleanField(default=False)

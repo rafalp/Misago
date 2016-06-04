@@ -37,7 +37,7 @@ def pagination_dict(page, include_page_range=True):
     }
 
     if include_page_range:
-        pagination['page_range'] = page.paginator.page_range
+        pagination['page_range'] = list(page.paginator.page_range)
 
     if page.has_previous():
         pagination['first'] = 1
