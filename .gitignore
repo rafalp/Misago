@@ -65,6 +65,7 @@ docs/_build/
 dev/
 dev-manage.py
 futuredep/
+venv/
 future-manage.py
 misago-admin.py
 db.sqlite3
