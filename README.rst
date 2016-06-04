@@ -4,12 +4,19 @@ Misago
 
 .. image:: https://travis-ci.org/rafalp/Misago.png?branch=master
   :target: https://travis-ci.org/rafalp/Misago
+  :alt: Tests Result
 
 .. image:: https://coveralls.io/repos/rafalp/Misago/badge.png?branch=master
   :target: https://coveralls.io/r/rafalp/Misago?branch=master
+  :alt: Code Coverage
+
+.. image:: https://landscape.io/github/rafalp/Misago/master/landscape.svg?style=flat
+  :target: https://landscape.io/github/rafalp/Misago/master
+  :alt: Code Health
 
 .. image:: https://badges.gitter.im/Misago/Misago.svg
   :target: https://gitter.im/Misago/Misago?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
+  :alt: Development Chat
 
 
 **Development Status: Pre-Alpha**
