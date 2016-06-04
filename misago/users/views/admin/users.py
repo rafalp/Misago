@@ -313,13 +313,11 @@ class DeletionStep(UserAdmin, generic.ButtonView):
             return _("This action can't be accessed directly")
 
         if target.is_staff or target.is_superuser:
-            message = _("%(user)s is admin and can't be deleted.")
-            return message % {'user': user.username}
+            return _("%(user)s is admin and can't be deleted.") % {'user': target.username}
 
     def execute_step(self, user):
-        raise NotImplementedError("execute_step method should return dict "
-                                  "with number of deleted_count and "
-                                  "is_completed keys")
+        raise NotImplementedError(
+            "execute_step method should return dict with number of deleted_count and is_completed keys")
 
     def button_action(self, request, target):
         return JsonResponse(self.execute_step(target))
