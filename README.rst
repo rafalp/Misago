@@ -10,10 +10,6 @@ Misago
    :target: https://coveralls.io/r/rafalp/Misago?branch=master
    :alt: Code Coverage
 
-.. image:: https://codeclimate.com/github/rafalp/Misago/badges/gpa.svg
-   :target: https://codeclimate.com/github/rafalp/Misago
-   :alt: Code Climate
-
 .. image:: https://badges.gitter.im/Misago/Misago.svg
    :target: https://gitter.im/Misago/Misago?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
    :alt: Development Chat

@@ -107,10 +107,7 @@ def render(request, template, context):
 
 @profile_view
 def lander(request, profile):
-    return redirect(user_profile.get_default_link(),
-        slug=profile.slug,
-        pk=profile.pk,
-    )
+    return redirect(user_profile.get_default_link(), slug=profile.slug, pk=profile.pk)
 
 
 @profile_view

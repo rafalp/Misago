@@ -11,7 +11,6 @@ from misago.acl.models import BaseRole
 from misago.conf import settings
 from misago.core.cache import cache
 from misago.core.utils import slugify
-
 from misago.threads import threadtypes
 
 

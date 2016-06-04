@@ -24,7 +24,7 @@ def limited(request, text):
 
     Returns parsed text
     """
-    result = parse(text, request, requser.user, allow_mentions=False,
+    result = parse(text, request, request.user, allow_mentions=False,
                    allow_links=True, allow_images=False, allow_blocks=False)
 
     return result['parsed_text']
