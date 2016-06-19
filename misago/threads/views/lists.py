@@ -187,5 +187,8 @@ class PrivateThreadsList(ThreadsList):
     def get_subcategories(self, category, categories):
         return []
 
+    def get_base_queryset(self, request, categories, list_type):
+        raise NotImplementedError('Private Threads List is not implemented yet!')
+
     def get_extra_context(self, request):
         return {}
