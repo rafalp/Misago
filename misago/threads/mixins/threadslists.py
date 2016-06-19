@@ -39,6 +39,13 @@ class ThreadsListMixin(object):
                 id__in=request.user.acl['visible_categories']
             ).select_related('parent'))
 
+    def get_subcategories(self, category, categories):
+        subcategories = []
+        for subcategory in categories:
+            if category.has_child(subcategory):
+                subcategories.append(subcategory)
+        return subcategories
+
     def get_visible_subcategories(self, threads, threads_categories):
         visible_subcategories = []
         for thread in threads:

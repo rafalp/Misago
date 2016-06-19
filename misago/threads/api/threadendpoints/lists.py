@@ -96,13 +96,6 @@ class ThreadsListEndpoint(BaseListEndpoint):
             raise Http404()
         return categories[0]
 
-    def get_subcategories(self, category, categories):
-        subcategories = []
-        for subcategory in categories:
-            if category.has_child(subcategory):
-                subcategories.append(subcategory)
-        return subcategories
-
     def get_pinned_threads(self, category, queryset, threads_categories):
         if category.level:
             return list(queryset.filter(weight=2)) + list(queryset.filter(

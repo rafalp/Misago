@@ -102,13 +102,6 @@ class BaseList(View):
             **self.get_extra_context(request)
         ))
 
-    def get_subcategories(self, category, categories):
-        subcategories = []
-        for subcategory in categories:
-            if category.has_child(subcategory):
-                subcategories.append(subcategory)
-        return subcategories
-
     def get_pinned_threads(self, request, queryset):
         return []
 
@@ -184,12 +177,12 @@ class PrivateThreadsList(ThreadsList):
     template_name = 'misago/threadslist/private_threads.html'
     preloaded_data_prefix = 'PRIVATE_'
 
+    def get_categories(self, request):
+        return [Category.objects.private_threads()]
+
     def get_category(self, request, **kwargs):
         allow_use_private_threads(request.user)
         return Category.objects.private_threads()
-
-    def get_categories(self, request):
-        return [Category.objects.private_threads()]
 
     def get_subcategories(self, category, categories):
         return []
