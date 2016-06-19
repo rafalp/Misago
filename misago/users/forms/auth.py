@@ -53,7 +53,7 @@ class MisagoAuthMixin(object):
         }
 
 
-class AuthenticationForm(MisagoAuthMixin, forms.Form, BaseAuthenticationForm):
+class AuthenticationForm(MisagoAuthMixin, BaseAuthenticationForm):
     """
     Base class for authenticating users, Floppy-forms and
     Misago login field comliant

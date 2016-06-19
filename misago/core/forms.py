@@ -3,20 +3,11 @@ from datetime import datetime, timedelta
 from mptt.forms import *  # noqa
 
 from django.forms import *  # noqa
-from django.forms import Form as BaseForm, ModelForm as BaseModelForm
 from django.utils import timezone
 from django.utils.encoding import force_text
 from django.utils.translation import ugettext_lazy as _
 
 
-TEXT_BASED_FIELDS = (
-    CharField, EmailField, FilePathField, URLField
-)
-
-
-"""
-Fields
-"""
 class YesNoSwitchBase(TypedChoiceField):
     def prepare_value(self, value):
         """normalize bools to binary 1/0 so field works on them too"""
@@ -79,8 +70,7 @@ class IsoDateTimeField(DateTimeField):
             local_date = self.strptime(value)
 
             if offset and offset[0] in ('-', '+'):
-                tz_offset = timedelta(hours=int(offset[1:3]),
-                                      minutes=int(offset[4:6]))
+                tz_offset = timedelta(hours=int(offset[1:3]), minutes=int(offset[4:6]))
                 tz_offset = tz_offset.seconds // 60
                 if offset[0] == '-':
                     tz_offset *= -1
@@ -92,14 +82,3 @@ class IsoDateTimeField(DateTimeField):
         except (IndexError, TypeError, ValueError) as e:
             raise ValidationError(
                 self.error_messages['invalid'], code='invalid')
-
-
-"""
-Forms
-"""
-class Form(BaseForm):
-    pass
-
-
-class ModelForm(BaseModelForm):
-    pass
