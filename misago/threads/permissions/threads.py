@@ -426,7 +426,7 @@ ACL tests
 """
 def allow_see_thread(user, target):
     category_acl = user.acl['categories'].get(target.category_id, {})
-    if not category_acl.get('can_browse'):
+    if not (category_acl.get('can_see') and category_acl.get('can_browse')):
         raise Http404()
 
     if user.is_anonymous() or user.pk != target.starter_id:
@@ -849,7 +849,7 @@ def exclude_invisible_threads(user, categories, queryset):
         return Thread.objects.none()
 
 
-def exclude_invisible_posts(queryset, user, category):
+def exclude_invisible_posts(user, category, queryset):
     if not category.acl['can_approve_content']:
         if user.is_authenticated():
             condition_author = Q(poster_id=user.id)

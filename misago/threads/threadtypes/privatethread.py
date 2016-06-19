@@ -11,10 +11,17 @@ class PrivateThread(ThreadTypeBase):
         return _('Private Threads')
 
     def get_category_absolute_url(self, category):
-        return reverse('misago:private_threads')
+        return reverse('misago:private-threads')
 
-    def get_thread_absolute_url(self, thread):
-        return reverse('misago:private_thread', kwargs={
-            'thread_slug': thread.slug,
-            'thread_id': thread.id
-        })
+    def get_thread_absolute_url(self, thread, page=1):
+        if page > 1:
+            return reverse('misago:private-thread', kwargs={
+                'slug': thread.slug,
+                'pk': thread.pk,
+                'page': page
+            })
+        else:
+            return reverse('misago:private-thread', kwargs={
+                'slug': thread.slug,
+                'pk': thread.pk
+            })

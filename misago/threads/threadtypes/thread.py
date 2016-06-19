@@ -15,8 +15,18 @@ class Thread(ThreadTypeBase):
             'slug': category.slug,
         })
 
-    def get_thread_absolute_url(self, thread):
-        return '/threads/not-implemented-yet-%s/' % thread.pk
+    def get_thread_absolute_url(self, thread, page=1):
+        if page > 1:
+            return reverse('misago:thread', kwargs={
+                'slug': thread.slug,
+                'pk': thread.pk,
+                'page': page
+            })
+        else:
+            return reverse('misago:thread', kwargs={
+                'slug': thread.slug,
+                'pk': thread.pk
+            })
 
     def get_thread_last_post_url(self, thread):
         return '/threads/not-implemented-yet-%s/last/' % thread.pk
@@ -26,3 +36,6 @@ class Thread(ThreadTypeBase):
 
     def get_thread_api_url(self, thread):
         return reverse('misago:api:thread-detail', kwargs={'pk': thread.pk})
+
+    def get_post_absolute_url(self, post):
+        return '/threads/not-implemented-yet-%s/post/' % post.pk

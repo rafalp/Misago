@@ -7,7 +7,7 @@ from misago.categories.permissions import allow_see_category, allow_browse_categ
 from misago.core.shortcuts import get_int_or_404, paginate, pagination_dict
 from misago.readtracker import threadstracker
 
-from misago.threads.mixins.threadslists import ThreadsListMixin
+from misago.threads.mixins.threadslist import ThreadsListMixin
 from misago.threads.permissions.privatethreads import allow_use_private_threads
 from misago.threads.serializers import ThreadListSerializer
 from misago.threads.subscriptions import make_subscription_aware

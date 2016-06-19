@@ -158,8 +158,8 @@ class Thread(models.Model):
     def thread_type(self):
         return self.category.thread_type
 
-    def get_absolute_url(self):
-        return self.thread_type.get_thread_absolute_url(self)
+    def get_absolute_url(self, page=1):
+        return self.thread_type.get_thread_absolute_url(self, page)
 
     def get_last_post_url(self):
         return self.thread_type.get_thread_last_post_url(self)

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls import url
 
 from misago.threads.views.lists import ThreadsList, CategoryThreadsList, PrivateThreadsList
+from misago.threads.views.thread import Thread, PrivateThread
 
 
 LISTS_TYPES = (
@@ -14,21 +15,21 @@ LISTS_TYPES = (
 )
 
 
-def threads_list_patterns(root_name, view, patterns):
-    listurls = []
+def threads_list_patterns(prefix, view, patterns):
+    urls = []
     for i, pattern in enumerate(patterns):
         if i > 0:
-            url_name = '%s-%s' % (root_name, LISTS_TYPES[i])
+            url_name = '%s-%s' % (prefix, LISTS_TYPES[i])
         else:
-            url_name = root_name
+            url_name = prefix
 
-        listurls.append(url(
+        urls.append(url(
             pattern,
             view.as_view(),
             name=url_name,
             kwargs={'list_type': LISTS_TYPES[i]},
         ))
-    return listurls
+    return urls
 
 
 if settings.MISAGO_CATEGORIES_ON_INDEX:
@@ -69,3 +70,23 @@ urlpatterns += threads_list_patterns('private-threads', CategoryThreadsList, (
     r'^private-threads/subscribed/$',
     r'^private-threads/unapproved/$',
 ))
+
+
+def thread_type_patterns(prefix, **views):
+    urls = [
+        url(r'^%s/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/$' % prefix, views['thread'].as_view(), name=prefix),
+        url(r'^%s/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/(?P<page>\d+)/$' % prefix, views['thread'].as_view(), name=prefix),
+    ]
+    return urls
+
+
+urlpatterns += thread_type_patterns(
+    'thread',
+    thread=Thread,
+)
+
+
+urlpatterns += thread_type_patterns(
+    'private-thread',
+    thread=PrivateThread,
+)

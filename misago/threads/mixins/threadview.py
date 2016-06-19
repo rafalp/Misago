@@ -1,0 +1,2 @@
+class ThreadViewMixin(object):
+    pass

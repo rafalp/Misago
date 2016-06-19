@@ -12,15 +12,18 @@ from misago.threads.checksums import update_post_checksum, is_post_valid
 class Post(models.Model):
     category = models.ForeignKey('misago_categories.Category')
     thread = models.ForeignKey('misago_threads.Thread')
-    poster = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
-                               on_delete=models.SET_NULL)
+    poster = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
     poster_name = models.CharField(max_length=255)
     poster_ip = models.GenericIPAddressField()
     original = models.TextField()
     parsed = models.TextField()
     checksum = models.CharField(max_length=64, default='-')
-    mentions = models.ManyToManyField(settings.AUTH_USER_MODEL,
-                                      related_name="mention_set")
+    mentions = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="mention_set")
 
     has_attachments = models.BooleanField(default=False)
     pickled_attachments = models.TextField(null=True, blank=True)
@@ -29,15 +32,23 @@ class Post(models.Model):
     updated_on = models.DateTimeField()
 
     edits = models.PositiveIntegerField(default=0)
-    last_editor = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+',
-                                    null=True, blank=True,
-                                    on_delete=models.SET_NULL)
+    last_editor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
     last_editor_name = models.CharField(max_length=255, null=True, blank=True)
     last_editor_slug = models.SlugField(max_length=255, null=True, blank=True)
 
-    hidden_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='+',
-                                  null=True, blank=True,
-                                  on_delete=models.SET_NULL)
+    hidden_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
     hidden_by_name = models.CharField(max_length=255, null=True, blank=True)
     hidden_by_slug = models.SlugField(max_length=255, null=True, blank=True)
     hidden_on = models.DateTimeField(default=timezone.now)
@@ -92,24 +103,6 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return self.thread_type.get_post_absolute_url(self)
-
-    def get_quote_url(self):
-        return self.thread_type.get_post_quote_url(self)
-
-    def get_approve_url(self):
-        return self.thread_type.get_post_approve_url(self)
-
-    def get_unhide_url(self):
-        return self.thread_type.get_post_unhide_url(self)
-
-    def get_hide_url(self):
-        return self.thread_type.get_post_hide_url(self)
-
-    def get_delete_url(self):
-        return self.thread_type.get_post_delete_url(self)
-
-    def get_report_url(self):
-        return self.thread_type.get_post_report_url(self)
 
     @property
     def short(self):

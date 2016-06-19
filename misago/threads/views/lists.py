@@ -12,7 +12,7 @@ from misago.categories.serializers import IndexCategorySerializer
 from misago.core.shortcuts import paginate, pagination_dict, validate_slug
 from misago.readtracker import threadstracker
 
-from misago.threads.mixins.threadslists import ThreadsListMixin
+from misago.threads.mixins.threadslist import ThreadsListMixin
 from misago.threads.permissions.privatethreads import allow_use_private_threads
 from misago.threads.serializers import ThreadListSerializer
 from misago.threads.subscriptions import make_subscription_aware
@@ -35,7 +35,7 @@ class BaseList(View):
 
     def get(self, request, list_type=None, **kwargs):
         try:
-            page_no = int(request.GET.get('page', 0))
+            page = int(request.GET.get('page', 0))
         except (ValueError, TypeError):
             raise Http404()
 
@@ -50,14 +50,14 @@ class BaseList(View):
         threads_categories = [category] + subcategories
         threads_queryset = self.get_threads_queryset(base_queryset, threads_categories)
 
-        page = paginate(threads_queryset, page_no, 24, 6)
-        paginator = pagination_dict(page, include_page_range=False)
+        list_page = paginate(threads_queryset, page, 24, 6)
+        paginator = pagination_dict(list_page, include_page_range=False)
 
-        if page.number > 1:
-            threads = list(page.object_list)
+        if list_page.number > 1:
+            threads = list(list_page.object_list)
         else:
             pinned_threads = self.get_pinned_threads(base_queryset, threads_categories)
-            threads = list(pinned_threads) + list(page.object_list)
+            threads = list(pinned_threads) + list(list_page.object_list)
 
         if list_type in ('new', 'unread'):
             # we already know all threads on list are unread
