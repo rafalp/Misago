@@ -1,37 +1,34 @@
 from django.conf import settings
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
-from misago.threads.views.threadslist import (
-    ThreadsList, CategoryThreadsList, PrivateThreadsList)
+from misago.threads.views.lists import ThreadsList, CategoryThreadsList, PrivateThreadsList
 
 
-PATTERNS_KWARGS = (
-    {'list_type': 'all'},
-    {'list_type': 'my'},
-    {'list_type': 'new'},
-    {'list_type': 'unread'},
-    {'list_type': 'subscribed'},
-    {'list_type': 'unapproved'},
+LISTS_TYPES = (
+    'all',
+    'my',
+    'new',
+    'unread',
+    'subscribed',
+    'unapproved',
 )
 
 
 def threads_list_patterns(root_name, view, patterns):
-    urlpatterns = []
-
+    listurls = []
     for i, pattern in enumerate(patterns):
         if i > 0:
-            url_name = '%s-%s' % (root_name, PATTERNS_KWARGS[i]['list_type'])
+            url_name = '%s-%s' % (root_name, LISTS_TYPES[i])
         else:
             url_name = root_name
 
-        urlpatterns.append(url(
+        listurls.append(url(
             pattern,
             view.as_view(),
             name=url_name,
-            kwargs=PATTERNS_KWARGS[i],
+            kwargs={'list_type': LISTS_TYPES[i]},
         ))
-
-    return urlpatterns
+    return listurls
 
 
 if settings.MISAGO_CATEGORIES_ON_INDEX:
