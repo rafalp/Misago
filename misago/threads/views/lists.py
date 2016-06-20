@@ -76,31 +76,11 @@ class BaseList(View):
         add_acl(request.user, threads)
         make_subscription_aware(request.user, threads)
 
-        request.frontend_context.update({
-            'THREADS': dict(
-                results=ThreadListSerializer(threads, many=True).data,
-                subcategories=[c.pk for c in category.subcategories],
-                **paginator),
-            'CATEGORIES': IndexCategorySerializer(categories, many=True).data,
-        })
+        frontend_context_data = self.get_frontend_context(request, category, categories, threads, paginator)
+        request.frontend_context.update(frontend_context_data)
 
-        if categories[0].special_role:
-            request.frontend_context['CATEGORIES'][0]['special_role'] = True
-
-        self.set_frontend_context(request)
-
-        return render(request, self.template_name, dict(
-            category=category,
-
-            list_name=LISTS_NAMES[list_type],
-            list_type=list_type,
-
-            threads=threads,
-            paginator=paginator,
-            count=paginator['count'],
-
-            **self.get_extra_context(request)
-        ))
+        context_data = self.get_context_data(request, category, list_type, threads, paginator)
+        return render(request, self.template_name, context_data)
 
     def get_pinned_threads(self, request, queryset):
         return []
@@ -108,38 +88,31 @@ class BaseList(View):
     def get_threads_queryset(self, queryset, threads_categories):
         return queryset.filter(category__in=threads_categories)
 
-    def set_extra_frontend_context(self, request):
-        pass
-
-
-class ThreadsList(BaseList, ThreadsListMixin):
-    template_name = 'misago/threadslist/threads.html'
-
-    def get_category(self, request, categories, **kwargs):
-        return categories[0]
-
-    def get_pinned_threads(self, queryset, threads_categories):
-        return queryset.filter(weight=2)
-
-    def get_threads_queryset(self, queryset, threads_categories):
-        return queryset.filter(
-            weight__lt=2,
-            category__in=threads_categories,
-        )
-
-    def get_extra_context(self, request):
-        return {
-            'is_index': not settings.MISAGO_CATEGORIES_ON_INDEX
+    def get_frontend_context(self, request, category, categories, threads, paginator):
+        context = {
+            'THREADS': {
+                'results': ThreadListSerializer(threads, many=True).data,
+                'subcategories': [c.pk for c in category.subcategories]
+            },
+            'CATEGORIES': IndexCategorySerializer(categories, many=True).data
         }
 
-    def set_frontend_context(self, request):
-        request.frontend_context.update({
-            'THREADS_API': reverse('misago:api:thread-list'),
-            'MERGE_THREADS_API': reverse('misago:api:thread-merge'),
-        })
+        context['THREADS'].update(paginator)
+        return context
+
+    def get_context_data(self, request, category, list_type, threads, paginator):
+        return {
+            'category': category,
+
+            'list_name': LISTS_NAMES[list_type],
+            'list_type': list_type,
+
+            'threads': threads,
+            'paginator': paginator
+        }
 
 
-class CategoryThreadsList(ThreadsList, ThreadsListMixin):
+class CategoryThreadsList(BaseList, ThreadsListMixin):
     template_name = 'misago/threadslist/category.html'
     preloaded_data_prefix = 'CATEGORY_'
 
@@ -169,13 +142,46 @@ class CategoryThreadsList(ThreadsList, ThreadsListMixin):
             category__in=threads_categories,
         )
 
-    def get_extra_context(self, request):
-        return {}
+    def get_frontend_context(self, request, category, categories, *args):
+        context = super(CategoryThreadsList, self).get_frontend_context(request, category, categories, *args)
+        if categories[0].special_role:
+            context['CATEGORIES'][0]['special_role'] = True
+
+        context.update({
+            'THREADS_API': reverse('misago:api:thread-list'),
+            'MERGE_THREADS_API': reverse('misago:api:thread-merge'),
+        })
+
+        return context
 
 
-class PrivateThreadsList(ThreadsList):
+class ThreadsList(CategoryThreadsList):
+    template_name = 'misago/threadslist/threads.html'
+
+    def get_category(self, request, categories, **kwargs):
+        return categories[0]
+
+    def get_pinned_threads(self, queryset, threads_categories):
+        return queryset.filter(weight=2)
+
+    def get_threads_queryset(self, queryset, threads_categories):
+        return queryset.filter(
+            weight__lt=2,
+            category__in=threads_categories,
+        )
+
+    def get_context_data(self, *args):
+        context = super(ThreadsList, self).get_context_data(*args)
+        context['is_index'] = not settings.MISAGO_CATEGORIES_ON_INDEX
+        return context
+
+
+class PrivateThreadsList(BaseList):
     template_name = 'misago/threadslist/private_threads.html'
     preloaded_data_prefix = 'PRIVATE_'
+
+    def get_base_queryset(self, request, categories, list_type):
+        raise NotImplementedError('Private Threads List is not implemented yet!')
 
     def get_categories(self, request):
         return [Category.objects.private_threads()]
@@ -186,9 +192,3 @@ class PrivateThreadsList(ThreadsList):
 
     def get_subcategories(self, category, categories):
         return []
-
-    def get_base_queryset(self, request, categories, list_type):
-        raise NotImplementedError('Private Threads List is not implemented yet!')
-
-    def get_extra_context(self, request):
-        return {}
