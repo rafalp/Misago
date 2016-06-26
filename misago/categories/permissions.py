@@ -35,6 +35,7 @@ ACL Builder
 def build_acl(acl, roles, key_name):
     new_acl = {
         'visible_categories': [],
+        'browseable_categories': [],
         'categories': {},
     }
     new_acl.update(acl)
@@ -82,6 +83,9 @@ def build_category_acl(acl, category, categories_roles, key_name):
     if final_acl['can_see']:
         acl['visible_categories'].append(category.pk)
         acl['categories'][category.pk] = final_acl
+
+        if final_acl['can_browse']:
+            acl['browseable_categories'].append(category.pk)
 
 
 """

@@ -18,18 +18,18 @@ class BaseThread(View, ThreadViewMixin):
         base_posts_queryset = thread.post_set.select_related('poster').order_by('id')
         posts_queryset = exclude_invisible_posts(request.user, thread.category, base_posts_queryset)
 
-        list_page = paginate(posts_queryset, page, settings.MISAGO_POSTS_PER_PAGE, settings.MISAGO_THREAD_TAIL)
+        list_page = paginate(posts_queryset, page, settings.MISAGO_POSTS_PER_PAGE, settings.MISAGO_POSTS_TAIL)
         paginator = pagination_dict(list_page, include_page_range=False)
 
         posts = list(list_page.object_list)
 
-        request.frontend_context.update(self.set_frontend_context(request, thread, posts, paginator))
+        request.frontend_context.update(self.get_frontend_context(request, thread, posts, paginator))
         return render(request, self.template_name, self.get_context_data(request, thread, posts, paginator))
 
-    def set_frontend_context(self, request, thread, posts, paginator):
+    def get_frontend_context(self, request, thread, posts, paginator):
         return {}
 
-    def get_context_data(self, request, thread, posts, paginator):
+    def get_context_data(self, request, thread=None, posts=None, category=None, paginator=None):
         return {
             'category': thread.category,
             'thread': thread,

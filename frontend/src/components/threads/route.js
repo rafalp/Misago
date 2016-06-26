@@ -264,7 +264,8 @@ export default class extends WithDropdown {
     /* jshint ignore:start */
     return <div className={this.getClassName()}>
 
-      <Header disabled={!this.state.isLoaded}
+      <Header categories={this.props.route.categoriesMap}
+              disabled={!this.state.isLoaded}
               threads={this.props.threads}
               title={this.getTitle()}
               toggleNav={this.toggleNav}

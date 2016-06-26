@@ -256,9 +256,14 @@ MISAGO_AVATARS_SIZES = (400, 200, 150, 100, 64, 50, 30, 20)
 MISAGO_AVATAR_SERVER_PATH = '/user-avatar'
 
 
+# Number of threads displayed on single page
+MISAGO_THREADS_PER_PAGE = 25
+MISAGO_THREADS_TAIL = 15
+
+
 # Number of posts displayed on single thread page
 MISAGO_POSTS_PER_PAGE = 15
-MISAGO_THREAD_TAIL = 7
+MISAGO_POSTS_TAIL = 7
 
 
 # Controls max age in days of items that Misago has to process to make rankings
@@ -276,12 +281,11 @@ MISAGO_RANKING_SIZE = 50
 MISAGO_USERS_PER_PAGE = 12
 
 
-# Controls amount of data used for new threads/replies lists
-# Only unread threads younger than number of days specified in this setting
-# will be considered fresh for "new threads" list
-# Only unread threads with last reply younger than number of days specified
-# there will be confidered fresh for "Threads with unread replies" list
-MISAGO_FRESH_CONTENT_PERIOD = 40
+# Controls amount of data used by readtracking system
+# Items older than number of days specified below are considered read
+# Depending on amount of new content being posted on your forum you may want
+# To decrease or increase this number to fine-tune readtracker performance
+MISAGO_READTRACKER_CUTOFF = 40
 
 
 # X-Sendfile

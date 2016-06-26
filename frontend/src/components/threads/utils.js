@@ -1,7 +1,7 @@
 import misago from 'misago/index';
 
 export function getPageTitle(route) {
-  if (!route.category.special_role) {
+  if (route.category.level) {
     if (route.list.path) {
       return {
         title: route.list.longName,

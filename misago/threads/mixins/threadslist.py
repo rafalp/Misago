@@ -89,7 +89,7 @@ def filter_threads_queryset(user, categories, list_type, queryset):
 def filter_read_threads_queryset(user, categories, list_type, queryset):
     # grab cutoffs for categories
     cutoff_date = timezone.now() - timedelta(
-        days=settings.MISAGO_FRESH_CONTENT_PERIOD
+        days=settings.MISAGO_READTRACKER_CUTOFF
     )
 
     if cutoff_date < user.joined_on:

@@ -248,17 +248,6 @@ MISAGO_DYNAMIC_AVATAR_DRAWER
 Function used to create unique avatar for this user. Allows for customization of algorithm used to generate those.
 
 
-MISAGO_EMBER_CLI_ORIGIN
------------------------
-
-Local address under which Ember-CLI web server is being ran. Used for rewriting redirects in development using Ember-CLI (``DEBUG = True``). Defaults to `http://localhost:4200`. Set this to empty string or ``False`` to disable this feature completely.
-
-
-MISAGO_FRESH_CONTENT_PERIOD
----------------------------
-Controls amount of data used in building "New threads" and "Threads with unread replies" lists. Active forums can try lowering this value while less active ones may wish to increase this number.
-
-
 MISAGO_HOURLY_POST_LIMIT
 -----------------------
 
@@ -306,6 +295,13 @@ MISAGO_POSTS_PER_PAGE
 Controls number of posts displayed on thread page. Greater numbers can increase number of objects loaded into memory and thus depending on features enabled greatly increase memory usage.
 
 
+MISAGO_POSTS_TAIL
+-----------------
+
+Defines minimal number of posts for thread's last page. If number of posts on last page is smaller or equal to one specified in this setting, last page will be appended to previous page instead.
+
+
+
 MISAGO_RANKING_LENGTH
 ---------------------
 
@@ -317,6 +313,12 @@ MISAGO_RANKING_SIZE
 -------------------
 
 Maximum number of items on ranking page.
+
+
+MISAGO_READTRACKER_CUTOFF
+-------------------------
+
+Controls amount of data used by readtracking system. All content older than number of days specified in this setting is considered old and read, even if opposite is true. Active forums can try lowering this value while less active ones may wish to increase it instead.
 
 
 MISAGO_SENDFILE_HEADER
@@ -353,10 +355,16 @@ MISAGO_STOP_FORUM_SPAM_USE
 This settings allows you to decide wheter of not `Stop Forum Spam <http://www.stopforumspam.com/>`_ database should be used to validate IPs and emails during new users registrations.
 
 
-MISAGO_THREAD_TAIL
+MISAGO_THREADS_PER_PAGE
+---------------------
+
+Controls number of threads displayed on page. Greater numbers can increase number of objects loaded into memory and thus depending on features enabled greatly increase memory usage.
+
+
+MISAGO_THREADS_TAIL
 ------------------
 
-Defines minimal number of posts for threads last page. If number of posts on last page is smaller or equal to one specified in this setting, last page will be appended to previous page instead.
+Defines minimal number of threads for lists last page. If number of threads on last page is smaller or equal to one specified in this setting, last page will be appended to previous page instead.
 
 
 MISAGO_THREAD_TYPES

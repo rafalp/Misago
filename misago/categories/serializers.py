@@ -32,7 +32,7 @@ def last_activity_detail(f):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    parent = serializers.SerializerMethodField()
+    parent = serializers.PrimaryKeyRelatedField(read_only=True)
     description = serializers.SerializerMethodField()
     is_read = serializers.SerializerMethodField()
     subcategories = serializers.SerializerMethodField()
@@ -69,15 +69,6 @@ class CategorySerializer(serializers.ModelSerializer):
             'lft',
             'rght',
         )
-
-    def get_parent(self, obj):
-        try:
-            if obj.parent:
-                return BasicCategorySerializer(obj.parent).data
-            else:
-                return None
-        except AttributeError:
-            return None
 
     def get_description(self, obj):
         if obj.description:
@@ -133,7 +124,7 @@ class CategorySerializer(serializers.ModelSerializer):
         }
 
 
-class IndexCategorySerializer(CategorySerializer):
+class BasicCategorySerializer(CategorySerializer):
     class Meta:
         model = Category
         fields = (
@@ -148,19 +139,5 @@ class IndexCategorySerializer(CategorySerializer):
             'level',
             'lft',
             'rght',
-        )
-
-
-class BasicCategorySerializer(CategorySerializer):
-    class Meta:
-        model = Category
-        fields = (
-            'id',
-            'name',
-            'is_closed',
-            'css_class',
-            'absolute_url',
-            'level',
-            'lft',
-            'rght',
+            'is_read',
         )

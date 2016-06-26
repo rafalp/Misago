@@ -48,8 +48,10 @@ export default class extends React.Component {
   getGoBackButton() {
     if (this.props.route.category.parent) {
       /* jshint ignore:start */
+      const parent = this.props.categories[this.props.route.category.parent];
+
       return <Link className="btn btn-default btn-aligned btn-icon btn-go-back pull-left"
-                   to={this.props.route.category.parent.absolute_url + this.props.route.list.path}>
+                   to={parent.absolute_url + this.props.route.list.path}>
         <span className="material-icon">
           keyboard_arrow_left
         </span>

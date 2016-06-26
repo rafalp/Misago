@@ -15,7 +15,7 @@ from misago.core.shortcuts import get_int_or_404, get_object_or_404
 from misago.readtracker.categoriestracker import read_category
 from misago.users.rest_permissions import IsAuthenticatedOrReadOnly
 
-from misago.threads.api.threadendpoints.lists import threads_list_endpoint
+from misago.threads.api.threadendpoints.list import threads_list_endpoint
 from misago.threads.api.threadendpoints.merge import threads_merge_endpoint
 from misago.threads.api.threadendpoints.patch import thread_patch_endpoint
 from misago.threads.models import Thread, Subscription

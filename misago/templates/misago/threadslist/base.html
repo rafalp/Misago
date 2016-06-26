@@ -13,10 +13,10 @@
   <div class="container">
 
     {% block list-container %}
-      {% if category.subcategories %}
+      {% if subcategories %}
       <div class="toolbar">
         <ul class="list-inline subcategories-list">
-          {% for subcategory in category.subcategories %}
+          {% for subcategory in subcategories %}
           <li>
             <a href="{{ subcategory.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="subcategory {% if subcategory.css_class %}subcategory-{{ subcategory.css_class }}{% endif %}">
               {{ subcategory.name }}

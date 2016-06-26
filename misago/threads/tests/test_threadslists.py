@@ -111,21 +111,23 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
         categories_acl = {
             'categories': {},
             'visible_categories': [],
-            'can_approve_content': [],
+            'browseable_categories': [],
+            'can_approve_content': []
         }
 
         if base_acl:
             categories_acl.update(base_acl)
 
-        for category in Category.objects.all_categories(include_root=True):
+        for category in Category.objects.all_categories():
             categories_acl['visible_categories'].append(category.pk)
+            categories_acl['browseable_categories'].append(category.pk)
             categories_acl['categories'][category.pk] = {
                 'can_see': 1,
                 'can_browse': 1,
                 'can_see_all_threads': 1,
                 'can_see_own_threads': 0,
                 'can_hide_threads': 0,
-                'can_approve_content': 0,
+                'can_approve_content': 0
             }
 
             if category_acl:
@@ -135,6 +137,24 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
 
         override_acl(self.user, categories_acl)
         return categories_acl
+
+
+class ApiTests(ThreadsListTestCase):
+    def test_root_category(self):
+        """its possible to access threads endpoint with category=ROOT_ID"""
+        response = self.client.get('%s?category=%s' % (
+            self.api_link,
+            self.root.pk,
+        ))
+        self.assertEqual(response.status_code, 200)
+
+    def test_explicit_first_page(self):
+        """its possible to access threads endpoint with explicit first page"""
+        response = self.client.get('%s?category=%s&page=1' % (
+            self.api_link,
+            self.root.pk,
+        ))
+        self.assertEqual(response.status_code, 200)
 
 
 class AllThreadsListTests(ThreadsListTestCase):
@@ -156,8 +176,7 @@ class AllThreadsListTests(ThreadsListTestCase):
 
             self.access_all_categories()
 
-            response = self.client.get(
-                '%s?list=%s' % (self.api_link, url.strip('/')))
+            response = self.client.get('%s?list=%s' % (self.api_link, url.strip('/')))
             self.assertEqual(response.status_code, 200)
 
             response_json = json_loads(response.content)
@@ -207,37 +226,6 @@ class AllThreadsListTests(ThreadsListTestCase):
             ))
             self.assertEqual(response.status_code, 403)
 
-    def test_empty_list_hides_categories_picker(self):
-        """categories picker is hidden on empty list"""
-        Category(
-            name='Hidden Category',
-            slug='hidden-category',
-        ).insert_at(self.root, position='last-child', save=True)
-        test_category = Category.objects.get(slug='hidden-category')
-
-        self.access_all_categories()
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-
-        self.assertNotIn(
-            'subcategory-%s' % self.category_a.css_class, response.content)
-        self.assertNotIn(
-            'subcategory-%s' % self.category_e.css_class, response.content)
-
-        self.access_all_categories()
-        response = self.client.get(self.category_a.get_absolute_url())
-        self.assertEqual(response.status_code, 200)
-
-        self.assertNotIn(
-            'subcategory-%s' % self.category_b.css_class, response.content)
-
-        self.access_all_categories()
-        response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 200)
-
-        response_json = json_loads(response.content)
-        self.assertEqual(len(response_json['subcategories']), 0)
-
     def test_list_renders_categories_picker(self):
         """categories picker renders valid categories"""
         Category(
@@ -253,30 +241,24 @@ class AllThreadsListTests(ThreadsListTestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
 
-        self.assertIn(
-            'subcategory-%s' % self.category_a.css_class, response.content)
+        self.assertIn('subcategory-%s' % self.category_a.css_class, response.content)
 
         # readable categories, but non-accessible directly
-        self.assertNotIn(
-            'subcategory-%s' % self.category_b.css_class, response.content)
-        self.assertNotIn(
-            'subcategory-%s' % self.category_c.css_class, response.content)
-        self.assertNotIn(
-            'subcategory-%s' % self.category_d.css_class, response.content)
-        self.assertNotIn(
-            'subcategory-%s' % self.category_f.css_class, response.content)
+        self.assertNotIn('subcategory-%s' % self.category_b.css_class, response.content)
+        self.assertNotIn('subcategory-%s' % self.category_c.css_class, response.content)
+        self.assertNotIn('subcategory-%s' % self.category_d.css_class, response.content)
+        self.assertNotIn('subcategory-%s' % self.category_f.css_class, response.content)
 
         # hidden category
-        self.assertNotIn(
-            'subcategory-%s' % test_category.css_class, response.content)
+        self.assertNotIn('subcategory-%s' % test_category.css_class, response.content)
 
         self.access_all_categories()
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
-        self.assertEqual(
-            response_json['subcategories'][0], self.category_a.pk)
+        self.assertIn(self.category_a.pk, response_json['subcategories'])
+        self.assertNotIn(self.category_b.pk, response_json['subcategories'])
 
         # test category view
         self.access_all_categories()
@@ -284,20 +266,15 @@ class AllThreadsListTests(ThreadsListTestCase):
         response = self.client.get(self.category_a.get_absolute_url())
         self.assertEqual(response.status_code, 200)
 
-        self.assertIn(
-            'subcategory-%s' % self.category_b.css_class, response.content)
+        self.assertIn('subcategory-%s' % self.category_b.css_class, response.content)
 
         # readable categories, but non-accessible directly
-        self.assertNotIn(
-            'subcategory-%s' % self.category_c.css_class, response.content)
-        self.assertNotIn(
-            'subcategory-%s' % self.category_d.css_class, response.content)
-        self.assertNotIn(
-            'subcategory-%s' % self.category_f.css_class, response.content)
+        self.assertNotIn('subcategory-%s' % self.category_c.css_class, response.content)
+        self.assertNotIn('subcategory-%s' % self.category_d.css_class, response.content)
+        self.assertNotIn('subcategory-%s' % self.category_f.css_class, response.content)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -319,7 +296,9 @@ class AllThreadsListTests(ThreadsListTestCase):
             is_pinned=True,
         )
 
-        standard = testutils.post_thread(category=self.first_category)
+        standard = testutils.post_thread(
+            category=self.first_category
+        )
 
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
@@ -367,18 +346,20 @@ class AllThreadsListTests(ThreadsListTestCase):
     def test_noscript_pagination(self):
         """threads list is paginated for users with js disabled"""
         threads = []
-        for i in xrange(24 * 3):
-            threads.append(testutils.post_thread(category=self.first_category))
+        for i in xrange(settings.MISAGO_THREADS_PER_PAGE * 3):
+            threads.append(testutils.post_thread(
+                category=self.first_category
+            ))
 
         # secondary page renders
         response = self.client.get('/?page=2')
         self.assertEqual(response.status_code, 200)
 
-        for thread in threads[:24]:
+        for thread in threads[:settings.MISAGO_THREADS_PER_PAGE]:
             self.assertNotIn(thread.get_absolute_url(), response.content)
-        for thread in threads[24:48]:
+        for thread in threads[settings.MISAGO_THREADS_PER_PAGE:settings.MISAGO_THREADS_PER_PAGE * 2]:
             self.assertIn(thread.get_absolute_url(), response.content)
-        for thread in threads[48:]:
+        for thread in threads[settings.MISAGO_THREADS_PER_PAGE * 2:]:
             self.assertNotIn(thread.get_absolute_url(), response.content)
 
         self.assertNotIn('/?page=1', response.content)
@@ -388,9 +369,9 @@ class AllThreadsListTests(ThreadsListTestCase):
         response = self.client.get('/?page=3')
         self.assertEqual(response.status_code, 200)
 
-        for thread in threads[24:]:
+        for thread in threads[settings.MISAGO_THREADS_PER_PAGE:]:
             self.assertNotIn(thread.get_absolute_url(), response.content)
-        for thread in threads[:24]:
+        for thread in threads[:settings.MISAGO_THREADS_PER_PAGE]:
             self.assertIn(thread.get_absolute_url(), response.content)
 
         self.assertIn('/?page=2', response.content)
@@ -414,8 +395,7 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             response = self.client.get(test_category.get_absolute_url() + url)
             self.assertEqual(response.status_code, 404)
 
-            response = self.client.get(
-                '%s?category=%s' % (self.api_link, test_category.pk))
+            response = self.client.get('%s?category=%s' % (self.api_link, test_category.pk))
             self.assertEqual(response.status_code, 404)
 
     def test_access_protected_category(self):
@@ -429,6 +409,7 @@ class CategoryThreadsListTests(ThreadsListTestCase):
         for url in LISTS_URLS:
             override_acl(self.user, {
                 'visible_categories': [test_category.pk],
+                'browseable_categories': [test_category.pk],
                 'categories': {
                     test_category.pk: {
                         'can_see': 1,
@@ -442,6 +423,7 @@ class CategoryThreadsListTests(ThreadsListTestCase):
 
             override_acl(self.user, {
                 'visible_categories': [test_category.pk],
+                'browseable_categories': [test_category.pk],
                 'categories': {
                     test_category.pk: {
                         'can_see': 1,
@@ -472,7 +454,9 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             is_pinned=True,
         )
 
-        standard = testutils.post_thread(category=self.first_category)
+        standard = testutils.post_thread(
+            category=self.first_category
+        )
 
         response = self.client.get(self.first_category.get_absolute_url())
         self.assertEqual(response.status_code, 200)
@@ -496,8 +480,7 @@ class CategoryThreadsListTests(ThreadsListTestCase):
         self.assertTrue(positions['s'] > positions['g'])
 
         # API behaviour is identic
-        response = self.client.get(
-            '/api/threads/?category=%s' % self.first_category.pk)
+        response = self.client.get('/api/threads/?category=%s' % self.first_category.pk)
         self.assertEqual(response.status_code, 200)
 
         positions = {
@@ -531,16 +514,10 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
 
         self.assertIn(test_thread.get_absolute_url(), response.content)
 
-        self.assertIn(
-            'subcategory-%s' % self.category_a.css_class, response.content)
-        self.assertIn(
-            'thread-category-%s' % self.category_a.css_class, response.content)
-        self.assertIn(
-            'thread-category-%s' % self.category_c.css_class, response.content)
-
-        # other top category is hidden from user
-        self.assertNotIn(
-            'subcategory-%s' % self.category_e.css_class, response.content)
+        self.assertIn('subcategory-%s' % self.category_a.css_class, response.content)
+        self.assertIn('subcategory-%s' % self.category_e.css_class, response.content)
+        self.assertIn('thread-category-%s' % self.category_a.css_class, response.content)
+        self.assertIn('thread-category-%s' % self.category_c.css_class, response.content)
 
         # api displays same data
         self.access_all_categories()
@@ -549,9 +526,8 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
 
         response_json = json_loads(response.content)
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
-        self.assertEqual(len(response_json['subcategories']), 1)
-        self.assertEqual(
-            response_json['subcategories'][0], self.category_a.pk)
+        self.assertEqual(len(response_json['subcategories']), 3)
+        self.assertIn(self.category_a.pk, response_json['subcategories'])
 
         # test category view
         self.access_all_categories()
@@ -561,28 +537,18 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         # thread displays
         self.assertIn(test_thread.get_absolute_url(), response.content)
 
-        self.assertNotIn(
-            'thread-category-%s' % self.category_b.css_class, response.content)
-        self.assertIn(
-            'thread-category-%s' % self.category_c.css_class, response.content)
-
-        # category picker was changed
-        self.assertIn(
-            'subcategory-%s' % self.category_c.css_class, response.content)
-        self.assertNotIn(
-            'subcategory-%s' % self.category_d.css_class, response.content)
+        self.assertNotIn('thread-category-%s' % self.category_b.css_class, response.content)
+        self.assertIn('thread-category-%s' % self.category_c.css_class, response.content)
 
         # api displays same data
         self.access_all_categories()
-        response = self.client.get(
-            '%s?category=%s' % (self.api_link, self.category_b.pk))
+        response = self.client.get('%s?category=%s' % (self.api_link, self.category_b.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
-        self.assertEqual(len(response_json['subcategories']), 1)
-        self.assertEqual(
-            response_json['subcategories'][0], self.category_c.pk)
+        self.assertEqual(len(response_json['subcategories']), 2)
+        self.assertEqual(response_json['subcategories'][0], self.category_c.pk)
 
     def test_list_hides_hidden_thread(self):
         """list renders empty due to no permission to see thread"""
@@ -593,7 +559,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         test_category = Category.objects.get(slug='hidden-category')
 
         test_thread = testutils.post_thread(
-            category=test_category,
+            category=test_category
         )
 
         response = self.client.get('/')
@@ -804,8 +770,7 @@ class MyThreadsListTests(ThreadsListTestCase):
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=my&category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?list=my&category=%s' % (self.api_link, self.category_a.pk))
 
         response_json = json_loads(response.content)
         self.assertEqual(len(response_json['results']), 0)
@@ -845,8 +810,7 @@ class MyThreadsListTests(ThreadsListTestCase):
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=my&category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?list=my&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -878,8 +842,7 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
 
         response_json = json_loads(response.content)
         self.assertEqual(len(response_json['results']), 0)
@@ -912,8 +875,7 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -942,8 +904,7 @@ class NewThreadsListTests(ThreadsListTestCase):
 
         self.access_all_categories()
 
-        response = self.client.get(
-            self.category_a.get_absolute_url() + 'new/')
+        response = self.client.get(self.category_a.get_absolute_url() + 'new/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_thread.get_absolute_url(), response.content)
 
@@ -957,8 +918,7 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -973,7 +933,7 @@ class NewThreadsListTests(ThreadsListTestCase):
         test_thread = testutils.post_thread(
             category=self.category_a,
             started_on=timezone.now() - timedelta(
-                days=settings.MISAGO_FRESH_CONTENT_PERIOD + 1
+                days=settings.MISAGO_READTRACKER_CUTOFF + 1
             )
         )
 
@@ -998,8 +958,7 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -1036,8 +995,7 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -1053,8 +1011,7 @@ class NewThreadsListTests(ThreadsListTestCase):
         )
 
         threadstracker.make_thread_read_aware(self.user, test_thread)
-        threadstracker.read_thread(
-            self.user, test_thread, test_thread.last_post)
+        threadstracker.read_thread(self.user, test_thread, test_thread.last_post)
 
         self.access_all_categories()
 
@@ -1077,8 +1034,7 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -1119,8 +1075,7 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -1138,8 +1093,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
         self.access_all_categories()
 
-        response = self.client.get(
-            self.category_a.get_absolute_url() + 'unread/')
+        response = self.client.get(self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
         self.assertIn("empty-message", response.content)
 
@@ -1152,8 +1106,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -1169,8 +1122,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         )
 
         threadstracker.make_thread_read_aware(self.user, test_thread)
-        threadstracker.read_thread(
-            self.user, test_thread, test_thread.last_post)
+        threadstracker.read_thread(self.user, test_thread, test_thread.last_post)
 
         testutils.reply_thread(test_thread)
 
@@ -1182,8 +1134,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
         self.access_all_categories()
 
-        response = self.client.get(
-            self.category_a.get_absolute_url() + 'unread/')
+        response = self.client.get(self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_thread.get_absolute_url(), response.content)
 
@@ -1197,8 +1148,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -1222,8 +1172,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
         self.access_all_categories()
 
-        response = self.client.get(
-            self.category_a.get_absolute_url() + 'unread/')
+        response = self.client.get(self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
 
@@ -1236,8 +1185,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -1253,8 +1201,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         )
 
         threadstracker.make_thread_read_aware(self.user, test_thread)
-        threadstracker.read_thread(
-            self.user, test_thread, test_thread.last_post)
+        threadstracker.read_thread(self.user, test_thread, test_thread.last_post)
 
         self.access_all_categories()
 
@@ -1264,8 +1211,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
         self.access_all_categories()
 
-        response = self.client.get(
-            self.category_a.get_absolute_url() + 'unread/')
+        response = self.client.get(self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
 
@@ -1278,8 +1224,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -1293,17 +1238,14 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         test_thread = testutils.post_thread(
             category=self.category_a,
             started_on=timezone.now() - timedelta(
-                days=settings.MISAGO_FRESH_CONTENT_PERIOD + 5
+                days=settings.MISAGO_READTRACKER_CUTOFF + 5
             )
         )
 
         threadstracker.make_thread_read_aware(self.user, test_thread)
-        threadstracker.read_thread(
-            self.user, test_thread, test_thread.last_post)
+        threadstracker.read_thread(self.user, test_thread, test_thread.last_post)
 
-        testutils.reply_thread(test_thread,
-            posted_on=test_thread.started_on + timedelta(days=1)
-        )
+        testutils.reply_thread(test_thread, posted_on=test_thread.started_on + timedelta(days=1))
 
         self.access_all_categories()
 
@@ -1313,8 +1255,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
         self.access_all_categories()
 
-        response = self.client.get(
-            self.category_a.get_absolute_url() + 'unread/')
+        response = self.client.get(self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
 
@@ -1327,8 +1268,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -1345,12 +1285,9 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         )
 
         threadstracker.make_thread_read_aware(self.user, test_thread)
-        threadstracker.read_thread(
-            self.user, test_thread, test_thread.last_post)
+        threadstracker.read_thread(self.user, test_thread, test_thread.last_post)
 
-        testutils.reply_thread(test_thread,
-            posted_on=test_thread.started_on + timedelta(days=1)
-        )
+        testutils.reply_thread(test_thread, posted_on=test_thread.started_on + timedelta(days=1))
 
         self.access_all_categories()
 
@@ -1360,8 +1297,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
         self.access_all_categories()
 
-        response = self.client.get(
-            self.category_a.get_absolute_url() + 'unread/')
+        response = self.client.get(self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
 
@@ -1374,8 +1310,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -1410,8 +1345,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
         self.access_all_categories()
 
-        response = self.client.get(
-            self.category_a.get_absolute_url() + 'unread/')
+        response = self.client.get(self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
 
@@ -1424,8 +1358,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
+        response = self.client.get('%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -1435,7 +1368,9 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 class SubscribedThreadsListTests(ThreadsListTestCase):
     def test_list_shows_subscribed_thread(self):
         """list shows subscribed thread"""
-        test_thread = testutils.post_thread(category=self.category_a)
+        test_thread = testutils.post_thread(
+            category=self.category_a
+        )
         self.user.subscription_set.create(
             thread=test_thread,
             category=self.category_a,
@@ -1450,8 +1385,7 @@ class SubscribedThreadsListTests(ThreadsListTestCase):
 
         self.access_all_categories()
 
-        response = self.client.get(
-            self.category_a.get_absolute_url() + 'subscribed/')
+        response = self.client.get(self.category_a.get_absolute_url() + 'subscribed/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(test_thread.get_absolute_url(), response.content)
 
@@ -1465,10 +1399,7 @@ class SubscribedThreadsListTests(ThreadsListTestCase):
         self.assertIn(test_thread.get_absolute_url(), response.content)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=subscribed&category=%s' % (
-                self.api_link, self.category_a.pk
-            ))
+        response = self.client.get('%s?list=subscribed&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -1477,7 +1408,9 @@ class SubscribedThreadsListTests(ThreadsListTestCase):
 
     def test_list_hides_unsubscribed_thread(self):
         """list shows subscribed thread"""
-        test_thread = testutils.post_thread(category=self.category_a)
+        test_thread = testutils.post_thread(
+            category=self.category_a
+        )
 
         self.access_all_categories()
 
@@ -1487,8 +1420,7 @@ class SubscribedThreadsListTests(ThreadsListTestCase):
 
         self.access_all_categories()
 
-        response = self.client.get(
-            self.category_a.get_absolute_url() + 'subscribed/')
+        response = self.client.get(self.category_a.get_absolute_url() + 'subscribed/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
 
@@ -1502,10 +1434,7 @@ class SubscribedThreadsListTests(ThreadsListTestCase):
         self.assertNotIn(test_thread.get_absolute_url(), response.content)
 
         self.access_all_categories()
-        response = self.client.get(
-            '%s?list=subscribed&category=%s' % (
-                self.api_link, self.category_a.pk
-            ))
+        response = self.client.get('%s?list=subscribed&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(response.content)
@@ -1574,8 +1503,7 @@ class UnapprovedListTests(ThreadsListTestCase):
         }, {
             'can_see_unapproved_content_lists': True
         })
-        response = self.client.get(
-            self.category_a.get_absolute_url() + 'unapproved/')
+        response = self.client.get(self.category_a.get_absolute_url() + 'unapproved/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(visible_thread.get_absolute_url(), response.content)
         self.assertNotIn(hidden_thread.get_absolute_url(), response.content)
@@ -1617,8 +1545,7 @@ class UnapprovedListTests(ThreadsListTestCase):
         self.access_all_categories(base_acl={
             'can_see_unapproved_content_lists': True
         })
-        response = self.client.get(
-            self.category_a.get_absolute_url() + 'unapproved/')
+        response = self.client.get(self.category_a.get_absolute_url() + 'unapproved/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(visible_thread.get_absolute_url(), response.content)
         self.assertNotIn(hidden_thread.get_absolute_url(), response.content)
