@@ -23,8 +23,11 @@ def parse(text, request, poster, allow_mentions=True, allow_links=True,
 
     Returns dict object
     """
-    md = md_factory(allow_links=allow_links, allow_images=allow_images,
-                    allow_blocks=allow_blocks)
+    md = md_factory(
+        allow_links=allow_links,
+        allow_images=allow_images,
+        allow_blocks=allow_blocks,
+    )
 
     parsing_result = {
         'original_text': text,
@@ -92,9 +95,7 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
 
     if allow_blocks:
         # Add [hr] [quote], [spoiler], [list] and [code] blocks
-        md.parser.blockprocessors.add('bb_hr',
-                                      blocks.BBCodeHRProcessor(md.parser),
-                                      '>hr')
+        md.parser.blockprocessors.add('bb_hr', blocks.BBCodeHRProcessor(md.parser), '>hr')
     else:
         # Remove blocks
         del md.parser.blockprocessors['hashheader']
@@ -116,7 +117,7 @@ def linkify_paragraphs(result):
 def clean_links(result, request):
     site_address = '%s://%s' % (request.scheme, request.get_host())
 
-    soup = BeautifulSoup(result['parsed_text'])
+    soup = BeautifulSoup(result['parsed_text'], 'html5lib')
     for link in soup.find_all('a'):
         if link['href'].lower().startswith(site_address):
             result['inside_links'].append(link['href'])

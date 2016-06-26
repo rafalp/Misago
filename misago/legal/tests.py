@@ -11,6 +11,72 @@ class MockRequest(object):
         self.frontend_context = {}
 
 
+class PrivacyPolicyTests(TestCase):
+    def tearDown(self):
+        settings.reset_settings()
+
+    def test_404_on_no_policy(self):
+        """policy view returns 404 when no policy is set"""
+        self.assertFalse(settings.privacy_policy_link)
+        self.assertFalse(settings.privacy_policy)
+
+        response = self.client.get(reverse('misago:privacy-policy'))
+        self.assertEqual(response.status_code, 404)
+
+    def test_301_on_link_policy(self):
+        """policy view returns 302 redirect when link is set"""
+        settings.override_setting('privacy_policy_link', 'http://test.com')
+        settings.override_setting('privacy_policy', 'Lorem ipsum')
+        self.assertTrue(settings.privacy_policy_link)
+        self.assertTrue(settings.privacy_policy)
+
+        response = self.client.get(reverse('misago:privacy-policy'))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], 'http://test.com')
+
+    def test_200_on_link_policy(self):
+        """policy view returns 200 when custom tos content is set"""
+        settings.override_setting('privacy_policy_title', 'Test Policy')
+        settings.override_setting('privacy_policy', 'Lorem ipsum dolor')
+        self.assertTrue(settings.privacy_policy_title)
+        self.assertTrue(settings.privacy_policy)
+
+        response = self.client.get(reverse('misago:privacy-policy'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Test Policy', response.content)
+        self.assertIn('Lorem ipsum dolor', response.content)
+
+    def test_context_processor_no_policy(self):
+        """context processor has no TOS link"""
+        context_dict = legal_links(MockRequest())
+        self.assertFalse(context_dict)
+
+    def test_context_processor_misago_policy(self):
+        """context processor has TOS link to Misago view"""
+        settings.override_setting('privacy_policy', 'Lorem ipsum')
+        context_dict = legal_links(MockRequest())
+
+        self.assertEqual(context_dict, {
+            'PRIVACY_POLICY_URL': reverse('misago:privacy-policy')
+        })
+
+    def test_context_processor_remote_policy(self):
+        """context processor has TOS link to remote url"""
+        settings.override_setting('privacy_policy_link', 'http://test.com')
+        context_dict = legal_links(MockRequest())
+
+        self.assertEqual(context_dict, {
+            'PRIVACY_POLICY_URL': 'http://test.com'
+        })
+
+        # set misago view too
+        settings.override_setting('privacy_policy', 'Lorem ipsum')
+        context_dict = legal_links(MockRequest())
+
+        self.assertEqual(context_dict, {
+            'PRIVACY_POLICY_URL': 'http://test.com'
+        })
+
 
 class TermsOfServiceTests(TestCase):
     def tearDown(self):
@@ -76,71 +142,4 @@ class TermsOfServiceTests(TestCase):
 
         self.assertEqual(context_dict, {
             'TERMS_OF_SERVICE_URL': 'http://test.com'
-        })
-
-
-class PrivacyPolicyTests(TestCase):
-    def tearDown(self):
-        settings.reset_settings()
-
-    def test_404_on_no_policy(self):
-        """policy view returns 404 when no policy is set"""
-        self.assertFalse(settings.privacy_policy_link)
-        self.assertFalse(settings.privacy_policy)
-
-        response = self.client.get(reverse('misago:privacy-policy'))
-        self.assertEqual(response.status_code, 404)
-
-    def test_301_on_link_policy(self):
-        """policy view returns 302 redirect when link is set"""
-        settings.override_setting('privacy_policy_link', 'http://test.com')
-        settings.override_setting('privacy_policy', 'Lorem ipsum')
-        self.assertTrue(settings.privacy_policy_link)
-        self.assertTrue(settings.privacy_policy)
-
-        response = self.client.get(reverse('misago:privacy-policy'))
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], 'http://test.com')
-
-    def test_200_on_link_policy(self):
-        """policy view returns 200 when custom tos content is set"""
-        settings.override_setting('privacy_policy_title', 'Test Policy')
-        settings.override_setting('privacy_policy', 'Lorem ipsum dolor')
-        self.assertTrue(settings.privacy_policy_title)
-        self.assertTrue(settings.privacy_policy)
-
-        response = self.client.get(reverse('misago:privacy-policy'))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('Test Policy', response.content)
-        self.assertIn('Lorem ipsum dolor', response.content)
-
-    def test_context_processor_no_policy(self):
-        """context processor has no TOS link"""
-        context_dict = legal_links(MockRequest())
-        self.assertFalse(context_dict)
-
-    def test_context_processor_misago_policy(self):
-        """context processor has TOS link to Misago view"""
-        settings.override_setting('privacy_policy', 'Lorem ipsum')
-        context_dict = legal_links(MockRequest())
-
-        self.assertEqual(context_dict, {
-            'PRIVACY_POLICY_URL': reverse('misago:privacy-policy')
-        })
-
-    def test_context_processor_remote_policy(self):
-        """context processor has TOS link to remote url"""
-        settings.override_setting('privacy_policy_link', 'http://test.com')
-        context_dict = legal_links(MockRequest())
-
-        self.assertEqual(context_dict, {
-            'PRIVACY_POLICY_URL': 'http://test.com'
-        })
-
-        # set misago view too
-        settings.override_setting('privacy_policy', 'Lorem ipsum')
-        context_dict = legal_links(MockRequest())
-
-        self.assertEqual(context_dict, {
-            'PRIVACY_POLICY_URL': 'http://test.com'
         })

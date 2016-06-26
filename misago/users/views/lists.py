@@ -68,7 +68,7 @@ def allow_see_list(f):
 
 
 @allow_see_list
-def lander(request):
+def landing(request):
     default = users_list.get_default_link()
     return redirect(default)
 

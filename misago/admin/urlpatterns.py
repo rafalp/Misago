@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
 
 
 class URLPatterns(object):
@@ -16,7 +16,7 @@ class URLPatterns(object):
     def patterns(self, namespace, *urlpatterns):
         self._patterns.append({
             'namespace': namespace,
-            'urlpatterns': patterns('', *urlpatterns),
+            'urlpatterns': urlpatterns,
             })
 
     def get_child_patterns(self, parent):
@@ -27,11 +27,8 @@ class URLPatterns(object):
             if namespace['parent'] == parent:
                 prefixed_namespace = prefix + namespace['namespace']
                 urlpatterns = self.get_child_patterns(prefixed_namespace)
-                included_patterns = include(urlpatterns,
-                                            namespace=namespace['namespace'])
-                namespace_urlpatterns += patterns('',
-                    url(namespace['path'], included_patterns)
-                )
+                included_patterns = include(urlpatterns, namespace=namespace['namespace'])
+                namespace_urlpatterns.append(url(namespace['path'], included_patterns))
 
         return namespace_urlpatterns
 
@@ -49,11 +46,8 @@ class URLPatterns(object):
         for namespace in self._namespaces:
             if not namespace['parent']:
                 urlpatterns = self.get_child_patterns(namespace['namespace'])
-                included_patterns = include(urlpatterns,
-                                            namespace=namespace['namespace'])
-                root_urlpatterns += patterns('',
-                    url(namespace['path'], included_patterns)
-                )
+                included_patterns = include(urlpatterns, namespace=namespace['namespace'])
+                root_urlpatterns.append(url(namespace['path'], included_patterns))
 
         return root_urlpatterns
 

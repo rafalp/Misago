@@ -30,23 +30,6 @@ def get_parsed_content(request, setting_name):
         return cached_content['parsed']
 
 
-def terms_of_service(request):
-    if not (settings.terms_of_service or settings.terms_of_service_link):
-        raise Http404()
-
-    if settings.terms_of_service_link:
-        return redirect(settings.terms_of_service_link)
-
-    parsed_content = get_parsed_content(request, 'terms_of_service')
-
-    return render(request, 'misago/terms_of_service.html', {
-            'id': 'terms-of-service',
-            'title': settings.terms_of_service_title or _("Terms of service"),
-            'link': settings.terms_of_service_link,
-            'body': parsed_content,
-        })
-
-
 def privacy_policy(request):
     if not (settings.privacy_policy or settings.privacy_policy_link):
         raise Http404()
@@ -60,5 +43,22 @@ def privacy_policy(request):
             'id': 'privacy-policy',
             'title': settings.privacy_policy_title or _("Privacy policy"),
             'link': settings.privacy_policy_link,
+            'body': parsed_content,
+        })
+
+
+def terms_of_service(request):
+    if not (settings.terms_of_service or settings.terms_of_service_link):
+        raise Http404()
+
+    if settings.terms_of_service_link:
+        return redirect(settings.terms_of_service_link)
+
+    parsed_content = get_parsed_content(request, 'terms_of_service')
+
+    return render(request, 'misago/terms_of_service.html', {
+            'id': 'terms-of-service',
+            'title': settings.terms_of_service_title or _("Terms of service"),
+            'link': settings.terms_of_service_link,
             'body': parsed_content,
         })

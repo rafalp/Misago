@@ -1,15 +1,17 @@
 from django.conf.urls import patterns, include, url
+
 from misago import admin
+from misago.admin.views import auth, index
 
 
-urlpatterns = patterns('misago.admin.views',
+urlpatterns = [
     # "misago:admin:index" link symbolises "root" of Misago admin links space
     # any request with path that falls below this one is assumed to be directed
     # at Misago Admin and will be checked by Misago Admin Middleware
-    url(r'^$', 'index.admin_index', name='index'),
-    url(r'^resolve-version/$', 'index.check_version', name='check-version'),
-    url(r'^logout/$', 'auth.logout', name='logout'),
-)
+    url(r'^$', index.admin_index, name='index'),
+    url(r'^resolve-version/$', index.check_version, name='check-version'),
+    url(r'^logout/$', auth.logout, name='logout'),
+]
 
 
 # Discover admin and register patterns
