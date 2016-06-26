@@ -9,6 +9,7 @@ admin.autodiscover()
 admin.site.login_form = AdminAuthenticationForm
 
 
+# Register basic views
 from misago.core.views import javascript_catalog, momentjs_catalog
 
 urlpatterns = [

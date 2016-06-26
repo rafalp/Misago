@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^$', forum_index, name='index'),
 ]
 
+
 # Register API
 apipatterns = [
     url(r'^', include('misago.categories.urls.api')),
