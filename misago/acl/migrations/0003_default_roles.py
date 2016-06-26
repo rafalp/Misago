@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations
 from django.utils.translation import ugettext as _
 
 from misago.core import serializer
@@ -15,7 +15,8 @@ def create_default_roles(apps, schema_editor):
     Role = apps.get_model('misago_acl', 'Role')
 
     role = Role(name=_("Member"), special_role='authenticated')
-    pickle_permissions(role,
+    pickle_permissions(
+        role,
         {
             # account perms
             'misago.users.permissions.account': {
@@ -47,7 +48,8 @@ def create_default_roles(apps, schema_editor):
     role.save()
 
     role = Role(name=_("Guest"), special_role='anonymous')
-    pickle_permissions(role,
+    pickle_permissions(
+        role,
         {
             # account perms
             'misago.users.permissions.account': {
@@ -77,7 +79,8 @@ def create_default_roles(apps, schema_editor):
     role.save()
 
     role = Role(name=_("Moderator"))
-    pickle_permissions(role,
+    pickle_permissions(
+        role,
         {
             # account perms
             'misago.users.permissions.account': {
@@ -128,7 +131,8 @@ def create_default_roles(apps, schema_editor):
     role.save()
 
     role = Role(name=_("See warnings"))
-    pickle_permissions(role,
+    pickle_permissions(
+        role,
         {
             # warnings perms
             'misago.users.permissions.warnings': {
@@ -138,7 +142,8 @@ def create_default_roles(apps, schema_editor):
     role.save()
 
     role = Role(name=_("Renaming users"))
-    pickle_permissions(role,
+    pickle_permissions(
+        role,
         {
             # rename users perms
             'misago.users.permissions.moderation': {
@@ -148,7 +153,8 @@ def create_default_roles(apps, schema_editor):
     role.save()
 
     role = Role(name=_("Banning users"))
-    pickle_permissions(role,
+    pickle_permissions(
+        role,
         {
             # ban users perms
             'misago.users.permissions.profiles': {
@@ -165,7 +171,8 @@ def create_default_roles(apps, schema_editor):
     role.save()
 
     role = Role(name=_("Deleting users"))
-    pickle_permissions(role,
+    pickle_permissions(
+        role,
         {
             # delete users perms
             'misago.users.permissions.delete': {
@@ -176,7 +183,8 @@ def create_default_roles(apps, schema_editor):
     role.save()
 
     role = Role(name=_("Can't be blocked"))
-    pickle_permissions(role,
+    pickle_permissions(
+        role,
         {
             # profiles perms
             'misago.users.permissions.profiles': {
@@ -186,7 +194,8 @@ def create_default_roles(apps, schema_editor):
     role.save()
 
     role = Role(name=_("Private threads"))
-    pickle_permissions(role,
+    pickle_permissions(
+        role,
         {
             # private threads perms
             'misago.threads.permissions.privatethreads': {
@@ -201,7 +210,8 @@ def create_default_roles(apps, schema_editor):
     role.save()
 
     role = Role(name=_("Private threads moderator"))
-    pickle_permissions(role,
+    pickle_permissions(
+        role,
         {
             # private threads perms
             'misago.threads.permissions.privatethreads': {

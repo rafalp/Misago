@@ -1,3 +1,4 @@
+# pylint: disable=protected-access
 from types import ModuleType
 
 from django.conf import settings

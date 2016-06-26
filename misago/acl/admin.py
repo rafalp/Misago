@@ -11,7 +11,8 @@ class MisagoAdminExtension(object):
 
         # Roles
         urlpatterns.namespace(r'^users/', 'users', 'permissions')
-        urlpatterns.patterns('permissions:users',
+        urlpatterns.patterns(
+            'permissions:users',
             url(r'^$', RolesList.as_view(), name='index'),
             url(r'^new/$', NewRole.as_view(), name='new'),
             url(r'^edit/(?P<pk>\d+)/$', EditRole.as_view(), name='edit'),

@@ -1,3 +1,13 @@
+"""
+Module functions for ACLs
+
+Workflow for ACLs in Misago is simple:
+
+First, you get user ACL. Its directory that you can introspect to find out user
+permissions, or if you have objects, you can use this acl to make those objects
+aware of their ACLs. This gives objects themselves special "acl" attribute with
+properties defined by ACL providers within their "add_acl_to_target"
+"""
 import copy
 
 from django.contrib.auth import get_user_model
@@ -8,21 +18,6 @@ from misago.core.cache import cache
 from misago.acl import version
 from misago.acl.builder import build_acl
 from misago.acl.providers import providers
-
-
-__ALL__ = ['get_user_acl', 'add_acl', 'serialize_acl']
-
-
-"""
-Module functions for ACLS
-
-Workflow for ACLs in Misago is simple:
-
-First, you get user ACL. Its directory that you can introspect to find out user
-permissions, or if you have objects, you can use this acl to make those objects
-aware of their ACLs. This gives objects themselves special "acl" attribute with
-properties defined by ACL providers within their "add_acl_to_target"
-"""
 
 
 def get_user_acl(user):

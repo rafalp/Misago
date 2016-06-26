@@ -1,3 +1,4 @@
+# pylint: disable=attribute-defined-outside-init,pointless-string-statement
 from django.db import models
 from django.dispatch import receiver
 
