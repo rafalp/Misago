@@ -156,6 +156,14 @@ class ApiTests(ThreadsListTestCase):
         ))
         self.assertEqual(response.status_code, 200)
 
+    def test_invalid_list_type(self):
+        """api returns 404 for invalid list type"""
+        response = self.client.get('%s?category=%s&list=nope' % (
+            self.api_link,
+            self.root.pk,
+        ))
+        self.assertEqual(response.status_code, 404)
+
 
 class AllThreadsListTests(ThreadsListTestCase):
     def test_list_renders_empty(self):
@@ -176,7 +184,7 @@ class AllThreadsListTests(ThreadsListTestCase):
 
             self.access_all_categories()
 
-            response = self.client.get('%s?list=%s' % (self.api_link, url.strip('/')))
+            response = self.client.get('%s?list=%s' % (self.api_link, url.strip('/') or 'all'))
             self.assertEqual(response.status_code, 200)
 
             response_json = json_loads(response.content)
@@ -202,7 +210,7 @@ class AllThreadsListTests(ThreadsListTestCase):
             response = self.client.get('%s?category=%s&list=%s' % (
                 self.api_link,
                 self.category_b.pk,
-                url.strip('/'),
+                url.strip('/') or 'all',
             ))
             self.assertEqual(response.status_code, 200)
 
@@ -222,7 +230,7 @@ class AllThreadsListTests(ThreadsListTestCase):
             response = self.client.get('%s?category=%s&list=%s' % (
                 self.api_link,
                 self.category_b.pk,
-                url.strip('/'),
+                url.strip('/') or 'all',
             ))
             self.assertEqual(response.status_code, 403)
 
