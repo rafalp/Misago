@@ -36,7 +36,7 @@ LIST_DENIED_MESSAGES = {
 }
 
 
-class ThreadsViewModel(object):
+class ViewModel(object):
     def __init__(self, request, category, list_type, page):
         self.allow_see_list(request, category, list_type)
 
@@ -114,7 +114,7 @@ class ThreadsViewModel(object):
         }
 
 
-class ForumThreads(ThreadsViewModel):
+class ForumThreads(ViewModel):
     def get_pinned_threads(self, queryset, category, threads_categories):
         if category.level:
             return list(queryset.filter(weight=2)) + list(queryset.filter(
@@ -137,7 +137,7 @@ class ForumThreads(ThreadsViewModel):
             )
 
 
-class PrivateThreads(ThreadsViewModel):
+class PrivateThreads(ViewModel):
     def get_remaining_threads_queryset(self, queryset, category, threads_categories):
         return queryset.filter(category__in=threads_categories)
 

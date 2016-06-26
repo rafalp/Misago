@@ -13,6 +13,7 @@ from misago.categories.permissions import (
     allow_see_category, allow_browse_category)
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
 from misago.readtracker.categoriestracker import read_category
+from misago.readtracker.threadstracker import make_read_aware
 from misago.users.rest_permissions import IsAuthenticatedOrReadOnly
 
 from misago.threads.api.threadendpoints.list import threads_list_endpoint
@@ -52,7 +53,10 @@ class ThreadViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, pk=None):
         thread = self.get_thread(request.user, pk)
+
+        make_read_aware(request.user, thread)
         make_subscription_aware(request.user, thread)
+
         return Response(ThreadSerializer(thread).data)
 
     def partial_update(self, request, pk=None):

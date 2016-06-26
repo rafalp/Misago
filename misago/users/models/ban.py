@@ -122,10 +122,8 @@ class Ban(models.Model):
 
 
 class BanCache(models.Model):
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, primary_key=True, related_name='ban_cache')
-    ban = models.ForeignKey(
-        Ban, null=True, blank=True, on_delete=models.SET_NULL)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, primary_key=True, related_name='ban_cache')
+    ban = models.ForeignKey(Ban, null=True, blank=True, on_delete=models.SET_NULL)
     bans_version = models.PositiveIntegerField(default=0)
     user_message = models.TextField(null=True, blank=True)
     staff_message = models.TextField(null=True, blank=True)
@@ -144,7 +142,8 @@ class BanCache(models.Model):
             check_type=BAN_USERNAME,
             user_message=self.user_message,
             staff_message=self.staff_message,
-            expires_on=self.expires_on)
+            expires_on=self.expires_on
+        )
         return BanMessageSerializer(temp_ban).data
 
     @property

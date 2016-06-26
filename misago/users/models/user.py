@@ -73,10 +73,8 @@ PRIVATE_THREAD_INVITES_LIMITS_CHOICES = (
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, email, password=None,
-                    set_default_avatar=False, **extra_fields):
-        from misago.users.validators import (validate_email, validate_password,
-                                             validate_username)
+    def create_user(self, username, email, password=None, set_default_avatar=False, **extra_fields):
+        from misago.users.validators import validate_email, validate_password, validate_username
 
         with transaction.atomic():
             if not email:
@@ -446,7 +444,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Online(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
         primary_key=True,
         related_name='online_tracker',
     )

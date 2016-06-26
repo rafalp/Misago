@@ -429,13 +429,14 @@ def allow_see_thread(user, target):
     if not (category_acl.get('can_see') and category_acl.get('can_browse')):
         raise Http404()
 
+    if target.is_hidden and (user.is_anonymous() or not category_acl.get('can_hide_threads')):
+        raise Http404()
+
     if user.is_anonymous() or user.pk != target.starter_id:
         if not category_acl.get('can_see_all_threads'):
             raise Http404()
-        if target.is_unapproved:
-            if not category_acl.get('can_approve_content'):
-                raise Http404()
-        if target.is_hidden and not category_acl.get('can_hide_threads'):
+
+        if target.is_unapproved and not category_acl.get('can_approve_content'):
             raise Http404()
 can_see_thread = return_boolean(allow_see_thread)
 
@@ -519,7 +520,7 @@ def allow_edit_post(user, target):
     if user.is_anonymous():
         raise PermissionDenied(_("You have to sign in to edit posts."))
 
-    category_acl = target.category.acl
+    category_acl = user.acl['categories'].get(target.category_id, {})
 
     if not category_acl['can_edit_posts']:
         raise PermissionDenied(_("You can't edit posts in this category."))
@@ -559,7 +560,7 @@ def allow_unhide_post(user, target):
     if user.is_anonymous():
         raise PermissionDenied(_("You have to sign in to reveal posts."))
 
-    category_acl = target.category.acl
+    category_acl = user.acl['categories'].get(target.category_id, {})
 
     if not category_acl['can_hide_posts']:
         if not category_acl['can_hide_own_posts']:
@@ -601,7 +602,7 @@ def allow_hide_post(user, target):
     if user.is_anonymous():
         raise PermissionDenied(_("You have to sign in to hide posts."))
 
-    category_acl = target.category.acl
+    category_acl = user.acl['categories'].get(target.category_id, {})
 
     if not category_acl['can_hide_posts']:
         if not category_acl['can_hide_own_posts']:
@@ -643,7 +644,7 @@ def allow_delete_post(user, target):
     if user.is_anonymous():
         raise PermissionDenied(_("You have to sign in to delete posts."))
 
-    category_acl = target.category.acl
+    category_acl = user.acl['categories'].get(target.category_id, {})
 
     if category_acl['can_hide_posts'] != 2:
         if not category_acl['can_hide_own_posts'] != 2:

@@ -34,11 +34,11 @@ class ListBase(View):
     def get_threads(self, request, category, list_type, page):
         return self.threads(request, category, list_type, page)
 
-    def get_default_context(self):
+    def get_default_frontend_context(self):
         return {}
 
     def get_frontend_context(self, request, category, threads):
-        context = self.get_default_context()
+        context = self.get_default_frontend_context()
 
         context.update(category.get_frontend_context())
         context.update(threads.get_frontend_context())
@@ -60,7 +60,7 @@ class ForumThreads(ListBase):
 
     template_name = 'misago/threadslist/threads.html'
 
-    def get_default_context(self):
+    def get_default_frontend_context(self):
         return {
             'THREADS_API': reverse('misago:api:thread-list'),
             'MERGE_THREADS_API': reverse('misago:api:thread-merge'),

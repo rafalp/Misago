@@ -1,50 +1,65 @@
-from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.views.generic import View
 
-from misago.acl import add_acl
-from misago.core.shortcuts import paginate, pagination_dict, validate_slug
-
-from misago.threads.mixins.threadview import ThreadViewMixin
-from misago.threads.mixins.typemixins import ThreadMixin, PrivateThreadMixin
-from misago.threads.permissions.threads import exclude_invisible_posts
+from misago.threads.viewmodels.thread import ForumThread
+from misago.threads.viewmodels.posts import ThreadPosts
 
 
-class BaseThread(View, ThreadViewMixin):
-    def get(self, request, slug, pk, page=0, **kwargs):
-        thread = self.get_thread(request, pk)
-        validate_slug(thread, slug)
+class ThreadBase(View):
+    thread = None
+    posts = ThreadPosts
 
-        base_posts_queryset = thread.post_set.select_related('poster').order_by('id')
-        posts_queryset = exclude_invisible_posts(request.user, thread.category, base_posts_queryset)
+    template_name = None
 
-        list_page = paginate(posts_queryset, page, settings.MISAGO_POSTS_PER_PAGE, settings.MISAGO_POSTS_TAIL)
-        paginator = pagination_dict(list_page, include_page_range=False)
+    def get(self, request, pk, slug, page=0):
+        thread = self.get_thread(request, slug, pk)
+        posts = self.get_posts(request, thread, page)
 
-        posts = list(list_page.object_list)
+        frontend_context = self.get_frontend_context(request, thread, posts)
+        request.frontend_context.update(frontend_context)
 
-        request.frontend_context.update(self.get_frontend_context(request, thread, posts, paginator))
-        return render(request, self.template_name, self.get_context_data(request, thread, posts, paginator))
+        template_context = self.get_template_context(request, thread, posts)
+        return render(request, self.template_name, template_context)
 
-    def get_frontend_context(self, request, thread, posts, paginator):
+    def get_thread(self, request, pk, slug):
+        return self.thread(request, pk, slug)
+
+    def get_posts(self, request, thread, page):
+        return self.posts(request, thread, page)
+
+    def get_default_frontend_context(self):
         return {}
 
-    def get_context_data(self, request, thread=None, posts=None, category=None, paginator=None):
-        return {
-            'category': thread.category,
-            'thread': thread,
-            'posts': posts,
+    def get_frontend_context(self, request, thread, posts):
+        context = self.get_default_frontend_context()
 
-            'count': paginator['count'],
-            'paginator': paginator,
+        context.update(thread.get_frontend_context())
+        context.update(posts.get_frontend_context())
 
+        return context
+
+    def get_template_context(self, request, thread, posts):
+        context = {
             'url_name': ':'.join(request.resolver_match.namespaces + [request.resolver_match.url_name])
         }
 
+        context.update(thread.get_template_context())
+        context.update(posts.get_template_context())
 
-class Thread(BaseThread, ThreadMixin):
+        return context
+
+
+class Thread(ThreadBase):
+    thread = ForumThread
     template_name = 'misago/thread/thread.html'
 
+    def get_default_frontend_context(self):
+        return {
+            'THREADS_API': reverse('misago:api:thread-list'),
+            #'POSTS_API': reverse('misago:api:posts-list'),
+        }
 
-class PrivateThread(BaseThread, PrivateThreadMixin):
+
+class PrivateThread(ThreadBase):
     template_name = 'misago/thread/private_thread.html'
