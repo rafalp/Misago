@@ -21,23 +21,17 @@ from misago.users.bans import get_user_ban
 from misago.users.forms.options import ForumOptionsForm
 from misago.users.online.utils import get_user_status
 from misago.users.permissions.delete import allow_delete_user
-from misago.users.permissions.moderation import (
-    allow_rename_user, allow_moderate_avatar)
-from misago.users.permissions.profiles import (
-    allow_browse_users_list, allow_follow_user, allow_see_ban_details)
+from misago.users.permissions.moderation import allow_rename_user, allow_moderate_avatar
+from misago.users.permissions.profiles import allow_browse_users_list, allow_follow_user, allow_see_ban_details
 
-from misago.users.rest_permissions import (
-    BasePermission, IsAuthenticatedOrReadOnly, UnbannedAnonOnly)
-from misago.users.serializers import (
-    UserSerializer, UserProfileSerializer, BanDetailsSerializer)
+from misago.users.rest_permissions import BasePermission, IsAuthenticatedOrReadOnly, UnbannedAnonOnly
+from misago.users.serializers import UserSerializer, UserProfileSerializer, BanDetailsSerializer
 
 from misago.users.api.userendpoints.list import list_endpoint
-from misago.users.api.userendpoints.avatar import (
-    avatar_endpoint, moderate_avatar_endpoint)
+from misago.users.api.userendpoints.avatar import avatar_endpoint, moderate_avatar_endpoint
 from misago.users.api.userendpoints.create import create_endpoint
 from misago.users.api.userendpoints.signature import signature_endpoint
-from misago.users.api.userendpoints.username import (
-    username_endpoint, moderate_username_endpoint)
+from misago.users.api.userendpoints.username import username_endpoint, moderate_username_endpoint
 from misago.users.api.userendpoints.changeemail import change_email_endpoint
 from misago.users.api.userendpoints.changepassword import change_password_endpoint
 
@@ -53,8 +47,7 @@ class UserViewSetPermission(BasePermission):
 
 def allow_self_only(user, pk, message):
     if user.is_anonymous():
-        raise PermissionDenied(
-            _("You have to sign in to perform this action."))
+        raise PermissionDenied(_("You have to sign in to perform this action."))
     if user.pk != int(pk):
         raise PermissionDenied(message)
 
@@ -69,9 +62,7 @@ class UserViewSet(viewsets.GenericViewSet):
         return self.queryset.select_related(*relations)
 
     def get_user(self, pk):
-        return get_object_or_404(self.get_queryset(),
-            pk=get_int_or_404(pk)
-        )
+        return get_object_or_404(self.get_queryset(), pk=get_int_or_404(pk))
 
     def list(self, request):
         allow_browse_users_list(request.user)
@@ -84,25 +75,22 @@ class UserViewSet(viewsets.GenericViewSet):
         profile = self.get_user(pk)
 
         add_acl(request.user, profile)
-        profile.status = get_user_status(profile, request.user.acl)
+        profile.status = get_user_status(request.user, profile)
 
-        serializer = UserProfileSerializer(
-            profile, context={'user': request.user})
+        serializer = UserProfileSerializer(profile, context={'user': request.user})
         return Response(serializer.data)
 
     @detail_route(methods=['get', 'post'])
     def avatar(self, request, pk=None):
         get_int_or_404(pk)
-        allow_self_only(request.user, pk,
-                        _("You can't change other users avatars."))
+        allow_self_only(request.user, pk, _("You can't change other users avatars."))
 
         return avatar_endpoint(request)
 
     @detail_route(methods=['post'])
     def forum_options(self, request, pk=None):
         get_int_or_404(pk)
-        allow_self_only(
-            request.user, pk, _("You can't change other users options."))
+        allow_self_only(request.user, pk, _("You can't change other users options."))
 
         form = ForumOptionsForm(request.data, instance=request.user)
         if form.is_valid():
@@ -116,32 +104,28 @@ class UserViewSet(viewsets.GenericViewSet):
     @detail_route(methods=['get', 'post'])
     def username(self, request, pk=None):
         get_int_or_404(pk)
-        allow_self_only(request.user, pk,
-                        _("You can't change other users names."))
+        allow_self_only(request.user, pk, _("You can't change other users names."))
 
         return username_endpoint(request)
 
     @detail_route(methods=['get', 'post'])
     def signature(self, request, pk=None):
         get_int_or_404(pk)
-        allow_self_only(request.user, pk,
-                        _("You can't change other users signatures."))
+        allow_self_only(request.user, pk, _("You can't change other users signatures."))
 
         return signature_endpoint(request)
 
     @detail_route(methods=['post'])
     def change_password(self, request, pk=None):
         get_int_or_404(pk)
-        allow_self_only(request.user, pk,
-                        _("You can't change other users passwords."))
+        allow_self_only(request.user, pk, _("You can't change other users passwords."))
 
         return change_password_endpoint(request)
 
     @detail_route(methods=['post'])
     def change_email(self, request, pk=None):
         get_int_or_404(pk)
-        allow_self_only(request.user, pk,
-                        _("You can't change other users e-mail addresses."))
+        allow_self_only(request.user, pk, _("You can't change other users e-mail addresses."))
 
         return change_email_endpoint(request)
 
@@ -182,7 +166,7 @@ class UserViewSet(viewsets.GenericViewSet):
         allow_see_ban_details(request.user, profile)
 
         ban = get_user_ban(profile)
-        if (ban):
+        if ban:
             return Response(BanDetailsSerializer(ban).data)
         else:
             return Response({})
@@ -227,9 +211,7 @@ class UserViewSet(viewsets.GenericViewSet):
                         post.thread.synchronize()
                         post.thread.save()
 
-                    categories = Category.objects.filter(
-                        id__in=categories_to_sync)
-
+                    categories = Category.objects.filter(id__in=categories_to_sync)
                     for category in categories.iterator():
                         category.synchronize()
                         category.save()

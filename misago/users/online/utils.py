@@ -9,7 +9,7 @@ from misago.users.models import Online, BanCache
 ACTIVITY_CUTOFF = timedelta(minutes=2)
 
 
-def get_user_status(user, acl):
+def get_user_status(viewer, user):
     user_status = {
         'is_banned': False,
         'is_hidden': user.is_hiding_presence,
@@ -29,7 +29,7 @@ def get_user_status(user, acl):
 
     try:
         online_tracker = user.online_tracker
-        is_hidden = user.is_hiding_presence and not acl['can_see_hidden_users']
+        is_hidden = user.is_hiding_presence and not viewer.acl['can_see_hidden_users']
 
         if online_tracker and not is_hidden:
             if online_tracker.last_click >= timezone.now() - ACTIVITY_CUTOFF:
@@ -39,7 +39,7 @@ def get_user_status(user, acl):
         pass
 
     if user_status['is_hidden']:
-        if acl['can_see_hidden_users']:
+        if viewer.acl['can_see_hidden_users']:
             user_status['is_hidden'] = False
             if user_status['is_online']:
                 user_status['is_online_hidden'] = True
@@ -58,7 +58,7 @@ def get_user_status(user, acl):
     return user_status
 
 
-def make_users_status_aware(users, acl, fetch_state=False):
+def make_users_status_aware(viewer, users, fetch_state=False):
     users_dict = {}
     for user in users:
         users_dict[user.pk] = user
@@ -74,4 +74,4 @@ def make_users_status_aware(users, acl, fetch_state=False):
 
     # Fill user states
     for user in users:
-        user.status = get_user_status(user, acl)
+        user.status = get_user_status(viewer, user)

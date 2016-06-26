@@ -28,7 +28,7 @@ class ViewModel(object):
         add_acl(request.user, posts)
 
         make_posts_read_aware(request.user, thread.thread, posts)
-        make_users_status_aware(posters, request.user.acl)
+        make_users_status_aware(request.user, posters)
 
         self.posts = posts
         self.paginator = paginator

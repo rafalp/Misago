@@ -23,8 +23,7 @@ Paginator = ApiPaginator(settings.MISAGO_USERS_PER_PAGE, 4)
 
 def active(request):
     ranking = get_active_posters_ranking()
-    make_users_status_aware(
-        ranking['users'], request.user.acl, fetch_state=True)
+    make_users_status_aware(request.user, ranking['users'], fetch_state=True)
 
     return Response({
         'tracked_period': settings.MISAGO_RANKING_LENGTH,
@@ -59,7 +58,7 @@ def generic(request):
     paginator = Paginator()
     users = paginator.paginate_queryset(queryset.order_by('slug'), request)
 
-    make_users_status_aware(users, request.user.acl)
+    make_users_status_aware(request.user, users)
     return paginator.get_paginated_response(
         UserSerializer(users, many=True).data)
 
