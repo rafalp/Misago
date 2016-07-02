@@ -1,0 +1,11 @@
+<div class="page-breadcrumbs">
+  <div class="container">
+    <ol class="breadcrumb">
+      {% for node in breadcrumbs %}
+        <li>
+          <a href="{{ node.get_absolute_url }}">{{ node.name }}</a>
+        </li>
+      {% endfor %}
+    </ol>
+  </div>
+</div>

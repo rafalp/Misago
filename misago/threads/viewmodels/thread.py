@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.utils.translation import gettext as _
 
 from misago.acl import add_acl
 from misago.categories.models import Category
@@ -19,6 +20,8 @@ class ViewModel(object):
     def __init__(self, request, slug, pk):
         thread = self.get_thread(request, pk, slug)
 
+        thread.path = self.get_thread_path(thread.category)
+
         add_acl(request.user, thread.category)
         add_acl(request.user, thread)
 
@@ -27,9 +30,29 @@ class ViewModel(object):
 
         self.thread = thread
         self.category = thread.category
+        self.path = thread.path
 
     def get_thread(self, request, pk, slug=None):
-        raise NotImplementedError('Thread view model has to implement get_Thread(request, pk, slug=None)')
+        raise NotImplementedError('Thread view model has to implement get_thread(request, pk, slug=None)')
+
+    def get_thread_path(self, category):
+        thread_path = []
+
+        if category.level:
+            categories = Category.objects.filter(
+                tree_id=category.tree_id,
+                lft__lte=category.lft,
+                rght__gte=category.rght
+            ).order_by('level')
+            thread_path = list(categories)
+        else:
+            thread_path = [category]
+
+        thread_path[0].name = self.get_root_name()
+        return thread_path
+
+    def get_root_name(self):
+        raise NotImplementedError('Thread view model has to implement get_root_name()')
 
     def get_frontend_context(self):
         return {
@@ -39,7 +62,8 @@ class ViewModel(object):
     def get_template_context(self):
         return {
             'thread': self.thread,
-            'category': self.category
+            'category': self.category,
+            'breadcrumbs': self.path
         }
 
 
@@ -55,3 +79,6 @@ class ForumThread(ViewModel):
         if slug:
             validate_slug(thread, slug)
         return thread
+
+    def get_root_name(self):
+        return _("Threads")

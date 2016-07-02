@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import JSONField
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.dispatch import receiver
@@ -26,7 +27,7 @@ class Post(models.Model):
     mentions = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="mention_set")
 
     has_attachments = models.BooleanField(default=False)
-    pickled_attachments = models.TextField(null=True, blank=True)
+    attachments_cache = JSONField(null=True, blank=True)
 
     posted_on = models.DateTimeField()
     updated_on = models.DateTimeField()
@@ -58,6 +59,10 @@ class Post(models.Model):
     is_unapproved = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
     is_protected = models.BooleanField(default=False)
+
+    is_event = models.BooleanField(default=False)
+    event_type = models.CharField(max_length=255, null=True, blank=True)
+    event_context = JSONField(null=True, blank=True)
 
     def __unicode__(self):
         return '%s...' % self.original[10:].strip()

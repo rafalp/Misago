@@ -199,12 +199,12 @@ class UserViewSet(viewsets.GenericViewSet):
                 else:
                     categories_to_sync = set()
 
-                    threads = profile.thread_set.select_related('first_post')
+                    threads = profile.thread_set.select_related('category', 'first_post')
                     for thread in threads.filter(is_hidden=False).iterator():
                         categories_to_sync.add(thread.category_id)
-                        hide_thread(request.user, thread)
+                        hide_thread(request, thread)
 
-                    posts = profile.post_set.select_related('thread')
+                    posts = profile.post_set.select_related('category', 'thread', 'thread__category')
                     for post in posts.filter(is_hidden=False).iterator():
                         categories_to_sync.add(post.category_id)
                         hide_post(request.user, post)

@@ -26,14 +26,14 @@ def patch_weight(request, thread, value):
 
     if value == 2:
         if thread.acl.get('can_pin') == 2:
-            moderation.pin_thread_globally(request.user, thread)
+            moderation.pin_thread_globally(request, thread)
         else:
             raise PermissionDenied(
                 _("You don't have permission to pin this thread globally."))
     elif value == 1:
-        moderation.pin_thread_locally(request.user, thread)
+        moderation.pin_thread_locally(request, thread)
     elif value == 0:
-        moderation.unpin_thread(request.user, thread)
+        moderation.unpin_thread(request, thread)
 
     return {'weight': thread.weight}
 thread_patch_endpoint.replace('weight', patch_weight)
@@ -52,7 +52,7 @@ def patch_move(request, thread, value):
         allow_browse_category(request.user, new_category)
         allow_start_thread(request.user, new_category)
 
-        moderation.move_thread(request.user, thread, new_category)
+        moderation.move_thread(request, thread, new_category)
 
         return {'category': CategorySerializer(new_category).data}
     else:
@@ -95,7 +95,7 @@ def patch_is_unapproved(request, thread, value):
         if value:
             raise PermissionDenied(_("Content approval can't be reversed."))
 
-        moderation.approve_thread(request.user, thread)
+        moderation.approve_thread(request, thread)
 
         return {
             'is_unapproved': thread.is_unapproved,
@@ -110,9 +110,9 @@ thread_patch_endpoint.replace('is-unapproved', patch_is_unapproved)
 def patch_is_closed(request, thread, value):
     if thread.acl.get('can_close'):
         if value:
-            moderation.close_thread(request.user, thread)
+            moderation.close_thread(request, thread)
         else:
-            moderation.open_thread(request.user, thread)
+            moderation.open_thread(request, thread)
 
         return {'is_closed': thread.is_closed}
     else:
@@ -128,9 +128,9 @@ thread_patch_endpoint.replace('is-closed', patch_is_closed)
 def patch_is_hidden(request, thread, value):
     if thread.acl.get('can_hide'):
         if value:
-            moderation.hide_thread(request.user, thread)
+            moderation.hide_thread(request, thread)
         else:
-            moderation.unhide_thread(request.user, thread)
+            moderation.unhide_thread(request, thread)
 
         return {'is_hidden': thread.is_hidden}
     else:

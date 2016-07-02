@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.conf import settings
+from django.contrib.postgres.fields import JSONField
 from django.db import models, migrations
 import django.db.models.deletion
 import django.utils.timezone
@@ -10,7 +11,6 @@ from misago.core.pgutils import CreatePartialIndex, CreatePartialCompositeIndex
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('misago_categories', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('parsed', models.TextField()),
                 ('checksum', models.CharField(max_length=64, default='-')),
                 ('has_attachments', models.BooleanField(default=False)),
-                ('pickled_attachments', models.TextField(null=True, blank=True)),
+                ('attachments_cache', JSONField(null=True, blank=True)),
                 ('posted_on', models.DateTimeField()),
                 ('updated_on', models.DateTimeField()),
                 ('edits', models.PositiveIntegerField(default=0)),
@@ -46,6 +46,9 @@ class Migration(migrations.Migration):
                 ('last_editor', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
                 ('mentions', models.ManyToManyField(related_name='mention_set', to=settings.AUTH_USER_MODEL)),
                 ('poster', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('is_event', models.BooleanField(default=False)),
+                ('event_type', models.CharField(max_length=255, null=True, blank=True)),
+                ('event_context', JSONField(null=True, blank=True)),
             ],
             options={
             },
@@ -72,7 +75,6 @@ class Migration(migrations.Migration):
                 ('has_open_reports', models.BooleanField(default=False)),
                 ('has_unapproved_posts', models.BooleanField(default=False)),
                 ('has_hidden_posts', models.BooleanField(default=False)),
-                ('has_events', models.BooleanField(default=False)),
                 ('started_on', models.DateTimeField(db_index=True)),
                 ('starter_name', models.CharField(max_length=255)),
                 ('starter_slug', models.CharField(max_length=255)),
@@ -116,25 +118,6 @@ class Migration(migrations.Migration):
             name='participants',
             field=models.ManyToManyField(related_name='private_thread_set', through='misago_threads.ThreadParticipant', through_fields=('thread', 'user'), to=settings.AUTH_USER_MODEL),
             preserve_default=True,
-        ),
-        migrations.CreateModel(
-            name='Event',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('author_name', models.CharField(max_length=255)),
-                ('author_slug', models.CharField(max_length=255)),
-                ('icon', models.CharField(max_length=255)),
-                ('occured_on', models.DateTimeField(default=django.utils.timezone.now, db_index=True)),
-                ('message', models.CharField(max_length=255)),
-                ('checksum', models.CharField(max_length=64, default='-')),
-                ('is_hidden', models.BooleanField(default=False)),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
-                ('category', models.ForeignKey(to='misago_categories.Category')),
-                ('thread', models.ForeignKey(to='misago_threads.Thread')),
-            ],
-            options={
-            },
-            bases=(models.Model,),
         ),
         CreatePartialIndex(
             field='Thread.has_reported_posts',

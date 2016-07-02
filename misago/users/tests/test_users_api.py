@@ -501,4 +501,4 @@ class UserDeleteTests(AuthenticatedUserTestCase):
             User.objects.get(pk=self.other_user.pk)
 
         self.assertEqual(Thread.objects.count(), self.threads + 1)
-        self.assertEqual(Post.objects.count(), self.posts + 1)
+        self.assertEqual(Post.objects.count(), self.posts + 2)

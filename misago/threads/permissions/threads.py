@@ -11,7 +11,7 @@ from misago.categories.models import Category, RoleCategoryACL, CategoryRole
 from misago.categories.permissions import get_categories_roles
 from misago.core import forms
 
-from misago.threads.models import Thread, Post, Event
+from misago.threads.models import Thread, Post
 
 
 __all__ = [
@@ -383,7 +383,18 @@ def add_acl_to_thread(user, thread):
         thread.acl['can_merge'] = category_acl.get('can_merge_threads', False)
 
 
-def add_acl_to_post(user, post):
+def add_acl_to_event(user, event):
+    category_acl = user.acl['categories'].get(event.category_id, {})
+    can_hide_events = category_acl.get('can_hide_events', 0)
+
+    event.acl.update({
+        'can_see_hidden': can_hide_events,
+        'can_hide': can_hide_events > 0,
+        'can_delete': can_hide_events == 2,
+    })
+
+
+def add_acl_to_reply(user, post):
     category_acl = user.acl['categories'].get(post.category_id, {})
 
     post.acl.update({
@@ -406,19 +417,17 @@ def add_acl_to_post(user, post):
             post.acl['can_see_hidden'] = post.id == post.thread.first_post_id
 
 
-def add_acl_to_event(user, event):
-    category_acl = user.acl['categories'].get(event.category_id, {})
-    can_hide_events = category_acl.get('can_hide_events', 0)
-
-    event.acl['can_hide'] = can_hide_events > 0
-    event.acl['can_delete'] = can_hide_events == 2
+def add_acl_to_post(user, post):
+    if post.is_event:
+        add_acl_to_event(user, post)
+    else:
+        add_acl_to_reply(user, post)
 
 
 def register_with(registry):
     registry.acl_annotator(Category, add_acl_to_category)
     registry.acl_annotator(Thread, add_acl_to_thread)
     registry.acl_annotator(Post, add_acl_to_post)
-    registry.acl_annotator(Event, add_acl_to_event)
 
 
 """

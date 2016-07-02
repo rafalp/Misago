@@ -6,142 +6,116 @@ from misago.threads.events import record_event
 
 
 @atomic
-def pin_thread_globally(user, thread):
+def pin_thread_globally(request, thread):
     if thread.weight != 2:
-        message = _("%(user)s pinned thread globally.")
-        record_event(user, thread, "bookmark", message, {'user': user})
-
         thread.weight = 2
-        thread.save(update_fields=['has_events', 'weight'])
+        record_event(request, thread, 'pinned_globally')
         return True
     else:
         return False
 
 
 @atomic
-def pin_thread_locally(user, thread):
+def pin_thread_locally(request, thread):
     if thread.weight != 1:
-        message = _("%(user)s pinned thread locally.")
-        record_event(user, thread, "bookmark", message, {'user': user})
-
         thread.weight = 1
-        thread.save(update_fields=['has_events', 'weight'])
+        record_event(request, thread, 'pinned_locally')
         return True
     else:
         return False
 
 
 @atomic
-def unpin_thread(user, thread):
+def unpin_thread(request, thread):
     if thread.weight:
-        message = _("%(user)s unpinned thread.")
-        record_event(user, thread, "circle", message, {'user': user})
-
         thread.weight = 0
-        thread.save(update_fields=['has_events', 'weight'])
+        record_event(request, thread, 'unpinned')
         return True
     else:
         return False
 
 
 @atomic
-def move_thread(user, thread, new_category):
+def move_thread(request, thread, new_category):
     if thread.category_id != new_category.pk:
-        message = _("%(user)s moved thread from %(category)s.")
-        record_event(user, thread, "arrow-right", message, {
-            'user': user,
-            'category': thread.category
-        })
-
+        from_category = thread.category
         thread.move(new_category)
-        thread.save(update_fields=['has_events', 'category'])
+
+        record_event(request, thread, 'moved', {
+            'from_category': {
+                'name': from_category.name,
+                'url': from_category.get_absolute_url(),
+            }
+        })
         return True
     else:
         return False
 
 
 @atomic
-def merge_thread(user, thread, other_thread):
-    message = _("%(user)s merged in %(thread)s.")
-    record_event(user, thread, "arrow-right", message, {
-        'user': user,
-        'thread': other_thread.title
-    })
-
+def merge_thread(request, thread, other_thread):
     thread.merge(other_thread)
     other_thread.delete()
+
+    record_event(request, thread, 'merged', {
+        'merged_thread': other_thread.title,
+    })
     return True
 
 
 @atomic
-def approve_thread(user, thread):
+def approve_thread(request, thread):
     if thread.is_unapproved:
-        message = _("%(user)s approved thread.")
-        record_event(user, thread, "check", message, {'user': user})
-
-        thread.is_closed = False
+        thread.is_unapproved = False
         thread.first_post.is_unapproved = False
         thread.first_post.save(update_fields=['is_unapproved'])
-        thread.synchronize()
-        thread.save(update_fields=['has_events', 'is_unapproved'])
+
+        record_event(request, thread, 'approved')
         return True
     else:
         return False
 
 
 @atomic
-def open_thread(user, thread):
+def open_thread(request, thread):
     if thread.is_closed:
-        message = _("%(user)s opened thread.")
-        record_event(user, thread, "unlock-alt", message, {'user': user})
-
         thread.is_closed = False
-        thread.save(update_fields=['has_events', 'is_closed'])
+        record_event(request, thread, 'opened')
         return True
     else:
         return False
 
 
 @atomic
-def close_thread(user, thread):
+def close_thread(request, thread):
     if not thread.is_closed:
-        message = _("%(user)s closed thread.")
-        record_event(user, thread, "lock", message, {'user': user})
-
         thread.is_closed = True
-        thread.save(update_fields=['has_events', 'is_closed'])
+        record_event(request, thread, 'closed')
         return True
     else:
         return False
 
 
 @atomic
-def unhide_thread(user, thread):
+def unhide_thread(request, thread):
     if thread.is_hidden:
-        message = _("%(user)s made thread visible.")
-        record_event(user, thread, "eye", message, {'user': user})
-
         thread.first_post.is_hidden = False
         thread.first_post.save(update_fields=['is_hidden'])
         thread.is_hidden = False
-        thread.save(update_fields=['has_events', 'is_hidden'])
-        thread.synchronize()
-        thread.save()
+
+        record_event(request, thread, 'unhid')
         return True
     else:
         return False
 
 
 @atomic
-def hide_thread(user, thread):
+def hide_thread(request, thread):
     if not thread.is_hidden:
-        message = _("%(user)s hidden thread.")
-        record_event(user, thread, "eye-slash", message, {'user': user})
-
         thread.first_post.is_hidden = True
-        thread.first_post.hidden_by = user
-        thread.first_post.hidden_by_name = user.username
-        thread.first_post.hidden_by_slug = user.slug
+        thread.first_post.hidden_by = request.user
+        thread.first_post.hidden_by_name = request.user.username
+        thread.first_post.hidden_by_slug = request.user.slug
         thread.first_post.hidden_on = timezone.now()
         thread.first_post.save(update_fields=[
             'is_hidden',
@@ -150,15 +124,15 @@ def hide_thread(user, thread):
             'hidden_by_slug',
             'hidden_on',
         ])
-
         thread.is_hidden = True
-        thread.save(update_fields=['has_events', 'is_hidden'])
+
+        record_event(request, thread, 'hid')
         return True
     else:
         return False
 
 
 @atomic
-def delete_thread(user, thread):
+def delete_thread(request, thread):
     thread.delete()
     return True

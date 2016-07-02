@@ -4,7 +4,7 @@ from django.dispatch import receiver, Signal
 from misago.categories.models import Category
 from misago.core.pgutils import batch_update, batch_delete
 
-from misago.threads.models import Thread, Post, Event
+from misago.threads.models import Thread, Post
 
 
 delete_post = Signal()
@@ -28,14 +28,12 @@ def merge_threads_posts(sender, **kwargs):
 @receiver(move_thread)
 def move_thread_content(sender, **kwargs):
     sender.post_set.update(category=sender.category)
-    sender.event_set.update(category=sender.category)
 
 
 from misago.categories.signals import (delete_category_content,
                                        move_category_content)
 @receiver(delete_category_content)
 def delete_category_threads(sender, **kwargs):
-    sender.event_set.all().delete()
     sender.thread_set.all().delete()
     sender.post_set.all().delete()
 
@@ -46,7 +44,6 @@ def move_category_threads(sender, **kwargs):
 
     Thread.objects.filter(category=sender).update(category=new_category)
     Post.objects.filter(category=sender).update(category=new_category)
-    Event.objects.filter(category=sender).update(category=new_category)
 
 
 from misago.users.signals import delete_user_content, username_changed
@@ -95,11 +92,6 @@ def update_usernames(sender, **kwargs):
     Post.objects.filter(last_editor=sender).update(
         last_editor_name=sender.username,
         last_editor_slug=sender.slug
-    )
-
-    Event.objects.filter(author=sender).update(
-        author_name=sender.username,
-        author_slug=sender.slug
     )
 
 

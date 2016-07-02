@@ -26,8 +26,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
 
     def test_merge_no_threads(self):
         """api validates if we are trying to merge no threads"""
-        response = self.client.post(
-            self.api_link, content_type="application/json")
+        response = self.client.post(self.api_link, content_type="application/json")
         self.assertEqual(response.status_code, 403)
 
         response_json = json.loads(response.content)
