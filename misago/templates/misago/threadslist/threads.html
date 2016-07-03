@@ -11,12 +11,14 @@
   {% endif %}
 {% elif is_index and paginator.page == 1 %}
   {% if misago_settings.forum_index_title %}
-  {{ misago_settings.forum_index_title }}
+    {{ misago_settings.forum_index_title }}
   {% else %}
-  {{ misago_settings.forum_name }}
+    {{ misago_settings.forum_name }}
   {% endif %}
 {% elif paginator.page > 1 %}
   {% trans "Threads" %} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ block.super }}
+{% elif is_index %}
+  {{ block.super }}
 {% else %}
   {% trans "Threads" %} | {{ block.super }}
 {% endif %}

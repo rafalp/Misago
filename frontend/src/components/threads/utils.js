@@ -35,7 +35,7 @@ export function getPageTitle(route) {
 }
 
 export function getTitle(route) {
-  if (!route.category.special_role) {
+  if (route.category.level) {
     return route.category.name;
   } else if (!misago.get('CATEGORIES_ON_INDEX')) {
     if (misago.get('SETTINGS').forum_index_title) {
