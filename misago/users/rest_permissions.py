@@ -20,8 +20,7 @@ __all__ = [
 class IsAuthenticatedOrReadOnly(BasePermission):
     def has_permission(self, request, view):
         if request.user.is_anonymous() and request.method not in SAFE_METHODS:
-            raise PermissionDenied(
-                _("This action is not available to guests."))
+            raise PermissionDenied(_("This action is not available to guests."))
         else:
             return True
 

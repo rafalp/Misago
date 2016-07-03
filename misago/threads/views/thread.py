@@ -13,7 +13,7 @@ class ThreadBase(View):
     template_name = None
 
     def get(self, request, pk, slug, page=0):
-        thread = self.get_thread(request, slug, pk)
+        thread = self.get_thread(request, pk, slug)
         posts = self.get_posts(request, thread, page)
 
         frontend_context = self.get_frontend_context(request, thread, posts)
@@ -34,8 +34,10 @@ class ThreadBase(View):
     def get_frontend_context(self, request, thread, posts):
         context = self.get_default_frontend_context()
 
-        context.update(thread.get_frontend_context())
-        context.update(posts.get_frontend_context())
+        context.update({
+            'THREAD': thread.get_frontend_context(),
+            'POSTS': posts.get_frontend_context(),
+        })
 
         return context
 
@@ -56,8 +58,7 @@ class Thread(ThreadBase):
 
     def get_default_frontend_context(self):
         return {
-            'THREADS_API': reverse('misago:api:thread-list'),
-            #'POSTS_API': reverse('misago:api:posts-list'),
+            'THREADS_API': reverse('misago:api:thread-list')
         }
 
 

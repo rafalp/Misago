@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import detail_route, list_route
-from rest_framework.parsers import JSONParser, MultiPartParser
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 
 from misago.acl import add_acl
@@ -54,7 +54,7 @@ def allow_self_only(user, pk, message):
 
 class UserViewSet(viewsets.GenericViewSet):
     permission_classes = (UserViewSetPermission,)
-    parser_classes=(JSONParser, MultiPartParser)
+    parser_classes=(FormParser, JSONParser, MultiPartParser)
     queryset = get_user_model().objects
 
     def get_queryset(self):

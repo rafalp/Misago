@@ -3,6 +3,9 @@ from rest_framework.routers import (
 
 
 class MisagoApiRouter(DefaultRouter):
+    include_root_view = False
+    include_format_suffixes = False
+
     routes = [
         # List route.
         Route(

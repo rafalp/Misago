@@ -311,13 +311,12 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # Rest Framework Configuration
 REST_FRAMEWORK = {
-    'UNAUTHENTICATED_USER': 'misago.users.models.AnonymousUser',
-
-    'EXCEPTION_HANDLER': 'misago.core.exceptionhandler.handle_api_exception',
-
     'DEFAULT_PERMISSION_CLASSES': (
         'misago.users.rest_permissions.IsAuthenticatedOrReadOnly',
-    )
+    ),
+    'EXCEPTION_HANDLER': 'misago.core.exceptionhandler.handle_api_exception',
+    'UNAUTHENTICATED_USER': 'misago.users.models.AnonymousUser',
+    'URL_FORMAT_OVERRIDE': None,
 }
 
 

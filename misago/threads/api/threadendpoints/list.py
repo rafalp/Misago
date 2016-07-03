@@ -1,5 +1,6 @@
-from django.http import Http404
 from rest_framework.response import Response
+
+from misago.core.shortcuts import get_int_or_404
 
 from misago.threads.viewmodels.category import ThreadsRootCategory, ThreadsCategory
 from misago.threads.viewmodels.threads import ForumThreads
@@ -12,12 +13,9 @@ class ListEndpointBase(object):
     template_name = None
 
     def __call__(self, request, **kwargs):
-        try:
-            page = int(request.query_params.get('page', 0))
-            if page == 1:
-                page = 0 # api allows explicit first page
-        except (ValueError, TypeError):
-            raise Http404()
+        page = get_int_or_404(request.query_params.get('page', 0))
+        if page == 1:
+            page = 0 # api allows explicit first page
 
         list_type = request.query_params.get('list', 'all')
 

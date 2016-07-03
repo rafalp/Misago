@@ -11,14 +11,10 @@ from misago.conf import settings
 from misago.core.mail import mail_user
 
 from misago.users.bans import get_user_ban
-from misago.users.forms.auth import (
-    AuthenticationForm, ResendActivationForm, ResetPasswordForm)
+from misago.users.forms.auth import AuthenticationForm, ResendActivationForm, ResetPasswordForm
 from misago.users.rest_permissions import UnbannedAnonOnly, UnbannedOnly
-from misago.users.serializers import (
-    AuthenticatedUserSerializer, AnonymousUserSerializer)
-from misago.users.tokens import (
-    make_activation_token, make_password_change_token,
-    is_password_change_token_valid)
+from misago.users.serializers import AuthenticatedUserSerializer, AnonymousUserSerializer
+from misago.users.tokens import make_activation_token, make_password_change_token, is_password_change_token_valid
 from misago.users.validators import validate_password
 
 

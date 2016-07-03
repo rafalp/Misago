@@ -13,7 +13,7 @@ __all__ = [
 
 
 class ThreadSerializer(serializers.ModelSerializer):
-    category = BasicCategorySerializer()
+    category = BasicCategorySerializer(many=False, read_only=True)
     is_read = serializers.SerializerMethodField()
     last_poster_url = serializers.SerializerMethodField()
     absolute_url = serializers.SerializerMethodField()

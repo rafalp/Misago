@@ -6,6 +6,7 @@ from misago.readtracker.threadstracker import make_posts_read_aware
 from misago.users.online.utils import make_users_status_aware
 
 from misago.threads.permissions.threads import exclude_invisible_posts
+from misago.threads.serializers import ThreadPostSerializer
 
 
 class ViewModel(object):
@@ -43,7 +44,13 @@ class ViewModel(object):
         return exclude_invisible_posts(request.user, thread.category, queryset)
 
     def get_frontend_context(self):
-        return {}
+        context = {
+            'results': ThreadPostSerializer(self.posts, many=True).data
+        }
+
+        context.update(self.paginator)
+
+        return context
 
     def get_template_context(self):
         return {

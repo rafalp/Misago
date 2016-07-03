@@ -17,7 +17,7 @@ BASE_QUERYSET = Thread.objects.select_related(
 
 
 class ViewModel(object):
-    def __init__(self, request, slug, pk):
+    def __init__(self, request, pk, slug=None):
         thread = self.get_thread(request, pk, slug)
 
         thread.path = self.get_thread_path(thread.category)
@@ -55,9 +55,7 @@ class ViewModel(object):
         raise NotImplementedError('Thread view model has to implement get_root_name()')
 
     def get_frontend_context(self):
-        return {
-            'THREAD': ThreadSerializer(self.thread).data
-        }
+        return ThreadSerializer(self.thread).data
 
     def get_template_context(self):
         return {

@@ -31,6 +31,7 @@ class Post(models.Model):
 
     posted_on = models.DateTimeField()
     updated_on = models.DateTimeField()
+    hidden_on = models.DateTimeField(default=timezone.now)
 
     edits = models.PositiveIntegerField(default=0)
     last_editor = models.ForeignKey(
@@ -52,7 +53,6 @@ class Post(models.Model):
     )
     hidden_by_name = models.CharField(max_length=255, null=True, blank=True)
     hidden_by_slug = models.SlugField(max_length=255, null=True, blank=True)
-    hidden_on = models.DateTimeField(default=timezone.now)
 
     has_reports = models.BooleanField(default=False)
     has_open_reports = models.BooleanField(default=False)

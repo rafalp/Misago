@@ -18,7 +18,7 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
         self.thread = testutils.post_thread(category=self.category)
         self.api_link = self.thread.get_api_url()
 
-    def override_acl(self, acl):
+    def override_acl(self, acl=None):
         final_acl = {
             'can_see': 1,
             'can_browse': 1,
@@ -26,8 +26,13 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
             'can_see_own_threads': 0,
             'can_hide_threads': 0,
             'can_approve_content': 0,
+            'can_edit_posts': 0,
+            'can_hide_posts': 0,
+            'can_hide_own_posts': 0,
         }
-        final_acl.update(acl)
+
+        if acl:
+            final_acl.update(acl)
 
         override_acl(self.user, {
             'categories': {
@@ -40,6 +45,71 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
         return json.loads(response.content)
+
+
+class ThreadRetrieveApiTests(ThreadsApiTestCase):
+    def setUp(self):
+        super(ThreadRetrieveApiTests, self).setUp()
+
+        self.tested_links = [
+            self.api_link,
+            '%sposts/' % self.api_link,
+            '%sposts/?page=1' % self.api_link,
+        ]
+
+    def test_api_returns_thread(self):
+        """api endpoint has no showstoppers"""
+        for link in self.tested_links:
+            self.override_acl()
+
+            response = self.client.get(link)
+            self.assertEqual(response.status_code, 200)
+
+            response_json = json.loads(response.content)
+            self.assertEqual(response_json['id'], self.thread.pk)
+            self.assertEqual(response_json['title'], self.thread.title)
+
+            if 'posts' in link:
+                self.assertIn('post_set', response_json)
+
+    def test_api_shows_owner_thread(self):
+        """api handles "owned threads only"""
+        for link in self.tested_links:
+            self.override_acl({
+                'can_see_all_threads': 0
+            })
+
+            response = self.client.get(link)
+            self.assertEqual(response.status_code, 404)
+
+        self.thread.starter = self.user
+        self.thread.save()
+
+        for link in self.tested_links:
+            self.override_acl({
+                'can_see_all_threads': 0
+            })
+
+            response = self.client.get(link)
+            self.assertEqual(response.status_code, 200)
+
+    def test_api_validates_category_permissions(self):
+        """api endpoint validates category visiblity"""
+        for link in self.tested_links:
+            self.override_acl({
+                'can_see': 0
+            })
+
+            response = self.client.get(link)
+            self.assertEqual(response.status_code, 404)
+
+        for link in self.tested_links:
+            self.override_acl({
+                'can_browse': 0
+            })
+
+            response = self.client.get(link)
+            self.assertEqual(response.status_code, 404)
 
 
 class ThreadDeleteApiTests(ThreadsApiTestCase):
