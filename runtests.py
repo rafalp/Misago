@@ -1,3 +1,4 @@
+import argparse
 import os
 import pwd
 import shutil
@@ -7,34 +8,32 @@ from django import setup
 from django.test.utils import setup_test_environment
 
 
-def runtests():
+def runtests(args, verbosity=1):
     test_runner_path = os.path.dirname(os.path.abspath(__file__))
-    project_template_path = os.path.join(
-        test_runner_path, 'misago/project_template')
-    project_package_path = os.path.join(
-        test_runner_path, 'misago/project_template/project_name')
+    project_template_path = os.path.join(test_runner_path, 'misago/project_template')
+    project_package_path = os.path.join(test_runner_path, 'misago/project_template/project_name')
 
     test_project_path = os.path.join(test_runner_path, "testproject")
-    if not os.path.exists(test_project_path):
-        shutil.copytree(project_template_path, test_project_path)
+    if os.path.exists(test_project_path):
+        shutil.rmtree(test_project_path)
 
-        module_init_path = os.path.join(test_project_path, '__init__.py')
-        with open(module_init_path, "w") as py_file:
-            py_file.write('')
+    shutil.copytree(project_template_path, test_project_path)
 
-        settings_path = os.path.join(
-            test_project_path, 'project_name', 'settings.py')
+    module_init_path = os.path.join(test_project_path, '__init__.py')
+    with open(module_init_path, "w") as py_file:
+        py_file.write('')
 
-        with open(settings_path, "r") as py_file:
-            settings_file = py_file.read()
+    settings_path = os.path.join(
+        test_project_path, 'project_name', 'settings.py')
 
-            # Do some configuration magic
-            settings_file = settings_file.replace(
-                '{{ project_name }}', 'testproject.project_name')
-            settings_file = settings_file.replace(
-                '{{ secret_key }}', 't3stpr0j3ct')
+    with open(settings_path, "r") as py_file:
+        settings_file = py_file.read()
 
-            settings_file += """
+        # Do some configuration magic
+        settings_file = settings_file.replace('{{ project_name }}', 'testproject.project_name')
+        settings_file = settings_file.replace('{{ secret_key }}', 't3stpr0j3ct')
+
+        settings_file += """
 # disable account validation via API's
 MISAGO_NEW_REGISTRATIONS_VALIDATORS = ()
 
@@ -55,8 +54,8 @@ PASSWORD_HASHERS = (
 )
 """
 
-        if os.environ.get('TRAVIS'):
-            settings_file += """
+    if os.environ.get('TRAVIS'):
+        settings_file += """
 
 DATABASES = {
     'default': {
@@ -71,12 +70,12 @@ DATABASES = {
 
 TEST_NAME = 'travis_ci_test'
 """
-        else:
-            settings_file += """
+    else:
+        settings_file += """
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'misago_postgres',
+        'NAME': 'misago_test',
         'USER': '%s',
         'PASSWORD': '',
         'HOST': '',
@@ -85,30 +84,30 @@ DATABASES = {
 }
 """ % pwd.getpwuid(os.getuid())[0]
 
-        with open(settings_path, "w") as py_file:
-            py_file.write(settings_file)
+    with open(settings_path, "w") as py_file:
+        py_file.write(settings_file)
 
-    os.environ.setdefault(
-        "DJANGO_SETTINGS_MODULE", "testproject.project_name.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "testproject.project_name.settings")
 
     setup()
     setup_test_environment()
-
-    verbosity = 1
-
-    if __name__ == '__main__':
-        args = sys.argv[1:]
-    else:
-        args = []
-
-    verbosity = 1
-    if '--verbose' in args:
-        verbosity = 2
-        args.remove('--verbose')
 
     from django.core.management.commands import test
     sys.exit(test.Command().execute(*args, verbosity=verbosity, noinput=True))
 
 
 if __name__ == '__main__':
-    runtests()
+    args = sys.argv[1:]
+
+    kwargs = {
+        'verbosity': 1,
+    }
+
+    cleaned_args = []
+    for arg in args:
+        if arg == '--verbose':
+            kwargs['verbosity'] = 2
+        else:
+            cleaned_args.append(arg)
+
+    runtests(cleaned_args, **kwargs)
