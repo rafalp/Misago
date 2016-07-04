@@ -1,11 +1,10 @@
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+from misago.threads.threadtypes import ThreadType
 
-from misago.threads.threadtypes import ThreadTypeBase
 
-
-class PrivateThread(ThreadTypeBase):
-    type_name = 'private_threads'
+class PrivateThread(ThreadType):
+    root_name = 'private_threads'
 
     def get_category_name(self, category):
         return _('Private Threads')

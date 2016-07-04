@@ -135,11 +135,6 @@ MISAGO_POSTING_MIDDLEWARES = (
 )
 
 MISAGO_THREAD_TYPES = (
-    # category and redirect types
-    'misago.categories.categorytypes.RootCategory',
-    'misago.categories.categorytypes.Category',
-
-    # real thread types
     'misago.threads.threadtypes.thread.Thread',
     'misago.threads.threadtypes.privatethread.PrivateThread',
 )

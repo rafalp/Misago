@@ -1,19 +1,43 @@
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
+from misago.threads.threadtypes import ThreadType
 
-from misago.threads.threadtypes import ThreadTypeBase
 
-
-class Thread(ThreadTypeBase):
-    type_name = 'thread'
+class Thread(ThreadType):
+    root_name = 'root_category'
 
     def get_category_name(self, category):
-        return category.name
+        if category.level:
+            return category.name
+        else:
+            return _('None (will become top level category)')
 
     def get_category_absolute_url(self, category):
-        return reverse('misago:category', kwargs={
-            'pk': category.pk,
-            'slug': category.slug,
-        })
+        if category.level:
+            return reverse('misago:category', kwargs={
+                'pk': category.pk,
+                'slug': category.slug,
+            })
+        else:
+            return reverse('misago:threads')
+
+    def get_category_last_thread_url(self, category):
+        return '/threads/%s-%s/' % (
+            category.last_thread_slug,
+            category.last_thread_id,
+        )
+
+    def get_category_last_post_url(self, category):
+        return '/threads/%s-%s/last/' % (
+            category.last_thread_slug,
+            category.last_thread_id,
+        )
+
+    def get_category_api_read_url(self, category):
+        if category.level:
+            return '%s?category=%s' % (reverse('misago:api:thread-read'), category.pk)
+        else:
+            return reverse('misago:api:thread-read')
 
     def get_thread_absolute_url(self, thread, page=1):
         if page > 1:

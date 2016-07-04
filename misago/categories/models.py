@@ -11,7 +11,7 @@ from misago.acl.models import BaseRole
 from misago.conf import settings
 from misago.core.cache import cache
 from misago.core.utils import slugify
-from misago.threads import threadtypes
+from misago.threads.threadtypes import trees_map
 
 
 CACHE_NAME = 'misago_categories_tree'
@@ -105,7 +105,7 @@ class Category(MPTTModel):
 
     @property
     def thread_type(self):
-        return threadtypes.get(self.special_role or 'category')
+        return trees_map.get_type_for_tree_id(self.tree_id)
 
     def __unicode__(self):
         return unicode(self.thread_type.get_category_name(self))
