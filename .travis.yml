@@ -1,5 +1,5 @@
 addons:
-  postgresql: "9.3"
+  postgresql: "9.5"
 language: python
 python:
   - "2.7"
