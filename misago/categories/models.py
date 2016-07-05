@@ -1,11 +1,9 @@
-from six.moves.urllib.parse import urlparse
-
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 
-from django.core.urlresolvers import reverse
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils import six
+from django.utils.encoding import python_2_unicode_compatible
 
 from misago.acl import version as acl_version
 from misago.acl.models import BaseRole
@@ -59,6 +57,7 @@ class CategoryManager(TreeManager):
         cache.delete(CACHE_NAME)
 
 
+@python_2_unicode_compatible
 class Category(MPTTModel):
     parent = TreeForeignKey(
         'self',
@@ -109,8 +108,8 @@ class Category(MPTTModel):
     def thread_type(self):
         return trees_map.get_type_for_tree_id(self.tree_id)
 
-    def __unicode__(self):
-        return unicode(self.thread_type.get_category_name(self))
+    def __str__(self):
+        return six.text_type(self.thread_type.get_category_name(self))
 
     def lock(self):
         return Category.objects.select_for_update().get(id=self.id)
