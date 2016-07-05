@@ -1,13 +1,12 @@
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.utils.translation import gettext as _
-
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 
 from misago.acl import add_acl
-from misago.categories.models import CATEGORIES_TREE_ID, Category
+from misago.categories.models import THREADS_ROOT_NAME, Category
 from misago.categories.permissions import allow_see_category, allow_browse_category
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
 from misago.readtracker.categoriestracker import read_category
@@ -18,6 +17,7 @@ from misago.threads.api.threadendpoints.patch import thread_patch_endpoint
 from misago.threads.models import Subscription
 from misago.threads.moderation import threads as moderation
 from misago.threads.subscriptions import make_subscription_aware
+from misago.threads.threadtypes import trees_map
 from misago.threads.viewmodels.thread import ForumThread
 
 
@@ -48,13 +48,23 @@ class ViewSet(viewsets.ViewSet):
         else:
             raise PermissionDenied(_("You don't have permission to delete this thread."))
 
+
+class ThreadViewSet(ViewSet):
+    thread = ForumThread
+
+    @list_route(methods=['post'])
+    def merge(self, request):
+        return threads_merge_endpoint(request)
+
     @list_route(methods=['post'])
     def read(self, request):
         if request.query_params.get('category'):
+            threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
+
             category_id = get_int_or_404(request.query_params.get('category'))
-            category = get_object_or_404(Category.objects,
+            category = get_object_or_404(Category,
                 id=category_id,
-                tree_id=self.TREE_ID,
+                tree_id=threads_tree_id,
             )
 
             allow_see_category(request.user, category)
@@ -64,12 +74,3 @@ class ViewSet(viewsets.ViewSet):
 
         read_category(request.user, category)
         return Response({'detail': 'ok'})
-
-
-class ThreadViewSet(ViewSet):
-    thread = ForumThread
-    TREE_ID = CATEGORIES_TREE_ID
-
-    @list_route(methods=['post'])
-    def merge(self, request):
-        return threads_merge_endpoint(request)

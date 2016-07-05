@@ -1,13 +1,13 @@
 from django.db import models
 from django.utils.html import conditional_escape, mark_safe
 from django.utils.translation import ugettext_lazy as _
-
 from mptt.forms import *  # noqa
 
 from misago.core import forms
 from misago.core.validators import validate_sluggable
+from misago.threads.threadtypes import trees_map
 
-from misago.categories.models import CATEGORIES_TREE_ID, Category, CategoryRole
+from misago.categories.models import THREADS_ROOT_NAME, Category, CategoryRole
 
 
 """
@@ -18,7 +18,8 @@ class AdminCategoryFieldMixin(object):
         self.base_level = kwargs.pop('base_level', 1)
         kwargs['level_indicator'] = kwargs.get('level_indicator', '- - ')
 
-        queryset = Category.objects.filter(tree_id=CATEGORIES_TREE_ID)
+        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
+        queryset = Category.objects.filter(tree_id=threads_tree_id)
         if not kwargs.pop('include_root', False):
             queryset = queryset.exclude(special_role="root_category")
 

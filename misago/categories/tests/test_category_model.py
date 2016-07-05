@@ -2,8 +2,9 @@ from django.utils import timezone
 
 from misago.core.testutils import MisagoTestCase
 from misago.threads import testutils
+from misago.threads.threadtypes import trees_map
 
-from misago.categories.models import CATEGORIES_TREE_ID, Category
+from misago.categories.models import THREADS_ROOT_NAME, Category
 
 
 class CategoryManagerTests(MisagoTestCase):
@@ -39,7 +40,8 @@ class CategoryManagerTests(MisagoTestCase):
         test_dict = Category.objects.get_categories_dict_from_db()
 
         for category in Category.objects.all():
-            if category.tree_id == CATEGORIES_TREE_ID:
+            threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
+            if category.tree_id == threads_tree_id:
                 self.assertIn(category.id, test_dict)
             else:
                 self.assertNotIn(category.id, test_dict)
@@ -165,10 +167,8 @@ class CategoryModelTests(MisagoTestCase):
         self.assertEqual(self.category.last_thread_title, new_thread.title)
         self.assertEqual(self.category.last_thread_slug, new_thread.slug)
         self.assertEqual(self.category.last_poster, new_thread.last_poster)
-        self.assertEqual(self.category.last_poster_name,
-                         new_thread.last_poster_name)
-        self.assertEqual(self.category.last_poster_slug,
-                         new_thread.last_poster_slug)
+        self.assertEqual(self.category.last_poster_name, new_thread.last_poster_name)
+        self.assertEqual(self.category.last_poster_slug, new_thread.last_poster_slug)
 
     def test_empty_last_thread(self):
         """empty_last_thread empties last category thread"""

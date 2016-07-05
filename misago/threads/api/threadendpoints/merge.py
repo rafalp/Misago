@@ -5,13 +5,14 @@ from django.utils.translation import gettext as _, ungettext
 from rest_framework.response import Response
 
 from misago.acl import add_acl
-from misago.categories.models import CATEGORIES_TREE_ID, Category
+from misago.categories.models import THREADS_ROOT_NAME, Category
 from misago.categories.permissions import can_see_category, can_browse_category
 
 from misago.threads.events import record_event
 from misago.threads.models import Thread
 from misago.threads.permissions import can_see_thread
 from misago.threads.serializers import ThreadListSerializer, MergeThreadsSerializer
+from misago.threads.threadtypes import trees_map
 from misago.threads.utils import add_categories_to_threads
 
 
@@ -66,9 +67,11 @@ def clean_threads_for_merge(request):
             MERGE_LIMIT)
         raise MergeError(message % {'limit': MERGE_LIMIT})
 
+    threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
+
     threads_queryset = Thread.objects.filter(
         id__in=threads_ids,
-        category__tree_id=CATEGORIES_TREE_ID,
+        category__tree_id=threads_tree_id,
     ).select_related('category').order_by('-id')
 
     threads = []

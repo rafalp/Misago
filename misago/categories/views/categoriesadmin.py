@@ -2,12 +2,12 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 
-from misago.admin.views import generic
 from misago.acl import version as acl_version
+from misago.admin.views import generic
+from misago.threads.threadtypes import trees_map
 
-from misago.categories.models import (
-    CATEGORIES_TREE_ID, Category, RoleCategoryACL)
 from misago.categories.forms import CategoryFormFactory, DeleteFormFactory
+from misago.categories.models import THREADS_ROOT_NAME, Category, RoleCategoryACL
 
 
 class CategoryAdmin(generic.AdminBaseMixin):
@@ -19,8 +19,10 @@ class CategoryAdmin(generic.AdminBaseMixin):
     def get_target(self, kwargs):
         target = super(CategoryAdmin, self).get_target(kwargs)
 
+        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
+
         target_is_special = bool(target.special_role)
-        target_not_in_categories_tree = target.tree_id != CATEGORIES_TREE_ID
+        target_not_in_categories_tree = target.tree_id != threads_tree_id
 
         if target.pk and (target_is_special or target_not_in_categories_tree):
             raise Category.DoesNotExist()

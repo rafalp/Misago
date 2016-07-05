@@ -11,11 +11,12 @@ from misago.acl.models import BaseRole
 from misago.conf import settings
 from misago.core.cache import cache
 from misago.core.utils import slugify
+
 from misago.threads.threadtypes import trees_map
 
 
 CACHE_NAME = 'misago_categories_tree'
-CATEGORIES_TREE_ID = 1
+THREADS_ROOT_NAME = 'root_category'
 
 
 class CategoryManager(TreeManager):
@@ -35,10 +36,11 @@ class CategoryManager(TreeManager):
         return special_category
 
     def all_categories(self, include_root=False):
-        qs = self.filter(tree_id=CATEGORIES_TREE_ID)
+        tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
+        queryset = self.filter(tree_id=tree_id)
         if not include_root:
-            qs = qs.filter(level__gt=0)
-        return qs.order_by('lft')
+            queryset = queryset.filter(level__gt=0)
+        return queryset.order_by('lft')
 
     def get_cached_categories_dict(self):
         categories_dict = cache.get(CACHE_NAME, 'nada')

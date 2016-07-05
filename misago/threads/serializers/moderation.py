@@ -1,21 +1,22 @@
 from django.forms import ValidationError
 from django.utils.translation import ugettext as _
-
 from rest_framework import serializers
 
 from misago.acl import add_acl
-from misago.categories.models import CATEGORIES_TREE_ID, Category
+from misago.categories.models import THREADS_ROOT_NAME, Category
 from misago.categories.permissions import can_see_category, can_browse_category
 
 from misago.threads.models import THREAD_WEIGHT_DEFAULT, THREAD_WEIGHT_GLOBAL
 from misago.threads.permissions import allow_start_thread
+from misago.threads.threadtypes import trees_map
 from misago.threads.validators import validate_title
 
 
 def validate_category(user, category_id, allow_root=False):
     try:
+        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
         category = Category.objects.get(
-            tree_id=CATEGORIES_TREE_ID,
+            tree_id=threads_tree_id,
             id=category_id,
         )
     except Category.DoesNotExist:
