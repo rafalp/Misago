@@ -10,6 +10,7 @@ def settings(request):
         'misago_settings': db_settings,
 
         'CATEGORIES_ON_INDEX': dj_settings.MISAGO_CATEGORIES_ON_INDEX,
+        'THREADS_ON_INDEX': not dj_settings.MISAGO_CATEGORIES_ON_INDEX,
 
         'LOGIN_REDIRECT_URL': dj_settings.LOGIN_REDIRECT_URL,
         'LOGIN_URL': dj_settings.LOGIN_URL,
@@ -38,6 +39,7 @@ def preload_settings_json(request):
         'CSRF_COOKIE_NAME': dj_settings.CSRF_COOKIE_NAME,
 
         'CATEGORIES_ON_INDEX': dj_settings.MISAGO_CATEGORIES_ON_INDEX,
+        'THREADS_ON_INDEX': not dj_settings.MISAGO_CATEGORIES_ON_INDEX,
     })
 
     return {}

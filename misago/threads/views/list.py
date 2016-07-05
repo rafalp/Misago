@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import render
@@ -34,9 +35,6 @@ class ListBase(View):
     def get_threads(self, request, category, list_type, page):
         return self.threads(request, category, list_type, page)
 
-    def get_default_frontend_context(self):
-        return {}
-
     def get_frontend_context(self, request, category, threads):
         context = self.get_default_frontend_context()
 
@@ -45,13 +43,19 @@ class ListBase(View):
 
         return context
 
+    def get_default_frontend_context(self):
+        return {}
+
     def get_template_context(self, request, category, threads):
-        context = {}
+        context = self.get_default_template_context()
 
         context.update(category.get_template_context())
         context.update(threads.get_template_context())
 
         return context
+
+    def get_default_template_context(self):
+        return {}
 
 
 class ForumThreads(ListBase):
