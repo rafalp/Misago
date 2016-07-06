@@ -3,20 +3,20 @@
 
 
 {% block title %}
-{% if is_index %}
-  {% if misago_settings.forum_index_title %}
-  {{ misago_settings.forum_index_title }}
-  {% else %}
-  {{ misago_settings.forum_name }}
-  {% endif %}
-{% else %}
+{% if THREADS_ON_INDEX %}
   {% trans "Categories" %} | {{ block.super }}
+{% else %}
+  {% if misago_settings.forum_index_title %}
+    {{ misago_settings.forum_index_title }}
+  {% else %}
+    {{ misago_settings.forum_name }}
+  {% endif %}
 {% endif %}
 {% endblock title %}
 
 
 {% block meta-description %}
-{% if is_index and misago_settings.forum_index_meta_description %}
+{% if not THREADS_ON_INDEX and misago_settings.forum_index_meta_description %}
   {{ misago_settings.forum_index_meta_description }}
 {% endif %}
 {% endblock meta-description %}

@@ -18,7 +18,6 @@ def categories(request):
 
     return render(request, 'misago/categories/list.html', {
         'categories': categories_tree,
-        'is_index': settings.MISAGO_CATEGORIES_ON_INDEX,
     })
 
 

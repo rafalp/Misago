@@ -214,12 +214,6 @@ MISAGO_AVATARS_SIZES
 Misago uses avatar cache that prescales avatars to requested sizes. Enter here sizes to which those should be optimized.
 
 
-MISAGO_CATEGORIES_ON_INDEX
---------------------------
-
-Change this setting to ``True`` to display categories list instead of threads list on board index.
-
-
 MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH
 ------------------------------------
 
@@ -343,16 +337,22 @@ For example, defining ``MISAGO_SENDFILE_LOCATIONS_PATH = 'misago_served_internal
 ``/home/mysite/www/attachments/13_05/142123.rar`` => ``/misago_served_internals/attachments/13_05/142123.rar``
 
 
+MISAGO_STOP_FORUM_SPAM_USE
+--------------------------
+
+This settings allows you to decide wheter of not `Stop Forum Spam <http://www.stopforumspam.com/>`_ database should be used to validate IPs and emails during new users registrations.
+
+
 MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE
 -------------------------------------
 
 Minimum confidence returned by `Stop Forum Spam <http://www.stopforumspam.com/>`_ for Misago to reject new registration and block IP address for 1 day.
 
 
-MISAGO_STOP_FORUM_SPAM_USE
+MISAGO_THREADS_ON_INDEX
 --------------------------
 
-This settings allows you to decide wheter of not `Stop Forum Spam <http://www.stopforumspam.com/>`_ database should be used to validate IPs and emails during new users registrations.
+Change this setting to ``False`` to display categories list instead of threads list on board index.
 
 
 MISAGO_THREADS_PER_PAGE

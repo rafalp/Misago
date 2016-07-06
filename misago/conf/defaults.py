@@ -220,8 +220,9 @@ MISAGO_ADMIN_NAMESPACES = (
 MISAGO_ADMIN_SESSION_EXPIRATION = 60
 
 
-# Display categories on forum index in place of threads list?
-MISAGO_CATEGORIES_ON_INDEX = False
+# Display threads on forum index
+# Change this to false to display categories list instead
+MISAGO_THREADS_ON_INDEX = True
 
 
 # Max age of notifications in days

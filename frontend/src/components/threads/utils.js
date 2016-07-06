@@ -12,7 +12,7 @@ export function getPageTitle(route) {
         title: route.category.name
       };
     }
-  } else if (!misago.get('CATEGORIES_ON_INDEX')) {
+  } else if (misago.get('THREADS_ON_INDEX')) {
     if (route.list.path) {
       return {
         title: route.list.longName
@@ -37,7 +37,7 @@ export function getPageTitle(route) {
 export function getTitle(route) {
   if (route.category.level) {
     return route.category.name;
-  } else if (!misago.get('CATEGORIES_ON_INDEX')) {
+  } else if (misago.get('THREADS_ON_INDEX')) {
     if (misago.get('SETTINGS').forum_index_title) {
       return misago.get('SETTINGS').forum_index_title;
     } else {

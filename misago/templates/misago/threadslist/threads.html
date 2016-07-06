@@ -3,24 +3,30 @@
 
 
 {% block title %}
-{% if list_name %}
-  {% if paginator.page > 1 %}
-    {{ list_name }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {% trans "Threads" %} | {{ block.super }}
+{% if THREADS_ON_INDEX %}
+  {% if list_name %}
+    {{ list_name }} | {{ block.super }}
+  {% elif paginator.page > 1 %}
+    {% if misago_settings.forum_index_title %}
+      {{ misago_settings.forum_index_title }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %})
+    {% else %}
+      {{ misago_settings.forum_name }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %})
+    {% endif %}
   {% else %}
-    {{ list_name }} | {% trans "Threads" %} | {{ block.super }}
+    {% if misago_settings.forum_index_title %}
+      {{ misago_settings.forum_index_title }}
+    {% else %}
+      {{ misago_settings.forum_name }}
+    {% endif %}
   {% endif %}
-{% elif THREADS_ON_INDEX and paginator.page == 1 %}
-  {% if misago_settings.forum_index_title %}
-    {{ misago_settings.forum_index_title }}
-  {% else %}
-    {{ misago_settings.forum_name }}
-  {% endif %}
-{% elif paginator.page > 1 %}
-  {% trans "Threads" %} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ block.super }}
-{% elif THREADS_ON_INDEX %}
-  {{ block.super }}
 {% else %}
-  {% trans "Threads" %} | {{ block.super }}
+  {% if list_name %}
+    {{ list_name }} | {% trans "Threads" %} | {{ block.super }}
+  {% elif paginator.page > 1 %}
+    {% trans "Threads" %} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ block.super }}
+  {% else %}
+    {% trans "Threads" %} | {{ block.super }}
+  {% endif %}
 {% endif %}
 {% endblock title %}
 

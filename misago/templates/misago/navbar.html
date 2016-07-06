@@ -12,18 +12,7 @@
     {% endif %}
 
     <ul class="nav navbar-nav">
-      {% if CATEGORIES_ON_INDEX %}
-      <li>
-        <a href="{% url 'misago:categories' %}">
-          {% trans "Categories" %}
-        </a>
-      </li>
-      <li>
-        <a href="{% url 'misago:threads' %}">
-          {% trans "Threads" %}
-        </a>
-      </li>
-      {% else %}
+      {% if THREADS_ON_INDEX %}
       <li>
         <a href="{% url 'misago:index' %}">
           {% trans "Threads" %}
@@ -32,6 +21,17 @@
       <li>
         <a href="{% url 'misago:categories' %}">
           {% trans "Categories" %}
+        </a>
+      </li>
+      {% else %}
+      <li>
+        <a href="{% url 'misago:categories' %}">
+          {% trans "Categories" %}
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'misago:threads' %}">
+          {% trans "Threads" %}
         </a>
       </li>
       {% endif %}
@@ -52,46 +52,46 @@
 
   <ul class="nav navbar-nav navbar-compact-nav hidden-md hidden-lg">
     {% if misago_settings.forum_branding_display %}
-    <li>
-      <a href="{% url 'misago:index' %}">
-        <img src="{% static 'misago/img/site-icon.png' %}" alt="">
-      </a>
-    </li>
-      {% if CATEGORIES_ON_INDEX %}
       <li>
-        <a href="{% url 'misago:threads' %}">
+        <a href="{% url 'misago:index' %}">
+          <img src="{% static 'misago/img/site-icon.png' %}" alt="">
+        </a>
+      </li>
+      {% if THREADS_ON_INDEX %}
+        <li>
+          <a href="{% url 'misago:categories' %}">
+            <i class="material-icon">forum</i>
+          </a>
+        </li>
+      {% else %}
+        <li>
+          <a href="{% url 'misago:threads' %}">
+            <i class="material-icon">message</i>
+          </a>
+        </li>
+      {% endif %}
+    {% elif THREADS_ON_INDEX %}
+      <li>
+        <a href="{% url 'misago:index' %}">
           <i class="material-icon">message</i>
         </a>
       </li>
-      {% else %}
       <li>
         <a href="{% url 'misago:categories' %}">
           <i class="material-icon">forum</i>
         </a>
       </li>
-      {% endif %}
-    {% elif CATEGORIES_ON_INDEX %}
-    <li>
-      <a href="{% url 'misago:index' %}">
-        <i class="material-icon">forum</i>
-      </a>
-    </li>
-    <li>
-      <a href="{% url 'misago:threads' %}">
-        <i class="material-icon">message</i>
-      </a>
-    </li>
     {% else %}
-    <li>
-      <a href="{% url 'misago:index' %}">
-        <i class="material-icon">message</i>
-      </a>
-    </li>
-    <li>
-      <a href="{% url 'misago:categories' %}">
-        <i class="material-icon">forum</i>
-      </a>
-    </li>
+      <li>
+        <a href="{% url 'misago:index' %}">
+          <i class="material-icon">forum</i>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'misago:threads' %}">
+          <i class="material-icon">message</i>
+        </a>
+      </li>
     {% endif %}
     <li>
       <a href="{% url 'misago:users' %}">

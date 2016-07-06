@@ -62,14 +62,14 @@ export function getLists(user) {
 
 export function paths(user) {
   let lists = getLists(user);
-  let paths = [];
+  let routes = [];
   let categoriesMap = {};
 
   misago.get('CATEGORIES').forEach(function(category) {
     lists.forEach(function(list) {
       categoriesMap[category.id] = category;
 
-      paths.push({
+      routes.push({
         path: category.absolute_url + list.path,
         component: connect(select)(Route),
 
@@ -83,5 +83,5 @@ export function paths(user) {
     });
   });
 
-  return paths;
+  return routes;
 }

@@ -32,16 +32,7 @@ def threads_list_patterns(prefix, view, patterns):
     return urls
 
 
-if settings.MISAGO_CATEGORIES_ON_INDEX:
-    urlpatterns = threads_list_patterns('threads', ForumThreads, (
-        r'^threads/$',
-        r'^threads/my/$',
-        r'^threads/new/$',
-        r'^threads/unread/$',
-        r'^threads/subscribed/$',
-        r'^threads/unapproved/$',
-    ))
-else:
+if settings.MISAGO_THREADS_ON_INDEX:
     urlpatterns = threads_list_patterns('threads', ForumThreads, (
         r'^$',
         r'^my/$',
@@ -49,6 +40,15 @@ else:
         r'^unread/$',
         r'^subscribed/$',
         r'^unapproved/$',
+    ))
+else:
+    urlpatterns = threads_list_patterns('threads', ForumThreads, (
+        r'^threads/$',
+        r'^threads/my/$',
+        r'^threads/new/$',
+        r'^threads/unread/$',
+        r'^threads/subscribed/$',
+        r'^threads/unapproved/$',
     ))
 
 
