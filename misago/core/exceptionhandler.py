@@ -6,8 +6,7 @@ from django.utils.translation import gettext as _
 from rest_framework.views import exception_handler as rest_exception_handler
 
 from misago.core import errorpages
-from misago.core.exceptions import (
-    AjaxError, Banned, ExplicitFirstPage, OutdatedSlug)
+from misago.core.exceptions import AjaxError, Banned, ExplicitFirstPage, OutdatedSlug
 
 
 HANDLED_EXCEPTIONS = (AjaxError, Banned, ExplicitFirstPage, Http404,

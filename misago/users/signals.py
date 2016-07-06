@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
-from django.dispatch import receiver, Signal
+from django.dispatch import Signal, receiver
+
+from misago.core.signals import secret_key_changed
 
 
 delete_user_content = Signal()
@@ -18,7 +20,6 @@ def handle_name_change(sender, **kwargs):
                                     canceler_slug=sender.slug)
 
 
-from misago.core.signals import secret_key_changed
 @receiver(secret_key_changed)
 def update_signatures_checksums(sender, **kwargs):
     User = get_user_model()

@@ -5,6 +5,7 @@ from django.test import TestCase
 
 from misago.conf import settings
 
+
 class AuthenticateAPITests(TestCase):
     def setUp(self):
         self.api_link = reverse('misago:api:captcha-question')

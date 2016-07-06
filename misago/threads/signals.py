@@ -1,10 +1,13 @@
+from django.contrib.auth import get_user_model
 from django.db import transaction
-from django.dispatch import receiver, Signal
+from django.db.models.signals import pre_delete
+from django.dispatch import Signal, receiver
 
 from misago.categories.models import Category
-from misago.core.pgutils import batch_update, batch_delete
-
-from misago.threads.models import Thread, Post
+from misago.categories.signals import delete_category_content, move_category_content
+from misago.core.pgutils import batch_delete, batch_update
+from misago.threads.models import Post, Thread
+from misago.users.signals import delete_user_content, username_changed
 
 
 delete_post = Signal()
@@ -30,8 +33,6 @@ def move_thread_content(sender, **kwargs):
     sender.post_set.update(category=sender.category)
 
 
-from misago.categories.signals import (delete_category_content,
-                                       move_category_content)
 @receiver(delete_category_content)
 def delete_category_threads(sender, **kwargs):
     sender.thread_set.all().delete()
@@ -46,7 +47,6 @@ def move_category_threads(sender, **kwargs):
     Post.objects.filter(category=sender).update(category=new_category)
 
 
-from misago.users.signals import delete_user_content, username_changed
 @receiver(delete_user_content)
 def delete_user_threads(sender, **kwargs):
     recount_categories = set()
@@ -95,8 +95,6 @@ def update_usernames(sender, **kwargs):
     )
 
 
-from django.contrib.auth import get_user_model
-from django.db.models.signals import pre_delete
 @receiver(pre_delete, sender=get_user_model())
 def remove_unparticipated_private_threads(sender, **kwargs):
     threads_qs = kwargs['instance'].private_thread_set.all()

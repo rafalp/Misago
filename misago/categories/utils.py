@@ -1,8 +1,7 @@
 from misago.acl import add_acl
+from misago.categories.models import Category
 from misago.core import threadstore
 from misago.readtracker import categoriestracker
-
-from misago.categories.models import Category
 
 
 __all__ = [

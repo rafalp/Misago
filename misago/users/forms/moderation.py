@@ -1,12 +1,12 @@
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
-from django.utils.translation import ugettext_lazy as _, ungettext
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext
 
 from misago.conf import settings
 from misago.core import forms
-
 from misago.users.bans import ban_user
 
 

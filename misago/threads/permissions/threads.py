@@ -2,16 +2,16 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http import Http404
 from django.utils import timezone
-from django.utils.translation import ungettext, ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext
 
 from misago.acl import add_acl, algebra
 from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
-from misago.categories.models import Category, RoleCategoryACL, CategoryRole
+from misago.categories.models import Category, CategoryRole, RoleCategoryACL
 from misago.categories.permissions import get_categories_roles
 from misago.core import forms
-
-from misago.threads.models import Thread, Post
+from misago.threads.models import Post, Thread
 
 
 __all__ = [

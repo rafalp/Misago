@@ -1,7 +1,8 @@
 import json
+
 from django.core.urlresolvers import reverse
-from misago.users.testutils import (
-    UserTestCase, AuthenticatedUserTestCase, SuperUserTestCase)
+
+from misago.users.testutils import AuthenticatedUserTestCase, SuperUserTestCase, UserTestCase
 
 
 class UserTestCaseTests(UserTestCase):

@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 
 from misago.acl.testutils import override_acl
-
 from misago.users.models import Ban
 from misago.users.testutils import AuthenticatedUserTestCase
 

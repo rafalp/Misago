@@ -2,7 +2,6 @@ import json
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
-
 from misago.threads.tests.test_threads_api import ThreadsApiTestCase
 
 

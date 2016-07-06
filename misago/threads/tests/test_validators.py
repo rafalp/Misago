@@ -2,7 +2,6 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from misago.conf import settings
-
 from misago.threads.validators import validate_title
 
 

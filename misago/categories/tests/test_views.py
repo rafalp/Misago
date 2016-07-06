@@ -1,10 +1,9 @@
 from django.core.urlresolvers import reverse
 
 from misago.acl.testutils import override_acl
-from misago.users.testutils import AuthenticatedUserTestCase
-
-from misago.categories.utils import get_categories_tree
 from misago.categories.models import Category
+from misago.categories.utils import get_categories_tree
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 class CategoryViewsTests(AuthenticatedUserTestCase):

@@ -7,9 +7,8 @@ from django.utils import timezone
 
 from misago.acl import add_acl
 from misago.categories.models import Category
-
 from misago.threads.events import record_event
-from misago.threads.models import Thread, Post
+from misago.threads.models import Post, Thread
 from misago.threads.testutils import reply_thread
 
 
@@ -58,4 +57,3 @@ class EventsAPITests(TestCase):
         self.assertEqual(event_post.event_context, context)
         self.assertEqual(event_post.poster_id, request.user.pk)
         self.assertEqual(event_post.poster_ip, request.user_ip)
-

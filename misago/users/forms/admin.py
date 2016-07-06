@@ -1,16 +1,21 @@
 from django.contrib.auth import get_user_model
-from django.utils.translation import ugettext_lazy as _, ungettext
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext
 
+from misago.acl.models import Role
 from misago.conf import settings
 from misago.core import forms, threadstore
 from misago.core.validators import validate_sluggable
-from misago.acl.models import Role
-
 from misago.users.models import (
-    AUTO_SUBSCRIBE_CHOICES, PRIVATE_THREAD_INVITES_LIMITS_CHOICES,
-    BANS_CHOICES, RESTRICTIONS_CHOICES, Ban, Rank, WarningLevel)
-from misago.users.validators import (
-    validate_username, validate_email, validate_password)
+    AUTO_SUBSCRIBE_CHOICES,
+    BANS_CHOICES,
+    PRIVATE_THREAD_INVITES_LIMITS_CHOICES,
+    RESTRICTIONS_CHOICES,
+    Ban,
+    Rank,
+    WarningLevel
+)
+from misago.users.validators import validate_email, validate_password, validate_username
 
 
 """

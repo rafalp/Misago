@@ -3,8 +3,8 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.translation import get_language
 from django.views import i18n
-from django.views.decorators.http import last_modified
 from django.views.decorators.cache import cache_page
+from django.views.decorators.http import last_modified
 
 from misago.core import momentjs
 
@@ -35,4 +35,3 @@ def momentjs_catalog(request):
         locale = "";
     return HttpResponse(
         locale, content_type='application/javascript; charset=utf-8')
-

@@ -1,6 +1,7 @@
 from django.apps import AppConfig
 from django.utils.translation import ugettext_lazy as _
-from misago.users.pages import usercp, users_list, user_profile
+
+from misago.users.pages import user_profile, usercp, users_list
 
 
 class MisagoUsersConfig(AppConfig):

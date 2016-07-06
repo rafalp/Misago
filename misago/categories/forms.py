@@ -1,13 +1,13 @@
+from mptt.forms import *  # noqa
+
 from django.db import models
 from django.utils.html import conditional_escape, mark_safe
 from django.utils.translation import ugettext_lazy as _
-from mptt.forms import *  # noqa
 
+from misago.categories.models import THREADS_ROOT_NAME, Category, CategoryRole
 from misago.core import forms
 from misago.core.validators import validate_sluggable
 from misago.threads.threadtypes import trees_map
-
-from misago.categories.models import THREADS_ROOT_NAME, Category, CategoryRole
 
 
 """

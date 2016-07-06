@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.utils.translation import ugettext_lazy as _
-from misago.acl.views import (RolesList, NewRole, EditRole, RoleUsers,
-                              DeleteRole)
+
+from misago.acl.views import DeleteRole, EditRole, NewRole, RolesList, RoleUsers
 
 
 class MisagoAdminExtension(object):

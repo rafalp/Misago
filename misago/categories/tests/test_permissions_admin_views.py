@@ -3,7 +3,6 @@ from django.core.urlresolvers import reverse
 from misago.acl.models import Role
 from misago.acl.testutils import fake_post_data
 from misago.admin.testutils import AdminTestCase
-
 from misago.categories.models import Category, CategoryRole
 
 

@@ -9,10 +9,10 @@ from django.db.transaction import atomic
 from django.template.defaultfilters import linebreaks_filter
 from django.utils import timezone
 
-from misago.core.management.progressbar import show_progress
 from misago.categories.models import Category
+from misago.core.management.progressbar import show_progress
 from misago.threads.checksums import update_post_checksum
-from misago.threads.models import Thread, Post
+from misago.threads.models import Post, Thread
 
 
 class Command(BaseCommand):

@@ -1,4 +1,5 @@
 from django.db.models import F
+
 from misago.core import threadstore
 
 

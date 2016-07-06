@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from misago.users.models import Ban, BAN_USERNAME
+from misago.users.models import BAN_USERNAME, Ban
 from misago.users.tokens import make_activation_token
 
 

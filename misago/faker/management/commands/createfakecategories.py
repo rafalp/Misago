@@ -2,13 +2,13 @@ import random
 import sys
 import time
 
-from django.core.management.base import BaseCommand
 from faker import Factory
 
-from misago.acl import version as acl_version
-from misago.core.management.progressbar import show_progress
+from django.core.management.base import BaseCommand
 
+from misago.acl import version as acl_version
 from misago.categories.models import Category, RoleCategoryACL
+from misago.core.management.progressbar import show_progress
 
 
 class Command(BaseCommand):

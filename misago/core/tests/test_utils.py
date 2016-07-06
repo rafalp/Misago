@@ -4,9 +4,13 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.utils import timezone
 
-from misago.core.utils import (clean_return_path, is_request_to_misago,
-                               slugify, is_referer_local,
-                               format_plaintext_for_html)
+from misago.core.utils import (
+    clean_return_path,
+    format_plaintext_for_html,
+    is_referer_local,
+    is_request_to_misago,
+    slugify
+)
 
 
 VALID_PATHS = (

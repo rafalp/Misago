@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from misago.categories.models import Category
 from misago.threads.threadtypes import TreesMap
 

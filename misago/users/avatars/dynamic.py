@@ -1,11 +1,10 @@
-from importlib import import_module
 import math
 import os
+from importlib import import_module
 
-from PIL import Image, ImageDraw, ImageColor, ImageFont, ImageFilter
+from PIL import Image, ImageColor, ImageDraw, ImageFilter, ImageFont
 
 from misago.conf import settings
-
 from misago.users.avatars import store
 
 

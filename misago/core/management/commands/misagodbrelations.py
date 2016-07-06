@@ -1,7 +1,6 @@
 from django.apps import apps
 from django.core.management.base import BaseCommand
-from django.db.models.fields.related import (ForeignKey, OneToOneField,
-                                             ManyToManyField)
+from django.db.models.fields.related import ForeignKey, ManyToManyField, OneToOneField
 
 
 class Command(BaseCommand):

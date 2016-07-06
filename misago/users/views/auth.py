@@ -3,7 +3,6 @@ from django.contrib import auth
 from django.shortcuts import redirect
 from django.utils.http import is_safe_url
 from django.utils.six.moves.urllib.parse import urlparse
-
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters

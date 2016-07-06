@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.utils import timezone
 
 from misago.users.bans import get_user_ban
-from misago.users.models import Online, BanCache
+from misago.users.models import BanCache, Online
 
 
 ACTIVITY_CUTOFF = timedelta(minutes=2)

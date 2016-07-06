@@ -1,12 +1,11 @@
-from rest_framework.permissions import BasePermission, AllowAny, SAFE_METHODS
-
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 
-from misago.core.exceptions import Banned
+from rest_framework.permissions import SAFE_METHODS, AllowAny, BasePermission
 
+from misago.core.exceptions import Banned
 from misago.users.bans import get_request_ip_ban
-from misago.users.models import Ban, BAN_IP
+from misago.users.models import BAN_IP, Ban
 
 
 __all__ = [

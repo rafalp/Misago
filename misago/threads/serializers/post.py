@@ -1,9 +1,9 @@
 from django.core.urlresolvers import reverse
+
 from rest_framework import serializers
 
-from misago.users.serializers import UserSerializer
-
 from misago.threads.models import Post
+from misago.users.serializers import UserSerializer
 
 
 __all__ = [

@@ -1,11 +1,10 @@
 from django.contrib.auth import get_user_model
-from django.utils.translation import ugettext_lazy as _, ungettext
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext
 
 from misago.conf import settings
 from misago.core import forms
-
-from misago.users.models import (AUTO_SUBSCRIBE_CHOICES,
-                                 PRIVATE_THREAD_INVITES_LIMITS_CHOICES)
+from misago.users.models import AUTO_SUBSCRIBE_CHOICES, PRIVATE_THREAD_INVITES_LIMITS_CHOICES
 from misago.users.validators import validate_email, validate_password
 
 

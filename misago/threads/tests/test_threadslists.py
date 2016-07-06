@@ -9,9 +9,8 @@ from misago.categories.models import Category
 from misago.core import threadstore
 from misago.core.cache import cache
 from misago.readtracker import categoriestracker, threadstracker
-from misago.users.testutils import AuthenticatedUserTestCase
-
 from misago.threads import testutils
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 LISTS_URLS = (

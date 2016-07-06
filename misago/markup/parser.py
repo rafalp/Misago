@@ -1,9 +1,9 @@
 import bleach
+import markdown
 from bs4 import BeautifulSoup
 from htmlmin.minify import html_minify
-import markdown
 
-from misago.markup.bbcode import inline, blocks
+from misago.markup.bbcode import blocks, inline
 from misago.markup.md.shortimgs import ShortImagesExtension
 from misago.markup.pipeline import pipeline
 

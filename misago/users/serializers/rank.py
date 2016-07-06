@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from misago.core.utils import format_plaintext_for_html
 from misago.users.models import Rank
 

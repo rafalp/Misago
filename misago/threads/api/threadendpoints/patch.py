@@ -3,12 +3,10 @@ from django.utils.translation import gettext as _
 
 from misago.acl import add_acl
 from misago.categories.models import Category
-from misago.categories.permissions import (
-    allow_see_category, allow_browse_category)
+from misago.categories.permissions import allow_browse_category, allow_see_category
 from misago.categories.serializers import CategorySerializer
 from misago.core.apipatch import ApiPatch
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
-
 from misago.threads.moderation import threads as moderation
 from misago.threads.permissions import allow_start_thread
 from misago.threads.utils import add_categories_to_threads

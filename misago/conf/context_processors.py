@@ -1,7 +1,8 @@
 import json
 
 from django.core.urlresolvers import reverse
-from misago.conf.gateway import dj_settings, db_settings  # noqa
+
+from misago.conf.gateway import db_settings, dj_settings  # noqa
 
 
 def settings(request):

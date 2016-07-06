@@ -1,16 +1,19 @@
 from django.conf import settings
 from django.conf.urls import include, url
-
+# Serve static and media files in development
+from django.conf.urls.static import static
 # Setup Django admin to work with Misago auth
 from django.contrib import admin
+
+# Register default views
+from misago.core.views import javascript_catalog, momentjs_catalog
 from misago.users.forms.auth import AdminAuthenticationForm
+
 
 admin.autodiscover()
 admin.site.login_form = AdminAuthenticationForm
 
 
-# Register default views
-from misago.core.views import javascript_catalog, momentjs_catalog
 
 urlpatterns = [
     url(r'^', include('misago.urls', namespace='misago')),
@@ -27,8 +30,6 @@ urlpatterns = [
 ]
 
 
-# Serve static and media files in development
-from django.conf.urls.static import static
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

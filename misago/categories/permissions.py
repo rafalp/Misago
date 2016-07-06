@@ -3,13 +3,11 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 
-
 from misago.acl import algebra
 from misago.acl.decorators import return_boolean
+from misago.categories.models import Category, CategoryRole, RoleCategoryACL
 from misago.core import forms
 from misago.users.models import AnonymousUser
-
-from misago.categories.models import Category, RoleCategoryACL, CategoryRole
 
 
 """

@@ -6,10 +6,9 @@ from django.utils import timezone
 
 from misago.acl import add_acl
 from misago.categories.models import Category
+from misago.readtracker import categoriestracker, threadstracker
 from misago.threads import testutils
 from misago.users.models import AnonymousUser
-
-from misago.readtracker import categoriestracker, threadstracker
 
 
 class ReadTrackerTests(TestCase):

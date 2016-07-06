@@ -1,9 +1,9 @@
 from django.utils.translation import ugettext as _
+
 from rest_framework import serializers
 
 from misago.core.utils import format_plaintext_for_html
-
-from misago.users.models import Ban, BAN_IP
+from misago.users.models import BAN_IP, Ban
 
 
 __all__ = [

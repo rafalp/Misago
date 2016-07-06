@@ -2,7 +2,6 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 
 from misago.core.shortcuts import get_int_or_404
-
 from misago.threads.viewmodels.posts import ThreadPosts
 from misago.threads.viewmodels.thread import ForumThread
 

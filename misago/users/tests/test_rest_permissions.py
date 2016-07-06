@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 
-from misago.users.models import Ban, BAN_IP
+from misago.users.models import BAN_IP, Ban
 from misago.users.testutils import UserTestCase
 
 

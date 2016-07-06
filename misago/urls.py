@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.conf.urls import include, url
+
 from misago.core.views import forum_index
 
 

@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 
 from misago.acl.testutils import override_acl
-
 from misago.users.testutils import AuthenticatedUserTestCase
 
 

@@ -1,11 +1,10 @@
 from django.http import Http404
 
 from misago.acl import add_acl
-from misago.core.shortcuts import validate_slug
-
 from misago.categories.models import Category
-from misago.categories.permissions import allow_see_category, allow_browse_category
+from misago.categories.permissions import allow_browse_category, allow_see_category
 from misago.categories.serializers import BasicCategorySerializer
+from misago.core.shortcuts import validate_slug
 
 
 class ViewModel(object):

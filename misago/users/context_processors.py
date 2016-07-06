@@ -1,8 +1,7 @@
 from django.core.urlresolvers import reverse
 
-from misago.users.pages import usercp, users_list, user_profile
-from misago.users.serializers import (
-    AuthenticatedUserSerializer, AnonymousUserSerializer)
+from misago.users.pages import user_profile, usercp, users_list
+from misago.users.serializers import AnonymousUserSerializer, AuthenticatedUserSerializer
 
 
 def user_links(request):

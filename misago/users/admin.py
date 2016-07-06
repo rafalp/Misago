@@ -2,18 +2,34 @@ from django.conf.urls import url
 from django.contrib import admin as djadmin
 from django.utils.translation import ugettext_lazy as _
 
-from misago.users.views.admin.bans import BansList, NewBan, EditBan, DeleteBan
+from misago.users.djangoadmin import User, UserAdminModel
+from misago.users.views.admin.bans import BansList, DeleteBan, EditBan, NewBan
 from misago.users.views.admin.ranks import (
-    RanksList, NewRank, EditRank, DeleteRank, MoveDownRank, MoveUpRank,
-    DefaultRank, RankUsers)
+    DefaultRank,
+    DeleteRank,
+    EditRank,
+    MoveDownRank,
+    MoveUpRank,
+    NewRank,
+    RanksList,
+    RankUsers
+)
 from misago.users.views.admin.users import (
-    UsersList, NewUser, EditUser, DeleteThreadsStep, DeletePostsStep,
-    DeleteAccountStep)
+    DeleteAccountStep,
+    DeletePostsStep,
+    DeleteThreadsStep,
+    EditUser,
+    NewUser,
+    UsersList
+)
 from misago.users.views.admin.warnings import (
-    WarningsList, NewWarning, EditWarning, MoveDownWarning, MoveUpWarning,
-    DeleteWarning)
-from misago.users.djangoadmin import User
-from misago.users.djangoadmin import UserAdminModel
+    DeleteWarning,
+    EditWarning,
+    MoveDownWarning,
+    MoveUpWarning,
+    NewWarning,
+    WarningsList
+)
 
 
 # register misago user model in django admin panel

@@ -5,7 +5,8 @@ from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db.transaction import atomic
 from django.http import Http404, JsonResponse
-from django.shortcuts import redirect, render as django_render
+from django.shortcuts import render as django_render
+from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
@@ -13,15 +14,14 @@ from misago.core.decorators import require_POST
 from misago.core.shortcuts import get_object_or_404, paginate, pagination_dict, validate_slug
 from misago.core.utils import clean_return_path
 from misago.threads.permissions import allow_message_user
-
 from misago.users.bans import get_user_ban
 from misago.users.decorators import deny_guests
 from misago.users.online.utils import get_user_status
 from misago.users.pages import user_profile
-from misago.users.permissions.profiles import allow_follow_user, allow_block_user
-from misago.users.serializers import UserSerializer, UserProfileSerializer, BanDetailsSerializer
-from misago.users.serializers.usernamechange import  UsernameChangeSerializer
-from misago.users.warnings import get_warning_levels, get_user_warning_level, get_user_warning_obj
+from misago.users.permissions.profiles import allow_block_user, allow_follow_user
+from misago.users.serializers import BanDetailsSerializer, UserProfileSerializer, UserSerializer
+from misago.users.serializers.usernamechange import UsernameChangeSerializer
+from misago.users.warnings import get_user_warning_level, get_user_warning_obj, get_warning_levels
 
 
 def profile_view(f):

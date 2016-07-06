@@ -4,10 +4,8 @@ from misago.categories.models import Category
 from misago.core import threadstore
 from misago.core.cache import cache
 from misago.threads.testutils import post_thread
-
+from misago.users.activepostersranking import build_active_posters_ranking, get_active_posters_ranking
 from misago.users.testutils import AuthenticatedUserTestCase
-from misago.users.activepostersranking import (
-    get_active_posters_ranking, build_active_posters_ranking)
 
 
 class TestActivePostersRanking(AuthenticatedUserTestCase):

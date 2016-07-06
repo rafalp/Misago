@@ -3,9 +3,8 @@ from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 
 from misago.core.exceptions import Banned
-
 from misago.users.bans import get_request_ip_ban
-from misago.users.models import Ban, BAN_IP
+from misago.users.models import BAN_IP, Ban
 
 
 def deny_authenticated(f):

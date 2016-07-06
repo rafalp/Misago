@@ -1,5 +1,5 @@
-from datetime import timedelta
 import json
+from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 
@@ -8,11 +8,10 @@ from misago.categories.models import Category
 from misago.conf import settings
 from misago.core import threadstore
 from misago.core.cache import cache
-from misago.threads.models import Thread, Post
+from misago.threads.models import Post, Thread
 from misago.threads.testutils import post_thread
-
 from misago.users.activepostersranking import build_active_posters_ranking
-from misago.users.models import Ban, BAN_USERNAME, Rank
+from misago.users.models import BAN_USERNAME, Ban, Rank
 from misago.users.testutils import AuthenticatedUserTestCase
 
 

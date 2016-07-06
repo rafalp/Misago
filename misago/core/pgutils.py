@@ -1,6 +1,5 @@
-from django.db.migrations.operations import RunSQL
-
 from django.core.paginator import Paginator
+from django.db.migrations.operations import RunSQL
 
 
 class CreatePartialIndex(RunSQL):

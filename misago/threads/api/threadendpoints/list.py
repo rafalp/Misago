@@ -1,8 +1,7 @@
 from rest_framework.response import Response
 
 from misago.core.shortcuts import get_int_or_404
-
-from misago.threads.viewmodels.category import ThreadsRootCategory, ThreadsCategory
+from misago.threads.viewmodels.category import ThreadsCategory, ThreadsRootCategory
 from misago.threads.viewmodels.threads import ForumThreads
 
 

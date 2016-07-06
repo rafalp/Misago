@@ -5,7 +5,6 @@ from misago.acl import add_acl
 from misago.categories.models import Category
 from misago.core.shortcuts import validate_slug
 from misago.readtracker.threadstracker import make_read_aware
-
 from misago.threads.models import Thread
 from misago.threads.permissions.threads import allow_see_thread
 from misago.threads.serializers import ThreadSerializer

@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, patterns, url
 
 from misago import admin
 from misago.admin.views import auth, index

@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from django.utils.translation import ugettext_lazy as _
+
 from misago.conf import views
 
 

@@ -1,16 +1,16 @@
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.utils.translation import gettext as _
+
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 
 from misago.acl import add_acl
 from misago.categories.models import THREADS_ROOT_NAME, Category
-from misago.categories.permissions import allow_see_category, allow_browse_category
+from misago.categories.permissions import allow_browse_category, allow_see_category
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
 from misago.readtracker.categoriestracker import read_category
-
 from misago.threads.api.threadendpoints.list import threads_list_endpoint
 from misago.threads.api.threadendpoints.merge import threads_merge_endpoint
 from misago.threads.api.threadendpoints.patch import thread_patch_endpoint

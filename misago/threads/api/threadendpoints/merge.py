@@ -1,17 +1,17 @@
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
-from django.utils.translation import gettext as _, ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import ungettext
 
 from rest_framework.response import Response
 
 from misago.acl import add_acl
 from misago.categories.models import THREADS_ROOT_NAME, Category
-from misago.categories.permissions import can_see_category, can_browse_category
-
+from misago.categories.permissions import can_browse_category, can_see_category
 from misago.threads.events import record_event
 from misago.threads.models import Thread
 from misago.threads.permissions import can_see_thread
-from misago.threads.serializers import ThreadListSerializer, MergeThreadsSerializer
+from misago.threads.serializers import MergeThreadsSerializer, ThreadListSerializer
 from misago.threads.threadtypes import trees_map
 from misago.threads.utils import add_categories_to_threads
 

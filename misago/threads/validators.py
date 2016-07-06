@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _, ungettext
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext
 
 from misago.conf import settings
 from misago.core.validators import validate_sluggable

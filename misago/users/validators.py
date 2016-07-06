@@ -1,16 +1,16 @@
-from importlib import import_module
 import json
 import re
+from importlib import import_module
 
 import requests
 
+from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.validators import validate_email as validate_email_content
-from django.utils.translation import ungettext, ugettext_lazy as _
-from django.contrib.auth import get_user_model
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext
 
 from misago.conf import settings
-
 from misago.users.bans import get_email_ban, get_username_ban
 
 

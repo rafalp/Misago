@@ -4,6 +4,7 @@ Service for tracking namechanges
 from datetime import timedelta
 
 from django.utils import timezone
+
 from misago.users.models import UsernameChange
 
 

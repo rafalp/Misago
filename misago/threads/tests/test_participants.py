@@ -3,11 +3,15 @@ from django.test import TestCase
 from django.utils import timezone
 
 from misago.categories.models import Category
-
-from misago.threads.models import Thread, ThreadParticipant, Post
+from misago.threads.models import Post, Thread, ThreadParticipant
 from misago.threads.participants import (
-    thread_has_participants, make_thread_participants_aware, set_thread_owner,
-    set_user_unread_private_threads_sync, add_owner, remove_participant)
+    add_owner,
+    make_thread_participants_aware,
+    remove_participant,
+    set_thread_owner,
+    set_user_unread_private_threads_sync,
+    thread_has_participants
+)
 
 
 class ParticipantsTests(TestCase):

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.conf import settings
-from django.contrib.postgres.fields import JSONField
-from django.db import models, migrations
 import django.db.models.deletion
 import django.utils.timezone
+from django.conf import settings
+from django.contrib.postgres.fields import JSONField
+from django.db import migrations, models
 
-from misago.core.pgutils import CreatePartialIndex, CreatePartialCompositeIndex
+from misago.core.pgutils import CreatePartialCompositeIndex, CreatePartialIndex
 
 
 class Migration(migrations.Migration):

@@ -1,8 +1,8 @@
 from django.core.urlresolvers import reverse
+
 from rest_framework import serializers
 
 from misago.categories.serializers import BasicCategorySerializer
-
 from misago.threads.models import Thread
 
 

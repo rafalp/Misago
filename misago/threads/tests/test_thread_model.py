@@ -5,8 +5,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from misago.categories.models import Category
-
-from misago.threads.models import Thread, ThreadParticipant, Post
+from misago.threads.models import Post, Thread, ThreadParticipant
 
 
 class ThreadModelTests(TestCase):

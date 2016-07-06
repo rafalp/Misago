@@ -1,6 +1,7 @@
 from importlib import import_module
 
 from bs4 import BeautifulSoup
+
 from django.conf import settings
 
 

@@ -1,4 +1,5 @@
 from django.conf.urls import url
+
 from misago.legal.views import privacy_policy, terms_of_service
 
 

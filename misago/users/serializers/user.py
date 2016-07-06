@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
+
 from rest_framework import serializers
 
 from misago.acl import serialize_acl
-
 from misago.users.serializers import RankSerializer
 
 

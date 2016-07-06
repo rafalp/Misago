@@ -4,7 +4,7 @@ from django.http import Http404
 from django.shortcuts import render
 from django.views.generic import View
 
-from misago.threads.viewmodels.category import ThreadsRootCategory, ThreadsCategory, PrivateThreadsCategory
+from misago.threads.viewmodels.category import PrivateThreadsCategory, ThreadsCategory, ThreadsRootCategory
 from misago.threads.viewmodels.threads import ForumThreads, PrivateThreads
 
 

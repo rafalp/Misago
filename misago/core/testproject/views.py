@@ -8,7 +8,6 @@ from misago.core.exceptions import Banned
 from misago.core.shortcuts import paginate, validate_slug
 from misago.core.testproject.models import Model
 from misago.core.views import home_redirect
-
 from misago.users.models import Ban
 
 

@@ -2,9 +2,8 @@
 from django.db import models
 from django.dispatch import receiver
 
-from misago.core import serializer
-
 from misago.acl import version as acl_version
+from misago.core import serializer
 from misago.core.signals import secret_key_changed
 
 

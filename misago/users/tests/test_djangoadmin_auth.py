@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+
 from misago.admin.testutils import AdminTestCase
 
 

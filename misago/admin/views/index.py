@@ -7,12 +7,10 @@ from django.http import Http404, JsonResponse
 from django.utils.translation import ugettext as _
 
 from misago import __version__
-
-from misago.core.cache import cache
-from misago.threads.models import Thread, Post
-from misago.users.models import User, ACTIVATION_REQUIRED_NONE
-
 from misago.admin.views import render
+from misago.core.cache import cache
+from misago.threads.models import Post, Thread
+from misago.users.models import ACTIVATION_REQUIRED_NONE, User
 
 
 VERSION_CHECK_CACHE_KEY = "misago_version_check"

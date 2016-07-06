@@ -4,10 +4,9 @@ from django.test import TestCase
 from django.utils import timezone
 from django.utils.six import StringIO
 
-from misago.threads import testutils
-
 from misago.categories.management.commands import prunecategories
 from misago.categories.models import Category
+from misago.threads import testutils
 
 
 class PruneCategoriesTests(TestCase):

@@ -1,11 +1,14 @@
 import base64
 from hashlib import sha256
+
+from django.conf import settings
+
+
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
 
-from django.conf import settings
 
 
 def _checksum(base):

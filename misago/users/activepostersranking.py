@@ -6,7 +6,6 @@ from django.db.models import Count
 from django.utils import timezone
 
 from misago.categories.models import Category
-
 from misago.users.models import ActivityRanking
 
 

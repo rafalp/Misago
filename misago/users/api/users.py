@@ -16,24 +16,21 @@ from misago.core.cache import cache
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
 from misago.threads.moderation.posts import hide_post
 from misago.threads.moderation.threads import hide_thread
-
+from misago.users.api.userendpoints.avatar import avatar_endpoint, moderate_avatar_endpoint
+from misago.users.api.userendpoints.changeemail import change_email_endpoint
+from misago.users.api.userendpoints.changepassword import change_password_endpoint
+from misago.users.api.userendpoints.create import create_endpoint
+from misago.users.api.userendpoints.list import list_endpoint
+from misago.users.api.userendpoints.signature import signature_endpoint
+from misago.users.api.userendpoints.username import moderate_username_endpoint, username_endpoint
 from misago.users.bans import get_user_ban
 from misago.users.forms.options import ForumOptionsForm
 from misago.users.online.utils import get_user_status
 from misago.users.permissions.delete import allow_delete_user
-from misago.users.permissions.moderation import allow_rename_user, allow_moderate_avatar
+from misago.users.permissions.moderation import allow_moderate_avatar, allow_rename_user
 from misago.users.permissions.profiles import allow_browse_users_list, allow_follow_user, allow_see_ban_details
-
 from misago.users.rest_permissions import BasePermission, IsAuthenticatedOrReadOnly, UnbannedAnonOnly
-from misago.users.serializers import UserSerializer, UserProfileSerializer, BanDetailsSerializer
-
-from misago.users.api.userendpoints.list import list_endpoint
-from misago.users.api.userendpoints.avatar import avatar_endpoint, moderate_avatar_endpoint
-from misago.users.api.userendpoints.create import create_endpoint
-from misago.users.api.userendpoints.signature import signature_endpoint
-from misago.users.api.userendpoints.username import username_endpoint, moderate_username_endpoint
-from misago.users.api.userendpoints.changeemail import change_email_endpoint
-from misago.users.api.userendpoints.changepassword import change_password_endpoint
+from misago.users.serializers import BanDetailsSerializer, UserProfileSerializer, UserSerializer
 
 
 class UserViewSetPermission(BasePermission):

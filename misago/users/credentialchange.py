@@ -4,7 +4,9 @@ Changed credentials service
 Stores new e-mail and password in cache
 """
 from hashlib import sha256
+
 from django.conf import settings
+
 from misago.core import serializer
 
 

@@ -4,10 +4,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from misago.acl import version as acl_version
 from misago.admin.views import generic
-from misago.threads.threadtypes import trees_map
-
 from misago.categories.forms import CategoryFormFactory, DeleteFormFactory
 from misago.categories.models import THREADS_ROOT_NAME, Category, RoleCategoryACL
+from misago.threads.threadtypes import trees_map
 
 
 class CategoryAdmin(generic.AdminBaseMixin):

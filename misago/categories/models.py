@@ -1,17 +1,17 @@
 from urlparse import urlparse
 
+from mptt.managers import TreeManager
+from mptt.models import MPTTModel, TreeForeignKey
+
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from mptt.managers import TreeManager
-from mptt.models import MPTTModel, TreeForeignKey
 
 from misago.acl import version as acl_version
 from misago.acl.models import BaseRole
 from misago.conf import settings
 from misago.core.cache import cache
 from misago.core.utils import slugify
-
 from misago.threads.threadtypes import trees_map
 
 

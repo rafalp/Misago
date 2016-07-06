@@ -1,15 +1,14 @@
 from urllib import urlencode
 
 from django.contrib import messages
-from django.core.paginator import Paginator, EmptyPage
+from django.core.paginator import EmptyPage, Paginator
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 
-from misago.core.exceptions import ExplicitFirstPage
-
 from misago.admin.views.generic.base import AdminView
+from misago.core.exceptions import ExplicitFirstPage
 
 
 class MassActionError(Exception):

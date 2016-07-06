@@ -3,7 +3,6 @@ from django.core import mail
 from django.core.urlresolvers import reverse
 
 from misago.conf import settings
-
 from misago.users.models import Online
 from misago.users.testutils import UserTestCase
 

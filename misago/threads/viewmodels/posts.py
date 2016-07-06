@@ -3,10 +3,9 @@ from django.conf import settings
 from misago.acl import add_acl
 from misago.core.shortcuts import paginate, pagination_dict
 from misago.readtracker.threadstracker import make_posts_read_aware
-from misago.users.online.utils import make_users_status_aware
-
 from misago.threads.permissions.threads import exclude_invisible_posts
 from misago.threads.serializers import ThreadPostSerializer
+from misago.users.online.utils import make_users_status_aware
 
 
 class ViewModel(object):

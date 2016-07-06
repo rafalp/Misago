@@ -1,5 +1,5 @@
-import re
 import os
+import re
 from optparse import OptionParser
 
 from django.core import management

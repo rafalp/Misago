@@ -1,5 +1,4 @@
-from rest_framework.routers import (
-    DefaultRouter, Route, DynamicDetailRoute, DynamicListRoute)
+from rest_framework.routers import DefaultRouter, DynamicDetailRoute, DynamicListRoute, Route
 
 
 class MisagoApiRouter(DefaultRouter):

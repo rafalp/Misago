@@ -5,9 +5,8 @@ from django.dispatch import receiver
 from django.utils import timezone
 
 from misago.conf import settings
-
 from misago.threads import threadtypes
-from misago.threads.checksums import update_post_checksum, is_post_valid
+from misago.threads.checksums import is_post_valid, update_post_checksum
 
 
 class Post(models.Model):

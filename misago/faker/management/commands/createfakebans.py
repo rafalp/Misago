@@ -1,14 +1,14 @@
-from datetime import timedelta
 import random
 import sys
+from datetime import timedelta
+
+from faker import Factory
 
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from faker import Factory
-
 from misago.core.management.progressbar import show_progress
-from misago.users.models import Ban, BAN_USERNAME, BAN_EMAIL, BAN_IP
+from misago.users.models import BAN_EMAIL, BAN_IP, BAN_USERNAME, Ban
 
 
 def fake_username_ban(fake):

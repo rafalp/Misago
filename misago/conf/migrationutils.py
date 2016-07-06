@@ -1,8 +1,7 @@
-from misago.core import serializer
-from misago.core.cache import cache as default_cache
-
 from misago.conf.dbsettings import CACHE_KEY
 from misago.conf.hydrators import dehydrate_value
+from misago.core import serializer
+from misago.core.cache import cache as default_cache
 
 
 def get_group(SettingsGroup, group_key):

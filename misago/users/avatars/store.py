@@ -1,11 +1,10 @@
-from hashlib import md5
 import os
+from hashlib import md5
 
 from path import Path
 from PIL import Image
 
 from misago.conf import settings
-
 from misago.users.avatars.paths import AVATARS_STORE
 
 
