@@ -111,7 +111,7 @@ Those keys should live at the end of the fields list and be separated from other
 Nested results
 --------------
 
-Nested results should be included in view or viewset, as part of creding dict of serialized data for "Response" object::
+Nested results should be included in view or viewset, as part of creating dict of serialized data for "Response" object::
 
     data = UserSerializer(user).data
     data['post_set'] = UserPostSerializer(posts, many=True).data
