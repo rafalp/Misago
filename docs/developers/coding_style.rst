@@ -9,7 +9,14 @@ When writing Python code for Misago, please familiarize yourself with and follow
 
 Those documents should give you solid knowledge of coding style and conventions that are followed by Python and Django programmers when writing code.
 
-In addition to those guidelines, Misago defines set of additional convetions and good practices that will help you write better and easier code:
+In addition to those guidelines, Misago defines set of additional convetions and good practices that will help you write better and easier code.
+
+
+.. note::
+   Originally Misago was writen with 79 character line limit in mind, but recently this convention was dropped for sake of Django's 119 characters line limit. 
+
+.. note::
+   Misago comes with ".pylintrc" file that contains configuration for pylint tool used to lint Misago's codebase.
 
 
 Models
@@ -39,57 +46,94 @@ True/False Fields
 For extra clarity prefix fields representing true/false states of model with "is". "is_deleted" is better than "deleted".
 
 
-URLConfs
-========
+Serializers
+===========
 
-Link Parameters
----------------
+Defining serializers
+--------------------
 
-Links pointing at classes instead of functions should use lowercase letters and undersores. This means that link pointing at "ForumThreads" should be named "forum_threads".
+Model's default serializer should be named after its model, but with "Serializer" suffix, ergo serializer for "Thread" model should be named "ThreadSerializer". Default serializer should be only serializer defining serialization methods.
 
-If link parameters represent model fields, name them using model_field scheme. This means that if your link contains UserWarn's id and slug, name those parameters userwarn_id and userwarn_slug in your link and view.
-
-.. note::
-   Notice that paramerter for this model is `userwarn_slug`, not `user_warn_slug`. This is important because when model slug validation fails, Misago error handler seeks for lowercase class name in link parameters.
-
-In rare cases you may want link parameters point at two instances of same model. If this is the case add use more descriptive prefix instead of one from model name (ergo "quoted_post").
+In case that model has more than one serializer, all serializers should inherit from default one and be named in a way describing it usage. For example serializer for "User" model used to serialize post's author should be named "PostPosterSerializer". This serializer should only define "Meta" class with "model" and "fields" attributes, inheriting serialization behaviour form default serializer.
 
 
-Views and Forms
-===============
+Fields Order
+------------
 
-Depending on number of views in your app, you may have single "views.py" file (AKA python module), or "views" directory (AKA python package). While both approaches are perfectly valid, you should preffer first one and only switch to latter when your views module becomes too big. Same practice applies for "forms.py". Split it only when file becomes to big to be easily navigate.
+Order of fields should correspond directly to order of fields on model that serializer handles.
 
-In addition to views and forms definitions, those files can also contain helper functions and attributes. Your views may perform same logic that you may want to move to single decorator or mixin in order to DRY your code while your forms may define factories or dynamic default values. However file contents should always follow "what it says on the tin" rule. If your views module defines forms or has nothing else but mixins or decorators that are imported by other modules, it shouldn't be named "views".
+If serializer defines non-model fields, those should be specified last and separated from model's fields with empty line, ergo:
 
-.. note::
-   This rule is not specific just for views and forms files or even for python language ans is widely considered as good practice in majority of programming languages out there.
+    fields = (
+        'id',
+        'user',
+        'title',
+
+        'acl', # annotation set on model by view
+        'something_extra', # dynamic atribute coming from "SerializerMethodField"
+    )
 
 
-View Arguments
+URLs
+----
+
+Serializers may define two special fields used for serialization of url's, "url" and "api". The first one should be string containing serialized model's "get_absolute_url" or list urls of interest for UI rendering serialized model, like:
+
+    'url': {
+        'absolute': obj.get_absolute_url(),
+        'first_unread': obj.get_first_unread_url(),
+        'last_post': obj.get_last_post_url(),
+    }
+
+Likewise the "api" key should contain the url to item api endpoint (eg. "/api/threads/132/") or list of avaiable endpoints:
+
+    'api': {
+        'index': reverse('misago:api:threads', kwargs={'pk': obj.pk}),
+        'read': reverse('misago:api:thread-read', kwargs={'pk': obj.pk}),
+        'move': reverse('misago:api:thread-move', kwargs={'pk': obj.pk}),
+    }
+
+Those keys should live at the end of the fields list and be separated from other fields with blank line:
+
+    fields = (
+        'id',
+        'user',
+        'title',
+
+        'acl', # annotation set on model by view
+        'something_extra', # dynamic atribute coming from "SerializerMethodField"
+
+        'api',
+        'url',
+    )
+
+
+Nested results
 --------------
 
-As convention, declare view arguments in order they are being used in view's code. Most common example of this is pk being declared before slug, as view has to get model from database before it validates its slug.
+Nested results should be included in view or viewset, as part of creding dict of serialized data for "Response" object:
+
+    data = UserSerializer(user).data
+    data['post_set'] = UserPostSerializer(posts, many=True).data
+    return Response(data)
+
+The added key should be model's "related_name" in respect of model it annotates (defautly its "modelname_set").
 
 
-Templates
-=========
+Kitchensink example for fields attribute
+----------------------------------------
 
-.. note::
-   There is no silver bullet approach to how you should name or organize templates in your apps. Instead in this chapter will explain convention used by Misago.
+    fields = (
+        'id',
+        'user',
+        'title',
 
+        'acl', # annotation set on model by view
+        'something_extra', # dynamic atribute coming from "SerializerMethodField"
 
-If you are looking for template file, first you should pick correct directory to search in. Misago groups templates by special "spaces" they belong to. This means "misago" directory has three subdirectories:
+        'post_set',
+        'usernamehistory',
 
-- admin
-- emails
-- forum
-
-After you have opened right directory, you should see list of directories and html files. See which directory or file name relates most to the page you are looking to modify. Directories are used to group related templates together and may either represent part of site (like user control panel) or single view that was split into few building blocks to remove complexity from templates (like thread view that includes additional templates).
-
-This means that some exploring will be needed, but Misago is not going to leave you on your own here. Debug mode makes Misago expose lots of inside information to help developers understand whats happening under the hood. After you enable it, Misago will wrap every rendered template in HTML comments pointing you to source files you have to look at.
-
-.. warning::
-   Never EVER EVER run your site with DEBUG = True in production. Sooner or later something will go wrong, and when it does, this will make Misago happily expose confidential details about your site's configuration to those who shouldn't see it.
-
-   Because implementation details of Misago features are freely available on internet and safety of some of those depends on their configuration remaining secret, this will open your site for many different attacks.
+        'api',
+        'url',
+    )
