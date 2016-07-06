@@ -62,7 +62,7 @@ Fields Order
 
 Order of fields should correspond directly to order of fields on model that serializer handles.
 
-If serializer defines non-model fields, those should be specified last and separated from model's fields with empty line, ergo:
+If serializer defines non-model fields, those should be specified last and separated from model's fields with empty line, ergo::
 
     fields = (
         'id',
@@ -77,7 +77,7 @@ If serializer defines non-model fields, those should be specified last and separ
 URLs
 ----
 
-Serializers may define two special fields used for serialization of url's, "url" and "api". The first one should be string containing serialized model's "get_absolute_url" or list urls of interest for UI rendering serialized model, like:
+Serializers may define two special fields used for serialization of url's, "url" and "api". The first one should be string containing serialized model's "get_absolute_url" or list urls of interest for UI rendering serialized model, like::
 
     'url': {
         'absolute': obj.get_absolute_url(),
@@ -85,7 +85,7 @@ Serializers may define two special fields used for serialization of url's, "url"
         'last_post': obj.get_last_post_url(),
     }
 
-Likewise the "api" key should contain the url to item api endpoint (eg. "/api/threads/132/") or list of avaiable endpoints:
+Likewise the "api" key should contain the url to item api endpoint (eg. "/api/threads/132/") or list of avaiable endpoints::
 
     'api': {
         'index': reverse('misago:api:threads', kwargs={'pk': obj.pk}),
@@ -93,7 +93,7 @@ Likewise the "api" key should contain the url to item api endpoint (eg. "/api/th
         'move': reverse('misago:api:thread-move', kwargs={'pk': obj.pk}),
     }
 
-Those keys should live at the end of the fields list and be separated from other fields with blank line:
+Those keys should live at the end of the fields list and be separated from other fields with blank line::
 
     fields = (
         'id',
@@ -111,29 +111,10 @@ Those keys should live at the end of the fields list and be separated from other
 Nested results
 --------------
 
-Nested results should be included in view or viewset, as part of creding dict of serialized data for "Response" object:
+Nested results should be included in view or viewset, as part of creding dict of serialized data for "Response" object::
 
     data = UserSerializer(user).data
     data['post_set'] = UserPostSerializer(posts, many=True).data
     return Response(data)
 
 The added key should be model's "related_name" in respect of model it annotates (defautly its "modelname_set").
-
-
-Kitchensink example for fields attribute
-----------------------------------------
-
-    fields = (
-        'id',
-        'user',
-        'title',
-
-        'acl', # annotation set on model by view
-        'something_extra', # dynamic atribute coming from "SerializerMethodField"
-
-        'post_set',
-        'usernamehistory',
-
-        'api',
-        'url',
-    )
