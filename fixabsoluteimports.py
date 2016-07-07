@@ -38,7 +38,7 @@ def clean_file(file_path):
 
         if save_file:
             with open(file_path, 'w') as package:
-                print py_source
+                print file_path
                 package.write(py_source)
 
 
@@ -73,3 +73,5 @@ def clean_import(package, import_path):
 if __name__ == '__main__':
     for args in os.walk('misago'):
         walk_directory(*args)
+
+    print "\nDone! Don't forget to run isort to fix imports ordering!"
