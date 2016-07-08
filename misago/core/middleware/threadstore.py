@@ -1,4 +1,4 @@
-from misago.core import threadstore
+from .. import threadstore
 
 
 class ThreadStoreMiddleware(object):

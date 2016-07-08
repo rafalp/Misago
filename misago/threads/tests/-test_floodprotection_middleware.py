@@ -2,9 +2,10 @@ from datetime import timedelta
 
 from django.utils import timezone
 
-from misago.threads.posting import PostingInterrupt
-from misago.threads.posting.floodprotection import MIN_POSTING_PAUSE, FloodProtectionMiddleware
 from misago.users.testutils import AuthenticatedUserTestCase
+
+from ..posting import PostingInterrupt
+from ..posting.floodprotection import MIN_POSTING_PAUSE, FloodProtectionMiddleware
 
 
 class FloodProtectionMiddlewareTests(AuthenticatedUserTestCase):

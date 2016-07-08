@@ -1,4 +1,4 @@
-from misago.threads.models import Subscription
+from .models import Subscription
 
 
 __all__ = ['make_subscription_aware']

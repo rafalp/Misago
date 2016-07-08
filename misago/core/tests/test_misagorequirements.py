@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.utils.six import StringIO
 
-from misago.core.management.commands import misagorequirements
+from ..management.commands import misagorequirements
 
 
 class MisagoRequirementsTests(TestCase):

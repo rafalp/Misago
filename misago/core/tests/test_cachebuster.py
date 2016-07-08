@@ -1,7 +1,7 @@
-from misago.core import cachebuster, threadstore
-from misago.core.cache import cache
-from misago.core.models import CacheVersion
-from misago.core.testutils import MisagoTestCase
+from .. import cachebuster, threadstore
+from ..cache import cache
+from ..models import CacheVersion
+from ..testutils import MisagoTestCase
 
 
 class CacheBusterTests(MisagoTestCase):

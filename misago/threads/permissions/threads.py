@@ -11,7 +11,8 @@ from misago.acl.models import Role
 from misago.categories.models import Category, CategoryRole, RoleCategoryACL
 from misago.categories.permissions import get_categories_roles
 from misago.core import forms
-from misago.threads.models import Post, Thread
+
+from ..models import Post, Thread
 
 
 __all__ = [

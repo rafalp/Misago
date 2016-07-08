@@ -9,13 +9,14 @@ from rest_framework.response import Response
 from misago.conf import settings
 from misago.core import forms
 from misago.core.mail import mail_user
-from misago.users import captcha
-from misago.users.bans import ban_ip
-from misago.users.forms.register import RegisterForm
-from misago.users.models import ACTIVATION_REQUIRED_ADMIN, ACTIVATION_REQUIRED_USER
-from misago.users.serializers import AuthenticatedUserSerializer
-from misago.users.tokens import make_activation_token
-from misago.users.validators import validate_new_registration
+
+from ... import captcha
+from ...bans import ban_ip
+from ...forms.register import RegisterForm
+from ...models import ACTIVATION_REQUIRED_ADMIN, ACTIVATION_REQUIRED_USER
+from ...serializers import AuthenticatedUserSerializer
+from ...tokens import make_activation_token
+from ...validators import validate_new_registration
 
 
 @csrf_protect

@@ -1,5 +1,6 @@
 from misago.core import forms
-from misago.users import validators
+
+from .. import validators
 
 
 class RegisterForm(forms.Form):

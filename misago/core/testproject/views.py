@@ -2,13 +2,14 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponse
 
-from misago.core import errorpages, mail
-from misago.core.decorators import require_POST
-from misago.core.exceptions import Banned
-from misago.core.shortcuts import paginate, validate_slug
-from misago.core.testproject.models import Model
-from misago.core.views import home_redirect
 from misago.users.models import Ban
+
+from .. import errorpages, mail
+from ..decorators import require_POST
+from ..exceptions import Banned
+from ..shortcuts import paginate, validate_slug
+from ..views import home_redirect
+from .models import Model
 
 
 def test_mail_user(request):

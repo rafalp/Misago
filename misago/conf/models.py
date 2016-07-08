@@ -1,9 +1,10 @@
 from django.db import models
 from django.dispatch import receiver
 
-from misago.conf import hydrators
 from misago.core import serializer
 from misago.core.signals import secret_key_changed
+
+from . import hydrators
 
 
 class SettingsGroupsManager(models.Manager):

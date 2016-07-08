@@ -10,7 +10,7 @@ def walk_directory(root, dirs, files):
 def clean_file(file_path):
     py_source = file(file_path).read()
     if 'misago.' in py_source:
-        package = file_path.rstrip('.py').split('/')[:-1]
+        package = file_path.rstrip('.py').split('/')
 
         parse_file = True
         save_file = False
@@ -44,18 +44,31 @@ def clean_file(file_path):
 
 def clean_import(package, import_path):
     if len(package) < 2 or len(import_path) < 2:
+        # skip non-app import
         return
 
     if package[:2] != import_path[:2]:
+        # skip other app import
         return
 
     if package == import_path:
-        # import from sibling module
+        # import from direct child
         return ['', '']
+
+    if package[:-1] == import_path[:-1]:
+        # import from sibling module
+        return ['', import_path[-1]]
 
     if len(package) < len(import_path) and package == import_path[:len(package)]:
         # import from child module
         return [''] + import_path[len(package):]
+
+    if len(package) > len(import_path) and package[:len(import_path)] == import_path:
+        # import from parent module
+        return [''] * (len(package) - len(import_path) + 1)
+
+    # relative up and down path
+    relative_path = []
 
     # find upwards path
     overlap_len = 2
@@ -64,10 +77,13 @@ def clean_import(package, import_path):
             break
         overlap_len += 1
 
-    upward_path = (['', ''] * (len(package) - overlap_len))[:-1]
+    relative_path += ([''] * (len(package) - overlap_len))[:-1]
 
     # append eventual downwards path
-    return upward_path + import_path[overlap_len:]
+    if import_path[overlap_len:]:
+        relative_path += [''] + import_path[overlap_len:]
+
+    return relative_path
 
 
 if __name__ == '__main__':

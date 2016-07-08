@@ -2,8 +2,8 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.views.generic import View
 
-from misago.threads.viewmodels.posts import ThreadPosts
-from misago.threads.viewmodels.thread import ForumThread
+from ..viewmodels.posts import ThreadPosts
+from ..viewmodels.thread import ForumThread
 
 
 class ThreadBase(View):

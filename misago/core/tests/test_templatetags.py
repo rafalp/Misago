@@ -1,9 +1,9 @@
 from django.template import Context, Template, TemplateSyntaxError
 from django.test import TestCase
 
-from misago.core import forms
-from misago.core.shortcuts import paginate
-from misago.core.templatetags import misago_batch
+from .. import forms
+from ..shortcuts import paginate
+from ..templatetags import misago_batch
 
 
 class CaptureTests(TestCase):

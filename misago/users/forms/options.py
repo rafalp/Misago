@@ -4,8 +4,9 @@ from django.utils.translation import ungettext
 
 from misago.conf import settings
 from misago.core import forms
-from misago.users.models import AUTO_SUBSCRIBE_CHOICES, PRIVATE_THREAD_INVITES_LIMITS_CHOICES
-from misago.users.validators import validate_email, validate_password
+
+from ..models import AUTO_SUBSCRIBE_CHOICES, PRIVATE_THREAD_INVITES_LIMITS_CHOICES
+from ..validators import validate_email, validate_password
 
 
 class ForumOptionsForm(forms.ModelForm):

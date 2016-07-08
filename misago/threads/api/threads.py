@@ -11,14 +11,15 @@ from misago.categories.models import THREADS_ROOT_NAME, Category
 from misago.categories.permissions import allow_browse_category, allow_see_category
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
 from misago.readtracker.categoriestracker import read_category
-from misago.threads.api.threadendpoints.list import threads_list_endpoint
-from misago.threads.api.threadendpoints.merge import threads_merge_endpoint
-from misago.threads.api.threadendpoints.patch import thread_patch_endpoint
-from misago.threads.models import Subscription
-from misago.threads.moderation import threads as moderation
-from misago.threads.subscriptions import make_subscription_aware
-from misago.threads.threadtypes import trees_map
-from misago.threads.viewmodels.thread import ForumThread
+
+from ..models import Subscription
+from ..moderation import threads as moderation
+from ..subscriptions import make_subscription_aware
+from ..threadtypes import trees_map
+from ..viewmodels.thread import ForumThread
+from .threadendpoints.list import threads_list_endpoint
+from .threadendpoints.merge import threads_merge_endpoint
+from .threadendpoints.patch import thread_patch_endpoint
 
 
 class ViewSet(viewsets.ViewSet):

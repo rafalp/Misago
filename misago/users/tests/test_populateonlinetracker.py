@@ -2,8 +2,8 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils.six import StringIO
 
-from misago.users.management.commands import populateonlinetracker
-from misago.users.models import Online
+from ..management.commands import populateonlinetracker
+from ..models import Online
 
 
 class PopulateOnlineTrackerTests(TestCase):

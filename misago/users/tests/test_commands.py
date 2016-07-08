@@ -1,7 +1,7 @@
 from django.core.management import call_command
 from django.test import TestCase
 
-from misago.users.models import User
+from ..models import User
 
 
 class CreateSuperUserTests(TestCase):

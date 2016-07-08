@@ -1,10 +1,11 @@
 from django.db.models import F
 from django.utils import timezone
 
-from misago.readtracker import signals
-from misago.readtracker.dates import is_date_tracked
-from misago.readtracker.models import CategoryRead
 from misago.threads.permissions import exclude_invisible_threads
+
+from . import signals
+from .dates import is_date_tracked
+from .models import CategoryRead
 
 
 __all__ = ['make_read_aware', 'sync_record']

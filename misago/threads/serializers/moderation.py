@@ -6,10 +6,11 @@ from rest_framework import serializers
 from misago.acl import add_acl
 from misago.categories.models import THREADS_ROOT_NAME, Category
 from misago.categories.permissions import can_browse_category, can_see_category
-from misago.threads.models import THREAD_WEIGHT_DEFAULT, THREAD_WEIGHT_GLOBAL
-from misago.threads.permissions import allow_start_thread
-from misago.threads.threadtypes import trees_map
-from misago.threads.validators import validate_title
+
+from ..models import THREAD_WEIGHT_DEFAULT, THREAD_WEIGHT_GLOBAL
+from ..permissions import allow_start_thread
+from ..threadtypes import trees_map
+from ..validators import validate_title
 
 
 def validate_category(user, category_id, allow_root=False):

@@ -1,6 +1,6 @@
 from django.conf import settings as dj_settings
 
-from misago.conf.dbsettings import db_settings
+from .dbsettings import db_settings
 
 
 class SettingsGateway(object):

@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from misago.users.models import User
+from ..models import User
 
 
 class UserManagerTests(TestCase):

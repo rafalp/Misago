@@ -1,7 +1,8 @@
 from django.utils.translation import ugettext_lazy as _
 
 from misago.core import forms
-from misago.users.validators import validate_username
+
+from ..validators import validate_username
 
 
 class ChangeUsernameForm(forms.Form):

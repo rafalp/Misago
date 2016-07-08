@@ -1,7 +1,7 @@
 from django.core import mail
 from django.core.urlresolvers import reverse
 
-from misago.users.testutils import AuthenticatedUserTestCase
+from ..testutils import AuthenticatedUserTestCase
 
 
 class OptionsViewsTests(AuthenticatedUserTestCase):

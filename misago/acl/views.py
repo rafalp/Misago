@@ -3,9 +3,10 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 
-from misago.acl.forms import RoleForm, get_permissions_forms
-from misago.acl.models import Role
 from misago.admin.views import generic
+
+from .forms import RoleForm, get_permissions_forms
+from .models import Role
 
 
 class RoleAdmin(generic.AdminBaseMixin):

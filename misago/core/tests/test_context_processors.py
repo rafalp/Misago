@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from misago.core import context_processors
+from .. import context_processors
 
 
 class MockRequest(object):

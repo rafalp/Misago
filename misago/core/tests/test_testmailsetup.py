@@ -2,7 +2,7 @@ from django.core import mail
 from django.test import TestCase
 from django.utils.six import StringIO
 
-from misago.core.management.commands import testemailsetup
+from ..management.commands import testemailsetup
 
 
 class TestEmailSetupTests(TestCase):

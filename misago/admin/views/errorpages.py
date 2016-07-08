@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 
-from misago.admin.auth import is_admin_session, update_admin_session
-from misago.admin.views import get_protected_namespace, protected_admin_view, render
+from . import get_protected_namespace, protected_admin_view, render
+from ..auth import is_admin_session, update_admin_session
 
 
 # Magic error page used by admin

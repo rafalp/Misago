@@ -2,8 +2,9 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import serializers
 
-from misago.categories.models import Category
 from misago.core.utils import format_plaintext_for_html
+
+from .models import Category
 
 
 __all__ = [

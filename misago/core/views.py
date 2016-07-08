@@ -6,7 +6,7 @@ from django.views import i18n
 from django.views.decorators.cache import cache_page
 from django.views.decorators.http import last_modified
 
-from misago.core import momentjs
+from . import momentjs
 
 
 def forum_index(request):

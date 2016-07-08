@@ -6,7 +6,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from misago.core.shortcuts import pagination_dict
+from .shortcuts import pagination_dict
 
 
 class BaseApiPaginator(PageNumberPagination):

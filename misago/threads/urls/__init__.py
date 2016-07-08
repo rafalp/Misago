@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.conf.urls import url
 
-from misago.threads.views.list import ForumThreads, CategoryThreads, PrivateThreads
-from misago.threads.views.thread import Thread, PrivateThread
+from ..views.list import ForumThreads, CategoryThreads, PrivateThreads
+from ..views.thread import Thread, PrivateThread
 
 
 LISTS_TYPES = (

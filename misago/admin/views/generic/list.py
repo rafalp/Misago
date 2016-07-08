@@ -7,8 +7,9 @@ from django.db import transaction
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 
-from misago.admin.views.generic.base import AdminView
 from misago.core.exceptions import ExplicitFirstPage
+
+from .base import AdminView
 
 
 class MassActionError(Exception):

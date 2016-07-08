@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from misago.core.apipaginator import ApiPaginator
+from ..apipaginator import ApiPaginator
 
 
 class MockRequest(object):

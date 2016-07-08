@@ -2,10 +2,11 @@ import json
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import THREADS_ROOT_NAME, Category
-from misago.threads import testutils
-from misago.threads.models import Thread
-from misago.threads.threadtypes import trees_map
 from misago.users.testutils import AuthenticatedUserTestCase
+
+from .. import testutils
+from ..models import Thread
+from ..threadtypes import trees_map
 
 
 class ThreadsApiTestCase(AuthenticatedUserTestCase):

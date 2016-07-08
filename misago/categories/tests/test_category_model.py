@@ -1,9 +1,10 @@
 from django.utils import timezone
 
-from misago.categories.models import THREADS_ROOT_NAME, Category
 from misago.core.testutils import MisagoTestCase
 from misago.threads import testutils
 from misago.threads.threadtypes import trees_map
+
+from ..models import THREADS_ROOT_NAME, Category
 
 
 class CategoryManagerTests(MisagoTestCase):

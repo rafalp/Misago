@@ -1,6 +1,6 @@
 from misago.conf import settings
 
-from misago.users.avatars import store, gravatar, dynamic, gallery, uploaded
+from . import store, gravatar, dynamic, gallery, uploaded
 
 
 AVATAR_TYPES = ('gravatar', 'dynamic', 'gallery', 'uploaded')

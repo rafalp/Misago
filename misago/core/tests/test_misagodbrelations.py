@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.utils.six import StringIO
 
-from misago.core.management.commands import misagodbrelations
+from ..management.commands import misagodbrelations
 
 
 class MisagoDBRelationsTests(TestCase):

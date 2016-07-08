@@ -4,9 +4,9 @@ from django.db import IntegrityError
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 
-from misago.users.credentialchange import read_new_credential
-from misago.users.decorators import deny_guests
-from misago.users.pages import usercp
+from ..credentialchange import read_new_credential
+from ..decorators import deny_guests
+from ..pages import usercp
 
 
 @deny_guests

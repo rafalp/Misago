@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from misago.users.views.avatarserver import clean_size
+from ..views.avatarserver import clean_size
 
 
 class AvatarServerTests(TestCase):

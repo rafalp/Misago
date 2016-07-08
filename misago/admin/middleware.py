@@ -1,8 +1,8 @@
 from django.shortcuts import redirect
 
-from misago.admin import auth
-from misago.admin.views import get_protected_namespace
-from misago.admin.views.auth import login
+from . import auth
+from .views import get_protected_namespace
+from .views.auth import login
 
 
 class AdminAuthMiddleware(object):

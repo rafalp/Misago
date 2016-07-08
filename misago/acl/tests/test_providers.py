@@ -4,7 +4,7 @@ from types import ModuleType
 from django.conf import settings
 from django.test import TestCase
 
-from misago.acl.providers import PermissionProviders
+from ..providers import PermissionProviders
 
 
 class TestType(object):

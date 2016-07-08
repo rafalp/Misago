@@ -1,8 +1,9 @@
 from django.test import TestCase
 
-from misago.conf.context_processors import settings
-from misago.conf.dbsettings import db_settings
 from misago.core import threadstore
+
+from ..context_processors import settings
+from ..dbsettings import db_settings
 
 
 class MockRequest(object):

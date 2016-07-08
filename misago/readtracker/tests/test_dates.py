@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.readtracker.dates import is_date_tracked
+from ..dates import is_date_tracked
 
 
 class MockUser(object):

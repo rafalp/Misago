@@ -1,9 +1,9 @@
 from django.db.transaction import atomic
 from django.utils import timezone
 
-from misago.readtracker import categoriestracker, signals
-from misago.readtracker.dates import is_date_tracked
-from misago.readtracker.models import CategoryRead, ThreadRead
+from . import categoriestracker, signals
+from .dates import is_date_tracked
+from .models import CategoryRead, ThreadRead
 
 
 __all__ = ['make_read_aware', 'read_thread']

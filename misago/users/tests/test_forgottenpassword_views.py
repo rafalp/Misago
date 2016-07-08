@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 
-from misago.users.models import BAN_USERNAME, Ban
-from misago.users.testutils import UserTestCase
-from misago.users.tokens import make_password_change_token
+from ..models import BAN_USERNAME, Ban
+from ..testutils import UserTestCase
+from ..tokens import make_password_change_token
 
 
 class ForgottenPasswordViewsTests(UserTestCase):

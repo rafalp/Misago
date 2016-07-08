@@ -5,8 +5,8 @@ from PIL import Image
 
 from django.conf import settings
 
-from misago.users.avatars import store
-from misago.users.avatars.paths import MEDIA_AVATARS
+from . import store
+from .paths import MEDIA_AVATARS
 
 
 def get_available_galleries(include_default=False):

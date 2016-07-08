@@ -2,8 +2,8 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from misago.admin.testutils import AdminTestCase
-from misago.admin.views import get_protected_namespace
+from ..testutils import AdminTestCase
+from ..views import get_protected_namespace
 
 
 class FakeRequest(object):

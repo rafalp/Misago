@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from misago.acl import algebra
+from .. import algebra
 
 
 class ComparisionsTests(TestCase):

@@ -5,9 +5,9 @@ from django.test import TestCase
 from django.utils import timezone
 from django.utils.six import StringIO
 
-from misago.users import bans
-from misago.users.management.commands import bansmaintenance
-from misago.users.models import Ban, BanCache
+from .. import bans
+from ..management.commands import bansmaintenance
+from ..models import Ban, BanCache
 
 
 class BansMaintenanceTests(TestCase):

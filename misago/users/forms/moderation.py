@@ -7,7 +7,8 @@ from django.utils.translation import ungettext
 
 from misago.conf import settings
 from misago.core import forms
-from misago.users.bans import ban_user
+
+from ..bans import ban_user
 
 
 class WarnUserForm(forms.Form):

@@ -5,7 +5,8 @@ from importlib import import_module
 from PIL import Image, ImageColor, ImageDraw, ImageFilter, ImageFont
 
 from misago.conf import settings
-from misago.users.avatars import store
+
+from . import store
 
 
 def set_avatar(user):

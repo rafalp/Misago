@@ -5,11 +5,12 @@ from django.core.urlresolvers import reverse
 from misago.acl import add_acl
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
-from misago.threads import testutils
-from misago.threads.api.threadendpoints.merge import MERGE_LIMIT
-from misago.threads.models import Post, Thread
-from misago.threads.serializers import ThreadListSerializer
-from misago.threads.tests.test_threads_api import ThreadsApiTestCase
+
+from .. import testutils
+from ..api.threadendpoints.merge import MERGE_LIMIT
+from ..models import Post, Thread
+from ..serializers import ThreadListSerializer
+from .test_threads_api import ThreadsApiTestCase
 
 
 class ThreadsMergeApiTests(ThreadsApiTestCase):

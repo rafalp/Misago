@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from misago.core import threadstore
-from misago.core.cache import cache
+from . import threadstore
+from .cache import cache
 
 
 class MisagoTestCase(TestCase):

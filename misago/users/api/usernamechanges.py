@@ -8,9 +8,10 @@ from rest_framework.response import Response
 
 from misago.core.apipaginator import ApiPaginator
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
-from misago.users.models import UsernameChange
-from misago.users.rest_permissions import BasePermission
-from misago.users.serializers.usernamechange import UsernameChangeSerializer
+
+from ..models import UsernameChange
+from ..rest_permissions import BasePermission
+from ..serializers.usernamechange import UsernameChangeSerializer
 
 
 class UsernameChangesViewSetPermission(BasePermission):

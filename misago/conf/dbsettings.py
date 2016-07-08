@@ -19,7 +19,7 @@ class DBSettings(object):
         return data
 
     def _read_db(self):
-        from misago.conf.models import Setting
+        from .models import Setting
 
         data = {}
         for setting in Setting.objects.iterator():
@@ -45,7 +45,7 @@ class DBSettings(object):
         return public_settings
 
     def get_lazy_setting(self, setting):
-        from misago.conf.models import Setting
+        from .models import Setting
 
         try:
             if self._settings[setting]['is_lazy']:

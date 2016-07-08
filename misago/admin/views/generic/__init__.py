@@ -1,6 +1,6 @@
 # flake8: noqa
-from misago.admin.views.generic.mixin import AdminBaseMixin
-from misago.admin.views.generic.base import AdminView
-from misago.admin.views.generic.list import ListView, MassActionError
-from misago.admin.views.generic.formsbuttons import (
+from .mixin import AdminBaseMixin
+from .base import AdminView
+from .list import ListView, MassActionError
+from .formsbuttons import (
     TargetedView, FormView, ModelFormView, ButtonView)

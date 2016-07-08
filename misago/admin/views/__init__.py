@@ -2,9 +2,9 @@ from django.conf import settings
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.shortcuts import render as dj_render
 
-from misago.admin import site
-from misago.admin.auth import is_admin_session, update_admin_session
-from misago.admin.views.auth import login
+from .. import site
+from ..auth import is_admin_session, update_admin_session
+from .auth import login
 
 
 __ALL__ = ['get_protected_namespace', 'render', 'protected_admin_view']

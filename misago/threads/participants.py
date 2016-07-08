@@ -1,8 +1,9 @@
 from django.utils.translation import ugettext as _
 
 from misago.core.mail import mail_user
-from misago.threads.models import ThreadParticipant
-from misago.threads.signals import remove_thread_participant
+
+from .models import ThreadParticipant
+from .signals import remove_thread_participant
 
 
 def thread_has_participants(thread):

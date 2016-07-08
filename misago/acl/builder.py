@@ -1,4 +1,4 @@
-from misago.acl.providers import providers
+from .providers import providers
 
 
 def build_acl(roles):

@@ -1,9 +1,10 @@
 from django.dispatch import Signal, receiver
 
-from misago.categories.models import Category, CategoryRole
 from misago.core import serializer
 from misago.core.signals import secret_key_changed
 from misago.users.signals import username_changed
+
+from .models import Category, CategoryRole
 
 
 delete_category_content = Signal()

@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import redirect
 
-from misago.admin.views.generic.base import AdminView
+from .base import AdminView
 
 
 class TargetedView(AdminView):

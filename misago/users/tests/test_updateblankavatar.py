@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.utils.six import StringIO
 
-from misago.users.management.commands import updateblankavatar
+from ..management.commands import updateblankavatar
 
 
 class UpdateBlankAvatarTests(TestCase):

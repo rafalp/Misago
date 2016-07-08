@@ -6,7 +6,7 @@ from PIL import Image
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from misago.users.avatars.paths import AVATARS_STORE, BLANK_AVATAR
+from ...avatars.paths import AVATARS_STORE, BLANK_AVATAR
 
 
 class Command(BaseCommand):

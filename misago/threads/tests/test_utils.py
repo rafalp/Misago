@@ -1,7 +1,8 @@
 from misago.categories.models import Category
 from misago.core.testutils import MisagoTestCase
-from misago.threads import testutils
-from misago.threads.utils import add_categories_to_threads
+
+from .. import testutils
+from ..utils import add_categories_to_threads
 
 
 class AddCategoriesToThreadsTests(MisagoTestCase):

@@ -8,8 +8,9 @@ from rest_framework.response import Response
 
 from misago.conf import settings
 from misago.core.utils import format_plaintext_for_html
-from misago.users import avatars
-from misago.users.forms.moderation import ModerateAvatarForm
+
+from ... import avatars
+from ...forms.moderation import ModerateAvatarForm
 
 
 def avatar_endpoint(request, pk=None):

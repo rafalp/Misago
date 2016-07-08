@@ -137,11 +137,11 @@ class Category(MPTTModel):
             self.empty_last_thread()
 
     def delete_content(self):
-        from misago.categories.signals import delete_category_content
+        from .signals import delete_category_content
         delete_category_content.send(sender=self)
 
     def move_content(self, new_category):
-        from misago.categories.signals import move_category_content
+        from .signals import move_category_content
         move_category_content.send(sender=self, new_category=new_category)
 
     def get_absolute_url(self):

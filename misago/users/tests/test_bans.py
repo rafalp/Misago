@@ -4,16 +4,8 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.users.bans import (
-    ban_ip,
-    ban_user,
-    get_email_ban,
-    get_ip_ban,
-    get_request_ip_ban,
-    get_user_ban,
-    get_username_ban
-)
-from misago.users.models import BAN_EMAIL, BAN_IP, BAN_USERNAME, Ban
+from ..bans import ban_ip, ban_user, get_email_ban, get_ip_ban, get_request_ip_ban, get_user_ban, get_username_ban
+from ..models import BAN_EMAIL, BAN_IP, BAN_USERNAME, Ban
 
 
 class GetBanTests(TestCase):

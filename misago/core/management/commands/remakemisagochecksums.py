@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from django.utils.encoding import force_str
 from django.utils.six.moves import input
 
-from misago.core.signals import secret_key_changed
+from ...signals import secret_key_changed
 
 
 class Command(BaseCommand):

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.test import TestCase
 
-from misago.markup.parser import parse
+from ..parser import parse
 
 
 class MockRequest(object):

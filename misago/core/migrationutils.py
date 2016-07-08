@@ -1,5 +1,5 @@
-from misago.core.cache import cache as default_cache
-from misago.core.cachebuster import CACHE_KEY
+from .cache import cache as default_cache
+from .cachebuster import CACHE_KEY
 
 
 def _CacheVersion(apps):

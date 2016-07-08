@@ -1,6 +1,6 @@
 from django.utils import timezone
 
-from misago.threads.models import Post
+from .models import Post
 
 
 def record_event(request, thread, event, context=None, commit=True):

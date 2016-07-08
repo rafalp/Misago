@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.test import TestCase
 
-from misago.core.shortcuts import get_int_or_404
+from ..shortcuts import get_int_or_404
 
 
 class PaginateTests(TestCase):

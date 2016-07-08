@@ -1,7 +1,8 @@
 from django.core.urlresolvers import reverse
 
 from misago.admin.testutils import AdminTestCase
-from misago.users.models import WarningLevel
+
+from ..models import WarningLevel
 
 
 class WarningsAdminViewsTests(AdminTestCase):

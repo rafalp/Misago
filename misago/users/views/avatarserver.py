@@ -7,7 +7,8 @@ from django.contrib.auth import get_user_model
 from django.views.decorators.cache import cache_control, never_cache
 
 from misago.core.fileserver import make_file_response
-from misago.users.avatars import store
+
+from ..avatars import store
 
 
 @cache_control(private=True, must_revalidate=True, max_age=5 * 24 * 3600)

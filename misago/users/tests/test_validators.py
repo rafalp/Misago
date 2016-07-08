@@ -4,8 +4,9 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.test import TestCase
 
 from misago.conf import settings
-from misago.users.models import BAN_EMAIL, BAN_USERNAME, Ban
-from misago.users.validators import (
+
+from ..models import BAN_EMAIL, BAN_USERNAME, Ban
+from ..validators import (
     validate_email,
     validate_email_available,
     validate_email_banned,

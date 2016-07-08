@@ -11,11 +11,12 @@ from django.utils.translation import ugettext_lazy
 from misago.acl import add_acl
 from misago.core.shortcuts import paginate, pagination_dict
 from misago.readtracker import threadstracker
-from misago.threads.models import Thread
-from misago.threads.permissions import exclude_invisible_threads
-from misago.threads.serializers import ThreadListSerializer
-from misago.threads.subscriptions import make_subscription_aware
-from misago.threads.utils import add_categories_to_threads
+
+from ..models import Thread
+from ..permissions import exclude_invisible_threads
+from ..serializers import ThreadListSerializer
+from ..subscriptions import make_subscription_aware
+from ..utils import add_categories_to_threads
 
 
 LISTS_NAMES = {

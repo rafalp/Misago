@@ -4,8 +4,8 @@ from django.http import Http404
 from django.shortcuts import render
 from django.views.generic import View
 
-from misago.threads.viewmodels.category import PrivateThreadsCategory, ThreadsCategory, ThreadsRootCategory
-from misago.threads.viewmodels.threads import ForumThreads, PrivateThreads
+from ..viewmodels.category import PrivateThreadsCategory, ThreadsCategory, ThreadsRootCategory
+from ..viewmodels.threads import ForumThreads, PrivateThreads
 
 
 class ListBase(View):

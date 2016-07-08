@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from misago.users.models import UsernameChange
-from misago.users.serializers.user import BasicUserSerializer
+from ..models import UsernameChange
+from .user import BasicUserSerializer
 
 
 __all__ = ['UsernameChangeSerializer']

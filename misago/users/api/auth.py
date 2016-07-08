@@ -9,12 +9,13 @@ from rest_framework.response import Response
 
 from misago.conf import settings
 from misago.core.mail import mail_user
-from misago.users.bans import get_user_ban
-from misago.users.forms.auth import AuthenticationForm, ResendActivationForm, ResetPasswordForm
-from misago.users.rest_permissions import UnbannedAnonOnly, UnbannedOnly
-from misago.users.serializers import AnonymousUserSerializer, AuthenticatedUserSerializer
-from misago.users.tokens import is_password_change_token_valid, make_activation_token, make_password_change_token
-from misago.users.validators import validate_password
+
+from ..bans import get_user_ban
+from ..forms.auth import AuthenticationForm, ResendActivationForm, ResetPasswordForm
+from ..rest_permissions import UnbannedAnonOnly, UnbannedOnly
+from ..serializers import AnonymousUserSerializer, AuthenticatedUserSerializer
+from ..tokens import is_password_change_token_valid, make_activation_token, make_password_change_token
+from ..validators import validate_password
 
 
 def gateway(request):

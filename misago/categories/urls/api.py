@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from misago.categories.views import api
+from ..views import api
 
 
 urlpatterns = [

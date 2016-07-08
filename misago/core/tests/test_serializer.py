@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from misago.core import serializer
+from .. import serializer
 
 
 class SerializerTests(TestCase):

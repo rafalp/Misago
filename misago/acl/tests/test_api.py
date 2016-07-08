@@ -1,7 +1,8 @@
 from django.test import TestCase
 
-from misago.acl.api import get_user_acl
 from misago.users.models import AnonymousUser, User
+
+from ..api import get_user_acl
 
 
 class GetUserACLTests(TestCase):

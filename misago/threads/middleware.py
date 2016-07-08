@@ -1,4 +1,4 @@
-from misago.threads.counts import sync_user_unread_private_threads_count
+from .counts import sync_user_unread_private_threads_count
 
 
 class UnreadThreadsCountMiddleware(object):

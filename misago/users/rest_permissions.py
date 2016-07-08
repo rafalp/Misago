@@ -4,8 +4,9 @@ from django.utils.translation import ugettext as _
 from rest_framework.permissions import SAFE_METHODS, AllowAny, BasePermission
 
 from misago.core.exceptions import Banned
-from misago.users.bans import get_request_ip_ban
-from misago.users.models import BAN_IP, Ban
+
+from .bans import get_request_ip_ban
+from .models import BAN_IP, Ban
 
 
 __all__ = [

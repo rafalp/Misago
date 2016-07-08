@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from misago.categories.models import Category
+from ...models import Category
 
 
 class Command(BaseCommand):

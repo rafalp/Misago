@@ -11,7 +11,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext
 
 from misago.conf import settings
-from misago.users.bans import get_email_ban, get_username_ban
+
+from .bans import get_email_ban, get_username_ban
 
 
 USERNAME_RE = re.compile(r'^[0-9a-z]+$', re.IGNORECASE)

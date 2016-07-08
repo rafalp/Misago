@@ -8,12 +8,13 @@ from rest_framework.response import Response
 from misago.acl import add_acl
 from misago.categories.models import THREADS_ROOT_NAME, Category
 from misago.categories.permissions import can_browse_category, can_see_category
-from misago.threads.events import record_event
-from misago.threads.models import Thread
-from misago.threads.permissions import can_see_thread
-from misago.threads.serializers import MergeThreadsSerializer, ThreadListSerializer
-from misago.threads.threadtypes import trees_map
-from misago.threads.utils import add_categories_to_threads
+
+from ...events import record_event
+from ...models import Thread
+from ...permissions import can_see_thread
+from ...serializers import MergeThreadsSerializer, ThreadListSerializer
+from ...threadtypes import trees_map
+from ...utils import add_categories_to_threads
 
 
 MERGE_LIMIT = 20 # no more than 20 threads can be merged in single action

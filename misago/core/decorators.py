@@ -1,4 +1,4 @@
-from misago.core.errorpages import not_allowed
+from .errorpages import not_allowed
 
 
 def ajax_only(f):

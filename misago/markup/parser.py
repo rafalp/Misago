@@ -3,9 +3,9 @@ import markdown
 from bs4 import BeautifulSoup
 from htmlmin.minify import html_minify
 
-from misago.markup.bbcode import blocks, inline
-from misago.markup.md.shortimgs import ShortImagesExtension
-from misago.markup.pipeline import pipeline
+from .bbcode import blocks, inline
+from .md.shortimgs import ShortImagesExtension
+from .pipeline import pipeline
 
 
 __all__ = ['parse']

@@ -3,7 +3,8 @@ from datetime import timedelta
 from django.utils import timezone
 
 from misago.core.utils import slugify
-from misago.threads.models import Post, Thread
+
+from .models import Post, Thread
 
 
 def post_thread(category, title='Test thread', poster='Tester',

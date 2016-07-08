@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
-from misago.users.models import Online
+from ...models import Online
 
 
 class Command(BaseCommand):

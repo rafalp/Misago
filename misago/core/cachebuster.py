@@ -1,6 +1,6 @@
 from django.db.models import F
 
-from misago.core import threadstore
+from . import threadstore
 
 
 CACHE_KEY = 'misago_cachebuster'
@@ -8,11 +8,11 @@ CACHE_KEY = 'misago_cachebuster'
 
 class CacheBusterController(object):
     def register_cache(self, cache):
-        from misago.core.models import CacheVersion
+        from .models import CacheVersion
         CacheVersion.objects.create(cache=cache)
 
     def unregister_cache(self, cache):
-        from misago.core.models import CacheVersion
+        from .models import CacheVersion
 
         try:
             cache = CacheVersion.objects.get(cache=cache)
@@ -32,7 +32,7 @@ class CacheBusterController(object):
         return data
 
     def read_cache(self):
-        from misago.core.cache import cache as default_cache
+        from .cache import cache as default_cache
 
         data = default_cache.get(CACHE_KEY, 'nada')
         if data == 'nada':
@@ -41,7 +41,7 @@ class CacheBusterController(object):
         return data
 
     def read_db(self):
-        from misago.core.models import CacheVersion
+        from .models import CacheVersion
 
         data = {}
         for cache_version in CacheVersion.objects.iterator():
@@ -61,8 +61,8 @@ class CacheBusterController(object):
             raise ValueError('Cache "%s" is not registered' % cache)
 
     def invalidate_cache(self, cache):
-        from misago.core.cache import cache as default_cache
-        from misago.core.models import CacheVersion
+        from .cache import cache as default_cache
+        from .models import CacheVersion
 
         self.cache[cache] += 1
         CacheVersion.objects.filter(cache=cache).update(
@@ -70,8 +70,8 @@ class CacheBusterController(object):
         default_cache.delete(CACHE_KEY)
 
     def invalidate_all(self):
-        from misago.core.cache import cache as default_cache
-        from misago.core.models import CacheVersion
+        from .cache import cache as default_cache
+        from .models import CacheVersion
 
         CacheVersion.objects.update(version=F('version') + 1)
         default_cache.delete(CACHE_KEY)

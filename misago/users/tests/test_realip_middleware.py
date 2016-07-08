@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from misago.users.middleware import RealIPMiddleware
+from ..middleware import RealIPMiddleware
 
 
 class MockRequest(object):

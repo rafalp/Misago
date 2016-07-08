@@ -3,7 +3,8 @@ from django.shortcuts import render
 from django.utils.translation import ugettext as _
 
 from misago.admin.views.errorpages import admin_csrf_failure, admin_error_page
-from misago.core.utils import is_request_to_misago
+
+from .utils import is_request_to_misago
 
 
 def _ajax_error(code=406, message=None):

@@ -14,14 +14,15 @@ from misago.core.decorators import require_POST
 from misago.core.shortcuts import get_object_or_404, paginate, pagination_dict, validate_slug
 from misago.core.utils import clean_return_path
 from misago.threads.permissions import allow_message_user
-from misago.users.bans import get_user_ban
-from misago.users.decorators import deny_guests
-from misago.users.online.utils import get_user_status
-from misago.users.pages import user_profile
-from misago.users.permissions.profiles import allow_block_user, allow_follow_user
-from misago.users.serializers import BanDetailsSerializer, UserProfileSerializer, UserSerializer
-from misago.users.serializers.usernamechange import UsernameChangeSerializer
-from misago.users.warnings import get_user_warning_level, get_user_warning_obj, get_warning_levels
+
+from ..bans import get_user_ban
+from ..decorators import deny_guests
+from ..online.utils import get_user_status
+from ..pages import user_profile
+from ..permissions.profiles import allow_block_user, allow_follow_user
+from ..serializers import BanDetailsSerializer, UserProfileSerializer, UserSerializer
+from ..serializers.usernamechange import UsernameChangeSerializer
+from ..warnings import get_user_warning_level, get_user_warning_obj, get_warning_levels
 
 
 def profile_view(f):

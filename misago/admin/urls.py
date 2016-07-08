@@ -1,7 +1,8 @@
 from django.conf.urls import include, patterns, url
 
 from misago import admin
-from misago.admin.views import auth, index
+
+from .views import auth, index
 
 
 urlpatterns = [

@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from misago.markup import checksums
+from .. import checksums
 
 
 class ChecksumsTests(TestCase):

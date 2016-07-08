@@ -5,7 +5,7 @@ from datetime import timedelta
 
 from django.utils import timezone
 
-from misago.users.models import UsernameChange
+from .models import UsernameChange
 
 
 class UsernameChanges(object):

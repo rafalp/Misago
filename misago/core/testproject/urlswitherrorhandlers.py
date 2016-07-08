@@ -1,4 +1,4 @@
-from misago.core.testproject.urls import *
+from .urls import *
 
 
 handler403 = 'misago.core.testproject.views.mock_custom_403_error_page'

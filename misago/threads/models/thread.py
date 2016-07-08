@@ -99,7 +99,7 @@ class Thread(models.Model):
         return Thread.objects.select_for_update().get(id=self.id)
 
     def delete(self, *args, **kwargs):
-        from misago.threads.signals import delete_thread
+        from ..signals import delete_thread
         delete_thread.send(sender=self)
 
         super(Thread, self).delete(*args, **kwargs)
@@ -108,11 +108,11 @@ class Thread(models.Model):
         if self.pk == other_thread.pk:
             raise ValueError("thread can't be merged with itself")
 
-        from misago.threads.signals import merge_thread
+        from ..signals import merge_thread
         merge_thread.send(sender=self, other_thread=other_thread)
 
     def move(self, new_category):
-        from misago.threads.signals import move_thread
+        from ..signals import move_thread
 
         self.category = new_category
         move_thread.send(sender=self)

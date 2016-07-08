@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from misago.users import tokens
+from .. import tokens
 
 
 class TokensTests(TestCase):

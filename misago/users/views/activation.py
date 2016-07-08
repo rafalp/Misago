@@ -6,10 +6,11 @@ from django.utils.translation import ugettext as _
 from misago.conf import settings
 from misago.core.exceptions import Banned
 from misago.core.mail import mail_user
-from misago.users.bans import get_user_ban
-from misago.users.decorators import deny_authenticated, deny_banned_ips
-from misago.users.models import ACTIVATION_REQUIRED_NONE
-from misago.users.tokens import is_activation_token_valid
+
+from ..bans import get_user_ban
+from ..decorators import deny_authenticated, deny_banned_ips
+from ..models import ACTIVATION_REQUIRED_NONE
+from ..tokens import is_activation_token_valid
 
 
 def activation_view(f):

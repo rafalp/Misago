@@ -12,11 +12,12 @@ import copy
 
 from django.contrib.auth import get_user_model
 
-from misago.acl import version
-from misago.acl.builder import build_acl
-from misago.acl.providers import providers
 from misago.core import threadstore
 from misago.core.cache import cache
+
+from . import version
+from .builder import build_acl
+from .providers import providers
 
 
 def get_user_acl(user):

@@ -1,9 +1,10 @@
 from django.apps import apps
 from django.test import TestCase
 
-from misago.conf import migrationutils
-from misago.conf.models import SettingsGroup
 from misago.core import threadstore
+
+from .. import migrationutils
+from ..models import SettingsGroup
 
 
 class DBConfMigrationUtilsTests(TestCase):

@@ -5,10 +5,11 @@ from misago.acl import add_acl
 from misago.categories.models import Category
 from misago.core.shortcuts import validate_slug
 from misago.readtracker.threadstracker import make_read_aware
-from misago.threads.models import Thread
-from misago.threads.permissions.threads import allow_see_thread
-from misago.threads.serializers import ThreadSerializer
-from misago.threads.subscriptions import make_subscription_aware
+
+from ..models import Thread
+from ..permissions.threads import allow_see_thread
+from ..serializers import ThreadSerializer
+from ..subscriptions import make_subscription_aware
 
 
 BASE_QUERYSET = Thread.objects.select_related(

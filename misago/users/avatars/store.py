@@ -5,7 +5,8 @@ from path import Path
 from PIL import Image
 
 from misago.conf import settings
-from misago.users.avatars.paths import AVATARS_STORE
+
+from .paths import AVATARS_STORE
 
 
 def normalize_image(image):

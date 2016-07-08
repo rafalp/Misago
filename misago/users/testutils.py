@@ -2,7 +2,8 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 
 from misago.core.testutils import MisagoTestCase
-from misago.users.models import AnonymousUser
+
+from .models import AnonymousUser
 
 
 class UserTestCase(MisagoTestCase):

@@ -6,11 +6,12 @@ from django.shortcuts import redirect
 
 from misago.core.shortcuts import get_object_or_404, paginate, pagination_dict
 from misago.core.utils import format_plaintext_for_html
-from misago.users.activepostersranking import get_active_posters_ranking
-from misago.users.models import Rank
-from misago.users.pages import users_list
-from misago.users.permissions.profiles import allow_browse_users_list
-from misago.users.serializers import ScoredUserSerializer, UserSerializer
+
+from ..activepostersranking import get_active_posters_ranking
+from ..models import Rank
+from ..pages import users_list
+from ..permissions.profiles import allow_browse_users_list
+from ..serializers import ScoredUserSerializer, UserSerializer
 
 
 def render(request, template, context):

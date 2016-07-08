@@ -2,8 +2,9 @@ from django.core.urlresolvers import reverse
 from django.test import Client, TestCase
 from django.test.client import RequestFactory
 
-from misago.core.testproject.views import mock_custom_403_error_page, mock_custom_404_error_page
 from misago.users.models import AnonymousUser
+
+from ..testproject.views import mock_custom_403_error_page, mock_custom_404_error_page
 
 
 class CSRFErrorViewTests(TestCase):

@@ -9,7 +9,7 @@ def paginate(object_list, page, per_page, orphans=0,
              allow_explicit_first_page=False):
     from django.http import Http404
     from django.core.paginator import Paginator, EmptyPage
-    from misago.core.exceptions import ExplicitFirstPage
+    from .exceptions import ExplicitFirstPage
 
     if page in (1, "1") and not allow_explicit_first_page:
         raise ExplicitFirstPage()
@@ -69,7 +69,7 @@ def pagination_dict(page, include_page_range=True):
 
 
 def validate_slug(model, slug):
-    from misago.core.exceptions import OutdatedSlug
+    from .exceptions import OutdatedSlug
     if model.slug != slug:
         raise OutdatedSlug(model)
 

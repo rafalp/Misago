@@ -7,9 +7,10 @@ from django.utils import timezone
 
 from misago.acl import add_acl
 from misago.categories.models import Category
-from misago.threads.events import record_event
-from misago.threads.models import Post, Thread
-from misago.threads.testutils import reply_thread
+
+from ..events import record_event
+from ..models import Post, Thread
+from ..testutils import reply_thread
 
 
 class MockRequest(object):

@@ -1,4 +1,4 @@
-from misago.markup.parser import parse
+from .parser import parse
 
 
 def common(request, poster, text, allow_mentions=True):

@@ -1,8 +1,9 @@
 # pylint: disable=protected-access
 from hashlib import md5
 
-from misago.acl.forms import get_permissions_forms
 from misago.core import threadstore
+
+from .forms import get_permissions_forms
 
 
 def fake_post_data(target, data_dict):

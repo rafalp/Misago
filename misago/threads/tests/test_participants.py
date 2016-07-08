@@ -3,8 +3,9 @@ from django.test import TestCase
 from django.utils import timezone
 
 from misago.categories.models import Category
-from misago.threads.models import Post, Thread, ThreadParticipant
-from misago.threads.participants import (
+
+from ..models import Post, Thread, ThreadParticipant
+from ..participants import (
     add_owner,
     make_thread_participants_aware,
     remove_participant,

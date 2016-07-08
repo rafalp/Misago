@@ -6,7 +6,8 @@ from misago.acl.models import Role
 from misago.conf import settings
 from misago.core import forms, threadstore
 from misago.core.validators import validate_sluggable
-from misago.users.models import (
+
+from ..models import (
     AUTO_SUBSCRIBE_CHOICES,
     BANS_CHOICES,
     PRIVATE_THREAD_INVITES_LIMITS_CHOICES,
@@ -15,7 +16,7 @@ from misago.users.models import (
     Rank,
     WarningLevel
 )
-from misago.users.validators import validate_email, validate_password, validate_username
+from ..validators import validate_email, validate_password, validate_username
 
 
 """

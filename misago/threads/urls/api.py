@@ -1,6 +1,7 @@
 from misago.core.apirouter import MisagoApiRouter
-from misago.threads.api.threadposts import ThreadPostsViewSet
-from misago.threads.api.threads import ThreadViewSet
+
+from ..api.threadposts import ThreadPostsViewSet
+from ..api.threads import ThreadViewSet
 
 
 router = MisagoApiRouter()

@@ -2,7 +2,7 @@ from django.db.transaction import atomic
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
-from misago.threads.moderation.exceptions import ModerationError
+from .exceptions import ModerationError
 
 
 def approve_post(user, post):

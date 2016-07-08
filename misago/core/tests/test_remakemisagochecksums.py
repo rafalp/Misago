@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.utils.six import StringIO
 
-from misago.core.management.commands import remakemisagochecksums
+from ..management.commands import remakemisagochecksums
 
 
 class RemakeMisagoChecksumsTests(TestCase):

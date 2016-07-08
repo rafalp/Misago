@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from misago.core.validators import validate_sluggable
+from ..validators import validate_sluggable
 
 
 class ValidateSluggableTests(TestCase):

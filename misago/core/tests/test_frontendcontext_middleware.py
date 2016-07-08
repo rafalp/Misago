@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from misago.core.middleware.frontendcontext import FrontendContextMiddleware
+from ..middleware.frontendcontext import FrontendContextMiddleware
 
 
 class MockRequest(object):

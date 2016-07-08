@@ -2,7 +2,7 @@ from django.db.transaction import atomic
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
-from misago.threads.events import record_event
+from ..events import record_event
 
 
 @atomic

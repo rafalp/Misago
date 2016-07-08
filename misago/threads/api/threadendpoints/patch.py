@@ -7,9 +7,10 @@ from misago.categories.permissions import allow_browse_category, allow_see_categ
 from misago.categories.serializers import CategorySerializer
 from misago.core.apipatch import ApiPatch
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
-from misago.threads.moderation import threads as moderation
-from misago.threads.permissions import allow_start_thread
-from misago.threads.utils import add_categories_to_threads
+
+from ...moderation import threads as moderation
+from ...permissions import allow_start_thread
+from ...utils import add_categories_to_threads
 
 
 thread_patch_endpoint = ApiPatch()

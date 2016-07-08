@@ -2,8 +2,9 @@ from django.test import TestCase
 from django.utils.six import StringIO
 
 from misago.categories.models import Category
-from misago.threads import testutils
-from misago.threads.management.commands import synchronizethreads
+
+from .. import testutils
+from ..management.commands import synchronizethreads
 
 
 class SynchronizeThreadsTests(TestCase):

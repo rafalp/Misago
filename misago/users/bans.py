@@ -11,7 +11,8 @@ from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 
 from misago.core import cachebuster
-from misago.users.models import BAN_IP, Ban, BanCache
+
+from .models import BAN_IP, Ban, BanCache
 
 
 BAN_CACHE_SESSION_KEY = 'misago_ip_check'

@@ -2,11 +2,12 @@ from django.apps import apps
 from django.conf import settings as dj_settings
 from django.test import TestCase
 
-from misago.conf.dbsettings import db_settings
-from misago.conf.gateway import settings as gateway
-from misago.conf.migrationutils import migrate_settings_group
 from misago.core import threadstore
 from misago.core.cache import cache
+
+from ..dbsettings import db_settings
+from ..gateway import settings as gateway
+from ..migrationutils import migrate_settings_group
 
 
 class DBSettingsTests(TestCase):

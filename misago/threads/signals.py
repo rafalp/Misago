@@ -6,8 +6,9 @@ from django.dispatch import Signal, receiver
 from misago.categories.models import Category
 from misago.categories.signals import delete_category_content, move_category_content
 from misago.core.pgutils import batch_delete, batch_update
-from misago.threads.models import Post, Thread
 from misago.users.signals import delete_user_content, username_changed
+
+from .models import Post, Thread
 
 
 delete_post = Signal()

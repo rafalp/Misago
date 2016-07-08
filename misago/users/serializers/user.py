@@ -4,7 +4,8 @@ from django.core.urlresolvers import reverse
 from rest_framework import serializers
 
 from misago.acl import serialize_acl
-from misago.users.serializers import RankSerializer
+
+from . import RankSerializer
 
 
 __all__ = [

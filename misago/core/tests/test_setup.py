@@ -2,7 +2,7 @@ import os
 
 from django.test import TestCase
 
-from misago.core import setup
+from .. import setup
 
 
 class MockParser(object):

@@ -1,8 +1,9 @@
 from django.utils.translation import ugettext_lazy as _
 
-from misago.acl.models import Role
-from misago.acl.providers import providers
 from misago.core import forms
+
+from .models import Role
+from .providers import providers
 
 
 class RoleForm(forms.ModelForm):

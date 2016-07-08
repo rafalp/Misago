@@ -4,7 +4,8 @@ from django.contrib.auth import get_user_model
 
 from misago.acl.testutils import override_acl
 from misago.conf import settings
-from misago.users.testutils import AuthenticatedUserTestCase
+
+from ..testutils import AuthenticatedUserTestCase
 
 
 class UserUsernameTests(AuthenticatedUserTestCase):

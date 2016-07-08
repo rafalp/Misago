@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from django.utils import timezone
 
-from misago.users.models import WarningLevel
+from .models import WarningLevel
 
 
 def get_warning_levels():
