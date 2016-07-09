@@ -8,7 +8,29 @@ from django import setup
 from django.test.utils import setup_test_environment
 
 
-def runtests(args, verbosity=1):
+def runtests():
+    args, kwargs = parse_args()
+    setup_testproject()
+    run_django(*args, **kwargs)
+
+
+def parse_args():
+    args = []
+    kwargs = {
+        'verbosity': 1,
+        'noinput': True,
+    }
+
+    for arg in sys.argv[1:]:
+        if arg == '--verbose':
+            kwargs['verbosity'] = 2
+        else:
+            args.append(arg)
+
+    return args, kwargs
+
+
+def setup_testproject():
     test_runner_path = os.path.dirname(os.path.abspath(__file__))
     project_template_path = os.path.join(test_runner_path, 'misago/project_template')
     project_package_path = os.path.join(test_runner_path, 'misago/project_template/project_name')
@@ -89,25 +111,14 @@ DATABASES = {
 
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "testproject.project_name.settings")
 
+
+def run_django(*args, **kwargs):
     setup()
     setup_test_environment()
 
     from django.core.management.commands import test
-    sys.exit(test.Command().execute(*args, verbosity=verbosity, noinput=True))
+    sys.exit(test.Command().execute(*args, **kwargs))
 
 
 if __name__ == '__main__':
-    args = sys.argv[1:]
-
-    kwargs = {
-        'verbosity': 1,
-    }
-
-    cleaned_args = []
-    for arg in args:
-        if arg == '--verbose':
-            kwargs['verbosity'] = 2
-        else:
-            cleaned_args.append(arg)
-
-    runtests(cleaned_args, **kwargs)
+    runtests()
