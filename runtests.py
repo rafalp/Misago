@@ -20,12 +20,13 @@ def parse_args():
         'noinput': True,
     }
 
-    sys_args = sys.argv
     if __name__ == '__main__':
         # strip argv with script name
-        sys_args = sys_args[1:]
+        sys_argv = sys.argv[1:]
+    else:
+        sys_argv = sys.argv
 
-    for arg in sys_args:
+    for arg in sys_argv:
         if arg == '--verbose':
             kwargs['verbosity'] = 2
         else:
