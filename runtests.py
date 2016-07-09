@@ -14,17 +14,14 @@ def runtests():
 
 
 def parse_args():
-    args = []
+    args = sys.argv[1:]
     kwargs = {
         'verbosity': 1,
         'noinput': True,
     }
 
-    if __name__ == '__main__':
-        # strip argv with script name
-        sys_argv = sys.argv[1:]
-    else:
-        sys_argv = sys.argv
+    if args and args[0] == 'test':
+        args = args[1:]
 
     for arg in sys_argv:
         if arg == '--verbose':
