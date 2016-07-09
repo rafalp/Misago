@@ -1,4 +1,3 @@
-import argparse
 import os
 import pwd
 import shutil
@@ -21,7 +20,12 @@ def parse_args():
         'noinput': True,
     }
 
-    for arg in sys.argv[1:]:
+    sys_args = sys.argv
+    if __name__ == '__main__':
+        # strip argv with script name
+        sys_args = sys_args[1:]
+
+    for arg in sys_args:
         if arg == '--verbose':
             kwargs['verbosity'] = 2
         else:
