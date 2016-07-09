@@ -27,6 +27,9 @@ def parse_args():
         else:
             args.append(arg)
 
+    if not args:
+        args = ['misago']
+
     return args, kwargs
 
 
