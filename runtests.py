@@ -28,7 +28,6 @@ def parse_args():
             kwargs['verbosity'] = 2
         else:
             args.append(arg)
-        raise Exception(sys_argv)
 
     return args, kwargs
 
