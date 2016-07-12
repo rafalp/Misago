@@ -1,7 +1,7 @@
 import json
 
 from django.core.urlresolvers import reverse
-
+from django.utils.encoding import smart_str
 from ..testutils import AuthenticatedUserTestCase, SuperUserTestCase, UserTestCase
 
 
@@ -36,7 +36,7 @@ class UserTestCaseTests(UserTestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(response.content)
+        user_json = json.loads(smart_str(response.content))
         self.assertEqual(user_json['id'], user.id)
 
     def test_login_superuser(self):
@@ -47,7 +47,7 @@ class UserTestCaseTests(UserTestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(response.content)
+        user_json = json.loads(smart_str(response.content))
         self.assertEqual(user_json['id'], user.id)
 
     def test_logout_user(self):
@@ -59,7 +59,7 @@ class UserTestCaseTests(UserTestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(response.content)
+        user_json = json.loads(smart_str(response.content))
         self.assertIsNone(user_json['id'])
 
     def test_logout_superuser(self):
@@ -71,7 +71,7 @@ class UserTestCaseTests(UserTestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(response.content)
+        user_json = json.loads(smart_str(response.content))
         self.assertIsNone(user_json['id'])
 
 
@@ -79,7 +79,7 @@ class AuthenticatedUserTestCaseTests(AuthenticatedUserTestCase):
     def test_setup(self):
         """setup executed correctly"""
         response = self.client.get(reverse('misago:index'))
-        self.assertIn(self.user.username, response.content)
+        self.assertContains(response, self.user.username)
 
     def test_reload_user(self):
         """reload_user reloads user"""
@@ -98,5 +98,5 @@ class SuperUserTestCaseTests(SuperUserTestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(response.content)
+        user_json = json.loads(smart_str(response.content))
         self.assertEqual(user_json['id'], self.user.id)

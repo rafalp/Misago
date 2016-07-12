@@ -1,5 +1,7 @@
 import json
 
+from django.utils.encoding import smart_str
+
 from misago.acl.testutils import override_acl
 from misago.categories.models import THREADS_ROOT_NAME, Category
 from misago.users.testutils import AuthenticatedUserTestCase
@@ -47,7 +49,7 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
         response = self.client.get(self.thread.get_api_url())
         self.assertEqual(response.status_code, 200)
 
-        return json.loads(response.content)
+        return json.loads(smart_str(response.content))
 
 
 class ThreadRetrieveApiTests(ThreadsApiTestCase):
@@ -141,7 +143,7 @@ class ThreadDeleteApiTests(ThreadsApiTestCase):
             'can_hide_threads': 0
         })
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json['detail'],
             "You don't have permission to delete this thread.")
 

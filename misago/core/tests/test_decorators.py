@@ -9,11 +9,9 @@ class RequirePostTests(TestCase):
     def test_require_POST_success(self):
         """require_POST decorator allowed POST request"""
         response = self.client.post(reverse('test-require-post'))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content, 'Request method: POST')
+        self.assertContains(response, 'Request method: POST')
 
     def test_require_POST_fail_GET(self):
         """require_POST decorator failed on GET request"""
         response = self.client.get(reverse('test-require-post'))
-        self.assertEqual(response.status_code, 405)
-        self.assertIn("Wrong way", response.content)
+        self.assertContains(response, "Wrong way", status_code=405)

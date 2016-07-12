@@ -8,12 +8,11 @@ class MomentJSCatalogViewTests(TestCase):
         with self.settings(LANGUAGE_CODE='en_us'):
             response = self.client.get('/moment-i18n.js')
             self.assertEqual(response.status_code, 200)
-            self.assertEqual(response.content, "")
+            self.assertEqual(response.content, b"")
 
         with self.settings(LANGUAGE_CODE='pl_pl'):
             response = self.client.get('/moment-i18n.js')
-            self.assertEqual(response.status_code, 200)
-            self.assertIn(response.content, "// locale : polish (pl)")
+            self.assertContains(response, "// locale : polish (pl)")
 
 
 class PreloadJSDataViewTests(TestCase):

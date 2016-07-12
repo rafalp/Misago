@@ -1,6 +1,7 @@
 import json
 
 from django.core.urlresolvers import reverse
+from django.utils.encoding import smart_str
 
 from misago.acl import add_acl
 from misago.acl.testutils import override_acl
@@ -29,7 +30,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         response = self.client.post(self.api_link, content_type="application/json")
         self.assertEqual(response.status_code, 403)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'detail': "You have to select at least two threads to merge."
         })
@@ -41,7 +42,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 403)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'detail': "You have to select at least two threads to merge."
         })
@@ -53,7 +54,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 403)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'detail': "One or more thread ids received were invalid."
         })
@@ -63,7 +64,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 403)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'detail': "One or more thread ids received were invalid."
         })
@@ -75,7 +76,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 403)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'detail': "You have to select at least two threads to merge."
         })
@@ -89,7 +90,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 403)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'detail': "One or more threads to merge could not be found."
         })
@@ -103,7 +104,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 403)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'detail': "One or more threads to merge could not be found."
         })
@@ -117,7 +118,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 403)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, [
             {
                 'id': thread.pk,
@@ -174,7 +175,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'title': ['This field is required.'],
             'category': ['This field is required.'],
@@ -198,7 +199,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'title': ["Thread title should be at least 5 characters long."]
         })
@@ -221,7 +222,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'category': ["Requested category could not be found."]
         })
@@ -245,7 +246,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'weight': ["Ensure this value is less than or equal to 2."]
         })
@@ -269,7 +270,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'weight': [
                 "You don't have permission to pin threads globally in this category."
@@ -295,7 +296,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'weight': [
                 "You don't have permission to pin threads in this category."
@@ -322,7 +323,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'title': ["Thread title should be at least 5 characters long."]
         })
@@ -347,7 +348,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'title': ["Thread title should be at least 5 characters long."]
         })
@@ -371,7 +372,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'is_closed': [
                 "You don't have permission to close threads in this category."
@@ -399,7 +400,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'title': ["Thread title should be at least 5 characters long."]
         })
@@ -425,7 +426,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 200)
 
         # is response json with new thread?
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
 
         new_thread = Thread.objects.get(pk=response_json['id'])
         new_thread.is_read = False
@@ -466,7 +467,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 200)
 
         # is response json with new thread?
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
 
         new_thread = Thread.objects.get(pk=response_json['id'])
         new_thread.is_read = False

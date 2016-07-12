@@ -41,15 +41,13 @@ class ConfirmChangeEmailTests(AuthenticatedUserTestCase):
                 'token': 'invalid'
             }))
 
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("Change confirmation link is invalid.", response.content)
+        self.assertContains(response, "Change confirmation link is invalid.", status_code=400)
 
     def test_change_email(self):
         """valid token changes email"""
         response = self.client.get(self.link)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("your e-mail has been changed", response.content)
+        self.assertContains(response, "your e-mail has been changed")
 
         self.reload_user()
         self.assertEqual(self.user.email, 'n3w@email.com')
@@ -78,15 +76,13 @@ class ConfirmChangePasswordTests(AuthenticatedUserTestCase):
                 'token': 'invalid'
             }))
 
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("Change confirmation link is invalid.", response.content)
+        self.assertContains(response, "Change confirmation link is invalid.", status_code=400)
 
     def test_change_password(self):
         """valid token changes password"""
         response = self.client.get(self.link)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("your password has been changed", response.content)
+        self.assertContains(response, "your password has been changed")
 
         self.reload_user()
         self.assertFalse(self.user.check_password(self.USER_PASSWORD))

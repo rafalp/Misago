@@ -1,3 +1,4 @@
+from django.utils.six.moves import range
 from django.test import TestCase
 
 from .. import serializer
@@ -17,7 +18,7 @@ class SerializerTests(TestCase):
 
     def test_serializer_handles_paddings(self):
         """serializer handles missing paddings"""
-        for i in xrange(100):
+        for i in range(100):
             wet = 'Lorem ipsum %s' % ('a' * i)
             dry = serializer.dumps(wet)
             self.assertFalse(dry.endswith('='))

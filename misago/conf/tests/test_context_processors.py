@@ -25,4 +25,4 @@ class ContextProcessorsTests(TestCase):
         """site configuration is preloaded by middleware"""
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn('"SETTINGS": {"', response.content)
+        self.assertContains(response, '"SETTINGS": {"')

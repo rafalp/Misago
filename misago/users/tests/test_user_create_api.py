@@ -28,8 +28,7 @@ class UserCreateTests(UserTestCase):
         settings.override_setting('account_activation', 'closed')
 
         response = self.client.post('/api/users/')
-        self.assertEqual(response.status_code, 403)
-        self.assertIn('closed', response.content)
+        self.assertContains(response, 'closed', status_code=403)
 
     def test_registration_creates_active_user(self):
         """api creates active and signed in user on POST"""
@@ -40,10 +39,9 @@ class UserCreateTests(UserTestCase):
                                           'email': 'bob@bob.com',
                                           'password': 'pass123'})
 
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('active', response.content)
-        self.assertIn('Bob', response.content)
-        self.assertIn('bob@bob.com', response.content)
+        self.assertContains(response, 'active')
+        self.assertContains(response, 'Bob')
+        self.assertContains(response, 'bob@bob.com')
 
         User = get_user_model()
         User.objects.get_by_username('Bob')
@@ -52,7 +50,7 @@ class UserCreateTests(UserTestCase):
         self.assertEqual(Online.objects.filter(user=test_user).count(), 1)
 
         response = self.client.get(reverse('misago:index'))
-        self.assertIn('Bob', response.content)
+        self.assertContains(response, 'Bob')
 
         self.assertIn('Welcome', mail.outbox[0].subject)
 
@@ -65,10 +63,9 @@ class UserCreateTests(UserTestCase):
                                           'email': 'bob@bob.com',
                                           'password': 'pass123'})
 
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('user', response.content)
-        self.assertIn('Bob', response.content)
-        self.assertIn('bob@bob.com', response.content)
+        self.assertContains(response, 'user')
+        self.assertContains(response, 'Bob')
+        self.assertContains(response, 'bob@bob.com')
 
         User = get_user_model()
         User.objects.get_by_username('Bob')
@@ -85,10 +82,9 @@ class UserCreateTests(UserTestCase):
                                           'email': 'bob@bob.com',
                                           'password': 'pass123'})
 
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('admin', response.content)
-        self.assertIn('Bob', response.content)
-        self.assertIn('bob@bob.com', response.content)
+        self.assertContains(response, 'admin')
+        self.assertContains(response, 'Bob')
+        self.assertContains(response, 'bob@bob.com')
 
         User = get_user_model()
         User.objects.get_by_username('Bob')

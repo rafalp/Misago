@@ -13,15 +13,14 @@ class RankAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:accounts:index'))
 
         response = self.client.get(response['location'])
-        self.assertIn(reverse('misago:admin:users:ranks:index'),
-                      response.content)
+        self.assertContains(response, reverse('misago:admin:users:ranks:index'))
 
     def test_list_view(self):
         """ranks list view returns 200"""
         response = self.client.get(reverse('misago:admin:users:ranks:index'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Team', response.content)
+        self.assertContains(response, 'Team')
 
     def test_new_view(self):
         """new rank view has no showstoppers"""
@@ -47,8 +46,8 @@ class RankAdminViewsTests(AdminTestCase):
 
         response = self.client.get(reverse('misago:admin:users:ranks:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Test Rank', response.content)
-        self.assertIn('Test Title', response.content)
+        self.assertContains(response, 'Test Rank')
+        self.assertContains(response, 'Test Title')
 
         test_rank = Rank.objects.get(slug='test-rank')
         self.assertIn(test_role_a, test_rank.roles.all())
@@ -78,8 +77,8 @@ class RankAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:ranks:edit',
                     kwargs={'pk': test_rank.pk}))
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_rank.name, response.content)
-        self.assertIn(test_rank.title, response.content)
+        self.assertContains(response, test_rank.name)
+        self.assertContains(response, test_rank.title)
 
         response = self.client.post(
             reverse('misago:admin:users:ranks:edit',
@@ -93,7 +92,7 @@ class RankAdminViewsTests(AdminTestCase):
         test_rank = Rank.objects.get(slug='top-lel')
         response = self.client.get(reverse('misago:admin:users:ranks:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_rank.name, response.content)
+        self.assertContains(response, test_rank.name)
         self.assertTrue('Test Rank' not in test_rank.roles.all())
         self.assertTrue('Test Title' not in test_rank.roles.all())
 
@@ -214,8 +213,8 @@ class RankAdminViewsTests(AdminTestCase):
         response = self.client.get(reverse('misago:admin:users:ranks:index'))
         self.assertEqual(response.status_code, 200)
 
-        self.assertTrue(test_rank.name not in response.content)
-        self.assertTrue(test_rank.title not in response.content)
+        self.assertNotContains(response, test_rank.name)
+        self.assertNotContains(response, test_rank.title)
 
     def test_uniquess(self):
         """rank slug uniqueness is enforced by admin forms"""
@@ -233,7 +232,7 @@ class RankAdminViewsTests(AdminTestCase):
             })
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn("This name collides with other rank.", response.content)
+        self.assertContains(response, "This name collides with other rank.")
 
         self.client.post(
             reverse('misago:admin:users:ranks:new'),
@@ -256,4 +255,4 @@ class RankAdminViewsTests(AdminTestCase):
                 'roles': [test_role_a.pk],
             })
         self.assertEqual(response.status_code, 200)
-        self.assertIn("This name collides with other rank.", response.content)
+        self.assertContains(response, "This name collides with other rank.")

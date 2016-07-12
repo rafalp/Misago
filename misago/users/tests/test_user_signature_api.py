@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth import get_user_model
+from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
 from misago.conf import settings
@@ -23,8 +24,7 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         })
 
         response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertIn("You don't have permission to change", response.content)
+        self.assertContains(response, "You don't have permission to change", status_code=403)
 
     def test_signature_locked(self):
         """locked edit signature returns 403"""
@@ -37,8 +37,7 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         self.user.save()
 
         response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertIn('Your siggy is banned', response.content)
+        self.assertContains(response, 'Your siggy is banned', status_code=403)
 
     def test_get_signature(self):
         """GET to api returns json with no signature"""
@@ -52,7 +51,7 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertFalse(response_json['signature'])
 
     def test_post_empty_signature(self):
@@ -67,7 +66,7 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         response = self.client.post(self.link, data={'signature': ''})
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertFalse(response_json['signature'])
 
     def test_post_too_long_signature(self):
@@ -82,8 +81,7 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         response = self.client.post(self.link, data={
             'signature': 'abcd' * 1000
         })
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('too long', response.content)
+        self.assertContains(response, 'too long', status_code=400)
 
     def test_post_good_signature(self):
         """POST with good signature changes user signature"""
@@ -99,7 +97,7 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         })
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json['signature']['html'],
                          '<p>Hello, <strong>bros</strong>!</p>')
         self.assertEqual(response_json['signature']['plain'],

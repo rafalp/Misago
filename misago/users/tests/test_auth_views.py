@@ -2,6 +2,7 @@ import json
 
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
+from django.utils.encoding import smart_str
 from django.test import TestCase
 
 
@@ -43,13 +44,12 @@ class AuthViewsTests(TestCase):
         response = self.client.post(
             '/api/auth/', data={'username': 'nope', 'password': 'nope'})
 
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("Login or password is incorrect.", response.content)
+        self.assertContains(response, "Login or password is incorrect.", status_code=400)
 
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(response.content)
+        user_json = json.loads(smart_str(response.content))
         self.assertIsNone(user_json['id'])
 
         response = self.client.post(reverse('misago:logout'))
@@ -58,5 +58,5 @@ class AuthViewsTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(response.content)
+        user_json = json.loads(smart_str(response.content))
         self.assertIsNone(user_json['id'])
