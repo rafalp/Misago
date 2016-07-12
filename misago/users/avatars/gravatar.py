@@ -1,4 +1,4 @@
-from six import StringIO
+from io import BytesIO
 
 import requests
 from PIL import Image
@@ -27,7 +27,7 @@ def set_avatar(user):
             raise NoGravatarAvailable(
                 'gravatar is not available for this e-mail')
 
-        image = Image.open(StringIO(r.content))
+        image = Image.open(BytesIO(r.content))
         store.store_new_avatar(user, image)
     except requests.exceptions.RequestException:
         raise GravatarError('failed to connect to gravatar servers')

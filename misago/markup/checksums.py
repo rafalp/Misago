@@ -23,12 +23,13 @@ in char fields with max_length=64
 from hashlib import sha256
 
 from django.conf import settings
+from django.utils import six
 
 
 def make_checksum(parsed, unique_values=None):
     unique_values = unique_values or []
     seeds = [parsed, settings.SECRET_KEY]
-    seeds.extend([unicode(v) for v in unique_values])
+    seeds.extend([six.text_type(v) for v in unique_values])
 
     return sha256('+'.join(seeds).encode("utf-8")).hexdigest()
 

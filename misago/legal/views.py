@@ -2,6 +2,7 @@ from hashlib import md5
 
 from django.http import Http404
 from django.shortcuts import redirect, render
+from django.utils.encoding import force_bytes
 from django.utils.translation import gettext as _
 
 from misago.conf import settings
@@ -15,7 +16,7 @@ def get_parsed_content(request, setting_name):
 
     unparsed_content = settings.get_lazy_setting(setting_name)
 
-    checksum_source = '%s:%s' % (unparsed_content, settings.SECRET_KEY)
+    checksum_source = force_bytes('%s:%s' % (unparsed_content, settings.SECRET_KEY))
     unparsed_checksum = md5(checksum_source).hexdigest()
 
     if cached_content and cached_content.get('checksum') == unparsed_checksum:

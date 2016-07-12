@@ -3,6 +3,7 @@ from importlib import import_module
 from bs4 import BeautifulSoup
 
 from django.conf import settings
+from django.utils import six
 
 
 class MarkupPipeline(object):
@@ -25,7 +26,7 @@ class MarkupPipeline(object):
                 hook = getattr(module, 'clean_parsed')
                 hook.process_result(result, soup)
 
-        souped_text = unicode(soup.body).strip()[6:-7]
+        souped_text = six.text_type(soup.body).strip()[6:-7]
         result['parsed_text'] = souped_text.strip()
         return result
 

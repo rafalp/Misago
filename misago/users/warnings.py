@@ -25,7 +25,7 @@ def fetch_user_valid_warnings(user):
 
     # expire levels
     active_warnings = []
-    for length, level in enumerate(levels.values()[1:]):
+    for length, level in enumerate(list(levels.values())[1:]):
         length += 1
         level_warnings = []
         if level.length_in_minutes:

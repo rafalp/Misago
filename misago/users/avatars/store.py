@@ -1,6 +1,8 @@
 import os
 from hashlib import md5
 
+from django.utils.encoding import force_bytes
+
 from path import Path
 from PIL import Image
 
@@ -60,8 +62,8 @@ def get_user_avatar_tokens(user):
     token_seeds = (user.email, user.avatar_hash, settings.SECRET_KEY)
 
     tokens = {
-        'org': md5('org:%s:%s:%s' % token_seeds).hexdigest()[:8],
-        'tmp': md5('tmp:%s:%s:%s' % token_seeds).hexdigest()[:8],
+        'org': md5(force_bytes('org:%s:%s:%s' % token_seeds)).hexdigest()[:8],
+        'tmp': md5(force_bytes('tmp:%s:%s:%s' % token_seeds)).hexdigest()[:8],
     }
 
     tokens.update({
