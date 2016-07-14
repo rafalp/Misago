@@ -161,6 +161,33 @@ class ThreadModelTests(TestCase):
         self.assertFalse(self.thread.has_hidden_posts)
         self.assertEqual(self.thread.replies, 3)
 
+         # add event post
+        hidden_post = Post.objects.create(
+            category=self.category,
+            thread=self.thread,
+            poster=user,
+            poster_name=user.username,
+            poster_ip='127.0.0.1',
+            original="-",
+            parsed="-",
+            checksum="nope",
+            posted_on=datetime + timedelta(10),
+            updated_on=datetime + timedelta(10),
+            is_event=True
+        )
+
+        # events don't count to reply count
+        self.thread.synchronize()
+        self.assertEqual(self.thread.last_post, hidden_post)
+        self.assertEqual(self.thread.last_post_on, hidden_post.posted_on)
+        self.assertEqual(self.thread.last_poster, user)
+        self.assertEqual(self.thread.last_poster_name, user.username)
+        self.assertEqual(self.thread.last_poster_slug, user.slug)
+        self.assertFalse(self.thread.has_reported_posts)
+        self.assertFalse(self.thread.has_unapproved_posts)
+        self.assertFalse(self.thread.has_hidden_posts)
+        self.assertEqual(self.thread.replies, 3)
+
     def test_set_first_post(self):
         """set_first_post sets first post and poster data on thread"""
         User = get_user_model()

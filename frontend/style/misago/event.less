@@ -1,0 +1,43 @@
+//
+// Posts List Event
+// --------------------------------------------------
+
+
+// Event style
+.posts-list .event {
+  margin-bottom: @line-height-computed / 4;
+
+  color: @text-muted;
+}
+
+
+// Event's icon
+.posts-list .event .post-avatar {
+  .material-icon {
+    height: @event-icon-size;
+    width: @event-icon-size;
+
+    font-size: @event-icon-size;
+    line-height: @event-icon-size;
+
+    text-align: center;
+  }
+}
+
+
+// Event's first and second rows
+.posts-list .event .event-message {
+  margin: 0px;
+
+  font-size: @font-size-base;
+}
+
+.posts-list .event .event-info {
+  margin: 0px;
+
+  font-size: @font-size-small;
+
+  li {
+    margin-right: @line-height-computed / 4;
+  }
+}

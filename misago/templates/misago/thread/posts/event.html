@@ -1,0 +1,85 @@
+{% load i18n misago_capture misago_shorthands %}
+<li id="event-{{ post.pk }}" class="event {{ event.is_hidden|iftrue:'event-hidden' }}">
+  <div class="post-border">
+    <div class="post-avatar">
+      <span class="material-icon">
+        {% if post.event_type == 'pinned_globally' %}
+          bookmark
+        {% elif post.event_type == 'pinned_locally' %}
+          bookmark_border
+        {% elif post.event_type == 'unpinned' %}
+          panorama_fish_eye
+        {% elif post.event_type == 'moved' %}
+          arrow_forward
+        {% elif post.event_type == 'merged' %}
+          call_merge
+        {% elif post.event_type == 'approved' %}
+          done
+        {% elif post.event_type == 'opened' %}
+          lock_open
+        {% elif post.event_type == 'closed' %}
+          lock_outline
+        {% elif post.event_type == 'unhid' %}
+          visibility
+        {% elif post.event_type == 'hid' %}
+          visibility_off
+        {% endif %}
+      </span>
+    </div>
+    <div class="post-body">
+      <p class="event-message">
+        {% if post.event_type == 'pinned_globally' %}
+          {% trans "Thread has been pinned globally." %}
+        {% elif post.event_type == 'pinned_locally' %}
+          {% trans "Thread has been pinned locally." %}
+        {% elif post.event_type == 'unpinned' %}
+          {% trans "Thread has been unpinned." %}
+        {% elif post.event_type == 'moved' %}
+          {% capture trimmed as from_category %}
+            <a href="{{ post.event_context.from_category.url }}" class="item-title">{{ post.event_context.from_category.name }}</a>
+          {% endcapture %}
+          {% blocktrans trimmed with from_category=from_category|safe %}
+            Thread has been moved from {{ from_category }}.
+          {% endblocktrans %}
+        {% elif post.event_type == 'merged' %}
+          {% capture trimmed as merged_thread %}
+            <span class="item-title">{{ post.event_context.merged_thread }}</span>
+          {% endcapture %}
+          {% blocktrans trimmed with merged_thread=merged_thread|safe %}
+            The {{ merged_thread }} thread has been merged into this thread.
+          {% endblocktrans %}
+        {% elif post.event_type == 'opened' %}
+          {% trans "Thread has been opened." %}
+        {% elif post.event_type == 'closed' %}
+          {% trans "Thread has been closed." %}
+        {% elif post.event_type == 'unhid' %}
+          {% trans "Thread has been revealed." %}
+        {% elif post.event_type == 'hid' %}
+          {% trans "Thread has been made hidden." %}
+        {% endif %}
+      </p>
+      <ul class="list-inline event-info">
+        {% if event.is_hidden %}
+        <li class="event-hidden-message">
+          {% trans "Hidden" %}
+        </li>
+        {% endif %}
+        <li class="event-author">
+          {% if post.poster %}
+            <a class="item-title" href="{{ post.poster.get_absolute_url }}">{{ post.poster.username }}</a>
+          {% else %}
+            <strong class="item-title">{{ post.poster_name }}</strong>
+          {% endif %}
+        </li>
+        <li class="event-timestamp">
+          <a href="{{ post.get_absolute_url }}">{{ post.posted_on|date:'DATETIME_FORMAT' }}</a>
+        </li>
+        {% if user.acl.can_see_users_ips %}
+        <li class="event-ip">
+          {{ post.poster_ip }}
+        </li>
+        {% endif %}
+      </p>
+    </div>
+  </div>
+</li>

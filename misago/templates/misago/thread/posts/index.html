@@ -1,0 +1,11 @@
+<ul class="posts-list">
+  {% for post in posts %}
+    {% if post.is_event %}
+      {% include "misago/thread/posts/event.html" %}
+    {% elif post.is_hidden and not post.acl.can_see_hidden %}
+      {% include "misago/thread/posts/post-hidden.html" %}
+    {% else %}
+      {% include "misago/thread/posts/post.html" %}
+    {% endif %}
+  {% endfor %}
+</ul>

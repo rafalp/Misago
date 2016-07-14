@@ -1,17 +1,16 @@
-{% load i18n misago_avatars %}
-<ul class="media-list posts-list">
-  {% for post in posts %}
-  <li id="post-{{ post.pk }}" class="media post">
-    <div class="media-left">
+{% load misago_avatars %}
+<li id="post-{{ post.pk }}" class="post">
+  <div class="post-border">
+    <div class="post-avatar">
       {% if post.poster %}
         <a href="{{ post.poster.get_absolute_url }}">
-          <img class="media-object user-avatar" src="{{ post.poster|avatar:100 }}" alt="">
+          <img class="user-avatar" src="{{ post.poster|avatar:100 }}" alt="">
         </a>
       {% else %}
-        <img class="media-object user-avatar" src="{% blankavatar 100 %}" alt="">
+        <img class="user-avatar" src="{% blankavatar 100 %}" alt="">
       {% endif %}
     </div>
-    <div class="media-body">
+    <div class="post-body">
       <div class="panel panel-default panel-post">
         <div class="panel-heading">
           {% if post.poster %}
@@ -28,6 +27,5 @@
         </div>
       </div>
     </div>
-  </li>
-  {% endfor %}
-</ul>
+  </div>
+</li>

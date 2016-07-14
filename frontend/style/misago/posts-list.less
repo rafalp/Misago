@@ -1,0 +1,37 @@
+//
+// Posts List
+// --------------------------------------------------
+
+
+// Remove paddings and margins from items list
+.posts-list {
+  margin: 0px;
+  padding: 0px;
+
+  li {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+  }
+}
+
+
+// Overflow auto the post border:
+.post-border {
+  overflow: auto;
+}
+
+
+// Float left column and space it out
+.post-avatar {
+  float: left;
+  width: @post-avatar-size;
+
+  text-align: right;
+}
+
+
+// Margin away post body
+.post-body {
+  margin-left: @post-avatar-size + 12px;
+}
