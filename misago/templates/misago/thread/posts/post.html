@@ -1,5 +1,5 @@
-{% load misago_avatars %}
-<li id="post-{{ post.pk }}" class="post">
+{% load i18n misago_avatars misago_capture %}
+<li id="post-{{ post.pk }} {% if post.is_hidden and not post.acl.can_see_hidden %}post-hidden{% endif %}" class="post">
   <div class="post-border">
     <div class="post-avatar">
       {% if post.poster %}
@@ -12,19 +12,107 @@
     </div>
     <div class="post-body">
       <div class="panel panel-default panel-post">
-        <div class="panel-heading">
+        <div class="panel-heading post-heading">
           {% if post.poster %}
             <a class="item-title" href="{{ post.poster.get_absolute_url }}">{{ post.poster.username }}</a>
           {% else %}
             <strong class="item-title">{{ post.poster_name }}</strong>
           {% endif %}
-          <a href="{{ post.get_absolute_url }}">{{ post.posted_on|date }}</a>
+          {% if post.poster %}
+            {% if not post.poster.rank.is_default %}
+              {% if post.poster.rank.is_tab %}
+                <a href="{% url 'misago:users-rank' slug=post.poster.rank.slug %}" class="label label-{{ post.poster.rank.css_class|default:'default' }}">
+                  {{ post.poster.short_title }}
+                </a>
+              {% else %}
+                <span class="label label-{{ post.poster.rank.css_class|default:'default' }}">
+                  {{ post.poster.short_title }}
+                </span>
+              {% endif %}
+            {% endif %}
+          {% else %}
+            <span class="rank-name item-title">
+              {% trans "Unregistered" %}
+            </span>
+          {% endif %}
+          <a href="{{ post.get_absolute_url }}" class="posted-on">
+            {% blocktrans trimmed with posted_on=post.posted_on|date:'DATETIME_FORMAT' %}
+              posted on {{ posted_on }}
+            {% endblocktrans %}
+          </a>
+
+          {% if not post.is_read %}
+            <span class="label label-success pull-right">
+              {% trans "New" %}
+            </span>
+          {% endif %}
         </div>
-        <div class="panel-body">
-          <article class="misago-markup">
-            {{ post.parsed|safe }}
-          </article>
-        </div>
+        {% if post.is_hidden and not post.acl.can_see_hidden %}
+          <div class="panel-body panel-body-hidden">
+            <p class="lead">{% trans "This post is hidden. You cannot not see its contents." %}</p>
+            {% capture trimmed as hidden_by %}
+              {% if post.hidden_by_id %}
+                <a href="{% url 'misago:user' pk=post.hidden_by_id slug=post.hidden_by_slug %}" class="item-title">{{ post.hidden_by_name }}</a>
+              {% else %}
+                <span class="item-title">{{ post.hidden_by_name }}</span>
+              {% endif %}
+            {% endcapture %}
+            <p class="text-muted">
+              {% blocktrans trimmed with hidden_by=hidden_by|safe hidden_on=post.hidden_on|date:'DATETIME_FORMAT' %}
+                Hidden by {{ hidden_by }} on {{ hidden_on }}.
+              {% endblocktrans %}
+            </p>
+          </div>
+        {% else %}
+          {% if post.is_hidden %}
+            <div class="post-status-message post-status-hidden">
+              <span class="material-icon">visibility_off</span>
+              <p>{% trans "This post is hidden. Only users with permission may see its contents." %}</p>
+            </div>
+          {% endif %}
+          {% if post.is_unapproved %}
+            <div class="post-status-message post-status-unapproved">
+              <span class="material-icon">remove_circle_outline</span>
+              <p>{% trans "This post is unapproved. Only users with permission to approve posts and its author may see its contents." %}</p>
+            </div>
+          {% endif %}
+          {% if post.is_valid %}
+            <div class="panel-body">
+              <article class="misago-markup">
+                {{ post.parsed|safe }}
+              </article>
+            </div>
+          {% else %}
+            <div class="panel-body panel-body-invalid">
+              <p class="lead">{% trans "This post's contents cannot be displayed." %}</p>
+              <p class="text-muted">{% trans "This error is caused by invalid post content manipulation." %}</p>
+            </div>
+          {% endif %}
+          {% if post.acl.can_reply or post.acl.can_edit or post.acl.can_see_likes or post.acl.can_like %}
+            <div class="panel-footer post-footer">
+              {% if post.acl.can_see_likes %}
+                <button type="button" class="btn btn-likes pull-left" disabled="disabled">
+                  Likes
+                </button>
+              {% endif %}
+              {% if post.acl.can_like %}
+                <button type="button" class="btn btn-like pull-left" disabled="disabled">
+                  {% trans "Like" %}
+                </button>
+              {% endif %}
+              {% if post.acl.can_reply %}
+                <button type="button" class="btn btn-reply pull-right" disabled="disabled">
+                  {% trans "Reply" %}
+                </button>
+              {% endif %}
+              {% if post.acl.can_edit %}
+                <button type="button" class="btn btn-edit pull-right" disabled="disabled">
+                  {% trans "Edit" %}
+                </button>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endif %}
       </div>
     </div>
   </div>

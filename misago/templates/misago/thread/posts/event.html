@@ -48,6 +48,8 @@
           {% blocktrans trimmed with merged_thread=merged_thread|safe %}
             The {{ merged_thread }} thread has been merged into this thread.
           {% endblocktrans %}
+        {% elif post.event_type == 'approved' %}
+          {% trans "Thread has been approved." %}
         {% elif post.event_type == 'opened' %}
           {% trans "Thread has been opened." %}
         {% elif post.event_type == 'closed' %}
@@ -59,25 +61,39 @@
         {% endif %}
       </p>
       <ul class="list-inline event-info">
-        {% if event.is_hidden %}
-        <li class="event-hidden-message">
-          {% trans "Hidden" %}
-        </li>
+        {% if post.is_hidden %}
+          <li class="event-hidden-message">
+            {% capture trimmed as hidden_by %}
+              {% if post.hidden_by_id %}
+                <a href="{% url 'misago:user' pk=post.hidden_by_id slug=post.hidden_by_slug %}" class="item-title">{{ post.hidden_by_name }}</a>
+              {% else %}
+                <span class="item-title">{{ post.hidden_by_name }}</span>
+              {% endif %}
+            {% endcapture %}
+            {% blocktrans trimmed with hidden_by=hidden_by|safe hidden_on=post.hidden_on|date:'DATETIME_FORMAT' %}
+              Hidden by {{ hidden_by }} on {{ hidden_on }}.
+            {% endblocktrans %}
+          </li>
         {% endif %}
-        <li class="event-author">
-          {% if post.poster %}
-            <a class="item-title" href="{{ post.poster.get_absolute_url }}">{{ post.poster.username }}</a>
-          {% else %}
-            <strong class="item-title">{{ post.poster_name }}</strong>
-          {% endif %}
-        </li>
-        <li class="event-timestamp">
-          <a href="{{ post.get_absolute_url }}">{{ post.posted_on|date:'DATETIME_FORMAT' }}</a>
+        <li class="event-poster">
+          {% capture trimmed as event_by %}
+            {% if post.poster %}
+              <a class="item-title" href="{{ post.poster.get_absolute_url }}">{{ post.poster.username }}</a>
+            {% else %}
+              <strong class="item-title">{{ post.poster_name }}</strong>
+            {% endif %}
+          {% endcapture %}
+          {% capture trimmed as event_on %}
+            <a href="{{ post.get_absolute_url }}">{{ post.posted_on|date:'DATETIME_FORMAT' }}</a>
+          {% endcapture %}
+          {% blocktrans trimmed with event_by=event_by|safe event_on=event_on|safe %}
+            By {{ event_by }} on {{ event_on }}.
+          {% endblocktrans %}
         </li>
         {% if user.acl.can_see_users_ips %}
-        <li class="event-ip">
-          {{ post.poster_ip }}
-        </li>
+          <li class="event-ip">
+            <abbr title="{{ post.poster_ip }}">{% trans "IP recorded" %}</abbr>
+          </li>
         {% endif %}
       </p>
     </div>

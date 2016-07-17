@@ -60,9 +60,14 @@ class Post(models.Model):
     is_hidden = models.BooleanField(default=False)
     is_protected = models.BooleanField(default=False)
 
-    is_event = models.BooleanField(default=False)
+    is_event = models.BooleanField(default=False, db_index=True)
     event_type = models.CharField(max_length=255, null=True, blank=True)
     event_context = JSONField(null=True, blank=True)
+
+    class Meta:
+        index_together = [
+            ('is_event', 'is_hidden')
+        ]
 
     def __unicode__(self):
         return '%s...' % self.original[10:].strip()

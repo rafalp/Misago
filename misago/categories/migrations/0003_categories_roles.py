@@ -40,6 +40,8 @@ def create_default_categories_roles(apps, schema_editor):
             # threads perms
             'misago.threads.permissions.threads': {
                 'can_see_all_threads': 1,
+                'can_see_posts_likes': 2,
+                'can_like_posts': 1,
             },
         })
     read_only.save()
@@ -58,6 +60,8 @@ def create_default_categories_roles(apps, schema_editor):
                 'can_see_all_threads': 1,
                 'can_reply_threads': 1,
                 'can_edit_posts': 1,
+                'can_see_posts_likes': 2,
+                'can_like_posts': 1,
             },
         })
     reply_only.save()
@@ -78,12 +82,13 @@ def create_default_categories_roles(apps, schema_editor):
                 'can_reply_threads': 1,
                 'can_edit_threads': 1,
                 'can_edit_posts': 1,
+                'can_see_posts_likes': 2,
+                'can_like_posts': 1,
             },
         })
     standard.save()
 
-    standard_with_polls = CategoryRole(
-        name=_('Start and reply threads, make polls'))
+    standard_with_polls = CategoryRole(name=_('Start and reply threads, make polls'))
     pickle_permissions(standard_with_polls,
         {
             # categories perms
@@ -99,6 +104,8 @@ def create_default_categories_roles(apps, schema_editor):
                 'can_reply_threads': 1,
                 'can_edit_threads': 1,
                 'can_edit_posts': 1,
+                'can_see_posts_likes': 2,
+                'can_like_posts': 1,
             },
         })
     standard_with_polls.save()
@@ -136,6 +143,8 @@ def create_default_categories_roles(apps, schema_editor):
                 'can_split_threads': 1,
                 'can_approve_content': 1,
                 'can_report_content': 1,
+                'can_see_posts_likes': 2,
+                'can_like_posts': 1,
                 'can_see_reports': 1,
                 'can_hide_events': 2,
             },

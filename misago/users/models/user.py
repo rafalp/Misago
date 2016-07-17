@@ -299,7 +299,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def short_title(self):
-        return self.title or self.rank.title
+        return self.title or self.rank.title or self.rank.name
 
     @property
     def requires_activation_by_admin(self):

@@ -4,6 +4,7 @@ from django.utils import timezone
 
 from misago.core.utils import slugify
 
+from .checksums import update_post_checksum
 from .models import Post, Thread
 
 
@@ -83,6 +84,10 @@ def reply_thread(thread, poster="Tester", message='I am test message',
         kwargs.update({'poster_name': poster})
 
     post = Post.objects.create(**kwargs)
+
+    update_post_checksum(post)
+    post.save()
+
     thread.synchronize()
     thread.save()
     thread.category.synchronize()

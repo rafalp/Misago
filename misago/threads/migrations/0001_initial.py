@@ -46,7 +46,7 @@ class Migration(migrations.Migration):
                 ('last_editor', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
                 ('mentions', models.ManyToManyField(related_name='mention_set', to=settings.AUTH_USER_MODEL)),
                 ('poster', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
-                ('is_event', models.BooleanField(default=False)),
+                ('is_event', models.BooleanField(default=False, db_index=True)),
                 ('event_type', models.CharField(max_length=255, null=True, blank=True)),
                 ('event_context', JSONField(null=True, blank=True)),
             ],
@@ -192,6 +192,10 @@ class Migration(migrations.Migration):
                 ('category', 'last_post_on'),
                 ('category', 'replies'),
             ]),
+        ),
+        migrations.AlterIndexTogether(
+            name='post',
+            index_together=set([('is_event', 'is_hidden')]),
         ),
         migrations.CreateModel(
             name='Subscription',

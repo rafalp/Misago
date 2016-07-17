@@ -1,3 +1,59 @@
 //
 // Posts List Post
 // --------------------------------------------------
+
+
+// Post status flags
+.post-status-message {
+  padding: @padding-base-vertical @padding-base-horizontal;
+  overflow: auto;
+
+  .material-icon {
+    float: left;
+
+    font-size: 28px;
+  }
+
+  p {
+    margin: 0px;
+    margin-top: (28px - @line-height-computed) / 2;
+    margin-left: 36px;
+  }
+}
+
+
+.post-status-hidden {
+  background-color: @brand-danger;
+  color: #fff;
+}
+
+
+.post-status-unapproved {
+  background-color: @brand-primary;
+  color: #fff;
+}
+
+
+// Hidden post message
+.posts-list .panel-body-hidden {
+  .lead, .text-muted {
+    margin: 0px;
+  }
+}
+
+// Invalid post message
+.posts-list .panel-body-invalid {
+  .lead, .text-muted {
+    margin: 0px;
+  }
+}
+
+
+// Post footer
+.post-footer {
+  overflow: auto;
+
+  .btn.pull-right {
+    margin-left: @line-height-computed / 2;
+  }
+}
