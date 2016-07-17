@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(default=django.utils.timezone.now, verbose_name='last login')),
+                ('last_login', models.DateTimeField(null=True, blank=True, verbose_name='last login')),
                 ('username', models.CharField(max_length=30)),
                 ('slug', models.CharField(unique=True, max_length=30)),
                 ('email', models.EmailField(max_length=255, db_index=True)),

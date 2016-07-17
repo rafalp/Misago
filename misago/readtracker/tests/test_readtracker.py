@@ -200,14 +200,14 @@ class ThreadsTrackerTests(ReadTrackerTests):
 
     def test_thread_replied_unread_for_user(self):
         """replied thread is unread for user"""
-        self.reply_thread(self.thread)
+        self.reply_thread()
 
         threadstracker.make_read_aware(self.user, self.thread)
         self.assertFalse(self.thread.is_read)
 
     def _test_thread_read(self):
         """thread read flag is set for user, then its set as unread by reply"""
-        self.reply_thread(self.thread)
+        self.reply_thread()
 
         add_acl(self.user, self.categories)
         threadstracker.make_read_aware(self.user, self.thread)

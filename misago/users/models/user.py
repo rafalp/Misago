@@ -198,12 +198,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_ip = models.GenericIPAddressField(null=True, blank=True)
     is_hiding_presence = models.BooleanField(default=False)
 
-    rank = models.ForeignKey(
-        'Rank', null=True, blank=True, on_delete=models.PROTECT)
+    rank = models.ForeignKey('Rank', null=True, blank=True, on_delete=models.deletion.PROTECT)
     title = models.CharField(max_length=255, null=True, blank=True)
-    requires_activation = models.PositiveIntegerField(
-        default=ACTIVATION_REQUIRED_NONE
-    )
+    requires_activation = models.PositiveIntegerField(default=ACTIVATION_REQUIRED_NONE)
     is_staff = models.BooleanField(_('staff status'),
         default=False,
         help_text=_('Designates whether the user can log into admin sites.'),

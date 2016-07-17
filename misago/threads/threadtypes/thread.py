@@ -24,8 +24,8 @@ class Thread(ThreadType):
 
     def get_category_last_thread_url(self, category):
         return reverse('misago:thread', kwargs={
-            'slug': thread.slug,
-            'pk': thread.pk
+            'slug': category.last_thread.slug,
+            'pk': category.last_thread.pk
         })
 
     def get_category_last_post_url(self, category):
