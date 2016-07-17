@@ -856,19 +856,13 @@ def exclude_invisible_threads(user, categories, queryset):
 
 
 def exclude_invisible_posts(user, category, queryset):
-    if category.acl['can_hide_events'] and category.acl['can_approve_content']:
-        return queryset # don't do extra filtering for posts
+    if not category.acl['can_approve_content']:
+        if user.is_authenticated():
+            queryset = queryset.filter(Q(is_unapproved=False) | Q(poster=user))
+        else:
+            queryset = queryset.exclude(is_unapproved=True)
 
-    if category.acl['can_approve_content']:
-        visible_posts = Q(is_event=False)
-    elif user.is_authenticated():
-        visible_posts = Q(is_event=False) & (Q(poster_id=user.id) | Q(is_unapproved=False))
-    else:
-        visible_posts = Q(is_event=False) & Q(is_unapproved=False)
+    if not category.acl['can_hide_events']:
+        queryset = queryset.exclude(is_event=True, is_hidden=True)
 
-    if category.acl['can_hide_events']:
-        visible_events = Q(is_event=True)
-    else:
-        visible_events = Q(is_event=True) & Q(is_hidden=False)
-
-    return queryset.filter(visible_posts | visible_events)
+    return queryset
