@@ -17,7 +17,7 @@ BASE_QUERYSET = Thread.objects.select_related(
 
 
 class ViewModel(object):
-    def __init__(self, request, pk, slug=None):
+    def __init__(self, request, pk, slug=None, read_aware=False, subscription_aware=False):
         thread = self.get_thread(request, pk, slug)
 
         thread.path = self.get_thread_path(thread.category)
@@ -25,8 +25,10 @@ class ViewModel(object):
         add_acl(request.user, thread.category)
         add_acl(request.user, thread)
 
-        make_read_aware(request.user, thread)
-        make_subscription_aware(request.user, thread)
+        if read_aware:
+            make_read_aware(request.user, thread)
+        if subscription_aware:
+            make_subscription_aware(request.user, thread)
 
         self.thread = thread
         self.category = thread.category

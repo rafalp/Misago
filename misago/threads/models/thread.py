@@ -160,6 +160,9 @@ class Thread(models.Model):
     def get_new_post_url(self):
         return self.thread_type.get_thread_new_post_url(self)
 
+    def get_unapproved_post_url(self):
+        return self.thread_type.get_thread_unapproved_post_url(self)
+
     def get_api_url(self):
         return self.thread_type.get_thread_api_url(self)
 

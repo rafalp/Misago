@@ -27,7 +27,7 @@ class ViewSet(viewsets.ViewSet):
     TREE_ID = None
 
     def get_thread(self, request, pk):
-        return self.thread(request, get_int_or_404(pk))
+        return self.thread(request, get_int_or_404(pk), read_aware=True, subscription_aware=True)
 
     def list(self, request):
         return threads_list_endpoint(request)

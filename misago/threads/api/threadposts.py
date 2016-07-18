@@ -11,12 +11,6 @@ class ViewSet(viewsets.ViewSet):
     thread = None
     posts = None
 
-    def get_thread(self, request, pk):
-        return self.thread(request, get_int_or_404(pk))
-
-    def get_posts(self, request, thread, page):
-        return self.posts(request, thread, page)
-
     def list(self, request, thread_pk):
         page = get_int_or_404(request.query_params.get('page', 0))
         if page == 1:
@@ -29,6 +23,12 @@ class ViewSet(viewsets.ViewSet):
         data['post_set'] = posts.get_frontend_context()
 
         return Response(data)
+
+    def get_thread(self, request, pk):
+        return self.thread(request, get_int_or_404(pk), read_aware=True, subscription_aware=True)
+
+    def get_posts(self, request, thread, page):
+        return self.posts(request, thread, page)
 
 
 class ThreadPostsViewSet(ViewSet):

@@ -14,20 +14,20 @@
 {% block content %}
 <div class="page page-thread {% if category.css_class %}page-thread-{{ category.css_class }}{% endif %}">
   <div class="page-header with-stats with-breadcrumbs">
-    {% include "misago/thread/breadcrumbs.html" %}
 
+    {% include "misago/thread/breadcrumbs.html" %}
     <div class="container">
       <h1>{{ thread.title }}</h1>
     </div>
-
     {% include "misago/thread/stats.html" %}
 
   </div>
-
   <div class="container">
-    {% include "misago/thread/posts/index.html" %}
 
+    {% include "misago/thread/toolbar-top.html" %}
+    {% include "misago/thread/posts/index.html" %}
     {% include "misago/thread/paginator.html" %}
+
   </div>
 </div>
 {% endblock content %}

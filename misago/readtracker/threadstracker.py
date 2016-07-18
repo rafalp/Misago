@@ -114,7 +114,7 @@ def make_posts_read_aware(user, thread, posts):
         is_thread_read = thread.is_read
     except AttributeError:
         raise ValueError("thread passed make_posts_read_aware should be "
-                         "read aware too via make_thread_read_aware")
+                         "made read aware via make_thread_read_aware")
 
     if is_thread_read:
         for post in posts:

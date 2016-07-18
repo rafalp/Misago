@@ -14,17 +14,17 @@
 
     {% block list-container %}
       {% if subcategories %}
-      <div class="toolbar">
-        <ul class="list-inline subcategories-list">
-          {% for subcategory in subcategories %}
-          <li>
-            <a href="{{ subcategory.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="subcategory {% if subcategory.css_class %}subcategory-{{ subcategory.css_class }}{% endif %}">
-              {{ subcategory.name }}
-            </a>
-          </li>
-          {% endfor %}
-        </ul>
-      </div>
+        <div class="toolbar">
+          <ul class="list-inline subcategories-list">
+            {% for subcategory in subcategories %}
+              <li>
+                <a href="{{ subcategory.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="subcategory {% if subcategory.css_class %}subcategory-{{ subcategory.css_class }}{% endif %}">
+                  {{ subcategory.name }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
       {% endif %}
 
       <div class="threads-list ui-ready">
@@ -60,36 +60,36 @@
 
       <noscript>
         {% if paginator.pages > 1 %}
-        <nav>
-          <ul class="pager">
-            {% if paginator.previous %}
-            <li class="previous">
-              <a href="{{ REQUEST_PATH }}?page={{ paginator.previous }}">
-                <span aria-hidden="true" class="material-icon">
-                  arrow_back
-                </span>
-              </a>
-            </li>
-            {% elif paginator.first %}
-            <li class="previous">
-              <a href="{{ REQUEST_PATH }}">
-                <span aria-hidden="true" class="material-icon">
-                  arrow_back
-                </span>
-              </a>
-            </li>
-            {% endif %}
-            {% if paginator.next %}
-            <li class="next">
-              <a href="{{ REQUEST_PATH }}?page={{ paginator.next }}">
-                <span aria-hidden="true" class="material-icon">
-                  arrow_forward
-                </span>
-              </a>
-            </li>
-            {% endif %}
-          </ul>
-        </nav>
+          <nav>
+            <ul class="pager">
+              {% if paginator.previous %}
+                <li class="previous">
+                  <a href="{{ REQUEST_PATH }}?page={{ paginator.previous }}">
+                    <span aria-hidden="true" class="material-icon">
+                      arrow_back
+                    </span>
+                  </a>
+                </li>
+              {% elif paginator.first %}
+                <li class="previous">
+                  <a href="{{ REQUEST_PATH }}">
+                    <span aria-hidden="true" class="material-icon">
+                      arrow_back
+                    </span>
+                  </a>
+                </li>
+              {% endif %}
+              {% if paginator.next %}
+                <li class="next">
+                  <a href="{{ REQUEST_PATH }}?page={{ paginator.next }}">
+                    <span aria-hidden="true" class="material-icon">
+                      arrow_forward
+                    </span>
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </nav>
         {% endif %}
       </noscript>
     {% endblock list-container %}
