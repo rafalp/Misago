@@ -70,7 +70,7 @@ export default class extends React.Component {
 
       <div className="thread-main">
 
-        <a href={this.props.thread.absolute_url} className="item-title thread-title">
+        <a href={this.props.thread.url.index} className="item-title thread-title">
           {this.props.thread.title}
         </a>
 

@@ -27,9 +27,9 @@ export default class extends React.Component {
 
   getUrl() {
       if (this.props.thread.is_read) {
-        return this.props.thread.last_post_url;
+        return this.props.thread.url.last_post;
       } else {
-        return this.props.thread.new_post_url;
+        return this.props.thread.url.new_post;
       }
   }
 

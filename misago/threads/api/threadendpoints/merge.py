@@ -12,7 +12,7 @@ from misago.categories.permissions import can_browse_category, can_see_category
 from ...events import record_event
 from ...models import Thread
 from ...permissions import can_see_thread
-from ...serializers import MergeThreadsSerializer, ThreadListSerializer
+from ...serializers import MergeThreadsSerializer, ThreadsListSerializer
 from ...threadtypes import trees_map
 from ...utils import add_categories_to_threads
 
@@ -48,7 +48,7 @@ def threads_merge_endpoint(request):
     serializer = MergeThreadsSerializer(context=request.user, data=request.data)
     if serializer.is_valid():
         new_thread = merge_threads(request, serializer.validated_data, threads)
-        return Response(ThreadListSerializer(new_thread).data)
+        return Response(ThreadsListSerializer(new_thread).data)
     else:
         return Response(serializer.errors, status=400)
 

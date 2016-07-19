@@ -9,7 +9,7 @@ from misago.categories.models import Category
 from .. import testutils
 from ..api.threadendpoints.merge import MERGE_LIMIT
 from ..models import Post, Thread
-from ..serializers import ThreadListSerializer
+from ..serializers import ThreadsListSerializer
 from .test_threads_api import ThreadsApiTestCase
 
 
@@ -435,7 +435,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         add_acl(self.user, new_thread.category)
         add_acl(self.user, new_thread)
 
-        self.assertEqual(response_json, ThreadListSerializer(new_thread).data)
+        self.assertEqual(response_json, ThreadsListSerializer(new_thread).data)
 
         # did posts move to new thread?
         for post in Post.objects.filter(id__in=posts_ids):
@@ -476,7 +476,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         add_acl(self.user, new_thread.category)
         add_acl(self.user, new_thread)
 
-        self.assertEqual(response_json, ThreadListSerializer(new_thread).data)
+        self.assertEqual(response_json, ThreadsListSerializer(new_thread).data)
 
         # did posts move to new thread?
         for post in Post.objects.filter(id__in=posts_ids):

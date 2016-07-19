@@ -14,7 +14,7 @@ from misago.readtracker import threadstracker
 
 from ..models import Thread
 from ..permissions import exclude_invisible_threads
-from ..serializers import ThreadListSerializer
+from ..serializers import ThreadsListSerializer
 from ..subscriptions import make_subscription_aware
 from ..utils import add_categories_to_threads
 
@@ -97,7 +97,7 @@ class ViewModel(object):
     def get_frontend_context(self):
         context = {
             'THREADS': {
-                'results': ThreadListSerializer(self.threads, many=True).data,
+                'results': ThreadsListSerializer(self.threads, many=True).data,
                 'subcategories': [c.pk for c in self.category.children]
             },
         }

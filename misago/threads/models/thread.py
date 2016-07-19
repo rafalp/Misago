@@ -31,12 +31,15 @@ class Thread(models.Model):
     title = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
     replies = models.PositiveIntegerField(default=0, db_index=True)
+
     has_reported_posts = models.BooleanField(default=False)
     has_open_reports = models.BooleanField(default=False)
     has_unapproved_posts = models.BooleanField(default=False)
     has_hidden_posts = models.BooleanField(default=False)
 
     started_on = models.DateTimeField(db_index=True)
+    last_post_on = models.DateTimeField(db_index=True)
+
     first_post = models.ForeignKey(
         'misago_threads.Post',
         related_name='+',
@@ -53,7 +56,6 @@ class Thread(models.Model):
     starter_name = models.CharField(max_length=255)
     starter_slug = models.CharField(max_length=255)
 
-    last_post_on = models.DateTimeField(db_index=True)
     last_post = models.ForeignKey(
         'misago_threads.Post',
         related_name='+',
@@ -151,20 +153,20 @@ class Thread(models.Model):
     def thread_type(self):
         return self.category.thread_type
 
+    def get_api_url(self):
+        return self.thread_type.get_thread_api_url(self)
+
     def get_absolute_url(self, page=1):
         return self.thread_type.get_thread_absolute_url(self, page)
-
-    def get_last_post_url(self):
-        return self.thread_type.get_thread_last_post_url(self)
 
     def get_new_post_url(self):
         return self.thread_type.get_thread_new_post_url(self)
 
+    def get_last_post_url(self):
+        return self.thread_type.get_thread_last_post_url(self)
+
     def get_unapproved_post_url(self):
         return self.thread_type.get_thread_unapproved_post_url(self)
-
-    def get_api_url(self):
-        return self.thread_type.get_thread_api_url(self)
 
     def set_title(self, title):
         self.title = title

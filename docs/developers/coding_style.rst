@@ -52,9 +52,9 @@ Serializers
 Defining serializers
 --------------------
 
-Model's default serializer should be named after its model, but with "Serializer" suffix, ergo serializer for "Thread" model should be named "ThreadSerializer". Default serializer should be only serializer defining serialization methods.
+Model's default serializer should be named after its model, but with "Serializer" suffix, ergo serializer for "Thread" model should be named "ThreadSerializer". Default serializer should be only serializer defining serialization methods for ``SerializerMethodField``.
 
-In case that model has more than one serializer, all serializers should inherit from default one and be named in a way describing it usage. For example serializer for "User" model used to serialize post's author should be named "PostPosterSerializer". This serializer should only define "Meta" class with "model" and "fields" attributes, inheriting serialization behaviour form default serializer.
+In case that model has more than one serializer, all additional serializers should be named in a way describing their usage. For example serializer for "Post" model used to serialize user's posts list could be named "FeedPostsSerializer". This serializer should only define "Meta" class with "model" and "fields" attributes, inheriting serialization behaviour form default serializer.
 
 
 Fields Order

@@ -12,7 +12,7 @@ export default class extends React.Component {
       /* jshint ignore:start */
       return <li className="thread-new-posts"
                  title={gettext("Go to first unread post")}>
-        <a href={this.props.thread.new_post_url}>
+        <a href={this.props.thread.url.new_post}>
           <span className="material-icon">
             comment
           </span>
@@ -164,16 +164,16 @@ export default class extends React.Component {
 
   getLastReplyDate() {
     return interpolate(LAST_REPLY_URL, {
-      url: escapeHtml(this.props.thread.last_post_url),
+      url: escapeHtml(this.props.thread.url.last_post),
       absolute: escapeHtml(this.props.thread.last_post_on.format('LLL')),
       relative: escapeHtml(this.props.thread.last_post_on.fromNow())
     }, true);
   }
 
   getLastPoster() {
-    if (this.props.thread.last_poster_url) {
+    if (this.props.thread.url.last_poster) {
       return interpolate(LAST_POSTER_URL, {
-        url: escapeHtml(this.props.thread.last_poster_url),
+        url: escapeHtml(this.props.thread.url.last_poster),
         user: escapeHtml(this.props.thread.last_poster_name)
       }, true);
     } else {

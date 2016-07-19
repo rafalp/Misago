@@ -31,7 +31,7 @@ export default class extends React.Component {
     this.props.threads.forEach((thread) => {
       this.props.freezeThread(thread.id);
 
-      ajax.patch(thread.api_url, ops).then((data) => {
+      ajax.patch(thread.api.index, ops).then((data) => {
         this.props.updateThread(data);
         countdown.count();
       }, (rejection) => {
@@ -187,7 +187,7 @@ export default class extends React.Component {
     this.props.threads.forEach((thread) => {
       this.props.freezeThread(thread.id);
 
-      ajax.delete(thread.api_url).then((data) => {
+      ajax.delete(thread.api.index).then((data) => {
         this.props.freezeThread(thread.id);
         this.props.deleteThread(thread);
         countdown.count();

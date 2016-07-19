@@ -37,7 +37,7 @@ export default class extends React.Component {
       subscription: STATE_UPDATES[newState]
     }));
 
-    ajax.patch(this.props.thread.api_url, [
+    ajax.patch(this.props.thread.api.index, [
       {op: 'replace', path: 'subscription', value: newState}
     ]).then(() => {
       this.setState({
