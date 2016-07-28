@@ -19,6 +19,7 @@ class ThreadSerializer(serializers.ModelSerializer):
     acl = serializers.SerializerMethodField()
     is_new = serializers.SerializerMethodField()
     is_read = serializers.SerializerMethodField()
+    path = BasicCategorySerializer(many=True, read_only=True)
     subscription = serializers.SerializerMethodField()
 
     api = serializers.SerializerMethodField()
@@ -32,6 +33,10 @@ class ThreadSerializer(serializers.ModelSerializer):
             'title',
             'replies',
             'has_unapproved_posts',
+            'started_on',
+            'last_post_on',
+            'last_post',
+            'last_poster_name',
             'is_unapproved',
             'is_hidden',
             'is_closed',
@@ -40,6 +45,7 @@ class ThreadSerializer(serializers.ModelSerializer):
             'acl',
             'is_new',
             'is_read',
+            'path',
             'subscription',
 
             'api',

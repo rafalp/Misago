@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export const REPLACE_THREAD = 'REPLACE_THREAD';
 
 export function replace(newState, hydrate=true) {
@@ -9,6 +11,9 @@ export function replace(newState, hydrate=true) {
 
 export function hydrate(json) {
   return Object.assign({}, json, {
+    started_on: moment(json.started_on),
+    last_post_on: moment(json.last_post_on),
+
     isBusy: false
   });
 }

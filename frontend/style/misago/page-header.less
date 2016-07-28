@@ -52,11 +52,25 @@
   padding-left: 0px;
   padding-right: 0px;
   margin-bottom: @line-height-computed * -1;
+  overflow: auto;
 }
+
+.page-breadcrumbs .breadcrumb li {
+  &, &:before {
+    display: block;
+    float: left;
+  }
+
+  &:before {
+    margin-left: 4px;
+  }
+}
+
 
 // Stats
 .header-stats .list-inline li {
   margin-right: 8px;
+  overflow: auto;
 
   .status-icon {
     width: 18px;
@@ -69,6 +83,17 @@
 
     font-size: 18px;
     line-height: 18px;
+  }
+
+  &>.material-icon, &>.icon-legend {
+    float: left;
+  }
+
+  &>.material-icon {
+    margin-right: 4px;
+
+    position: relative;
+    top: 3px;
   }
 }
 
