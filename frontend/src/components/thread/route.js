@@ -4,10 +4,11 @@ import Header from './header'; // jshint ignore:line
 import Paginator from './paginator'; // jshint ignore:line
 import ToolbarTop from './toolbar-top'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
+import polls from 'misago/services/polls';
 import snackbar from 'misago/services/snackbar';
 import * as posts from 'misago/reducers/posts';
 import store from 'misago/services/store';
-import * as thread from 'misago/reducers/thread';
+import * as thread from 'misago/reducers/thread'; // jshint ignore:line
 import title from 'misago/services/page-title';
 
 export default class extends React.Component {
@@ -16,13 +17,20 @@ export default class extends React.Component {
       this.fetchData();
       this.setPageTitle();
     }
+
+    this.startPollingApi();
   }
 
   componentDidUpdate() {
     if (this.shouldFetchData()) {
       this.fetchData();
+      this.startPollingApi();
       this.setPageTitle();
     }
+  }
+
+  componentWillUnmount() {
+    this.stopPollingApi();
   }
 
   shouldFetchData() {
@@ -40,11 +48,29 @@ export default class extends React.Component {
     ajax.get(this.props.thread.api.posts, {
       page: this.props.params.page || 1
     }, 'posts').then((data) => {
-      store.dispatch(thread.replace(data));
-      store.dispatch(posts.load(data.post_set));
+      this.update(data);
     }, (rejection) => {
       snackbar.apiError(rejection);
     });
+  }
+
+  startPollingApi() {
+    polls.start({
+      poll: 'thread-posts',
+
+      url: this.props.thread.api.posts,
+      data: {
+        page: this.props.params.page || 1
+      },
+      update: this.update,
+
+      frequency: 120 * 1000,
+      delayed: true
+    });
+  }
+
+  stopPollingApi() {
+    polls.stop('thread-posts');
   }
 
   setPageTitle() {
@@ -53,6 +79,15 @@ export default class extends React.Component {
       page: (this.props.params.page || 1) * 1
     });
   }
+
+  /* jshint ignore:start */
+  update = (data) => {
+    store.dispatch(thread.replace(data));
+    store.dispatch(posts.load(data.post_set));
+
+    this.setPageTitle();
+  };
+  /* jshint ignore:end */
 
   render() {
     /* jshint ignore:start */

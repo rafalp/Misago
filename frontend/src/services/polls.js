@@ -7,15 +7,16 @@ export class Polls {
   }
 
   start(kwargs) {
-    let poolServer = () => {
+    this.stop(kwargs.poll);
+
+    const poolServer = () => {
       this._polls[kwargs.poll] = kwargs;
 
       this._ajax.get(kwargs.url, kwargs.data || null).then((data) => {
         if (!this._polls[kwargs.poll]._stopped) {
           kwargs.update(data);
 
-          this._polls[kwargs.poll].timeout = window.setTimeout(
-            poolServer, kwargs.frequency);
+          this._polls[kwargs.poll].timeout = window.setTimeout(poolServer, kwargs.frequency);
         }
       }, (rejection) => {
         if (!this._polls[kwargs.poll]._stopped) {
@@ -28,7 +29,13 @@ export class Polls {
       });
     };
 
-    poolServer();
+    if (kwargs.delayed) {
+      this._polls[kwargs.poll] = {
+        timeout: window.setTimeout(poolServer, kwargs.frequency)
+      };
+    } else {
+      poolServer();
+    }
   }
 
   stop(pollId) {
