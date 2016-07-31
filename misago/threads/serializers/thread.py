@@ -85,6 +85,9 @@ class ThreadSerializer(serializers.ModelSerializer):
     def get_api(self, obj):
         return {
             'index': obj.get_api_url(),
+            'posts': reverse('misago:api:thread-post-list', kwargs={
+                'thread_pk': obj.pk
+            }),
             'read': 'nada',
         }
 
