@@ -1,0 +1,13 @@
+{% load i18n %}
+{% if post.is_hidden %}
+  <div class="post-status-message post-status-hidden">
+    <span class="material-icon">visibility_off</span>
+    <p>{% trans "This post is hidden. Only users with permission may see its contents." %}</p>
+  </div>
+{% endif %}
+{% if post.is_unapproved %}
+  <div class="post-status-message post-status-unapproved">
+    <span class="material-icon">remove_circle_outline</span>
+    <p>{% trans "This post is unapproved. Only users with permission to approve posts and its author may see its contents." %}</p>
+  </div>
+{% endif %}

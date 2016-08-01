@@ -1,0 +1,25 @@
+{% load i18n %}
+{% if post.acl.can_reply or post.acl.can_edit or post.acl.can_see_likes or post.acl.can_like %}
+  <div class="panel-footer post-footer">
+    {% if post.acl.can_see_likes %}
+      <button type="button" class="btn btn-likes pull-left" disabled="disabled">
+        Likes
+      </button>
+    {% endif %}
+    {% if post.acl.can_like %}
+      <button type="button" class="btn btn-like pull-left" disabled="disabled">
+        {% trans "Like" %}
+      </button>
+    {% endif %}
+    {% if post.acl.can_reply %}
+      <button type="button" class="btn btn-reply pull-right" disabled="disabled">
+        {% trans "Reply" %}
+      </button>
+    {% endif %}
+    {% if post.acl.can_edit %}
+      <button type="button" class="btn btn-edit pull-right" disabled="disabled">
+        {% trans "Edit" %}
+      </button>
+    {% endif %}
+  </div>
+{% endif %}

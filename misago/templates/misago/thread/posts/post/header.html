@@ -1,0 +1,38 @@
+{% load i18n %}
+<div class="panel-heading post-heading">
+  {% if post.poster %}
+    <a class="item-title" href="{{ post.poster.get_absolute_url }}">{{ post.poster.username }}</a>
+  {% else %}
+    <strong class="item-title">{{ post.poster_name }}</strong>
+  {% endif %}
+
+  {% if post.poster %}
+    {% if not post.poster.rank.is_default %}
+      {% if post.poster.rank.is_tab %}
+        <a href="{% url 'misago:users-rank' slug=post.poster.rank.slug %}" class="label label-{{ post.poster.rank.css_class|default:'default' }}">
+          {{ post.poster.short_title }}
+        </a>
+      {% else %}
+        <span class="label label-{{ post.poster.rank.css_class|default:'default' }}">
+          {{ post.poster.short_title }}
+        </span>
+      {% endif %}
+    {% endif %}
+  {% else %}
+    <span class="rank-name item-title">
+      {% trans "Unregistered" %}
+    </span>
+  {% endif %}
+
+  <a href="{{ post.get_absolute_url }}" class="posted-on">
+    {% blocktrans trimmed with posted_on=post.posted_on|date:'DATETIME_FORMAT' %}
+      posted on {{ posted_on }}
+    {% endblocktrans %}
+  </a>
+
+  {% if not post.is_read %}
+    <span class="label label-success pull-right">
+      {% trans "New" %}
+    </span>
+  {% endif %}
+</div>
