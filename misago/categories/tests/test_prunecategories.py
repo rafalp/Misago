@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.six import StringIO
+from django.utils.six.moves import range
 
 from misago.threads import testutils
 
@@ -21,12 +22,12 @@ class PruneCategoriesTests(TestCase):
         # post old threads with recent replies
         started_on = timezone.now() - timedelta(days=30)
         posted_on = timezone.now()
-        for t in xrange(10):
+        for t in range(10):
             thread = testutils.post_thread(category, started_on=started_on)
             testutils.reply_thread(thread, posted_on=posted_on)
 
         # post recent threads that will be preserved
-        threads = [testutils.post_thread(category) for t in xrange(10)]
+        threads = [testutils.post_thread(category) for t in range(10)]
 
         category.synchronize()
         self.assertEqual(category.threads, 20)
@@ -57,12 +58,12 @@ class PruneCategoriesTests(TestCase):
 
         # post old threads with recent replies
         started_on = timezone.now() - timedelta(days=30)
-        for t in xrange(10):
+        for t in range(10):
             thread = testutils.post_thread(category, started_on=started_on)
             testutils.reply_thread(thread)
 
         # post recent threads that will be preserved
-        threads = [testutils.post_thread(category) for t in xrange(10)]
+        threads = [testutils.post_thread(category) for t in range(10)]
 
         category.synchronize()
         self.assertEqual(category.threads, 20)
@@ -103,12 +104,12 @@ class PruneCategoriesTests(TestCase):
         # post old threads with recent replies
         started_on = timezone.now() - timedelta(days=30)
         posted_on = timezone.now()
-        for t in xrange(10):
+        for t in range(10):
             thread = testutils.post_thread(category, started_on=started_on)
             testutils.reply_thread(thread, posted_on=posted_on)
 
         # post recent threads that will be preserved
-        threads = [testutils.post_thread(category) for t in xrange(10)]
+        threads = [testutils.post_thread(category) for t in range(10)]
 
         category.synchronize()
         self.assertEqual(category.threads, 20)
@@ -152,12 +153,12 @@ class PruneCategoriesTests(TestCase):
 
         # post old threads with recent replies
         started_on = timezone.now() - timedelta(days=30)
-        for t in xrange(10):
+        for t in range(10):
             thread = testutils.post_thread(category, started_on=started_on)
             testutils.reply_thread(thread)
 
         # post recent threads that will be preserved
-        threads = [testutils.post_thread(category) for t in xrange(10)]
+        threads = [testutils.post_thread(category) for t in range(10)]
 
         category.synchronize()
         self.assertEqual(category.threads, 20)

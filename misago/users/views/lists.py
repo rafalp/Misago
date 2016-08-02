@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render as django_render
 from django.shortcuts import redirect
 
+import six
+
 from misago.core.shortcuts import get_object_or_404, paginate, pagination_dict
 from misago.core.utils import format_plaintext_for_html
 
@@ -22,7 +24,7 @@ def render(request, template, context):
     for page in context['pages']:
         page['reversed_link'] = reverse(page['link'])
         request.frontend_context['USERS_LISTS'].append({
-            'name': unicode(page['name']),
+            'name': six.text_type(page['name']),
             'component': page['component'],
         })
 

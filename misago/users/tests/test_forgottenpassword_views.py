@@ -37,8 +37,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
                 'pk': test_user.pk,
                 'token': password_token,
             }))
-        self.assertEqual(response.status_code, 403)
-        self.assertIn('<p>Nope!</p>', response.content)
+        self.assertContains(response, '<p>Nope!</p>', status_code=403)
 
     def test_change_password_on_other_user(self):
         """change other user password errors"""
@@ -54,8 +53,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
                 'pk': test_user.pk,
                 'token': password_token,
             }))
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('your link has expired', response.content)
+        self.assertContains(response, 'your link has expired', status_code=400)
 
     def test_change_password_invalid_token(self):
         """invalid form token errors"""
@@ -69,8 +67,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
                 'pk': test_user.pk,
                 'token': 'abcdfghqsads',
             }))
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('your link is invalid', response.content)
+        self.assertContains(response, 'your link is invalid', status_code=400)
 
     def test_change_password_form(self):
         """change user password form displays for valid token"""
@@ -84,5 +81,4 @@ class ForgottenPasswordViewsTests(UserTestCase):
                 'pk': test_user.pk,
                 'token': password_token,
             }))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(password_token, response.content)
+        self.assertContains(response, password_token)

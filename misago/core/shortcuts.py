@@ -3,6 +3,8 @@ from collections import OrderedDict
 from django.http import Http404
 from django.shortcuts import *  # noqa
 
+import six
+
 
 def paginate(object_list, page, per_page, orphans=0,
              allow_empty_first_page=True,
@@ -75,7 +77,7 @@ def validate_slug(model, slug):
 
 
 def get_int_or_404(value):
-    if unicode(value).isdigit():
+    if six.text_type(value).isdigit():
         return int(value)
     else:
         raise Http404()

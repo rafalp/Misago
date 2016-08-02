@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.utils import six
 
 from misago.categories.models import Category
 
@@ -75,7 +76,7 @@ class TreesMapTests(TestCase):
             trees_map.get_type_for_tree_id(tree_id + 1000)
             self.fail("invalid tree id should cause KeyError being raised")
         except KeyError as e:
-            self.assertIn("tree id has no type defined", unicode(e), "invalid exception message as given")
+            self.assertIn("tree id has no type defined", six.text_type(e), "invalid exception message as given")
 
     def test_get_tree_id_for_root(self):
         """TreesMap().get_tree_id_for_root() returns tree id for valid type name"""
@@ -91,4 +92,4 @@ class TreesMapTests(TestCase):
             trees_map.get_tree_id_for_root('hurr_durr')
             self.fail("invalid root name should cause KeyError being raised")
         except KeyError as e:
-            self.assertIn('"hurr_durr" root has no tree defined', unicode(e), "invalid exception message as given")
+            self.assertIn('"hurr_durr" root has no tree defined', six.text_type(e), "invalid exception message as given")

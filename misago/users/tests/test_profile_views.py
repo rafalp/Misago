@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
+from django.utils.six.moves import range
 
 from misago.acl.testutils import override_acl
 
@@ -29,7 +30,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
                                            kwargs=self.link_kwargs))
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('no messages posted', response.content)
+        self.assertContains(response, 'no messages posted')
 
     def test_user_threads_list(self):
         """user profile threads list has no showstoppers"""
@@ -37,7 +38,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
                                            kwargs=self.link_kwargs))
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('no started threads', response.content)
+        self.assertContains(response, 'no started threads')
 
     def test_user_followers(self):
         """user profile followers list has no showstoppers"""
@@ -47,10 +48,10 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
                                            kwargs=self.link_kwargs))
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('You have no followers.', response.content)
+        self.assertContains(response, 'You have no followers.')
 
         followers = []
-        for i in xrange(10):
+        for i in range(10):
             user_data = ("Follower%s" % i, "foll%s@test.com" % i, "Pass.123")
             followers.append(User.objects.create_user(*user_data))
             self.user.followed_by.add(followers[-1])
@@ -58,8 +59,8 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         response = self.client.get(reverse('misago:user-followers',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
-        for i in xrange(10):
-            self.assertIn("Follower%s" % i, response.content)
+        for i in range(10):
+            self.assertContains(response, "Follower%s" % i)
 
     def test_user_follows(self):
         """user profile follows list has no showstoppers"""
@@ -69,10 +70,10 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
                                            kwargs=self.link_kwargs))
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('You are not following any users.', response.content)
+        self.assertContains(response, 'You are not following any users.')
 
         followers = []
-        for i in xrange(10):
+        for i in range(10):
             user_data = ("Follower%s" % i, "foll%s@test.com" % i, "Pass.123")
             followers.append(User.objects.create_user(*user_data))
             followers[-1].followed_by.add(self.user)
@@ -80,15 +81,15 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         response = self.client.get(reverse('misago:user-follows',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
-        for i in xrange(10):
-            self.assertIn("Follower%s" % i, response.content)
+        for i in range(10):
+            self.assertContains(response, "Follower%s" % i)
 
     def test_username_history_list(self):
         """user name changes history list has no showstoppers"""
         response = self.client.get(reverse('misago:username-history',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Your username was never changed.', response.content)
+        self.assertContains(response, 'Your username was never changed.')
 
         self.user.set_username('RenamedAdmin')
         self.user.save()
@@ -98,8 +99,8 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         response = self.client.get(reverse('misago:username-history',
                                            kwargs=self.link_kwargs))
         self.assertEqual(response.status_code, 200)
-        self.assertIn("TestUser", response.content)
-        self.assertIn("RenamedAdmin", response.content)
+        self.assertContains(response, "TestUser")
+        self.assertContains(response, "RenamedAdmin")
 
     def test_user_ban_details(self):
         """user ban details page has no showstoppers"""
@@ -136,5 +137,5 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         response = self.client.get(reverse('misago:user-ban',
                                            kwargs=link_kwargs))
         self.assertEqual(response.status_code, 200)
-        self.assertIn('User m3ss4ge', response.content)
-        self.assertIn('Staff m3ss4ge', response.content)
+        self.assertContains(response, 'User m3ss4ge')
+        self.assertContains(response, 'Staff m3ss4ge')

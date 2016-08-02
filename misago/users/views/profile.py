@@ -7,6 +7,7 @@ from django.db.transaction import atomic
 from django.http import Http404, JsonResponse
 from django.shortcuts import render as django_render
 from django.shortcuts import redirect
+from django.utils import six
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
@@ -62,7 +63,7 @@ def render(request, template, context):
 
     for section in context['sections']:
         request.frontend_context['PROFILE_PAGES'].append({
-            'name': unicode(section['name']),
+            'name': six.text_type(section['name']),
             'icon': section['icon'],
             'meta': section.get('metadata'),
             'component': section['component'],

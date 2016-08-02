@@ -1,6 +1,7 @@
 from datetime import date, datetime, timedelta
 
 from django.core.urlresolvers import reverse
+from django.utils.six.moves import range
 
 from misago.admin.testutils import AdminTestCase
 
@@ -14,8 +15,7 @@ class BanAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:accounts:index'))
 
         response = self.client.get(response['location'])
-        self.assertIn(reverse('misago:admin:users:bans:index'),
-                      response.content)
+        self.assertContains(response, reverse('misago:admin:users:bans:index'))
 
     def test_list_view(self):
         """bans list view returns 200"""
@@ -29,7 +29,7 @@ class BanAdminViewsTests(AdminTestCase):
         """adminview deletes multiple bans"""
         test_date = datetime.now() + timedelta(days=180)
 
-        for i in xrange(10):
+        for i in range(10):
             response = self.client.post(
                 reverse('misago:admin:users:bans:new'),
                 data={
@@ -75,7 +75,7 @@ class BanAdminViewsTests(AdminTestCase):
         response = self.client.get(reverse('misago:admin:users:bans:index'))
         response = self.client.get(response['location'])
         self.assertEqual(response.status_code, 200)
-        self.assertIn('test@test.com', response.content)
+        self.assertContains(response, 'test@test.com')
 
     def test_edit_view(self):
         """edit ban view has no showstoppers"""
@@ -101,7 +101,7 @@ class BanAdminViewsTests(AdminTestCase):
         response = self.client.get(reverse('misago:admin:users:bans:index'))
         response = self.client.get(response['location'])
         self.assertEqual(response.status_code, 200)
-        self.assertIn('test@test.com', response.content)
+        self.assertContains(response, 'test@test.com')
 
     def test_delete_view(self):
         """delete ban view has no showstoppers"""
@@ -125,4 +125,4 @@ class BanAdminViewsTests(AdminTestCase):
         response = self.client.get(response['location'])
 
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(test_ban.banned_value not in response.content)
+        self.assertNotContains(response, test_ban.banned_value)

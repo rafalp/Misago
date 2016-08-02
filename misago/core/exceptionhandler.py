@@ -1,6 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponsePermanentRedirect, JsonResponse
+from django.utils import six
 from django.utils.translation import gettext as _
 
 from rest_framework.views import exception_handler as rest_exception_handler
@@ -18,7 +19,7 @@ def is_misago_exception(exception):
 
 
 def handle_ajax_error(request, exception):
-    json = {'is_error': 1, 'message': unicode(exception.message)}
+    json = {'is_error': 1, 'message': six.text_type(exception.message)}
     return JsonResponse(json, status=exception.code)
 
 

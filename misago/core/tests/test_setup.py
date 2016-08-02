@@ -1,5 +1,6 @@
 import os
 
+from django.utils.encoding import smart_str
 from django.test import TestCase
 
 from .. import setup
@@ -36,5 +37,5 @@ class SetupTests(TestCase):
             os.path.dirname(os.path.dirname(__file__)))
         test_project_path = os.path.join(misago_path, 'project_template')
 
-        self.assertEqual(unicode(setup.get_misago_project_template()),
-                         unicode(test_project_path))
+        self.assertEqual(smart_str(setup.get_misago_project_template()),
+                         smart_str(test_project_path))

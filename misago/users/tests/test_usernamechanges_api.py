@@ -18,7 +18,7 @@ class UsernameChangesApiTests(AuthenticatedUserTestCase):
 
         response = self.client.get('%s?user=%s' % (self.link, self.user.pk))
         self.assertEqual(response.status_code, 200)
-        self.assertIn(self.user.username, response.content)
+        self.assertContains(response, self.user.username)
 
     def test_list_handles_invalid_filter(self):
         """list raises 404 for invalid filter"""
@@ -48,13 +48,13 @@ class UsernameChangesApiTests(AuthenticatedUserTestCase):
             '%s?user=%s&search=new' % (self.link, self.user.pk))
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn(self.user.username, response.content)
+        self.assertContains(response, self.user.username)
 
         response = self.client.get(
             '%s?user=%s&search=usernew' % (self.link, self.user.pk))
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('[]', response.content)
+        self.assertContains(response, '[]')
 
     def test_list_denies_permission(self):
         """list denies permission for other user (or all) if no access"""
@@ -62,9 +62,7 @@ class UsernameChangesApiTests(AuthenticatedUserTestCase):
 
         response = self.client.get(
             '%s?user=%s' % (self.link, self.user.pk + 1))
-        self.assertEqual(response.status_code, 403)
-        self.assertIn("don't have permission to", response.content)
+        self.assertContains(response, "don't have permission to", status_code=403)
 
         response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertIn("don't have permission to", response.content)
+        self.assertContains(response, "don't have permission to", status_code=403)

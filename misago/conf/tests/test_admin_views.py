@@ -10,7 +10,7 @@ class AdminSettingsViewsTests(AdminTestCase):
         """admin index view contains settings link"""
         response = self.client.get(reverse('misago:admin:index'))
 
-        self.assertIn(reverse('misago:admin:settings:index'), response.content)
+        self.assertContains(response, reverse('misago:admin:settings:index'))
 
     def test_groups_list_view(self):
         """settings group view returns 200 and contains all settings groups"""
@@ -21,8 +21,8 @@ class AdminSettingsViewsTests(AdminTestCase):
             group_link = reverse('misago:admin:settings:group', kwargs={
                 'key': group.key
             })
-            self.assertIn(group.name, response.content)
-            self.assertIn(group_link, response.content)
+            self.assertContains(response, group.name)
+            self.assertContains(response, group_link)
 
     def test_groups_views(self):
         """
@@ -35,12 +35,12 @@ class AdminSettingsViewsTests(AdminTestCase):
             response = self.client.get(group_link)
 
             self.assertEqual(response.status_code, 200)
-            self.assertIn(group.name, response.content)
+            self.assertContains(response, group.name)
 
             values = {}
             for setting in group.setting_set.all():
                 values[setting.setting] = setting.value
-                self.assertIn(setting.name, response.content)
+                self.assertContains(response, setting.name)
 
             response = self.client.post(group_link, data=values)
             self.assertEqual(response.status_code, 302)

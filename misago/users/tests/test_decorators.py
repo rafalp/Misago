@@ -51,5 +51,4 @@ class DenyBannedIPTests(UserTestCase):
             user_message='Ya got banned!')
 
         response = self.client.post(reverse('misago:request-activation'))
-        self.assertEqual(response.status_code, 403)
-        self.assertIn('<p>Ya got banned!</p>', response.content)
+        self.assertContains(response, '<p>Ya got banned!</p>', status_code=403)

@@ -43,8 +43,8 @@ class PrivacyPolicyTests(TestCase):
 
         response = self.client.get(reverse('misago:privacy-policy'))
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Test Policy', response.content)
-        self.assertIn('Lorem ipsum dolor', response.content)
+        self.assertContains(response, 'Test Policy')
+        self.assertContains(response, 'Lorem ipsum dolor')
 
     def test_context_processor_no_policy(self):
         """context processor has no TOS link"""
@@ -110,8 +110,8 @@ class TermsOfServiceTests(TestCase):
 
         response = self.client.get(reverse('misago:terms-of-service'))
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Test ToS', response.content)
-        self.assertIn('Lorem ipsum dolor', response.content)
+        self.assertContains(response, 'Test ToS')
+        self.assertContains(response, 'Lorem ipsum dolor')
 
     def test_context_processor_no_tos(self):
         """context processor has no TOS link"""

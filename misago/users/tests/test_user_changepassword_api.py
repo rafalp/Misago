@@ -39,8 +39,7 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
             'new_password': 'N3wP@55w0rd',
             'password': 'Lor3mIpsum'
         })
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('password is invalid', response.content)
+        self.assertContains(response, 'password is invalid', status_code=400)
 
     def test_invalid_input(self):
         """api errors correctly for invalid input"""
@@ -48,13 +47,10 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
             'new_password': '',
             'password': self.USER_PASSWORD
         })
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('new_password":["This field is required',
-                      response.content)
+        self.assertContains(response, 'new_password":["This field is required', status_code=400)
 
         response = self.client.post(self.link, data={
             'new_password': 'n',
             'password': self.USER_PASSWORD
         })
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('password must be', response.content)
+        self.assertContains(response, 'password must be', status_code=400)

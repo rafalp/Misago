@@ -1,6 +1,8 @@
 import os
 from hashlib import md5
 
+from django.utils.encoding import force_bytes
+
 from path import Path
 from PIL import Image
 
@@ -60,8 +62,8 @@ def get_user_avatar_tokens(user):
     token_seeds = (user.email, user.avatar_hash, settings.SECRET_KEY)
 
     tokens = {
-        'org': md5('org:%s:%s:%s' % token_seeds).hexdigest()[:8],
-        'tmp': md5('tmp:%s:%s:%s' % token_seeds).hexdigest()[:8],
+        'org': md5(force_bytes('org:%s:%s:%s' % token_seeds)).hexdigest()[:8],
+        'tmp': md5(force_bytes('tmp:%s:%s:%s' % token_seeds)).hexdigest()[:8],
     }
 
     tokens.update({
@@ -112,7 +114,7 @@ def get_avatars_dir_path(user=None):
         except AttributeError:
             user_pk = user
 
-        dir_hash = md5(str(user_pk)).hexdigest()
+        dir_hash = md5(str(user_pk).encode()).hexdigest()
         hash_path = [dir_hash[0:1], dir_hash[2:3]]
         return Path(os.path.join(AVATARS_STORE, *hash_path))
     else:

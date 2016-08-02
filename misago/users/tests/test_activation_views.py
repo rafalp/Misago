@@ -29,8 +29,7 @@ class ActivationViewsTests(TestCase):
             'pk': test_user.pk,
             'token': activation_token,
         }))
-        self.assertEqual(response.status_code, 403)
-        self.assertIn("<p>Nope!</p>", response.content)
+        self.assertContains(response, "<p>Nope!</p>", status_code=403)
 
         test_user = User.objects.get(pk=test_user.pk)
         self.assertEqual(test_user.requires_activation, 1)
@@ -81,7 +80,7 @@ class ActivationViewsTests(TestCase):
             'token': activation_token,
         }))
         self.assertEqual(response.status_code, 200)
-        self.assertIn("your account has been activated!", response.content)
+        self.assertContains(response, "your account has been activated!")
 
         test_user = User.objects.get(pk=test_user.pk)
         self.assertEqual(test_user.requires_activation, 0)

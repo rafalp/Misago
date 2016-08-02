@@ -2,6 +2,7 @@ import random
 import sys
 import time
 
+from django.utils.six.moves import range
 from faker import Factory
 
 from django.core.management.base import BaseCommand
@@ -46,7 +47,7 @@ class Command(BaseCommand):
         created_count = 0
         start_time = time.time()
         show_progress(self, created_count, fake_cats_to_create)
-        for i in xrange(fake_cats_to_create):
+        for i in range(fake_cats_to_create):
             parent = random.choice(categories)
 
             new_category = Category()

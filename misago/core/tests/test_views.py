@@ -5,15 +5,14 @@ from django.test import TestCase
 class MomentJSCatalogViewTests(TestCase):
     def test_moment_js_catalog_view_returns_200(self):
         """moment.js catalog view has no show-stoppers"""
-        with self.settings(LANGUAGE_CODE='en_us'):
+        with self.settings(LANGUAGE_CODE='en-us'):
             response = self.client.get('/moment-i18n.js')
             self.assertEqual(response.status_code, 200)
-            self.assertEqual(response.content, "")
+            self.assertEqual(response.content, b"")
 
-        with self.settings(LANGUAGE_CODE='pl_pl'):
+        with self.settings(LANGUAGE_CODE='pl-pl'):
             response = self.client.get('/moment-i18n.js')
-            self.assertEqual(response.status_code, 200)
-            self.assertIn(response.content, "// locale : polish (pl)")
+            self.assertContains(response, "// locale : polish (pl)")
 
 
 class PreloadJSDataViewTests(TestCase):

@@ -39,8 +39,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
             'new_email': 'new@email.com',
             'password': 'Lor3mIpsum'
         })
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('password is invalid', response.content)
+        self.assertContains(response, 'password is invalid', status_code=400)
 
     def test_invalid_input(self):
         """api errors correctly for invalid input"""
@@ -48,15 +47,13 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
             'new_email': '',
             'password': self.USER_PASSWORD
         })
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('new_email":["This field is required', response.content)
+        self.assertContains(response, 'new_email":["This field is required', status_code=400)
 
         response = self.client.post(self.link, data={
             'new_email': 'newmail',
             'password': self.USER_PASSWORD
         })
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('valid email address', response.content)
+        self.assertContains(response, 'valid email address', status_code=400)
 
     def test_email_taken(self):
         """api validates email usage"""
@@ -67,5 +64,4 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
             'new_email': 'new@email.com',
             'password': self.USER_PASSWORD
         })
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('not available', response.content)
+        self.assertContains(response, 'not available', status_code=400)

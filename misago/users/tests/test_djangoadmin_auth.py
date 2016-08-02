@@ -24,20 +24,20 @@ class DjangoAdminAuthTests(AdminTestCase):
 
         response = self.client.get(reverse('admin:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertIn(self.user.username, response.content)
+        self.assertContains(response, self.user.username)
 
     def test_logout(self):
         """its possible to sign out from django admin"""
         response = self.client.get(reverse('admin:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertIn(self.user.username, response.content)
+        self.assertContains(response, self.user.username)
 
         # assert there's no showstopper on signout page
         response = self.client.get(reverse('admin:logout'))
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(self.user.username, response.content)
+        self.assertNotContains(response, self.user.username)
 
         # user was signed out
         response = self.client.get(reverse('admin:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(self.user.username, response.content)
+        self.assertNotContains(response, self.user.username)

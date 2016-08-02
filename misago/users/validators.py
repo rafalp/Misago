@@ -7,6 +7,7 @@ import requests
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.validators import validate_email as validate_email_content
+from django.utils.encoding import force_str
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext
 
@@ -131,7 +132,7 @@ def _real_validate_with_sfs(ip, email):
     try:
         r = requests.get(SFS_API_URL % {'email': email, 'ip': ip},
                          timeout=3)
-        api_response = json.loads(r.content)
+        api_response = json.loads(force_str(r.content))
         ip_score = api_response.get('ip', {}).get('confidence', 0)
         email_score = api_response.get('email', {}).get('confidence', 0)
 

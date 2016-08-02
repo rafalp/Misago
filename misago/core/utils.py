@@ -9,9 +9,11 @@ from django.utils import html, timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
 
+import six
+
 
 def slugify(string):
-    string = unicode(string)
+    string = six.text_type(string)
     string = unidecode(string)
     return django_slugify(string.replace('_', ' ').strip())
 

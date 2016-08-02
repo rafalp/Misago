@@ -1,6 +1,8 @@
 import json
 
 from django.contrib.auth import get_user_model
+from django.utils.encoding import smart_str
+from django.utils.six.moves import range
 
 from misago.acl.testutils import override_acl
 from misago.conf import settings
@@ -21,7 +23,7 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
 
         self.assertIsNotNone(response_json['changes_left'])
         self.assertEqual(response_json['length_min'],
@@ -30,13 +32,13 @@ class UserUsernameTests(AuthenticatedUserTestCase):
                          settings.username_length_max)
         self.assertIsNone(response_json['next_on'])
 
-        for i in xrange(response_json['changes_left']):
+        for i in range(response_json['changes_left']):
             self.user.set_username('NewName%s' % i, self.user)
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json['changes_left'], 0)
         self.assertIsNotNone(response_json['next_on'])
 
@@ -45,28 +47,26 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(response.content)
-        for i in xrange(response_json['changes_left']):
+        response_json = json.loads(smart_str(response.content))
+        for i in range(response_json['changes_left']):
             self.user.set_username('NewName%s' % i, self.user)
 
         response = self.client.get(self.link)
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json['changes_left'], 0)
 
         response = self.client.post(self.link, data={
             'username': 'Pointless'
         })
 
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('change your username now', response.content)
+        self.assertContains(response, 'change your username now', status_code=400)
         self.assertTrue(self.user.username != 'Pointless')
 
     def test_change_username_no_input(self):
         """api returns error 400 if new username is empty"""
         response = self.client.post(self.link, data={})
 
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('Enter new username.', response.content)
+        self.assertContains(response, 'Enter new username.', status_code=400)
 
     def test_change_username_invalid_name(self):
         """api returns error 400 if new username is wrong"""
@@ -74,13 +74,12 @@ class UserUsernameTests(AuthenticatedUserTestCase):
             'username': '####'
         })
 
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('can only contain latin', response.content)
+        self.assertContains(response, 'can only contain latin', status_code=400)
 
     def test_change_username(self):
         """api changes username and records change"""
         response = self.client.get(self.link)
-        changes_left = json.loads(response.content)['changes_left']
+        changes_left = json.loads(smart_str(response.content))['changes_left']
 
         username = self.user.username
         new_username = 'NewUsernamu'
@@ -90,7 +89,7 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         })
 
         self.assertEqual(response.status_code, 200)
-        options = json.loads(response.content)['options']
+        options = json.loads(smart_str(response.content))['options']
         self.assertEqual(changes_left, options['changes_left'] + 1)
 
         self.reload_user()
@@ -120,16 +119,14 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         })
 
         response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertIn("can't rename users", response.content)
+        self.assertContains(response, "can't rename users", status_code=403)
 
         override_acl(self.user, {
             'can_rename_users': 0,
         })
 
         response = self.client.post(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertIn("can't rename users", response.content)
+        self.assertContains(response, "can't rename users", status_code=403)
 
     def test_moderate_username(self):
         """moderate username"""
@@ -140,7 +137,7 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
-        options = json.loads(response.content)
+        options = json.loads(smart_str(response.content))
         self.assertEqual(options['length_min'],
                          settings.username_length_min)
         self.assertEqual(options['length_max'],
@@ -155,8 +152,7 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
             }),
             content_type="application/json")
 
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("Enter new username", response.content)
+        self.assertContains(response, "Enter new username", status_code=400)
 
         override_acl(self.user, {
             'can_rename_users': 1,
@@ -167,10 +163,9 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
             }),
             content_type="application/json")
 
-        self.assertEqual(response.status_code, 400)
-        self.assertIn(
+        self.assertContains(response,
             "Username can only contain latin alphabet letters and digits.",
-            response.content)
+            status_code=400)
 
         override_acl(self.user, {
             'can_rename_users': 1,
@@ -182,8 +177,9 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
             content_type="application/json")
 
         self.assertEqual(response.status_code, 400)
-        self.assertIn(
-            "Username must be at least 3 characters long.", response.content)
+        self.assertContains(response,
+            "Username must be at least 3 characters long.",
+            status_code=400)
 
         override_acl(self.user, {
             'can_rename_users': 1,
@@ -202,7 +198,7 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         self.assertEqual('BobBoberson', other_user.username)
         self.assertEqual('bobboberson', other_user.slug)
 
-        options = json.loads(response.content)
+        options = json.loads(smart_str(response.content))
         self.assertEqual(options['username'], other_user.username)
         self.assertEqual(options['slug'], other_user.slug)
 

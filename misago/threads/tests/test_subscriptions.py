@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
+from django.utils.six.moves import range
 
 from misago.categories.models import Category
 from misago.users.models import AnonymousUser
@@ -34,7 +35,7 @@ class SubscriptionsTests(TestCase):
     def test_anon_threads_subscription(self):
         """make multiple threads list sub aware for anon"""
         threads = []
-        for i in xrange(10):
+        for i in range(10):
             threads.append(
                 self.post_thread(timezone.now() - timedelta(days=10)))
 
@@ -51,7 +52,7 @@ class SubscriptionsTests(TestCase):
     def test_threads_no_subscription(self):
         """make mulitple threads sub aware for authenticated"""
         threads = []
-        for i in xrange(10):
+        for i in range(10):
             threads.append(
                 self.post_thread(timezone.now() - timedelta(days=10)))
 
@@ -76,7 +77,7 @@ class SubscriptionsTests(TestCase):
     def test_threads_no_subscription(self):
         """make mulitple threads sub aware for authenticated"""
         threads = []
-        for i in xrange(10):
+        for i in range(10):
             threads.append(
                 self.post_thread(timezone.now() - timedelta(days=10)))
 
@@ -99,7 +100,7 @@ class SubscriptionsTests(TestCase):
 
         make_subscription_aware(self.user, threads)
 
-        for i in xrange(10):
+        for i in range(10):
             if i % 3 == 0:
                 self.assertFalse(threads[i].subscription.send_email)
             elif i % 2 == 0:

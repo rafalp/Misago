@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
+from django.utils.six.moves import range
 
 from misago.acl.testutils import override_acl
 
@@ -43,7 +44,7 @@ class ActivePostersTests(UsersListTestCase):
 
         # Create 200 test users and see if errors appeared
         User = get_user_model()
-        for i in xrange(200):
+        for i in range(200):
             User.objects.create_user(
                 'Bob%s' % i, 'm%s@te.com' % i, 'Pass.123', posts=12345)
 

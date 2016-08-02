@@ -416,7 +416,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             else:
                 roles_pks.append('%s:%s' % (self.rank.pk, role.pk))
 
-        self.acl_key = md5(','.join(roles_pks)).hexdigest()[:12]
+        self.acl_key = md5(','.join(roles_pks).encode()).hexdigest()[:12]
 
     def email_user(self, subject, message, from_email=None, **kwargs):
         """

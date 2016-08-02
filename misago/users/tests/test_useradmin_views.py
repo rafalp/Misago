@@ -3,6 +3,9 @@ import json
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.core.urlresolvers import reverse
+from django.utils import six
+from django.utils.six.moves import range
+from django.utils.encoding import smart_str
 
 from misago.acl.models import Role
 from misago.admin.testutils import AdminTestCase
@@ -17,8 +20,7 @@ class UserAdminViewsTests(AdminTestCase):
         """admin index view contains users link"""
         response = self.client.get(reverse('misago:admin:index'))
 
-        self.assertIn(reverse('misago:admin:users:accounts:index'),
-                      response.content)
+        self.assertContains(response, reverse('misago:admin:users:accounts:index'))
 
     def test_list_view(self):
         """users list view returns 200"""
@@ -28,7 +30,7 @@ class UserAdminViewsTests(AdminTestCase):
 
         response = self.client.get(response['location'])
         self.assertEqual(response.status_code, 200)
-        self.assertIn(self.user.username, response.content)
+        self.assertContains(response, self.user.username)
 
     def test_list_search(self):
         """users list is searchable"""
@@ -47,27 +49,27 @@ class UserAdminViewsTests(AdminTestCase):
         # Search both
         response = self.client.get(link_base + '&username=tyr')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(user_a.username, response.content)
-        self.assertIn(user_b.username, response.content)
+        self.assertContains(response, user_a.username)
+        self.assertContains(response, user_b.username)
 
         # Search tyrion
         response = self.client.get(link_base + '&username=tyrion')
         self.assertEqual(response.status_code, 200)
-        self.assertFalse(user_a.username in response.content)
-        self.assertIn(user_b.username, response.content)
+        self.assertNotContains(response, user_a.username)
+        self.assertContains(response, user_b.username)
 
         # Search tyrael
         response = self.client.get(link_base + '&email=t123@test.com')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(user_a.username, response.content)
-        self.assertFalse(user_b.username in response.content)
+        self.assertContains(response, user_a.username)
+        self.assertNotContains(response, user_b.username)
 
     def test_mass_activation(self):
         """users list activates multiple users"""
         User = get_user_model()
 
         user_pks = []
-        for i in xrange(10):
+        for i in range(10):
             test_user = User.objects.create_user(
                 'Bob%s' % i,
                 'bob%s@test.com' % i,
@@ -91,7 +93,7 @@ class UserAdminViewsTests(AdminTestCase):
         User = get_user_model()
 
         user_pks = []
-        for i in xrange(10):
+        for i in range(10):
             test_user = User.objects.create_user(
                 'Bob%s' % i,
                 'bob%s@test.com' % i,
@@ -124,7 +126,7 @@ class UserAdminViewsTests(AdminTestCase):
         User = get_user_model()
 
         user_pks = []
-        for i in xrange(10):
+        for i in range(10):
             test_user = User.objects.create_user(
                 'Bob%s' % i,
                 'bob%s@test.com' % i,
@@ -144,7 +146,7 @@ class UserAdminViewsTests(AdminTestCase):
         User = get_user_model()
 
         user_pks = []
-        for i in xrange(10):
+        for i in range(10):
             test_user = User.objects.create_user(
                 'Bob%s' % i,
                 'bob%s@test.com' % i,
@@ -171,8 +173,8 @@ class UserAdminViewsTests(AdminTestCase):
         response = self.client.post(reverse('misago:admin:users:accounts:new'),
             data={
                 'username': 'Bawww',
-                'rank': unicode(default_rank.pk),
-                'roles': unicode(authenticated_role.pk),
+                'rank': six.text_type(default_rank.pk),
+                'roles': six.text_type(authenticated_role.pk),
                 'email': 'reg@stered.com',
                 'new_password': 'pass123',
                 'staff_level': '0'
@@ -194,8 +196,8 @@ class UserAdminViewsTests(AdminTestCase):
 
         response = self.client.post(test_link, data={
             'username': 'Bawww',
-            'rank': unicode(test_user.rank_id),
-            'roles': unicode(test_user.roles.all()[0].pk),
+            'rank': six.text_type(test_user.rank_id),
+            'roles': six.text_type(test_user.roles.all()[0].pk),
             'email': 'reg@stered.com',
             'new_password': 'pass123',
             'staff_level': '0',
@@ -223,19 +225,19 @@ class UserAdminViewsTests(AdminTestCase):
                             kwargs={'pk': test_user.pk})
 
         category = Category.objects.all_categories()[:1][0]
-        [post_thread(category, poster=test_user) for i in xrange(10)]
+        [post_thread(category, poster=test_user) for i in range(10)]
 
         response = self.client.post(test_link, **self.ajax_header)
         self.assertEqual(response.status_code, 200)
 
-        response_dict = json.loads(response.content)
+        response_dict = json.loads(smart_str(response.content))
         self.assertEqual(response_dict['deleted_count'], 10)
         self.assertFalse(response_dict['is_completed'])
 
         response = self.client.post(test_link, **self.ajax_header)
         self.assertEqual(response.status_code, 200)
 
-        response_dict = json.loads(response.content)
+        response_dict = json.loads(smart_str(response.content))
         self.assertEqual(response_dict['deleted_count'], 0)
         self.assertTrue(response_dict['is_completed'])
 
@@ -248,19 +250,19 @@ class UserAdminViewsTests(AdminTestCase):
 
         category = Category.objects.all_categories()[:1][0]
         thread = post_thread(category)
-        [reply_thread(thread, poster=test_user) for i in xrange(10)]
+        [reply_thread(thread, poster=test_user) for i in range(10)]
 
         response = self.client.post(test_link, **self.ajax_header)
         self.assertEqual(response.status_code, 200)
 
-        response_dict = json.loads(response.content)
+        response_dict = json.loads(smart_str(response.content))
         self.assertEqual(response_dict['deleted_count'], 10)
         self.assertFalse(response_dict['is_completed'])
 
         response = self.client.post(test_link, **self.ajax_header)
         self.assertEqual(response.status_code, 200)
 
-        response_dict = json.loads(response.content)
+        response_dict = json.loads(smart_str(response.content))
         self.assertEqual(response_dict['deleted_count'], 0)
         self.assertTrue(response_dict['is_completed'])
 
@@ -274,5 +276,5 @@ class UserAdminViewsTests(AdminTestCase):
         response = self.client.post(test_link, **self.ajax_header)
         self.assertEqual(response.status_code, 200)
 
-        response_dict = json.loads(response.content)
+        response_dict = json.loads(smart_str(response.content))
         self.assertTrue(response_dict['is_completed'])
