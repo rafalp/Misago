@@ -3,6 +3,8 @@ from json import loads as json_loads
 
 from django.conf import settings
 from django.utils import timezone
+from django.utils.encoding import smart_str
+from django.utils.six.moves import range
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
@@ -173,21 +175,21 @@ class AllThreadsListTests(ThreadsListTestCase):
 
             response = self.client.get('/' + url)
             self.assertEqual(response.status_code, 200)
-            self.assertIn("empty-message", response.content)
+            self.assertContains(response, "empty-message")
 
             self.access_all_categories()
 
             response = self.client.get(self.category_b.get_absolute_url() + url)
             self.assertEqual(response.status_code, 200)
-            self.assertIn(self.category_b.name, response.content)
-            self.assertIn("empty-message", response.content)
+            self.assertContains(response, self.category_b.name)
+            self.assertContains(response, "empty-message")
 
             self.access_all_categories()
 
             response = self.client.get('%s?list=%s' % (self.api_link, url.strip('/') or 'all'))
             self.assertEqual(response.status_code, 200)
 
-            response_json = json_loads(response.content)
+            response_json = json_loads(smart_str(response.content))
             self.assertEqual(len(response_json['results']), 0)
 
     def test_list_authenticated_only_views(self):
@@ -202,7 +204,7 @@ class AllThreadsListTests(ThreadsListTestCase):
 
             response = self.client.get(self.category_b.get_absolute_url() + url)
             self.assertEqual(response.status_code, 200)
-            self.assertIn(self.category_b.name, response.content)
+            self.assertContains(response, self.category_b.name)
 
             self.access_all_categories()
 
@@ -249,22 +251,28 @@ class AllThreadsListTests(ThreadsListTestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
 
-        self.assertIn('subcategory-%s' % self.category_a.css_class, response.content)
+        self.assertContains(response,
+            'subcategory-%s' % self.category_a.css_class)
 
         # readable categories, but non-accessible directly
-        self.assertNotIn('subcategory-%s' % self.category_b.css_class, response.content)
-        self.assertNotIn('subcategory-%s' % self.category_c.css_class, response.content)
-        self.assertNotIn('subcategory-%s' % self.category_d.css_class, response.content)
-        self.assertNotIn('subcategory-%s' % self.category_f.css_class, response.content)
+        self.assertNotContains(response,
+            'subcategory-%s' % self.category_b.css_class)
+        self.assertNotContains(response,
+            'subcategory-%s' % self.category_c.css_class)
+        self.assertNotContains(response,
+            'subcategory-%s' % self.category_d.css_class)
+        self.assertNotContains(response,
+            'subcategory-%s' % self.category_f.css_class)
 
         # hidden category
-        self.assertNotIn('subcategory-%s' % test_category.css_class, response.content)
+        self.assertNotContains(response,
+            'subcategory-%s' % test_category.css_class)
 
         self.access_all_categories()
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertIn(self.category_a.pk, response_json['subcategories'])
         self.assertNotIn(self.category_b.pk, response_json['subcategories'])
 
@@ -274,18 +282,22 @@ class AllThreadsListTests(ThreadsListTestCase):
         response = self.client.get(self.category_a.get_absolute_url())
         self.assertEqual(response.status_code, 200)
 
-        self.assertIn('subcategory-%s' % self.category_b.css_class, response.content)
+        self.assertContains(response,
+            'subcategory-%s' % self.category_b.css_class)
 
         # readable categories, but non-accessible directly
-        self.assertNotIn('subcategory-%s' % self.category_c.css_class, response.content)
-        self.assertNotIn('subcategory-%s' % self.category_d.css_class, response.content)
-        self.assertNotIn('subcategory-%s' % self.category_f.css_class, response.content)
+        self.assertNotContains(response,
+            'subcategory-%s' % self.category_c.css_class)
+        self.assertNotContains(response,
+            'subcategory-%s' % self.category_d.css_class)
+        self.assertNotContains(response,
+            'subcategory-%s' % self.category_f.css_class)
 
         self.access_all_categories()
         response = self.client.get('%s?category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(
             response_json['subcategories'][0], self.category_b.pk)
 
@@ -311,10 +323,11 @@ class AllThreadsListTests(ThreadsListTestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
 
+        content = smart_str(response.content)
         positions = {
-            'g': response.content.find(globally.get_absolute_url()),
-            'l': response.content.find(locally.get_absolute_url()),
-            's': response.content.find(standard.get_absolute_url()),
+            'g': content.find(globally.get_absolute_url()),
+            'l': content.find(locally.get_absolute_url()),
+            's': content.find(standard.get_absolute_url()),
         }
 
         # global announcement before others
@@ -333,10 +346,11 @@ class AllThreadsListTests(ThreadsListTestCase):
         response = self.client.get('/api/threads/')
         self.assertEqual(response.status_code, 200)
 
+        content = smart_str(response.content)
         positions = {
-            'g': response.content.find(globally.get_absolute_url()),
-            'l': response.content.find(locally.get_absolute_url()),
-            's': response.content.find(standard.get_absolute_url()),
+            'g': content.find(globally.get_absolute_url()),
+            'l': content.find(locally.get_absolute_url()),
+            's': content.find(standard.get_absolute_url()),
         }
 
         # global announcement before others
@@ -354,7 +368,7 @@ class AllThreadsListTests(ThreadsListTestCase):
     def test_noscript_pagination(self):
         """threads list is paginated for users with js disabled"""
         threads = []
-        for i in xrange(settings.MISAGO_THREADS_PER_PAGE * 3):
+        for i in range(settings.MISAGO_THREADS_PER_PAGE * 3):
             threads.append(testutils.post_thread(
                 category=self.first_category
             ))
@@ -364,26 +378,26 @@ class AllThreadsListTests(ThreadsListTestCase):
         self.assertEqual(response.status_code, 200)
 
         for thread in threads[:settings.MISAGO_THREADS_PER_PAGE]:
-            self.assertNotIn(thread.get_absolute_url(), response.content)
+            self.assertNotContains(response, thread.get_absolute_url())
         for thread in threads[settings.MISAGO_THREADS_PER_PAGE:settings.MISAGO_THREADS_PER_PAGE * 2]:
-            self.assertIn(thread.get_absolute_url(), response.content)
+            self.assertContains(response, thread.get_absolute_url())
         for thread in threads[settings.MISAGO_THREADS_PER_PAGE * 2:]:
-            self.assertNotIn(thread.get_absolute_url(), response.content)
+            self.assertNotContains(response, thread.get_absolute_url())
 
-        self.assertNotIn('/?page=1', response.content)
-        self.assertIn('/?page=3', response.content)
+        self.assertNotContains(response, '/?page=1')
+        self.assertContains(response, '/?page=3')
 
         # third page renders
         response = self.client.get('/?page=3')
         self.assertEqual(response.status_code, 200)
 
         for thread in threads[settings.MISAGO_THREADS_PER_PAGE:]:
-            self.assertNotIn(thread.get_absolute_url(), response.content)
+            self.assertNotContains(response, thread.get_absolute_url())
         for thread in threads[:settings.MISAGO_THREADS_PER_PAGE]:
-            self.assertIn(thread.get_absolute_url(), response.content)
+            self.assertContains(response, thread.get_absolute_url())
 
-        self.assertIn('/?page=2', response.content)
-        self.assertNotIn('/?page=4', response.content)
+        self.assertContains(response, '/?page=2')
+        self.assertNotContains(response, '/?page=4')
 
         # excessive page gives 404
         response = self.client.get('/?page=4')
@@ -469,10 +483,11 @@ class CategoryThreadsListTests(ThreadsListTestCase):
         response = self.client.get(self.first_category.get_absolute_url())
         self.assertEqual(response.status_code, 200)
 
+        content = smart_str(response.content)
         positions = {
-            'g': response.content.find(globally.get_absolute_url()),
-            'l': response.content.find(locally.get_absolute_url()),
-            's': response.content.find(standard.get_absolute_url()),
+            'g': content.find(globally.get_absolute_url()),
+            'l': content.find(locally.get_absolute_url()),
+            's': content.find(standard.get_absolute_url()),
         }
 
         # global announcement before others
@@ -491,10 +506,11 @@ class CategoryThreadsListTests(ThreadsListTestCase):
         response = self.client.get('/api/threads/?category=%s' % self.first_category.pk)
         self.assertEqual(response.status_code, 200)
 
+        content = smart_str(response.content)
         positions = {
-            'g': response.content.find(globally.get_absolute_url()),
-            'l': response.content.find(locally.get_absolute_url()),
-            's': response.content.find(standard.get_absolute_url()),
+            'g': content.find(globally.get_absolute_url()),
+            'l': content.find(locally.get_absolute_url()),
+            's': content.find(standard.get_absolute_url()),
         }
 
         # global announcement before others
@@ -520,19 +536,23 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
 
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
 
-        self.assertIn('subcategory-%s' % self.category_a.css_class, response.content)
-        self.assertIn('subcategory-%s' % self.category_e.css_class, response.content)
-        self.assertIn('thread-category-%s' % self.category_a.css_class, response.content)
-        self.assertIn('thread-category-%s' % self.category_c.css_class, response.content)
+        self.assertContains(response,
+            'subcategory-%s' % self.category_a.css_class)
+        self.assertContains(response,
+            'subcategory-%s' % self.category_e.css_class)            
+        self.assertContains(response,
+            'thread-category-%s' % self.category_a.css_class)
+        self.assertContains(response,
+            'thread-category-%s' % self.category_c.css_class)
 
         # api displays same data
         self.access_all_categories()
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
         self.assertEqual(len(response_json['subcategories']), 3)
         self.assertIn(self.category_a.pk, response_json['subcategories'])
@@ -543,17 +563,19 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         self.assertEqual(response.status_code, 200)
 
         # thread displays
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
 
-        self.assertNotIn('thread-category-%s' % self.category_b.css_class, response.content)
-        self.assertIn('thread-category-%s' % self.category_c.css_class, response.content)
+        self.assertNotContains(response,
+            'thread-category-%s' % self.category_b.css_class)
+        self.assertContains(response,
+            'thread-category-%s' % self.category_c.css_class)
 
         # api displays same data
         self.access_all_categories()
         response = self.client.get('%s?category=%s' % (self.api_link, self.category_b.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
         self.assertEqual(len(response_json['subcategories']), 2)
         self.assertEqual(response_json['subcategories'][0], self.category_c.pk)
@@ -572,7 +594,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
 
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn("empty-message", response.content)
+        self.assertContains(response, "empty-message")
 
     def test_api_hides_hidden_thread(self):
         """api returns empty due to no permission to see thread"""
@@ -589,7 +611,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
     def test_list_user_see_own_unapproved_thread(self):
@@ -602,14 +624,14 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
 
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
     def test_list_user_cant_see_unapproved_thread(self):
@@ -621,14 +643,14 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
 
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
     def test_list_user_cant_see_hidden_thread(self):
@@ -640,14 +662,14 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
 
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
     def test_list_user_cant_see_own_hidden_thread(self):
@@ -660,14 +682,14 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
 
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
     def test_list_user_can_see_own_hidden_thread(self):
@@ -684,7 +706,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
 
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories({
@@ -694,7 +716,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
     def test_list_user_can_see_hidden_thread(self):
@@ -712,7 +734,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
 
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories({
@@ -722,7 +744,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
     def test_list_user_can_see_unapproved_thread(self):
@@ -740,7 +762,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
 
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories({
@@ -750,7 +772,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
 
@@ -761,26 +783,26 @@ class MyThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/my/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn("empty-message", response.content)
+        self.assertContains(response, "empty-message")
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'my/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn("empty-message", response.content)
+        self.assertContains(response, "empty-message")
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=my' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
         response = self.client.get('%s?list=my&category=%s' % (self.api_link, self.category_a.pk))
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
     def test_list_renders_test_thread(self):
@@ -798,22 +820,22 @@ class MyThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/my/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
-        self.assertNotIn(other_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
+        self.assertNotContains(response, other_thread.get_absolute_url())
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'my/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
-        self.assertNotIn(other_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
+        self.assertNotContains(response, other_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=my' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 1)
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
@@ -821,7 +843,7 @@ class MyThreadsListTests(ThreadsListTestCase):
         response = self.client.get('%s?list=my&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 1)
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
@@ -833,26 +855,26 @@ class NewThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/new/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn("empty-message", response.content)
+        self.assertContains(response, "empty-message")
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'new/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn("empty-message", response.content)
+        self.assertContains(response, "empty-message")
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=new' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
         response = self.client.get('%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
     def test_list_renders_new_thread(self):
@@ -865,20 +887,20 @@ class NewThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/new/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'new/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=new' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 1)
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
@@ -886,7 +908,7 @@ class NewThreadsListTests(ThreadsListTestCase):
         response = self.client.get('%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 1)
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
@@ -908,20 +930,20 @@ class NewThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/new/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'new/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=new' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 1)
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
@@ -929,7 +951,7 @@ class NewThreadsListTests(ThreadsListTestCase):
         response = self.client.get('%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 1)
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
@@ -949,27 +971,27 @@ class NewThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/new/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'new/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=new' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
         response = self.client.get('%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
     def test_list_hides_user_cutoff_thread(self):
@@ -986,27 +1008,27 @@ class NewThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/new/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'new/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=new' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
         response = self.client.get('%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
     def test_list_hides_user_read_thread(self):
@@ -1025,27 +1047,27 @@ class NewThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/new/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'new/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=new' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
         response = self.client.get('%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
     def test_list_hides_category_read_thread(self):
@@ -1066,27 +1088,27 @@ class NewThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/new/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'new/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=new' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
         response = self.client.get('%s?list=new&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
 
@@ -1097,27 +1119,27 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/unread/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn("empty-message", response.content)
+        self.assertContains(response, "empty-message")
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn("empty-message", response.content)
+        self.assertContains(response, "empty-message")
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=unread' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
         response = self.client.get('%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
     def test_list_renders_unread_thread(self):
@@ -1138,20 +1160,20 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/unread/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=unread' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 1)
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
@@ -1159,7 +1181,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         response = self.client.get('%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 1)
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
@@ -1176,27 +1198,27 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/unread/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=unread' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
         response = self.client.get('%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
     def test_list_hides_read_thread(self):
@@ -1215,27 +1237,27 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/unread/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=unread' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
         response = self.client.get('%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
     def test_list_hides_global_cutoff_thread(self):
@@ -1259,27 +1281,27 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/unread/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=unread' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
         response = self.client.get('%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
     def test_list_hides_user_cutoff_thread(self):
@@ -1301,27 +1323,27 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/unread/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=unread' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
         response = self.client.get('%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
     def test_list_hides_category_cutoff_thread(self):
@@ -1349,27 +1371,27 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/unread/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'unread/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=unread' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
         self.access_all_categories()
         response = self.client.get('%s?list=unread&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
 
 
@@ -1389,30 +1411,30 @@ class SubscribedThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/subscribed/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'subscribed/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=subscribed' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 1)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
 
         self.access_all_categories()
         response = self.client.get('%s?list=subscribed&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 1)
-        self.assertIn(test_thread.get_absolute_url(), response.content)
+        self.assertContains(response, test_thread.get_absolute_url())
 
     def test_list_hides_unsubscribed_thread(self):
         """list shows subscribed thread"""
@@ -1424,30 +1446,30 @@ class SubscribedThreadsListTests(ThreadsListTestCase):
 
         response = self.client.get('/subscribed/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         self.access_all_categories()
 
         response = self.client.get(self.category_a.get_absolute_url() + 'subscribed/')
         self.assertEqual(response.status_code, 200)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         # test api
         self.access_all_categories()
         response = self.client.get('%s?list=subscribed' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
         self.access_all_categories()
         response = self.client.get('%s?list=subscribed&category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
-        response_json = json_loads(response.content)
+        response_json = json_loads(smart_str(response.content))
         self.assertEqual(len(response_json['results']), 0)
-        self.assertNotIn(test_thread.get_absolute_url(), response.content)
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
 
 class UnapprovedListTests(ThreadsListTestCase):
@@ -1503,8 +1525,8 @@ class UnapprovedListTests(ThreadsListTestCase):
         })
         response = self.client.get('/unapproved/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(visible_thread.get_absolute_url(), response.content)
-        self.assertNotIn(hidden_thread.get_absolute_url(), response.content)
+        self.assertContains(response, visible_thread.get_absolute_url())
+        self.assertNotContains(response, hidden_thread.get_absolute_url())
 
         self.access_all_categories({
             'can_approve_content': True
@@ -1513,8 +1535,8 @@ class UnapprovedListTests(ThreadsListTestCase):
         })
         response = self.client.get(self.category_a.get_absolute_url() + 'unapproved/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(visible_thread.get_absolute_url(), response.content)
-        self.assertNotIn(hidden_thread.get_absolute_url(), response.content)
+        self.assertContains(response, visible_thread.get_absolute_url())
+        self.assertNotContains(response, hidden_thread.get_absolute_url())
 
         # test api
         self.access_all_categories({
@@ -1524,8 +1546,8 @@ class UnapprovedListTests(ThreadsListTestCase):
         })
         response = self.client.get('%s?list=unapproved' % self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(visible_thread.get_absolute_url(), response.content)
-        self.assertNotIn(hidden_thread.get_absolute_url(), response.content)
+        self.assertContains(response, visible_thread.get_absolute_url())
+        self.assertNotContains(response, hidden_thread.get_absolute_url())
 
     def test_list_shows_owned_threads_for_unapproving_user(self):
         """
@@ -1547,16 +1569,16 @@ class UnapprovedListTests(ThreadsListTestCase):
         })
         response = self.client.get('/unapproved/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(visible_thread.get_absolute_url(), response.content)
-        self.assertNotIn(hidden_thread.get_absolute_url(), response.content)
+        self.assertContains(response, visible_thread.get_absolute_url())
+        self.assertNotContains(response, hidden_thread.get_absolute_url())
 
         self.access_all_categories(base_acl={
             'can_see_unapproved_content_lists': True
         })
         response = self.client.get(self.category_a.get_absolute_url() + 'unapproved/')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(visible_thread.get_absolute_url(), response.content)
-        self.assertNotIn(hidden_thread.get_absolute_url(), response.content)
+        self.assertContains(response, visible_thread.get_absolute_url())
+        self.assertNotContains(response, hidden_thread.get_absolute_url())
 
         # test api
         self.access_all_categories(base_acl={
@@ -1564,5 +1586,5 @@ class UnapprovedListTests(ThreadsListTestCase):
         })
         response = self.client.get('%s?list=unapproved' % self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(visible_thread.get_absolute_url(), response.content)
-        self.assertNotIn(hidden_thread.get_absolute_url(), response.content)
+        self.assertContains(response, visible_thread.get_absolute_url())
+        self.assertNotContains(response, hidden_thread.get_absolute_url())

@@ -11,16 +11,14 @@ class CategoryAdminViewsTests(AdminTestCase):
         response = self.client.get(
             reverse('misago:admin:categories:nodes:index'))
 
-        self.assertIn(reverse('misago:admin:categories:nodes:index'),
-                      response.content)
+        self.assertContains(response, reverse('misago:admin:categories:nodes:index'))
 
     def test_list_view(self):
         """categories list view returns 200"""
         response = self.client.get(
             reverse('misago:admin:categories:nodes:index'))
 
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('First category', response.content)
+        self.assertContains(response, 'First category')
 
         # Now test that empty categories list contains message
         root = Category.objects.root_category()
@@ -31,7 +29,7 @@ class CategoryAdminViewsTests(AdminTestCase):
             reverse('misago:admin:categories:nodes:index'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('No categories', response.content)
+        self.assertContains(response, 'No categories')
 
     def test_new_view(self):
         """new category view has no showstoppers"""
@@ -54,8 +52,7 @@ class CategoryAdminViewsTests(AdminTestCase):
 
         response = self.client.get(
             reverse('misago:admin:categories:nodes:index'))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('Test Category', response.content)
+        self.assertContains(response, 'Test Category')
 
         test_category = Category.objects.get(slug='test-category')
 
@@ -72,8 +69,7 @@ class CategoryAdminViewsTests(AdminTestCase):
 
         response = self.client.get(
             reverse('misago:admin:categories:nodes:index'))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('Test Subcategory', response.content)
+        self.assertContains(response, 'Test Subcategory')
 
     def test_edit_view(self):
         """edit category view has no showstoppers"""
@@ -109,8 +105,7 @@ class CategoryAdminViewsTests(AdminTestCase):
                 'pk': test_category.pk
             }))
 
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('Test Category', response.content)
+        self.assertContains(response, 'Test Category')
 
         response = self.client.post(
             reverse('misago:admin:categories:nodes:edit', kwargs={
@@ -127,8 +122,7 @@ class CategoryAdminViewsTests(AdminTestCase):
 
         response = self.client.get(
             reverse('misago:admin:categories:nodes:index'))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('Test Category Edited', response.content)
+        self.assertContains(response, 'Test Category Edited')
 
     def test_move_views(self):
         """move up/down views have no showstoppers"""
@@ -161,8 +155,8 @@ class CategoryAdminViewsTests(AdminTestCase):
         response = self.client.get(
             reverse('misago:admin:categories:nodes:index'))
         self.assertEqual(response.status_code, 200)
-        position_a = response.content.find('Category A')
-        position_b = response.content.find('Category B')
+        position_a = response.content.find(b'Category A')
+        position_b = response.content.find(b'Category B')
         self.assertTrue(position_a > position_b)
 
         response = self.client.post(
@@ -175,8 +169,8 @@ class CategoryAdminViewsTests(AdminTestCase):
         response = self.client.get(
             reverse('misago:admin:categories:nodes:index'))
         self.assertEqual(response.status_code, 200)
-        position_a = response.content.find('Category A')
-        position_b = response.content.find('Category B')
+        position_a = response.content.find(b'Category A')
+        position_b = response.content.find(b'Category B')
         self.assertTrue(position_a > position_b)
 
         response = self.client.post(
@@ -189,8 +183,8 @@ class CategoryAdminViewsTests(AdminTestCase):
         response = self.client.get(
             reverse('misago:admin:categories:nodes:index'))
         self.assertEqual(response.status_code, 200)
-        position_a = response.content.find('Category A')
-        position_b = response.content.find('Category B')
+        position_a = response.content.find(b'Category A')
+        position_b = response.content.find(b'Category B')
         self.assertTrue(position_a > position_b)
 
         response = self.client.post(
@@ -203,8 +197,8 @@ class CategoryAdminViewsTests(AdminTestCase):
         response = self.client.get(
             reverse('misago:admin:categories:nodes:index'))
         self.assertEqual(response.status_code, 200)
-        position_a = response.content.find('Category A')
-        position_b = response.content.find('Category B')
+        position_a = response.content.find(b'Category A')
+        position_b = response.content.find(b'Category B')
         self.assertTrue(position_a < position_b)
 
 

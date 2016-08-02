@@ -1,4 +1,5 @@
 from misago.markup import checksums
+from django.utils import six
 
 
 def is_post_valid(post):
@@ -7,7 +8,7 @@ def is_post_valid(post):
 
 
 def make_post_checksum(post):
-    post_seeds = [unicode(v) for v in (post.id, post.poster_ip)]
+    post_seeds = [six.text_type(v) for v in (post.id, post.poster_ip)]
     return checksums.make_checksum(post.parsed, post_seeds)
 
 

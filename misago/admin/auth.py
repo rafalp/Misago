@@ -13,7 +13,7 @@ KEY_UPDATED = 'misago_admin_session_updated'
 
 def make_user_admin_token(user):
     formula = (str(user.pk), user.email, user.password, settings.SECRET_KEY)
-    return md5(':'.join(formula)).hexdigest()
+    return md5(':'.join(formula).encode()).hexdigest()
 
 
 # Admin session state controls

@@ -13,8 +13,8 @@ class ViewModel(object):
         map(lambda c: add_acl(request.user, c), self.categories)
 
         self.category = self.get_category(request, self.categories, **kwargs)
-        self.subcategories = filter(self.category.has_child, self.categories)
-        self.children = filter(lambda s: s.parent_id == self.category.pk, self.subcategories)
+        self.subcategories = list(filter(self.category.has_child, self.categories))
+        self.children = list(filter(lambda s: s.parent_id == self.category.pk, self.subcategories))
 
     def get_categories(self, request):
         raise NotImplementedError('Category view model has to implement get_categories(request)')

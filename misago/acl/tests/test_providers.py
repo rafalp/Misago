@@ -3,6 +3,7 @@ from types import ModuleType
 
 from django.conf import settings
 from django.test import TestCase
+from django.utils import six
 
 from ..providers import PermissionProviders
 
@@ -46,7 +47,7 @@ class PermissionProvidersTests(TestCase):
         self.assertEqual(len(providers_list), len(providers_setting))
 
         for extension, module in providers_list:
-            self.assertTrue(isinstance(extension, basestring))
+            self.assertTrue(isinstance(extension, six.string_types))
             self.assertEqual(type(module), ModuleType)
 
     def test_dict(self):
@@ -58,7 +59,7 @@ class PermissionProvidersTests(TestCase):
         self.assertEqual(len(providers_dict), len(providers_setting))
 
         for extension, module in providers_dict.items():
-            self.assertTrue(isinstance(extension, basestring))
+            self.assertTrue(isinstance(extension, six.string_types))
             self.assertEqual(type(module), ModuleType)
 
     def test_annotators(self):

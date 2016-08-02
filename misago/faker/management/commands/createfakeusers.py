@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import IntegrityError
+from django.utils.six.moves import range
 
 from misago.core.management.progressbar import show_progress
 from misago.users.avatars import dynamic, gallery, get_avatar_hash
@@ -39,7 +40,7 @@ class Command(BaseCommand):
         created_count = 0
         start_time = time.time()
         show_progress(self, created_count, fake_users_to_create)
-        for i in xrange(fake_users_to_create):
+        for i in range(fake_users_to_create):
             try:
                 kwargs = {
                     'rank': random.choice(ranks),

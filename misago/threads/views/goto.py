@@ -41,7 +41,7 @@ class GotoView(View):
             return 1 # no chance for post to be on other page than only page
 
         # compute total count of thread pages
-        thread_pages = thread_len / settings.MISAGO_POSTS_PER_PAGE
+        thread_pages = thread_len // settings.MISAGO_POSTS_PER_PAGE
         thread_tail = thread_len - thread_pages * settings.MISAGO_POSTS_PER_PAGE
         if thread_tail > settings.MISAGO_POSTS_TAIL:
             thread_pages += 1

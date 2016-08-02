@@ -8,6 +8,7 @@ from django.core.management.base import BaseCommand
 from django.db.transaction import atomic
 from django.template.defaultfilters import linebreaks_filter
 from django.utils import timezone
+from django.utils.six.moves import range
 
 from misago.categories.models import Category
 from misago.core.management.progressbar import show_progress
@@ -41,7 +42,7 @@ class Command(BaseCommand):
         created_threads = 0
         start_time = time.time()
         show_progress(self, created_threads, fake_threads_to_create)
-        for i in xrange(fake_threads_to_create):
+        for i in range(fake_threads_to_create):
             with atomic():
                 datetime = timezone.now()
                 category = random.choice(categories)
@@ -98,7 +99,7 @@ class Command(BaseCommand):
                 else:
                     thread_replies = random.randint(0, 10)
 
-                for x in xrange(thread_replies):
+                for x in range(thread_replies):
                     datetime = timezone.now()
                     user = User.objects.order_by('?')[:1][0]
                     fake_message = "\n\n".join(fake.paragraphs())
@@ -137,7 +138,7 @@ class Command(BaseCommand):
 
         pinned_threads = random.randint(0, int(created_threads * 0.025)) or 1
         self.stdout.write('\nPinning %s threads...' % pinned_threads)
-        for i in xrange(0, pinned_threads):
+        for i in range(0, pinned_threads):
             thread = Thread.objects.order_by('?')[:1][0]
             if random.randint(0, 100) > 75:
                 thread.weight = 2

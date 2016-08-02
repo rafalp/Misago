@@ -12,7 +12,7 @@ class PaginateTests(TestCase):
         """Valid page number causes no errors"""
         response = self.client.get(
             reverse('test-pagination', kwargs={'page': 2}))
-        self.assertEqual("5,6,7,8,9", response.content)
+        self.assertEqual("5,6,7,8,9", response.content.decode())
 
     def test_invalid_page_handling(self):
         """Invalid page number results in 404 error"""
@@ -24,7 +24,7 @@ class PaginateTests(TestCase):
         """Implicit page number causes no errors"""
         response = self.client.get(
             reverse('test-pagination'))
-        self.assertEqual("0,1,2,3,4", response.content)
+        self.assertEqual("0,1,2,3,4", response.content.decode())
 
     def test_explicit_page_handling(self):
         """Explicit page number results in redirect"""
@@ -43,7 +43,7 @@ class ValidateSlugTests(TestCase):
             'slug': 'eric-the-fish',
             'pk': 1,
         }))
-        self.assertIn("Allright", response.content)
+        self.assertContains(response, "Allright")
 
     def test_invalid_slug_handling(self):
         """Invalid slug returns in redirect to valid page"""

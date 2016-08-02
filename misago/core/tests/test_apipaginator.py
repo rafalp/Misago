@@ -1,5 +1,5 @@
 from django.test import TestCase
-
+from django.utils.six.moves import range
 from ..apipaginator import ApiPaginator
 
 
@@ -36,7 +36,7 @@ class PaginatorTests(TestCase):
     def test_first_page(self):
         """pagination works for first page of queryset"""
         paginator = ApiPaginator(6, 2)()
-        querset = [i for i in xrange(20)]
+        querset = [i for i in range(20)]
 
         results = paginator.paginate_queryset(querset, MockRequest())
         self.assertEqual(results, [0, 1, 2, 3, 4, 5])
@@ -57,7 +57,7 @@ class PaginatorTests(TestCase):
     def test_next_page(self):
         """pagination works for next page of queryset"""
         paginator = ApiPaginator(6, 2)()
-        querset = [i for i in xrange(20)]
+        querset = [i for i in range(20)]
 
         results = paginator.paginate_queryset(querset, MockRequest(2))
         self.assertEqual(results, [6, 7, 8, 9, 10, 11])
@@ -78,7 +78,7 @@ class PaginatorTests(TestCase):
     def test_last_page(self):
         """pagination works for last page of queryset"""
         paginator = ApiPaginator(6, 2)()
-        querset = [i for i in xrange(20)]
+        querset = [i for i in range(20)]
 
         results = paginator.paginate_queryset(querset, MockRequest(3))
         self.assertEqual(results, [12, 13, 14, 15, 16, 17, 18, 19])

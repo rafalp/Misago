@@ -16,7 +16,10 @@ class TargetedView(AdminView):
             select_for_update = self.get_model().objects
             if self.is_atomic:
                 select_for_update = select_for_update.select_for_update()
-            return select_for_update.get(pk=kwargs[kwargs.keys()[0]])
+            # Does not work on Python 3:
+            # return select_for_update.get(pk=kwargs[kwargs.keys()[0]])
+            (pk,) = kwargs.values()
+            return select_for_update.get(pk=pk)
         else:
             return self.get_model()()
 

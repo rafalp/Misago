@@ -4,6 +4,7 @@ from path import Path
 
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
+from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
 from misago.conf import settings
@@ -26,7 +27,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
             response = self.client.get(self.link)
             self.assertEqual(response.status_code, 200)
 
-            options = json.loads(response.content)
+            options = json.loads(smart_str(response.content))
             self.assertTrue(options['generated'])
             self.assertFalse(options['gravatar'])
             self.assertFalse(options['crop_org'])
@@ -40,7 +41,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
             response = self.client.get(self.link)
             self.assertEqual(response.status_code, 200)
 
-            options = json.loads(response.content)
+            options = json.loads(smart_str(response.content))
             self.assertTrue(options['generated'])
             self.assertTrue(options['gravatar'])
             self.assertFalse(options['crop_org'])
@@ -55,30 +56,26 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.user.save()
 
         response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertIn('Your avatar is pwnt', response.content)
+        self.assertContains(response, 'Your avatar is pwnt', status_code=403)
 
     def test_other_user_avatar(self):
         """requests to api error if user tries to access other user"""
         self.logout_user();
 
         response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertIn('You have to sign in', response.content)
+        self.assertContains(response, 'You have to sign in', status_code=403)
 
         User = get_user_model()
         self.login_user(User.objects.create_user(
             "BobUser", "bob@bob.com", self.USER_PASSWORD))
 
         response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertIn('can\'t change other users avatars', response.content)
+        self.assertContains(response, 'can\'t change other users avatars', status_code=403)
 
     def test_empty_requests(self):
         """empty request errors with code 400"""
         response = self.client.post(self.link)
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('Unknown avatar type.', response.content)
+        self.assertContains(response, 'Unknown avatar type.', status_code=400)
 
     def test_failed_gravatar_request(self):
         """no gravatar RPC fails"""
@@ -86,8 +83,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.user.save()
 
         response = self.client.post(self.link, data={'avatar': 'gravatar'})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('No Gravatar is associated', response.content)
+        self.assertContains(response, 'No Gravatar is associated', status_code=400)
 
     def test_successful_gravatar_request(self):
         """gravatar RPC fails"""
@@ -95,14 +91,12 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.user.save()
 
         response = self.client.post(self.link, data={'avatar': 'gravatar'})
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('Gravatar was downloaded and set', response.content)
+        self.assertContains(response, 'Gravatar was downloaded and set')
 
     def test_generation_request(self):
         """generated avatar is set"""
         response = self.client.post(self.link, data={'avatar': 'generated'})
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('New avatar based on your account', response.content)
+        self.assertContains(response, 'New avatar based on your account')
 
     def test_avatar_upload_and_crop(self):
         """avatar can be uploaded and cropped"""
@@ -110,11 +104,10 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
         response = self.client.post(self.link, data={'avatar': 'upload'})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('No file was sent.', response.content)
+        self.assertContains(response, 'No file was sent.', status_code=400)
 
         avatar_path = (settings.MEDIA_ROOT, 'avatars', 'blank.png')
-        with open('/'.join(avatar_path)) as avatar:
+        with open('/'.join(avatar_path), 'rb') as avatar:
             response = self.client.post(self.link,
                                         data={
                                             'avatar': 'upload',
@@ -122,7 +115,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
                                         })
             self.assertEqual(response.status_code, 200)
 
-            response_json = json.loads(response.content)
+            response_json = json.loads(smart_str(response.content))
             self.assertTrue(response_json['options']['crop_tmp'])
 
             avatar_dir = store.get_existing_avatars_dir(self.user)
@@ -150,10 +143,10 @@ class UserAvatarTests(AuthenticatedUserTestCase):
                     }
                 }),
                 content_type="application/json")
-            response_json = json.loads(response.content)
+            response_json = json.loads(smart_str(response.content))
 
             self.assertEqual(response.status_code, 200)
-            self.assertIn('Uploaded avatar was set.', response.content)
+            self.assertContains(response, 'Uploaded avatar was set.')
 
             avatar_dir = store.get_existing_avatars_dir(self.user)
             avatar = Path('%s/%s_tmp.png' % (avatar_dir, self.user.pk))
@@ -183,8 +176,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
                     }
                 }),
                 content_type="application/json")
-            self.assertEqual(response.status_code, 400)
-            self.assertIn('This avatar type is not allowed.', response.content)
+            self.assertContains(response, 'This avatar type is not allowed.', status_code=400)
 
             response = self.client.post(self.link, json.dumps({
                     'avatar': 'crop_org',
@@ -196,15 +188,14 @@ class UserAvatarTests(AuthenticatedUserTestCase):
                     }
                 }),
                 content_type="application/json")
-            self.assertEqual(response.status_code, 200)
-            self.assertIn('Avatar was re-cropped.', response.content)
+            self.assertContains(response, 'Avatar was re-cropped.')
 
     def test_gallery(self):
         """its possible to set avatar from gallery"""
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
-        options = json.loads(response.content)
+        options = json.loads(smart_str(response.content))
         self.assertTrue(options['galleries'])
 
         for gallery in options['galleries']:
@@ -214,8 +205,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
                     'image': image
                 })
 
-                self.assertEqual(response.status_code, 200)
-                self.assertIn('Avatar from gallery was set.', response.content)
+                self.assertContains(response, 'Avatar from gallery was set.')
 
 
 class UserAvatarModerationTests(AuthenticatedUserTestCase):
@@ -238,16 +228,14 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         })
 
         response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertIn("can't moderate avatars", response.content)
+        self.assertContains(response, "can't moderate avatars", status_code=403)
 
         override_acl(self.user, {
             'can_moderate_avatars': 0,
         })
 
         response = self.client.post(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertIn("can't moderate avatars", response.content)
+        self.assertContains(response, "can't moderate avatars", status_code=403)
 
     def test_moderate_avatar(self):
         """moderate avatar"""
@@ -258,7 +246,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
-        options = json.loads(response.content)
+        options = json.loads(smart_str(response.content))
         self.assertEqual(options['is_avatar_locked'],
                          self.other_user.is_avatar_locked)
         self.assertEqual(options['avatar_lock_user_message'],
@@ -281,7 +269,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         User = get_user_model()
         other_user = User.objects.get(pk=self.other_user.pk)
 
-        options = json.loads(response.content)
+        options = json.loads(smart_str(response.content))
         self.assertEqual(other_user.is_avatar_locked, True)
         self.assertEqual(
             other_user.avatar_lock_user_message, "Test user message.")
@@ -311,7 +299,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
 
         other_user = User.objects.get(pk=self.other_user.pk)
 
-        options = json.loads(response.content)
+        options = json.loads(smart_str(response.content))
         self.assertEqual(options['avatar_hash'],
                          other_user.avatar_hash)
         self.assertEqual(options['is_avatar_locked'],

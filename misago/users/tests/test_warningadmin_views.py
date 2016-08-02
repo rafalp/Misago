@@ -12,8 +12,7 @@ class WarningsAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:accounts:index'))
 
         response = self.client.get(response['location'])
-        self.assertIn(reverse('misago:admin:users:warnings:index'),
-                      response.content)
+        self.assertContains(response, reverse('misago:admin:users:warnings:index'))
 
     def test_list_view(self):
         """warning levels list view returns 200"""
@@ -21,7 +20,7 @@ class WarningsAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:warnings:index'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('No warning levels', response.content)
+        self.assertContains(response, 'No warning levels')
 
     def test_new_view(self):
         """new warning level view has no showstoppers"""
@@ -42,7 +41,7 @@ class WarningsAdminViewsTests(AdminTestCase):
         response = self.client.get(
             reverse('misago:admin:users:warnings:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Test Level', response.content)
+        self.assertContains(response, 'Test Level')
 
     def test_edit_view(self):
         """edit warning level view has no showstoppers"""
@@ -61,7 +60,7 @@ class WarningsAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:warnings:edit',
                     kwargs={'pk': test_level.pk}))
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_level.name, response.content)
+        self.assertContains(response, test_level.name)
 
         response = self.client.post(
             reverse('misago:admin:users:warnings:edit',
@@ -78,8 +77,8 @@ class WarningsAdminViewsTests(AdminTestCase):
         response = self.client.get(
             reverse('misago:admin:users:warnings:index'))
         self.assertEqual(response.status_code, 200)
-        self.assertIn(test_level.name, response.content)
-        self.assertTrue('Test Level' not in response.content)
+        self.assertContains(response, test_level.name)
+        self.assertNotContains(response, 'Test Level')
 
     def test_move_up_view(self):
         """move warning level up view has no showstoppers"""
@@ -168,4 +167,4 @@ class WarningsAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:warnings:index'))
         self.assertEqual(response.status_code, 200)
 
-        self.assertTrue(test_level.name not in response.content)
+        self.assertNotContains(response, test_level.name)

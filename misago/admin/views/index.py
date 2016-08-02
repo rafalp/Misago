@@ -4,6 +4,7 @@ import requests
 from requests.exceptions import RequestException
 
 from django.http import Http404, JsonResponse
+from django.utils.six.moves import range
 from django.utils.translation import ugettext as _
 
 from misago import __version__
@@ -48,7 +49,7 @@ def check_version(request):
             latest = [int(v) for v in latest_version.split(".")]
             current = [int(v) for v in __version__.split(".")]
 
-            for i in xrange(3):
+            for i in range(3):
                 if latest[i] > current[i]:
                     message = _("Outdated: %(current)s < %(latest)s")
                     formats = {

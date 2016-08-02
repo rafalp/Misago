@@ -13,8 +13,7 @@ class CSRFErrorViewTests(TestCase):
         csrf_client = Client(enforce_csrf_checks=True)
         response = csrf_client.post(reverse('misago:index'),
                                     data={'eric': 'fish'})
-        self.assertEqual(response.status_code, 403)
-        self.assertIn("Request blocked", response.content)
+        self.assertContains(response, "Request blocked", status_code=403)
 
 
 class ErrorPageViewsTests(TestCase):
@@ -23,26 +22,22 @@ class ErrorPageViewsTests(TestCase):
     def test_banned_returns_403(self):
         """banned error page has no show-stoppers"""
         response = self.client.get(reverse('raise-misago-banned'))
-        self.assertEqual(response.status_code, 403)
-        self.assertIn("<p>Banned for test!</p>", response.content)
+        self.assertContains(response, "<p>Banned for test!</p>", status_code=403)
 
     def test_permission_denied_returns_403(self):
         """permission_denied error page has no show-stoppers"""
         response = self.client.get(reverse('raise-misago-403'))
-        self.assertEqual(response.status_code, 403)
-        self.assertIn("Page not available", response.content)
+        self.assertContains(response, "Page not available", status_code=403)
 
     def test_page_not_found_returns_404(self):
         """page_not_found error page has no show-stoppers"""
         response = self.client.get(reverse('raise-misago-404'))
-        self.assertEqual(response.status_code, 404)
-        self.assertIn("Page not found", response.content)
+        self.assertContains(response, "Page not found", status_code=404)
 
     def test_not_allowed_returns_405(self):
         """not allowed error page has no showstoppers"""
         response = self.client.get(reverse('raise-misago-405'))
-        self.assertEqual(response.status_code, 405)
-        self.assertIn("Wrong way", response.content)
+        self.assertContains(response, "Wrong way", status_code=405)
 
 
 class CustomErrorPagesTests(TestCase):
@@ -63,23 +58,21 @@ class CustomErrorPagesTests(TestCase):
         response = self.client.get(reverse('raise-misago-403'))
         self.assertEqual(response.status_code, 403)
         response = self.client.get(reverse('raise-403'))
-        self.assertEqual(response.status_code, 403)
-        self.assertIn("Custom 403", response.content)
+        self.assertContains(response, "Custom 403", status_code=403)
 
         response = mock_custom_403_error_page(self.misago_request)
-        self.assertNotIn("Custom 403", response.content)
+        self.assertNotContains(response, "Custom 403", status_code=403)
         response = mock_custom_403_error_page(self.site_request)
-        self.assertIn("Custom 403", response.content)
+        self.assertContains(response, "Custom 403", status_code=403)
 
     def test_shared_404_decorator(self):
         """shared_404_decorator calls correct error handler"""
         response = self.client.get(reverse('raise-misago-404'))
         self.assertEqual(response.status_code, 404)
         response = self.client.get(reverse('raise-404'))
-        self.assertEqual(response.status_code, 404)
-        self.assertIn("Custom 404", response.content)
+        self.assertContains(response, "Custom 404", status_code=404)
 
         response = mock_custom_404_error_page(self.misago_request)
-        self.assertNotIn("Custom 404", response.content)
+        self.assertNotContains(response, "Custom 404", status_code=404)
         response = mock_custom_404_error_page(self.site_request)
-        self.assertIn("Custom 404", response.content)
+        self.assertContains(response, "Custom 404", status_code=404)

@@ -2,6 +2,7 @@ import json
 
 from django.contrib.auth import get_user_model
 from django.core import mail
+from django.utils.encoding import smart_str
 from django.test import TestCase
 
 from ..models import BAN_USERNAME, Ban
@@ -15,13 +16,12 @@ class GatewayTests(TestCase):
             '/api/auth/',
             data={'username': 'nope', 'password': 'nope'})
 
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("Login or password is incorrect.", response.content)
+        self.assertContains(response, "Login or password is incorrect.", status_code=400)
 
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(response.content)
+        user_json = json.loads(smart_str(response.content))
         self.assertIsNone(user_json['id'])
 
     def test_login(self):
@@ -39,15 +39,14 @@ class GatewayTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(response.content)
+        user_json = json.loads(smart_str(response.content))
         self.assertEqual(user_json['id'], user.id)
         self.assertEqual(user_json['username'], user.username)
 
     def test_submit_empty(self):
         """login api errors for no body"""
         response = self.client.post('/api/auth/')
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('empty_data', response.content)
+        self.assertContains(response, 'empty_data', status_code=400)
 
     def test_login_banned(self):
         """login api fails to sign banned user in"""
@@ -66,7 +65,7 @@ class GatewayTests(TestCase):
         })
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json['code'], 'banned')
         self.assertEqual(response_json['detail']['message']['plain'],
                          ban.user_message)
@@ -76,7 +75,7 @@ class GatewayTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(response.content)
+        user_json = json.loads(smart_str(response.content))
         self.assertIsNone(user_json['id'])
 
     def test_login_inactive_admin(self):
@@ -91,13 +90,13 @@ class GatewayTests(TestCase):
         })
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json['code'], 'inactive_user')
 
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(response.content)
+        user_json = json.loads(smart_str(response.content))
         self.assertIsNone(user_json['id'])
 
     def test_login_inactive_user(self):
@@ -112,13 +111,13 @@ class GatewayTests(TestCase):
         })
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json['code'], 'inactive_admin')
 
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(response.content)
+        user_json = json.loads(smart_str(response.content))
         self.assertIsNone(user_json['id'])
 
 
@@ -154,16 +153,14 @@ class SendActivationAPITests(TestCase):
     def test_submit_empty(self):
         """request activation link api errors for no body"""
         response = self.client.post(self.link)
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('empty_email', response.content)
+        self.assertContains(response, 'empty_email', status_code=400)
 
         self.assertTrue(not mail.outbox)
 
     def test_submit_invalid(self):
         """request activation link api errors for invalid email"""
         response = self.client.post(self.link, data={'email': 'fake@mail.com'})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('not_found', response.content)
+        self.assertContains(response, 'not_found', status_code=400)
 
         self.assertTrue(not mail.outbox)
 
@@ -173,9 +170,7 @@ class SendActivationAPITests(TestCase):
         self.user.save()
 
         response = self.client.post(self.link, data={'email': self.user.email})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('Bob, your account is already active.',
-                      response.content)
+        self.assertContains(response, 'Bob, your account is already active.', status_code=400)
 
     def test_submit_inactive_user(self):
         """request activation link api errors for admin-activated users"""
@@ -183,8 +178,7 @@ class SendActivationAPITests(TestCase):
         self.user.save()
 
         response = self.client.post(self.link, data={'email': self.user.email})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('inactive_admin', response.content)
+        self.assertContains(response, 'inactive_admin', status_code=400)
 
         self.assertTrue(not mail.outbox)
 
@@ -228,16 +222,14 @@ class SendPasswordFormAPITests(TestCase):
     def test_submit_empty(self):
         """request change password form link api errors for no body"""
         response = self.client.post(self.link)
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('empty_email', response.content)
+        self.assertContains(response, 'empty_email', status_code=400)
 
         self.assertTrue(not mail.outbox)
 
     def test_submit_invalid(self):
         """request change password form link api errors for invalid email"""
         response = self.client.post(self.link, data={'email': 'fake@mail.com'})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('not_found', response.content)
+        self.assertContains(response, 'not_found', status_code=400)
 
         self.assertTrue(not mail.outbox)
 
@@ -247,15 +239,13 @@ class SendPasswordFormAPITests(TestCase):
         self.user.save()
 
         response = self.client.post(self.link, data={'email': self.user.email})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('inactive_user', response.content)
+        self.assertContains(response, 'inactive_user', status_code=400)
 
         self.user.requires_activation = 2
         self.user.save()
 
         response = self.client.post(self.link, data={'email': self.user.email})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('inactive_admin', response.content)
+        self.assertContains(response, 'inactive_admin', status_code=400)
 
         self.assertTrue(not mail.outbox)
 
@@ -285,8 +275,7 @@ class ChangePasswordAPITests(TestCase):
                 'asda7ad89sa7d9s789as'
             ))
 
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('Form link is invalid.', response.content)
+        self.assertContains(response, 'Form link is invalid.', status_code=400)
 
     def test_banned_user_link(self):
         """request errors because user is banned"""
@@ -300,8 +289,7 @@ class ChangePasswordAPITests(TestCase):
                 self.user.pk,
                 make_password_change_token(self.user)
             ))
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('Your link has expired.', response.content)
+        self.assertContains(response, 'Your link has expired.', status_code=400)
 
     def test_inactive_user(self):
         """request change password form link api errors for inactive users"""
@@ -312,8 +300,7 @@ class ChangePasswordAPITests(TestCase):
                 self.user.pk,
                 make_password_change_token(self.user)
             ))
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('Your link has expired.', response.content)
+        self.assertContains(response, 'Your link has expired.', status_code=400)
 
         self.user.requires_activation = 2
         self.user.save()
@@ -322,8 +309,7 @@ class ChangePasswordAPITests(TestCase):
                 self.user.pk,
                 make_password_change_token(self.user)
             ))
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('Your link has expired.', response.content)
+        self.assertContains(response, 'Your link has expired.', status_code=400)
 
     def test_submit_empty(self):
         """submit change password form api errors for empty body"""
@@ -331,5 +317,4 @@ class ChangePasswordAPITests(TestCase):
                 self.user.pk,
                 make_password_change_token(self.user)
             ))
-        self.assertEqual(response.status_code, 400)
-        self.assertIn('Valid password must', response.content)
+        self.assertContains(response, 'Valid password must', status_code=400)

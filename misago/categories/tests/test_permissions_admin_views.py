@@ -17,8 +17,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         response = self.client.get(
             reverse('misago:admin:permissions:categories:index'))
 
-        self.assertIn(reverse('misago:admin:permissions:categories:index'),
-                      response.content)
+        self.assertContains(response, reverse('misago:admin:permissions:categories:index'))
 
     def test_list_view(self):
         """roles list view returns 200"""
@@ -41,8 +40,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         test_role = CategoryRole.objects.get(name='Test CategoryRole')
         response = self.client.get(
             reverse('misago:admin:permissions:categories:index'))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(test_role.name, response.content)
+        self.assertContains(response, test_role.name)
 
     def test_edit_view(self):
         """edit role view has no showstoppers"""
@@ -56,8 +54,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
             reverse('misago:admin:permissions:categories:edit', kwargs={
                 'pk': test_role.pk
             }))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('Test CategoryRole', response.content)
+        self.assertContains(response, 'Test CategoryRole')
 
         response = self.client.post(
             reverse('misago:admin:permissions:categories:edit', kwargs={
@@ -69,8 +66,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         test_role = CategoryRole.objects.get(name='Top Lel')
         response = self.client.get(
             reverse('misago:admin:permissions:categories:index'))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(test_role.name, response.content)
+        self.assertContains(response, test_role.name)
 
     def test_delete_view(self):
         """delete role view has no showstoppers"""
@@ -88,8 +84,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         self.client.get(reverse('misago:admin:permissions:categories:index'))
         response = self.client.get(
             reverse('misago:admin:permissions:categories:index'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(test_role.name not in response.content)
+        self.assertNotContains(response, test_role.name)
 
     def test_change_category_roles_view(self):
         """change category roles perms view works"""
@@ -146,12 +141,11 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         response = self.client.get(
             reverse('misago:admin:categories:nodes:permissions',
                     kwargs={'pk': test_category.pk}))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(test_category.name, response.content)
-        self.assertIn(test_role_a.name, response.content)
-        self.assertIn(test_role_b.name, response.content)
-        self.assertIn(role_comments.name, response.content)
-        self.assertIn(role_full.name, response.content)
+        self.assertContains(response, test_category.name)
+        self.assertContains(response, test_role_a.name)
+        self.assertContains(response, test_role_b.name)
+        self.assertContains(response, role_comments.name)
+        self.assertContains(response, role_full.name)
 
         # Assign roles to categories
         response = self.client.post(
@@ -239,11 +233,10 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
             reverse('misago:admin:permissions:users:categories', kwargs={
                 'pk': test_role.pk
             }))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(category_a.name, response.content)
-        self.assertIn(category_b.name, response.content)
-        self.assertIn(category_c.name, response.content)
-        self.assertIn(category_d.name, response.content)
+        self.assertContains(response, category_a.name)
+        self.assertContains(response, category_b.name)
+        self.assertContains(response, category_c.name)
+        self.assertContains(response, category_d.name)
 
         # Set test roles
         self.client.post(
@@ -261,9 +254,8 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
             reverse('misago:admin:permissions:users:categories', kwargs={
                 'pk': test_role.pk
             }))
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(role_comments.name, response.content)
-        self.assertIn(role_full.name, response.content)
+        self.assertContains(response, role_comments.name)
+        self.assertContains(response, role_full.name)
 
         # Assign roles to categories
         response = self.client.post(

@@ -43,7 +43,7 @@ def serve_user_avatar_source(request, pk, secret, hash):
     fallback_avatar = get_blank_avatar_file(min(settings.MISAGO_AVATARS_SIZES))
     User = get_user_model()
 
-    if pk > 0:
+    if int(pk) > 0:
         try:
             user = User.objects.get(pk=pk)
 
