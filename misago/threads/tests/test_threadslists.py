@@ -295,8 +295,6 @@ class AllThreadsListTests(ThreadsListTestCase):
 
         self.access_all_categories()
         response = self.client.get('%s?category=%s' % (self.api_link, self.category_a.pk))
-        response = self.client.get(
-            '%s?category=%s' % (self.api_link, self.category_a.pk))
         self.assertEqual(response.status_code, 200)
 
         response_json = json_loads(smart_str(response.content))
