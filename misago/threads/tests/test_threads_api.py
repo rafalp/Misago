@@ -70,7 +70,7 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
             response = self.client.get(link)
             self.assertEqual(response.status_code, 200)
 
-            response_json = json.loads(response.content)
+            response_json = json.loads(smart_str(response.content))
             self.assertEqual(response_json['id'], self.thread.pk)
             self.assertEqual(response_json['title'], self.thread.title)
 

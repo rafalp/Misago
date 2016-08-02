@@ -2,6 +2,7 @@ import json
 
 from django.core.urlresolvers import reverse
 from django.utils.encoding import smart_str
+from django.utils.six.moves import range
 
 from misago.acl import add_acl
 from misago.acl.testutils import override_acl
@@ -139,7 +140,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
     def test_merge_too_many_threads(self):
         """api rejects too many threads to merge"""
         threads = []
-        for i in xrange(MERGE_LIMIT + 1):
+        for i in range(MERGE_LIMIT + 1):
             threads.append(testutils.post_thread(category=self.category).pk)
 
         self.override_acl({
@@ -154,7 +155,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 403)
 
-        response_json = json.loads(response.content)
+        response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
             'detail': "No more than %s threads can be merged at single time." % MERGE_LIMIT
         })
