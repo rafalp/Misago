@@ -83,5 +83,7 @@ class RoleAdminViewsTests(AdminTestCase):
         response = self.client.post(reverse('misago:admin:permissions:users:delete', kwargs={'pk': test_role.pk}))
         self.assertEqual(response.status_code, 302)
 
+        # Get the page twice so no alert is renderered on second request
+        self.client.get(reverse('misago:admin:permissions:users:index'))
         response = self.client.get(reverse('misago:admin:permissions:users:index'))
         self.assertNotContains(response, test_role.name)
