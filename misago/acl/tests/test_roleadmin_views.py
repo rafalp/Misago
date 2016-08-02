@@ -14,8 +14,6 @@ class RoleAdminViewsTests(AdminTestCase):
     def test_link_registered(self):
         """admin nav contains user roles link"""
         response = self.client.get(reverse('misago:admin:permissions:users:index'))
-        self.assertIn(reverse('misago:admin:permissions:users:index'), response.content)
-
         self.assertContains(response, reverse('misago:admin:permissions:users:index'))
 
     def test_list_view(self):
@@ -85,7 +83,5 @@ class RoleAdminViewsTests(AdminTestCase):
         response = self.client.post(reverse('misago:admin:permissions:users:delete', kwargs={'pk': test_role.pk}))
         self.assertEqual(response.status_code, 302)
 
-        self.client.get(reverse('misago:admin:permissions:users:index'))
         response = self.client.get(reverse('misago:admin:permissions:users:index'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(test_role.name not in response.content)
+        self.assertNotContains(response, test_role.name)
