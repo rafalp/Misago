@@ -1,18 +1,28 @@
 /* jshint ignore:start */
 import React from 'react';
 import Avatar from 'misago/components/avatar';
+import Body from './body';
+import { FlagHidden, FlagUnapproved } from './flags';
+import Header from './header';
 
 export default function(props) {
+  let className = 'post';
+  if (props.post.is_hidden && !props.post.acl.can_see_hidden) {
+    className = 'post post-hidden';
+  }
+
   return (
-    <li id={'post-' + props.post.id} className={getClassName(props.post)}>
+    <li id={'post-' + props.post.id} className={className}>
       <div className="post-border">
         <div className="post-avatar">
-          <PostAvatar post={props.post} />
+          <PosterAvatar post={props.post} />
         </div>
         <div className="post-body">
           <div className="panel panel-default panel-post">
-            <PostHeader {...props} />
-            <PostBody {...props} />
+            <Header {...props} />
+            <FlagHidden {...props} />
+            <FlagUnapproved {...props} />
+            <Body {...props} />
           </div>
         </div>
       </div>
@@ -20,15 +30,7 @@ export default function(props) {
   );
 }
 
-export function getClassName(post) {
-  if (post.is_hidden && !post.acl.can_see_hidden) {
-    return 'post post-hidden';
-  } else {
-    return 'post';
-  }
-}
-
-export function PostAvatar(props) {
+export function PosterAvatar(props) {
   if (props.post.poster) {
     return (
       <a href={props.post.poster.absolute_url}>
@@ -38,20 +40,4 @@ export function PostAvatar(props) {
   } else {
     return <Avatar size={100} />;
   }
-}
-
-export function PostHeader(props) {
-  return (
-    <div className="panel-heading post-heading">
-      Hello, I'm post's heading!
-    </div>
-  );
-}
-
-export function PostBody(props) {
-  return (
-    <div className="panel-body">
-      Hello, I'm post's body!
-    </div>
-  );
 }

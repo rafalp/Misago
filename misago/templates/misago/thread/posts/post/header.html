@@ -1,7 +1,9 @@
 {% load i18n %}
 <div class="panel-heading post-heading">
   {% if post.poster %}
-    <a class="item-title" href="{{ post.poster.get_absolute_url }}">{{ post.poster.username }}</a>
+    <a class="item-title" href="{{ post.poster.get_absolute_url }}">
+      {{ post.poster.username }}
+    </a>
   {% else %}
     <strong class="item-title">{{ post.poster_name }}</strong>
   {% endif %}

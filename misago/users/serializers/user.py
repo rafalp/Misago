@@ -103,6 +103,9 @@ class BaseSerializer(serializers.ModelSerializer):
     def get_absolute_url(self, obj):
         return obj.get_absolute_url()
 
+    def get_short_title(self, obj):
+        return obj.short_title
+
 
 class BasicUserSerializer(BaseSerializer):
     class Meta:
@@ -118,6 +121,7 @@ class BasicUserSerializer(BaseSerializer):
 
 class UserSerializer(BaseSerializer):
     rank = RankSerializer(many=False, read_only=True)
+    short_title = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
     signature = serializers.SerializerMethodField()
 
@@ -130,6 +134,7 @@ class UserSerializer(BaseSerializer):
             'joined_on',
             'avatar_hash',
             'title',
+            'short_title',
             'rank',
             'signature',
             'threads',

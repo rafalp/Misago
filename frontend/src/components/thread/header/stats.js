@@ -4,7 +4,7 @@ import escapeHtml from 'misago/utils/escape-html';
 
 const LAST_POSTER_URL = '<a href="%(url)s" class="poster-title">%(user)s</a>';
 const LAST_POSTER_SPAN = '<span class="poster-title">%(user)s</span>';
-const LAST_REPLY_URL = '<abbr class="last-title" title="%(absolute)s">%(relative)s</abbr>';
+const LAST_REPLY = '<abbr class="last-title" title="%(absolute)s">%(relative)s</abbr>';
 
 export function Weight(props) {
   if (props.thread.weight == 2) {
@@ -99,11 +99,6 @@ export function Replies(props) {
 }
 
 export function LastReply(props) {
-  const date = interpolate(LAST_REPLY_URL, {
-    absolute: escapeHtml(props.thread.last_post_on.format('LLL')),
-    relative: escapeHtml(props.thread.last_post_on.fromNow())
-  }, true);
-
   let user = null;
   if (props.thread.url.last_poster) {
     user = interpolate(LAST_POSTER_URL, {
@@ -116,9 +111,13 @@ export function LastReply(props) {
     }, true);
   };
 
+  const date = interpolate(LAST_REPLY, {
+    absolute: escapeHtml(props.thread.last_post_on.format('LLL')),
+    relative: escapeHtml(props.thread.last_post_on.fromNow())
+  }, true);
+
   const message = interpolate(escapeHtml(gettext("last reply by %(user)s %(date)s")), {
-        date,
-        user
+    date, user
   }, true);
 
   return <li className="thread-last-reply" dangerouslySetInnerHTML={{__html: message}}/>;
