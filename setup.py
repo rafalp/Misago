@@ -5,8 +5,7 @@ from misago import __version__ as version
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
-requirements_path = os.path.join(
-    os.path.dirname(__file__), 'misago/project_template/requirements.txt')
+requirements_path = os.path.join(os.path.dirname(__file__), 'misago/project_template/requirements.txt')
 with open(requirements_path, "r") as f:
     REQUIREMENTS = [x.strip() for x in f.readlines()]
 
@@ -15,9 +14,10 @@ with open(requirements_path, "r") as f:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 
-EXCLUDE_FROM_PACKAGES = ['misago.project_template',
-                         'misago.bin']
-
+EXCLUDE_FROM_PACKAGES = [
+    'misago.project_template',
+    'misago.bin'
+]
 
 setup(
     name='Misago',
@@ -47,6 +47,7 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.5',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         "Topic :: Internet :: WWW/HTTP :: WSGI",
