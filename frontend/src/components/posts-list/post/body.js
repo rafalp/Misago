@@ -27,13 +27,13 @@ export function Default(props) {
 export function Hidden(props) {
   let user = null;
   if (props.post.hidden_by) {
-      user = interpolate(HIDDEN_BY_URL, {
-        url: escapeHtml(props.post.url.hidden_by),
-        user: escapeHtml(props.post.hidden_by_name)
-      }, true);
+    user = interpolate(HIDDEN_BY_URL, {
+      url: escapeHtml(props.post.url.hidden_by),
+      user: escapeHtml(props.post.hidden_by_name)
+    }, true);
   } else {
     user = interpolate(HIDDEN_BY_SPAN, {
-      user: escapeHtml(props.thread.hidden_by_name)
+      user: escapeHtml(props.post.hidden_by_name)
     }, true);
   }
 

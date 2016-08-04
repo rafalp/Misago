@@ -2,7 +2,7 @@
 import React from 'react';
 
 export function FlagHidden(props) {
-  if (isVisible(props) && props.post.is_hidden) {
+  if (isVisible(props.post) && props.post.is_hidden) {
     return (
       <div className="post-status-message post-status-hidden">
         <span className="material-icon">visibility_off</span>
@@ -15,7 +15,7 @@ export function FlagHidden(props) {
 }
 
 export function FlagUnapproved(props) {
-  if (isVisible(props) && props.post.is_unapproved) {
+  if (isVisible(props.post) && props.post.is_unapproved) {
     return (
       <div className="post-status-message post-status-unapproved">
         <span className="material-icon">remove_circle_outline</span>
@@ -27,6 +27,6 @@ export function FlagUnapproved(props) {
   }
 }
 
-export function isVisible(props) {
-  return !props.post.is_hidden || props.post.acl_can_see_hidden;
+export function isVisible(post) {
+  return !post.is_hidden || post.acl.can_see_hidden;
 }

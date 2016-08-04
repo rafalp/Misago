@@ -14,7 +14,7 @@ export default function(props) {
 
 export function Poster(props) {
   if (props.post.poster) {
-    return <a className="item-title" href={props.post.url.poster}>
+    return <a className="item-title" href={props.post.poster.absolute_url}>
       {props.post.poster.username}
     </a>;
   } else {
