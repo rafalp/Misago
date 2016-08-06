@@ -91,10 +91,7 @@ class AnonymousUserSerializer(serializers.Serializer):
     acl = serializers.SerializerMethodField()
 
     def get_acl(self, obj):
-        if hasattr(obj, 'acl_'):
-            return serialize_acl(obj)
-        else:
-            return None
+        return serialize_acl(obj)
 
 
 class BaseSerializer(serializers.ModelSerializer):

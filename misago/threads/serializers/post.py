@@ -20,6 +20,8 @@ class PostSerializer(serializers.ModelSerializer):
     hidden_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
     acl = serializers.SerializerMethodField()
+    is_read = serializers.SerializerMethodField()
+    is_new = serializers.SerializerMethodField()
 
     api = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
@@ -52,6 +54,8 @@ class PostSerializer(serializers.ModelSerializer):
             'event_context',
 
             'acl',
+            'is_new',
+            'is_read',
 
             'api',
             'url',
@@ -70,6 +74,18 @@ class PostSerializer(serializers.ModelSerializer):
     def get_acl(self, obj):
         try:
             return obj.acl
+        except AttributeError:
+            return None
+
+    def get_is_new(self, obj):
+        try:
+            return obj.is_new
+        except AttributeError:
+            return None
+
+    def get_is_read(self, obj):
+        try:
+            return obj.is_read
         except AttributeError:
             return None
 
