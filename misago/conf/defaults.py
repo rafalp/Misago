@@ -102,6 +102,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
     # Data preloaders
     'misago.conf.context_processors.preload_settings_json',
+    'misago.threads.context_processors.preload_threads_urls',
     'misago.users.context_processors.preload_user_json',
 
     # Note: keep frontend_context processor last for previous processors
