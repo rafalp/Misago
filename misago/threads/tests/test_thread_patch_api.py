@@ -211,7 +211,9 @@ class ThreadMoveApiTests(ThreadsApiTestCase):
         self.override_acl({
             'can_move_threads': True
         })
-        self.override_other_acl({})
+        self.override_other_acl({
+            'can_start_threads': 2
+        })
 
         response = self.client.patch(self.api_link, json.dumps([
             {'op': 'replace', 'path': 'category', 'value': self.category_b.pk},
@@ -235,7 +237,9 @@ class ThreadMoveApiTests(ThreadsApiTestCase):
         self.override_acl({
             'can_move_threads': True
         })
-        self.override_other_acl({})
+        self.override_other_acl({
+            'can_start_threads': 2
+        })
 
         response = self.client.patch(self.api_link, json.dumps([
             {'op': 'replace', 'path': 'category', 'value': self.category_b.pk},

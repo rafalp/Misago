@@ -8,9 +8,9 @@ from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
-class ThreadsApiTestCase(AuthenticatedUserTestCase):
+class ThreadsEditorApiTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ThreadsApiTestCase, self).setUp()
+        super(ThreadsEditorApiTestCase, self).setUp()
 
         self.category = Category.objects.get(slug='first-category')
         self.api_link = reverse('misago:api:thread-editor')
