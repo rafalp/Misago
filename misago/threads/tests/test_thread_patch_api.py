@@ -1,4 +1,5 @@
 import json
+
 from django.utils import six
 from django.utils.encoding import smart_str
 

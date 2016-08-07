@@ -1,8 +1,8 @@
-from crispy_forms.templatetags import crispy_forms_field, crispy_forms_filters
-
 from django import template
 from django.template import Context
 from django.template.loader import get_template
+
+from crispy_forms.templatetags import crispy_forms_field, crispy_forms_filters
 
 
 register = template.Library()

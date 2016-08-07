@@ -14,6 +14,7 @@ from misago.readtracker.categoriestracker import read_category
 
 from ..models import Subscription
 from ..moderation import threads as moderation
+from ..permissions.threads import can_start_thread
 from ..subscriptions import make_subscription_aware
 from ..threadtypes import trees_map
 from ..viewmodels.thread import ForumThread
@@ -75,3 +76,42 @@ class ThreadViewSet(ViewSet):
 
         read_category(request.user, category)
         return Response({'detail': 'ok'})
+
+    @list_route(methods=['get'])
+    def editor(self, request):
+        if request.user.is_anonymous():
+            raise PermissionDenied(_("You need to be signed in to post content."))
+
+        # list of categories that allow or contain subcategories that allow new threads
+        available = []
+
+        categories = []
+        for category in Category.objects.filter(pk__in=request.user.acl['browseable_categories']).order_by('-lft'):
+            add_acl(request.user, category)
+
+            post = False
+            if can_start_thread(request.user, category):
+                post = {
+                    'close': bool(category.acl['can_close_threads']),
+                    'hide': bool(category.acl['can_hide_threads']),
+                    'pin': category.acl['can_pin_threads']
+                }
+
+                available.append(category.pk)
+                available.append(category.parent_id)
+            elif category.pk in available:
+                available.append(category.parent_id)
+
+            categories.append({
+                'id': category.pk,
+                'name': category.name,
+                'level': category.level - 1,
+                'post': post
+            })
+
+        cleaned_categories = []
+        for category in reversed(categories):
+            if category['id'] in available:
+                cleaned_categories.append(category)
+
+        return Response(cleaned_categories)

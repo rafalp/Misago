@@ -23,7 +23,7 @@ def create_default_categories_roles(apps, schema_editor):
             # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
-                'can_browse': 0,
+                'can_browse': 0
             },
         })
     see_only.save()
@@ -34,14 +34,15 @@ def create_default_categories_roles(apps, schema_editor):
             # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
-                'can_browse': 1,
+                'can_browse': 1
             },
 
             # threads perms
             'misago.threads.permissions.threads': {
                 'can_see_all_threads': 1,
                 'can_see_posts_likes': 2,
-                'can_like_posts': 1,
+                'can_download_other_users_attachments': 1,
+                'can_like_posts': 1
             },
         })
     read_only.save()
@@ -52,7 +53,7 @@ def create_default_categories_roles(apps, schema_editor):
             # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
-                'can_browse': 1,
+                'can_browse': 1
             },
 
             # threads perms
@@ -60,8 +61,10 @@ def create_default_categories_roles(apps, schema_editor):
                 'can_see_all_threads': 1,
                 'can_reply_threads': 1,
                 'can_edit_posts': 1,
+                'can_download_other_users_attachments': 1,
+                'max_attachment_size': 500,
                 'can_see_posts_likes': 2,
-                'can_like_posts': 1,
+                'can_like_posts': 1
             },
         })
     reply_only.save()
@@ -72,7 +75,7 @@ def create_default_categories_roles(apps, schema_editor):
             # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
-                'can_browse': 1,
+                'can_browse': 1
             },
 
             # threads perms
@@ -82,8 +85,10 @@ def create_default_categories_roles(apps, schema_editor):
                 'can_reply_threads': 1,
                 'can_edit_threads': 1,
                 'can_edit_posts': 1,
+                'can_download_other_users_attachments': 1,
+                'max_attachment_size': 500,
                 'can_see_posts_likes': 2,
-                'can_like_posts': 1,
+                'can_like_posts': 1
             },
         })
     standard.save()
@@ -104,8 +109,10 @@ def create_default_categories_roles(apps, schema_editor):
                 'can_reply_threads': 1,
                 'can_edit_threads': 1,
                 'can_edit_posts': 1,
+                'can_download_other_users_attachments': 1,
+                'max_attachment_size': 500,
                 'can_see_posts_likes': 2,
-                'can_like_posts': 1,
+                'can_like_posts': 1
             },
         })
     standard_with_polls.save()
@@ -116,7 +123,7 @@ def create_default_categories_roles(apps, schema_editor):
             # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
-                'can_browse': 1,
+                'can_browse': 1
             },
 
             # threads perms
@@ -142,11 +149,14 @@ def create_default_categories_roles(apps, schema_editor):
                 'can_merge_threads': 1,
                 'can_split_threads': 1,
                 'can_approve_content': 1,
-                'can_report_content': 1,
+                'can_download_other_users_attachments': 1,
+                'max_attachment_size': 2500,
+                'can_delete_other_users_attachments': 1,
                 'can_see_posts_likes': 2,
                 'can_like_posts': 1,
+                'can_report_content': 1,
                 'can_see_reports': 1,
-                'can_hide_events': 2,
+                'can_hide_events': 2
             },
         })
     moderator.save()

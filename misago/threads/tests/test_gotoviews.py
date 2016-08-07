@@ -1,8 +1,8 @@
 from django.utils import timezone
 
 from misago.acl.testutils import override_acl
-from misago.conf import settings
 from misago.categories.models import Category
+from misago.conf import settings
 from misago.readtracker.threadstracker import make_thread_read_aware, read_thread
 from misago.users.testutils import AuthenticatedUserTestCase
 

@@ -1,10 +1,10 @@
 import os
 from hashlib import md5
 
-from django.utils.encoding import force_bytes
-
 from path import Path
 from PIL import Image
+
+from django.utils.encoding import force_bytes
 
 from misago.conf import settings
 

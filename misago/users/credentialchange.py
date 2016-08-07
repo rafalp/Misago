@@ -8,6 +8,7 @@ from hashlib import sha256
 from django.conf import settings
 from django.utils import six
 from django.utils.encoding import force_bytes
+
 from misago.core import serializer
 
 

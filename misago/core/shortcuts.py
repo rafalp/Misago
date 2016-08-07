@@ -1,9 +1,9 @@
 from collections import OrderedDict
 
+import six
+
 from django.http import Http404
 from django.shortcuts import *  # noqa
-
-import six
 
 
 def paginate(object_list, page, per_page, orphans=0,

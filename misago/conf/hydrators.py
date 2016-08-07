@@ -1,5 +1,6 @@
 import six
 
+
 def hydrate_string(dry_value):
     return six.text_type(dry_value) if dry_value else ''
 

@@ -2,8 +2,8 @@ import json
 
 from django.contrib.auth import get_user_model
 from django.core import mail
-from django.utils.encoding import smart_str
 from django.test import TestCase
+from django.utils.encoding import smart_str
 
 from ..models import BAN_USERNAME, Ban
 from ..tokens import make_activation_token, make_password_change_token

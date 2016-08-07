@@ -46,6 +46,15 @@ Admin Permissions Forms
 class RolePermissionsForm(forms.Form):
     legend = _("Threads")
 
+    can_download_other_users_attachments = forms.YesNoSwitch(label=_("Can download other users attachments"))
+    max_attachment_size = forms.IntegerField(
+        label=_("Max attached file size (in kb)"),
+        help_text=_("Enter 0 to disable attachments."),
+        initial=500,
+        min_value=0
+    )
+    can_delete_other_users_attachments = forms.YesNoSwitch(label=_("Can delete other users attachments"))
+
     can_see_unapproved_content_lists = forms.YesNoSwitch(
         label=_("Can see unapproved content list"),
         help_text=_('Allows access to "unapproved" tab on threads lists for '
@@ -214,12 +223,20 @@ def change_permissions_form(role):
 ACL Builder
 """
 def build_acl(acl, roles, key_name):
-    acl['can_see_unapproved_content_lists'] = False
-    acl['can_see_reported_content_lists'] = False
-    acl['can_approve_content'] = []
-    acl['can_see_reports'] = []
+    acl.update({
+        'can_download_other_users_attachments': False,
+        'max_attachment_size': 0,
+        'can_delete_other_users_attachments': False,
+        'can_see_unapproved_content_lists': False,
+        'can_see_reported_content_lists': False,
+        'can_approve_content': [],
+        'can_see_reports': [],
+    })
 
     acl = algebra.sum_acls(acl, roles=roles, key=key_name,
+        can_download_other_users_attachments=algebra.greater,
+        max_attachment_size=algebra.greater,
+        can_delete_other_users_attachments=algebra.greater,
         can_see_unapproved_content_lists=algebra.greater,
         can_see_reported_content_lists=algebra.greater
     )
@@ -476,10 +493,12 @@ def allow_start_thread(user, target):
     if user.is_anonymous():
         raise PermissionDenied(_("You have to sign in to start threads."))
 
-    if target.is_closed and not target.acl['can_close_threads']:
+    category_acl = user.acl['categories'].get(target.pk, {})
+
+    if target.is_closed and not category_acl.get('can_close_threads', False):
         raise PermissionDenied(_("This category is closed. You can't start new threads in it."))
 
-    if not user.acl['categories'].get(target.id, {'can_start_threads': False}):
+    if not category_acl.get('can_start_threads', False):
         raise PermissionDenied(_("You don't have permission to start new threads in this category."))
 can_start_thread = return_boolean(allow_start_thread)
 

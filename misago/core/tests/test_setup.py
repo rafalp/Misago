@@ -1,7 +1,7 @@
 import os
 
-from django.utils.encoding import smart_str
 from django.test import TestCase
+from django.utils.encoding import smart_str
 
 from .. import setup
 

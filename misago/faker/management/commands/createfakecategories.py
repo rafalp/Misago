@@ -2,11 +2,10 @@ import random
 import sys
 import time
 
-from django.utils.six.moves import range
-from faker import Factory
-
 from django.core.management.base import BaseCommand
+from django.utils.six.moves import range
 
+from faker import Factory
 from misago.acl import version as acl_version
 from misago.categories.models import Category, RoleCategoryACL
 from misago.core.management.progressbar import show_progress

@@ -1,5 +1,6 @@
-from misago.markup import checksums
 from django.utils import six
+
+from misago.markup import checksums
 
 
 def is_post_valid(post):

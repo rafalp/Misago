@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+import six
 from unidecode import unidecode
 
 from django.core.urlresolvers import resolve, reverse
@@ -8,8 +9,6 @@ from django.template.defaultfilters import slugify as django_slugify
 from django.utils import html, timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
-
-import six
 
 
 def slugify(string):

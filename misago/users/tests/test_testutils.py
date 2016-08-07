@@ -2,6 +2,7 @@ import json
 
 from django.core.urlresolvers import reverse
 from django.utils.encoding import smart_str
+
 from ..testutils import AuthenticatedUserTestCase, SuperUserTestCase, UserTestCase
 
 

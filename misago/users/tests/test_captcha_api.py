@@ -1,8 +1,8 @@
 import json
 
 from django.core.urlresolvers import reverse
-from django.utils.encoding import smart_str
 from django.test import TestCase
+from django.utils.encoding import smart_str
 
 from misago.conf import settings
 

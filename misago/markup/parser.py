@@ -1,5 +1,6 @@
-import bleach
 import markdown
+
+import bleach
 from bs4 import BeautifulSoup
 from htmlmin.minify import html_minify
 

@@ -1,5 +1,5 @@
-from django.utils.six.moves import range
 from django.test import TestCase
+from django.utils.six.moves import range
 
 from .. import serializer
 

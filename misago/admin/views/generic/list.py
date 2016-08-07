@@ -1,5 +1,3 @@
-from six.moves.urllib.parse import urlencode
-
 from django.contrib import messages
 from django.core.paginator import EmptyPage, Paginator
 from django.core.urlresolvers import reverse
@@ -8,6 +6,7 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 
 from misago.core.exceptions import ExplicitFirstPage
+from six.moves.urllib.parse import urlencode
 
 from .base import AdminView
 
