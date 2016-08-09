@@ -53,11 +53,15 @@ export default class extends Form {
     /* jshint ignore:start */
     if (this.state.isReady) {
       return (
-        <p>Well, posting action has started!</p>
+        <div className="container">
+          <p className="lead">Posting action has started!</p>
+        </div>
       );
     } else if (this.state.isErrored) {
       return (
-        <p>Well, posting action has errored!</p>
+        <div className="container">
+          <p className="lead">Posting action has errored!</p>
+        </div>
       );
     } else {
       return (
