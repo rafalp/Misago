@@ -5,8 +5,10 @@ import DropdownToggle from 'misago/components/dropdown-toggle'; // jshint ignore
 import { TabsNav } from 'misago/components/threads/navs'; // jshint ignore:line
 import { read } from 'misago/reducers/threads'; // jshint ignore:line
 import ajax from 'misago/services/ajax'; // jshint ignore:line
+import posting from 'misago/services/posting'; // jshint ignore:line
 import snackbar from 'misago/services/snackbar'; // jshint ignore:line
 import store from 'misago/services/store'; // jshint ignore:line
+import misago from 'misago'; // jshint ignore:line
 
 export default class extends React.Component {
   constructor(props) {
@@ -41,7 +43,13 @@ export default class extends React.Component {
   };
 
   startThread = () => {
-    console.log('TODO: Start thread form!');
+    posting.open({
+      'url': misago.get('THREAD_EDITOR_URL'),
+      'mode': 'START_THREAD',
+      'initial': {
+        'category': this.props.route.category.id
+      }
+    });
   };
   /* jshint ignore:end */
 
