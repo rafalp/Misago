@@ -1,5 +1,5 @@
 import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom'; // jshint ignore:line
 import PostingComponent from 'misago/components/posting'; // jshint ignore:line
 import mount from 'misago/utils/mount-component'; // jshint ignore:line
 
@@ -27,22 +27,22 @@ export class Posting {
       'posting-mount'
     );
 
-    this._placeholder.addClass('in');
+    this._placeholder.addClass('slide-in');
   }
-  // jshint ignore:end
 
-  close() {
+  close = () => {
     if (this._isOpen && !this._isClosing) {
       this._isClosing = true;
-      this._placeholder.removeClass('in');
+      this._placeholder.removeClass('slide-in');
 
       window.setTimeout(() => {
-        ReactDOM.render(null, document.getElementById('posting-mount'));
+        ReactDOM.render(<div />, document.getElementById('posting-mount'));
         this._isClosing = false;
         this._isOpen = false;
       }, 300);
     }
-  }
+  };
+  // jshint ignore:end
 }
 
 export default new Posting();

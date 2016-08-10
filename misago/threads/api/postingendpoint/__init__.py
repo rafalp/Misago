@@ -13,7 +13,7 @@ class PostingInterrupt(Exception):
         self.message = message
 
 
-class EditorFormset(object):
+class PostingEndpoint(object):
     START = 0
     REPLY = 1
     EDIT = 2
@@ -33,15 +33,15 @@ class EditorFormset(object):
         self._load_middlewares()
 
     @property
-    def is_start_form(self):
+    def is_start_endpoint(self):
         return self.mode == self.START
 
     @property
-    def is_reply_form(self):
+    def is_reply_endpoint(self):
         return self.mode == self.REPLY
 
     @property
-    def is_edit_form(self):
+    def is_edit_endpoint(self):
         return self.mode == self.EDIT
 
     def _load_middlewares(self):

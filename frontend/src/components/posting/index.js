@@ -1,6 +1,8 @@
 import React from 'react'; //jshint ignore:line
 import Form from 'misago/components/form';
-import Loading from './loading'; //jshint ignore:line
+import Loader from './loader'; //jshint ignore:line
+import Message from './message'; //jshint ignore:line
+import Placeholder from './placeholder'; //jshint ignore:line
 import ajax from 'misago/services/ajax';
 import * as validators from 'misago/utils/validators'; //jshint ignore:line
 
@@ -45,7 +47,9 @@ export default class extends Form {
   };
 
   loadError = (rejection) => {
-    console.log(rejection);
+    this.setState({
+      isErrored: rejection.detail
+    });
   };
   /* jshint ignore:end */
 
@@ -53,19 +57,30 @@ export default class extends Form {
     /* jshint ignore:start */
     if (this.state.isReady) {
       return (
-        <div className="container">
-          <p className="lead">Posting action has started!</p>
+        <div className="posting-form">
+
+          <Placeholder />
+
+          <div className="posting-overlay">
+            <div className="posting-cover">
+              <div className="posting-inner">
+
+                <div className="container">
+                  <p className="lead">TODO: posting form goes here</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       );
     } else if (this.state.isErrored) {
       return (
-        <div className="container">
-          <p className="lead">Posting action has errored!</p>
-        </div>
+        <Message message={this.state.isErrored} />
       );
     } else {
       return (
-        <Loading />
+        <Loader />
       );
     }
     /* jshint ignore:end */

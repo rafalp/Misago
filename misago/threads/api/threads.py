@@ -80,7 +80,7 @@ class ThreadViewSet(ViewSet):
     @list_route(methods=['get'])
     def editor(self, request):
         if request.user.is_anonymous():
-            raise PermissionDenied(_("You need to be signed in to post content."))
+            raise PermissionDenied(_("You need to be signed in to start threads."))
 
         # list of categories that allow or contain subcategories that allow new threads
         available = []
@@ -109,9 +109,13 @@ class ThreadViewSet(ViewSet):
                 'post': post
             })
 
+        # list only categories that allow new threads, or contains subcategory that allows one
         cleaned_categories = []
         for category in reversed(categories):
             if category['id'] in available:
                 cleaned_categories.append(category)
+
+        if not cleaned_categories:
+            raise PermissionDenied(_("No categories that allow new threads are available to you at the moment."))
 
         return Response(cleaned_categories)

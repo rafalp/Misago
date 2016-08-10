@@ -60,31 +60,20 @@ class ThreadsEditorApiTestCase(AuthenticatedUserTestCase):
             }
         })
 
-    def get_json(self):
-        response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 200)
-
-        return json.loads(smart_str(response.content))
-
     def test_anonymous_user_request(self):
         """endpoint validates if user is authenticated"""
         self.logout_user()
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 403)
-
-        response_json = json.loads(smart_str(response.content))
-        self.assertEqual(response_json['detail'], "You need to be signed in to post content.")
+        self.assertContains(response, "You need to be signed in", status_code=403)
 
     def test_category_visibility_validation(self):
         """endpoint omits non-browseable categories"""
         self.override_acl({'can_browse': 0})
 
         response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 200)
-
-        response_json = json.loads(smart_str(response.content))
-        self.assertEqual(len(response_json), 0)
+        self.assertContains(response, "No categories that allow new threads", status_code=403)
 
     def test_category_disallowing_new_threads(self):
         """endpoint omits category disallowing starting threads"""
@@ -93,10 +82,7 @@ class ThreadsEditorApiTestCase(AuthenticatedUserTestCase):
         })
 
         response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 200)
-
-        response_json = json.loads(smart_str(response.content))
-        self.assertEqual(len(response_json), 0)
+        self.assertContains(response, "No categories that allow new threads", status_code=403)
 
     def test_category_closed_disallowing_new_threads(self):
         """endpoint omits closed category"""
@@ -109,10 +95,7 @@ class ThreadsEditorApiTestCase(AuthenticatedUserTestCase):
         self.category.save()
 
         response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 200)
-
-        response_json = json.loads(smart_str(response.content))
-        self.assertEqual(len(response_json), 0)
+        self.assertContains(response, "No categories that allow new threads", status_code=403)
 
     def test_category_closed_allowing_new_threads(self):
         """endpoint adds closed category that allows new threads"""
