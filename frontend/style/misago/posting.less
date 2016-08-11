@@ -5,6 +5,7 @@
 // Affix and style placeholder
 #posting-placeholder {
   background-color: @gray-lighter;
+  padding: @line-height-computed 0px;
 
   position: fixed;
   bottom: -100%;
@@ -23,6 +24,10 @@
 // First row
 #posting-placeholder .first-row {
   margin-bottom: @line-height-computed;
+
+  .form-control {
+    border: 1px solid darken(@gray-lighter, 15%);
+  }
 }
 
 
@@ -49,13 +54,12 @@
   display: table-cell;
   vertical-align: middle;
   overflow: auto;
-
-  text-align: center;
 }
 
 
-// Hide height placeholder that's below the overlay
-.posting-height-placeholder {
+// Hide filler behind overlay, so it keeps editor height constant
+// between states, but its hidden from user
+.posting-height-filler {
   visibility: hidden;
 }
 
@@ -79,6 +83,10 @@
 
 
 // Posting Loader
+.posting-loader {
+  text-align: center;
+}
+
 .posting-loader .loader {
   height: 100px;
 
@@ -93,6 +101,8 @@
 @posting-icon-width: 28px;
 
 .posting-message {
+  text-align: center;
+
   .material-icon {
     margin-right: @line-height-computed / 3;
     position: relative;

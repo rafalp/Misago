@@ -1,0 +1,36 @@
+//
+// Editor
+// --------------------------------------------------
+
+@editor-border: darken(@gray-lighter, 15%);
+
+.editor-border {
+  background-color: #fff;
+  border: 1px solid @editor-border;
+  border-radius: @border-radius-base;
+}
+
+.form-control {
+  // remove border and resizing
+  border: none;
+  resize: none;
+
+  // remove shadow from control
+  &, &:focus, &:active {
+    .box-shadow(none);
+  }
+}
+
+.editor-footer {
+  border-top: 1px solid @editor-border;
+  padding: @padding-base-vertical @padding-base-horizontal;
+  overflow: auto;
+
+  .pull-left {
+    margin-right: @padding-base-horizontal;
+  }
+
+  .pull-right {
+    margin-left: @padding-base-horizontal;
+  }
+}

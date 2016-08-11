@@ -1,9 +1,10 @@
 // jshint ignore:start
 import React from 'react';
+import Editor from 'misago/components/editor'; //jshint ignore:line
 
 export default function(props) {
   return (
-    <div className="posting-height-placeholder container">
+    <div className="posting-height-filler container">
       <div className="row first-row">
         <div className="col-md-8">
           <input className="form-control" type="text" disabled />
@@ -14,7 +15,7 @@ export default function(props) {
       </div>
       <div className="row">
         <div className="col-md-12">
-          <textarea className="form-control" rows="6" disabled></textarea>
+          <Editor />
         </div>
       </div>
     </div>

@@ -1,9 +1,11 @@
 import React from 'react'; //jshint ignore:line
+import Editor from 'misago/components/editor'; //jshint ignore:line
 import Form from 'misago/components/form';
+import Container from './container'; //jshint ignore:line
 import Loader from './loader'; //jshint ignore:line
 import Message from './message'; //jshint ignore:line
-import Placeholder from './placeholder'; //jshint ignore:line
 import ajax from 'misago/services/ajax';
+import posting from 'misago/services/posting'; //jshint ignore:line
 import * as validators from 'misago/utils/validators'; //jshint ignore:line
 
 export default class extends Form {
@@ -51,28 +53,50 @@ export default class extends Form {
       isErrored: rejection.detail
     });
   };
+
+  onClose = () => {
+    const close = confirm(gettext("Are you sure you want to discard your message?"));
+    if (close) {
+      posting.close();
+    }
+  };
   /* jshint ignore:end */
 
   render() {
     /* jshint ignore:start */
     if (this.state.isReady) {
       return (
-        <div className="posting-form">
-
-          <Placeholder />
-
-          <div className="posting-overlay">
-            <div className="posting-cover">
-              <div className="posting-inner">
-
-                <div className="container">
-                  <p className="lead">TODO: posting form goes here</p>
-                </div>
-              </div>
+        <Container className="posting-form">
+          <div className="row first-row">
+            <div className="col-md-6">
+              <input className="form-control" type="text" placeholder={gettext("Thread title")} />
+            </div>
+            <div className="col-md-4">
+              <input className="form-control" type="text" placeholder={gettext("Category")} />
+            </div>
+            <div className="col-md-2">
+              <button type="button" className="btn btn-default">
+                <span className="material-icon">bookmark</span>
+              </button>
+              <button type="button" className="btn btn-default">
+                <span className="material-icon">visibility_off</span>
+              </button>
+              <button type="button" className="btn btn-default">
+                <span className="material-icon">lock_outline</span>
+              </button>
             </div>
           </div>
+          <div className="row">
+            <div className="col-md-12">
 
-        </div>
+              <Editor
+                onClose={this.onClose}
+                submitLabel={gettext("Post thread")}
+              />
+
+            </div>
+          </div>
+        </Container>
       );
     } else if (this.state.isErrored) {
       return (
