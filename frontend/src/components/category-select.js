@@ -2,16 +2,25 @@
 import React from 'react';
 
 export default function(props) {
-  return <select id={props.id || null}
-                 className={props.className || 'form-control'}
-                 value={props.value}
-                 onChange={props.onChange}>
-    {props.choices.map((item) => {
-      return <option disabled={item.disabled || false}
-                     value={item.value}
-                     key={item.value}>
-        {'- - '.repeat(item.level) + item.label}
-      </option>
-    })}
-  </select>;
+  return (
+    <select
+      className={props.className || 'form-control'}
+      disabled={props.disabled || false}
+      id={props.id || null}
+      onChange={props.onChange}
+      value={props.value}
+    >
+      {props.choices.map((item) => {
+        return (
+          <option
+            disabled={item.disabled || false}
+            key={item.value}
+            value={item.value}
+          >
+            {'- - '.repeat(item.level) + item.label}
+          </option>
+        );
+      })}
+    </select>
+  );
 }

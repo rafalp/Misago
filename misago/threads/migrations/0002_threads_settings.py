@@ -51,6 +51,7 @@ def create_threads_settings_group(apps, schema_editor):
                     'field_extra': {
                         'min_value': 1,
                     },
+                    'is_public': True,
                 },
                 {
                     'setting': 'post_length_max',
@@ -61,6 +62,7 @@ def create_threads_settings_group(apps, schema_editor):
                     'field_extra': {
                         'min_value': 0,
                     },
+                    'is_public': True,
                 },
             )
         })

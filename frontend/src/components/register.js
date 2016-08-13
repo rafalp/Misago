@@ -3,7 +3,7 @@ import Button from 'misago/components/button'; // jshint ignore:line
 import Form from 'misago/components/form';
 import FormGroup from 'misago/components/form-group'; // jshint ignore:line
 import PasswordStrength from 'misago/components/password-strength'; // jshint ignore:line
-import misago from 'misago/index';
+import misago from 'misago';
 import ajax from 'misago/services/ajax';
 import auth from 'misago/services/auth'; // jshint ignore:line
 import captcha from 'misago/services/captcha';
