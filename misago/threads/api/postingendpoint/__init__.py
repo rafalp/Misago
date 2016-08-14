@@ -3,7 +3,6 @@ from importlib import import_module
 from django.utils import timezone
 
 from misago.conf import settings
-from misago.core import forms
 
 
 class PostingInterrupt(Exception):
@@ -18,19 +17,22 @@ class PostingEndpoint(object):
     REPLY = 1
     EDIT = 2
 
-    def __init__(self, **kwargs):
-        self.errors = []
-
-        self._forms_list = []
-        self._forms_dict = {}
-
+    def __init__(self, request, mode, **kwargs):
         self.kwargs = kwargs
+        self.kwargs.update({
+            'mode': mode,
+            'request': request,
+            'user': request.user
+        })
+
         self.__dict__.update(kwargs)
 
         self.datetime = timezone.now()
+        self.errors = {}
+        self._is_validated = False
 
-        self.middlewares = []
-        self._load_middlewares()
+        self.middlewares = self._load_middlewares()
+        self._serializers = self._initialize_serializers()
 
     @property
     def is_start_endpoint(self):
@@ -51,6 +53,7 @@ class PostingEndpoint(object):
             'parsing_result': {},
         })
 
+        middlewares = []
         for middleware in settings.MISAGO_POSTING_MIDDLEWARES:
             module_name = '.'.join(middleware.split('.')[:-1])
             class_name = middleware.split('.')[-1]
@@ -61,93 +64,57 @@ class PostingEndpoint(object):
             try:
                 middleware_obj = middleware_class(prefix=middleware, **kwargs)
                 if middleware_obj.use_this_middleware():
-                    self.middlewares.append((middleware, middleware_obj))
+                    middlewares.append((middleware, middleware_obj))
             except PostingInterrupt:
                 raise ValueError("Posting process can only be interrupted during pre_save phase")
 
-    def get_forms_list(self):
-        """return list of forms belonging to formset"""
-        if not self._forms_list:
-            self._build_forms_cache()
-        return self._forms_list
+        return middlewares
 
-    def get_forms_dict(self):
-        """return list of forms belonging to formset"""
-        if not self._forms_dict:
-            self._build_forms_cache()
-        return self._forms_dict
+    def get_serializers(self):
+        """return list of serializers belonging to serializerset"""
+        return self._serializers
 
-    def _build_forms_cache(self):
+    def _initialize_serializers(self):
         try:
+            serializers = {}
             for middleware, obj in self.middlewares:
-                form = obj.make_form()
-                if form:
-                    self._forms_dict[middleware] = form
-                    self._forms_list.append(form)
+                serializer = obj.get_serializer()
+                if serializer:
+                    serializers[middleware] = serializer
+            return serializers
         except PostingInterrupt:
             raise ValueError("Posting process can only be interrupted during pre_save phase")
 
-    def get_main_forms(self):
-        """return list of main forms"""
-        main_forms = []
-        for form in self.get_forms_list():
-            try:
-                if form.is_main and form.legend:
-                    main_forms.append(form)
-            except AttributeError:
-                pass
-        return main_forms
-
-    def get_supporting_forms(self):
-        """return list of supporting forms"""
-        supporting_forms = {}
-        for form in self.get_forms_list():
-            try:
-                if form.is_supporting:
-                    supporting_forms.setdefault(form.location, []).append(form)
-            except AttributeError:
-                pass
-        return supporting_forms
-
     def is_valid(self):
-        """validate all forms"""
-        all_forms_valid = True
-        for form in self.get_forms_list():
-            if not form.is_valid():
-                if not form.is_bound:
-                    form_class = form.__class__.__name__
-                    raise ValueError("%s didn't receive any data" % form_class)
+        """validate data against all serializers"""
+        for serializer in self._serializers.values():
+            if not serializer.is_valid():
+                self.errors.update(serializer.errors)
 
-                all_forms_valid = False
-                for field_errors in form.errors.as_data().values():
-                    self.errors.extend([unicode(e[0]) for e in field_errors])
-        return all_forms_valid
+        self._is_validated = True
+        return not self.errors
 
     def save(self):
-        """change state"""
-        forms_dict = self.get_forms_dict()
+        """save new state to backend"""
+        if not self._is_validated or self.errors:
+            raise RuntimeError("You need to validate posting data successfully before calling save")
+
         try:
             for middleware, obj in self.middlewares:
-                obj.pre_save(forms_dict.get(middleware))
+                obj.pre_save(self._serializers.get(middleware))
         except PostingInterrupt as e:
             raise ValueError("Posting process can only be interrupted from within interrupt_posting method")
 
         for middleware, obj in self.middlewares:
-            obj.interrupt_posting(forms_dict.get(middleware))
+            obj.interrupt_posting(self._serializers.get(middleware))
 
         try:
             for middleware, obj in self.middlewares:
-                obj.save(forms_dict.get(middleware))
+                obj.save(self._serializers.get(middleware))
             for middleware, obj in self.middlewares:
-                obj.post_save(forms_dict.get(middleware))
+                obj.post_save(self._serializers.get(middleware))
         except PostingInterrupt as e:
             raise ValueError("Posting process can only be interrupted from within interrupt_posting method")
-
-    def update(self):
-        """handle POST that shouldn't result in state change"""
-        forms_dict = self.get_forms_dict()
-        for middleware, obj in self.middlewares:
-            obj.pre_save(forms_dict.get(middleware))
 
 
 class PostingMiddleware(object):
@@ -161,17 +128,17 @@ class PostingMiddleware(object):
     def use_this_middleware(self):
         return True
 
-    def make_form(self):
+    def get_serializer(self):
         pass
 
-    def pre_save(self, form):
+    def pre_save(self, serializer):
         pass
 
-    def interrupt_posting(self, form):
+    def interrupt_posting(self, serializer):
         pass
 
-    def save(self, form):
+    def save(self, serializer):
         pass
 
-    def post_save(self, form):
+    def post_save(self, serializer):
         pass

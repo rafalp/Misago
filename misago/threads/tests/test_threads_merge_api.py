@@ -202,7 +202,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
 
         response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
-            'title': ["Thread title should be at least 5 characters long."]
+            'title': ["Thread title should be at least 5 characters long (it has 3)."]
         })
 
     def test_merge_invalid_category(self):
@@ -326,7 +326,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
 
         response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
-            'title': ["Thread title should be at least 5 characters long."]
+            'title': ["Thread title should be at least 5 characters long (it has 3)."]
         })
 
     def test_merge_allowed_global_weight(self):
@@ -351,7 +351,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
 
         response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
-            'title': ["Thread title should be at least 5 characters long."]
+            'title': ["Thread title should be at least 5 characters long (it has 3)."]
         })
 
     def test_merge_unallowed_close(self):
@@ -403,7 +403,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
 
         response_json = json.loads(smart_str(response.content))
         self.assertEqual(response_json, {
-            'title': ["Thread title should be at least 5 characters long."]
+            'title': ["Thread title should be at least 5 characters long (it has 3)."]
         })
 
     def test_merge(self):

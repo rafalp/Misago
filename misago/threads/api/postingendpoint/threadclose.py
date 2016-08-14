@@ -1,6 +1,5 @@
 from . import START, PostingMiddleware
 from .. import moderation
-from ..forms.posting import ThreadCloseForm
 
 
 class ThreadCloseFormMiddleware(PostingMiddleware):
@@ -11,22 +10,22 @@ class ThreadCloseFormMiddleware(PostingMiddleware):
         else:
             return False
 
-    def make_form(self):
+    def make_serializer(self):
         if self.request.method == 'POST':
             return ThreadCloseForm(self.request.POST, prefix=self.prefix)
         else:
             initial = {'is_closed': self.is_closed}
             return ThreadCloseForm(prefix=self.prefix, initial=initial)
 
-    def pre_save(self, form):
-        if form.is_valid() and self.mode == START:
-            if form.cleaned_data.get('is_closed'):
-                self.thread.is_closed = form.cleaned_data.get('is_closed')
+    def pre_save(self, serializer):
+        if serializer.is_valid() and self.mode == START:
+            if serializer.cleaned_data.get('is_closed'):
+                self.thread.is_closed = serializer.cleaned_data.get('is_closed')
                 self.thread.update_fields.append('is_closed')
 
-    def post_save(self, form):
-        if form.is_valid() and self.mode != START:
-            if self.is_closed != form.cleaned_data.get('is_closed'):
+    def post_save(self, serializer):
+        if serializer.is_valid() and self.mode != START:
+            if self.is_closed != serializer.cleaned_data.get('is_closed'):
                 if self.thread.is_closed:
                     moderation.open_thread(self.user, self.thread)
                 else:

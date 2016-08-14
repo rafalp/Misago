@@ -14,15 +14,16 @@ from misago.threads.threadtypes import trees_map
 
 
 CACHE_NAME = 'misago_categories_tree'
+PRIVATE_THREADS_ROOT_NAME = 'private_threads'
 THREADS_ROOT_NAME = 'root_category'
 
 
 class CategoryManager(TreeManager):
     def private_threads(self):
-        return self.get_special('private_threads')
+        return self.get_special(PRIVATE_THREADS_ROOT_NAME)
 
     def root_category(self):
-        return self.get_special('root_category')
+        return self.get_special(THREADS_ROOT_NAME)
 
     def get_special(self, special_role):
         cache_name = '%s_%s' % (CACHE_NAME, special_role)

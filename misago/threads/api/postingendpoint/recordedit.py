@@ -11,7 +11,7 @@ class RecordEditMiddleware(PostingMiddleware):
             self.original_title = self.thread.title
             self.original_post = self.post.original
 
-    def save(self, form):
+    def save(self, serializer):
         if self.mode == EDIT:
             # record post or thread edit
             is_title_changed = self.original_title != self.thread.title

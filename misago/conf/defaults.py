@@ -125,16 +125,17 @@ MISAGO_MARKUP_EXTENSIONS = ()
 
 MISAGO_POSTING_MIDDLEWARES = (
     # Note: always keep FloodProtectionMiddleware middleware first one
-    'misago.threads.posting.floodprotection.FloodProtectionMiddleware',
-    'misago.threads.posting.reply.ReplyFormMiddleware',
-    'misago.threads.posting.participants.ThreadParticipantsFormMiddleware',
-    'misago.threads.posting.threadlabel.ThreadLabelFormMiddleware',
-    'misago.threads.posting.threadpin.ThreadPinFormMiddleware',
-    'misago.threads.posting.threadclose.ThreadCloseFormMiddleware',
-    'misago.threads.posting.recordedit.RecordEditMiddleware',
-    'misago.threads.posting.updatestats.UpdateStatsMiddleware',
+    'misago.threads.api.postingendpoint.floodprotection.FloodProtectionMiddleware',
+    'misago.threads.api.postingendpoint.category.CategoryMiddleware',
+    'misago.threads.api.postingendpoint.reply.ReplyMiddleware',
+        #'misago.threads.api.postingendpoint.participants.ThreadParticipantsFormMiddleware',
+        #
+        #'misago.threads.api.postingendpoint.threadpin.ThreadPinFormMiddleware',
+        #'misago.threads.api.postingendpoint.threadclose.ThreadCloseFormMiddleware',
+        #'misago.threads.api.postingendpoint.recordedit.RecordEditMiddleware',
+    'misago.threads.api.postingendpoint.updatestats.UpdateStatsMiddleware',
     # Note: always keep SaveChangesMiddleware middleware last one
-    'misago.threads.posting.savechanges.SaveChangesMiddleware',
+    'misago.threads.api.postingendpoint.savechanges.SaveChangesMiddleware',
 )
 
 MISAGO_THREAD_TYPES = (

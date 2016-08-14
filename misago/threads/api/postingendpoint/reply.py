@@ -1,56 +1,33 @@
-from misago.markup import Editor
+from django.utils.translation import ugettext_lazy
 
-from . import EDIT, REPLY, START, PostingMiddleware
-from ..checksums import update_post_checksum
-from ..forms.posting import ReplyForm, ThreadForm
-from ..permissions import can_edit_thread
+from rest_framework import serializers
+
+from misago.conf import settings
+from misago.markup import common_flavour
+
+from . import PostingEndpoint, PostingMiddleware
+from ...checksums import update_post_checksum
+from ...validators import validate_post, validate_title
 
 
-class ReplyFormMiddleware(PostingMiddleware):
-    def make_form(self):
-        initial_data = {'title': self.thread.title, 'post': self.post.original}
-
-        if self.mode == EDIT:
-            is_first_post = self.post.id == self.thread.first_post_id
-            if is_first_post and can_edit_thread(self.user, self.thread):
-                FormType = ThreadForm
-            else:
-                FormType = ReplyForm
-        elif self.mode == START:
-            FormType = ThreadForm
+class ReplyMiddleware(PostingMiddleware):
+    def get_serializer(self):
+        if self.mode == PostingEndpoint.START:
+            serializer = ThreadSerializer(data=self.request.data)
         else:
-            FormType = ReplyForm
+            serializer = ReplySerializer(data=self.request.data)
+        return serializer
 
-        if FormType == ThreadForm:
-            if self.request.method == 'POST':
-                form = FormType(
-                    self.thread, self.post, self.request, self.request.POST)
-            else:
-                form = FormType(
-                    self.thread, self.post, self.request, initial=initial_data)
+    def save(self, serializer):
+        if self.mode == PostingEndpoint.START:
+            self.new_thread(serializer.validated_data)
+
+        parsing_result = self.parse_post(serializer.validated_data['post'])
+
+        if self.mode == PostingEndpoint.EDIT:
+            self.edit_post(serializer.validated_data, parsing_result)
         else:
-            if self.request.method == 'POST':
-                form = FormType(
-                    self.post, self.request, self.request.POST)
-            else:
-                form = FormType(
-                    self.post, self.request, initial=initial_data)
-
-        form.post_editor = Editor(form['post'], has_preview=True)
-        return form
-
-    def pre_save(self, form):
-        if form.is_valid():
-            self.parsing_result.update(form.parsing_result)
-
-    def save(self, form):
-        if self.mode == START:
-            self.new_thread(form)
-
-        if self.mode == EDIT:
-            self.edit_post(form)
-        else:
-            self.new_post()
+            self.new_post(serializer.validated_data, parsing_result)
 
         self.post.updated_on = self.datetime
         self.post.save()
@@ -58,8 +35,8 @@ class ReplyFormMiddleware(PostingMiddleware):
         update_post_checksum(self.post)
         self.post.update_fields.append('checksum')
 
-    def new_thread(self, form):
-        self.thread.set_title(form.cleaned_data['title'])
+    def new_thread(self, validated_data):
+        self.thread.set_title(validated_data['title'])
         self.thread.starter_name = self.user.username
         self.thread.starter_slug = self.user.slug
         self.thread.last_poster_name = self.user.username
@@ -68,14 +45,39 @@ class ReplyFormMiddleware(PostingMiddleware):
         self.thread.last_post_on = self.datetime
         self.thread.save()
 
-    def edit_post(self, form):
-        if form.cleaned_data.get('title'):
-            self.thread.set_title(form.cleaned_data['title'])
-            self.thread.update_fields.extend(('title', 'slug'))
+    def edit_post(self, validated_data, parsing_result):
+        pass # todo: test if post was really edited, if so, register change
 
-    def new_post(self):
+    def new_post(self, validated_data, parsing_result):
         self.post.thread = self.thread
         self.post.poster = self.user
         self.post.poster_name = self.user.username
-        self.post.poster_ip = self.request._misago_real_ip
+        self.post.poster_ip = self.request.user_ip
         self.post.posted_on = self.datetime
+
+        self.post.original = parsing_result['original_text']
+        self.post.parsed = parsing_result['parsed_text']
+
+    def parse_post(self, post):
+        if self.mode == PostingEndpoint.START:
+            return common_flavour(self.request, self.user, post)
+        else:
+            return common_flavour(self.request, self.post.poster, post)
+
+
+class ReplySerializer(serializers.Serializer):
+    post = serializers.CharField(
+        validators=[validate_post],
+        error_messages={
+            'required': ugettext_lazy("You have to enter a message")
+        }
+    )
+
+
+class ThreadSerializer(ReplySerializer):
+    title = serializers.CharField(
+        validators=[validate_title],
+        error_messages={
+        'required': ugettext_lazy("You have to enter thread title.")
+        }
+    )

@@ -12,12 +12,13 @@ from misago.categories.permissions import allow_browse_category, allow_see_categ
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
 from misago.readtracker.categoriestracker import read_category
 
-from ..models import Subscription
+from ..models import Post, Subscription, Thread
 from ..moderation import threads as moderation
 from ..permissions.threads import can_start_thread
 from ..subscriptions import make_subscription_aware
 from ..threadtypes import trees_map
 from ..viewmodels.thread import ForumThread
+from .postingendpoint import PostingEndpoint
 from .threadendpoints.list import threads_list_endpoint
 from .threadendpoints.merge import threads_merge_endpoint
 from .threadendpoints.patch import thread_patch_endpoint
@@ -53,6 +54,34 @@ class ViewSet(viewsets.ViewSet):
 
 class ThreadViewSet(ViewSet):
     thread = ForumThread
+
+    def create(self, request):
+        if request.user.is_anonymous():
+            raise PermissionDenied(_("You need to be signed in to start threads."))
+
+        # Initialize empty instances for new thread
+        thread = Thread()
+        post = Post(thread=thread)
+
+        # Put them through posting pipeline
+        posting = PostingEndpoint(
+            request,
+            PostingEndpoint.START,
+            tree_name=THREADS_ROOT_NAME,
+            thread=thread,
+            post=post
+        )
+
+        if posting.is_valid():
+            posting.save()
+
+            return Response({
+                'id': thread.pk,
+                'title': thread.title,
+                'url': thread.get_absolute_url()
+            })
+        else:
+            return Response(posting.errors, status=400)
 
     @list_route(methods=['post'])
     def merge(self, request):

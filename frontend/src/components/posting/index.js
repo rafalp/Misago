@@ -105,7 +105,7 @@ export default class extends Form {
     });
 
     this.setState({
-      category,
+      category: category.id,
       categoryOptions: category.post
     });
   };
@@ -181,7 +181,8 @@ export default class extends Form {
   }
 
   handleSuccess(success) {
-    window.location = success.url.index;
+    snackbar.success(gettext("Your thread has been posted!"));
+    window.location = success.url;
   }
 
   handleError(rejection) {
@@ -299,8 +300,8 @@ export function getPostValidators() {
   return [
     validators.minLength(misago.get('SETTINGS').post_length_min, (limitValue, length) => {
       const message = ngettext(
-        "Post content cannot be shorter than %(limit_value)s character (it has %(show_value)s).",
-        "Post content cannot be shorter than %(limit_value)s characters (it has %(show_value)s).",
+        "Posted message cannot be shorter than %(limit_value)s character (it has %(show_value)s).",
+        "Posted message cannot be shorter than %(limit_value)s characters (it has %(show_value)s).",
         limitValue);
 
       return interpolate(message, {
@@ -308,10 +309,12 @@ export function getPostValidators() {
         show_value: length
       }, true);
     }),
-    validators.maxLength(misago.get('SETTINGS').post_length_max, (limitValue, length) => {
+    // max len 1000000 cos post_length_max may be zero, disabling limitation
+    // TODO: make this valiador optional
+    validators.maxLength(misago.get('SETTINGS').post_length_max || 1000000, (limitValue, length) => {
       const message = ngettext(
-        "Post content cannot be longer than %(limit_value)s character (it has %(show_value)s).",
-        "Post content cannot be longer than %(limit_value)s characters (it has %(show_value)s).",
+        "Posted message cannot be longer than %(limit_value)s character (it has %(show_value)s).",
+        "Posted message cannot be longer than %(limit_value)s characters (it has %(show_value)s).",
         limitValue);
 
       return interpolate(message, {
