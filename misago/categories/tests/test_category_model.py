@@ -99,17 +99,17 @@ class CategoryModelTests(MisagoTestCase):
         hidden.save()
 
         self.category.synchronize()
-        self.assertEqual(self.category.threads, 2)
-        self.assertEqual(self.category.posts, 2)
-        self.assertEqual(self.category.last_thread, hidden)
+        self.assertEqual(self.category.threads, 1)
+        self.assertEqual(self.category.posts, 1)
+        self.assertEqual(self.category.last_thread, thread)
 
         unapproved.is_unapproved = False
         unapproved.post_set.update(is_unapproved=False)
         unapproved.save()
 
         self.category.synchronize()
-        self.assertEqual(self.category.threads, 3)
-        self.assertEqual(self.category.posts, 3)
+        self.assertEqual(self.category.threads, 2)
+        self.assertEqual(self.category.posts, 2)
         self.assertEqual(self.category.last_thread, unapproved)
 
     def test_delete_content(self):
