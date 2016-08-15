@@ -128,11 +128,11 @@ MISAGO_POSTING_MIDDLEWARES = (
     'misago.threads.api.postingendpoint.floodprotection.FloodProtectionMiddleware',
     'misago.threads.api.postingendpoint.category.CategoryMiddleware',
     'misago.threads.api.postingendpoint.reply.ReplyMiddleware',
-        #'misago.threads.api.postingendpoint.participants.ThreadParticipantsFormMiddleware',
-        #
-        #'misago.threads.api.postingendpoint.threadpin.ThreadPinFormMiddleware',
-        #'misago.threads.api.postingendpoint.threadclose.ThreadCloseFormMiddleware',
-        #'misago.threads.api.postingendpoint.recordedit.RecordEditMiddleware',
+    # 'misago.threads.api.postingendpoint.participants.ThreadParticipantsFormMiddleware',
+    'misago.threads.api.postingendpoint.pin.PinMiddleware',
+    'misago.threads.api.postingendpoint.close.CloseMiddleware',
+    'misago.threads.api.postingendpoint.hide.HideMiddleware',
+    # 'misago.threads.api.postingendpoint.recordedit.RecordEditMiddleware',
     'misago.threads.api.postingendpoint.updatestats.UpdateStatsMiddleware',
     # Note: always keep SaveChangesMiddleware middleware last one
     'misago.threads.api.postingendpoint.savechanges.SaveChangesMiddleware',

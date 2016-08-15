@@ -27,8 +27,7 @@ def patch_weight(request, thread, value):
         if thread.acl.get('can_pin') == 2:
             moderation.pin_thread_globally(request, thread)
         else:
-            raise PermissionDenied(
-                _("You don't have permission to pin this thread globally."))
+            raise PermissionDenied(_("You don't have permission to pin this thread globally."))
     elif value == 1:
         moderation.pin_thread_locally(request, thread)
     elif value == 0:
@@ -55,8 +54,7 @@ def patch_move(request, thread, value):
 
         return {'category': CategorySerializer(new_category).data}
     else:
-        raise PermissionDenied(
-            _("You don't have permission to move this thread."))
+        raise PermissionDenied(_("You don't have permission to move this thread."))
 thread_patch_endpoint.replace('category', patch_move)
 
 
@@ -101,8 +99,7 @@ def patch_is_unapproved(request, thread, value):
             'has_unapproved_posts': thread.has_unapproved_posts,
         }
     else:
-        raise PermissionDenied(
-            _("You don't have permission to approve this thread."))
+        raise PermissionDenied(_("You don't have permission to approve this thread."))
 thread_patch_endpoint.replace('is-unapproved', patch_is_unapproved)
 
 
@@ -116,11 +113,9 @@ def patch_is_closed(request, thread, value):
         return {'is_closed': thread.is_closed}
     else:
         if value:
-            raise PermissionDenied(
-                _("You don't have permission to close this thread."))
+            raise PermissionDenied(_("You don't have permission to close this thread."))
         else:
-            raise PermissionDenied(
-                _("You don't have permission to open this thread."))
+            raise PermissionDenied(_("You don't have permission to open this thread."))
 thread_patch_endpoint.replace('is-closed', patch_is_closed)
 
 
@@ -133,8 +128,7 @@ def patch_is_hidden(request, thread, value):
 
         return {'is_hidden': thread.is_hidden}
     else:
-        raise PermissionDenied(
-            _("You don't have permission to hide this thread."))
+        raise PermissionDenied(_("You don't have permission to hide this thread."))
 thread_patch_endpoint.replace('is-hidden', patch_is_hidden)
 
 

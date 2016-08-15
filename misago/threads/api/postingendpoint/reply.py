@@ -13,10 +13,9 @@ from ...validators import validate_post, validate_title
 class ReplyMiddleware(PostingMiddleware):
     def get_serializer(self):
         if self.mode == PostingEndpoint.START:
-            serializer = ThreadSerializer(data=self.request.data)
+            return ThreadSerializer(data=self.request.data)
         else:
-            serializer = ReplySerializer(data=self.request.data)
-        return serializer
+            return ReplySerializer(data=self.request.data)
 
     def save(self, serializer):
         if self.mode == PostingEndpoint.START:
@@ -28,12 +27,17 @@ class ReplyMiddleware(PostingMiddleware):
             self.edit_post(serializer.validated_data, parsing_result)
         else:
             self.new_post(serializer.validated_data, parsing_result)
+            self.thread.set_first_post(self.post)
 
         self.post.updated_on = self.datetime
         self.post.save()
 
         update_post_checksum(self.post)
         self.post.update_fields.append('checksum')
+
+        if self.mode != PostingEndpoint.EDIT:
+            self.thread.set_last_post(self.post)
+        self.thread.save()
 
     def new_thread(self, validated_data):
         self.thread.set_title(validated_data['title'])

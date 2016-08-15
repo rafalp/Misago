@@ -4,8 +4,8 @@ from django.utils import timezone
 
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from ..posting import PostingInterrupt
-from ..posting.floodprotection import MIN_POSTING_PAUSE, FloodProtectionMiddleware
+from ..api.postingendpoint import PostingInterrupt
+from ..api.postingendpoint.floodprotection import MIN_POSTING_PAUSE, FloodProtectionMiddleware
 
 
 class FloodProtectionMiddlewareTests(AuthenticatedUserTestCase):

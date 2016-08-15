@@ -133,7 +133,6 @@ can_see_category = return_boolean(allow_see_category)
 def allow_browse_category(user, target):
     target_acl = user.acl['categories'].get(target.id, {'can_browse': False})
     if not target_acl['can_browse']:
-        message = _('You don\'t have permission '
-                    'to browse "%(category)s" contents.')
+        message = _('You don\'t have permission to browse "%(category)s" contents.')
         raise PermissionDenied(message % {'category': target.name})
 can_browse_category = return_boolean(allow_browse_category)

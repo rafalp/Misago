@@ -91,6 +91,13 @@ export function PinOptions(props) {
         icon = 'info_outline';
         onClick = props.onPinGlobally;
         tooltip = gettext("Pinned locally");
+
+        if (props.show == 2) {
+          onClick = props.onPinGlobally;
+        } else {
+          onClick = props.onUnpin;
+        }
+
         break;
 
       case 2:

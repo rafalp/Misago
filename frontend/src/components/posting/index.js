@@ -56,7 +56,8 @@ export default class extends Form {
 
     // hydrate categories, extract posting options
     const categories = data.map((item) => {
-      if (!category && item.post !== false) {
+      // pick first category that allows posting and if it may, override it with initial one
+      if (item.post !== false && (!category || item.id == this.state.category)) {
         category = item.id;
         categoryOptions = item.post;
       }
@@ -104,9 +105,17 @@ export default class extends Form {
       return event.target.value == item.value;
     });
 
+    // if selected pin is greater than allowed, reduce it
+    let pin = this.state.pin;
+    if (category.post.pin && category.post.pin < pin) {
+      pin = category.post.pin;
+    }
+
     this.setState({
       category: category.id,
-      categoryOptions: category.post
+      categoryOptions: category.post,
+
+      pin
     });
   };
 
@@ -183,6 +192,11 @@ export default class extends Form {
   handleSuccess(success) {
     snackbar.success(gettext("Your thread has been posted!"));
     window.location = success.url;
+
+    // keep form loading
+    this.setState({
+      'isLoading': true
+    });
   }
 
   handleError(rejection) {
@@ -273,8 +287,8 @@ export function getThreadTitleValidators() {
   return [
     validators.minLength(misago.get('SETTINGS').thread_title_length_min, (limitValue, length) => {
       const message = ngettext(
-        "Thread title cannot be shorter than %(limit_value)s character (it has %(show_value)s).",
-        "Thread title cannot be shorter than %(limit_value)s characters (it has %(show_value)s).",
+        "Thread title should be at least %(limit_value)s character long (it has %(show_value)s).",
+        "Thread title should be at least %(limit_value)s characters long (it has %(show_value)s).",
         limitValue);
 
       return interpolate(message, {
@@ -300,8 +314,8 @@ export function getPostValidators() {
   return [
     validators.minLength(misago.get('SETTINGS').post_length_min, (limitValue, length) => {
       const message = ngettext(
-        "Posted message cannot be shorter than %(limit_value)s character (it has %(show_value)s).",
-        "Posted message cannot be shorter than %(limit_value)s characters (it has %(show_value)s).",
+        "Posted message should be at least %(limit_value)s character long (it has %(show_value)s).",
+        "Posted message should be at least %(limit_value)s characters long (it has %(show_value)s).",
         limitValue);
 
       return interpolate(message, {
