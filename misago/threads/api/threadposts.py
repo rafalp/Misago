@@ -71,7 +71,18 @@ class ViewSet(viewsets.ViewSet):
         )
 
         if posting.is_valid():
-            raise NotImplementedError("NOT YET!")
+            post_edits = post.edits
+
+            posting.save()
+
+            post.is_read = True
+            post.is_new = False
+            post.edits = post_edits + 1
+
+            if post.poster:
+                make_users_status_aware(request.user, [post.poster])
+
+            return Response(PostSerializer(post).data)
         else:
             return Response(posting.errors, status=400)
 

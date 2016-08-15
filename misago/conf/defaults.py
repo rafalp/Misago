@@ -132,6 +132,7 @@ MISAGO_POSTING_MIDDLEWARES = (
     'misago.threads.api.postingendpoint.pin.PinMiddleware',
     'misago.threads.api.postingendpoint.close.CloseMiddleware',
     'misago.threads.api.postingendpoint.hide.HideMiddleware',
+    'misago.threads.api.postingendpoint.protect.ProtectMiddleware',
     # 'misago.threads.api.postingendpoint.recordedit.RecordEditMiddleware',
     'misago.threads.api.postingendpoint.updatestats.UpdateStatsMiddleware',
     # Note: always keep SaveChangesMiddleware middleware last one
