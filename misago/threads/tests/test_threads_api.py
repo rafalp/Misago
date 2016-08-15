@@ -24,7 +24,8 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
         self.api_link = self.thread.get_api_url()
 
     def override_acl(self, acl=None):
-        final_acl = {
+        final_acl = self.user.acl['categories'][self.category.pk]
+        final_acl.update({
             'can_see': 1,
             'can_browse': 1,
             'can_see_all_threads': 1,
@@ -34,7 +35,7 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
             'can_edit_posts': 0,
             'can_hide_posts': 0,
             'can_hide_own_posts': 0,
-        }
+        })
 
         if acl:
             final_acl.update(acl)
@@ -115,6 +116,43 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
 
             response = self.client.get(link)
             self.assertEqual(response.status_code, 404)
+
+    def test_api_validates_posts_visibility(self):
+        """api endpoint validates posts visiblity"""
+        self.override_acl({
+            'can_hide_posts': 0
+        })
+
+        hidden_post = testutils.reply_thread(self.thread, is_hidden=True, message="I'am hidden test message!")
+
+        response = self.client.get(self.tested_links[1])
+        self.assertNotContains(response, hidden_post.parsed) # post's body is hidden
+
+        # add permission to see hidden posts
+        self.override_acl({
+            'can_hide_posts': 1
+        })
+
+        response = self.client.get(self.tested_links[1])
+        self.assertContains(response, hidden_post.parsed) # hidden post's body is visible with permission
+
+        self.override_acl({
+            'can_approve_content': 0
+        })
+
+        # unapproved posts shouldn't show at all
+        unapproved_post = testutils.reply_thread(self.thread, is_unapproved=True)
+
+        response = self.client.get(self.tested_links[1])
+        self.assertNotContains(response, unapproved_post.get_absolute_url())
+
+        # add permission to see unapproved posts
+        self.override_acl({
+            'can_approve_content': 1
+        })
+
+        response = self.client.get(self.tested_links[1])
+        self.assertContains(response, unapproved_post.get_absolute_url())
 
 
 class ThreadDeleteApiTests(ThreadsApiTestCase):

@@ -114,6 +114,9 @@ class Post(models.Model):
     def get_absolute_url(self):
         return self.thread_type.get_post_absolute_url(self)
 
+    def get_api_url(self):
+        return self.thread_type.get_post_absolute_url(self)
+
     @property
     def short(self):
         if self.is_valid:

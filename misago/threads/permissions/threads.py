@@ -423,6 +423,13 @@ def add_acl_to_thread(user, thread):
         thread.acl['can_merge'] = category_acl.get('can_merge_threads', False)
 
 
+def add_acl_to_post(user, post):
+    if post.is_event:
+        add_acl_to_event(user, post)
+    else:
+        add_acl_to_reply(user, post)
+
+
 def add_acl_to_event(user, event):
     category_acl = user.acl['categories'].get(event.category_id, {})
     can_hide_events = category_acl.get('can_hide_events', 0)
@@ -454,13 +461,6 @@ def add_acl_to_reply(user, post):
 
     if not post.acl['can_see_hidden']:
         post.acl['can_see_hidden'] = post.id == post.thread.first_post_id
-
-
-def add_acl_to_post(user, post):
-    if post.is_event:
-        add_acl_to_event(user, post)
-    else:
-        add_acl_to_reply(user, post)
 
 
 def register_with(registry):
@@ -567,18 +567,18 @@ def allow_edit_post(user, target):
     if not category_acl['can_edit_posts']:
         raise PermissionDenied(_("You can't edit posts in this category."))
 
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't edit posts in it."))
+        if target.thread.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't edit posts in it."))
+
     if target.is_hidden and not can_unhide_post(user, target):
         raise PermissionDenied(_("This post is hidden, you can't edit it."))
 
     if category_acl['can_edit_posts'] == 1:
         if target.poster_id != user.pk:
             raise PermissionDenied(_("You can't edit other users posts in this category."))
-
-        if not category_acl['can_close_threads']:
-            if target.category.is_closed:
-                raise PermissionDenied(_("This category is closed. You can't edit posts in it."))
-            if target.thread.is_closed:
-                raise PermissionDenied(_("This thread is closed. You can't edit posts in it."))
 
         if target.is_protected and not category_acl['can_protect_posts']:
             raise PermissionDenied(_("This post is protected. You can't edit it."))

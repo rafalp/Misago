@@ -7,16 +7,18 @@ from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
+from .. import testutils
 
-class ThreadsEditorApiTestCase(AuthenticatedUserTestCase):
+
+class EditorApiTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ThreadsEditorApiTestCase, self).setUp()
+        super(EditorApiTestCase, self).setUp()
 
         self.category = Category.objects.get(slug='first-category')
-        self.api_link = reverse('misago:api:thread-editor')
 
     def override_acl(self, acl=None):
-        final_acl = {
+        final_acl = self.user.acl['categories'][self.category.pk]
+        final_acl.update({
             'can_see': 1,
             'can_browse': 1,
             'can_see_all_threads': 1,
@@ -44,7 +46,7 @@ class ThreadsEditorApiTestCase(AuthenticatedUserTestCase):
             'can_see_posts_likes': 0,
             'can_like_posts': 0,
             'can_hide_events': 0,
-        }
+        })
 
         if acl:
             final_acl.update(acl)
@@ -60,12 +62,18 @@ class ThreadsEditorApiTestCase(AuthenticatedUserTestCase):
             }
         })
 
+
+class ThreadPostEditorApiTests(EditorApiTestCase):
+    def setUp(self):
+        super(ThreadPostEditorApiTests, self).setUp()
+
+        self.api_link = reverse('misago:api:thread-editor')
+
     def test_anonymous_user_request(self):
         """endpoint validates if user is authenticated"""
         self.logout_user()
 
         response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 403)
         self.assertContains(response, "You need to be signed in", status_code=403)
 
     def test_category_visibility_validation(self):
@@ -249,4 +257,337 @@ class ThreadsEditorApiTestCase(AuthenticatedUserTestCase):
                 'hide': True,
                 'pin': 0
             }
+        })
+
+
+class ThreadReplyEditorApiTests(EditorApiTestCase):
+    def setUp(self):
+        super(ThreadReplyEditorApiTests, self).setUp()
+
+        self.thread = testutils.post_thread(category=self.category)
+        self.api_link = reverse('misago:api:thread-post-editor', kwargs={
+            'thread_pk': self.thread.pk
+        })
+
+    def test_anonymous_user_request(self):
+        """endpoint validates if user is authenticated"""
+        self.logout_user()
+
+        response = self.client.get(self.api_link)
+        self.assertContains(response, "You have to sign in to reply threads.", status_code=403)
+
+    def test_thread_visibility(self):
+        """thread's visibility is validated"""
+        self.override_acl({'can_see': 0})
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 404)
+
+        self.override_acl({'can_browse': 0})
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 404)
+
+        self.override_acl({'can_see_all_threads': 0})
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 404)
+
+    def test_no_reply_permission(self):
+        """permssion to reply is validated"""
+        self.override_acl({
+            'can_reply_threads': 0
+        })
+
+        response = self.client.get(self.api_link)
+        self.assertContains(response, "You can't reply to threads in this category.", status_code=403)
+
+    def test_closed_category(self):
+        """permssion to reply in closed category is validated"""
+        self.override_acl({
+            'can_reply_threads': 1,
+            'can_close_threads': 0
+        })
+
+        self.category.is_closed = True
+        self.category.save()
+
+        response = self.client.get(self.api_link)
+        self.assertContains(response, "This category is closed. You can't reply to threads in it.", status_code=403)
+
+        # allow to post in closed category
+        self.override_acl({
+            'can_reply_threads': 1,
+            'can_close_threads': 1
+        })
+
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+    def test_closed_thread(self):
+        """permssion to reply in closed thread is validated"""
+        self.override_acl({
+            'can_reply_threads': 1,
+            'can_close_threads': 0
+        })
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        response = self.client.get(self.api_link)
+        self.assertContains(response, "You can't reply to closed threads in this category.", status_code=403)
+
+        # allow to post in closed thread
+        self.override_acl({
+            'can_reply_threads': 1,
+            'can_close_threads': 1
+        })
+
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+    def test_allow_reply_thread(self):
+        """api returns 200 code if thread reply is allowed"""
+        self.override_acl({
+            'can_reply_threads': 1
+        })
+
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+    def test_reply_to_visibility(self):
+        """api validates replied post visibility"""
+        self.override_acl({
+            'can_reply_threads': 1
+        })
+
+        # unapproved reply can't be replied to
+        unapproved_reply = testutils.reply_thread(self.thread, is_unapproved=True)
+
+        response = self.client.get('{}?reply={}'.format(self.api_link, unapproved_reply.pk))
+        self.assertEqual(response.status_code, 404)
+
+        # hidden reply can't be replied to
+        self.override_acl({
+            'can_reply_threads': 1
+        })
+
+        hidden_reply = testutils.reply_thread(self.thread, is_hidden=True)
+
+        response = self.client.get('{}?reply={}'.format(self.api_link, hidden_reply.pk))
+        self.assertContains(response, "You can't reply to hidden posts", status_code=403)
+
+    def test_reply_to_other_thread_post(self):
+        """api validates is replied post belongs to same thread"""
+        other_thread = testutils.post_thread(category=self.category)
+        reply_to = testutils.reply_thread(other_thread)
+
+        response = self.client.get('{}?reply={}'.format(self.api_link, reply_to.pk))
+        self.assertEqual(response.status_code, 404)
+
+    def test_reply_to(self):
+        """api includes replied to post details in response"""
+        self.override_acl({
+            'can_reply_threads': 1
+        })
+
+        reply_to = testutils.reply_thread(self.thread)
+
+        response = self.client.get('{}?reply={}'.format(self.api_link, reply_to.pk))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(smart_str(response.content)), {
+            'id': reply_to.pk,
+            'post': reply_to.original,
+            'poster': reply_to.poster_name
+        })
+
+
+class EditReplyEditorApiTests(EditorApiTestCase):
+    def setUp(self):
+        super(EditReplyEditorApiTests, self).setUp()
+
+        self.thread = testutils.post_thread(category=self.category)
+        self.post = testutils.reply_thread(self.thread, poster=self.user)
+
+        self.api_link = reverse('misago:api:thread-post-editor', kwargs={
+            'thread_pk': self.thread.pk,
+            'pk': self.post.pk
+        })
+
+    def test_anonymous_user_request(self):
+        """endpoint validates if user is authenticated"""
+        self.logout_user()
+
+        response = self.client.get(self.api_link)
+        self.assertContains(response, "You have to sign in to edit posts.", status_code=403)
+
+    def test_thread_visibility(self):
+        """thread's visibility is validated"""
+        self.override_acl({'can_see': 0})
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 404)
+
+        self.override_acl({'can_browse': 0})
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 404)
+
+        self.override_acl({'can_see_all_threads': 0})
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 404)
+
+    def test_no_edit_permission(self):
+        """permssion to edit is validated"""
+        self.override_acl({
+            'can_edit_posts': 0
+        })
+
+        response = self.client.get(self.api_link)
+        self.assertContains(response, "You can't edit posts in this category.", status_code=403)
+
+    def test_closed_category(self):
+        """permssion to edit in closed category is validated"""
+        self.override_acl({
+            'can_edit_posts': 1,
+            'can_close_threads': 0
+        })
+
+        self.category.is_closed = True
+        self.category.save()
+
+        response = self.client.get(self.api_link)
+        self.assertContains(response, "This category is closed. You can't edit posts in it.", status_code=403)
+
+        # allow to edit in closed category
+        self.override_acl({
+            'can_edit_posts': 1,
+            'can_close_threads': 1
+        })
+
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+    def test_closed_thread(self):
+        """permssion to edit in closed thread is validated"""
+        self.override_acl({
+            'can_edit_posts': 1,
+            'can_close_threads': 0
+        })
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        response = self.client.get(self.api_link)
+        self.assertContains(response, "This thread is closed. You can't edit posts in it.", status_code=403)
+
+        # allow to edit in closed thread
+        self.override_acl({
+            'can_edit_posts': 1,
+            'can_close_threads': 1
+        })
+
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+    def test_protected_post(self):
+        """permssion to edit protected post is validated"""
+        self.override_acl({
+            'can_edit_posts': 1,
+            'can_protect_posts': 0
+        })
+
+        self.post.is_protected = True
+        self.post.save()
+
+        response = self.client.get(self.api_link)
+        self.assertContains(response, "This post is protected. You can't edit it.", status_code=403)
+
+        # allow to post in closed thread
+        self.override_acl({
+            'can_edit_posts': 1,
+            'can_protect_posts': 1
+        })
+
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+    def test_post_visibility(self):
+        """edited posts visibility is validated"""
+        self.override_acl({
+            'can_edit_posts': 1
+        })
+
+        self.post.is_hidden = True;
+        self.post.save()
+
+        response = self.client.get(self.api_link)
+        self.assertContains(response, "This post is hidden, you can't edit it.", status_code=403)
+
+        # allow hidden edition
+        self.override_acl({
+            'can_edit_posts': 1,
+            'can_hide_posts': 1
+        })
+
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        # test unapproved post
+        self.post.is_hidden = False;
+        self.post.poster = None;
+        self.post.save()
+
+        self.override_acl({
+            'can_edit_posts': 2,
+            'can_approve_content': 0
+        })
+
+        self.post.is_unapproved = True;
+        self.post.save()
+
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 404)
+
+        # allow unapproved edition
+        self.override_acl({
+            'can_edit_posts': 2,
+            'can_approve_content': 1
+        })
+
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+    def test_other_user_post(self):
+        """api validates if other user's post can be edited"""
+        self.override_acl({
+            'can_edit_posts': 1,
+        })
+
+        self.post.poster = None;
+        self.post.save()
+
+        response = self.client.get(self.api_link)
+        self.assertContains(response, "You can't edit other users posts in this category.", status_code=403)
+
+        # allow other users post edition
+        self.override_acl({
+            'can_edit_posts': 2,
+        })
+
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+    def test_edit(self):
+        """endpoint returns valid configuration for editor"""
+        self.override_acl({
+            'can_edit_posts': 1,
+        })
+
+        response = self.client.get(self.api_link)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(smart_str(response.content)), {
+            'id': self.post.pk,
+            'api': self.post.get_api_url(),
+            'post': self.post.original,
+            'can_protect': False,
+            'is_protected': self.post.is_protected,
+            'poster': self.post.poster_name
         })

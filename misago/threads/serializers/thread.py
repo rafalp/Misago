@@ -88,6 +88,9 @@ class ThreadSerializer(serializers.ModelSerializer):
             'posts': reverse('misago:api:thread-post-list', kwargs={
                 'thread_pk': obj.pk
             }),
+            'editor': reverse('misago:api:thread-post-editor', kwargs={
+                'thread_pk': obj.pk
+            }),
             'read': 'nada',
         }
 

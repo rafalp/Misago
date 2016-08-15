@@ -80,3 +80,6 @@ class Thread(ThreadType):
                 'pk': post.thread.pk,
                 'post': post.pk
             })
+
+    def get_post_api_url(self, post):
+        return reverse('misago:api:threads-post-detail', kwargs={'thread_ok': post.thread_id, 'pk': post.pk})

@@ -58,7 +58,7 @@ def post_thread(category, title='Test thread', poster='Tester',
     return thread
 
 
-def reply_thread(thread, poster="Tester", message='I am test message',
+def reply_thread(thread, poster="Tester", message="I am test message",
                  is_unapproved=False, is_hidden=False, has_reports=False,
                  has_open_reports=False, posted_on=None, poster_ip='127.0.0.1'):
     posted_on = posted_on or thread.last_post_on + timedelta(minutes=5)
