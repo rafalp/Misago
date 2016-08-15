@@ -20,7 +20,6 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
 
-        self.root = Category.objects.get(tree_id=threads_tree_id, level=0)
         self.category = Category.objects.get(slug='first-category')
 
         self.api_link = '/api/threads/'
@@ -126,7 +125,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
                 "You have to enter thread title."
             ],
             'post': [
-                "You have to enter a message"
+                "You have to enter a message."
             ]
         })
 
@@ -136,8 +135,8 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={
             'category': self.category.pk,
-            'title': '------',
-            'post': 'Lorem ipsum dolor met, sit amet elit!',
+            'title': "------",
+            'post': "Lorem ipsum dolor met, sit amet elit!",
         })
 
         self.assertEqual(response.status_code, 400)
@@ -153,8 +152,8 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={
             'category': self.category.pk,
-            'title': 'Lorem ipsum dolor met',
-            'post': 'a',
+            'title': "Lorem ipsum dolor met",
+            'post': "a",
         })
 
         self.assertEqual(response.status_code, 400)
@@ -221,8 +220,8 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={
             'category': self.category.pk,
-            'title': 'Hello, I am test thread!',
-            'post': 'Lorem ipsum dolor met!',
+            'title': "Hello, I am test thread!",
+            'post': "Lorem ipsum dolor met!",
             'close': True
         })
         self.assertEqual(response.status_code, 200)
@@ -236,8 +235,8 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={
             'category': self.category.pk,
-            'title': 'Hello, I am test thread!',
-            'post': 'Lorem ipsum dolor met!',
+            'title': "Hello, I am test thread!",
+            'post': "Lorem ipsum dolor met!",
             'close': True
         })
         self.assertEqual(response.status_code, 200)
@@ -251,8 +250,8 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={
             'category': self.category.pk,
-            'title': 'Hello, I am test thread!',
-            'post': 'Lorem ipsum dolor met!',
+            'title': "Hello, I am test thread!",
+            'post': "Lorem ipsum dolor met!",
             'pin': 0
         })
         self.assertEqual(response.status_code, 200)
@@ -266,8 +265,8 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={
             'category': self.category.pk,
-            'title': 'Hello, I am test thread!',
-            'post': 'Lorem ipsum dolor met!',
+            'title': "Hello, I am test thread!",
+            'post': "Lorem ipsum dolor met!",
             'pin': 1
         })
         self.assertEqual(response.status_code, 200)
@@ -281,8 +280,8 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={
             'category': self.category.pk,
-            'title': 'Hello, I am test thread!',
-            'post': 'Lorem ipsum dolor met!',
+            'title': "Hello, I am test thread!",
+            'post': "Lorem ipsum dolor met!",
             'pin': 2
         })
         self.assertEqual(response.status_code, 200)
@@ -296,8 +295,8 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={
             'category': self.category.pk,
-            'title': 'Hello, I am test thread!',
-            'post': 'Lorem ipsum dolor met!',
+            'title': "Hello, I am test thread!",
+            'post': "Lorem ipsum dolor met!",
             'pin': 2
         })
         self.assertEqual(response.status_code, 200)
@@ -311,8 +310,8 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={
             'category': self.category.pk,
-            'title': 'Hello, I am test thread!',
-            'post': 'Lorem ipsum dolor met!',
+            'title': "Hello, I am test thread!",
+            'post': "Lorem ipsum dolor met!",
             'pin': 1
         })
         self.assertEqual(response.status_code, 200)
@@ -326,8 +325,8 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={
             'category': self.category.pk,
-            'title': 'Hello, I am test thread!',
-            'post': 'Lorem ipsum dolor met!',
+            'title': "Hello, I am test thread!",
+            'post': "Lorem ipsum dolor met!",
             'hide': 1
         })
         self.assertEqual(response.status_code, 200)
@@ -344,8 +343,8 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={
             'category': self.category.pk,
-            'title': 'Hello, I am test thread!',
-            'post': 'Lorem ipsum dolor met!',
+            'title': "Hello, I am test thread!",
+            'post': "Lorem ipsum dolor met!",
             'hide': 1
         })
         self.assertEqual(response.status_code, 200)
@@ -359,7 +358,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={
             'category': self.category.pk,
-            'title': 'Brzęczyżczykiewicz',
-            'post': 'Chrzążczyżewoszyce, powiat Łękółody.'
+            'title': "Brzęczyżczykiewicz",
+            'post': "Chrzążczyżewoszyce, powiat Łękółody."
         })
         self.assertEqual(response.status_code, 200)

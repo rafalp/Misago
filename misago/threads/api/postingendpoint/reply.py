@@ -27,7 +27,6 @@ class ReplyMiddleware(PostingMiddleware):
             self.edit_post(serializer.validated_data, parsing_result)
         else:
             self.new_post(serializer.validated_data, parsing_result)
-            self.thread.set_first_post(self.post)
 
         self.post.updated_on = self.datetime
         self.post.save()
@@ -35,8 +34,11 @@ class ReplyMiddleware(PostingMiddleware):
         update_post_checksum(self.post)
         self.post.update_fields.append('checksum')
 
+        if self.mode == PostingEndpoint.START:
+            self.thread.set_first_post(self.post)
         if self.mode != PostingEndpoint.EDIT:
             self.thread.set_last_post(self.post)
+
         self.thread.save()
 
     def new_thread(self, validated_data):
@@ -73,7 +75,7 @@ class ReplySerializer(serializers.Serializer):
     post = serializers.CharField(
         validators=[validate_post],
         error_messages={
-            'required': ugettext_lazy("You have to enter a message")
+            'required': ugettext_lazy("You have to enter a message.")
         }
     )
 
