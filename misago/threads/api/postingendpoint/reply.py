@@ -1,3 +1,4 @@
+from django.db.models import F
 from django.utils.translation import ugettext_lazy
 
 from rest_framework import serializers
@@ -52,7 +53,15 @@ class ReplyMiddleware(PostingMiddleware):
         self.thread.save()
 
     def edit_post(self, validated_data, parsing_result):
-        pass # todo: test if post was really edited, if so, register change
+        self.post.original = parsing_result['original_text']
+        self.post.parsed = parsing_result['parsed_text']
+
+        self.post.updated_on = self.datetime
+        self.post.edits = F('edits') + 1
+
+        self.post.last_editor = self.user
+        self.post.last_editor_name = self.user.username
+        self.post.last_editor_slug = self.user.slug
 
     def new_post(self, validated_data, parsing_result):
         self.post.thread = self.thread

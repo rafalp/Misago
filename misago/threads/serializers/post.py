@@ -90,7 +90,13 @@ class PostSerializer(serializers.ModelSerializer):
             return None
 
     def get_api(self, obj):
-        return {}
+        return {
+            'index': obj.get_api_url(),
+            'editor': reverse('misago:api:thread-post-editor', kwargs={
+                'thread_pk': obj.thread_id,
+                'pk': obj.pk
+            }),
+        }
 
     def get_url(self, obj):
         return {

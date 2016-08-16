@@ -5,7 +5,7 @@ import Filler from './filler';
 export default function(props) {
   return (
    <div className={props.className}>
-      <Filler />
+      <Filler withFirstRow={props.withFirstRow} />
 
       <div className="posting-overlay">
         <div className="posting-cover">

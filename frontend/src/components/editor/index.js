@@ -20,15 +20,43 @@ export default class extends React.Component {
           >
             {this.props.submitLabel || gettext("Post")}
           </Button>
-          <Button
-            className="btn-default btn-sm pull-right"
+          <button
+            className="btn btn-default btn-sm pull-right"
             disabled={this.props.loading}
-            onClick={this.props.onClose}
+            onClick={this.props.onCancel}
+            type="button"
           >
             {gettext("Cancel")}
-          </Button>
+          </button>
+          <Protect
+            canProtect={this.props.canProtect}
+            disabled={this.props.loading}
+            onProtect={this.props.onProtect}
+            onUnprotect={this.props.onUnprotect}
+            protect={this.props.protect}
+          />
         </div>
       </div>
     );
+  }
+}
+
+export function Protect(props) {
+  if (props.canProtect) {
+    return (
+      <button
+        className="btn btn-default btn-sm pull-right"
+        disabled={props.disabled}
+        onClick={props.protect ? props.onUnprotect : props.onProtect}
+        title={props.protect ? gettext('Protected') : gettext('Protect')}
+        type="button"
+      >
+        <span className="material-icon">
+          {props.protect ? 'lock' : 'lock_outline'}
+        </span>
+      </button>
+    );
+  } else {
+    return null;
   }
 }

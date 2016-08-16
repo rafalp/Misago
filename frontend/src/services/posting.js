@@ -13,17 +13,23 @@ export class Posting {
     this._isClosing = false;
   }
 
-  open(options) {
-    if (!this._isOpen) {
-      this._isOpen = true;
-      this._realOpen(options);
+  open(props) {
+    if (this._isOpen === false) {
+      this._isOpen = props.config;
+      this._realOpen(props);
+    } else if (this._isOpen !== props.url) {
+      const changeForm = confirm(gettext("You are already working on other message. Do you want to discard it?"));
+      if (changeForm) {
+        this._isOpen = props.config;
+        this._realOpen(props);
+      }
     }
   }
 
   // jshint ignore:start
-  _realOpen(options) {
+  _realOpen(props) {
     mount(
-      <PostingComponent options={options} />,
+      <PostingComponent {...props} />,
       'posting-mount'
     );
 

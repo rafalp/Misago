@@ -177,11 +177,11 @@ class EditReplyTests(AuthenticatedUserTestCase):
             ]
         })
 
-    def _test_can_reply_thread(self):
-        """endpoint creates new reply"""
+    def test_can_edit_reply(self):
+        """endpoint updates reply"""
         self.override_acl()
         response = self.put(self.api_link, data={
-            'post': "This is test response!"
+            'post': "This is test edit!"
         })
         self.assertEqual(response.status_code, 200)
 
@@ -189,30 +189,14 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
         self.override_acl()
         response = self.client.get(self.thread.get_absolute_url())
-        self.assertContains(response, "<p>This is test response!</p>")
+        self.assertContains(response, "<p>This is test edit!</p>")
 
-        self.reload_user()
-        self.assertEqual(self.user.posts, 1)
-
-        post = self.user.post_set.all()[:1][0]
-        self.assertEqual(post.category_id, self.category.pk)
-        self.assertEqual(post.original, "This is test response!")
-        self.assertEqual(post.poster_id, self.user.id)
-        self.assertEqual(post.poster_name, self.user.username)
-
-        self.assertEqual(thread.last_post_id, post.id)
-        self.assertEqual(thread.last_poster_id, self.user.id)
-        self.assertEqual(thread.last_poster_name, self.user.username)
-        self.assertEqual(thread.last_poster_slug, self.user.slug)
-
-        category = Category.objects.get(pk=self.category.pk)
-        self.assertEqual(category.last_thread_id, thread.id)
-        self.assertEqual(category.last_thread_title, thread.title)
-        self.assertEqual(category.last_thread_slug, thread.slug)
-
-        self.assertEqual(category.last_poster_id, self.user.id)
-        self.assertEqual(category.last_poster_name, self.user.username)
-        self.assertEqual(category.last_poster_slug, self.user.slug)
+        post = self.thread.post_set.all()[:1][0]
+        self.assertEqual(post.edits, 1)
+        self.assertEqual(post.original, "This is test edit!")
+        self.assertEqual(post.last_editor_id, self.user.id)
+        self.assertEqual(post.last_editor_name, self.user.username)
+        self.assertEqual(post.last_editor_slug, self.user.slug)
 
     def test_protect_post(self):
         """can protect post"""

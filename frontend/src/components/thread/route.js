@@ -3,12 +3,13 @@ import PostsList from 'misago/components/posts-list'; // jshint ignore:line
 import Header from './header'; // jshint ignore:line
 import Paginator from './paginator'; // jshint ignore:line
 import ToolbarTop from './toolbar-top'; // jshint ignore:line
+import * as posts from 'misago/reducers/posts';
+import * as thread from 'misago/reducers/thread'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
 import polls from 'misago/services/polls';
 import snackbar from 'misago/services/snackbar';
-import * as posts from 'misago/reducers/posts';
+import posting from 'misago/services/posting'; // jshint ignore:line
 import store from 'misago/services/store';
-import * as thread from 'misago/reducers/thread'; // jshint ignore:line
 import title from 'misago/services/page-title';
 
 export default class extends React.Component {
@@ -87,6 +88,15 @@ export default class extends React.Component {
 
     this.setPageTitle();
   };
+
+  openReplyForm = () => {
+    posting.open({
+      mode: 'REPLY',
+
+      config: this.props.thread.api.editor,
+      submit: this.props.thread.api.posts
+    });
+  };
   /* jshint ignore:end */
 
   render() {
@@ -95,7 +105,7 @@ export default class extends React.Component {
       <Header {...this.props} />
       <div className="container">
 
-        <ToolbarTop {...this.props} />
+        <ToolbarTop openReplyForm={this.openReplyForm} {...this.props} />
         <PostsList {...this.props} />
         <Paginator {...this.props} />
 

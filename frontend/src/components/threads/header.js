@@ -44,11 +44,12 @@ export default class extends React.Component {
 
   startThread = () => {
     posting.open({
-      url: misago.get('THREAD_EDITOR_URL'),
-      mode: 'START_THREAD',
-      initial: {
-        category: this.props.route.category.id
-      }
+      mode: 'START',
+
+      config: misago.get('THREAD_EDITOR_URL'),
+      submit: misago.get('THREADS_API'),
+
+      category: this.props.route.category.id
     });
   };
   /* jshint ignore:end */
