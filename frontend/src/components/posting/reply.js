@@ -36,7 +36,7 @@ export default class extends Form {
     this.setState({
       isReady: true,
 
-      post: '' || '[quote]\n' + data.post + '\n[/quote]'
+      post: data.post ? ('[quote]\n' + data.post + '\n[/quote]') : ''
     });
   };
 

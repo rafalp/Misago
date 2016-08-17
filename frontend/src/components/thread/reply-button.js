@@ -8,6 +8,9 @@ export default function(props) {
       onClick={props.onClick}
       type="button"
     >
+      <span className="material-icon">
+        chat
+      </span>
       {gettext("Reply")}
     </button>
   );

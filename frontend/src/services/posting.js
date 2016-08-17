@@ -17,7 +17,7 @@ export class Posting {
     if (this._isOpen === false) {
       this._isOpen = props.config;
       this._realOpen(props);
-    } else if (this._isOpen !== props.url) {
+    } else if (this._isOpen !== props.config) {
       const changeForm = confirm(gettext("You are already working on other message. Do you want to discard it?"));
       if (changeForm) {
         this._isOpen = props.config;

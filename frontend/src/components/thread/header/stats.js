@@ -16,7 +16,7 @@ export function Weight(props) {
         {gettext("Pinned globally")}
       </span>
     </li>;
-  } else if (props.thread.weight == 2) {
+  } else if (props.thread.weight == 1) {
     return <li className="thread-pinned-locally">
       <span className="material-icon">
         bookmark_border
