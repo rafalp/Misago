@@ -3,12 +3,13 @@ import React from 'react';
 import Breadcrumbs from './breadcrumbs';
 import { isModerationVisible, ModerationControls } from '../moderation/thread';
 import Stats from './stats';
+import Title from './title';
 
 export default function(props) {
   return <div className="page-header with-stats with-breadcrumbs">
     <Breadcrumbs path={props.thread.path} />
     <div className="container">
-      <h1 className="pull-left">{props.thread.title}</h1>
+      <Title thread={props.thread} user={props.user} />
       <Moderation thread={props.thread} user={props.user} />
     </div>
     <Stats thread={props.thread} />

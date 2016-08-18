@@ -2,6 +2,8 @@
 import React from 'react';
 
 const ICON = {
+  changed_title: 'edit',
+
   pinned_globally: 'bookmark',
   pinned_locally: 'bookmark_border',
   unpoinned: 'panorama_fish_eye',

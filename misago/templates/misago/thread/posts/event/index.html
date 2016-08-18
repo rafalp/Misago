@@ -33,8 +33,8 @@
     <div class="post-body">
       <p class="event-message">
         {% if post.event_type == 'changed_title' %}
-          {% capture trimmed as from_title %}
-            <span class="item-title">{{ post.event_context.from_title }}</span>
+          {% capture trimmed as old_title %}
+            <span class="item-title">{{ post.event_context.old_title }}</span>
           {% endcapture %}
           {% blocktrans trimmed with old_title=old_title|safe %}
             Thread title has been changed from {{ old_title }}.

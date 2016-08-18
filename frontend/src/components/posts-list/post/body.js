@@ -7,7 +7,7 @@ const HIDDEN_BY_SPAN = '<span class="item-title">%(user)s</span>';
 const HIDDEN_ON = '<abbr class="last-title" title="%(absolute)s">%(relative)s</abbr>';
 
 export default function(props) {
-  if (props.post.is_hidden && !props.post.acl_can_see_hidden) {
+  if (props.post.is_hidden && !props.post.acl.can_see_hidden) {
     return <Hidden {...props} />;
   } else if (props.post.parsed) {
     return <Default {...props} />;

@@ -604,8 +604,7 @@ def allow_unhide_post(user, target):
             raise PermissionDenied(_("You can't reveal posts in this category."))
 
         if user.id != target.poster_id:
-            raise PermissionDenied(
-                _("You can't reveal other users posts in this category."))
+            raise PermissionDenied(_("You can't reveal other users posts in this category."))
 
         if not category_acl['can_close_threads']:
             if target.category.is_closed:
@@ -614,19 +613,15 @@ def allow_unhide_post(user, target):
                 raise PermissionDenied(_("This thread is closed. You can't reveal posts in it."))
 
         if target.is_protected and not category_acl['can_protect_posts']:
-            raise PermissionDenied(
-                _("This post is protected. You can't reveal it."))
+            raise PermissionDenied(_("This post is protected. You can't reveal it."))
 
         if has_time_to_edit_post(user, target):
             message = ungettext(
                 "You can't reveal posts that are older than %(minutes)s minute.",
                 "You can't reveal posts that are older than %(minutes)s minutes.",
                 category_acl['post_edit_time'])
-            raise PermissionDenied(
-                message % {'minutes': category_acl['post_edit_time']})
+            raise PermissionDenied(message % {'minutes': category_acl['post_edit_time']})
 
-    if target.id == target.thread.first_post_id:
-        raise PermissionDenied(_("You can't reveal thread's first post."))
     if not target.is_hidden:
         raise PermissionDenied(_("Only hidden posts can be revealed."))
 can_unhide_post = return_boolean(allow_unhide_post)
@@ -652,16 +647,14 @@ def allow_hide_post(user, target):
                 raise PermissionDenied(_("This thread is closed. You can't hide posts in it."))
 
         if target.is_protected and not category_acl['can_protect_posts']:
-            raise PermissionDenied(
-                _("This post is protected. You can't hide it."))
+            raise PermissionDenied(_("This post is protected. You can't hide it."))
 
         if has_time_to_edit_post(user, target):
             message = ungettext(
                 "You can't hide posts that are older than %(minutes)s minute.",
                 "You can't hide posts that are older than %(minutes)s minutes.",
                 category_acl['post_edit_time'])
-            raise PermissionDenied(
-                message % {'minutes': category_acl['post_edit_time']})
+            raise PermissionDenied(message % {'minutes': category_acl['post_edit_time']})
 
     if target.id == target.thread.first_post_id:
         raise PermissionDenied(_("You can't hide thread's first post."))

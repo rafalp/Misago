@@ -213,7 +213,7 @@ export default class extends Form {
     if (this.state.isReady) {
       return (
         <Container className="posting-form" withFirstRow={true}>
-          <form onSubmit={this.handleSubmit} method="POST">
+          <form onSubmit={this.handleSubmit}>
             <div className="row first-row">
               <div className={this.state.showOptions ? 'col-md-6' : 'col-md-8'}>
                 <input

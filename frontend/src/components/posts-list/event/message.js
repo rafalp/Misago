@@ -17,6 +17,7 @@ const MESSAGE = {
 }
 
 const FROM_CATEGORY = '<a href="%(url)s" class="item-title">%(name)s</a>'
+const OLD_TITLE = '<span class="item-title">%(old_title)s</span>';
 const MERGED_THREAD = '<span class="item-title">%(merged_thread)s</span>';
 
 export default function(props) {
@@ -25,6 +26,10 @@ export default function(props) {
       <p className="event-message">
         {MESSAGE[props.post.event_type]}
       </p>
+    );
+  } else if (props.post.event_type === 'changed_title') {
+    return (
+      <ChangedTitle {...props} />
     );
   } else if (props.post.event_type === 'moved') {
     return (
@@ -37,6 +42,21 @@ export default function(props) {
   } else {
     return null;
   }
+}
+
+export function ChangedTitle(props) {
+  const msgstring = escapeHtml(gettext("Thread title has been changed from %(old_title)s."));
+  const oldTitle = interpolate(OLD_TITLE, {
+    old_title: escapeHtml(props.post.event_context.old_title)
+  }, true);
+
+  const message = interpolate(msgstring, {
+    old_title: oldTitle
+  }, true);
+
+  return (
+    <p className="event-message" dangerouslySetInnerHTML={{__html: message}} />
+  );
 }
 
 export function Moved(props) {
