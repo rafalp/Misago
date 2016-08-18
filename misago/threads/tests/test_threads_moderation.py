@@ -25,6 +25,19 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
     def reload_thread(self):
         self.thread = Thread.objects.get(pk=self.thread.pk)
 
+    def test_change_thread_title(self):
+        """change_thread_title changes thread's title and slug"""
+        self.assertTrue(moderation.change_thread_title(self.request, self.thread, "New title is here!"))
+
+        self.reload_thread()
+        self.assertEqual(self.thread.title, "New title is here!")
+        self.assertEqual(self.thread.slug, 'new-title-is-here')
+
+        event = self.thread.last_post
+
+        self.assertTrue(event.is_event)
+        self.assertEqual(event.event_type, 'changed_title')
+
     def test_pin_globally_thread(self):
         """pin_thread_globally makes thread pinned globally"""
         self.assertEqual(self.thread.weight, 0)

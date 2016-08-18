@@ -9,6 +9,55 @@ from misago.categories.models import Category
 from .test_threads_api import ThreadsApiTestCase
 
 
+class ThreadChangeTitleApiTests(ThreadsApiTestCase):
+    def test_change_thread_title(self):
+        """api makes it possible to change thread title"""
+        self.override_acl({
+            'can_edit_threads': 2
+        })
+
+        response = self.client.patch(self.api_link, json.dumps([
+            {'op': 'replace', 'path': 'title', 'value': "Lorem ipsum change!"}
+        ]),
+        content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['title'], "Lorem ipsum change!")
+
+    def test_change_thread_title_no_permission(self):
+        """api validates permission to change title"""
+        self.override_acl({
+            'can_edit_threads': 0
+        })
+
+        response = self.client.patch(self.api_link, json.dumps([
+            {'op': 'replace', 'path': 'title', 'value': "Lorem ipsum change!"}
+        ]),
+        content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        response_json = json.loads(smart_str(response.content))
+        self.assertEqual(response_json['detail'][0],
+            "You don't have permission to edit this thread.")
+
+    def test_change_thread_title_invalid(self):
+        """api cleans, validates and rejects too short title"""
+        self.override_acl({
+            'can_edit_threads': 2
+        })
+
+        response = self.client.patch(self.api_link, json.dumps([
+            {'op': 'replace', 'path': 'title', 'value': 12}
+        ]),
+        content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        response_json = json.loads(smart_str(response.content))
+        self.assertEqual(response_json['detail'][0],
+            "Thread title should be at least 5 characters long (it has 2).")
+
+
 class ThreadPinGloballyApiTests(ThreadsApiTestCase):
     def test_pin_thread(self):
         """api makes it possible to pin globally thread"""

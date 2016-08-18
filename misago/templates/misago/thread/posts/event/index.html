@@ -4,7 +4,9 @@
 
     <div class="post-avatar">
       <span class="material-icon">
-        {% if post.event_type == 'pinned_globally' %}
+        {% if post.event_type == 'changed_title' %}
+          edit
+        {% elif post.event_type == 'pinned_globally' %}
           bookmark
         {% elif post.event_type == 'pinned_locally' %}
           bookmark_border
@@ -30,7 +32,14 @@
 
     <div class="post-body">
       <p class="event-message">
-        {% if post.event_type == 'pinned_globally' %}
+        {% if post.event_type == 'changed_title' %}
+          {% capture trimmed as from_title %}
+            <span class="item-title">{{ post.event_context.from_title }}</span>
+          {% endcapture %}
+          {% blocktrans trimmed with old_title=old_title|safe %}
+            Thread title has been changed from {{ old_title }}.
+          {% endblocktrans %}
+        {% elif post.event_type == 'pinned_globally' %}
           {% trans "Thread has been pinned globally." %}
         {% elif post.event_type == 'pinned_locally' %}
           {% trans "Thread has been pinned locally." %}

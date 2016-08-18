@@ -297,6 +297,19 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
             self.assertContains(response, message)
             self.assertContains(response, "Hidden by")
 
+    def test_changed_thread_title_event_renders(self):
+        """changed thread title event renders"""
+        threads_moderation.change_thread_title(MockRequest(self.user), self.thread, "Lorem renamed ipsum!")
+
+        event = self.thread.post_set.filter(is_event=True)[0]
+        self.assertEqual(event.event_type, 'changed_title')
+
+        # event renders
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertContains(response, event.get_absolute_url())
+        self.assertContains(response, "title has been changed from")
+        self.assertContains(response, self.thread.title)
+
     def test_thread_move_event_renders(self):
         """moved thread event renders"""
         self.thread.category = self.thread.category.parent

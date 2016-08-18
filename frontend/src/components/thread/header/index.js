@@ -1,7 +1,7 @@
 /* jshint ignore:start */
 import React from 'react';
 import Breadcrumbs from './breadcrumbs';
-import { showModeration, ModerationControls } from '../moderation';
+import { isModerationVisible, ModerationControls } from '../moderation/thread';
 import Stats from './stats';
 
 export default function(props) {
@@ -16,7 +16,7 @@ export default function(props) {
 }
 
 export function Moderation(props) {
-  if (props.user.id && showModeration(props.thread)) {
+  if (props.user.id && isModerationVisible(props.thread)) {
     return (
       <div className="btn-group pull-right">
         <button

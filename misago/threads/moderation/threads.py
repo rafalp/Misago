@@ -6,6 +6,21 @@ from ..events import record_event
 
 
 @atomic
+def change_thread_title(request, thread, new_title):
+    if thread.title != new_title:
+        old_title = thread.title
+        thread.set_title(new_title)
+        thread.save(update_fields=['title', 'slug'])
+
+        record_event(request, thread, 'changed_title', {
+            'old_title': old_title
+        })
+        return True
+    else:
+        return False
+
+
+@atomic
 def pin_thread_globally(request, thread):
     if thread.weight != 2:
         thread.weight = 2

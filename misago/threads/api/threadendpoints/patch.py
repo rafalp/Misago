@@ -1,4 +1,5 @@
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
+from django.utils import six
 from django.utils.translation import gettext as _
 
 from misago.acl import add_acl
@@ -11,9 +12,29 @@ from misago.core.shortcuts import get_int_or_404, get_object_or_404
 from ...moderation import threads as moderation
 from ...permissions import allow_start_thread
 from ...utils import add_categories_to_threads
+from ...validators import validate_title
 
 
-thread_patch_endpoint = ApiPatch()
+thread_patch_dispatcher = ApiPatch()
+
+
+def patch_title(request, thread, value):
+    try:
+        value_cleaned = six.text_type(value).strip()
+    except (TypeError, ValueError):
+        raise PermissionDenied(_("Invalid thread title."))
+
+    try:
+        validate_title(value_cleaned)
+    except ValidationError as e:
+        raise PermissionDenied(e.args[0])
+
+    if not thread.acl.get('can_edit'):
+        raise PermissionDenied(_("You don't have permission to edit this thread."))
+
+    moderation.change_thread_title(request, thread, value_cleaned)
+    return {'title': thread.title}
+thread_patch_dispatcher.replace('title', patch_title)
 
 
 def patch_weight(request, thread, value):
@@ -34,7 +55,7 @@ def patch_weight(request, thread, value):
         moderation.unpin_thread(request, thread)
 
     return {'weight': thread.weight}
-thread_patch_endpoint.replace('weight', patch_weight)
+thread_patch_dispatcher.replace('weight', patch_weight)
 
 
 def patch_move(request, thread, value):
@@ -55,7 +76,7 @@ def patch_move(request, thread, value):
         return {'category': CategorySerializer(new_category).data}
     else:
         raise PermissionDenied(_("You don't have permission to move this thread."))
-thread_patch_endpoint.replace('category', patch_move)
+thread_patch_dispatcher.replace('category', patch_move)
 
 
 def patch_top_category(request, thread, value):
@@ -70,7 +91,7 @@ def patch_top_category(request, thread, value):
     ))
     add_categories_to_threads(root_category, categories, [thread])
     return {'top_category': CategorySerializer(thread.top_category).data}
-thread_patch_endpoint.add('top-category', patch_top_category)
+thread_patch_dispatcher.add('top-category', patch_top_category)
 
 
 def patch_flatten_categories(request, thread, value):
@@ -84,7 +105,7 @@ def patch_flatten_categories(request, thread, value):
             'category': thread.category_id,
             'top_category': None
         }
-thread_patch_endpoint.replace('flatten-categories', patch_flatten_categories)
+thread_patch_dispatcher.replace('flatten-categories', patch_flatten_categories)
 
 
 def patch_is_unapproved(request, thread, value):
@@ -100,7 +121,7 @@ def patch_is_unapproved(request, thread, value):
         }
     else:
         raise PermissionDenied(_("You don't have permission to approve this thread."))
-thread_patch_endpoint.replace('is-unapproved', patch_is_unapproved)
+thread_patch_dispatcher.replace('is-unapproved', patch_is_unapproved)
 
 
 def patch_is_closed(request, thread, value):
@@ -116,7 +137,7 @@ def patch_is_closed(request, thread, value):
             raise PermissionDenied(_("You don't have permission to close this thread."))
         else:
             raise PermissionDenied(_("You don't have permission to open this thread."))
-thread_patch_endpoint.replace('is-closed', patch_is_closed)
+thread_patch_dispatcher.replace('is-closed', patch_is_closed)
 
 
 def patch_is_hidden(request, thread, value):
@@ -129,7 +150,7 @@ def patch_is_hidden(request, thread, value):
         return {'is_hidden': thread.is_hidden}
     else:
         raise PermissionDenied(_("You don't have permission to hide this thread."))
-thread_patch_endpoint.replace('is-hidden', patch_is_hidden)
+thread_patch_dispatcher.replace('is-hidden', patch_is_hidden)
 
 
 def patch_subscribtion(request, thread, value):
@@ -155,4 +176,36 @@ def patch_subscribtion(request, thread, value):
         return {'subscription': True}
     else:
         return {'subscription': None}
-thread_patch_endpoint.replace('subscription', patch_subscribtion)
+thread_patch_dispatcher.replace('subscription', patch_subscribtion)
+
+
+def thread_patch_endpoint(request, thread):
+    old_title = thread.title
+    old_is_hidden = thread.is_hidden
+    old_is_unapproved = thread.is_unapproved
+    old_category = thread.category
+
+    response = thread_patch_dispatcher.dispatch(request, thread)
+
+    # diff thread's state against pre-patch and resync category if necessary
+    hidden_changed = old_is_hidden != thread.is_hidden
+    unapproved_changed = old_is_unapproved != thread.is_unapproved
+    category_changed = old_category != thread.category
+
+    title_changed = old_is_hidden != thread.is_hidden
+    if thread.category.last_thread_id != thread.pk:
+        title_changed = False # don't trigger resync on simple title change
+
+    if hidden_changed or unapproved_changed or category_changed:
+        thread.category.synchronize()
+        thread.category.save()
+
+        if category_changed:
+            old_category.synchronize()
+            old_category.save()
+    elif title_changed:
+        thread.category.last_thread_title = thread.title
+        thread.category.last_thread_slug = thread.slug
+        thread.category.save(update_fields=['last_thread_title', 'last_thread_slug'])
+
+    return response

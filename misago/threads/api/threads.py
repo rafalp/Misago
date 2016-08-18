@@ -40,28 +40,7 @@ class ViewSet(viewsets.ViewSet):
 
     def partial_update(self, request, pk):
         thread = self.get_thread(request, pk).thread
-
-        old_is_hidden = thread.is_hidden
-        old_is_unapproved = thread.is_unapproved
-        old_category = thread.category
-
-        response = thread_patch_endpoint.dispatch(request, thread)
-
-        # diff thread's state against pre-patch and resync category if necessary
-        hidden_changed = old_is_hidden != thread.is_hidden
-        unapproved_changed = old_is_unapproved != thread.is_unapproved
-        category_changed = old_category != thread.category
-
-        if hidden_changed or unapproved_changed or category_changed:
-            thread.category.synchronize()
-            thread.category.save()
-
-            if category_changed:
-                old_category.synchronize()
-                old_category.save()
-
-        # return response
-        return response
+        return thread_patch_endpoint(request, thread)
 
     def destroy(self, request, pk):
         thread = self.get_thread(request, pk).thread
