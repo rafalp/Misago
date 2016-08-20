@@ -31,8 +31,7 @@ def validate_category(user, category_id, allow_root=False):
         raise ValidationError(_("Requested category could not be found."))
 
     if not can_browse_category(user, category):
-        raise ValidationError(
-            _("You don't have permission to access this category."))
+        raise ValidationError(_("You don't have permission to access this category."))
     return category
 
 
@@ -66,11 +65,9 @@ class MergeThreadsSerializer(serializers.Serializer):
 
         if weight > self.category.acl.get('can_pin_threads', 0):
             if weight == 2:
-                raise ValidationError(_("You don't have permission to pin "
-                                        "threads globally in this category."))
+                raise ValidationError(_("You don't have permission to pin threads globally in this category."))
             else:
-                raise ValidationError(_("You don't have permission to pin "
-                                        "threads in this category."))
+                raise ValidationError(_("You don't have permission to pin threads in this category."))
         return weight
 
     def validate_is_closed(self, is_closed):
@@ -80,6 +77,5 @@ class MergeThreadsSerializer(serializers.Serializer):
             return is_closed # don't validate closed further if category failed
 
         if is_closed and not self.category.acl.get('can_close_threads'):
-            raise ValidationError(_("You don't have permission to close "
-                                    "threads in this category."))
+            raise ValidationError(_("You don't have permission to close threads in this category."))
         return is_closed

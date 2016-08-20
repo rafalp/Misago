@@ -35,6 +35,7 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
             'can_edit_posts': 0,
             'can_hide_posts': 0,
             'can_hide_own_posts': 0,
+            'can_merge_threads': 0
         })
 
         if acl:
@@ -78,7 +79,7 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
             if 'posts' in link:
                 self.assertIn('post_set', response_json)
 
-    def test_api_shows_owner_thread(self):
+    def test_api_shows_owned_thread(self):
         """api handles "owned threads only"""
         for link in self.tested_links:
             self.override_acl({

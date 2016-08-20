@@ -152,7 +152,7 @@ class MockRequest(object):
         self.host = host
 
         self.path_info = '/api/threads/123/merge/'
-        self.path = '{}'.format(wsgialias.rstrip('/'), self.path_info)
+        self.path = '{}{}'.format(wsgialias.rstrip('/'), self.path_info)
 
     def get_host(self):
         return self.host

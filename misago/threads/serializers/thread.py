@@ -85,10 +85,13 @@ class ThreadSerializer(serializers.ModelSerializer):
     def get_api(self, obj):
         return {
             'index': obj.get_api_url(),
-            'posts': reverse('misago:api:thread-post-list', kwargs={
+            'editor': reverse('misago:api:thread-post-editor', kwargs={
                 'thread_pk': obj.pk
             }),
-            'editor': reverse('misago:api:thread-post-editor', kwargs={
+            'merge': reverse('misago:api:thread-merge', kwargs={
+                'pk': obj.pk
+            }),
+            'posts': reverse('misago:api:thread-post-list', kwargs={
                 'thread_pk': obj.pk
             }),
             'read': 'nada',

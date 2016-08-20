@@ -66,7 +66,7 @@ def get_thread_id_from_url(request, url):
         clean_path = bits.path
 
     try:
-        wsgi_alias = request.path[:len(request.path_info)]
+        wsgi_alias = request.path[:len(request.path_info) * -1]
         resolution = resolve(clean_path[len(wsgi_alias):])
     except:
         return None

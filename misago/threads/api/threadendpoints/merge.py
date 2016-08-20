@@ -1,5 +1,6 @@
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
+from django.http import Http404
 from django.utils.translation import gettext as _
 from django.utils.translation import ungettext
 
@@ -11,10 +12,11 @@ from misago.categories.permissions import can_browse_category, can_see_category
 
 from ...events import record_event
 from ...models import Thread
+from ...moderation import threads as moderation
 from ...permissions import can_see_thread
 from ...serializers import MergeThreadsSerializer, ThreadsListSerializer
 from ...threadtypes import trees_map
-from ...utils import add_categories_to_threads
+from ...utils import add_categories_to_threads, get_thread_id_from_url
 
 
 MERGE_LIMIT = 20 # no more than 20 threads can be merged in single action
@@ -23,6 +25,49 @@ MERGE_LIMIT = 20 # no more than 20 threads can be merged in single action
 class MergeError(Exception):
     def __init__(self, msg):
         self.msg = msg
+
+
+@transaction.atomic
+def thread_merge_endpoint(request, thread, viewmodel):
+    if not thread.acl['can_merge']:
+        raise PermissionDenied(_("You don't have permission to merge this thread with others."))
+
+    other_thread_id = get_thread_id_from_url(request, request.data.get('thread_url', None))
+    if not other_thread_id:
+        return Response({'detail': _("This is not a valid thread link.")}, status=400)
+    if other_thread_id == thread.pk:
+        return Response({'detail': _("You can't merge thread with itself.")}, status=400)
+
+    try:
+        other_thread = viewmodel(request, other_thread_id).thread
+    except PermissionDenied as e:
+        return Response({
+            'detail': e.args[0]
+        }, status=400)
+    except Http404:
+        return Response({
+            'detail': _("The thread you have entered link to doesn't exist or you don't have permission to see it.")
+        }, status=400)
+
+    if not other_thread.acl['can_merge']:
+        return Response({
+            'detail': _("You don't have permission to merge this thread with current one.")
+        }, status=400)
+
+    moderation.merge_thread(request, other_thread, thread)
+
+    other_thread.category.synchronize()
+    other_thread.category.save()
+
+    if thread.category != other_thread.category:
+        thread.category.synchronize()
+        thread.category.save()
+
+    return Response({
+        'id': other_thread.pk,
+        'title': other_thread.title,
+        'url': other_thread.get_absolute_url()
+    })
 
 
 def threads_merge_endpoint(request):
