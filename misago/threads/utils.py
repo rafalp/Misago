@@ -1,3 +1,7 @@
+from django.core.urlresolvers import resolve
+from django.utils.six.moves.urllib.parse import urlparse
+
+
 def add_categories_to_threads(root_category, categories, threads):
     categories_dict = {}
     for category in categories:
@@ -30,3 +34,53 @@ def add_categories_to_threads(root_category, categories, threads):
                         category.has_child(thread.category)):
                     top_categories_map[thread.category_id] = category
                     thread.top_category = category
+
+
+SUPPORTED_THREAD_ROUTES = {
+    'misago:thread': 'pk',
+    'misago:thread-post': 'pk',
+    'misago:thread-last': 'pk',
+    'misago:thread-new': 'pk',
+    'misago:thread-unapproved': 'pk',
+}
+
+
+def get_thread_id_from_url(request, url):
+    try:
+        bits = urlparse(url)
+    except:
+        return None
+
+    if bits.netloc:
+        if bits.port:
+            hostname = ':'.join((bits.netloc, bits.port))
+        else:
+            hostname = bits.netloc
+
+        if hostname != request.get_host():
+            return None
+
+    if bits.path.startswith(request.get_host()):
+        clean_path = bits.path.lstrip(request.get_host())
+    else:
+        clean_path = bits.path
+
+    try:
+        wsgi_alias = request.path[:len(request.path_info)]
+        resolution = resolve(clean_path[len(wsgi_alias):])
+    except:
+        return None
+
+    if not resolution.namespaces:
+        return None
+
+    url_name = '{}:{}'.format(':'.join(resolution.namespaces), resolution.url_name)
+    kwargname = SUPPORTED_THREAD_ROUTES.get(url_name)
+
+    if not kwargname:
+        return None
+
+    try:
+        return int(resolution.kwargs.get(kwargname))
+    except (TypeError, ValueError):
+        return None
