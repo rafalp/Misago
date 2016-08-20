@@ -1,4 +1,5 @@
 from django.core.urlresolvers import resolve
+from django.utils import six
 from django.utils.six.moves.urllib.parse import urlparse
 
 
@@ -47,18 +48,13 @@ SUPPORTED_THREAD_ROUTES = {
 
 def get_thread_id_from_url(request, url):
     try:
-        bits = urlparse(url)
+        clean_url = six.text_type(url).strip()
+        bits = urlparse(clean_url)
     except:
         return None
 
-    if bits.netloc:
-        if bits.port:
-            hostname = ':'.join((bits.netloc, bits.port))
-        else:
-            hostname = bits.netloc
-
-        if hostname != request.get_host():
-            return None
+    if bits.netloc and bits.netloc != request.get_host():
+        return None
 
     if bits.path.startswith(request.get_host()):
         clean_path = bits.path.lstrip(request.get_host())

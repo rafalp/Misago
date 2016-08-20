@@ -56,6 +56,9 @@ def thread_merge_endpoint(request, thread, viewmodel):
 
     moderation.merge_thread(request, other_thread, thread)
 
+    other_thread.synchronize()
+    other_thread.save()
+
     other_thread.category.synchronize()
     other_thread.category.save()
 

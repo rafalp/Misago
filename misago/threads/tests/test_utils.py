@@ -179,39 +179,51 @@ class GetThreadIdFromUrlTests(MisagoTestCase):
                 'pk': 432
             },
             {
-                # we can extract thread id from other thread urls
+                # extract thread id from other thread urls
                 'request': MockRequest('https', 'testforum.com', '/discuss/'),
                 'url': 'http://testforum.com/discuss/thread/test-thread-432/post/12321/',
                 'pk': 432
             },
             {
-                # we can extract thread id from thread page url
+                # extract thread id from thread page url
                 'request': MockRequest('http', 'testforum.com', '/discuss/'),
                 'url': 'http://testforum.com/discuss/thread/test-thread-432/123/',
                 'pk': 432
             },
             {
-                # we can extract thread id from thread last post url with relative schema
+                # extract thread id from thread last post url with relative schema
                 'request': MockRequest('http', 'testforum.com', '/discuss/'),
                 'url': '//testforum.com/discuss/thread/test-thread-18/last/',
                 'pk': 18
             },
             {
-                # we can extract thread id from url that lacks scheme
+                # extract thread id from url that lacks scheme
                 'request': MockRequest('http', 'testforum.com', ''),
                 'url': 'testforum.com/thread/test-thread-12/last/',
                 'pk': 12
             },
             {
-                # we can extract thread id from schemaless thread last post url
+                # extract thread id from schemaless thread last post url
                 'request': MockRequest('http', 'testforum.com', '/discuss/'),
                 'url': 'testforum.com/discuss/thread/test-thread-18/last/',
                 'pk': 18
             },
             {
-                # we can extract thread id from url that lacks scheme and hostname
+                # extract thread id from url that lacks scheme and hostname
                 'request': MockRequest('http', 'testforum.com', ''),
                 'url': '/thread/test-thread-13/',
+                'pk': 13
+            },
+            {
+                # extract thread id from url that has port name
+                'request': MockRequest('http', '127.0.0.1:8000', ''),
+                'url': 'https://127.0.0.1:8000/thread/test-thread-13/',
+                'pk': 13
+            },
+            {
+                # extract thread id from url that isn't trimmed
+                'request': MockRequest('http', '127.0.0.1:8000', ''),
+                'url': '   /thread/test-thread-13/   ',
                 'pk': 13
             }
         )

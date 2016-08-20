@@ -1,5 +1,6 @@
 // jshint ignore:start
 import React from 'react';
+import MergeModal from './merge'; // jshint ignore:line
 import MoveModal from './move'; // jshint ignore:line
 import * as thread from 'misago/reducers/thread';
 import ajax from 'misago/services/ajax'; // jshint ignore:line
@@ -117,6 +118,12 @@ export default class extends React.Component {
     );
   };
 
+  merge = () => {
+    modal.show(
+      <MergeModal thread={this.props.thread} />
+    );
+  };
+
   delete = () => {
     if (!confirm(gettext("Are you sure you want to delete this thread?"))) {
       return;
@@ -189,6 +196,22 @@ export default class extends React.Component {
                   className="btn btn-link"
                   onClick={this.move}>
             {gettext("Move")}
+          </button>
+        </li>
+      );
+    } else {
+      return null;
+    }
+  }
+
+  getMergeButton() {
+    if (this.props.thread.acl.can_merge) {
+      return (
+        <li>
+          <button type="button"
+                  className="btn btn-link"
+                  onClick={this.merge}>
+            {gettext("Merge")}
           </button>
         </li>
       );
@@ -300,6 +323,7 @@ export default class extends React.Component {
         {this.getPinLocallyButton()}
         {this.getUnpinButton()}
         {this.getMoveButton()}
+        {this.getMergeButton()}
         {this.getApproveButton()}
         {this.getOpenButton()}
         {this.getCloseButton()}
