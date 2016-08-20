@@ -10,7 +10,11 @@ export default function(props) {
     <Breadcrumbs path={props.thread.path} />
     <div className="container">
       <Title thread={props.thread} user={props.user} />
-      <Moderation thread={props.thread} user={props.user} />
+      <Moderation
+        posts={props.posts}
+        thread={props.thread}
+        user={props.user}
+      />
     </div>
     <Stats thread={props.thread} />
   </div>;
@@ -33,7 +37,11 @@ export function Moderation(props) {
           </span>
           {gettext("Moderation")}
         </button>
-        <ModerationControls thread={props.thread} user={props.user} />
+        <ModerationControls
+          posts={props.posts}
+          thread={props.thread}
+          user={props.user}
+        />
       </div>
     )
   } else {

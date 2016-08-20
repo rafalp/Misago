@@ -391,6 +391,29 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category.pk)
 
+    def test_move_thread_same_category(self):
+        """api move thread to category it's already in fails"""
+        self.override_acl({
+            'can_move_threads': True
+        })
+        self.override_other_acl({
+            'can_start_threads': 2
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'category', 'value': self.thread.category_id}
+        ])
+        self.assertEqual(response.status_code, 400)
+
+        response_json = json.loads(smart_str(response.content))
+        self.assertEqual(response_json['detail'][0],
+            "You can't move thread to the category it's already in.")
+
+        self.override_other_acl({})
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['category']['id'], self.category.pk)
+
     def test_thread_flatten_categories(self):
         """api flatten thread categories"""
         response = self.patch(self.api_link, [

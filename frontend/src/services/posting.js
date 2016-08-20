@@ -42,7 +42,7 @@ export class Posting {
       this._placeholder.removeClass('slide-in');
 
       window.setTimeout(() => {
-        ReactDOM.render(<div />, document.getElementById('posting-mount'));
+        ReactDOM.unmountComponentAtNode(document.getElementById('posting-mount'));
         this._isClosing = false;
         this._isOpen = false;
       }, 300);

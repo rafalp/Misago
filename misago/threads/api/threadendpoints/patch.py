@@ -81,6 +81,9 @@ def patch_move(request, thread, value):
         allow_browse_category(request.user, new_category)
         allow_start_thread(request.user, new_category)
 
+        if new_category == thread.category:
+            raise PermissionDenied(_("You can't move thread to the category it's already in."))
+
         moderation.move_thread(request, thread, new_category)
 
         return {'category': CategorySerializer(new_category).data}

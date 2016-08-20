@@ -1,7 +1,9 @@
 // jshint ignore:start
 import React from 'react';
+import MoveModal from './move'; // jshint ignore:line
 import * as thread from 'misago/reducers/thread';
 import ajax from 'misago/services/ajax'; // jshint ignore:line
+import modal from 'misago/services/modal'; // jshint ignore:line
 import snackbar from 'misago/services/snackbar'; // jshint ignore:line
 import store from 'misago/services/store'; // jshint ignore:line
 
@@ -107,7 +109,12 @@ export default class extends React.Component {
   };
 
   move = () => {
-    console.log('TODO!');
+    modal.show(
+      <MoveModal
+        posts={this.props.posts}
+        thread={this.props.thread}
+      />
+    );
   };
 
   delete = () => {
@@ -121,6 +128,7 @@ export default class extends React.Component {
       snackbar.success(gettext("Thread has been deleted."))
       window.location = this.props.thread.category.absolute_url;
     }, (rejection) => {
+      store.dispatch(thread.release());
       snackbar.apiError(rejection);
     });
   };
