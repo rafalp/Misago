@@ -28,6 +28,9 @@ export default class extends React.Component {
       }
     }, this.props.threads.length);
 
+    // update thread acl together with its state
+    ops.push({op: 'add', path: 'acl', value: true});
+
     this.props.threads.forEach((thread) => {
       this.props.freezeThread(thread.id);
 

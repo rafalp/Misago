@@ -18,6 +18,16 @@ from ...validators import validate_title
 thread_patch_dispatcher = ApiPatch()
 
 
+def patch_acl(request, thread, value):
+    """useful little op that updates thread acl to current state"""
+    if value:
+        add_acl(request.user, thread)
+        return {'acl': thread.acl}
+    else:
+        return {'acl': None}
+thread_patch_dispatcher.add('acl', patch_acl)
+
+
 def patch_title(request, thread, value):
     try:
         value_cleaned = six.text_type(value).strip()

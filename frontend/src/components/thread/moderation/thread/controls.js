@@ -8,6 +8,10 @@ import store from 'misago/services/store'; // jshint ignore:line
 export default class extends React.Component {
   callApi = (ops, successMessage) => {
     store.dispatch(thread.busy());
+
+    // by the chance update thread acl too
+    ops.push({op: 'add', path: 'acl', value: true});
+
     ajax.patch(this.props.thread.api.index, ops).then((data) => {
       store.dispatch(thread.update(data));
       store.dispatch(thread.release());

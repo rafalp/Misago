@@ -9,17 +9,43 @@ from misago.categories.models import Category
 from .test_threads_api import ThreadsApiTestCase
 
 
-class ThreadChangeTitleApiTests(ThreadsApiTestCase):
+class ThreadPatchApiTestCase(ThreadsApiTestCase):
+    def patch(self, api_link, ops):
+        return self.client.patch(api_link, json.dumps(ops), content_type="application/json")
+
+
+class ThreadAddAclApiTests(ThreadPatchApiTestCase):
+    def test_add_thread_acl(self):
+        """api adds current thread's acl to response"""
+        response = self.patch(self.api_link, [
+            {'op': 'add', 'path': 'acl', 'value': True}
+        ])
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json.loads(smart_str(response.content))
+        self.assertTrue(response_json['acl'])
+
+    def test_add_thread_acl(self):
+        """if value is false, api won't add acl to the response, but will set empty key"""
+        response = self.patch(self.api_link, [
+            {'op': 'add', 'path': 'acl', 'value': False}
+        ])
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json.loads(smart_str(response.content))
+        self.assertIsNone(response_json['acl'])
+
+
+class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
     def test_change_thread_title(self):
         """api makes it possible to change thread title"""
         self.override_acl({
             'can_edit_threads': 2
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'title', 'value': "Lorem ipsum change!"}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 200)
 
         thread_json = self.get_thread_json()
@@ -31,10 +57,9 @@ class ThreadChangeTitleApiTests(ThreadsApiTestCase):
             'can_edit_threads': 0
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'title', 'value': "Lorem ipsum change!"}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 400)
 
         response_json = json.loads(smart_str(response.content))
@@ -47,10 +72,9 @@ class ThreadChangeTitleApiTests(ThreadsApiTestCase):
             'can_edit_threads': 2
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'title', 'value': 12}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 400)
 
         response_json = json.loads(smart_str(response.content))
@@ -58,17 +82,16 @@ class ThreadChangeTitleApiTests(ThreadsApiTestCase):
             "Thread title should be at least 5 characters long (it has 2).")
 
 
-class ThreadPinGloballyApiTests(ThreadsApiTestCase):
+class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
     def test_pin_thread(self):
         """api makes it possible to pin globally thread"""
         self.override_acl({
             'can_pin_threads': 2
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'weight', 'value': 2}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 200)
 
         thread_json = self.get_thread_json()
@@ -86,10 +109,9 @@ class ThreadPinGloballyApiTests(ThreadsApiTestCase):
             'can_pin_threads': 2
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'weight', 'value': 0}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 200)
 
         thread_json = self.get_thread_json()
@@ -101,10 +123,9 @@ class ThreadPinGloballyApiTests(ThreadsApiTestCase):
             'can_pin_threads': 1
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'weight', 'value': 2}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 400)
 
         response_json = json.loads(smart_str(response.content))
@@ -126,10 +147,9 @@ class ThreadPinGloballyApiTests(ThreadsApiTestCase):
             'can_pin_threads': 1
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'weight', 'value': 1}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 400)
 
         response_json = json.loads(smart_str(response.content))
@@ -140,17 +160,16 @@ class ThreadPinGloballyApiTests(ThreadsApiTestCase):
         self.assertEqual(thread_json['weight'], 2)
 
 
-class ThreadPinLocallyApiTests(ThreadsApiTestCase):
+class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
     def test_pin_thread(self):
         """api makes it possible to pin locally thread"""
         self.override_acl({
             'can_pin_threads': 1
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'weight', 'value': 1}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 200)
 
         thread_json = self.get_thread_json()
@@ -168,10 +187,9 @@ class ThreadPinLocallyApiTests(ThreadsApiTestCase):
             'can_pin_threads': 1
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'weight', 'value': 0}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 200)
 
         thread_json = self.get_thread_json()
@@ -183,10 +201,9 @@ class ThreadPinLocallyApiTests(ThreadsApiTestCase):
             'can_pin_threads': 0
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'weight', 'value': 1}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 400)
 
         response_json = json.loads(smart_str(response.content))
@@ -208,10 +225,9 @@ class ThreadPinLocallyApiTests(ThreadsApiTestCase):
             'can_pin_threads': 0
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'weight', 'value': 0}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 400)
 
         response_json = json.loads(smart_str(response.content))
@@ -222,7 +238,7 @@ class ThreadPinLocallyApiTests(ThreadsApiTestCase):
         self.assertEqual(thread_json['weight'], 1)
 
 
-class ThreadMoveApiTests(ThreadsApiTestCase):
+class ThreadMoveApiTests(ThreadPatchApiTestCase):
     def setUp(self):
         super(ThreadMoveApiTests, self).setUp()
 
@@ -264,12 +280,11 @@ class ThreadMoveApiTests(ThreadsApiTestCase):
             'can_start_threads': 2
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'category', 'value': self.category_b.pk},
             {'op': 'add', 'path': 'top-category', 'value': self.category_b.pk},
             {'op': 'replace', 'path': 'flatten-categories', 'value': None},
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 200)
 
         self.override_other_acl({})
@@ -290,7 +305,7 @@ class ThreadMoveApiTests(ThreadsApiTestCase):
             'can_start_threads': 2
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'category', 'value': self.category_b.pk},
             {
                 'op': 'add',
@@ -298,8 +313,7 @@ class ThreadMoveApiTests(ThreadsApiTestCase):
                 'value': Category.objects.root_category().pk,
             },
             {'op': 'replace', 'path': 'flatten-categories', 'value': None},
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 200)
 
         self.override_other_acl({})
@@ -318,10 +332,9 @@ class ThreadMoveApiTests(ThreadsApiTestCase):
         })
         self.override_other_acl({})
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'category', 'value': self.category_b.pk}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 400)
 
         response_json = json.loads(smart_str(response.content))
@@ -342,10 +355,9 @@ class ThreadMoveApiTests(ThreadsApiTestCase):
             'can_see': False
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'category', 'value': self.category_b.pk}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 400)
 
         response_json = json.loads(smart_str(response.content))
@@ -365,10 +377,9 @@ class ThreadMoveApiTests(ThreadsApiTestCase):
             'can_browse': False
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'category', 'value': self.category_b.pk}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 400)
 
         response_json = json.loads(smart_str(response.content))
@@ -382,10 +393,9 @@ class ThreadMoveApiTests(ThreadsApiTestCase):
 
     def test_thread_flatten_categories(self):
         """api flatten thread categories"""
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'flatten-categories', 'value': None}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 200)
 
         response_json = json.loads(smart_str(response.content))
@@ -398,15 +408,14 @@ class ThreadMoveApiTests(ThreadsApiTestCase):
 
         self.override_other_acl({})
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {
                 'op': 'add',
                 'path': 'top-category',
                 'value': Category.objects.root_category().pk,
             },
             {'op': 'replace', 'path': 'flatten-categories', 'value': None},
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 200)
 
         response_json = json.loads(smart_str(response.content))
@@ -414,17 +423,16 @@ class ThreadMoveApiTests(ThreadsApiTestCase):
         self.assertEqual(response_json['category'], self.category_b.pk)
 
 
-class ThreadCloseApiTests(ThreadsApiTestCase):
+class ThreadCloseApiTests(ThreadPatchApiTestCase):
     def test_close_thread(self):
         """api makes it possible to close thread"""
         self.override_acl({
             'can_close_threads': True
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'is-closed', 'value': True}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 200)
 
         thread_json = self.get_thread_json()
@@ -442,10 +450,9 @@ class ThreadCloseApiTests(ThreadsApiTestCase):
             'can_close_threads': True
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'is-closed', 'value': False}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 200)
 
         thread_json = self.get_thread_json()
@@ -457,10 +464,9 @@ class ThreadCloseApiTests(ThreadsApiTestCase):
             'can_close_threads': False
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'is-closed', 'value': True}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 400)
 
         response_json = json.loads(smart_str(response.content))
@@ -482,10 +488,9 @@ class ThreadCloseApiTests(ThreadsApiTestCase):
             'can_close_threads': False
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'is-closed', 'value': False}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 400)
 
         response_json = json.loads(smart_str(response.content))
@@ -496,7 +501,7 @@ class ThreadCloseApiTests(ThreadsApiTestCase):
         self.assertTrue(thread_json['is_closed'])
 
 
-class ThreadApproveApiTests(ThreadsApiTestCase):
+class ThreadApproveApiTests(ThreadPatchApiTestCase):
     def test_approve_thread(self):
         """api makes it possible to approve thread"""
         self.thread.is_unapproved = True
@@ -506,10 +511,9 @@ class ThreadApproveApiTests(ThreadsApiTestCase):
             'can_approve_content': 1
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'is-unapproved', 'value': False}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 200)
 
         thread_json = self.get_thread_json()
@@ -521,10 +525,9 @@ class ThreadApproveApiTests(ThreadsApiTestCase):
             'can_approve_content': 1
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'is-unapproved', 'value': True}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 400)
 
         response_json = json.loads(smart_str(response.content))
@@ -532,17 +535,16 @@ class ThreadApproveApiTests(ThreadsApiTestCase):
             "Content approval can't be reversed.")
 
 
-class ThreadHideApiTests(ThreadsApiTestCase):
+class ThreadHideApiTests(ThreadPatchApiTestCase):
     def test_hide_thread(self):
         """api makes it possible to hide thread"""
         self.override_acl({
             'can_hide_threads': 1
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'is-hidden', 'value': True}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 200)
 
         self.override_acl({
@@ -568,10 +570,9 @@ class ThreadHideApiTests(ThreadsApiTestCase):
             'can_hide_threads': 1
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'is-hidden', 'value': False}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 200)
 
         self.override_acl({
@@ -587,10 +588,9 @@ class ThreadHideApiTests(ThreadsApiTestCase):
             'can_hide_threads': 0
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'is-hidden', 'value': True}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 400)
 
         response_json = json.loads(smart_str(response.content))
@@ -616,20 +616,18 @@ class ThreadHideApiTests(ThreadsApiTestCase):
             'can_hide_threads': 0
         })
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'is-hidden', 'value': False}
-        ]),
-        content_type="application/json")
+        ])
         self.assertEqual(response.status_code, 404)
 
 
-class ThreadSubscribeApiTests(ThreadsApiTestCase):
+class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
     def test_subscribe_thread(self):
         """api makes it possible to subscribe thread"""
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'subscription', 'value': 'notify'}
-        ]),
-        content_type="application/json")
+        ])
 
         self.assertEqual(response.status_code, 200)
 
@@ -641,10 +639,9 @@ class ThreadSubscribeApiTests(ThreadsApiTestCase):
 
     def test_subscribe_thread_with_email(self):
         """api makes it possible to subscribe thread with emails"""
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'subscription', 'value': 'email'}
-        ]),
-        content_type="application/json")
+        ])
 
         self.assertEqual(response.status_code, 200)
 
@@ -656,10 +653,9 @@ class ThreadSubscribeApiTests(ThreadsApiTestCase):
 
     def test_unsubscribe_thread(self):
         """api makes it possible to unsubscribe thread"""
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'subscription', 'value': 'remove'}
-        ]),
-        content_type="application/json")
+        ])
 
         self.assertEqual(response.status_code, 200)
 
@@ -672,10 +668,9 @@ class ThreadSubscribeApiTests(ThreadsApiTestCase):
         """api makes it impossible to subscribe thread"""
         self.logout_user()
 
-        response = self.client.patch(self.api_link, json.dumps([
+        response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'subscription', 'value': 'email'}
-        ]),
-        content_type="application/json")
+        ])
 
         self.assertEqual(response.status_code, 403)
 
@@ -684,9 +679,8 @@ class ThreadSubscribeApiTests(ThreadsApiTestCase):
         bad_api_link = self.api_link.replace(
             six.text_type(self.thread.pk), six.text_type(self.thread.pk + 9))
 
-        response = self.client.patch(bad_api_link, json.dumps([
+        response = self.patch(bad_api_link, [
             {'op': 'replace', 'path': 'subscription', 'value': 'email'}
-        ]),
-        content_type="application/json")
+        ])
 
         self.assertEqual(response.status_code, 404)
