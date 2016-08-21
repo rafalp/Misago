@@ -574,6 +574,26 @@ class EditReplyEditorApiTests(EditorApiTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
+    def test_edit_first_post_hidden(self):
+        """endpoint returns valid configuration for editor of hidden thread's first post"""
+        self.override_acl({
+            'can_hide_threads': 1,
+            'can_edit_posts': 2
+        })
+
+        self.thread.is_hidden = True
+        self.thread.save()
+        self.thread.first_post.is_hidden = True
+        self.thread.first_post.save()
+
+        api_link = reverse('misago:api:thread-post-editor', kwargs={
+            'thread_pk': self.thread.pk,
+            'pk': self.thread.first_post.pk
+        })
+
+        response = self.client.get(api_link)
+        self.assertEqual(response.status_code, 200)
+
     def test_edit(self):
         """endpoint returns valid configuration for editor"""
         self.override_acl({

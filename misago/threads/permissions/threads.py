@@ -447,7 +447,7 @@ def add_acl_to_reply(user, post):
     post.acl.update({
         'can_reply': can_reply_thread(user, post.thread),
         'can_edit': can_edit_post(user, post),
-        'can_see_hidden': category_acl.get('can_hide_posts'),
+        'can_see_hidden': post.is_first_post or category_acl.get('can_hide_posts'),
         'can_unhide': can_unhide_post(user, post),
         'can_hide': can_hide_post(user, post),
         'can_delete': can_delete_post(user, post),
@@ -573,8 +573,8 @@ def allow_edit_post(user, target):
         if target.thread.is_closed:
             raise PermissionDenied(_("This thread is closed. You can't edit posts in it."))
 
-    if target.is_hidden and not can_unhide_post(user, target):
-        raise PermissionDenied(_("This post is hidden, you can't edit it."))
+    if target.is_hidden and not target.is_first_post and not category_acl['can_hide_posts']:
+            raise PermissionDenied(_("This post is hidden, you can't edit it."))
 
     if category_acl['can_edit_posts'] == 1:
         if target.poster_id != user.pk:
@@ -622,6 +622,8 @@ def allow_unhide_post(user, target):
                 category_acl['post_edit_time'])
             raise PermissionDenied(message % {'minutes': category_acl['post_edit_time']})
 
+    if target.is_first_post:
+        raise PermissionDenied(_("You can't hide thread's first post."))
     if not target.is_hidden:
         raise PermissionDenied(_("Only hidden posts can be revealed."))
 can_unhide_post = return_boolean(allow_unhide_post)
@@ -656,7 +658,7 @@ def allow_hide_post(user, target):
                 category_acl['post_edit_time'])
             raise PermissionDenied(message % {'minutes': category_acl['post_edit_time']})
 
-    if target.id == target.thread.first_post_id:
+    if target.is_first_post:
         raise PermissionDenied(_("You can't hide thread's first post."))
     if target.is_hidden:
         raise PermissionDenied(_("Only visible posts can be hidden."))
@@ -693,7 +695,7 @@ def allow_delete_post(user, target):
                 category_acl['post_edit_time'])
             raise PermissionDenied(message % {'minutes': category_acl['post_edit_time']})
 
-    if target.id == target.thread.first_post_id:
+    if target.is_first_post:
         raise PermissionDenied(_("You can't delete thread's first post."))
 can_delete_post = return_boolean(allow_delete_post)
 

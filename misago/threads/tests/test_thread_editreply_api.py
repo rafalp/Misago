@@ -177,7 +177,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
             ]
         })
 
-    def test_can_edit_reply(self):
+    def test_edit_reply(self):
         """endpoint updates reply"""
         self.override_acl()
         response = self.put(self.api_link, data={
@@ -197,6 +197,28 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.assertEqual(post.last_editor_id, self.user.id)
         self.assertEqual(post.last_editor_name, self.user.username)
         self.assertEqual(post.last_editor_slug, self.user.slug)
+
+    def test_edit_first_post_hidden(self):
+        """endpoint updates hidden thread's first post"""
+        self.override_acl({
+            'can_hide_threads': 1,
+            'can_edit_posts': 2
+        })
+
+        self.thread.is_hidden = True
+        self.thread.save()
+        self.thread.first_post.is_hidden = True
+        self.thread.first_post.save()
+
+        api_link = reverse('misago:api:thread-post-detail', kwargs={
+            'thread_pk': self.thread.pk,
+            'pk': self.thread.first_post.pk
+        })
+
+        response = self.put(self.api_link, data={
+            'post': "This is test edit!"
+        })
+        self.assertEqual(response.status_code, 200)
 
     def test_protect_post(self):
         """can protect post"""

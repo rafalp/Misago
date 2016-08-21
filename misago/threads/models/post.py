@@ -130,3 +130,7 @@ class Post(models.Model):
     @property
     def is_valid(self):
         return is_post_valid(self)
+
+    @property
+    def is_first_post(self):
+        return self.pk == self.thread.first_post_id
