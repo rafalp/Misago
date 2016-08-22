@@ -435,7 +435,7 @@ def add_acl_to_event(user, event):
     can_hide_events = category_acl.get('can_hide_events', 0)
 
     event.acl.update({
-        'can_see_hidden': can_hide_events,
+        'can_see_hidden': can_hide_events > 0,
         'can_hide': can_hide_events > 0,
         'can_delete': can_hide_events == 2,
     })
@@ -544,8 +544,7 @@ def allow_edit_thread(user, target):
                 "You can't edit threads that are older than %(minutes)s minute.",
                 "You can't edit threads that are older than %(minutes)s minutes.",
                 category_acl['thread_edit_time'])
-            raise PermissionDenied(
-                message % {'minutes': category_acl['thread_edit_time']})
+            raise PermissionDenied(message % {'minutes': category_acl['thread_edit_time']})
 can_edit_thread = return_boolean(allow_edit_thread)
 
 
@@ -588,8 +587,7 @@ def allow_edit_post(user, target):
                 "You can't edit posts that are older than %(minutes)s minute.",
                 "You can't edit posts that are older than %(minutes)s minutes.",
                 category_acl['post_edit_time'])
-            raise PermissionDenied(
-                message % {'minutes': category_acl['post_edit_time']})
+            raise PermissionDenied(message % {'minutes': category_acl['post_edit_time']})
 can_edit_post = return_boolean(allow_edit_post)
 
 
@@ -615,7 +613,7 @@ def allow_unhide_post(user, target):
         if target.is_protected and not category_acl['can_protect_posts']:
             raise PermissionDenied(_("This post is protected. You can't reveal it."))
 
-        if has_time_to_edit_post(user, target):
+        if not has_time_to_edit_post(user, target):
             message = ungettext(
                 "You can't reveal posts that are older than %(minutes)s minute.",
                 "You can't reveal posts that are older than %(minutes)s minutes.",
@@ -651,7 +649,7 @@ def allow_hide_post(user, target):
         if target.is_protected and not category_acl['can_protect_posts']:
             raise PermissionDenied(_("This post is protected. You can't hide it."))
 
-        if has_time_to_edit_post(user, target):
+        if not has_time_to_edit_post(user, target):
             message = ungettext(
                 "You can't hide posts that are older than %(minutes)s minute.",
                 "You can't hide posts that are older than %(minutes)s minutes.",
@@ -672,7 +670,7 @@ def allow_delete_post(user, target):
     category_acl = user.acl['categories'].get(target.category_id, {})
 
     if category_acl['can_hide_posts'] != 2:
-        if not category_acl['can_hide_own_posts'] != 2:
+        if category_acl['can_hide_own_posts'] != 2:
             raise PermissionDenied(_("You can't delete posts in this category."))
 
         if user.id != target.poster_id:
@@ -685,10 +683,9 @@ def allow_delete_post(user, target):
                 raise PermissionDenied(_("This thread is closed. You can't delete posts from it."))
 
         if target.is_protected and not category_acl['can_protect_posts']:
-            raise PermissionDenied(
-                _("This post is protected. You can't delete it."))
+            raise PermissionDenied(_("This post is protected. You can't delete it."))
 
-        if has_time_to_edit_post(user, target):
+        if not has_time_to_edit_post(user, target):
             message = ungettext(
                 "You can't delete posts that are older than %(minutes)s minute.",
                 "You can't delete posts that are older than %(minutes)s minutes.",
@@ -717,23 +714,23 @@ def can_change_owned_thread(user, target):
 
 
 def has_time_to_edit_thread(user, target):
-    category_acl = user.acl['categories'].get(target.category_id, {})
-    if category_acl.get('thread_edit_time'):
+    edit_time = user.acl['categories'].get(target.category_id, {}).get('thread_edit_time', 0)
+    if edit_time:
         diff = timezone.now() - target.started_on
         diff_minutes = int(diff.total_seconds() / 60)
 
-        return diff_minutes < category_acl.get('thread_edit_time')
+        return diff_minutes < edit_time
     else:
         return True
 
 
 def has_time_to_edit_post(user, target):
-    category_acl = user.acl['categories'].get(target.category_id, {})
-    if category_acl.get('post_edit_time'):
+    edit_time = user.acl['categories'].get(target.category_id, {}).get('post_edit_time', 0)
+    if edit_time:
         diff = timezone.now() - target.posted_on
         diff_minutes = int(diff.total_seconds() / 60)
 
-        return diff_minutes < category_acl.get('post_edit_time')
+        return diff_minutes < edit_time
     else:
         return True
 

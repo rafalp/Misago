@@ -1,5 +1,4 @@
 from django.core.exceptions import PermissionDenied
-from django.db import transaction
 from django.http import Http404
 from django.utils.translation import gettext as _
 from django.utils.translation import ungettext
@@ -27,7 +26,6 @@ class MergeError(Exception):
         self.msg = msg
 
 
-@transaction.atomic
 def thread_merge_endpoint(request, thread, viewmodel):
     if not thread.acl['can_merge']:
         raise PermissionDenied(_("You don't have permission to merge this thread with others."))
@@ -39,7 +37,7 @@ def thread_merge_endpoint(request, thread, viewmodel):
         return Response({'detail': _("You can't merge thread with itself.")}, status=400)
 
     try:
-        other_thread = viewmodel(request, other_thread_id).thread
+        other_thread = viewmodel(request, other_thread_id, select_for_update=True).thread
     except PermissionDenied as e:
         return Response({
             'detail': e.args[0]
@@ -121,7 +119,7 @@ def clean_threads_for_merge(request):
     threads_queryset = Thread.objects.filter(
         id__in=threads_ids,
         category__tree_id=threads_tree_id,
-    ).select_related('category').order_by('-id')
+    ).select_for_update().select_related('category').order_by('-id')
 
     threads = []
     for thread in threads_queryset:
@@ -135,7 +133,6 @@ def clean_threads_for_merge(request):
     return threads
 
 
-@transaction.atomic
 def merge_threads(request, validated_data, threads):
     new_thread = Thread(
         category=validated_data['category'],

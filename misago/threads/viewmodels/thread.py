@@ -12,13 +12,12 @@ from ..serializers import ThreadSerializer
 from ..subscriptions import make_subscription_aware
 
 
-BASE_QUERYSET = Thread.objects.select_related(
-    'category', 'starter', 'starter__rank', 'starter__ban_cache', 'starter__online_tracker')
+BASE_RELATIONS = ('category', 'starter', 'starter__rank', 'starter__ban_cache', 'starter__online_tracker')
 
 
 class ViewModel(object):
-    def __init__(self, request, pk, slug=None, read_aware=False, subscription_aware=False):
-        thread = self.get_thread(request, pk, slug)
+    def __init__(self, request, pk, slug=None, read_aware=False, subscription_aware=False, select_for_update=False):
+        thread = self.get_thread(request, pk, slug, select_for_update)
 
         thread.path = self.get_thread_path(thread.category)
 
@@ -34,7 +33,7 @@ class ViewModel(object):
         self.category = thread.category
         self.path = thread.path
 
-    def get_thread(self, request, pk, slug=None):
+    def get_thread(self, request, pk, slug=None, select_for_update=False):
         raise NotImplementedError('Thread view model has to implement get_thread(request, pk, slug=None)')
 
     def get_thread_path(self, category):
@@ -68,11 +67,16 @@ class ViewModel(object):
 
 
 class ForumThread(ViewModel):
-    def get_thread(self, request, pk, slug=None):
+    def get_thread(self, request, pk, slug=None, select_for_update=False):
+        if select_for_update:
+            queryset = Thread.objects.select_for_update().select_related('category')
+        else:
+            queryset = Thread.objects.select_related(*BASE_RELATIONS)
+
         thread = get_object_or_404(
-            BASE_QUERYSET,
+            queryset,
             pk=pk,
-            category__tree_id=Category.objects.root_category().tree_id,
+            category__tree_id=Category.objects.root_category().tree_id
         )
 
         allow_see_thread(request.user, thread)

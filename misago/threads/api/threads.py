@@ -29,8 +29,23 @@ class ViewSet(viewsets.ViewSet):
     thread = None
     TREE_ID = None
 
-    def get_thread(self, request, pk):
-        return self.thread(request, get_int_or_404(pk), read_aware=True, subscription_aware=True)
+    def get_thread(self, request, pk, read_aware=True, subscription_aware=True, select_for_update=False):
+        return self.thread(
+            request,
+            get_int_or_404(pk),
+            None,
+            read_aware,
+            subscription_aware,
+            select_for_update
+        )
+
+    def get_thread_for_update(self, request, pk):
+        return self.get_thread(
+            request, pk,
+            read_aware=False,
+            subscription_aware=False,
+            select_for_update=True
+        )
 
     def list(self, request):
         return threads_list_endpoint(request)
@@ -39,12 +54,14 @@ class ViewSet(viewsets.ViewSet):
         thread = self.get_thread(request, pk)
         return Response(thread.get_frontend_context())
 
+    @transaction.atomic
     def partial_update(self, request, pk):
-        thread = self.get_thread(request, pk).thread
+        thread = self.get_thread_for_update(request, pk).thread
         return thread_patch_endpoint(request, thread)
 
+    @transaction.atomic
     def destroy(self, request, pk):
-        thread = self.get_thread(request, pk).thread
+        thread = self.get_thread_for_update(request, pk).thread
 
         if thread.acl.get('can_hide') == 2:
             moderation.delete_thread(request.user, thread)
@@ -82,11 +99,13 @@ class ThreadViewSet(ViewSet):
             return Response(posting.errors, status=400)
 
     @detail_route(methods=['post'], url_path='merge')
+    @transaction.atomic
     def thread_merge(self, request, pk):
-        thread = self.get_thread(request, pk).thread
+        thread = self.get_thread_for_update(request, pk).thread
         return thread_merge_endpoint(request, thread, self.thread)
 
     @list_route(methods=['post'], url_path='merge')
+    @transaction.atomic
     def threads_merge(self, request):
         return threads_merge_endpoint(request)
 

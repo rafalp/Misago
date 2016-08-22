@@ -1,4 +1,5 @@
 from django.core.exceptions import PermissionDenied
+from django.db import transaction
 from django.utils.translation import ugettext as _
 
 from rest_framework import viewsets
@@ -9,7 +10,8 @@ from misago.core.shortcuts import get_int_or_404
 from misago.users.online.utils import make_users_status_aware
 
 from ..models import Post
-from ..permissions.threads import allow_edit_post, allow_reply_thread
+from ..moderation import posts as moderation
+from ..permissions.threads import allow_delete_post, allow_edit_post, allow_reply_thread
 from ..serializers import PostSerializer
 from ..viewmodels.post import ThreadPost
 from ..viewmodels.posts import ThreadPosts
@@ -20,24 +22,60 @@ from .postingendpoint import PostingEndpoint
 class ViewSet(viewsets.ViewSet):
     thread = None
     posts = None
+    post = None
 
-    def get_thread(self, request, pk):
-        return self.thread(request, get_int_or_404(pk), read_aware=True, subscription_aware=True)
+    def get_thread(self, request, pk, read_aware=True, subscription_aware=True, select_for_update=False):
+        return self.thread(
+            request,
+            get_int_or_404(pk),
+            None,
+            read_aware,
+            subscription_aware,
+            select_for_update
+        )
+
+    def get_thread_for_update(self, request, pk):
+        return self.get_thread(
+            request, pk,
+            read_aware=False,
+            subscription_aware=False,
+            select_for_update=True
+        )
 
     def get_posts(self, request, thread, page):
         return self.posts(request, thread, page)
 
-    def create(self, request, thread_pk):
-        thread = self.thread(request, get_int_or_404(thread_pk))
-        allow_reply_thread(request.user, thread.thread)
+    def get_post(self, request, thread, pk, select_for_update=False):
+        return self.post(request, thread, get_int_or_404(pk), select_for_update)
 
-        post = Post(thread=thread.thread, category=thread.category)
+    def get_post_for_update(self, request, thread, pk):
+        return self.get_post(request, thread, pk, select_for_update=True)
+
+    def list(self, request, thread_pk):
+        page = get_int_or_404(request.query_params.get('page', 0))
+        if page == 1:
+            page = 0 # api allows explicit first page
+
+        thread = self.get_thread(request, thread_pk)
+        posts = self.get_posts(request, thread, page)
+
+        data = thread.get_frontend_context()
+        data['post_set'] = posts.get_frontend_context()
+
+        return Response(data)
+
+    @transaction.atomic
+    def create(self, request, thread_pk):
+        thread = self.get_thread_for_update(request, thread_pk).thread
+        allow_reply_thread(request.user, thread)
+
+        post = Post(thread=thread, category=thread.category)
 
         # Put them through posting pipeline
         posting = PostingEndpoint(
             request,
             PostingEndpoint.REPLY,
-            thread=thread.thread,
+            thread=thread,
             post=post
         )
 
@@ -57,9 +95,10 @@ class ViewSet(viewsets.ViewSet):
         else:
             return Response(posting.errors, status=400)
 
+    @transaction.atomic
     def update(self, request, thread_pk, pk):
-        thread = self.thread(request, get_int_or_404(thread_pk))
-        post = ThreadPost(request, thread, get_int_or_404(pk)).post
+        thread = self.get_thread_for_update(request, thread_pk)
+        post = self.get_post_for_update(request, thread, pk).post
 
         allow_edit_post(request.user, post)
 
@@ -88,23 +127,26 @@ class ViewSet(viewsets.ViewSet):
 
         return Response({})
 
-    def list(self, request, thread_pk):
-        page = get_int_or_404(request.query_params.get('page', 0))
-        if page == 1:
-            page = 0 # api allows explicit first page
+    @transaction.atomic
+    def delete(self, request, thread_pk, pk):
+        thread = self.get_thread_for_update(request, thread_pk)
+        post = self.get_post_for_update(request, thread, pk).post
 
-        thread = self.get_thread(request, thread_pk)
-        posts = self.get_posts(request, thread, page)
+        allow_delete_post(request.user, post)
+        moderation.delete_post(request.user, post)
 
-        data = thread.get_frontend_context()
-        data['post_set'] = posts.get_frontend_context()
+        thread.thread.synchronize()
+        thread.thread.save()
 
-        return Response(data)
+        thread.category.synchronize()
+        thread.category.save()
+
+        return Response({})
 
     @detail_route(methods=['get'], url_path='editor')
     def post_editor(self, request, thread_pk, pk):
         thread = self.thread(request, get_int_or_404(thread_pk))
-        post = ThreadPost(request, thread, get_int_or_404(pk)).post
+        post = self.post(request, thread, get_int_or_404(pk)).post
 
         allow_edit_post(request.user, post)
 
@@ -123,7 +165,7 @@ class ViewSet(viewsets.ViewSet):
         allow_reply_thread(request.user, thread.thread)
 
         if 'reply' in request.query_params:
-            reply_to = ThreadPost(request, thread, get_int_or_404(request.query_params['reply'])).post
+            reply_to = self.post(request, thread, get_int_or_404(request.query_params['reply'])).post
 
             if reply_to.is_hidden and not reply_to.acl['can_see_hidden']:
                 raise PermissionDenied(_("You can't reply to hidden posts"))
@@ -140,3 +182,4 @@ class ViewSet(viewsets.ViewSet):
 class ThreadPostsViewSet(ViewSet):
     thread = ForumThread
     posts = ThreadPosts
+    post = ThreadPost

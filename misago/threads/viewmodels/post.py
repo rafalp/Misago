@@ -6,15 +6,24 @@ from ..permissions.threads import allow_see_post, exclude_invisible_posts
 
 
 class ViewModel(object):
-    def __init__(self, request, thread, pk):
-        post = self.get_post(request, thread, pk)
+    def __init__(self, request, thread, pk, select_for_update=False):
+        post = self.get_post(request, thread, pk, select_for_update)
 
         add_acl(request.user, post)
 
         self.post = post
 
-    def get_post(self, request, thread, pk):
+    def get_post(self, request, thread, pk, select_for_update=False):
         queryset = self.get_queryset(request, thread.thread)
+        if select_for_update:
+            queryset = queryset.select_for_update()
+        else:
+            queryset = queryset.select_related(
+                'poster',
+                'poster__rank',
+                'poster__ban_cache'
+            )
+
         post = get_object_or_404(queryset, pk=pk, is_event=False)
 
         post.category = thread.category
@@ -24,12 +33,7 @@ class ViewModel(object):
         return post
 
     def get_queryset(self, request, thread):
-        queryset = thread.post_set.select_related(
-            'poster',
-            'poster__rank',
-            'poster__ban_cache'
-        )
-        return exclude_invisible_posts(request.user, thread.category, queryset)
+        return exclude_invisible_posts(request.user, thread.category, thread.post_set)
 
 
 class ThreadPost(ViewModel):
