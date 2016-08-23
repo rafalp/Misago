@@ -162,6 +162,17 @@ class EditReplyTests(AuthenticatedUserTestCase):
             ]
         })
 
+    def test_edit_event(self):
+        """events can't be edited"""
+        self.override_acl()
+
+        self.post.is_event = True
+        self.post.save()
+
+        response = self.put(self.api_link, data={})
+
+        self.assertContains(response, "Events can't be edited.", status_code=403)
+
     def test_post_is_validated(self):
         """post is validated"""
         self.override_acl()

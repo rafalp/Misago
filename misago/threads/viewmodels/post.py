@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 
 from misago.acl import add_acl
 
-from ..permissions.threads import allow_see_post, exclude_invisible_posts
+from ..permissions.threads import exclude_invisible_posts
 
 
 class ViewModel(object):
@@ -24,11 +24,9 @@ class ViewModel(object):
                 'poster__ban_cache'
             )
 
-        post = get_object_or_404(queryset, pk=pk, is_event=False)
+        post = get_object_or_404(queryset, pk=pk)
 
         post.category = thread.category
-
-        allow_see_post(request.user, post)
 
         return post
 

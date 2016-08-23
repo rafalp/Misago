@@ -21,7 +21,7 @@ def post_thread(category, title='Test thread', poster='Tester',
         'last_post_on': started_on,
         'is_unapproved': is_unapproved,
         'is_hidden': is_hidden,
-        'is_closed': is_closed,
+        'is_closed': is_closed
     }
 
     if is_global:
@@ -59,8 +59,8 @@ def post_thread(category, title='Test thread', poster='Tester',
 
 
 def reply_thread(thread, poster="Tester", message="I am test message",
-                 is_unapproved=False, is_hidden=False, has_reports=False,
-                 has_open_reports=False, posted_on=None, poster_ip='127.0.0.1'):
+                 is_unapproved=False, is_hidden=False, is_event=False,
+                 has_reports=False, has_open_reports=False, posted_on=None, poster_ip='127.0.0.1'):
     posted_on = posted_on or thread.last_post_on + timedelta(minutes=5)
 
     kwargs = {
@@ -72,6 +72,7 @@ def reply_thread(thread, poster="Tester", message="I am test message",
         'poster_ip': poster_ip,
         'posted_on': posted_on,
         'updated_on': posted_on,
+        'is_event': is_event,
         'is_unapproved': is_unapproved,
         'is_hidden': is_hidden,
         'has_reports': has_reports,

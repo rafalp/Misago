@@ -382,6 +382,18 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
         response = self.client.get('{}?reply={}'.format(self.api_link, reply_to.pk))
         self.assertEqual(response.status_code, 404)
 
+    def test_reply_to_event(self):
+        """events can't be edited"""
+        self.override_acl({
+            'can_reply_threads': 1
+        })
+
+        reply_to = testutils.reply_thread(self.thread, is_event=True)
+
+        response = self.client.get('{}?reply={}'.format(self.api_link, reply_to.pk))
+
+        self.assertContains(response, "You can't reply to events.", status_code=403)
+
     def test_reply_to(self):
         """api includes replied to post details in response"""
         self.override_acl({
@@ -553,6 +565,17 @@ class EditReplyEditorApiTests(EditorApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
+
+    def test_post_is_event(self):
+        """events can't be edited"""
+        self.override_acl()
+
+        self.post.is_event = True
+        self.post.save()
+
+        response = self.client.get(self.api_link)
+
+        self.assertContains(response, "Events can't be edited.", status_code=403)
 
     def test_other_user_post(self):
         """api validates if other user's post can be edited"""

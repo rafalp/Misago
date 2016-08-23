@@ -25,8 +25,6 @@ __all__ = [
     'can_reply_thread',
     'allow_edit_thread',
     'can_edit_thread',
-    'allow_see_post',
-    'can_see_post',
     'allow_edit_post',
     'can_edit_post',
     'allow_unhide_post',
@@ -548,18 +546,12 @@ def allow_edit_thread(user, target):
 can_edit_thread = return_boolean(allow_edit_thread)
 
 
-def allow_see_post(user, target):
-    if target.is_unapproved:
-        category_acl = user.acl['categories'].get(target.category_id, {})
-        if not category_acl.get('can_approve_content'):
-            if user.is_anonymous() or user.pk != target.poster_id:
-                raise Http404()
-can_see_post = return_boolean(allow_see_post)
-
-
 def allow_edit_post(user, target):
     if user.is_anonymous():
         raise PermissionDenied(_("You have to sign in to edit posts."))
+
+    if target.is_event:
+        raise PermissionDenied(_("Events can't be edited."))
 
     category_acl = user.acl['categories'].get(target.category_id, {})
 
@@ -695,6 +687,16 @@ def allow_delete_post(user, target):
     if target.is_first_post:
         raise PermissionDenied(_("You can't delete thread's first post."))
 can_delete_post = return_boolean(allow_delete_post)
+
+
+def allow_delete_event(user, target):
+    if user.is_anonymous():
+        raise PermissionDenied(_("You have to sign in to delete events."))
+
+    category_acl = user.acl['categories'].get(target.category_id, {})
+    if category_acl['can_hide_events'] != 2:
+        raise PermissionDenied(_("You can't delete events in this category."))
+can_delete_event = return_boolean(allow_delete_event)
 
 
 """

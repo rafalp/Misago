@@ -11,7 +11,8 @@ from misago.users.online.utils import make_users_status_aware
 
 from ..models import Post
 from ..moderation import posts as moderation
-from ..permissions.threads import allow_delete_post, allow_edit_post, allow_reply_thread
+from ..permissions.threads import (
+    allow_delete_event, allow_delete_post, allow_edit_post, allow_reply_thread)
 from ..serializers import PostSerializer
 from ..viewmodels.post import ThreadPost
 from ..viewmodels.posts import ThreadPosts
@@ -132,7 +133,11 @@ class ViewSet(viewsets.ViewSet):
         thread = self.get_thread_for_update(request, thread_pk)
         post = self.get_post_for_update(request, thread, pk).post
 
-        allow_delete_post(request.user, post)
+        if post.is_event:
+            allow_delete_event(request.user, post)
+        else:
+            allow_delete_post(request.user, post)
+
         moderation.delete_post(request.user, post)
 
         thread.thread.synchronize()
@@ -167,8 +172,10 @@ class ViewSet(viewsets.ViewSet):
         if 'reply' in request.query_params:
             reply_to = self.post(request, thread, get_int_or_404(request.query_params['reply'])).post
 
+            if reply_to.is_event:
+                raise PermissionDenied(_("You can't reply to events."))
             if reply_to.is_hidden and not reply_to.acl['can_see_hidden']:
-                raise PermissionDenied(_("You can't reply to hidden posts"))
+                raise PermissionDenied(_("You can't reply to hidden posts."))
 
             return Response({
                 'id': reply_to.pk,
