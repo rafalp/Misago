@@ -709,9 +709,6 @@ def can_change_owned_thread(user, target):
     if target.category.is_closed or target.is_closed:
         return False
 
-    if target.first_post.is_protected:
-        return False
-
     return has_time_to_edit_thread(user, target)
 
 
