@@ -10,8 +10,10 @@ def show_progress(command, step, total, since=None):
     rendered_line = line % (str(progress).rjust(3), '=' * filled, ' ' * blank)
 
     if since:
-        if step > 0:
-            estimated_time = ((time.time() - since) // step) * (total - step)
+        progress_float = float(step) * 100.0 / float(total)
+        if progress_float > 0:
+            step_time = (time.time() - since) / progress_float
+            estimated_time = (100 - progress) * step_time
             clock = time.strftime('%H:%M:%S', time.gmtime(estimated_time))
             rendered_line = '%s %s est.' % (rendered_line, clock)
         else:
