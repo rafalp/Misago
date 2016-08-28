@@ -42,9 +42,9 @@ class ViewModel(object):
         self.allow_see_list(request, category, list_type)
 
         base_queryset = self.get_base_queryset(request, category.categories, list_type)
-        threads_categories = [category.category] + category.subcategories
+        threads_categories = [category.model] + category.subcategories
 
-        threads_queryset = self.get_remaining_threads_queryset(base_queryset, category.category, threads_categories)
+        threads_queryset = self.get_remaining_threads_queryset(base_queryset, category.model, threads_categories)
 
         list_page = paginate(threads_queryset, page, settings.MISAGO_THREADS_PER_PAGE, settings.MISAGO_THREADS_TAIL)
         paginator = pagination_dict(list_page, include_page_range=False)
@@ -52,7 +52,7 @@ class ViewModel(object):
         if list_page.number > 1:
             threads = list(list_page.object_list)
         else:
-            pinned_threads = list(self.get_pinned_threads(base_queryset, category.category, threads_categories))
+            pinned_threads = list(self.get_pinned_threads(base_queryset, category.model, threads_categories))
             threads = list(pinned_threads) + list(list_page.object_list)
 
         if list_type in ('new', 'unread'):
@@ -61,7 +61,7 @@ class ViewModel(object):
         else:
             threadstracker.make_threads_read_aware(request.user, threads)
 
-        add_categories_to_threads(category.category, category.categories, threads)
+        add_categories_to_threads(category.model, category.categories, threads)
         add_acl(request.user, threads)
         make_subscription_aware(request.user, threads)
 

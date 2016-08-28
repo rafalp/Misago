@@ -17,21 +17,33 @@ BASE_RELATIONS = ('category', 'starter', 'starter__rank', 'starter__ban_cache', 
 
 class ViewModel(object):
     def __init__(self, request, pk, slug=None, read_aware=False, subscription_aware=False, select_for_update=False):
-        thread = self.get_thread(request, pk, slug, select_for_update)
+        model = self.get_thread(request, pk, slug, select_for_update)
 
-        thread.path = self.get_thread_path(thread.category)
+        model.path = self.get_thread_path(model.category)
 
-        add_acl(request.user, thread.category)
-        add_acl(request.user, thread)
+        add_acl(request.user, model.category)
+        add_acl(request.user, model)
 
         if read_aware:
-            make_read_aware(request.user, thread)
+            make_read_aware(request.user, model)
         if subscription_aware:
-            make_subscription_aware(request.user, thread)
+            make_subscription_aware(request.user, model)
 
-        self.thread = thread
-        self.category = thread.category
-        self.path = thread.path
+        self._model = model
+        self._category = model.category
+        self._path = model.path
+
+    @property
+    def model(self):
+        return self._model
+
+    @property
+    def category(self):
+        return self._category
+
+    @property
+    def path(self):
+        return self._path
 
     def get_thread(self, request, pk, slug=None, select_for_update=False):
         raise NotImplementedError('Thread view model has to implement get_thread(request, pk, slug=None)')
@@ -56,13 +68,13 @@ class ViewModel(object):
         raise NotImplementedError('Thread view model has to implement get_root_name()')
 
     def get_frontend_context(self):
-        return ThreadSerializer(self.thread).data
+        return ThreadSerializer(self._model).data
 
     def get_template_context(self):
         return {
-            'thread': self.thread,
-            'category': self.category,
-            'breadcrumbs': self.path
+            'thread': self._model,
+            'category': self._category,
+            'breadcrumbs': self._path
         }
 
 

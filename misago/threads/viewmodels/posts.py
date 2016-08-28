@@ -11,7 +11,7 @@ from ..serializers import PostSerializer
 
 class ViewModel(object):
     def __init__(self, request, thread, page):
-        posts_queryset = self.get_queryset(request, thread.thread)
+        posts_queryset = self.get_queryset(request, thread.model)
 
         list_page = paginate(posts_queryset, page, settings.MISAGO_POSTS_PER_PAGE, settings.MISAGO_POSTS_TAIL)
         paginator = pagination_dict(list_page, include_page_range=False)
@@ -21,14 +21,14 @@ class ViewModel(object):
 
         for post in posts:
             post.category = thread.category
-            post.thread = thread.thread
+            post.thread = thread.model
 
             if post.poster and post.poster not in posters:
                 posters.append(post.poster)
 
         add_acl(request.user, posts)
 
-        make_posts_read_aware(request.user, thread.thread, posts)
+        make_posts_read_aware(request.user, thread.model, posts)
         make_users_status_aware(request.user, posters)
 
         self.posts = posts

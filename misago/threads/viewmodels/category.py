@@ -9,12 +9,28 @@ from misago.core.shortcuts import validate_slug
 
 class ViewModel(object):
     def __init__(self, request, **kwargs):
-        self.categories = self.get_categories(request)
-        map(lambda c: add_acl(request.user, c), self.categories)
+        self._categories = self.get_categories(request)
+        add_acl(request.user, self._categories)
 
-        self.category = self.get_category(request, self.categories, **kwargs)
-        self.subcategories = list(filter(self.category.has_child, self.categories))
-        self.children = list(filter(lambda s: s.parent_id == self.category.pk, self.subcategories))
+        self._model = self.get_category(request, self._categories, **kwargs)
+        self._subcategories = list(filter(self._model.has_child, self._categories))
+        self._children = list(filter(lambda s: s.parent_id == self._model.pk, self._subcategories))
+
+    @property
+    def model(self):
+        return self._model
+
+    @property
+    def categories(self):
+        return self._categories
+
+    @property
+    def subcategories(self):
+        return self._subcategories
+
+    @property
+    def children(self):
+        return self._children
 
     def get_categories(self, request):
         raise NotImplementedError('Category view model has to implement get_categories(request)')
@@ -24,13 +40,13 @@ class ViewModel(object):
 
     def get_frontend_context(self):
         return {
-            'CATEGORIES': BasicCategorySerializer(self.categories, many=True).data
+            'CATEGORIES': BasicCategorySerializer(self._categories, many=True).data
         }
 
     def get_template_context(self):
         return {
-            'category': self.category,
-            'subcategories': self.children
+            'category': self._model,
+            'subcategories': self._children
         }
 
 
@@ -45,7 +61,7 @@ class ThreadsRootCategory(ViewModel):
 class ThreadsCategory(ThreadsRootCategory):
     @property
     def level(self):
-        return self.category.level
+        return self._model.level
 
     def get_category(self, request, categories, **kwargs):
         for category in categories:

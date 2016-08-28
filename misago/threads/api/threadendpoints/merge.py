@@ -38,7 +38,7 @@ def thread_merge_endpoint(request, thread, viewmodel):
         return Response({'detail': _("You can't merge thread with itself.")}, status=400)
 
     try:
-        other_thread = viewmodel(request, other_thread_id, select_for_update=True).thread
+        other_thread = viewmodel(request, other_thread_id, select_for_update=True).model
     except PermissionDenied as e:
         return Response({
             'detail': e.args[0]

@@ -71,12 +71,12 @@ class ViewSet(viewsets.ViewSet):
     @list_route(methods=['post'], url_path='merge')
     @transaction.atomic
     def merge(self, request, thread_pk):
-        thread = self.get_thread_for_update(request, thread_pk).thread
+        thread = self.get_thread_for_update(request, thread_pk).model
         return posts_merge_endpoint(request, thread)
 
     @transaction.atomic
     def create(self, request, thread_pk):
-        thread = self.get_thread_for_update(request, thread_pk).thread
+        thread = self.get_thread_for_update(request, thread_pk).model
         allow_reply_thread(request.user, thread)
 
         post = Post(thread=thread, category=thread.category)
@@ -108,14 +108,14 @@ class ViewSet(viewsets.ViewSet):
     @transaction.atomic
     def update(self, request, thread_pk, pk):
         thread = self.get_thread_for_update(request, thread_pk)
-        post = self.get_post_for_update(request, thread, pk).post
+        post = self.get_post_for_update(request, thread, pk).model
 
         allow_edit_post(request.user, post)
 
         posting = PostingEndpoint(
             request,
             PostingEndpoint.EDIT,
-            thread=thread.thread,
+            thread=thread.model,
             post=post
         )
 
@@ -140,7 +140,7 @@ class ViewSet(viewsets.ViewSet):
     @transaction.atomic
     def partial_update(self, request, thread_pk, pk):
         thread = self.get_thread_for_update(request, thread_pk)
-        post = self.get_post_for_update(request, thread, pk).post
+        post = self.get_post_for_update(request, thread, pk).model
 
         if post.is_event:
             return event_patch_endpoint(request, post)
@@ -150,7 +150,7 @@ class ViewSet(viewsets.ViewSet):
     @transaction.atomic
     def delete(self, request, thread_pk, pk):
         thread = self.get_thread_for_update(request, thread_pk)
-        post = self.get_post_for_update(request, thread, pk).post
+        post = self.get_post_for_update(request, thread, pk).model
 
         if post.is_event:
             allow_delete_event(request.user, post)
@@ -159,8 +159,8 @@ class ViewSet(viewsets.ViewSet):
 
         moderation.delete_post(request.user, post)
 
-        thread.thread.synchronize()
-        thread.thread.save()
+        thread.model.synchronize()
+        thread.model.save()
 
         thread.category.synchronize()
         thread.category.save()
@@ -170,7 +170,7 @@ class ViewSet(viewsets.ViewSet):
     @detail_route(methods=['get'], url_path='editor')
     def post_editor(self, request, thread_pk, pk):
         thread = self.thread(request, get_int_or_404(thread_pk))
-        post = self.post(request, thread, get_int_or_404(pk)).post
+        post = self.post(request, thread, get_int_or_404(pk)).model
 
         allow_edit_post(request.user, post)
 
@@ -186,10 +186,10 @@ class ViewSet(viewsets.ViewSet):
     @list_route(methods=['get'], url_path='editor')
     def reply_editor(self, request, thread_pk):
         thread = self.thread(request, get_int_or_404(thread_pk))
-        allow_reply_thread(request.user, thread.thread)
+        allow_reply_thread(request.user, thread.model)
 
         if 'reply' in request.query_params:
-            reply_to = self.post(request, thread, get_int_or_404(request.query_params['reply'])).post
+            reply_to = self.post(request, thread, get_int_or_404(request.query_params['reply'])).model
 
             if reply_to.is_event:
                 raise PermissionDenied(_("You can't reply to events."))

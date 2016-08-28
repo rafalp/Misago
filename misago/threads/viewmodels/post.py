@@ -7,14 +7,28 @@ from ..permissions.threads import exclude_invisible_posts
 
 class ViewModel(object):
     def __init__(self, request, thread, pk, select_for_update=False):
-        post = self.get_post(request, thread, pk, select_for_update)
+        model = self.get_post(request, thread, pk, select_for_update)
 
-        add_acl(request.user, post)
+        add_acl(request.user, model)
 
-        self.post = post
+        self._model = model
+        self._thread = model.thread
+        self._category = model.category
+
+    @property
+    def model(self):
+        return self._model
+
+    @property
+    def thread(self):
+        return self._thread
+
+    @property
+    def category(self):
+        return self._category
 
     def get_post(self, request, thread, pk, select_for_update=False):
-        queryset = self.get_queryset(request, thread.thread)
+        queryset = self.get_queryset(request, thread.model)
         if select_for_update:
             queryset = queryset.select_for_update()
         else:
@@ -26,7 +40,7 @@ class ViewModel(object):
 
         post = get_object_or_404(queryset, pk=pk)
 
-        post.thread = thread.thread
+        post.thread = thread.model
         post.category = thread.category
 
         return post
