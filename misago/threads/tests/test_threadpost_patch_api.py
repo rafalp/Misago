@@ -79,6 +79,191 @@ class PostAddAclApiTests(ThreadPostPatchApiTestCase):
         self.assertEqual(response.status_code, 200)
 
 
+class PostProtectApiTests(ThreadPostPatchApiTestCase):
+    def test_protect_post(self):
+        """api makes it possible to protect post"""
+        self.override_acl({
+            'can_protect_posts': 1
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-protected', 'value': True}
+        ])
+        self.assertEqual(response.status_code, 200)
+
+        self.refresh_post()
+        self.assertTrue(self.post.is_protected)
+
+    def test_unprotect_post(self):
+        """api makes it possible to unprotect protected post"""
+        self.post.is_protected = True
+        self.post.save()
+
+        self.override_acl({
+            'can_protect_posts': 1
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-protected', 'value': False}
+        ])
+        self.assertEqual(response.status_code, 200)
+
+        self.refresh_post()
+        self.assertFalse(self.post.is_protected)
+
+    def test_protect_post_no_permission(self):
+        """api validates permission to protect post"""
+        self.override_acl({
+            'can_protect_posts': 0
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-protected', 'value': True}
+        ])
+        self.assertEqual(response.status_code, 400)
+
+        response_json = json.loads(smart_str(response.content))
+        self.assertEqual(response_json['detail'][0], "You can't protect posts in this category.")
+
+        self.refresh_post()
+        self.assertFalse(self.post.is_protected)
+
+    def test_unprotect_post_no_permission(self):
+        """api validates permission to unprotect post"""
+        self.post.is_protected = True
+        self.post.save()
+
+        self.override_acl({
+            'can_protect_posts': 0
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-protected', 'value': False}
+        ])
+        self.assertEqual(response.status_code, 400)
+
+        response_json = json.loads(smart_str(response.content))
+        self.assertEqual(response_json['detail'][0], "You can't protect posts in this category.")
+
+        self.refresh_post()
+        self.assertTrue(self.post.is_protected)
+
+    def test_unprotect_post_not_editable(self):
+        """api validates if we can edit post we want to protect"""
+        self.override_acl({
+            'can_edit_posts': 0,
+            'can_protect_posts': 1
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-protected', 'value': True}
+        ])
+        self.assertEqual(response.status_code, 400)
+
+        response_json = json.loads(smart_str(response.content))
+        self.assertEqual(response_json['detail'][0], "You can't protect posts you can't edit.")
+
+        self.refresh_post()
+        self.assertFalse(self.post.is_protected)
+
+
+class PostApproveApiTests(ThreadPostPatchApiTestCase):
+    def test_approve_post(self):
+        """api makes it possible to approve post"""
+        self.post.is_unapproved = True
+        self.post.save()
+
+        self.override_acl({
+            'can_approve_content': 1
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-unapproved', 'value': True}
+        ])
+        self.assertEqual(response.status_code, 200)
+
+        self.refresh_post()
+        self.assertFalse(self.post.is_unapproved)
+
+    def test_unapprove_post(self):
+        """unapproving posts is not supported by api"""
+        self.override_acl({
+            'can_approve_content': 1
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-unapproved', 'value': False}
+        ])
+        self.assertEqual(response.status_code, 200)
+
+        self.refresh_post()
+        self.assertFalse(self.post.is_unapproved)
+
+    def test_approve_post_no_permission(self):
+        """api validates approval permission"""
+        self.post.is_unapproved = True
+        self.post.save()
+
+        self.override_acl({
+            'can_approve_content': 0
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-unapproved', 'value': True}
+        ])
+        self.assertEqual(response.status_code, 400)
+
+        response_json = json.loads(smart_str(response.content))
+        self.assertEqual(response_json['detail'][0], "You can't approve posts in this category.")
+
+        self.refresh_post()
+        self.assertTrue(self.post.is_unapproved)
+
+    def test_approve_first_post(self):
+        """api approve first post fails"""
+        self.post.is_unapproved = True
+        self.post.save()
+
+        self.thread.set_first_post(self.post)
+        self.thread.save()
+
+        self.override_acl({
+            'can_approve_content': 1
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-unapproved', 'value': True}
+        ])
+        self.assertEqual(response.status_code, 400)
+
+        response_json = json.loads(smart_str(response.content))
+        self.assertEqual(response_json['detail'][0], "You can't approve thread's first post.")
+
+        self.refresh_post()
+        self.assertTrue(self.post.is_unapproved)
+
+    def test_approve_hidden_post(self):
+        """api approve hidden post fails"""
+        self.post.is_unapproved = True
+        self.post.is_hidden = True
+        self.post.save()
+
+        self.override_acl({
+            'can_approve_content': 1
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-unapproved', 'value': True}
+        ])
+        self.assertEqual(response.status_code, 400)
+
+        response_json = json.loads(smart_str(response.content))
+        self.assertEqual(response_json['detail'][0], "You can't approve posts the content you can't see.")
+
+        self.refresh_post()
+        self.assertTrue(self.post.is_unapproved)
+
+
 class PostHideApiTests(ThreadPostPatchApiTestCase):
     def test_hide_post(self):
         """api makes it possible to hide post"""
@@ -147,43 +332,6 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
 
         self.refresh_post()
         self.assertFalse(self.post.is_hidden)
-
-    def test_hide_post_already_hidden(self):
-        """api hide hidden post fails"""
-        self.post.is_hidden = True
-        self.post.save()
-
-        self.refresh_post()
-        self.assertTrue(self.post.is_hidden)
-
-        self.override_acl({
-            'can_hide_posts': 1
-        })
-
-        response = self.patch(self.api_link, [
-            {'op': 'replace', 'path': 'is-hidden', 'value': True}
-        ])
-        self.assertEqual(response.status_code, 400)
-
-        response_json = json.loads(smart_str(response.content))
-        self.assertEqual(response_json['detail'][0], "Only visible posts can be made hidden.")
-
-        self.refresh_post()
-        self.assertTrue(self.post.is_hidden)
-
-    def test_show_post_already_visible(self):
-        """api unhide visible post fails"""
-        self.override_acl({
-            'can_hide_posts': 1
-        })
-
-        response = self.patch(self.api_link, [
-            {'op': 'replace', 'path': 'is-hidden', 'value': False}
-        ])
-        self.assertEqual(response.status_code, 400)
-
-        response_json = json.loads(smart_str(response.content))
-        self.assertEqual(response_json['detail'][0], "Only hidden posts can be revealed.")
 
     def test_hide_post_no_permission(self):
         """api hide post with no permission fails"""

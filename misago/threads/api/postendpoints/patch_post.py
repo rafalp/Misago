@@ -4,7 +4,7 @@ from django.utils.translation import gettext as _
 from misago.acl import add_acl
 from misago.core.apipatch import ApiPatch
 from ...moderation import posts as moderation
-from ...permissions.threads import allow_hide_post, allow_unhide_post
+from ...permissions.threads import allow_approve_post, allow_hide_post, allow_protect_post, allow_unhide_post
 
 
 post_patch_dispatcher = ApiPatch()
@@ -18,6 +18,24 @@ def patch_acl(request, post, value):
     else:
         return {'acl': None}
 post_patch_dispatcher.add('acl', patch_acl)
+
+
+def patch_is_protected(request, post, value):
+    allow_protect_post(request.user, post)
+    if value:
+        moderation.protect_post(request.user, post)
+    else:
+        moderation.unprotect_post(request.user, post)
+    return {'is_protected': post.is_protected}
+post_patch_dispatcher.replace('is-protected', patch_is_protected)
+
+
+def patch_is_unapproved(request, post, value):
+    if value:
+        allow_approve_post(request.user, post)
+        moderation.approve_post(request.user, post)
+    return {'is_unapproved': post.is_unapproved}
+post_patch_dispatcher.replace('is-unapproved', patch_is_unapproved)
 
 
 def patch_is_hidden(request, post, value):

@@ -448,8 +448,8 @@ def add_acl_to_reply(user, post):
         'can_unhide': can_unhide_post(user, post),
         'can_hide': can_hide_post(user, post),
         'can_delete': can_delete_post(user, post),
-        'can_protect': category_acl.get('can_protect_posts', False),
-        'can_approve': category_acl.get('can_approve_content', False),
+        'can_protect': can_protect_post(user, post),
+        'can_approve': can_approve_post(user, post),
         'can_report': category_acl.get('can_report_content', False),
         'can_see_reports': category_acl.get('can_see_reports', False),
         'can_see_likes': category_acl.get('can_see_posts_likes', 0),
@@ -613,8 +613,6 @@ def allow_unhide_post(user, target):
 
     if target.is_first_post:
         raise PermissionDenied(_("You can't reveal thread's first post."))
-    if not target.is_hidden:
-        raise PermissionDenied(_("Only hidden posts can be revealed."))
 can_unhide_post = return_boolean(allow_unhide_post)
 
 
@@ -649,8 +647,6 @@ def allow_hide_post(user, target):
 
     if target.is_first_post:
         raise PermissionDenied(_("You can't hide thread's first post."))
-    if target.is_hidden:
-        raise PermissionDenied(_("Only visible posts can be made hidden."))
 can_hide_post = return_boolean(allow_hide_post)
 
 
@@ -686,6 +682,34 @@ def allow_delete_post(user, target):
     if target.is_first_post:
         raise PermissionDenied(_("You can't delete thread's first post."))
 can_delete_post = return_boolean(allow_delete_post)
+
+
+def allow_protect_post(user, target):
+    if user.is_anonymous():
+        raise PermissionDenied(_("You have to sign in to protect posts."))
+
+    category_acl = user.acl['categories'].get(target.category_id, {})
+
+    if not category_acl['can_protect_posts']:
+        raise PermissionDenied(_("You can't protect posts in this category."))
+    if not can_edit_post(user, target):
+        raise PermissionDenied(_("You can't protect posts you can't edit."))
+can_protect_post = return_boolean(allow_protect_post)
+
+
+def allow_approve_post(user, target):
+    if user.is_anonymous():
+        raise PermissionDenied(_("You have to sign in to approve posts."))
+
+    category_acl = user.acl['categories'].get(target.category_id, {})
+
+    if not category_acl['can_approve_content']:
+        raise PermissionDenied(_("You can't approve posts in this category."))
+    if target.is_first_post:
+        raise PermissionDenied(_("You can't approve thread's first post."))
+    if not target.is_first_post and not category_acl['can_hide_posts'] and target.is_hidden:
+        raise PermissionDenied(_("You can't approve posts the content you can't see."))
+can_approve_post = return_boolean(allow_approve_post)
 
 
 def allow_delete_event(user, target):
