@@ -5,7 +5,6 @@ import json
 from datetime import timedelta
 
 from django.core.urlresolvers import reverse
-from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 from django.utils import timezone
 from django.utils.encoding import smart_str
 

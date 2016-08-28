@@ -1,7 +1,6 @@
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
-from django.utils.translation import gettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext as _, ungettext
 
 from rest_framework.response import Response
 
@@ -101,7 +100,7 @@ def threads_merge_endpoint(request):
 
 def clean_threads_for_merge(request):
     try:
-        threads_ids = list(map(int, request.data.get('threads', [])))
+        threads_ids = list(map(int, request.data.getlist('threads', [])))
     except (ValueError, TypeError):
         raise MergeError(_("One or more thread ids received were invalid."))
 

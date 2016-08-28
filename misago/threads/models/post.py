@@ -80,15 +80,10 @@ class Post(models.Model):
 
     def merge(self, other_post):
         if self.thread_id != other_post.thread_id:
-            message = "only posts belonging to same thread can be merged"
-            raise ValueError(message)
+            raise ValueError("only posts belonging to same thread can be merged")
 
-        message = "posts made by different authors can't be merged"
-        if self.poster_id and other_post.poster_id:
-            if self.poster_id != other_post.poster_id:
-                raise ValueError(message)
-        else:
-            raise ValueError(message)
+        if self.is_event or other_post.is_event:
+            raise ValueError("can't merge events")
 
         if self.pk == other_post.pk:
             raise ValueError("post can't be merged with itself")

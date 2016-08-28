@@ -400,6 +400,9 @@ def add_acl_to_thread(user, thread):
         'can_close': category_acl.get('can_close_threads', False),
         'can_move': False,
         'can_merge': False,
+        'can_move_posts': False,
+        'can_merge_posts': False,
+        'can_split': False,
         'can_approve': category_acl.get('can_approve_content', False),
         'can_see_reports': category_acl.get('can_see_reports', False),
     })
@@ -418,6 +421,10 @@ def add_acl_to_thread(user, thread):
         thread.acl['can_pin'] = category_acl.get('can_pin_threads', 0)
         thread.acl['can_move'] = category_acl.get('can_move_threads', False)
         thread.acl['can_merge'] = category_acl.get('can_merge_threads', False)
+
+        thread.acl['can_move_posts'] = category_acl.get('can_move_posts', False)
+        thread.acl['can_merge_posts'] = category_acl.get('can_merge_posts', False)
+        thread.acl['can_split'] = category_acl.get('can_split_threads', False)
 
 
 def add_acl_to_post(user, post):
