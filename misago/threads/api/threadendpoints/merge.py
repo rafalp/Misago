@@ -1,7 +1,8 @@
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
 from django.utils.translation import gettext as _, ungettext
 
+from rest_framework import serializers
 from rest_framework.response import Response
 
 from misago.acl import add_acl
@@ -9,11 +10,12 @@ from misago.categories.models import THREADS_ROOT_NAME, Category
 from misago.categories.permissions import can_browse_category, can_see_category
 
 from ...events import record_event
-from ...models import Thread
+from ...models import THREAD_WEIGHT_DEFAULT, THREAD_WEIGHT_GLOBAL, Thread
 from ...moderation import threads as moderation
-from ...permissions import can_see_thread
-from ...serializers import MergeThreadsSerializer, ThreadsListSerializer
+from ...permissions import allow_start_thread, can_see_thread
+from ...serializers import ThreadsListSerializer
 from ...threadtypes import trees_map
+from ...validators import validate_title
 from ...utils import add_categories_to_threads, get_thread_id_from_url
 
 
@@ -181,3 +183,71 @@ def merge_threads(request, validated_data, threads):
 
     add_acl(request.user, new_thread)
     return new_thread
+
+
+def validate_category(user, category_id, allow_root=False):
+    try:
+        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
+        category = Category.objects.get(
+            tree_id=threads_tree_id,
+            id=category_id,
+        )
+    except Category.DoesNotExist:
+        category = None
+
+    # Skip ACL validation for root category?
+    if allow_root and category and not category.level:
+        return category
+
+    if not category or not can_see_category(user, category):
+        raise ValidationError(_("Requested category could not be found."))
+
+    if not can_browse_category(user, category):
+        raise ValidationError(_("You don't have permission to access this category."))
+    return category
+
+
+class MergeThreadsSerializer(serializers.Serializer):
+    title = serializers.CharField()
+    category = serializers.IntegerField()
+    top_category = serializers.IntegerField(required=False, allow_null=True)
+    weight = serializers.IntegerField(
+        required=False,
+        allow_null=True,
+        max_value=THREAD_WEIGHT_GLOBAL,
+        min_value=THREAD_WEIGHT_DEFAULT,
+    )
+    is_closed = serializers.NullBooleanField(required=False)
+
+    def validate_title(self, title):
+        return validate_title(title)
+
+    def validate_top_category(self, category_id):
+        return validate_category(self.context, category_id, allow_root=True)
+
+    def validate_category(self, category_id):
+        self.category = validate_category(self.context, category_id)
+        return self.category
+
+    def validate_weight(self, weight):
+        try:
+            add_acl(self.context, self.category)
+        except AttributeError:
+            return weight # don't validate weight further if category failed
+
+        if weight > self.category.acl.get('can_pin_threads', 0):
+            if weight == 2:
+                raise ValidationError(_("You don't have permission to pin threads globally in this category."))
+            else:
+                raise ValidationError(_("You don't have permission to pin threads in this category."))
+        return weight
+
+    def validate_is_closed(self, is_closed):
+        try:
+            add_acl(self.context, self.category)
+        except AttributeError:
+            return is_closed # don't validate closed further if category failed
+
+        if is_closed and not self.category.acl.get('can_close_threads'):
+            raise ValidationError(_("You don't have permission to close threads in this category."))
+        return is_closed

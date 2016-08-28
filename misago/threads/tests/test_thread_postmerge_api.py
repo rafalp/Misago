@@ -7,6 +7,7 @@ from datetime import timedelta
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.utils.encoding import smart_str
+from django.utils.six.moves import range
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
@@ -135,7 +136,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
     def test_merge_limit(self):
         """api rejects more posts than merge limit"""
         response = self.client.post(self.api_link, json.dumps({
-            'posts': list(xrange(MERGE_LIMIT + 1))
+            'posts': list(range(MERGE_LIMIT + 1))
         }), content_type="application/json")
         self.assertContains(response, "No more than {} posts can be merged".format(MERGE_LIMIT), status_code=400)
 
