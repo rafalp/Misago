@@ -223,8 +223,8 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
 
     def test_merge_posts(self):
         """api merges two posts"""
-        post_a = testutils.reply_thread(self.thread, poster="Bob", message="Battery")
-        post_b = testutils.reply_thread(self.thread, poster="Bob", message="Horse")
+        post_a = testutils.reply_thread(self.thread, poster="Bob", message="Battęry")
+        post_b = testutils.reply_thread(self.thread, poster="Bob", message="Hórse")
 
         thread_replies = self.thread.replies
 

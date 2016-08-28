@@ -53,27 +53,12 @@ class PostModelTests(TestCase):
 
     def test_merge_invalid(self):
         """see if attempts for invalid merges fail"""
+        # can't merge with itself
         with self.assertRaises(ValueError):
             self.post.merge(self.post)
 
         User = get_user_model()
         other_user = User.objects.create_user("Jeff", "Je@ff.com", "Pass.123")
-
-        other_post = Post.objects.create(
-            category=self.category,
-            thread=self.thread,
-            poster=other_user,
-            poster_name=other_user.username,
-            poster_ip='127.0.0.1',
-            original="Hello! I am test message!",
-            parsed="<p>Hello! I am test message!</p>",
-            checksum="nope",
-            posted_on=timezone.now() + timedelta(minutes=5),
-            updated_on=timezone.now() + timedelta(minutes=5)
-        )
-
-        with self.assertRaises(ValueError):
-            self.post.merge(other_post)
 
         other_thread = Thread.objects.create(
             category=self.category,
@@ -85,38 +70,36 @@ class PostModelTests(TestCase):
             last_poster_slug='tester'
         )
 
-        other_post = Post.objects.create(
-            category=self.category,
-            thread=other_thread,
-            poster=self.user,
-            poster_name=self.user.username,
-            poster_ip='127.0.0.1',
-            original="Hello! I am test message!",
-            parsed="<p>Hello! I am test message!</p>",
-            checksum="nope",
-            posted_on=timezone.now() + timedelta(minutes=5),
-            updated_on=timezone.now() + timedelta(minutes=5)
-        )
-
+        # can't merge across threads
         with self.assertRaises(ValueError):
-            self.post.merge(other_post)
+            self.post.merge(Post.objects.create(
+                category=self.category,
+                thread=other_thread,
+                poster=self.user,
+                poster_name=self.user.username,
+                poster_ip='127.0.0.1',
+                original="Hello! I am test message!",
+                parsed="<p>Hello! I am test message!</p>",
+                checksum="nope",
+                posted_on=timezone.now() + timedelta(minutes=5),
+                updated_on=timezone.now() + timedelta(minutes=5)
+            ))
 
-        other_post = Post.objects.create(
-            category=self.category,
-            thread=self.thread,
-            poster_name=other_user.username,
-            poster_ip='127.0.0.1',
-            original="Hello! I am test message!",
-            parsed="<p>Hello! I am test message!</p>",
-            checksum="nope",
-            posted_on=timezone.now() + timedelta(minutes=5),
-            updated_on=timezone.now() + timedelta(minutes=5)
-        )
-
+        # can't merge with events
         with self.assertRaises(ValueError):
-            self.post.merge(other_post)
-        with self.assertRaises(ValueError):
-            other_post.merge(self.post)
+            self.post.merge(Post.objects.create(
+                category=self.category,
+                thread=self.thread,
+                poster=self.user,
+                poster_name=self.user.username,
+                poster_ip='127.0.0.1',
+                original="Hello! I am test message!",
+                parsed="<p>Hello! I am test message!</p>",
+                checksum="nope",
+                posted_on=timezone.now() + timedelta(minutes=5),
+                updated_on=timezone.now() + timedelta(minutes=5),
+                is_event=True
+            ))
 
     def test_merge(self):
         """merge method merges two posts into one"""

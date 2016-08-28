@@ -100,7 +100,7 @@ def threads_merge_endpoint(request):
 
 def clean_threads_for_merge(request):
     try:
-        threads_ids = list(map(int, request.data.getlist('threads', [])))
+        threads_ids = list(map(int, request.data.get('threads', [])))
     except (ValueError, TypeError):
         raise MergeError(_("One or more thread ids received were invalid."))
 
