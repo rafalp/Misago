@@ -18,6 +18,8 @@ from ..viewmodels.post import ThreadPost
 from ..viewmodels.posts import ThreadPosts
 from ..viewmodels.thread import ForumThread
 from .postingendpoint import PostingEndpoint
+from .postendpoints.patch_event import event_patch_endpoint
+from .postendpoints.patch_post import post_patch_endpoint
 
 
 class ViewSet(viewsets.ViewSet):
@@ -127,6 +129,16 @@ class ViewSet(viewsets.ViewSet):
             return Response(posting.errors, status=400)
 
         return Response({})
+
+    @transaction.atomic
+    def partial_update(self, request, thread_pk, pk):
+        thread = self.get_thread_for_update(request, thread_pk)
+        post = self.get_post_for_update(request, thread, pk).post
+
+        if post.is_event:
+            return event_patch_endpoint(request, post)
+        else:
+            return post_patch_endpoint(request, post)
 
     @transaction.atomic
     def delete(self, request, thread_pk, pk):

@@ -26,6 +26,7 @@ class ViewModel(object):
 
         post = get_object_or_404(queryset, pk=pk)
 
+        post.thread = thread.thread
         post.category = thread.category
 
         return post

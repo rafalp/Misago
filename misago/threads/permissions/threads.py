@@ -144,8 +144,7 @@ class CategoryPermissionsForm(forms.Form):
     )
     can_hide_own_posts = forms.TypedChoiceField(
         label=_("Can hide own posts"),
-        help_text=_("Only last posts to thread made within "
-                    "edit time limit can be hidden."),
+        help_text=_("Only last posts to thread made within edit time limit can be hidden."),
         coerce=int,
         initial=0,
         choices=(
@@ -565,7 +564,7 @@ def allow_edit_post(user, target):
             raise PermissionDenied(_("This thread is closed. You can't edit posts in it."))
 
     if target.is_hidden and not target.is_first_post and not category_acl['can_hide_posts']:
-            raise PermissionDenied(_("This post is hidden, you can't edit it."))
+        raise PermissionDenied(_("This post is hidden, you can't edit it."))
 
     if category_acl['can_edit_posts'] == 1:
         if target.poster_id != user.pk:
@@ -613,7 +612,7 @@ def allow_unhide_post(user, target):
             raise PermissionDenied(message % {'minutes': category_acl['post_edit_time']})
 
     if target.is_first_post:
-        raise PermissionDenied(_("You can't hide thread's first post."))
+        raise PermissionDenied(_("You can't reveal thread's first post."))
     if not target.is_hidden:
         raise PermissionDenied(_("Only hidden posts can be revealed."))
 can_unhide_post = return_boolean(allow_unhide_post)
@@ -651,7 +650,7 @@ def allow_hide_post(user, target):
     if target.is_first_post:
         raise PermissionDenied(_("You can't hide thread's first post."))
     if target.is_hidden:
-        raise PermissionDenied(_("Only visible posts can be hidden."))
+        raise PermissionDenied(_("Only visible posts can be made hidden."))
 can_hide_post = return_boolean(allow_hide_post)
 
 

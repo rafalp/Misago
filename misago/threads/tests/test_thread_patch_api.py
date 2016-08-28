@@ -15,7 +15,7 @@ class ThreadPatchApiTestCase(ThreadsApiTestCase):
 
 
 class ThreadAddAclApiTests(ThreadPatchApiTestCase):
-    def test_add_thread_acl(self):
+    def test_add_acl_true(self):
         """api adds current thread's acl to response"""
         response = self.patch(self.api_link, [
             {'op': 'add', 'path': 'acl', 'value': True}
@@ -25,7 +25,7 @@ class ThreadAddAclApiTests(ThreadPatchApiTestCase):
         response_json = json.loads(smart_str(response.content))
         self.assertTrue(response_json['acl'])
 
-    def test_add_thread_acl(self):
+    def test_add_acl_false(self):
         """if value is false, api won't add acl to the response, but will set empty key"""
         response = self.patch(self.api_link, [
             {'op': 'add', 'path': 'acl', 'value': False}
