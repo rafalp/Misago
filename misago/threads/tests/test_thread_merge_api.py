@@ -23,7 +23,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         self.api_link = reverse('misago:api:thread-merge', kwargs={'pk': self.thread.pk})
 
     def override_other_acl(self, acl=None):
-        final_acl = {
+        other_category_acl = self.user.acl['categories'][self.category.pk].copy()
+        other_category_acl.update({
             'can_see': 1,
             'can_browse': 1,
             'can_see_all_threads': 1,
@@ -34,14 +35,16 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             'can_hide_posts': 0,
             'can_hide_own_posts': 0,
             'can_merge_threads': 0
-        }
-        final_acl.update(acl or {})
+        })
+
+        if acl:
+            other_category_acl.update(acl)
 
         categories_acl = self.user.acl['categories']
-        categories_acl[self.category_b.pk] = final_acl
+        categories_acl[self.category_b.pk] = other_category_acl
 
         visible_categories = [self.category.pk]
-        if final_acl['can_see']:
+        if other_category_acl['can_see']:
             visible_categories.append(self.category_b.pk)
 
         override_acl(self.user, {

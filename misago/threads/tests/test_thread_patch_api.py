@@ -249,21 +249,22 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         self.category_b = Category.objects.get(slug='category-b')
 
     def override_other_acl(self, acl):
-        final_acl = {
+        other_category_acl = self.user.acl['categories'][self.category.pk].copy()
+        other_category_acl.update({
             'can_see': 1,
             'can_browse': 1,
             'can_see_all_threads': 1,
             'can_see_own_threads': 0,
             'can_hide_threads': 0,
             'can_approve_content': 0,
-        }
-        final_acl.update(acl)
+        })
+        other_category_acl.update(acl)
 
         categories_acl = self.user.acl['categories']
-        categories_acl[self.category_b.pk] = final_acl
+        categories_acl[self.category_b.pk] = other_category_acl
 
         visible_categories = [self.category.pk]
-        if final_acl['can_see']:
+        if other_category_acl['can_see']:
             visible_categories.append(self.category_b.pk)
 
         override_acl(self.user, {

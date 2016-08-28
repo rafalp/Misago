@@ -117,20 +117,24 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
             'can_approve_content': []
         }
 
+        # copy first category's acl to other categories to make base for overrides
+        for category in Category.objects.all_categories():
+            categories_acl['categories'][category.pk] = self.user.acl['categories'][self.first_category.pk].copy()
+
         if base_acl:
             categories_acl.update(base_acl)
 
         for category in Category.objects.all_categories():
             categories_acl['visible_categories'].append(category.pk)
             categories_acl['browseable_categories'].append(category.pk)
-            categories_acl['categories'][category.pk] = {
+            categories_acl['categories'][category.pk].update({
                 'can_see': 1,
                 'can_browse': 1,
                 'can_see_all_threads': 1,
                 'can_see_own_threads': 0,
                 'can_hide_threads': 0,
                 'can_approve_content': 0
-            }
+            })
 
             if category_acl:
                 categories_acl['categories'][category.pk].update(category_acl)
@@ -541,7 +545,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         self.assertContains(response,
             'subcategory-%s' % self.category_a.css_class)
         self.assertContains(response,
-            'subcategory-%s' % self.category_e.css_class)            
+            'subcategory-%s' % self.category_e.css_class)
         self.assertContains(response,
             'thread-category-%s' % self.category_a.css_class)
         self.assertContains(response,

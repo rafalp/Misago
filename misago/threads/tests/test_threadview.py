@@ -22,7 +22,8 @@ class ThreadViewTestCase(AuthenticatedUserTestCase):
         self.thread = testutils.post_thread(category=self.category)
 
     def override_acl(self, acl=None):
-        final_acl = {
+        category_acl = self.user.acl['categories'][self.category.pk]
+        category_acl.update({
             'can_see': 1,
             'can_browse': 1,
             'can_see_all_threads': 1,
@@ -35,14 +36,14 @@ class ThreadViewTestCase(AuthenticatedUserTestCase):
             'can_close_threads': 0,
             'post_edit_time': 0,
             'can_hide_events': 0,
-        }
+        })
 
         if acl:
-            final_acl.update(acl)
+            category_acl.update(acl)
 
         override_acl(self.user, {
             'categories': {
-                self.category.pk: final_acl
+                self.category.pk: category_acl
             }
         })
 
