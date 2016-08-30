@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 
 from misago.acl import add_acl
-from misago.categories.models import Category
+from misago.categories.models import THREADS_ROOT_NAME, Category
 from misago.core.shortcuts import validate_slug
 from misago.readtracker.threadstracker import make_read_aware
 
@@ -10,6 +10,7 @@ from ..models import Thread
 from ..permissions.threads import allow_see_thread
 from ..serializers import ThreadSerializer
 from ..subscriptions import make_subscription_aware
+from ..threadtypes import trees_map
 
 
 BASE_RELATIONS = ('category', 'starter', 'starter__rank', 'starter__ban_cache', 'starter__online_tracker')
@@ -88,7 +89,7 @@ class ForumThread(ViewModel):
         thread = get_object_or_404(
             queryset,
             pk=pk,
-            category__tree_id=Category.objects.root_category().tree_id
+            category__tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
         )
 
         allow_see_thread(request.user, thread)

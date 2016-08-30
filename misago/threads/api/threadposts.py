@@ -19,6 +19,7 @@ from ..viewmodels.posts import ThreadPosts
 from ..viewmodels.thread import ForumThread
 from .postingendpoint import PostingEndpoint
 from .postendpoints.merge import posts_merge_endpoint
+from .postendpoints.move import posts_move_endpoint
 from .postendpoints.patch_event import event_patch_endpoint
 from .postendpoints.patch_post import post_patch_endpoint
 
@@ -73,6 +74,12 @@ class ViewSet(viewsets.ViewSet):
     def merge(self, request, thread_pk):
         thread = self.get_thread_for_update(request, thread_pk).model
         return posts_merge_endpoint(request, thread)
+
+    @list_route(methods=['post'], url_path='move')
+    @transaction.atomic
+    def move(self, request, thread_pk):
+        thread = self.get_thread_for_update(request, thread_pk).model
+        return posts_move_endpoint(request, thread, self.thread)
 
     @transaction.atomic
     def create(self, request, thread_pk):

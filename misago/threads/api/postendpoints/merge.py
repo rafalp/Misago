@@ -70,7 +70,7 @@ def clean_posts_for_merge(request, thread):
         if post.is_event:
             raise MergeError(_("Events can't be merged."))
         if post.is_hidden and not (post.pk == thread.first_post_id or thread.category.acl['can_hide_posts']):
-            raise MergeError(_("You can't merge posts the content you can't see"))
+            raise MergeError(_("You can't merge posts the content you can't see."))
 
         if not posts:
             posts.append(post)
