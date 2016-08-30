@@ -3,7 +3,7 @@ from django.utils import six
 
 from misago.categories.models import Category
 
-from ..threadtypes import TreesMap
+from ..threadtypes.treesmap import TreesMap
 
 
 THREAD_TYPE = 'misago.threads.threadtypes.thread.Thread'
