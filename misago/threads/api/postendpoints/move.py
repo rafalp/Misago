@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
+from django.http import Http404
 from django.utils.translation import ugettext as _, ungettext
 
 from rest_framework.response import Response
@@ -29,7 +30,7 @@ def posts_move_endpoint(request, thread, viewmodel):
         return Response({'detail': e.msg}, status=400)
 
     for post in posts:
-        post.move(thread)
+        post.move(new_thread)
         post.save()
 
     thread.synchronize()
@@ -48,12 +49,12 @@ def posts_move_endpoint(request, thread, viewmodel):
     return Response({})
 
 
-def clean_thread_for_move(request, thread):
+def clean_thread_for_move(request, thread, viewmodel):
     new_thread_id = get_thread_id_from_url(request, request.data.get('thread_url', None))
     if not new_thread_id:
         raise MoveError(_("This is not a valid thread link."))
     if new_thread_id == thread.pk:
-        raise MoveError(_("You can't move this thread's posts to itself."))
+        raise MoveError(_("Thread to move posts to is same as current one."))
 
     try:
         new_thread = viewmodel(request, new_thread_id, select_for_update=True).model
@@ -63,7 +64,7 @@ def clean_thread_for_move(request, thread):
         raise MoveError(_("The thread you have entered link to doesn't exist or you don't have permission to see it."))
 
     if not new_thread.acl['can_reply']:
-        raise MoveError(_("You don't have permission to move posts to thread you can't reply."))
+        raise MoveError(_("You can't move posts to threads you can't reply."))
 
     return new_thread
 
@@ -74,7 +75,9 @@ def clean_posts_for_move(request, thread):
     except (ValueError, TypeError):
         raise MoveError(_("One or more post ids received were invalid."))
 
-    if len(posts_ids) > MOVE_LIMIT:
+    if not posts_ids:
+        raise MoveError(_("You have to specify at least one post to move."))
+    elif len(posts_ids) > MOVE_LIMIT:
         message = ungettext(
             "No more than %(limit)s post can be moved at single time.",
             "No more than %(limit)s posts can be moved at single time.",
@@ -89,7 +92,7 @@ def clean_posts_for_move(request, thread):
         if post.is_event:
             raise MoveError(_("Events can't be moved."))
         if post.pk == thread.first_post_id:
-            raise MoveError(_("You can't move first post in thread."))
+            raise MoveError(_("You can't move thread's first post."))
         if post.is_hidden and not thread.category.acl['can_hide_posts']:
             raise MoveError(_("You can't move posts the content you can't see."))
 
