@@ -2,19 +2,17 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
 from django.utils.translation import gettext as _, ungettext
 
-from rest_framework import serializers
 from rest_framework.response import Response
 
 from misago.acl import add_acl
 from misago.categories.models import THREADS_ROOT_NAME, Category
 
 from ...events import record_event
-from ...models import THREAD_WEIGHT_DEFAULT, THREAD_WEIGHT_GLOBAL, Thread
+from ...models import THREAD_WEIGHT_GLOBAL, Thread
 from ...moderation import threads as moderation
-from ...permissions import can_start_thread, can_reply_thread, can_see_thread
-from ...serializers import ThreadsListSerializer
+from ...permissions import can_reply_thread, can_see_thread
+from ...serializers import NewThreadSerializer, ThreadsListSerializer
 from ...threadtypes import trees_map
-from ...validators import validate_category, validate_title
 from ...utils import add_categories_to_threads, get_thread_id_from_url
 
 
@@ -90,7 +88,7 @@ def threads_merge_endpoint(request):
     if invalid_threads:
         return Response(invalid_threads, status=403)
 
-    serializer = MergeThreadsSerializer(context=request.user, data=request.data)
+    serializer = NewThreadSerializer(context=request.user, data=request.data)
     if serializer.is_valid():
         new_thread = merge_threads(request, serializer.validated_data, threads)
         return Response(ThreadsListSerializer(new_thread).data)
@@ -135,10 +133,8 @@ def clean_threads_for_merge(request):
 def merge_threads(request, validated_data, threads):
     new_thread = Thread(
         category=validated_data['category'],
-        weight=validated_data.get('weight', 0),
-        is_closed=validated_data.get('is_closed', False),
         started_on=threads[0].started_on,
-        last_post_on=threads[0].last_post_on,
+        last_post_on=threads[0].last_post_on
     )
 
     new_thread.set_title(validated_data['title'])
@@ -156,6 +152,15 @@ def merge_threads(request, validated_data, threads):
 
     new_thread.synchronize()
     new_thread.save()
+
+    if validated_data.get('weight') == THREAD_WEIGHT_GLOBAL:
+        moderation.pin_thread_globally(request, new_thread)
+    elif validated_data.get('weight'):
+        moderation.pin_thread_locally(request, new_thread)
+    if validated_data.get('is_hidden', False):
+        moderation.hide_thread(request, new_thread)
+    if validated_data.get('is_closed', False):
+        moderation.close_thread(request, new_thread)
 
     if new_thread.category not in categories:
         categories.append(new_thread.category)
@@ -177,55 +182,5 @@ def merge_threads(request, validated_data, threads):
     else:
         new_thread.top_category = None
 
-    new_thread.save()
-
     add_acl(request.user, new_thread)
     return new_thread
-
-
-class MergeThreadsSerializer(serializers.Serializer):
-    title = serializers.CharField()
-    category = serializers.IntegerField()
-    top_category = serializers.IntegerField(required=False, allow_null=True)
-    weight = serializers.IntegerField(
-        required=False,
-        allow_null=True,
-        max_value=THREAD_WEIGHT_GLOBAL,
-        min_value=THREAD_WEIGHT_DEFAULT,
-    )
-    is_closed = serializers.NullBooleanField(required=False)
-
-    def validate_title(self, title):
-        return validate_title(title)
-
-    def validate_top_category(self, category_id):
-        return validate_category(self.context, category_id, allow_root=True)
-
-    def validate_category(self, category_id):
-        self.category = validate_category(self.context, category_id)
-        if not can_start_thread(self.context, self.category):
-            raise ValidationError(_("You can't create new threads in selected category."))
-        return self.category
-
-    def validate_weight(self, weight):
-        try:
-            add_acl(self.context, self.category)
-        except AttributeError:
-            return weight # don't validate weight further if category failed
-
-        if weight > self.category.acl.get('can_pin_threads', 0):
-            if weight == 2:
-                raise ValidationError(_("You don't have permission to pin threads globally in this category."))
-            else:
-                raise ValidationError(_("You don't have permission to pin threads in this category."))
-        return weight
-
-    def validate_is_closed(self, is_closed):
-        try:
-            add_acl(self.context, self.category)
-        except AttributeError:
-            return is_closed # don't validate closed further if category failed
-
-        if is_closed and not self.category.acl.get('can_close_threads'):
-            raise ValidationError(_("You don't have permission to close threads in this category."))
-        return is_closed

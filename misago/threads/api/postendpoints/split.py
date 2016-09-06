@@ -5,8 +5,8 @@ from django.utils.translation import ugettext as _, ungettext
 from rest_framework import serializers
 from rest_framework.response import Response
 
-from ...models import THREAD_WEIGHT_DEFAULT, THREAD_WEIGHT_GLOBAL
 from ...permissions.threads import exclude_invisible_posts
+from ...serializers import NewThreadSerializer
 
 
 SPLIT_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
@@ -23,13 +23,12 @@ def posts_split_endpoint(request, thread):
     except SplitError as e:
         return Response({'detail': e.msg}, status=400)
 
-    # HERE run serializer to validate if split thread stuff
-
-    # create thread
-    # move posts to it
-    # moderate new thread
-
-    # sync old and new thread/categories
+    serializer = NewThreadSerializer(context=request.user, data=request.data)
+    if serializer.is_valid():
+        split_posts_to_new_thread(request, thread, serializer.validated_data, posts)
+        return Response({})
+    else:
+        return Response(serializer.errors, status=400)
 
 
 def clean_posts_for_split(request, thread):
@@ -67,55 +66,38 @@ def clean_posts_for_split(request, thread):
     return posts
 
 
-class SplitPostsSerializer(serializers.Serializer):
-    title = serializers.CharField()
-    category = serializers.IntegerField()
-    weight = serializers.IntegerField(
-        required=False,
-        allow_null=True,
-        max_value=THREAD_WEIGHT_GLOBAL,
-        min_value=THREAD_WEIGHT_DEFAULT,
+def split_posts_to_new_thread(request, thread, validated_data, posts):
+    new_thread = Thread(
+        category=validated_data['category'],
+        started_on=thread[0].started_on,
+        last_post_on=thread[0].last_post_on
     )
-    is_hidden = serializers.NullBooleanField(required=False)
-    is_closed = serializers.NullBooleanField(required=False)
 
-    def validate_title(self, title):
-        return validate_title(title)
+    new_thread.set_title(validated_data['title'])
+    new_thread.save()
 
-    def validate_category(self, category_id):
-        self.category = validate_category(self.context, category_id)
-        return self.category
+    for post in posts:
+        post.move(new_thread)
+        post.save()
 
-    def validate_weight(self, weight):
-        try:
-            add_acl(self.context, self.category)
-        except AttributeError:
-            return weight # don't validate weight further if category failed
+    thread.synchronize()
+    thread.save()
 
-        if weight > self.category.acl.get('can_pin_threads', 0):
-            if weight == 2:
-                raise ValidationError(_("You don't have permission to pin threads globally in this category."))
-            else:
-                raise ValidationError(_("You don't have permission to pin threads in this category."))
-        return weight
+    new_thread.synchronize()
+    new_thread.save()
 
-    def validate_is_hidden(self, is_hidden):
-        try:
-            add_acl(self.context, self.category)
-        except AttributeError:
-            return is_hidden # don't validate closed further if category failed
+    if validated_data.get('weight') == THREAD_WEIGHT_GLOBAL:
+        moderation.pin_thread_globally(request, new_thread)
+    elif validated_data.get('weight'):
+        moderation.pin_thread_locally(request, new_thread)
+    if validated_data.get('is_hidden', False):
+        moderation.hide_thread(request, new_thread)
+    if validated_data.get('is_closed', False):
+        moderation.close_thread(request, new_thread)
 
-        if is_hidden and not self.category.acl.get('can_hide_threads'):
-            raise ValidationError(_("You don't have permission to hide threads in this category."))
-        return is_hidden
+    thread.category.synchronize()
+    thread.category.save()
 
-    def validate_is_closed(self, is_closed):
-        try:
-            add_acl(self.context, self.category)
-        except AttributeError:
-            return is_closed # don't validate closed further if category failed
-
-        if is_closed and not self.category.acl.get('can_close_threads'):
-            raise ValidationError(_("You don't have permission to close threads in this category."))
-        return is_closed
-
+    if new_thread.category != thread.category:
+        new_thread.category.synchronize()
+        new_thread.category.save()

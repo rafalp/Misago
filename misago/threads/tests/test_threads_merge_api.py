@@ -410,7 +410,6 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         """api allows for closing thread"""
         self.override_acl({
             'can_merge_threads': True,
-            'can_close_threads': False,
             'can_edit_threads': False,
             'can_reply_threads': False,
             'can_close_threads': True,
@@ -424,6 +423,59 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             'category': self.category.id,
             'weight': 0,
             'is_closed': True,
+        }), content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        response_json = json.loads(smart_str(response.content))
+        self.assertEqual(response_json, {
+            'title': ["Thread title should be at least 5 characters long (it has 3)."]
+        })
+
+    def test_merge_unallowed_hidden(self):
+        """api rejects merge because hidden thread was unallowed"""
+        self.override_acl({
+            'can_merge_threads': True,
+            'can_close_threads': False,
+            'can_edit_threads': False,
+            'can_reply_threads': False,
+            'can_hide_threads': 0,
+        })
+
+        thread = testutils.post_thread(category=self.category)
+
+        response = self.client.post(self.api_link, json.dumps({
+            'threads': [self.thread.id, thread.id],
+            'title': 'Valid thread title',
+            'category': self.category.id,
+            'is_hidden': True,
+        }), content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        response_json = json.loads(smart_str(response.content))
+        self.assertEqual(response_json, {
+            'is_hidden': [
+                "You don't have permission to hide threads in this category."
+            ]
+        })
+
+    def test_merge_with_hide(self):
+        """api allows for hiding thread"""
+        self.override_acl({
+            'can_merge_threads': True,
+            'can_close_threads': False,
+            'can_edit_threads': False,
+            'can_reply_threads': False,
+            'can_hide_threads': 1,
+        })
+
+        thread = testutils.post_thread(category=self.category)
+
+        response = self.client.post(self.api_link, json.dumps({
+            'threads': [self.thread.id, thread.id],
+            'title': '$$$',
+            'category': self.category.id,
+            'weight': 0,
+            'is_hidden': True,
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
