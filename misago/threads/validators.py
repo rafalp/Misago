@@ -1,8 +1,34 @@
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _, ungettext
+from django.utils.translation import ugettext as _, ungettext
 
+from misago.categories.models import THREADS_ROOT_NAME, Category
+from misago.categories.permissions import can_browse_category, can_see_category
 from misago.conf import settings
 from misago.core.validators import validate_sluggable
+
+from .threadtypes import trees_map
+
+
+def validate_category(user, category_id, allow_root=False):
+    try:
+        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
+        category = Category.objects.get(
+            tree_id=threads_tree_id,
+            id=category_id,
+        )
+    except Category.DoesNotExist:
+        category = None
+
+    # Skip ACL validation for root category?
+    if allow_root and category and not category.level:
+        return category
+
+    if not category or not can_see_category(user, category):
+        raise ValidationError(_("Requested category could not be found."))
+
+    if not can_browse_category(user, category):
+        raise ValidationError(_("You don't have permission to access this category."))
+    return category
 
 
 def validate_post(post):

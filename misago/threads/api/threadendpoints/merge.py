@@ -7,15 +7,14 @@ from rest_framework.response import Response
 
 from misago.acl import add_acl
 from misago.categories.models import THREADS_ROOT_NAME, Category
-from misago.categories.permissions import can_browse_category, can_see_category
 
 from ...events import record_event
 from ...models import THREAD_WEIGHT_DEFAULT, THREAD_WEIGHT_GLOBAL, Thread
 from ...moderation import threads as moderation
-from ...permissions import allow_start_thread, can_see_thread
+from ...permissions import can_start_thread, can_reply_thread, can_see_thread
 from ...serializers import ThreadsListSerializer
 from ...threadtypes import trees_map
-from ...validators import validate_title
+from ...validators import validate_category, validate_title
 from ...utils import add_categories_to_threads, get_thread_id_from_url
 
 
@@ -39,6 +38,10 @@ def thread_merge_endpoint(request, thread, viewmodel):
 
     try:
         other_thread = viewmodel(request, other_thread_id, select_for_update=True).model
+        if not can_reply_thread(request.user, other_thread):
+            raise PermissionDenied(_("You can't merge this thread into thread you can't reply."))
+        if not other_thread.acl['can_merge']:
+            raise PermissionDenied(_("You don't have permission to merge this thread with current one."))
     except PermissionDenied as e:
         return Response({
             'detail': e.args[0]
@@ -46,11 +49,6 @@ def thread_merge_endpoint(request, thread, viewmodel):
     except Http404:
         return Response({
             'detail': _("The thread you have entered link to doesn't exist or you don't have permission to see it.")
-        }, status=400)
-
-    if not other_thread.acl['can_merge']:
-        return Response({
-            'detail': _("You don't have permission to merge this thread with current one.")
         }, status=400)
 
     moderation.merge_thread(request, other_thread, thread)
@@ -185,28 +183,6 @@ def merge_threads(request, validated_data, threads):
     return new_thread
 
 
-def validate_category(user, category_id, allow_root=False):
-    try:
-        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
-        category = Category.objects.get(
-            tree_id=threads_tree_id,
-            id=category_id,
-        )
-    except Category.DoesNotExist:
-        category = None
-
-    # Skip ACL validation for root category?
-    if allow_root and category and not category.level:
-        return category
-
-    if not category or not can_see_category(user, category):
-        raise ValidationError(_("Requested category could not be found."))
-
-    if not can_browse_category(user, category):
-        raise ValidationError(_("You don't have permission to access this category."))
-    return category
-
-
 class MergeThreadsSerializer(serializers.Serializer):
     title = serializers.CharField()
     category = serializers.IntegerField()
@@ -227,6 +203,8 @@ class MergeThreadsSerializer(serializers.Serializer):
 
     def validate_category(self, category_id):
         self.category = validate_category(self.context, category_id)
+        if not can_start_thread(self.context, self.category):
+            raise ValidationError(_("You can't create new threads in selected category."))
         return self.category
 
     def validate_weight(self, weight):

@@ -5,8 +5,6 @@ from django.utils.translation import ugettext as _, ungettext
 
 from rest_framework.response import Response
 
-from misago.acl import add_acl
-
 from ...permissions.threads import exclude_invisible_posts
 from ...utils import get_thread_id_from_url
 

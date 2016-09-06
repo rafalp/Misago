@@ -143,6 +143,23 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         })
         self.assertContains(response, "You don't have permission to merge this thread", status_code=400)
 
+    def test_other_thread_isnt_replyable(self):
+        """api validates if other thread can be replied, which is condition for merg"""
+        self.override_acl({
+            'can_merge_threads': 1
+        })
+
+        self.override_other_acl({
+            'can_reply_threads': 0
+        })
+
+        other_thread = testutils.post_thread(self.category_b)
+
+        response = self.client.post(self.api_link, {
+            'thread_url': other_thread.get_absolute_url()
+        })
+        self.assertContains(response, "You can't merge this thread into thread you can't reply.", status_code=400)
+
     def test_merge_threads(self):
         """api merges two threads successfully"""
         self.override_acl({

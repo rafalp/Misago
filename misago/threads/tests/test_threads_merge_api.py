@@ -228,6 +228,32 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             'category': ["Requested category could not be found."]
         })
 
+    def test_merge_unallowed_start_thread(self):
+        """api rejects merge because category isn't allowing starting threads"""
+        self.override_acl({
+            'can_merge_threads': True,
+            'can_close_threads': False,
+            'can_edit_threads': False,
+            'can_reply_threads': False,
+            'can_start_threads': 0
+        })
+
+        thread = testutils.post_thread(category=self.category)
+
+        response = self.client.post(self.api_link, json.dumps({
+            'threads': [self.thread.id, thread.id],
+            'title': 'Valid thread title',
+            'category': self.category.id
+        }), content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        response_json = json.loads(smart_str(response.content))
+        self.assertEqual(response_json, {
+            'category': [
+                "You can't create new threads in selected category."
+            ]
+        })
+
     def test_merge_invalid_weight(self):
         """api rejects merge because final weight was invalid"""
         self.override_acl({
