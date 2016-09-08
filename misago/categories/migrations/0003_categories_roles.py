@@ -147,7 +147,6 @@ def create_default_categories_roles(apps, schema_editor):
                 'can_close_threads': 1,
                 'can_move_threads': 1,
                 'can_merge_threads': 1,
-                'can_split_threads': 1,
                 'can_approve_content': 1,
                 'can_download_other_users_attachments': 1,
                 'max_attachment_size': 2500,

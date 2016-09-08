@@ -83,14 +83,14 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         })
 
     def test_anonymous_user(self):
-        """you need to authenticate to merge posts"""
+        """you need to authenticate to move posts"""
         self.logout_user()
 
         response = self.client.post(self.api_link, json.dumps({}), content_type="application/json")
         self.assertEqual(response.status_code, 403)
 
     def test_no_permission(self):
-        """api validates permission to merge"""
+        """api validates permission to move"""
         self.override_acl({
             'can_move_posts': 0
         })
@@ -213,6 +213,17 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             'thread_url': other_thread.get_absolute_url(),
             'posts': [
                 testutils.reply_thread(self.thread, is_unapproved=True).pk
+            ]
+        }), content_type="application/json")
+        self.assertContains(response, "One or more posts to move could not be found.", status_code=400)
+
+    def test_move_other_thread_posts(self):
+        """api recjects attempt to move other thread's post"""
+        other_thread = testutils.post_thread(self.category)
+
+        response = self.client.post(self.api_link, json.dumps({
+            'posts': [
+                testutils.reply_thread(other_thread, is_hidden=True).pk
             ]
         }), content_type="application/json")
         self.assertContains(response, "One or more posts to move could not be found.", status_code=400)

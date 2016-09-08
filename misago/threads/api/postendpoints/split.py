@@ -5,6 +5,9 @@ from django.utils.translation import ugettext as _, ungettext
 from rest_framework import serializers
 from rest_framework.response import Response
 
+from ...events import record_event
+from ...models import THREAD_WEIGHT_GLOBAL, Thread
+from ...moderation import threads as moderation
 from ...permissions.threads import exclude_invisible_posts
 from ...serializers import NewThreadSerializer
 
@@ -18,6 +21,9 @@ class SplitError(Exception):
 
 
 def posts_split_endpoint(request, thread):
+    if not thread.acl['can_move_posts']:
+        raise PermissionDenied(_("You can't split posts from this thread."))
+
     try:
         posts = clean_posts_for_split(request, thread)
     except SplitError as e:
@@ -69,8 +75,8 @@ def clean_posts_for_split(request, thread):
 def split_posts_to_new_thread(request, thread, validated_data, posts):
     new_thread = Thread(
         category=validated_data['category'],
-        started_on=thread[0].started_on,
-        last_post_on=thread[0].last_post_on
+        started_on=thread.started_on,
+        last_post_on=thread.last_post_on
     )
 
     new_thread.set_title(validated_data['title'])

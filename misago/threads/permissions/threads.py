@@ -111,7 +111,6 @@ class CategoryPermissionsForm(forms.Form):
     can_close_threads = forms.YesNoSwitch(label=_("Can close threads"))
     can_move_threads = forms.YesNoSwitch(label=_("Can move threads"))
     can_merge_threads = forms.YesNoSwitch(label=_("Can merge threads"))
-    can_split_threads = forms.YesNoSwitch(label=_("Can split threads"))
 
     can_edit_posts = forms.TypedChoiceField(
         label=_("Can edit posts"),
@@ -163,7 +162,10 @@ class CategoryPermissionsForm(forms.Form):
         label=_("Can protect posts"),
         help_text=_("Only users with this permission can edit protected posts.")
     )
-    can_move_posts = forms.YesNoSwitch(label=_("Can move posts"))
+    can_move_posts = forms.YesNoSwitch(
+        label=_("Can move posts"),
+        help_text=_("Will be able to move posts to other threads.")
+    )
     can_merge_posts = forms.YesNoSwitch(label=_("Can merge posts"))
     can_approve_content = forms.YesNoSwitch(
         label=_("Can approve content"),
@@ -256,7 +258,6 @@ def build_category_acl(acl, category, categories_roles, key_name):
         'can_close_threads': 0,
         'can_move_threads': 0,
         'can_merge_threads': 0,
-        'can_split_threads': 0,
         'can_approve_content': 0,
         'can_report_content': 0,
         'can_see_reports': 0,
@@ -285,7 +286,6 @@ def build_category_acl(acl, category, categories_roles, key_name):
         can_close_threads=algebra.greater,
         can_move_threads=algebra.greater,
         can_merge_threads=algebra.greater,
-        can_split_threads=algebra.greater,
         can_approve_content=algebra.greater,
         can_report_content=algebra.greater,
         can_see_reports=algebra.greater,
@@ -322,7 +322,6 @@ def add_acl_to_category(user, category):
         'can_close_threads': 0,
         'can_move_threads': 0,
         'can_merge_threads': 0,
-        'can_split_threads': 0,
         'can_approve_content': 0,
         'can_report_content': 0,
         'can_see_reports': 0,
@@ -355,7 +354,6 @@ def add_acl_to_category(user, category):
             can_close_threads=algebra.greater,
             can_move_threads=algebra.greater,
             can_merge_threads=algebra.greater,
-            can_split_threads=algebra.greater,
             can_approve_content=algebra.greater,
             can_report_content=algebra.greater,
             can_see_reports=algebra.greater,
@@ -379,7 +377,6 @@ def add_acl_to_thread(user, thread):
         'can_merge': False,
         'can_move_posts': False,
         'can_merge_posts': False,
-        'can_split': False,
         'can_approve': category_acl.get('can_approve_content', False),
         'can_see_reports': category_acl.get('can_see_reports', False),
     })
@@ -401,7 +398,6 @@ def add_acl_to_thread(user, thread):
 
         thread.acl['can_move_posts'] = category_acl.get('can_move_posts', False)
         thread.acl['can_merge_posts'] = category_acl.get('can_merge_posts', False)
-        thread.acl['can_split'] = category_acl.get('can_split_threads', False)
 
 
 def add_acl_to_post(user, post):

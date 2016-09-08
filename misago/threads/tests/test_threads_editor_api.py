@@ -39,7 +39,6 @@ class EditorApiTestCase(AuthenticatedUserTestCase):
             'can_close_threads': 0,
             'can_move_threads': 0,
             'can_merge_threads': 0,
-            'can_split_threads': 0,
             'can_approve_content': 0,
             'can_report_content': 0,
             'can_see_reports': 0,

@@ -356,7 +356,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         })
 
     def test_merge_allowed_global_weight(self):
-        """api allows local weight"""
+        """api allows global weight"""
         self.override_acl({
             'can_merge_threads': True,
             'can_close_threads': False,
@@ -511,6 +511,53 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         new_thread.is_read = False
         new_thread.subscription = None
         new_thread.top_category = None
+
+        add_acl(self.user, new_thread.category)
+        add_acl(self.user, new_thread)
+
+        self.assertEqual(response_json, ThreadsListSerializer(new_thread).data)
+
+        # did posts move to new thread?
+        for post in Post.objects.filter(id__in=posts_ids):
+            self.assertEqual(post.thread_id, new_thread.id)
+
+        # are old threads gone?
+        self.assertEqual([t.pk for t in Thread.objects.all()], [new_thread.pk])
+
+    def test_merge_kitchensink(self):
+        """api performs merge"""
+        posts_ids = [p.id for p in Post.objects.all()]
+
+        self.override_acl({
+            'can_merge_threads': True,
+            'can_close_threads': True,
+            'can_hide_threads': 1,
+            'can_pin_threads': 2
+        })
+
+        thread = testutils.post_thread(category=self.category)
+
+        response = self.client.post(self.api_link, json.dumps({
+            'threads': [self.thread.id, thread.id],
+            'title': 'Merged thread!',
+            'category': self.category.id,
+            'is_closed': 1,
+            'is_hidden': 1,
+            'weight': 2
+        }), content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+        # is response json with new thread?
+        response_json = json.loads(smart_str(response.content))
+
+        new_thread = Thread.objects.get(pk=response_json['id'])
+        new_thread.is_read = False
+        new_thread.subscription = None
+        new_thread.top_category = None
+
+        self.assertEqual(new_thread.weight, 2)
+        self.assertTrue(new_thread.is_closed)
+        self.assertTrue(new_thread.is_hidden)
 
         add_acl(self.user, new_thread.category)
         add_acl(self.user, new_thread)
