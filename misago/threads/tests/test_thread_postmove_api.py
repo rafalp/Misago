@@ -222,6 +222,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         other_thread = testutils.post_thread(self.category)
 
         response = self.client.post(self.api_link, json.dumps({
+            'thread_url': other_thread.get_absolute_url(),
             'posts': [
                 testutils.reply_thread(other_thread, is_hidden=True).pk
             ]
