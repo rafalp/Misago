@@ -29,8 +29,7 @@ export default class extends Form {
     props.categories.forEach((category) => {
       if (category.level > 0) {
         const acl = acls[category.id];
-        const disabled = !acl.can_start_threads || (
-          category.is_closed && !acl.can_close_threads);
+        const disabled = !acl.can_start_threads || (category.is_closed && !acl.can_close_threads);
 
         this.categoryChoices.push({
           value: category.id,

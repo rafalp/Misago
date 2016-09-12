@@ -6,7 +6,9 @@ import Message from './message';
 
 export default function(props) {
   let className = 'event';
-  if (props.post.is_hidden && !props.post.acl.can_see_hidden) {
+  if (props.post.isDeleted) {
+    className = 'hide';
+  } else if (props.post.is_hidden && !props.post.acl.can_see_hidden) {
     className = 'event post-hidden';
   }
 

@@ -24,6 +24,7 @@ export default class extends Form {
       title: '',
       category: null,
       weight: 0,
+      is_hidden: 0,
       is_closed: false,
 
       validators: {
@@ -49,8 +50,7 @@ export default class extends Form {
     props.categories.forEach((category) => {
       if (category.level > 0) {
         const acl = this.acl[category.id];
-        const disabled = !acl.can_start_threads || (
-          category.is_closed && !acl.can_close_threads);
+        const disabled = !acl.can_start_threads || (category.is_closed && !acl.can_close_threads);
 
         this.categoryChoices.push({
           value: category.id,
@@ -64,6 +64,19 @@ export default class extends Form {
         }
       }
     });
+
+    this.isHiddenChoices = [
+      {
+        'value': 0,
+        'icon': 'visibility',
+        'label': gettext("No")
+      },
+      {
+        'value': 1,
+        'icon': 'visibility_off',
+        'label': gettext("Yes")
+      },
+    ];
 
     this.isClosedChoices = [
       {
@@ -98,6 +111,7 @@ export default class extends Form {
       title: this.state.title,
       category: this.state.category,
       weight: this.state.weight,
+      is_hidden: this.state.is_hidden,
       is_closed: this.state.is_closed
     });
   }
@@ -114,8 +128,7 @@ export default class extends Form {
 
     // append merged thread, filter threads
     this.props.addThreads([apiResponse]);
-    store.dispatch(
-      filterThreads(this.props.route.category, this.props.categoriesMap));
+    store.dispatch(filterThreads(this.props.route.category, this.props.categoriesMap));
 
     // hide modal
     modal.hide();
@@ -146,6 +159,11 @@ export default class extends Form {
     if (this.acl[categoryId].can_pin_threads < newState.weight) {
       newState.weight = 0;
     }
+
+    if (!this.acl[categoryId].can_hide_threads) {
+      newState.is_hidden = 0;
+    }
+
     if (!this.acl[categoryId].can_close_threads) {
       newState.is_closed = false;
     }
@@ -155,7 +173,19 @@ export default class extends Form {
   /* jshint ignore:end */
 
   getWeightChoices() {
-    const choices = [];
+    const choices = [
+      {
+        'value': 0,
+        'icon': 'remove',
+        'label': gettext("Not pinned"),
+      },
+      {
+        'value': 1,
+        'icon': 'bookmark_border',
+        'label': gettext("Pinned locally"),
+      }
+    ];
+
     if (this.acl[this.state.category].can_pin_threads == 2) {
       choices.push({
         'value': 2,
@@ -163,17 +193,6 @@ export default class extends Form {
         'label': gettext("Pinned globally"),
       });
     }
-
-    choices.push({
-      'value': 1,
-      'icon': 'bookmark_border',
-      'label': gettext("Pinned locally"),
-    });
-    choices.push({
-      'value': 0,
-      'icon': 'remove',
-      'label': gettext("Not pinned"),
-    });
 
     return choices;
   }
@@ -188,6 +207,23 @@ export default class extends Form {
                 onChange={this.bindInput('weight')}
                 value={this.state.weight}
                 choices={this.getWeightChoices()} />
+      </FormGroup>;
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
+  renderHiddenField() {
+    if (this.acl[this.state.category].can_hide_threads) {
+      /* jshint ignore:start */
+      return <FormGroup label={gettext("Hide thread")}
+                        for="id_is_hidden"
+                        labelClass="col-sm-4" controlClass="col-sm-8">
+        <Select id="id_is_closed"
+                onChange={this.bindInput('is_hidden')}
+                value={this.state.is_hidden}
+                choices={this.isHiddenChoices} />
       </FormGroup>;
       /* jshint ignore:end */
     } else {
@@ -241,6 +277,7 @@ export default class extends Form {
         <div className="clearfix"></div>
 
         {this.renderWeightField()}
+        {this.renderHiddenField()}
         {this.renderClosedField()}
 
       </div>

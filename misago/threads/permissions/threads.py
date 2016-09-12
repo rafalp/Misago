@@ -408,8 +408,11 @@ def add_acl_to_post(user, post):
 
 
 def add_acl_to_event(user, event):
-    category_acl = user.acl['categories'].get(event.category_id, {})
-    can_hide_events = category_acl.get('can_hide_events', 0)
+    if user.is_authenticated():
+        category_acl = user.acl['categories'].get(event.category_id, {})
+        can_hide_events = category_acl.get('can_hide_events', 0)
+    else:
+        can_hide_events = 0
 
     event.acl.update({
         'can_see_hidden': can_hide_events > 0,

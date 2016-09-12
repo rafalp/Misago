@@ -1,4 +1,4 @@
-import { hydrate as hydratePost } from 'misago/reducers/post';
+import postReducer, { PATCH_POST, hydrate as hydratePost } from 'misago/reducers/post';
 
 export const LOAD_POSTS = 'LOAD_POSTS';
 export const UNLOAD_POSTS = 'UNLOAD_POSTS';
@@ -32,6 +32,15 @@ export default function posts(state={}, action=null) {
     case UNLOAD_POSTS:
       return Object.assign({}, state, {
         isLoaded: false,
+      });
+
+    case PATCH_POST:
+      const reducedPosts = state.results.map((post) => {
+        return postReducer(post, action);
+      });
+
+      return Object.assign({}, state, {
+        results: reducedPosts
       });
 
     default:

@@ -1,6 +1,7 @@
 /* jshint ignore:start */
 import React from 'react';
 import escapeHtml from 'misago/utils/escape-html';
+import Controls from './controls';
 
 const DATE_ABBR = '<abbr title="%(absolute)s">%(relative)s</abbr>';
 const DATE_URL = '<a href="%(url)s" title="%(absolute)s">%(relative)s</a>';
@@ -13,6 +14,7 @@ export default function(props) {
       <Hidden {...props} />
       <Poster {...props} />
       <Ip {...props} />
+      <Controls {...props} />
     </ul>
   );
 }
@@ -20,7 +22,7 @@ export default function(props) {
 export function Hidden(props) {
   if (props.post.is_hidden) {
     let user = null;
-    if (props.post.poster) {
+    if (props.post.url.hidden_by) {
       user = interpolate(USER_URL, {
         url: escapeHtml(props.post.url.hidden_by),
         user: escapeHtml(props.post.hidden_by_name)

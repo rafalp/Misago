@@ -104,7 +104,8 @@ def serialize_categories_alcs(serialized_acl):
                 'can_start_threads': acl.get('can_start_threads', False),
                 'can_reply_threads': acl.get('can_reply_threads', False),
                 'can_pin_threads': acl.get('can_pin_threads', 0),
-                'can_close_threads': acl.get('can_close_threads', False),
+                'can_hide_threads': acl.get('can_hide_threads', 0),
+                'can_close_threads': acl.get('can_close_threads', False)
             })
     serialized_acl['categories'] = categories_acl
 

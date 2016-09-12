@@ -8,7 +8,9 @@ import Header from './header';
 
 export default function(props) {
   let className = 'post';
-  if (props.post.is_hidden && !props.post.acl.can_see_hidden) {
+  if (props.post.isDeleted) {
+    className = 'hide';
+  } else if (props.post.is_hidden && !props.post.acl.can_see_hidden) {
     className = 'post post-hidden';
   }
 
