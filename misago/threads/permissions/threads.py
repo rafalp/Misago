@@ -433,6 +433,7 @@ def add_acl_to_reply(user, post):
         'can_delete': can_delete_post(user, post),
         'can_protect': can_protect_post(user, post),
         'can_approve': can_approve_post(user, post),
+        'can_move': can_move_post(user, post),
         'can_report': category_acl.get('can_report_content', False),
         'can_see_reports': category_acl.get('can_see_reports', False),
         'can_see_likes': category_acl.get('can_see_posts_likes', 0),
@@ -720,6 +721,23 @@ def allow_approve_post(user, target):
     if not target.is_first_post and not category_acl['can_hide_posts'] and target.is_hidden:
         raise PermissionDenied(_("You can't approve posts the content you can't see."))
 can_approve_post = return_boolean(allow_approve_post)
+
+
+def allow_move_post(user, target):
+    if user.is_anonymous():
+        raise PermissionDenied(_("You have to sign in to move posts."))
+
+    category_acl = user.acl['categories'].get(target.category_id, {
+        'can_move_posts': False
+    })
+
+    if not category_acl['can_move_posts']:
+        raise PermissionDenied(_("You can't move posts in this category."))
+    if target.is_first_post:
+        raise PermissionDenied(_("You can't move thread's first post."))
+    if not target.is_first_post and not category_acl['can_hide_posts'] and target.is_hidden:
+        raise PermissionDenied(_("You can't move posts the content you can't see."))
+can_move_post = return_boolean(allow_move_post)
 
 
 def allow_delete_event(user, target):

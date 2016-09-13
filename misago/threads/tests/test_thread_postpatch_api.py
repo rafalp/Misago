@@ -177,7 +177,7 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
         })
 
         response = self.patch(self.api_link, [
-            {'op': 'replace', 'path': 'is-unapproved', 'value': True}
+            {'op': 'replace', 'path': 'is-unapproved', 'value': False}
         ])
         self.assertEqual(response.status_code, 200)
 
@@ -191,7 +191,7 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
         })
 
         response = self.patch(self.api_link, [
-            {'op': 'replace', 'path': 'is-unapproved', 'value': False}
+            {'op': 'replace', 'path': 'is-unapproved', 'value': True}
         ])
         self.assertEqual(response.status_code, 200)
 
@@ -208,7 +208,7 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
         })
 
         response = self.patch(self.api_link, [
-            {'op': 'replace', 'path': 'is-unapproved', 'value': True}
+            {'op': 'replace', 'path': 'is-unapproved', 'value': False}
         ])
         self.assertEqual(response.status_code, 400)
 
@@ -231,7 +231,7 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
         })
 
         response = self.patch(self.api_link, [
-            {'op': 'replace', 'path': 'is-unapproved', 'value': True}
+            {'op': 'replace', 'path': 'is-unapproved', 'value': False}
         ])
         self.assertEqual(response.status_code, 400)
 
@@ -252,7 +252,7 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
         })
 
         response = self.patch(self.api_link, [
-            {'op': 'replace', 'path': 'is-unapproved', 'value': True}
+            {'op': 'replace', 'path': 'is-unapproved', 'value': False}
         ])
         self.assertEqual(response.status_code, 400)
 

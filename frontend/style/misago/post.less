@@ -5,7 +5,8 @@
 
 // Post header
 .post-heading {
-  overflow: auto;
+  overflow: visible;
+  height: 42px;
 
   &>* {
     float: left;
@@ -19,6 +20,23 @@
     }
   }
 }
+
+.post-heading .btn-icon {
+  margin: -6px 0px;
+  margin-left: 8px;
+  padding: 0px 3px;
+
+  .material-icon {
+    position: static;
+
+    width: 28px;
+    height: 28px;
+
+    font-size: 28px;
+    line-height: 28px;
+  }
+}
+
 
 // Post status flags
 .post-status-message {

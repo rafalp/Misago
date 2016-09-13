@@ -1,7 +1,6 @@
 /* jshint ignore:start */
 import React from 'react';
 import moment from 'moment';
-import misago from 'misago';
 import * as post from 'misago/reducers/post';
 import ajax from 'misago/services/ajax';
 import snackbar from 'misago/services/snackbar';
