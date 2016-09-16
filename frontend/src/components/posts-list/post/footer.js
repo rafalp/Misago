@@ -56,7 +56,7 @@ export class Reply extends React.Component {
       mode: 'REPLY',
 
       config: this.props.thread.api.editor,
-      submit: this.props.thread.api.posts,
+      submit: this.props.thread.api.posts.index,
 
       context: {
         reply: this.props.post.id

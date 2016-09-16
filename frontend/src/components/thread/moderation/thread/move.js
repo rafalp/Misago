@@ -178,7 +178,7 @@ export function ModalMessage(props) {
             {gettext("You can't move this thread at the moment.")}
           </p>
           <p>
-            {this.state.message}
+            {props.message}
           </p>
         </div>
       </div>

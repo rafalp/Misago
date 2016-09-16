@@ -91,9 +91,20 @@ class ThreadSerializer(serializers.ModelSerializer):
             'merge': reverse('misago:api:thread-merge', kwargs={
                 'pk': obj.pk
             }),
-            'posts': reverse('misago:api:thread-post-list', kwargs={
-                'thread_pk': obj.pk
-            }),
+            'posts': {
+                'index': reverse('misago:api:thread-post-list', kwargs={
+                    'thread_pk': obj.pk
+                }),
+                'merge': reverse('misago:api:thread-post-merge', kwargs={
+                    'thread_pk': obj.pk
+                }),
+                'move': reverse('misago:api:thread-post-move', kwargs={
+                    'thread_pk': obj.pk
+                }),
+                'split': reverse('misago:api:thread-post-split', kwargs={
+                    'thread_pk': obj.pk
+                }),
+            },
             'read': 'nada',
         }
 

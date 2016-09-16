@@ -46,7 +46,7 @@ export default class extends React.Component {
   fetchData() {
     store.dispatch(posts.unload());
 
-    ajax.get(this.props.thread.api.posts, {
+    ajax.get(this.props.thread.api.posts.index, {
       page: this.props.params.page || 1
     }, 'posts').then((data) => {
       this.update(data);
@@ -59,7 +59,7 @@ export default class extends React.Component {
     polls.start({
       poll: 'thread-posts',
 
-      url: this.props.thread.api.posts,
+      url: this.props.thread.api.posts.index,
       data: {
         page: this.props.params.page || 1
       },
@@ -94,7 +94,7 @@ export default class extends React.Component {
       mode: 'REPLY',
 
       config: this.props.thread.api.editor,
-      submit: this.props.thread.api.posts
+      submit: this.props.thread.api.posts.index
     });
   };
   /* jshint ignore:end */
