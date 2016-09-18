@@ -37,18 +37,20 @@ export default class extends Form {
   send() {
     return ajax.post(this.props.thread.api.posts.move, {
       thread_url: this.state.url,
-      posts: [this.props.post.id]
+      posts: this.props.selection.map((post) => post.id)
     });
   }
 
   handleSuccess(success) {
-    store.dispatch(post.patch(this.props.post, {
-      isDeleted: true
-    }));
+    this.props.selection.forEach((selection) => {
+      store.dispatch(post.patch(selection, {
+        isDeleted: true
+      }));
+    });
 
     modal.hide();
 
-    snackbar.success(gettext("Selected post was moved to the other thread."));
+    snackbar.success(gettext("Selected posts were moved to the other thread."));
   }
 
   handleError(rejection) {
@@ -72,7 +74,7 @@ export default class extends Form {
             <div className="modal-body">
               <FormGroup
                 for="id_url"
-                label={gettext("Link to thread you want to move post to")}
+                label={gettext("Link to thread you want to move posts to")}
               >
                 <input
                   className="form-control"
@@ -85,7 +87,7 @@ export default class extends Form {
             </div>
             <div className="modal-footer">
               <button className="btn btn-primary" loading={this.state.isLoading}>
-                {gettext("Move post")}
+                {gettext("Move posts")}
               </button>
             </div>
           </div>
@@ -106,7 +108,7 @@ export function ModalHeader(props) {
       >
         <span aria-hidden="true">&times;</span>
       </button>
-      <h4 className="modal-title">{gettext("Move post")}</h4>
+      <h4 className="modal-title">{gettext("Move posts")}</h4>
     </div>
   );
 }

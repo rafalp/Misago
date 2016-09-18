@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router'; // jshint ignore:line
 
 export default function(props) {
-  return <nav className="misago-pagination">
+  return <nav className="misago-pagination pull-left">
     <Pager {...props} />
     <More more={props.posts.more} />
   </nav>;

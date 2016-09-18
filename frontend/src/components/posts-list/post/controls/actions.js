@@ -120,7 +120,7 @@ export function remove(props) {
     snackbar.success(gettext("Post has been deleted."));
   }, (rejection) => {
     if (rejection.status === 400) {
-      snackbar.error(rejection.detail[0]);
+      snackbar.error(rejection.detail);
     } else {
       snackbar.apiError(rejection);
     }

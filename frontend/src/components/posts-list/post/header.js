@@ -1,6 +1,7 @@
 /* jshint ignore:start */
 import React from 'react';
 import Controls from './controls';
+import Select from './select';
 
 export default function(props) {
   return (
@@ -8,6 +9,7 @@ export default function(props) {
       <Poster {...props} />
       <PosterRank {...props} />
       <PostedOn {...props} />
+      <Select {...props} />
       <Controls {...props} />
       <UnreadLabel {...props} />
     </div>
