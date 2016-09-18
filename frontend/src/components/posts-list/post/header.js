@@ -11,6 +11,7 @@ export default function(props) {
       <PostedOn {...props} />
       <Select {...props} />
       <Controls {...props} />
+      <ProtectedLabel {...props} />
       <UnreadLabel {...props} />
     </div>
   );
@@ -72,4 +73,23 @@ export function UnreadLabel(props) {
   } else {
     return null;
   }
+}
+
+export function ProtectedLabel(props) {
+  const postAuthor = props.post.poster && props.post.poster.id === props.user.id;
+  const hasAcl = props.post.acl.can_protect;
+  const isVisible = props.user.id && props.post.is_protected && (postAuthor || hasAcl);
+
+  if (!isVisible) {
+    return null;
+  }
+
+  return (
+    <span
+      className="label label-default pull-right"
+      title={gettext("This post is protected and may not be edited.")}
+    >
+      {gettext("Protected")}
+    </span>
+  );
 }
