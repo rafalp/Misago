@@ -6,6 +6,7 @@ from htmlmin.minify import html_minify
 
 from .bbcode import blocks, inline
 from .md.shortimgs import ShortImagesExtension
+from .mentions import add_mentions
 from .pipeline import pipeline
 
 
@@ -51,8 +52,11 @@ def parse(text, request, poster, allow_mentions=True, allow_links=True,
 
     parsing_result = pipeline.process_result(parsing_result)
 
+    if allow_mentions:
+        add_mentions(request, parsing_result)
+
     if allow_links or allow_images:
-        clean_links(parsing_result, request)
+        clean_links(request, parsing_result)
 
     if minify:
         minify_result(parsing_result)
@@ -111,11 +115,10 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
 
 
 def linkify_paragraphs(result):
-    result['parsed_text'] = bleach.linkify(
-        result['parsed_text'], skip_pre=True, parse_email=True)
+    result['parsed_text'] = bleach.linkify(result['parsed_text'], skip_pre=True, parse_email=True)
 
 
-def clean_links(result, request):
+def clean_links(request, result):
     site_address = '%s://%s' % (request.scheme, request.get_host())
 
     soup = BeautifulSoup(result['parsed_text'], 'html5lib')
