@@ -24,7 +24,7 @@ def add_mentions(request, result):
                 add_mentions_to_element(request, element, mentions_dict)
 
     result['parsed_text'] = six.text_type(soup.body)[6:-7].strip()
-    result['mentions'] = filter(bool, mentions_dict.values())
+    result['mentions'] = list(filter(bool, mentions_dict.values()))
 
 
 def add_mentions_to_element(request, element, mentions_dict):
