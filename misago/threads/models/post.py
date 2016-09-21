@@ -66,7 +66,8 @@ class Post(models.Model):
 
     class Meta:
         index_together = [
-            ('is_event', 'is_hidden')
+            ('is_event', 'is_hidden'),
+            ('poster', 'posted_on')
         ]
 
     def __unicode__(self):
@@ -93,7 +94,7 @@ class Post(models.Model):
         update_post_checksum(other_post)
 
         from ..signals import merge_post
-        merge_post.send(sender=self, other_thread=other_post)
+        merge_post.send(sender=self, other_post=other_post)
 
     def move(self, new_thread):
         from ..signals import move_post

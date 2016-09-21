@@ -4,13 +4,16 @@ from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
-from . import PostingInterrupt, PostingMiddleware
+from . import PostingEndpoint, PostingInterrupt, PostingMiddleware
 
 
 MIN_POSTING_PAUSE = 3
 
 
 class FloodProtectionMiddleware(PostingMiddleware):
+    def use_this_middleware(self):
+        return self.mode != PostingEndpoint.EDIT
+
     def interrupt_posting(self, serializer):
         now = timezone.now()
 
@@ -24,14 +27,13 @@ class FloodProtectionMiddleware(PostingMiddleware):
 
         if settings.MISAGO_HOURLY_POST_LIMIT:
             cutoff = now - timedelta(hours=24)
-            count_qs = self.user.post_set.filter(posted_on__gte=cutoff)
-            posts_count = count_qs.count()
-            if posts_count > settings.MISAGO_HOURLY_POST_LIMIT:
+            if self.is_limit_exceeded(cutoff, settings.MISAGO_HOURLY_POST_LIMIT):
                 raise PostingInterrupt(_("Your account has excceed hourly post limit."))
 
         if settings.MISAGO_DIALY_POST_LIMIT:
             cutoff = now - timedelta(hours=1)
-            count_qs = self.user.post_set.filter(posted_on__gte=cutoff)
-            posts_count = count_qs.count()
-            if posts_count > settings.MISAGO_DIALY_POST_LIMIT:
+            if self.is_limit_exceeded(cutoff, settings.MISAGO_DIALY_POST_LIMIT):
                 raise PostingInterrupt(_("Your account has excceed dialy post limit."))
+
+    def is_limit_exceeded(self, cutoff, limit):
+        return self.user.post_set.filter(posted_on__gte=cutoff).count() >= limit

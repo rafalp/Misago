@@ -1,5 +1,6 @@
 from importlib import import_module
 
+from django.core.exceptions import PermissionDenied
 from django.utils import timezone
 
 from misago.conf import settings
@@ -105,8 +106,11 @@ class PostingEndpoint(object):
         except PostingInterrupt as e:
             raise ValueError("Posting process can only be interrupted from within interrupt_posting method")
 
-        for middleware, obj in self.middlewares:
-            obj.interrupt_posting(self._serializers.get(middleware))
+        try:
+            for middleware, obj in self.middlewares:
+                obj.interrupt_posting(self._serializers.get(middleware))
+        except PostingInterrupt as e:
+            raise PermissionDenied(e.message)
 
         try:
             for middleware, obj in self.middlewares:

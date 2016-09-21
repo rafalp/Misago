@@ -195,7 +195,10 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterIndexTogether(
             name='post',
-            index_together=set([('is_event', 'is_hidden')]),
+            index_together=set([
+                ('is_event', 'is_hidden'),
+                ('poster', 'posted_on'),
+            ]),
         ),
         migrations.CreateModel(
             name='Subscription',
