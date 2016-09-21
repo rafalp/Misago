@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from ..parser import parse
@@ -8,6 +9,9 @@ from ..parser import parse
 
 class MockRequest(object):
     scheme = 'http'
+
+    def __init__(self, user=None):
+        self.user = user
 
     def get_host(self):
         return 'test.com'
@@ -21,9 +25,9 @@ class BBCodeTests(TestCase):
     def test_inline_text(self):
         """inline elements are correctly parsed"""
         test_text = """
-Lorem **ipsum** dolor met.
+Lorem **ipsum**, dolor met.
 
-Lorem [b]ipsum[/b] [i]dolor[/i] [u]met[/u].
+Lorem [b]ipsum[/b], [i]dolor[/i] [u]met[/u].
 
 Lorem [b]**ipsum**[/b] [i]dolor[/i] [u]met[/u].
 
@@ -39,8 +43,8 @@ Lorem [b]ipsum[/B].
 """.strip()
 
         expected_result = """
-<p>Lorem <strong>ipsum</strong> dolor met.</p>
-<p>Lorem <b>ipsum</b> <i>dolor</i> <u>met</u>.</p>
+<p>Lorem <strong>ipsum</strong>, dolor met.</p>
+<p>Lorem <b>ipsum</b>, <i>dolor</i> <u>met</u>.</p>
 <p>Lorem <b><strong>ipsum</strong></b> <i>dolor</i> <u>met</u>.</p>
 <p>Lorem <b>**ipsum</b>** <i>dolor</i> <u>met</u>.</p>
 <p>Lorem <b>__ipsum</b>__ <i>dolor</i> <u>met</u>.</p>
@@ -99,6 +103,22 @@ Lorem ipsum.
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_complex_paragraph(self):
+        """parser minifies complex paragraph"""
+        User = get_user_model()
+        user = User.objects.create_user('Bob', 'bob@test.com', 'Pass123')
+
+        test_text = """
+Hey there @{}, how's going?
+""".strip().format(user)
+
+        expected_result = """
+<p>Hey there <a href="{}">@{}</a>, how's going?</p>
+""".strip().format(user.get_absolute_url(), user)
+
+        result = parse(test_text, MockRequest(user), user, minify=True)
         self.assertEqual(expected_result, result['parsed_text'])
 
 

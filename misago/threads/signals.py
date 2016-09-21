@@ -13,7 +13,7 @@ from .models import Post, Thread
 
 delete_post = Signal()
 delete_thread = Signal()
-merge_post = Signal()
+merge_post = Signal(providing_args=["other_post"])
 merge_thread = Signal(providing_args=["other_thread"])
 move_post = Signal()
 move_thread = Signal()
@@ -27,6 +27,13 @@ Signal handlers
 def merge_threads_posts(sender, **kwargs):
     other_thread = kwargs['other_thread']
     other_thread.post_set.update(category=sender.category, thread=sender)
+
+
+@receiver(merge_post)
+def merge_posts(sender, **kwargs):
+    other_post = kwargs['other_post']
+    for user in sender.mentions.iterator():
+        other_post.mentions.add(user)
 
 
 @receiver(move_thread)

@@ -42,6 +42,9 @@ class ReplyMiddleware(PostingMiddleware):
 
         self.thread.save()
 
+        # annotate post for future middlewares
+        self.post.parsing_result = parsing_result
+
     def new_thread(self, validated_data):
         self.thread.set_title(validated_data['title'])
         self.thread.starter_name = self.user.username

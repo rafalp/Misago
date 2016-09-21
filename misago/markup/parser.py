@@ -2,6 +2,7 @@ import markdown
 
 import bleach
 from bs4 import BeautifulSoup
+from django.utils import six
 from htmlmin.minify import html_minify
 
 from .bbcode import blocks, inline
@@ -133,9 +134,10 @@ def clean_links(request, result):
             result['outgoing_links'].append(link['href'])
 
         if link.string.startswith('http://'):
-            link.string = link.string[7:].strip()
+            link.string.replace_with(link.string[7:].strip())
         if link.string.startswith('https://'):
-            link.string = link.string[8:].strip()
+            print link.string
+            link.string.replace_with(link.string[8:].strip())
 
     for img in soup.find_all('img'):
         result['images'].append(img['src'])
@@ -150,8 +152,8 @@ def clean_links(request, result):
         if img['alt'].startswith('https://'):
             img['alt'] = img['alt'][8:].strip()
 
-    if result['outgoing_links'] or result['inside_links'] or result['images']:
-        result['parsed_text'] = soup.prettify()
+    # [6:-7] trims <body></body> wrap
+    result['parsed_text'] = six.text_type(soup.body)[6:-7]
 
 
 def minify_result(result):
