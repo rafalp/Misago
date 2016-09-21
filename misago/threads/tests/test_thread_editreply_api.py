@@ -202,7 +202,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, "<p>This is test edit!</p>")
 
-        post = self.thread.post_set.all()[:1][0]
+        post = self.thread.post_set.order_by('id').last()
         self.assertEqual(post.edits, 1)
         self.assertEqual(post.original, "This is test edit!")
         self.assertEqual(post.last_editor_id, self.user.id)
@@ -243,7 +243,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         })
         self.assertEqual(response.status_code, 200)
 
-        post = self.user.post_set.all()[:1][0]
+        post = self.user.post_set.order_by('id').last()
         self.assertTrue(post.is_protected)
 
     def test_protect_post_no_permission(self):
@@ -258,7 +258,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         })
         self.assertEqual(response.status_code, 200)
 
-        post = self.user.post_set.all()[:1][0]
+        post = self.user.post_set.order_by('id').last()
         self.assertFalse(post.is_protected)
 
     def test_post_unicode(self):
