@@ -48,7 +48,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         })
         self.assertEqual(response.status_code, 200)
 
-        post = self.user.post_set.all()[:1][0]
+        post = self.user.post_set.order_by('-id')[:1][0]
         self.assertEqual(post.mentions.count(), 0)
 
     def test_mention_nonexistant(self):
@@ -58,7 +58,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         })
         self.assertEqual(response.status_code, 200)
 
-        post = self.user.post_set.all()[:1][0]
+        post = self.user.post_set.order_by('-id')[:1][0]
         self.assertEqual(post.mentions.count(), 0)
 
     def test_mention_self(self):
@@ -68,7 +68,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         })
         self.assertEqual(response.status_code, 200)
 
-        post = self.user.post_set.all()[:1][0]
+        post = self.user.post_set.order_by('-id')[:1][0]
 
         self.assertEqual(post.mentions.count(), 1)
         self.assertEqual(post.mentions.all()[0], self.user)
@@ -91,7 +91,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         })
         self.assertEqual(response.status_code, 200)
 
-        post = self.user.post_set.all()[:1][0]
+        post = self.user.post_set.order_by('-id')[:1][0]
 
         self.assertEqual(post.mentions.count(), 24)
         self.assertEqual(list(post.mentions.order_by('id')), users[:24])
@@ -107,7 +107,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         })
         self.assertEqual(response.status_code, 200)
 
-        post = self.user.post_set.all()[:1][0]
+        post = self.user.post_set.order_by('-id')[:1][0]
 
         self.assertEqual(post.mentions.count(), 1)
         self.assertEqual(post.mentions.all()[0], user_a)
@@ -158,7 +158,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         })
         self.assertEqual(response.status_code, 200)
 
-        post_a = self.user.post_set.all()[:1][0]
+        post_a = self.user.post_set.order_by('-id')[:1][0]
 
         self.assertEqual(post_a.mentions.count(), 1)
         self.assertEqual(list(post_a.mentions.all()), [user_a])
@@ -172,7 +172,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         })
         self.assertEqual(response.status_code, 200)
 
-        post_b = self.user.post_set.all()[:1][0]
+        post_b = self.user.post_set.order_by('-id')[:1][0]
 
         # merge posts and validate that post A has all mentions
         post_b.merge(post_a)
