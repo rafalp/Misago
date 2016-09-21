@@ -136,7 +136,6 @@ def clean_links(request, result):
         if link.string.startswith('http://'):
             link.string.replace_with(link.string[7:].strip())
         if link.string.startswith('https://'):
-            print link.string
             link.string.replace_with(link.string[8:].strip())
 
     for img in soup.find_all('img'):
