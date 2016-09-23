@@ -12,7 +12,7 @@ MIN_POSTING_PAUSE = 3
 
 class FloodProtectionMiddleware(PostingMiddleware):
     def use_this_middleware(self):
-        return self.mode != PostingEndpoint.EDIT
+        return not self.user.acl['can_omit_flood_protection'] and self.mode != PostingEndpoint.EDIT
 
     def interrupt_posting(self, serializer):
         now = timezone.now()

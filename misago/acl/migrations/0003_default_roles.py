@@ -115,6 +115,7 @@ def create_default_roles(apps, schema_editor):
             'misago.threads.permissions.threads': {
                 'can_see_unapproved_content_lists': True,
                 'can_see_reported_content_lists': True,
+                'can_omit_flood_protection': True,
             },
             'misago.users.permissions.moderation': {
                 'can_warn_users': 1,

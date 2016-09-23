@@ -48,6 +48,10 @@ class RolePermissionsForm(forms.Form):
                     "categories in which the user has permission to see posts "
                     "reports.")
     )
+    can_omit_flood_protection = forms.YesNoSwitch(
+        label=_("Can omit flood protection"),
+        help_text=_("Allows posting more frequently than flood protection would.")
+    )
 
 
 class CategoryPermissionsForm(forms.Form):
@@ -205,6 +209,7 @@ def build_acl(acl, roles, key_name):
         'can_delete_other_users_attachments': False,
         'can_see_unapproved_content_lists': False,
         'can_see_reported_content_lists': False,
+        'can_omit_flood_protection': False,
         'can_approve_content': [],
         'can_see_reports': [],
     })
@@ -214,7 +219,8 @@ def build_acl(acl, roles, key_name):
         max_attachment_size=algebra.greater,
         can_delete_other_users_attachments=algebra.greater,
         can_see_unapproved_content_lists=algebra.greater,
-        can_see_reported_content_lists=algebra.greater
+        can_see_reported_content_lists=algebra.greater,
+        can_omit_flood_protection=algebra.greater
     )
 
     categories_roles = get_categories_roles(roles)
