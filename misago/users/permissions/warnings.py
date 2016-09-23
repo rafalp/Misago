@@ -20,8 +20,7 @@ NO_OWNED_ALL = ((0, _("No")), (1, _("Owned")), (2, _("All")))
 class LimitedPermissionsForm(forms.Form):
     legend = _("Warnings")
 
-    can_see_other_users_warnings = forms.YesNoSwitch(
-        label=_("Can see other users warnings"))
+    can_see_other_users_warnings = forms.YesNoSwitch(label=_("Can see other users warnings"))
 
 
 class PermissionsForm(LimitedPermissionsForm):
@@ -31,12 +30,14 @@ class PermissionsForm(LimitedPermissionsForm):
         label=_("Can cancel warnings"),
         coerce=int,
         choices=NO_OWNED_ALL,
-        initial=0)
+        initial=0
+    )
     can_delete_warnings = forms.TypedChoiceField(
         label=_("Can delete warnings"),
         coerce=int,
         choices=NO_OWNED_ALL,
-        initial=0)
+        initial=0
+    )
 
 
 def change_permissions_form(role):

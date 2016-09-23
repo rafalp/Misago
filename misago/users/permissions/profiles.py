@@ -15,16 +15,19 @@ Admin Permissions Form
 """
 CAN_BROWSE_USERS_LIST = forms.YesNoSwitch(
     label=_("Can browse users list"),
-    initial=1)
+    initial=1
+)
 CAN_SEARCH_USERS = forms.YesNoSwitch(
     label=_("Can search user profiles"),
-    initial=1)
+    initial=1
+)
 CAN_SEE_USER_NAME_HISTORY = forms.YesNoSwitch(
-    label=_("Can see other members name history"))
+    label=_("Can see other members name history")
+)
 CAN_SEE_BAN_DETAILS = forms.YesNoSwitch(
     label=_("Can see members bans details"),
-    help_text=_("Allows users with this permission to see user and "
-                "staff ban messages."))
+    help_text=_("Allows users with this permission to see user and staff ban messages.")
+)
 
 
 class LimitedPermissionsForm(forms.Form):
@@ -42,18 +45,23 @@ class PermissionsForm(LimitedPermissionsForm):
     can_search_users = CAN_SEARCH_USERS
     can_follow_users = forms.YesNoSwitch(
         label=_("Can follow other users"),
-        initial=1)
+        initial=1
+    )
     can_be_blocked = forms.YesNoSwitch(
         label=_("Can be blocked by other users"),
-        initial=0)
+        initial=0
+    )
     can_see_users_name_history = CAN_SEE_USER_NAME_HISTORY
     can_see_ban_details = CAN_SEE_BAN_DETAILS
     can_see_users_emails = forms.YesNoSwitch(
-        label=_("Can see members e-mails"))
+        label=_("Can see members e-mails")
+    )
     can_see_users_ips = forms.YesNoSwitch(
-        label=_("Can see members IPs"))
+        label=_("Can see members IPs")
+    )
     can_see_hidden_users = forms.YesNoSwitch(
-        label=_("Can see members that hide their presence"))
+        label=_("Can see members that hide their presence")
+    )
 
 
 def change_permissions_form(role):

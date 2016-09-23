@@ -14,24 +14,24 @@ class PermissionsForm(forms.Form):
     name_changes_allowed = forms.IntegerField(
         label=_("Allowed username changes number"),
         min_value=0,
-        initial=1)
+        initial=1
+    )
     name_changes_expire = forms.IntegerField(
         label=_("Don't count username changes older than"),
         help_text=_("Number of days since name change that makes "
                     "that change no longer count to limit. Enter "
                     "zero to make all changes count."),
         min_value=0,
-        initial=0)
-    can_have_signature = forms.YesNoSwitch(
-        label=_("Can have signature"))
-    allow_signature_links = forms.YesNoSwitch(
-        label=_("Can put links in signature"))
-    allow_signature_images = forms.YesNoSwitch(
-        label=_("Can put images in signature"))
+        initial=0
+    )
+    can_have_signature = forms.YesNoSwitch(label=_("Can have signature"))
+    allow_signature_links = forms.YesNoSwitch(label=_("Can put links in signature"))
+    allow_signature_images = forms.YesNoSwitch(label=_("Can put images in signature"))
     allow_signature_blocks = forms.YesNoSwitch(
         label=_("Can use text blocks in signature"),
         help_text=_("Controls whether or not users can put quote, code, "
-                    "spoiler blocks and horizontal lines in signatures."))
+                    "spoiler blocks and horizontal lines in signatures.")
+    )
 
 
 def change_permissions_form(role):

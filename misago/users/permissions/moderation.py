@@ -22,20 +22,21 @@ class PermissionsForm(forms.Form):
 
     can_rename_users = forms.YesNoSwitch(label=_("Can rename users"))
     can_moderate_avatars = forms.YesNoSwitch(label=_("Can moderate avatars"))
-    can_moderate_signatures = forms.YesNoSwitch(
-        label=_("Can moderate signatures"))
+    can_moderate_signatures = forms.YesNoSwitch(label=_("Can moderate signatures"))
     can_ban_users = forms.YesNoSwitch(label=_("Can ban users"))
     max_ban_length = forms.IntegerField(
         label=_("Max length, in days, of imposed ban"),
         help_text=_("Enter zero to let moderators impose permanent bans."),
         min_value=0,
-        initial=0)
+        initial=0
+    )
     can_lift_bans = forms.YesNoSwitch(label=_("Can lift bans"))
     max_lifted_ban_length = forms.IntegerField(
         label=_("Max length, in days, of lifted ban"),
         help_text=_("Enter zero to let moderators lift permanent bans."),
         min_value=0,
-        initial=0)
+        initial=0
+    )
 
 
 def change_permissions_form(role):
