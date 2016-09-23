@@ -1,8 +1,51 @@
 // jshint ignore:start
 import React from 'react';
+import MarkupPreview from './markup-preview';
 import Button from 'misago/components/button';
+import misago from 'misago';
+import ajax from 'misago/services/ajax';
+import modal from 'misago/services/modal';
+import snackbar from 'misago/services/snackbar';
 
 export default class extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isPreviewLoading: false
+    };
+  }
+
+  onPreviewClick = () => {
+    if (this.state.isPreviewLoading) {
+      return;
+    }
+
+    this.setState({
+      isPreviewLoading: true
+    });
+
+    ajax.post(misago.get('PARSE_MARKUP_API'), {post: this.props.value}).then((data) => {
+      modal.show(
+        <MarkupPreview markup={data.parsed} />
+      );
+
+      this.setState({
+        isPreviewLoading: false
+      });
+    }, (rejection) => {
+      if (rejection.status === 400) {
+        snackbar.error(rejection.detail);
+      } else {
+        snackbar.apiError(rejection);
+      }
+
+      this.setState({
+        isPreviewLoading: false
+      });
+    });
+  };
+
   render() {
     return (
       <div className="editor-border">
@@ -14,6 +57,14 @@ export default class extends React.Component {
           value={this.props.value}
         />
         <div className="editor-footer">
+          <Button
+            className="btn-default btn-sm pull-left"
+            disabled={this.props.loading || this.state.isPreviewLoading}
+            onClick={this.onPreviewClick}
+            type="button"
+          >
+            {gettext("Preview")}
+          </Button>
           <Button
             className="btn-primary btn-sm pull-right"
             loading={this.props.loading}

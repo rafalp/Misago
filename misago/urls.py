@@ -22,6 +22,7 @@ urlpatterns = [
 # Register API
 apipatterns = [
     url(r'^', include('misago.categories.urls.api')),
+    url(r'^', include('misago.markup.urls')),
     url(r'^', include('misago.threads.urls.api')),
     url(r'^', include('misago.users.urls.api')),
 ]

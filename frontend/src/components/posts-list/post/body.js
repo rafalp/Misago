@@ -1,5 +1,6 @@
 /* jshint ignore:start */
 import React from 'react';
+import MisagoMarkup from 'misago/components/misago-markup';
 import escapeHtml from 'misago/utils/escape-html';
 
 const HIDDEN_BY_URL = '<a href="%(url)s" class="item-title">%(user)s</a>';
@@ -19,7 +20,7 @@ export default function(props) {
 export function Default(props) {
  return (
     <div className="panel-body">
-      <article className="misago-markup" dangerouslySetInnerHTML={{__html: props.post.parsed}} />
+      <MisagoMarkup markup={props.post.parsed} />
     </div>
   );
 }
