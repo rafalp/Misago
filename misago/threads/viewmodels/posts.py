@@ -23,7 +23,7 @@ class ViewModel(object):
             post.category = thread.category
             post.thread = thread.model
 
-            if post.poster and post.poster not in posters:
+            if post.poster:
                 posters.append(post.poster)
 
         add_acl(request.user, posts)

@@ -2,10 +2,12 @@
 import React from 'react';
 import Controls from './controls';
 import Select from './select';
+import {StatusIcon, getStatusClassName, getStatusDescription} from 'misago/components/user-status';
 
 export default function(props) {
   return (
     <div className="panel-heading post-heading">
+      <PosterStatus {...props} />
       <Poster {...props} />
       <PosterRank {...props} />
       <PostedOn {...props} />
@@ -17,13 +19,35 @@ export default function(props) {
   );
 }
 
+export function PosterStatus(props) {
+  if (!props.post.poster) {
+    return null;
+  }
+
+  return (
+    <div
+      className={getStatusClassName(props.post.poster.status)}
+      title={getStatusDescription(props.post.poster, props.post.poster.status)}
+    >
+      <StatusIcon
+        status={props.post.poster.status}
+        user={props.post.poster}
+      />
+    </div>
+  );
+}
+
 export function Poster(props) {
   if (props.post.poster) {
-    return <a className="item-title" href={props.post.poster.absolute_url}>
-      {props.post.poster.username}
-    </a>;
+    return (
+      <a className="item-title" href={props.post.poster.absolute_url}>
+        {props.post.poster.username}
+      </a>
+    );
   } else {
-    return <strong className="item-title">{props.post.poster_name}</strong>;
+    return (
+      <strong className="item-title">{props.post.poster_name}</strong>
+    );
   }
 }
 

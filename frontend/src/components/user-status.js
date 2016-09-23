@@ -2,22 +2,7 @@ import React from 'react';
 
 export default class extends React.Component {
   getClass() {
-    let status = '';
-    if (this.props.status.is_banned) {
-      status = 'banned';
-    } else if (this.props.status.is_hidden) {
-      status = 'offline';
-    } else if (this.props.status.is_online_hidden) {
-      status = 'online';
-    } else if (this.props.status.is_offline_hidden) {
-      status = 'offline';
-    } else if (this.props.status.is_online) {
-      status = 'online';
-    } else if (this.props.status.is_offline) {
-      status = 'offline';
-    }
-
-    return 'user-status user-' + status;
+    return getStatusClassName(this.props.status);
   }
 
   render() {
@@ -58,40 +43,7 @@ export class StatusIcon extends React.Component {
 
 export class StatusLabel extends React.Component {
   getHelp() {
-    if (this.props.status.is_banned) {
-      if (this.props.status.banned_until) {
-        return interpolate(gettext("%(username)s is banned until %(ban_expires)s"), {
-          username: this.props.user.username,
-          ban_expires: this.props.status.banned_until.format('LL, LT')
-        }, true);
-      } else {
-        return interpolate(gettext("%(username)s is banned"), {
-          username: this.props.user.username
-        }, true);
-      }
-    } else if (this.props.status.is_hidden) {
-      return interpolate(gettext("%(username)s is hiding presence"), {
-        username: this.props.user.username
-      }, true);
-    } else if (this.props.status.is_online_hidden) {
-      return interpolate(gettext("%(username)s is online (hidden)"), {
-        username: this.props.user.username
-      }, true);
-    } else if (this.props.status.is_offline_hidden) {
-      return interpolate(gettext("%(username)s was last seen %(last_click)s (hidden)"), {
-        username: this.props.user.username,
-        last_click: this.props.status.last_click.fromNow()
-      }, true);
-    } else if (this.props.status.is_online) {
-      return interpolate(gettext("%(username)s is online"), {
-        username: this.props.user.username
-      }, true);
-    } else if (this.props.status.is_offline) {
-      return interpolate(gettext("%(username)s was last seen %(last_click)s"), {
-        username: this.props.user.username,
-        last_click: this.props.status.last_click.fromNow()
-      }, true);
-    }
+    return getStatusDescription(this.props.user, this.props.status);
   }
 
   getLabel() {
@@ -117,5 +69,61 @@ export class StatusLabel extends React.Component {
       {this.getLabel()}
     </span>;
     /* jshint ignore:end */
+  }
+}
+
+export function getStatusClassName(status) {
+  let className = '';
+  if (status.is_banned) {
+    className = 'banned';
+  } else if (status.is_hidden) {
+    className = 'offline';
+  } else if (status.is_online_hidden) {
+    className = 'online';
+  } else if (status.is_offline_hidden) {
+    className = 'offline';
+  } else if (status.is_online) {
+    className = 'online';
+  } else if (status.is_offline) {
+    className = 'offline';
+  }
+
+  return 'user-status user-' + className;
+}
+
+export function getStatusDescription(user, status) {
+  if (status.is_banned) {
+    if (status.banned_until) {
+      return interpolate(gettext("%(username)s is banned until %(ban_expires)s"), {
+        username: user.username,
+        ban_expires: status.banned_until.format('LL, LT')
+      }, true);
+    } else {
+      return interpolate(gettext("%(username)s is banned"), {
+        username: user.username
+      }, true);
+    }
+  } else if (status.is_hidden) {
+    return interpolate(gettext("%(username)s is hiding presence"), {
+      username: user.username
+    }, true);
+  } else if (status.is_online_hidden) {
+    return interpolate(gettext("%(username)s is online (hidden)"), {
+      username: user.username
+    }, true);
+  } else if (status.is_offline_hidden) {
+    return interpolate(gettext("%(username)s was last seen %(last_click)s (hidden)"), {
+      username: user.username,
+      last_click: status.last_click.fromNow()
+    }, true);
+  } else if (status.is_online) {
+    return interpolate(gettext("%(username)s is online"), {
+      username: user.username
+    }, true);
+  } else if (status.is_offline) {
+    return interpolate(gettext("%(username)s was last seen %(last_click)s"), {
+      username: user.username,
+      last_click: status.last_click.fromNow()
+    }, true);
   }
 }

@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { hydrateUser } from './users';
 
 export const PATCH_POST = 'PATCH_POST';
 
@@ -7,6 +8,8 @@ export function hydrate(json) {
     posted_on: moment(json.posted_on),
     updated_on: moment(json.updated_on),
     hidden_on: moment(json.hidden_on),
+
+    poster: json.poster ? hydrateUser(json.poster) : null,
 
     isSelected: false,
     isBusy: false,
