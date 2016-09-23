@@ -110,7 +110,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         post = self.user.post_set.order_by('id').last()
 
         self.assertEqual(post.mentions.count(), 1)
-        self.assertEqual(post.mentions.all()[0], user_a)
+        self.assertEqual(post.mentions.order_by('id')[0], user_a)
 
         # add mention to post
         edit_link = reverse('misago:api:thread-post-detail', kwargs={
@@ -125,7 +125,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(post.mentions.count(), 2)
-        self.assertEqual(list(post.mentions.all()), [user_a, user_b])
+        self.assertEqual(list(post.mentions.order_by('id')), [user_a, user_b])
 
         # remove first mention from post - should preserve mentions
         self.override_acl()
@@ -135,7 +135,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(post.mentions.count(), 2)
-        self.assertEqual(list(post.mentions.all()), [user_a, user_b])
+        self.assertEqual(list(post.mentions.order_by('id')), [user_a, user_b])
 
         # remove mentions from post - should preserve mentions
         self.override_acl()
@@ -145,7 +145,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(post.mentions.count(), 2)
-        self.assertEqual(list(post.mentions.all()), [user_a, user_b])
+        self.assertEqual(list(post.mentions.order_by('id')), [user_a, user_b])
 
     def test_mentions_merge(self):
         """posts merge sums mentions"""
@@ -178,4 +178,4 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         post_b.merge(post_a)
 
         self.assertEqual(post_a.mentions.count(), 2)
-        self.assertEqual(list(post_a.mentions.all()), [user_a, user_b])
+        self.assertEqual(list(post_a.mentions.order_by('id')), [user_a, user_b])
