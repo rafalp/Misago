@@ -3,6 +3,7 @@ import React from 'react';
 import Icon from './icon';
 import Info from './info';
 import Message from './message';
+import Waypoint from '../waypoint';
 
 export default function(props) {
   let className = 'event';
@@ -17,10 +18,10 @@ export default function(props) {
       <div className="post-border">
 
         <Icon {...props} />
-        <div className="post-body">
+        <Waypoint className="post-body" post={props.post}>
           <Message {...props} />
           <Info {...props} />
-        </div>
+        </Waypoint>
 
       </div>
     </li>

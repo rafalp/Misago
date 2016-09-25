@@ -1,6 +1,6 @@
 /* jshint ignore:start */
 import React from 'react';
-import Waypoint from './waypoint';
+import Waypoint from '../waypoint';
 import MisagoMarkup from 'misago/components/misago-markup';
 import escapeHtml from 'misago/utils/escape-html';
 
