@@ -88,7 +88,7 @@ class ThreadSerializer(serializers.ModelSerializer):
             'editor': obj.get_editor_api_url(),
             'merge': obj.get_merge_api_url(),
             'posts': {
-                'index': obj.get_api_url(),
+                'index': obj.get_posts_api_url(),
                 'merge': obj.get_post_merge_api_url(),
                 'move': obj.get_post_move_api_url(),
                 'split': obj.get_post_split_api_url()

@@ -9,3 +9,4 @@ require('bootstrap-modal');
 require('bootstrap-dropdown');
 
 require('cropit');
+require('waypoints');

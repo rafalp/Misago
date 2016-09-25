@@ -15,7 +15,8 @@
     "bootstrap-affix": "./node_modules/bootstrap/js/affix.js",
     "bootstrap-modal": "./node_modules/bootstrap/js/modal.js",
     "bootstrap-dropdown": "./node_modules/bootstrap/js/dropdown.js",
-    "dropzone": "./node_modules/dropzone/dist/dropzone.js"
+    "dropzone": "./node_modules/dropzone/dist/dropzone.js",
+    "waypoints": "./node_modules/waypoints/lib/jquery.waypoints.js"
   },
   "browserify-shim": {
     "jquery": "jQuery"
@@ -60,6 +61,7 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0",
+    "waypoints": "^4.0.1",
     "zxcvbn": "^4.2.0"
   },
   "devDependencies": {

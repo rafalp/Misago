@@ -162,6 +162,9 @@ class Thread(models.Model):
     def get_merge_api_url(self):
         return self.thread_type.get_thread_merge_api_url(self)
 
+    def get_posts_api_url(self):
+        return self.thread_type.get_thread_posts_api_url(self)
+
     def get_post_merge_api_url(self):
         return self.thread_type.get_post_merge_api_url(self)
 

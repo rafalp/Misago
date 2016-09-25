@@ -14,6 +14,10 @@ export default function(props) {
     className = 'post post-hidden';
   }
 
+  if (!props.post.is_read) {
+    className += ' post-new';
+  }
+
   return (
     <li id={'post-' + props.post.id} className={className}>
       <div className="post-border">

@@ -1,5 +1,5 @@
 {% load misago_avatars %}
-<li id="post-{{ post.pk }}" class="post {% if post.is_hidden and not post.acl.can_see_hidden %}post-hidden{% endif %}">
+<li id="post-{{ post.pk }}" class="post {% if post.is_hidden and not post.acl.can_see_hidden %}post-hidden{% endif %} {% if not post.is_read %}post-new{% endif %}">
   <div class="post-border">
     <div class="post-avatar">
       {% if post.poster %}

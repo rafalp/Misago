@@ -91,7 +91,7 @@ export function PostedOn(props) {
 
 export function UnreadLabel(props) {
   if (!props.post.is_read) {
-    return <span className="label label-success pull-right">
+    return <span className="label label-warning pull-right">
       {gettext("New")}
     </span>;
   } else {

@@ -85,6 +85,11 @@ class Thread(ThreadType):
             'pk': thread.pk
         })
 
+    def get_thread_posts_api_url(self, thread):
+        return reverse('misago:api:thread-post-list', kwargs={
+            'thread_pk': thread.pk
+        })
+
     def get_post_merge_api_url(self, thread):
         reverse('misago:api:thread-post-merge', kwargs={
             'thread_pk': thread.pk
