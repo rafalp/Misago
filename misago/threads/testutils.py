@@ -50,7 +50,7 @@ def post_thread(category, title='Test thread', poster='Tester',
     reply_thread(
         thread,
         poster=poster,
-        posted_on=thread.last_post_on,
+        posted_on=started_on,
         is_hidden=is_hidden,
         is_unapproved=is_unapproved,
     )

@@ -20,15 +20,16 @@ from ..viewmodels.thread import ForumThread
 from .postingendpoint import PostingEndpoint
 from .postendpoints.merge import posts_merge_endpoint
 from .postendpoints.move import posts_move_endpoint
-from .postendpoints.split import posts_split_endpoint
 from .postendpoints.patch_event import event_patch_endpoint
 from .postendpoints.patch_post import post_patch_endpoint
+from .postendpoints.read import post_read_endpoint
+from .postendpoints.split import posts_split_endpoint
 
 
 class ViewSet(viewsets.ViewSet):
     thread = None
     posts = None
-    post = None
+    post_ = None
 
     def get_thread(self, request, pk, read_aware=True, subscription_aware=True, select_for_update=False):
         return self.thread(
@@ -52,7 +53,7 @@ class ViewSet(viewsets.ViewSet):
         return self.posts(request, thread, page)
 
     def get_post(self, request, thread, pk, select_for_update=False):
-        return self.post(request, thread, get_int_or_404(pk), select_for_update)
+        return self.post_(request, thread, get_int_or_404(pk), select_for_update)
 
     def get_post_for_update(self, request, thread, pk):
         return self.get_post(request, thread, pk, select_for_update=True)
@@ -182,10 +183,25 @@ class ViewSet(viewsets.ViewSet):
 
         return Response({})
 
+    @detail_route(methods=['post'])
+    @transaction.atomic
+    def read(self, request, thread_pk, pk):
+        thread = self.get_thread(request, get_int_or_404(thread_pk))
+        post = self.get_post(request, thread, get_int_or_404(pk)).model
+
+        request.user.lock()
+
+        return post_read_endpoint(request, thread.model, post)
+
     @detail_route(methods=['get'], url_path='editor')
     def post_editor(self, request, thread_pk, pk):
-        thread = self.thread(request, get_int_or_404(thread_pk))
-        post = self.post(request, thread, get_int_or_404(pk)).model
+        thread = self.get_thread(
+            request,
+            get_int_or_404(thread_pk),
+            read_aware=False,
+            subscription_aware=False
+        )
+        post = self.get_post(request, thread, get_int_or_404(pk)).model
 
         allow_edit_post(request.user, post)
 
@@ -200,11 +216,16 @@ class ViewSet(viewsets.ViewSet):
 
     @list_route(methods=['get'], url_path='editor')
     def reply_editor(self, request, thread_pk):
-        thread = self.thread(request, get_int_or_404(thread_pk))
+        thread = self.get_thread(
+            request,
+            get_int_or_404(thread_pk),
+            read_aware=False,
+            subscription_aware=False
+        )
         allow_reply_thread(request.user, thread.model)
 
         if 'reply' in request.query_params:
-            reply_to = self.post(request, thread, get_int_or_404(request.query_params['reply'])).model
+            reply_to = self.get_post(request, thread, get_int_or_404(request.query_params['reply'])).model
 
             if reply_to.is_event:
                 raise PermissionDenied(_("You can't reply to events."))
@@ -223,4 +244,4 @@ class ViewSet(viewsets.ViewSet):
 class ThreadPostsViewSet(ViewSet):
     thread = ForumThread
     posts = ThreadPosts
-    post = ThreadPost
+    post_ = ThreadPost

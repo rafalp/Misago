@@ -93,7 +93,7 @@ class PostSerializer(serializers.ModelSerializer):
         return {
             'index': obj.get_api_url(),
             'editor': obj.get_editor_api_url(),
-            'read': 'nada',
+            'read': obj.get_read_api_url(),
         }
 
     def get_url(self, obj):

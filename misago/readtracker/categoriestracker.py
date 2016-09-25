@@ -28,7 +28,8 @@ def make_read_aware(user, categories):
 
     if categories_dict:
         categories_records = user.categoryread_set.filter(
-            category__in=categories_dict.keys())
+            category__in=categories_dict.keys()
+        )
 
         for record in categories_records:
             category = categories_dict[record.category_id]
@@ -67,9 +68,12 @@ def sync_record(user, category):
     all_threads_count = recorded_threads.count()
 
     read_threads = user.threadread_set.filter(
-        category=category, last_read_on__gt=cutoff_date)
+        category=category,
+        last_read_on__gt=cutoff_date
+    )
     read_threads_count = read_threads.filter(
-        thread__last_post_on__lte=F("last_read_on")).count()
+        thread__last_post_on__lte=F("last_read_on")
+    ).count()
 
     category_is_read = read_threads_count == all_threads_count
 
@@ -78,7 +82,7 @@ def sync_record(user, category):
 
     if category_record:
         if category_is_read:
-            category_record.last_read_on = category_record.last_read_on
+            category_record.last_read_on = timezone.now()
         else:
             category_record.last_read_on = cutoff_date
         category_record.save(update_fields=['last_read_on'])
@@ -90,7 +94,8 @@ def sync_record(user, category):
 
         category_record = user.categoryread_set.create(
             category=category,
-            last_read_on=last_read_on)
+            last_read_on=last_read_on
+        )
 
 
 def read_category(user, category):

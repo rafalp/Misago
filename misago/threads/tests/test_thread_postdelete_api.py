@@ -1,5 +1,3 @@
-import time
-
 from django.core.urlresolvers import reverse
 
 from .. import testutils

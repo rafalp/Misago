@@ -70,7 +70,7 @@ class ThreadGotoLastView(GotoView):
     thread = ForumThread
 
     def get_target_post(self, thread, posts_queryset, **kwargs):
-        return posts_queryset.order_by('-id')[:1][0]
+        return posts_queryset.order_by('id').last()
 
 
 class ThreadGotoNewView(GotoView):
@@ -78,13 +78,10 @@ class ThreadGotoNewView(GotoView):
     read_aware = True
 
     def get_target_post(self, thread, posts_queryset, **kwargs):
-        return posts_queryset.order_by('-id')[:1][0]
-
-    def get_target_post(self, thread, posts_queryset, **kwargs):
-        try:
-            return posts_queryset.filter(posted_on__gt=thread.last_read_on).order_by('id')[:1][0]
-        except IndexError:
-            return posts_queryset.order_by('-id')[:1][0]
+        if thread.is_new:
+            return posts_queryset.filter(posted_on__gt=thread.last_read_on).order_by('id').first()
+        else:
+            return posts_queryset.order_by('id').last()
 
 
 class ThreadGotoUnapprovedView(GotoView):
@@ -96,7 +93,8 @@ class ThreadGotoUnapprovedView(GotoView):
                 _("You need permission to approve content to be able to go to first unapproved post."))
 
     def get_target_post(self, thread, posts_queryset, **kwargs):
-        try:
-            return posts_queryset.filter(is_unapproved=True).order_by('id')[:1][0]
-        except IndexError:
-            return posts_queryset.order_by('-id')[:1][0]
+        unapproved_post = posts_queryset.filter(is_unapproved=True).order_by('id').first()
+        if unapproved_post:
+            return unapproved_post
+        else:
+            return posts_queryset.order_by('id').last()

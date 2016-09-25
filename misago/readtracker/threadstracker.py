@@ -91,13 +91,12 @@ def make_thread_read_aware(user, thread):
         try:
             category_record = user.categoryread_set.get(
                 category_id=thread.category_id)
-
             if thread.last_post_on > category_record.last_read_on:
                 try:
                     thread_record = user.threadread_set.get(thread=thread)
                     thread.last_read_on = thread_record.last_read_on
-                    thread.is_new = False
                     if thread.last_post_on <= thread_record.last_read_on:
+                        thread.is_new = False
                         thread.is_read = True
                     thread.read_record = thread_record
                 except ThreadRead.DoesNotExist:
