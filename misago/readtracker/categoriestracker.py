@@ -94,19 +94,21 @@ def sync_record(user, category):
 
 
 def read_category(user, category):
-    if category.is_leaf_node():
-        categories = [category]
-    else:
-        categories = category.get_descendants(include_self=True)
+    categories = []
+    if category.level:
+        categories.append(category.pk)
+    if not category.is_leaf_node():
+        queryset = category.get_descendants().filter(id__in=user.acl['visible_categories'])
+        categories += [c['id'] for c in queryset.values('id')]
 
-    user.categoryread_set.filter(category__in=categories).delete()
+    user.categoryread_set.filter(category_id__in=categories).delete()
 
     now = timezone.now()
     new_reads = []
     for category in categories:
         new_reads.append(CategoryRead(
             user=user,
-            category=category,
+            category_id=category,
             last_read_on=now,
         ))
 

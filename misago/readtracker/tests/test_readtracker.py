@@ -159,14 +159,12 @@ class CategorysTrackerTests(ReadTrackerTests):
         self.assertTrue(self.user.categoryread_set.get(category=self.category))
 
     def test_read_root_category(self):
-        """read_category reads category and its subcategories for user"""
+        """read_category reads its subcategories for user"""
         root_category = Category.objects.root_category()
         categoriestracker.read_category(self.user, root_category)
 
-        root_read = self.user.categoryread_set.get(category=root_category)
         child_read = self.user.categoryread_set.get(category=self.category)
-
-        self.assertEqual(root_read.last_read_on, child_read.last_read_on)
+        self.assertTrue(child_read.last_read_on > timezone.now() -timedelta(seconds=3))
 
 
 class ThreadsTrackerTests(ReadTrackerTests):

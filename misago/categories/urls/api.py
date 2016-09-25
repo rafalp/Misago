@@ -1,8 +1,8 @@
-from django.conf.urls import url
+from misago.core.apirouter import MisagoApiRouter
 
-from ..views.categorieslist import api
+from ..api import CategoryViewSet
 
 
-urlpatterns = [
-    url(r'^categories/$', api, name='categories'),
-]
+router = MisagoApiRouter()
+router.register(r'categories', CategoryViewSet, base_name='category')
+urlpatterns = router.urls

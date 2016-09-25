@@ -200,7 +200,7 @@ class ThreadsReadApiTests(ThreadsApiTestCase):
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        self.assertEqual(self.user.categoryread_set.count(), 2)
+        self.assertEqual(self.user.categoryread_set.count(), 1)
 
     def test_read_threads_in_category(self):
         """api sets threads in category as read"""

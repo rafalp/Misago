@@ -59,9 +59,11 @@ export function patch(thread, patch, sorting=null) {
   };
 }
 
-export function read() {
+export function read(categoriesMap, category) {
   return {
-    type: READ_THREADS
+    type: READ_THREADS,
+    categoriesMap,
+    category
   };
 }
 
@@ -135,9 +137,14 @@ export default function thread(state=[], action=null) {
 
     case READ_THREADS:
       return state.map(function(item) {
-        return Object.assign({}, item, {
-          is_read: true
-        });
+        const itemCategory = action.categoriesMap[item.category];
+        if (itemCategory.lft >= action.category.lft && itemCategory.rght <= action.category.rght) {
+          return Object.assign({}, item, {
+            is_read: true
+          });
+        } else {
+          return item;
+        }
       });
 
     case SORT_THREADS:

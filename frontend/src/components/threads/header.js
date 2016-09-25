@@ -26,7 +26,7 @@ export default class extends React.Component {
     });
 
     ajax.post(this.props.route.category.api_url.read).then(() => {
-      store.dispatch(read());
+      store.dispatch(read(this.props.route.categoriesMap, this.props.route.category));
 
       this.setState({
         isBusy: false
