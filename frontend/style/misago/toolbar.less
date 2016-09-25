@@ -27,17 +27,17 @@
 
 // Full displays
 @media screen and (min-width: @screen-md-min) {
+.toolbar-left {
+    float: left;
+    margin-right: @padding-large-horizontal;
+  }
+
+  .toolbar-right {
+    float: right;
+    margin-left: @padding-large-horizontal;
+  }
+
   .toolbar {
-    .toolbar-left {
-      float: left;
-      margin-right: @padding-large-horizontal;
-    }
-
-    .toolbar-right {
-      float: right;
-      margin-left: @padding-large-horizontal;
-    }
-
     .toolbar-control, .toolbar-bottom>.form-control {
       margin: 0px;
       width: auto;
