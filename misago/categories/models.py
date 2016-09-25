@@ -154,8 +154,8 @@ class Category(MPTTModel):
     def get_last_post_url(self):
         return self.thread_type.get_category_last_post_url(self)
 
-    def get_api_read_url(self):
-        return self.thread_type.get_category_api_read_url(self)
+    def get_read_api_url(self):
+        return self.thread_type.get_category_read_api_url(self)
 
     def set_name(self, name):
         self.name = name

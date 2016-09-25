@@ -107,11 +107,14 @@ class Post(models.Model):
     def thread_type(self):
         return self.category.thread_type
 
-    def get_absolute_url(self):
-        return self.thread_type.get_post_absolute_url(self)
-
     def get_api_url(self):
         return self.thread_type.get_post_api_url(self)
+
+    def get_editor_api_url(self):
+        return self.thread_type.get_post_editor_api_url(self)
+
+    def get_absolute_url(self):
+        return self.thread_type.get_post_absolute_url(self)
 
     @property
     def short(self):

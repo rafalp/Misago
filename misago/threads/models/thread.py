@@ -156,6 +156,21 @@ class Thread(models.Model):
     def get_api_url(self):
         return self.thread_type.get_thread_api_url(self)
 
+    def get_editor_api_url(self):
+        return self.thread_type.get_thread_editor_api_url(self)
+
+    def get_merge_api_url(self):
+        return self.thread_type.get_thread_merge_api_url(self)
+
+    def get_post_merge_api_url(self):
+        return self.thread_type.get_post_merge_api_url(self)
+
+    def get_post_move_api_url(self):
+        return self.thread_type.get_post_move_api_url(self)
+
+    def get_post_split_api_url(self):
+        return self.thread_type.get_post_split_api_url(self)
+
     def get_absolute_url(self, page=1):
         return self.thread_type.get_thread_absolute_url(self, page)
 

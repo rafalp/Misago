@@ -34,7 +34,7 @@ class Thread(ThreadType):
             'pk': category.last_thread_id
         })
 
-    def get_category_api_read_url(self, category):
+    def get_category_read_api_url(self, category):
         return reverse('misago:api:category-read', kwargs={
             'pk': category.pk
         })
@@ -71,7 +71,34 @@ class Thread(ThreadType):
         })
 
     def get_thread_api_url(self, thread):
-        return reverse('misago:api:thread-detail', kwargs={'pk': thread.pk})
+        return reverse('misago:api:thread-detail', kwargs={
+            'pk': thread.pk
+        })
+
+    def get_thread_editor_api_url(self, thread):
+        return reverse('misago:api:thread-post-editor', kwargs={
+            'thread_pk': thread.pk
+        })
+
+    def get_thread_merge_api_url(self, thread):
+        return reverse('misago:api:thread-merge', kwargs={
+            'pk': thread.pk
+        })
+
+    def get_post_merge_api_url(self, thread):
+        reverse('misago:api:thread-post-merge', kwargs={
+            'thread_pk': thread.pk
+        })
+
+    def get_post_move_api_url(self, thread):
+        reverse('misago:api:thread-post-move', kwargs={
+            'thread_pk': thread.pk
+        })
+
+    def get_post_split_api_url(self, thread):
+        reverse('misago:api:thread-post-split', kwargs={
+            'thread_pk': thread.pk
+        })
 
     def get_post_absolute_url(self, post):
             return reverse('misago:thread-post', kwargs={
@@ -82,6 +109,12 @@ class Thread(ThreadType):
 
     def get_post_api_url(self, post):
         return reverse('misago:api:thread-post-detail', kwargs={
+            'thread_pk': post.thread_id,
+            'pk': post.pk
+        })
+
+    def get_post_editor_api_url(self, post):
+        return reverse('misago:api:thread-post-editor', kwargs={
             'thread_pk': post.thread_id,
             'pk': post.pk
         })

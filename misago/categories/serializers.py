@@ -121,7 +121,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def get_api_url(self, obj):
         return {
-            'read': obj.get_api_read_url(),
+            'read': obj.get_read_api_url(),
         }
 
 
