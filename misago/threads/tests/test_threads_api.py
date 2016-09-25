@@ -188,24 +188,3 @@ class ThreadDeleteApiTests(ThreadsApiTestCase):
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
-
-
-class ThreadsReadApiTests(ThreadsApiTestCase):
-    def setUp(self):
-        super(ThreadsReadApiTests, self).setUp()
-        self.api_link = '/api/threads/read/'
-
-    def test_read_all_threads(self):
-        """api sets all threads as read"""
-        response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 200)
-
-        self.assertEqual(self.user.categoryread_set.count(), 1)
-
-    def test_read_threads_in_category(self):
-        """api sets threads in category as read"""
-        response = self.client.post(
-            '%s?category=%s' % (self.api_link, self.category.pk))
-        self.assertEqual(response.status_code, 200)
-
-        self.assertEqual(self.user.categoryread_set.count(), 1)

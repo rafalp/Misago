@@ -6,17 +6,11 @@ from rest_framework import viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 
-from misago.acl import add_acl
-from misago.categories.models import THREADS_ROOT_NAME, Category
-from misago.categories.permissions import allow_browse_category, allow_see_category
-from misago.core.shortcuts import get_int_or_404, get_object_or_404
-from misago.readtracker.categoriestracker import read_category
+from misago.categories.models import THREADS_ROOT_NAME
+from misago.core.shortcuts import get_int_or_404
 
-from ..models import Post, Subscription, Thread
+from ..models import Post, Thread
 from ..moderation import threads as moderation
-from ..permissions.threads import can_start_thread
-from ..subscriptions import make_subscription_aware
-from ..threadtypes import trees_map
 from ..viewmodels.thread import ForumThread
 from .postingendpoint import PostingEndpoint
 from .threadendpoints.editor import thread_start_editor
@@ -108,25 +102,6 @@ class ThreadViewSet(ViewSet):
     @transaction.atomic
     def threads_merge(self, request):
         return threads_merge_endpoint(request)
-
-    @list_route(methods=['post'])
-    def read(self, request):
-        if request.query_params.get('category'):
-            threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
-
-            category_id = get_int_or_404(request.query_params.get('category'))
-            category = get_object_or_404(Category,
-                id=category_id,
-                tree_id=threads_tree_id,
-            )
-
-            allow_see_category(request.user, category)
-            allow_browse_category(request.user, category)
-        else:
-            category = Category.objects.root_category()
-
-        read_category(request.user, category)
-        return Response({'detail': 'ok'})
 
     @list_route(methods=['get'])
     def editor(self, request):
