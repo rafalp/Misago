@@ -137,6 +137,7 @@ MISAGO_POSTING_MIDDLEWARES = (
     # 'misago.threads.api.postingendpoint.recordedit.RecordEditMiddleware',
     'misago.threads.api.postingendpoint.updatestats.UpdateStatsMiddleware',
     'misago.threads.api.postingendpoint.mentions.MentionsMiddleware',
+    'misago.threads.api.postingendpoint.subscribe.SubscribeMiddleware',
     # Note: always keep SaveChangesMiddleware middleware last one
     'misago.threads.api.postingendpoint.savechanges.SaveChangesMiddleware',
 )
