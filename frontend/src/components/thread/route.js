@@ -3,6 +3,7 @@ import PostsList from 'misago/components/posts-list'; // jshint ignore:line
 import Header from './header'; // jshint ignore:line
 import Paginator from './paginator'; // jshint ignore:line
 import ReplyButton from './reply-button'; // jshint ignore:line
+import Subscription from './subscription'; // jshint ignore:line
 import ToolbarTop from './toolbar-top'; // jshint ignore:line
 import PostsModeration from './moderation/posts'; // jshint ignore:line
 import * as posts from 'misago/reducers/posts';
@@ -112,6 +113,7 @@ export default class extends React.Component {
         <div className="toolbar-bottom">
           <Paginator {...this.props} />
           <Reply onClick={this.openReplyForm} thread={this.props.thread} />
+          <Subscription className="toolbar-right dropup" {...this.props} />
           <PostsModeration {...this.props} />
           <div className="clear-fix" />
         </div>

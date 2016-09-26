@@ -1,6 +1,7 @@
 /* jshint ignore:start */
 import React from 'react';
 import ReplyButton from './reply-button';
+import Subscription from './subscription';
 
 export default function(props) {
   return (
@@ -10,6 +11,7 @@ export default function(props) {
         <GotoUnapproved thread={props.thread} />
         <GotoLast thread={props.thread} />
         <Reply openReplyForm={props.openReplyForm} thread={props.thread} />
+        <SubscriptionMenu {...props} />
       </ul>
     </div>
   );
@@ -51,6 +53,18 @@ export function GotoLast(props) {
       </a>
     </li>
   );
+}
+
+export function SubscriptionMenu(props) {
+  if (!props.user.id) {
+    return null;
+  }
+
+  return (
+    <li className="pull-right">
+      <Subscription className="dropdown toolbar-right" {...props} />
+    </li>
+  )
 }
 
 export function Reply(props) {
