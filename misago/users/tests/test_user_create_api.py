@@ -12,32 +12,37 @@ class UserCreateTests(UserTestCase):
     """
     tests for new user registration (POST to /api/users/)
     """
+    def setUp(self):
+        super(UserCreateTests, self).setUp()
+        self.api_link = '/api/users/'
+
     def test_empty_request(self):
         """empty request errors with code 400"""
-        response = self.client.post('/api/users/')
+        response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 400)
 
     def test_authenticated_request(self):
         """authentiated user request errors with code 403"""
         self.login_user(self.get_authenticated_user())
-        response = self.client.post('/api/users/')
+        response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
 
     def test_registration_off_request(self):
         """registrations off request errors with code 403"""
         settings.override_setting('account_activation', 'closed')
 
-        response = self.client.post('/api/users/')
+        response = self.client.post(self.api_link)
         self.assertContains(response, 'closed', status_code=403)
 
     def test_registration_creates_active_user(self):
         """api creates active and signed in user on POST"""
         settings.override_setting('account_activation', 'none')
 
-        response = self.client.post('/api/users/',
-                                    data={'username': 'Bob',
-                                          'email': 'bob@bob.com',
-                                          'password': 'pass123'})
+        response = self.client.post(self.api_link, data={
+            'username': 'Bob',
+            'email': 'bob@bob.com',
+            'password': 'pass123'
+        })
 
         self.assertContains(response, 'active')
         self.assertContains(response, 'Bob')
@@ -58,10 +63,11 @@ class UserCreateTests(UserTestCase):
         """api creates inactive user on POST"""
         settings.override_setting('account_activation', 'user')
 
-        response = self.client.post('/api/users/',
-                                    data={'username': 'Bob',
-                                          'email': 'bob@bob.com',
-                                          'password': 'pass123'})
+        response = self.client.post(self.api_link, data={
+            'username': 'Bob',
+            'email': 'bob@bob.com',
+            'password': 'pass123'
+        })
 
         self.assertContains(response, 'user')
         self.assertContains(response, 'Bob')
@@ -77,10 +83,11 @@ class UserCreateTests(UserTestCase):
         """api creates admin activated user on POST"""
         settings.override_setting('account_activation', 'admin')
 
-        response = self.client.post('/api/users/',
-                                    data={'username': 'Bob',
-                                          'email': 'bob@bob.com',
-                                          'password': 'pass123'})
+        response = self.client.post(self.api_link, data={
+            'username': 'Bob',
+            'email': 'bob@bob.com',
+            'password': 'pass123'
+        })
 
         self.assertContains(response, 'admin')
         self.assertContains(response, 'Bob')

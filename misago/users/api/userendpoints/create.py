@@ -22,8 +22,7 @@ from ...validators import validate_new_registration
 @csrf_protect
 def create_endpoint(request):
     if settings.account_activation == 'closed':
-        raise PermissionDenied(
-            _("New users registrations are currently closed."))
+        raise PermissionDenied(_("New users registrations are currently closed."))
 
     form = RegisterForm(request.data)
 
@@ -66,12 +65,14 @@ def create_endpoint(request):
         }
 
     User = get_user_model()
-    new_user = User.objects.create_user(form.cleaned_data['username'],
-                                        form.cleaned_data['email'],
-                                        form.cleaned_data['password'],
-                                        joined_from_ip=request.user_ip,
-                                        set_default_avatar=True,
-                                        **activation_kwargs)
+    new_user = User.objects.create_user(
+        form.cleaned_data['username'],
+        form.cleaned_data['email'],
+        form.cleaned_data['password'],
+        joined_from_ip=request.user_ip,
+        set_default_avatar=True,
+        **activation_kwargs
+    )
 
     mail_subject = _("Welcome on %(forum_name)s forums!")
     mail_subject = mail_subject % {'forum_name': settings.forum_name}
