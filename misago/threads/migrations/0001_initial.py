@@ -214,4 +214,10 @@ class Migration(migrations.Migration):
             },
             bases=(models.Model,),
         ),
+        migrations.AlterIndexTogether(
+            name='subscription',
+            index_together=set([
+                ('send_email', 'last_read_on'),
+            ]),
+        ),
     ]

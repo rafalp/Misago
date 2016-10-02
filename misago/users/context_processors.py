@@ -5,21 +5,22 @@ from .serializers import AnonymousUserSerializer, AuthenticatedUserSerializer
 
 
 def user_links(request):
-    request.frontend_context.update({
-        'REQUEST_ACTIVATION_URL': reverse('misago:request-activation'),
-        'FORGOTTEN_PASSWORD_URL': reverse('misago:forgotten-password'),
+    if request.include_frontend_context:
+        request.frontend_context.update({
+            'REQUEST_ACTIVATION_URL': reverse('misago:request-activation'),
+            'FORGOTTEN_PASSWORD_URL': reverse('misago:forgotten-password'),
 
-        'BANNED_URL': reverse('misago:banned'),
+            'BANNED_URL': reverse('misago:banned'),
 
-        'USERCP_URL': reverse('misago:options'),
-        'USERS_LIST_URL': reverse('misago:users'),
+            'USERCP_URL': reverse('misago:options'),
+            'USERS_LIST_URL': reverse('misago:users'),
 
-        'AUTH_API': reverse('misago:api:auth'),
-        'USERS_API': reverse('misago:api:user-list'),
+            'AUTH_API': reverse('misago:api:auth'),
+            'USERS_API': reverse('misago:api:user-list'),
 
-        'CAPTCHA_API': reverse('misago:api:captcha-question'),
-        'USERNAME_CHANGES_API': reverse('misago:api:usernamechange-list'),
-    })
+            'CAPTCHA_API': reverse('misago:api:captcha-question'),
+            'USERNAME_CHANGES_API': reverse('misago:api:usernamechange-list'),
+        })
 
     return {
         'USERCP_URL': usercp.get_default_link(),
@@ -29,6 +30,9 @@ def user_links(request):
 
 
 def preload_user_json(request):
+    if not request.include_frontend_context:
+        return {}
+
     request.frontend_context.update({
         'isAuthenticated': request.user.is_authenticated(),
     })

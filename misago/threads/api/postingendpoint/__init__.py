@@ -28,6 +28,10 @@ class PostingEndpoint(object):
 
         self.__dict__.update(kwargs)
 
+        # some middlewares (eg. emailnotification) may call render()
+        # which will crash if this isn't set to false
+        request.include_frontend_context = False
+
         self.datetime = timezone.now()
         self.errors = {}
         self._is_validated = False

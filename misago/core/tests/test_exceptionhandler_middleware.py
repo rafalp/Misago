@@ -12,6 +12,7 @@ class ExceptionHandlerMiddlewareTests(TestCase):
     def setUp(self):
         self.request = RequestFactory().get(reverse('misago:index'))
         self.request.user = AnonymousUser()
+        self.request.include_frontend_context = True
         self.request.frontend_context = {}
 
     def test_middleware_returns_response_for_supported_exception(self):

@@ -50,6 +50,9 @@ class CustomErrorPagesTests(TestCase):
         self.misago_request.user = AnonymousUser()
         self.site_request.user = AnonymousUser()
 
+        self.misago_request.include_frontend_context = True
+        self.site_request.include_frontend_context = True
+
         self.misago_request.frontend_context = {}
         self.site_request.frontend_context = {}
 

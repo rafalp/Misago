@@ -17,4 +17,7 @@ def site_address(request):
 
 
 def frontend_context(request):
-    return {'frontend_context': request.frontend_context}
+    if request.include_frontend_context:
+        return {'frontend_context': request.frontend_context}
+    else:
+        return {}

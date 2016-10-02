@@ -547,6 +547,24 @@ def allow_edit_thread(user, target):
 can_edit_thread = return_boolean(allow_edit_thread)
 
 
+def allow_see_post(user, target):
+    category_acl = user.acl['categories'].get(target.category_id, {
+        'can_approve_content': False,
+        'can_hide_events': False
+    })
+
+    if not target.is_event and target.is_unapproved:
+        if user.is_anonymous():
+            raise Http404()
+
+        if not category_acl['can_approve_content'] and user.id != target.poster_id:
+            raise Http404()
+
+    if target.is_event and target.is_hidden and not category_acl['can_hide_events']:
+        raise Http404()
+can_see_post = return_boolean(allow_see_post)
+
+
 def allow_edit_post(user, target):
     if user.is_anonymous():
         raise PermissionDenied(_("You have to sign in to edit posts."))
