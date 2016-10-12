@@ -8,6 +8,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import migrations, models
 
 from misago.core.pgutils import CreatePartialCompositeIndex, CreatePartialIndex
+import misago.threads.models.attachment
 
 
 class Migration(migrations.Migration):
@@ -219,5 +220,43 @@ class Migration(migrations.Migration):
             index_together=set([
                 ('send_email', 'last_read_on'),
             ]),
+        ),
+        migrations.CreateModel(
+            name='Attachment',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('uuid', models.CharField(db_index=True, max_length=64)),
+                ('uploaded_on', models.DateTimeField(default=django.utils.timezone.now)),
+                ('uploader_name', models.CharField(max_length=255)),
+                ('uploader_slug', models.CharField(max_length=255)),
+                ('uploader_ip', models.GenericIPAddressField()),
+                ('filename', models.CharField(max_length=255)),
+                ('file', models.FileField(upload_to=misago.threads.models.attachment.clean_upload_to)),
+                ('downloads', models.PositiveIntegerField(default=0)),
+                ('post', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='misago_threads.Post')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='AttachmentType',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(max_length=255)),
+                ('extensions', models.CharField(max_length=255)),
+                ('mimetypes', models.CharField(blank=True, max_length=255, null=True)),
+                ('size_limit', models.PositiveIntegerField(default=1024)),
+                ('status', models.PositiveIntegerField(choices=[(0, 'Allow uploads and downloads'), (1, 'Allow downloads only'), (2, 'Disallow both uploading and downloading')], default=0)),
+                ('limit_downloaders_to', models.ManyToManyField(blank=True, related_name='_attachmenttype_limit_downloaders_to_+', to='misago_acl.Role')),
+                ('limit_uploaders_to', models.ManyToManyField(blank=True, related_name='_attachmenttype_limit_uploaders_to_+', to='misago_acl.Role')),
+            ],
+        ),
+        migrations.AddField(
+            model_name='attachment',
+            name='type',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.AttachmentType'),
+        ),
+        migrations.AddField(
+            model_name='attachment',
+            name='uploader',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
         ),
     ]

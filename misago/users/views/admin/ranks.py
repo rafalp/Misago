@@ -42,12 +42,10 @@ class DeleteRank(RankAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         message_format = {'name': target.name}
         if target.is_default:
-            message = _('Rank "%(name)s" is default '
-                        'rank and can\'t be deleted.')
+            message = _('Rank "%(name)s" is default rank and can\'t be deleted.')
             return message % message_format
         if target.user_set.exists():
-            message = _('Rank "%(name)s" is assigned to '
-                        'users and can\'t be deleted.')
+            message = _('Rank "%(name)s" is assigned to users and can\'t be deleted.')
             return message % message_format
 
     def button_action(self, request, target):
