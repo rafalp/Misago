@@ -24,8 +24,11 @@
 
 {% block table-row %}
 <td class="item-name">
-  {{ item }}<br>
-  <small>{{ item.get_status_display }}</small>
+  {{ item }}
+  {% if not item.is_enabled %}
+    <br>
+    <small class="text-muted">{{ item.get_status_display }}</small>
+  {% endif %}
 </td>
 <td>
   <ul class="list-unstyled list-inline">

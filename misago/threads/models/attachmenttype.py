@@ -31,6 +31,10 @@ class AttachmentType(models.Model):
         return self.name
 
     @property
+    def is_enabled(self):
+        return self.status == AttachmentType.ENABLED
+
+    @property
     def extensions_list(self):
         if self.extensions:
             return self.extensions.split(',')
