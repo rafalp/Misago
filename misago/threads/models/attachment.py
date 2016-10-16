@@ -86,4 +86,4 @@ class Attachment(models.Model):
 
         thumb_secret = get_random_string(settings.MISAGO_ATTACHMENT_SECRET_LENGTH)
         thumb_filename = '.'.join([thumb_secret, fileformat])
-        self.thumbnail = ContentFile(thumb_stream.get_value(), thumb_filename)
+        self.thumbnail = ContentFile(thumb_stream.getvalue(), thumb_filename)
