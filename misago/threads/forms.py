@@ -14,8 +14,8 @@ class AttachmentTypeForm(forms.ModelForm):
             'mimetypes': _("Mimetypes"),
             'size_limit': _("Maximum allowed uploaded file size"),
             'status': _("Status"),
-            'limit_uploaders_to': _("Limit uploads to"),
-            'limit_downloaders_to': _("Limit downloaders to"),
+            'limit_uploads_to': _("Limit uploads to"),
+            'limit_downloads_to': _("Limit downloads to"),
         }
         help_texts = {
             'extensions': _("List of comma separated file extensions associated with this attachment type."),
@@ -23,18 +23,18 @@ class AttachmentTypeForm(forms.ModelForm):
             'size_limit': _("Maximum allowed uploaded file size for this type, in kb. "
                             "May be overriden via user permission."),
             'status': _("Controls this attachment type availability on your site."),
-            'limit_uploaders_to': _("If you wish to limit option to upload files of this type to users with specific "
+            'limit_uploads_to': _("If you wish to limit option to upload files of this type to users with specific "
                                     "roles, select them on this list. Otherwhise don't select any roles to allow all "
                                     "users with permission to upload attachments to be able to upload attachments of "
                                     "this type."),
-            'limit_downloaders_to': _("If you wish to limit option to download files of this type to users with "
+            'limit_downloads_to': _("If you wish to limit option to download files of this type to users with "
                                       "specific roles, select them on this list. Otherwhise don't select any roles to "
                                       "allow all users with permission to download attachments to be able to download "
                                       " attachments of this type."),
         }
         widgets = {
-            'limit_uploaders_to': forms.CheckboxSelectMultiple,
-            'limit_downloaders_to': forms.CheckboxSelectMultiple,
+            'limit_uploads_to': forms.CheckboxSelectMultiple,
+            'limit_downloads_to': forms.CheckboxSelectMultiple,
         }
 
     def clean_extensions(self):

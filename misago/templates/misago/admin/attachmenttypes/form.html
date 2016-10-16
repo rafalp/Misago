@@ -52,8 +52,8 @@ class="form-horizontal"
     <legend>{% trans "Availability" %}</legend>
 
     {% form_row form.status label_class field_class %}
-    {% form_row form.limit_uploaders_to label_class field_class %}
-    {% form_row form.limit_downloaders_to label_class field_class %}
+    {% form_row form.limit_uploads_to label_class field_class %}
+    {% form_row form.limit_downloads_to label_class field_class %}
 
   </fieldset>
   {% endwith %}

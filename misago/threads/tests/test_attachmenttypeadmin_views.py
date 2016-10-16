@@ -67,14 +67,21 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
         self.assertEqual(test_type.name, 'Test type')
 
         form_link = reverse('misago:admin:system:attachment-types:edit', kwargs={'pk': test_type.pk})
+
+        response = self.client.get(form_link)
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(form_link, data={})
+        self.assertEqual(response.status_code, 200)
+
         response = self.client.post(form_link, data={
             'name': 'Test type edited',
             'extensions': '.test.extension',
             'mimetypes': 'test/edited-mime',
             'size_limit': 512,
             'status': AttachmentType.DISABLED,
-            'limit_uploaders_to': [r.pk for r in Role.objects.all()],
-            'limit_downloaders_to': [r.pk for r in Role.objects.all()],
+            'limit_uploads_to': [r.pk for r in Role.objects.all()],
+            'limit_downloads_to': [r.pk for r in Role.objects.all()],
         })
         self.assertEqual(response.status_code, 302)
 
@@ -90,8 +97,8 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
         self.assertContains(response, test_type.extensions)
         self.assertContains(response, test_type.mimetypes)
 
-        self.assertEqual(test_type.limit_uploaders_to.count(), Role.objects.count())
-        self.assertEqual(test_type.limit_downloaders_to.count(), Role.objects.count())
+        self.assertEqual(test_type.limit_uploads_to.count(), Role.objects.count())
+        self.assertEqual(test_type.limit_downloads_to.count(), Role.objects.count())
 
         # remove limits from type
         response = self.client.post(form_link, data={
@@ -100,13 +107,13 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
             'mimetypes': 'test/edited-mime',
             'size_limit': 512,
             'status': AttachmentType.DISABLED,
-            'limit_uploaders_to': [],
-            'limit_downloaders_to': [],
+            'limit_uploads_to': [],
+            'limit_downloads_to': [],
         })
         self.assertEqual(response.status_code, 302)
 
-        self.assertEqual(test_type.limit_uploaders_to.count(), 0)
-        self.assertEqual(test_type.limit_downloaders_to.count(), 0)
+        self.assertEqual(test_type.limit_uploads_to.count(), 0)
+        self.assertEqual(test_type.limit_downloads_to.count(), 0)
 
     def test_clean_params_view(self):
         """admin form nicely cleans lists of extensions/mimetypes"""

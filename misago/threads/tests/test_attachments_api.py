@@ -90,7 +90,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         )
 
         user_roles = (r.pk for r in self.user.get_roles())
-        attachment_type.limit_uploaders_to.set(Role.objects.exclude(id__in=user_roles))
+        attachment_type.limit_uploads_to.set(Role.objects.exclude(id__in=user_roles))
 
         with open(TEST_DOCUMENT_PATH, 'rb') as upload:
             response = self.client.post(self.api_link, data={

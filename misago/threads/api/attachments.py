@@ -63,7 +63,7 @@ def validate_filetype(upload, user_roles):
     filename = upload.name.strip().lower()
 
     queryset = AttachmentType.objects.filter(status=AttachmentType.ENABLED)
-    for filetype in queryset.prefetch_related('limit_uploaders_to'):
+    for filetype in queryset.prefetch_related('limit_uploads_to'):
         for extension in filetype.extensions_list:
             if filename.endswith('.%s' % extension):
                 break
@@ -73,8 +73,8 @@ def validate_filetype(upload, user_roles):
         if filetype.mimetypes_list and upload.content_type not in filetype.mimetypes_list:
             continue
 
-        if filetype.limit_uploaders_to.exists():
-            allowed_roles = set(r.pk for r in filetype.limit_uploaders_to.all())
+        if filetype.limit_uploads_to.exists():
+            allowed_roles = set(r.pk for r in filetype.limit_uploads_to.all())
             if not user_roles & allowed_roles:
                 continue
 

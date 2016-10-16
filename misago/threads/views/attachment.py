@@ -52,7 +52,7 @@ def allow_file_download(request, attachment):
         if not is_authenticated or request.user.id != attachment.uploader_id:
             raise PermissionDenied()
 
-    allowed_roles = set(r.pk for r in attachment.filetype.limit_downloaders_to.all())
+    allowed_roles = set(r.pk for r in attachment.filetype.limit_downloads_to.all())
     if allowed_roles:
         user_roles = set(r.pk for r in request.user.get_roles())
         if not user_roles & allowed_roles:

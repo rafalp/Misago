@@ -246,8 +246,8 @@ class Migration(migrations.Migration):
                 ('mimetypes', models.CharField(blank=True, max_length=255, null=True)),
                 ('size_limit', models.PositiveIntegerField(default=1024)),
                 ('status', models.PositiveIntegerField(choices=[(0, 'Allow uploads and downloads'), (1, 'Allow downloads only'), (2, 'Disallow both uploading and downloading')], default=0)),
-                ('limit_downloaders_to', models.ManyToManyField(blank=True, related_name='_attachmenttype_limit_downloaders_to_+', to='misago_acl.Role')),
-                ('limit_uploaders_to', models.ManyToManyField(blank=True, related_name='_attachmenttype_limit_uploaders_to_+', to='misago_acl.Role')),
+                ('limit_downloads_to', models.ManyToManyField(blank=True, related_name='_attachmenttype_limit_downloads_to_+', to='misago_acl.Role')),
+                ('limit_uploads_to', models.ManyToManyField(blank=True, related_name='_attachmenttype_limit_uploads_to_+', to='misago_acl.Role')),
             ],
         ),
         migrations.AddField(

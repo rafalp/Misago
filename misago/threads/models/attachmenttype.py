@@ -24,8 +24,8 @@ class AttachmentType(models.Model):
         )
     )
 
-    limit_uploaders_to = models.ManyToManyField('misago_acl.Role', related_name='+', blank=True)
-    limit_downloaders_to = models.ManyToManyField('misago_acl.Role', related_name='+', blank=True)
+    limit_uploads_to = models.ManyToManyField('misago_acl.Role', related_name='+', blank=True)
+    limit_downloads_to = models.ManyToManyField('misago_acl.Role', related_name='+', blank=True)
 
     def __str__(self):
         return self.name

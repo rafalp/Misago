@@ -144,7 +144,7 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         attachment = self.upload_document()
 
         user_roles = (r.pk for r in self.user.get_roles())
-        self.attachment_type_pdf.limit_downloaders_to.set(Role.objects.exclude(id__in=user_roles))
+        self.attachment_type_pdf.limit_downloads_to.set(Role.objects.exclude(id__in=user_roles))
 
         response = self.client.get(attachment.get_absolute_url())
         self.assertIs403(response)
@@ -205,7 +205,7 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         attachment = self.upload_document()
 
         user_roles = self.user.get_roles()
-        self.attachment_type_pdf.limit_downloaders_to.set(user_roles)
+        self.attachment_type_pdf.limit_downloads_to.set(user_roles)
 
         response = self.client.get(attachment.get_absolute_url())
         self.assertSuccess(response)
