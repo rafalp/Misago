@@ -6,6 +6,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 
+from misago.acl import add_acl
 from misago.core.shortcuts import get_int_or_404
 from misago.users.online.utils import make_users_status_aware
 
@@ -13,7 +14,7 @@ from ..models import Post
 from ..moderation import posts as moderation
 from ..permissions.threads import (
     allow_delete_event, allow_delete_post, allow_edit_post, allow_reply_thread)
-from ..serializers import PostSerializer
+from ..serializers import AttachmentSerializer, PostSerializer
 from ..viewmodels.post import ThreadPost
 from ..viewmodels.posts import ThreadPosts
 from ..viewmodels.thread import ForumThread
@@ -204,10 +205,18 @@ class ViewSet(viewsets.ViewSet):
 
         allow_edit_post(request.user, post)
 
+        attachments = []
+        for attachment in post.attachment_set.order_by('-id'):
+            add_acl(request.user, attachment)
+            attachments.append(attachment)
+        attachments_json = AttachmentSerializer(
+            attachments, many=True, context={'user': request.user}).data
+
         return Response({
             'id': post.pk,
             'api': post.get_api_url(),
             'post': post.original,
+            'attachments': attachments_json,
             'can_protect': bool(thread.category.acl['can_protect_posts']),
             'is_protected': post.is_protected,
             'poster': post.poster_name

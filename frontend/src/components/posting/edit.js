@@ -19,6 +19,7 @@ export default class extends Form {
       isErrored: false,
 
       post: '',
+      attachments: [],
       protect: false,
 
       canProtect: false,
@@ -71,8 +72,14 @@ export default class extends Form {
     });
   };
 
-  onPostchange = (event) => {
+  onPostChange = (event) => {
     this.changeValue('post', event.target.value);
+  };
+
+  onAttachmentsChange = (attachments) => {
+    this.setState({
+      attachments
+    });
   };
   /* jshint ignore:end */
 
@@ -133,10 +140,12 @@ export default class extends Form {
               <div className="col-md-12">
 
                 <Editor
+                  attachments={this.state.attachments}
                   canProtect={this.state.canProtect}
                   loading={this.state.isLoading}
+                  onAttachmentsChange={this.onAttachmentsChange}
                   onCancel={this.onCancel}
-                  onChange={this.onPostchange}
+                  onChange={this.onPostChange}
                   onProtect={this.onProtect}
                   onUnprotect={this.onUnprotect}
                   protect={this.state.protect}

@@ -80,6 +80,9 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
 
         return attachment
 
+    def get_downloads_count(self):
+        return Attachment.objects.order_by('id').last().downloads
+
     def assertIs404(self, response):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response['location'].endswith(settings.MISAGO_404_IMAGE))
@@ -113,6 +116,8 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
 
         self.assertIs404(response)
 
+        self.assertEqual(self.get_downloads_count(), 0)
+
     def test_other_user_file_no_permission(self):
         """user tries to retrieve other user's file without perm"""
         attachment = self.upload_document(by_other_user=True)
@@ -122,12 +127,16 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         response = self.client.get(attachment.get_absolute_url())
         self.assertIs403(response)
 
+        self.assertEqual(self.get_downloads_count(), 0)
+
     def test_other_user_orphaned_file(self):
         """user tries to retrieve other user's orphaned file"""
         attachment = self.upload_document(is_orphaned=True, by_other_user=True)
 
         response = self.client.get(attachment.get_absolute_url())
         self.assertIs403(response)
+
+        self.assertEqual(self.get_downloads_count(), 0)
 
     def test_document_thumbnail(self):
         """user tries to retrieve thumbnail from non-image attachment"""
@@ -139,6 +148,8 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         }))
         self.assertIs404(response)
 
+        self.assertEqual(self.get_downloads_count(), 0)
+
     def test_no_role(self):
         """user tries to retrieve attachment without perm to its type"""
         attachment = self.upload_document()
@@ -148,6 +159,8 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
 
         response = self.client.get(attachment.get_absolute_url())
         self.assertIs403(response)
+
+        self.assertEqual(self.get_downloads_count(), 0)
 
     def test_type_disabled(self):
         """user tries to retrieve attachment the type disabled downloads"""
@@ -159,6 +172,8 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         response = self.client.get(attachment.get_absolute_url())
         self.assertIs403(response)
 
+        self.assertEqual(self.get_downloads_count(), 0)
+
     def test_locked_type(self):
         """user retrieves own locked file"""
         attachment = self.upload_document()
@@ -168,6 +183,8 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
 
         response = self.client.get(attachment.get_absolute_url())
         self.assertSuccess(response)
+
+        self.assertEqual(self.get_downloads_count(), 1)
 
     def test_own_file(self):
         """user retrieves own file"""
@@ -183,6 +200,8 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         response = self.client.get(attachment.get_absolute_url())
         self.assertSuccess(response)
 
+        self.assertEqual(self.get_downloads_count(), 1)
+
     def test_other_user_orphaned_file_is_staff(self):
         """user retrieves other user's orphaned file because he is staff"""
         attachment = self.upload_document(is_orphaned=True, by_other_user=True)
@@ -193,12 +212,16 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         response = self.client.get(attachment.get_absolute_url())
         self.assertSuccess(response)
 
+        self.assertEqual(self.get_downloads_count(), 1)
+
     def test_orphaned_file_is_uploader(self):
         """user retrieves orphaned file because he is its uploader"""
         attachment = self.upload_document(is_orphaned=True)
 
         response = self.client.get(attachment.get_absolute_url())
         self.assertSuccess(response)
+
+        self.assertEqual(self.get_downloads_count(), 1)
 
     def test_has_role(self):
         """user retrieves file he has roles to download"""
@@ -210,6 +233,8 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         response = self.client.get(attachment.get_absolute_url())
         self.assertSuccess(response)
 
+        self.assertEqual(self.get_downloads_count(), 1)
+
     def test_image(self):
         """user retrieves """
         attachment = self.upload_image()
@@ -217,9 +242,13 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         response = self.client.get(attachment.get_absolute_url())
         self.assertSuccess(response)
 
+        self.assertEqual(self.get_downloads_count(), 1)
+
     def test_image_thumb(self):
         """user retrieves image's thumbnail"""
         attachment = self.upload_image()
 
         response = self.client.get(attachment.get_thumbnail_url())
         self.assertSuccess(response)
+
+        self.assertEqual(self.get_downloads_count(), 0)

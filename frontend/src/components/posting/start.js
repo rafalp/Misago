@@ -27,6 +27,7 @@ export default class extends Form {
       category: props.category || null,
       categories: [],
       post: '',
+      attachments: [],
       close: false,
       hide: false,
       pin: 0,
@@ -114,8 +115,14 @@ export default class extends Form {
     });
   };
 
-  onPostchange = (event) => {
+  onPostChange = (event) => {
     this.changeValue('post', event.target.value);
+  };
+
+  onAttachmentsChange = (attachments) => {
+    this.setState({
+      attachments
+    });
   };
 
   onClose = () => {
@@ -253,9 +260,11 @@ export default class extends Form {
               <div className="col-md-12">
 
                 <Editor
+                  attachments={this.state.attachments}
                   loading={this.state.isLoading}
+                  onAttachmentsChange={this.onAttachmentsChange}
                   onCancel={this.onCancel}
-                  onChange={this.onPostchange}
+                  onChange={this.onPostChange}
                   submitLabel={gettext("Post thread")}
                   value={this.state.post}
                 />

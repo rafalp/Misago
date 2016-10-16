@@ -1,5 +1,7 @@
 // jshint ignore:start
 import React from 'react';
+import AttachmentsEditor from './attachments';
+import Upload from './attachments/upload-button/';
 import MarkupPreview from './markup-preview';
 import Button from 'misago/components/button';
 import misago from 'misago';
@@ -56,7 +58,16 @@ export default class extends React.Component {
           rows="7"
           value={this.props.value}
         />
+        <AttachmentsEditor
+          attachments={this.props.attachments}
+          onAttachmentsChange={this.props.onAttachmentsChange}
+          placeholder={this.props.placeholder}
+        />
         <div className="editor-footer">
+          <Upload
+            className="btn-default btn-sm pull-left"
+            disabled={this.props.loading || this.state.isPreviewLoading}
+          />
           <Button
             className="btn-default btn-sm pull-left"
             disabled={this.props.loading || this.state.isPreviewLoading}

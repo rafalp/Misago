@@ -21,6 +21,8 @@
   }
 }
 
+
+// Footer styles
 .editor-footer {
   border-top: 1px solid @editor-border;
   padding: @padding-base-vertical @padding-base-horizontal;
@@ -33,4 +35,79 @@
   .pull-right {
     margin-left: @padding-base-horizontal;
   }
+}
+
+
+// Attachments list
+.editor-attachments-list {
+  &, & li {
+    margin: 0px;
+    padding: 0px;
+  }
+}
+
+.editor-attachment-ready {
+  border-top: 1px solid @editor-border;
+}
+
+.editor-attachment-error {
+  border-top: 1px solid @editor-border;
+  padding: @padding-base-vertical 0px;
+  padding-right: @padding-base-horizontal;
+}
+
+.editor-attachment-error-icon {
+  float: left;
+  width: 46px;
+
+  font-size: @font-size-large;
+  text-align: center;
+}
+
+.editor-attachment-error-message {
+  margin-left: 46px;
+  padding: @padding-base-vertical 0px;
+  position: relative;
+
+  h4, p {
+    margin: 0px;
+    padding: 0px;
+
+    font-size: @font-size-base;
+  }
+
+  p {
+    margin-top: @padding-base-vertical / 2;
+    font-size: @font-size-small;
+  }
+
+  .btn {
+    position: absolute;
+    top: @padding-base-vertical + 3px;
+    right: @padding-base-horizontal;
+  }
+}
+
+.editor-attachment-progress-bar {
+  background: @editor-border;
+  overflow: auto;
+}
+
+.editor-attachment-progress {
+  background: @brand-primary;
+  float: left;
+  height: 1px;
+}
+
+.editor-attachment-upload-message {
+  margin: 0px;
+  padding: @padding-base-vertical @padding-base-horizontal;
+}
+
+
+// Hide file input outside of viewport
+#editor-upload-field {
+  position: absolute;
+  left: -1000px;
+  top: -1000px;
 }

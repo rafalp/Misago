@@ -85,7 +85,7 @@ export default class extends React.Component {
           'isLoading': false,
           'image': null,
           'progress': 0
-        })
+        });
       } else {
         this.props.showError(rejection);
       }

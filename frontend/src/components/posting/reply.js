@@ -19,6 +19,7 @@ export default class extends Form {
       isErrored: false,
 
       post: '',
+      attachments: [],
 
       validators: {
         post: getPostValidators()
@@ -53,8 +54,14 @@ export default class extends Form {
     }
   };
 
-  onPostchange = (event) => {
+  onPostChange = (event) => {
     this.changeValue('post', event.target.value);
+  };
+
+  onAttachmentsChange = (attachments) => {
+    this.setState({
+      attachments
+    });
   };
   /* jshint ignore:end */
 
@@ -114,9 +121,11 @@ export default class extends Form {
               <div className="col-md-12">
 
                 <Editor
+                  attachments={this.state.attachments}
                   loading={this.state.isLoading}
+                  onAttachmentsChange={this.onAttachmentsChange}
                   onCancel={this.onCancel}
-                  onChange={this.onPostchange}
+                  onChange={this.onPostChange}
                   submitLabel={gettext("Post reply")}
                   value={this.state.post}
                 />

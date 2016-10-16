@@ -30,8 +30,9 @@ def serve_file(request, pk, secret, thumbnail):
     if not request.user.is_staff:
         allow_file_download(request, attachment)
 
-    attachment.downloads = F('downloads') + 1
-    attachment.save(update_fields=['downloads'])
+    if not thumbnail:
+        attachment.downloads = F('downloads') + 1
+        attachment.save(update_fields=['downloads'])
 
     if attachment.is_image:
         if thumbnail:

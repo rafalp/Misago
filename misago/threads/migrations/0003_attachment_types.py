@@ -10,17 +10,20 @@ ATTACHMENTS = (
     {
         'name': 'GIF',
         'extensions': ('gif',),
-        'mimetypes': ('image/gif',)
+        'mimetypes': ('image/gif',),
+        'size_limit': 5 * 1024
     },
     {
         'name': 'JPG',
         'extensions': ('jpg', 'jpeg',),
-        'mimetypes': ('image/jpeg',)
+        'mimetypes': ('image/jpeg',),
+        'size_limit': 3 * 1024
     },
     {
         'name': 'PNG',
         'extensions': ('png',),
-        'mimetypes': ('image/jpeg',)
+        'mimetypes': ('image/png',),
+        'size_limit': 3 * 1024
     },
     {
         'name': 'PDF',

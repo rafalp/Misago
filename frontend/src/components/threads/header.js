@@ -46,7 +46,7 @@ export default class extends React.Component {
     posting.open({
       mode: 'START',
 
-      config: misago.get('THREAD_EDITOR_URL'),
+      config: misago.get('THREAD_EDITOR_API'),
       submit: misago.get('THREADS_API'),
 
       category: this.props.route.category.id

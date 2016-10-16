@@ -82,8 +82,13 @@ class Attachment(models.Model):
         thumbnail.thumbnail((500, 500))
 
         thumb_stream = BytesIO()
-        thumbnail.save(thumb_stream, fileformat)
+        if fileformat == 'jpg':
+            # normalize jpg to jpeg for Pillow
+            thumbnail.save(thumb_stream, 'jpeg')
+        else:
+            thumbnail.save(thumb_stream, fileformat)
 
         thumb_secret = get_random_string(settings.MISAGO_ATTACHMENT_SECRET_LENGTH)
         thumb_filename = '.'.join([thumb_secret, fileformat])
         self.thumbnail = ContentFile(thumb_stream.getvalue(), thumb_filename)
+
