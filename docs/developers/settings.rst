@@ -208,7 +208,7 @@ MISAGO_ATTACHMENT_SECRET_LENGTH
 
 Length of attachment's secret (filenames and url token). The longer, the harder it is to bruteforce, but too long may conflict with your uploaded files storage limits (eg. filesystem path length limits).
 
-.. warning:
+.. warning::
    In order for Misago to support clustered deployments or CDN's (like Amazon's S3), its unable to validate user's permission to see the attachment at its source. Instead it has to rely on exessively long and hard to guess urls to attachments and assumption that your users will not "leak" source urls to attachments further.
 
    Generaly, neither you nor your users should use forums to exchange files containing valuable data, but if you do, you should make sure to secure it additionaly via other means like password-protected archives or file encryption solutions.
