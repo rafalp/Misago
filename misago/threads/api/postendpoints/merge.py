@@ -44,7 +44,7 @@ def posts_merge_endpoint(request, thread):
 
     add_acl(request.user, first_post)
 
-    return Response(PostSerializer(first_post).data)
+    return Response(PostSerializer(first_post, context={'user': request.user}).data)
 
 
 def clean_posts_for_merge(request, thread):

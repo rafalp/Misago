@@ -21,15 +21,6 @@ Admin Permissions Forms
 class RolePermissionsForm(forms.Form):
     legend = _("Threads")
 
-    can_download_other_users_attachments = forms.YesNoSwitch(label=_("Can download other users attachments"))
-    max_attachment_size = forms.IntegerField(
-        label=_("Max attached file size (in kb)"),
-        help_text=_("Enter 0 to disable attachments."),
-        initial=500,
-        min_value=0
-    )
-    can_delete_other_users_attachments = forms.YesNoSwitch(label=_("Can delete other users attachments"))
-
     can_see_unapproved_content_lists = forms.YesNoSwitch(
         label=_("Can see unapproved content list"),
         help_text=_('Allows access to "unapproved" tab on threads lists for '
@@ -204,9 +195,6 @@ ACL Builder
 """
 def build_acl(acl, roles, key_name):
     acl.update({
-        'can_download_other_users_attachments': False,
-        'max_attachment_size': 0,
-        'can_delete_other_users_attachments': False,
         'can_see_unapproved_content_lists': False,
         'can_see_reported_content_lists': False,
         'can_omit_flood_protection': False,
@@ -215,9 +203,6 @@ def build_acl(acl, roles, key_name):
     })
 
     acl = algebra.sum_acls(acl, roles=roles, key=key_name,
-        can_download_other_users_attachments=algebra.greater,
-        max_attachment_size=algebra.greater,
-        can_delete_other_users_attachments=algebra.greater,
         can_see_unapproved_content_lists=algebra.greater,
         can_see_reported_content_lists=algebra.greater,
         can_omit_flood_protection=algebra.greater

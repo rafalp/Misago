@@ -165,6 +165,18 @@ forum_index_title
 Forum index title. Can be empty string if not set, in which case ``forum_name`` should be used instead.
 
 
+MISAGO_403_IMAGE
+----------------
+
+Url (relative to STATIC_URL) to file that should be served if user has no permission to see requested attachment.
+
+
+MISAGO_404_IMAGE
+----------------
+
+Url (relative to STATIC_URL) to file that should be served if user has requested nonexistant attachment.
+
+
 MISAGO_ACL_EXTENSIONS
 ---------------------
 
@@ -191,10 +203,15 @@ MISAGO_ADMIN_SESSION_EXPIRATION
 Maximum allowed lenght of inactivity period between two requests to admin namespaces. If its exceeded, user will be asked to sign in again to admin backed before being allowed to continue activities.
 
 
-MISAGO_ATTACHMENTS_ROOT
------------------------
+MISAGO_ATTACHMENT_SECRET_LENGTH
+-------------------------------
 
-Path to directory that Misago should use to store post attachments. This directory shouldn't be accessible from outside world.
+Length of attachment's secret (filenames and url token). The longer, the harder it is to bruteforce, but too long may conflict with your uploaded files storage limits (eg. filesystem path length limits).
+
+.. warning:
+   In order for Misago to support clustered deployments or CDN's (like Amazon's S3), its unable to validate user's permission to see the attachment at its source. Instead it has to rely on exessively long and hard to guess urls to attachments and assumption that your users will not "leak" source urls to attachments further.
+
+   Generaly, neither you nor your users should use forums to exchange files containing valuable data, but if you do, you should make sure to secure it additionaly via other means like password-protected archives or file encryption solutions.
 
 
 MISAGO_AVATAR_SERVER_PATH

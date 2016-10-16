@@ -1,2 +1,2 @@
 This directory is used to gather publicly available assets like images, icons, css filers et all.
-Don't put any files here yourself, or you will risk losing them. Use themes/static instead.
+Don't put any files here yourself, as they may be deleted by "collectstatic" command. Use "theme/static" directory instead.

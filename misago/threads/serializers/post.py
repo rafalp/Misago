@@ -14,6 +14,7 @@ __all__ = [
 
 class PostSerializer(serializers.ModelSerializer):
     poster = UserSerializer(many=False, read_only=True)
+    poster_ip = serializers.SerializerMethodField()
     parsed = serializers.SerializerMethodField()
     attachments_cache = serializers.SerializerMethodField()
     last_editor = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -60,6 +61,12 @@ class PostSerializer(serializers.ModelSerializer):
             'api',
             'url',
         )
+
+    def get_poster_ip(self, obj):
+        if self.context['user'].acl['can_see_users_ips']:
+            return obj.poster_ip
+        else:
+            return None
 
     def get_parsed(self, obj):
         if obj.is_valid and not obj.is_event and (not obj.is_hidden or obj.acl['can_see_hidden']):

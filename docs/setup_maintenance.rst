@@ -19,7 +19,7 @@ Before you start make sure your hosting provider grants you:
 - SSH access to the server
 - Python 2.7 or 3.5
 - PostgreSQL >= 9.4
-- At least 64 megabytes of free memory for Misago's process
+- At least 128 megabytes of free memory for Misago's processes
 - HTTP server that supports WSGI applications
 - Crontab
 
@@ -76,3 +76,8 @@ Deployment is a process in which you get your site running and reachable by your
 
 Misago is de facto Django with extra features added. This means deployment of Misago should be largery same to deployment of other Django-based solutions. Django documentation `already covers <https://docs.djangoproject.com/en/1.6/howto/deployment/>`_ supported deployment methods, and while on dedicated and VPS options deployment method depends largery on your choice and employed software stack, shared servers may differ greatly by the way how Django should be deployed. If thats the case, make sure you consult your ISP documentation and/or ask its rep for details about supported deployment method.
 
+
+Securing MEDIA_ROOT
+-------------------
+
+By default Misago uses the ``FileSystemStorage`` strategy that stores user-uploaded files in your site's ``media`` directory. You need to make sure that you have disabled indexing of this directory contents in your HTTP server's settings, or your user-uploaded files will be discoverable by 3rd party.

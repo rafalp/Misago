@@ -83,7 +83,6 @@ class ViewSet(viewsets.ViewSet):
         thread = self.get_thread_for_update(request, thread_pk).model
         return posts_move_endpoint(request, thread, self.thread)
 
-
     @list_route(methods=['post'])
     @transaction.atomic
     def split(self, request, thread_pk):
@@ -117,7 +116,7 @@ class ViewSet(viewsets.ViewSet):
 
             make_users_status_aware(request.user, [post.poster])
 
-            return Response(PostSerializer(post).data)
+            return Response(PostSerializer(post, context={'user': request.user}).data)
         else:
             return Response(posting.errors, status=400)
 
@@ -147,7 +146,7 @@ class ViewSet(viewsets.ViewSet):
             if post.poster:
                 make_users_status_aware(request.user, [post.poster])
 
-            return Response(PostSerializer(post).data)
+            return Response(PostSerializer(post, context={'user': request.user}).data)
         else:
             return Response(posting.errors, status=400)
 

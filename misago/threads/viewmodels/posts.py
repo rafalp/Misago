@@ -31,6 +31,8 @@ class ViewModel(object):
         make_posts_read_aware(request.user, thread.model, posts)
         make_users_status_aware(request.user, posters)
 
+        self._user = request.user
+
         self.posts = posts
         self.paginator = paginator
 
@@ -45,7 +47,7 @@ class ViewModel(object):
 
     def get_frontend_context(self):
         context = {
-            'results': PostSerializer(self.posts, many=True).data
+            'results': PostSerializer(self.posts, many=True, context={'user': self._user}).data
         }
 
         context.update(self.paginator)

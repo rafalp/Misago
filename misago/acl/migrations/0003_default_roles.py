@@ -18,7 +18,7 @@ def create_default_roles(apps, schema_editor):
     pickle_permissions(
         role,
         {
-            # account perms
+            # account
             'misago.users.permissions.account': {
                 'name_changes_allowed': 2,
                 'name_changes_expire': 180,
@@ -27,7 +27,7 @@ def create_default_roles(apps, schema_editor):
                 'allow_signature_images': 0,
             },
 
-            # profiles perms
+            # profiles
             'misago.users.permissions.profiles': {
                 'can_browse_users_list': 1,
                 'can_search_users': 1,
@@ -39,7 +39,13 @@ def create_default_roles(apps, schema_editor):
                 'can_see_hidden_users': 0,
             },
 
-            # delete users perms
+            # attachments
+            'misago.threads.permissions.attachments': {
+                'max_attachment_size': 4 * 1024,
+                'can_download_other_users_attachments': True,
+            },
+
+            # delete users
             'misago.users.permissions.delete': {
                 'can_delete_users_newer_than': 0,
                 'can_delete_users_with_less_posts_than': 0,
@@ -51,7 +57,7 @@ def create_default_roles(apps, schema_editor):
     pickle_permissions(
         role,
         {
-            # account perms
+            # account
             'misago.users.permissions.account': {
                 'name_changes_allowed': 0,
                 'name_changes_expire': 0,
@@ -60,7 +66,7 @@ def create_default_roles(apps, schema_editor):
                 'allow_signature_images': 0,
             },
 
-            # profiles perms
+            # profiles
             'misago.users.permissions.profiles': {
                 'can_browse_users_list': 1,
                 'can_search_users': 1,
@@ -70,7 +76,12 @@ def create_default_roles(apps, schema_editor):
                 'can_see_hidden_users': 0,
             },
 
-            # delete users perms
+            # attachments
+            'misago.threads.permissions.attachments': {
+                'can_download_other_users_attachments': True,
+            },
+
+            # delete users
             'misago.users.permissions.delete': {
                 'can_delete_users_newer_than': 0,
                 'can_delete_users_with_less_posts_than': 0,
@@ -82,7 +93,7 @@ def create_default_roles(apps, schema_editor):
     pickle_permissions(
         role,
         {
-            # account perms
+            # account
             'misago.users.permissions.account': {
                 'name_changes_allowed': 5,
                 'name_changes_expire': 14,
@@ -91,7 +102,7 @@ def create_default_roles(apps, schema_editor):
                 'allow_signature_images': 0,
             },
 
-            # profiles perms
+            # profiles
             'misago.users.permissions.profiles': {
                 'can_browse_users_list': 1,
                 'can_search_users': 1,
@@ -103,7 +114,7 @@ def create_default_roles(apps, schema_editor):
                 'can_see_hidden_users': 1,
             },
 
-            # warnings perms
+            # warnings
             'misago.users.permissions.warnings': {
                 'can_see_other_users_warnings': 1,
                 'can_warn_users': 1,
@@ -111,7 +122,14 @@ def create_default_roles(apps, schema_editor):
                 'can_be_warned': 0,
             },
 
-            # moderation perms
+            # attachments
+            'misago.threads.permissions.attachments': {
+                'max_attachment_size': 8 * 1024,
+                'can_download_other_users_attachments': True,
+                'can_delete_other_users_attachments': True,
+            },
+
+            # moderation
             'misago.threads.permissions.threads': {
                 'can_see_unapproved_content_lists': True,
                 'can_see_reported_content_lists': True,
@@ -123,7 +141,7 @@ def create_default_roles(apps, schema_editor):
                 'can_moderate_signatures': 1,
             },
 
-            # delete users perms
+            # delete users
             'misago.users.permissions.delete': {
                 'can_delete_users_newer_than': 0,
                 'can_delete_users_with_less_posts_than': 0,
@@ -135,7 +153,7 @@ def create_default_roles(apps, schema_editor):
     pickle_permissions(
         role,
         {
-            # warnings perms
+            # warnings
             'misago.users.permissions.warnings': {
                 'can_see_other_users_warnings': 1,
             },
@@ -146,7 +164,7 @@ def create_default_roles(apps, schema_editor):
     pickle_permissions(
         role,
         {
-            # rename users perms
+            # rename users
             'misago.users.permissions.moderation': {
                 'can_rename_users': 1,
             },
@@ -157,7 +175,7 @@ def create_default_roles(apps, schema_editor):
     pickle_permissions(
         role,
         {
-            # ban users perms
+            # ban users
             'misago.users.permissions.profiles': {
                 'can_see_ban_details': 1,
             },
@@ -175,7 +193,7 @@ def create_default_roles(apps, schema_editor):
     pickle_permissions(
         role,
         {
-            # delete users perms
+            # delete users
             'misago.users.permissions.delete': {
                 'can_delete_users_newer_than': 3,
                 'can_delete_users_with_less_posts_than': 7,
@@ -187,7 +205,7 @@ def create_default_roles(apps, schema_editor):
     pickle_permissions(
         role,
         {
-            # profiles perms
+            # profiles
             'misago.users.permissions.profiles': {
                 'can_be_blocked': 0,
             },
@@ -198,7 +216,7 @@ def create_default_roles(apps, schema_editor):
     pickle_permissions(
         role,
         {
-            # private threads perms
+            # private threads
             'misago.threads.permissions.privatethreads': {
                 'can_use_private_threads': 1,
                 'can_start_private_threads': 1,
@@ -214,7 +232,7 @@ def create_default_roles(apps, schema_editor):
     pickle_permissions(
         role,
         {
-            # private threads perms
+            # private threads
             'misago.threads.permissions.privatethreads': {
                 'can_use_private_threads': 1,
                 'can_start_private_threads': 1,

@@ -171,7 +171,7 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
 
         test_type.attachment_set.create(
             uuid='loremipsum',
-            type=test_type,
+            filetype=test_type,
             uploader_name='Bob',
             uploader_slug='bob',
             uploader_ip='127.0.0.1',

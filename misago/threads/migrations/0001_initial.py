@@ -8,7 +8,6 @@ from django.contrib.postgres.fields import JSONField
 from django.db import migrations, models
 
 from misago.core.pgutils import CreatePartialCompositeIndex, CreatePartialIndex
-import misago.threads.models.attachment
 
 
 class Migration(migrations.Migration):
@@ -225,13 +224,15 @@ class Migration(migrations.Migration):
             name='Attachment',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.CharField(db_index=True, max_length=64)),
+                ('uuid', models.CharField(max_length=64)),
                 ('uploaded_on', models.DateTimeField(default=django.utils.timezone.now)),
                 ('uploader_name', models.CharField(max_length=255)),
                 ('uploader_slug', models.CharField(max_length=255)),
                 ('uploader_ip', models.GenericIPAddressField()),
                 ('filename', models.CharField(max_length=255)),
-                ('file', models.FileField(upload_to=misago.threads.models.attachment.clean_upload_to)),
+                ('thumbnail', models.ImageField(blank=True, null=True, upload_to='attachments')),
+                ('image', models.ImageField(blank=True, null=True, upload_to='attachments')),
+                ('file', models.FileField(blank=True, null=True, upload_to='attachments')),
                 ('downloads', models.PositiveIntegerField(default=0)),
                 ('post', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='misago_threads.Post')),
             ],
@@ -251,7 +252,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='attachment',
-            name='type',
+            name='filetype',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.AttachmentType'),
         ),
         migrations.AddField(

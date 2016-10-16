@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls import url
 
+from ..views.attachment import attachment_server
 from ..views.goto import ThreadGotoPostView, ThreadGotoLastView, ThreadGotoNewView, ThreadGotoUnapprovedView
 from ..views.list import ForumThreads, CategoryThreads, PrivateThreads
 from ..views.thread import Thread, PrivateThread
@@ -109,3 +110,9 @@ urlpatterns += goto_patterns(
     new=ThreadGotoNewView,
     unapproved=ThreadGotoUnapprovedView
 )
+
+
+urlpatterns += [
+    url(r'^attachment/(?P<uuid>[-a-zA-Z0-9]+)-(?P<pk>\d+)/', attachment_server, name='attachment'),
+    url(r'^attachment/thumb/(?P<uuid>[-a-zA-Z0-9]+)-(?P<pk>\d+)/', attachment_server, name='attachment-thumbnail', kwargs={'thumbnail': True}),
+]

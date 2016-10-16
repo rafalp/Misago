@@ -118,6 +118,7 @@ MISAGO_ACL_EXTENSIONS = (
     'misago.users.permissions.moderation',
     'misago.users.permissions.delete',
     'misago.categories.permissions',
+    'misago.threads.permissions.attachments',
     'misago.threads.permissions.threads',
     'misago.threads.permissions.privatethreads',
 )
@@ -270,6 +271,20 @@ MISAGO_THREADS_TAIL = 15
 # Number of posts displayed on single thread page
 MISAGO_POSTS_PER_PAGE = 15
 MISAGO_POSTS_TAIL = 7
+
+
+# Number of attachments possible to assign to single post
+MISAGO_POST_ATTACHMENTS_LIMIT = 16
+
+
+# Length of secret used for attachments url tokens and filenames
+MISAGO_ATTACHMENT_SECRET_LENGTH = 64
+
+
+# Names of files served when user requests file that doesn't exist or is unavailable
+# Those files will be sought within STATIC_ROOT directory
+MISAGO_404_IMAGE = 'misago/error-404.png'
+MISAGO_403_IMAGE = 'misago/error-403.png'
 
 
 # Controls max age in days of items that Misago has to process to make rankings
