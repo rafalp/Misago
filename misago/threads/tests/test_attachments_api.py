@@ -193,6 +193,9 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         attachment = Attachment.objects.get(id=response_json['id'])
 
         self.assertEqual(attachment.filename, 'document.pdf')
+        self.assertTrue(attachment.is_file)
+        self.assertFalse(attachment.is_image)
+
         self.assertIsNotNone(attachment.file)
         self.assertTrue(not attachment.image)
         self.assertTrue(not attachment.thumbnail)
@@ -219,6 +222,9 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         attachment = Attachment.objects.get(id=response_json['id'])
 
         self.assertEqual(attachment.filename, 'small.jpg')
+        self.assertFalse(attachment.is_file)
+        self.assertTrue(attachment.is_image)
+
         self.assertTrue(not attachment.file)
         self.assertIsNotNone(attachment.image)
         self.assertIsNotNone(attachment.thumbnail)
