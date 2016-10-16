@@ -224,7 +224,7 @@ class Migration(migrations.Migration):
             name='Attachment',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uuid', models.CharField(max_length=64)),
+                ('secret', models.CharField(max_length=64)),
                 ('uploaded_on', models.DateTimeField(default=django.utils.timezone.now)),
                 ('uploader_name', models.CharField(max_length=255)),
                 ('uploader_slug', models.CharField(max_length=255)),

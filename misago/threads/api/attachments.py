@@ -36,7 +36,7 @@ class AttachmentViewSet(viewsets.ViewSet):
         validate_filesize(upload, filetype, request.user.acl['max_attachment_size'])
 
         attachment = Attachment(
-            uuid=Attachment.generate_new_uuid(),
+            secret=Attachment.generate_new_secret(),
             filetype=filetype,
             uploader=request.user,
             uploader_name=request.user.username,

@@ -11,7 +11,7 @@ from PIL import Image
 
 
 class Attachment(models.Model):
-    uuid = models.CharField(max_length=64)
+    secret = models.CharField(max_length=64)
     filetype = models.ForeignKey('AttachmentType')
     post = models.ForeignKey(
         'Post',
@@ -41,7 +41,7 @@ class Attachment(models.Model):
     downloads = models.PositiveIntegerField(default=0)
 
     @classmethod
-    def generate_new_uuid(cls):
+    def generate_new_secret(cls):
         return get_random_string(settings.MISAGO_ATTACHMENT_SECRET_LENGTH)
 
     @property
@@ -55,14 +55,14 @@ class Attachment(models.Model):
     def get_absolute_url(self):
         return reverse('misago:attachment', kwargs={
             'pk': self.pk,
-            'uuid': self.uuid,
+            'secret': self.secret,
         })
 
     def get_thumbnail_url(self):
         if self.is_image:
             return reverse('misago:attachment-thumbnail', kwargs={
                 'pk': self.pk,
-                'uuid': self.uuid,
+                'secret': self.secret,
             })
         else:
             return None

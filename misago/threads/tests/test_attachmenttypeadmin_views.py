@@ -170,7 +170,7 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
         self.assertEqual(test_type.name, 'Test type')
 
         test_type.attachment_set.create(
-            uuid='loremipsum',
+            secret='loremipsum',
             filetype=test_type,
             uploader_name='Bob',
             uploader_slug='bob',

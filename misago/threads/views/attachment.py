@@ -13,9 +13,9 @@ ATTACHMENT_404_URL = '/'.join((settings.STATIC_URL, settings.MISAGO_404_IMAGE))
 ATTACHMENT_403_URL = '/'.join((settings.STATIC_URL, settings.MISAGO_403_IMAGE))
 
 
-def attachment_server(request, pk, uuid, thumbnail=False):
+def attachment_server(request, pk, secret, thumbnail=False):
     try:
-        url = serve_file(request, pk, uuid, thumbnail)
+        url = serve_file(request, pk, secret, thumbnail)
         return redirect(url)
     except Http404:
         return redirect(ATTACHMENT_404_URL)
@@ -23,9 +23,9 @@ def attachment_server(request, pk, uuid, thumbnail=False):
         return redirect(ATTACHMENT_403_URL)
 
 
-def serve_file(request, pk, uuid, thumbnail):
+def serve_file(request, pk, secret, thumbnail):
     queryset = Attachment.objects.select_related('filetype')
-    attachment = get_object_or_404(queryset, pk=pk, uuid=uuid)
+    attachment = get_object_or_404(queryset, pk=pk, secret=secret)
 
     if not request.user.is_staff:
         allow_file_download(request, attachment)

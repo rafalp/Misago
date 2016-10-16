@@ -97,18 +97,18 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         """user tries to retrieve nonexistant file"""
         response = self.client.get(reverse('misago:attachment', kwargs={
             'pk': 123,
-            'uuid': 'qwertyuiop'
+            'secret': 'qwertyuiop'
         }))
 
         self.assertIs404(response)
 
-    def test_invalid_uuid(self):
-        """user tries to retrieve existing file using invalid uuid"""
+    def test_invalid_secret(self):
+        """user tries to retrieve existing file using invalid secret"""
         attachment = self.upload_document()
 
         response = self.client.get(reverse('misago:attachment', kwargs={
             'pk': attachment.pk,
-            'uuid': 'qwertyuiop'
+            'secret': 'qwertyuiop'
         }))
 
         self.assertIs404(response)
@@ -135,7 +135,7 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
 
         response = self.client.get(reverse('misago:attachment-thumbnail', kwargs={
             'pk': attachment.pk,
-            'uuid': attachment.uuid
+            'secret': attachment.secret
         }))
         self.assertIs404(response)
 
