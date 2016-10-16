@@ -1,11 +1,9 @@
-from io import BytesIO
-
 from django.conf import settings
 from django.core.files import File
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.utils import timezone
+from django.utils import six, timezone
 from django.utils.crypto import get_random_string
 from PIL import Image
 
@@ -81,7 +79,10 @@ class Attachment(models.Model):
         thumbnail = Image.open(upload)
         thumbnail.thumbnail((500, 500))
 
-        thumb_stream = BytesIO()
+        if six.PY3:
+            thumb_stream = six.StringIO()
+        else:
+            thumb_stream = six.BytesIO()
         thumbnail.save(thumb_stream, fileformat)
 
         thumb_secret = get_random_string(settings.MISAGO_ATTACHMENT_SECRET_LENGTH)

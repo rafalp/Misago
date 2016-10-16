@@ -131,7 +131,7 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
             self.assertEqual(response.status_code, 302)
 
             test_type = AttachmentType.objects.order_by('id').last()
-            self.assertEqual(test_type.extensions_list, final)
+            self.assertEqual(set(test_type.extensions_list), set(final))
 
     def test_delete_view(self):
         """delete attachment type view has no showstoppers"""
