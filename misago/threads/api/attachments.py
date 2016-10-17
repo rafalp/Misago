@@ -38,6 +38,7 @@ class AttachmentViewSet(viewsets.ViewSet):
         attachment = Attachment(
             secret=Attachment.generate_new_secret(),
             filetype=filetype,
+            size=upload.size,
             uploader=request.user,
             uploader_name=request.user.username,
             uploader_slug=request.user.slug,

@@ -33,12 +33,11 @@ class Attachment(models.Model):
     uploader_ip = models.GenericIPAddressField()
 
     filename = models.CharField(max_length=255)
+    size = models.PositiveIntegerField(default=0)
 
     thumbnail = models.ImageField(blank=True, null=True, upload_to='attachments')
     image = models.ImageField(blank=True, null=True, upload_to='attachments')
     file = models.FileField(blank=True, null=True, upload_to='attachments')
-
-    downloads = models.PositiveIntegerField(default=0)
 
     @classmethod
     def generate_new_secret(cls):

@@ -30,7 +30,7 @@ class AttachmentSerializer(serializers.ModelSerializer):
             'uploader_name',
             'uploader_ip',
             'filename',
-            'downloads',
+            'size',
 
             'acl',
             'is_image',

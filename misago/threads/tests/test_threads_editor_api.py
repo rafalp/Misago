@@ -1,13 +1,21 @@
 import json
+import os
 
 from django.core.urlresolvers import reverse
 from django.utils.encoding import smart_str
 
+from misago.acl import add_acl
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from .. import testutils
+from ..models import Attachment
+from ..serializers import AttachmentSerializer
+
+
+TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testfiles')
+TEST_DOCUMENT_PATH = os.path.join(TESTFILES_DIR, 'document.pdf')
 
 
 class EditorApiTestCase(AuthenticatedUserTestCase):
@@ -618,11 +626,33 @@ class EditReplyEditorApiTests(EditorApiTestCase):
 
     def test_edit(self):
         """endpoint returns valid configuration for editor"""
+        # TODO: HERE UPLOAD ATTACHMENT OR TWO AND TIE THEM TO EDITED POST
+        for i in range(3):
+            self.override_acl({
+                'max_attachment_size': 1000,
+            })
+
+            with open(TEST_DOCUMENT_PATH, 'rb') as upload:
+                response = self.client.post(reverse('misago:api:attachment-list'), data={
+                    'upload': upload
+                })
+            self.assertEqual(response.status_code, 200)
+
+        attachments = list(Attachment.objects.order_by('id'))
+
+        attachments[0].uploader = None
+        attachments[0].save()
+
+        for attachment in attachments[:2]:
+            attachment.post = self.post
+            attachment.save()
+
         self.override_acl({
             'can_edit_posts': 1,
         })
-
         response = self.client.get(self.api_link)
+
+        map(lambda a: add_acl(self.user, a), attachments)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(smart_str(response.content)), {
@@ -631,5 +661,9 @@ class EditReplyEditorApiTests(EditorApiTestCase):
             'post': self.post.original,
             'can_protect': False,
             'is_protected': self.post.is_protected,
-            'poster': self.post.poster_name
+            'poster': self.post.poster_name,
+            'attachments': [
+                AttachmentSerializer(attachments[1], context={'user': self.user}).data,
+                AttachmentSerializer(attachments[0], context={'user': self.user}).data,
+            ]
         })
