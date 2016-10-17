@@ -652,9 +652,7 @@ class EditReplyEditorApiTests(EditorApiTestCase):
         })
         response = self.client.get(self.api_link)
 
-        map(lambda a: add_acl(self.user, a), attachments)
-
-        self.maxDiff = None
+        list(map(lambda a: add_acl(self.user, a), attachments))
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(smart_str(response.content)), {
