@@ -276,10 +276,11 @@ MISAGO_POSTS_TAIL = 7
 # Number of attachments possible to assign to single post
 MISAGO_POST_ATTACHMENTS_LIMIT = 16
 
+# Max allowed size of image before Misago will generate thumbnail for it
+MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT = (500, 500)
 
 # Length of secret used for attachments url tokens and filenames
 MISAGO_ATTACHMENT_SECRET_LENGTH = 64
-
 
 # Names of files served when user requests file that doesn't exist or is unavailable
 # Those files will be sought within STATIC_ROOT directory

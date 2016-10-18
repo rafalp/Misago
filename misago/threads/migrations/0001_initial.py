@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.db import migrations, models
 
+import misago.threads.models.attachment
 from misago.core.pgutils import CreatePartialCompositeIndex, CreatePartialIndex
 
 
@@ -231,9 +232,9 @@ class Migration(migrations.Migration):
                 ('uploader_ip', models.GenericIPAddressField()),
                 ('filename', models.CharField(max_length=255)),
                 ('size', models.PositiveIntegerField(default=0)),
-                ('thumbnail', models.ImageField(blank=True, null=True, upload_to='attachments')),
-                ('image', models.ImageField(blank=True, null=True, upload_to='attachments')),
-                ('file', models.FileField(blank=True, null=True, upload_to='attachments')),
+                ('thumbnail', models.ImageField(blank=True, null=True, upload_to=misago.threads.models.attachment.upload_to)),
+                ('image', models.ImageField(blank=True, null=True, upload_to=misago.threads.models.attachment.upload_to)),
+                ('file', models.FileField(blank=True, null=True, upload_to=misago.threads.models.attachment.upload_to)),
                 ('post', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='misago_threads.Post')),
             ],
         ),

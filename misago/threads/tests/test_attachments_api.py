@@ -2,6 +2,7 @@ import json
 import os
 
 from django.core.urlresolvers import reverse
+from django.utils import six
 from django.utils.encoding import smart_str
 
 from misago.acl.models import Role
@@ -15,6 +16,7 @@ TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testfi
 TEST_DOCUMENT_PATH = os.path.join(TESTFILES_DIR, 'document.pdf')
 TEST_LARGEPNG_PATH = os.path.join(TESTFILES_DIR, 'large.png')
 TEST_SMALLJPG_PATH = os.path.join(TESTFILES_DIR, 'small.jpg')
+TEST_ANIMATEDGIT_PATH = os.path.join(TESTFILES_DIR, 'animated.gif')
 TEST_CORRUPTEDIMG_PATH = os.path.join(TESTFILES_DIR, 'corrupted.gif')
 
 
@@ -200,12 +202,16 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         self.assertTrue(not attachment.image)
         self.assertTrue(not attachment.thumbnail)
 
+        self.assertTrue(six.text_type(attachment.file).endswith('document.pdf'))
+
         self.assertIsNone(response_json['post'])
         self.assertEqual(response_json['uploader_name'], self.user.username)
+        self.assertEqual(response_json['url']['index'], attachment.get_absolute_url())
+        self.assertIsNone(response_json['url']['thumb'])
         self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
 
-    def test_image_upload(self):
-        """successful upload creates orphan attachment with thumbnail"""
+    def test_small_image_upload(self):
+        """successful small image upload creates orphan attachment without thumbnail"""
         attachment_type = AttachmentType.objects.create(
             name="Test extension",
             extensions='jpeg,jpg',
@@ -227,8 +233,84 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
         self.assertTrue(not attachment.file)
         self.assertIsNotNone(attachment.image)
-        self.assertIsNotNone(attachment.thumbnail)
+        self.assertTrue(not attachment.thumbnail)
+
+        self.assertTrue(six.text_type(attachment.image).endswith('small.jpg'))
 
         self.assertIsNone(response_json['post'])
         self.assertEqual(response_json['uploader_name'], self.user.username)
+        self.assertEqual(response_json['url']['index'], attachment.get_absolute_url())
+        self.assertIsNone(response_json['url']['thumb'])
+        self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
+
+    def test_large_image_upload(self):
+        """successful large image upload creates orphan attachment with thumbnail"""
+        self.override_acl({
+            'max_attachment_size': 10 * 1024
+        })
+
+        attachment_type = AttachmentType.objects.create(
+            name="Test extension",
+            extensions='png',
+            mimetypes='image/png'
+        )
+
+        with open(TEST_LARGEPNG_PATH, 'rb') as upload:
+            response = self.client.post(self.api_link, data={
+                'upload': upload
+            })
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json.loads(smart_str(response.content))
+        attachment = Attachment.objects.get(id=response_json['id'])
+
+        self.assertEqual(attachment.filename, 'large.png')
+        self.assertFalse(attachment.is_file)
+        self.assertTrue(attachment.is_image)
+
+        self.assertTrue(not attachment.file)
+        self.assertIsNotNone(attachment.image)
+        self.assertIsNotNone(attachment.thumbnail)
+
+        self.assertTrue(six.text_type(attachment.image).endswith('large.png'))
+        self.assertTrue(six.text_type(attachment.thumbnail).endswith('large.png'))
+
+        self.assertIsNone(response_json['post'])
+        self.assertEqual(response_json['uploader_name'], self.user.username)
+        self.assertEqual(response_json['url']['index'], attachment.get_absolute_url())
+        self.assertEqual(response_json['url']['thumb'], attachment.get_thumbnail_url())
+        self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
+
+    def test_animated_image_upload(self):
+        """successful gif upload creates orphan attachment with thumbnail"""
+        attachment_type = AttachmentType.objects.create(
+            name="Test extension",
+            extensions='gif',
+            mimetypes='image/gif'
+        )
+
+        with open(TEST_ANIMATEDGIT_PATH, 'rb') as upload:
+            response = self.client.post(self.api_link, data={
+                'upload': upload
+            })
+        self.assertEqual(response.status_code, 200)
+
+        response_json = json.loads(smart_str(response.content))
+        attachment = Attachment.objects.get(id=response_json['id'])
+
+        self.assertEqual(attachment.filename, 'animated.gif')
+        self.assertFalse(attachment.is_file)
+        self.assertTrue(attachment.is_image)
+
+        self.assertTrue(not attachment.file)
+        self.assertIsNotNone(attachment.image)
+        self.assertIsNotNone(attachment.thumbnail)
+
+        self.assertTrue(six.text_type(attachment.image).endswith('animated.gif'))
+        self.assertTrue(six.text_type(attachment.thumbnail).endswith('animated.gif'))
+
+        self.assertIsNone(response_json['post'])
+        self.assertEqual(response_json['uploader_name'], self.user.username)
+        self.assertEqual(response_json['url']['index'], attachment.get_absolute_url())
+        self.assertEqual(response_json['url']['thumb'], attachment.get_thumbnail_url())
         self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())

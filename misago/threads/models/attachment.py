@@ -1,3 +1,5 @@
+import os
+from hashlib import md5
 from io import BytesIO
 
 from django.conf import settings
@@ -8,6 +10,25 @@ from django.db import models
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 from PIL import Image
+
+from misago.core.utils import slugify
+
+
+def upload_to(instance, filename):
+    spread_path = md5(instance.secret[:16]).hexdigest()
+    secret = Attachment.generate_new_secret()
+
+    filename_lowered = filename.lower().strip()
+    for extension in instance.filetype.extensions_list:
+        if filename_lowered.endswith(extension):
+            break
+
+    filename_clean = u'.'.join((
+        slugify(filename[:(len(extension) + 1) * -1])[:16],
+        extension
+    ))
+
+    return os.path.join('attachments', spread_path[:2], spread_path[2:4], secret, filename_clean)
 
 
 class Attachment(models.Model):
@@ -35,9 +56,9 @@ class Attachment(models.Model):
     filename = models.CharField(max_length=255)
     size = models.PositiveIntegerField(default=0)
 
-    thumbnail = models.ImageField(blank=True, null=True, upload_to='attachments')
-    image = models.ImageField(blank=True, null=True, upload_to='attachments')
-    file = models.FileField(blank=True, null=True, upload_to='attachments')
+    thumbnail = models.ImageField(blank=True, null=True, upload_to=upload_to)
+    image = models.ImageField(blank=True, null=True, upload_to=upload_to)
+    file = models.FileField(blank=True, null=True, upload_to=upload_to)
 
     @classmethod
     def generate_new_secret(cls):
@@ -58,7 +79,7 @@ class Attachment(models.Model):
         })
 
     def get_thumbnail_url(self):
-        if self.is_image:
+        if self.thumbnail:
             return reverse('misago:attachment-thumbnail', kwargs={
                 'pk': self.pk,
                 'secret': self.secret,
@@ -67,27 +88,29 @@ class Attachment(models.Model):
             return None
 
     def set_file(self, upload):
-        file_secret = get_random_string(settings.MISAGO_ATTACHMENT_SECRET_LENGTH)
-        self.file = File(upload, '.'.join([file_secret, self.filetype.extensions_list[0]]))
+        self.file = File(upload, upload.name)
 
     def set_image(self, upload):
         fileformat = self.filetype.extensions_list[0]
 
-        image_secret = get_random_string(settings.MISAGO_ATTACHMENT_SECRET_LENGTH)
-        image_filename = '.'.join([image_secret, fileformat])
-        self.image = File(upload, image_filename)
+        self.image = File(upload, upload.name)
 
         thumbnail = Image.open(upload)
-        thumbnail.thumbnail((500, 500))
+        downscale_image = (
+            thumbnail.size[0] > settings.MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT[0] or
+            thumbnail.size[1] > settings.MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT[1]
+        )
+        strip_animation = fileformat == 'gif'
 
         thumb_stream = BytesIO()
-        if fileformat == 'jpg':
-            # normalize jpg to jpeg for Pillow
-            thumbnail.save(thumb_stream, 'jpeg')
-        else:
+        if downscale_image:
+            if fileformat == 'jpg':
+                # normalize jpg to jpeg for Pillow
+                thumbnail.save(thumb_stream, 'jpeg')
+            else:
+                thumbnail.save(thumb_stream, fileformat)
+        elif strip_animation:
             thumbnail.save(thumb_stream, fileformat)
 
-        thumb_secret = get_random_string(settings.MISAGO_ATTACHMENT_SECRET_LENGTH)
-        thumb_filename = '.'.join([thumb_secret, fileformat])
-        self.thumbnail = ContentFile(thumb_stream.getvalue(), thumb_filename)
-
+        if downscale_image or strip_animation:
+            self.thumbnail = ContentFile(thumb_stream.getvalue(), upload.name)

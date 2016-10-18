@@ -127,7 +127,10 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         attachment = self.upload_document(is_orphaned=True, by_other_user=True)
 
         response = self.client.get(attachment.get_absolute_url())
-        self.assertIs403(response)
+        self.assertIs404(response)
+
+        response = self.client.get(attachment.get_absolute_url() + '?shva=1')
+        self.assertIs404(response)
 
     def test_document_thumbnail(self):
         """user tries to retrieve thumbnail from non-image attachment"""
@@ -191,6 +194,9 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         self.user.save()
 
         response = self.client.get(attachment.get_absolute_url())
+        self.assertIs404(response)
+
+        response = self.client.get(attachment.get_absolute_url() + '?shva=1')
         self.assertSuccess(response)
 
     def test_orphaned_file_is_uploader(self):
@@ -198,6 +204,9 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         attachment = self.upload_document(is_orphaned=True)
 
         response = self.client.get(attachment.get_absolute_url())
+        self.assertIs404(response)
+
+        response = self.client.get(attachment.get_absolute_url() + '?shva=1')
         self.assertSuccess(response)
 
     def test_has_role(self):
@@ -207,19 +216,19 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         user_roles = self.user.get_roles()
         self.attachment_type_pdf.limit_downloads_to.set(user_roles)
 
-        response = self.client.get(attachment.get_absolute_url())
+        response = self.client.get(attachment.get_absolute_url() + '?shva=1')
         self.assertSuccess(response)
 
     def test_image(self):
         """user retrieves """
         attachment = self.upload_image()
 
-        response = self.client.get(attachment.get_absolute_url())
+        response = self.client.get(attachment.get_absolute_url() + '?shva=1')
         self.assertSuccess(response)
 
     def test_image_thumb(self):
         """user retrieves image's thumbnail"""
         attachment = self.upload_image()
 
-        response = self.client.get(attachment.get_thumbnail_url())
+        response = self.client.get(attachment.get_absolute_url() + '?shva=1')
         self.assertSuccess(response)

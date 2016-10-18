@@ -626,7 +626,6 @@ class EditReplyEditorApiTests(EditorApiTestCase):
 
     def test_edit(self):
         """endpoint returns valid configuration for editor"""
-        # TODO: HERE UPLOAD ATTACHMENT OR TWO AND TIE THEM TO EDITED POST
         for i in range(3):
             self.override_acl({
                 'max_attachment_size': 1000,
