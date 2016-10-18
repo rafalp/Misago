@@ -15,20 +15,25 @@ from misago.core.utils import slugify
 
 
 def upload_to(instance, filename):
-    spread_path = md5(instance.secret[:16]).hexdigest()
-    secret = Attachment.generate_new_secret()
+    try:
+        spread_path = md5(instance.secret[:16]).hexdigest()
+        secret = Attachment.generate_new_secret()
 
-    filename_lowered = filename.lower().strip()
-    for extension in instance.filetype.extensions_list:
-        if filename_lowered.endswith(extension):
-            break
+        filename_lowered = filename.lower().strip()
+        for extension in instance.filetype.extensions_list:
+            if filename_lowered.endswith(extension):
+                break
 
-    filename_clean = u'.'.join((
-        slugify(filename[:(len(extension) + 1) * -1])[:16],
-        extension
-    ))
+        filename_clean = u'.'.join((
+            slugify(filename[:(len(extension) + 1) * -1])[:16],
+            extension
+        ))
 
-    return os.path.join('attachments', spread_path[:2], spread_path[2:4], secret, filename_clean)
+        return os.path.join('attachments', spread_path[:2], spread_path[2:4], secret, filename_clean)
+    except Exception as e:
+        print ''
+        print 'E> %s' % e
+        raise e
 
 
 class Attachment(models.Model):
