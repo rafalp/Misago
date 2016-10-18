@@ -16,7 +16,7 @@ from misago.core.utils import slugify
 
 def upload_to(instance, filename):
     try:
-        spread_path = md5(instance.secret[:16]).hexdigest()
+        spread_path = md5(str(instance.secret[:16]).encode()).hexdigest()
         secret = Attachment.generate_new_secret()
 
         filename_lowered = filename.lower().strip()
