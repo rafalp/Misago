@@ -40,15 +40,83 @@
 
 // Attachments list
 .editor-attachments-list {
-  &, & li {
+  margin: 0px;
+  padding: 0px;
+
+  li {
     margin: 0px;
-    padding: 0px;
   }
 }
 
-.editor-attachment-ready {
+.editor-attachment-complete {
   border-top: 1px solid @editor-border;
+  padding: @padding-base-vertical 0px;
+  padding-right: @padding-base-horizontal;
+
+  .editor-attachment-image {
+    float: left;
+    width: 50px;
+
+    a {
+      background-size: cover;
+      background-position: center;
+      border-radius: @border-radius-small;
+      display: block;
+
+      margin: 0px auto;
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  .editor-attachment-icon {
+    float: left;
+    width: 50px;
+
+    text-align: center;
+
+    .material-icon {
+      position: relative;
+      top: 2px;
+
+      height: 28px;
+      width: 28px;
+
+      font-size: 28px;
+      line-height: 28px;
+    }
+  }
+
+  .editor-attachment-details {
+    margin-left: 50px;
+
+    h4, p {
+      margin: 0px;
+      padding: 0px;
+
+      font-size: @font-size-base;
+    }
+
+    p {
+      margin-top: @padding-base-vertical / 2;
+
+      color: @gray-light;
+      font-size: @font-size-small;
+    }
+  }
 }
+
+
+.editor-attachment-actions {
+  float: right;
+  margin: 0px;
+  margin-top: 3px;
+
+  li {
+    margin-left: @line-height-computed / 2;
+  }
+}
+
 
 .editor-attachment-error {
   border-top: 1px solid @editor-border;
@@ -58,14 +126,22 @@
 
 .editor-attachment-error-icon {
   float: left;
-  width: 46px;
+  width: 50px;
 
-  font-size: @font-size-large;
-  text-align: center;
+  .material-icon {
+    position: relative;
+    top: 2px;
+
+    height: 28px;
+    width: 28px;
+
+    font-size: 28px;
+    line-height: 28px;
+  }
 }
 
 .editor-attachment-error-message {
-  margin-left: 46px;
+  margin-left: 50px;
   padding: @padding-base-vertical 0px;
   position: relative;
 

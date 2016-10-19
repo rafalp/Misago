@@ -1,5 +1,6 @@
 // jshint ignore:start
 import React from 'react';
+import moment from 'moment';
 import misago from 'misago';
 import ajax from 'misago/services/ajax';
 import snackbar from 'misago/services/snackbar';
@@ -28,6 +29,7 @@ export default class extends React.Component {
       upload.progress = progress;
       this.props.onAttachmentsChange(this.props.attachments.concat());
     }).then((data) => {
+      data.uploaded_on = moment(data.uploaded_on);
       Object.assign(upload, data);
       this.props.onAttachmentsChange(this.props.attachments.concat());
     }, (rejection) => {

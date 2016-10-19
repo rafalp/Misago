@@ -104,6 +104,7 @@ class Attachment(models.Model):
 
         thumb_stream = BytesIO()
         if downscale_image:
+            thumbnail.thumbnail(settings.MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT)
             if fileformat == 'jpg':
                 # normalize jpg to jpeg for Pillow
                 thumbnail.save(thumb_stream, 'jpeg')
