@@ -63,6 +63,16 @@ The next step is to boot up the VM and provision it:
 cd Misago && git checkout 0.5.x && vagrant up
 ```
 
+If you get any errors from the Pillow library (something like `ImportError: No module named PIL`), you've got to ssh into the machine and install jpg library:
+
+```sh
+vagrant ssh
+sudo apt-get install libjpeg-dev
+exit
+```
+
+To continue the vagrant setup, run `vagrant provision`.
+
 You might want to grab a coffee while Puppet works its magic as the process usually takes ~5 minutes. When the VM is booted and Puppet is done provisioning, ssh into the VM and start the Django development server:
 
 ```sh

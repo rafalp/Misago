@@ -1,7 +1,7 @@
 django==1.6.4
 django-debug-toolbar==1
 django-floppyforms
-django-haystack
+django-haystack==2.4.1
 django-jinja==0.24
 django-mptt<0.6
 jinja2
