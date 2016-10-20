@@ -1,9 +1,11 @@
 import json
 import os
 
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils import six
 from django.utils.encoding import smart_str
+from PIL import Image
 
 from misago.acl.models import Role
 from misago.acl.testutils import override_acl
@@ -210,6 +212,12 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         self.assertIsNone(response_json['url']['thumb'])
         self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
 
+        # files associated with attachment are deleted on its deletion
+        file_path = attachment.file.path
+        self.assertTrue(os.path.exists(file_path))
+        attachment.delete()
+        self.assertFalse(os.path.exists(file_path))
+
     def test_small_image_upload(self):
         """successful small image upload creates orphan attachment without thumbnail"""
         attachment_type = AttachmentType.objects.create(
@@ -280,6 +288,23 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         self.assertEqual(response_json['url']['index'], attachment.get_absolute_url())
         self.assertEqual(response_json['url']['thumb'], attachment.get_thumbnail_url())
         self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
+
+        # thumbnail was scaled down
+        thumbnail = Image.open(attachment.thumbnail.path)
+        self.assertEqual(thumbnail.size[0], settings.MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT[0])
+        self.assertLess(thumbnail.size[1], settings.MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT[1])
+
+        # files associated with attachment are deleted on its deletion
+        image_path = attachment.image.path
+        thumbnail_path = attachment.thumbnail.path
+
+        self.assertTrue(os.path.exists(image_path))
+        self.assertTrue(os.path.exists(thumbnail_path))
+
+        attachment.delete()
+
+        self.assertFalse(os.path.exists(image_path))
+        self.assertFalse(os.path.exists(thumbnail_path))
 
     def test_animated_image_upload(self):
         """successful gif upload creates orphan attachment with thumbnail"""

@@ -60,6 +60,18 @@ class Attachment(models.Model):
     image = models.ImageField(blank=True, null=True, upload_to=upload_to)
     file = models.FileField(blank=True, null=True, upload_to=upload_to)
 
+    def delete(self, *args, **kwargs):
+        self.delete_files()
+        return super(Attachment, self).delete(*args, **kwargs)
+
+    def delete_files(self):
+        if self.thumbnail:
+            self.thumbnail.delete(save=False)
+        if self.image:
+            self.image.delete(save=False)
+        if self.file:
+            self.file.delete(save=False)
+
     @classmethod
     def generate_new_secret(cls):
         return get_random_string(settings.MISAGO_ATTACHMENT_SECRET_LENGTH)
