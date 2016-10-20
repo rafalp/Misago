@@ -60,7 +60,7 @@ git clone git://github.com/rafalp/Misago.git
 The next step is to boot up the VM and provision it:
 
 ```sh
-cd Misago && vagrant up
+cd Misago && git checkout 0.5.x && vagrant up
 ```
 
 You might want to grab a coffee while Puppet works its magic as the process usually takes ~5 minutes. When the VM is booted and Puppet is done provisioning, ssh into the VM and start the Django development server:
