@@ -6,7 +6,7 @@ import Container from './utils/container'; //jshint ignore:line
 import Loader from './utils/loader'; //jshint ignore:line
 import Message from './utils/message'; //jshint ignore:line
 import Options from './utils/options'; //jshint ignore:line
-import cleanAttachments from './utils/clean-attachments'; //jshint ignore:line
+import * as attachments from './utils/attachments'; //jshint ignore:line
 import { getPostValidators, getTitleValidators } from './utils/validators';
 import ajax from 'misago/services/ajax';
 import posting from 'misago/services/posting'; //jshint ignore:line
@@ -186,7 +186,7 @@ export default class extends Form {
       title: this.state.title,
       category: this.state.category,
       post: this.state.post,
-      attachments: cleanAttachments(this.state.attachments),
+      attachments: attachments.clean(this.state.attachments),
       close: this.state.close,
       hide: this.state.hide,
       pin: this.state.pin

@@ -126,10 +126,12 @@ MISAGO_ACL_EXTENSIONS = (
 MISAGO_MARKUP_EXTENSIONS = ()
 
 MISAGO_POSTING_MIDDLEWARES = (
-    # Note: always keep FloodProtectionMiddleware middleware first one
+    # Always keep FloodProtectionMiddleware middleware first one
     'misago.threads.api.postingendpoint.floodprotection.FloodProtectionMiddleware',
+
     'misago.threads.api.postingendpoint.category.CategoryMiddleware',
     'misago.threads.api.postingendpoint.reply.ReplyMiddleware',
+    'misago.threads.api.postingendpoint.attachments.AttachmentsMiddleware',
     # 'misago.threads.api.postingendpoint.participants.ThreadParticipantsFormMiddleware',
     'misago.threads.api.postingendpoint.pin.PinMiddleware',
     'misago.threads.api.postingendpoint.close.CloseMiddleware',
@@ -139,8 +141,10 @@ MISAGO_POSTING_MIDDLEWARES = (
     'misago.threads.api.postingendpoint.updatestats.UpdateStatsMiddleware',
     'misago.threads.api.postingendpoint.mentions.MentionsMiddleware',
     'misago.threads.api.postingendpoint.subscribe.SubscribeMiddleware',
-    # Note: always keep SaveChangesMiddleware middleware after all state-changing middlewares
+
+    # Always keep SaveChangesMiddleware middleware after all state-changing middlewares
     'misago.threads.api.postingendpoint.savechanges.SaveChangesMiddleware',
+
     # Those middlewares are last because they don't change app state
     'misago.threads.api.postingendpoint.emailnotification.EmailNotificationMiddleware',
 )

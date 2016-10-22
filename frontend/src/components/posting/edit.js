@@ -4,7 +4,7 @@ import Form from 'misago/components/form';
 import Container from './utils/container'; //jshint ignore:line
 import Loader from './utils/loader'; //jshint ignore:line
 import Message from './utils/message'; //jshint ignore:line
-import cleanAttachments from './utils/clean-attachments'; //jshint ignore:line
+import * as attachments from './utils/attachments'; //jshint ignore:line
 import { getPostValidators } from './utils/validators';
 import ajax from 'misago/services/ajax';
 import posting from 'misago/services/posting'; //jshint ignore:line
@@ -42,6 +42,7 @@ export default class extends Form {
       isReady: true,
 
       post: data.post,
+      attachments: attachments.hydrate(data.attachments),
       protect: data.is_protected,
 
       canProtect: data.can_protect
@@ -103,7 +104,7 @@ export default class extends Form {
   send() {
     return ajax.put(this.props.submit, {
       post: this.state.post,
-      attachments: cleanAttachments(this.state.attachments),
+      attachments: attachments.clean(this.state.attachments),
       protect: this.state.protect
     });
   }

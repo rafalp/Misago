@@ -15,7 +15,7 @@ class PermissionsForm(forms.Form):
 
     max_attachment_size = forms.IntegerField(
         label=_("Max attached file size (in kb)"),
-        help_text=_("Enter 0 to disable attachments."),
+        help_text=_("Enter 0 to don't allow uploading end deleting attachments."),
         initial=500,
         min_value=0
     )
@@ -64,12 +64,10 @@ ACL's for targets
 def add_acl_to_attachment(user, attachment):
     if user.is_authenticated() and user.id == attachment.uploader_id:
         attachment.acl.update({
-            'can_download': True,
             'can_delete': True,
         })
     else:
         attachment.acl.update({
-            'can_download': user.acl['can_download_other_users_attachments'],
             'can_delete': user.is_authenticated() and user.acl['can_delete_other_users_attachments'],
         })
 

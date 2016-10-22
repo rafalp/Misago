@@ -104,6 +104,13 @@ class Post(models.Model):
         move_post.send(sender=self)
 
     @property
+    def attachments(self):
+        if self.attachments_cache:
+            return self.attachments_cache
+        else:
+            return []
+
+    @property
     def thread_type(self):
         return self.category.thread_type
 
