@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import markdown
 
 import bleach
@@ -119,39 +121,61 @@ def linkify_paragraphs(result):
 
 
 def clean_links(request, result):
+    host = request.get_host()
     site_address = '%s://%s' % (request.scheme, request.get_host())
 
     soup = BeautifulSoup(result['parsed_text'], 'html5lib')
     for link in soup.find_all('a'):
-        if link['href'].lower().startswith(site_address):
-            result['inside_links'].append(link['href'])
-            if link['href'].lower() == site_address:
-                link['href'] = '/'
-            else:
-                link['href'] = link['href'][len(site_address):]
+        if is_internal_link(link['href'], host):
+            link['href'] = clean_internal_link(link['href'], host)
         else:
             result['outgoing_links'].append(link['href'])
 
-        if link.string.startswith('http://'):
-            link.string.replace_with(link.string[7:].strip())
-        if link.string.startswith('https://'):
-            link.string.replace_with(link.string[8:].strip())
+        if link.string:
+            link.string = clean_link_prefix(link.string)
 
     for img in soup.find_all('img'):
-        result['images'].append(img['src'])
-        if img['src'].lower().startswith(site_address):
-            if img['src'].lower() == site_address:
-                img['src'] = '/'
-            else:
-                img['src'] = img['src'][len(site_address):]
-
-        if img['alt'].startswith('http://'):
-            img['alt'] = img['alt'][7:].strip()
-        if img['alt'].startswith('https://'):
-            img['alt'] = img['alt'][8:].strip()
+        img['alt'] = clean_link_prefix(img['alt'])
+        if is_internal_link(img['src'], host):
+            img['src'] = clean_internal_link(img['src'], host)
+            result['images'].append(img['src'])
+        else:
+            result['images'].append(img['src'])
 
     # [6:-7] trims <body></body> wrap
     result['parsed_text'] = six.text_type(soup.body)[6:-7]
+
+
+def is_internal_link(link, host):
+    if link.startswith('/') and not link.startswith('//'):
+        return True
+
+    link = clean_link_prefix(link).lstrip('www.').lower()
+    return link.lower().startswith(host.lstrip('www.'))
+
+
+def clean_link_prefix(link):
+    if link.lower().startswith('https:'):
+        link = link[6:]
+    if link.lower().startswith('http:'):
+        link = link[5:]
+    if link.startswith('//'):
+        link = link[2:]
+    return link
+
+
+def clean_internal_link(link, host):
+    link = clean_link_prefix(link)
+
+    if link.lower().startswith('www.'):
+        link = link[4:]
+    if host.lower().startswith('www.'):
+        host = host[4:]
+
+    if link.lower().startswith(host):
+        link = link[len(host):]
+
+    return link or '/'
 
 
 def minify_result(result):

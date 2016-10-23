@@ -124,9 +124,22 @@ Hey there @{}, how's going?
 
 class CleanLinksTests(TestCase):
     def test_clean_current_link(self):
-        """clean_links step leaves http://test.com alone"""
+        """clean_links step cleans http://test.com"""
         test_text = """
 Lorem ipsum: http://test.com
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum: <a href="/" rel="nofollow">test.com</a></p>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=True)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_clean_schemaless_link(self):
+        """clean_links step cleans test.com"""
+        test_text = """
+Lorem ipsum: test.com
 """.strip()
 
         expected_result = """
@@ -196,6 +209,19 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
 
         expected_result = """
 <p><img alt="somewhere.com/image.jpg" src="http://somewhere.com/image.jpg"/></p>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=True)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_clean_linked_image(self):
+        """parser handles image element nested in link"""
+        test_text = """
+[![3.png](http://test.com/attachment/thumb/test-43/)](http://test.com/attachment/test-43/)
+        """
+
+        expected_result = """
+<p><a href="/attachment/test-43/" rel="nofollow"><img alt="3.png" src="/attachment/thumb/test-43/"/></a></p>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
