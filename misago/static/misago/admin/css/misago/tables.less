@@ -117,6 +117,23 @@
           margin: 0px;
         }
 
+        .item-title {
+          &, a:link, a:active, a:visited, a:focus, a:hover {
+            color: @text-color;
+          }
+        }
+
+        &.item-thumbnail a {
+          background-position: center;
+          background-size: cover;
+          border-radius: @border-radius-base;
+          display: block;
+          margin: 0px auto;
+          padding: @table-condensed-cell-padding @table-cell-padding;
+          width: 42px;
+          height: 42px;
+        }
+
         &.item-name {
           color: @text-color;
           font-size: @font-size-large;
@@ -126,6 +143,7 @@
           }
 
           small {
+            display: block;
             font-size: @font-size-small;
           }
         }

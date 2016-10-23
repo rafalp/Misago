@@ -8,7 +8,7 @@ from misago.categories.signals import delete_category_content, move_category_con
 from misago.core.pgutils import batch_delete, batch_update
 from misago.users.signals import delete_user_content, username_changed
 
-from .models import Post, Thread
+from .models import Attachment, Post, Thread
 
 
 delete_post = Signal()
@@ -100,6 +100,11 @@ def update_usernames(sender, **kwargs):
     Post.objects.filter(last_editor=sender).update(
         last_editor_name=sender.username,
         last_editor_slug=sender.slug
+    )
+
+    Attachment.objects.filter(uploader=sender).update(
+        uploader_name=sender.username,
+        uploader_slug=sender.slug
     )
 
 

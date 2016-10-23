@@ -64,8 +64,7 @@ class UsersList(UserAdmin, generic.ListView):
             'action': 'delete_accounts',
             'name': _("Delete accounts"),
             'icon': 'fa fa-times-circle',
-            'confirmation': _("Are you sure you want "
-                              "to delete selected users?"),
+            'confirmation': _("Are you sure you want to delete selected users?"),
         },
         {
             'action': 'delete_all',

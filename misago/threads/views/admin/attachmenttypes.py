@@ -15,7 +15,7 @@ class AttachmentTypeAdmin(generic.AdminBaseMixin):
     Model = AttachmentType
     Form = AttachmentTypeForm
     templates_dir = 'misago/admin/attachmenttypes'
-    message_404 = _("Requested attachment type not exist.")
+    message_404 = _("Requested attachment type could not be found.")
 
     def update_roles(self, target, roles):
         target.roles.clear()

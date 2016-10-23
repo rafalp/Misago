@@ -1,7 +1,47 @@
 from django import forms
 from django.utils.translation import ugettext as _
 
-from .models import AttachmentType
+from .models import Attachment, AttachmentType
+
+
+def get_searchable_filetypes():
+    choices = [(0, _("All types"))]
+    choices += [(a.id, a.name) for a in AttachmentType.objects.order_by('name')]
+    return choices
+
+
+class SearchAttachmentsForm(forms.Form):
+    uploader = forms.CharField(label=_("Uploader name contains"), required=False)
+    filename = forms.CharField(label=_("Filename contains"), required=False)
+    filetype = forms.TypedChoiceField(
+        label=_("File type"),
+        coerce=int,
+        choices=get_searchable_filetypes,
+        empty_value=0,
+        required=False
+    )
+    is_orphan = forms.ChoiceField(
+        label=_("State"),
+        required=False,
+        choices=(
+            ('', _("All")),
+            ('yes', _("Only orphaned")),
+            ('no', _("Not orphaned")),
+        ),
+    )
+
+    def filter_queryset(self, criteria, queryset):
+        if criteria.get('uploader'):
+            queryset = queryset.filter(uploader_slug__contains=criteria['uploader'].lower())
+        if criteria.get('filename'):
+            queryset = queryset.filter(filename__icontains=criteria['filename'])
+        if criteria.get('filetype'):
+            queryset = queryset.filter(filetype_id=criteria['filetype'])
+        if criteria.get('is_orphan') == 'yes':
+            queryset = queryset.filter(post__isnull=True)
+        elif criteria.get('is_orphan') == 'no':
+            queryset = queryset.filter(post__isnull=False)
+        return queryset
 
 
 class AttachmentTypeForm(forms.ModelForm):

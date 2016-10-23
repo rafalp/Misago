@@ -233,8 +233,7 @@ class SearchUsersFormBase(forms.Form):
     inactive = forms.YesNoSwitch(label=_("Inactive only"))
     is_staff = forms.YesNoSwitch(label=_("Admins only"))
 
-    def filter_queryset(self, search_criteria, queryset):
-        criteria = search_criteria
+    def filter_queryset(self, criteria, queryset):
         if criteria.get('username'):
             queryset = queryset.filter(
                 slug__startswith=criteria.get('username').lower())

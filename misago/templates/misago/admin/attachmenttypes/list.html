@@ -26,7 +26,6 @@
 <td class="item-name">
   {{ item }}
   {% if not item.is_enabled %}
-    <br>
     <small class="text-muted">{{ item.get_status_display }}</small>
   {% endif %}
 </td>
@@ -68,7 +67,7 @@
 
 
 {% block emptylist %}
-<td colspan="{{ 8|add:extra_actions_len }}">
+<td colspan="{{ 6|add:extra_actions_len }}">
   <p>{% trans "No attachment types are currently defined." %}</p>
 </td>
 {% endblock emptylist %}

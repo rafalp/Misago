@@ -1,0 +1,117 @@
+{% extends "misago/admin/generic/list.html" %}
+{% load i18n misago_capture misago_forms %}
+
+
+{% block table-header %}
+<th style="width: 1%;">&nbsp;</th>
+<th>{% trans "Attachment" %}</th>
+<th style="width: 40%;">{% trans "Thread" %}</th>
+<th style="width: 1%;">&nbsp;</th>
+{% endblock table-header %}
+
+
+{% block table-row %}
+{% if item.is_image %}
+  <td class="item-thumbnail">
+    {% if item.thumbnail %}
+      <a href="{{ item.get_absolute_url }}?shva=1" style='background-image: url("{{  item.get_thumbnail_url }}?shva=1");' target="_blank"></a>
+    {% else %}
+      <a href="{{ item.get_absolute_url }}?shva=1" style='background-image: url("{{  item.get_absolute_url }}?shva=1");' target="_blank"></a>
+    {% endif %}
+  </td>
+{% else %}
+  <td class="item-name text-center">
+    <a href="{{ item.get_absolute_url }}?shva=1" target="_blank">
+      <span class="fa fa-file"></span>
+    </a>
+  </td>
+{% endif %}
+<td class="item-name">
+  {{ item }}
+  {% capture trimmed as uploader %}
+    {% if item.uploader %}
+      <a href="{{ item.uploader.get_absolute_url }}" class="item-title">{{ item.uploader }}</a>
+    {% else %}
+      <span class="item-title">{{ item.uploader_name }}</span>
+    {% endif %}
+  {% endcapture %}
+  {% capture trimmed as uploaded_on %}
+    <abbr class="moment" data-iso="{{ item.uploaded_on.isoformat }}" data-format="LL"></abbr>
+  {% endcapture %}
+  <small class="text-muted">
+    {% blocktrans trimmed with filetype=item.filetype size=item.size|filesizeformat uploader=uploader|safe uploaded_on=uploaded_on|safe uploader_ip=item.uploader_ip %}
+      {{ filetype }}, {{ size }}, uploaded by {{ uploader }} {{ uploaded_on }} from {{ uploader_ip }}.
+    {% endblocktrans %}
+  </small>
+</td>
+<td>
+  {% if item.post %}
+    <a href="{{ item.post.get_absolute_url }}" class="item-title">
+      {{ item.post.thread }}
+    </a>
+  {% else %}
+    <em class="text-muted">{% trans "None" %}</em>
+  {% endif %}
+</td>
+<td class="row-action">
+  <form action="{% url 'misago:admin:system:attachments:delete' pk=item.pk %}" method="post" class="delete-prompt">
+    <button class="btn btn-danger tooltip-top" title="{% trans "Delete" %}">
+      {% csrf_token %}
+      <span class="fa fa-times"></span>
+    </button>
+  </form>
+</td>
+{% endblock table-row %}
+
+
+{% block emptylist %}
+<td colspan="{{ 4|add:extra_actions_len }}">
+  {% if active_filters %}
+    <p>{% trans "No attachments matching search criteria exist." %}</p>
+  {% else %}
+    <p>{% trans "No attachments currently exist." %}</p>
+  {% endif %}
+</td>
+{% endblock emptylist %}
+
+
+{% block modal-title %}
+{% trans "Search attachments" %}
+{% endblock modal-title %}
+
+
+{% block modal-body %}
+<div class="row">
+  <div class="col-md-12">
+    {% form_row search_form.uploader %}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {% form_row search_form.filename %}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {% form_row search_form.filetype %}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {% form_row search_form.is_orphan %}
+  </div>
+</div>
+{% endblock modal-body %}
+
+
+{% block javascripts %}
+{{ block.super }}
+<script type="text/javascript">
+  $(function() {
+    $('.delete-prompt').submit(function() {
+      var decision = confirm("{% trans "Are you sure you want to delete this attachment?" %}");
+      return decision;
+    });
+  });
+</script>
+{% endblock %}
