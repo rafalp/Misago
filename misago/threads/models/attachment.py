@@ -41,7 +41,7 @@ class Attachment(models.Model):
         on_delete=models.SET_NULL
     )
 
-    uploaded_on = models.DateTimeField(default=timezone.now)
+    uploaded_on = models.DateTimeField(default=timezone.now, db_index=True)
 
     uploader = models.ForeignKey(
         settings.AUTH_USER_MODEL,

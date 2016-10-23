@@ -17,7 +17,7 @@ class SynchronizeThreadsTests(TestCase):
         command.execute(stdout=out)
         command_output = out.getvalue().strip()
 
-        self.assertEqual(command_output, 'No threads were found')
+        self.assertEqual(command_output, "No threads were found")
 
     def test_threads_sync(self):
         """command synchronizes threads"""
@@ -39,4 +39,4 @@ class SynchronizeThreadsTests(TestCase):
             self.assertEqual(db_thread.replies, i)
 
         command_output = out.getvalue().splitlines()[-1].strip()
-        self.assertEqual(command_output, 'Synchronized 10 threads')
+        self.assertEqual(command_output, "Synchronized 10 threads")

@@ -212,6 +212,12 @@ Max dimensions (width and height) of user-uploaded images embedded in posts. If 
    Because user-uploaded GIF's may be smaller than dimensions specified, but still be considerably heavy due to animation, Misago always generates thumbnails for user-uploaded GIFS, stripping the animations from them.
 
 
+MISAGO_ATTACHMENT_ORPHANED_EXPIRE
+---------------------------------
+
+How old (in minutes) should attachments unassociated with any be before they'll automatically deleted by ``clearattachments`` task.
+
+
 MISAGO_ATTACHMENT_SECRET_LENGTH
 -------------------------------
 

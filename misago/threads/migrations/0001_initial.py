@@ -225,7 +225,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('secret', models.CharField(max_length=64)),
-                ('uploaded_on', models.DateTimeField(default=django.utils.timezone.now)),
+                ('uploaded_on', models.DateTimeField(default=django.utils.timezone.now, db_index=True)),
                 ('uploader_name', models.CharField(max_length=255)),
                 ('uploader_slug', models.CharField(max_length=255)),
                 ('uploader_ip', models.GenericIPAddressField()),
