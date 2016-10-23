@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 import six
 from unidecode import unidecode
@@ -7,8 +7,8 @@ from django.core.urlresolvers import resolve, reverse
 from django.http import Http404
 from django.template.defaultfilters import slugify as django_slugify
 from django.utils import html, timezone
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext_lazy
+from django.utils.encoding import force_text
+from django.utils.translation import ugettext_lazy as _, ungettext_lazy
 
 
 def slugify(string):
@@ -19,6 +19,43 @@ def slugify(string):
 
 def format_plaintext_for_html(string):
     return html.linebreaks(html.urlize(html.escape(string)))
+
+
+"""
+Turn ISO 8601 string into datetime object
+"""
+ISO8601_FORMATS = (
+    "%Y-%m-%dT%H:%M:%S",
+    "%Y-%m-%dT%H:%M:%S.%f",
+)
+
+def parse_iso8601_string(value):
+    value = force_text(value, strings_only=True).rstrip('Z')
+
+    for format in ISO8601_FORMATS:
+        try:
+            parsed_value = datetime.strptime(value, format)
+            break
+        except ValueError:
+            try:
+                parsed_value = datetime.strptime(value[:-6], format)
+                break
+            except ValueError:
+                pass
+    else:
+        raise ValueError('failed to hydrate the %s timestamp' % value)
+
+    offset_str = value[-6:]
+    if offset_str and offset_str[0] in ('-', '+'):
+        tz_offset = timedelta(hours=int(offset_str[1:3]), minutes=int(offset_str[4:6]))
+        tz_offset = tz_offset.seconds // 60
+        if offset_str[0] == '-':
+            tz_offset *= -1
+    else:
+        tz_offset = 0
+
+    tz_correction = timezone.get_fixed_timezone(tz_offset)
+    return timezone.make_aware(parsed_value, tz_correction)
 
 
 """

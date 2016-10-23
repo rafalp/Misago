@@ -338,3 +338,64 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, event.get_absolute_url())
         self.assertContains(response, "thread has been merged into this thread")
+
+
+class ThreadAttachmentsViewTests(ThreadViewTestCase):
+    def mock_attachment_cache(self, data):
+        json = {
+            'url': {},
+            'size': 16914,
+            'filename': 'Archiwum.zip',
+            'filetype': 'ZIP',
+            'is_image': False,
+            'uploaded_on': '2016-10-22T21:17:40.408710Z',
+            'uploader_name': 'BobBoberson'
+        }
+
+        json.update(data)
+        return json
+
+    def test_attachments_display(self):
+        """thread posts show list of attachments below them"""
+        post = self.thread.first_post
+
+        post.attachments_cache = [
+            self.mock_attachment_cache({
+                'url': {
+                    'index': '/attachment/loremipsum-123/',
+                    'thumb': None,
+                    'uploader': '/user/bobboberson-123/'
+                },
+                'filename': 'Archiwum-1.zip',
+            }),
+            self.mock_attachment_cache({
+                'url': {
+                    'index': '/attachment/loremipsum-223/',
+                    'thumb': '/attachment/thumb/loremipsum-223/',
+                    'uploader': '/user/bobboberson-223/'
+                },
+                'is_image': True,
+                'filename': 'Archiwum-2.zip'
+            }),
+            self.mock_attachment_cache({
+                'url': {
+                    'index': '/attachment/loremipsum-323/',
+                    'thumb': None,
+                    'uploader': '/user/bobboberson-323/'
+                },
+                'filename': 'Archiwum-3.zip'
+            })
+        ]
+        post.save()
+
+        # attachments render
+        response = self.client.get(self.thread.get_absolute_url())
+
+        for attachment in post.attachments_cache:
+            self.assertContains(response, attachment['filename'])
+            self.assertContains(response, attachment['uploader_name'])
+            self.assertContains(response, attachment['url']['index'])
+            self.assertContains(response, attachment['url']['uploader'])
+
+            if attachment['url']['thumb']:
+                self.assertContains(response, attachment['url']['thumb'])

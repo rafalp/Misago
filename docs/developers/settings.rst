@@ -203,6 +203,15 @@ MISAGO_ADMIN_SESSION_EXPIRATION
 Maximum allowed lenght of inactivity period between two requests to admin namespaces. If its exceeded, user will be asked to sign in again to admin backed before being allowed to continue activities.
 
 
+MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT
+----------------------------------
+
+Max dimensions (width and height) of user-uploaded images embedded in posts. If uploaded image is greater than dimensions specified in this settings, Misago will generate thumbnail for it.
+
+.. note::
+   Because user-uploaded GIF's may be smaller than dimensions specified, but still be considerably heavy due to animation, Misago always generates thumbnails for user-uploaded GIFS, stripping the animations from them.
+
+
 MISAGO_ATTACHMENT_SECRET_LENGTH
 -------------------------------
 
@@ -294,6 +303,12 @@ MISAGO_NOTIFICATIONS_MAX_AGE
 Max age, in days, of notifications stored in database. Notifications older than this will be delted.
 
 
+MISAGO_POST_ATTACHMENTS_LIMIT
+-----------------------------
+
+Limit of attachments that may be uploaded in single post. Lower limits may hamper image-heavy forums, but help keep memory usage by posting process. 
+
+
 MISAGO_POSTING_MIDDLEWARES
 --------------------------
 
@@ -310,7 +325,6 @@ MISAGO_POSTS_TAIL
 -----------------
 
 Defines minimal number of posts for thread's last page. If number of posts on last page is smaller or equal to one specified in this setting, last page will be appended to previous page instead.
-
 
 
 MISAGO_RANKING_LENGTH

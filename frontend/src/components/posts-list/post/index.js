@@ -1,6 +1,7 @@
 /* jshint ignore:start */
 import React from 'react';
 import Avatar from 'misago/components/avatar';
+import Attachments from './attachments';
 import Body from './body';
 import { FlagHidden, FlagUnapproved } from './flags';
 import Footer from './footer';
@@ -30,6 +31,7 @@ export default function(props) {
             <FlagHidden {...props} />
             <FlagUnapproved {...props} />
             <Body {...props} />
+            <Attachments {...props} />
             <Footer {...props} />
           </div>
         </div>

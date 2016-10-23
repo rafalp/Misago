@@ -4,7 +4,9 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.utils import timezone
 
-from ..utils import clean_return_path, format_plaintext_for_html, is_referer_local, is_request_to_misago, slugify
+from ..utils import (
+    clean_return_path, format_plaintext_for_html, is_referer_local, is_request_to_misago,
+    parse_iso8601_string, slugify)
 
 
 VALID_PATHS = (
@@ -55,6 +57,33 @@ class SlugifyTests(TestCase):
 
         for original, slug in test_cases:
             self.assertEqual(slugify(original), slug)
+
+
+class ParseIso8601StringTests(TestCase):
+    def test_valid_input(self):
+        """util parses iso 8601 strings"""
+        INPUTS = (
+            '2016-10-22T20:55:39.185085Z',
+            '2016-10-22T20:55:39.185085-01:00',
+            '2016-10-22T20:55:39-01:00',
+            '2016-10-22T20:55:39.185085+01:00',
+        )
+
+        for test_input in INPUTS:
+            self.assertTrue(parse_iso8601_string(test_input))
+
+    def test_invalid_input(self):
+        """util throws ValueError on invalid input"""
+        INPUTS = (
+            '',
+            '2016-10-22',
+            '2016-10-22T30:55:39.185085+11:00',
+            '2016-10-22T20:55:39.18SSSSS5085Z',
+        )
+
+        for test_input in INPUTS:
+            with self.assertRaises(ValueError):
+                self.assertTrue(parse_iso8601_string(test_input))
 
 
 PLAINTEXT_FORMAT_CASES = (

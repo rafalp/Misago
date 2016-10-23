@@ -27,7 +27,6 @@ class Migration(migrations.Migration):
                 ('original', models.TextField()),
                 ('parsed', models.TextField()),
                 ('checksum', models.CharField(max_length=64, default='-')),
-                ('has_attachments', models.BooleanField(default=False)),
                 ('attachments_cache', JSONField(null=True, blank=True)),
                 ('posted_on', models.DateTimeField()),
                 ('updated_on', models.DateTimeField()),

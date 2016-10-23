@@ -90,6 +90,61 @@
 }
 
 
+// Post attachments
+.post-attachments {
+  @post-preview-width: 40px;
+
+  td {
+    position: @padding-base-vertical @padding-base-horizontal;
+  }
+
+  .post-attachment-preview {
+    float: left;
+    height: @post-preview-width;
+    width: @post-preview-width;
+
+    text-align: center;
+  }
+
+  .post-attachment {
+    margin-left: @post-preview-width + 12px;
+  }
+
+  .post-thumbnail {
+    display: block;
+    background-size: cover;
+    background-position: center;
+    border-radius: @border-radius-small;
+    width: @post-preview-width;
+    height: @post-preview-width;
+  }
+
+  .material-icon {
+    width: 28px;
+    height: 28px;
+
+    position: relative;
+    top: 5px;
+
+    font-size: 28px;
+    line-height: 28px;
+
+    &:link, &:active, &:visited, &:hover, &:focus {
+      color: @gray-darker;
+      text-decoration: none;
+    }
+  }
+
+  .post-attachment-description {
+    margin: 0px;
+    padding: 0px;
+
+    color: @text-muted;
+    font-size: @font-size-small;
+  }
+}
+
+
 // Post footer
 .post-footer {
   overflow: auto;

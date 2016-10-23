@@ -101,7 +101,6 @@ export function Filename(props) {
 }
 
 export function Details(props) {
-  // const message = "JPEG, 24kb, uploaded by Somebody 10 minutes ago.";
   let user = null;
   if (props.item.url.uploader) {
     user = interpolate(USER_URL, {

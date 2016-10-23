@@ -1,3 +1,5 @@
+import copy
+
 from django.contrib.postgres.fields import JSONField
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -5,6 +7,7 @@ from django.dispatch import receiver
 from django.utils import six, timezone
 
 from misago.conf import settings
+from misago.core.utils import parse_iso8601_string
 
 from .. import threadtypes
 from ..checksums import is_post_valid, update_post_checksum
@@ -26,7 +29,6 @@ class Post(models.Model):
     checksum = models.CharField(max_length=64, default='-')
     mentions = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="mention_set")
 
-    has_attachments = models.BooleanField(default=False)
     attachments_cache = JSONField(null=True, blank=True)
 
     posted_on = models.DateTimeField()
@@ -105,10 +107,16 @@ class Post(models.Model):
 
     @property
     def attachments(self):
+        if hasattr(self, '_hydrated_attachments_cache'):
+            return self._hydrated_attachments_cache
+
+        self._hydrated_attachments_cache = []
         if self.attachments_cache:
-            return self.attachments_cache
-        else:
-            return []
+            for attachment in copy.deepcopy(self.attachments_cache):
+                attachment['uploaded_on'] = parse_iso8601_string(attachment['uploaded_on'])
+                self._hydrated_attachments_cache.append(attachment)
+
+        return self._hydrated_attachments_cache
 
     @property
     def thread_type(self):

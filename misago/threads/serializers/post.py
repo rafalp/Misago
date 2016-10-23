@@ -16,7 +16,7 @@ class PostSerializer(serializers.ModelSerializer):
     poster = UserSerializer(many=False, read_only=True)
     poster_ip = serializers.SerializerMethodField()
     parsed = serializers.SerializerMethodField()
-    attachments_cache = serializers.SerializerMethodField()
+    attachments = serializers.SerializerMethodField()
     last_editor = serializers.PrimaryKeyRelatedField(read_only=True)
     hidden_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
@@ -35,8 +35,7 @@ class PostSerializer(serializers.ModelSerializer):
             'poster_name',
             'poster_ip',
             'parsed',
-            'has_attachments',
-            'attachments_cache',
+            'attachments',
             'posted_on',
             'updated_on',
             'hidden_on',
@@ -74,9 +73,8 @@ class PostSerializer(serializers.ModelSerializer):
         else:
             return None
 
-    def get_attachments_cache(self, obj):
-        # TODO: check if user can download attachments before we'll expose them here
-        return None
+    def get_attachments(self, obj):
+        return obj.attachments_cache
 
     def get_acl(self, obj):
         try:

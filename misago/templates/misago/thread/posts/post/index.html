@@ -18,6 +18,9 @@
         {% else %}
           {% include "misago/thread/posts/post/flags.html" %}
           {% include "misago/thread/posts/post/body.html" %}
+          {% if post.attachments %}
+            {% include "misago/thread/posts/post/attachments.html" %}
+          {% endif %}
           {% include "misago/thread/posts/post/footer.html" %}
         {% endif %}
       </div>
