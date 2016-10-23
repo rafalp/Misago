@@ -65,6 +65,108 @@ class ListView(AdminView):
     def get_queryset(self):
         return self.get_model().objects.all()
 
+    """
+    Dispatch response
+    """
+    def dispatch(self, request, *args, **kwargs):
+        mass_actions_list = self.mass_actions or []
+        extra_actions_list = self.extra_actions or []
+
+        refresh_querystring = False
+
+        context = {
+            'items': self.get_queryset(),
+
+            'paginator': None,
+            'page': None,
+
+            'order_by': [],
+            'order': None,
+
+            'search_form': None,
+            'active_filters': {},
+
+            'querystring': '',
+            'query_order': {},
+            'query_filters': {},
+
+            'selected_items': [],
+            'selection_label': self.selection_label,
+            'empty_selection_label': self.empty_selection_label,
+            'mass_actions': mass_actions_list,
+
+            'extra_actions': extra_actions_list,
+            'extra_actions_len': len(extra_actions_list),
+        }
+
+        if request.method == 'POST' and mass_actions_list:
+            try:
+                response = self.handle_mass_action(request, context)
+                if response:
+                    return response
+                else:
+                    return redirect(request.path)
+            except MassActionError as e:
+                messages.error(request, e.args[0])
+
+        if self.ordering:
+            ordering_methods = self.get_ordering_methods(request)
+            used_method = self.get_ordering_method_to_use(ordering_methods)
+            self.set_ordering_in_context(context, used_method)
+
+            if (ordering_methods['GET'] and
+                    ordering_methods['GET'] != ordering_methods['session']):
+                # Store GET ordering in session for future requests
+                session_key = self.ordering_session_key
+                request.session[session_key] = ordering_methods['GET']
+
+            if context['order_by'] and not ordering_methods['GET']:
+                # Make view redirect to itself with querystring,
+                # So address ball contains copy-friendly link
+                refresh_querystring = True
+
+        SearchForm = self.get_search_form(request)
+        if SearchForm:
+            filtering_methods = self.get_filtering_methods(request)
+            active_filters = self.get_filtering_method_to_use(
+                filtering_methods)
+            if request.GET.get('clear_filters'):
+                # Clear filters from querystring
+                request.session.pop(self.filters_session_key, None)
+                active_filters = {}
+            self.apply_filtering_on_context(
+                context, active_filters, SearchForm)
+
+            if (filtering_methods['GET'] and
+                    filtering_methods['GET'] != filtering_methods['session']):
+                # Store GET filters in session for future requests
+                session_key = self.filters_session_key
+                request.session[session_key] = filtering_methods['GET']
+            if request.GET.get('set_filters'):
+                # Force store filters in session
+                session_key = self.filters_session_key
+                request.session[session_key] = context['active_filters']
+                refresh_querystring = True
+
+            if context['active_filters'] and not filtering_methods['GET']:
+                # Make view redirect to itself with querystring,
+                # So address ball contains copy-friendly link
+                refresh_querystring = True
+
+        self.make_querystrings(context)
+
+        if self.items_per_page:
+            try:
+                self.paginate_items(context, kwargs.get('page', 0))
+            except EmptyPage:
+                return redirect(
+                    '%s%s' % (reverse(self.root_link), context['querystring']))
+
+        if refresh_querystring:
+            return redirect('%s%s' % (request.path, context['querystring']))
+
+        return self.render(request, context)
+
     def paginate_items(self, context, page):
         try:
             page = int(page)
@@ -258,105 +360,3 @@ class ListView(AdminView):
             context['query_order'] = order_values
         if filter_values:
             context['query_filters'] = filter_values
-
-    """
-    Dispatch response
-    """
-    def dispatch(self, request, *args, **kwargs):
-        mass_actions_list = self.mass_actions or []
-        extra_actions_list = self.extra_actions or []
-
-        refresh_querystring = False
-
-        context = {
-            'items': self.get_queryset(),
-
-            'paginator': None,
-            'page': None,
-
-            'order_by': [],
-            'order': None,
-
-            'search_form': None,
-            'active_filters': {},
-
-            'querystring': '',
-            'query_order': {},
-            'query_filters': {},
-
-            'selected_items': [],
-            'selection_label': self.selection_label,
-            'empty_selection_label': self.empty_selection_label,
-            'mass_actions': mass_actions_list,
-
-            'extra_actions': extra_actions_list,
-            'extra_actions_len': len(extra_actions_list),
-        }
-
-        if request.method == 'POST' and mass_actions_list:
-            try:
-                response = self.handle_mass_action(request, context)
-                if response:
-                    return response
-                else:
-                    return redirect(request.path)
-            except MassActionError as e:
-                messages.error(request, e.args[0])
-
-        if self.ordering:
-            ordering_methods = self.get_ordering_methods(request)
-            used_method = self.get_ordering_method_to_use(ordering_methods)
-            self.set_ordering_in_context(context, used_method)
-
-            if (ordering_methods['GET'] and
-                    ordering_methods['GET'] != ordering_methods['session']):
-                # Store GET ordering in session for future requests
-                session_key = self.ordering_session_key
-                request.session[session_key] = ordering_methods['GET']
-
-            if context['order_by'] and not ordering_methods['GET']:
-                # Make view redirect to itself with querystring,
-                # So address ball contains copy-friendly link
-                refresh_querystring = True
-
-        SearchForm = self.get_search_form(request)
-        if SearchForm:
-            filtering_methods = self.get_filtering_methods(request)
-            active_filters = self.get_filtering_method_to_use(
-                filtering_methods)
-            if request.GET.get('clear_filters'):
-                # Clear filters from querystring
-                request.session.pop(self.filters_session_key, None)
-                active_filters = {}
-            self.apply_filtering_on_context(
-                context, active_filters, SearchForm)
-
-            if (filtering_methods['GET'] and
-                    filtering_methods['GET'] != filtering_methods['session']):
-                # Store GET filters in session for future requests
-                session_key = self.filters_session_key
-                request.session[session_key] = filtering_methods['GET']
-            if request.GET.get('set_filters'):
-                # Force store filters in session
-                session_key = self.filters_session_key
-                request.session[session_key] = context['active_filters']
-                refresh_querystring = True
-
-            if context['active_filters'] and not filtering_methods['GET']:
-                # Make view redirect to itself with querystring,
-                # So address ball contains copy-friendly link
-                refresh_querystring = True
-
-        self.make_querystrings(context)
-
-        if self.items_per_page:
-            try:
-                self.paginate_items(context, kwargs.get('page', 0))
-            except EmptyPage:
-                return redirect(
-                    '%s%s' % (reverse(self.root_link), context['querystring']))
-
-        if refresh_querystring:
-            return redirect('%s%s' % (request.path, context['querystring']))
-
-        return self.render(request, context)

@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.db import transaction
 from django.db.models import Count
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
@@ -39,6 +40,7 @@ class AttachmentsList(AttachmentAdmin, generic.ListView):
             'name': _("Delete attachments"),
             'icon': 'fa fa-times-circle',
             'confirmation': _("Are you sure you want to delete selected attachments?"),
+            'is_atomic': False
         }
     ]
 
@@ -53,11 +55,14 @@ class AttachmentsList(AttachmentAdmin, generic.ListView):
             if attachment.post:
                 deleted_attachments.append(attachment.pk)
                 desynced_posts.append(attachment.post_id)
-            attachment.delete()
 
         if desynced_posts:
-            for post in Post.objects.select_for_update().filter(id__in=desynced_posts):
-                self.delete_from_cache(post, deleted_attachments)
+            with transaction.atomic():
+                for post in Post.objects.select_for_update().filter(id__in=desynced_posts):
+                    self.delete_from_cache(post, deleted_attachments)
+
+        for attachment in attachments:
+            attachment.delete()
 
         message = _("Selected attachments have been deleted.")
         messages.success(request, message)
