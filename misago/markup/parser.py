@@ -68,8 +68,7 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
     """
     Create and configure markdown object
     """
-    md = markdown.Markdown(safe_mode='escape',
-                           extensions=['nl2br'])
+    md = markdown.Markdown(safe_mode='escape', extensions=['nl2br'])
 
     # Remove references
     del md.preprocessors['reference']
@@ -129,7 +128,7 @@ def clean_links(request, result):
             if link['href'].lower() == site_address:
                 link['href'] = '/'
             else:
-                link['href'] = link['href'].lower()[len(site_address):]
+                link['href'] = link['href'][len(site_address):]
         else:
             result['outgoing_links'].append(link['href'])
 
@@ -144,7 +143,7 @@ def clean_links(request, result):
             if img['src'].lower() == site_address:
                 img['src'] = '/'
             else:
-                img['src'] = img['src'].lower()[len(site_address):]
+                img['src'] = img['src'][len(site_address):]
 
         if img['alt'].startswith('http://'):
             img['alt'] = img['alt'][7:].strip()

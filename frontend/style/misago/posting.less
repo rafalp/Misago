@@ -5,18 +5,15 @@
 // Affix and style placeholder
 #posting-placeholder {
   background-color: @gray-lighter;
+  display: none;
+  margin-top: @line-height-computed * 1.5;
+  margin-bottom: @line-height-computed * -1.5;
   padding: @line-height-computed 0px;
 
-  position: fixed;
-  bottom: -100%;
-
-  width: 100%;
-
-  transition: bottom 300ms, box-shadow 300ms;
+  transition: height 300ms;
 
   &.slide-in {
-    .box-shadow(0px 0px 8px @gray-light);
-    bottom: 0px;
+    display: block;
   }
 }
 

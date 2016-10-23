@@ -9,6 +9,24 @@ const USER_SPAN = '<span class="item-title">%(user)s</span>';
 const USER_URL = '<a href="%(url)s" class="item-title">%(user)s</a>';
 
 export default class extends React.Component {
+  onInsert = () => {
+    this.props.replaceSelection(this.insertAttachment);
+  };
+
+  insertAttachment = (selection, replace) => {
+    const item = this.props.item;
+
+    if (item.is_image) {
+      if (item.url.thumb) {
+        replace('[![' + item.filename + '](' + item.url.thumb + ')](' + item.url.index + ')');
+      } else {
+        replace('[![' + item.filename + '](' + item.url.index + ')](' + item.url.index + ')');
+      }
+    } else {
+      replace('[' + item.filename + '](' + item.url.index + ')');
+    }
+  };
+
   onRemove = () => {
     this.updateItem({
       isRemoved: true
@@ -37,6 +55,7 @@ export default class extends React.Component {
       <li className="editor-attachment-complete">
         <Preview {...this.props} />
         <Actions
+          onInsert={this.onInsert}
           onRemove={this.onRemove}
           onUndo={this.onUndo}
           {...this.props}
@@ -132,10 +151,29 @@ export function Details(props) {
 
 export function Actions(props) {
   return (
-    <ul className="list-unstyled list-horizontal editor-attachment-actions">
+    <ul className="list-unstyled list-inline editor-attachment-actions">
+      <Insert {...props} />
       <Remove {...props} />
       <Undo {...props} />
     </ul>
+  );
+}
+
+export function Insert(props) {
+  if (!!props.item.isRemoved) {
+    return null;
+  }
+
+  return (
+    <li>
+      <button
+        className="btn btn-default btn-sm"
+        onClick={props.onInsert}
+        type="button"
+      >
+        {gettext("Insert")}
+      </button>
+    </li>
   );
 }
 

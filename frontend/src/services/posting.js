@@ -34,6 +34,10 @@ export class Posting {
     );
 
     this._placeholder.addClass('slide-in');
+
+    $('html, body').animate({
+      scrollTop: this._placeholder.offset().top
+    }, 1000);
   }
 
   close = () => {

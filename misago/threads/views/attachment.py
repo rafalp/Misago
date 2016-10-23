@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import os
 
 from django.conf import settings
@@ -9,8 +11,8 @@ from django.shortcuts import get_object_or_404, redirect
 from ..models import Attachment, AttachmentType
 
 
-ATTACHMENT_404_URL = '/'.join((settings.STATIC_URL, settings.MISAGO_404_IMAGE))
-ATTACHMENT_403_URL = '/'.join((settings.STATIC_URL, settings.MISAGO_403_IMAGE))
+ATTACHMENT_404_URL = ''.join((settings.STATIC_URL, settings.MISAGO_404_IMAGE))
+ATTACHMENT_403_URL = ''.join((settings.STATIC_URL, settings.MISAGO_403_IMAGE))
 
 
 def attachment_server(request, pk, secret, thumbnail=False):

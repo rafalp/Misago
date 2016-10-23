@@ -1,8 +1,17 @@
 // jshint ignore:start
 import React from 'react';
+import Code from './actions/code';
+import Emphasis from './actions/emphasis';
+import Hr from './actions/hr';
+import Image from './actions/image';
+import Link from './actions/link';
+import Striketrough from './actions/striketrough';
+import Strong from './actions/strong';
+import Quote from './actions/quote';
 import AttachmentsEditor from './attachments';
 import Upload from './attachments/upload-button/';
 import MarkupPreview from './markup-preview';
+import * as textUtils from './textUtils';
 import Button from 'misago/components/button';
 import misago from 'misago';
 import ajax from 'misago/services/ajax';
@@ -48,22 +57,70 @@ export default class extends React.Component {
     });
   };
 
+  replaceSelection = (operation) => {
+    operation(textUtils.getSelectionText(), this._replaceSelection);
+  };
+
+  _replaceSelection = (newValue) => {
+    this.props.onChange({
+      target: {
+        value: textUtils.replace(newValue)
+      }
+    });
+  };
+
   render() {
     return (
       <div className="editor-border">
         <textarea
           className="form-control"
+          defaultValue={this.props.value}
           disabled={this.props.loading}
+          id="editor-textarea"
           onChange={this.props.onChange}
-          rows="7"
-          value={this.props.value}
-        />
-        <AttachmentsEditor
-          attachments={this.props.attachments}
-          onAttachmentsChange={this.props.onAttachmentsChange}
-          placeholder={this.props.placeholder}
-        />
+          rows="9"
+        ></textarea>
         <div className="editor-footer">
+          <Strong
+            className="btn-default btn-sm pull-left"
+            disabled={this.props.loading || this.state.isPreviewLoading}
+            replaceSelection={this.replaceSelection}
+          />
+          <Emphasis
+            className="btn-default btn-sm pull-left"
+            disabled={this.props.loading || this.state.isPreviewLoading}
+            replaceSelection={this.replaceSelection}
+          />
+          <Striketrough
+            className="btn-default btn-sm pull-left"
+            disabled={this.props.loading || this.state.isPreviewLoading}
+            replaceSelection={this.replaceSelection}
+          />
+          <Hr
+            className="btn-default btn-sm pull-left"
+            disabled={this.props.loading || this.state.isPreviewLoading}
+            replaceSelection={this.replaceSelection}
+          />
+          <Link
+            className="btn-default btn-sm pull-left"
+            disabled={this.props.loading || this.state.isPreviewLoading}
+            replaceSelection={this.replaceSelection}
+          />
+          <Image
+            className="btn-default btn-sm pull-left"
+            disabled={this.props.loading || this.state.isPreviewLoading}
+            replaceSelection={this.replaceSelection}
+          />
+          <Quote
+            className="btn-default btn-sm pull-left"
+            disabled={this.props.loading || this.state.isPreviewLoading}
+            replaceSelection={this.replaceSelection}
+          />
+          <Code
+            className="btn-default btn-sm pull-left"
+            disabled={this.props.loading || this.state.isPreviewLoading}
+            replaceSelection={this.replaceSelection}
+          />
           <Upload
             className="btn-default btn-sm pull-left"
             disabled={this.props.loading || this.state.isPreviewLoading}
@@ -98,6 +155,12 @@ export default class extends React.Component {
             protect={this.props.protect}
           />
         </div>
+        <AttachmentsEditor
+          attachments={this.props.attachments}
+          onAttachmentsChange={this.props.onAttachmentsChange}
+          placeholder={this.props.placeholder}
+          replaceSelection={this.replaceSelection}
+        />
       </div>
     );
   }
