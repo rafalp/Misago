@@ -4,6 +4,8 @@ import markdown
 
 import bleach
 from bs4 import BeautifulSoup
+from django.core.urlresolvers import resolve
+from django.http import Http404
 from django.utils import six
 from htmlmin.minify import html_minify
 
@@ -17,7 +19,7 @@ __all__ = ['parse']
 
 
 def parse(text, request, poster, allow_mentions=True, allow_links=True,
-          allow_images=True, allow_blocks=True, minify=True):
+          allow_images=True, allow_blocks=True, force_shva=False, minify=True):
     """
     Message parser
 
@@ -59,7 +61,7 @@ def parse(text, request, poster, allow_mentions=True, allow_links=True,
         add_mentions(request, parsing_result)
 
     if allow_links or allow_images:
-        clean_links(request, parsing_result)
+        clean_links(request, parsing_result, force_shva)
 
     if minify:
         minify_result(parsing_result)
@@ -83,10 +85,7 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
     md.inlinePatterns.add('bb_i', inline.italics, '<emphasis')
     md.inlinePatterns.add('bb_u', inline.underline, '<emphasis2')
 
-    if allow_links:
-        # Add [url]
-        pass
-    else:
+    if not allow_links:
         # Remove links
         del md.inlinePatterns['link']
         del md.inlinePatterns['autolink']
@@ -101,7 +100,7 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
         del md.inlinePatterns['image_link']
 
     if allow_blocks:
-        # Add [hr] [quote], [spoiler], [list] and [code] blocks
+        # Add [hr], [quote] and [code] blocks
         md.parser.blockprocessors.add('bb_hr', blocks.BBCodeHRProcessor(md.parser), '>hr')
     else:
         # Remove blocks
@@ -120,7 +119,7 @@ def linkify_paragraphs(result):
     result['parsed_text'] = bleach.linkify(result['parsed_text'], skip_pre=True, parse_email=True)
 
 
-def clean_links(request, result):
+def clean_links(request, result, force_shva=False):
     host = request.get_host()
     site_address = '%s://%s' % (request.scheme, request.get_host())
 
@@ -128,6 +127,13 @@ def clean_links(request, result):
     for link in soup.find_all('a'):
         if is_internal_link(link['href'], host):
             link['href'] = clean_internal_link(link['href'], host)
+            if force_shva:
+                try:
+                    resolution = resolve(link['href'])
+                    print resolution
+                except (Http404, ValueError):
+                    pass
+            result['inside_links'].append(link['href'])
         else:
             result['outgoing_links'].append(link['href'])
 

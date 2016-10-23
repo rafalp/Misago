@@ -34,7 +34,7 @@ export function insertLink(selection, replace) {
     if (label.length > 0) {
       replace('[' + label + '](' + url + ')');
     } else {
-      replace('<' + url + '>');
+      replace(url);
     }
   }
 }

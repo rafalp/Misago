@@ -23,5 +23,5 @@ def parse_markup(request):
         }, status=status.HTTP_400_BAD_REQUEST)
 
     return Response({
-        'parsed': common_flavour(request, request.user, post)['parsed_text']
+        'parsed': common_flavour(request, request.user, post, force_shva=True)['parsed_text']
     })

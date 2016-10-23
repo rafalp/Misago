@@ -1,7 +1,7 @@
 from .parser import parse
 
 
-def common(request, poster, text, allow_mentions=True):
+def common(request, poster, text, allow_mentions=True, force_shva=False):
     """
     Common flavour
 
@@ -12,7 +12,7 @@ def common(request, poster, text, allow_mentions=True):
 
     Returns dict object
     """
-    return parse(text, request, poster, allow_mentions=allow_mentions)
+    return parse(text, request, poster, allow_mentions=allow_mentions, force_shva=force_shva)
 
 
 def limited(request, text):

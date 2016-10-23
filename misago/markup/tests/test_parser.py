@@ -226,3 +226,16 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
         self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_force_shva(self):
+        """parser appends ?shva=1 bit to attachment links"""
+        test_text = """
+            ![3.png](http://test.com/attachment/thumb/test-43/)
+        """
+
+        expected_result = """
+<p><img alt="3.png" src="/attachment/thumb/test-43/?shva=1"/></p>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=True)
+        self.assertEqual(expected_result, result['parsed_text'])
