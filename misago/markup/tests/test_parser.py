@@ -218,7 +218,7 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
         """parser handles image element nested in link"""
         test_text = """
 [![3.png](http://test.com/attachment/thumb/test-43/)](http://test.com/attachment/test-43/)
-        """
+        """.strip()
 
         expected_result = """
 <p><a href="/attachment/test-43/" rel="nofollow"><img alt="3.png" src="/attachment/thumb/test-43/"/></a></p>
@@ -228,13 +228,26 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
         self.assertEqual(expected_result, result['parsed_text'])
 
     def test_force_shva(self):
-        """parser appends ?shva=1 bit to attachment links"""
+        """parser appends ?shva=1 bit to attachment links if flag is present"""
         test_text = """
-            ![3.png](http://test.com/attachment/thumb/test-43/)
-        """
+![3.png](http://test.com/attachment/thumb/test-43/)
+        """.strip()
 
         expected_result = """
 <p><img alt="3.png" src="/attachment/thumb/test-43/?shva=1"/></p>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=True, force_shva=True)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_remove_shva(self):
+        """parser removes ?shva=1 bit from attachment links if flag is absent"""
+        test_text = """
+![3.png](http://test.com/attachment/thumb/test-43/?shva=1)
+        """.strip()
+
+        expected_result = """
+<p><img alt="3.png" src="/attachment/thumb/test-43/"/></p>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)

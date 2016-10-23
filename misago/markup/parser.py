@@ -17,6 +17,9 @@ from .pipeline import pipeline
 
 __all__ = ['parse']
 
+MISAGO_ATTACHMENT_VIEWS = ('misago:attachment', 'misago:attachment-thumbnail')
+
+
 
 def parse(text, request, poster, allow_mentions=True, allow_links=True,
           allow_images=True, allow_blocks=True, force_shva=False, minify=True):
@@ -127,13 +130,8 @@ def clean_links(request, result, force_shva=False):
     for link in soup.find_all('a'):
         if is_internal_link(link['href'], host):
             link['href'] = clean_internal_link(link['href'], host)
-            if force_shva:
-                try:
-                    resolution = resolve(link['href'])
-                    print resolution
-                except (Http404, ValueError):
-                    pass
             result['inside_links'].append(link['href'])
+            link['href'] = clean_attachment_link(link['href'], force_shva)
         else:
             result['outgoing_links'].append(link['href'])
 
@@ -145,6 +143,7 @@ def clean_links(request, result, force_shva=False):
         if is_internal_link(img['src'], host):
             img['src'] = clean_internal_link(img['src'], host)
             result['images'].append(img['src'])
+            img['src'] = clean_attachment_link(img['src'], force_shva)
         else:
             result['images'].append(img['src'])
 
@@ -182,6 +181,21 @@ def clean_internal_link(link, host):
         link = link[len(host):]
 
     return link or '/'
+
+
+def clean_attachment_link(link, force_shva=False):
+    try:
+        resolution = resolve(link)
+        url_name = ':'.join(resolution.namespaces + [resolution.url_name])
+    except (Http404, ValueError):
+        return link
+
+    if url_name in MISAGO_ATTACHMENT_VIEWS:
+        if force_shva:
+            link = '{}?shva=1'.format(link)
+        elif link.endswith('?shva=1'):
+            link = link[:-7]
+    return link
 
 
 def minify_result(result):
