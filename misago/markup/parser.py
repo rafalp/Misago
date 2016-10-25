@@ -11,6 +11,7 @@ from htmlmin.minify import html_minify
 
 from .bbcode import blocks, inline
 from .md.shortimgs import ShortImagesExtension
+from .md.striketrough import StriketroughExtension
 from .mentions import add_mentions
 from .pipeline import pipeline
 
@@ -88,6 +89,10 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
     md.inlinePatterns.add('bb_i', inline.italics, '<emphasis')
     md.inlinePatterns.add('bb_u', inline.underline, '<emphasis2')
 
+    # Add ~~deleted~~
+    striketrough_md = StriketroughExtension()
+    striketrough_md.extendMarkdown(md)
+
     if not allow_links:
         # Remove links
         del md.inlinePatterns['link']
@@ -103,8 +108,11 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
         del md.inlinePatterns['image_link']
 
     if allow_blocks:
-        # Add [hr], [quote] and [code] blocks
+        # Add [hr] and [quote] blocks
         md.parser.blockprocessors.add('bb_hr', blocks.BBCodeHRProcessor(md.parser), '>hr')
+
+        quote_bbcode = blocks.QuoteExtension()
+        quote_bbcode.extendMarkdown(md)
     else:
         # Remove blocks
         del md.parser.blockprocessors['hashheader']

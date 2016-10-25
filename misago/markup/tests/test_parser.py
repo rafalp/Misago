@@ -252,3 +252,48 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
         self.assertEqual(expected_result, result['parsed_text'])
+
+
+class StriketroughTests(TestCase):
+    def test_striketrough(self):
+        """striketrough markdown deletes test"""
+        test_text = """
+Lorem ~~ipsum, dolor~~ met.
+""".strip()
+
+        expected_result = """
+<p>Lorem <del>ipsum, dolor</del> met.</p>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+
+class QuoteTests(TestCase):
+    def test_quotes(self):
+        """bbcode for quote is supported"""
+        test_text = """
+Lorem ipsum.
+[quote]Dolor met[/quote]
+[quote]Dolor <b>met</b>[/quote]
+[quote]Dolor **met**[quote]Dolor met[/quote][/quote]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.</p>
+<blockquote>
+<p>Dolor met</p>
+</blockquote>
+<blockquote>
+<p>Dolor &lt;b&gt;met&lt;/b&gt;</p>
+</blockquote>
+<blockquote>
+<p>Dolor <strong>met</strong></p>
+<blockquote>
+<p>Dolor met</p>
+</blockquote>
+</blockquote>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
