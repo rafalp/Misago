@@ -33,6 +33,7 @@ def preload_settings_json(request):
     request.frontend_context.update({
         'SETTINGS': preloaded_settings,
 
+        'MISAGO_PATH': reverse('misago:index'),
         'STATIC_URL': dj_settings.STATIC_URL,
         'MEDIA_URL': dj_settings.MEDIA_URL,
 

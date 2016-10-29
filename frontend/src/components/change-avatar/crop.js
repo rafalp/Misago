@@ -1,10 +1,9 @@
 import React from 'react';
+import misago from 'misago';
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
 import Button from 'misago/components/button'; // jshint ignore:line
 import ajax from 'misago/services/ajax'; // jshint ignore:line
 import snackbar from 'misago/services/snackbar'; // jshint ignore:line
-
-const BASE_URL = $('base').attr('href') + 'user-avatar';
 
 export default class extends React.Component {
   constructor(props) {
@@ -37,7 +36,7 @@ export default class extends React.Component {
 
   getImagePath() {
     return [
-      BASE_URL,
+      misago.get('MISAGO_PATH') + 'user-avatar',
       this.getAvatarSecret() + ':' + this.getAvatarHash(),
       this.props.user.id + '.png'
     ].join('/');

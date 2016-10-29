@@ -1,7 +1,6 @@
 /* jshint ignore:start */
 import React from 'react';
-
-const BASE_URL = $('base').attr('href') + 'user-avatar/';
+import misago from 'misago';
 
 export default function(props) {
   return (
@@ -15,7 +14,7 @@ export default function(props) {
 
 export function getSrc(props) {
   const size = props.size || 100; // jshint ignore:line
-  let url = BASE_URL;
+  let url = misago.get('MISAGO_PATH') + 'user-avatar/';
 
   if (props.user && props.user.id) {
     // just avatar hash, size and user id
