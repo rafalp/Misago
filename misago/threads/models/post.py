@@ -8,6 +8,7 @@ from django.utils import six, timezone
 
 from misago.conf import settings
 from misago.core.utils import parse_iso8601_string
+from misago.markup import finalise_markup
 
 from .. import threadtypes
 from ..checksums import is_post_valid, update_post_checksum
@@ -117,6 +118,12 @@ class Post(models.Model):
                 self._hydrated_attachments_cache.append(attachment)
 
         return self._hydrated_attachments_cache
+
+    @property
+    def content(self):
+        if not hasattr(self, '_finalised_parsed'):
+            self._finalised_parsed = finalise_markup(self.parsed)
+        return self._finalised_parsed
 
     @property
     def thread_type(self):

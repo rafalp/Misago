@@ -35,9 +35,7 @@ export default class extends React.Component {
   render() {
     return (
       <div className={this.props.className}>
-        <div style={{borderColor: '#f00'}}>
-          {this.props.children}
-        </div>
+        {this.props.children}
       </div>
     );
   }

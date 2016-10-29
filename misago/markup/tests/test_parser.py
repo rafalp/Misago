@@ -282,16 +282,106 @@ Lorem ipsum.
         expected_result = """
 <p>Lorem ipsum.</p>
 <blockquote>
+<header></header>
 <p>Dolor met</p>
 </blockquote>
 <blockquote>
+<header></header>
 <p>Dolor &lt;b&gt;met&lt;/b&gt;</p>
 </blockquote>
 <blockquote>
+<header></header>
 <p>Dolor <strong>met</strong></p>
 <blockquote>
+<header></header>
 <p>Dolor met</p>
 </blockquote>
+</blockquote>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_authored_quotes(self):
+        """bbcode for authored quote is supported and handles mentions as well"""
+        test_text = """
+Lorem ipsum.
+[quote]Dolor met[/quote]
+[quote=\"Bob\"]Dolor <b>met</b>[/quote]
+[quote]Dolor **met**[quote=@Bob]Dolor met[/quote][/quote]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.</p>
+<blockquote>
+<header></header>
+<p>Dolor met</p>
+</blockquote>
+<blockquote>
+<header>@Bob</header>
+<p>Dolor &lt;b&gt;met&lt;/b&gt;</p>
+</blockquote>
+<blockquote>
+<header></header>
+<p>Dolor <strong>met</strong></p>
+<blockquote>
+<header>@Bob</header>
+<p>Dolor met</p>
+</blockquote>
+</blockquote>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_invalid_author_quote(self):
+        """parser handles invalid author quote"""
+        test_text = """
+Lorem ipsum.
+[quote=\"Bob Sasasasa]Dolor <b>met</b>[/quote]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.<br/>
+[quote="Bob Sasasasa]Dolor &lt;b&gt;met&lt;/b&gt;[/quote]</p>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_invalid_author_quote(self):
+        """parser handles invalid author quote"""
+        test_text = """
+Lorem ipsum.
+[quote=\"Bob Sasasasa]Dolor <b>met</b>[/quote]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.<br/>
+[quote="Bob Sasasasa]Dolor &lt;b&gt;met&lt;/b&gt;[/quote]</p>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_hr_edge_case(self):
+        """test for weird edge case in which hr gets moved outside of quote"""
+        test_text = """
+Lorem ipsum.
+[quote]
+Dolor met
+- - - - -
+Amet elit
+[/quote]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.</p>
+<blockquote>
+<header></header>
+<p>Dolor met</p>
+<hr/>
+<p>Amet elit</p>
 </blockquote>
 """.strip()
 

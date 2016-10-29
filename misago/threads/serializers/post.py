@@ -15,7 +15,7 @@ __all__ = [
 class PostSerializer(serializers.ModelSerializer):
     poster = UserSerializer(many=False, read_only=True)
     poster_ip = serializers.SerializerMethodField()
-    parsed = serializers.SerializerMethodField()
+    content = serializers.SerializerMethodField()
     attachments = serializers.SerializerMethodField()
     last_editor = serializers.PrimaryKeyRelatedField(read_only=True)
     hidden_by = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -34,7 +34,7 @@ class PostSerializer(serializers.ModelSerializer):
             'poster',
             'poster_name',
             'poster_ip',
-            'parsed',
+            'content',
             'attachments',
             'posted_on',
             'updated_on',
@@ -67,9 +67,9 @@ class PostSerializer(serializers.ModelSerializer):
         else:
             return None
 
-    def get_parsed(self, obj):
+    def get_content(self, obj):
         if obj.is_valid and not obj.is_event and (not obj.is_hidden or obj.acl['can_see_hidden']):
-            return obj.parsed
+            return obj.content
         else:
             return None
 

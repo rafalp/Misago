@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from misago.threads.validators import validate_post
 
-from . import common_flavour
+from . import common_flavour, finalise_markup
 
 
 @api_view(['POST'])
@@ -22,6 +22,9 @@ def parse_markup(request):
             'detail': e.args[0]
         }, status=status.HTTP_400_BAD_REQUEST)
 
+    parsed = common_flavour(request, request.user, post, force_shva=True)['parsed_text']
+    finalised = finalise_markup(parsed)
+
     return Response({
-        'parsed': common_flavour(request, request.user, post, force_shva=True)['parsed_text']
+        'parsed': finalised
     })

@@ -11,7 +11,7 @@ const HIDDEN_ON = '<abbr class="last-title" title="%(absolute)s">%(relative)s</a
 export default function(props) {
   if (props.post.is_hidden && !props.post.acl.can_see_hidden) {
     return <Hidden {...props} />;
-  } else if (props.post.parsed) {
+  } else if (props.post.content) {
     return <Default {...props} />;
   } else {
     return <Invalid {...props} />;
@@ -21,7 +21,7 @@ export default function(props) {
 export function Default(props) {
  return (
     <Waypoint className="panel-body" post={props.post}>
-      <MisagoMarkup markup={props.post.parsed} />
+      <MisagoMarkup markup={props.post.content} />
     </Waypoint>
   );
 }
