@@ -5,7 +5,7 @@ django-haystack==2.4.1
 django-jinja==0.24
 django-mptt<0.6
 jinja2
-markdown<2.3
+markdown==2.3.1
 path.py
 Pillow
 pytz==2013b
