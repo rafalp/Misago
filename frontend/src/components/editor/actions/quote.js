@@ -10,7 +10,9 @@ export default function(props) {
       title={gettext("Insert quote")}
       {...props}
     >
-      quote
+      <span className="material-icon">
+        format_quote
+      </span>
     </Action>
   );
 }

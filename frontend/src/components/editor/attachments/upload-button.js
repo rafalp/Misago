@@ -14,7 +14,7 @@ export default class extends React.Component {
 
     return (
       <button
-        className={'btn ' + this.props.className}
+        className={'btn btn-icon ' + this.props.className}
         disabled={this.props.disabled}
         onClick={this.onClick}
         title={gettext('Upload file')}

@@ -9,7 +9,9 @@ export default function(props) {
       title={gettext("Striketrough selection")}
       {...props}
     >
-      striketrough
+      <span className="material-icon">
+        format_strikethrough
+      </span>
     </Action>
   );
 }

@@ -9,7 +9,9 @@ export default function(props) {
       title={gettext("Emphase selection")}
       {...props}
     >
-      emphasis
+      <span className="material-icon">
+        format_italic
+      </span>
     </Action>
   );
 }

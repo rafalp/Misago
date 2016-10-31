@@ -9,7 +9,9 @@ export default function(props) {
       title={gettext("Insert horizontal ruler")}
       {...props}
     >
-      hr
+      <span className="material-icon">
+        remove
+      </span>
     </Action>
   );
 }

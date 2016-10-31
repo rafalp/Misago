@@ -10,7 +10,9 @@ export default function(props) {
       title={gettext("Insert image")}
       {...props}
     >
-      image
+      <span className="material-icon">
+        insert_photo
+      </span>
     </Action>
   );
 }

@@ -10,7 +10,9 @@ export default function(props) {
       title={gettext("Insert link")}
       {...props}
     >
-      link
+      <span className="material-icon">
+        insert_link
+      </span>
     </Action>
   );
 }

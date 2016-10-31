@@ -170,7 +170,7 @@ export function Protect(props) {
   if (props.canProtect) {
     return (
       <button
-        className="btn btn-default btn-sm pull-right"
+        className="btn btn-icon btn-default btn-sm pull-right"
         disabled={props.disabled}
         onClick={props.protect ? props.onUnprotect : props.onProtect}
         title={props.protect ? gettext('Protected') : gettext('Protect')}

@@ -9,7 +9,7 @@ export default class extends React.Component {
   render() {
     return (
       <button
-        className={'btn ' + this.props.className}
+        className={'btn btn-icon ' + this.props.className}
         disabled={this.props.disabled}
         onClick={this.onClick}
         title={this.props.title}

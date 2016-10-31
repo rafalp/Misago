@@ -9,7 +9,9 @@ export default function(props) {
       title={gettext("Bolder selection")}
       {...props}
     >
-      bold
+      <span className="material-icon">
+        format_bold
+      </span>
     </Action>
   );
 }

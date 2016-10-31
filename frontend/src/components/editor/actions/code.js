@@ -10,7 +10,9 @@ export default function(props) {
       title={gettext("Insert code")}
       {...props}
     >
-      code
+      <span className="material-icon">
+        functions
+      </span>
     </Action>
   );
 }
