@@ -88,7 +88,7 @@ class EditPollSerializer(serializers.ModelSerializer):
         )
 
     def validate_choices(self, choices):
-        clean_choices = map(self.clean_choice, choices)
+        clean_choices = list(map(self.clean_choice, choices))
 
     def clean_choice(self, choice):
         clean_choice = {
@@ -138,7 +138,7 @@ class NewPollSerializer(EditPollSerializer):
         )
 
     def validate_choices(self, choices):
-        clean_choices = map(self.clean_choice, choices)
+        clean_choices = list(map(self.clean_choice, choices))
 
         self.validate_choices_num(clean_choices)
 
