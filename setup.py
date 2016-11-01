@@ -1,12 +1,17 @@
 #-*- coding: utf-8 -*-
 import os
+
 from setuptools import setup, find_packages
+
 from misago import __version__ as version
 
-README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
-requirements_path = os.path.join(os.path.dirname(__file__), 'misago/project_template/requirements.txt')
-with open(requirements_path, "r") as f:
+SETUP_DIR = os.path.dirname(__file__)
+
+
+README = open(os.path.join(SETUP_DIR, 'README.rst')).read()
+
+with open(os.path.join(SETUP_DIR, 'requirements.txt'), "r") as f:
     REQUIREMENTS = [x.strip() for x in f.readlines()]
 
 
@@ -18,6 +23,7 @@ EXCLUDE_FROM_PACKAGES = [
     'misago.project_template',
     'misago.bin'
 ]
+
 
 setup(
     name='Misago',
