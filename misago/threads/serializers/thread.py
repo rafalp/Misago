@@ -5,6 +5,7 @@ from rest_framework import serializers
 from misago.categories.serializers import BasicCategorySerializer
 
 from ..models import Thread
+from .poll import PollSerializer
 
 
 __all__ = [
@@ -20,6 +21,7 @@ class ThreadSerializer(serializers.ModelSerializer):
     is_new = serializers.SerializerMethodField()
     is_read = serializers.SerializerMethodField()
     path = BasicCategorySerializer(many=True, read_only=True)
+    poll = PollSerializer(many=False, read_only=True)
     subscription = serializers.SerializerMethodField()
 
     api = serializers.SerializerMethodField()
@@ -46,6 +48,7 @@ class ThreadSerializer(serializers.ModelSerializer):
             'is_new',
             'is_read',
             'path',
+            'poll',
             'subscription',
 
             'api',

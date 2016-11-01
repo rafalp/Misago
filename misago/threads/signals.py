@@ -8,7 +8,7 @@ from misago.categories.signals import delete_category_content, move_category_con
 from misago.core.pgutils import batch_delete, batch_update
 from misago.users.signals import delete_user_content, username_changed
 
-from .models import Attachment, Post, Thread
+from .models import Attachment, Post, Thread, Poll, PollVote
 
 
 delete_post = Signal()
@@ -53,6 +53,8 @@ def move_category_threads(sender, **kwargs):
 
     Thread.objects.filter(category=sender).update(category=new_category)
     Post.objects.filter(category=sender).update(category=new_category)
+    Poll.objects.filter(category=sender).update(category=new_category)
+    PollVote.objects.filter(category=sender).update(category=new_category)
 
 
 @receiver(delete_user_content)
@@ -105,6 +107,16 @@ def update_usernames(sender, **kwargs):
     Attachment.objects.filter(uploader=sender).update(
         uploader_name=sender.username,
         uploader_slug=sender.slug
+    )
+
+    Poll.objects.filter(poster=sender).update(
+        poster_name=sender.username,
+        poster_slug=sender.slug
+    )
+
+    PollVote.objects.filter(voter=sender).update(
+        voter_name=sender.username,
+        voter_slug=sender.slug
     )
 
 

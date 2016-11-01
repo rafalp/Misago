@@ -1,6 +1,8 @@
 from django.core.urlresolvers import reverse
 
 from misago.admin.testutils import AdminTestCase
+from misago.threads import testutils
+from misago.threads.models import Thread
 
 from ..models import Category
 
@@ -268,6 +270,10 @@ class CategoryAdminDeleteViewTests(AdminTestCase):
 
     def test_delete_category_move_contents(self):
         """category was deleted and its contents were moved"""
+        for i in range(10):
+            testutils.post_thread(self.category_b)
+        self.assertEqual(Thread.objects.count(), 10)
+
         response = self.client.get(
             reverse('misago:admin:categories:nodes:delete', kwargs={
                 'pk': self.category_b.pk
@@ -284,9 +290,13 @@ class CategoryAdminDeleteViewTests(AdminTestCase):
             })
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Category.objects.all_categories().count(), 6)
+        self.assertEqual(Thread.objects.count(), 10)
 
     def test_delete_category_and_contents(self):
         """category and its contents were deleted"""
+        for i in range(10):
+            testutils.post_thread(self.category_b)
+
         response = self.client.get(
             reverse('misago:admin:categories:nodes:delete', kwargs={
                 'pk': self.category_b.pk
@@ -297,16 +307,25 @@ class CategoryAdminDeleteViewTests(AdminTestCase):
             reverse('misago:admin:categories:nodes:delete', kwargs={
                 'pk': self.category_b.pk
             }),
-            data={'move_children_to': '', 'move_threads_to': ''})
+            data={
+                'move_children_to': '',
+                'move_threads_to': ''
+            })
         self.assertEqual(response.status_code, 302)
 
         self.assertEqual(Category.objects.all_categories().count(), 4)
+        self.assertEqual(Thread.objects.count(), 0)
+
 
     def test_delete_leaf_category(self):
         """category was deleted and its contents were moved"""
+        for i in range(10):
+            testutils.post_thread(self.category_d)
+        self.assertEqual(Thread.objects.count(), 10)
+
         response = self.client.get(
             reverse('misago:admin:categories:nodes:delete', kwargs={
-                'pk': self.category_b.pk
+                'pk': self.category_d.pk
             }))
         self.assertEqual(response.status_code, 200)
 
@@ -319,4 +338,6 @@ class CategoryAdminDeleteViewTests(AdminTestCase):
                 'move_threads_to': '',
             })
         self.assertEqual(response.status_code, 302)
+
         self.assertEqual(Category.objects.all_categories().count(), 6)
+        self.assertEqual(Thread.objects.count(), 0)

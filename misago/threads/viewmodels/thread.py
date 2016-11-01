@@ -13,7 +13,14 @@ from ..subscriptions import make_subscription_aware
 from ..threadtypes import trees_map
 
 
-BASE_RELATIONS = ('category', 'starter', 'starter__rank', 'starter__ban_cache', 'starter__online_tracker')
+BASE_RELATIONS = (
+    'category',
+    'poll',
+    'starter',
+    'starter__rank',
+    'starter__ban_cache',
+    'starter__online_tracker'
+)
 
 
 class ViewModel(object):

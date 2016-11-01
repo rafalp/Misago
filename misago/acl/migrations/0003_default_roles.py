@@ -45,6 +45,12 @@ def create_default_roles(apps, schema_editor):
                 'can_download_other_users_attachments': True,
             },
 
+            # polls
+            'misago.threads.permissions.polls': {
+                'can_start_polls': 1,
+                'can_edit_polls': 1
+            },
+
             # delete users
             'misago.users.permissions.delete': {
                 'can_delete_users_newer_than': 0,
@@ -127,6 +133,14 @@ def create_default_roles(apps, schema_editor):
                 'max_attachment_size': 8 * 1024,
                 'can_download_other_users_attachments': True,
                 'can_delete_other_users_attachments': True,
+            },
+
+            # polls
+            'misago.threads.permissions.polls': {
+                'can_start_polls': 2,
+                'can_edit_polls': 2,
+                'can_delete_polls': 2,
+                'can_always_see_poll_voters': 1
             },
 
             # moderation

@@ -117,8 +117,8 @@ def validate_attachments_count(data):
     total_attachments = len(data)
     if total_attachments > settings.MISAGO_POST_ATTACHMENTS_LIMIT:
         message = ungettext(
-            "You can't attach more than %(limit_value)s file to single post. (added %(show_value)s)",
-            "You can't attach more than %(limit_value)s flies to single post. (added %(show_value)s)",
+            "You can't attach more than %(limit_value)s file to single post (added %(show_value)s).",
+            "You can't attach more than %(limit_value)s flies to single post (added %(show_value)s).",
             settings.MISAGO_POST_ATTACHMENTS_LIMIT)
         raise serializers.ValidationError(message % {
             'limit_value': settings.MISAGO_POST_ATTACHMENTS_LIMIT,

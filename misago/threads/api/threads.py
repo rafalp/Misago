@@ -21,7 +21,6 @@ from .threadendpoints.patch import thread_patch_endpoint
 
 class ViewSet(viewsets.ViewSet):
     thread = None
-    TREE_ID = None
 
     def get_thread(self, request, pk, read_aware=True, subscription_aware=True, select_for_update=False):
         return self.thread(
@@ -67,6 +66,7 @@ class ViewSet(viewsets.ViewSet):
 class ThreadViewSet(ViewSet):
     thread = ForumThread
 
+    @transaction.atomic
     def create(self, request):
         # Initialize empty instances for new thread
         thread = Thread()

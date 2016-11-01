@@ -119,6 +119,7 @@ MISAGO_ACL_EXTENSIONS = (
     'misago.users.permissions.delete',
     'misago.categories.permissions',
     'misago.threads.permissions.attachments',
+    'misago.threads.permissions.polls',
     'misago.threads.permissions.threads',
     'misago.threads.permissions.privatethreads',
 )
