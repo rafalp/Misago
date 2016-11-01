@@ -1,11 +1,12 @@
 from django.core.urlresolvers import reverse
+from django.test import override_settings
 
 from misago.admin.testutils import AdminTestCase
 
 
+@override_settings(ROOT_URLCONF='misago.core.testproject.urls')
 class DjangoAdminAuthTests(AdminTestCase):
     """assertions for Django admin auth interop with Misago User Model"""
-    urls = 'misago.core.testproject.urls'
 
     def test_login(self):
         """its possible to sign in to django admin"""

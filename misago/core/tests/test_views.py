@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 
 class MomentJSCatalogViewTests(TestCase):
@@ -22,9 +22,9 @@ class PreloadJSDataViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class RedirectViewTests(TestCase):
-    urls = 'misago.core.testproject.urls'
 
+@override_settings(ROOT_URLCONF='misago.core.testproject.urls')
+class RedirectViewTests(TestCase):
     def test_redirect_view(self):
         """redirect view always redirects to home page"""
         response = self.client.get(reverse('test-redirect'))

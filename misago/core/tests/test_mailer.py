@@ -1,12 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 
+@override_settings(ROOT_URLCONF='misago.core.testproject.urls')
 class MisagoMailerTests(TestCase):
-    urls = 'misago.core.testproject.urls'
-
     def test_mail_user(self):
         """mail_user sets message in backend"""
         User = get_user_model()

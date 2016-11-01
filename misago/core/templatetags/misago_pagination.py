@@ -1,6 +1,5 @@
 from django import template
 from django.core.urlresolvers import reverse
-from django.template import Context
 from django.template.loader import get_template
 
 
@@ -18,7 +17,7 @@ def pagination(page, template, link_name, **kwargs):
         'link_name': link_name,
     })
 
-    return template.render(Context(context))
+    return template.render(context)
 
 
 @register.simple_tag

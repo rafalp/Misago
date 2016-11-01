@@ -1,6 +1,5 @@
 from django import template
-from django.template import Context
-from django.template.loader import get_template
+from django.template.loader import render_to_string
 
 from crispy_forms.templatetags import crispy_forms_field, crispy_forms_filters
 
@@ -62,14 +61,13 @@ class FormRowNode(template.Node):
             field_class = None
 
         template_pack = crispy_forms_filters.TEMPLATE_PACK
-        template = get_template('%s/field.html' % template_pack)
-        c = Context({
+        return render_to_string('%s/field.html' % template_pack, {
             'field': field,
             'form_show_errors': True,
             'form_show_labels': True,
             'label_class': label_class or '',
-            'field_class': field_class or ''})
-        return template.render(c)
+            'field_class': field_class or ''
+        })
 
 
 """

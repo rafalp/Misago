@@ -1,21 +1,18 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.core.urlresolvers import reverse
+from django.test import override_settings
 from django.utils import formats
 
 from misago.admin.testutils import AdminTestCase
 
 
-User = get_user_model()
-
-
+@override_settings(ROOT_URLCONF='misago.core.testproject.urls')
 class TestDjangoAdminUserForm(AdminTestCase):
-    urls = 'misago.core.testproject.urls'
-
     def test_edit_page_content(self):
-        """
-        Assert that edit-view of `test_user` contains expected content.
-        """
+        """assert that edit-view of `test_user` contains expected content."""
+        User = get_user_model()
+
         test_user = User.objects.create_user(
             username='Bob',
             email='bob@test.com',

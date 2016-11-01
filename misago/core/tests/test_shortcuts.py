@@ -1,13 +1,12 @@
 from django.core.urlresolvers import reverse
 from django.http import Http404
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from ..shortcuts import get_int_or_404
 
 
+@override_settings(ROOT_URLCONF='misago.core.testproject.urls')
 class PaginateTests(TestCase):
-    urls = 'misago.core.testproject.urls'
-
     def test_valid_page_handling(self):
         """Valid page number causes no errors"""
         response = self.client.get(
@@ -34,9 +33,8 @@ class PaginateTests(TestCase):
         self.assertEqual(response['Location'], valid_url)
 
 
+@override_settings(ROOT_URLCONF='misago.core.testproject.urls')
 class ValidateSlugTests(TestCase):
-    urls = 'misago.core.testproject.urls'
-
     def test_valid_slug_handling(self):
         """Valid slug causes no interruption in view processing"""
         response = self.client.get(reverse('validate-slug-view', kwargs={

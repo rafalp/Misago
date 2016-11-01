@@ -1,11 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 
+@override_settings(ROOT_URLCONF='misago.core.testproject.urls')
 class RequirePostTests(TestCase):
-    urls = 'misago.core.testproject.urls'
-
     def test_require_POST_success(self):
         """require_POST decorator allowed POST request"""
         response = self.client.post(reverse('test-require-post'))

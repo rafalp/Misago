@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from django.test import Client, TestCase
+from django.test import Client, TestCase, override_settings
 from django.test.client import RequestFactory
 
 from misago.users.models import AnonymousUser
@@ -11,14 +11,15 @@ class CSRFErrorViewTests(TestCase):
     def test_csrf_failure(self):
         """csrf_failure error page has no show-stoppers"""
         csrf_client = Client(enforce_csrf_checks=True)
-        response = csrf_client.post(reverse('misago:index'),
-                                    data={'eric': 'fish'})
+        response = csrf_client.post(reverse('misago:index'), data={
+            'eric': 'fish'
+        })
         self.assertContains(response, "Request blocked", status_code=403)
 
 
-class ErrorPageViewsTests(TestCase):
-    urls = 'misago.core.testproject.urls'
 
+@override_settings(ROOT_URLCONF='misago.core.testproject.urls')
+class ErrorPageViewsTests(TestCase):
     def test_banned_returns_403(self):
         """banned error page has no show-stoppers"""
         response = self.client.get(reverse('raise-misago-banned'))
@@ -40,9 +41,8 @@ class ErrorPageViewsTests(TestCase):
         self.assertContains(response, "Wrong way", status_code=405)
 
 
+@override_settings(ROOT_URLCONF='misago.core.testproject.urlswitherrorhandlers')
 class CustomErrorPagesTests(TestCase):
-    urls = 'misago.core.testproject.urlswitherrorhandlers'
-
     def setUp(self):
         self.misago_request = RequestFactory().get(reverse('misago:index'))
         self.site_request = RequestFactory().get(reverse('raise-403'))
