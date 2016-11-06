@@ -17,4 +17,4 @@ class PollVote(models.Model):
     voter_slug = models.CharField(max_length=255)
     voter_ip = models.GenericIPAddressField()
     voted_on = models.DateTimeField(default=timezone.now)
-    option_hash = models.CharField(max_length=12)
+    choice_hash = models.CharField(max_length=12, db_index=True)

@@ -288,7 +288,7 @@ class Migration(migrations.Migration):
                 ('voter_slug', models.CharField(max_length=255)),
                 ('voter_ip', models.GenericIPAddressField()),
                 ('voted_on', models.DateTimeField(default=django.utils.timezone.now)),
-                ('option_hash', models.CharField(max_length=12)),
+                ('choice_hash', models.CharField(max_length=12, db_index=True)),
                 ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_categories.Category')),
                 ('poll', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.Poll')),
                 ('thread', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.Thread')),

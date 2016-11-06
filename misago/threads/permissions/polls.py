@@ -1,4 +1,5 @@
 from django.core.exceptions import PermissionDenied
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _, ungettext
 
 from misago.acl import algebra
@@ -90,7 +91,7 @@ ACL's for targets
 """
 def add_acl_to_poll(user, poll):
     poll.acl.update({
-        'can_edit': False,
+        'can_edit': can_edit_poll(user, poll),
         'can_delete': False,
     })
 
@@ -133,3 +134,46 @@ def allow_start_poll(user, target):
     except Poll.DoesNotExist:
         pass
 can_start_poll = return_boolean(allow_start_poll)
+
+
+def allow_edit_poll(user, target):
+    if user.is_anonymous():
+        raise PermissionDenied(_("You have to sign in to edit polls."))
+
+    category_acl = user.acl['categories'].get(target.category_id, {
+        'can_close_threads': False,
+    })
+
+    if not user.acl.get('can_edit_polls'):
+        raise PermissionDenied(_("You can't edit polls."))
+
+    if user.acl.get('can_edit_polls') < 2:
+        if user.pk != target.poster_id:
+            raise PermissionDenied(_("You can't edit other users polls in this category."))
+        if not has_time_to_edit_poll(user, target):
+            message = ungettext(
+                "You can't edit polls that are older than %(minutes)s minute.",
+                "You can't edit polls that are older than %(minutes)s minutes.",
+                user.acl['poll_edit_time'])
+            raise PermissionDenied(message % {'minutes': user.acl['poll_edit_time']})
+
+    if target.is_over:
+        raise PermissionDenied(_("This poll is over. You can't edit it."))
+
+    if not category_acl.get('can_close_threads'):
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't edito polls in it."))
+        if target.thread.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't edito polls in it."))
+can_edit_poll = return_boolean(allow_edit_poll)
+
+
+def has_time_to_edit_poll(user, target):
+    edit_time = user.acl['poll_edit_time']
+    if edit_time:
+        diff = timezone.now() - target.posted_on
+        diff_minutes = int(diff.total_seconds() / 60)
+
+        return diff_minutes < edit_time
+    else:
+        return True

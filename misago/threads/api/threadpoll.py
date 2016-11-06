@@ -9,7 +9,7 @@ from misago.acl import add_acl
 from misago.core.shortcuts import get_int_or_404
 
 from ..models import Poll, PollVote
-from ..permissions.polls import allow_start_poll
+from ..permissions.polls import allow_start_poll, allow_edit_poll
 from ..serializers import PollSerializer, NewPollSerializer, EditPollSerializer
 from ..viewmodels.thread import ForumThread
 
@@ -22,20 +22,25 @@ class ViewSet(viewsets.ViewSet):
             request,
             get_int_or_404(thread_pk),
             select_for_update=select_for_update,
-        )
+        ).model
 
     def get_thread_for_update(self, request, thread_pk):
         return self.get_thread(request, thread_pk, select_for_update=True)
 
-    def get_poll(self, thread):
+    def get_poll(self, thread, pk):
         try:
-            return thread.poll
+            poll_id = get_int_or_404(pk)
+            if thread.poll.pk != poll_id:
+                raise Http404()
+            poll = Poll.objects.select_for_update().get(pk=thread.poll.pk)
+            poll.thread = thread
+            return poll
         except Poll.DoesNotExist:
             raise Http404()
 
     @transaction.atomic
     def create(self, request, thread_pk):
-        thread = self.get_thread_for_update(request, thread_pk).model
+        thread = self.get_thread_for_update(request, thread_pk)
         allow_start_poll(request.user, thread)
 
         instance = Poll(
@@ -56,7 +61,25 @@ class ViewSet(viewsets.ViewSet):
         else:
             return Response(serializer.errors, status=400)
 
-    # create poll
+    @transaction.atomic
+    def update(self, request, thread_pk, pk):
+        thread = self.get_thread(request, thread_pk)
+        instance = self.get_poll(thread, pk)
+
+        allow_edit_poll(request.user, instance)
+
+        serializer = EditPollSerializer(instance, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+
+            add_acl(request.user, instance)
+            serialized_poll = PollSerializer(instance).data
+            instance.make_choices_votes_aware(request.user, serialized_poll['choices'])
+            return Response(serialized_poll)
+        else:
+            return Response(serializer.errors, status=400)
+
+
     # edit poll
     # delete poll
     # vote in poll

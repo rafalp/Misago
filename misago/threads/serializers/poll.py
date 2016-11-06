@@ -90,6 +90,29 @@ class EditPollSerializer(serializers.ModelSerializer):
     def validate_choices(self, choices):
         clean_choices = list(map(self.clean_choice, choices))
 
+        # generate hashes for added choices
+        choices_map = {}
+        for choice in self.instance.choices:
+            choices_map[choice['hash']] = choice
+
+        final_choices = []
+        for choice in clean_choices:
+            if choice['hash'] in choices_map:
+                choices_map[choice['hash']].update({
+                    'label': choice['label']
+                })
+                final_choices.append(choices_map[choice['hash']])
+            else:
+                choice.update({
+                    'hash': get_random_string(12),
+                    'votes': 0
+                })
+                final_choices.append(choice)
+
+        self.validate_choices_num(final_choices)
+
+        return final_choices
+
     def clean_choice(self, choice):
         clean_choice = {
             'hash': choice.get('hash', get_random_string(12)),
@@ -123,6 +146,24 @@ class EditPollSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 _("Number of allowed choices can't be greater than number of all choices."))
         return data
+
+    def update(self, instance, validated_data):
+        if instance.choices:
+            self.update_choices(instance, validated_data['choices'])
+
+        return super(EditPollSerializer, self).update(instance, validated_data)
+
+    def update_choices(self, instance, cleaned_choices):
+        removed_hashes = []
+
+        final_hashes = [c['hash'] for c in cleaned_choices]
+        for choice in instance.choices:
+            if choice['hash'] not in final_hashes:
+                instance.votes -= choice['votes']
+                removed_hashes.append(choice['hash'])
+
+        if removed_hashes:
+            instance.pollvote_set.filter(choice_hash__in=removed_hashes).delete()
 
 
 class NewPollSerializer(EditPollSerializer):
