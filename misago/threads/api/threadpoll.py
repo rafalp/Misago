@@ -32,8 +32,12 @@ class ViewSet(viewsets.ViewSet):
             poll_id = get_int_or_404(pk)
             if thread.poll.pk != poll_id:
                 raise Http404()
+
             poll = Poll.objects.select_for_update().get(pk=thread.poll.pk)
+
             poll.thread = thread
+            poll.category = thread.category
+
             return poll
         except Poll.DoesNotExist:
             raise Http404()

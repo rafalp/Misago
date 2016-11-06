@@ -90,6 +90,7 @@ class ThreadSerializer(serializers.ModelSerializer):
             'index': obj.get_api_url(),
             'editor': obj.get_editor_api_url(),
             'merge': obj.get_merge_api_url(),
+            'poll': obj.get_poll_api_url(),
             'posts': {
                 'index': obj.get_posts_api_url(),
                 'merge': obj.get_post_merge_api_url(),

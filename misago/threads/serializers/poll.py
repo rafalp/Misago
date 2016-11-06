@@ -39,18 +39,15 @@ class PollSerializer(serializers.ModelSerializer):
 
     def get_api(self, obj):
         return {
-            'index': reverse('misago:api:thread-poll-detail', kwargs={
-                'thread_pk': obj.thread_id,
-                'pk': obj.pk
-            }),
+            'index': obj.get_api_url(),
         }
 
     def get_url(self, obj):
         return {
-            'poster': self.get_last_poster_url(obj),
+            'poster': self.get_poster_url(obj),
         }
 
-    def get_last_poster_url(self, obj):
+    def get_poster_url(self, obj):
         if obj.poster_id:
             return reverse('misago:user', kwargs={
                 'slug': obj.poster_slug,

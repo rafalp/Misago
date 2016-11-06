@@ -36,6 +36,13 @@ class Poll(models.Model):
             return self.posted_on - timedelta(days=self.length) < timezone.now()
         return False
 
+    @property
+    def thread_type(self):
+        return self.category.thread_type
+
+    def get_api_url(self):
+        return self.thread_type.get_poll_api_url(self)
+
     def make_choices_votes_aware(self, user, choices):
         if user.is_anonymous():
             for choice in choices:
