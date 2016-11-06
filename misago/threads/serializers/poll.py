@@ -39,8 +39,9 @@ class PollSerializer(serializers.ModelSerializer):
 
     def get_api(self, obj):
         return {
-            'index': reverse('misago:api:thread-poll-list', kwargs={
-                'thread_pk': obj.thread_id
+            'index': reverse('misago:api:thread-poll-detail', kwargs={
+                'thread_pk': obj.thread_id,
+                'pk': obj.pk
             }),
         }
 
