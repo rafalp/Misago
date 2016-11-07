@@ -1,10 +1,8 @@
 from datetime import timedelta
 
-from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 
-from ..models import Poll
 from ..serializers.poll import MAX_POLL_OPTIONS
 from .test_thread_poll_api import ThreadPollApiTestCase
 
@@ -13,92 +11,10 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
     def setUp(self):
         super(ThreadPollEditTests, self).setUp()
 
-        # mock poll
-        self.poll = self.thread.poll = Poll.objects.create(
-            category=self.category,
-            thread=self.thread,
-            poster=self.user,
-            poster_name=self.user.username,
-            poster_slug=self.user.slug,
-            poster_ip='127.0.0.1',
-            question="Lorem ipsum dolor met?",
-            choices=[
-                {
-                    'hash': 'aaaaaaaaaaaa',
-                    'label': 'Alpha',
-                    'votes': 1
-                },
-                {
-                    'hash': 'bbbbbbbbbbbb',
-                    'label': 'Beta',
-                    'votes': 0
-                },
-                {
-                    'hash': 'gggggggggggg',
-                    'label': 'Gamma',
-                    'votes': 2
-                },
-                {
-                    'hash': 'dddddddddddd',
-                    'label': 'Delta',
-                    'votes': 1
-                }
-            ],
-            allowed_choices=2,
-            votes=4
-        )
-
-        # one user voted for Alpha choice
-        User = get_user_model()
-        user = User.objects.create_user('bob', 'bob@test.com', 'Pass.123')
-
-        self.poll.pollvote_set.create(
-            category=self.category,
-            thread=self.thread,
-            voter=user,
-            voter_name=user.username,
-            voter_slug=user.slug,
-            voter_ip='127.0.0.1',
-            choice_hash='aaaaaaaaaaaa'
-        )
-
-        # test user voted on third and last choices
-        self.poll.pollvote_set.create(
-            category=self.category,
-            thread=self.thread,
-            voter=self.user,
-            voter_name=self.user.username,
-            voter_slug=self.user.slug,
-            voter_ip='127.0.0.1',
-            choice_hash='gggggggggggg'
-        )
-        self.poll.pollvote_set.create(
-            category=self.category,
-            thread=self.thread,
-            voter=self.user,
-            voter_name=self.user.username,
-            voter_slug=self.user.slug,
-            voter_ip='127.0.0.1',
-            choice_hash='dddddddddddd'
-        )
-
-        # somebody else voted on third option before being deleted
-        self.poll.pollvote_set.create(
-            category=self.category,
-            thread=self.thread,
-            voter_name='deleted',
-            voter_slug='deleted',
-            voter_ip='127.0.0.1',
-            choice_hash='gggggggggggg'
-        )
-
-        self.api_link = reverse('misago:api:thread-poll-detail', kwargs={
-            'thread_pk': self.thread.pk,
-            'pk': self.poll.pk
-        })
+        self.mock_poll()
 
     def test_anonymous(self):
-        """api requires you to sign in to create poll"""
+        """api requires you to sign in to edit poll"""
         self.logout_user()
 
         response = self.put(self.api_link)
@@ -559,3 +475,57 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         self.assertEqual(response_json['votes'], 1)
         self.assertEqual(self.poll.pollvote_set.count(), 1)
 
+    def test_moderate_user_poll(self):
+        """api edits all poll choices out in other users poll, even if its over"""
+        self.override_acl({
+            'can_edit_polls': 2,
+            'poll_edit_time': 5
+        })
+
+        self.poll.poster = None
+        self.poll.posted_on = timezone.now() - timedelta(days=15)
+        self.poll.length = 5
+        self.poll.save()
+
+        response = self.put(self.api_link, data={
+            'length': 40,
+            'question': "Select two best colors",
+            'allowed_choices': 2,
+            'allow_revotes': True,
+            'is_public': True,
+            'choices': [
+                {
+                    'label': '\nRed  '
+                },
+                {
+                    'label': 'Green'
+                },
+                {
+                    'label': 'Blue'
+                }
+            ]
+        })
+        self.assertEqual(response.status_code, 200)
+
+        response_json = response.json()
+
+        self.assertEqual(response_json['poster_name'], self.user.username)
+        self.assertEqual(response_json['poster_slug'], self.user.slug)
+        self.assertEqual(response_json['length'], 40)
+        self.assertEqual(response_json['question'], "Select two best colors")
+        self.assertEqual(response_json['allowed_choices'], 2)
+        self.assertTrue(response_json['allow_revotes'])
+
+        # you can't change poll's type after its posted
+        self.assertFalse(response_json['is_public'])
+
+        # choices were updated
+        self.assertEqual(len(response_json['choices']), 3)
+        self.assertEqual(len(set([c['hash'] for c in response_json['choices']])), 3)
+        self.assertEqual([c['label'] for c in response_json['choices']], ['Red', 'Green', 'Blue'])
+        self.assertEqual([c['votes'] for c in response_json['choices']], [0, 0, 0])
+        self.assertEqual([c['selected'] for c in response_json['choices']], [False, False, False])
+
+        # votes were removed
+        self.assertEqual(response_json['votes'], 0)
+        self.assertEqual(self.poll.pollvote_set.count(), 0)
