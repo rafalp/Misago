@@ -148,7 +148,9 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
     def test_poll_delete(self):
         """api deletes poll and associated votes"""
         response = self.client.delete(self.api_link)
+
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'can_start_poll': True})
 
         self.assertEqual(Poll.objects.count(), 0)
         self.assertEqual(PollVote.objects.count(), 0)
@@ -167,6 +169,7 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'can_start_poll': True})
 
         self.assertEqual(Poll.objects.count(), 0)
         self.assertEqual(PollVote.objects.count(), 0)

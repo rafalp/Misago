@@ -9,7 +9,8 @@ from misago.acl import add_acl
 from misago.core.shortcuts import get_int_or_404
 
 from ..models import Poll, PollVote
-from ..permissions.polls import allow_start_poll, allow_edit_poll, allow_delete_poll
+from ..permissions.polls import (
+    allow_start_poll, allow_edit_poll, allow_delete_poll, can_start_poll)
 from ..serializers import PollSerializer, NewPollSerializer, EditPollSerializer
 from ..viewmodels.thread import ForumThread
 
@@ -90,9 +91,11 @@ class ViewSet(viewsets.ViewSet):
 
         allow_delete_poll(request.user, instance)
 
-        instance.delete()
+        thread.poll.delete()
 
-        return Response({'detail': 'ok'})
+        return Response({
+            'can_start_poll': can_start_poll(request.user, thread)
+        })
 
 
 class ThreadPollViewSet(ViewSet):

@@ -129,7 +129,7 @@ def allow_start_poll(user, target):
         if target.is_closed:
             raise PermissionDenied(_("This thread is closed. You can't start polls in it."))
     try:
-        if target.poll:
+        if target.poll and target.poll.pk:
             raise PermissionDenied(_("There's already a poll in this thread."))
     except Poll.DoesNotExist:
         pass
