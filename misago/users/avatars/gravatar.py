@@ -24,10 +24,9 @@ def set_avatar(user):
     try:
         r = requests.get(GRAVATAR_URL % url_formats, timeout=5)
         if r.status_code != 200:
-            raise NoGravatarAvailable(
-                'gravatar is not available for this e-mail')
+            raise NoGravatarAvailable("gravatar is not available for this e-mail")
 
         image = Image.open(BytesIO(r.content))
         store.store_new_avatar(user, image)
     except requests.exceptions.RequestException:
-        raise GravatarError('failed to connect to gravatar servers')
+        raise GravatarError("failed to connect to gravatar servers")
