@@ -18,3 +18,8 @@ class PollVote(models.Model):
     voter_ip = models.GenericIPAddressField()
     voted_on = models.DateTimeField(default=timezone.now)
     choice_hash = models.CharField(max_length=12, db_index=True)
+
+    class Meta:
+        index_together = [
+            ['poll', 'voter_name'],
+        ]

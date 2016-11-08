@@ -84,8 +84,7 @@ class ThreadPollApiTestCase(AuthenticatedUserTestCase):
                 }
             ],
             allowed_choices=2,
-            votes=4,
-            is_public=True
+            votes=4
         )
 
         # one user voted for Alpha choice

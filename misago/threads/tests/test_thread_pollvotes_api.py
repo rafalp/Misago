@@ -11,6 +11,9 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
 
         self.mock_poll()
 
+        self.poll.is_public = True
+        self.poll.save()
+
         self.api_link = reverse('misago:api:thread-poll-votes', kwargs={
             'thread_pk': self.thread.pk,
             'pk': self.poll.pk
