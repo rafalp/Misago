@@ -2,7 +2,7 @@ from django.db import transaction
 from django.http import Http404
 
 from rest_framework import viewsets
-from rest_framework.decorators import detail_route, list_route
+from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 
 from misago.acl import add_acl
@@ -10,8 +10,8 @@ from misago.core.shortcuts import get_int_or_404
 
 from ..models import Poll, PollVote
 from ..permissions.polls import (
-    allow_start_poll, allow_edit_poll, allow_delete_poll, can_start_poll)
-from ..serializers import PollSerializer, NewPollSerializer, EditPollSerializer
+    allow_see_poll_votes, allow_start_poll, allow_edit_poll, allow_delete_poll, can_start_poll)
+from ..serializers import PollSerializer, PollVoteSerializer, NewPollSerializer, EditPollSerializer
 from ..viewmodels.thread import ForumThread
 
 
@@ -96,6 +96,46 @@ class ViewSet(viewsets.ViewSet):
         return Response({
             'can_start_poll': can_start_poll(request.user, thread)
         })
+
+    @detail_route(methods=['get', 'post'])
+    def votes(self, request, thread_pk, pk):
+        if request.method == 'POST':
+            return self.post_votes(request, thread_pk, pk)
+        else:
+            return self.get_votes(request, thread_pk, pk)
+
+    @transaction.atomic
+    def post_votes(self, request, thread_pk, pk):
+        pass
+
+    def get_votes(self, request, thread_pk, pk):
+        poll_pk = get_int_or_404(pk)
+
+        try:
+            thread = self.get_thread(request, thread_pk)
+            if thread.poll.pk != poll_pk:
+                raise Http404()
+        except Poll.DoesNotExist:
+            raise Http404()
+
+        allow_see_poll_votes(request.user, thread.poll)
+
+        choices = []
+        voters = {}
+
+        for choice in thread.poll.choices:
+            choice['voters'] = []
+            voters[choice['hash']] = choice['voters']
+
+            choices.append(choice)
+
+        queryset = thread.poll.pollvote_set.values(
+            'voter_id', 'voter_name', 'voter_slug', 'voted_on', 'choice_hash')
+
+        for voter in queryset.order_by('pk').iterator():
+            voters[voter['choice_hash']].append(PollVoteSerializer(voter).data)
+
+        return Response(choices)
 
 
 class ThreadPollViewSet(ViewSet):

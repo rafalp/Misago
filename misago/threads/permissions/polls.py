@@ -93,6 +93,7 @@ def add_acl_to_poll(user, poll):
     poll.acl.update({
         'can_edit': can_edit_poll(user, poll),
         'can_delete': can_delete_poll(user, poll),
+        'can_see_votes': can_see_poll_votes(user, poll),
     })
 
 
@@ -197,6 +198,12 @@ def allow_delete_poll(user, target):
         if target.thread.is_closed:
             raise PermissionDenied(_("This thread is closed. You can't delete polls in it."))
 can_delete_poll = return_boolean(allow_delete_poll)
+
+
+def allow_see_poll_votes(user, target):
+    if not target.is_public and not user.acl['can_always_see_poll_voters']:
+        raise PermissionDenied(_("You dont have permission to this poll's voters."))
+can_see_poll_votes = return_boolean(allow_see_poll_votes)
 
 
 def has_time_to_edit_poll(user, target):
