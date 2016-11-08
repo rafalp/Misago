@@ -123,7 +123,6 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
         self.poll.is_public = False
         self.poll.save()
 
-
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 

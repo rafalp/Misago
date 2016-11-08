@@ -132,7 +132,7 @@ class ViewSet(viewsets.ViewSet):
         queryset = thread.poll.pollvote_set.values(
             'voter_id', 'voter_name', 'voter_slug', 'voted_on', 'choice_hash')
 
-        for voter in queryset.order_by('pk').iterator():
+        for voter in queryset.order_by('voter_name').iterator():
             voters[voter['choice_hash']].append(PollVoteSerializer(voter).data)
 
         return Response(choices)
