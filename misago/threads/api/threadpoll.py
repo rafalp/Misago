@@ -8,11 +8,12 @@ from rest_framework.response import Response
 from misago.acl import add_acl
 from misago.core.shortcuts import get_int_or_404
 
-from ..models import Poll, PollVote
+from ..models import Poll
 from ..permissions.polls import (
     allow_see_poll_votes, allow_start_poll, allow_edit_poll, allow_delete_poll, can_start_poll)
 from ..serializers import PollSerializer, PollVoteSerializer, NewPollSerializer, EditPollSerializer
 from ..viewmodels.thread import ForumThread
+from .pollvotecreateendpoint import poll_vote_create
 
 
 class ViewSet(viewsets.ViewSet):
@@ -68,7 +69,7 @@ class ViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     def update(self, request, thread_pk, pk):
-        thread = self.get_thread(request, thread_pk)
+        thread = self.get_thread_for_update(request, thread_pk)
         instance = self.get_poll(thread, pk)
 
         allow_edit_poll(request.user, instance)
@@ -86,7 +87,7 @@ class ViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     def delete(self, request, thread_pk, pk):
-        thread = self.get_thread(request, thread_pk)
+        thread = self.get_thread_for_update(request, thread_pk)
         instance = self.get_poll(thread, pk)
 
         allow_delete_poll(request.user, instance)
@@ -106,7 +107,10 @@ class ViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     def post_votes(self, request, thread_pk, pk):
-        pass
+        thread = self.get_thread_for_update(request, thread_pk)
+        instance = self.get_poll(thread, pk)
+
+        return poll_vote_create(request, thread, instance)
 
     def get_votes(self, request, thread_pk, pk):
         poll_pk = get_int_or_404(pk)

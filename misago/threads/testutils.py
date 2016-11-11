@@ -1,11 +1,12 @@
 from datetime import timedelta
 
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from misago.core.utils import slugify
 
 from .checksums import update_post_checksum
-from .models import Post, Thread
+from .models import Poll, Post, Thread
 
 
 def post_thread(category, title='Test thread', poster='Tester',
@@ -95,3 +96,85 @@ def reply_thread(thread, poster="Tester", message="I am test message",
     thread.category.save()
 
     return post
+
+
+def post_poll(thread, poster):
+    poll = Poll.objects.create(
+        category=thread.category,
+        thread=thread,
+        poster=poster,
+        poster_name=poster.username,
+        poster_slug=poster.slug,
+        poster_ip='127.0.0.1',
+        question="Lorem ipsum dolor met?",
+        choices=[
+            {
+                'hash': 'aaaaaaaaaaaa',
+                'label': 'Alpha',
+                'votes': 1
+            },
+            {
+                'hash': 'bbbbbbbbbbbb',
+                'label': 'Beta',
+                'votes': 0
+            },
+            {
+                'hash': 'gggggggggggg',
+                'label': 'Gamma',
+                'votes': 2
+            },
+            {
+                'hash': 'dddddddddddd',
+                'label': 'Delta',
+                'votes': 1
+            }
+        ],
+        allowed_choices=2,
+        votes=4
+    )
+
+    # one user voted for Alpha choice
+    User = get_user_model()
+    user = User.objects.create_user('bob', 'bob@test.com', 'Pass.123')
+
+    poll.pollvote_set.create(
+        category=thread.category,
+        thread=thread,
+        voter=user,
+        voter_name=user.username,
+        voter_slug=user.slug,
+        voter_ip='127.0.0.1',
+        choice_hash='aaaaaaaaaaaa'
+    )
+
+    # test user voted on third and last choices
+    poll.pollvote_set.create(
+        category=thread.category,
+        thread=thread,
+        voter=poster,
+        voter_name=poster.username,
+        voter_slug=poster.slug,
+        voter_ip='127.0.0.1',
+        choice_hash='gggggggggggg'
+    )
+    poll.pollvote_set.create(
+        category=thread.category,
+        thread=thread,
+        voter=poster,
+        voter_name=poster.username,
+        voter_slug=poster.slug,
+        voter_ip='127.0.0.1',
+        choice_hash='dddddddddddd'
+    )
+
+    # somebody else voted on third option before being deleted
+    poll.pollvote_set.create(
+        category=thread.category,
+        thread=thread,
+        voter_name='deleted',
+        voter_slug='deleted',
+        voter_ip='127.0.0.1',
+        choice_hash='gggggggggggg'
+    )
+
+    return poll

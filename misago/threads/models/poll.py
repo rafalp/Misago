@@ -33,7 +33,8 @@ class Poll(models.Model):
     @property
     def is_over(self):
         if self.length:
-            return self.posted_on - timedelta(days=self.length) < timezone.now()
+            poll_cutoff = self.posted_on + timedelta(days=self.length)
+            return timezone.now() > poll_cutoff
         return False
 
     @property
