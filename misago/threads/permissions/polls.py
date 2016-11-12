@@ -206,10 +206,11 @@ def allow_vote_poll(user, target):
         raise PermissionDenied(_("You have to sign in to vote in polls."))
 
     user_has_voted = False
-    for choice in target.choices:
-        if choice['selected']:
-            user_has_voted = True
-            break
+    if target.choices and 'selected' in target.choices[0]:
+        for choice in target.choices:
+            if choice['selected']:
+                user_has_voted = True
+                break
 
     if user_has_voted and not target.allow_revotes:
         raise PermissionDenied(_("You have already voted in this poll."))
