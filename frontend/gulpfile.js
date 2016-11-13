@@ -114,15 +114,18 @@ gulp.task('watchifybuild', ['fastbuild'], function() {
     .external('redux')
     .external('react-redux')
     .transform(babelify)
-    .on('error', function(err){
-      // print the error (can replace with gulp-util)
-      console.log(err.message);
-      // end this stream
+    .on('error', function(err) {
+      gutil.log(gutil.colors.red(err.toString() + '\n' + err.codeFrame));
       this.emit('end');
     });
 
     function bundle() {
-      b.bundle().pipe(fs.createWriteStream(misago + 'js/misago.js'));
+      b.bundle()
+        .on('error', function(err) {
+          gutil.log(gutil.colors.red(err.toString() + '\n' + err.codeFrame));
+          this.emit('end');
+        })
+        .pipe(fs.createWriteStream(misago + 'js/misago.js'));
     }
 
     b.on('update', bundle);
@@ -165,7 +168,10 @@ gulp.task('cleanstyle', function(cb) {
 
 gulp.task('faststyle', function() {
   return gulp.src('style/index.less')
-    .pipe(less())
+    .pipe(less().on('error', function(err) {
+        gutil.log(gutil.colors.red(err.toString()));
+        this.emit('end');
+      }))
     .pipe(rename('misago.css'))
     .pipe(gulp.dest(misago + 'css'));
 });
