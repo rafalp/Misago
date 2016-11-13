@@ -2,6 +2,7 @@
 import React from 'react';
 import ReplyButton from './reply-button';
 import Subscription from './subscription';
+import posting from 'misago/services/posting';
 
 export default function(props) {
   return (
@@ -11,6 +12,7 @@ export default function(props) {
         <GotoUnapproved thread={props.thread} />
         <GotoLast thread={props.thread} />
         <Reply openReplyForm={props.openReplyForm} thread={props.thread} />
+        <StartPoll poll={props.poll} thread={props.thread} />
         <SubscriptionMenu {...props} />
       </ul>
     </div>
@@ -68,13 +70,46 @@ export function SubscriptionMenu(props) {
 }
 
 export function Reply(props) {
-  if (props.thread.acl.can_reply) {
+  if (!props.thread.acl.can_reply) {
+    return null;
+  }
+
+  return (
+    <li className="pull-right">
+      <ReplyButton onClick={props.openReplyForm} />
+    </li>
+  );
+}
+
+export class StartPoll extends React.Component {
+  onClick = () => {
+    posting.open({
+      thread: this.props.thread,
+      poll: null,
+      config: {
+        mode: 'POLL'
+      }
+    });
+  }
+
+  render() {
+    if (!this.props.thread.acl.can_start_poll || this.props.thread.poll) {
+      return null;
+    }
+
     return (
       <li className="pull-right">
-        <ReplyButton onClick={props.openReplyForm} />
+        <button
+          className="btn btn-default"
+          onClick={this.onClick}
+          type="button"
+        >
+          <span className="material-icon">
+            poll
+          </span>
+          {gettext("Add poll")}
+        </button>
       </li>
     );
-  } else {
-    return null;
   }
 }

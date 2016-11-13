@@ -284,15 +284,21 @@ class Migration(migrations.Migration):
             name='PollVote',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('voter_name', models.CharField(max_length=255)),
+                ('voter_name', models.CharField(max_length=255, db_index=True)),
                 ('voter_slug', models.CharField(max_length=255)),
                 ('voter_ip', models.GenericIPAddressField()),
                 ('voted_on', models.DateTimeField(default=django.utils.timezone.now)),
-                ('choice_hash', models.CharField(max_length=12, db_index=True)),
+                ('choice_hash', models.CharField(max_length=12)),
                 ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_categories.Category')),
                 ('poll', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.Poll')),
                 ('thread', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.Thread')),
                 ('voter', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
             ],
+        ),
+        migrations.AlterIndexTogether(
+            name='pollvote',
+            index_together=set([
+                ('poll', 'voter_name'),
+            ]),
         ),
     ]

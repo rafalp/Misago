@@ -37,7 +37,7 @@ class RolePermissionsForm(forms.Form):
         )
     )
     can_delete_polls = forms.TypedChoiceField(
-        label=_("Can edit polls"),
+        label=_("Can delete polls"),
         coerce=int,
         initial=0,
         choices=(
@@ -91,8 +91,10 @@ ACL's for targets
 """
 def add_acl_to_poll(user, poll):
     poll.acl.update({
+        'can_vote': can_vote_poll(user, poll),
         'can_edit': can_edit_poll(user, poll),
         'can_delete': can_delete_poll(user, poll),
+        'can_see_votes': can_see_poll_votes(user, poll),
     })
 
 
@@ -197,6 +199,33 @@ def allow_delete_poll(user, target):
         if target.thread.is_closed:
             raise PermissionDenied(_("This thread is closed. You can't delete polls in it."))
 can_delete_poll = return_boolean(allow_delete_poll)
+
+
+def allow_vote_poll(user, target):
+    if user.is_anonymous():
+        raise PermissionDenied(_("You have to sign in to vote in polls."))
+
+    if target.has_selected_choices and not target.allow_revotes:
+        raise PermissionDenied(_("You have already voted in this poll."))
+    if target.is_over:
+        raise PermissionDenied(_("This poll is over. You can't vote in it."))
+
+    category_acl = user.acl['categories'].get(target.category_id, {
+        'can_close_threads': False,
+    })
+
+    if not category_acl.get('can_close_threads'):
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't vote in it."))
+        if target.thread.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't vote in it."))
+can_vote_poll = return_boolean(allow_vote_poll)
+
+
+def allow_see_poll_votes(user, target):
+    if not target.is_public and not user.acl['can_always_see_poll_voters']:
+        raise PermissionDenied(_("You dont have permission to this poll's voters."))
+can_see_poll_votes = return_boolean(allow_see_poll_votes)
 
 
 def has_time_to_edit_poll(user, target):

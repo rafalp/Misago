@@ -4,7 +4,7 @@ import ReadIcon from 'misago/components/categories/read-icon'; // jshint ignore:
 import Stats from 'misago/components/categories/stats'; // jshint ignore:line
 import SubcategorySubcategories from 'misago/components/categories/subcategory-subcategories'; // jshint ignore:line
 
-export default class Subcategory extends React.Component {
+export class Subcategory extends React.Component {
   getClassName() {
     if (this.props.category.css_class) {
       return 'list-group-item category-subcategory subcategory-' + this.props.category.css_class;

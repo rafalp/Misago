@@ -1,4 +1,5 @@
 import React from 'react';
+import { Poll } from 'misago/components/poll'; // jshint ignore:line
 import PostsList from 'misago/components/posts-list'; // jshint ignore:line
 import Header from './header'; // jshint ignore:line
 import Paginator from './paginator'; // jshint ignore:line
@@ -6,6 +7,7 @@ import ReplyButton from './reply-button'; // jshint ignore:line
 import Subscription from './subscription'; // jshint ignore:line
 import ToolbarTop from './toolbar-top'; // jshint ignore:line
 import PostsModeration from './moderation/posts'; // jshint ignore:line
+import * as poll from 'misago/reducers/poll'; // jshint ignore:line
 import * as posts from 'misago/reducers/posts';
 import * as thread from 'misago/reducers/thread'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
@@ -89,6 +91,10 @@ export default class extends React.Component {
     store.dispatch(thread.replace(data));
     store.dispatch(posts.load(data.post_set));
 
+    if (data.poll) {
+      store.dispatch(poll.replace(data.poll));
+    }
+
     this.setPageTitle();
   };
 
@@ -109,6 +115,11 @@ export default class extends React.Component {
       <div className="container">
 
         <ToolbarTop openReplyForm={this.openReplyForm} {...this.props} />
+        <Poll
+          poll={this.props.poll}
+          thread={this.props.thread}
+          user={this.props.user}
+        />
         <PostsList {...this.props} />
         <div className="toolbar-bottom">
           <Paginator {...this.props} />

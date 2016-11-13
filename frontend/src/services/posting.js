@@ -1,5 +1,6 @@
 import React from 'react'; // jshint ignore:line
 import ReactDOM from 'react-dom'; // jshint ignore:line
+import { PollForm } from 'misago/components/poll'; // jshint ignore:line
 import PostingComponent from 'misago/components/posting'; // jshint ignore:line
 import mount from 'misago/utils/mount-component'; // jshint ignore:line
 
@@ -18,7 +19,12 @@ export class Posting {
       this._isOpen = props.config;
       this._realOpen(props);
     } else if (this._isOpen !== props.config) {
-      const changeForm = confirm(gettext("You are already working on other message. Do you want to discard it?"));
+      let message = gettext("You are already working on other message. Do you want to discard it?");
+      if (this._isOpen.config.mode == 'POLL') {
+        message = gettext("You are already working on poll. Do you want to discard it?");
+      }
+
+      const changeForm = confirm(message);
       if (changeForm) {
         this._isOpen = props.config;
         this._realOpen(props);
@@ -28,10 +34,17 @@ export class Posting {
 
   // jshint ignore:start
   _realOpen(props) {
-    mount(
-      <PostingComponent {...props} />,
-      'posting-mount'
-    );
+    if (props.config.mode == 'POLL') {
+      mount(
+        <PollForm {...props} />,
+        'posting-mount'
+      );
+    } else {
+      mount(
+        <PostingComponent {...props} />,
+        'posting-mount'
+      );
+    }
 
     this._placeholder.addClass('slide-in');
 
