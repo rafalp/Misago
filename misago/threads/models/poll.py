@@ -44,14 +44,24 @@ class Poll(models.Model):
     def get_api_url(self):
         return self.thread_type.get_poll_api_url(self)
 
-    def make_choices_votes_aware(self, user, choices):
+    def get_votes_api_url(self):
+        return self.thread_type.get_poll_votes_api_url(self)
+
+    def make_choices_votes_aware(self, user):
         if user.is_anonymous():
-            for choice in choices:
+            for choice in self.choices:
                 choice['selected'] = False
             return
 
         queryset = self.pollvote_set.filter(voter=user).values('choice_hash')
         user_votes = [v['choice_hash'] for v in queryset]
 
-        for choice in choices:
+        for choice in self.choices:
             choice['selected'] = choice['hash'] in user_votes
+
+    @property
+    def has_selected_choices(self):
+        for choice in self.choices:
+            if choice.get('selected'):
+                return True
+        return False

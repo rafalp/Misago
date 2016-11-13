@@ -44,7 +44,10 @@ export function Hidden(props) {
     }, true);
 
     return (
-      <li className="event-hidden-message" dangerouslySetInnerHTML={{__html: message}} />
+      <li
+        className="event-hidden-message"
+        dangerouslySetInnerHTML={{__html: message}}
+      />
     );
   } else {
     return null;

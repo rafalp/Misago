@@ -1,7 +1,7 @@
 import React from 'react';
 import SubcategorySubcategories from 'misago/components/categories/subcategory-subcategories'; // jshint ignore:line
 
-export default class Subcategory extends React.Component {
+export class Subcategory extends React.Component {
   getClassName() {
     if (this.props.category.css_class) {
       return 'subcategory subcategory-' + this.props.category.css_class;

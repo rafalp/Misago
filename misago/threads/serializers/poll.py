@@ -40,6 +40,7 @@ class PollSerializer(serializers.ModelSerializer):
     def get_api(self, obj):
         return {
             'index': obj.get_api_url(),
+            'votes': obj.get_votes_api_url(),
         }
 
     def get_url(self, obj):

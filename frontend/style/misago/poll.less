@@ -1,0 +1,62 @@
+//
+// Poll
+// --------------------------------------------------
+
+
+.panel-poll h2 {
+  margin-top: 0px;
+}
+
+.poll-select-choice .btn {
+  &, &:active, &:focus, &:hover {
+    background: transparent;
+    border: transparent;
+    .box-shadow(none);
+
+    margin: @padding-base-vertical 0px;
+    padding: 0px;
+    padding-left: @padding-base-vertical;
+
+    outline: none;
+
+    text-align: left;
+  }
+
+  .material-icon {
+    margin-right: @padding-base-vertical;
+
+    height: 28px;
+    width: 28px;
+
+    font-size: 28px;
+    line-heigh: 28px;
+
+    color: @gray-lighter;
+  }
+
+  &.btn-selected .material-icon {
+    color: @brand-success;
+  }
+}
+
+.poll-help {
+  font-size: @font-size-small;
+}
+
+.poll-chart-selected .material-icon {
+  margin-right: 4px;
+
+  position: relative;
+  bottom: 1px;
+
+  height: 14px;
+  width: 14px;
+
+  color: @brand-success;
+  font-size: 14px;
+  line-heigh: 14px;
+}
+
+.poll-options {
+  margin-bottom: 0px;
+}

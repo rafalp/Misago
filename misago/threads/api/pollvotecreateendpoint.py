@@ -13,7 +13,7 @@ from ..serializers import PollSerializer
 
 
 def poll_vote_create(request, thread, poll):
-    poll.make_choices_votes_aware(request.user, poll.choices)
+    poll.make_choices_votes_aware(request.user)
 
     allow_vote_poll(request.user, poll)
 

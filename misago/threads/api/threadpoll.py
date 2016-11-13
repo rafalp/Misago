@@ -63,6 +63,9 @@ class ViewSet(viewsets.ViewSet):
             serializer.save()
 
             add_acl(request.user, instance)
+            for choice in instance.choices:
+                choice['selected'] = False
+
             return Response(PollSerializer(instance).data)
         else:
             return Response(serializer.errors, status=400)
@@ -79,9 +82,9 @@ class ViewSet(viewsets.ViewSet):
             serializer.save()
 
             add_acl(request.user, instance)
-            serialized_poll = PollSerializer(instance).data
-            instance.make_choices_votes_aware(request.user, serialized_poll['choices'])
-            return Response(serialized_poll)
+            instance.make_choices_votes_aware(request.user)
+
+            return Response(PollSerializer(instance).data)
         else:
             return Response(serializer.errors, status=400)
 

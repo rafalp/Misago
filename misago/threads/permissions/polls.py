@@ -37,7 +37,7 @@ class RolePermissionsForm(forms.Form):
         )
     )
     can_delete_polls = forms.TypedChoiceField(
-        label=_("Can edit polls"),
+        label=_("Can delete polls"),
         coerce=int,
         initial=0,
         choices=(
@@ -205,14 +205,7 @@ def allow_vote_poll(user, target):
     if user.is_anonymous():
         raise PermissionDenied(_("You have to sign in to vote in polls."))
 
-    user_has_voted = False
-    if target.choices and 'selected' in target.choices[0]:
-        for choice in target.choices:
-            if choice['selected']:
-                user_has_voted = True
-                break
-
-    if user_has_voted and not target.allow_revotes:
+    if target.has_selected_choices and not target.allow_revotes:
         raise PermissionDenied(_("You have already voted in this poll."))
     if target.is_over:
         raise PermissionDenied(_("This poll is over. You can't vote in it."))
