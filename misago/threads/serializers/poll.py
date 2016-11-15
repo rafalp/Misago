@@ -21,7 +21,6 @@ class PollSerializer(serializers.ModelSerializer):
         model = Poll
         fields = (
             'poster_name',
-            'poster_slug',
             'posted_on',
             'length',
             'question',

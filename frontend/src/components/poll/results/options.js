@@ -1,8 +1,10 @@
 // jshint ignore:start
 import React from 'react';
+import Modal from './modal';
 import * as poll from 'misago/reducers/poll';
 import * as thread from 'misago/reducers/thread';
 import ajax from 'misago/services/ajax';
+import modal from 'misago/services/modal';
 import posting from 'misago/services/posting';
 import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
@@ -58,7 +60,9 @@ export function ChangeVote(props) {
 
 export class SeeVotes extends React.Component {
   onClick = () => {
-    alert("TODO!");
+    modal.show(
+      <Modal poll={this.props.poll} />
+    );
   };
 
   render() {
