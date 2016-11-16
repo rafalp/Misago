@@ -1,4 +1,5 @@
 from datetime import timedelta
+from math import ceil
 
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
@@ -31,10 +32,15 @@ class Poll(models.Model):
     is_public = models.BooleanField(default=False)
 
     @property
+    def ends_on(self):
+        if self.length:
+            return self.posted_on + timedelta(days=self.length)
+        return None
+
+    @property
     def is_over(self):
         if self.length:
-            poll_cutoff = self.posted_on + timedelta(days=self.length)
-            return timezone.now() > poll_cutoff
+            return timezone.now() > self.ends_on
         return False
 
     @property
@@ -65,3 +71,21 @@ class Poll(models.Model):
             if choice.get('selected'):
                 return True
         return False
+
+    @property
+    def view_choices(self):
+        view_choices = []
+        for choice in self.choices:
+            if choice['votes'] and self.votes:
+                proc = int(ceil(choice['votes'] * 100 / self.votes))
+            else:
+                proc = 0
+
+            view_choices.append({
+                'label': choice['label'],
+                'votes': choice['votes'],
+                'selected': choice['selected'],
+                'proc': proc
+            })
+        return view_choices
+
