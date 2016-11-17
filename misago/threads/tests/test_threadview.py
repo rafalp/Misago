@@ -399,3 +399,34 @@ class ThreadAttachmentsViewTests(ThreadViewTestCase):
 
             if attachment['url']['thumb']:
                 self.assertContains(response, attachment['url']['thumb'])
+
+
+class ThreadPollViewTests(ThreadViewTestCase):
+    def test_poll_voted_display(self):
+        """view has no showstoppers when displaying voted poll"""
+        poll = testutils.post_poll(self.thread, self.user)
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertContains(response, poll.question)
+        self.assertContains(response, '4 votes')
+        self.assertNotContains(response, 'Save your vote')
+
+    def test_poll_unvoted_display(self):
+        """view has no showstoppers when displaying poll vote form"""
+        poll = testutils.post_poll(self.thread, self.user)
+        poll.pollvote_set.all().delete()
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertContains(response, poll.question)
+        self.assertContains(response, 'Save your vote')
+
+    def test_poll_anonymous_view(self):
+        """view has no showstoppers when displaying poll to anon user"""
+        poll = testutils.post_poll(self.thread, self.user)
+
+        self.logout_user()
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertContains(response, poll.question)
+        self.assertContains(response, '4 votes')
+        self.assertNotContains(response, 'Save your vote')
