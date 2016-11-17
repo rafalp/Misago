@@ -268,7 +268,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             ]
         })
 
-        # poll and its votes were untouched
+        # polls and votes were untouched
         self.assertEqual(Poll.objects.count(), 2)
         self.assertEqual(PollVote.objects.count(), 8)
 
@@ -295,7 +295,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             'detail': "Invalid choice."
         })
 
-        # poll and its votes were untouched
+        # polls and votes were untouched
         self.assertEqual(Poll.objects.count(), 2)
         self.assertEqual(PollVote.objects.count(), 8)
 
@@ -327,8 +327,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             Thread.objects.get(pk=self.thread.pk)
 
         # polls and votes are gone
-        self.assertEqual(Poll.objects.filter(pk=poll.pk, thread=other_thread).count(), 0)
-        self.assertEqual(PollVote.objects.filter(poll=poll, thread=other_thread).count(), 0)
+        self.assertEqual(Poll.objects.count(), 0)
+        self.assertEqual(PollVote.objects.count(), 0)
 
     def test_threads_merge_conflict_keep_first_poll(self):
         """api deletes other poll on merge"""

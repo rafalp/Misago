@@ -20,6 +20,8 @@ class PollMergeHandler(object):
             except Poll.DoesNotExist:
                 pass
 
+        self._list.sort(key=lambda choice: choice.thread_id)
+
     @property
     def polls(self):
         return self._list
