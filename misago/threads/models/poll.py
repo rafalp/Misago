@@ -31,6 +31,12 @@ class Poll(models.Model):
     votes = models.PositiveIntegerField(default=0)
     is_public = models.BooleanField(default=False)
 
+    def move(self, thread):
+        if self.thread_id != thread.id:
+            self.thread = thread
+            self.pollvote_set.update(thread=thread)
+            self.save()
+
     @property
     def ends_on(self):
         if self.length:

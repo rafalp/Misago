@@ -14,6 +14,7 @@ from ...permissions import can_reply_thread, can_see_thread
 from ...serializers import NewThreadSerializer, ThreadsListSerializer
 from ...threadtypes import trees_map
 from ...utils import add_categories_to_threads, get_thread_id_from_url
+from .pollmergehandler import PollMergeHandler
 
 
 MERGE_LIMIT = 20 # no more than 20 threads can be merged in single action
@@ -48,6 +49,29 @@ def thread_merge_endpoint(request, thread, viewmodel):
         return Response({
             'detail': _("The thread you have entered link to doesn't exist or you don't have permission to see it.")
         }, status=400)
+
+    polls_handler = PollMergeHandler([thread, other_thread])
+    if len(polls_handler.polls) == 1:
+        poll = polls_handler.polls[0]
+        poll.move(other_thread)
+    elif polls_handler.is_merge_conflict():
+        if 'poll' in request.data:
+            polls_handler.set_resolution(request.data.get('poll'))
+            if polls_handler.is_valid():
+                poll = polls_handler.get_resolution()
+                if poll and poll.thread_id != other_thread.id:
+                    other_thread.poll.delete()
+                    poll.move(other_thread)
+                elif not poll:
+                    other_thread.poll.delete()
+            else:
+                return Response({
+                    'detail': _("Invalid choice.")
+                }, status=400)
+        else:
+            return Response({
+                'polls': polls_handler.get_available_resolutions()
+            }, status=400)
 
     moderation.merge_thread(request, other_thread, thread)
 
@@ -90,7 +114,26 @@ def threads_merge_endpoint(request):
 
     serializer = NewThreadSerializer(context=request.user, data=request.data)
     if serializer.is_valid():
-        new_thread = merge_threads(request, serializer.validated_data, threads)
+        polls_handler = PollMergeHandler(threads)
+        if len(polls_handler.polls) == 1:
+            poll = polls_handler.polls[0]
+        elif polls_handler.is_merge_conflict():
+            if 'poll' in request.data:
+                polls_handler.set_resolution(request.data.get('poll'))
+                if polls_handler.is_valid():
+                    poll = polls_handler.get_resolution()
+                else:
+                    return Response({
+                        'detail': _("Invalid choice.")
+                    }, status=400)
+            else:
+                return Response({
+                    'polls': polls_handler.get_available_resolutions()
+                }, status=400)
+        else:
+            poll = None
+
+        new_thread = merge_threads(request, serializer.validated_data, threads, poll)
         return Response(ThreadsListSerializer(new_thread).data)
     else:
         return Response(serializer.errors, status=400)
@@ -130,7 +173,7 @@ def clean_threads_for_merge(request):
     return threads
 
 
-def merge_threads(request, validated_data, threads):
+def merge_threads(request, validated_data, threads, poll):
     new_thread = Thread(
         category=validated_data['category'],
         started_on=threads[0].started_on,
@@ -139,6 +182,9 @@ def merge_threads(request, validated_data, threads):
 
     new_thread.set_title(validated_data['title'])
     new_thread.save()
+
+    if poll:
+        poll.move(new_thread)
 
     categories = []
     for thread in threads:

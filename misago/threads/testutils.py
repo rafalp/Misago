@@ -135,7 +135,10 @@ def post_poll(thread, poster):
 
     # one user voted for Alpha choice
     User = get_user_model()
-    user = User.objects.create_user('bob', 'bob@test.com', 'Pass.123')
+    try:
+        user = User.objects.get(slug='bob')
+    except User.DoesNotExist:
+        user = User.objects.create_user('bob', 'bob@test.com', 'Pass.123')
 
     poll.pollvote_set.create(
         category=thread.category,
