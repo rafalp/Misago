@@ -59,13 +59,6 @@ class ReplyMiddleware(PostingMiddleware):
         self.post.original = parsing_result['original_text']
         self.post.parsed = parsing_result['parsed_text']
 
-        self.post.updated_on = self.datetime
-        self.post.edits = F('edits') + 1
-
-        self.post.last_editor = self.user
-        self.post.last_editor_name = self.user.username
-        self.post.last_editor_slug = self.user.slug
-
     def new_post(self, validated_data, parsing_result):
         self.post.thread = self.thread
         self.post.poster = self.user

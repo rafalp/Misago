@@ -221,6 +221,25 @@ class Migration(migrations.Migration):
             ]),
         ),
         migrations.CreateModel(
+            name='PostEdit',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('edited_on', models.DateTimeField(default=django.utils.timezone.now)),
+                ('editor_name', models.CharField(max_length=255)),
+                ('editor_slug', models.CharField(max_length=255)),
+                ('editor_ip', models.GenericIPAddressField()),
+                ('edited_from', models.TextField()),
+                ('edited_to', models.TextField()),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_categories.Category')),
+                ('editor', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
+                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='edits_record', to='misago_threads.Post')),
+                ('thread', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.Thread')),
+            ],
+            options={
+                'ordering': ['-id'],
+            },
+        ),
+        migrations.CreateModel(
             name='Attachment',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -284,11 +303,11 @@ class Migration(migrations.Migration):
             name='PollVote',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('voter_name', models.CharField(max_length=255, db_index=True)),
+                ('voter_name', models.CharField(max_length=255)),
                 ('voter_slug', models.CharField(max_length=255)),
                 ('voter_ip', models.GenericIPAddressField()),
                 ('voted_on', models.DateTimeField(default=django.utils.timezone.now)),
-                ('choice_hash', models.CharField(max_length=12)),
+                ('choice_hash', models.CharField(db_index=True, max_length=12)),
                 ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_categories.Category')),
                 ('poll', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.Poll')),
                 ('thread', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.Thread')),

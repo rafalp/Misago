@@ -1,23 +1,41 @@
 from django.db.models import F
 
-from . import EDIT, PostingMiddleware
+from . import PostingEndpoint, PostingMiddleware
 
 
 class RecordEditMiddleware(PostingMiddleware):
-    def __init__(self, **kwargs):
-        super(RecordEditMiddleware, self).__init__(**kwargs)
+    def use_this_middleware(self):
+        self.original_post = self.post.original
 
-        if self.mode == EDIT:
-            self.original_title = self.thread.title
-            self.original_post = self.post.original
+        return self.mode == PostingEndpoint.EDIT
 
     def save(self, serializer):
-        if self.mode == EDIT:
-            # record post or thread edit
-            is_title_changed = self.original_title != self.thread.title
-            is_post_changed = self.original_post != self.post.original
+        is_post_changed = self.original_post != self.post.original
+        if not is_post_changed:
+            return
 
-            if is_title_changed or is_post_changed:
-                self.post.edits += 1
-                self.post.last_editor_name = self.user.username
-                self.post.update_fields.extend(('edits', 'last_editor_name'))
+        self.post.updated_on = self.datetime
+        self.post.edits = F('edits') + 1
+
+        self.post.last_editor = self.user
+        self.post.last_editor_name = self.user.username
+        self.post.last_editor_slug = self.user.slug
+
+        self.post.update_fields.extend((
+            'updated_on',
+            'edits',
+            'last_editor',
+            'last_editor_name',
+            'last_editor_slug',
+        ))
+
+        self.post.edits_record.create(
+            category=self.post.category,
+            thread=self.thread,
+            editor=self.user,
+            editor_name=self.user.username,
+            editor_slug=self.user.slug,
+            editor_ip=self.request.user_ip,
+            edited_from=self.original_post,
+            edited_to=self.post.original
+        )
