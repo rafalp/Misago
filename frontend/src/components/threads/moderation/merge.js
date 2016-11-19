@@ -8,6 +8,7 @@ import misago from 'misago/index';
 import { filterThreads } from 'misago/reducers/threads'; // jshint ignore:line
 import * as select from 'misago/reducers/selection'; // jshint ignore:line
 import ErrorsModal from 'misago/components/threads/moderation/errors-list'; // jshint ignore:line
+import MergePolls from 'misago/components/merge-polls'; // jshint ignore:line
 import ajax from 'misago/services/ajax'; // jshint ignore:line
 import modal from 'misago/services/modal'; // jshint ignore:line
 import snackbar from 'misago/services/snackbar';
@@ -105,7 +106,12 @@ export default class extends Form {
   }
 
   send() {
-    return ajax.post(misago.get('MERGE_THREADS_API'), {
+    return ajax.post(misago.get('MERGE_THREADS_API'), this.getFormdata());
+  }
+
+  /* jshint ignore:start */
+  getFormdata = () => {
+    return {
       top_category: this.props.route.category.id,
       threads: this.props.threads.map((thread) => thread.id),
       title: this.state.title,
@@ -113,10 +119,10 @@ export default class extends Form {
       weight: this.state.weight,
       is_hidden: this.state.is_hidden,
       is_closed: this.state.is_closed
-    });
-  }
+    };
+  };
 
-  handleSuccess(apiResponse) {
+  handleSuccess = (apiResponse) => {
     // unfreeze and remove merged threads
     this.props.threads.forEach((thread) => {
       this.props.freezeThread(thread.id);
@@ -132,24 +138,33 @@ export default class extends Form {
 
     // hide modal
     modal.hide();
-  }
+  };
 
-  handleError(rejection) {
+  handleError = (rejection) => {
     if (rejection.status === 400) {
-      this.setState({
-        'errors': Object.assign({}, this.state.errors, rejection)
-      });
-      snackbar.error(gettext("Form contains errors."));
+      if (rejection.polls) {
+        modal.show(
+          <MergePolls
+            api={misago.get('MERGE_THREADS_API')}
+            data={this.getFormdata()}
+            polls={rejection.polls}
+            onError={this.handleError}
+            onSuccess={this.handleSuccess}
+          />
+        );
+      } else {
+        this.setState({
+          'errors': Object.assign({}, this.state.errors, rejection)
+        });
+        snackbar.error(gettext("Form contains errors."));
+      }
     } else if (rejection.status === 403 && Array.isArray(rejection)) {
-      /* jshint ignore:start */
       modal.show(<ErrorsModal errors={rejection} />);
-      /* jshint ignore:end */
     } else {
       snackbar.apiError(rejection);
     }
-  }
+  };
 
-  /* jshint ignore:start */
   onCategoryChange = (ev) => {
     const categoryId = ev.target.value;
     const newState = {

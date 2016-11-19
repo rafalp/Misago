@@ -34,8 +34,13 @@ class Poll(models.Model):
     def move(self, thread):
         if self.thread_id != thread.id:
             self.thread = thread
-            self.pollvote_set.update(thread=thread)
+            self.category_id = thread.category_id
             self.save()
+
+            self.pollvote_set.update(
+                thread=self.thread,
+                category_id=self.category_id
+            )
 
     @property
     def ends_on(self):
