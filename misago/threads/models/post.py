@@ -141,6 +141,9 @@ class Post(models.Model):
     def get_api_url(self):
         return self.thread_type.get_post_api_url(self)
 
+    def get_likes_api_url(self):
+        return self.thread_type.get_post_likes_api_url(self)
+
     def get_editor_api_url(self):
         return self.thread_type.get_post_editor_api_url(self)
 

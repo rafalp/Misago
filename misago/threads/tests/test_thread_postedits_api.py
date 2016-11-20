@@ -18,8 +18,6 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
     def setUp(self):
         super(ThreadPostEditsApiTestCase, self).setUp()
 
-        self.category = Category.objects.get(slug='first-category')
-        self.thread = testutils.post_thread(category=self.category)
         self.post = testutils.reply_thread(self.thread, poster=self.user)
 
         self.api_link = reverse('misago:api:thread-post-edits', kwargs={

@@ -622,25 +622,6 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
 
 
 class PostLikeApiTests(ThreadPostPatchApiTestCase):
-    def like_post(self):
-        self.post.postlike_set.create(
-            category=self.category,
-            thread=self.thread,
-            user=self.user,
-            user_name=self.user.username,
-            user_slug=self.user.slug,
-            user_ip='127.0.0.1'
-        )
-        self.post.likes += 1
-        self.post.last_likes = [
-            {
-                'username': self.user.username,
-                'slug': self.user.slug,
-                'url': self.user.get_absolute_url()
-            }
-        ]
-        self.post.save()
-
     def test_like_no_see_permission(self):
         """api validates user's permission to see posts likes"""
         self.override_acl({
@@ -687,7 +668,7 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
 
     def test_unlike_post(self):
         """api removes user like from post"""
-        self.like_post()
+        testutils.like_post(self.user, self.post)
 
         response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'is-liked', 'value': False}
@@ -705,7 +686,7 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
 
     def test_like_post_no_change(self):
         """api does no state change if we are linking liked post"""
-        self.like_post()
+        testutils.like_post(self.user, self.post)
 
         response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'is-liked', 'value': True}

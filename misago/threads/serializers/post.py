@@ -97,6 +97,7 @@ class PostSerializer(serializers.ModelSerializer):
     def get_api(self, obj):
         return {
             'index': obj.get_api_url(),
+            'likes': obj.get_likes_api_url(),
             'editor': obj.get_editor_api_url(),
             'edits': obj.get_edits_api_url(),
             'read': obj.get_read_api_url(),

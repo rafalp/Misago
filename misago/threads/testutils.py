@@ -181,3 +181,25 @@ def post_poll(thread, poster):
     )
 
     return poll
+
+
+def like_post(user, post):
+    like = post.postlike_set.create(
+        category=post.category,
+        thread=post.thread,
+        user=user,
+        user_name=user.username,
+        user_slug=user.slug,
+        user_ip='127.0.0.1'
+    )
+    post.likes += 1
+    post.last_likes = [
+        {
+            'username': user.username,
+            'slug': user.slug,
+            'url': user.get_absolute_url()
+        }
+    ]
+    post.save()
+
+    return like

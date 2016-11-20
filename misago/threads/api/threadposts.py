@@ -20,6 +20,7 @@ from ..viewmodels.posts import ThreadPosts
 from ..viewmodels.thread import ForumThread
 from .postingendpoint import PostingEndpoint
 from .postendpoints.edits import get_edit_endpoint, revert_post_endpoint
+from .postendpoints.likes import likes_list_endpoint
 from .postendpoints.merge import posts_merge_endpoint
 from .postendpoints.move import posts_move_endpoint
 from .postendpoints.patch_event import event_patch_endpoint
@@ -265,6 +266,16 @@ class ViewSet(viewsets.ViewSet):
                 allow_edit_post(request.user, post)
 
                 return revert_post_endpoint(request, post)
+
+    @detail_route(methods=['get'])
+    def likes(self, request, thread_pk, pk):
+        thread = self.get_thread(request, thread_pk)
+        post = self.get_post(request, thread, pk).model
+
+        if post.acl['can_see_likes'] < 2:
+            raise PermissionDenied(_("You can't see who liked this post."))
+
+        return likes_list_endpoint(request, post)
 
 
 class ThreadPostsViewSet(ViewSet):
