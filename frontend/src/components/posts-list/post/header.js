@@ -3,6 +3,8 @@ import React from 'react';
 import Controls from './controls';
 import Select from './select';
 import {StatusIcon, getStatusClassName, getStatusDescription} from 'misago/components/user-status';
+import PostChangelog from 'misago/components/post-changelog';
+import modal from 'misago/services/modal';
 
 export default function(props) {
   return (
@@ -13,6 +15,7 @@ export default function(props) {
       <PostedOn {...props} />
       <Select {...props} />
       <Controls {...props} />
+      <PostEdits {...props} />
       <ProtectedLabel {...props} />
       <UnreadLabel {...props} />
     </div>
@@ -87,6 +90,44 @@ export function PostedOn(props) {
   return <a href={props.post.url.index} className="posted-on" title={tooltip}>
     {message}
   </a>;
+}
+
+export class PostEdits extends React.Component {
+  onClick = () => {
+    modal.show(
+      <PostChangelog post={this.props.post} />
+    )
+  };
+
+  render() {
+    const isHidden = this.props.post.is_hidden && !this.props.post.acl.can_see_hidden;
+    const isUnedited = this.props.post.edits === 0;
+    if (isHidden || isUnedited) return null;
+
+    const message = ngettext(
+      "This post was edited %(edits)s time.",
+      "This post was edited %(edits)s times.",
+      this.props.post.edits
+    );
+
+    const title = interpolate(message, {
+      'edits': this.props.post.edits
+    }, true);
+
+    return (
+      <button
+        className="btn btn-default btn-sm pull-right"
+        onClick={this.onClick}
+        title={title}
+        type="button"
+      >
+        <span className="material-icon">
+          edit
+        </span>
+        {this.props.post.edits}
+      </button>
+    )
+  }
 }
 
 export function UnreadLabel(props) {

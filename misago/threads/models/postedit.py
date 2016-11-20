@@ -29,4 +29,4 @@ class PostEdit(models.Model):
         ordering = ['-id']
 
     def get_diff(self):
-        return difflib.ndiff(self.edited_from.splitlines(), self.edited_to.splitlines()),
+        return difflib.ndiff(self.edited_from.splitlines(), self.edited_to.splitlines())

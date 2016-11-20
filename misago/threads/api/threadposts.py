@@ -19,7 +19,7 @@ from ..viewmodels.post import ThreadPost
 from ..viewmodels.posts import ThreadPosts
 from ..viewmodels.thread import ForumThread
 from .postingendpoint import PostingEndpoint
-from .postendpoints.editsrecord import get_edit_endpoint, revert_post_endpoint
+from .postendpoints.edits import get_edit_endpoint, revert_post_endpoint
 from .postendpoints.merge import posts_merge_endpoint
 from .postendpoints.move import posts_move_endpoint
 from .postendpoints.patch_event import event_patch_endpoint
@@ -258,12 +258,13 @@ class ViewSet(viewsets.ViewSet):
             return get_edit_endpoint(request, post)
 
         if request.method == 'POST':
-            thread = self.get_thread(request, thread_pk)
-            post = self.get_post_for_update(request, thread, pk).model
+            with transaction.atomic():
+                thread = self.get_thread(request, thread_pk)
+                post = self.get_post_for_update(request, thread, pk).model
 
-            allow_edit_post(request.user, post)
+                allow_edit_post(request.user, post)
 
-            return revert_post_endpoint(request, post)
+                return revert_post_endpoint(request, post)
 
 
 class ThreadPostsViewSet(ViewSet):
