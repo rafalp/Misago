@@ -151,7 +151,10 @@ class CategoryPermissionsForm(forms.Form):
             (2, _("Number and list of likers"))
         )
     )
-    can_like_posts = forms.YesNoSwitch(label=_("Can like posts"))
+    can_like_posts = forms.YesNoSwitch(
+        label=_("Can like posts"),
+        help_text=_("Only users with this permission to see likes can like posts.")
+    )
 
     can_protect_posts = forms.YesNoSwitch(
         label=_("Can protect posts"),
@@ -428,11 +431,13 @@ def add_acl_to_reply(user, post):
         'can_report': category_acl.get('can_report_content', False),
         'can_see_reports': category_acl.get('can_see_reports', False),
         'can_see_likes': category_acl.get('can_see_posts_likes', 0),
-        'can_like_posts': category_acl.get('can_like_posts', False),
+        'can_like': False,
     })
 
     if not post.acl['can_see_hidden']:
         post.acl['can_see_hidden'] = post.id == post.thread.first_post_id
+    if user.is_authenticated() and post.acl['can_see_likes']:
+        post.acl['can_like'] = category_acl.get('can_like_posts', False)
 
 
 def register_with(registry):

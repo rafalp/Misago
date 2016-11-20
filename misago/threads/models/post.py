@@ -67,6 +67,15 @@ class Post(models.Model):
     event_type = models.CharField(max_length=255, null=True, blank=True)
     event_context = JSONField(null=True, blank=True)
 
+    likes = models.PositiveIntegerField(default=0)
+    last_likes = JSONField(null=True, blank=True)
+
+    liked_by = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='liked_post_set',
+        through='misago_threads.PostLike',
+    )
+
     class Meta:
         index_together = [
             ('is_event', 'is_hidden'),

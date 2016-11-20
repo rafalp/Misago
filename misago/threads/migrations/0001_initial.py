@@ -49,6 +49,8 @@ class Migration(migrations.Migration):
                 ('is_event', models.BooleanField(default=False, db_index=True)),
                 ('event_type', models.CharField(max_length=255, null=True, blank=True)),
                 ('event_context', JSONField(null=True, blank=True)),
+                ('likes', models.PositiveIntegerField(default=0)),
+                ('last_likes', JSONField(blank=True, null=True)),
             ],
             options={
             },
@@ -319,5 +321,39 @@ class Migration(migrations.Migration):
             index_together=set([
                 ('poll', 'voter_name'),
             ]),
+        ),
+        migrations.CreateModel(
+            name='PostLike',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('user_name', models.CharField(max_length=255, db_index=True)),
+                ('user_slug', models.CharField(max_length=255)),
+                ('user_ip', models.GenericIPAddressField()),
+                ('liked_on', models.DateTimeField(default=django.utils.timezone.now)),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_categories.Category')),
+            ],
+            options={
+                'ordering': ['-id'],
+            },
+        ),
+        migrations.AddField(
+            model_name='postlike',
+            name='post',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.Post'),
+        ),
+        migrations.AddField(
+            model_name='postlike',
+            name='thread',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.Thread'),
+        ),
+        migrations.AddField(
+            model_name='postlike',
+            name='user',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
+        ),
+        migrations.AddField(
+            model_name='post',
+            name='liked_by',
+            field=models.ManyToManyField(related_name='liked_post_set', through='misago_threads.PostLike', to=settings.AUTH_USER_MODEL),
         ),
     ]

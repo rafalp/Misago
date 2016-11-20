@@ -6,14 +6,13 @@ from datetime import timedelta
 
 from django.core.urlresolvers import reverse
 from django.utils import timezone
-from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from .. import testutils
-from ..models import Thread
+from ..models import Post, Thread
 
 
 class ThreadPostPatchApiTestCase(AuthenticatedUserTestCase):
@@ -59,7 +58,7 @@ class PostAddAclApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertTrue(response_json['acl'])
 
     def test_add_acl_false(self):
@@ -69,7 +68,7 @@ class PostAddAclApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertIsNone(response_json['acl'])
 
         response = self.patch(self.api_link, [
@@ -121,7 +120,7 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't protect posts in this category.")
 
         self.refresh_post()
@@ -141,7 +140,7 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't protect posts in this category.")
 
         self.refresh_post()
@@ -159,7 +158,7 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't protect posts you can't edit.")
 
         self.refresh_post()
@@ -212,7 +211,7 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't approve posts in this category.")
 
         self.refresh_post()
@@ -235,7 +234,7 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't approve thread's first post.")
 
         self.refresh_post()
@@ -256,7 +255,7 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't approve posts the content you can't see.")
 
         self.refresh_post()
@@ -343,7 +342,7 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't hide posts in this category.")
 
         self.refresh_post()
@@ -366,7 +365,7 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't reveal posts in this category.")
 
         self.refresh_post()
@@ -387,7 +386,7 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "This post is protected. You can't hide it.")
 
         self.refresh_post()
@@ -411,7 +410,7 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "This post is protected. You can't reveal it.")
 
         self.refresh_post()
@@ -431,7 +430,7 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't hide other users posts in this category.")
 
         self.refresh_post()
@@ -452,7 +451,7 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't reveal other users posts in this category.")
 
         self.refresh_post()
@@ -473,7 +472,7 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't hide posts that are older than 1 minute.")
 
         self.refresh_post()
@@ -495,7 +494,7 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't reveal posts that are older than 1 minute.")
 
         self.refresh_post()
@@ -515,7 +514,7 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "This thread is closed. You can't hide posts in it.")
 
         self.refresh_post()
@@ -538,7 +537,7 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "This thread is closed. You can't reveal posts in it.")
 
         self.refresh_post()
@@ -558,7 +557,7 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "This category is closed. You can't hide posts in it.")
 
         self.refresh_post()
@@ -581,7 +580,7 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "This category is closed. You can't reveal posts in it.")
 
         self.refresh_post()
@@ -601,7 +600,7 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't hide thread's first post.")
 
     def test_show_first_post(self):
@@ -618,8 +617,127 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't reveal thread's first post.")
+
+
+class PostLikeApiTests(ThreadPostPatchApiTestCase):
+    def like_post(self):
+        self.post.postlike_set.create(
+            category=self.category,
+            thread=self.thread,
+            user=self.user,
+            user_name=self.user.username,
+            user_slug=self.user.slug,
+            user_ip='127.0.0.1'
+        )
+        self.post.likes += 1
+        self.post.last_likes = [
+            {
+                'username': self.user.username,
+                'slug': self.user.slug,
+                'url': self.user.get_absolute_url()
+            }
+        ]
+        self.post.save()
+
+    def test_like_no_see_permission(self):
+        """api validates user's permission to see posts likes"""
+        self.override_acl({
+            'can_see_posts_likes': 0
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-liked', 'value': True}
+        ])
+        self.assertContains(response, "You can't like posts in this category.", status_code=400)
+
+    def test_like_no_like_permission(self):
+        """api validates user's permission to see posts likes"""
+        self.override_acl({
+            'can_like_posts': False
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-liked', 'value': True}
+        ])
+        self.assertContains(response, "You can't like posts in this category.", status_code=400)
+
+    def test_like_post(self):
+        """api adds user like to post"""
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-liked', 'value': True}
+        ])
+        self.assertEqual(response.status_code, 200)
+
+        response_json = response.json()
+        self.assertEqual(response_json['likes'], 1)
+        self.assertEqual(response_json['is_liked'], True)
+        self.assertEqual(response_json['last_likes'], [
+            {
+                'username': self.user.username,
+                'slug': self.user.slug,
+                'url': self.user.get_absolute_url()
+            }
+        ])
+
+        post = Post.objects.get(pk=self.post.pk)
+        self.assertEqual(post.likes, response_json['likes'])
+        self.assertEqual(post.last_likes, response_json['last_likes'])
+
+    def test_unlike_post(self):
+        """api removes user like from post"""
+        self.like_post()
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-liked', 'value': False}
+        ])
+        self.assertEqual(response.status_code, 200)
+
+        response_json = response.json()
+        self.assertEqual(response_json['likes'], 0)
+        self.assertEqual(response_json['is_liked'], False)
+        self.assertEqual(response_json['last_likes'], [])
+
+        post = Post.objects.get(pk=self.post.pk)
+        self.assertEqual(post.likes, response_json['likes'])
+        self.assertEqual(post.last_likes, response_json['last_likes'])
+
+    def test_like_post_no_change(self):
+        """api does no state change if we are linking liked post"""
+        self.like_post()
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-liked', 'value': True}
+        ])
+        self.assertEqual(response.status_code, 200)
+
+        response_json = response.json()
+        self.assertEqual(response_json['likes'], 1)
+        self.assertEqual(response_json['is_liked'], True)
+        self.assertEqual(response_json['last_likes'], [
+            {
+                'username': self.user.username,
+                'slug': self.user.slug,
+                'url': self.user.get_absolute_url()
+            }
+        ])
+
+        post = Post.objects.get(pk=self.post.pk)
+        self.assertEqual(post.likes, response_json['likes'])
+        self.assertEqual(post.last_likes, response_json['last_likes'])
+
+    def test_unlike_post_no_change(self):
+        """api does no state change if we are unlinking unliked post"""
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-liked', 'value': False}
+        ])
+        self.assertEqual(response.status_code, 200)
+
+        response_json = response.json()
+        self.assertEqual(response_json['likes'], 0)
+        self.assertEqual(response_json['is_liked'], False)
+        self.assertEqual(response_json['last_likes'], [])
 
 
 class ThreadEventPatchApiTestCase(ThreadPostPatchApiTestCase):
@@ -656,7 +774,7 @@ class EventAddAclApiTests(ThreadEventPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertTrue(response_json['acl'])
 
     def test_add_acl_false(self):
@@ -666,7 +784,7 @@ class EventAddAclApiTests(ThreadEventPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertIsNone(response_json['acl'])
 
         response = self.patch(self.api_link, [
@@ -721,7 +839,7 @@ class EventHideApiTests(ThreadEventPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You don't have permission to hide this event.")
 
         self.refresh_event()
