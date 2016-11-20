@@ -42,8 +42,8 @@ class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
 
     def test_likes(self):
         """api returns list of likes"""
-        like = testutils.like_post(self.user, self.post)
-        other_like = testutils.like_post(self.user, self.post)
+        like = testutils.like_post(self.post, self.user)
+        other_like = testutils.like_post(self.post, self.user)
 
         other_like.user = None
         other_like.save()

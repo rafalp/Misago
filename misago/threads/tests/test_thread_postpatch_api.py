@@ -668,7 +668,7 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
 
     def test_unlike_post(self):
         """api removes user like from post"""
-        testutils.like_post(self.user, self.post)
+        testutils.like_post(self.post, self.user)
 
         response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'is-liked', 'value': False}
@@ -686,7 +686,7 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
 
     def test_like_post_no_change(self):
         """api does no state change if we are linking liked post"""
-        testutils.like_post(self.user, self.post)
+        testutils.like_post(self.post, self.user)
 
         response = self.patch(self.api_link, [
             {'op': 'replace', 'path': 'is-liked', 'value': True}

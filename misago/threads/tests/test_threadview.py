@@ -430,3 +430,27 @@ class ThreadPollViewTests(ThreadViewTestCase):
         self.assertContains(response, poll.question)
         self.assertContains(response, '4 votes')
         self.assertNotContains(response, 'Save your vote')
+
+
+class ThreadLikedPostsViewTests(ThreadViewTestCase):
+    def test_liked_posts_display(self):
+        """view has no showstoppers on displaying posts with likes"""
+        testutils.like_post(self.thread.first_post, self.user)
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertContains(response, '"is_liked": true')
+
+    def test_liked_posts_no_permission(self):
+        """
+        view has no showstoppers on displaying posts with likes without perm
+        """
+        testutils.like_post(self.thread.first_post, self.user)
+
+        self.override_acl({
+            'can_see_posts_likes': 0
+        })
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertNotContains(response, '"is_liked": true')
+        self.assertNotContains(response, '"is_liked": false')
+        self.assertContains(response, '"is_liked": null')

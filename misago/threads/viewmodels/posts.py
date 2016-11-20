@@ -7,6 +7,7 @@ from misago.users.online.utils import make_users_status_aware
 
 from ..permissions.threads import exclude_invisible_posts
 from ..serializers import PostSerializer
+from ..utils import add_likes_to_posts
 
 
 class ViewModel(object):
@@ -30,6 +31,9 @@ class ViewModel(object):
 
         make_posts_read_aware(request.user, thread.model, posts)
         make_users_status_aware(request.user, posters)
+
+        if thread.category.acl['can_see_posts_likes']:
+            add_likes_to_posts(request.user, posts)
 
         self._user = request.user
 

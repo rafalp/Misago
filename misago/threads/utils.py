@@ -2,6 +2,8 @@ from django.core.urlresolvers import resolve
 from django.utils import six
 from django.utils.six.moves.urllib.parse import urlparse
 
+from .models import PostLike
+
 
 def add_categories_to_threads(root_category, categories, threads):
     categories_dict = {}
@@ -35,6 +37,22 @@ def add_categories_to_threads(root_category, categories, threads):
                         category.has_child(thread.category)):
                     top_categories_map[thread.category_id] = category
                     thread.top_category = category
+
+
+def add_likes_to_posts(user, posts):
+    if user.is_anonymous():
+        return
+
+    posts_map = {}
+    for post in posts:
+        posts_map[post.id] = post
+        post.is_liked = False
+
+    queryset = PostLike.objects.filter(
+        user=user, post_id__in=posts_map.keys())
+
+    for like in queryset.values('post_id'):
+        posts_map[like['post_id']].is_liked = True
 
 
 SUPPORTED_THREAD_ROUTES = {

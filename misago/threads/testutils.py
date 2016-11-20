@@ -183,7 +183,7 @@ def post_poll(thread, poster):
     return poll
 
 
-def like_post(user, post):
+def like_post(post, user):
     like = post.postlike_set.create(
         category=post.category,
         thread=post.thread,
