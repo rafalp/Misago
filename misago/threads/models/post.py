@@ -135,6 +135,9 @@ class Post(models.Model):
     def get_editor_api_url(self):
         return self.thread_type.get_post_editor_api_url(self)
 
+    def get_edits_api_url(self):
+        return self.thread_type.get_post_edits_api_url(self)
+
     def get_read_api_url(self):
         return self.thread_type.get_post_read_api_url(self)
 

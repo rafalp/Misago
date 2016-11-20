@@ -8,7 +8,7 @@ from misago.categories.signals import delete_category_content, move_category_con
 from misago.core.pgutils import batch_delete, batch_update
 from misago.users.signals import delete_user_content, username_changed
 
-from .models import Attachment, Post, Thread, Poll, PollVote
+from .models import Attachment, Post, PostEdit, Thread, Poll, PollVote
 
 
 delete_post = Signal()
@@ -38,7 +38,10 @@ def merge_posts(sender, **kwargs):
 
 @receiver(move_thread)
 def move_thread_content(sender, **kwargs):
-    sender.post_set.update(category=sender.category)
+    Post.objects.filter(thread=sender).update(category=sender.category)
+    PostEdit.objects.filter(thread=sender).update(category=sender.category)
+    Poll.objects.filter(thread=sender).update(category=sender.category)
+    PollVote.objects.filter(thread=sender).update(category=sender.category)
 
 
 @receiver(delete_category_content)
@@ -53,6 +56,7 @@ def move_category_threads(sender, **kwargs):
 
     Thread.objects.filter(category=sender).update(category=new_category)
     Post.objects.filter(category=sender).update(category=new_category)
+    PostEdit.objects.filter(category=sender).update(category=new_category)
     Poll.objects.filter(category=sender).update(category=new_category)
     PollVote.objects.filter(category=sender).update(category=new_category)
 
@@ -102,6 +106,11 @@ def update_usernames(sender, **kwargs):
     Post.objects.filter(last_editor=sender).update(
         last_editor_name=sender.username,
         last_editor_slug=sender.slug
+    )
+
+    PostEdit.objects.filter(editor=sender).update(
+        editor_name=sender.username,
+        editor_slug=sender.slug
     )
 
     Attachment.objects.filter(uploader=sender).update(

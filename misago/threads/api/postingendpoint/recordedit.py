@@ -32,6 +32,7 @@ class RecordEditMiddleware(PostingMiddleware):
         self.post.edits_record.create(
             category=self.post.category,
             thread=self.thread,
+            edited_on=self.datetime,
             editor=self.user,
             editor_name=self.user.username,
             editor_slug=self.user.slug,

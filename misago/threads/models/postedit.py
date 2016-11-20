@@ -1,3 +1,5 @@
+import difflib
+
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -25,3 +27,6 @@ class PostEdit(models.Model):
 
     class Meta:
         ordering = ['-id']
+
+    def get_diff(self):
+        return difflib.ndiff(self.edited_from.splitlines(), self.edited_to.splitlines()),
