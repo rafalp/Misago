@@ -1,13 +1,14 @@
 /* jshint ignore:start */
 import React from 'react';
 import posting from 'misago/services/posting';
+import * as actions from './controls/actions';
 
 export default function(props) {
   if (isVisible(props.post)) {
     return (
       <div className="panel-footer post-footer">
-        <Likes {...props} />
         <Like {...props} />
+        <Likes {...props} />
         <Reply {...props} />
         <Edit {...props} />
       </div>
@@ -26,28 +27,93 @@ export function isVisible(post) {
   );
 }
 
-export function Likes(props) {
-  if (props.post.acl.can_see_likes) {
+export class Like extends React.Component {
+  onClick = () => {
+    if (this.props.post.is_liked) {
+      actions.unlike(this.props);
+    } else {
+      actions.like(this.props);
+    }
+  };
+
+  render() {
+    if (!this.props.post.acl.can_like) return null;
+
     return (
-      <button type="button" className="btn btn-likes pull-left" disabled="disabled">
-        Likes
+      <button
+        className="btn btn-default pull-left"
+        disabled={this.props.post.isBusy}
+        onClick={this.onClick}
+        type="button"
+      >
+        {this.props.post.is_liked ? gettext("Unlike") : gettext("Like")}
       </button>
     );
-  } else {
-    return null;
   }
 }
 
-export function Like(props) {
-  if (props.post.acl.can_like) {
+export class Likes extends React.Component {
+  onClick = () => {
+    console.log('TODO: likes modal');
+  };
+
+  render() {
+    if (!this.props.post.acl.can_see_likes || !this.props.post.last_likes) return null;
+
+    if (this.props.post.acl.can_see_likes === 2) {
+      return (
+        <button
+          className="btn btn-link pull-left"
+          onClick={this.onClick}
+          type="button"
+        >
+          {getLikesMessage(this.props.post.likes, this.props.post.last_likes)}
+        </button>
+      );
+    }
+
     return (
-      <button type="button" className="btn btn-like pull-left" disabled="disabled">
-        {gettext("Like")}
-      </button>
+      <p className="pull-left">
+        {getLikesMessage(this.props.post.likes, this.props.post.last_likes)}
+      </p>
     );
-  } else {
-    return null;
   }
+}
+
+export function getLikesMessage(likes, users) {
+  const usernames = users.map((u) => u.username);
+
+  if (usernames.length == 1) {
+    return interpolate(gettext("%(user)s likes this."), {
+      user: usernames[0]
+    }, true);
+  }
+
+  const hiddenLikes = likes - usernames.length;
+
+  const otherUsers = usernames.slice(0, -1).join(', ');
+  const lastUser = usernames.slice(-1)[0];
+
+  const usernamesList = interpolate(gettext("%(users)s and %(last_user)s"), {
+    users: otherUsers,
+    last_user: lastUser
+  }, true);
+
+  if (hiddenLikes === 0) {
+    return interpolate(gettext("%(users)s like this."), {
+      users: usernamesList
+    }, true);
+  }
+
+  const message = ngettext(
+    "%(users)s and %(likes)s other user like this.",
+    "%(users)s and %(likes)s other users like this.",
+    hiddenLikes);
+
+  return interpolate(message, {
+    users: usernamesList,
+    likes: hiddenLikes
+  }, true);
 }
 
 export class Reply extends React.Component {

@@ -92,6 +92,45 @@ export function unhide(props) {
   patch(props, ops, previousState);
 }
 
+export function like(props) {
+  store.dispatch(post.patch(props.post, {
+    is_liked: true,
+    likes: props.post.likes + 1,
+    last_likes: [props.user].concat(props.post.last_likes.slice(0, -1))
+  }));
+
+  const ops = [
+    {'op': 'replace', 'path': 'is-liked', 'value': true}
+  ];
+
+  const previousState = {
+    is_liked: props.post.is_liked,
+    likes: props.post.likes,
+    last_likes: props.post.last_likes
+  };
+
+  patch(props, ops, previousState);
+}
+
+export function unlike(props) {
+  store.dispatch(post.patch(props.post, {
+    is_liked: false,
+    likes: props.post.likes - 1
+  }));
+
+  const ops = [
+    {'op': 'replace', 'path': 'is-liked', 'value': false}
+  ];
+
+  const previousState = {
+    is_liked: props.post.is_liked,
+    likes: props.post.likes,
+    last_likes: props.post.last_likes
+  };
+
+  patch(props, ops, previousState);
+}
+
 export function patch(props, ops, previousState) {
   ajax.patch(props.post.api.index, ops).then((newState) => {
     store.dispatch(post.patch(props.post, newState));

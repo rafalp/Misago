@@ -24,6 +24,8 @@ class PostSerializer(serializers.ModelSerializer):
     is_read = serializers.SerializerMethodField()
     is_new = serializers.SerializerMethodField()
     is_liked = serializers.SerializerMethodField()
+    last_likes = serializers.SerializerMethodField()
+    likes = serializers.SerializerMethodField()
 
     api = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
@@ -53,13 +55,13 @@ class PostSerializer(serializers.ModelSerializer):
             'is_event',
             'event_type',
             'event_context',
-            'likes',
-            'last_likes',
 
             'acl',
             'is_liked',
             'is_new',
             'is_read',
+            'last_likes',
+            'likes',
 
             'api',
             'url',
@@ -101,6 +103,20 @@ class PostSerializer(serializers.ModelSerializer):
     def get_is_read(self, obj):
         try:
             return obj.is_read
+        except AttributeError:
+            return None
+
+    def get_last_likes(self, obj):
+        try:
+            if obj.acl['can_see_likes']:
+                return obj.last_likes
+        except AttributeError:
+            return None
+
+    def get_likes(self, obj):
+        try:
+            if obj.acl['can_see_likes']:
+                return obj.likes
         except AttributeError:
             return None
 

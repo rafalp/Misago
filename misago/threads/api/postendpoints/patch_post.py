@@ -1,4 +1,5 @@
 from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse
 from django.utils.translation import gettext as _
 
 from misago.acl import add_acl
@@ -59,13 +60,16 @@ def patch_is_liked(request, post, value):
     post.last_likes = []
     for like in post.postlike_set.all()[:3]:
         post.last_likes.append({
-            'username': request.user.username,
-            'slug': request.user.slug,
+            'username': like.user_name,
+            'slug': like.user_slug,
             'url': None
         })
 
         if like.user_id:
-            post.last_likes[-1]['url'] = request.user.get_absolute_url()
+            post.last_likes[-1]['url'] = reverse('misago:user', kwargs={
+                'pk': like.user_id,
+                'slug': like.user_slug
+            })
 
     post.save(update_fields=['likes', 'last_likes'])
 
