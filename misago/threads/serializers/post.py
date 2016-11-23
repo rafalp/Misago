@@ -107,6 +107,9 @@ class PostSerializer(serializers.ModelSerializer):
             return None
 
     def get_last_likes(self, obj):
+        if obj.is_event:
+            return None
+
         try:
             if obj.acl['can_see_likes']:
                 return obj.last_likes
@@ -114,6 +117,9 @@ class PostSerializer(serializers.ModelSerializer):
             return None
 
     def get_likes(self, obj):
+        if obj.is_event:
+            return None
+
         try:
             if obj.acl['can_see_likes']:
                 return obj.likes
@@ -121,13 +127,18 @@ class PostSerializer(serializers.ModelSerializer):
             return None
 
     def get_api(self, obj):
-        return {
+        api_links = {
             'index': obj.get_api_url(),
             'likes': obj.get_likes_api_url(),
             'editor': obj.get_editor_api_url(),
             'edits': obj.get_edits_api_url(),
             'read': obj.get_read_api_url(),
         }
+
+        if obj.is_event:
+            del api_links['likes']
+
+        return api_links
 
     def get_url(self, obj):
         return {

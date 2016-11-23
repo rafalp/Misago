@@ -656,9 +656,46 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
         self.assertEqual(response_json['is_liked'], True)
         self.assertEqual(response_json['last_likes'], [
             {
-                'username': self.user.username,
-                'slug': self.user.slug,
-                'url': self.user.get_absolute_url()
+                'id': self.user.id,
+                'username': self.user.username
+            }
+        ])
+
+        post = Post.objects.get(pk=self.post.pk)
+        self.assertEqual(post.likes, response_json['likes'])
+        self.assertEqual(post.last_likes, response_json['last_likes'])
+
+    def test_like_liked_post(self):
+        """api adds user like to post"""
+        testutils.like_post(self.post, username='Myo')
+        testutils.like_post(self.post, username='Mugi')
+        testutils.like_post(self.post, username='Bob')
+        testutils.like_post(self.post, username='Miku')
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'is-liked', 'value': True}
+        ])
+        self.assertEqual(response.status_code, 200)
+
+        response_json = response.json()
+        self.assertEqual(response_json['likes'], 5)
+        self.assertEqual(response_json['is_liked'], True)
+        self.assertEqual(response_json['last_likes'], [
+            {
+                'id': self.user.id,
+                'username': self.user.username
+            },
+            {
+                'id': None,
+                'username': 'Miku'
+            },
+            {
+                'id': None,
+                'username': 'Bob'
+            },
+            {
+                'id': None,
+                'username': 'Mugi'
             }
         ])
 
@@ -698,9 +735,8 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
         self.assertEqual(response_json['is_liked'], True)
         self.assertEqual(response_json['last_likes'], [
             {
-                'username': self.user.username,
-                'slug': self.user.slug,
-                'url': self.user.get_absolute_url()
+                'id': self.user.id,
+                'username': self.user.username
             }
         ])
 

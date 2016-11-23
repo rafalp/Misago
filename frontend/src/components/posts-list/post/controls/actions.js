@@ -115,7 +115,10 @@ export function like(props) {
 export function unlike(props) {
   store.dispatch(post.patch(props.post, {
     is_liked: false,
-    likes: props.post.likes - 1
+    likes: props.post.likes - 1,
+    last_likes: props.post.last_likes.filter((user) => {
+      return !user.id || user.id !== props.user.id;
+    })
   }));
 
   const ops = [

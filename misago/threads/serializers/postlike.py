@@ -11,7 +11,7 @@ __all__ = [
 
 
 class PostLikeSerializer(serializers.ModelSerializer):
-    id = serializers.SerializerMethodField()
+    user_id = serializers.SerializerMethodField()
     username = serializers.SerializerMethodField()
 
     url = serializers.SerializerMethodField()
@@ -19,15 +19,16 @@ class PostLikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostLike
         fields = (
+            'id',
             'liked_on',
 
-            'id',
+            'user_id',
             'username',
 
             'url',
         )
 
-    def get_id(self, obj):
+    def get_user_id(self, obj):
         return obj['user_id']
 
     def get_username(self, obj):

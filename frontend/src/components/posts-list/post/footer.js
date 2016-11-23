@@ -1,14 +1,20 @@
 /* jshint ignore:start */
 import React from 'react';
-import posting from 'misago/services/posting';
 import * as actions from './controls/actions';
+import LikesModal from 'misago/components/post-likes';
+import modal from 'misago/services/modal';
+import posting from 'misago/services/posting';
 
 export default function(props) {
   if (isVisible(props.post)) {
     return (
       <div className="panel-footer post-footer">
         <Like {...props} />
-        <Likes {...props} />
+        <Likes
+          lastLikes={props.post.last_likes}
+          likes={props.post.likes}
+          {...props}
+        />
         <Reply {...props} />
         <Edit {...props} />
       </div>
@@ -54,7 +60,11 @@ export class Like extends React.Component {
 
 export class Likes extends React.Component {
   onClick = () => {
-    console.log('TODO: likes modal');
+    modal.show(
+      <LikesModal
+        post={this.props.post}
+      />
+    );
   };
 
   render() {
@@ -67,21 +77,21 @@ export class Likes extends React.Component {
           onClick={this.onClick}
           type="button"
         >
-          {getLikesMessage(this.props.post.likes, this.props.post.last_likes)}
+          {getLikesMessage(this.props.likes, this.props.lastLikes)}
         </button>
       );
     }
 
     return (
       <p className="pull-left">
-        {getLikesMessage(this.props.post.likes, this.props.post.last_likes)}
+        {getLikesMessage(this.props.likes, this.props.lastLikes)}
       </p>
     );
   }
 }
 
 export function getLikesMessage(likes, users) {
-  const usernames = users.map((u) => u.username);
+  const usernames = users.slice(0, 3).map((u) => u.username);
 
   if (usernames.length == 1) {
     return interpolate(gettext("%(user)s likes this."), {
