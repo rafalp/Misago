@@ -1,23 +1,27 @@
-{% load i18n %}
+{% load i18n misago_poststags %}
 {% if post.acl.can_reply or post.acl.can_edit or post.acl.can_see_likes or post.acl.can_like %}
   <div class="panel-footer post-footer">
-    {% if post.acl.can_see_likes %}
-      <button type="button" class="btn btn-likes pull-left" disabled="disabled">
-        Likes
+    {% if post.acl.can_like %}
+      <button type="button" class="btn btn-default pull-left" disabled="disabled">
+        {% if post.is_liked %}
+          {% trans "Unlike" %}
+        {% else %}
+          {% trans "Like" %}
+        {% endif %}
       </button>
     {% endif %}
-    {% if post.acl.can_like %}
-      <button type="button" class="btn btn-like pull-left" disabled="disabled">
-        {% trans "Like" %}
-      </button>
+    {% if post.acl.can_see_likes and post.last_likes %}
+      <p class="pull-left">
+        {% likes_label post %}
+      </p>
     {% endif %}
     {% if post.acl.can_reply %}
-      <button type="button" class="btn btn-reply pull-right" disabled="disabled">
+      <button type="button" class="btn btn-default pull-right" disabled="disabled">
         {% trans "Reply" %}
       </button>
     {% endif %}
     {% if post.acl.can_edit %}
-      <button type="button" class="btn btn-edit pull-right" disabled="disabled">
+      <button type="button" class="btn btn-default pull-right" disabled="disabled">
         {% trans "Edit" %}
       </button>
     {% endif %}
