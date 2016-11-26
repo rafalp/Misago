@@ -16,16 +16,19 @@ from misago.threads.models import Post, Thread
 
 
 class Command(BaseCommand):
-    help = 'Adds random threads and posts for testing purposes'
+    help = 'Creates random threads and posts for dev and testing purposes.'
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            'threads',
+            help="number of threads to create",
+            nargs='?',
+            type=int,
+            default=5
+        )
 
     def handle(self, *args, **options):
-        try:
-            fake_threads_to_create = int(args[0])
-        except IndexError:
-            fake_threads_to_create = 5
-        except ValueError:
-            self.stderr.write("\nOptional argument should be integer.")
-            sys.exit(1)
+        items_to_create = options['threads']
 
         categories = list(Category.objects.all_categories())
 
@@ -40,8 +43,9 @@ class Command(BaseCommand):
 
         created_threads = 0
         start_time = time.time()
-        show_progress(self, created_threads, fake_threads_to_create)
-        for i in range(fake_threads_to_create):
+        show_progress(self, created_threads, items_to_create)
+
+        while created_threads < items_to_create:
             with atomic():
                 datetime = timezone.now()
                 category = random.choice(categories)
@@ -133,7 +137,7 @@ class Command(BaseCommand):
 
                 created_threads += 1
                 show_progress(
-                    self, created_threads, fake_threads_to_create, start_time)
+                    self, created_threads, items_to_create, start_time)
 
         pinned_threads = random.randint(0, int(created_threads * 0.025)) or 1
         self.stdout.write('\nPinning %s threads...' % pinned_threads)
