@@ -49,12 +49,12 @@ class ViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     def partial_update(self, request, pk):
-        thread = self.get_thread_for_update(request, pk).model
+        thread = self.get_thread_for_update(request, pk).unwrap()
         return thread_patch_endpoint(request, thread)
 
     @transaction.atomic
     def destroy(self, request, pk):
-        thread = self.get_thread_for_update(request, pk).model
+        thread = self.get_thread_for_update(request, pk)
 
         if thread.acl.get('can_hide') == 2:
             moderation.delete_thread(request.user, thread)
@@ -95,7 +95,7 @@ class ThreadViewSet(ViewSet):
     @detail_route(methods=['post'], url_path='merge')
     @transaction.atomic
     def thread_merge(self, request, pk):
-        thread = self.get_thread_for_update(request, pk).model
+        thread = self.get_thread_for_update(request, pk).unwrap()
         return thread_merge_endpoint(request, thread, self.thread)
 
     @list_route(methods=['post'], url_path='merge')

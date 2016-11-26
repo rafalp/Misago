@@ -23,7 +23,12 @@ class ThreadBase(View):
         return render(request, self.template_name, template_context)
 
     def get_thread(self, request, pk, slug):
-        return self.thread(request, pk, slug, read_aware=True, subscription_aware=True, poll_votes_aware=True)
+        return self.thread(
+            request, pk, slug,
+            read_aware=True,
+            subscription_aware=True,
+            poll_votes_aware=True
+        )
 
     def get_posts(self, request, thread, page):
         return self.posts(request, thread, page)

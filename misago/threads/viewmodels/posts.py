@@ -12,7 +12,12 @@ from ..utils import add_likes_to_posts
 
 class ViewModel(object):
     def __init__(self, request, thread, page):
-        posts_queryset = self.get_queryset(request, thread.model)
+        try:
+            thread_model = thread.unwrap()
+        except AttributeError:
+            thread_model = thread
+
+        posts_queryset = self.get_queryset(request, thread_model)
 
         list_page = paginate(posts_queryset, page, settings.MISAGO_POSTS_PER_PAGE, settings.MISAGO_POSTS_TAIL)
         paginator = pagination_dict(list_page, include_page_range=False)
@@ -22,14 +27,14 @@ class ViewModel(object):
 
         for post in posts:
             post.category = thread.category
-            post.thread = thread.model
+            post.thread = thread_model
 
             if post.poster:
                 posters.append(post.poster)
 
         add_acl(request.user, posts)
 
-        make_posts_read_aware(request.user, thread.model, posts)
+        make_posts_read_aware(request.user, thread_model, posts)
         make_users_status_aware(request.user, posters)
 
         if thread.category.acl['can_see_posts_likes']:

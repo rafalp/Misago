@@ -55,7 +55,7 @@ def clean_thread_for_move(request, thread, viewmodel):
         raise MoveError(_("Thread to move posts to is same as current one."))
 
     try:
-        new_thread = viewmodel(request, new_thread_id, select_for_update=True).model
+        new_thread = viewmodel(request, new_thread_id, select_for_update=True).unwrap()
     except PermissionDenied as e:
         raise MoveError(e.args[0])
     except Http404:

@@ -24,7 +24,7 @@ class ViewSet(viewsets.ViewSet):
             request,
             get_int_or_404(thread_pk),
             select_for_update=select_for_update,
-        ).model
+        ).unwrap()
 
     def get_thread_for_update(self, request, thread_pk):
         return self.get_thread(request, thread_pk, select_for_update=True)

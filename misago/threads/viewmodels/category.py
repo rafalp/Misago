@@ -4,10 +4,11 @@ from misago.acl import add_acl
 from misago.categories.models import Category
 from misago.categories.permissions import allow_browse_category, allow_see_category
 from misago.categories.serializers import BasicCategorySerializer
+from misago.core.viewmodel import ViewModel as BaseViewModel
 from misago.core.shortcuts import validate_slug
 
 
-class ViewModel(object):
+class ViewModel(BaseViewModel):
     def __init__(self, request, **kwargs):
         self._categories = self.get_categories(request)
         add_acl(request.user, self._categories)
@@ -15,10 +16,6 @@ class ViewModel(object):
         self._model = self.get_category(request, self._categories, **kwargs)
         self._subcategories = list(filter(self._model.has_child, self._categories))
         self._children = list(filter(lambda s: s.parent_id == self._model.pk, self._subcategories))
-
-    @property
-    def model(self):
-        return self._model
 
     @property
     def categories(self):

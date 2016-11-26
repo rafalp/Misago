@@ -16,7 +16,7 @@ class GotoView(View):
     read_aware=False
 
     def get(self, request, pk, slug, **kwargs):
-        thread = self.get_thread(request, pk, slug).model
+        thread = self.get_thread(request, pk, slug).unwrap()
         self.test_permissions(request, thread)
 
         posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)

@@ -77,24 +77,24 @@ class ViewSet(viewsets.ViewSet):
     @list_route(methods=['post'])
     @transaction.atomic
     def merge(self, request, thread_pk):
-        thread = self.get_thread_for_update(request, thread_pk).model
+        thread = self.get_thread_for_update(request, thread_pk).unwrap()
         return posts_merge_endpoint(request, thread)
 
     @list_route(methods=['post'])
     @transaction.atomic
     def move(self, request, thread_pk):
-        thread = self.get_thread_for_update(request, thread_pk).model
+        thread = self.get_thread_for_update(request, thread_pk).unwrap()
         return posts_move_endpoint(request, thread, self.thread)
 
     @list_route(methods=['post'])
     @transaction.atomic
     def split(self, request, thread_pk):
-        thread = self.get_thread_for_update(request, thread_pk).model
+        thread = self.get_thread_for_update(request, thread_pk).unwrap()
         return posts_split_endpoint(request, thread)
 
     @transaction.atomic
     def create(self, request, thread_pk):
-        thread = self.get_thread_for_update(request, thread_pk).model
+        thread = self.get_thread_for_update(request, thread_pk).unwrap()
         allow_reply_thread(request.user, thread)
 
         post = Post(thread=thread, category=thread.category)
@@ -125,15 +125,15 @@ class ViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     def update(self, request, thread_pk, pk):
-        thread = self.get_thread_for_update(request, thread_pk)
-        post = self.get_post_for_update(request, thread, pk).model
+        thread = self.get_thread_for_update(request, thread_pk).unwrap()
+        post = self.get_post_for_update(request, thread, pk).unwrap()
 
         allow_edit_post(request.user, post)
 
         posting = PostingEndpoint(
             request,
             PostingEndpoint.EDIT,
-            thread=thread.model,
+            thread=thread,
             post=post
         )
 
@@ -158,7 +158,7 @@ class ViewSet(viewsets.ViewSet):
     @transaction.atomic
     def partial_update(self, request, thread_pk, pk):
         thread = self.get_thread_for_update(request, thread_pk)
-        post = self.get_post_for_update(request, thread, pk).model
+        post = self.get_post_for_update(request, thread, pk).unwrap()
 
         if post.is_event:
             return event_patch_endpoint(request, post)
@@ -168,7 +168,7 @@ class ViewSet(viewsets.ViewSet):
     @transaction.atomic
     def delete(self, request, thread_pk, pk):
         thread = self.get_thread_for_update(request, thread_pk)
-        post = self.get_post_for_update(request, thread, pk).model
+        post = self.get_post_for_update(request, thread, pk).unwrap()
 
         if post.is_event:
             allow_delete_event(request.user, post)
@@ -177,8 +177,8 @@ class ViewSet(viewsets.ViewSet):
 
         moderation.delete_post(request.user, post)
 
-        thread.model.synchronize()
-        thread.model.save()
+        thread.synchronize()
+        thread.save()
 
         thread.category.synchronize()
         thread.category.save()
@@ -188,12 +188,12 @@ class ViewSet(viewsets.ViewSet):
     @detail_route(methods=['post'])
     @transaction.atomic
     def read(self, request, thread_pk, pk):
-        thread = self.get_thread(request, thread_pk)
-        post = self.get_post(request, thread, pk).model
+        thread = self.get_thread(request, thread_pk).unwrap()
+        post = self.get_post(request, thread, pk).unwrap()
 
         request.user.lock()
 
-        return post_read_endpoint(request, thread.model, post)
+        return post_read_endpoint(request, thread, post)
 
     @detail_route(methods=['get'], url_path='editor')
     def post_editor(self, request, thread_pk, pk):
@@ -203,7 +203,7 @@ class ViewSet(viewsets.ViewSet):
             read_aware=False,
             subscription_aware=False
         )
-        post = self.get_post(request, thread, pk).model
+        post = self.get_post(request, thread, pk).unwrap()
 
         allow_edit_post(request.user, post)
 
@@ -231,11 +231,11 @@ class ViewSet(viewsets.ViewSet):
             thread_pk,
             read_aware=False,
             subscription_aware=False
-        )
-        allow_reply_thread(request.user, thread.model)
+        ).unwrap()
+        allow_reply_thread(request.user, thread)
 
         if 'reply' in request.query_params:
-            reply_to = self.get_post(request, thread, request.query_params['reply']).model
+            reply_to = self.get_post(request, thread, request.query_params['reply']).unwrap()
 
             if reply_to.is_event:
                 raise PermissionDenied(_("You can't reply to events."))
@@ -254,14 +254,14 @@ class ViewSet(viewsets.ViewSet):
     def edits(self, request, thread_pk, pk):
         if request.method == 'GET':
             thread = self.get_thread(request, thread_pk)
-            post = self.get_post(request, thread, pk).model
+            post = self.get_post(request, thread, pk).unwrap()
 
             return get_edit_endpoint(request, post)
 
         if request.method == 'POST':
             with transaction.atomic():
                 thread = self.get_thread(request, thread_pk)
-                post = self.get_post_for_update(request, thread, pk).model
+                post = self.get_post_for_update(request, thread, pk).unwrap()
 
                 allow_edit_post(request.user, post)
 
@@ -270,7 +270,7 @@ class ViewSet(viewsets.ViewSet):
     @detail_route(methods=['get'])
     def likes(self, request, thread_pk, pk):
         thread = self.get_thread(request, thread_pk)
-        post = self.get_post(request, thread, pk).model
+        post = self.get_post(request, thread, pk).unwrap()
 
         if post.acl['can_see_likes'] < 2:
             raise PermissionDenied(_("You can't see who liked this post."))
