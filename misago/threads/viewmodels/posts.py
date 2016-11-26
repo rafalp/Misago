@@ -10,6 +10,9 @@ from ..serializers import PostSerializer
 from ..utils import add_likes_to_posts
 
 
+__all__ = ['ThreadPosts']
+
+
 class ViewModel(object):
     def __init__(self, request, thread, page):
         try:
@@ -19,7 +22,8 @@ class ViewModel(object):
 
         posts_queryset = self.get_queryset(request, thread_model)
 
-        list_page = paginate(posts_queryset, page, settings.MISAGO_POSTS_PER_PAGE, settings.MISAGO_POSTS_TAIL)
+        list_page = paginate(
+            posts_queryset, page, settings.MISAGO_POSTS_PER_PAGE, settings.MISAGO_POSTS_TAIL)
         paginator = pagination_dict(list_page, include_page_range=False)
 
         posts = list(list_page.object_list)

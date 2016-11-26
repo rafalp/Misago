@@ -11,7 +11,7 @@ from misago.core.shortcuts import get_int_or_404
 
 from ..models import Post, Thread
 from ..moderation import threads as moderation
-from ..viewmodels.thread import ForumThread
+from ..viewmodels import ForumThread
 from .postingendpoint import PostingEndpoint
 from .threadendpoints.editor import thread_start_editor
 from .threadendpoints.list import threads_list_endpoint

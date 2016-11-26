@@ -19,6 +19,9 @@ from ..subscriptions import make_subscription_aware
 from ..utils import add_categories_to_threads
 
 
+__all__ = ['ForumThreads', 'PrivateThreads']
+
+
 LISTS_NAMES = {
     'all': None,
     'my': ugettext_lazy("Your threads"),

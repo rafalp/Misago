@@ -14,6 +14,9 @@ from ..subscriptions import make_subscription_aware
 from ..threadtypes import trees_map
 
 
+__all__ = ['ForumThread', 'PrivateThread']
+
+
 BASE_RELATIONS = (
     'category',
     'poll',
@@ -108,3 +111,8 @@ class ForumThread(ViewModel):
 
     def get_root_name(self):
         return _("Threads")
+
+
+class PrivateThread(ViewModel):
+    pass
+

@@ -6,6 +6,9 @@ from misago.core.viewmodel import ViewModel as BaseViewModel
 from ..permissions.threads import exclude_invisible_posts
 
 
+__all__ = ['ThreadPost']
+
+
 class ViewModel(BaseViewModel):
     def __init__(self, request, thread, pk, select_for_update=False):
         model = self.get_post(request, thread, pk, select_for_update)

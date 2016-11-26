@@ -15,9 +15,7 @@ from ..moderation import posts as moderation
 from ..permissions.threads import (
     allow_delete_event, allow_delete_post, allow_edit_post, allow_reply_thread)
 from ..serializers import AttachmentSerializer, PostSerializer
-from ..viewmodels.post import ThreadPost
-from ..viewmodels.posts import ThreadPosts
-from ..viewmodels.thread import ForumThread
+from ..viewmodels import ForumThread, ThreadPost, ThreadPosts
 from .postingendpoint import PostingEndpoint
 from .postendpoints.edits import get_edit_endpoint, revert_post_endpoint
 from .postendpoints.likes import likes_list_endpoint

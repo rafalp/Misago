@@ -8,6 +8,9 @@ from misago.core.viewmodel import ViewModel as BaseViewModel
 from misago.core.shortcuts import validate_slug
 
 
+__all__ = ['ThreadsRootCategory', 'ThreadsCategory', 'PrivateThreadsCategory']
+
+
 class ViewModel(BaseViewModel):
     def __init__(self, request, **kwargs):
         self._categories = self.get_categories(request)

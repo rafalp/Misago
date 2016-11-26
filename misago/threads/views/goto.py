@@ -8,7 +8,7 @@ from django.views.generic import View
 from misago.conf import settings
 
 from ..permissions.threads import exclude_invisible_posts
-from ..viewmodels.thread import ForumThread
+from ..viewmodels import ForumThread
 
 
 class GotoView(View):

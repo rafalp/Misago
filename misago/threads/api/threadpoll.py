@@ -12,7 +12,7 @@ from ..models import Poll
 from ..permissions.polls import (
     allow_see_poll_votes, allow_start_poll, allow_edit_poll, allow_delete_poll, can_start_poll)
 from ..serializers import PollSerializer, PollVoteSerializer, NewPollSerializer, EditPollSerializer
-from ..viewmodels.thread import ForumThread
+from ..viewmodels import ForumThread
 from .pollvotecreateendpoint import poll_vote_create
 
 

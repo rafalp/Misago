@@ -2,8 +2,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.views.generic import View
 
-from ..viewmodels.posts import ThreadPosts
-from ..viewmodels.thread import ForumThread
+from ..viewmodels import ForumThread, ThreadPosts
 
 
 class ThreadBase(View):
