@@ -1,5 +1,7 @@
+from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import Http404
+from django.utils.translation import gettext as _
 
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
@@ -48,6 +50,12 @@ class ViewSet(viewsets.ViewSet):
     def create(self, request, thread_pk):
         thread = self.get_thread_for_update(request, thread_pk)
         allow_start_poll(request.user, thread)
+
+        try:
+            if thread.poll and thread.poll.pk:
+                raise PermissionDenied(_("There's already a poll in this thread."))
+        except Poll.DoesNotExist:
+            pass
 
         instance = Poll(
             thread=thread,

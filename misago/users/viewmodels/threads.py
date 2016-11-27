@@ -67,7 +67,7 @@ class UserThreads(object):
             request.user, threads_categories, profile.thread_set)
 
     def get_posts_queryset(self, user, profile, threads_queryset):
-        return profile.post_set.select_related('thread', 'thread__poll').filter(
+        return profile.post_set.select_related('thread').filter(
             id__in=threads_queryset.values('first_post_id')
         )
 

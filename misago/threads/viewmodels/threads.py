@@ -67,6 +67,7 @@ class ViewModel(object):
             threadstracker.make_threads_read_aware(request.user, threads)
 
         add_categories_to_items(category_model, category.categories, threads)
+
         add_acl(request.user, threads)
         make_subscription_aware(request.user, threads)
 
