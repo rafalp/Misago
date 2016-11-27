@@ -13,7 +13,7 @@ from ...moderation import threads as moderation
 from ...permissions import can_reply_thread, can_see_thread
 from ...serializers import NewThreadSerializer, ThreadsListSerializer
 from ...threadtypes import trees_map
-from ...utils import add_categories_to_threads, get_thread_id_from_url
+from ...utils import add_categories_to_items, get_thread_id_from_url
 from .pollmergehandler import PollMergeHandler
 
 
@@ -224,7 +224,7 @@ def merge_threads(request, validated_data, threads, poll):
         categories = list(Category.objects.all_categories().filter(
             id__in=request.user.acl['visible_categories']
         ))
-        add_categories_to_threads(validated_data['top_category'], categories, [new_thread])
+        add_categories_to_items(validated_data['top_category'], categories, [new_thread])
     else:
         new_thread.top_category = None
 

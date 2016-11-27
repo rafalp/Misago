@@ -24,6 +24,7 @@ from ..permissions.profiles import allow_block_user, allow_follow_user
 from ..serializers import BanDetailsSerializer, UserProfileSerializer, UserSerializer
 from ..serializers.usernamechange import UsernameChangeSerializer
 from ..warnings import get_user_warning_level, get_user_warning_obj, get_warning_levels
+from ..viewmodels import UserPosts, UserThreads
 
 
 def profile_view(f):
@@ -109,16 +110,30 @@ def landing(request, profile):
 
 @profile_view
 def posts(request, profile):
-    return render(request, 'misago/profile/posts.html', {
+    context = {
         'profile': profile
-    })
+    }
+
+    feed = UserPosts(request, profile)
+    context.update(feed.get_template_context())
+
+    request.frontend_context['FEED'] = feed.get_frontend_context()
+
+    return render(request, 'misago/profile/posts.html', context)
 
 
 @profile_view
 def threads(request, profile):
-    return render(request, 'misago/profile/threads.html', {
+    context = {
         'profile': profile
-    })
+    }
+
+    feed = UserThreads(request, profile)
+    context.update(feed.get_template_context())
+
+    request.frontend_context['FEED'] = feed.get_frontend_context()
+
+    return render(request, 'misago/profile/threads.html', context)
 
 
 @profile_view

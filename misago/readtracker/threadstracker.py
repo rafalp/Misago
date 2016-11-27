@@ -45,7 +45,8 @@ def make_categories_threads_read_aware(user, threads):
     for thread in threads:
         category_cutoff = categories_cutoffs.get(thread.category_id)
         thread.is_read = not is_date_tracked(thread.last_post_on, user, category_cutoff)
-        thread.is_new = True
+        thread.is_new = not thread.is_read
+        thread.last_read_on = user.joined_on
 
         if not thread.is_read:
             threads_dict[thread.pk] = thread
@@ -70,8 +71,9 @@ def make_threads_dict_read_aware(user, threads_dict):
     for record in user.threadread_set.filter(thread__in=threads_dict.keys()):
         if record.thread_id in threads_dict:
             thread = threads_dict[record.thread_id]
-            thread.is_new = False
             thread.is_read = record.last_read_on >= thread.last_post_on
+            thread.is_new = not thread.is_read
+            thread.last_read_on = record.last_read_on
 
 
 def make_thread_read_aware(user, thread):

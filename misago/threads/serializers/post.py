@@ -2,6 +2,8 @@ from django.core.urlresolvers import reverse
 
 from rest_framework import serializers
 
+from misago.categories.models import Category
+from misago.categories.serializers import BasicCategorySerializer
 from misago.users.serializers import UserSerializer
 
 from ..models import Post
@@ -9,6 +11,7 @@ from ..models import Post
 
 __all__ = [
     'PostSerializer',
+    'PostFeedSerializer',
 ]
 
 
@@ -32,7 +35,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = (
+        fields = [
             'id',
             'poster',
             'poster_name',
@@ -65,7 +68,7 @@ class PostSerializer(serializers.ModelSerializer):
 
             'api',
             'url',
-        )
+        ]
 
     def get_poster_ip(self, obj):
         if self.context['user'].acl['can_see_users_ips']:
@@ -164,3 +167,42 @@ class PostSerializer(serializers.ModelSerializer):
             })
         else:
             return None
+
+
+class CategoryFeedSerializer(BasicCategorySerializer):
+    class Meta:
+        model = Category
+        fields = (
+            'name',
+            'css_class',
+            'absolute_url',
+        )
+
+
+class PostFeedSerializer(PostSerializer):
+    category = CategoryFeedSerializer(many=False, read_only=True)
+
+    thread = serializers.SerializerMethodField()
+    top_category = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Post
+        fields = PostSerializer.Meta.fields + [
+            'category',
+
+            'thread',
+            'top_category'
+        ]
+
+    def get_thread(self, obj):
+        return {
+            'title': obj.thread.title,
+            'url': obj.thread.get_absolute_url()
+        }
+
+    def get_top_category(self, obj):
+        try:
+            return CategoryFeedSerializer(obj.top_category).data
+        except AttributeError:
+            return None
+

@@ -1,5 +1,4 @@
-from django.core.paginator import Paginator as DjangoPaginator
-from django.core.paginator import InvalidPage
+from django.core.paginator import Paginator as DjangoPaginator, InvalidPage
 from django.utils import six
 
 from rest_framework.exceptions import NotFound

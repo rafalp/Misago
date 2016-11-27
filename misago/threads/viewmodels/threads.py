@@ -16,7 +16,7 @@ from ..models import Thread
 from ..permissions import exclude_invisible_threads
 from ..serializers import ThreadsListSerializer
 from ..subscriptions import make_subscription_aware
-from ..utils import add_categories_to_threads
+from ..utils import add_categories_to_items
 
 
 __all__ = ['ForumThreads', 'PrivateThreads']
@@ -66,7 +66,7 @@ class ViewModel(object):
         else:
             threadstracker.make_threads_read_aware(request.user, threads)
 
-        add_categories_to_threads(category_model, category.categories, threads)
+        add_categories_to_items(category_model, category.categories, threads)
         add_acl(request.user, threads)
         make_subscription_aware(request.user, threads)
 

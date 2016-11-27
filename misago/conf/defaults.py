@@ -346,6 +346,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'misago.users.rest_permissions.IsAuthenticatedOrReadOnly',
     ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
     'EXCEPTION_HANDLER': 'misago.core.exceptionhandler.handle_api_exception',
     'UNAUTHENTICATED_USER': 'misago.users.models.AnonymousUser',
     'URL_FORMAT_OVERRIDE': None,
