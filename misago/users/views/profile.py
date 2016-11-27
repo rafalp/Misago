@@ -111,13 +111,13 @@ def landing(request, profile):
 @profile_view
 def posts(request, profile):
     context = {
-        'profile': profile
+        'profile': profile,
     }
 
     feed = UserPosts(request, profile)
     context.update(feed.get_template_context())
 
-    request.frontend_context['FEED'] = feed.get_frontend_context()
+    request.frontend_context['POSTS'] = feed.get_frontend_context()
 
     return render(request, 'misago/profile/posts.html', context)
 
@@ -131,7 +131,7 @@ def threads(request, profile):
     feed = UserThreads(request, profile)
     context.update(feed.get_template_context())
 
-    request.frontend_context['FEED'] = feed.get_frontend_context()
+    request.frontend_context['POSTS'] = feed.get_frontend_context()
 
     return render(request, 'misago/profile/threads.html', context)
 

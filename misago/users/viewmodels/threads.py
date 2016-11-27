@@ -23,6 +23,7 @@ class UserThreads(object):
         posts_queryset = self.get_posts_queryset(
             request.user, profile, threads_queryset
             ).filter(
+                is_event=False,
                 is_hidden=False,
                 is_unapproved=False
             ).order_by('-pk')
@@ -66,7 +67,7 @@ class UserThreads(object):
             request.user, threads_categories, profile.thread_set)
 
     def get_posts_queryset(self, user, profile, threads_queryset):
-        return profile.post_set.select_related('thread').filter(
+        return profile.post_set.select_related('thread', 'thread__poll').filter(
             id__in=threads_queryset.values('first_post_id')
         )
 
@@ -81,6 +82,6 @@ class UserThreads(object):
 
     def get_template_context(self):
         return {
-            'feed': self.posts,
+            'posts': self.posts,
             'paginator': self.paginator
         }
