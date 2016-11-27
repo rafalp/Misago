@@ -198,6 +198,7 @@ class Migration(migrations.Migration):
         migrations.AlterIndexTogether(
             name='post',
             index_together=set([
+                ('thread', 'id'),
                 ('is_event', 'is_hidden'),
                 ('poster', 'posted_on'),
             ]),

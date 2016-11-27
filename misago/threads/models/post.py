@@ -78,6 +78,7 @@ class Post(models.Model):
 
     class Meta:
         index_together = [
+            ('thread', 'id'), # speed up threadview for team members
             ('is_event', 'is_hidden'),
             ('poster', 'posted_on')
         ]
