@@ -26,13 +26,6 @@ INSTALLED_APPS = (
 )
 """
 
-# Build paths inside the project like this: os.path.join(MISAGO_BASE_DIR, ...)
-import os
-
-
-MISAGO_BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-
 # Default JS debug to false
 # This setting used exclusively by test runner and isn't part of public API
 _MISAGO_JS_DEBUG = False
@@ -41,6 +34,9 @@ _MISAGO_JS_DEBUG = False
 # Application definition
 
 INSTALLED_APPS = (
+    # Load Misago's locale/templates/static
+    'misago',
+
     'django.contrib.admin',
     # Keep misago.users above django.contrib.auth
     # so our management commands take precedence over theirs
@@ -153,21 +149,6 @@ MISAGO_POSTING_MIDDLEWARES = (
 MISAGO_THREAD_TYPES = (
     'misago.threads.threadtypes.thread.Thread',
     'misago.threads.threadtypes.privatethread.PrivateThread',
-)
-
-
-# Register Misago directories
-
-LOCALE_PATHS = (
-    os.path.join(MISAGO_BASE_DIR, 'locale'),
-)
-
-STATICFILES_DIRS = (
-    os.path.join(MISAGO_BASE_DIR, 'static'),
-)
-
-TEMPLATE_DIRS = (
-    os.path.join(MISAGO_BASE_DIR, 'templates'),
 )
 
 

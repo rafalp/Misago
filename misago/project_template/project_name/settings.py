@@ -94,11 +94,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # assets and templates to your site
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'theme', 'static'),
-) + STATICFILES_DIRS
+)
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'theme', 'templates'),
-) + TEMPLATE_DIRS
+)
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
