@@ -108,10 +108,6 @@ class Command(BaseCommand):
                     fake_message = "\n\n".join(fake.paragraphs())
 
                     is_unapproved = random.randint(0, 100) > 97
-                    if not is_unapproved:
-                        is_hidden = random.randint(0, 100) > 97
-                    else:
-                        is_hidden = False
 
                     post = Post.objects.create(
                         category=category,
@@ -121,13 +117,30 @@ class Command(BaseCommand):
                         poster_ip=fake.ipv4(),
                         original=fake_message,
                         parsed=linebreaks_filter(fake_message),
-                        is_hidden=is_hidden,
                         is_unapproved=is_unapproved,
                         posted_on=datetime,
                         updated_on=datetime
                     )
+
+                    if not is_unapproved:
+                        is_hidden = random.randint(0, 100) > 97
+                    else:
+                        is_hidden = False
+
+                    if is_hidden:
+                        post.is_hidden = True
+
+                        if random.randint(0, 100) < 80:
+                            user = User.objects.order_by('?')[:1][0]
+                            post.hidden_by = user
+                            post.hidden_by_name = user.username
+                            post.hidden_by_slug = user.username
+                        else:
+                            post.hidden_by_name = fake.first_name()
+                            post.hidden_by_slug = post.hidden_by_name.lower()
+
                     update_post_checksum(post)
-                    post.save(update_fields=['checksum'])
+                    post.save()
 
                     user.posts += 1
                     user.save()
