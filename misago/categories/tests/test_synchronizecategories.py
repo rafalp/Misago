@@ -1,3 +1,4 @@
+from django.core.management import call_command
 from django.test import TestCase
 from django.utils.six import StringIO
 from django.utils.six.moves import range
@@ -23,7 +24,7 @@ class SynchronizeCategoriesTests(TestCase):
         command = synchronizecategories.Command()
 
         out = StringIO()
-        command.execute(stdout=out)
+        call_command(command, stdout=out)
 
         category = Category.objects.get(id=category.id)
         self.assertEqual(category.threads, 10)

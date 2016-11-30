@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.management import call_command
 from django.test import TestCase
 from django.utils.six import StringIO
 
@@ -17,7 +18,7 @@ class PopulateOnlineTrackerTests(TestCase):
         self.assertEqual(Online.objects.filter(user=test_user).count(), 0)
 
         out = StringIO()
-        populateonlinetracker.Command().execute(stdout=out)
+        call_command(populateonlinetracker.Command(), stdout=out)
         command_output = out.getvalue().splitlines()[0].strip()
 
         self.assertEqual(command_output, 'Tracker entries created: 1')

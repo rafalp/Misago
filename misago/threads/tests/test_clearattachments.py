@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from django.conf import settings
+from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.six import StringIO
@@ -18,7 +19,7 @@ class ClearAttachmentsTests(TestCase):
         command = clearattachments.Command()
 
         out = StringIO()
-        command.execute(stdout=out)
+        call_command(command, stdout=out)
         command_output = out.getvalue().strip()
 
         self.assertEqual(command_output, "No attachments were found")
@@ -75,7 +76,7 @@ class ClearAttachmentsTests(TestCase):
         command = clearattachments.Command()
 
         out = StringIO()
-        command.execute(stdout=out)
+        call_command(command, stdout=out)
 
         command_output = out.getvalue().splitlines()[-1].strip()
         self.assertEqual(command_output, "Cleared 5 attachments")

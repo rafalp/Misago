@@ -1,3 +1,4 @@
+from django.core.management import call_command
 from django.test import TestCase
 from django.utils.six import StringIO
 
@@ -10,7 +11,7 @@ class UpdateBlankAvatarTests(TestCase):
         command = updateblankavatar.Command()
 
         out = StringIO()
-        command.execute(stdout=out)
+        call_command(command, stdout=out)
         command_output = out.getvalue().splitlines()[0].strip()
 
         self.assertEqual(command_output, 'Blank avatar was updated')

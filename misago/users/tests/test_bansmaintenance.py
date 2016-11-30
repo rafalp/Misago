@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
+from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.six import StringIO
@@ -25,7 +26,7 @@ class BansMaintenanceTests(TestCase):
         command = bansmaintenance.Command()
 
         out = StringIO()
-        command.execute(stdout=out)
+        call_command(command, stdout=out)
         command_output = out.getvalue().splitlines()[0].strip()
 
         self.assertEqual(command_output, 'Bans invalidated: 5')
@@ -49,7 +50,7 @@ class BansMaintenanceTests(TestCase):
         command = bansmaintenance.Command()
 
         out = StringIO()
-        command.execute(stdout=out)
+        call_command(command, stdout=out)
         command_output = out.getvalue().splitlines()[1].strip()
 
         self.assertEqual(command_output, 'Ban caches emptied: 0')
@@ -62,7 +63,7 @@ class BansMaintenanceTests(TestCase):
 
         # invalidate expired ban cache
         out = StringIO()
-        command.execute(stdout=out)
+        call_command(command, stdout=out)
         command_output = out.getvalue().splitlines()[1].strip()
 
         self.assertEqual(command_output, 'Ban caches emptied: 1')
