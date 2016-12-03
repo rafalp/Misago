@@ -93,10 +93,12 @@ export function unhide(props) {
 }
 
 export function like(props) {
+  const lastLikes = props.post.last_likes || [];
+
   store.dispatch(post.patch(props.post, {
     is_liked: true,
     likes: props.post.likes + 1,
-    last_likes: [props.user].concat(props.post.last_likes.slice(0, -1))
+    last_likes: [props.user].concat(lastLikes.slice(0, -1))
   }));
 
   const ops = [
