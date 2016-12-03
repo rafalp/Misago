@@ -1,9 +1,12 @@
+from __future import unicode_literals
+
 import copy
 
 from django.contrib.postgres.fields import JSONField
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.dispatch import receiver
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils import six, timezone
 
 from misago.conf import settings
@@ -14,6 +17,7 @@ from .. import threadtypes
 from ..checksums import is_post_valid, update_post_checksum
 
 
+@python_2_unicode_compatible
 class Post(models.Model):
     category = models.ForeignKey('misago_categories.Category')
     thread = models.ForeignKey('misago_threads.Thread')
@@ -83,7 +87,7 @@ class Post(models.Model):
             ('poster', 'posted_on')
         ]
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s...' % self.original[10:].strip()
 
     def delete(self, *args, **kwargs):

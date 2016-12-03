@@ -1,13 +1,12 @@
 from django.core.urlresolvers import reverse
 from django.db import models, transaction
+from django.utils.encoding import python_2_unicode_compatible
 
 from misago.acl import version as acl_version
 from misago.core.utils import slugify
 
 
-__all__ = [
-    'Rank'
-]
+__all__ = ['Rank']
 
 
 class RankManager(models.Manager):
@@ -21,6 +20,7 @@ class RankManager(models.Manager):
             rank.save(update_fields=['is_default'])
 
 
+@python_2_unicode_compatible
 class Rank(models.Model):
     name = models.CharField(max_length=255)
     slug = models.CharField(unique=True, max_length=255)
@@ -37,7 +37,7 @@ class Rank(models.Model):
     class Meta:
         get_latest_by = 'order'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
