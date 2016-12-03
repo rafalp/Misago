@@ -68,7 +68,8 @@ export class Likes extends React.Component {
   };
 
   render() {
-    if (!this.props.post.acl.can_see_likes || !this.props.post.last_likes) return null;
+    const hasLikes = (this.props.post.last_likes || []).length > 0;
+    if (!this.props.post.acl.can_see_likes || !hasLikes) return null;
 
     if (this.props.post.acl.can_see_likes === 2) {
       return (
