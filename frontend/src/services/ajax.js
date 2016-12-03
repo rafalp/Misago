@@ -53,6 +53,10 @@ export class Ajax {
             }
           }
 
+          if (rejection.status === 413 && !rejection.detail) {
+            rejection.detail = gettext("Payload sent to application was too large.");
+          }
+
           if (rejection.status === 500 && !rejection.detail) {
             rejection.detail = gettext("Unknown error has occured.");
           }
