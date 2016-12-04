@@ -43,11 +43,24 @@ To start Misago site locally, first setup and activate virtual environment for i
     python setup.py install
     misago-start.py testforum
 
-This will install Misago and its dependencies in your virtual environment and will make pre-configured Misago site for you named ``testforum``.
+This will install Misago and its dependencies in your virtual environment and will make pre-configured Misago site for you named ``testforum``::
 
-Now cd to ``testforum/testforum`` and edit ``settings.py`` file in your editor of choice in order to set up basic settings like database connection, default timezone or interface language.
+    testforum
+      + avatar_store
+      + media
+      + testforum
+        * __init__.py
+        * settings.py
+        * urls.py
+        * wsgi.py
+      + static
+      + theme
+      + cron.txt
+      + manage.py
 
-Next, initialize database by using migrate commands provided by ``manage.py`` admin utility::
+Now  edit ``settings.py`` file in your editor of choice in order to set up basic settings like database connection, default timezone or interface language.
+
+Next, initialize database by using migrate commands provided by ``manage.py`` admin utility that you'll find in directory up one level from where ``settings.py`` is::
 
     python manage.py migrate
 
