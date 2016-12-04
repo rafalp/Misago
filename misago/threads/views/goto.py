@@ -8,7 +8,7 @@ from django.views.generic import View
 from misago.conf import settings
 
 from ..permissions.threads import exclude_invisible_posts
-from ..viewmodels import ForumThread
+from ..viewmodels import ForumThread, PrivateThread
 
 
 class GotoView(View):
@@ -98,3 +98,29 @@ class ThreadGotoUnapprovedView(GotoView):
             return unapproved_post
         else:
             return posts_queryset.order_by('id').last()
+
+
+class PrivateThreadGotoPostView(GotoView):
+    thread = PrivateThread
+
+    def get_target_post(self, thread, posts_queryset, **kwargs):
+        return get_object_or_404(posts_queryset, pk=kwargs['post'])
+
+
+class PrivateThreadGotoLastView(GotoView):
+    thread = PrivateThread
+
+    def get_target_post(self, thread, posts_queryset, **kwargs):
+        return posts_queryset.order_by('id').last()
+
+
+class PrivateThreadGotoNewView(GotoView):
+    thread = PrivateThread
+    read_aware = True
+
+    def get_target_post(self, thread, posts_queryset, **kwargs):
+        if thread.is_new:
+            return posts_queryset.filter(posted_on__gt=thread.last_read_on).order_by('id').first()
+        else:
+            return posts_queryset.order_by('id').last()
+

@@ -151,18 +151,21 @@ can_use_private_threads = return_boolean(allow_use_private_threads)
 
 
 def allow_see_private_thread(user, target):
-    can_see_unapproved = user.acl.get('can_moderate_private_threads')
-    can_see_unapproved = can_see_unapproved and target.has_reported_posts
+    if user.acl.get('can_moderate_private_threads'):
+        can_see_reported = target.has_reported_posts
+    else:
+        can_see_reported = False
+
     can_see_participating = user in [p.user for p in target.participants_list]
 
-    if not (can_see_participating or can_see_unapproved):
+    if not (can_see_participating or can_see_reported):
         raise Http404()
 can_see_private_thread = return_boolean(allow_see_private_thread)
 
 
 def allow_see_private_post(user, target):
-    can_see_unapproved = user.acl.get('can_moderate_private_threads')
-    if not (can_see_unapproved and target.thread.has_reported_posts):
+    can_see_reported = user.acl.get('can_moderate_private_threads')
+    if not (can_see_reported and target.thread.has_reported_posts):
         for participant in target.thread.participants_list:
             if participant.user == user and participant.is_removed:
                 if post.posted_on > target.last_post_on:

@@ -55,12 +55,6 @@ class PrivateThread(ThreadType):
             'pk': thread.pk
         })
 
-    def get_thread_unapproved_post_url(self, thread):
-        return reverse('misago:private-thread-unapproved', kwargs={
-            'slug': thread.slug,
-            'pk': thread.pk
-        })
-
     def get_thread_api_url(self, thread):
         return reverse('misago:api:private-thread-detail', kwargs={
             'pk': thread.pk

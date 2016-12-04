@@ -159,9 +159,6 @@ class PrivateThreads(ViewModel):
 
         return queryset
 
-    def get_pinned_threads(self, queryset, category, threads_categories):
-        return [] # this is noop for Private Threads where its impossible to weight threads
-
     def get_remaining_threads_queryset(self, queryset, category, threads_categories):
         return queryset.filter(category__in=threads_categories)
 

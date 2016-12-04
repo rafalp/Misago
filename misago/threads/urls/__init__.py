@@ -2,7 +2,9 @@ from django.conf import settings
 from django.conf.urls import url
 
 from ..views.attachment import attachment_server
-from ..views.goto import ThreadGotoPostView, ThreadGotoLastView, ThreadGotoNewView, ThreadGotoUnapprovedView
+from ..views.goto import (
+    ThreadGotoPostView, ThreadGotoLastView, ThreadGotoNewView, ThreadGotoUnapprovedView,
+    PrivateThreadGotoPostView, PrivateThreadGotoLastView, PrivateThreadGotoNewView)
 from ..views.list import ForumThreads, CategoryThreads, PrivateThreads
 from ..views.thread import Thread, PrivateThread
 
@@ -113,10 +115,9 @@ urlpatterns += goto_patterns(
 
 urlpatterns += goto_patterns(
     'private-thread',
-    post=ThreadGotoPostView,
-    last=ThreadGotoLastView,
-    new=ThreadGotoNewView,
-    unapproved=ThreadGotoUnapprovedView
+    post=PrivateThreadGotoPostView,
+    last=PrivateThreadGotoLastView,
+    new=PrivateThreadGotoNewView,
 )
 
 

@@ -22,6 +22,9 @@ class ThreadsList(object):
 
         return Response(self.get_response_json(request, category, threads)['THREADS'])
 
+    def get_category(self, request, pk=None):
+        raise NotImplementedError('Threads list has to implement get_category(request, pk=None)')
+
     def get_threads(self, request, category, list_type, page):
         return self.threads(request, category, list_type, page)
 
