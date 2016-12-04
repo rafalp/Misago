@@ -13,8 +13,9 @@ from ..models import Post, Thread
 from ..moderation import threads as moderation
 from ..viewmodels import ForumThread
 from .postingendpoint import PostingEndpoint
+from .rest_permissions import PrivateThreadsPermission
 from .threadendpoints.editor import thread_start_editor
-from .threadendpoints.list import threads_list_endpoint
+from .threadendpoints.list import threads_list_endpoint, private_threads_list_endpoint
 from .threadendpoints.merge import thread_merge_endpoint, threads_merge_endpoint
 from .threadendpoints.patch import thread_patch_endpoint
 
@@ -40,9 +41,6 @@ class ViewSet(viewsets.ViewSet):
             select_for_update=True
         )
 
-    def list(self, request):
-        return threads_list_endpoint(request)
-
     def retrieve(self, request, pk):
         thread = self.get_thread(request, pk)
         return Response(thread.get_frontend_context())
@@ -65,6 +63,9 @@ class ViewSet(viewsets.ViewSet):
 
 class ThreadViewSet(ViewSet):
     thread = ForumThread
+
+    def list(self, request):
+        return threads_list_endpoint(request)
 
     @transaction.atomic
     def create(self, request):
@@ -102,6 +103,17 @@ class ThreadViewSet(ViewSet):
     @transaction.atomic
     def threads_merge(self, request):
         return threads_merge_endpoint(request)
+
+    @list_route(methods=['get'])
+    def editor(self, request):
+        return thread_start_editor(request)
+
+
+class PrivateThreadViewSet(ViewSet):
+    permission_classes = (PrivateThreadsPermission,)
+
+    def list(self, request):
+        return private_threads_list_endpoint(request)
 
     @list_route(methods=['get'])
     def editor(self, request):

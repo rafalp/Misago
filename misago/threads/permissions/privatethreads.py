@@ -49,7 +49,8 @@ class PermissionsForm(forms.Form):
     )
     can_moderate_private_threads = forms.YesNoSwitch(
         label=_("Can moderate private threads"),
-        help_text=_("Allows user to read, reply, edit and delete content in reported private threads.")
+        help_text=_("Allows user to read, reply, edit and delete content "
+                    "in reported private threads.")
     )
 
 
@@ -140,9 +141,9 @@ ACL tests
 """
 def allow_use_private_threads(user):
     if user.is_anonymous():
-        raise PermissionDenied(_("Unsigned members can't use private threads system."))
+        raise PermissionDenied(_("You have to sign in to use private threads."))
     if not user.acl['can_use_private_threads']:
-        raise PermissionDenied(_("You can't use private threads system."))
+        raise PermissionDenied(_("You can't use private threads."))
 can_use_private_threads = return_boolean(allow_use_private_threads)
 
 

@@ -145,7 +145,11 @@ class ForumThreads(ViewModel):
 
 
 class PrivateThreads(ViewModel):
+    def get_pinned_threads(self, queryset, category, threads_categories):
+        return [] # this is noop for Private Threads where its impossible to weight threads
+
     def get_remaining_threads_queryset(self, queryset, category, threads_categories):
+        # todo: return all with reports (if moderator) or ones user is participating in otherwhise
         return queryset.filter(category__in=threads_categories)
 
 

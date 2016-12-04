@@ -2,8 +2,9 @@ from rest_framework.response import Response
 
 from misago.core.shortcuts import get_int_or_404
 
-from ...viewmodels.category import ThreadsCategory, ThreadsRootCategory
-from ...viewmodels.threads import ForumThreads
+from ...viewmodels.category import (
+    ThreadsCategory, ThreadsRootCategory, PrivateThreadsCategory)
+from ...viewmodels.threads import ForumThreads, PrivateThreads
 
 
 class ListEndpointBase(object):
@@ -31,7 +32,7 @@ class ListEndpointBase(object):
         return threads.get_frontend_context()
 
 
-class ForumThreads(ListEndpointBase):
+class ForumThreadsList(ListEndpointBase):
     threads = ForumThreads
 
     def get_category(self, request, pk=None):
@@ -40,4 +41,13 @@ class ForumThreads(ListEndpointBase):
         else:
             return ThreadsRootCategory(request)
 
-threads_list_endpoint = ForumThreads()
+
+class PrivateThreadsList(ListEndpointBase):
+    threads = PrivateThreads
+
+    def get_category(self, request, pk=None):
+        return PrivateThreadsCategory(request)
+
+
+threads_list_endpoint = ForumThreadsList()
+private_threads_list_endpoint = PrivateThreadsList()

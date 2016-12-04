@@ -67,7 +67,6 @@ class ForumThreads(ListBase):
 
     def get_default_frontend_context(self):
         return {
-            'THREADS_API': reverse('misago:api:thread-list'),
             'MERGE_THREADS_API': reverse('misago:api:thread-merge'),
         }
 

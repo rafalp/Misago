@@ -325,7 +325,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # Rest Framework Configuration
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        'misago.users.rest_permissions.IsAuthenticatedOrReadOnly',
+        'misago.core.rest_permissions.IsAuthenticatedOrReadOnly',
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',

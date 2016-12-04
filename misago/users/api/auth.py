@@ -12,10 +12,10 @@ from misago.core.mail import mail_user
 
 from ..bans import get_user_ban
 from ..forms.auth import AuthenticationForm, ResendActivationForm, ResetPasswordForm
-from ..rest_permissions import UnbannedAnonOnly, UnbannedOnly
 from ..serializers import AnonymousUserSerializer, AuthenticatedUserSerializer
 from ..tokens import is_password_change_token_valid, make_activation_token, make_password_change_token
 from ..validators import validate_password
+from .rest_permissions import UnbannedAnonOnly, UnbannedOnly
 
 
 def gateway(request):

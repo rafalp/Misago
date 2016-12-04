@@ -79,4 +79,5 @@ class ThreadsCategory(ThreadsRootCategory):
 
 
 class PrivateThreadsCategory(ViewModel):
-    pass
+    def get_categories(self, request):
+        return [Category.objects.private_threads()]

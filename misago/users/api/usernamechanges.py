@@ -10,8 +10,8 @@ from misago.core.apipaginator import ApiPaginator
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
 
 from ..models import UsernameChange
-from ..rest_permissions import BasePermission
 from ..serializers.usernamechange import UsernameChangeSerializer
+from .rest_permissions import BasePermission
 
 
 class UsernameChangesViewSetPermission(BasePermission):
