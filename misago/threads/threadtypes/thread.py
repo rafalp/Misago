@@ -108,26 +108,26 @@ class Thread(ThreadType):
         })
 
     def get_post_merge_api_url(self, thread):
-        reverse('misago:api:thread-post-merge', kwargs={
+        return reverse('misago:api:thread-post-merge', kwargs={
             'thread_pk': thread.pk
         })
 
     def get_post_move_api_url(self, thread):
-        reverse('misago:api:thread-post-move', kwargs={
+        return reverse('misago:api:thread-post-move', kwargs={
             'thread_pk': thread.pk
         })
 
     def get_post_split_api_url(self, thread):
-        reverse('misago:api:thread-post-split', kwargs={
+        return reverse('misago:api:thread-post-split', kwargs={
             'thread_pk': thread.pk
         })
 
     def get_post_absolute_url(self, post):
-            return reverse('misago:thread-post', kwargs={
-                'slug': post.thread.slug,
-                'pk': post.thread.pk,
-                'post': post.pk
-            })
+        return reverse('misago:thread-post', kwargs={
+            'slug': post.thread.slug,
+            'pk': post.thread.pk,
+            'post': post.pk
+        })
 
     def get_post_api_url(self, post):
         return reverse('misago:api:thread-post-detail', kwargs={

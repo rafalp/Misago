@@ -8,21 +8,26 @@ class ThreadParticipantManager(models.Manager):
         ThreadParticipant.objects.filter(thread=thread, user=user).delete()
 
     def set_owner(self, thread, user):
-        thread_owner = ThreadParticipant.objects.filter(
-            thread=thread, is_owner=True)
-        thread_owner.update(is_owner=False)
+        # remove existing owner
+        ThreadParticipant.objects.filter(
+            thread=thread,
+            is_owner=True
+        ).update(is_owner=False)
 
+        # add (or re-add) user as thread owner
         self.remove_participant(thread, user)
         ThreadParticipant.objects.create(
             thread=thread,
             user=user,
-            is_owner=True)
+            is_owner=True
+        )
 
     def add_participant(self, thread, user, is_owner=False):
         ThreadParticipant.objects.create(
             thread=thread,
             user=user,
-            is_owner=is_owner)
+            is_owner=is_owner
+        )
 
 
 class ThreadParticipant(models.Model):

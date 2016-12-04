@@ -7,11 +7,8 @@ from ...viewmodels.category import (
 from ...viewmodels.threads import ForumThreads, PrivateThreads
 
 
-class ListEndpointBase(object):
-    category = None
+class ThreadsList(object):
     threads = None
-
-    template_name = None
 
     def __call__(self, request, **kwargs):
         page = get_int_or_404(request.query_params.get('page', 0))
@@ -32,7 +29,7 @@ class ListEndpointBase(object):
         return threads.get_frontend_context()
 
 
-class ForumThreadsList(ListEndpointBase):
+class ForumThreadsList(ThreadsList):
     threads = ForumThreads
 
     def get_category(self, request, pk=None):
@@ -42,7 +39,7 @@ class ForumThreadsList(ListEndpointBase):
             return ThreadsRootCategory(request)
 
 
-class PrivateThreadsList(ListEndpointBase):
+class PrivateThreadsList(ThreadsList):
     threads = PrivateThreads
 
     def get_category(self, request, pk=None):

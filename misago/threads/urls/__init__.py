@@ -111,6 +111,14 @@ urlpatterns += goto_patterns(
     unapproved=ThreadGotoUnapprovedView
 )
 
+urlpatterns += goto_patterns(
+    'private-thread',
+    post=ThreadGotoPostView,
+    last=ThreadGotoLastView,
+    new=ThreadGotoNewView,
+    unapproved=ThreadGotoUnapprovedView
+)
+
 
 urlpatterns += [
     url(r'^attachment/(?P<secret>[-a-zA-Z0-9]+)-(?P<pk>\d+)/', attachment_server, name='attachment'),

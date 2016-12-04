@@ -214,18 +214,16 @@ def build_acl(acl, roles, key_name):
     categories_roles = get_categories_roles(roles)
     categories = list(Category.objects.all_categories(include_root=True))
 
-    approve_in_categories = []
-
     for category in categories:
         category_acl = acl['categories'].get(category.pk, {'can_browse': 0})
         if category_acl['can_browse']:
             category_acl = acl['categories'][category.pk] = build_category_acl(
                 category_acl, category, categories_roles, key_name)
 
+            if category_acl.get('can_approve_content'):
+                acl['can_approve_content'].append(category.pk)
             if category_acl.get('can_see_reports'):
                 acl['can_see_reports'].append(category.pk)
-            if category_acl.get('can_approve_content'):
-                approve_in_categories.append(category)
 
     return acl
 

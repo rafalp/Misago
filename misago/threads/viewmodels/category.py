@@ -17,6 +17,7 @@ class ViewModel(BaseViewModel):
         add_acl(request.user, self._categories)
 
         self._model = self.get_category(request, self._categories, **kwargs)
+
         self._subcategories = list(filter(self._model.has_child, self._categories))
         self._children = list(filter(lambda s: s.parent_id == self._model.pk, self._subcategories))
 

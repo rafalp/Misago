@@ -90,8 +90,11 @@ def build_acl(acl, roles, key_name):
 
     private_category = Category.objects.private_threads()
 
+    new_acl['visible_categories'].append(private_category.pk)
+    new_acl['browseable_categories'].append(private_category.pk)
+
     if new_acl['can_moderate_private_threads']:
-        new_acl['can_approve_content'].append(private_category.pk)
+        new_acl['can_see_reports'].append(private_category.pk)
 
     category_acl = {
         'can_see': 1,

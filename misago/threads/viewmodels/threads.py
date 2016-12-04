@@ -145,11 +145,24 @@ class ForumThreads(ViewModel):
 
 
 class PrivateThreads(ViewModel):
+    def get_base_queryset(self, request, threads_categories, list_type):
+        queryset = super(PrivateThreads, self).get_base_queryset(request, threads_categories, list_type)
+
+        # limit queryset to threads we are participant of
+        participated_threads = request.user.threadparticipant_set.values('thread_id')
+
+        if request.user.acl['can_moderate_private_threads']:
+            queryset = queryset.filter(
+                Q(id__in=participated_threads) | Q(has_reported_posts=True))
+        else:
+            queryset = queryset.filter(id__in=participated_threads)
+
+        return queryset
+
     def get_pinned_threads(self, queryset, category, threads_categories):
         return [] # this is noop for Private Threads where its impossible to weight threads
 
     def get_remaining_threads_queryset(self, queryset, category, threads_categories):
-        # todo: return all with reports (if moderator) or ones user is participating in otherwhise
         return queryset.filter(category__in=threads_categories)
 
 
