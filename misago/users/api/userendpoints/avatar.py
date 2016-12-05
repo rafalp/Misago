@@ -80,7 +80,7 @@ def get_avatar_options(user):
 
     # Allow upload conditions
     options['upload'] = {
-        'limit': settings.avatar_upload_limit * 1000,
+        'limit': settings.avatar_upload_limit * 1024,
         'allowed_extensions': avatars.uploaded.ALLOWED_EXTENSIONS,
         'allowed_mime_types': avatars.uploaded.ALLOWED_MIME_TYPES,
     }
