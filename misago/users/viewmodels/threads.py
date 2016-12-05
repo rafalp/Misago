@@ -10,7 +10,7 @@ from misago.threads.utils import add_categories_to_items, add_likes_to_posts
 from misago.threads.viewmodels import ThreadsRootCategory
 from misago.users.online.utils import make_users_status_aware
 
-from ..serializers import UserFeedSerializer
+from ..serializers.userfeed import UserFeedSerializer
 
 
 class UserThreads(object):
