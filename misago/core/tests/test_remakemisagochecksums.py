@@ -1,3 +1,4 @@
+from django.core.management import call_command
 from django.test import TestCase
 from django.utils.six import StringIO
 
@@ -10,6 +11,6 @@ class RemakeMisagoChecksumsTests(TestCase):
         command = remakemisagochecksums.Command()
 
         out = StringIO()
-        command.execute("--force", stdout=out)
+        call_command(command, "--force", stdout=out)
         command_output = out.getvalue().splitlines()[-1].strip()
         self.assertEqual(command_output, "Done!")

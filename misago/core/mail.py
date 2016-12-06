@@ -1,5 +1,4 @@
 from django.core import mail as djmail
-from django.template import RequestContext
 from django.template.loader import render_to_string
 
 
@@ -8,10 +7,9 @@ def build_mail(request, recipient, subject, template, context=None):
     context['sender'] = request.user
     context['recipient'] = recipient
     context['subject'] = subject
-    context = RequestContext(request, context)
 
-    message_plain = render_to_string('%s.txt' % template, context)
-    message_html = render_to_string('%s.html' % template, context)
+    message_plain = render_to_string('%s.txt' % template, context, request=request)
+    message_html = render_to_string('%s.html' % template, context, request=request)
 
     message = djmail.EmailMultiAlternatives(
         subject, message_plain, to=[recipient.email])

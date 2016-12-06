@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.six import StringIO
@@ -37,7 +38,7 @@ class PruneCategoriesTests(TestCase):
         command = prunecategories.Command()
 
         out = StringIO()
-        command.execute(stdout=out)
+        call_command(command, stdout=out)
 
         category.synchronize()
         self.assertEqual(category.threads, 10)
@@ -73,7 +74,7 @@ class PruneCategoriesTests(TestCase):
         command = prunecategories.Command()
 
         out = StringIO()
-        command.execute(stdout=out)
+        call_command(command, stdout=out)
 
         category.synchronize()
         self.assertEqual(category.threads, 10)
@@ -119,7 +120,7 @@ class PruneCategoriesTests(TestCase):
         command = prunecategories.Command()
 
         out = StringIO()
-        command.execute(stdout=out)
+        call_command(command, stdout=out)
 
         category.synchronize()
         self.assertEqual(category.threads, 10)
@@ -168,7 +169,7 @@ class PruneCategoriesTests(TestCase):
         command = prunecategories.Command()
 
         out = StringIO()
-        command.execute(stdout=out)
+        call_command(command, stdout=out)
 
         category.synchronize()
         self.assertEqual(category.threads, 10)

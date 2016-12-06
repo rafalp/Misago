@@ -119,8 +119,8 @@ def run_django(*args, **kwargs):
     setup()
     setup_test_environment()
 
-    from django.core.management.commands import test
-    sys.exit(test.Command().execute(*args, **kwargs))
+    from django.core.management import call_command
+    sys.exit(call_command('test', *args, **kwargs))
 
 
 if __name__ == '__main__':
