@@ -10,6 +10,6 @@ class UserPosts(UserThreads):
             request.user, threads_categories, Thread.objects)
 
     def get_posts_queryset(self, user, profile, threads_queryset):
-        return profile.post_set.select_related('thread').filter(
+        return profile.post_set.select_related('thread', 'poster').filter(
             thread_id__in=threads_queryset.values('id')
         )

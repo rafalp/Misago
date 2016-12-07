@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from misago.categories.models import Category
 from misago.categories.serializers import BasicCategorySerializer
-from misago.users.serializers import UserSerializer
+from misago.users.serializers import BasicUserSerializer, UserSerializer
 
 from ..models import Post
 
@@ -180,6 +180,7 @@ class CategoryFeedSerializer(BasicCategorySerializer):
 
 
 class PostFeedSerializer(PostSerializer):
+    poster = BasicUserSerializer(many=False, read_only=True)
     category = CategoryFeedSerializer(many=False, read_only=True)
 
     thread = serializers.SerializerMethodField()
