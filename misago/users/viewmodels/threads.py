@@ -34,15 +34,10 @@ class UserThreads(object):
         paginator = pagination_dict(list_page, include_page_range=False)
 
         posts = list(list_page.object_list)
-
-        posters = []
         threads = []
 
         for post in posts:
             threads.append(post.thread)
-
-            if post.poster:
-                posters.append(post.poster)
 
         add_categories_to_items(root_category.unwrap(), threads_categories, posts + threads)
 
@@ -54,8 +49,6 @@ class UserThreads(object):
             threadstracker.make_posts_read_aware(request.user, post.thread, [post])
 
         add_likes_to_posts(request.user, posts)
-
-        make_users_status_aware(request.user, posters)
 
         self._user = request.user
 

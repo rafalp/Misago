@@ -14,7 +14,6 @@ admin.autodiscover()
 admin.site.login_form = AdminAuthenticationForm
 
 
-
 urlpatterns = [
     url(r'^', include('misago.urls', namespace='misago')),
 
@@ -24,13 +23,18 @@ urlpatterns = [
 
     # Uncomment next line if you plan to use Django admin for 3rd party apps
     #url(r'^django-admin/', include(admin.site.urls)),
-
-    # Uncomment next line if you plan to use browseable API
-    #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
 
 
+# If debug mode is enabled, run debug toolbar
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]
 
+
+# Use static file server for static and media (debug only)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

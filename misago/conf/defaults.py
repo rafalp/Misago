@@ -34,13 +34,15 @@ _MISAGO_JS_DEBUG = False
 # Application definition
 
 INSTALLED_APPS = (
-    # Load Misago's locale/templates/static
+    # Load Misago's locale/templates/static files
     'misago',
 
-    'django.contrib.admin',
     # Keep misago.users above django.contrib.auth
     # so our management commands take precedence over theirs
     'misago.users',
+
+    # Django and 3rd party apps
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -51,6 +53,8 @@ INSTALLED_APPS = (
     'crispy_forms',
     'mptt',
     'rest_framework',
+
+    # Misago apps
     'misago.admin',
     'misago.acl',
     'misago.core',
@@ -64,6 +68,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'misago.users.middleware.AvatarServerMiddleware',
     'misago.users.middleware.RealIPMiddleware',
     'misago.core.middleware.frontendcontext.FrontendContextMiddleware',
@@ -82,7 +87,7 @@ MIDDLEWARE_CLASSES = (
     'misago.core.middleware.threadstore.ThreadStoreMiddleware',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
+DEFAULT_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.template.context_processors.debug',
     'django.template.context_processors.i18n',
@@ -351,3 +356,6 @@ DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.signals.SignalsPanel',
     'debug_toolbar.panels.logging.LoggingPanel',
 )
+
+# Show debug toolbar for localhost
+INTERNAL_IPS = ['127.0.0.1']

@@ -102,7 +102,7 @@ TEMPLATES = [
         ],
         'APP_DIRS': True,
         'OPTIONS': {
-            'context_processors': TEMPLATE_CONTEXT_PROCESSORS,
+            'context_processors': DEFAULT_CONTEXT_PROCESSORS,
         },
     },
 ]
