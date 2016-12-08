@@ -13,7 +13,6 @@ from ..models import Post, Thread
 from ..moderation import threads as moderation
 from ..viewmodels import ForumThread
 from .postingendpoint import PostingEndpoint
-from .rest_permissions import PrivateThreadsPermission
 from .threadendpoints.editor import thread_start_editor
 from .threadendpoints.list import threads_list_endpoint, private_threads_list_endpoint
 from .threadendpoints.merge import thread_merge_endpoint, threads_merge_endpoint
@@ -110,8 +109,6 @@ class ThreadViewSet(ViewSet):
 
 
 class PrivateThreadViewSet(ViewSet):
-    permission_classes = (PrivateThreadsPermission,)
-
     def list(self, request):
         return private_threads_list_endpoint(request)
 

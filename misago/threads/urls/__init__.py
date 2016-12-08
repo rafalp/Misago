@@ -66,13 +66,12 @@ urlpatterns += threads_list_patterns('category', CategoryThreads, (
 ))
 
 
-urlpatterns += threads_list_patterns('private-threads', CategoryThreads, (
+urlpatterns += threads_list_patterns('private-threads', PrivateThreads, (
     r'^private-threads/$',
     r'^private-threads/my/$',
     r'^private-threads/new/$',
     r'^private-threads/unread/$',
     r'^private-threads/subscribed/$',
-    r'^private-threads/unapproved/$',
 ))
 
 

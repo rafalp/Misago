@@ -129,8 +129,6 @@ def build_acl(acl, roles, key_name):
             'can_protect_posts': 1,
             'can_merge_posts': 1,
             'can_see_reports': 1,
-            'can_see_reports': 1,
-            'can_approve_content': 1,
             'can_hide_events': 2,
         })
 
