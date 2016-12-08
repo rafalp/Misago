@@ -25,7 +25,6 @@ from .postendpoints.patch_event import event_patch_endpoint
 from .postendpoints.patch_post import post_patch_endpoint
 from .postendpoints.read import post_read_endpoint
 from .postendpoints.split import posts_split_endpoint
-from .rest_permissions import PrivateThreadsPermission
 
 
 class ViewSet(viewsets.ViewSet):
@@ -284,5 +283,4 @@ class ThreadPostsViewSet(ViewSet):
 
 
 class PrivateThreadPostsViewSet(ViewSet):
-    permission_classes = (PrivateThreadsPermission,)
-
+    pass
