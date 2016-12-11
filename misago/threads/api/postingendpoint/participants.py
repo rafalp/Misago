@@ -78,8 +78,10 @@ class ParticipantsSerializer(serializers.Serializer):
 
         if len(usernames) != len(users):
             invalid_usernames = set(usernames) - set([u.slug for u in users])
+            sorted_usernames = sorted(invalid_usernames)
+
             message = _("One or more users could not be found: %(usernames)s")
             raise serializers.ValidationError(
-                message % {'usernames': ', '.join(invalid_usernames)})
+                message % {'usernames': ', '.join(sorted_usernames)})
 
         return users
