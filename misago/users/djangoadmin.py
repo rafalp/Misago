@@ -1,96 +1,33 @@
-"""
-Defines `UserAdminModel` for registration of Misago `User` model in django 
-admin panel.
-
-The model supposed to be used for interaction of third party django apps with
-Misago `User` model, i.e. assignment to a `User` permissions or groups.
-
-Registration call is placed in :mod:`misago.users.admin`.
-
-Test for the model is placed in :mod:`misago.users.tests.test_djangoadmin_user`.
-"""
-from django.contrib import admin
-from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
+# -*- coding: utf-8 -*-
+from django.contrib.admin import ModelAdmin
+from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
 
-from misago.core import forms
+
+def _change_field_short_description(short_desc_new):
+    def func_wrapper(func):
+        func.short_description = short_desc_new
+        return func
+    return func_wrapper
 
 
-# Misago user model
-User = get_user_model()
-
-
-class UserAdminForm(forms.ModelForm):
+class UserAdminModel(ModelAdmin):
     """
-    This form adds `edit_from_misago_link` pseudo-field, that renders 
-    itself like an html hyperlink to a user edit page in misago admin panel.
-
-    This could be done with `User` edit template overwrite, but
-    it is kind of overkill - overwrite the whole template just to add one 
-    button - isn't it?
+    Removes `new` and `delete` actions (use misago admin panel for that).
+    The registration call is placed in `misago.users.admin`.
     """
-    #: pseudo-field
-    edit_from_misago_link = forms.Field()
-    
-    def __init__(self, *args, **kwargs):
-        # noinspection PyArgumentList
-        super(UserAdminForm, self).__init__(*args, **kwargs)
-        self.init_edit_from_misago_link_field()
-
-    def init_edit_from_misago_link_field(self):
-        """
-        Init for the pseudo-field, and replace it's widget `render`.
-        """
-        field = self.fields['edit_from_misago_link']
-        field.required = False
-        field.label = ''
-        field.widget.render = self.render_edit_from_misago_link
-
-    # noinspection PyUnusedLocal
-    def render_edit_from_misago_link(self, *args, **kwargs):
-        """
-        Composes an html hyperlink for the pseudo-field render.
-
-        `*args` and `**kwargs` arguments need to mimic widget `render()`
-        signature.
-
-        :rtype: str
-        """
-        text = _('Edit this user in Misago admin panel')
-        link_html_template = ('<a href="{}" target="blank">' + text + '</a>')
-        link_url = reverse(
-            viewname='misago:admin:users:accounts:edit',
-            kwargs={'pk': self.instance.pk},
-        )
-        link_html = format_html(link_html_template, link_url)
-
-        return link_html
-    
-    class Meta:
-        model = User
-        fields = ['edit_from_misago_link']
-
-
-class UserAdminModel(admin.ModelAdmin):
-    """
-    Redeclare most of the model fields like read-only. 
-    Prevents new/delete actions (users should use misago admin panel for 
-    that).
-    Replaces default form with custom `UserAdminForm`.
-    """
-
     list_display = (
         'username',
         'email',
         'is_staff',
         'is_superuser',
+        'rank',
+        'show_edit_from_misago_url',
     )
     search_fields = ('username', 'email')
-    list_filter = ('groups', 'is_staff', 'is_superuser')
+    list_filter = ('groups', 'is_staff', 'is_superuser', 'rank')
 
-    form = UserAdminForm
     actions = None
     readonly_fields = (
         'username',
@@ -100,10 +37,11 @@ class UserAdminModel(admin.ModelAdmin):
         'joined_on',
         'is_staff',
         'is_superuser',
+        'show_edit_from_misago_url',
     )
     fieldsets = (
         (
-            _('Misago user data'),
+            _("Misago user data"),
             {'fields': (
                 'username',
                 'email',
@@ -112,11 +50,11 @@ class UserAdminModel(admin.ModelAdmin):
                 'joined_on',
                 'is_staff',
                 'is_superuser',
-                'edit_from_misago_link',
+                'show_edit_from_misago_url',
             )},
         ),
         (
-            _('Edit permissions and groups'),
+            _("Edit permissions and groups"),
             {'fields': (
                 'groups',
                 'user_permissions',
@@ -129,3 +67,15 @@ class UserAdminModel(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+    
+    @_change_field_short_description(_("Edit the user from Misago admin panel"))
+    def show_edit_from_misago_url(self, user_instance):
+        return format_html(
+            '<a href="{link}" class="{cls}" target="blank">{text}</a>',
+            link=reverse(
+                viewname='misago:admin:users:accounts:edit',
+                kwargs={'pk': user_instance.pk},
+            ),
+            cls='changelink',
+            text=_("Edit"),
+        )
