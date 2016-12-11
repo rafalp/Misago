@@ -8,7 +8,7 @@
 {% endblocktrans %}
 
 {% blocktrans trimmed %}
-To go to this thread click the link below:
+To read this thread click the link below:
 {% endblocktrans %}
 {{ SITE_ADDRESS }}{{ thread.get_absolute_url }}
 {% endblock content %}

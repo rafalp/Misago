@@ -8,7 +8,7 @@ from rest_framework import serializers
 from misago.categories.models import PRIVATE_THREADS_ROOT_NAME
 
 from . import PostingEndpoint, PostingMiddleware
-from ...participants import add_owner, add_participant
+from ...participants import set_owner, add_participants
 from ...permissions import allow_message_user
 
 
@@ -24,19 +24,19 @@ class ParticipantsMiddleware(PostingMiddleware):
         })
 
     def save(self, serializer):
-        add_owner(self.thread, self.user)
-        for user in serializer.users_cache:
-            add_participant(self.request, self.thread, user)
+        set_owner(self.thread, self.user)
+        add_participants(self.request, self.thread, serializer.users_cache)
 
 
 class ParticipantsSerializer(serializers.Serializer):
     to = serializers.ListField(
-       child=serializers.CharField()
+       child=serializers.CharField(),
+       required=True
     )
 
     def validate_to(self, usernames):
         clean_usernames = self.clean_usernames(usernames)
-        self.users_cache = self.get_users(usernames)
+        self.users_cache = self.get_users(clean_usernames)
 
     def clean_usernames(self, usernames):
         clean_usernames = []
@@ -50,13 +50,19 @@ class ParticipantsSerializer(serializers.Serializer):
             if clean_name and clean_name not in clean_usernames:
                 clean_usernames.append(clean_name)
 
+        if not clean_usernames:
+            raise serializers.ValidationError(_("You have to enter user names."))
+
         max_participants = self.context['user'].acl['max_private_thread_participants']
         if max_participants and len(clean_usernames) > max_participants:
             message = ungettext(
-                "You can't start private thread with more than %(users)s participant.",
-                "You can't start private thread with more than %(users)s participants.",
+                "You can't add more than %(users)s user to private thread (you've added %(added)s).",
+                "You can't add more than %(users)s users to private thread (you've added %(added)s).",
                 max_participants)
-            raise forms.ValidationError(message % {'users': max_participants})
+            raise serializers.ValidationError(message % {
+                'users': max_participants,
+                'added': len(clean_usernames)
+            })
 
         return list(set(clean_usernames))
 
@@ -66,7 +72,7 @@ class ParticipantsSerializer(serializers.Serializer):
             try:
                 allow_message_user(self.context['user'], user)
             except PermissionDenied as e:
-                raise serializer.ValidationError(six.text_type(e))
+                raise serializers.ValidationError(six.text_type(e))
             users.append(user)
 
         if len(usernames) != len(users):

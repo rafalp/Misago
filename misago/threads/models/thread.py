@@ -84,7 +84,7 @@ class Thread(models.Model):
 
     participants = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
-        related_name='private_thread_set',
+        related_name='privatethread_set',
         through='ThreadParticipant',
         through_fields=('thread', 'user')
     )

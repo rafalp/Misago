@@ -138,7 +138,7 @@ def update_usernames(sender, **kwargs):
 
 @receiver(pre_delete, sender=get_user_model())
 def remove_unparticipated_private_threads(sender, **kwargs):
-    threads_qs = kwargs['instance'].private_thread_set.all()
+    threads_qs = kwargs['instance'].privatethread_set.all()
     for thread in batch_update(threads_qs, 50):
         if thread.participants.count() == 1:
             with transaction.atomic():

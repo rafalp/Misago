@@ -9,7 +9,7 @@ from misago.core.viewmodel import ViewModel as BaseViewModel
 from misago.readtracker.threadstracker import make_read_aware
 
 from ..models import Poll, Thread
-from ..participants import make_thread_participants_aware
+from ..participants import make_participants_aware
 from ..permissions.privatethreads import allow_see_private_thread
 from ..permissions.threads import allow_see_thread
 from ..serializers import ThreadSerializer
@@ -129,7 +129,7 @@ class PrivateThread(ViewModel):
             category__tree_id=trees_map.get_tree_id_for_root(PRIVATE_THREADS_ROOT_NAME)
         )
 
-        make_thread_participants_aware(request.user, thread)
+        make_participants_aware(request.user, thread)
         allow_see_private_thread(request.user, thread)
 
         if slug:

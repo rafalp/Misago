@@ -314,8 +314,7 @@ class ThreadModelTests(TestCase):
         user_b = User.objects.create_user(
             "Weebl", "weebl@weeblson.com", "Pass.123")
 
-        ThreadParticipant.objects.add_participant(self.thread, user_a)
-        ThreadParticipant.objects.add_participant(self.thread, user_b)
+        ThreadParticipant.objects.add_participants(self.thread, [user_a, user_b])
         self.assertEqual(self.thread.participants.count(), 2)
 
         user_a.delete()

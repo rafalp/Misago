@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import json
-
-from django.utils.encoding import smart_str
+from django.urls import reverse
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import THREADS_ROOT_NAME, Category
@@ -20,8 +18,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
         threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
 
         self.category = Category.objects.get(slug='first-category')
-
-        self.api_link = '/api/threads/'
+        self.api_link = reverse('misago:api:thread-list')
 
     def override_acl(self, extra_acl=None):
         new_acl = self.user.acl
@@ -116,7 +113,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(json.loads(smart_str(response.content)), {
+        self.assertEqual(response.json(), {
             'category': [
                 "You have to select category to post thread in."
             ],
@@ -139,7 +136,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
         })
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(json.loads(smart_str(response.content)), {
+        self.assertEqual(response.json(), {
             'title': [
                 "Thread title should contain alpha-numeric characters."
             ]
@@ -156,7 +153,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
         })
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(json.loads(smart_str(response.content)), {
+        self.assertEqual(response.json(), {
             'post': [
                 "Posted message should be at least 5 characters long (it has 1)."
             ]
@@ -174,7 +171,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         thread = self.user.thread_set.all()[:1][0]
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['url'], thread.get_absolute_url())
 
         self.override_acl()

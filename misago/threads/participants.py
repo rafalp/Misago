@@ -1,16 +1,17 @@
+from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext as _
 
-from misago.core.mail import mail_user
+from misago.core.mail import build_mail, send_messages
 
 from .models import ThreadParticipant
 from .signals import remove_thread_participant
 
 
-def thread_has_participants(thread):
+def has_participants(thread):
     return thread.threadparticipant_set.exists()
 
 
-def make_thread_participants_aware(user, thread):
+def make_participants_aware(user, thread):
     thread.participants_list = []
     thread.participant = None
 
@@ -24,39 +25,57 @@ def make_thread_participants_aware(user, thread):
     return thread.participants_list
 
 
-def set_thread_owner(thread, user):
+def set_owner(thread, user):
+    """
+    Remove user's ownership over thread
+    """
     ThreadParticipant.objects.set_owner(thread, user)
 
 
-def set_user_unread_private_threads_sync(user):
-    user.sync_unread_private_threads = True
-    user.save(update_fields=['sync_unread_private_threads'])
+def set_users_unread_private_threads_sync(users):
+    User = get_user_model()
+    User.objects.filter(id__in=[u.pk for u in users]).update(
+        sync_unread_private_threads=True
+    )
 
 
 def add_participant(request, thread, user):
     """
-    Add participant to thread, set "recound private threads" flag on user,
-    notify user about being added to thread and mail him about it
+    Shortcut for adding single participant to thread
     """
-    ThreadParticipant.objects.add_participant(thread, user)
-
-    set_user_unread_private_threads_sync(user)
-
-    mail_subject = _("%(thread)s - %(user)s added you to private thread")
-    subject_formats = {'thread': thread.title, 'user': request.user.username}
-
-    mail_user(request, user, mail_subject % subject_formats,
-              'misago/emails/privatethread/added',
-              {'thread': thread})
+    add_participants(request, thread, [user])
 
 
-def add_owner(thread, user):
+def add_participants(request, thread, users):
     """
-    Add owner to thread, set "recound private threads" flag on user,
-    notify user about being added to thread
+    Add multiple participants to thread, set "recound private threads" flag on them
+    notify them about being added to thread
     """
-    ThreadParticipant.objects.add_participant(thread, user, True)
-    set_user_unread_private_threads_sync(user)
+    ThreadParticipant.objects.add_participants(thread, users)
+    set_users_unread_private_threads_sync(users)
+
+    emails = []
+    for user in users:
+        emails.append(build_noticiation_email(request, thread, user))
+    send_messages(emails)
+
+
+def build_noticiation_email(request, thread, user):
+    subject = _('%(user)s has invited you to participate in private thread "%(thread)s"')
+    subject_formats = {
+        'thread': thread.title,
+        'user': request.user.username
+    }
+
+    return build_mail(
+        request,
+        user,
+        subject % subject_formats,
+        'misago/emails/privatethread/added',
+        {
+            'thread': thread
+        }
+    )
 
 
 def remove_participant(thread, user):
@@ -64,6 +83,6 @@ def remove_participant(thread, user):
     Remove thread participant, set "recound private threads" flag on user
     """
     thread.threadparticipant_set.filter(user=user).delete()
-    set_user_unread_private_threads_sync(user)
+    set_users_unread_private_threads_sync([user])
 
     remove_thread_participant.send(thread, user=user)

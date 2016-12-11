@@ -11,6 +11,7 @@ from misago.core.shortcuts import get_int_or_404
 
 from ..models import Post, Thread
 from ..moderation import threads as moderation
+from ..permissions import allow_use_private_threads
 from ..viewmodels import ForumThread
 from .postingendpoint import PostingEndpoint
 from .threadendpoints.editor import thread_start_editor
@@ -114,6 +115,10 @@ class PrivateThreadViewSet(ViewSet):
 
     @transaction.atomic
     def create(self, request):
+        allow_use_private_threads(request.user)
+        if not request.user.acl['can_start_private_threads']:
+            raise PermissionDenied(_("You can't start private threads."))
+
         # Initialize empty instances for new thread
         thread = Thread()
         post = Post(thread=thread)

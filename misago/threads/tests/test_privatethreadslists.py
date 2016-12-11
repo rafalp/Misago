@@ -3,7 +3,7 @@ from django.urls import reverse
 from misago.acl.testutils import override_acl
 
 from .. import testutils
-from ..participants import add_owner
+from ..models import ThreadParticipant
 from .test_privatethreads_api import PrivateThreadsApiTestCase
 
 
@@ -43,7 +43,7 @@ class PrivateThreadsApiTests(PrivateThreadsApiTestCase):
         hidden = testutils.post_thread(category=self.category, poster=self.user)
         reported = testutils.post_thread(category=self.category, poster=self.user)
 
-        add_owner(visible, self.user)
+        ThreadParticipant.objects.add_participants(visible, [self.user])
 
         reported.has_reported_posts = True
         reported.save()
@@ -103,7 +103,7 @@ class PrivateThreadsListTests(PrivateThreadsApiTestCase):
         hidden = testutils.post_thread(category=self.category, poster=self.user)
         reported = testutils.post_thread(category=self.category, poster=self.user)
 
-        add_owner(visible, self.user)
+        ThreadParticipant.objects.add_participants(visible, [self.user])
 
         reported.has_reported_posts = True
         reported.save()
