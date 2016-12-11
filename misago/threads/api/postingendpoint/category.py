@@ -17,7 +17,9 @@ class CategoryMiddleware(PostingMiddleware):
     Middleware that validates category id and sets category on thread and post instances
     """
     def use_this_middleware(self):
-        return self.mode == PostingEndpoint.START and self.tree_name == THREADS_ROOT_NAME
+        if self.mode == PostingEndpoint.START:
+            return self.tree_name == THREADS_ROOT_NAME
+        return False
 
     def get_serializer(self):
         return CategorySerializer(self.user, data=self.request.data)

@@ -14,8 +14,8 @@ from ...permissions import allow_message_user
 
 class ParticipantsMiddleware(PostingMiddleware):
     def use_this_middleware(self):
-        if self.tree_name == PRIVATE_THREADS_ROOT_NAME:
-            return self.mode == PostingEndpoint.START
+        if self.mode == PostingEndpoint.START:
+            return self.tree_name == PRIVATE_THREADS_ROOT_NAME
         return False
 
     def get_serializer(self):
