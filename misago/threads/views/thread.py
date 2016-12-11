@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.views.generic import View
 
-from ..viewmodels import ForumThread, ThreadPosts
+from ..viewmodels import ForumThread, PrivateThread, ThreadPosts
 
 
 class ThreadBase(View):
@@ -67,4 +67,5 @@ class Thread(ThreadBase):
 
 
 class PrivateThread(ThreadBase):
+    thread = PrivateThread
     template_name = 'misago/thread/private_thread.html'

@@ -132,9 +132,10 @@ MISAGO_POSTING_MIDDLEWARES = (
     'misago.threads.api.postingendpoint.floodprotection.FloodProtectionMiddleware',
 
     'misago.threads.api.postingendpoint.category.CategoryMiddleware',
+    'misago.threads.api.postingendpoint.privatethread.PrivateThreadMiddleware',
     'misago.threads.api.postingendpoint.reply.ReplyMiddleware',
     'misago.threads.api.postingendpoint.attachments.AttachmentsMiddleware',
-    # 'misago.threads.api.postingendpoint.participants.ThreadParticipantsFormMiddleware',
+    'misago.threads.api.postingendpoint.participants.ParticipantsMiddleware',
     'misago.threads.api.postingendpoint.pin.PinMiddleware',
     'misago.threads.api.postingendpoint.close.CloseMiddleware',
     'misago.threads.api.postingendpoint.hide.HideMiddleware',

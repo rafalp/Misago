@@ -8,7 +8,6 @@ def preload_threads_urls(request):
         'THREAD_EDITOR_API': reverse('misago:api:thread-editor'),
         'THREADS_API': reverse('misago:api:thread-list'),
 
-        'PRIVATE_THREAD_EDITOR_API': reverse('misago:api:private-thread-editor'),
         'PRIVATE_THREADS_API': reverse('misago:api:private-thread-list'),
     })
 

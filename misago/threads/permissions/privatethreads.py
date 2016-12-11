@@ -183,19 +183,18 @@ def allow_message_user(user, target):
     message_format = {'user': target.username}
 
     if not can_use_private_threads(target):
-        message = _("%(user)s can't participate in private threads.")
-        raise PermissionDenied(message % message_format)
+        raise PermissionDenied(
+            _("%(user)s can't participate in private threads.") % message_format)
 
     if user.acl['can_add_everyone_to_private_threads']:
         return None
 
     if user.acl['can_be_blocked'] and target.is_blocking(user):
-        message = _("%(user)s is blocking you.")
-        raise PermissionDenied(message % message_format)
+        raise PermissionDenied(_("%(user)s is blocking you.") % message_format)
 
     if target.can_be_messaged_by_nobody:
-        message = _("%(user)s is not allowing invitations to private threads.")
-        raise PermissionDenied(message % message_format)
+        raise PermissionDenied(
+            _("%(user)s is not allowing invitations to private threads.") % message_format)
 
     if target.can_be_messaged_by_followed and not target.is_following(user):
         message = _("%(user)s is allowing invitations to private threads only from followed users.")

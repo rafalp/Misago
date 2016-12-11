@@ -6,7 +6,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 
-from misago.categories.models import THREADS_ROOT_NAME
+from misago.categories.models import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
 from misago.core.shortcuts import get_int_or_404
 
 from ..models import Post, Thread
@@ -112,6 +112,28 @@ class PrivateThreadViewSet(ViewSet):
     def list(self, request):
         return private_threads_list_endpoint(request)
 
-    @list_route(methods=['get'])
-    def editor(self, request):
-        return thread_start_editor(request)
+    @transaction.atomic
+    def create(self, request):
+        # Initialize empty instances for new thread
+        thread = Thread()
+        post = Post(thread=thread)
+
+        # Put them through posting pipeline
+        posting = PostingEndpoint(
+            request,
+            PostingEndpoint.START,
+            tree_name=PRIVATE_THREADS_ROOT_NAME,
+            thread=thread,
+            post=post
+        )
+
+        if posting.is_valid():
+            posting.save()
+
+            return Response({
+                'id': thread.pk,
+                'title': thread.title,
+                'url': thread.get_absolute_url()
+            })
+        else:
+            return Response(posting.errors, status=400)

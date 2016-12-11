@@ -91,14 +91,6 @@ def render(request, template, context):
 
     context['profile'].status = get_user_status(request.user, context['profile'])
 
-    if request.user.is_authenticated():
-        try:
-            allow_message_user(request.user, context['profile'])
-            context['can_message'] = True
-        except PermissionDenied as e:
-            context['can_message'] = False
-            context['cant_message_reason'] = e
-
     request.frontend_context['PROFILE'] = UserProfileSerializer(
         context['profile'], context={'user': request.user}).data
 

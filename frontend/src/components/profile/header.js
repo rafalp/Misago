@@ -2,6 +2,7 @@ import React from 'react';
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
 import DropdownToggle from 'misago/components/dropdown-toggle'; // jshint ignore:line
 import FollowButton from 'misago/components/profile/follow-button'; // jshint ignore:line
+import MessageButton from 'misago/components/profile/message-button'; // jshint ignore:line
 import ModerationNav from 'misago/components/profile/moderation/nav'; // jshint ignore:line
 import Status, { StatusIcon, StatusLabel } from 'misago/components/user-status'; // jshint ignore:line
 
@@ -134,6 +135,11 @@ export default class extends React.Component {
               <span className="user-name">{this.props.profile.username}</span>
             </h1>
 
+            <MessageButton
+              className="btn btn-default btn-aligned hidden-xs hidden-sm"
+              profile={this.props.profile}
+              user={this.props.user}
+            />
             {this.getFollowButton()}
             {this.getModerationButton()}
 
