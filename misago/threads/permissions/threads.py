@@ -297,6 +297,7 @@ def add_acl_to_category(user, category):
 
     category.acl.update({
         'can_see_all_threads': 0,
+        'can_see_own_threads': 0,
         'can_start_threads': 0,
         'can_reply_threads': 0,
         'can_edit_threads': 0,

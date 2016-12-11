@@ -112,11 +112,17 @@ def build_acl(acl, roles, key_name):
         'can_hide_threads': 0,
         'can_hide_posts': 0,
         'can_protect_posts': 0,
+        'can_move_posts': 0,
         'can_merge_posts': 0,
+        'can_pin_threads': 0,
         'can_close_threads': 0,
+        'can_move_threads': 0,
+        'can_merge_threads': 0,
         'can_approve_content': 0,
         'can_report_content': new_acl['can_report_private_threads'],
         'can_see_reports': 0,
+        'can_see_posts_likes': 0,
+        'can_like_posts': 0,
         'can_hide_events': 0,
     }
 
