@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import ugettext as _, ungettext
+from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 
 from rest_framework import serializers
 from rest_framework.response import Response

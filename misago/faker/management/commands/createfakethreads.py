@@ -1,6 +1,8 @@
 import random
 import time
 
+from faker import Factory
+
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.db.transaction import atomic
@@ -8,7 +10,6 @@ from django.template.defaultfilters import linebreaks_filter
 from django.utils import timezone
 from django.utils.six.moves import range
 
-from faker import Factory
 from misago.categories.models import Category
 from misago.core.management.progressbar import show_progress
 from misago.threads.checksums import update_post_checksum

@@ -2,8 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 
 from misago.acl import add_acl
-from misago.categories.models import (
-    PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME, Category)
+from misago.categories.models import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME, Category
 from misago.core.shortcuts import validate_slug
 from misago.core.viewmodel import ViewModel as BaseViewModel
 from misago.readtracker.threadstracker import make_read_aware
@@ -139,4 +138,3 @@ class PrivateThread(ViewModel):
 
     def get_root_name(self):
         return _("Private threads")
-

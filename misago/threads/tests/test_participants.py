@@ -10,7 +10,7 @@ from ..participants import (
     make_participants_aware,
     remove_participant,
     set_owner,
-    set_users_unread_private_threads_sync,
+    set_users_unread_private_threads_sync
 )
 
 

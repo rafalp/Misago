@@ -1,5 +1,5 @@
-from django.core.urlresolvers import reverse
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic import View
 
 from ..viewmodels import ForumThread, PrivateThread, ThreadPosts

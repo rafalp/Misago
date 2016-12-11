@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from ..models import BAN_USERNAME, Ban
 from ..testutils import UserTestCase

@@ -10,8 +10,7 @@ from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
-from misago.users.models import (
-    LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED, LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY)
+from misago.users.models import LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED, LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from ..models import Thread, ThreadParticipant

@@ -1,7 +1,7 @@
-from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.urls import reverse
 
 from misago.users.models import AnonymousUser
 

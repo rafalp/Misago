@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 import json
 
-from django.core.urlresolvers import reverse
 from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
+from django.urls import reverse
 from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl

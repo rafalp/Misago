@@ -2,7 +2,8 @@ from copy import deepcopy
 
 from django.core.exceptions import ValidationError
 from django.utils import six
-from django.utils.translation import gettext as _, ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import ungettext
 
 from rest_framework.response import Response
 

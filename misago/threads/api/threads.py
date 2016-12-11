@@ -15,7 +15,7 @@ from ..permissions import allow_use_private_threads
 from ..viewmodels import ForumThread
 from .postingendpoint import PostingEndpoint
 from .threadendpoints.editor import thread_start_editor
-from .threadendpoints.list import threads_list_endpoint, private_threads_list_endpoint
+from .threadendpoints.list import private_threads_list_endpoint, threads_list_endpoint
 from .threadendpoints.merge import thread_merge_endpoint, threads_merge_endpoint
 from .threadendpoints.patch import thread_patch_endpoint
 

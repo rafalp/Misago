@@ -4,8 +4,8 @@ from misago.acl import add_acl
 from misago.categories.models import Category
 from misago.categories.permissions import allow_browse_category, allow_see_category
 from misago.categories.serializers import BasicCategorySerializer
-from misago.core.viewmodel import ViewModel as BaseViewModel
 from misago.core.shortcuts import validate_slug
+from misago.core.viewmodel import ViewModel as BaseViewModel
 
 from ..permissions import allow_use_private_threads
 

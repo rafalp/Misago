@@ -12,7 +12,7 @@ from misago.markup import common_flavour
 from misago.users.online.utils import make_users_status_aware
 
 from ...checksums import update_post_checksum
-from ...serializers import PostSerializer, PostEditSerializer
+from ...serializers import PostEditSerializer, PostSerializer
 
 
 def get_edit_endpoint(request, post):

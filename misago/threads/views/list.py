@@ -1,12 +1,10 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic import View
 
-from ..viewmodels import (
-    PrivateThreadsCategory, ThreadsCategory, ThreadsRootCategory,
-    ForumThreads, PrivateThreads)
+from ..viewmodels import ForumThreads, PrivateThreads, PrivateThreadsCategory, ThreadsCategory, ThreadsRootCategory
 
 
 class ListBase(View):

@@ -1,6 +1,6 @@
 import json
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
@@ -9,6 +9,7 @@ from misago.categories.models import Category
 from .. import testutils
 from ..models import Poll, PollVote, Thread
 from .test_threads_api import ThreadsApiTestCase
+
 
 class ThreadMergeApiTests(ThreadsApiTestCase):
     def setUp(self):

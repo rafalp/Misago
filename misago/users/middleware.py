@@ -2,7 +2,7 @@ import pytz
 
 from django.contrib.auth import logout
 from django.contrib.auth.models import AnonymousUser as DjAnonymousUser
-from django.core.urlresolvers import resolve
+from django.urls import resolve
 
 from misago.conf import settings
 

@@ -1,5 +1,5 @@
-from django.core.urlresolvers import reverse
 from django.db import models, transaction
+from django.urls import reverse
 from django.utils.encoding import python_2_unicode_compatible
 
 from misago.acl import version as acl_version

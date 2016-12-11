@@ -2,18 +2,17 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
 from django.db.transaction import atomic
 from django.http import Http404, JsonResponse
 from django.shortcuts import render as django_render
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils import six
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
 from misago.core.decorators import require_POST
-from misago.core.shortcuts import (
-    get_object_or_404, paginate, pagination_dict, validate_slug)
+from misago.core.shortcuts import get_object_or_404, paginate, pagination_dict, validate_slug
 from misago.core.utils import clean_return_path
 from misago.threads.permissions import allow_message_user
 
@@ -24,8 +23,8 @@ from ..pages import user_profile
 from ..permissions.profiles import allow_block_user, allow_follow_user
 from ..serializers import BanDetailsSerializer, UserProfileSerializer, UserSerializer
 from ..serializers.usernamechange import UsernameChangeSerializer
-from ..warnings import get_user_warning_level, get_user_warning_obj, get_warning_levels
 from ..viewmodels import UserPosts, UserThreads
+from ..warnings import get_user_warning_level, get_user_warning_obj, get_warning_levels
 
 
 def profile_view(f):

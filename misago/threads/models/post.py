@@ -3,11 +3,11 @@ from __future__ import unicode_literals
 import copy
 
 from django.contrib.postgres.fields import JSONField
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.dispatch import receiver
-from django.utils.encoding import python_2_unicode_compatible
+from django.urls import reverse
 from django.utils import six, timezone
+from django.utils.encoding import python_2_unicode_compatible
 
 from misago.conf import settings
 from misago.core.utils import parse_iso8601_string

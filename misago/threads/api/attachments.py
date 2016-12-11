@@ -107,4 +107,3 @@ def is_upload_image(upload):
         if filename.endswith('.%s' % extension):
             return True
     return False
-

@@ -1,8 +1,7 @@
-from misago.users.models import (
-    AUTO_SUBSCRIBE_NONE, AUTO_SUBSCRIBE_NOTIFY, AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL)
+from misago.users.models import AUTO_SUBSCRIBE_NONE, AUTO_SUBSCRIBE_NOTIFY, AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL
 
-from ...models import Subscription
 from . import PostingEndpoint, PostingMiddleware
+from ...models import Subscription
 
 
 class SubscribeMiddleware(PostingMiddleware):

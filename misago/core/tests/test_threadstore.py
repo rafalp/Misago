@@ -1,6 +1,6 @@
-from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.urls import reverse
 
 from .. import threadstore
 from ..middleware.threadstore import ThreadStoreMiddleware

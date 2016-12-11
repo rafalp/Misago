@@ -123,4 +123,3 @@ class PrivateThreadGotoNewView(GotoView):
             return posts_queryset.filter(posted_on__gt=thread.last_read_on).order_by('id').first()
         else:
             return posts_queryset.order_by('id').last()
-

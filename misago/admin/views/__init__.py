@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse, NoReverseMatch
+from django.urls import reverse, NoReverseMatch
 from django.shortcuts import render as dj_render
 
 from .. import site

@@ -3,6 +3,7 @@ from django.utils.translation import gettext as _
 
 from misago.acl import add_acl
 from misago.core.apipatch import ApiPatch
+
 from ...models import PostLike
 from ...moderation import posts as moderation
 from ...permissions.threads import allow_approve_post, allow_hide_post, allow_protect_post, allow_unhide_post

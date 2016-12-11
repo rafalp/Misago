@@ -1,8 +1,8 @@
 from django.contrib import messages
-from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.db.models import Count
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from misago.admin.views import generic

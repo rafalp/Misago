@@ -1,5 +1,5 @@
 """
-Defines `UserAdminModel` for registration of Misago `User` model in django 
+Defines `UserAdminModel` for registration of Misago `User` model in django
 admin panel.
 
 The model supposed to be used for interaction of third party django apps with
@@ -11,7 +11,7 @@ Test for the model is placed in :mod:`misago.users.tests.test_djangoadmin_user`.
 """
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
 
@@ -24,16 +24,16 @@ User = get_user_model()
 
 class UserAdminForm(forms.ModelForm):
     """
-    This form adds `edit_from_misago_link` pseudo-field, that renders 
+    This form adds `edit_from_misago_link` pseudo-field, that renders
     itself like an html hyperlink to a user edit page in misago admin panel.
 
     This could be done with `User` edit template overwrite, but
-    it is kind of overkill - overwrite the whole template just to add one 
+    it is kind of overkill - overwrite the whole template just to add one
     button - isn't it?
     """
     #: pseudo-field
     edit_from_misago_link = forms.Field()
-    
+
     def __init__(self, *args, **kwargs):
         # noinspection PyArgumentList
         super(UserAdminForm, self).__init__(*args, **kwargs)
@@ -67,7 +67,7 @@ class UserAdminForm(forms.ModelForm):
         link_html = format_html(link_html_template, link_url)
 
         return link_html
-    
+
     class Meta:
         model = User
         fields = ['edit_from_misago_link']
@@ -75,8 +75,8 @@ class UserAdminForm(forms.ModelForm):
 
 class UserAdminModel(admin.ModelAdmin):
     """
-    Redeclare most of the model fields like read-only. 
-    Prevents new/delete actions (users should use misago admin panel for 
+    Redeclare most of the model fields like read-only.
+    Prevents new/delete actions (users should use misago admin panel for
     that).
     Replaces default form with custom `UserAdminForm`.
     """

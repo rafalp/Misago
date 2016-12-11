@@ -1,11 +1,12 @@
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import ugettext as _, ugettext_lazy
+from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy
 
 from rest_framework import serializers
 
 from misago.acl import add_acl
 from misago.categories.models import THREADS_ROOT_NAME, Category
-from misago.categories.permissions import can_see_category, can_browse_category
+from misago.categories.permissions import can_browse_category, can_see_category
 
 from . import PostingEndpoint, PostingMiddleware
 from ...permissions.threads import allow_start_thread

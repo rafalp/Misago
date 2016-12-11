@@ -12,11 +12,9 @@ from misago.users.online.utils import make_users_status_aware
 
 from ..models import Post
 from ..moderation import posts as moderation
-from ..permissions.threads import (
-    allow_delete_event, allow_delete_post, allow_edit_post, allow_reply_thread)
+from ..permissions.threads import allow_delete_event, allow_delete_post, allow_edit_post, allow_reply_thread
 from ..serializers import AttachmentSerializer, PostSerializer
 from ..viewmodels import ForumThread, ThreadPost, ThreadPosts
-from .postingendpoint import PostingEndpoint
 from .postendpoints.edits import get_edit_endpoint, revert_post_endpoint
 from .postendpoints.likes import likes_list_endpoint
 from .postendpoints.merge import posts_merge_endpoint
@@ -25,6 +23,7 @@ from .postendpoints.patch_event import event_patch_endpoint
 from .postendpoints.patch_post import post_patch_endpoint
 from .postendpoints.read import post_read_endpoint
 from .postendpoints.split import posts_split_endpoint
+from .postingendpoint import PostingEndpoint
 
 
 class ViewSet(viewsets.ViewSet):

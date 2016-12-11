@@ -4,9 +4,9 @@ from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
 from django.contrib.auth.models import UserManager as BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
 from django.db import IntegrityError, models, transaction
 from django.dispatch import receiver
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 

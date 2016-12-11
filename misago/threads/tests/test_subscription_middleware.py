@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
-from misago.users.models import (
-    AUTO_SUBSCRIBE_NONE, AUTO_SUBSCRIBE_NOTIFY, AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL)
+from misago.users.models import AUTO_SUBSCRIBE_NONE, AUTO_SUBSCRIBE_NOTIFY, AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from .. import testutils

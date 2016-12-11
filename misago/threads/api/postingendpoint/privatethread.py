@@ -25,4 +25,3 @@ class PrivateThreadMiddleware(PostingMiddleware):
         # assign category to thread and post
         self.thread.category = category
         self.post.category = category
-

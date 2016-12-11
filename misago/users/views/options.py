@@ -1,7 +1,7 @@
 from django.contrib.auth import update_session_auth_hash
-from django.core.urlresolvers import reverse
 from django.db import IntegrityError
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils import six
 from django.utils.translation import ugettext as _
 

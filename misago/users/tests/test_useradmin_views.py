@@ -2,7 +2,7 @@ import json
 
 from django.contrib.auth import get_user_model
 from django.core import mail
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import six
 from django.utils.encoding import smart_str
 from django.utils.six.moves import range

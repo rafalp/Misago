@@ -3,12 +3,13 @@ from datetime import datetime, timedelta
 import six
 from unidecode import unidecode
 
-from django.core.urlresolvers import resolve, reverse
 from django.http import Http404
 from django.template.defaultfilters import slugify as django_slugify
+from django.urls import resolve, reverse
 from django.utils import html, timezone
 from django.utils.encoding import force_text
-from django.utils.translation import ugettext_lazy as _, ungettext_lazy
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext_lazy
 
 
 def slugify(string):

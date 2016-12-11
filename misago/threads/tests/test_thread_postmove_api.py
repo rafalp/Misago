@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import json
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.six.moves import range
 
 from misago.acl.testutils import override_acl

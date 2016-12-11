@@ -26,6 +26,7 @@ from ..permissions.moderation import allow_moderate_avatar, allow_rename_user
 from ..permissions.profiles import allow_browse_users_list, allow_follow_user, allow_see_ban_details
 from ..serializers import BanDetailsSerializer, UserProfileSerializer, UserSerializer
 from ..viewmodels import UserPosts, UserThreads
+from .rest_permissions import BasePermission, UnbannedAnonOnly
 from .userendpoints.avatar import avatar_endpoint, moderate_avatar_endpoint
 from .userendpoints.changeemail import change_email_endpoint
 from .userendpoints.changepassword import change_password_endpoint
@@ -33,7 +34,6 @@ from .userendpoints.create import create_endpoint
 from .userendpoints.list import list_endpoint
 from .userendpoints.signature import signature_endpoint
 from .userendpoints.username import moderate_username_endpoint, username_endpoint
-from .rest_permissions import BasePermission, UnbannedAnonOnly
 
 
 class UserViewSetPermission(BasePermission):

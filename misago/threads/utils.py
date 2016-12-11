@@ -1,4 +1,4 @@
-from django.core.urlresolvers import resolve
+from django.urls import resolve
 from django.utils import six
 from django.utils.six.moves.urllib.parse import urlparse
 

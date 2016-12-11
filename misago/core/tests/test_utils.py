@@ -1,12 +1,17 @@
 #-*- coding: utf-8 -*-
-from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test.client import RequestFactory
+from django.urls import reverse
 from django.utils import timezone
 
 from ..utils import (
-    clean_return_path, format_plaintext_for_html, is_referer_local, is_request_to_misago,
-    parse_iso8601_string, slugify)
+    clean_return_path,
+    format_plaintext_for_html,
+    is_referer_local,
+    is_request_to_misago,
+    parse_iso8601_string,
+    slugify
+)
 
 
 VALID_PATHS = (

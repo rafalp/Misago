@@ -3,7 +3,7 @@ import json
 from path import Path
 
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl

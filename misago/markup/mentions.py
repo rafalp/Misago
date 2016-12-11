@@ -1,6 +1,7 @@
 import re
 
 from bs4 import BeautifulSoup, NavigableString
+
 from django.contrib.auth import get_user_model
 from django.utils import six
 

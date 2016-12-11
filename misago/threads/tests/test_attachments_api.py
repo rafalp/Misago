@@ -1,11 +1,12 @@
 import json
 import os
 
+from PIL import Image
+
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import six
 from django.utils.encoding import smart_str
-from PIL import Image
 
 from misago.acl.models import Role
 from misago.acl.testutils import override_acl

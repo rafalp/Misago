@@ -99,4 +99,3 @@ class Poll(models.Model):
                 'proc': proc
             })
         return view_choices
-

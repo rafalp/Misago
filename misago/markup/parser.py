@@ -1,13 +1,13 @@
 from __future__ import unicode_literals
 
-import markdown
-
 import bleach
+import markdown
 from bs4 import BeautifulSoup
-from django.core.urlresolvers import resolve
-from django.http import Http404
-from django.utils import six
 from htmlmin.minify import html_minify
+
+from django.http import Http404
+from django.urls import resolve
+from django.utils import six
 
 from .bbcode import blocks, inline
 from .md.shortimgs import ShortImagesExtension

@@ -2,9 +2,9 @@ import six
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
 from django.shortcuts import render as django_render
 from django.shortcuts import redirect
+from django.urls import reverse
 
 from misago.core.shortcuts import get_object_or_404, paginate, pagination_dict
 from misago.core.utils import format_plaintext_for_html
