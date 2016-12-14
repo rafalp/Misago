@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from ..models import BAN_IP, Ban
 from ..testutils import UserTestCase

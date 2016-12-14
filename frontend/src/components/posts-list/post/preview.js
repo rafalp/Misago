@@ -1,11 +1,11 @@
 /* jshint ignore:start */
 import React from 'react';
-import Avatar from 'misago/components/avatar'; // jshint ignore:line
-import * as random from 'misago/utils/random'; // jshint ignore:line
+import Avatar from 'misago/components/avatar';
+import * as random from 'misago/utils/random';
 
 export default function(props) {
   return (
-    <li class="post">
+    <li className="post">
       <div className="post-border">
         <div className="post-avatar">
           <Avatar size="100" />

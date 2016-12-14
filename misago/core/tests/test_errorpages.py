@@ -1,6 +1,6 @@
-from django.core.urlresolvers import reverse
 from django.test import Client, TestCase, override_settings
 from django.test.client import RequestFactory
+from django.urls import reverse
 
 from misago.users.models import AnonymousUser
 

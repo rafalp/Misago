@@ -10,23 +10,27 @@ export class Posting {
     this._snackbar = snackbar;
     this._placeholder = $(placeholder);
 
+    this._mode = null;
+
     this._isOpen = false;
     this._isClosing = false;
   }
 
   open(props) {
     if (this._isOpen === false) {
-      this._isOpen = props.config;
+      this._mode = props.mode;
+      this._isOpen = props.submit;
       this._realOpen(props);
-    } else if (this._isOpen !== props.config) {
+    } else if (this._isOpen !== props.submit) {
       let message = gettext("You are already working on other message. Do you want to discard it?");
-      if (this._isOpen.config.mode == 'POLL') {
-        message = gettext("You are already working on poll. Do you want to discard it?");
+      if (this._mode == 'POLL') {
+        message = gettext("You are already working on a poll. Do you want to discard it?");
       }
 
       const changeForm = confirm(message);
       if (changeForm) {
-        this._isOpen = props.config;
+        this._mode = props.mode;
+        this._isOpen = props.submit;
         this._realOpen(props);
       }
     }
@@ -34,7 +38,7 @@ export class Posting {
 
   // jshint ignore:start
   _realOpen(props) {
-    if (props.config.mode == 'POLL') {
+    if (props.mode == 'POLL') {
       mount(
         <PollForm {...props} />,
         'posting-mount'

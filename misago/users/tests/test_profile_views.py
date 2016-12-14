@@ -1,8 +1,10 @@
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.six.moves import range
 
 from misago.acl.testutils import override_acl
+from misago.categories.models import Category
+from misago.threads import testutils
 
 from ..models import Ban
 from ..testutils import AuthenticatedUserTestCase
@@ -16,6 +18,8 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
             'pk': self.user.pk
         }
 
+        self.category = Category.objects.get(slug='first-category')
+
     def test_outdated_slugs(self):
         """user profile view redirects to valid slig"""
         invalid_kwargs = {'slug': 'baww', 'pk': self.user.pk}
@@ -26,19 +30,47 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
     def test_user_posts_list(self):
         """user profile posts list has no showstoppers"""
-        response = self.client.get(reverse('misago:user-posts',
-                                           kwargs=self.link_kwargs))
+        link = reverse('misago:user-posts', kwargs=self.link_kwargs)
+        response = self.client.get(link)
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'no messages posted')
+        self.assertContains(response, "You have posted no messages")
+
+        thread = testutils.post_thread(category=self.category, poster=self.user)
+
+        response = self.client.get(link)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, thread.get_absolute_url())
+
+        post = testutils.reply_thread(thread, poster=self.user)
+        other_post = testutils.reply_thread(thread, poster=self.user)
+
+        response = self.client.get(link)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, post.get_absolute_url())
+        self.assertContains(response, other_post.get_absolute_url())
 
     def test_user_threads_list(self):
         """user profile threads list has no showstoppers"""
-        response = self.client.get(reverse('misago:user-threads',
-                                           kwargs=self.link_kwargs))
+        link = reverse('misago:user-threads', kwargs=self.link_kwargs)
 
+        response = self.client.get(link)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'no started threads')
+        self.assertContains(response, "You have no started threads.")
+
+        thread = testutils.post_thread(category=self.category, poster=self.user)
+
+        response = self.client.get(link)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, thread.get_absolute_url())
+
+        post = testutils.reply_thread(thread, poster=self.user)
+        other_post = testutils.reply_thread(thread, poster=self.user)
+
+        response = self.client.get(link)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, post.get_absolute_url())
+        self.assertNotContains(response, other_post.get_absolute_url())
 
     def test_user_followers(self):
         """user profile followers list has no showstoppers"""

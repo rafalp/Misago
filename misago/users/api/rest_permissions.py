@@ -1,28 +1,18 @@
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 
-from rest_framework.permissions import SAFE_METHODS, AllowAny, BasePermission
+from rest_framework.permissions import BasePermission
 
 from misago.core.exceptions import Banned
 
-from .bans import get_request_ip_ban
-from .models import BAN_IP, Ban
+from ..bans import get_request_ip_ban
+from ..models import BAN_IP, Ban
 
 
 __all__ = [
-    'AllowAny',
-    'IsAuthenticatedOrReadOnly',
     'UnbannedOnly',
     'UnbannedAnonOnly'
 ]
-
-
-class IsAuthenticatedOrReadOnly(BasePermission):
-    def has_permission(self, request, view):
-        if request.user.is_anonymous() and request.method not in SAFE_METHODS:
-            raise PermissionDenied(_("This action is not available to guests."))
-        else:
-            return True
 
 
 class UnbannedOnly(BasePermission):
@@ -43,8 +33,7 @@ class UnbannedOnly(BasePermission):
 class UnbannedAnonOnly(UnbannedOnly):
     def has_permission(self, request, view):
         if request.user.is_authenticated():
-            raise PermissionDenied(
-                _("This action is not available to signed in users."))
+            raise PermissionDenied(_("This action is not available to signed in users."))
 
         self.is_request_banned(request)
         return True

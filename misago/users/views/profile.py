@@ -2,11 +2,11 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
 from django.db.transaction import atomic
 from django.http import Http404, JsonResponse
 from django.shortcuts import render as django_render
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils import six
 from django.utils.translation import ugettext as _
 
@@ -23,6 +23,7 @@ from ..pages import user_profile
 from ..permissions.profiles import allow_block_user, allow_follow_user
 from ..serializers import BanDetailsSerializer, UserProfileSerializer, UserSerializer
 from ..serializers.usernamechange import UsernameChangeSerializer
+from ..viewmodels import UserPosts, UserThreads
 from ..warnings import get_user_warning_level, get_user_warning_obj, get_warning_levels
 
 
@@ -32,6 +33,7 @@ def profile_view(f):
 
         relations = ('rank', 'online_tracker', 'ban_cache')
         queryset = User.objects.select_related(*relations)
+
         profile = get_object_or_404(queryset, pk=kwargs.pop('pk'))
 
         validate_slug(profile, kwargs.pop('slug'))
@@ -88,14 +90,6 @@ def render(request, template, context):
 
     context['profile'].status = get_user_status(request.user, context['profile'])
 
-    if request.user.is_authenticated():
-        try:
-            allow_message_user(request.user, context['profile'])
-            context['can_message'] = True
-        except PermissionDenied as e:
-            context['can_message'] = False
-            context['cant_message_reason'] = e
-
     request.frontend_context['PROFILE'] = UserProfileSerializer(
         context['profile'], context={'user': request.user}).data
 
@@ -109,16 +103,30 @@ def landing(request, profile):
 
 @profile_view
 def posts(request, profile):
-    return render(request, 'misago/profile/posts.html', {
-        'profile': profile
-    })
+    context = {
+        'profile': profile,
+    }
+
+    feed = UserPosts(request, profile)
+    context.update(feed.get_template_context())
+
+    request.frontend_context['POSTS'] = feed.get_frontend_context()
+
+    return render(request, 'misago/profile/posts.html', context)
 
 
 @profile_view
 def threads(request, profile):
-    return render(request, 'misago/profile/threads.html', {
+    context = {
         'profile': profile
-    })
+    }
+
+    feed = UserThreads(request, profile)
+    context.update(feed.get_template_context())
+
+    request.frontend_context['POSTS'] = feed.get_frontend_context()
+
+    return render(request, 'misago/profile/threads.html', context)
 
 
 @profile_view

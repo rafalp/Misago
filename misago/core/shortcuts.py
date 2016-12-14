@@ -10,7 +10,7 @@ def paginate(object_list, page, per_page, orphans=0,
              allow_empty_first_page=True,
              allow_explicit_first_page=False):
     from django.http import Http404
-    from django.core.paginator import Paginator, EmptyPage
+    from django.core.paginator import Paginator, EmptyPage, InvalidPage
     from .exceptions import ExplicitFirstPage
 
     if page in (1, "1") and not allow_explicit_first_page:
@@ -22,7 +22,7 @@ def paginate(object_list, page, per_page, orphans=0,
         return Paginator(
             object_list, per_page, orphans=orphans,
             allow_empty_first_page=allow_empty_first_page).page(page)
-    except EmptyPage:
+    except (EmptyPage, InvalidPage):
         raise Http404()
 
 

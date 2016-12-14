@@ -1,0 +1,7 @@
+<div class="panel panel-default panel-poll">
+  {% if user.is_anonymous or not poll.acl.can_vote or poll.has_selected_choices %}
+    {% include "misago/poll/results.html" %}
+  {% else %}
+    {% include "misago/poll/voting.html" %}
+  {% endif %}
+</div>

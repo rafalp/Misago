@@ -2,29 +2,33 @@ import random
 import sys
 import time
 
+from faker import Factory
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import IntegrityError
 from django.utils.six.moves import range
 
-from faker import Factory
 from misago.core.management.progressbar import show_progress
 from misago.users.avatars import dynamic, gallery, get_avatar_hash
 from misago.users.models import Rank
 
 
 class Command(BaseCommand):
-    help = 'Creates random fakey users for testing purposes'
+    help = "Creates fake users for dev and testing purposes."
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            'users',
+            help="number of users to create",
+            nargs='?',
+            type=int,
+            default=5
+        )
 
     def handle(self, *args, **options):
-        try:
-            fake_users_to_create = int(args[0])
-        except IndexError:
-            fake_users_to_create = 5
-        except ValueError:
-            self.stderr.write("\nOptional argument should be integer.")
-            sys.exit(1)
+        items_to_create = options['users']
 
         fake = Factory.create()
         User = get_user_model()
@@ -32,14 +36,15 @@ class Command(BaseCommand):
         ranks = [r for r in Rank.objects.all()]
 
         message = 'Creating %s fake user accounts...\n'
-        self.stdout.write(message % fake_users_to_create)
+        self.stdout.write(message % items_to_create)
 
         message = '\n\nSuccessfully created %s fake user accounts in %s'
 
         created_count = 0
         start_time = time.time()
-        show_progress(self, created_count, fake_users_to_create)
-        for i in range(fake_users_to_create):
+        show_progress(self, created_count, items_to_create)
+
+        while created_count < items_to_create:
             try:
                 kwargs = {
                     'rank': random.choice(ranks),
@@ -61,7 +66,7 @@ class Command(BaseCommand):
             else:
                 created_count += 1
                 show_progress(
-                    self, created_count, fake_users_to_create, start_time)
+                    self, created_count, items_to_create, start_time)
 
         total_time = time.time() - start_time
         total_humanized = time.strftime('%H:%M:%S', time.gmtime(total_time))

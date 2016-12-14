@@ -16,7 +16,10 @@ from ..models import Thread
 from ..permissions import exclude_invisible_threads
 from ..serializers import ThreadsListSerializer
 from ..subscriptions import make_subscription_aware
-from ..utils import add_categories_to_threads
+from ..utils import add_categories_to_items
+
+
+__all__ = ['ForumThreads', 'PrivateThreads']
 
 
 LISTS_NAMES = {
@@ -41,10 +44,12 @@ class ViewModel(object):
     def __init__(self, request, category, list_type, page):
         self.allow_see_list(request, category, list_type)
 
-        base_queryset = self.get_base_queryset(request, category.categories, list_type)
-        threads_categories = [category.model] + category.subcategories
+        category_model = category.unwrap()
 
-        threads_queryset = self.get_remaining_threads_queryset(base_queryset, category.model, threads_categories)
+        base_queryset = self.get_base_queryset(request, category.categories, list_type)
+        threads_categories = [category_model] + category.subcategories
+
+        threads_queryset = self.get_remaining_threads_queryset(base_queryset, category_model, threads_categories)
 
         list_page = paginate(threads_queryset, page, settings.MISAGO_THREADS_PER_PAGE, settings.MISAGO_THREADS_TAIL)
         paginator = pagination_dict(list_page, include_page_range=False)
@@ -52,7 +57,7 @@ class ViewModel(object):
         if list_page.number > 1:
             threads = list(list_page.object_list)
         else:
-            pinned_threads = list(self.get_pinned_threads(base_queryset, category.model, threads_categories))
+            pinned_threads = list(self.get_pinned_threads(base_queryset, category_model, threads_categories))
             threads = list(pinned_threads) + list(list_page.object_list)
 
         if list_type in ('new', 'unread'):
@@ -61,7 +66,8 @@ class ViewModel(object):
         else:
             threadstracker.make_threads_read_aware(request.user, threads)
 
-        add_categories_to_threads(category.model, category.categories, threads)
+        add_categories_to_items(category_model, category.categories, threads)
+
         add_acl(request.user, threads)
         make_subscription_aware(request.user, threads)
 
@@ -139,6 +145,20 @@ class ForumThreads(ViewModel):
 
 
 class PrivateThreads(ViewModel):
+    def get_base_queryset(self, request, threads_categories, list_type):
+        queryset = super(PrivateThreads, self).get_base_queryset(request, threads_categories, list_type)
+
+        # limit queryset to threads we are participant of
+        participated_threads = request.user.threadparticipant_set.values('thread_id')
+
+        if request.user.acl['can_moderate_private_threads']:
+            queryset = queryset.filter(
+                Q(id__in=participated_threads) | Q(has_reported_posts=True))
+        else:
+            queryset = queryset.filter(id__in=participated_threads)
+
+        return queryset
+
     def get_remaining_threads_queryset(self, queryset, category, threads_categories):
         return queryset.filter(category__in=threads_categories)
 

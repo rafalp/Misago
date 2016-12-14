@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import timezone
 
 from ..serializers.poll import MAX_POLL_OPTIONS
@@ -310,7 +310,6 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         response_json = response.json()
 
         self.assertEqual(response_json['poster_name'], self.user.username)
-        self.assertEqual(response_json['poster_slug'], self.user.slug)
         self.assertEqual(response_json['length'], 40)
         self.assertEqual(response_json['question'], "Select two best colors")
         self.assertEqual(response_json['allowed_choices'], 2)
@@ -366,7 +365,6 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         response_json = response.json()
 
         self.assertEqual(response_json['poster_name'], self.user.username)
-        self.assertEqual(response_json['poster_slug'], self.user.slug)
         self.assertEqual(response_json['length'], 40)
         self.assertEqual(response_json['question'], "Select two best colors")
         self.assertEqual(response_json['allowed_choices'], 2)
@@ -439,7 +437,6 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         response_json = response.json()
 
         self.assertEqual(response_json['poster_name'], self.user.username)
-        self.assertEqual(response_json['poster_slug'], self.user.slug)
         self.assertEqual(response_json['length'], 40)
         self.assertEqual(response_json['question'], "Select two best colors")
         self.assertEqual(response_json['allowed_choices'], 2)
@@ -510,7 +507,6 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         response_json = response.json()
 
         self.assertEqual(response_json['poster_name'], self.user.username)
-        self.assertEqual(response_json['poster_slug'], self.user.slug)
         self.assertEqual(response_json['length'], 40)
         self.assertEqual(response_json['question'], "Select two best colors")
         self.assertEqual(response_json['allowed_choices'], 2)

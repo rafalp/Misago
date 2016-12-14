@@ -3,6 +3,8 @@ from django.utils.translation import gettext as _
 
 from misago.acl import add_acl
 from misago.core.apipatch import ApiPatch
+
+from ...models import PostLike
 from ...moderation import posts as moderation
 from ...permissions.threads import allow_approve_post, allow_hide_post, allow_protect_post, allow_unhide_post
 
@@ -18,6 +20,58 @@ def patch_acl(request, post, value):
     else:
         return {'acl': None}
 post_patch_dispatcher.add('acl', patch_acl)
+
+
+def patch_is_liked(request, post, value):
+    if not post.acl['can_like']:
+        raise PermissionDenied(_("You can't like posts in this category."))
+
+    # grab like state for this post and user
+    try:
+        user_like = post.postlike_set.get(user=request.user)
+    except PostLike.DoesNotExist:
+        user_like = None
+
+    # no change
+    if (value and user_like) or (not value and not user_like):
+        return {
+            'likes': post.likes,
+            'last_likes': post.last_likes or [],
+            'is_liked': value,
+        }
+
+    # like
+    if value:
+        post.postlike_set.create(
+            category=post.category,
+            thread=post.thread,
+            user=request.user,
+            user_name=request.user.username,
+            user_slug=request.user.slug,
+            user_ip=request.user_ip
+        )
+        post.likes += 1
+
+    # unlike
+    if not value:
+        user_like.delete()
+        post.likes -= 1
+
+    post.last_likes = []
+    for like in post.postlike_set.all()[:4]:
+        post.last_likes.append({
+            'id': like.user_id,
+            'username': like.user_name
+        })
+
+    post.save(update_fields=['likes', 'last_likes'])
+
+    return {
+        'likes': post.likes,
+        'last_likes': post.last_likes or [],
+        'is_liked': value,
+    }
+post_patch_dispatcher.replace('is-liked', patch_is_liked)
 
 
 def patch_is_protected(request, post, value):

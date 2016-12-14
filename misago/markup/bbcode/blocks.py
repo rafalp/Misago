@@ -2,11 +2,12 @@ from __future__ import unicode_literals
 
 import re
 
-from django.utils.crypto import get_random_string
 import markdown
 from markdown.blockprocessors import BlockProcessor, HRProcessor
 from markdown.preprocessors import Preprocessor
 from markdown.util import etree
+
+from django.utils.crypto import get_random_string
 
 
 QUOTE_START = get_random_string(32)

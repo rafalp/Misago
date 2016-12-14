@@ -84,11 +84,11 @@ export function Reply(props) {
 export class StartPoll extends React.Component {
   onClick = () => {
     posting.open({
+      mode: 'POLL',
+      submit: this.props.thread.api.poll,
+
       thread: this.props.thread,
-      poll: null,
-      config: {
-        mode: 'POLL'
-      }
+      poll: null
     });
   }
 

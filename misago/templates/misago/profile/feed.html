@@ -1,0 +1,43 @@
+{% load i18n %}
+<ul class="posts-list ui-ready">
+  {% for post in posts %}
+    <li id="post-{{ post.pk }}" class="post post-infeed {% if post.is_new %}post-new{% endif %}">
+      <div class="post-border">
+        <div class="post-body">
+          <div class="panel panel-default panel-post">
+
+            <div class="panel-heading post-heading">
+              <a href="{{ post.thread.get_absolute_url }}" class="item-title">
+                {{ post.thread.title }}
+              </a>
+              <a href="{{ post.get_absolute_url }}" class="posted-on">
+                {% blocktrans trimmed with posted_on=post.posted_on|date:'DATETIME_FORMAT' %}
+                  posted on {{ posted_on }}
+                {% endblocktrans %}
+              </a>
+              <div class="pull-right">
+                <a href="{{ post.get_absolute_url }}" class="btn btn-default btn-sm">
+                  {% trans "Go to post" %}
+                </a>
+              </div>
+            </div>
+
+            {% if post.is_valid %}
+              <div class="panel-body">
+                <article class="misago-markup">
+                  {{ post.content|safe }}
+                </article>
+              </div>
+            {% else %}
+              <div class="panel-body panel-body-invalid">
+                <p class="lead">{% trans "This post's contents cannot be displayed." %}</p>
+                <p class="text-muted">{% trans "This error is caused by invalid post content manipulation." %}</p>
+              </div>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+    </li>
+  {% endfor %}
+</ul>

@@ -49,7 +49,8 @@ class PermissionsForm(forms.Form):
     )
     can_moderate_private_threads = forms.YesNoSwitch(
         label=_("Can moderate private threads"),
-        help_text=_("Allows user to read, reply, edit and delete content in reported private threads.")
+        help_text=_("Allows user to read, reply, edit and delete content "
+                    "in reported private threads.")
     )
 
 
@@ -89,8 +90,11 @@ def build_acl(acl, roles, key_name):
 
     private_category = Category.objects.private_threads()
 
+    new_acl['visible_categories'].append(private_category.pk)
+    new_acl['browseable_categories'].append(private_category.pk)
+
     if new_acl['can_moderate_private_threads']:
-        new_acl['can_approve_content'].append(private_category.pk)
+        new_acl['can_see_reports'].append(private_category.pk)
 
     category_acl = {
         'can_see': 1,
@@ -108,11 +112,17 @@ def build_acl(acl, roles, key_name):
         'can_hide_threads': 0,
         'can_hide_posts': 0,
         'can_protect_posts': 0,
+        'can_move_posts': 0,
         'can_merge_posts': 0,
+        'can_pin_threads': 0,
         'can_close_threads': 0,
+        'can_move_threads': 0,
+        'can_merge_threads': 0,
         'can_approve_content': 0,
         'can_report_content': new_acl['can_report_private_threads'],
         'can_see_reports': 0,
+        'can_see_posts_likes': 0,
+        'can_like_posts': 0,
         'can_hide_events': 0,
     }
 
@@ -125,8 +135,6 @@ def build_acl(acl, roles, key_name):
             'can_protect_posts': 1,
             'can_merge_posts': 1,
             'can_see_reports': 1,
-            'can_see_reports': 1,
-            'can_approve_content': 1,
             'can_hide_events': 2,
         })
 
@@ -140,25 +148,28 @@ ACL tests
 """
 def allow_use_private_threads(user):
     if user.is_anonymous():
-        raise PermissionDenied(_("Unsigned members can't use private threads system."))
+        raise PermissionDenied(_("You have to sign in to use private threads."))
     if not user.acl['can_use_private_threads']:
-        raise PermissionDenied(_("You can't use private threads system."))
+        raise PermissionDenied(_("You can't use private threads."))
 can_use_private_threads = return_boolean(allow_use_private_threads)
 
 
 def allow_see_private_thread(user, target):
-    can_see_unapproved = user.acl.get('can_moderate_private_threads')
-    can_see_unapproved = can_see_unapproved and target.has_reported_posts
+    if user.acl.get('can_moderate_private_threads'):
+        can_see_reported = target.has_reported_posts
+    else:
+        can_see_reported = False
+
     can_see_participating = user in [p.user for p in target.participants_list]
 
-    if not (can_see_participating or can_see_unapproved):
+    if not (can_see_participating or can_see_reported):
         raise Http404()
 can_see_private_thread = return_boolean(allow_see_private_thread)
 
 
 def allow_see_private_post(user, target):
-    can_see_unapproved = user.acl.get('can_moderate_private_threads')
-    if not (can_see_unapproved and target.thread.has_reported_posts):
+    can_see_reported = user.acl.get('can_moderate_private_threads')
+    if not (can_see_reported and target.thread.has_reported_posts):
         for participant in target.thread.participants_list:
             if participant.user == user and participant.is_removed:
                 if post.posted_on > target.last_post_on:
@@ -178,22 +189,21 @@ def allow_message_user(user, target):
     message_format = {'user': target.username}
 
     if not can_use_private_threads(target):
-        message = _("%(user)s can't participate in private threads.")
-        raise PermissionDenied(message % message_format)
+        raise PermissionDenied(
+            _("%(user)s can't participate in private threads.") % message_format)
 
     if user.acl['can_add_everyone_to_private_threads']:
-        return None
+        return
 
     if user.acl['can_be_blocked'] and target.is_blocking(user):
-        message = _("%(user)s is blocking you.")
-        raise PermissionDenied(message % message_format)
+        raise PermissionDenied(_("%(user)s is blocking you.") % message_format)
 
     if target.can_be_messaged_by_nobody:
-        message = _("%(user)s is not allowing invitations to private threads.")
-        raise PermissionDenied(message % message_format)
+        raise PermissionDenied(
+            _("%(user)s is not allowing invitations to private threads.") % message_format)
 
     if target.can_be_messaged_by_followed and not target.is_following(user):
-        message = _("%(user)s is allowing invitations to private threads only from followed users.")
+        message = _("%(user)s limits invitations to private threads to followed users.")
         raise PermissionDenied(message % message_format)
 can_message_user = return_boolean(allow_message_user)
 

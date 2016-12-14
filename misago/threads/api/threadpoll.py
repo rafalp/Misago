@@ -1,5 +1,7 @@
+from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import Http404
+from django.utils.translation import gettext as _
 
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route
@@ -10,9 +12,14 @@ from misago.core.shortcuts import get_int_or_404
 
 from ..models import Poll
 from ..permissions.polls import (
-    allow_see_poll_votes, allow_start_poll, allow_edit_poll, allow_delete_poll, can_start_poll)
-from ..serializers import PollSerializer, PollVoteSerializer, NewPollSerializer, EditPollSerializer
-from ..viewmodels.thread import ForumThread
+    allow_delete_poll,
+    allow_edit_poll,
+    allow_see_poll_votes,
+    allow_start_poll,
+    can_start_poll
+)
+from ..serializers import EditPollSerializer, NewPollSerializer, PollSerializer, PollVoteSerializer
+from ..viewmodels import ForumThread
 from .pollvotecreateendpoint import poll_vote_create
 
 
@@ -24,7 +31,7 @@ class ViewSet(viewsets.ViewSet):
             request,
             get_int_or_404(thread_pk),
             select_for_update=select_for_update,
-        ).model
+        ).unwrap()
 
     def get_thread_for_update(self, request, thread_pk):
         return self.get_thread(request, thread_pk, select_for_update=True)
@@ -48,6 +55,12 @@ class ViewSet(viewsets.ViewSet):
     def create(self, request, thread_pk):
         thread = self.get_thread_for_update(request, thread_pk)
         allow_start_poll(request.user, thread)
+
+        try:
+            if thread.poll and thread.poll.pk:
+                raise PermissionDenied(_("There's already a poll in this thread."))
+        except Poll.DoesNotExist:
+            pass
 
         instance = Poll(
             thread=thread,

@@ -151,7 +151,10 @@ class CategoryPermissionsForm(forms.Form):
             (2, _("Number and list of likers"))
         )
     )
-    can_like_posts = forms.YesNoSwitch(label=_("Can like posts"))
+    can_like_posts = forms.YesNoSwitch(
+        label=_("Can like posts"),
+        help_text=_("Only users with this permission to see likes can like posts.")
+    )
 
     can_protect_posts = forms.YesNoSwitch(
         label=_("Can protect posts"),
@@ -211,18 +214,16 @@ def build_acl(acl, roles, key_name):
     categories_roles = get_categories_roles(roles)
     categories = list(Category.objects.all_categories(include_root=True))
 
-    approve_in_categories = []
-
     for category in categories:
         category_acl = acl['categories'].get(category.pk, {'can_browse': 0})
         if category_acl['can_browse']:
             category_acl = acl['categories'][category.pk] = build_category_acl(
                 category_acl, category, categories_roles, key_name)
 
+            if category_acl.get('can_approve_content'):
+                acl['can_approve_content'].append(category.pk)
             if category_acl.get('can_see_reports'):
                 acl['can_see_reports'].append(category.pk)
-            if category_acl.get('can_approve_content'):
-                approve_in_categories.append(category)
 
     return acl
 
@@ -296,6 +297,7 @@ def add_acl_to_category(user, category):
 
     category.acl.update({
         'can_see_all_threads': 0,
+        'can_see_own_threads': 0,
         'can_start_threads': 0,
         'can_reply_threads': 0,
         'can_edit_threads': 0,
@@ -428,11 +430,13 @@ def add_acl_to_reply(user, post):
         'can_report': category_acl.get('can_report_content', False),
         'can_see_reports': category_acl.get('can_see_reports', False),
         'can_see_likes': category_acl.get('can_see_posts_likes', 0),
-        'can_like_posts': category_acl.get('can_like_posts', False),
+        'can_like': False,
     })
 
     if not post.acl['can_see_hidden']:
         post.acl['can_see_hidden'] = post.id == post.thread.first_post_id
+    if user.is_authenticated() and post.acl['can_see_likes']:
+        post.acl['can_like'] = category_acl.get('can_like_posts', False)
 
 
 def register_with(registry):

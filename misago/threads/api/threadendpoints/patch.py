@@ -11,7 +11,7 @@ from misago.core.shortcuts import get_int_or_404, get_object_or_404
 
 from ...moderation import threads as moderation
 from ...permissions import allow_start_thread
-from ...utils import add_categories_to_threads
+from ...utils import add_categories_to_items
 from ...validators import validate_title
 
 
@@ -102,7 +102,7 @@ def patch_top_category(request, thread, value):
     categories = list(Category.objects.all_categories().filter(
         id__in=request.user.acl['visible_categories']
     ))
-    add_categories_to_threads(root_category, categories, [thread])
+    add_categories_to_items(root_category, categories, [thread])
     return {'top_category': CategorySerializer(thread.top_category).data}
 thread_patch_dispatcher.add('top-category', patch_top_category)
 

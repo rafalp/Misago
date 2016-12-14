@@ -1,14 +1,17 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from rest_framework import serializers
 
-from misago.users.serializers import UserSerializer
+from misago.categories.models import Category
+from misago.categories.serializers import BasicCategorySerializer
+from misago.users.serializers import BasicUserSerializer, UserSerializer
 
 from ..models import Post
 
 
 __all__ = [
     'PostSerializer',
+    'PostFeedSerializer',
 ]
 
 
@@ -23,13 +26,16 @@ class PostSerializer(serializers.ModelSerializer):
     acl = serializers.SerializerMethodField()
     is_read = serializers.SerializerMethodField()
     is_new = serializers.SerializerMethodField()
+    is_liked = serializers.SerializerMethodField()
+    last_likes = serializers.SerializerMethodField()
+    likes = serializers.SerializerMethodField()
 
     api = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
-        fields = (
+        fields = [
             'id',
             'poster',
             'poster_name',
@@ -54,12 +60,15 @@ class PostSerializer(serializers.ModelSerializer):
             'event_context',
 
             'acl',
+            'is_liked',
             'is_new',
             'is_read',
+            'last_likes',
+            'likes',
 
             'api',
             'url',
-        )
+        ]
 
     def get_poster_ip(self, obj):
         if self.context['user'].acl['can_see_users_ips']:
@@ -82,6 +91,12 @@ class PostSerializer(serializers.ModelSerializer):
         except AttributeError:
             return None
 
+    def get_is_liked(self, obj):
+        try:
+            return obj.is_liked
+        except AttributeError:
+            return None
+
     def get_is_new(self, obj):
         try:
             return obj.is_new
@@ -94,12 +109,39 @@ class PostSerializer(serializers.ModelSerializer):
         except AttributeError:
             return None
 
+    def get_last_likes(self, obj):
+        if obj.is_event:
+            return None
+
+        try:
+            if obj.acl['can_see_likes']:
+                return obj.last_likes
+        except AttributeError:
+            return None
+
+    def get_likes(self, obj):
+        if obj.is_event:
+            return None
+
+        try:
+            if obj.acl['can_see_likes']:
+                return obj.likes
+        except AttributeError:
+            return None
+
     def get_api(self, obj):
-        return {
+        api_links = {
             'index': obj.get_api_url(),
+            'likes': obj.get_likes_api_url(),
             'editor': obj.get_editor_api_url(),
+            'edits': obj.get_edits_api_url(),
             'read': obj.get_read_api_url(),
         }
+
+        if obj.is_event:
+            del api_links['likes']
+
+        return api_links
 
     def get_url(self, obj):
         return {
@@ -124,4 +166,43 @@ class PostSerializer(serializers.ModelSerializer):
                 'slug': obj.hidden_by_slug
             })
         else:
+            return None
+
+
+class CategoryFeedSerializer(BasicCategorySerializer):
+    class Meta:
+        model = Category
+        fields = (
+            'name',
+            'css_class',
+            'absolute_url',
+        )
+
+
+class PostFeedSerializer(PostSerializer):
+    poster = BasicUserSerializer(many=False, read_only=True)
+    category = CategoryFeedSerializer(many=False, read_only=True)
+
+    thread = serializers.SerializerMethodField()
+    top_category = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Post
+        fields = PostSerializer.Meta.fields + [
+            'category',
+
+            'thread',
+            'top_category'
+        ]
+
+    def get_thread(self, obj):
+        return {
+            'title': obj.thread.title,
+            'url': obj.thread.get_absolute_url()
+        }
+
+    def get_top_category(self, obj):
+        try:
+            return CategoryFeedSerializer(obj.top_category).data
+        except AttributeError:
             return None

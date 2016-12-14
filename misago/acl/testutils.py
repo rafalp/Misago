@@ -1,4 +1,5 @@
 # pylint: disable=protected-access
+from copy import deepcopy
 from hashlib import md5
 
 from misago.core import threadstore
@@ -25,7 +26,7 @@ def fake_post_data(target, data_dict):
 
 def override_acl(user, new_acl):
     """overrides user permissions with specified ones"""
-    final_cache = user.acl
+    final_cache = deepcopy(user.acl)
     final_cache.update(new_acl)
 
     if user.is_authenticated():

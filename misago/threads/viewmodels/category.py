@@ -5,20 +5,23 @@ from misago.categories.models import Category
 from misago.categories.permissions import allow_browse_category, allow_see_category
 from misago.categories.serializers import BasicCategorySerializer
 from misago.core.shortcuts import validate_slug
+from misago.core.viewmodel import ViewModel as BaseViewModel
+
+from ..permissions import allow_use_private_threads
 
 
-class ViewModel(object):
+__all__ = ['ThreadsRootCategory', 'ThreadsCategory', 'PrivateThreadsCategory']
+
+
+class ViewModel(BaseViewModel):
     def __init__(self, request, **kwargs):
         self._categories = self.get_categories(request)
         add_acl(request.user, self._categories)
 
         self._model = self.get_category(request, self._categories, **kwargs)
+
         self._subcategories = list(filter(self._model.has_child, self._categories))
         self._children = list(filter(lambda s: s.parent_id == self._model.pk, self._subcategories))
-
-    @property
-    def model(self):
-        return self._model
 
     @property
     def categories(self):
@@ -79,4 +82,10 @@ class ThreadsCategory(ThreadsRootCategory):
 
 
 class PrivateThreadsCategory(ViewModel):
-    pass
+    def get_categories(self, request):
+        return [Category.objects.private_threads()]
+
+    def get_category(self, request, categories, **kwargs):
+        allow_use_private_threads(request.user)
+
+        return categories[0]

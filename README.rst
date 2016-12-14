@@ -43,27 +43,38 @@ To start Misago site locally, first setup and activate virtual environment for i
     python setup.py install
     misago-start.py testforum
 
-This will install Misago in your virtual environment and will make pre-configured Misago site for you named "testforum". It will also expose "requirements.txt" for you to use to install Misago dependencies::
+This will install Misago and its dependencies in your virtual environment and will make pre-configured Misago site for you named ``testforum``::
 
-    pip install -r requirements.txt
+    testforum
+      + avatar_store
+      + media
+      + testforum
+        * __init__.py
+        * settings.py
+        * urls.py
+        * wsgi.py
+      + static
+      + theme
+      + cron.txt
+      + manage.py
 
-Now cd to "testforum" and edit "settings.py" file in your editor of choice in order to set up basic settings like database connection, default timezone or interface language.
+Now  edit ``settings.py`` file in your editor of choice in order to set up basic settings like database connection, default timezone or interface language.
 
-Next, initialize database by using migrate commands provided by manage.py admin utility::
+Next, initialize database by using migrate commands provided by ``manage.py`` admin utility that you'll find in directory up one level from where ``settings.py`` is::
 
-    cd testforum
     python manage.py migrate
 
-Then, call "createsuperuser" command to create super admin in database::
+Then, call ``createsuperuser`` command to create super admin in database::
 
     python manage.py createsuperuser
 
-Finally start development server using "runserver" command::
+Finally start development server using ``runserver`` command::
 
     python manage.py runserver
 
+If nothing is wrong with your setup, Django developer server will start, enabling you to visit ``127.0.0.1:8000`` in your browser and see the forum index. You should now be able to sign in to user account that you have created ealier.
 
-If nothing is wrong with your setup, Django developer server will start, enabling you to visit 127.0.0.1:8000 in your browser and see the (incomplete) forum index.
+You will likely want to customize your site via changing settings and creating categories. You can do this with Admin Control Panel available under ``127.0.0.1:8000/admincp/`` url.
 
 
 Frontend

@@ -1,6 +1,8 @@
 import random
 import time
 
+from faker import Factory
+
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.db.transaction import atomic
@@ -8,7 +10,6 @@ from django.template.defaultfilters import linebreaks_filter
 from django.utils import timezone
 from django.utils.six.moves import range
 
-from faker import Factory
 from misago.categories.models import Category
 from misago.core.management.progressbar import show_progress
 from misago.threads.checksums import update_post_checksum
@@ -16,16 +17,19 @@ from misago.threads.models import Post, Thread
 
 
 class Command(BaseCommand):
-    help = 'Adds random threads and posts for testing purposes'
+    help = 'Creates random threads and posts for dev and testing purposes.'
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            'threads',
+            help="number of threads to create",
+            nargs='?',
+            type=int,
+            default=5
+        )
 
     def handle(self, *args, **options):
-        try:
-            fake_threads_to_create = int(args[0])
-        except IndexError:
-            fake_threads_to_create = 5
-        except ValueError:
-            self.stderr.write("\nOptional argument should be integer.")
-            sys.exit(1)
+        items_to_create = options['threads']
 
         categories = list(Category.objects.all_categories())
 
@@ -40,8 +44,9 @@ class Command(BaseCommand):
 
         created_threads = 0
         start_time = time.time()
-        show_progress(self, created_threads, fake_threads_to_create)
-        for i in range(fake_threads_to_create):
+        show_progress(self, created_threads, items_to_create)
+
+        while created_threads < items_to_create:
             with atomic():
                 datetime = timezone.now()
                 category = random.choice(categories)
@@ -104,10 +109,6 @@ class Command(BaseCommand):
                     fake_message = "\n\n".join(fake.paragraphs())
 
                     is_unapproved = random.randint(0, 100) > 97
-                    if not is_unapproved:
-                        is_hidden = random.randint(0, 100) > 97
-                    else:
-                        is_hidden = False
 
                     post = Post.objects.create(
                         category=category,
@@ -117,13 +118,30 @@ class Command(BaseCommand):
                         poster_ip=fake.ipv4(),
                         original=fake_message,
                         parsed=linebreaks_filter(fake_message),
-                        is_hidden=is_hidden,
                         is_unapproved=is_unapproved,
                         posted_on=datetime,
                         updated_on=datetime
                     )
+
+                    if not is_unapproved:
+                        is_hidden = random.randint(0, 100) > 97
+                    else:
+                        is_hidden = False
+
+                    if is_hidden:
+                        post.is_hidden = True
+
+                        if random.randint(0, 100) < 80:
+                            user = User.objects.order_by('?')[:1][0]
+                            post.hidden_by = user
+                            post.hidden_by_name = user.username
+                            post.hidden_by_slug = user.username
+                        else:
+                            post.hidden_by_name = fake.first_name()
+                            post.hidden_by_slug = post.hidden_by_name.lower()
+
                     update_post_checksum(post)
-                    post.save(update_fields=['checksum'])
+                    post.save()
 
                     user.posts += 1
                     user.save()
@@ -133,7 +151,7 @@ class Command(BaseCommand):
 
                 created_threads += 1
                 show_progress(
-                    self, created_threads, fake_threads_to_create, start_time)
+                    self, created_threads, items_to_create, start_time)
 
         pinned_threads = random.randint(0, int(created_threads * 0.025)) or 1
         self.stdout.write('\nPinning %s threads...' % pinned_threads)

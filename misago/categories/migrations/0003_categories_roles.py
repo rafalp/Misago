@@ -40,7 +40,7 @@ def create_default_categories_roles(apps, schema_editor):
             # threads perms
             'misago.threads.permissions.threads': {
                 'can_see_all_threads': 1,
-                'can_see_posts_likes': 2,
+                'can_see_posts_likes': 1,
                 'can_download_other_users_attachments': 1,
                 'can_like_posts': 1
             },

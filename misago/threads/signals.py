@@ -8,7 +8,7 @@ from misago.categories.signals import delete_category_content, move_category_con
 from misago.core.pgutils import batch_delete, batch_update
 from misago.users.signals import delete_user_content, username_changed
 
-from .models import Attachment, Post, Thread, Poll, PollVote
+from .models import Attachment, Poll, PollVote, Post, PostEdit, PostLike, Thread
 
 
 delete_post = Signal()
@@ -38,7 +38,11 @@ def merge_posts(sender, **kwargs):
 
 @receiver(move_thread)
 def move_thread_content(sender, **kwargs):
-    sender.post_set.update(category=sender.category)
+    Post.objects.filter(thread=sender).update(category=sender.category)
+    PostEdit.objects.filter(thread=sender).update(category=sender.category)
+    PostLike.objects.filter(thread=sender).update(category=sender.category)
+    Poll.objects.filter(thread=sender).update(category=sender.category)
+    PollVote.objects.filter(thread=sender).update(category=sender.category)
 
 
 @receiver(delete_category_content)
@@ -53,6 +57,8 @@ def move_category_threads(sender, **kwargs):
 
     Thread.objects.filter(category=sender).update(category=new_category)
     Post.objects.filter(category=sender).update(category=new_category)
+    PostEdit.objects.filter(category=sender).update(category=new_category)
+    PostLike.objects.filter(category=sender).update(category=new_category)
     Poll.objects.filter(category=sender).update(category=new_category)
     PollVote.objects.filter(category=sender).update(category=new_category)
 
@@ -104,6 +110,16 @@ def update_usernames(sender, **kwargs):
         last_editor_slug=sender.slug
     )
 
+    PostEdit.objects.filter(editor=sender).update(
+        editor_name=sender.username,
+        editor_slug=sender.slug
+    )
+
+    PostLike.objects.filter(user=sender).update(
+        user_name=sender.username,
+        user_slug=sender.slug
+    )
+
     Attachment.objects.filter(uploader=sender).update(
         uploader_name=sender.username,
         uploader_slug=sender.slug
@@ -122,7 +138,7 @@ def update_usernames(sender, **kwargs):
 
 @receiver(pre_delete, sender=get_user_model())
 def remove_unparticipated_private_threads(sender, **kwargs):
-    threads_qs = kwargs['instance'].private_thread_set.all()
+    threads_qs = kwargs['instance'].privatethread_set.all()
     for thread in batch_update(threads_qs, 50):
         if thread.participants.count() == 1:
             with transaction.atomic():

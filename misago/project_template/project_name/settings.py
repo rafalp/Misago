@@ -23,8 +23,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = DEBUG
-
 # Hosts allowed to POST to your site
 # If you are unsure, just enter here your host name, eg. 'mysite.com'
 
@@ -94,11 +92,20 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # assets and templates to your site
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'theme', 'static'),
-) + STATICFILES_DIRS
+)
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'theme', 'templates'),
-) + TEMPLATE_DIRS
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, 'theme', 'templates'),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': DEFAULT_CONTEXT_PROCESSORS,
+        },
+    },
+]
 
 
 # SECURITY WARNING: keep the secret key used in production secret!

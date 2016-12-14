@@ -8,16 +8,14 @@ from django.core.validators import validate_email
 class Command(BaseCommand):
     help = 'Sends test e-mail to given address'
 
+    def add_arguments(self, parser):
+        parser.add_argument('email', type=str)
+
     def handle(self, *args, **options):
         try:
-            if len(args) != 1:
-                raise ValueError()
-            email = args[0]
+            email = options['email']
             validate_email(email)
             self.send_message(email)
-        except ValueError:
-            self.stderr.write("Command accepts exactly "
-                              "one argument (e-mail address)")
         except ValidationError:
             self.stderr.write("This isn't valid e-mail address")
 

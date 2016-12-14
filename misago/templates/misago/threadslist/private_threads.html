@@ -1,0 +1,69 @@
+{% extends "misago/threadslist/base.html" %}
+{% load i18n misago_shorthands misago_stringutils %}
+
+
+{% block title %}
+{% if list_name %}
+  {% if paginator.page > 1 %}
+    {{ list_name }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ category }} | {{ block.super }}
+  {% else %}
+    {{ list_name }} | {{ category }} | {{ block.super }}
+  {% endif %}
+{% elif paginator.page > 1 %}
+  {{ category }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ block.super }}
+{% else %}
+  {{ category }} | {{ block.super }}
+{% endif %}
+{% endblock title %}
+
+
+{% block extra-css %}
+page-private-threads
+{% endblock extra-css %}
+
+
+{% block page-header %}
+<div class="page-header tabbed">
+  <div class="container">
+    <a href="{{ category.parent.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="btn btn-default btn-aligned btn-icon btn-go-back pull-left">
+      <span class="material-icon">
+        keyboard_arrow_left
+      </span>
+    </a>
+
+    <h1 class="pull-left">
+      {{ category }}
+    </h1>
+  </div>
+  {% if user.is_authenticated %}
+    {% include "misago/threadslist/tabs.html" with hide_unapproved=True %}
+  {% endif %}
+</div>
+{% endblock page-header %}
+
+
+{% block list-container %}
+  <div class="category-description">
+    <div class="page-lead">
+      <p>{% trans "Private threads are threads which only those that started them and those they have invited may see and participate in." %}</p>
+    </div>
+  </div>
+
+  {{ block.super }}
+{% endblock list-container%}
+
+
+{% block thread %}
+  {% include "misago/threadslist/thread.html" with hide_path=True %}
+{% endblock thread %}
+
+
+{% block list-empty-message %}
+  {% if list_type == 'all' %}
+    <p class="lead">
+      {% trans "You aren't participating in any private threads." %}
+    </p>
+  {% else %}
+    {% trans "No threads matching specified criteria were found." %}
+  {% endif %}
+{% endblock list-empty-message %}

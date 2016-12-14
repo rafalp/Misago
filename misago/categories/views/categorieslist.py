@@ -1,5 +1,5 @@
-from django.core.urlresolvers import reverse
 from django.shortcuts import render
+from django.urls import reverse
 
 from ..serializers import CategorySerializer
 from ..utils import get_categories_tree

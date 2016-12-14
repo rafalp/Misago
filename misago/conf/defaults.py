@@ -26,13 +26,6 @@ INSTALLED_APPS = (
 )
 """
 
-# Build paths inside the project like this: os.path.join(MISAGO_BASE_DIR, ...)
-import os
-
-
-MISAGO_BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-
 # Default JS debug to false
 # This setting used exclusively by test runner and isn't part of public API
 _MISAGO_JS_DEBUG = False
@@ -41,10 +34,15 @@ _MISAGO_JS_DEBUG = False
 # Application definition
 
 INSTALLED_APPS = (
-    'django.contrib.admin',
+    # Load Misago's locale/templates/static files
+    'misago',
+
     # Keep misago.users above django.contrib.auth
     # so our management commands take precedence over theirs
     'misago.users',
+
+    # Django and 3rd party apps
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -55,6 +53,8 @@ INSTALLED_APPS = (
     'crispy_forms',
     'mptt',
     'rest_framework',
+
+    # Misago apps
     'misago.admin',
     'misago.acl',
     'misago.core',
@@ -68,6 +68,7 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'misago.users.middleware.AvatarServerMiddleware',
     'misago.users.middleware.RealIPMiddleware',
     'misago.core.middleware.frontendcontext.FrontendContextMiddleware',
@@ -86,13 +87,13 @@ MIDDLEWARE_CLASSES = (
     'misago.core.middleware.threadstore.ThreadStoreMiddleware',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
+DEFAULT_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'django.core.context_processors.tz',
+    'django.template.context_processors.debug',
+    'django.template.context_processors.i18n',
+    'django.template.context_processors.media',
+    'django.template.context_processors.static',
+    'django.template.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
 
     'misago.core.context_processors.site_address',
@@ -131,14 +132,15 @@ MISAGO_POSTING_MIDDLEWARES = (
     'misago.threads.api.postingendpoint.floodprotection.FloodProtectionMiddleware',
 
     'misago.threads.api.postingendpoint.category.CategoryMiddleware',
+    'misago.threads.api.postingendpoint.privatethread.PrivateThreadMiddleware',
     'misago.threads.api.postingendpoint.reply.ReplyMiddleware',
     'misago.threads.api.postingendpoint.attachments.AttachmentsMiddleware',
-    # 'misago.threads.api.postingendpoint.participants.ThreadParticipantsFormMiddleware',
+    'misago.threads.api.postingendpoint.participants.ParticipantsMiddleware',
     'misago.threads.api.postingendpoint.pin.PinMiddleware',
     'misago.threads.api.postingendpoint.close.CloseMiddleware',
     'misago.threads.api.postingendpoint.hide.HideMiddleware',
     'misago.threads.api.postingendpoint.protect.ProtectMiddleware',
-    # 'misago.threads.api.postingendpoint.recordedit.RecordEditMiddleware',
+    'misago.threads.api.postingendpoint.recordedit.RecordEditMiddleware',
     'misago.threads.api.postingendpoint.updatestats.UpdateStatsMiddleware',
     'misago.threads.api.postingendpoint.mentions.MentionsMiddleware',
     'misago.threads.api.postingendpoint.subscribe.SubscribeMiddleware',
@@ -153,21 +155,6 @@ MISAGO_POSTING_MIDDLEWARES = (
 MISAGO_THREAD_TYPES = (
     'misago.threads.threadtypes.thread.Thread',
     'misago.threads.threadtypes.privatethread.PrivateThread',
-)
-
-
-# Register Misago directories
-
-LOCALE_PATHS = (
-    os.path.join(MISAGO_BASE_DIR, 'locale'),
-)
-
-STATICFILES_DIRS = (
-    os.path.join(MISAGO_BASE_DIR, 'static'),
-)
-
-TEMPLATE_DIRS = (
-    os.path.join(MISAGO_BASE_DIR, 'templates'),
 )
 
 
@@ -344,7 +331,10 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # Rest Framework Configuration
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        'misago.users.rest_permissions.IsAuthenticatedOrReadOnly',
+        'misago.core.rest_permissions.IsAuthenticatedOrReadOnly',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
     ),
     'EXCEPTION_HANDLER': 'misago.core.exceptionhandler.handle_api_exception',
     'UNAUTHENTICATED_USER': 'misago.users.models.AnonymousUser',
@@ -367,3 +357,6 @@ DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.signals.SignalsPanel',
     'debug_toolbar.panels.logging.LoggingPanel',
 )
+
+# Show debug toolbar for localhost
+INTERNAL_IPS = ['127.0.0.1']

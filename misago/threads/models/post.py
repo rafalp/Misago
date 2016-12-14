@@ -1,10 +1,13 @@
+from __future__ import unicode_literals
+
 import copy
 
 from django.contrib.postgres.fields import JSONField
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.dispatch import receiver
+from django.urls import reverse
 from django.utils import six, timezone
+from django.utils.encoding import python_2_unicode_compatible
 
 from misago.conf import settings
 from misago.core.utils import parse_iso8601_string
@@ -14,6 +17,7 @@ from .. import threadtypes
 from ..checksums import is_post_valid, update_post_checksum
 
 
+@python_2_unicode_compatible
 class Post(models.Model):
     category = models.ForeignKey('misago_categories.Category')
     thread = models.ForeignKey('misago_threads.Thread')
@@ -67,13 +71,23 @@ class Post(models.Model):
     event_type = models.CharField(max_length=255, null=True, blank=True)
     event_context = JSONField(null=True, blank=True)
 
+    likes = models.PositiveIntegerField(default=0)
+    last_likes = JSONField(null=True, blank=True)
+
+    liked_by = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='liked_post_set',
+        through='misago_threads.PostLike',
+    )
+
     class Meta:
         index_together = [
+            ('thread', 'id'), # speed up threadview for team members
             ('is_event', 'is_hidden'),
             ('poster', 'posted_on')
         ]
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s...' % self.original[10:].strip()
 
     def delete(self, *args, **kwargs):
@@ -132,8 +146,14 @@ class Post(models.Model):
     def get_api_url(self):
         return self.thread_type.get_post_api_url(self)
 
+    def get_likes_api_url(self):
+        return self.thread_type.get_post_likes_api_url(self)
+
     def get_editor_api_url(self):
         return self.thread_type.get_post_editor_api_url(self)
+
+    def get_edits_api_url(self):
+        return self.thread_type.get_post_edits_api_url(self)
 
     def get_read_api_url(self):
         return self.thread_type.get_post_read_api_url(self)

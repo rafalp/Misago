@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from rest_framework import serializers
 
@@ -250,4 +250,6 @@ class UserProfileSerializer(UserSerializer):
             'moderate_username': reverse(
                 'misago:api:user-moderate-username',kwargs={'pk': obj.pk}),
             'delete': reverse('misago:api:user-delete', kwargs={'pk': obj.pk}),
+            'threads': reverse('misago:api:user-threads', kwargs={'pk': obj.pk}),
+            'posts': reverse('misago:api:user-posts', kwargs={'pk': obj.pk}),
         }

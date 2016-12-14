@@ -4,25 +4,36 @@ from misago.conf import settings
 
 
 class ThreadParticipantManager(models.Manager):
-    def remove_participant(self, thread, user):
-        ThreadParticipant.objects.filter(thread=thread, user=user).delete()
-
     def set_owner(self, thread, user):
-        thread_owner = ThreadParticipant.objects.filter(
-            thread=thread, is_owner=True)
-        thread_owner.update(is_owner=False)
+        ThreadParticipant.objects.filter(
+            thread=thread,
+            is_owner=True
+        ).update(is_owner=False)
 
         self.remove_participant(thread, user)
-        ThreadParticipant.objects.create(
-            thread=thread,
-            user=user,
-            is_owner=True)
 
-    def add_participant(self, thread, user, is_owner=False):
         ThreadParticipant.objects.create(
             thread=thread,
             user=user,
-            is_owner=is_owner)
+            is_owner=True
+        )
+
+    def add_participants(self, thread, users):
+        bulk = []
+        for user in users:
+            bulk.append(ThreadParticipant(
+                thread=thread,
+                user=user,
+                is_owner=False
+            ))
+
+        ThreadParticipant.objects.bulk_create(bulk)
+
+    def remove_participant(self, thread, user):
+        ThreadParticipant.objects.filter(
+            thread=thread,
+            user=user
+        ).delete()
 
 
 class ThreadParticipant(models.Model):

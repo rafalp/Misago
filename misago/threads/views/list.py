@@ -1,11 +1,10 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic import View
 
-from ..viewmodels.category import PrivateThreadsCategory, ThreadsCategory, ThreadsRootCategory
-from ..viewmodels.threads import ForumThreads, PrivateThreads
+from ..viewmodels import ForumThreads, PrivateThreads, PrivateThreadsCategory, ThreadsCategory, ThreadsRootCategory
 
 
 class ListBase(View):
@@ -66,7 +65,6 @@ class ForumThreads(ListBase):
 
     def get_default_frontend_context(self):
         return {
-            'THREADS_API': reverse('misago:api:thread-list'),
             'MERGE_THREADS_API': reverse('misago:api:thread-merge'),
         }
 

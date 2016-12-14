@@ -4,9 +4,10 @@ from django.utils.translation import gettext as _
 from rest_framework.response import Response
 
 from misago.acl import add_acl
-from misago.categories.models import Category
+from misago.categories.models import THREADS_ROOT_NAME, Category
 
 from ...permissions.threads import can_start_thread
+from ...threadtypes import trees_map
 
 
 def thread_start_editor(request):
@@ -15,9 +16,14 @@ def thread_start_editor(request):
 
     # list of categories that allow or contain subcategories that allow new threads
     available = []
-
     categories = []
-    for category in Category.objects.filter(pk__in=request.user.acl['browseable_categories']).order_by('-lft'):
+
+    queryset = Category.objects.filter(
+        pk__in=request.user.acl['browseable_categories'],
+        tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
+    ).order_by('-lft')
+
+    for category in queryset:
         add_acl(request.user, category)
 
         post = False

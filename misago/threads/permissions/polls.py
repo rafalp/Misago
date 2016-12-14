@@ -1,6 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _, ungettext
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ungettext
 
 from misago.acl import algebra
 from misago.acl.decorators import return_boolean
@@ -130,11 +131,6 @@ def allow_start_poll(user, target):
             raise PermissionDenied(_("This category is closed. You can't start polls in it."))
         if target.is_closed:
             raise PermissionDenied(_("This thread is closed. You can't start polls in it."))
-    try:
-        if target.poll and target.poll.pk:
-            raise PermissionDenied(_("There's already a poll in this thread."))
-    except Poll.DoesNotExist:
-        pass
 can_start_poll = return_boolean(allow_start_poll)
 
 

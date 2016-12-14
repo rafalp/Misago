@@ -4,7 +4,6 @@ works with double authentication fields on user model
 """
 import sys
 from getpass import getpass
-from optparse import make_option
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -23,29 +22,25 @@ class NotRunningInTTYException(Exception):
 class Command(BaseCommand):
     help = 'Used to create a superuser.'
 
-    def __init__(self, *args, **kwargs):
-        super(Command, self).__init__(*args, **kwargs)
-
-        self.option_list = BaseCommand.option_list + (
-            make_option('--username', dest='username', default=None,
-                        help='Specifies the username for the superuser.'),
-            make_option('--email', dest='email', default=None,
-                        help='Specifies the username for the superuser.'),
-            make_option('--password', dest='password', default=None,
-                        help='Specifies the username for the superuser.'),
-            make_option('--noinput', action='store_false', dest='interactive',
-                        default=True,
-                        help=('Tells Miago to NOT prompt the user for input '
-                              'of any kind. You must use --username with '
-                              '--noinput, along with an option for any other '
-                              'required field. Superusers created with '
-                              '--noinput will  not be able to log in until '
-                              'they\'re given a valid password.')),
-            make_option('--database', action='store', dest='database',
-                        default=DEFAULT_DB_ALIAS,
-                        help=('Specifies the database to use. '
-                              'Default is "default".')),
-        )
+    def add_arguments(self, parser):
+        parser.add_argument('--username', dest='username', default=None,
+                    help='Specifies the username for the superuser.')
+        parser.add_argument('--email', dest='email', default=None,
+                    help='Specifies the username for the superuser.')
+        parser.add_argument('--password', dest='password', default=None,
+                    help='Specifies the username for the superuser.')
+        parser.add_argument('--noinput', action='store_false', dest='interactive',
+                    default=True,
+                    help=('Tells Misago to NOT prompt the user for input '
+                          'of any kind. You must use --username with '
+                          '--noinput, along with an option for any other '
+                          'required field. Superusers created with '
+                          '--noinput will  not be able to log in until '
+                          'they\'re given a valid password.'))
+        parser.add_argument('--database', action='store', dest='database',
+                    default=DEFAULT_DB_ALIAS,
+                    help=('Specifies the database to use. '
+                          'Default is "default".'))
 
     def execute(self, *args, **options):
         self.stdin = options.get('stdin', sys.stdin)  # Used for testing

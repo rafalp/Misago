@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from .pages import user_profile, usercp, users_list
 from .serializers import AnonymousUserSerializer, AuthenticatedUserSerializer

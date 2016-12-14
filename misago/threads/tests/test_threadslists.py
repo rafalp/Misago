@@ -2,6 +2,7 @@ from datetime import timedelta
 from json import loads as json_loads
 
 from django.conf import settings
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import smart_str
 from django.utils.six.moves import range
@@ -29,7 +30,7 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
     def setUp(self):
         super(ThreadsListTestCase, self).setUp()
 
-        self.api_link = '/api/threads/'
+        self.api_link = reverse('misago:api:thread-list')
 
         self.root = Category.objects.root_category()
         self.first_category = Category.objects.get(slug='first-category')

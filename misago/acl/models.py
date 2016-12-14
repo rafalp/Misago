@@ -1,6 +1,7 @@
 # pylint: disable=attribute-defined-outside-init,pointless-string-statement
 from django.db import models
 from django.dispatch import receiver
+from django.utils.encoding import python_2_unicode_compatible
 
 from misago.core import serializer
 from misago.core.signals import secret_key_changed
@@ -8,6 +9,7 @@ from misago.core.signals import secret_key_changed
 from . import version as acl_version
 
 
+@python_2_unicode_compatible
 class BaseRole(models.Model):
     name = models.CharField(max_length=255)
     special_role = models.CharField(max_length=255, null=True, blank=True)
@@ -16,7 +18,7 @@ class BaseRole(models.Model):
     class Meta:
         abstract = True
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):

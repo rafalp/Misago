@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 import json
 
-from django.core.urlresolvers import reverse
 from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
+from django.urls import reverse
 from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
@@ -188,9 +188,36 @@ class EditReplyTests(AuthenticatedUserTestCase):
             ]
         })
 
+    def test_edit_reply_no_change(self):
+        """endpoint isn't bumping edits count if no change was made to post's body"""
+        self.override_acl()
+        self.assertEqual(self.post.edits_record.count(), 0)
+
+        response = self.put(self.api_link, data={
+            'post': self.post.original
+        })
+        self.assertEqual(response.status_code, 200)
+
+        thread = Thread.objects.get(pk=self.thread.pk)
+
+        self.override_acl()
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertContains(response, self.post.parsed)
+
+        post = self.thread.post_set.order_by('id').last()
+        self.assertEqual(post.edits, 0)
+        self.assertEqual(post.original, self.post.original)
+        self.assertIsNone(post.last_editor_id, self.user.id)
+        self.assertIsNone(post.last_editor_name, self.user.username)
+        self.assertIsNone(post.last_editor_slug, self.user.slug)
+
+        self.assertEqual(self.post.edits_record.count(), 0)
+
     def test_edit_reply(self):
         """endpoint updates reply"""
         self.override_acl()
+        self.assertEqual(self.post.edits_record.count(), 0)
+
         response = self.put(self.api_link, data={
             'post': "This is test edit!"
         })
@@ -208,6 +235,16 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.assertEqual(post.last_editor_id, self.user.id)
         self.assertEqual(post.last_editor_name, self.user.username)
         self.assertEqual(post.last_editor_slug, self.user.slug)
+
+        self.assertEqual(self.post.edits_record.count(), 1)
+
+        post_edit = post.edits_record.last()
+        self.assertEqual(post_edit.edited_from, self.post.original)
+        self.assertEqual(post_edit.edited_to, post.original)
+
+        self.assertEqual(post_edit.editor_id, self.user.id)
+        self.assertEqual(post_edit.editor_name, self.user.username)
+        self.assertEqual(post_edit.editor_slug, self.user.slug)
 
     def test_edit_first_post_hidden(self):
         """endpoint updates hidden thread's first post"""

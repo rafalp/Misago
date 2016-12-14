@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.utils.translation import ugettext as _
 
 from misago.conf import settings

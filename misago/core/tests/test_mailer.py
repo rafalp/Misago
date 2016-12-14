@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core import mail
-from django.core.urlresolvers import reverse
 from django.test import TestCase, override_settings
+from django.urls import reverse
 
 
 @override_settings(ROOT_URLCONF='misago.core.testproject.urls')

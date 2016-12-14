@@ -7,15 +7,39 @@
 {% block section %}
 <div class="profile-posts">
 
-  <p class="lead">
-    {% if is_authenticated_user %}
-      {% trans "You have no messages posted." %}
-    {% else %}
-      {% blocktrans trimmed with username=profile.username %}
-        {{ username }} posted no messages.
-      {% endblocktrans %}
-    {% endif %}
-  </p>
+  {% if posts %}
+    <div>
+      <nav class="toolbar">
+        <h3 class="toolbar-left">
+          {% if is_authenticated_user %}
+            {% blocktrans trimmed count posts=paginator.count %}
+              You have posted {{ posts }} message.
+            {% plural %}
+              You have posted {{ posts }} messages.
+            {% endblocktrans %}
+          {% else %}
+            {% blocktrans trimmed count posts=paginator.count with username=profile %}
+              {{ username }} has posted {{ posts }} message.
+            {% plural %}
+              {{ username }} has posted {{ posts }} messages.
+            {% endblocktrans %}
+          {% endif %}
+        </h3>
+      </nav>
+
+      {% include "misago/profile/feed.html" %}
+    </div>
+  {% else %}
+    <p class="lead">
+      {% if is_authenticated_user %}
+        {% trans "You have posted no messages" %}
+      {% else %}
+        {% blocktrans trimmed with username=profile.username %}
+          {{ username }} posted no messages.
+        {% endblocktrans %}
+      {% endif %}
+    </p>
+  {% endif %}
 
 </div>
 {% endblock section %}

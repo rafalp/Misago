@@ -1,40 +1,58 @@
-from django.core.urlresolvers import resolve
+from django.urls import resolve
 from django.utils import six
 from django.utils.six.moves.urllib.parse import urlparse
 
+from .models import PostLike
 
-def add_categories_to_threads(root_category, categories, threads):
+
+def add_categories_to_items(root_category, categories, items):
     categories_dict = {}
     for category in categories:
         categories_dict[category.pk] = category
 
     top_categories_map = {}
 
-    for thread in threads:
-        thread.top_category = None
-        thread.category = categories_dict[thread.category_id]
+    for item in items:
+        item.top_category = None
+        item.category = categories_dict[item.category_id]
 
-        if thread.category == root_category:
+        if item.category == root_category:
             continue
-        elif thread.category.parent_id == root_category.pk:
-            thread.top_category = thread.category
-        elif thread.category_id in top_categories_map:
-            thread.top_category = top_categories_map[thread.category_id]
-        elif root_category.has_child(thread.category):
-            # thread in subcategory resolution
+        elif item.category.parent_id == root_category.pk:
+            item.top_category = item.category
+        elif item.category_id in top_categories_map:
+            item.top_category = top_categories_map[item.category_id]
+        elif root_category.has_child(item.category):
+            # item in subcategory resolution
             for category in categories:
                 if (category.parent_id == root_category.pk and
-                        category.has_child(thread.category)):
-                    top_categories_map[thread.category_id] = category
-                    thread.top_category = category
+                        category.has_child(item.category)):
+                    top_categories_map[item.category_id] = category
+                    item.top_category = category
         else:
-            # global thread in other category resolution
+            # item from other category's scope
             for category in categories:
                 if category.level == 1 and (
-                        category == thread.category or
-                        category.has_child(thread.category)):
-                    top_categories_map[thread.category_id] = category
-                    thread.top_category = category
+                        category == item.category or
+                        category.has_child(item.category)):
+                    top_categories_map[item.category_id] = category
+                    item.top_category = category
+
+
+def add_likes_to_posts(user, posts):
+    if user.is_anonymous():
+        return
+
+    posts_map = {}
+    for post in posts:
+        posts_map[post.id] = post
+        post.is_liked = False
+
+    queryset = PostLike.objects.filter(
+        user=user, post_id__in=posts_map.keys())
+
+    for like in queryset.values('post_id'):
+        posts_map[like['post_id']].is_liked = True
 
 
 SUPPORTED_THREAD_ROUTES = {

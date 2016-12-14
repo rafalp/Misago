@@ -132,7 +132,7 @@
         </span>
       </li>
       {% endif %}
-      {% if thread.top_category %}
+      {% if thread.top_category and not hide_path %}
       <li class="thread-path">
         <a href="{{ thread.top_category.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="thread-category{% if thread.top_category.css_class %} thread-category-{{ thread.top_category.css_class }}{% endif %}">
           {{ thread.top_category.name }}
@@ -173,7 +173,7 @@
       </li>
     </ul>
     <ul class="thread-details-compact list-inline">
-      {% if thread.top_category %}
+      {% if thread.top_category and not hide_path %}
         {% if thread.top_category != thread.category %}
         <li class="thread-path">
           <a href="{{ thread.category.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="thread-category{% if thread.category.css_class %} thread-category-{{ thread.category.css_class }}{% endif %}">

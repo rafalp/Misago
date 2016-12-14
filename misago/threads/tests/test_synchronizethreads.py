@@ -1,3 +1,4 @@
+from django.core.management import call_command
 from django.test import TestCase
 from django.utils.six import StringIO
 from django.utils.six.moves import range
@@ -14,7 +15,7 @@ class SynchronizeThreadsTests(TestCase):
         command = synchronizethreads.Command()
 
         out = StringIO()
-        command.execute(stdout=out)
+        call_command(command, stdout=out)
         command_output = out.getvalue().strip()
 
         self.assertEqual(command_output, "No threads were found")
@@ -32,7 +33,7 @@ class SynchronizeThreadsTests(TestCase):
         command = synchronizethreads.Command()
 
         out = StringIO()
-        command.execute(stdout=out)
+        call_command(command, stdout=out)
 
         for i, thread in enumerate(threads):
             db_thread = category.thread_set.get(id=thread.id)

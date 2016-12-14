@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from misago.acl import add_acl
 from misago.categories.models import Category
 from misago.core.cache import cache
+from misago.core.rest_permissions import IsAuthenticatedOrReadOnly
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
 from misago.threads.moderation.posts import hide_post
 from misago.threads.moderation.threads import hide_thread
@@ -23,8 +24,9 @@ from ..online.utils import get_user_status
 from ..permissions.delete import allow_delete_user
 from ..permissions.moderation import allow_moderate_avatar, allow_rename_user
 from ..permissions.profiles import allow_browse_users_list, allow_follow_user, allow_see_ban_details
-from ..rest_permissions import BasePermission, IsAuthenticatedOrReadOnly, UnbannedAnonOnly
 from ..serializers import BanDetailsSerializer, UserProfileSerializer, UserSerializer
+from ..viewmodels import UserPosts, UserThreads
+from .rest_permissions import BasePermission, UnbannedAnonOnly
 from .userendpoints.avatar import avatar_endpoint, moderate_avatar_endpoint
 from .userendpoints.changeemail import change_email_endpoint
 from .userendpoints.changepassword import change_password_endpoint
@@ -217,3 +219,27 @@ class UserViewSet(viewsets.GenericViewSet):
                 profile.delete()
 
         return Response({'detail': 'ok'})
+
+    @detail_route(methods=['get'])
+    def threads(self, request, pk=None):
+        profile = self.get_user(pk)
+
+        page = get_int_or_404(request.query_params.get('page', 0))
+        if page == 1:
+            page = 0 # api allows explicit first page
+
+        feed = UserThreads(request, profile, page)
+
+        return Response(feed.get_frontend_context())
+
+    @detail_route(methods=['get'])
+    def posts(self, request, pk=None):
+        profile = self.get_user(pk)
+
+        page = get_int_or_404(request.query_params.get('page', 0))
+        if page == 1:
+            page = 0 # api allows explicit first page
+
+        feed = UserPosts(request, profile, page)
+
+        return Response(feed.get_frontend_context())

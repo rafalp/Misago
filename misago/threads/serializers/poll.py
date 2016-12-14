@@ -1,6 +1,7 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.crypto import get_random_string
-from django.utils.translation import ugettext as _, ungettext
+from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 
 from rest_framework import serializers
 
@@ -20,8 +21,8 @@ class PollSerializer(serializers.ModelSerializer):
     class Meta:
         model = Poll
         fields = (
+            'id',
             'poster_name',
-            'poster_slug',
             'posted_on',
             'length',
             'question',
@@ -194,4 +195,3 @@ class NewPollSerializer(EditPollSerializer):
 class PollChoiceSerializer(serializers.Serializer):
     hash = serializers.CharField(required=True, min_length=12, max_length=12)
     label = serializers.CharField(required=True, max_length=255)
-

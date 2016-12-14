@@ -1,4 +1,5 @@
 from django.db import models, transaction
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from misago.conf import settings
@@ -26,6 +27,7 @@ THREAD_WEIGHT_CHOICES = (
 )
 
 
+@python_2_unicode_compatible
 class Thread(models.Model):
     category = models.ForeignKey('misago_categories.Category')
     title = models.CharField(max_length=255)
@@ -82,7 +84,7 @@ class Thread(models.Model):
 
     participants = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
-        related_name='private_thread_set',
+        related_name='privatethread_set',
         through='ThreadParticipant',
         through_fields=('thread', 'user')
     )
@@ -94,7 +96,7 @@ class Thread(models.Model):
             ['category', 'replies'],
         ]
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def lock(self):

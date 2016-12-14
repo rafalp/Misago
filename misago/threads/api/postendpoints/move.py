@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
-from django.utils.translation import ugettext as _, ungettext
+from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 
 from rest_framework.response import Response
 
@@ -55,7 +56,7 @@ def clean_thread_for_move(request, thread, viewmodel):
         raise MoveError(_("Thread to move posts to is same as current one."))
 
     try:
-        new_thread = viewmodel(request, new_thread_id, select_for_update=True).model
+        new_thread = viewmodel(request, new_thread_id, select_for_update=True).unwrap()
     except PermissionDenied as e:
         raise MoveError(e.args[0])
     except Http404:

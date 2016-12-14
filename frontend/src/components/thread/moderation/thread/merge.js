@@ -1,6 +1,7 @@
 import React from 'react'; // jshint ignore:line
 import Form from 'misago/components/form';
 import FormGroup from 'misago/components/form-group'; // jshint ignore:line
+import MergePolls from 'misago/components/merge-polls'; // jshint ignore:line
 import * as thread from 'misago/reducers/thread';
 import ajax from 'misago/services/ajax'; // jshint ignore:line
 import modal from 'misago/services/modal'; // jshint ignore:line
@@ -41,25 +42,43 @@ export default class extends Form {
     });
   }
 
-  handleSuccess(success) {
-    snackbar.success(gettext("Thread has been merged with other one."));
-    window.location = success.url;
+  /* jshint ignore:start */
+  handleSuccess = (success) => {
+    this.handleSuccessUnmounted(success);
 
     // keep form loading
     this.setState({
       'isLoading': true
     });
-  }
+  };
 
-  handleError(rejection) {
+  handleSuccessUnmounted = (success) => {
+    snackbar.success(gettext("Thread has been merged with other one."));
+    window.location = success.url;
+  };
+
+  handleError = (rejection) => {
+    store.dispatch(thread.release());
+
     if (rejection.status === 400) {
-      snackbar.error(rejection.detail);
+      if (rejection.polls) {
+        modal.show(
+          <MergePolls
+            api={this.props.thread.api.merge}
+            data={{thread_url: this.state.url}}
+            polls={rejection.polls}
+            onError={this.handleError}
+            onSuccess={this.handleSuccessUnmounted}
+          />
+        );
+      } else {
+        snackbar.error(rejection.detail);
+      }
     } else {
       snackbar.apiError(rejection);
     }
-  }
+  };
 
-  /* jshint ignore:start */
   onUrlChange = (event) => {
     this.changeValue('url', event.target.value);
   };

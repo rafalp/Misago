@@ -3,6 +3,7 @@ from django.utils.translation import gettext as _
 
 from misago.acl import add_acl
 from misago.core.apipatch import ApiPatch
+
 from ...moderation import posts as moderation
 
 

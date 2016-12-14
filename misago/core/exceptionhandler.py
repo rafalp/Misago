@@ -1,6 +1,6 @@
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponsePermanentRedirect, JsonResponse
+from django.urls import reverse
 from django.utils import six
 from django.utils.translation import gettext as _
 

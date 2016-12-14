@@ -6,7 +6,7 @@ from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.core import mail
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import smart_str
 
@@ -32,7 +32,8 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             'thread_pk': self.thread.pk
         })
 
-        self.other_user = get_user_model().objects.create_user('Bob', 'bob@boberson.com', 'pass123')
+        self.other_user = get_user_model().objects.create_user(
+            'Bob', 'bob@boberson.com', 'pass123')
 
     def override_acl(self):
         new_acl = deepcopy(self.user.acl)

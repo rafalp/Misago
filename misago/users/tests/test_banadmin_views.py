@@ -1,6 +1,6 @@
 from datetime import date, datetime, timedelta
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.six.moves import range
 
 from misago.admin.testutils import AdminTestCase

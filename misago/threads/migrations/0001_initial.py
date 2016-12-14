@@ -49,6 +49,8 @@ class Migration(migrations.Migration):
                 ('is_event', models.BooleanField(default=False, db_index=True)),
                 ('event_type', models.CharField(max_length=255, null=True, blank=True)),
                 ('event_context', JSONField(null=True, blank=True)),
+                ('likes', models.PositiveIntegerField(default=0)),
+                ('last_likes', JSONField(blank=True, null=True)),
             ],
             options={
             },
@@ -196,6 +198,7 @@ class Migration(migrations.Migration):
         migrations.AlterIndexTogether(
             name='post',
             index_together=set([
+                ('thread', 'id'),
                 ('is_event', 'is_hidden'),
                 ('poster', 'posted_on'),
             ]),
@@ -219,6 +222,25 @@ class Migration(migrations.Migration):
             index_together=set([
                 ('send_email', 'last_read_on'),
             ]),
+        ),
+        migrations.CreateModel(
+            name='PostEdit',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('edited_on', models.DateTimeField(default=django.utils.timezone.now)),
+                ('editor_name', models.CharField(max_length=255)),
+                ('editor_slug', models.CharField(max_length=255)),
+                ('editor_ip', models.GenericIPAddressField()),
+                ('edited_from', models.TextField()),
+                ('edited_to', models.TextField()),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_categories.Category')),
+                ('editor', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
+                ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='edits_record', to='misago_threads.Post')),
+                ('thread', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.Thread')),
+            ],
+            options={
+                'ordering': ['-id'],
+            },
         ),
         migrations.CreateModel(
             name='Attachment',
@@ -284,11 +306,11 @@ class Migration(migrations.Migration):
             name='PollVote',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('voter_name', models.CharField(max_length=255, db_index=True)),
+                ('voter_name', models.CharField(max_length=255)),
                 ('voter_slug', models.CharField(max_length=255)),
                 ('voter_ip', models.GenericIPAddressField()),
                 ('voted_on', models.DateTimeField(default=django.utils.timezone.now)),
-                ('choice_hash', models.CharField(max_length=12)),
+                ('choice_hash', models.CharField(db_index=True, max_length=12)),
                 ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_categories.Category')),
                 ('poll', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.Poll')),
                 ('thread', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.Thread')),
@@ -300,5 +322,39 @@ class Migration(migrations.Migration):
             index_together=set([
                 ('poll', 'voter_name'),
             ]),
+        ),
+        migrations.CreateModel(
+            name='PostLike',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('user_name', models.CharField(max_length=255, db_index=True)),
+                ('user_slug', models.CharField(max_length=255)),
+                ('user_ip', models.GenericIPAddressField()),
+                ('liked_on', models.DateTimeField(default=django.utils.timezone.now)),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_categories.Category')),
+            ],
+            options={
+                'ordering': ['-id'],
+            },
+        ),
+        migrations.AddField(
+            model_name='postlike',
+            name='post',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.Post'),
+        ),
+        migrations.AddField(
+            model_name='postlike',
+            name='thread',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_threads.Thread'),
+        ),
+        migrations.AddField(
+            model_name='postlike',
+            name='user',
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
+        ),
+        migrations.AddField(
+            model_name='post',
+            name='liked_by',
+            field=models.ManyToManyField(related_name='liked_post_set', through='misago_threads.PostLike', to=settings.AUTH_USER_MODEL),
         ),
     ]

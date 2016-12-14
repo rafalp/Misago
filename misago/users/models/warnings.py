@@ -4,6 +4,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from misago.core import threadstore
@@ -55,6 +56,7 @@ class WarningLevelManager(models.Manager):
         return OrderedDict(levels)
 
 
+@python_2_unicode_compatible
 class WarningLevel(models.Model):
     name = models.CharField(max_length=255)
     level = models.PositiveIntegerField(default=1, db_index=True)
@@ -66,7 +68,7 @@ class WarningLevel(models.Model):
 
     objects = WarningLevelManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):

@@ -5,14 +5,14 @@
 {% block title %}
 {% if list_name %}
   {% if paginator.page > 1 %}
-    {{ list_name }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ category.name }} | {{ block.super }}
+    {{ list_name }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ category }} | {{ block.super }}
   {% else %}
-    {{ list_name }} | {{ category.name }} | {{ block.super }}
+    {{ list_name }} | {{ category }} | {{ block.super }}
   {% endif %}
 {% elif paginator.page > 1 %}
-  {{ category.name }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ block.super }}
+  {{ category }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ block.super }}
 {% else %}
-  {{ category.name }} | {{ block.super }}
+  {{ category }} | {{ block.super }}
 {% endif %}
 {% endblock title %}
 
@@ -41,7 +41,7 @@
     </a>
 
     <h1 class="pull-left">
-      {{ category.name }}
+      {{ category }}
     </h1>
   </div>
   {% if user.is_authenticated %}

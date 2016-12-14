@@ -8,7 +8,7 @@ from django.views.generic import View
 from misago.conf import settings
 
 from ..permissions.threads import exclude_invisible_posts
-from ..viewmodels.thread import ForumThread
+from ..viewmodels import ForumThread, PrivateThread
 
 
 class GotoView(View):
@@ -16,7 +16,7 @@ class GotoView(View):
     read_aware=False
 
     def get(self, request, pk, slug, **kwargs):
-        thread = self.get_thread(request, pk, slug).model
+        thread = self.get_thread(request, pk, slug).unwrap()
         self.test_permissions(request, thread)
 
         posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)
@@ -96,5 +96,30 @@ class ThreadGotoUnapprovedView(GotoView):
         unapproved_post = posts_queryset.filter(is_unapproved=True).order_by('id').first()
         if unapproved_post:
             return unapproved_post
+        else:
+            return posts_queryset.order_by('id').last()
+
+
+class PrivateThreadGotoPostView(GotoView):
+    thread = PrivateThread
+
+    def get_target_post(self, thread, posts_queryset, **kwargs):
+        return get_object_or_404(posts_queryset, pk=kwargs['post'])
+
+
+class PrivateThreadGotoLastView(GotoView):
+    thread = PrivateThread
+
+    def get_target_post(self, thread, posts_queryset, **kwargs):
+        return posts_queryset.order_by('id').last()
+
+
+class PrivateThreadGotoNewView(GotoView):
+    thread = PrivateThread
+    read_aware = True
+
+    def get_target_post(self, thread, posts_queryset, **kwargs):
+        if thread.is_new:
+            return posts_queryset.filter(posted_on__gt=thread.last_read_on).order_by('id').first()
         else:
             return posts_queryset.order_by('id').last()

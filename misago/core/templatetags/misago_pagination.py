@@ -1,6 +1,6 @@
 from django import template
-from django.core.urlresolvers import reverse
 from django.template.loader import get_template
+from django.urls import reverse
 
 
 register = template.Library()
