@@ -18,8 +18,8 @@ urlpatterns = [
     url(r'^', include('misago.urls', namespace='misago')),
 
     # Javascript translations
-    url(r'^django-i18n.js$', javascript_catalog),
-    url(r'^moment-i18n.js$', momentjs_catalog),
+    url(r'^django-i18n.js$', javascript_catalog, name='django-i18n'),
+    url(r'^moment-i18n.js$', momentjs_catalog, name='moment-i18n'),
 
     # Uncomment next line if you plan to use Django admin for 3rd party apps
     #url(r'^django-admin/', include(admin.site.urls)),
