@@ -307,15 +307,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.requires_activation == ACTIVATION_REQUIRED_USER
 
     @property
-    def staff_level(self):
-        if self.is_superuser:
-            return 2
-        elif self.is_staff:
-            return 1
-        else:
-            return 0
-
-    @property
     def can_be_messaged_by_everyone(self):
         preference = self.limits_private_thread_invites_to
         return preference == LIMITS_PRIVATE_THREAD_INVITES_TO_NONE
@@ -333,6 +324,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def has_valid_signature(self):
         return is_user_signature_valid(self)
+
+    @property
+    def staff_level(self):
+        if self.is_superuser:
+            return 2
+        elif self.is_staff:
+            return 1
+        else:
+            return 0
 
     @staff_level.setter
     def staff_level(self, new_level):
