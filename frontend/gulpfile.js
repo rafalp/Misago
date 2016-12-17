@@ -6,7 +6,7 @@ var gutil = require('gulp-util');
 var babelify = require('babelify');
 var browserify = require('browserify');
 var buffer = require('vinyl-buffer');
-var imageop = require('gulp-image-optimization');
+var image = require('gulp-image');
 var jshint = require('gulp-jshint');
 var less = require('gulp-less');
 var minify = require('gulp-minify-css');
@@ -198,9 +198,7 @@ gulp.task('fastcopyimages', function() {
 
 gulp.task('copyimages', function() {
   return gulp.src('static/img/**/*')
-    .pipe(imageop({
-      optimizationLevel: 9
-    }))
+    .pipe(image())
     .pipe(gulp.dest(misago + 'img'));
 });
 
