@@ -3,9 +3,9 @@ from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
-class PrivateThreadsApiTestCase(AuthenticatedUserTestCase):
+class PrivateThreadsTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(PrivateThreadsApiTestCase, self).setUp()
+        super(PrivateThreadsTestCase, self).setUp()
 
         self.category = Category.objects.private_threads()
 

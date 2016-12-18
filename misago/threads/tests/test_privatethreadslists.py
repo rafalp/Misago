@@ -4,10 +4,10 @@ from misago.acl.testutils import override_acl
 
 from .. import testutils
 from ..models import ThreadParticipant
-from .test_privatethreads_api import PrivateThreadsApiTestCase
+from .test_privatethreads import PrivateThreadsTestCase
 
 
-class PrivateThreadsApiTests(PrivateThreadsApiTestCase):
+class PrivateThreadsApiTests(PrivateThreadsTestCase):
     def setUp(self):
         super(PrivateThreadsApiTests, self).setUp()
 
@@ -69,7 +69,7 @@ class PrivateThreadsApiTests(PrivateThreadsApiTestCase):
         self.assertEqual(response_json['results'][1]['id'], visible.id)
 
 
-class PrivateThreadsListTests(PrivateThreadsApiTestCase):
+class PrivateThreadsListTests(PrivateThreadsTestCase):
     def setUp(self):
         super(PrivateThreadsListTests, self).setUp()
 
