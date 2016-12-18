@@ -9,7 +9,7 @@ from misago.readtracker.threadstracker import make_read_aware
 
 from ..models import Poll, Thread
 from ..participants import make_participants_aware
-from ..permissions.privatethreads import allow_see_private_thread
+from ..permissions.privatethreads import allow_use_private_threads, allow_see_private_thread
 from ..permissions.threads import allow_see_thread
 from ..serializers import ThreadSerializer
 from ..subscriptions import make_subscription_aware
@@ -117,6 +117,8 @@ class ForumThread(ViewModel):
 
 class PrivateThread(ViewModel):
     def get_thread(self, request, pk, slug=None, select_for_update=False):
+        allow_use_private_threads(request.user)
+
         if select_for_update:
             queryset = Thread.objects.select_for_update()
         else:
