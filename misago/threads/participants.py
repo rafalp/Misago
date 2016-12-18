@@ -3,6 +3,7 @@ from django.utils.translation import ugettext as _
 
 from misago.core.mail import build_mail, send_messages
 
+from .events import record_event
 from .models import ThreadParticipant
 from .signals import remove_thread_participant
 
@@ -41,9 +42,15 @@ def set_users_unread_private_threads_sync(users):
 
 def add_participant(request, thread, user):
     """
-    Shortcut for adding single participant to thread
+    Adds single participant to thread, registers this on the event
     """
     add_participants(request, thread, [user])
+    record_event(request, thread, 'added_participant', {
+        'user': {
+            'username': user.username,
+            'url': user.get_absolute_url(),
+        }
+    })
 
 
 def add_participants(request, thread, users):

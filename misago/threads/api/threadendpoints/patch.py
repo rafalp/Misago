@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.utils import six
 from django.utils.translation import gettext as _
@@ -9,8 +10,13 @@ from misago.categories.serializers import CategorySerializer
 from misago.core.apipatch import ApiPatch
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
 
+from ...models import ThreadParticipant
 from ...moderation import threads as moderation
-from ...permissions import allow_start_thread
+from ...participants import add_participant, remove_participant
+from ...permissions import (
+    allow_start_thread, allow_takeover, allow_add_participants,
+    allow_add_participant, allow_remove_participants)
+from ...serializers import ThreadParticipantSerializer
 from ...utils import add_categories_to_items
 from ...validators import validate_title
 
@@ -190,6 +196,34 @@ def patch_subscribtion(request, thread, value):
     else:
         return {'subscription': None}
 thread_patch_dispatcher.replace('subscription', patch_subscribtion)
+
+
+def patch_add_participants(request, thread, value):
+    allow_add_participants(request.user, thread)
+
+    User = get_user_model()
+    try:
+        participant = User.objects.get(slug=six.text_type(value).strip().lower())
+    except User.DoesNotExist:
+        raise PermissionDenied("No user with such name exists.")
+
+    if participant in [p.user for p in thread.participants_list]:
+        raise PermissionDenied("This user is already thread participant.")
+
+    allow_add_participant(request.user, participant)
+    add_participant(request, thread, participant)
+
+    return {
+        'participant': ThreadParticipantSerializer(
+            ThreadParticipant(user=participant, is_owner=False)
+        ).data
+    }
+thread_patch_dispatcher.add('participants', patch_add_participants)
+
+
+def patch_remove_participants(request, thread, value):
+    pass
+thread_patch_dispatcher.remove('participants', patch_remove_participants)
 
 
 def thread_patch_endpoint(request, thread):
