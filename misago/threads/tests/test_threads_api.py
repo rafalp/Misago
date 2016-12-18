@@ -153,18 +153,6 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
 
 
 class ThreadDeleteApiTests(ThreadsApiTestCase):
-    def test_delete_thread(self):
-        """DELETE to API link with permission deletes thread"""
-        self.override_acl({
-            'can_hide_threads': 2
-        })
-
-        response = self.client.delete(self.api_link)
-        self.assertEqual(response.status_code, 200)
-
-        with self.assertRaises(Thread.DoesNotExist):
-            Thread.objects.get(pk=self.thread.pk)
-
     def test_delete_thread_no_permission(self):
         """DELETE to API link with no permission to delete fails"""
         self.override_acl({
@@ -184,3 +172,15 @@ class ThreadDeleteApiTests(ThreadsApiTestCase):
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
+
+    def test_delete_thread(self):
+        """DELETE to API link with permission deletes thread"""
+        self.override_acl({
+            'can_hide_threads': 2
+        })
+
+        response = self.client.delete(self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        with self.assertRaises(Thread.DoesNotExist):
+            Thread.objects.get(pk=self.thread.pk)
