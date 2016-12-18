@@ -6,10 +6,12 @@ from misago.categories.serializers import BasicCategorySerializer
 
 from ..models import Thread
 from .poll import PollSerializer
+from .threadparticipant import ThreadParticipantSerializer
 
 
 __all__ = [
     'ThreadSerializer',
+    'PrivateThreadSerializer',
     'ThreadsListSerializer',
 ]
 
@@ -116,6 +118,42 @@ class ThreadSerializer(serializers.ModelSerializer):
             })
         else:
             return None
+
+
+class PrivateThreadSerializer(ThreadSerializer):
+    participants = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Thread
+        fields = (
+            'id',
+            'category',
+            'title',
+            'replies',
+            'has_unapproved_posts',
+            'started_on',
+            'last_post_on',
+            'last_post',
+            'last_poster_name',
+            'is_unapproved',
+            'is_hidden',
+            'is_closed',
+            'weight',
+
+            'acl',
+            'is_new',
+            'is_read',
+            'participants',
+            'path',
+            'poll',
+            'subscription',
+
+            'api',
+            'url',
+        )
+
+    def get_participants(self, obj):
+        return ThreadParticipantSerializer(obj.participants_list, many=True).data
 
 
 class ThreadsListSerializer(ThreadSerializer):

@@ -11,7 +11,7 @@ from ..models import Poll, Thread
 from ..participants import make_participants_aware
 from ..permissions.privatethreads import allow_use_private_threads, allow_see_private_thread
 from ..permissions.threads import allow_see_thread
-from ..serializers import ThreadSerializer
+from ..serializers import PrivateThreadSerializer, ThreadSerializer
 from ..subscriptions import make_subscription_aware
 from ..threadtypes import trees_map
 
@@ -79,10 +79,10 @@ class ViewModel(BaseViewModel):
         return thread_path
 
     def get_root_name(self):
-        raise NotImplementedError('Thread view model has to implement get_root_name()')
+        raise NotImplementedError("Thread view model has to implement get_root_name()")
 
     def get_frontend_context(self):
-        return ThreadSerializer(self._model).data
+        raise NotImplementedError("Thread view model has to implement get_frontend_context()")
 
     def get_template_context(self):
         return {
@@ -114,6 +114,9 @@ class ForumThread(ViewModel):
     def get_root_name(self):
         return _("Threads")
 
+    def get_frontend_context(self):
+        return ThreadSerializer(self._model).data
+
 
 class PrivateThread(ViewModel):
     def get_thread(self, request, pk, slug=None, select_for_update=False):
@@ -140,3 +143,6 @@ class PrivateThread(ViewModel):
 
     def get_root_name(self):
         return _("Private threads")
+
+    def get_frontend_context(self):
+        return PrivateThreadSerializer(self._model).data

@@ -1,4 +1,5 @@
 from .moderation import *
+from .threadparticipant import *
 from .thread import *
 from .post import *
 from .postedit import *

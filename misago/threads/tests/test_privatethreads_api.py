@@ -119,14 +119,38 @@ class PrivateThreadsApiGetTests(PrivateThreadsTestCase):
         ThreadParticipant.objects.set_owner(self.thread, self.user)
 
         response = self.client.get(self.api_url)
-        self.assertContains(response, self.thread.title)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = response.json()
+        self.assertEqual(response_json['title'], self.thread.title)
+        self.assertEqual(response_json['participants'], [
+            {
+                'id': self.user.id,
+                'username': self.user.username,
+                'avatar_hash': self.user.avatar_hash,
+                'url': self.user.get_absolute_url(),
+                'is_owner': True
+            }
+        ])
 
     def test_can_see_participant(self):
         """user can see thread he is participant of"""
         ThreadParticipant.objects.add_participants(self.thread, [self.user])
 
         response = self.client.get(self.api_url)
-        self.assertContains(response, self.thread.title)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = response.json()
+        self.assertEqual(response_json['title'], self.thread.title)
+        self.assertEqual(response_json['participants'], [
+            {
+                'id': self.user.id,
+                'username': self.user.username,
+                'avatar_hash': self.user.avatar_hash,
+                'url': self.user.get_absolute_url(),
+                'is_owner': False
+            }
+        ])
 
     def test_mod_can_see_reported(self):
         """moderator can see private thread that has reports"""
@@ -138,4 +162,8 @@ class PrivateThreadsApiGetTests(PrivateThreadsTestCase):
         self.thread.save()
 
         response = self.client.get(self.api_url)
-        self.assertContains(response, self.thread.title)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = response.json()
+        self.assertEqual(response_json['title'], self.thread.title)
+        self.assertEqual(response_json['participants'], [])
