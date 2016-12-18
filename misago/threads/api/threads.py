@@ -12,7 +12,7 @@ from misago.core.shortcuts import get_int_or_404
 from ..models import Post, Thread
 from ..moderation import threads as moderation
 from ..permissions import allow_use_private_threads
-from ..viewmodels import ForumThread
+from ..viewmodels import ForumThread, PrivateThread
 from .postingendpoint import PostingEndpoint
 from .threadendpoints.editor import thread_start_editor
 from .threadendpoints.list import private_threads_list_endpoint, threads_list_endpoint
@@ -110,6 +110,8 @@ class ThreadViewSet(ViewSet):
 
 
 class PrivateThreadViewSet(ViewSet):
+    thread = PrivateThread
+
     def list(self, request):
         return private_threads_list_endpoint(request)
 
