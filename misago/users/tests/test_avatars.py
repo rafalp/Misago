@@ -141,14 +141,6 @@ class UploadedAvatarTests(TestCase):
                     'zoom': 2
                 })
 
-            uploaded.clean_crop(image, {
-                    'offset': {
-                        'x': 0,
-                        'y': 0,
-                    },
-                    'zoom': 0
-                })
-
     def test_uploaded_image_size_validation(self):
         """uploaded image size is validated"""
         image = MockAvatarFile(size=settings.avatar_upload_limit * 2024)

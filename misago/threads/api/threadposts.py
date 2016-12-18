@@ -150,8 +150,6 @@ class ViewSet(viewsets.ViewSet):
         else:
             return Response(posting.errors, status=400)
 
-        return Response({})
-
     @transaction.atomic
     def partial_update(self, request, thread_pk, pk):
         thread = self.get_thread_for_update(request, thread_pk)

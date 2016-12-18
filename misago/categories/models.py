@@ -112,9 +112,6 @@ class Category(MPTTModel):
     def __str__(self):
         return six.text_type(self.thread_type.get_category_name(self))
 
-    def lock(self):
-        return Category.objects.select_for_update().get(id=self.id)
-
     def delete(self, *args, **kwargs):
         Category.objects.clear_cache()
         acl_version.invalidate()

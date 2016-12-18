@@ -231,6 +231,9 @@ can_add_participants = return_boolean(allow_add_participants)
 
 
 def allow_remove_participants(user, target):
+    if user == target:
+        return # we can always remove ourselves
+
     if not target.participant or not target.participant.is_owner:
         raise PermissionDenied(
             _("You have to be thread owner to remove participants from it."))
