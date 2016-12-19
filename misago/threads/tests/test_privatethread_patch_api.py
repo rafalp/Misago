@@ -40,6 +40,17 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertContains(
             response, "be thread owner to add new participants to it", status_code=400)
 
+    def test_add_empty_username(self):
+        """path validates username"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+
+        response = self.patch(self.api_link, [
+            {'op': 'add', 'path': 'participants', 'value': ''}
+        ])
+
+        self.assertContains(
+            response, "You have to enter new participant's username.", status_code=400)
+
     def test_add_nonexistant_user(self):
         """can't user two times"""
         ThreadParticipant.objects.set_owner(self.thread, self.user)
@@ -116,7 +127,90 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
 
 
 class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
-    pass
+    def setUp(self):
+        super(PrivateThreadRemoveParticipantApiTests, self).setUp()
+
+        User = get_user_model()
+        self.other_user = get_user_model().objects.create_user(
+            'BobBoberson', 'bob@boberson.com', 'pass123')
+
+    def test_remove_invalid(self):
+        """removed user has to be participant"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+
+        response = self.patch(self.api_link, [
+            {'op': 'remove', 'path': 'participants', 'value': 'string'}
+        ])
+
+        self.assertContains(
+            response, "Participant to remove is invalid.", status_code=400)
+
+    def test_remove_nonexistant(self):
+        """removed user has to be participant"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+
+        response = self.patch(self.api_link, [
+            {'op': 'remove', 'path': 'participants', 'value': self.other_user.pk}
+        ])
+
+        self.assertContains(
+            response, "Participant doesn't exist.", status_code=400)
+
+    def test_remove_not_owner(self):
+        """api validates if user trying to remove other user is an owner"""
+        ThreadParticipant.objects.set_owner(self.thread, self.other_user)
+        ThreadParticipant.objects.add_participants(self.thread, [self.user])
+
+        response = self.patch(self.api_link, [
+            {'op': 'remove', 'path': 'participants', 'value': self.other_user.pk}
+        ])
+
+        self.assertContains(
+            response, "be thread owner to remove participants from it", status_code=400)
+
+    def test_user_leave_thread(self):
+        """api allows user to remove himself from thread"""
+        ThreadParticipant.objects.set_owner(self.thread, self.other_user)
+        ThreadParticipant.objects.add_participants(self.thread, [self.user])
+
+        response = self.patch(self.api_link, [
+            {'op': 'remove', 'path': 'participants', 'value': self.user.pk}
+        ])
+
+        raise NotImplementedError('this test scenario is incomplete!')
+
+    def test_owner_remove_user(self):
+        """api allows owner to remove other user"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+        ThreadParticipant.objects.add_participants(self.thread, [self.other_user])
+
+        response = self.patch(self.api_link, [
+            {'op': 'remove', 'path': 'participants', 'value': self.other_user.pk}
+        ])
+
+        raise NotImplementedError('this test scenario is incomplete!')
+
+    def test_owner_leave_thread(self):
+        """api allows owner to remove hisemf from thread, causing thread to close"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+        ThreadParticipant.objects.add_participants(self.thread, [self.other_user])
+
+        response = self.patch(self.api_link, [
+            {'op': 'remove', 'path': 'participants', 'value': self.user.pk}
+        ])
+
+        raise NotImplementedError('this test scenario is incomplete!')
+
+    def test_last_user_leave_thread(self):
+        """api allows last user leave thread, causing thread to delete"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+        ThreadParticipant.objects.add_participants(self.thread, [self.other_user])
+
+        response = self.patch(self.api_link, [
+            {'op': 'remove', 'path': 'participants', 'value': self.user.pk}
+        ])
+
+        raise NotImplementedError('this test scenario is incomplete!')
 
 
 class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):

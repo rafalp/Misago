@@ -20,12 +20,12 @@ __all__ = [
     'can_see_private_thread',
     'allow_see_private_post',
     'can_see_private_post',
-    'allow_takeover',
-    'can_takeover',
+    'allow_change_owner',
+    'can_change_owner',
     'allow_add_participants',
     'can_add_participants',
-    'allow_remove_participants',
-    'can_remove_participants',
+    'allow_remove_participant',
+    'can_remove_participant',
     'allow_add_participant',
     'can_add_participant',
     'allow_message_user',
@@ -162,9 +162,8 @@ def add_acl_to_thread(user, thread):
         thread.participant = None
 
     thread.acl.update({
-        'can_takeover': can_takeover(user, thread),
+        'can_change_owner': can_change_owner(user, thread),
         'can_add_participants': can_add_participants(user, thread),
-        'can_remove_participants': can_remove_participants(user, thread)
     })
 
 
@@ -206,14 +205,14 @@ def allow_see_private_post(user, target):
 can_see_private_post = return_boolean(allow_see_private_post)
 
 
-def allow_takeover(user, target):
-    if target.participant and target.participant.is_owner:
+def allow_change_owner(user, target):
+    is_moderator = user.acl['can_moderate_private_threads']
+    is_owner = target.participant and target.participant.is_owner
+
+    if not (is_owner and is_moderator):
         raise PermissionDenied(
-            _("You are already this thread's owner."))
-    if not user.acl['can_moderate_private_threads']:
-        raise PermissionDenied(
-            _("Only private threads moderators can take over private threads."))
-can_takeover = return_boolean(allow_takeover)
+            _("Only threaf owner and moderators can change threads owners."))
+can_change_owner = return_boolean(allow_change_owner)
 
 
 def allow_add_participants(user, target):
@@ -230,14 +229,14 @@ def allow_add_participants(user, target):
 can_add_participants = return_boolean(allow_add_participants)
 
 
-def allow_remove_participants(user, target):
+def allow_remove_participant(user, thread, target):
     if user == target:
         return # we can always remove ourselves
 
-    if not target.participant or not target.participant.is_owner:
+    if not thread.participant or not thread.participant.is_owner:
         raise PermissionDenied(
             _("You have to be thread owner to remove participants from it."))
-can_remove_participants = return_boolean(allow_remove_participants)
+can_remove_participant = return_boolean(allow_remove_participant)
 
 
 def allow_add_participant(user, target):
