@@ -102,9 +102,13 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         """adding user to thread add user to thread as participant, sets event and emails him"""
         ThreadParticipant.objects.set_owner(self.thread, self.user)
 
+        self.other_user.email = 'rafio.xudb@gmail.com'
+        self.other_user.save()
+
         response = self.patch(self.api_link, [
             {'op': 'add', 'path': 'participants', 'value': self.other_user.username}
         ])
+
         self.assertEqual(response.json()['participant'], {
             'id': self.other_user.id,
             'username': self.other_user.username,
@@ -178,11 +182,17 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         ])
 
         self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.json()['deleted'])
 
         # thread still exists
         self.assertTrue(Thread.objects.get(pk=self.thread.pk))
 
-        # users were flagged to sync
+        # leave event has valid type
+        event = self.thread.post_set.order_by('id').last()
+        self.assertTrue(event.is_event)
+        self.assertTrue(event.event_type, 'participant_left')
+
+        # users were flagged for sync
         User = get_user_model()
         self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
         self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
@@ -200,7 +210,25 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
             {'op': 'remove', 'path': 'participants', 'value': self.other_user.pk}
         ])
 
-        raise NotImplementedError('this test scenario is incomplete!')
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.json()['deleted'])
+
+        # thread still exists
+        self.assertTrue(Thread.objects.get(pk=self.thread.pk))
+
+        # leave event has valid type
+        event = self.thread.post_set.order_by('id').last()
+        self.assertTrue(event.is_event)
+        self.assertTrue(event.event_type, 'participant_removed')
+
+        # users were flagged for sync
+        User = get_user_model()
+        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
+        self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+
+        # user was removed from participation
+        self.assertEqual(self.thread.participants.count(), 1)
+        self.assertEqual(self.thread.participants.filter(pk=self.other_user.pk).count(), 0)
 
     def test_owner_leave_thread(self):
         """api allows owner to remove hisemf from thread, causing thread to close"""
@@ -211,18 +239,44 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
             {'op': 'remove', 'path': 'participants', 'value': self.user.pk}
         ])
 
-        raise NotImplementedError('this test scenario is incomplete!')
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.json()['deleted'])
+
+        # thread still exists and is closed
+        self.assertTrue(Thread.objects.get(pk=self.thread.pk).is_closed)
+
+        # leave event has valid type
+        event = self.thread.post_set.order_by('id').last()
+        self.assertTrue(event.is_event)
+        self.assertTrue(event.event_type, 'owner_left')
+
+        # users were flagged for sync
+        User = get_user_model()
+        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
+        self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+
+        # user was removed from participation
+        self.assertEqual(self.thread.participants.count(), 1)
+        self.assertEqual(self.thread.participants.filter(pk=self.user.pk).count(), 0)
 
     def test_last_user_leave_thread(self):
         """api allows last user leave thread, causing thread to delete"""
         ThreadParticipant.objects.set_owner(self.thread, self.user)
-        ThreadParticipant.objects.add_participants(self.thread, [self.other_user])
 
         response = self.patch(self.api_link, [
             {'op': 'remove', 'path': 'participants', 'value': self.user.pk}
         ])
 
-        raise NotImplementedError('this test scenario is incomplete!')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json()['deleted'])
+
+        # thread is gone
+        with self.assertRaises(Thread.DoesNotExist):
+            Thread.objects.get(pk=self.thread.pk)
+
+        # users were flagged for sync
+        User = get_user_model()
+        self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
 
 
 class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):

@@ -241,7 +241,9 @@ def patch_remove_participant(request, thread, value):
     allow_remove_participant(request.user, thread, participant.user)
     remove_participant(request, thread, participant.user)
 
-    return {}
+    return {
+        'deleted': len(thread.participants_list) == 1
+    }
 
 thread_patch_dispatcher.remove('participants', patch_remove_participant)
 
