@@ -8,7 +8,6 @@ from ..models import Post, Thread, ThreadParticipant
 from ..participants import (
     has_participants,
     make_participants_aware,
-    remove_participant,
     set_owner,
     set_users_unread_private_threads_sync
 )
@@ -95,18 +94,6 @@ class ParticipantsTests(TestCase):
                 break
         else:
             self.fail("thread.participants_list didn't contain user")
-
-    def test_remove_participant(self):
-        """remove_participant removes user from thread"""
-        User = get_user_model()
-        user = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
-
-        set_owner(self.thread, user)
-        remove_participant(self.thread, user)
-
-        self.assertEqual(self.thread.participants.count(), 0)
-        with self.assertRaises(ThreadParticipant.DoesNotExist):
-            self.thread.threadparticipant_set.get(user=user)
 
     def test_set_owner(self):
         """set_owner sets user as thread owner"""

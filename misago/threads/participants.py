@@ -5,7 +5,6 @@ from misago.core.mail import build_mail, send_messages
 
 from .events import record_event
 from .models import ThreadParticipant
-from .signals import remove_thread_participant
 
 
 def has_participants(thread):
@@ -85,11 +84,42 @@ def build_noticiation_email(request, thread, user):
     )
 
 
-def remove_participant(thread, user):
+def remove_participant(request, thread, user):
     """
     Remove thread participant, set "recound private threads" flag on user
     """
-    thread.threadparticipant_set.filter(user=user).delete()
-    set_users_unread_private_threads_sync([user])
+    removed_owner = False
+    remaining_participants = []
 
-    remove_thread_participant.send(thread, user=user)
+    for participant in thread.participants_list:
+        if participant.user == user:
+            removed_owner = participant.is_owner
+        else:
+            remaining_participants.append(participant.user)
+
+    set_users_unread_private_threads_sync(remaining_participants + [user])
+
+    if not remaining_participants:
+        thread.delete()
+    else:
+        thread.threadparticipant_set.filter(user=user).delete()
+
+        if removed_owner:
+            thread.is_closed = True # flag thread to close
+
+            if request.user == user:
+                event_type = 'owner_left'
+            else:
+                event_type = 'removed_owner'
+        else:
+            if request.user == user:
+                event_type = 'participant_left'
+            else:
+                event_type = 'removed_participant'
+
+        record_event(request, thread, event_type, {
+            'user': {
+                'username': user.username,
+                'url': user.get_absolute_url(),
+            }
+        })

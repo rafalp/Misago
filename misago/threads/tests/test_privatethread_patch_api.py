@@ -6,7 +6,7 @@ from django.core import mail
 from misago.acl.testutils import override_acl
 
 from .. import testutils
-from ..models import ThreadParticipant
+from ..models import Thread, ThreadParticipant
 from .test_privatethreads import PrivateThreadsTestCase
 
 
@@ -177,7 +177,19 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
             {'op': 'remove', 'path': 'participants', 'value': self.user.pk}
         ])
 
-        raise NotImplementedError('this test scenario is incomplete!')
+        self.assertEqual(response.status_code, 200)
+
+        # thread still exists
+        self.assertTrue(Thread.objects.get(pk=self.thread.pk))
+
+        # users were flagged to sync
+        User = get_user_model()
+        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
+        self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+
+        # user was removed from participation
+        self.assertEqual(self.thread.participants.count(), 1)
+        self.assertEqual(self.thread.participants.filter(pk=self.user.pk).count(), 0)
 
     def test_owner_remove_user(self):
         """api allows owner to remove other user"""

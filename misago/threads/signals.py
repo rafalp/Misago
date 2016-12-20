@@ -17,7 +17,6 @@ merge_post = Signal(providing_args=["other_post"])
 merge_thread = Signal(providing_args=["other_thread"])
 move_post = Signal()
 move_thread = Signal()
-remove_thread_participant = Signal(providing_args=["user"])
 
 
 """

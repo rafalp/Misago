@@ -75,26 +75,27 @@ thread_patch_dispatcher.replace('weight', patch_weight)
 
 
 def patch_move(request, thread, value):
-    if thread.acl.get('can_move'):
-        category_pk = get_int_or_404(value)
-        new_category = get_object_or_404(
-            Category.objects.all_categories().select_related('parent'),
-            pk=category_pk
-        )
-
-        add_acl(request.user, new_category)
-        allow_see_category(request.user, new_category)
-        allow_browse_category(request.user, new_category)
-        allow_start_thread(request.user, new_category)
-
-        if new_category == thread.category:
-            raise PermissionDenied(_("You can't move thread to the category it's already in."))
-
-        moderation.move_thread(request, thread, new_category)
-
-        return {'category': CategorySerializer(new_category).data}
-    else:
+    if not thread.acl.get('can_move'):
         raise PermissionDenied(_("You don't have permission to move this thread."))
+
+    category_pk = get_int_or_404(value)
+    new_category = get_object_or_404(
+        Category.objects.all_categories().select_related('parent'),
+        pk=category_pk
+    )
+
+    add_acl(request.user, new_category)
+    allow_see_category(request.user, new_category)
+    allow_browse_category(request.user, new_category)
+    allow_start_thread(request.user, new_category)
+
+    if new_category == thread.category:
+        raise PermissionDenied(_("You can't move thread to the category it's already in."))
+
+    moderation.move_thread(request, thread, new_category)
+
+    return {'category': CategorySerializer(new_category).data}
+
 thread_patch_dispatcher.replace('category', patch_move)
 
 
@@ -238,8 +239,9 @@ def patch_remove_participant(request, thread, value):
         raise PermissionDenied(_("Participant doesn't exist."))
 
     allow_remove_participant(request.user, thread, participant.user)
+    remove_participant(request, thread, participant.user)
 
-    raise NotImplementedError('this execution path is incomplete!')
+    return {}
 
 thread_patch_dispatcher.remove('participants', patch_remove_participant)
 
