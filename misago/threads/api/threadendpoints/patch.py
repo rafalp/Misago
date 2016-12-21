@@ -174,7 +174,7 @@ def patch_is_hidden(request, thread, value):
 thread_patch_dispatcher.replace('is-hidden', patch_is_hidden)
 
 
-def patch_subscribtion(request, thread, value):
+def patch_subscription(request, thread, value):
     request.user.subscription_set.filter(thread=thread).delete()
 
     if value == 'notify':
@@ -197,7 +197,7 @@ def patch_subscribtion(request, thread, value):
         return {'subscription': True}
     else:
         return {'subscription': None}
-thread_patch_dispatcher.replace('subscription', patch_subscribtion)
+thread_patch_dispatcher.replace('subscription', patch_subscription)
 
 
 def patch_add_participant(request, thread, value):
