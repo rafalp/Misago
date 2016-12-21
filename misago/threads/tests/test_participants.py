@@ -108,7 +108,7 @@ class ParticipantsTests(TestCase):
     def test_set_users_unread_private_threads_sync(self):
         """
         set_users_unread_private_threads_sync sets sync_unread_private_threads
-        flag on user model to true
+        flag on users provided to true
         """
         User = get_user_model()
         users = [
@@ -116,6 +116,41 @@ class ParticipantsTests(TestCase):
             User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123"),
         ]
 
-        set_users_unread_private_threads_sync(users)
+        set_users_unread_private_threads_sync(users=users)
+        for user in users:
+            User.objects.get(pk=user.pk, sync_unread_private_threads=True)
+
+    def test_set_participants_unread_private_threads_sync(self):
+        """
+        set_users_unread_private_threads_sync sets sync_unread_private_threads
+        flag on participants provided to true
+        """
+        User = get_user_model()
+        users = [
+            User.objects.create_user("Bob1", "bob1@boberson.com", "Pass.123"),
+            User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123"),
+        ]
+
+        participants = [ThreadParticipant(user=u) for u in users]
+
+        set_users_unread_private_threads_sync(participants=participants)
+        for user in users:
+            User.objects.get(pk=user.pk, sync_unread_private_threads=True)
+
+    def test_set_participants_isers_unread_private_threads_sync(self):
+        """
+        set_users_unread_private_threads_sync sets sync_unread_private_threads
+        flag on users and participants provided to true
+        """
+        User = get_user_model()
+        users = [
+            User.objects.create_user("Bob1", "bob1@boberson.com", "Pass.123"),
+        ]
+
+        participants = [ThreadParticipant(user=u) for u in users]
+
+        users.append(User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123"))
+
+        set_users_unread_private_threads_sync(users=users, participants=participants)
         for user in users:
             User.objects.get(pk=user.pk, sync_unread_private_threads=True)

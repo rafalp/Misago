@@ -183,7 +183,7 @@ can_use_private_threads = return_boolean(allow_use_private_threads)
 
 
 def allow_see_private_thread(user, target):
-    if user.acl.get('can_moderate_private_threads'):
+    if user.acl['can_moderate_private_threads']:
         can_see_reported = target.has_reported_posts
     else:
         can_see_reported = False
@@ -211,27 +211,45 @@ def allow_change_owner(user, target):
 
     if not (is_owner and is_moderator):
         raise PermissionDenied(
-            _("Only threaf owner and moderators can change threads owners."))
+            _("Only thread owner and moderators can change threads owners."))
+
+    if not is_moderator and target.is_closed:
+        raise PermissionDenied(
+            _("Only moderators can change closed threads owners."))
 can_change_owner = return_boolean(allow_change_owner)
 
 
 def allow_add_participants(user, target):
+    if user.acl['can_moderate_private_threads']:
+        return
+
     if not target.participant or not target.participant.is_owner:
         raise PermissionDenied(
             _("You have to be thread owner to add new participants to it."))
 
+    if target.is_closed:
+        raise PermissionDenied(
+            _("Only moderators can add participants to closed threads."))
+
     max_participants = user.acl['max_private_thread_participants']
     current_participants = len(target.participants_list) - 1
 
-    if current_participants >= max_participants :
+    if current_participants >= max_participants:
         raise PermissionDenied(
             _("You can't add any more new users to this thread."))
 can_add_participants = return_boolean(allow_add_participants)
 
 
 def allow_remove_participant(user, thread, target):
+    if user.acl['can_moderate_private_threads']:
+        return
+
     if user == target:
         return # we can always remove ourselves
+
+    if thread.is_closed:
+        raise PermissionDenied(
+            _("Only moderators can remove participants from closed threads."))
 
     if not thread.participant or not thread.participant.is_owner:
         raise PermissionDenied(

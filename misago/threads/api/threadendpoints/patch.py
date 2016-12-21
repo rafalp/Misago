@@ -12,7 +12,7 @@ from misago.core.shortcuts import get_int_or_404, get_object_or_404
 
 from ...models import ThreadParticipant
 from ...moderation import threads as moderation
-from ...participants import add_participant, remove_participant
+from ...participants import add_participant, change_owner, remove_participant
 from ...permissions import (
     allow_add_participants, allow_add_participant,
     allow_change_owner, allow_remove_participant, allow_start_thread)
@@ -244,8 +244,25 @@ def patch_remove_participant(request, thread, value):
     return {
         'deleted': len(thread.participants_list) == 1
     }
-
 thread_patch_dispatcher.remove('participants', patch_remove_participant)
+
+
+def patch_replace_owner(request, thread, value):
+    try:
+        user_id = int(value)
+    except (ValueError, TypeError):
+        raise PermissionDenied(_("Participant to remove is invalid."))
+
+    for participant in thread.participants_list:
+        if participant.user_id == user_id:
+            break
+    else:
+        raise PermissionDenied(_("Participant doesn't exist."))
+
+    allow_change_owner(request.user, thread)
+
+
+thread_patch_dispatcher.replace('owner', patch_replace_owner)
 
 
 def thread_patch_endpoint(request, thread):

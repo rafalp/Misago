@@ -17,19 +17,16 @@ class PrivateThreadPatchApiTestCase(PrivateThreadsTestCase):
         self.thread = testutils.post_thread(self.category, poster=self.user)
         self.api_link = self.thread.get_api_url()
 
+        User = get_user_model()
+        self.other_user = get_user_model().objects.create_user(
+            'BobBoberson', 'bob@boberson.com', 'pass123')
+
     def patch(self, api_link, ops):
         return self.client.patch(
             api_link, json.dumps(ops), content_type="application/json")
 
 
 class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
-    def setUp(self):
-        super(PrivateThreadAddParticipantApiTests, self).setUp()
-
-        User = get_user_model()
-        self.other_user = get_user_model().objects.create_user(
-            'BobBoberson', 'bob@boberson.com', 'pass123')
-
     def test_add_participant_not_owner(self):
         """non-owner can't add participant"""
         ThreadParticipant.objects.add_participants(self.thread, [self.user])
@@ -98,12 +95,95 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertContains(
             response, "You can't add any more new users to this thread.", status_code=400)
 
+    def test_add_user_closed_thread(self):
+        """adding user to closed thread fails for non-moderator"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        response = self.patch(self.api_link, [
+            {'op': 'add', 'path': 'participants', 'value': self.other_user.username}
+        ])
+        self.assertContains(
+            response, "Only moderators can add participants to closed threads.", status_code=400)
+
     def test_add_user(self):
         """adding user to thread add user to thread as participant, sets event and emails him"""
         ThreadParticipant.objects.set_owner(self.thread, self.user)
 
-        self.other_user.email = 'rafio.xudb@gmail.com'
-        self.other_user.save()
+        response = self.patch(self.api_link, [
+            {'op': 'add', 'path': 'participants', 'value': self.other_user.username}
+        ])
+
+        self.assertEqual(response.json()['participant'], {
+            'id': self.other_user.id,
+            'username': self.other_user.username,
+            'avatar_hash': self.other_user.avatar_hash,
+            'url': self.other_user.get_absolute_url(),
+            'is_owner': False,
+        })
+
+        # event was set on thread
+        event = self.thread.post_set.order_by('id').last()
+        self.assertTrue(event.is_event)
+        self.assertTrue(event.event_type, 'added_participant')
+
+        # notification about new private thread was sent to other user
+        self.assertEqual(len(mail.outbox), 1)
+        email = mail.outbox[-1]
+
+        self.assertIn(self.user.username, email.subject)
+        self.assertIn(self.thread.title, email.subject)
+
+    def test_add_user_too_many_users_moderator(self):
+        """moderators bypass users limit"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+
+        override_acl(self.user, {
+            'can_moderate_private_threads': 1
+        })
+
+        User = get_user_model()
+        for i in range(self.user.acl['max_private_thread_participants']):
+            user = User.objects.create_user(
+                'User{}'.format(i), 'user{}@example.com'.format(i), 'Pass.123')
+            ThreadParticipant.objects.add_participants(self.thread, [user])
+
+        response = self.patch(self.api_link, [
+            {'op': 'add', 'path': 'participants', 'value': self.other_user.username}
+        ])
+
+        self.assertEqual(response.json()['participant'], {
+            'id': self.other_user.id,
+            'username': self.other_user.username,
+            'avatar_hash': self.other_user.avatar_hash,
+            'url': self.other_user.get_absolute_url(),
+            'is_owner': False,
+        })
+
+        # event was set on thread
+        event = self.thread.post_set.order_by('id').last()
+        self.assertTrue(event.is_event)
+        self.assertTrue(event.event_type, 'added_participant')
+
+        # notification about new private thread was sent to other user
+        self.assertEqual(len(mail.outbox), 1)
+        email = mail.outbox[-1]
+
+        self.assertIn(self.user.username, email.subject)
+        self.assertIn(self.thread.title, email.subject)
+
+    def test_add_user_to_closed_moderator(self):
+        """moderators can add users to closed threads"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        override_acl(self.user, {
+            'can_moderate_private_threads': 1
+        })
 
         response = self.patch(self.api_link, [
             {'op': 'add', 'path': 'participants', 'value': self.other_user.username}
@@ -131,13 +211,6 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
 
 
 class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
-    def setUp(self):
-        super(PrivateThreadRemoveParticipantApiTests, self).setUp()
-
-        User = get_user_model()
-        self.other_user = get_user_model().objects.create_user(
-            'BobBoberson', 'bob@boberson.com', 'pass123')
-
     def test_remove_invalid(self):
         """removed user has to be participant"""
         ThreadParticipant.objects.set_owner(self.thread, self.user)
@@ -172,10 +245,56 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertContains(
             response, "be thread owner to remove participants from it", status_code=400)
 
+    def test_owner_remove_user_closed_thread(self):
+        """api disallows owner to remove other user from closed thread"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+        ThreadParticipant.objects.add_participants(self.thread, [self.other_user])
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        response = self.patch(self.api_link, [
+            {'op': 'remove', 'path': 'participants', 'value': self.other_user.pk}
+        ])
+        self.assertContains(
+            response, "moderators can remove participants from closed threads", status_code=400)
+
     def test_user_leave_thread(self):
         """api allows user to remove himself from thread"""
         ThreadParticipant.objects.set_owner(self.thread, self.other_user)
         ThreadParticipant.objects.add_participants(self.thread, [self.user])
+
+        response = self.patch(self.api_link, [
+            {'op': 'remove', 'path': 'participants', 'value': self.user.pk}
+        ])
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.json()['deleted'])
+
+        # thread still exists
+        self.assertTrue(Thread.objects.get(pk=self.thread.pk))
+
+        # leave event has valid type
+        event = self.thread.post_set.order_by('id').last()
+        self.assertTrue(event.is_event)
+        self.assertTrue(event.event_type, 'participant_left')
+
+        # users were flagged for sync
+        User = get_user_model()
+        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
+        self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+
+        # user was removed from participation
+        self.assertEqual(self.thread.participants.count(), 1)
+        self.assertEqual(self.thread.participants.filter(pk=self.user.pk).count(), 0)
+
+    def test_user_leave_closed_thread(self):
+        """api allows user to remove himself from closed thread"""
+        ThreadParticipant.objects.set_owner(self.thread, self.other_user)
+        ThreadParticipant.objects.add_participants(self.thread, [self.user])
+
+        self.thread.is_closed = True
+        self.thread.save()
 
         response = self.patch(self.api_link, [
             {'op': 'remove', 'path': 'participants', 'value': self.user.pk}
@@ -280,4 +399,17 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
 
 
 class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
+    """
+    Todo:
+
+    - handle no permission to change owner
+    - handle non-int new owner ID
+    - handle invalid int of new owner ID
+    - handle new owner id being same as current owner
+    - handle owner fail to pass ownership in closed thread
+    - handle owner pass ownership
+    - handle owner being changed by moderator
+    - handle owner being changed by moderator in closed thread
+
+    """
     pass
