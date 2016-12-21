@@ -18,7 +18,7 @@ class PrivateThreadPatchApiTestCase(PrivateThreadsTestCase):
         self.api_link = self.thread.get_api_url()
 
         User = get_user_model()
-        self.other_user = get_user_model().objects.create_user(
+        self.other_user = User.objects.create_user(
             'BobBoberson', 'bob@boberson.com', 'pass123')
 
     def patch(self, api_link, ops):
@@ -34,6 +34,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         response = self.patch(self.api_link, [
             {'op': 'add', 'path': 'participants', 'value': self.user.username}
         ])
+
         self.assertContains(
             response, "be thread owner to add new participants to it", status_code=400)
 
@@ -77,6 +78,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         response = self.patch(self.api_link, [
             {'op': 'add', 'path': 'participants', 'value': self.other_user.username}
         ])
+
         self.assertContains(response, "BobBoberson is blocking you.", status_code=400)
 
     def test_add_too_many_users(self):
@@ -92,6 +94,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         response = self.patch(self.api_link, [
             {'op': 'add', 'path': 'participants', 'value': self.other_user.username}
         ])
+
         self.assertContains(
             response, "You can't add any more new users to this thread.", status_code=400)
 
@@ -105,6 +108,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         response = self.patch(self.api_link, [
             {'op': 'add', 'path': 'participants', 'value': self.other_user.username}
         ])
+
         self.assertContains(
             response, "Only moderators can add participants to closed threads.", status_code=400)
 
@@ -115,14 +119,6 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         response = self.patch(self.api_link, [
             {'op': 'add', 'path': 'participants', 'value': self.other_user.username}
         ])
-
-        self.assertEqual(response.json()['participant'], {
-            'id': self.other_user.id,
-            'username': self.other_user.username,
-            'avatar_hash': self.other_user.avatar_hash,
-            'url': self.other_user.get_absolute_url(),
-            'is_owner': False,
-        })
 
         # event was set on thread
         event = self.thread.post_set.order_by('id').last()
@@ -154,14 +150,6 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
             {'op': 'add', 'path': 'participants', 'value': self.other_user.username}
         ])
 
-        self.assertEqual(response.json()['participant'], {
-            'id': self.other_user.id,
-            'username': self.other_user.username,
-            'avatar_hash': self.other_user.avatar_hash,
-            'url': self.other_user.get_absolute_url(),
-            'is_owner': False,
-        })
-
         # event was set on thread
         event = self.thread.post_set.order_by('id').last()
         self.assertTrue(event.is_event)
@@ -189,14 +177,6 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
             {'op': 'add', 'path': 'participants', 'value': self.other_user.username}
         ])
 
-        self.assertEqual(response.json()['participant'], {
-            'id': self.other_user.id,
-            'username': self.other_user.username,
-            'avatar_hash': self.other_user.avatar_hash,
-            'url': self.other_user.get_absolute_url(),
-            'is_owner': False,
-        })
-
         # event was set on thread
         event = self.thread.post_set.order_by('id').last()
         self.assertTrue(event.is_event)
@@ -211,16 +191,25 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
 
 
 class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
-    def test_remove_invalid(self):
-        """removed user has to be participant"""
+    def test_remove_empty(self):
+        """api handles empty user id"""
         ThreadParticipant.objects.set_owner(self.thread, self.user)
 
         response = self.patch(self.api_link, [
             {'op': 'remove', 'path': 'participants', 'value': 'string'}
         ])
 
-        self.assertContains(
-            response, "Participant to remove is invalid.", status_code=400)
+        self.assertContains(response, "Participant doesn't exist.", status_code=400)
+
+    def test_remove_invalid(self):
+        """api validates user id type"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+
+        response = self.patch(self.api_link, [
+            {'op': 'remove', 'path': 'participants', 'value': 'string'}
+        ])
+
+        self.assertContains(response, "Participant doesn't exist.", status_code=400)
 
     def test_remove_nonexistant(self):
         """removed user has to be participant"""
@@ -230,8 +219,7 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
             {'op': 'remove', 'path': 'participants', 'value': self.other_user.pk}
         ])
 
-        self.assertContains(
-            response, "Participant doesn't exist.", status_code=400)
+        self.assertContains(response, "Participant doesn't exist.", status_code=400)
 
     def test_remove_not_owner(self):
         """api validates if user trying to remove other user is an owner"""
@@ -256,6 +244,7 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         response = self.patch(self.api_link, [
             {'op': 'remove', 'path': 'participants', 'value': self.other_user.pk}
         ])
+
         self.assertContains(
             response, "moderators can remove participants from closed threads", status_code=400)
 
@@ -399,17 +388,197 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
 
 
 class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
-    """
-    Todo:
+    def test_empty_user_id(self):
+        """api handles empty user id"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
 
-    - handle no permission to change owner
-    - handle non-int new owner ID
-    - handle invalid int of new owner ID
-    - handle new owner id being same as current owner
-    - handle owner fail to pass ownership in closed thread
-    - handle owner pass ownership
-    - handle owner being changed by moderator
-    - handle owner being changed by moderator in closed thread
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'owner', 'value': ''}
+        ])
 
-    """
-    pass
+        self.assertContains(response, "Participant doesn't exist.", status_code=400)
+
+    def test_invalid_user_id(self):
+        """api handles invalid user id"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'owner', 'value': 'dsadsa'}
+        ])
+
+        self.assertContains(response, "Participant doesn't exist.", status_code=400)
+
+    def test_nonexistant_user_id(self):
+        """api handles nonexistant user id"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'owner', 'value': self.other_user.pk}
+        ])
+
+        self.assertContains(response, "Participant doesn't exist.", status_code=400)
+
+    def test_no_permission(self):
+        """non-moderator/owner can't change owner"""
+        ThreadParticipant.objects.set_owner(self.thread, self.other_user)
+        ThreadParticipant.objects.add_participants(self.thread, [self.user])
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'owner', 'value': self.user.pk}
+        ])
+
+        self.assertContains(
+            response, "thread owner and moderators can change threads owners", status_code=400)
+
+    def test_no_change(self):
+        """api validates that new owner id is same as current owner"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+        ThreadParticipant.objects.add_participants(self.thread, [self.other_user])
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'owner', 'value': self.user.pk}
+        ])
+
+        self.assertContains(response, "This user already is thread owner.", status_code=400)
+
+    def test_change_closed_thread_owner(self):
+        """non-moderator can't change owner in closed thread"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+        ThreadParticipant.objects.add_participants(self.thread, [self.other_user])
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'owner', 'value': self.other_user.pk}
+        ])
+
+        self.assertContains(
+            response, "Only moderators can change closed threads owners.", status_code=400)
+
+    def test_owner_change_thread_owner(self):
+        """owner can pass thread ownership to other participant"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+        ThreadParticipant.objects.add_participants(self.thread, [self.other_user])
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'owner', 'value': self.other_user.pk}
+        ])
+
+        self.assertEqual(response.status_code, 200)
+
+        # users were flagged for sync
+        User = get_user_model()
+
+        self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
+
+        # ownership was transfered
+        self.assertEqual(self.thread.participants.count(), 2)
+        self.assertTrue(ThreadParticipant.objects.get(user=self.other_user).is_owner)
+        self.assertFalse(ThreadParticipant.objects.get(user=self.user).is_owner)
+
+        # change was recorded in event
+        event = self.thread.post_set.order_by('id').last()
+        self.assertTrue(event.is_event)
+        self.assertTrue(event.event_type, 'changed_owner')
+
+    def test_moderator_change_owner(self):
+        """moderator can change thread owner to other user"""
+        User = get_user_model()
+        new_owner = User.objects.create_user(
+            'NewOwner', 'new@owner.com', 'pass123')
+
+        ThreadParticipant.objects.set_owner(self.thread, self.other_user)
+        ThreadParticipant.objects.add_participants(self.thread, [self.user, new_owner])
+
+        override_acl(self.user, {
+            'can_moderate_private_threads': 1
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'owner', 'value': new_owner.pk}
+        ])
+
+        self.assertEqual(response.status_code, 200)
+
+        # users were flagged for sync
+        self.assertTrue(User.objects.get(pk=new_owner.pk).sync_unread_private_threads)
+        self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
+
+        # ownership was transfered
+        self.assertEqual(self.thread.participants.count(), 3)
+        self.assertTrue(ThreadParticipant.objects.get(user=new_owner).is_owner)
+        self.assertFalse(ThreadParticipant.objects.get(user=self.user).is_owner)
+        self.assertFalse(ThreadParticipant.objects.get(user=self.other_user).is_owner)
+
+        # change was recorded in event
+        event = self.thread.post_set.order_by('id').last()
+        self.assertTrue(event.is_event)
+        self.assertTrue(event.event_type, 'changed_owner')
+
+    def test_moderator_takeover(self):
+        """moderator can takeover the thread"""
+        ThreadParticipant.objects.set_owner(self.thread, self.other_user)
+        ThreadParticipant.objects.add_participants(self.thread, [self.user])
+
+        override_acl(self.user, {
+            'can_moderate_private_threads': 1
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'owner', 'value': self.user.pk}
+        ])
+
+        self.assertEqual(response.status_code, 200)
+
+        # users were flagged for sync
+        User = get_user_model()
+
+        self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
+
+        # ownership was transfered
+        self.assertEqual(self.thread.participants.count(), 2)
+        self.assertTrue(ThreadParticipant.objects.get(user=self.user).is_owner)
+        self.assertFalse(ThreadParticipant.objects.get(user=self.other_user).is_owner)
+
+        # change was recorded in event
+        event = self.thread.post_set.order_by('id').last()
+        self.assertTrue(event.is_event)
+        self.assertTrue(event.event_type, 'tookover')
+
+    def test_moderator_closed_thread_takeover(self):
+        """moderator can takeover closed thread thread"""
+        ThreadParticipant.objects.set_owner(self.thread, self.other_user)
+        ThreadParticipant.objects.add_participants(self.thread, [self.user])
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        override_acl(self.user, {
+            'can_moderate_private_threads': 1
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'owner', 'value': self.user.pk}
+        ])
+
+        self.assertEqual(response.status_code, 200)
+
+        # users were flagged for sync
+        User = get_user_model()
+
+        self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
+
+        # ownership was transfered
+        self.assertEqual(self.thread.participants.count(), 2)
+        self.assertTrue(ThreadParticipant.objects.get(user=self.user).is_owner)
+        self.assertFalse(ThreadParticipant.objects.get(user=self.other_user).is_owner)
+
+        # change was recorded in event
+        event = self.thread.post_set.order_by('id').last()
+        self.assertTrue(event.is_event)
+        self.assertTrue(event.event_type, 'tookover')

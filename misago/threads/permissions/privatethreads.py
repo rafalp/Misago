@@ -209,7 +209,7 @@ def allow_change_owner(user, target):
     is_moderator = user.acl['can_moderate_private_threads']
     is_owner = target.participant and target.participant.is_owner
 
-    if not (is_owner and is_moderator):
+    if not (is_owner or is_moderator):
         raise PermissionDenied(
             _("Only thread owner and moderators can change threads owners."))
 

@@ -12,7 +12,8 @@ from misago.core.shortcuts import get_int_or_404, get_object_or_404
 
 from ...models import ThreadParticipant
 from ...moderation import threads as moderation
-from ...participants import add_participant, change_owner, remove_participant
+from ...participants import (
+    add_participant, change_owner, make_participants_aware, remove_participant)
 from ...permissions import (
     allow_add_participants, allow_add_participant,
     allow_change_owner, allow_remove_participant, allow_start_thread)
@@ -218,10 +219,9 @@ def patch_add_participant(request, thread, value):
     allow_add_participant(request.user, participant)
     add_participant(request, thread, participant)
 
+    participants = make_participants_aware(request.user, thread)
     return {
-        'participant': ThreadParticipantSerializer(
-            ThreadParticipant(user=participant, is_owner=False)
-        ).data
+        'participants': ThreadParticipantSerializer(participants, many=True).data
     }
 thread_patch_dispatcher.add('participants', patch_add_participant)
 
@@ -230,7 +230,7 @@ def patch_remove_participant(request, thread, value):
     try:
         user_id = int(value)
     except (ValueError, TypeError):
-        raise PermissionDenied(_("Participant to remove is invalid."))
+        user_id = 0
 
     for participant in thread.participants_list:
         if participant.user_id == user_id:
@@ -241,9 +241,16 @@ def patch_remove_participant(request, thread, value):
     allow_remove_participant(request.user, thread, participant.user)
     remove_participant(request, thread, participant.user)
 
-    return {
-        'deleted': len(thread.participants_list) == 1
-    }
+    if len(thread.participants_list) == 1:
+        return {
+            'deleted': True
+        }
+    else:
+        participants = make_participants_aware(request.user, thread)
+        return {
+            'deleted': False,
+            'participants': ThreadParticipantSerializer(participants, many=True).data
+        }
 thread_patch_dispatcher.remove('participants', patch_remove_participant)
 
 
@@ -251,17 +258,24 @@ def patch_replace_owner(request, thread, value):
     try:
         user_id = int(value)
     except (ValueError, TypeError):
-        raise PermissionDenied(_("Participant to remove is invalid."))
+        user_id = 0
 
     for participant in thread.participants_list:
         if participant.user_id == user_id:
-            break
+            if participant.is_owner:
+                raise PermissionDenied(_("This user already is thread owner."))
+            else:
+                break
     else:
         raise PermissionDenied(_("Participant doesn't exist."))
 
     allow_change_owner(request.user, thread)
+    change_owner(request, thread, participant.user)
 
-
+    participants = make_participants_aware(request.user, thread)
+    return {
+        'participants': ThreadParticipantSerializer(participants, many=True).data
+    }
 thread_patch_dispatcher.replace('owner', patch_replace_owner)
 
 

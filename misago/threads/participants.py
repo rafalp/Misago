@@ -46,7 +46,7 @@ def set_owner(thread, user):
     ThreadParticipant.objects.set_owner(thread, user)
 
 
-def change_owner(thread, user):
+def change_owner(request, thread, user):
     """
     Replace thread's owner with other
     """
