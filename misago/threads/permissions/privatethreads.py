@@ -220,16 +220,16 @@ can_change_owner = return_boolean(allow_change_owner)
 
 
 def allow_add_participants(user, target):
-    if user.acl['can_moderate_private_threads']:
-        return
+    is_moderator = user.acl['can_moderate_private_threads']
 
-    if not target.participant or not target.participant.is_owner:
-        raise PermissionDenied(
-            _("You have to be thread owner to add new participants to it."))
+    if not is_moderator:
+        if not target.participant or not target.participant.is_owner:
+            raise PermissionDenied(
+                _("You have to be thread owner to add new participants to it."))
 
-    if target.is_closed:
-        raise PermissionDenied(
-            _("Only moderators can add participants to closed threads."))
+        if target.is_closed:
+            raise PermissionDenied(
+                _("Only moderators can add participants to closed threads."))
 
     max_participants = user.acl['max_private_thread_participants']
     current_participants = len(target.participants_list) - 1

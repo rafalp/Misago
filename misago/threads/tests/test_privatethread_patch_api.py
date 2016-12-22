@@ -132,35 +132,28 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertIn(self.user.username, email.subject)
         self.assertIn(self.thread.title, email.subject)
 
-    def test_add_user_too_many_users_moderator(self):
-        """moderators bypass users limit"""
-        ThreadParticipant.objects.set_owner(self.thread, self.user)
+    def test_add_user_to_other_user_thread_moderator(self):
+        """moderators can add users to other users threads"""
+        ThreadParticipant.objects.set_owner(self.thread, self.other_user)
+
+        self.thread.has_reported_posts = True
+        self.thread.save()
 
         override_acl(self.user, {
             'can_moderate_private_threads': 1
         })
 
-        User = get_user_model()
-        for i in range(self.user.acl['max_private_thread_participants']):
-            user = User.objects.create_user(
-                'User{}'.format(i), 'user{}@example.com'.format(i), 'Pass.123')
-            ThreadParticipant.objects.add_participants(self.thread, [user])
-
         response = self.patch(self.api_link, [
-            {'op': 'add', 'path': 'participants', 'value': self.other_user.username}
+            {'op': 'add', 'path': 'participants', 'value': self.user.username}
         ])
 
         # event was set on thread
         event = self.thread.post_set.order_by('id').last()
         self.assertTrue(event.is_event)
-        self.assertTrue(event.event_type, 'added_participant')
+        self.assertTrue(event.event_type, 'entered_thread')
 
-        # notification about new private thread was sent to other user
-        self.assertEqual(len(mail.outbox), 1)
-        email = mail.outbox[-1]
-
-        self.assertIn(self.user.username, email.subject)
-        self.assertIn(self.thread.title, email.subject)
+        # notification about new private thread wasn't send because we invited ourselves
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_add_user_to_closed_moderator(self):
         """moderators can add users to closed threads"""

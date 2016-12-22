@@ -70,12 +70,15 @@ def add_participant(request, thread, user):
     """
     add_participants(request, thread, [user])
 
-    record_event(request, thread, 'added_participant', {
-        'user': {
-            'username': user.username,
-            'url': user.get_absolute_url(),
-        }
-    })
+    if request.user == user:
+        record_event(request, thread, 'entered_thread')
+    else:
+        record_event(request, thread, 'added_participant', {
+            'user': {
+                'username': user.username,
+                'url': user.get_absolute_url(),
+            }
+        })
 
 
 def add_participants(request, thread, users):
@@ -94,8 +97,10 @@ def add_participants(request, thread, users):
 
     emails = []
     for user in users:
-        emails.append(build_noticiation_email(request, thread, user))
-    send_messages(emails)
+        if user != request.user:
+            emails.append(build_noticiation_email(request, thread, user))
+    if emails:
+        send_messages(emails)
 
 
 def build_noticiation_email(request, thread, user):
