@@ -261,10 +261,10 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(event.is_event)
         self.assertTrue(event.event_type, 'participant_left')
 
-        # users were flagged for sync
+        # valid users were flagged for sync
         User = get_user_model()
-        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
         self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
 
         # user was removed from participation
         self.assertEqual(self.thread.participants.count(), 1)
@@ -293,10 +293,10 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(event.is_event)
         self.assertTrue(event.event_type, 'participant_left')
 
-        # users were flagged for sync
+        # valid users were flagged for sync
         User = get_user_model()
-        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
         self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
 
         # user was removed from participation
         self.assertEqual(self.thread.participants.count(), 1)
@@ -322,10 +322,10 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(event.is_event)
         self.assertTrue(event.event_type, 'participant_removed')
 
-        # users were flagged for sync
+        # valid users were flagged for sync
         User = get_user_model()
-        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
         self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
 
         # user was removed from participation
         self.assertEqual(self.thread.participants.count(), 1)
@@ -351,10 +351,10 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(event.is_event)
         self.assertTrue(event.event_type, 'owner_left')
 
-        # users were flagged for sync
+        # valid users were flagged for sync
         User = get_user_model()
-        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
         self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
 
         # user was removed from participation
         self.assertEqual(self.thread.participants.count(), 1)
@@ -375,7 +375,7 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         with self.assertRaises(Thread.DoesNotExist):
             Thread.objects.get(pk=self.thread.pk)
 
-        # users were flagged for sync
+        # valid users were flagged for sync
         User = get_user_model()
         self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
 
@@ -460,10 +460,10 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # users were flagged for sync
+        # valid users were flagged for sync
         User = get_user_model()
 
-        self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+        self.assertFalse(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
         self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
 
         # ownership was transfered
@@ -495,9 +495,9 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # users were flagged for sync
+        # valid users were flagged for sync
         self.assertTrue(User.objects.get(pk=new_owner.pk).sync_unread_private_threads)
-        self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+        self.assertFalse(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
         self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
 
         # ownership was transfered
@@ -526,10 +526,10 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # users were flagged for sync
+        # valid users were flagged for sync
         User = get_user_model()
 
-        self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+        self.assertFalse(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
         self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
 
         # ownership was transfered
@@ -560,10 +560,10 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # users were flagged for sync
+        # valid users were flagged for sync
         User = get_user_model()
 
-        self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+        self.assertFalse(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
         self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
 
         # ownership was transfered

@@ -26,12 +26,18 @@ def make_participants_aware(user, thread):
     return thread.participants_list
 
 
-def set_users_unread_private_threads_sync(users=None, participants=None):
+def set_users_unread_private_threads_sync(
+        users=None, participants=None, exclude_user=None):
     users_ids = []
     if users:
         users_ids += [u.pk for u in users]
     if participants:
         users_ids += [p.user_id for p in participants]
+    if exclude_user:
+        users_ids = filter(lambda u: u != exclude_user.pk, users_ids)
+
+    if not users_ids:
+        return
 
     User = get_user_model()
     User.objects.filter(id__in=set(users_ids)).update(
@@ -51,7 +57,10 @@ def change_owner(request, thread, user):
     Replace thread's owner with other
     """
     ThreadParticipant.objects.set_owner(thread, user)
-    set_users_unread_private_threads_sync(participants=thread.participants_list)
+    set_users_unread_private_threads_sync(
+        participants=thread.participants_list,
+        exclude_user=request.user
+    )
 
     if thread.participant and thread.participant.is_owner:
         record_event(request, thread, 'changed_owner', {
@@ -93,7 +102,11 @@ def add_participants(request, thread, users):
     except AttributeError:
         thread_participants = []
 
-    set_users_unread_private_threads_sync(users=users, participants=thread_participants)
+    set_users_unread_private_threads_sync(
+        users=users,
+        participants=thread_participants,
+        exclude_user=request.user
+    )
 
     emails = []
     for user in users:
