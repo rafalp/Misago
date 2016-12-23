@@ -29,7 +29,7 @@ export function Moderation(props) {
           aria-haspopup="true"
           className="btn btn-default dropdown-toggle"
           data-toggle="dropdown"
-          disable={props.thread.isBusy}
+          disabled={props.thread.isBusy}
           type="button"
         >
           <span className="material-icon">

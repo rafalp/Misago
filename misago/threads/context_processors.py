@@ -9,6 +9,9 @@ def preload_threads_urls(request):
         'THREADS_API': reverse('misago:api:thread-list'),
 
         'PRIVATE_THREADS_API': reverse('misago:api:private-thread-list'),
+
+
+        'PRIVATE_THREADS_URL': reverse('misago:private-threads'),
     })
 
     return {}
