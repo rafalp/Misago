@@ -19,7 +19,7 @@ from ..subscriptions import make_subscription_aware
 from ..utils import add_categories_to_items
 
 
-__all__ = ['ForumThreads', 'PrivateThreads']
+__all__ = ['ForumThreads', 'PrivateThreads', 'filter_read_threads_queryset']
 
 
 LISTS_NAMES = {

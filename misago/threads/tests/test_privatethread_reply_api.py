@@ -7,9 +7,9 @@ from ..models import ThreadParticipant
 from .test_privatethreads import PrivateThreadsTestCase
 
 
-class PrivateThreadreplyApiTestCase(PrivateThreadsTestCase):
+class PrivateThreadReplyApiTestCase(PrivateThreadsTestCase):
     def setUp(self):
-        super(PrivateThreadreplyApiTestCase, self).setUp()
+        super(PrivateThreadReplyApiTestCase, self).setUp()
 
         self.thread = testutils.post_thread(self.category, poster=self.user)
         self.api_link = self.thread.get_posts_api_url()

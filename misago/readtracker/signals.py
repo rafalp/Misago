@@ -1,5 +1,6 @@
 from django.dispatch import Signal, receiver
 
+from misago.categories.models import PRIVATE_THREADS_ROOT_NAME
 from misago.categories.signals import move_category_content
 from misago.threads.signals import move_thread
 
@@ -28,6 +29,10 @@ def delete_thread_tracker(sender, **kwargs):
 def decrease_unread_private_count(sender, **kwargs):
     user = sender
     thread = kwargs['thread']
-    if user.pk != thread.starter_id and user.unread_private_threads:
+
+    if thread.category.thread_type.root_name != PRIVATE_THREADS_ROOT_NAME:
+        return
+
+    if user.unread_private_threads:
         user.unread_private_threads -= 1
         user.save(update_fields=['unread_private_threads'])

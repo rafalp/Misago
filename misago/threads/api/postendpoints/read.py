@@ -9,4 +9,5 @@ def post_read_endpoint(request, thread, post):
         read_thread(request.user, thread, post)
         if thread.subscription:
             thread.subscription.last_read_on = post.posted_on
-    return Response({'detail': 'ok'})
+        return Response({'thread_is_read': thread.last_post_on <= post.posted_on})
+    return Response({'thread_is_read': True})
