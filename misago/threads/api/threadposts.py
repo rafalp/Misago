@@ -183,10 +183,10 @@ class ViewSet(viewsets.ViewSet):
     @detail_route(methods=['post'])
     @transaction.atomic
     def read(self, request, thread_pk, pk):
+        request.user.lock()
+
         thread = self.get_thread(request, thread_pk).unwrap()
         post = self.get_post(request, thread, pk).unwrap()
-
-        request.user.lock()
 
         return post_read_endpoint(request, thread, post)
 
