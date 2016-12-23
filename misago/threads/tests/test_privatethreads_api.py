@@ -169,6 +169,30 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
         self.assertEqual(response_json['participants'], [])
 
 
+class PrivateThreadsReadApiTests(PrivateThreadsTestCase):
+    def setUp(self):
+        super(PrivateThreadsReadApiTests, self).setUp()
+        self.api_link = self.category.get_read_api_url()
+
+    def test_read_threads_no_permission(self):
+        """api validates permission to use private threads"""
+        override_acl(self.user, {
+            'can_use_private_threads': 0
+        })
+
+        response = self.client.post(self.api_link)
+        self.assertEqual(response.status_code, 403)
+
+    def test_read_all(self):
+        """api sets all private threads as read"""
+        self.assertEqual(self.category.categoryread_set.count(), 0)
+
+        response = self.client.post(self.category.get_read_api_url())
+        self.assertEqual(response.status_code, 200)
+
+        self.category.categoryread_set.get(user=self.user)
+
+
 class PrivateThreadDeleteApiTests(PrivateThreadsTestCase):
     def setUp(self):
         super(PrivateThreadDeleteApiTests, self).setUp()

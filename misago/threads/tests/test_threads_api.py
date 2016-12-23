@@ -216,11 +216,13 @@ class ThreadsReadApiTests(ThreadsApiTestCase):
 
     def test_read_all(self):
         """api sets all threads as read"""
+        self.assertEqual(self.root.categoryread_set.count(), 0)
         self.assertEqual(self.category.categoryread_set.count(), 0)
 
         response = self.client.post(self.root.get_read_api_url())
         self.assertEqual(response.status_code, 200)
 
+        self.root.categoryread_set.get(user=self.user)
         self.category.categoryread_set.get(user=self.user)
 
 

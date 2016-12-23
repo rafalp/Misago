@@ -1,7 +1,4 @@
-from datetime import timedelta
-
 from django.urls import reverse
-from django.utils import timezone
 
 from misago.acl.testutils import override_acl
 from misago.users.testutils import AuthenticatedUserTestCase
@@ -59,9 +56,6 @@ class CategoryAPIViewsTests(AuthenticatedUserTestCase):
         super(CategoryAPIViewsTests, self).setUp()
 
         self.category = Category.objects.get(slug='first-category')
-        self.api_link = reverse('misago:api:category-read', kwargs={
-            'pk': self.category.pk
-        })
 
     def test_list_renders(self):
         """api returns categories for authenticated"""
@@ -104,74 +98,3 @@ class CategoryAPIViewsTests(AuthenticatedUserTestCase):
             self.assertNotContains(response, node.name)
             if node.level > 1:
                 self.assertNotContains(response, node.get_absolute_url())
-
-    def test_read_category_guest(self):
-        """category read api validates that user is authenticated"""
-        self.logout_user()
-
-        response = self.client.post(self.api_link)
-        self.assertContains(response, "This action is not available to guests.", status_code=403)
-
-    def test_read_invalid_category(self):
-        """category read api validates category id"""
-        api_link = reverse('misago:api:category-read', kwargs={
-            'pk': 'abcd'
-        })
-
-        response = self.client.post(api_link)
-        self.assertEqual(response.status_code, 404)
-
-    def test_read_nonexistant_category(self):
-        """category read api validates category visibility"""
-        api_link = reverse('misago:api:category-read', kwargs={
-            'pk': self.category.pk * 2
-        })
-
-        response = self.client.post(api_link)
-        self.assertEqual(response.status_code, 404)
-
-    def test_read_category_no_permission(self):
-        """category read api validates category permission"""
-        override_acl(self.user, {'visible_categories': []})
-
-        response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 404)
-
-    def test_read_category(self):
-        """category read api reads category"""
-        # clean reads
-        self.user.categoryread_set.all().delete()
-        self.assertEqual(self.user.categoryread_set.count(), 0)
-
-        # call api
-        response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 200)
-
-        # assert that new read was created
-        self.assertEqual(self.user.categoryread_set.count(), 1)
-
-        read = self.user.categoryread_set.order_by('id').last()
-        self.assertEqual(read.category_id, self.category.id)
-        self.assertTrue(read.last_read_on > timezone.now() - timedelta(seconds=3))
-
-    def test_read_root_category(self):
-        """category read api reads root category"""
-        category = Category.objects.root_category()
-        api_link = reverse('misago:api:category-read', kwargs={
-            'pk': category.pk
-        })
-
-        # clean reads
-        self.user.categoryread_set.all().delete()
-        self.assertEqual(self.user.categoryread_set.count(), 0)
-
-        # call api
-        response = self.client.post(api_link)
-        self.assertEqual(response.status_code, 200)
-
-        # assert that new read for subcategory was created
-        self.assertEqual(self.user.categoryread_set.count(), 1)
-
-        read = self.user.categoryread_set.order_by('id').last()
-        self.assertEqual(read.category_id, self.category.id)
-        self.assertTrue(read.last_read_on > timezone.now() - timedelta(seconds=3))

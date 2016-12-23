@@ -99,9 +99,7 @@ def sync_record(user, category):
 
 
 def read_category(user, category):
-    categories = []
-    if category.level:
-        categories.append(category.pk)
+    categories = [category.pk]
     if not category.is_leaf_node():
         queryset = category.get_descendants().filter(id__in=user.acl['visible_categories'])
         categories += queryset.values_list('id', flat=True)
