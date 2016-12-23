@@ -27,3 +27,9 @@ def read_threads(user, pk):
 def read_private_threads(user):
     category = Category.objects.private_threads()
     read_category(user, category)
+
+    user.sync_unread_private_threads = False
+    user.unread_private_threads = 0
+    user.save(update_fields=[
+        'sync_unread_private_threads', 'unread_private_threads'
+    ])

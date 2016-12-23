@@ -192,6 +192,12 @@ class PrivateThreadsReadApiTests(PrivateThreadsTestCase):
 
         self.category.categoryread_set.get(user=self.user)
 
+        # user was resynced
+        self.reload_user()
+
+        self.assertFalse(self.user.sync_unread_private_threads)
+        self.assertEqual(self.user.unread_private_threads, 0)
+
 
 class PrivateThreadDeleteApiTests(PrivateThreadsTestCase):
     def setUp(self):
