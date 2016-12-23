@@ -83,7 +83,7 @@ export default class extends WithDropdown {
   }
 
   loadThreads(category, page=1) {
-    ajax.get(misago.get('THREADS_API'), {
+    ajax.get(this.props.options.api, {
       category: category,
       list: this.props.route.list.type,
       page: page || 1
@@ -123,7 +123,7 @@ export default class extends WithDropdown {
   startPolling(category) {
     polls.start({
       poll: 'threads',
-      url: misago.get('THREADS_API'),
+      url: this.props.options.api,
       data: {
         category: category,
         list: this.props.route.list.type
@@ -155,12 +155,18 @@ export default class extends WithDropdown {
   }
 
   getTitle() {
+    if (this.props.options.title) {
+      return this.props.options.title;
+    }
+
     return getTitle(this.props.route);
   }
 
   setPageTitle() {
     if (this.props.route.category.level || !misago.get('THREADS_ON_INDEX')) {
       title.set(getPageTitle(this.props.route));
+    } else if (this.props.options.title) {
+        title.set(this.props.options.title);
     } else {
       if (misago.get('SETTINGS').forum_index_title) {
         document.title = misago.get('SETTINGS').forum_index_title;

@@ -13,6 +13,9 @@ class UnreadThreadsCountMiddleware(object):
         if not request.user.acl['can_use_private_threads']:
             return
 
+        if not request.user.sync_unread_private_threads:
+            return
+
         participated_threads = request.user.threadparticipant_set.values('thread_id')
 
         category = Category.objects.private_threads()

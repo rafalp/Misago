@@ -103,6 +103,7 @@ DEFAULT_CONTEXT_PROCESSORS = (
 
     # Data preloaders
     'misago.conf.context_processors.preload_settings_json',
+    'misago.core.context_processors.current_link',
     'misago.markup.context_processors.preload_api_url',
     'misago.threads.context_processors.preload_threads_urls',
     'misago.users.context_processors.preload_user_json',

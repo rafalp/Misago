@@ -63,7 +63,33 @@ class ParticipantsTests(TestCase):
         self.thread.threadparticipant_set.all().delete()
         self.assertFalse(has_participants(self.thread))
 
-    def test_make_participants_aware(self):
+    def test_make_threads_participants_aware(self):
+        """
+        make_participants_aware sets participants_list and participant
+        annotations on list of threads
+        """
+        User = get_user_model()
+        user = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
+        other_user = User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123")
+
+        self.assertFalse(hasattr(self.thread, 'participants_list'))
+        self.assertFalse(hasattr(self.thread, 'participant'))
+
+        make_participants_aware(user, [self.thread])
+
+        self.assertFalse(hasattr(self.thread, 'participants_list'))
+        self.assertTrue(hasattr(self.thread, 'participant'))
+        self.assertIsNone(self.thread.participant)
+
+        ThreadParticipant.objects.set_owner(self.thread, user)
+        ThreadParticipant.objects.add_participants(self.thread, [other_user])
+
+        make_participants_aware(user, [self.thread])
+
+        self.assertFalse(hasattr(self.thread, 'participants_list'))
+        self.assertEqual(self.thread.participant.user, user)
+
+    def test_make_thread_participants_aware(self):
         """
         make_participants_aware sets participants_list and participant
         annotations on thread model

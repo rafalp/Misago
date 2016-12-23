@@ -104,7 +104,7 @@ def read_category(user, category):
         categories.append(category.pk)
     if not category.is_leaf_node():
         queryset = category.get_descendants().filter(id__in=user.acl['visible_categories'])
-        categories += [c['id'] for c in queryset.values('id')]
+        categories += queryset.values_list('id', flat=True)
 
     user.categoryread_set.filter(category_id__in=categories).delete()
 

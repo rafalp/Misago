@@ -10,7 +10,7 @@ class PrivateThread(ThreadType):
     root_name = PRIVATE_THREADS_ROOT_NAME
 
     def get_category_name(self, category):
-        return _('Private Threads')
+        return _('Private threads')
 
     def get_category_absolute_url(self, category):
         return reverse('misago:private-threads')
@@ -28,9 +28,7 @@ class PrivateThread(ThreadType):
         })
 
     def get_category_read_api_url(self, category):
-        return reverse('misago:api:category-read', kwargs={
-            'pk': category.pk
-        })
+        return reverse('misago:api:private-thread-read')
 
     def get_thread_absolute_url(self, thread, page=1):
         if page > 1:

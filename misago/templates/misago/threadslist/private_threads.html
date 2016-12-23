@@ -25,12 +25,6 @@ page-private-threads
 {% block page-header %}
 <div class="page-header tabbed">
   <div class="container">
-    <a href="{{ category.parent.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="btn btn-default btn-aligned btn-icon btn-go-back pull-left">
-      <span class="material-icon">
-        keyboard_arrow_left
-      </span>
-    </a>
-
     <h1 class="pull-left">
       {{ category }}
     </h1>

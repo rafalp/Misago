@@ -18,6 +18,7 @@ from .threadendpoints.editor import thread_start_editor
 from .threadendpoints.list import private_threads_list_endpoint, threads_list_endpoint
 from .threadendpoints.merge import thread_merge_endpoint, threads_merge_endpoint
 from .threadendpoints.patch import thread_patch_endpoint
+from .threadendpoints.read import read_private_threads, read_threads
 
 
 class ViewSet(viewsets.ViewSet):
@@ -108,6 +109,12 @@ class ThreadViewSet(ViewSet):
     def editor(self, request):
         return thread_start_editor(request)
 
+    @list_route(methods=['post'])
+    @transaction.atomic
+    def read(self, request):
+        read_threads(request.user, request.GET.get('category'))
+        return Response({'detail': 'ok'})
+
 
 class PrivateThreadViewSet(ViewSet):
     thread = PrivateThread
@@ -144,3 +151,10 @@ class PrivateThreadViewSet(ViewSet):
             })
         else:
             return Response(posting.errors, status=400)
+
+    @list_route(methods=['post'])
+    @transaction.atomic
+    def read(self, request):
+        allow_use_private_threads(request.user)
+        read_private_threads(request.user)
+        return Response({'detail': 'ok'})

@@ -15,34 +15,6 @@ export default class extends React.Component {
     }
   }
 
-  getToolbarLabel() {
-    if (this.props.isLoaded) {
-      let label = null;
-      if (this.props.route.list.path) {
-        label = ngettext(
-          "%(threads)s thread found.",
-          "%(threads)s threads found.",
-          this.props.threadsCount);
-      } else if (this.props.route.category.parent) {
-        label = ngettext(
-          "There is %(threads)s thread in this category.",
-          "There are %(threads)s threads in this category.",
-          this.props.threadsCount);
-      } else {
-        label = ngettext(
-          "There is %(threads)s thread on our forums.",
-          "There are %(threads)s threads on our forums.",
-          this.props.threadsCount);
-      }
-
-      return interpolate(label, {
-        threads: this.props.threadsCount
-      }, true);
-    } else {
-      return gettext("Loading threads...");
-    }
-  }
-
   getDisableToolbar() {
     return !this.props.isLoaded || this.props.isBusy || this.props.busyThreads.length;
   }
@@ -69,7 +41,6 @@ export default class extends React.Component {
                       route={this.props.route}
                       disabled={this.getDisableToolbar()}
                       user={this.props.user}>
-        {this.getToolbarLabel()}
       </Toolbar>;
       /* jshint ignore:end */
     } else {

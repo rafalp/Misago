@@ -37,9 +37,8 @@ class Thread(ThreadType):
         })
 
     def get_category_read_api_url(self, category):
-        return reverse('misago:api:category-read', kwargs={
-            'pk': category.pk
-        })
+        return '{}?category={}'.format(
+            reverse('misago:api:thread-read'), category.pk)
 
     def get_thread_absolute_url(self, thread, page=1):
         if page > 1:

@@ -28,7 +28,7 @@ class ReadTrackerTests(TestCase):
         )
 
 
-class CategorysTrackerTests(ReadTrackerTests):
+class CategoriesTrackerTests(ReadTrackerTests):
     def test_anon_empty_category_read(self):
         """anon users content is always read"""
         categoriestracker.make_read_aware(self.anon, self.categories)
@@ -164,7 +164,7 @@ class CategorysTrackerTests(ReadTrackerTests):
         categoriestracker.read_category(self.user, root_category)
 
         child_read = self.user.categoryread_set.get(category=self.category)
-        self.assertTrue(child_read.last_read_on > timezone.now() -timedelta(seconds=3))
+        self.assertTrue(child_read.last_read_on > timezone.now() - timedelta(seconds=3))
 
 
 class ThreadsTrackerTests(ReadTrackerTests):
