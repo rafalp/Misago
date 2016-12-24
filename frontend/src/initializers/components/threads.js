@@ -16,8 +16,14 @@ export function getListOptions(context) {
   const currentLink = context.get('CURRENT_LINK');
   if (currentLink.substr(0, PRIVATE_THREADS_LIST.length) === PRIVATE_THREADS_LIST) {
     return {
-      'api': context.get('PRIVATE_THREADS_API'),
-      'title': gettext("Private threads")
+      api: context.get('PRIVATE_THREADS_API'),
+      startThread: {
+        mode: 'START_PRIVATE',
+        submit: misago.get('PRIVATE_THREADS_API')
+      },
+      title: gettext("Private threads"),
+      pageLead: gettext("Private threads are threads which only those that started them and those they have invited may see and participate in."),
+      emptyMessage: gettext("You aren't participating in any private threads.")
     };
   }
 

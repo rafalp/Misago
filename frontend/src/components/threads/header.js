@@ -43,7 +43,7 @@ export default class extends React.Component {
   };
 
   startThread = () => {
-    posting.open({
+    posting.open(this.props.startThread || {
       mode: 'START',
 
       config: misago.get('THREAD_EDITOR_API'),

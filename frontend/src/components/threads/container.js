@@ -4,11 +4,23 @@ import Toolbar from 'misago/components/threads/toolbar'; // jshint ignore:line
 
 export default class extends React.Component {
   getCategoryDescription() {
-    if (this.props.route.category.description) {
+    if (this.props.pageLead) {
       /* jshint ignore:start */
-      return <div className="category-description">
-        <PageLead copy={this.props.route.category.description.html} />
-      </div>;
+      return (
+        <div className="category-description">
+          <div className="page-lead">
+            <p>{this.props.pageLead}</p>
+          </div>
+        </div>
+      );
+      /* jshint ignore:end */
+    } else if (this.props.route.category.description) {
+      /* jshint ignore:start */
+      return (
+        <div className="category-description">
+          <PageLead copy={this.props.route.category.description.html} />
+        </div>
+      );
       /* jshint ignore:end */
     } else {
       return null;

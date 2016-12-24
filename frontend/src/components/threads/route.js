@@ -280,58 +280,71 @@ export default class extends WithDropdown {
 
   render() {
     /* jshint ignore:start */
-    return <div className={this.getClassName()}>
+    return (
+      <div className={this.getClassName()}>
+        <Header
+          categories={this.props.route.categoriesMap}
+          disabled={!this.state.isLoaded}
+          startThread={this.props.options.startThread}
+          threads={this.props.threads}
+          title={this.getTitle()}
+          toggleNav={this.toggleNav}
+          route={this.props.route}
+          user={this.props.user}
+        />
 
-      <Header categories={this.props.route.categoriesMap}
-              disabled={!this.state.isLoaded}
-              threads={this.props.threads}
-              title={this.getTitle()}
-              toggleNav={this.toggleNav}
-              route={this.props.route}
-              user={this.props.user} />
+        {this.getCompactNav()}
 
-      {this.getCompactNav()}
+        <Container
+          route={this.props.route}
+          subcategories={this.state.subcategories}
+          user={this.props.user}
 
-      <Container route={this.props.route}
-                 subcategories={this.state.subcategories}
-                 user={this.props.user}
+          pageLead={this.props.options.pageLead}
 
-                 threads={this.props.threads}
-                 threadsCount={this.state.count}
+          threads={this.props.threads}
+          threadsCount={this.state.count}
 
-                 moderation={this.state.moderation}
-                 selection={this.props.selection}
+          moderation={this.state.moderation}
+          selection={this.props.selection}
 
-                 busyThreads={this.state.busyThreads}
-                 addThreads={this.addThreads}
-                 freezeThread={this.freezeThread}
-                 deleteThread={this.deleteThread}
-                 updateThread={this.updateThread}
+          busyThreads={this.state.busyThreads}
+          addThreads={this.addThreads}
+          freezeThread={this.freezeThread}
+          deleteThread={this.deleteThread}
+          updateThread={this.updateThread}
 
-                 isLoaded={this.state.isLoaded}
-                 isBusy={this.state.isBusy}>
+          isLoaded={this.state.isLoaded}
+          isBusy={this.state.isBusy}
+        >
 
-        <ThreadsList categories={this.props.route.categoriesMap}
-                     list={this.props.route.list}
-                     selection={this.props.selection}
-                     threads={this.props.threads}
+          <ThreadsList
+            categories={this.props.route.categoriesMap}
+            list={this.props.route.list}
+            selection={this.props.selection}
+            threads={this.props.threads}
 
-                     diffSize={this.state.diff.results.length}
-                     applyDiff={this.applyDiff}
+            diffSize={this.state.diff.results.length}
+            applyDiff={this.applyDiff}
 
-                     showOptions={!!this.props.user.id}
+            showOptions={!!this.props.user.id}
 
-                     isLoaded={this.state.isLoaded}
-                     busyThreads={this.state.busyThreads}>
-          <ThreadsListEmpty category={this.props.route.category}
-                            list={this.props.route.list} />
-        </ThreadsList>
+            isLoaded={this.state.isLoaded}
+            busyThreads={this.state.busyThreads}
+          >
+            <ThreadsListEmpty
+              category={this.props.route.category}
+              emptyMessage={this.props.options.emptyMessage}
+              list={this.props.route.list}
+            />
+          </ThreadsList>
 
-        {this.getMoreButton()}
+          {this.getMoreButton()}
 
-      </Container>
+        </Container>
 
-    </div>;
+      </div>
+    );
     /* jshint ignore:end */
   }
 }
