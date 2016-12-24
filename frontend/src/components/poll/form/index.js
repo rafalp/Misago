@@ -235,7 +235,7 @@ export default class extends Form {
                     &nbsp;
                     <button
                       className="btn btn-default"
-                      dsabled={this.state.isLoading}
+                      disabled={this.state.isLoading}
                       onClick={this.onCancel}
                       type="button"
                     >

@@ -163,6 +163,7 @@ def add_acl_to_thread(user, thread):
         thread.participant = None
 
     thread.acl.update({
+        'can_start_poll': False,
         'can_change_owner': can_change_owner(user, thread),
         'can_add_participants': can_add_participants(user, thread),
     })
