@@ -219,9 +219,12 @@ def patch_add_participant(request, thread, value):
     allow_add_participant(request.user, participant)
     add_participant(request, thread, participant)
 
-    participants = make_participants_aware(request.user, thread)
+    make_participants_aware(request.user, thread)
+    participants = ThreadParticipantSerializer(
+        thread.participants_list, many=True)
+
     return {
-        'participants': ThreadParticipantSerializer(participants, many=True).data
+        'participants': participants.data
     }
 thread_patch_dispatcher.add('participants', patch_add_participant)
 
@@ -246,10 +249,13 @@ def patch_remove_participant(request, thread, value):
             'deleted': True
         }
     else:
-        participants = make_participants_aware(request.user, thread)
+        make_participants_aware(request.user, thread)
+        participants = ThreadParticipantSerializer(
+            thread.participants_list, many=True)
+
         return {
             'deleted': False,
-            'participants': ThreadParticipantSerializer(participants, many=True).data
+            'participants': participants.data
         }
 thread_patch_dispatcher.remove('participants', patch_remove_participant)
 
@@ -272,9 +278,10 @@ def patch_replace_owner(request, thread, value):
     allow_change_owner(request.user, thread)
     change_owner(request, thread, participant.user)
 
-    participants = make_participants_aware(request.user, thread)
+    make_participants_aware(request.user, thread)
+    participants = ThreadParticipantSerializer(thread.participants_list, many=True)
     return {
-        'participants': ThreadParticipantSerializer(participants, many=True).data
+        'participants': participants.data
     }
 thread_patch_dispatcher.replace('owner', patch_replace_owner)
 

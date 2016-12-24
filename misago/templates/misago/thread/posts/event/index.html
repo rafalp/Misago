@@ -26,6 +26,14 @@
           visibility
         {% elif post.event_type == 'hid' %}
           visibility_off
+        {% elif post.event_type == 'changed_owner' or post.event_type == 'tookover' %}
+          grade
+        {% elif post.event_type == 'added_participant' %}
+          person_add
+        {% elif post.event_type == 'owner_left' or post.event_type == 'participant_left' or post.event_type == 'removed_participant' %}
+          person_outline
+        {% elif post.event_type == 'removed_participant' %}
+          remove_circle_outline
         {% endif %}
       </span>
     </div>
@@ -69,6 +77,33 @@
           {% trans "Thread has been revealed." %}
         {% elif post.event_type == 'hid' %}
           {% trans "Thread has been made hidden." %}
+        {% elif post.event_type == 'tookover' %}
+          {% trans "Took thread over." %}
+        {% elif post.event_type == 'owner_left' %}
+          {% trans "Owner has left thread. This thread is now closed." %}
+        {% elif post.event_type == 'participant_left' %}
+          {% trans "Participant has left thread." %}
+        {% elif post.event_type == 'changed_owner' %}
+          {% capture trimmed as user %}
+            <a href="{{ post.event_context.user.url }}" class="item-title">{{ post.event_context.user.username }}</a>
+          {% endcapture %}
+          {% blocktrans trimmed with user=user|safe %}
+            Changed thread owner to {{ user }}.
+          {% endblocktrans %}
+        {% elif post.event_type == 'added_participant' %}
+          {% capture trimmed as user %}
+            <a href="{{ post.event_context.user.url }}" class="item-title">{{ post.event_context.user.username }}</a>
+          {% endcapture %}
+          {% blocktrans trimmed with user=user|safe %}
+            Added {{ user }} to thread.
+          {% endblocktrans %}
+        {% elif post.event_type == 'removed_participant' %}
+          {% capture trimmed as user %}
+            <a href="{{ post.event_context.user.url }}" class="item-title">{{ post.event_context.user.username }}</a>
+          {% endcapture %}
+          {% blocktrans trimmed with user=user|safe %}
+            Removed {{ user }} from thread.
+          {% endblocktrans %}
         {% endif %}
       </p>
 

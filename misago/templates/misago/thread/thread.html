@@ -25,7 +25,6 @@
   <div class="container">
 
     {% include "misago/thread/toolbar-top.html" %}
-
     {% if thread.poll %}
       {% include "misago/poll/index.html" with poll=thread.poll %}
     {% endif %}

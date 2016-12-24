@@ -17,7 +17,16 @@ const ICON = {
   closed: 'lock_outline',
 
   unhid: 'visibility',
-  hid: 'visibility_off'
+  hid: 'visibility_off',
+
+  changed_owner: 'grade',
+  tookover: 'grade',
+
+  added_participant: 'person_add',
+
+  owner_left: 'person_outline',
+  participant_left: 'person_outline',
+  removed_participant: 'remove_circle_outline',
 }
 
 export default function(props) {
