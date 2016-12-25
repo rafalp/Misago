@@ -29,13 +29,17 @@ def search(request, search_provider):
     else:
         raise Http404()
 
+    request.frontend_context['SEARCH_API'] = reverse('misago:api:search')
     request.frontend_context['SEARCH_PROVIDERS'] = []
+
     for provider in searchproviders.get_allowed_providers(request):
         request.frontend_context['SEARCH_PROVIDERS'].append({
+            'id': provider.url,
             'name': six.text_type(provider.name),
             'url': reverse('misago:search', kwargs={'search_provider': provider.url}),
-            'api': provider.url,
-            'results': None
+            'api': reverse('misago:api:search', kwargs={'search_provider': provider.url}),
+            'results': None,
+            'time': None
         })
 
     return render(request, 'misago/search.html')

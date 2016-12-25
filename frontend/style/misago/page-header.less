@@ -18,6 +18,16 @@
       margin-right: 8px;
     }
   }
+
+  @media screen and (min-width: @screen-md-min) {
+    .row {
+      margin-top: @line-height-computed * 1.25;
+
+      h1 {
+        margin-top: -3px;
+      }
+    }
+  }
 }
 
 
@@ -51,7 +61,7 @@
   background: none;
   padding-left: 0px;
   padding-right: 0px;
-  margin-bottom: @line-height-computed * -1;
+  margin-bottom: @line-height-computed * -.5;
   overflow: auto;
 }
 

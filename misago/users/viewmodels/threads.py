@@ -5,12 +5,8 @@ from misago.core.shortcuts import paginate, pagination_dict
 from misago.readtracker import threadstracker
 from misago.threads.permissions import exclude_invisible_threads
 from misago.threads.serializers import PostFeedSerializer
-from misago.threads.subscriptions import make_subscription_aware
-from misago.threads.threadtypes import trees_map
 from misago.threads.utils import add_categories_to_items, add_likes_to_posts
 from misago.threads.viewmodels import ThreadsRootCategory
-
-from ..online.utils import make_users_status_aware
 
 
 class UserThreads(object):
@@ -39,7 +35,8 @@ class UserThreads(object):
         for post in posts:
             threads.append(post.thread)
 
-        add_categories_to_items(root_category.unwrap(), threads_categories, posts + threads)
+        add_categories_to_items(
+            root_category.unwrap(), threads_categories, posts + threads)
 
         add_acl(request.user, threads)
         add_acl(request.user, posts)
@@ -56,7 +53,8 @@ class UserThreads(object):
         self.paginator = paginator
 
     def get_threads_queryset(self, request, threads_categories, profile):
-        return exclude_invisible_threads(request.user, threads_categories, profile.thread_set)
+        return exclude_invisible_threads(
+            request.user, threads_categories, profile.thread_set)
 
     def get_posts_queryset(self, user, profile, threads_queryset):
         return profile.post_set.select_related('thread', 'poster').filter(
@@ -65,7 +63,8 @@ class UserThreads(object):
 
     def get_frontend_context(self):
         context = {
-            'results': PostFeedSerializer(self.posts, many=True, context={'user': self._user}).data
+            'results': PostFeedSerializer(
+                self.posts, many=True, context={'user': self._user}).data
         }
 
         context.update(self.paginator)

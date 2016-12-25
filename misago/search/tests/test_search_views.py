@@ -31,12 +31,6 @@ class LandingTests(AuthenticatedUserTestCase):
 
 
 class SearchTests(AuthenticatedUserTestCase):
-    """
-    todo:
-
-    - search provider disallowed
-    - noscript view displayed
-    """
     def test_no_permission(self):
         """view validates permission to search forum"""
         override_acl(self.user, {

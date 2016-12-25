@@ -22,7 +22,7 @@ def paginate(object_list, page, per_page, orphans=0,
         return Paginator(
             object_list, per_page, orphans=orphans,
             allow_empty_first_page=allow_empty_first_page).page(page)
-    except (EmptyPage, InvalidPage):
+    except (EmptyPage, InvalidPage) as e:
         raise Http404()
 
 

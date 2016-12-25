@@ -63,12 +63,15 @@ export default class extends Form {
                   disabled={this.state.isLoading}
                   onChange={this.onUsernameChange}
                   type="text"
-                  value={this.state.title}
+                  value={this.state.username}
                 />
               </FormGroup>
             </div>
             <div className="modal-footer">
-              <button className="btn btn-block btn-primary" disabled={this.state.isLoading}>
+              <button
+                className="btn btn-block btn-primary"
+                disabled={this.state.isLoading}
+              >
                 {gettext("Add participant")}
               </button>
             </div>
