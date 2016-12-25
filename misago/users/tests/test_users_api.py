@@ -124,6 +124,19 @@ class FollowsListTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, test_follower.username)
 
+    def test_filled_list_search(self):
+        """follows list is searchable"""
+        User = get_user_model()
+        test_follower = User.objects.create_user(
+            "TestFollower", "test@follower.com", self.USER_PASSWORD)
+        self.user.follows.add(test_follower)
+
+        api_link = self.link % self.user.pk
+
+        response = self.client.get('%s&name=%s' % (api_link, 'test'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, test_follower.username)
+
 
 class RankListTests(AuthenticatedUserTestCase):
     """
@@ -157,6 +170,13 @@ class RankListTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link % self.user.rank.pk)
         self.assertEqual(response.status_code, 404)
 
+    def test_list_search(self):
+        """rank list is not searchable"""
+        api_link = self.link % self.user.rank.pk
+
+        response = self.client.get('%s&name=%s' % (api_link, 'test'))
+        self.assertEqual(response.status_code, 404)
+
     def test_filled_list(self):
         """tab rank with members return 200"""
         self.user.rank.is_tab = True
@@ -169,22 +189,21 @@ class RankListTests(AuthenticatedUserTestCase):
 
 class SearchNamesListTests(AuthenticatedUserTestCase):
     """
-    tests for generic list (GET /users/) filtered by username
+    tests for generic list (GET /users/) filtered by username disallowing searches
     """
     def setUp(self):
         super(SearchNamesListTests, self).setUp()
         self.link = '/api/users/?&name='
 
     def test_empty_list(self):
-        """empty list returns 200"""
+        """empty list returns 404"""
         response = self.client.get(self.link + 'this-user-is-fake')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
 
     def test_filled_list(self):
-        """filled list returns 200"""
+        """results list returns 404"""
         response = self.client.get(self.link + self.user.slug)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.user.username)
+        self.assertEqual(response.status_code, 404)
 
 
 class UserCategoriesOptionsTests(AuthenticatedUserTestCase):
