@@ -8,7 +8,6 @@ from faker import Factory
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.db.transaction import atomic
-from django.template.defaultfilters import linebreaks_filter
 from django.utils import timezone
 from django.utils.six.moves import range
 
@@ -19,6 +18,8 @@ from misago.threads.models import Post, Thread
 
 from ...englishcorpus import EnglishCorpus
 
+
+PLACEKITTEN_URL = 'https://placekitten.com/g/%s/%s'
 
 corpus = EnglishCorpus()
 corpus_short = EnglishCorpus(max_length=150)
@@ -80,10 +81,7 @@ class Command(BaseCommand):
                 thread.set_title(corpus_short.random_choice())
                 thread.save()
 
-                paragraphs = []
-                for i in range(random.randint(1, 20)):
-                    paragraphs.append(' '.join(corpus.random_sentences(random.randint(1, 20))))
-                fake_message = "\n\n".join(paragraphs)
+                original, parsed = self.fake_post_content()
 
                 post = Post.objects.create(
                     category=category,
@@ -91,8 +89,8 @@ class Command(BaseCommand):
                     poster=user,
                     poster_name=user.username,
                     poster_ip=fake.ipv4(),
-                    original=fake_message,
-                    parsed=linebreaks_filter(fake_message),
+                    original=original,
+                    parsed=parsed,
                     posted_on=datetime,
                     updated_on=datetime
                 )
@@ -119,10 +117,7 @@ class Command(BaseCommand):
                     datetime = timezone.now()
                     user = User.objects.order_by('?')[:1][0]
 
-                    paragraphs = []
-                    for i in range(random.randint(1, 20)):
-                        paragraphs.append(' '.join(corpus.random_sentences(random.randint(1, 20))))
-                    fake_message = "\n\n".join(paragraphs)
+                    original, parsed = self.fake_post_content()
 
                     is_unapproved = random.randint(0, 100) > 97
 
@@ -132,8 +127,8 @@ class Command(BaseCommand):
                         poster=user,
                         poster_name=user.username,
                         poster_ip=fake.ipv4(),
-                        original=fake_message,
-                        parsed=linebreaks_filter(fake_message),
+                        original=original,
+                        parsed=parsed,
                         is_unapproved=is_unapproved,
                         posted_on=datetime,
                         updated_on=datetime
@@ -186,3 +181,31 @@ class Command(BaseCommand):
         total_time = time.time() - start_time
         total_humanized = time.strftime('%H:%M:%S', time.gmtime(total_time))
         self.stdout.write(message % (created_threads, total_humanized))
+
+    def fake_post_content(self):
+        raw = []
+        parsed = []
+
+        if random.randint(0, 100) > 80:
+            paragraphs_to_make = random.randint(1, 20)
+        else:
+            paragraphs_to_make = random.randint(1, 5)
+
+        for i in range(paragraphs_to_make):
+            if random.randint(0, 100) > 95:
+                cat_width = random.randint(1, 16) * random.choice([100, 90, 80])
+                cat_height = random.randint(1, 12) * random.choice([100, 90, 80])
+
+                cat_url = PLACEKITTEN_URL % (cat_width, cat_height)
+
+                raw.append('!(%s)' % cat_url)
+                parsed.append('<p><img src="%s" alt=""/></p>' % cat_url)
+            else:
+                if random.randint(0, 100) > 95:
+                    sentences_to_make = random.randint(1, 20)
+                else:
+                    sentences_to_make = random.randint(1, 7)
+                raw.append(' '.join(corpus.random_sentences(sentences_to_make)))
+                parsed.append('<p>%s</p>' % raw[-1])
+
+        return "\n\n".join(raw), "\n".join(parsed)
