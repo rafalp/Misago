@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import random
 import time
 
@@ -14,6 +16,12 @@ from misago.categories.models import Category
 from misago.core.management.progressbar import show_progress
 from misago.threads.checksums import update_post_checksum
 from misago.threads.models import Post, Thread
+
+from ...englishcorpus import EnglishCorpus
+
+
+corpus = EnglishCorpus()
+corpus_short = EnglishCorpus(max_length=150)
 
 
 class Command(BaseCommand):
@@ -69,10 +77,14 @@ class Command(BaseCommand):
                     is_hidden=thread_is_hidden,
                     is_closed=thread_is_closed
                 )
-                thread.set_title(fake.sentence())
+                thread.set_title(corpus_short.random_choice())
                 thread.save()
 
-                fake_message = "\n\n".join(fake.paragraphs())
+                paragraphs = []
+                for i in range(random.randint(1, 20)):
+                    paragraphs.append(' '.join(corpus.random_sentences(random.randint(1, 20))))
+                fake_message = "\n\n".join(paragraphs)
+
                 post = Post.objects.create(
                     category=category,
                     thread=thread,
@@ -96,7 +108,7 @@ class Command(BaseCommand):
                 user.save()
 
                 thread_type = random.randint(0, 100)
-                if thread_type > 95:
+                if thread_type > 98:
                     thread_replies = random.randint(200, 2500)
                 elif thread_type > 50:
                     thread_replies = random.randint(5, 30)
@@ -106,7 +118,11 @@ class Command(BaseCommand):
                 for x in range(thread_replies):
                     datetime = timezone.now()
                     user = User.objects.order_by('?')[:1][0]
-                    fake_message = "\n\n".join(fake.paragraphs())
+
+                    paragraphs = []
+                    for i in range(random.randint(1, 20)):
+                        paragraphs.append(' '.join(corpus.random_sentences(random.randint(1, 20))))
+                    fake_message = "\n\n".join(paragraphs)
 
                     is_unapproved = random.randint(0, 100) > 97
 
