@@ -18,10 +18,11 @@ def landing(request):
 
 
 def search(request, search_provider):
-    if not request.user.acl['can_search']:
+    all_providers = searchproviders.get_providers(request)
+    if not request.user.acl['can_search'] or not all_providers:
         raise PermissionDenied(_("You don't have permission to search site."))
 
-    for provider in searchproviders.get_providers(request):
+    for provider in all_providers:
         if provider.url == search_provider:
             provider.allow_search()
             break

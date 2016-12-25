@@ -33,22 +33,26 @@ def active(request):
 
 
 def generic(request):
+    allow_name_search = True
     queryset = get_user_model().objects
+
     if request.query_params.get('followers'):
         user_pk = get_int_or_404(request.query_params.get('followers'))
         queryset = get_object_or_404(queryset, pk=user_pk).followed_by
     elif request.query_params.get('follows'):
         user_pk = get_int_or_404(request.query_params.get('follows'))
         queryset = get_object_or_404(queryset, pk=user_pk).follows
-
-    if request.query_params.get('rank'):
+    elif request.query_params.get('rank'):
         rank_pk = get_int_or_404(request.query_params.get('rank'))
         rank = get_object_or_404(Rank.objects, pk=rank_pk, is_tab=True)
         queryset = queryset.filter(rank=rank)
+        allow_name_search = False
+    else:
+        raise Http404() # don't use this api for searches
 
     if request.query_params.get('name'):
         name_starts_with = request.query_params.get('name').strip().lower()
-        if name_starts_with:
+        if name_starts_with and allow_name_search:
             queryset = queryset.filter(slug__startswith=name_starts_with)
         else:
             raise Http404()

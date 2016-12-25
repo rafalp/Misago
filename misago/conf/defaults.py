@@ -162,6 +162,7 @@ MISAGO_THREAD_TYPES = (
 )
 
 MISAGO_SEARCH_EXTENSIONS = (
+    'misago.threads.search.SearchThreads',
     'misago.users.search.SearchUsers',
 )
 
