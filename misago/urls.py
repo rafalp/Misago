@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^', include('misago.users.urls')),
     url(r'^', include('misago.categories.urls')),
     url(r'^', include('misago.threads.urls')),
+    url(r'^', include('misago.search.urls')),
 
     # "misago:index" link symbolises "root" of Misago links space
     # any request with path that falls below this one is assumed to be directed

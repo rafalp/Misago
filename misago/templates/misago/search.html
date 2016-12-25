@@ -1,0 +1,25 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{% trans "Search site" %} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+<div class="page page-error page-error-noscript">
+  <div class="container">
+    <div class="message-panel">
+
+      <div class="message-icon">
+        <span class="material-icon">code</span>
+      </div>
+
+      <div class="message-body">
+        <p class="lead">{% trans "To search site enable JavaScript" %}</p>
+        <p>{% trans "Site search is unavailable without JavaScript enabled." %}</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock content %}

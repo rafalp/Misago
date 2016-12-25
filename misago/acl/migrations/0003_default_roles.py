@@ -51,10 +51,9 @@ def create_default_roles(apps, schema_editor):
                 'can_edit_polls': 1
             },
 
-            # delete users
-            'misago.users.permissions.delete': {
-                'can_delete_users_newer_than': 0,
-                'can_delete_users_with_less_posts_than': 0,
+            # search
+            'misago.search.permissions': {
+                'can_search': 1,
             },
         })
     role.save()
@@ -87,10 +86,9 @@ def create_default_roles(apps, schema_editor):
                 'can_download_other_users_attachments': True,
             },
 
-            # delete users
-            'misago.users.permissions.delete': {
-                'can_delete_users_newer_than': 0,
-                'can_delete_users_with_less_posts_than': 0,
+            # search
+            'misago.search.permissions': {
+                'can_search': 1,
             },
         })
     role.save()

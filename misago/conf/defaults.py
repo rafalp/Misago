@@ -64,6 +64,7 @@ INSTALLED_APPS = (
     'misago.categories',
     'misago.threads',
     'misago.readtracker',
+    'misago.search',
     'misago.faker',
 )
 
@@ -124,6 +125,7 @@ MISAGO_ACL_EXTENSIONS = (
     'misago.threads.permissions.polls',
     'misago.threads.permissions.threads',
     'misago.threads.permissions.privatethreads',
+    'misago.search.permissions',
 )
 
 MISAGO_MARKUP_EXTENSIONS = ()
@@ -157,6 +159,10 @@ MISAGO_POSTING_MIDDLEWARES = (
 MISAGO_THREAD_TYPES = (
     'misago.threads.threadtypes.thread.Thread',
     'misago.threads.threadtypes.privatethread.PrivateThread',
+)
+
+MISAGO_SEARCH_EXTENSIONS = (
+    'misago.users.search.SearchUsers',
 )
 
 

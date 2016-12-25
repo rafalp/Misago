@@ -40,11 +40,13 @@
           {% trans "Users" %}
         </a>
       </li>
+      {% if user.acl.can_search %}
       <li>
-        <a href="#">
+        <a href="{% url 'misago:search' %}">
           {% trans "Search" %}
         </a>
       </li>
+      {% endif %}
     </ul>
 
     <div id="user-menu-mount"></div>
