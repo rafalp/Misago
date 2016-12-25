@@ -270,8 +270,8 @@ MISAGO_THREADS_TAIL = 15
 
 
 # Number of posts displayed on single thread page
-MISAGO_POSTS_PER_PAGE = 15
-MISAGO_POSTS_TAIL = 7
+MISAGO_POSTS_PER_PAGE = 18
+MISAGO_POSTS_TAIL = 6
 
 
 # Number of attachments possible to assign to single post
