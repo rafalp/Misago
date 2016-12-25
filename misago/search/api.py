@@ -28,7 +28,7 @@ def search(request, search_provider=None):
             'url': reverse('misago:search', kwargs={'search_provider': provider.url}),
             'api': reverse('misago:api:search', kwargs={'search_provider': provider.url}),
             'results': None,
-            'time': 0,
+            'time': None,
         }
 
         if not search_provider or search_provider == provider.url:
