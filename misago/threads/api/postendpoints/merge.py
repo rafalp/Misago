@@ -34,9 +34,9 @@ def posts_merge_endpoint(request, thread):
         post.delete()
 
     if first_post.pk == thread.first_post_id:
-        self.post.set_search_document(thread.title)
+        first_post.set_search_document(thread.title)
     else:
-        self.post.set_search_document()
+        first_post.set_search_document()
 
     first_post.save()
 
