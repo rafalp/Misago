@@ -8,6 +8,10 @@
   margin: 0px;
   margin-bottom: @line-height-computed;
 
+  h1 {
+    word-wrap: break-word;
+  }
+
   .btn-aligned {
     float: right;
     margin-top: @line-height-computed + 3px;
@@ -159,14 +163,19 @@
 // Edit title
 .title-editable {
   overflow: auto;
-
-  h1, .btn {
-    float: left;
-  }
+  position: relative;
 
   .btn {
-    position: relative;
-    top: @line-height-computed;
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    padding: @padding-small-vertical @padding-small-vertical;
+    .opacity(0.5);
+  }
+
+  &:hover .btn {
+    .opacity(1);
   }
 
   .material-icon {

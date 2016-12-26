@@ -112,7 +112,7 @@ export default class extends Form {
             {this.props.thread.title}
           </h1>
           <button
-            className="btn btn-link"
+            className="btn btn-default"
             onClick={this.onEdit}
             title={gettext("Edit title")}
             type="button"
