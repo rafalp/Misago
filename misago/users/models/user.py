@@ -1,8 +1,8 @@
 from hashlib import md5
 
 from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
-from django.contrib.auth.models import UserManager as BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import UserManager as BaseUserManager
 from django.core.mail import send_mail
 from django.db import IntegrityError, models, transaction
 from django.dispatch import receiver
@@ -75,6 +75,9 @@ class UserManager(BaseUserManager):
     def create_user(self, username, email, password=None, set_default_avatar=False, **extra_fields):
         from ..validators import validate_email, validate_password, validate_username
 
+        email = self.normalize_email(email)
+        username = self.model.normalize_username(username)
+
         with transaction.atomic():
             if not email:
                 raise ValueError(_("User must have an email address."))
@@ -102,10 +105,13 @@ class UserManager(BaseUserManager):
                 new_value = WATCH_DICT[settings.subscribe_reply]
                 extra_fields['subscribe_to_replied_threads'] = new_value
 
+            extra_fields.update({
+                'is_staff': False,
+                'is_superuser': False
+            })
+
             now = timezone.now()
             user = self.model(
-                is_staff=False,
-                is_superuser=False,
                 last_login=now,
                 joined_on=now,
                 **extra_fields
@@ -264,6 +270,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
+    def clean(self):
+        self.username = self.normalize_username(self.username)
+        self.email = self.__class__.objects.normalize_email(self.email)
+
     def lock(self):
         """Locks user in DB"""
         return User.objects.select_for_update().get(pk=self.pk)
@@ -327,27 +337,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_valid_signature(self):
         return is_user_signature_valid(self)
 
-    @property
-    def staff_level(self):
-        if self.is_superuser:
-            return 2
-        elif self.is_staff:
-            return 1
-        else:
-            return 0
-
-    @staff_level.setter
-    def staff_level(self, new_level):
-        if new_level == 2:
-            self.is_superuser = True
-            self.is_staff = True
-        elif new_level == 1:
-            self.is_superuser = False
-            self.is_staff = True
-        else:
-            self.is_superuser = False
-            self.is_staff = False
-
     def get_absolute_url(self):
         return reverse('misago:user', kwargs={
             'slug': self.slug,
@@ -367,6 +356,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.username
 
     def set_username(self, new_username, changed_by=None):
+        new_username = self.normalize_username(new_username)
         if new_username != self.username:
             old_username = self.username
             self.username = new_username

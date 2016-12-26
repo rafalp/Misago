@@ -201,7 +201,7 @@ class UserAdminViewsTests(AdminTestCase):
             'rank': six.text_type(test_user.rank_id),
             'roles': six.text_type(test_user.roles.all()[0].pk),
             'email': 'reg@stered.com',
-            'new_password': 'pass123',
+            'new_password': 'newpass123',
             'staff_level': '0',
             'signature': 'Hello world!',
             'is_signature_locked': '1',
@@ -214,8 +214,49 @@ class UserAdminViewsTests(AdminTestCase):
         })
         self.assertEqual(response.status_code, 302)
 
+        updated_user = User.objects.get(pk=test_user.pk)
+        self.assertTrue(updated_user.check_password('newpass123'))
+        self.assertEqual(updated_user.username, 'Bawww')
+        self.assertEqual(updated_user.slug, 'bawww')
+
         User.objects.get_by_username('Bawww')
         User.objects.get_by_email('reg@stered.com')
+
+    def test_edit_dont_change_username(self):
+        """
+        If username wasn't changed, don't touch user's username, slug or history
+
+        This is regression test for issue #640
+        """
+        User = get_user_model()
+        test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_link = reverse('misago:admin:users:accounts:edit',
+                            kwargs={'pk': test_user.pk})
+
+        response = self.client.get(test_link)
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(test_link, data={
+            'username': 'Bob',
+            'rank': six.text_type(test_user.rank_id),
+            'roles': six.text_type(test_user.roles.all()[0].pk),
+            'email': 'reg@stered.com',
+            'new_password': 'pass123',
+            'signature': 'Hello world!',
+            'is_signature_locked': '1',
+            'is_hiding_presence': '0',
+            'limits_private_thread_invites_to': '0',
+            'signature_lock_staff_message': 'Staff message',
+            'signature_lock_user_message': 'User message',
+            'subscribe_to_started_threads': '2',
+            'subscribe_to_replied_threads': '2',
+        })
+        self.assertEqual(response.status_code, 302)
+
+        updated_user = User.objects.get(pk=test_user.pk)
+        self.assertEqual(updated_user.username, 'Bob')
+        self.assertEqual(updated_user.slug, 'bob')
+        self.assertEqual(updated_user.namechanges.count(), 0)
 
     def test_edit_make_admin(self):
         """edit user view allows super admin to make other user admin"""
