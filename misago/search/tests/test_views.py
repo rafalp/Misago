@@ -67,4 +67,4 @@ class SearchTests(AuthenticatedUserTestCase):
         response = self.client.get(
             reverse('misago:search', kwargs={'search_provider': 'threads'}))
 
-        self.assertContains(response, "enable JavaScript")
+        self.assertContains(response, "Loading search...")

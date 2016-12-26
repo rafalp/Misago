@@ -6,20 +6,33 @@
 
 
 {% block content %}
-<div class="page page-error page-error-noscript">
-  <div class="container">
-    <div class="message-panel">
-
-      <div class="message-icon">
-        <span class="material-icon">code</span>
+<div class="page page-search">
+  <div class="page-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
+          <h1>{% trans "Search" %}</h1>
+        </div>
+        <div class="col-md-7">
+          <div class="form-group">
+            <input class="form-control" type="text" disabled/>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-primary btn-block" disabled>
+            {% trans "Search" %}
+          </button>
+        </div>
       </div>
-
-      <div class="message-body">
-        <p class="lead">{% trans "To search site enable JavaScript" %}</p>
-        <p>{% trans "Site search is unavailable without JavaScript enabled." %}</p>
-      </div>
-
     </div>
+  </div>
+
+  <div class="container">
+
+    <p class="lead text-center">
+      {% trans "Loading search..." %}
+    </p>
+
   </div>
 </div>
 {% endblock content %}
