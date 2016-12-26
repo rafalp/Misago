@@ -32,10 +32,13 @@ class Command(BaseCommand):
         queryset = Post.objects.select_related('thread').filter(is_event=False)
         for post in batch_update(queryset):
             if post.id == post.thread.first_post_id:
-                post.update_search_vector(post.thread.title)
+                post.set_search_document(post.thread.title)
             else:
-                post.update_search_vector()
-            post.save(update_fields=['search_document', 'search_vector'])
+                post.set_search_document()
+            post.save(update_fields=['search_document'])
+
+            post.update_search_vector()
+            post.save(update_fields=['search_vector'])
 
             synchronized_count += 1
             show_progress(self, synchronized_count, posts_to_sync, start_time)

@@ -29,17 +29,18 @@ class ReplyMiddleware(PostingMiddleware):
         else:
             self.new_post(serializer.validated_data, parsing_result)
 
-        if self.mode == PostingEndpoint.EDIT:
-            if self.post.pk == self.thread.first_post_id:
-                self.post.update_search_vector(self.thread.title)
-            else:
-                self.post.update_search_vector()
+        if self.mode == PostingEndpoint.START:
+            self.post.set_search_document(self.thread.title)
+        else:
+            self.post.set_search_document()
 
         self.post.updated_on = self.datetime
         self.post.save()
 
+        self.post.update_search_vector()
         update_post_checksum(self.post)
-        self.post.update_fields.append('checksum')
+
+        self.post.update_fields += ['checksum', 'search_vector']
 
         if self.mode == PostingEndpoint.START:
             self.thread.set_first_post(self.post)
@@ -47,13 +48,6 @@ class ReplyMiddleware(PostingMiddleware):
             self.thread.set_last_post(self.post)
 
         self.thread.save()
-
-        if self.mode in (PostingEndpoint.START, PostingEndpoint.REPLY):
-            if self.mode == PostingEndpoint.START:
-                self.post.update_search_vector(self.thread.title)
-            elif self.mode == PostingEndpoint.REPLY:
-                self.post.update_search_vector()
-            self.post.update_fields += ['search_document', 'search_vector']
 
         # annotate post for future middlewares
         self.post.parsing_result = parsing_result

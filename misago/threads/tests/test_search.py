@@ -14,6 +14,16 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
         self.api_link = reverse('misago:api:search')
 
+    def index_post(self, post):
+        if post.id == post.thread.first_post_id:
+            post.set_search_document(post.thread.title)
+        else:
+            post.set_search_document()
+        post.save(update_fields=['search_document'])
+
+        post.update_search_vector()
+        post.save(update_fields=['search_vector'])
+
     def test_no_query(self):
         """api handles no search query"""
         response = self.client.get(self.api_link)
@@ -42,6 +52,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         """api handles short search query"""
         thread = testutils.post_thread(self.category)
         post = testutils.reply_thread(thread, message="Lorem ipsum dolor.")
+        self.index_post(post)
 
         response = self.client.get('%s?q=ip' % self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -57,6 +68,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         """api handles query miss"""
         thread = testutils.post_thread(self.category)
         post = testutils.reply_thread(thread, message="Lorem ipsum dolor.")
+        self.index_post(post)
 
         response = self.client.get('%s?q=elit' % self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -73,6 +85,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         thread = testutils.post_thread(self.category)
         post = testutils.reply_thread(
             thread, message="Lorem ipsum dolor.", is_hidden=True)
+        self.index_post(post)
 
         response = self.client.get('%s?q=ipsum' % self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -89,6 +102,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         thread = testutils.post_thread(self.category)
         post = testutils.reply_thread(
             thread, message="Lorem ipsum dolor.", is_unapproved=True)
+        self.index_post(post)
 
         response = self.client.get('%s?q=ipsum' % self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -104,6 +118,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         """api handles search query"""
         thread = testutils.post_thread(self.category)
         post = testutils.reply_thread(thread, message="Lorem ipsum dolor.")
+        self.index_post(post)
 
         response = self.client.get('%s?q=ipsum' % self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -121,6 +136,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         """api searches threads by title"""
         thread = testutils.post_thread(self.category, title="Atmosphere of mars")
         testutils.reply_thread(thread, message="Lorem ipsum dolor.")
+        self.index_post(post)
 
         response = self.client.get('%s?q=mars atmosphere' % self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -138,6 +154,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         """api handles complex query that uses fulltext search facilities"""
         thread = testutils.post_thread(self.category)
         post = testutils.reply_thread(thread, message="Atmosphere of Mars")
+        self.index_post(post)
 
         response = self.client.get('%s?q=Mars atmosphere' % self.api_link)
         self.assertEqual(response.status_code, 200)

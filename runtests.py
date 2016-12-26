@@ -77,6 +77,10 @@ CACHES = {
 PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
 )
+
+
+# Use english search config
+MISAGO_SEARCH_CONFIG = 'english'
 """
 
     if os.environ.get('TRAVIS'):

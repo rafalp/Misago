@@ -34,11 +34,14 @@ def posts_merge_endpoint(request, thread):
         post.delete()
 
     if first_post.pk == thread.first_post_id:
-        self.post.update_search_vector(thread.title)
+        self.post.set_search_document(thread.title)
     else:
-        self.post.update_search_vector()
+        self.post.set_search_document()
 
     first_post.save()
+
+    first_post.update_search_vector()
+    first_post.save(update_fields=['search_vector'])
 
     thread.synchronize()
     thread.save()

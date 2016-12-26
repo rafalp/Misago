@@ -165,12 +165,13 @@ class Post(models.Model):
     def get_absolute_url(self):
         return self.thread_type.get_post_absolute_url(self)
 
-    def update_search_vector(self, thread_title=None):
+    def set_search_document(self, thread_title=None):
         if thread_title:
             self.search_document = '\n\n'.join([thread_title, self.original])
         else:
             self.search_document = self.original
 
+    def update_search_vector(self):
         self.search_vector = SearchVector(
             'search_document',
             config=settings.MISAGO_SEARCH_CONFIG,
