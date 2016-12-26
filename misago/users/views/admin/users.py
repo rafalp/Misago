@@ -98,12 +98,11 @@ class UsersList(UserAdmin, generic.ListView):
             queryset = User.objects.filter(pk__in=activated_users_pks)
             queryset.update(requires_activation=ACTIVATION_REQUIRED_NONE)
 
-            mail_subject = _("Your account on %(forum_name)s "
-                             "forums has been activated")
-            subject_formats = {'forum_name': settings.forum_name}
-            mail_subject = mail_subject % subject_formats
+            subject = _("Your account on %(forum_name)s forums has been activated")
+            mail_subject = subject % {
+                'forum_name': settings.forum_name
+            }
 
-            mail_subject = mail_subject
             mail_users(request, inactive_users, mail_subject,
                        'misago/emails/activation/by_admin')
 
@@ -264,10 +263,9 @@ class EditUser(UserAdmin, generic.ModelFormView):
 
     def handle_form(self, form, request, target):
         target.username = target.old_username
-
         if target.username != form.cleaned_data.get('username'):
-            target.set_username(form.cleaned_data.get('username'),
-                                changed_by=request.user)
+            target.set_username(
+                form.cleaned_data.get('username'), changed_by=request.user)
 
         if form.cleaned_data.get('new_password'):
             target.set_password(form.cleaned_data['new_password'])
@@ -285,8 +283,9 @@ class EditUser(UserAdmin, generic.ModelFormView):
             if not target.old_is_avatar_locked:
                 set_dynamic_avatar(target)
 
-        if 'staff_level' in form.cleaned_data:
-            target.staff_level = form.cleaned_data['staff_level']
+        if 'is_staff' in form.fields and 'is_superuser' in form.fields:
+            target.is_staff = form.cleaned_data.get('is_staff')
+            target.is_superuser = form.cleaned_data.get('is_superuser')
 
         target.rank = form.cleaned_data.get('rank')
 

@@ -16,6 +16,8 @@ from ..models import Ban, Rank
 
 
 class UserAdminViewsTests(AdminTestCase):
+    AJAX_HEADER = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
+
     def test_link_registered(self):
         """admin index view contains users link"""
         response = self.client.get(reverse('misago:admin:index'))
@@ -215,7 +217,110 @@ class UserAdminViewsTests(AdminTestCase):
         User.objects.get_by_username('Bawww')
         User.objects.get_by_email('reg@stered.com')
 
-    ajax_header = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
+    def test_edit_make_admin(self):
+        """edit user view allows super admin to make other user admin"""
+        User = get_user_model()
+        test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_link = reverse('misago:admin:users:accounts:edit',
+                            kwargs={'pk': test_user.pk})
+
+        response = self.client.get(test_link)
+        self.assertContains(response, 'id="id_is_staff_1"')
+        self.assertContains(response, 'id="id_is_superuser_1"')
+
+        response = self.client.post(test_link, data={
+            'username': 'Bawww',
+            'rank': six.text_type(test_user.rank_id),
+            'roles': six.text_type(test_user.roles.all()[0].pk),
+            'email': 'reg@stered.com',
+            'new_password': 'pass123',
+            'is_staff': '1',
+            'is_superuser': '0',
+            'signature': 'Hello world!',
+            'is_signature_locked': '1',
+            'is_hiding_presence': '0',
+            'limits_private_thread_invites_to': '0',
+            'signature_lock_staff_message': 'Staff message',
+            'signature_lock_user_message': 'User message',
+            'subscribe_to_started_threads': '2',
+            'subscribe_to_replied_threads': '2',
+        })
+        self.assertEqual(response.status_code, 302)
+
+        updated_user = User.objects.get(pk=test_user.pk)
+        self.assertTrue(updated_user.is_staff)
+        self.assertFalse(updated_user.is_superuser)
+
+    def test_edit_make_superadmin_admin(self):
+        """edit user view allows super admin to make other user super admin"""
+        User = get_user_model()
+        test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_link = reverse('misago:admin:users:accounts:edit',
+                            kwargs={'pk': test_user.pk})
+
+        response = self.client.get(test_link)
+        self.assertContains(response, 'id="id_is_staff_1"')
+        self.assertContains(response, 'id="id_is_superuser_1"')
+
+        response = self.client.post(test_link, data={
+            'username': 'Bawww',
+            'rank': six.text_type(test_user.rank_id),
+            'roles': six.text_type(test_user.roles.all()[0].pk),
+            'email': 'reg@stered.com',
+            'new_password': 'pass123',
+            'is_staff': '0',
+            'is_superuser': '1',
+            'signature': 'Hello world!',
+            'is_signature_locked': '1',
+            'is_hiding_presence': '0',
+            'limits_private_thread_invites_to': '0',
+            'signature_lock_staff_message': 'Staff message',
+            'signature_lock_user_message': 'User message',
+            'subscribe_to_started_threads': '2',
+            'subscribe_to_replied_threads': '2',
+        })
+        self.assertEqual(response.status_code, 302)
+
+        updated_user = User.objects.get(pk=test_user.pk)
+        self.assertFalse(updated_user.is_staff)
+        self.assertTrue(updated_user.is_superuser)
+
+    def test_edit_cant_make_admin(self):
+        """edit user view forbids admins from making other admins"""
+        self.user.is_superuser = False
+        self.user.save()
+
+        User = get_user_model()
+        test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_link = reverse('misago:admin:users:accounts:edit',
+                            kwargs={'pk': test_user.pk})
+
+        response = self.client.get(test_link)
+        self.assertNotContains(response, 'id="id_is_staff_1"')
+        self.assertNotContains(response, 'id="id_is_superuser_1"')
+
+        response = self.client.post(test_link, data={
+            'username': 'Bawww',
+            'rank': six.text_type(test_user.rank_id),
+            'roles': six.text_type(test_user.roles.all()[0].pk),
+            'email': 'reg@stered.com',
+            'new_password': 'pass123',
+            'is_staff': '1',
+            'is_superuser': '1',
+            'signature': 'Hello world!',
+            'is_signature_locked': '1',
+            'is_hiding_presence': '0',
+            'limits_private_thread_invites_to': '0',
+            'signature_lock_staff_message': 'Staff message',
+            'signature_lock_user_message': 'User message',
+            'subscribe_to_started_threads': '2',
+            'subscribe_to_replied_threads': '2',
+        })
+        self.assertEqual(response.status_code, 302)
+
+        updated_user = User.objects.get(pk=test_user.pk)
+        self.assertFalse(updated_user.is_staff)
+        self.assertFalse(updated_user.is_superuser)
 
     def test_delete_threads_view(self):
         """delete user threads view deletes threads"""
@@ -227,14 +332,14 @@ class UserAdminViewsTests(AdminTestCase):
         category = Category.objects.all_categories()[:1][0]
         [post_thread(category, poster=test_user) for i in range(10)]
 
-        response = self.client.post(test_link, **self.ajax_header)
+        response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
 
         response_dict = json.loads(smart_str(response.content))
         self.assertEqual(response_dict['deleted_count'], 10)
         self.assertFalse(response_dict['is_completed'])
 
-        response = self.client.post(test_link, **self.ajax_header)
+        response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
 
         response_dict = json.loads(smart_str(response.content))
@@ -252,14 +357,14 @@ class UserAdminViewsTests(AdminTestCase):
         thread = post_thread(category)
         [reply_thread(thread, poster=test_user) for i in range(10)]
 
-        response = self.client.post(test_link, **self.ajax_header)
+        response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
 
         response_dict = json.loads(smart_str(response.content))
         self.assertEqual(response_dict['deleted_count'], 10)
         self.assertFalse(response_dict['is_completed'])
 
-        response = self.client.post(test_link, **self.ajax_header)
+        response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
 
         response_dict = json.loads(smart_str(response.content))
@@ -273,7 +378,7 @@ class UserAdminViewsTests(AdminTestCase):
         test_link = reverse('misago:admin:users:accounts:delete-account',
                             kwargs={'pk': test_user.pk})
 
-        response = self.client.post(test_link, **self.ajax_header)
+        response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
 
         response_dict = json.loads(smart_str(response.content))

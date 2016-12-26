@@ -204,21 +204,21 @@ def StaffFlagUserFormFactory(FormType, instance, add_staff_field):
     FormType = UserFormFactory(FormType, instance)
 
     if add_staff_field:
-        staff_levels = (
-            (0, _("No access")),
-            (1, _("Administrator")),
-            (2, _("Superadmin")),
-        )
-
         staff_fields = {
-            'staff_level': forms.TypedChoiceField(
-                label=_("Admin level"),
+            'is_staff': forms.YesNoSwitch(
+                label=_("Is administrator"),
+                help_text=_("Designates whether the user can log into admin sites. "
+                            "If Django admin site is enabled, this user will need "
+                            "additional permissions assigned within it to admin "
+                            "Django modules."),
+                initial=instance.is_staff
+            ),
+            'is_superuser': forms.YesNoSwitch(
+                label=_("Is superuser"),
                 help_text=_("Only administrators can access admin sites. "
                             "In addition to admin site access, superadmins "
                             "can also change other members admin levels."),
-                coerce=int,
-                choices=staff_levels,
-                initial=instance.staff_level
+                initial=instance.is_superuser
             ),
         }
 
