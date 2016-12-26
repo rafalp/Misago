@@ -85,29 +85,38 @@ export default class extends Form {
     /* jshint ignore:start */
     if (this.state.isEditing) {
       return (
-        <form onSubmit={this.handleSubmit} className="pull-left title-edit-form">
-          <input className="form-control" type="text" value={this.state.title} onChange={this.onChange} />
-          <button
-            className="btn btn-default"
-            disabled={this.state.isLoading}
-            title={gettext("Change title")}
-          >
-            <span className="material-icon">check_circle</span>
-          </button>
-          <button
-            className="btn btn-default"
-            disabled={this.state.isLoading}
-            onClick={this.onCancel}
-            title={gettext("Cancel")}
-            type="button"
-          >
-            <span className="material-icon">cancel</span>
-          </button>
+        <form onSubmit={this.handleSubmit} className="title-edit-form">
+          <div className="input-group">
+            <input
+              className="form-control"
+              type="text"
+              value={this.state.title}
+              onChange={this.onChange}
+            />
+            <span className="input-group-btn">
+              <button
+                className="btn btn-success"
+                disabled={this.state.isLoading}
+                title={gettext("Change title")}
+              >
+                {gettext("Save changes")}
+              </button>
+              <button
+                className="btn btn-default"
+                disabled={this.state.isLoading}
+                onClick={this.onCancel}
+                title={gettext("Cancel")}
+                type="button"
+              >
+                {gettext("Cancel")}
+              </button>
+            </span>
+          </div>
         </form>
       );
     } else if (this.props.user.id && this.props.thread.acl.can_edit) {
       return (
-        <div className="pull-left title-editable">
+        <div className="title-editable">
           <h1>
             {this.props.thread.title}
           </h1>
@@ -123,9 +132,7 @@ export default class extends Form {
       );
     } else {
       return (
-        <div className="pull-left">
-          <h1>{this.props.thread.title}</h1>
-        </div>
+        <h1>{this.props.thread.title}</h1>
       );
     }
     /* jshint ignore:end */
