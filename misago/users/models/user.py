@@ -201,10 +201,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     rank = models.ForeignKey('Rank', null=True, blank=True, on_delete=models.deletion.PROTECT)
     title = models.CharField(max_length=255, null=True, blank=True)
     requires_activation = models.PositiveIntegerField(default=ACTIVATION_REQUIRED_NONE)
+
     is_staff = models.BooleanField(_('staff status'),
         default=False,
         help_text=_('Designates whether the user can log into admin sites.'),
     )
+
     roles = models.ManyToManyField('misago_acl.Role')
     acl_key = models.CharField(max_length=12, null=True, blank=True)
 

@@ -21,7 +21,7 @@ def is_admin_session(request):
     if request.user.is_anonymous():
         return False
 
-    if not (request.user.is_staff and request.user.is_superuser):
+    if not request.user.is_staff:
         return False
 
     admin_token = request.session.get(KEY_TOKEN)

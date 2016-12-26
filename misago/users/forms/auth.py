@@ -24,15 +24,11 @@ class MisagoAuthMixin(object):
     def confirm_user_active(self, user):
         if user.requires_activation_by_admin:
             raise ValidationError(
-                self.error_messages['inactive_admin'],
-                code='inactive_admin',
-            )
+                self.error_messages['inactive_admin'], code='inactive_admin')
 
         if user.requires_activation_by_user:
             raise ValidationError(
-                self.error_messages['inactive_user'],
-                code='inactive_user',
-            )
+                self.error_messages['inactive_user'], code='inactive_user')
 
     def confirm_user_not_banned(self, user):
         self.user_ban = get_user_ban(user)
@@ -57,31 +53,33 @@ class AuthenticationForm(MisagoAuthMixin, BaseAuthenticationForm):
     Base class for authenticating users, Floppy-forms and
     Misago login field comliant
     """
-    username = forms.CharField(label=_("Username or e-mail"),
-                               required=False,
-                               max_length=254)
-    password = forms.CharField(label=_("Password"), required=False,
-                               widget=forms.PasswordInput)
+    username = forms.CharField(
+        label=_("Username or e-mail"),
+        required=False,
+        max_length=254
+    )
+    password = forms.CharField(
+        label=_("Password"),
+        required=False,
+        widget=forms.PasswordInput
+    )
 
     def clean(self):
         username = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
 
         if username and password:
-            self.user_cache = authenticate(username=username,
-                                           password=password)
+            self.user_cache = authenticate(
+                username=username, password=password)
+
             if self.user_cache is None or not self.user_cache.is_active:
                 raise ValidationError(
-                    self.error_messages['invalid_login'],
-                    code='invalid_login',
-                )
+                    self.error_messages['invalid_login'], code='invalid_login')
             else:
                 self.confirm_login_allowed(self.user_cache)
         else:
             raise ValidationError(
-                self.error_messages['empty_data'],
-                code='empty_data',
-            )
+                self.error_messages['empty_data'], code='empty_data')
 
         return self.cleaned_data
 
@@ -96,16 +94,14 @@ class AdminAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         self.error_messages.update({
             'not_staff': _("Your account does not have admin privileges.")
-            })
+        })
 
         super(AdminAuthenticationForm, self).__init__(*args, **kwargs)
 
     def confirm_login_allowed(self, user):
         if not user.is_staff:
             raise forms.ValidationError(
-                self.error_messages['not_staff'],
-                code='not_staff',
-            )
+                self.error_messages['not_staff'], code='not_staff')
 
 
 class GetUserForm(MisagoAuthMixin, forms.Form):
@@ -117,15 +113,13 @@ class GetUserForm(MisagoAuthMixin, forms.Form):
         email = data.get('email')
         if not email or len(email) > 250:
             raise forms.ValidationError(
-                _("Enter e-mail address."),
-                code='empty_email')
+                _("Enter e-mail address."), code='empty_email')
 
         try:
             validate_email(email)
         except forms.ValidationError:
             raise forms.ValidationError(
-                _("Entered e-mail is invalid."),
-                code='invalid_email')
+                _("Entered e-mail is invalid."), code='invalid_email')
 
         try:
             User = get_user_model()
@@ -133,8 +127,7 @@ class GetUserForm(MisagoAuthMixin, forms.Form):
             self.user_cache = user
         except User.DoesNotExist:
             raise forms.ValidationError(
-                _("No user with this e-mail exists."),
-                code='not_found')
+                _("No user with this e-mail exists."), code='not_found')
 
         self.confirm_allowed(user)
 
@@ -150,14 +143,13 @@ class ResendActivationForm(GetUserForm):
 
         if not user.requires_activation:
             message = _("%(user)s, your account is already active.")
-            raise forms.ValidationError(message % username_format,
-                                        code='already_active')
+            raise forms.ValidationError(
+                message % username_format, code='already_active')
 
         if user.requires_activation_by_admin:
-            message = _("%(user)s, only administrator may activate "
-                        "your account.")
-            raise forms.ValidationError(message % username_format,
-                                        code='inactive_admin')
+            message = _("%(user)s, only administrator may activate your account.")
+            raise forms.ValidationError(
+                message % username_format, code='inactive_admin')
 
 
 class ResetPasswordForm(GetUserForm):
