@@ -135,6 +135,8 @@ class SearchApiTests(AuthenticatedUserTestCase):
     def test_thread_title_search(self):
         """api searches threads by title"""
         thread = testutils.post_thread(self.category, title="Atmosphere of mars")
+        self.index_post(thread.first_post)
+
         post = testutils.reply_thread(thread, message="Lorem ipsum dolor.")
         self.index_post(post)
 
