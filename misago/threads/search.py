@@ -1,3 +1,4 @@
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.utils.translation import ugettext_lazy as _
 
 from misago.conf import settings
@@ -32,6 +33,8 @@ class SearchThreads(SearchProvider):
         paginator = pagination_dict(list_page, include_page_range=False)
 
         posts = list(list_page.object_list)
+        #for post in posts:
+        #    print post.search_rank
         threads = []
 
         for post in posts:
@@ -50,10 +53,13 @@ class SearchThreads(SearchProvider):
 
 
 def search_threads(request, query, visible_threads):
+    search_query = SearchQuery(query, config=settings.MISAGO_SEARCH_CONFIG)
+    search_vector = SearchVector('search_document', config=settings.MISAGO_SEARCH_CONFIG)
+
     return Post.objects.select_related('thread', 'poster').filter(
         is_event=False,
         is_hidden=False,
         is_unapproved=False,
         thread_id__in=visible_threads.values('id'),
-        original__icontains=query
-    ).order_by('-pk')
+        search_vector=search_query
+    ).annotate(rank=SearchRank(search_vector, search_query)).order_by('-rank', '-id')

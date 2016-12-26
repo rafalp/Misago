@@ -32,6 +32,12 @@ def posts_merge_endpoint(request, thread):
     for post in merged_posts:
         post.merge(first_post)
         post.delete()
+
+    if first_post.pk == thread.first_post_id:
+        self.post.update_search_vector(thread.title)
+    else:
+        self.post.update_search_vector()
+
     first_post.save()
 
     thread.synchronize()

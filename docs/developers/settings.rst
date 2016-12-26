@@ -352,6 +352,20 @@ MISAGO_READTRACKER_CUTOFF
 Controls amount of data used by readtracking system. All content older than number of days specified in this setting is considered old and read, even if opposite is true. Active forums can try lowering this value while less active ones may wish to increase it instead.
 
 
+MISAGO_SEARCH_CONFIG
+--------------------
+
+PostgreSQL text search configuration to use in searches. Defaults to "simple", for list of installed configurations run "\dF" in "psql".
+
+Standard configs as of PostgreSQL 9.5 are: ``dutch``, ``english``, ``finnish``, ``french``, ``german``, ``hungarian``, ``italian``, ``norwegian``, ``portuguese``, ``romanian``, ``russian``, ``simple``, ``spanish``, ``swedish``, ``turkish``.
+
+.. note::
+   Example on adding custom language can be found `here <https://github.com/lemonskyjwt/plpstgrssearch>`_.
+
+.. note::
+   Items in Misago are usually indexed in search engine on save or update. If you change search configuration, you'll need to rebuild search for past posts to get reindexed using new configuration. Misago comes with ``rebuildpostssearch`` tool for this purpose.
+
+
 MISAGO_SENDFILE_HEADER
 ----------------------
 

@@ -12,6 +12,9 @@ def change_thread_title(request, thread, new_title):
         thread.set_title(new_title)
         thread.save(update_fields=['title', 'slug'])
 
+        thread.first_post.update_search_vector(include_thread_title=True)
+        thread.first_post.save(update_fields=['search_vector'])
+
         record_event(request, thread, 'changed_title', {
             'old_title': old_title
         })

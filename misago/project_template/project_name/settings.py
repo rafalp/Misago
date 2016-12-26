@@ -43,6 +43,15 @@ DATABASES = {
     }
 }
 
+# PostgreSQL text search configuration to use in searches
+# Defaults to "simple", for list of installed configurations run "\dF" in "psql"
+# Standard configs as of PostgreSQL 9.5: dutch, english, finnish, french,
+# german, hungarian, italian, norwegian, portuguese, romanian, russian, simple,
+# spanish, swedish, turkish
+# Example on adding custom language can be found here: https://github.com/lemonskyjwt/plpstgrssearch
+
+MISAGO_SEARCH_CONFIG = 'simple'
+
 
 # Cache
 # https://docs.djangoproject.com/en/{{ docs_version }}/ref/settings/#caches

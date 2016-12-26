@@ -59,6 +59,14 @@ export default class extends Form {
     });
   }
 
+  handleError(rejection) {
+    snackbar.apiError(rejection);
+
+    store.dispatch(updateSearch({
+      isLoading: false
+    }));
+  }
+
   render() {
     return (
       <div className="page-header">
