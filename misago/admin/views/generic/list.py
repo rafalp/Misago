@@ -105,7 +105,7 @@ class ListView(AdminView):
                 if response:
                     return response
                 else:
-                    return redirect(request.path)
+                    return redirect(request.path_info)
             except MassActionError as e:
                 messages.error(request, e.args[0])
 
@@ -150,10 +150,10 @@ class ListView(AdminView):
 
             if context['active_filters'] and not filtering_methods['GET']:
                 # Make view redirect to itself with querystring,
-                # So address ball contains copy-friendly link
+                # so address bar contains copy-friendly link
                 refresh_querystring = True
 
-        self.make_querystrings(context)
+        self.make_querystring(context)
 
         if self.items_per_page:
             try:
@@ -162,8 +162,8 @@ class ListView(AdminView):
                 return redirect(
                     '%s%s' % (reverse(self.root_link), context['querystring']))
 
-        if refresh_querystring:
-            return redirect('%s%s' % (request.path, context['querystring']))
+        if refresh_querystring and not request.GET.get('redirected'):
+            return redirect('%s%s' % (request.path_info, context['querystring']))
 
         return self.render(request, context)
 
@@ -177,9 +177,8 @@ class ListView(AdminView):
         except ValueError:
             page = 1
 
-        context['paginator'] = Paginator(context['items'],
-                                         self.items_per_page,
-                                         allow_empty_first_page=True)
+        context['paginator'] = Paginator(
+            context['items'], self.items_per_page, allow_empty_first_page=True)
         context['page'] = context['paginator'].page(page)
         context['items'] = context['page'].object_list
 
@@ -331,9 +330,9 @@ class ListView(AdminView):
             raise MassActionError(_("Action is not allowed."))
 
     """
-    Querystrings builder
+    Querystring builder
     """
-    def make_querystrings(self, context):
+    def make_querystring(self, context):
         values = {}
         filter_values = {}
         order_values = {}
@@ -346,7 +345,7 @@ class ListView(AdminView):
             order_values = {
                 'sort': context['order']['order_by'],
                 'direction': context['order']['type'],
-                }
+            }
 
             if order_values['sort'][0] == '-':
                 # We don't start sorting criteria with minus in querystring
@@ -355,7 +354,8 @@ class ListView(AdminView):
             values.update(order_values)
 
         if values:
-            context['querystring'] = '?%s' % urlencode(values)
+            values['redirected'] = 1
+            context['querystring'] = '?%s' % urlencode(values, 'utf-8')
         if order_values:
             context['query_order'] = order_values
         if filter_values:
