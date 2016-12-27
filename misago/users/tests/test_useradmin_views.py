@@ -49,19 +49,19 @@ class UserAdminViewsTests(AdminTestCase):
         user_b = User.objects.create_user('Tyrion', 't321@test.com', 'pass123')
 
         # Search both
-        response = self.client.get(link_base + '&username=tyr')
+        response = self.client.get('%s&username=tyr' % link_base)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, user_a.username)
         self.assertContains(response, user_b.username)
 
         # Search tyrion
-        response = self.client.get(link_base + '&username=tyrion')
+        response = self.client.get('%s&username=tyrion' % link_base)
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, user_a.username)
         self.assertContains(response, user_b.username)
 
         # Search tyrael
-        response = self.client.get(link_base + '&email=t123@test.com')
+        response = self.client.get('%s&email=t123@test.com' % link_base)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, user_a.username)
         self.assertNotContains(response, user_b.username)

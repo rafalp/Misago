@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -187,3 +190,26 @@ class AdminIndexViewTests(AdminTestCase):
         response = self.client.get(reverse('misago:admin:index'))
 
         self.assertContains(response, self.user.username)
+
+
+class AdminGenericViewsTests(AdminTestCase):
+    def test_view_redirected_queryvar(self):
+        """querystring redirected value is handled"""
+        test_link = reverse('misago:admin:users:accounts:index')
+
+        # request resulted in redirect with redirected=1 bit
+        response = self.client.get('%s?username=lorem' % test_link)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('redirected=1', response['location'])
+
+        # request with flag muted redirect
+        response = self.client.get(
+            '%s?redirected=1&username=lorem' % test_link)
+        self.assertEqual(response.status_code, 200)
+
+    def test_list_search_unicode_handling(self):
+        """querystring creation handles unicode strings"""
+        test_link = reverse('misago:admin:users:accounts:index')
+        response = self.client.get(
+            '%s?redirected=1&username=%s' % (test_link, 'łut'))
+        self.assertEqual(response.status_code, 200)
