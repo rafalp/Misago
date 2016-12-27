@@ -53,7 +53,7 @@ class="form-horizontal"
     {% else %}
       <div id="div_id_is_staff" class="form-group">
         <label for="id_is_staff_0" class="control-label {{ label_class }}">
-          {% trans "Is administrator" %}:
+          {{ form.IS_STAFF_LABEL }}:
         </label>
         <div class="{{ field_class }}">
           <p class="form-control-static">
@@ -64,13 +64,13 @@ class="form-horizontal"
             {% endif %}
           </p>
           <p id="hint_id_is_staff" class="help-block">
-            {% trans "Designates whether the user can log into admin sites. If Django admin site is enabled, this user will need additional permissions assigned within it to admin Django modules." %}
+            {{ form.IS_STAFF_HELP_TEXT }}
           </p>
         </div>
       </div>
       <div id="div_id_is_superuser" class="form-group">
         <label for="id_is_superuser_0" class="control-label {{ label_class }}">
-          {% trans "Is superuser" %}:
+          {{ form.IS_SUPERUSER_LABEL }}:
         </label>
         <div class="{{ field_class }}">
           <p class="form-control-static">
@@ -81,7 +81,7 @@ class="form-horizontal"
             {% endif %}
           </p>
           <p id="hint_id_is_superuser" class="help-block">
-            {% trans "Only administrators can access admin sites. In addition to admin site access, superadmins can also change other members admin levels." %}
+            {{ form.IS_SUPERUSER_HELP_TEXT }}
           </p>
         </div>
       </div>
@@ -128,6 +128,50 @@ class="form-horizontal"
 
     {% form_row form.subscribe_to_started_threads label_class field_class %}
     {% form_row form.subscribe_to_replied_threads label_class field_class %}
+
+  </fieldset>
+  <fieldset>
+    <legend>{% trans "Account status" %}</legend>
+
+    {% if 'is_active' in form.fields %}
+      {% form_row form.is_active label_class field_class %}
+      {% form_row form.is_active_staff_message label_class field_class %}
+    {% else %}
+      <div id="div_id_is_active" class="form-group">
+        <label for="id_is_active_0" class="control-label {{ label_class }}">
+          {{ form.IS_ACTIVE_LABEL }}:
+        </label>
+        <div class="{{ field_class }}">
+          <p class="form-control-static">
+            {% if target.is_active %}
+              <strong class="text-success">{% trans "Yes" %}</strong>
+            {% else %}
+              <strong class="text-danger">{% trans "No" %}</strong>
+            {% endif %}
+          </p>
+          <p id="hint_id_is_active" class="help-block">
+            {{ form.IS_ACTIVE_HELP_TEXT }}
+          </p>
+        </div>
+      </div>
+      <div id="div_id_is_superuser" class="form-group">
+        <label for="id_is_superuser_0" class="control-label {{ label_class }}">
+          {{ form.IS_ACTIVE_STAFF_MESSAGE_LABEL }}:
+        </label>
+        <div class="{{ field_class }}">
+          <div class="form-control-static">
+            {% if target.is_active_staff_message %}
+              {{ target.is_active_staff_message|escape|linebreaks }}
+            {% else %}
+              <em>{% trans "No staff message is available." %}</em>
+            {% endif %}
+          </div>
+          <p id="hint_id_is_superuser" class="help-block">
+            {{ form.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT }}
+          </p>
+        </div>
+      </div>
+    {% endif %}
 
   </fieldset>
   {% endwith %}

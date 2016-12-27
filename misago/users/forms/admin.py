@@ -72,6 +72,33 @@ class NewUserForm(UserBaseForm):
 
 
 class EditUserForm(UserBaseForm):
+    IS_STAFF_LABEL = _("Is administrator")
+    IS_STAFF_HELP_TEXT = _(
+        "Designates whether the user can log into admin sites. "
+        "If Django admin site is enabled, this user will need "
+        "additional permissions assigned within it to admin "
+        "Django modules."
+    )
+
+    IS_SUPERUSER_LABEL = _("Is superuser")
+    IS_SUPERUSER_HELP_TEXT = _(
+        "Only administrators can access admin sites. "
+        "In addition to admin site access, superadmins "
+        "can also change other members admin levels."
+    )
+
+    IS_ACTIVE_LABEL = _('Is active')
+    IS_ACTIVE_HELP_TEXT = _(
+        "Designates whether this user should be treated as active. "
+        "Turning this off is non-destructible way to remove user accounts."
+    )
+
+    IS_ACTIVE_STAFF_MESSAGE_LABEL=_("Staff message")
+    IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT=_(
+        "Optional message for forum team members explaining "
+        "why user's account has been disabled."
+    )
+
     new_password = forms.CharField(
         label=_("Change password to"),
         widget=forms.PasswordInput,
@@ -80,21 +107,27 @@ class EditUserForm(UserBaseForm):
 
     is_avatar_locked = forms.YesNoSwitch(
         label=_("Lock avatar"),
-        help_text=_("Setting this to yes will stop user from changing "
-                    "his/her avatar, and will reset his/her avatar to "
-                    "procedurally generated one.")
+        help_text=_(
+            "Setting this to yes will stop user from changing "
+            "his/her avatar, and will reset his/her avatar to "
+            "procedurally generated one."
+        )
     )
     avatar_lock_user_message = forms.CharField(
         label=_("User message"),
-        help_text=_("Optional message for user explaining "
-                    "why he/she is banned form changing avatar."),
+        help_text=_(
+            "Optional message for user explaining "
+            "why he/she is banned form changing avatar."
+        ),
         widget=forms.Textarea(attrs={'rows': 3}),
         required=False
     )
     avatar_lock_staff_message = forms.CharField(
         label=_("Staff message"),
-        help_text=_("Optional message for forum team members explaining "
-                    "why user is banned form changing avatar."),
+        help_text=_(
+            "Optional message for forum team members explaining "
+            "why user is banned form changing avatar."
+        ),
         widget=forms.Textarea(attrs={'rows': 3}),
         required=False
     )
@@ -106,20 +139,24 @@ class EditUserForm(UserBaseForm):
     )
     is_signature_locked = forms.YesNoSwitch(
         label=_("Lock signature"),
-        help_text=_("Setting this to yes will stop user from "
-                    "making changes to his/her signature.")
+        help_text=_(
+            "Setting this to yes will stop user from "
+            "making changes to his/her signature."
+        )
     )
     signature_lock_user_message = forms.CharField(
         label=_("User message"),
-        help_text=_("Optional message to user explaining "
-                    "why his/hers signature is locked."),
+        help_text=_(
+            "Optional message to user explaining why his/hers signature is locked."
+        ),
         widget=forms.Textarea(attrs={'rows': 3}),
         required=False
     )
     signature_lock_staff_message = forms.CharField(
         label=_("Staff message"),
-        help_text=_("Optional message to team members explaining "
-                    "why user signature is locked."),
+        help_text=_(
+            "Optional message to team members explaining why user signature is locked."
+        ),
         widget=forms.Textarea(attrs={'rows': 3}),
         required=False
     )
@@ -170,7 +207,8 @@ class EditUserForm(UserBaseForm):
             raise forms.ValidationError(ungettext(
                 "Signature can't be longer than %(limit)s character.",
                 "Signature can't be longer than %(limit)s characters.",
-                length_limit) % {'limit': length_limit})
+                length_limit
+            ) % {'limit': length_limit})
 
         return data
 
@@ -180,8 +218,10 @@ def UserFormFactory(FormType, instance):
 
     extra_fields['rank'] = forms.ModelChoiceField(
         label=_("Rank"),
-        help_text=_("Ranks are used to group and distinguish users. They are "
-                    "also used to add permissions to groups of users."),
+        help_text=_(
+            "Ranks are used to group and distinguish users. They are "
+            "also used to add permissions to groups of users."
+        ),
         queryset=Rank.objects.order_by('name'),
         initial=instance.rank
     )
@@ -190,8 +230,9 @@ def UserFormFactory(FormType, instance):
 
     extra_fields['roles'] = forms.ModelMultipleChoiceField(
         label=_("Roles"),
-        help_text=_('Individual roles of this user. '
-                    'All users must have "member" role.'),
+        help_text=_(
+            'Individual roles of this user. All users must have "member" role.'
+        ),
         queryset=roles,
         initial=instance.roles.all() if instance.pk else None,
         widget=forms.CheckboxSelectMultiple
@@ -200,31 +241,53 @@ def UserFormFactory(FormType, instance):
     return type('UserFormFinal', (FormType,), extra_fields)
 
 
-def StaffFlagUserFormFactory(FormType, instance, add_staff_field):
+def StaffFlagUserFormFactory(FormType, instance):
+    staff_fields = {
+        'is_staff': forms.YesNoSwitch(
+            label=EditUserForm.IS_STAFF_LABEL,
+            help_text=EditUserForm.IS_STAFF_HELP_TEXT,
+            initial=instance.is_staff
+        ),
+        'is_superuser': forms.YesNoSwitch(
+            label=EditUserForm.IS_SUPERUSER_LABEL,
+            help_text=EditUserForm.IS_SUPERUSER_HELP_TEXT,
+            initial=instance.is_superuser
+        ),
+    }
+
+    return type('StaffUserForm', (FormType,), staff_fields)
+
+
+def UserIsActiveFormFactory(FormType, instance):
+    is_active_fields = {
+        'is_active': forms.YesNoSwitch(
+            label=EditUserForm.IS_ACTIVE_LABEL,
+            help_text=EditUserForm.IS_ACTIVE_HELP_TEXT,
+            initial=instance.is_active
+        ),
+        'is_active_staff_message': forms.CharField(
+            label=EditUserForm.IS_ACTIVE_STAFF_MESSAGE_LABEL,
+            help_text=EditUserForm.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT,
+            initial=instance.is_active_staff_message,
+            widget=forms.Textarea(attrs={'rows': 3}),
+            required=False
+        ),
+    }
+
+    return type('UserIsActiveForm', (FormType,), is_active_fields)
+
+
+def EditUserFormFactory(FormType, instance,
+        add_is_active_fields=False, add_admin_fields=False):
     FormType = UserFormFactory(FormType, instance)
 
-    if add_staff_field:
-        staff_fields = {
-            'is_staff': forms.YesNoSwitch(
-                label=_("Is administrator"),
-                help_text=_("Designates whether the user can log into admin sites. "
-                            "If Django admin site is enabled, this user will need "
-                            "additional permissions assigned within it to admin "
-                            "Django modules."),
-                initial=instance.is_staff
-            ),
-            'is_superuser': forms.YesNoSwitch(
-                label=_("Is superuser"),
-                help_text=_("Only administrators can access admin sites. "
-                            "In addition to admin site access, superadmins "
-                            "can also change other members admin levels."),
-                initial=instance.is_superuser
-            ),
-        }
+    if add_is_active_fields:
+        FormType = UserIsActiveFormFactory(FormType, instance)
 
-        return type('StaffUserForm', (FormType,), staff_fields)
-    else:
-        return FormType
+    if add_admin_fields:
+        FormType = StaffFlagUserFormFactory(FormType, instance)
+
+    return FormType
 
 
 class SearchUsersFormBase(forms.Form):
@@ -304,42 +367,51 @@ class RankForm(forms.ModelForm):
     name = forms.CharField(
         label=_("Name"),
         validators=[validate_sluggable()],
-        help_text=_('Short and descriptive name of all users with this rank. '
-                    '"The Team" or "Game Masters" are good examples.')
+        help_text=_(
+            'Short and descriptive name of all users with this rank. '
+            '"The Team" or "Game Masters" are good examples.'
+        )
     )
     title = forms.CharField(
         label=_("User title"),
         required=False,
-        help_text=_('Optional, singular version of rank name displayed by '
-                    'user names. For example "GM" or "Dev".')
+        help_text=_(
+            'Optional, singular version of rank name displayed by user names. '
+            'For example "GM" or "Dev".'
+        )
     )
     description = forms.CharField(
         label=_("Description"),
         max_length=2048,
         required=False,
         widget=forms.Textarea(attrs={'rows': 3}),
-        help_text=_("Optional description explaining function or status of "
-                    "members distincted with this rank.")
+        help_text=_(
+            "Optional description explaining function or status of "
+            "members distincted with this rank."
+        )
     )
     roles = forms.ModelMultipleChoiceField(
         label=_("User roles"),
         widget=forms.CheckboxSelectMultiple,
         queryset=Role.objects.order_by('name'),
         required=False,
-        help_text=_('Rank can give additional roles to users with it.')
+        help_text=_("Rank can give additional roles to users with it.")
     )
     css_class = forms.CharField(
         label=_("CSS class"),
         required=False,
-        help_text=_("Optional css class added to content belonging to this "
-                    "rank owner.")
+        help_text=_(
+            "Optional css class added to content belonging to this rank owner."
+        )
     )
     is_tab = forms.BooleanField(
         label=_("Give rank dedicated tab on users list"),
         required=False,
-        help_text=_("Selecting this option will make users with this rank "
-                    "easily discoverable by others trough dedicated page on "
-                    "forum users list.")
+        help_text=_(
+            "Selecting this option will make users with this rank "
+            "easily discoverable by others trough dedicated page on "
+            "forum users list."
+        )
     )
 
     class Meta:
@@ -388,8 +460,7 @@ class BanUsersForm(forms.Form):
         label=_("User message"),
         required=False,
         max_length=1000,
-        help_text=_("Optional message displayed to users "
-                    "instead of default one."),
+        help_text=_("Optional message displayed to users instead of default one."),
         widget=forms.Textarea(attrs={'rows': 3}),
         error_messages={
             'max_length': _("Message can't be longer than 1000 characters.")
@@ -408,7 +479,7 @@ class BanUsersForm(forms.Form):
     expires_on = forms.IsoDateTimeField(
         label=_("Expires on"),
         required=False,
-        help_text=_('Leave this field empty for set bans to never expire.')
+        help_text=_("Leave this field empty for set bans to never expire.")
     )
 
 
@@ -421,9 +492,11 @@ class BanForm(forms.ModelForm):
     banned_value = forms.CharField(
         label=_("Banned value"),
         max_length=250,
-        help_text=_('This value is case-insensitive and accepts asterisk (*) '
-                    'for rought matches. For example, making IP ban for value '
-                    '"83.*" will ban all IP addresses beginning with "83.".'),
+        help_text=_(
+            'This value is case-insensitive and accepts asterisk (*) '
+            'for rought matches. For example, making IP ban for value '
+            '"83.*" will ban all IP addresses beginning with "83.".'
+        ),
         error_messages={
             'max_length': _("Banned value can't be longer "
                             "than 250 characters.")
@@ -433,8 +506,7 @@ class BanForm(forms.ModelForm):
         label=_("User message"),
         required=False,
         max_length=1000,
-        help_text=_("Optional message displayed to user "
-                    "instead of default one."),
+        help_text=_("Optional message displayed to user instead of default one."),
         widget=forms.Textarea(attrs={'rows': 3}),
         error_messages={
             'max_length': _("Message can't be longer than 1000 characters.")
@@ -453,7 +525,7 @@ class BanForm(forms.ModelForm):
     expires_on = forms.IsoDateTimeField(
         label=_("Expires on"),
         required=False,
-        help_text=_('Leave this field empty for this ban to never expire.')
+        help_text=_("Leave this field empty for this ban to never expire.")
     )
 
     class Meta:
@@ -537,9 +609,11 @@ class WarningLevelForm(forms.ModelForm):
     length_in_minutes = forms.IntegerField(
         label=_("Length in minutes"),
         min_value=0,
-        help_text=_("Enter number of minutes since this warning level was "
-                    "imposed on member until it's reduced, or 0 to make "
-                    "this warning level permanent.")
+        help_text=_(
+            "Enter number of minutes since this warning level was "
+            "imposed on member until it's reduced, or 0 to make "
+            "this warning level permanent."
+        )
     )
     restricts_posting_replies = forms.TypedChoiceField(
         label=_("Posting replies"),

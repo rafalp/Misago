@@ -363,6 +363,174 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertFalse(updated_user.is_staff)
         self.assertFalse(updated_user.is_superuser)
 
+    def test_edit_disable_user(self):
+        """edit user view allows admin to disable non admin"""
+        self.user.is_superuser = False
+        self.user.save()
+
+        User = get_user_model()
+        test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_link = reverse('misago:admin:users:accounts:edit',
+                            kwargs={'pk': test_user.pk})
+
+        response = self.client.get(test_link)
+        self.assertContains(response, 'id="id_is_active_1"')
+        self.assertContains(response, 'id="id_is_active_staff_message"')
+
+        response = self.client.post(test_link, data={
+            'username': 'Bawww',
+            'rank': six.text_type(test_user.rank_id),
+            'roles': six.text_type(test_user.roles.all()[0].pk),
+            'email': 'reg@stered.com',
+            'new_password': 'pass123',
+            'is_staff': '0',
+            'is_superuser': '0',
+            'signature': 'Hello world!',
+            'is_signature_locked': '1',
+            'is_hiding_presence': '0',
+            'limits_private_thread_invites_to': '0',
+            'signature_lock_staff_message': 'Staff message',
+            'signature_lock_user_message': 'User message',
+            'subscribe_to_started_threads': '2',
+            'subscribe_to_replied_threads': '2',
+            'is_active': '0',
+            'is_active_staff_message': "Disabled in test!"
+        })
+        self.assertEqual(response.status_code, 302)
+
+        updated_user = User.objects.get(pk=test_user.pk)
+        self.assertFalse(updated_user.is_active)
+        self.assertEqual(updated_user.is_active_staff_message, "Disabled in test!")
+
+    def test_edit_superuser_disable_admin(self):
+        """edit user view allows admin to disable non admin"""
+        self.user.is_superuser = True
+        self.user.save()
+
+        User = get_user_model()
+        test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
+
+        test_user.is_staff = True
+        test_user.save()
+
+        test_link = reverse('misago:admin:users:accounts:edit',
+                            kwargs={'pk': test_user.pk})
+
+        response = self.client.get(test_link)
+        self.assertContains(response, 'id="id_is_active_1"')
+        self.assertContains(response, 'id="id_is_active_staff_message"')
+
+        response = self.client.post(test_link, data={
+            'username': 'Bawww',
+            'rank': six.text_type(test_user.rank_id),
+            'roles': six.text_type(test_user.roles.all()[0].pk),
+            'email': 'reg@stered.com',
+            'new_password': 'pass123',
+            'is_staff': '1',
+            'is_superuser': '0',
+            'signature': 'Hello world!',
+            'is_signature_locked': '1',
+            'is_hiding_presence': '0',
+            'limits_private_thread_invites_to': '0',
+            'signature_lock_staff_message': 'Staff message',
+            'signature_lock_user_message': 'User message',
+            'subscribe_to_started_threads': '2',
+            'subscribe_to_replied_threads': '2',
+            'is_active': '0',
+            'is_active_staff_message': "Disabled in test!"
+        })
+        self.assertEqual(response.status_code, 302)
+
+        updated_user = User.objects.get(pk=test_user.pk)
+        self.assertFalse(updated_user.is_active)
+        self.assertEqual(updated_user.is_active_staff_message, "Disabled in test!")
+
+    def test_edit_admin_cant_disable_admin(self):
+        """edit user view disallows admin to disable admin"""
+        self.user.is_superuser = False
+        self.user.save()
+
+        User = get_user_model()
+        test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
+
+        test_user.is_staff = True
+        test_user.save()
+
+        test_link = reverse('misago:admin:users:accounts:edit',
+                            kwargs={'pk': test_user.pk})
+
+        response = self.client.get(test_link)
+        self.assertNotContains(response, 'id="id_is_active_1"')
+        self.assertNotContains(response, 'id="id_is_active_staff_message"')
+
+        response = self.client.post(test_link, data={
+            'username': 'Bawww',
+            'rank': six.text_type(test_user.rank_id),
+            'roles': six.text_type(test_user.roles.all()[0].pk),
+            'email': 'reg@stered.com',
+            'new_password': 'pass123',
+            'is_staff': '1',
+            'is_superuser': '0',
+            'signature': 'Hello world!',
+            'is_signature_locked': '1',
+            'is_hiding_presence': '0',
+            'limits_private_thread_invites_to': '0',
+            'signature_lock_staff_message': 'Staff message',
+            'signature_lock_user_message': 'User message',
+            'subscribe_to_started_threads': '2',
+            'subscribe_to_replied_threads': '2',
+            'is_active': '0',
+            'is_active_staff_message': "Disabled in test!"
+        })
+        self.assertEqual(response.status_code, 302)
+
+        updated_user = User.objects.get(pk=test_user.pk)
+        self.assertTrue(updated_user.is_active)
+        self.assertFalse(updated_user.is_active_staff_message)
+
+    def test_edit_superuser_disable_admin(self):
+        """edit user view allows superuser to disable admin"""
+        self.user.is_superuser = True
+        self.user.save()
+
+        User = get_user_model()
+        test_user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
+
+        test_user.is_staff = True
+        test_user.save()
+
+        test_link = reverse('misago:admin:users:accounts:edit',
+                            kwargs={'pk': test_user.pk})
+
+        response = self.client.get(test_link)
+        self.assertContains(response, 'id="id_is_active_1"')
+        self.assertContains(response, 'id="id_is_active_staff_message"')
+
+        response = self.client.post(test_link, data={
+            'username': 'Bawww',
+            'rank': six.text_type(test_user.rank_id),
+            'roles': six.text_type(test_user.roles.all()[0].pk),
+            'email': 'reg@stered.com',
+            'new_password': 'pass123',
+            'is_staff': '1',
+            'is_superuser': '0',
+            'signature': 'Hello world!',
+            'is_signature_locked': '1',
+            'is_hiding_presence': '0',
+            'limits_private_thread_invites_to': '0',
+            'signature_lock_staff_message': 'Staff message',
+            'signature_lock_user_message': 'User message',
+            'subscribe_to_started_threads': '2',
+            'subscribe_to_replied_threads': '2',
+            'is_active': '0',
+            'is_active_staff_message': "Disabled in test!"
+        })
+        self.assertEqual(response.status_code, 302)
+
+        updated_user = User.objects.get(pk=test_user.pk)
+        self.assertFalse(updated_user.is_active)
+        self.assertEqual(updated_user.is_active_staff_message, "Disabled in test!")
+
     def test_delete_threads_view(self):
         """delete user threads view deletes threads"""
         User = get_user_model()

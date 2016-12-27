@@ -36,6 +36,9 @@ def profile_view(f):
 
         profile = get_object_or_404(queryset, pk=kwargs.pop('pk'))
 
+        if not profile.is_active and not request.user.is_staff:
+            raise Http404()
+
         validate_slug(profile, kwargs.pop('slug'))
         kwargs['profile'] = profile
 

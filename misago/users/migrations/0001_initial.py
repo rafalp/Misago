@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
                 ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
                 ('acl_key', models.CharField(max_length=12, null=True, blank=True)),
                 ('is_active', models.BooleanField(
-                    default=True, verbose_name='active', help_text=(
+                    db_index=True, default=True, verbose_name='active', help_text=(
                         'Designates whether this user should be treated as active. Unselect this instead of deleting '
                         'accounts.'
                     )
