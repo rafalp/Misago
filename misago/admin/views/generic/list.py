@@ -4,9 +4,9 @@ from django.db import transaction
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
+from six.moves.urllib.parse import urlencode
 
 from misago.core.exceptions import ExplicitFirstPage
-from six.moves.urllib.parse import urlencode
 
 from .base import AdminView
 
