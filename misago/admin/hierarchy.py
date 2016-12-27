@@ -26,13 +26,12 @@ class Node(object):
     def children_as_dicts(self):
         childrens = []
         for children in self._children:
-            childrens.append(
-                {
-                    'name': children.name,
-                    'icon': children.icon,
-                    'link': reverse(children.link),
-                    'namespace': children.namespace,
-                })
+            childrens.append({
+                'name': children.name,
+                'icon': children.icon,
+                'link': reverse(children.link),
+                'namespace': children.namespace,
+            })
         return childrens
 
     def add_node(self, node, after=None, before=None):
@@ -107,17 +106,19 @@ class AdminHierarchyBuilder(object):
 
             for index, node in enumerate(self.nodes_record):
                 if node['parent'] in nodes_dict:
-                    node_obj = Node(name=node['name'],
-                                    icon=node['icon'],
-                                    link=node['link'])
+                    node_obj = Node(
+                        name=node['name'],
+                        icon=node['icon'],
+                        link=node['link']
+                    )
 
                     parent = nodes_dict[node['parent']]
                     if node['after']:
-                        node_added = parent.add_node(node_obj,
-                                                     after=node['after'])
+                        node_added = parent.add_node(
+                            node_obj, after=node['after'])
                     elif node['before']:
-                        node_added = parent.add_node(node_obj,
-                                                     before=node['before'])
+                        node_added = parent.add_node(
+                            node_obj, before=node['before'])
                     else:
                         node_added = parent.add_node(node_obj)
 
@@ -141,16 +142,15 @@ class AdminHierarchyBuilder(object):
         if after and before:
             raise ValueError("after and before arguments are exclusive")
 
-        self.nodes_record.append(
-            {
-                'name': name,
-                'icon': icon,
-                'parent': parent,
-                'namespace': namespace,
-                'after': after,
-                'before': before,
-                'link': link,
-            })
+        self.nodes_record.append({
+            'name': name,
+            'icon': icon,
+            'parent': parent,
+            'namespace': namespace,
+            'after': after,
+            'before': before,
+            'link': link,
+        })
 
     def visible_branches(self, request):
         if not self.nodes_dict:
@@ -158,22 +158,33 @@ class AdminHierarchyBuilder(object):
 
         branches = []
 
-        if request.resolver_match.namespace in self.nodes_dict:
-            node = self.nodes_dict[request.resolver_match.namespace]
+        try:
+            namespace = request.resolver_match.namespace
+        except AttributeError:
+            namespace = 'misago:admin'
+
+        if namespace in self.nodes_dict:
+            node = self.nodes_dict[namespace]
             while node:
                 children = node.children_as_dicts()
                 if children:
                     branches.append(children)
                 node = node.parent
 
-        namespace = request.resolver_match.namespaces
+        try:
+            namespaces = request.resolver_match.namespaces
+        except AttributeError:
+            namespaces = ['misago', 'admin']
 
         branches.reverse()
         for depth, branch in enumerate(branches):
-            depth_namespace = namespace[2:3 + depth]
+            depth_namespace = namespaces[2:3 + depth]
             for node in branch:
                 node_namespace = node['namespace'].split(':')[2:3 + depth]
-                node['is_active'] = depth_namespace == node_namespace
+                if request.resolver_match:
+                    node['is_active'] = depth_namespace == node_namespace
+                else:
+                    node['is_active'] = False
 
         return branches
 

@@ -10,10 +10,9 @@ def _error_page(request, code, message=None):
     if is_admin_session(request):
         template_pattern = 'misago/admin/errorpages/%s.html' % code
 
-        response = render(request,
-                          template_pattern,
-                          {'message': message},
-                          error_page=True)
+        response = render(request, template_pattern, {
+            'message': message
+        }, error_page=True)
         response.status_code = code
         return response
     else:
