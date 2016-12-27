@@ -2,6 +2,7 @@ import json
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
@@ -204,6 +205,39 @@ class SearchNamesListTests(AuthenticatedUserTestCase):
         """results list returns 404"""
         response = self.client.get(self.link + self.user.slug)
         self.assertEqual(response.status_code, 404)
+
+
+class UserRetrieveTests(AuthenticatedUserTestCase):
+    def setUp(self):
+        super(UserRetrieveTests, self).setUp()
+
+        User = get_user_model()
+        self.test_user = User.objects.create_user('Tyrael', 't123@test.com', 'pass123')
+        self.link = reverse('misago:api:user-detail', kwargs={
+            'pk': self.test_user.pk
+        })
+
+    def test_get_user(self):
+        """api user retrieve endpoint has no showstoppers"""
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+
+    def test_disabled_user(self):
+        """api user retrieve handles disabled users"""
+        self.user.is_staff = False
+        self.user.save()
+
+        self.test_user.is_active = False
+        self.test_user.save()
+
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 404)
+
+        self.user.is_staff = True
+        self.user.save()
+
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
 
 
 class UserCategoriesOptionsTests(AuthenticatedUserTestCase):

@@ -82,7 +82,12 @@ class UserViewSet(viewsets.GenericViewSet):
         profile.status = get_user_status(request.user, profile)
 
         serializer = UserProfileSerializer(profile, context={'user': request.user})
-        return Response(serializer.data)
+        profile_json = serializer.data
+
+        if not profile.is_active:
+            profile_json['is_active'] = False
+
+        return Response(profile_json)
 
     @detail_route(methods=['get', 'post'])
     def avatar(self, request, pk=None):

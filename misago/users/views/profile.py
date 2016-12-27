@@ -96,6 +96,9 @@ def render(request, template, context):
     request.frontend_context['PROFILE'] = UserProfileSerializer(
         context['profile'], context={'user': request.user}).data
 
+    if not context['profile'].is_active:
+        request.frontend_context['PROFILE']['is_active'] = False
+
     return django_render(request, template, context)
 
 
