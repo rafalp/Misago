@@ -36,6 +36,13 @@ class Migration(migrations.Migration):
                 ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into admin sites.', verbose_name='staff status')),
                 ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
                 ('acl_key', models.CharField(max_length=12, null=True, blank=True)),
+                ('is_active', models.BooleanField(
+                    default=True, verbose_name='active', help_text=(
+                        'Designates whether this user should be treated as active. Unselect this instead of deleting '
+                        'accounts.'
+                    )
+                )),
+                ('is_active_staff_message', models.TextField(null=True, blank=True)),
                 ('groups', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Group', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of his/her group.', verbose_name='groups')),
                 ('roles', models.ManyToManyField(to='misago_acl.Role')),
                 ('user_permissions', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Permission', blank=True, help_text='Specific permissions for this user.', verbose_name='user permissions')),
