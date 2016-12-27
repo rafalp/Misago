@@ -35,7 +35,13 @@
   </a>
 </td>
 <td class="item-name {% if item.requires_activation %}text-muted{% endif %}">
-  <a href="{{ item.get_absolute_url }}">{{ item }}</a>
+  {% if item.is_active %}
+    <a href="{{ item.get_absolute_url }}">{{ item }}</a>
+  {% else %}
+    <a href="{{ item.get_absolute_url }}" title="{% trans "Is disabled by administrator" %}">
+      <del>{{ item }}</del>
+    </a>
+  {% endif %}
 </td>
 <td class="lead text-muted">
   {% if item.requires_activation_by_admin %}
@@ -112,10 +118,13 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-4">
     {% form_row search_form.inactive %}
   </div>
-  <div class="col-md-6">
+  <div class="col-md-4">
+    {% form_row search_form.disabled %}
+  </div>
+  <div class="col-md-4">
     {% form_row search_form.is_staff %}
   </div>
 </div>

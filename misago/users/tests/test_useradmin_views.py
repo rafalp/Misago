@@ -47,6 +47,7 @@ class UserAdminViewsTests(AdminTestCase):
         User = get_user_model()
         user_a = User.objects.create_user('Tyrael', 't123@test.com', 'pass123')
         user_b = User.objects.create_user('Tyrion', 't321@test.com', 'pass123')
+        user_c = User.objects.create_user('Karen', 't432@test.com', 'pass123')
 
         # Search both
         response = self.client.get('%s&username=tyr' % link_base)
@@ -65,6 +66,16 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, user_a.username)
         self.assertNotContains(response, user_b.username)
+
+        # Search disabled
+        user_c.is_active = False
+        user_c.save()
+
+        response = self.client.get('%s&disabled=1' % link_base)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, user_a.username)
+        self.assertNotContains(response, user_b.username)
+        self.assertContains(response, '<del>%s</del>' % user_c.username)
 
     def test_mass_activation(self):
         """users list activates multiple users"""

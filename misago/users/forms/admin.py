@@ -294,6 +294,7 @@ class SearchUsersFormBase(forms.Form):
     username = forms.CharField(label=_("Username starts with"), required=False)
     email = forms.CharField(label=_("E-mail starts with"), required=False)
     inactive = forms.YesNoSwitch(label=_("Inactive only"))
+    disabled = forms.YesNoSwitch(label=_("Disabled only"))
     is_staff = forms.YesNoSwitch(label=_("Admins only"))
 
     def filter_queryset(self, criteria, queryset):
@@ -313,6 +314,9 @@ class SearchUsersFormBase(forms.Form):
 
         if criteria.get('inactive'):
             queryset = queryset.filter(requires_activation__gt=0)
+
+        if criteria.get('disabled'):
+            queryset = queryset.filter(is_active=False)
 
         if criteria.get('is_staff'):
             queryset = queryset.filter(is_staff=True)
