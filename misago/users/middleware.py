@@ -35,6 +35,7 @@ class UserMiddleware(object):
         elif not request.user.is_staff:
             if get_request_ip_ban(request) or get_user_ban(request.user):
                 logout(request)
+                request.user = AnonymousUser()
 
 
 class OnlineTrackerMiddleware(object):
