@@ -31,9 +31,10 @@ class MisagoAuthMixin(object):
                 self.error_messages['inactive_user'], code='inactive_user')
 
     def confirm_user_not_banned(self, user):
-        self.user_ban = get_user_ban(user)
-        if self.user_ban:
-            raise ValidationError('', code='banned')
+        if not user.is_staff:
+            self.user_ban = get_user_ban(user)
+            if self.user_ban:
+                raise ValidationError('', code='banned')
 
     def get_errors_dict(self):
         error = self.errors.as_data()['__all__'][0]
@@ -124,6 +125,8 @@ class GetUserForm(MisagoAuthMixin, forms.Form):
         try:
             User = get_user_model()
             user = User.objects.get_by_email(data['email'])
+            if not user.is_active:
+                raise User.DoesNotExist()
             self.user_cache = user
         except User.DoesNotExist:
             raise forms.ValidationError(

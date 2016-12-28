@@ -1,5 +1,3 @@
-import json
-
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.test import TestCase
@@ -21,7 +19,7 @@ class GatewayTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(smart_str(response.content))
+        user_json = response.json()
         self.assertIsNone(user_json['id'])
 
     def test_login(self):
@@ -39,7 +37,7 @@ class GatewayTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(smart_str(response.content))
+        user_json = response.json()
         self.assertEqual(user_json['id'], user.id)
         self.assertEqual(user_json['username'], user.username)
 
@@ -65,7 +63,7 @@ class GatewayTests(TestCase):
         })
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['code'], 'banned')
         self.assertEqual(response_json['detail']['message']['plain'],
                          ban.user_message)
@@ -75,8 +73,35 @@ class GatewayTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(smart_str(response.content))
+        user_json = response.json()
         self.assertIsNone(user_json['id'])
+
+    def test_login_banned_staff(self):
+        """login api signs banned staff member in"""
+        User = get_user_model()
+        user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+
+        user.is_staff = True
+        user.save()
+
+        ban = Ban.objects.create(
+            check_type=BAN_USERNAME,
+            banned_value='bob',
+            user_message='You are tragically banned.',
+        )
+
+        response = self.client.post('/api/auth/', data={
+            'username': 'Bob',
+            'password': 'Pass.123',
+        })
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get('/api/auth/')
+        self.assertEqual(response.status_code, 200)
+
+        user_json = response.json()
+        self.assertEqual(user_json['id'], user.id)
+        self.assertEqual(user_json['username'], user.username)
 
     def test_login_inactive_admin(self):
         """login api fails to sign admin-activated user in"""
@@ -90,13 +115,13 @@ class GatewayTests(TestCase):
         })
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['code'], 'inactive_user')
 
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(smart_str(response.content))
+        user_json = response.json()
         self.assertIsNone(user_json['id'])
 
     def test_login_inactive_user(self):
@@ -111,13 +136,34 @@ class GatewayTests(TestCase):
         })
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['code'], 'inactive_admin')
 
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(smart_str(response.content))
+        user_json = response.json()
+        self.assertIsNone(user_json['id'])
+
+    def test_login_disabled_user(self):
+        """its impossible to sign in to disabled account"""
+        User = get_user_model()
+        user = User.objects.create_user(
+            'Bob', 'bob@test.com', 'Pass.123', is_active=False)
+
+        user.is_staff = True
+        user.save()
+
+        response = self.client.post('/api/auth/', data={
+            'username': 'Bob',
+            'password': 'Pass.123',
+        })
+        self.assertContains(response, "Login or password is incorrect.", status_code=400)
+
+        response = self.client.get('/api/auth/')
+        self.assertEqual(response.status_code, 200)
+
+        user_json = response.json()
         self.assertIsNone(user_json['id'])
 
 
@@ -149,6 +195,16 @@ class SendActivationAPITests(TestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertIn('Activate Bob', mail.outbox[0].subject)
+
+    def test_submit_disabled(self):
+        """request activation link api fails disabled users"""
+        self.user.is_active = False
+        self.user.save()
+
+        response = self.client.post(self.link, data={'email': self.user.email})
+        self.assertContains(response, 'not_found', status_code=400)
+
+        self.assertTrue(not mail.outbox)
 
     def test_submit_empty(self):
         """request activation link api errors for no body"""
@@ -218,6 +274,16 @@ class SendPasswordFormAPITests(TestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertIn('Change Bob password', mail.outbox[0].subject)
+
+    def test_submit_disabled(self):
+        """request change password form api fails disabled users"""
+        self.user.is_active = False
+        self.user.save()
+
+        response = self.client.post(self.link, data={'email': self.user.email})
+        self.assertContains(response, 'not_found', status_code=400)
+
+        self.assertTrue(not mail.outbox)
 
     def test_submit_empty(self):
         """request change password form link api errors for no body"""
