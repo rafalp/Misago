@@ -3,10 +3,10 @@ from django.utils import timezone
 from .models import Post
 
 
-def record_event(request, thread, event, context=None, commit=True):
+def record_event(request, thread, event_type, context=None, commit=True):
     time_now = timezone.now()
 
-    event_post = Post.objects.create(
+    event = Post.objects.create(
         category=thread.category,
         thread=thread,
         poster=request.user,
@@ -17,11 +17,12 @@ def record_event(request, thread, event, context=None, commit=True):
         posted_on=time_now,
         updated_on=time_now,
         is_event=True,
-        event_type=event,
+        event_type=event_type,
         event_context=context,
     )
 
-    thread.set_last_post(event_post)
+    thread.has_events = True
+    thread.set_last_post(event)
     if commit:
         thread.save()
 
@@ -30,4 +31,4 @@ def record_event(request, thread, event, context=None, commit=True):
         if commit:
             thread.category.save()
 
-    return event_post
+    return event

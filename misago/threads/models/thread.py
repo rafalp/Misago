@@ -34,6 +34,7 @@ class Thread(models.Model):
     slug = models.CharField(max_length=255)
     replies = models.PositiveIntegerField(default=0, db_index=True)
 
+    has_events = models.BooleanField(default=False)
     has_reported_posts = models.BooleanField(default=False)
     has_open_reports = models.BooleanField(default=False)
     has_unapproved_posts = models.BooleanField(default=False)
@@ -65,6 +66,7 @@ class Thread(models.Model):
         blank=True,
         on_delete=models.SET_NULL
     )
+    last_post_is_event = models.BooleanField(default=False)
     last_poster = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='last_poster_set',
@@ -141,15 +143,23 @@ class Thread(models.Model):
         hidden_post_qs = self.post_set.filter(is_hidden=True)[:1]
         self.has_hidden_posts = hidden_post_qs.exists()
 
-        first_post = self.post_set.order_by('id')[:1][0]
+        posts = self.post_set.order_by('id')
+
+        first_post = posts.first()
         self.set_first_post(first_post)
 
-        last_post_qs = self.post_set.filter(is_unapproved=False).order_by('-id')
-        last_post = last_post_qs[:1]
+        last_post = posts.filter(is_unapproved=False).last()
         if last_post:
-            self.set_last_post(last_post[0])
+            self.set_last_post(last_post)
         else:
             self.set_last_post(first_post)
+
+        self.has_events = False
+        if last_post:
+            if last_post.is_event:
+                self.has_events = True
+            else:
+                self.has_events = self.post_set.filter(is_event=True).exists()
 
     @property
     def thread_type(self):
@@ -210,6 +220,7 @@ class Thread(models.Model):
 
     def set_last_post(self, post):
         self.last_post_on = post.posted_on
+        self.last_post_is_event = post.is_event
         self.last_post = post
         self.last_poster = post.poster
         self.last_poster_name = post.poster_name
