@@ -36,6 +36,9 @@ def generic(request):
     allow_name_search = True
     queryset = get_user_model().objects
 
+    if not request.user.is_staff:
+        queryset = queryset.filter(is_active=True)
+
     if request.query_params.get('followers'):
         user_pk = get_int_or_404(request.query_params.get('followers'))
         queryset = get_object_or_404(queryset, pk=user_pk).followed_by

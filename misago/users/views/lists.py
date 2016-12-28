@@ -99,6 +99,9 @@ def rank(request, slug, page=0):
     rank = get_object_or_404(Rank.objects.filter(is_tab=True), slug=slug)
     queryset = rank.user_set.select_related('rank').order_by('slug')
 
+    if not request.user.is_staff:
+        queryset = queryset.filter(is_active=True)
+
     page = paginate(queryset, page, settings.MISAGO_USERS_PER_PAGE, 4)
     paginator = pagination_dict(page)
 

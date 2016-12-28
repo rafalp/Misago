@@ -187,6 +187,30 @@ class RankListTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.user.username)
 
+    def test_disabled_users(self):
+        """api follows disabled users visibility"""
+        test_rank = Rank.objects.create(
+            name="Test rank",
+            slug="test-rank",
+            is_tab=True
+        )
+
+        User = get_user_model()
+        test_user = User.objects.create_user(
+            'Visible', 'visible@te.com', 'Pass.123',
+            rank=test_rank, is_active=False
+        )
+
+        response = self.client.get(self.link % test_rank.pk)
+        self.assertNotContains(response, test_user.get_absolute_url())
+
+        # api shows disabled accounts to staff
+        self.user.is_staff = True
+        self.user.save()
+
+        response = self.client.get(self.link % test_rank.pk)
+        self.assertContains(response, test_user.get_absolute_url())
+
 
 class SearchNamesListTests(AuthenticatedUserTestCase):
     """

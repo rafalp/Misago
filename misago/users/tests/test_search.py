@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from misago.acl.testutils import override_acl
@@ -97,6 +98,38 @@ class SearchApiTests(AuthenticatedUserTestCase):
         for provider in reponse_json:
             if provider['id'] == 'users':
                 self.assertEqual(provider['results']['results'], [])
+
+    def test_search_disabled(self):
+        """api respects disabled users visibility"""
+        User = get_user_model()
+        disabled_user = User.objects.create_user(
+            'DisabledUser', 'visible@te.com', 'Pass.123', is_active=False)
+
+        response = self.client.get('%s?q=DisabledUser' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        reponse_json = response.json()
+        self.assertIn('users', [p['id'] for p in reponse_json])
+
+        for provider in reponse_json:
+            if provider['id'] == 'users':
+                self.assertEqual(provider['results']['results'], [])
+
+        # user shows in searchech performed by staff
+        self.user.is_staff = True
+        self.user.save()
+
+        response = self.client.get('%s?q=DisabledUser' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        reponse_json = response.json()
+        self.assertIn('users', [p['id'] for p in reponse_json])
+
+        for provider in reponse_json:
+            if provider['id'] == 'users':
+                results = provider['results']['results']
+                self.assertEqual(len(results), 1)
+                self.assertEqual(results[0]['id'], disabled_user.id)
 
 
 class SearchProviderApiTests(SearchApiTests):

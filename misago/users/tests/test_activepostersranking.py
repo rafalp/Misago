@@ -16,7 +16,7 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         cache.clear()
         threadstore.clear()
 
-        self.category = Category.objects.all_categories()[:1][0]
+        self.category = Category.objects.get(slug='first-category')
 
     def tearDown(self):
         super(TestActivePostersRanking, self).tearDown()
@@ -54,6 +54,29 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
 
         self.user.posts = 2
         self.user.save()
+
+        build_active_posters_ranking()
+        ranking = get_active_posters_ranking()
+
+        self.assertEqual(ranking['users'], [self.user, other_user])
+        self.assertEqual(ranking['users_count'], 2)
+
+        self.assertEqual(ranking['users'][0].score, 2)
+        self.assertEqual(ranking['users'][1].score, 1)
+
+        # disabled users are not ranked
+        disabled = User.objects.create_user(
+            "DisabledUser", "disabled@user.com", "pass123")
+
+        disabled.is_active = False
+        disabled.save()
+
+        post_thread(self.category, poster=disabled)
+        post_thread(self.category, poster=disabled)
+        post_thread(self.category, poster=disabled)
+
+        disabled.posts = 3
+        disabled.save()
 
         build_active_posters_ranking()
         ranking = get_active_posters_ranking()

@@ -22,7 +22,10 @@ class SearchUsers(SearchProvider):
 
     def search(self, query, page=1):
         if query:
-            results = search_users(username=query)
+            results = search_users(
+                search_disabled=self.request.user.is_staff,
+                username=query
+            )
         else:
             results = []
 
@@ -36,6 +39,9 @@ def search_users(**filters):
     User = get_user_model()
     queryset = User.objects.order_by('slug').select_related(
         'rank', 'ban_cache', 'online_tracker')
+
+    if not filters.get('search_disabled', False):
+        queryset = queryset.filter(is_active=True)
 
     username = filters.get('username').lower()
 

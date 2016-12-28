@@ -3,7 +3,10 @@ from django.urls import reverse
 from django.utils.six.moves import range
 
 from misago.acl.testutils import override_acl
+from misago.categories.models import Category
+from misago.threads.testutils import post_thread
 
+from ..activepostersranking import build_active_posters_ranking
 from ..models import Rank
 from ..testutils import AuthenticatedUserTestCase
 
@@ -35,18 +38,29 @@ class UsersListLanderTests(UsersListTestCase):
 
 
 class ActivePostersTests(UsersListTestCase):
-    def test_active_posters_list(self):
-        """active posters page has no showstoppers"""
+    def test_empty_active_posters_list(self):
+        """empty active posters page has no showstoppers"""
         view_link = reverse('misago:users-active-posters')
 
         response = self.client.get(view_link)
         self.assertEqual(response.status_code, 200)
 
-        # Create 200 test users and see if errors appeared
+    def test_active_posters_list(self):
+        """active posters page has no showstoppers"""
+        category = Category.objects.get(slug='first-category')
+        view_link = reverse('misago:users-active-posters')
+
+        response = self.client.get(view_link)
+        self.assertEqual(response.status_code, 200)
+
+        # Create 50 test users and see if errors appeared
         User = get_user_model()
-        for i in range(200):
-            User.objects.create_user(
+        for i in range(50):
+            user = User.objects.create_user(
                 'Bob%s' % i, 'm%s@te.com' % i, 'Pass.123', posts=12345)
+            post_thread(category, poster=user)
+
+        build_active_posters_ranking()
 
         response = self.client.get(view_link)
         self.assertEqual(response.status_code, 200)
@@ -55,11 +69,60 @@ class ActivePostersTests(UsersListTestCase):
 class UsersRankTests(UsersListTestCase):
     def test_ranks(self):
         """ranks lists are handled correctly"""
+        User = get_user_model()
+        rank_user = User.objects.create_user(
+            'Visible', 'visible@te.com', 'Pass.123')
+
         for rank in Rank.objects.iterator():
+            rank_user.rank = rank
+            rank_user.save()
+
             rank_link = reverse('misago:users-rank', kwargs={'slug': rank.slug})
             response = self.client.get(rank_link)
 
             if rank.is_tab:
                 self.assertEqual(response.status_code, 200)
+                self.assertContains(response, rank_user.get_absolute_url())
+            else:
+                self.assertEqual(response.status_code, 404)
+
+    def test_disabled_users(self):
+        """ranks lists excludes disabled accounts"""
+        User = get_user_model()
+        rank_user = User.objects.create_user(
+            'Visible', 'visible@te.com', 'Pass.123', is_active=False)
+
+        for rank in Rank.objects.iterator():
+            rank_user.rank = rank
+            rank_user.save()
+
+            rank_link = reverse('misago:users-rank', kwargs={'slug': rank.slug})
+            response = self.client.get(rank_link)
+
+            if rank.is_tab:
+                self.assertEqual(response.status_code, 200)
+                self.assertNotContains(response, rank_user.get_absolute_url())
+            else:
+                self.assertEqual(response.status_code, 404)
+
+    def test_staff_see_disabled_users(self):
+        """ranks lists shows disabled accounts for staff members"""
+        self.user.is_staff = True
+        self.user.save()
+
+        User = get_user_model()
+        rank_user = User.objects.create_user(
+            'Visible', 'visible@te.com', 'Pass.123', is_active=False)
+
+        for rank in Rank.objects.iterator():
+            rank_user.rank = rank
+            rank_user.save()
+
+            rank_link = reverse('misago:users-rank', kwargs={'slug': rank.slug})
+            response = self.client.get(rank_link)
+
+            if rank.is_tab:
+                self.assertEqual(response.status_code, 200)
+                self.assertContains(response, rank_user.get_absolute_url())
             else:
                 self.assertEqual(response.status_code, 404)

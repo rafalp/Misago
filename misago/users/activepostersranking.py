@@ -34,7 +34,10 @@ def build_active_posters_ranking():
     for category in Category.objects.all_categories():
         ranked_categories.append(category.pk)
 
-    queryset = get_user_model().objects.filter(posts__gt=0).filter(
+    queryset = get_user_model().objects.filter(
+        is_active=True,
+        posts__gt=0
+    ).filter(
         post__posted_on__gte=tracked_since,
         post__category__in=ranked_categories
     ).annotate(score=Count('post'))
