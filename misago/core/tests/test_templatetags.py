@@ -4,6 +4,7 @@ from django.test import TestCase
 from .. import forms
 from ..shortcuts import paginate
 from ..templatetags import misago_batch
+from ..utils import encode_json_html
 
 
 class CaptureTests(TestCase):
@@ -242,7 +243,7 @@ class ShorthandsTests(TestCase):
 
 class JSONTests(TestCase):
     def test_json_filter(self):
-        """as_json filter renders dict as json"""
+        """as_json filter renders dict as safe json"""
         tpl_content = """
 {% load misago_json %}
 
@@ -251,8 +252,8 @@ class JSONTests(TestCase):
 
         tpl = Template(tpl_content)
         self.assertEqual(tpl.render(Context({
-            'value': {'he<llo': 'bo"b!'}
-        })).strip(), '{"he<llo": "bo\\"b!"}')
+            'value': {'he</script>llo': 'bo"b!'}
+        })).strip(), '{"he\u003C/script>llo": "bo\\"b!"}')
 
 
 class PageTitleTests(TestCase):

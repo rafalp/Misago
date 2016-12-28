@@ -3,6 +3,7 @@ import json
 from django import template
 from django.utils.safestring import mark_safe
 
+from ..utils import encode_json_html
 
 register = template.Library()
 
@@ -11,4 +12,4 @@ register = template.Library()
 def as_json(value):
     json_dump = json.dumps(value)
     # fixes XSS as described in #651
-    return mark_safe(json_dump.replace('<', r'\u003C'))
+    return mark_safe(encode_json_html(json_dump))

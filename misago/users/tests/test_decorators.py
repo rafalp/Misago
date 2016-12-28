@@ -1,5 +1,7 @@
 from django.urls import reverse
 
+from misago.core.utils import encode_json_html
+
 from ..models import BAN_IP, Ban
 from ..testutils import UserTestCase
 
@@ -38,7 +40,7 @@ class DenyBannedIPTests(UserTestCase):
         Ban.objects.create(
             check_type=BAN_IP,
             banned_value='83.*',
-            user_message='Ya got banned!')
+            user_message="Ya got banned!")
 
         response = self.client.post(reverse('misago:request-activation'))
         self.assertEqual(response.status_code, 200)
@@ -48,7 +50,8 @@ class DenyBannedIPTests(UserTestCase):
         Ban.objects.create(
             check_type=BAN_IP,
             banned_value='127.*',
-            user_message='Ya got banned!')
+            user_message="Ya got banned!")
 
         response = self.client.post(reverse('misago:request-activation'))
-        self.assertContains(response, '<p>Ya got banned!</p>', status_code=403)
+        self.assertContains(
+            response, encode_json_html("<p>Ya got banned!</p>"), status_code=403)

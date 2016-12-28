@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
+from misago.core.utils import encode_json_html
+
 from ..models import BAN_USERNAME, Ban
 from ..tokens import make_activation_token
 
@@ -29,7 +31,8 @@ class ActivationViewsTests(TestCase):
             'pk': test_user.pk,
             'token': activation_token,
         }))
-        self.assertContains(response, "<p>Nope!</p>", status_code=403)
+        self.assertContains(
+            response, encode_json_html("<p>Nope!</p>"), status_code=403)
 
         test_user = User.objects.get(pk=test_user.pk)
         self.assertEqual(test_user.requires_activation, 1)

@@ -5,6 +5,7 @@ from django.urls import reverse
 from misago.users.models import AnonymousUser
 
 from ..testproject.views import mock_custom_403_error_page, mock_custom_404_error_page
+from ..utils import encode_json_html
 
 
 class CSRFErrorViewTests(TestCase):
@@ -24,7 +25,8 @@ class ErrorPageViewsTests(TestCase):
         """banned error page has no show-stoppers"""
         response = self.client.get(reverse('raise-misago-banned'))
         self.assertContains(response, "misago:error-banned", status_code=403)
-        self.assertContains(response, "<p>Banned for test!</p>", status_code=403)
+        self.assertContains(
+            response, encode_json_html("<p>Banned for test!</p>"), status_code=403)
 
     def test_permission_denied_returns_403(self):
         """permission_denied error page has no show-stoppers"""

@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
+from misago.core.utils import encode_json_html
+
 from ..models import BAN_USERNAME, Ban
 from ..testutils import UserTestCase
 from ..tokens import make_password_change_token
@@ -37,7 +39,8 @@ class ForgottenPasswordViewsTests(UserTestCase):
                 'pk': test_user.pk,
                 'token': password_token,
             }))
-        self.assertContains(response, '<p>Nope!</p>', status_code=403)
+        self.assertContains(
+            response, encode_json_html("<p>Nope!</p>"), status_code=403)
 
     def test_change_password_on_other_user(self):
         """change other user password errors"""
