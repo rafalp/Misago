@@ -140,7 +140,7 @@ def change_forgotten_password(request, pk, token):
 
     try:
         try:
-            user = User.objects.get(pk=pk)
+            user = User.objects.get(pk=pk, is_active=True)
         except User.DoesNotExist:
             raise PasswordChangeFailed(invalid_message)
 

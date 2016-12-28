@@ -326,22 +326,22 @@ class ChangePasswordAPITests(TestCase):
     def test_submit_valid(self):
         """submit change password form api errors for empty body"""
         response = self.client.post(self.link % (
-                self.user.pk,
-                make_password_change_token(self.user)
-            ), data={'password': 'n3wp4ss!'})
+            self.user.pk,
+            make_password_change_token(self.user)
+        ), data={'password': 'n3wp4ss!'})
         self.assertEqual(response.status_code, 200)
 
         user = get_user_model().objects.get(id=self.user.pk)
         self.assertTrue(user.check_password('n3wp4ss!'))
 
     def test_invalid_token_link(self):
-        """request errors on invalid user id link"""
+        """api errors on invalid user id link"""
         response = self.client.post(self.link % (
-                self.user.pk,
-                'asda7ad89sa7d9s789as'
-            ))
+            self.user.pk,
+            'asda7ad89sa7d9s789as'
+        ))
 
-        self.assertContains(response, 'Form link is invalid.', status_code=400)
+        self.assertContains(response, "Form link is invalid.", status_code=400)
 
     def test_banned_user_link(self):
         """request errors because user is banned"""
@@ -352,35 +352,46 @@ class ChangePasswordAPITests(TestCase):
         )
 
         response = self.client.post(self.link % (
-                self.user.pk,
-                make_password_change_token(self.user)
-            ))
-        self.assertContains(response, 'Your link has expired.', status_code=400)
+            self.user.pk,
+            make_password_change_token(self.user)
+        ))
+        self.assertContains(response, "Your link has expired.", status_code=400)
 
     def test_inactive_user(self):
-        """request change password form link api errors for inactive users"""
+        """change password api errors for inactive users"""
         self.user.requires_activation = 1
         self.user.save()
 
         response = self.client.post(self.link % (
-                self.user.pk,
-                make_password_change_token(self.user)
-            ))
-        self.assertContains(response, 'Your link has expired.', status_code=400)
+            self.user.pk,
+            make_password_change_token(self.user)
+        ))
+        self.assertContains(response, "Your link has expired.", status_code=400)
 
         self.user.requires_activation = 2
         self.user.save()
 
         response = self.client.post(self.link % (
-                self.user.pk,
-                make_password_change_token(self.user)
-            ))
-        self.assertContains(response, 'Your link has expired.', status_code=400)
+            self.user.pk,
+            make_password_change_token(self.user)
+        ))
+        self.assertContains(response, "Your link has expired.", status_code=400)
+
+    def test_disabled_user(self):
+        """change password api errors for disabled users"""
+        self.user.is_active = False
+        self.user.save()
+
+        response = self.client.post(self.link % (
+            self.user.pk,
+            make_password_change_token(self.user)
+        ))
+        self.assertContains(response, "Form link is invalid.", status_code=400)
 
     def test_submit_empty(self):
-        """submit change password form api errors for empty body"""
+        """change password api errors for empty body"""
         response = self.client.post(self.link % (
-                self.user.pk,
-                make_password_change_token(self.user)
-            ))
-        self.assertContains(response, 'Valid password must', status_code=400)
+            self.user.pk,
+            make_password_change_token(self.user)
+        ))
+        self.assertContains(response, "Valid password must", status_code=400)
