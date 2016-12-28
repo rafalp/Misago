@@ -5,6 +5,7 @@ from misago.core.shortcuts import paginate, pagination_dict
 from misago.readtracker.threadstracker import make_posts_read_aware
 from misago.users.online.utils import make_users_status_aware
 
+from ..paginator import PostsPaginator
 from ..permissions.threads import exclude_invisible_posts
 from ..serializers import PostSerializer
 from ..utils import add_likes_to_posts
@@ -20,10 +21,11 @@ class ViewModel(object):
         except AttributeError:
             thread_model = thread
 
-        posts_queryset = self.get_queryset(request, thread_model)
+        posts_queryset = self.get_posts_queryset(request, thread_model)
 
         list_page = paginate(
-            posts_queryset, page, settings.MISAGO_POSTS_PER_PAGE, settings.MISAGO_POSTS_TAIL)
+            posts_queryset, page, settings.MISAGO_POSTS_PER_PAGE, settings.MISAGO_POSTS_TAIL,
+            paginator=PostsPaginator)
         paginator = pagination_dict(list_page, include_page_range=False)
 
         posts = list(list_page.object_list)
@@ -36,27 +38,53 @@ class ViewModel(object):
             if post.poster:
                 posters.append(post.poster)
 
-        add_acl(request.user, posts)
-
-        make_posts_read_aware(request.user, thread_model, posts)
         make_users_status_aware(request.user, posters)
 
         if thread.category.acl['can_see_posts_likes']:
             add_likes_to_posts(request.user, posts)
+
+        # add events to posts
+        first_post = None
+        if list_page.has_previous():
+            first_post = posts[0]
+        last_post = None
+        if list_page.has_next():
+            last_post = posts[-1]
+
+        posts += self.get_events_queryset(
+            request, thread_model, settings.MISAGO_EVENTS_PER_PAGE, first_post, last_post)
+
+        # sorth both by pk
+        posts.sort(key=lambda p: p.pk)
+
+        # make posts and events ACL and reads aware
+        add_acl(request.user, posts)
+        make_posts_read_aware(request.user, thread_model, posts)
 
         self._user = request.user
 
         self.posts = posts
         self.paginator = paginator
 
-    def get_queryset(self, request, thread):
+    def get_posts_queryset(self, request, thread):
         queryset = thread.post_set.select_related(
             'poster',
             'poster__rank',
             'poster__ban_cache',
             'poster__online_tracker'
-        ).order_by('id')
+        ).filter(is_event=False).order_by('id')
         return exclude_invisible_posts(request.user, thread.category, queryset)
+
+    def get_events_queryset(self, request, thread, limit, first_post=None, last_post=None):
+        queryset = thread.post_set.select_related('poster').filter(is_event=True)
+
+        if first_post:
+            queryset = queryset.filter(pk__gt=first_post.pk)
+        if last_post:
+            queryset = queryset.filter(pk__lt=last_post.pk)
+
+        queryset = exclude_invisible_posts(request.user, thread.category, queryset)
+        return list(queryset.order_by('id')[:limit])
 
     def get_frontend_context(self):
         context = {

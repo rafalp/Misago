@@ -8,7 +8,8 @@ from django.shortcuts import *  # noqa
 
 def paginate(object_list, page, per_page, orphans=0,
              allow_empty_first_page=True,
-             allow_explicit_first_page=False):
+             allow_explicit_first_page=False,
+             paginator=None):
     from django.http import Http404
     from django.core.paginator import Paginator, EmptyPage, InvalidPage
     from .exceptions import ExplicitFirstPage
@@ -18,8 +19,10 @@ def paginate(object_list, page, per_page, orphans=0,
     elif not page:
         page = 1
 
+    paginator = paginator or Paginator
+
     try:
-        return Paginator(
+        return paginator(
             object_list, per_page, orphans=orphans,
             allow_empty_first_page=allow_empty_first_page).page(page)
     except (EmptyPage, InvalidPage) as e:

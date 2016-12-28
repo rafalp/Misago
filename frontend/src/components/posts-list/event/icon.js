@@ -6,7 +6,7 @@ const ICON = {
 
   pinned_globally: 'bookmark',
   pinned_locally: 'bookmark_border',
-  unpoinned: 'panorama_fish_eye',
+  unpinned: 'panorama_fish_eye',
 
   moved: 'arrow_forward',
   merged: 'call_merge',
