@@ -1,8 +1,10 @@
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
+from misago.conf import settings
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from .. import testutils
+from ..events import record_event
 from ..models import Post, Thread
 from ..moderation import threads as threads_moderation
 from ..moderation.posts import hide_post
@@ -297,6 +299,81 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
             self.assertContains(response, event.get_absolute_url())
             self.assertContains(response, message)
             self.assertContains(response, "Hidden by")
+
+            # Event is only loaded if thread has events flag
+            self.thread.has_events = False
+            self.thread.save()
+
+            self.override_acl({
+                'can_approve_content': 1,
+                'can_hide_threads': 1,
+                'can_hide_events': 1,
+            })
+
+            response = self.client.get(self.thread.get_absolute_url())
+            self.assertNotContains(response, event.get_absolute_url())
+
+    def test_events_limit(self):
+        """forum will trim oldest events if theres more than allowed by config"""
+        events_limit = settings.MISAGO_EVENTS_PER_PAGE
+        events = []
+
+        for i in range(events_limit + 5):
+            event = record_event(MockRequest(self.user), self.thread, 'closed')
+            events.append(event)
+
+        # test that only events within limits were rendered
+        response = self.client.get(self.thread.get_absolute_url())
+
+        for event in events[5:]:
+            self.assertContains(response, event.get_absolute_url())
+        for event in events[:5]:
+            self.assertNotContains(response, event.get_absolute_url())
+
+    def test_events_dont_take_space(self):
+        """events dont take space away from posts"""
+        posts_limit = settings.MISAGO_POSTS_PER_PAGE
+        events_limit = settings.MISAGO_EVENTS_PER_PAGE
+        events = []
+
+        for i in range(events_limit + 5):
+            event = record_event(MockRequest(self.user), self.thread, 'closed')
+            events.append(event)
+
+        posts = []
+        for i in range(posts_limit - 1):
+            post = testutils.reply_thread(self.thread)
+            posts.append(post)
+
+        # test that all events and posts within limits were rendered
+        response = self.client.get(self.thread.get_absolute_url())
+
+        for event in events[5:]:
+            self.assertContains(response, event.get_absolute_url())
+        for post in posts:
+            self.assertContains(response, post.get_absolute_url())
+
+        # add second page to thread with more events
+        for i in range(posts_limit):
+            post = testutils.reply_thread(self.thread)
+        for i in range(events_limit):
+            event = record_event(MockRequest(self.user), self.thread, 'closed')
+            events.append(event)
+
+        # see first page
+        response = self.client.get(self.thread.get_absolute_url())
+
+        for event in events[5:events_limit]:
+            self.assertContains(response, event.get_absolute_url())
+        for post in posts[:posts_limit - 1]:
+            self.assertContains(response, post.get_absolute_url())
+
+        # see second page
+        response = self.client.get('%s2/' % self.thread.get_absolute_url())
+        for event in events[5 + events_limit:]:
+            self.assertContains(response, event.get_absolute_url())
+        for post in posts[posts_limit - 1:]:
+            self.assertContains(response, post.get_absolute_url())
 
     def test_changed_thread_title_event_renders(self):
         """changed thread title event renders"""

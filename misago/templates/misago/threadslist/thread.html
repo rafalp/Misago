@@ -167,9 +167,15 @@
             <span class="poster-title">{{ thread.last_poster_name }}</span>
           {% endif %}
         {% endcapture %}
-        {% blocktrans trimmed with user=last_poster|safe date=thread.last_post_on|date %}
-          last reply by {{ user }} {{ date }}
-        {% endblocktrans %}
+        {% if thread.last_post_is_event %}
+          {% blocktrans trimmed with user=last_poster|safe date=thread.last_post_on|date %}
+            last action by {{ user }} {{ date }}
+          {% endblocktrans %}
+        {% else %}
+          {% blocktrans trimmed with user=last_poster|safe date=thread.last_post_on|date %}
+            last reply by {{ user }} {{ date }}
+          {% endblocktrans %}
+        {% endif %}
       </li>
     </ul>
     <ul class="thread-details-compact list-inline">

@@ -23,9 +23,10 @@ class ViewModel(object):
 
         posts_queryset = self.get_posts_queryset(request, thread_model)
 
-        list_page = paginate(
-            posts_queryset, page, settings.MISAGO_POSTS_PER_PAGE, settings.MISAGO_POSTS_TAIL,
-            paginator=PostsPaginator)
+        posts_limit = settings.MISAGO_POSTS_PER_PAGE
+        posts_orphans = settings.MISAGO_POSTS_TAIL
+        list_page = paginate(posts_queryset, page, posts_limit, posts_orphans,
+                             paginator=PostsPaginator)
         paginator = pagination_dict(list_page, include_page_range=False)
 
         posts = list(list_page.object_list)
@@ -44,18 +45,20 @@ class ViewModel(object):
             add_likes_to_posts(request.user, posts)
 
         # add events to posts
-        first_post = None
-        if list_page.has_previous():
-            first_post = posts[0]
-        last_post = None
-        if list_page.has_next():
-            last_post = posts[-1]
+        if thread_model.has_events:
+            first_post = None
+            if list_page.has_previous():
+                first_post = posts[0]
+            last_post = None
+            if list_page.has_next():
+                last_post = posts[-1]
 
-        posts += self.get_events_queryset(
-            request, thread_model, settings.MISAGO_EVENTS_PER_PAGE, first_post, last_post)
+            events_limit = settings.MISAGO_EVENTS_PER_PAGE
+            posts += self.get_events_queryset(
+                request, thread_model, events_limit, first_post, last_post)
 
-        # sorth both by pk
-        posts.sort(key=lambda p: p.pk)
+            # sort both by pk
+            posts.sort(key=lambda p: p.pk)
 
         # make posts and events ACL and reads aware
         add_acl(request.user, posts)
@@ -84,7 +87,7 @@ class ViewModel(object):
             queryset = queryset.filter(pk__lt=last_post.pk)
 
         queryset = exclude_invisible_posts(request.user, thread.category, queryset)
-        return list(queryset.order_by('id')[:limit])
+        return list(queryset.order_by('-id')[:limit])
 
     def get_frontend_context(self):
         context = {

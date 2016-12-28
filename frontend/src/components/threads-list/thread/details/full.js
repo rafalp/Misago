@@ -184,10 +184,15 @@ export default class extends React.Component {
   }
 
   getLastReply() {
+    let message = gettext("last reply by %(user)s %(date)s");
+    if (this.props.thread.last_post_is_event) {
+      message = gettext("last action by %(user)s %(date)s");
+    }
+
     /* jshint ignore:start */
     return <li className="thread-last-reply"
                dangerouslySetInnerHTML={{__html: interpolate(
-      escapeHtml(gettext("last reply by %(user)s %(date)s")), {
+      escapeHtml(message), {
         date: this.getLastReplyDate(),
         user: this.getLastPoster()
       }, true)}} />;
