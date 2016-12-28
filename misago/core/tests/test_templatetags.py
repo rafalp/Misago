@@ -253,7 +253,7 @@ class JSONTests(TestCase):
         tpl = Template(tpl_content)
         self.assertEqual(tpl.render(Context({
             'value': {'he</script>llo': 'bo"b!'}
-        })).strip(), '{"he\u003C/script>llo": "bo\\"b!"}')
+        })).strip(), r'{"he\u003C/script>llo": "bo\"b!"}')
 
 
 class PageTitleTests(TestCase):
