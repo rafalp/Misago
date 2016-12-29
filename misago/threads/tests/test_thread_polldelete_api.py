@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.urls import reverse
 from django.utils import timezone
 
-from ..models import Poll, PollVote
+from ..models import Poll, PollVote, Thread
 from .test_thread_poll_api import ThreadPollApiTestCase
 
 
@@ -155,6 +155,10 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
         self.assertEqual(Poll.objects.count(), 0)
         self.assertEqual(PollVote.objects.count(), 0)
 
+        # api set poll flag on thread to False
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertFalse(thread.has_poll)
+
     def test_other_user_poll_delete(self):
         """api deletes other user's poll and associated votes, even if its over"""
         self.override_acl({
@@ -173,3 +177,7 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
 
         self.assertEqual(Poll.objects.count(), 0)
         self.assertEqual(PollVote.objects.count(), 0)
+
+        # api set poll flag on thread to False
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertFalse(thread.has_poll)

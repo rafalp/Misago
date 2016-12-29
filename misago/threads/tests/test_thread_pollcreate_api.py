@@ -306,3 +306,7 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
 
         self.assertEqual(len(poll.choices), 3)
         self.assertEqual(len(set([c['hash'] for c in poll.choices])), 3)
+
+        # api set poll flag on thread to true
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertTrue(thread.has_poll)

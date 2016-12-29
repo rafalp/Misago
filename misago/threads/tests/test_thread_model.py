@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from misago.categories.models import Category
 
-from ..models import Post, Thread, ThreadParticipant
+from ..models import Poll, Post, Thread, ThreadParticipant
 
 
 class ThreadModelTests(TestCase):
@@ -214,6 +214,21 @@ class ThreadModelTests(TestCase):
         self.thread.synchronize()
         self.assertFalse(self.thread.last_post_is_event)
         self.assertFalse(self.thread.has_events)
+
+        # has poll flag
+        self.assertFalse(self.thread.has_poll)
+
+        Poll.objects.create(
+            thread=self.thread,
+            category=self.category,
+            poster_name='test',
+            poster_slug='test',
+            poster_ip='127.0.0.1',
+            choices=[]
+        )
+
+        self.thread.synchronize()
+        self.assertTrue(self.thread.has_poll)
 
     def test_set_first_post(self):
         """set_first_post sets first post and poster data on thread"""

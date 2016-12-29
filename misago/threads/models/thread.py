@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models, transaction
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
@@ -35,6 +36,7 @@ class Thread(models.Model):
     replies = models.PositiveIntegerField(default=0, db_index=True)
 
     has_events = models.BooleanField(default=False)
+    has_poll = models.BooleanField(default=False)
     has_reported_posts = models.BooleanField(default=False)
     has_open_reports = models.BooleanField(default=False)
     has_unapproved_posts = models.BooleanField(default=False)
@@ -79,7 +81,6 @@ class Thread(models.Model):
 
     weight = models.PositiveIntegerField(default=THREAD_WEIGHT_DEFAULT)
 
-    is_poll = models.BooleanField(default=False)
     is_unapproved = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
@@ -124,6 +125,11 @@ class Thread(models.Model):
         move_thread.send(sender=self)
 
     def synchronize(self):
+        try:
+            self.has_poll = bool(self.poll)
+        except ObjectDoesNotExist:
+            self.has_poll = False
+
         self.replies = self.post_set.filter(is_event=False, is_unapproved=False).count()
         if self.replies > 0:
             self.replies -= 1

@@ -79,6 +79,9 @@ class ViewSet(viewsets.ViewSet):
             for choice in instance.choices:
                 choice['selected'] = False
 
+            thread.has_poll = True
+            thread.save()
+
             return Response(PollSerializer(instance).data)
         else:
             return Response(serializer.errors, status=400)
@@ -109,6 +112,9 @@ class ViewSet(viewsets.ViewSet):
         allow_delete_poll(request.user, instance)
 
         thread.poll.delete()
+
+        thread.has_poll = False
+        thread.save()
 
         return Response({
             'can_start_poll': can_start_poll(request.user, thread)

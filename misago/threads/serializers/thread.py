@@ -171,6 +171,7 @@ class ThreadsListSerializer(ThreadSerializer):
             'category',
             'title',
             'replies',
+            'has_poll',
             'has_unapproved_posts',
             'started_on',
             'last_post_on',
