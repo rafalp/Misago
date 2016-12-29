@@ -1,6 +1,7 @@
+from datetime import timedelta
 import json
 
-from django.utils import six
+from django.utils import six, timezone
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
@@ -64,7 +65,27 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
 
         response_json = response.json()
         self.assertEqual(response_json['detail'][0],
-            "You don't have permission to edit this thread.")
+            "You can't edit threads in this category.")
+
+    def test_change_thread_title_after_edit_time(self):
+        """api cleans, validates and rejects too short title"""
+        self.override_acl({
+            'thread_edit_time': 1,
+            'can_edit_threads': 1
+        })
+
+        self.thread.starter = self.user
+        self.thread.started_on = timezone.now() - timedelta(minutes=10)
+        self.thread.save()
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'title', 'value': "Lorem ipsum change!"}
+        ])
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(response_json['detail'][0],
+            "You can't edit threads that are older than 1 minute.")
 
     def test_change_thread_title_invalid(self):
         """api cleans, validates and rejects too short title"""

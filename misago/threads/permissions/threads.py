@@ -585,7 +585,6 @@ def allow_edit_post(user, target):
             raise PermissionDenied(_("This post is protected. You can't edit it."))
 
         if not has_time_to_edit_post(user, target):
-            raise Exception()
             message = ungettext(
                 "You can't edit posts that are older than %(minutes)s minute.",
                 "You can't edit posts that are older than %(minutes)s minutes.",

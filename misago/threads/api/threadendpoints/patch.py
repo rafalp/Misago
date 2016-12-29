@@ -16,7 +16,8 @@ from ...participants import (
     add_participant, change_owner, make_participants_aware, remove_participant)
 from ...permissions import (
     allow_add_participants, allow_add_participant,
-    allow_change_owner, allow_remove_participant, allow_start_thread)
+    allow_change_owner, allow_edit_thread,
+    allow_remove_participant, allow_start_thread)
 from ...serializers import ThreadParticipantSerializer
 from ...utils import add_categories_to_items
 from ...validators import validate_title
@@ -46,8 +47,7 @@ def patch_title(request, thread, value):
     except ValidationError as e:
         raise PermissionDenied(e.args[0])
 
-    if not thread.acl.get('can_edit'):
-        raise PermissionDenied(_("You don't have permission to edit this thread."))
+    allow_edit_thread(request.user, thread)
 
     moderation.change_thread_title(request, thread, value_cleaned)
     return {'title': thread.title}
