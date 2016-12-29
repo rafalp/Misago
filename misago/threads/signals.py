@@ -46,7 +46,11 @@ def move_thread_content(sender, **kwargs):
 
 @receiver(delete_category_content)
 def delete_category_threads(sender, **kwargs):
+    sender.pollvote_set.all().delete()
+    sender.poll_set.all().delete()
+    sender.postlike_set.all().delete()
     sender.thread_set.all().delete()
+    sender.postedit_set.all().delete()
     sender.post_set.all().delete()
 
 
