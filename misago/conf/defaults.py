@@ -70,7 +70,6 @@ INSTALLED_APPS = (
 
 MIDDLEWARE_CLASSES = (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'misago.users.middleware.AvatarServerMiddleware',
     'misago.users.middleware.RealIPMiddleware',
     'misago.core.middleware.frontendcontext.FrontendContextMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -258,11 +257,7 @@ MISAGO_DYNAMIC_AVATAR_DRAWER = 'misago.users.avatars.dynamic.draw_default'
 # Max size also controls min size of uploaded image as well as crop size
 MISAGO_AVATARS_SIZES = (400, 200, 150, 100, 64, 50, 30, 20)
 
-# Path to avatar server
-# This path is used to detect avatar requests, which bypass most of
-# Request/Response processing for performance reasons
-MISAGO_AVATAR_SERVER_PATH = '/user-avatar'
-
+# Path to blank avatar
 MISAGO_BLANK_AVATAR = 'blank-avatar.png'
 
 

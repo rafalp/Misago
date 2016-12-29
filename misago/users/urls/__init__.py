@@ -2,7 +2,7 @@ from django.conf.urls import include, url
 
 from misago.core.views import home_redirect
 
-from ..views import activation, auth, avatarserver, forgottenpassword, lists, options, profile
+from ..views import activation, auth, forgottenpassword, lists, options, profile
 
 
 urlpatterns = [
@@ -51,14 +51,5 @@ urlpatterns += [
         url(r'^follows/$', profile.follows, name='user-follows'),
         url(r'^username-history/$', profile.username_history, name='username-history'),
         url(r'^ban-details/$', profile.user_ban, name='user-ban'),
-    ]))
-]
-
-
-urlpatterns += [
-    url(r'^user-avatar/', include([
-        url(r'^(?P<hash>[a-f0-9]+)/(?P<size>\d+)/(?P<pk>\d+)\.png$', avatarserver.serve_user_avatar, name='user-avatar'),
-        url(r'^(?P<secret>[a-f0-9]+):(?P<hash>[a-f0-9]+)/(?P<pk>\d+)\.png$', avatarserver.serve_user_avatar_source, name='user-avatar-source'),
-        url(r'^(?P<size>\d+)\.png$', avatarserver.serve_blank_avatar, name='blank-avatar'),
     ]))
 ]

@@ -2,9 +2,6 @@ import pytz
 
 from django.contrib.auth import logout
 from django.contrib.auth.models import AnonymousUser as DjAnonymousUser
-from django.urls import resolve
-
-from misago.conf import settings
 
 from .bans import get_request_ip_ban, get_user_ban
 from .models import AnonymousUser, Online
@@ -18,14 +15,6 @@ class RealIPMiddleware(object):
             request.user_ip = x_forwarded_for.split(',')[0]
         else:
             request.user_ip = request.META.get('REMOTE_ADDR')
-
-
-class AvatarServerMiddleware(object):
-    def process_request(self, request):
-        if request.path_info.startswith(settings.MISAGO_AVATAR_SERVER_PATH):
-            request.user = DjAnonymousUser()
-            resolved_path = resolve(request.path_info)
-            return resolved_path.func(request, **resolved_path.kwargs)
 
 
 class UserMiddleware(object):

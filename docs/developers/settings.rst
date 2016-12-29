@@ -229,11 +229,6 @@ Length of attachment's secret (filenames and url token). The longer, the harder 
    Generaly, neither you nor your users should use forums to exchange files containing valuable data, but if you do, you should make sure to secure it additionaly via other means like password-protected archives or file encryption solutions.
 
 
-MISAGO_AVATAR_SERVER_PATH
--------------------------
-Url path that that all avatar server urls starts with. If you are running Misago subdirectory, make sure to update it (i.e. valid path for  "http://somesite.com/forums/" is ``/forums/user-avatar``).
-
-
 MISAGO_AVATARS_SIZES
 --------------------
 
