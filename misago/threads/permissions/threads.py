@@ -802,31 +802,6 @@ def has_time_to_edit_post(user, target):
 """
 Queryset helpers
 """
-def exclude_invisible_category_threads(queryset, user, category):
-    if user.is_authenticated():
-        condition_author = Q(starter_id=user.id)
-
-        can_mod = category.acl['can_approve_content']
-        can_hide = category.acl['can_hide_threads']
-
-        if not can_mod and not can_hide:
-            condition = Q(is_unapproved=False) & Q(is_hidden=False)
-            queryset = queryset.filter(condition_author | condition)
-        elif not can_mod:
-            condition = Q(is_unapproved=False)
-            queryset = queryset.filter(condition_author | condition)
-        elif not can_hide:
-            condition = Q(is_hidden=False)
-            queryset = queryset.filter(condition_author | condition)
-    else:
-        if not category.acl['can_approve_content']:
-            queryset = queryset.filter(is_unapproved=False)
-        if not category.acl['can_hide_threads']:
-            queryset = queryset.filter(is_hidden=False)
-
-    return queryset
-
-
 def exclude_invisible_threads(user, categories, queryset):
     show_all = []
     show_accepted_visible = []

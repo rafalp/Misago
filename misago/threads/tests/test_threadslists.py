@@ -12,6 +12,7 @@ from misago.categories.models import Category
 from misago.core import threadstore
 from misago.core.cache import cache
 from misago.readtracker import categoriestracker, threadstracker
+from misago.users.models import AnonymousUser
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from .. import testutils
@@ -1593,3 +1594,63 @@ class UnapprovedListTests(ThreadsListTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, visible_thread.get_absolute_url())
         self.assertNotContains(response, hidden_thread.get_absolute_url())
+
+
+class OwnerOnlyThreadsVisibilityTests(AuthenticatedUserTestCase):
+    def setUp(self):
+        super(OwnerOnlyThreadsVisibilityTests, self).setUp()
+
+        self.category = Category.objects.get(slug='first-category')
+
+    def override_acl(self, user):
+        category_acl = user.acl['categories'][self.category.pk].copy()
+        category_acl.update({
+            'can_see_all_threads': 0
+        })
+        user.acl['categories'][self.category.pk] = category_acl
+
+        override_acl(user, user.acl)
+
+    def test_owned_threads_visibility(self):
+        """only user-posted threads are visible in category"""
+        self.override_acl(self.user)
+
+        visible_thread = testutils.post_thread(
+            poster=self.user,
+            category=self.category,
+            is_unapproved=True,
+        )
+
+        hidden_thread = testutils.post_thread(
+            category=self.category,
+            is_unapproved=True,
+        )
+
+        response = self.client.get(self.category.get_absolute_url())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, visible_thread.get_absolute_url())
+        self.assertNotContains(response, hidden_thread.get_absolute_url())
+
+    def test_owned_threads_visibility_anonymous(self):
+        """anons can't see any threads in limited visibility category"""
+        self.logout_user()
+
+        self.override_acl(AnonymousUser())
+
+        user_thread = testutils.post_thread(
+            poster=self.user,
+            category=self.category,
+            is_unapproved=True,
+        )
+
+        guest_thread = testutils.post_thread(
+            category=self.category,
+            is_unapproved=True,
+        )
+
+        response = self.client.get(self.category.get_absolute_url())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, user_thread.get_absolute_url())
+        self.assertNotContains(response, guest_thread.get_absolute_url())
