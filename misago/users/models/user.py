@@ -129,6 +129,9 @@ class UserManager(BaseUserManager):
 
         if set_default_avatar:
             avatars.set_default_avatar(user)
+        else:
+            # just for test purposes
+            user.avatars = [{'size': 400, 'url': '//placekitten.com/400/400'}]
 
         authenticated_role = Role.objects.get(special_role='authenticated')
         if authenticated_role not in user.roles.all():
@@ -225,7 +228,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     is_active_staff_message = models.TextField(null=True, blank=True)
 
-    avatar_temp = models.ImageField(upload_to=avatars.store.upload_to, null=True, blank=True)
+    avatar_tmp = models.ImageField(upload_to=avatars.store.upload_to, null=True, blank=True)
     avatar_src = models.ImageField(upload_to=avatars.store.upload_to, null=True, blank=True)
     avatar_crop = models.CharField(max_length=255, null=True, blank=True)
     avatars = JSONField(null=True, blank=True)

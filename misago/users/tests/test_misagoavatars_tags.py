@@ -9,23 +9,37 @@ class TemplateTagsTests(TestCase):
         User = get_user_model()
         user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
 
+        user.avatars = [
+            {
+                'size': 400,
+                'url': '/avatar/400.png'
+            },
+            {
+                'size': 128,
+                'url': '/avatar/400.png'
+            },
+            {
+                'size': 30,
+                'url': '/avatar/30.png'
+            },
+        ]
+
         tpl_content = """
 {% load misago_avatars %}
 
 {{ user|avatar }}
 {{ user|avatar:100 }}
+{{ user|avatar:30 }}
+{{ user|avatar:10 }}
 """
 
         tpl = Template(tpl_content)
         render = tpl.render(Context({'user': user})).strip().splitlines()
 
-        pk = user.pk
-        avatar_hash = user.avatar_hash
-
-        self.assertEqual(render[0].strip(),
-                         '/user-avatar/%s/200/%s.png' % (avatar_hash, pk))
-        self.assertEqual(render[1].strip(),
-                         '/user-avatar/%s/100/%s.png' % (avatar_hash, pk))
+        self.assertEqual(render[0].strip(), user.avatars[0]['url'])
+        self.assertEqual(render[1].strip(), user.avatars[1]['url'])
+        self.assertEqual(render[2].strip(), user.avatars[2]['url'])
+        self.assertEqual(render[3].strip(), user.avatars[2]['url'])
 
     def test_blankavatar_tag(self):
         """{% blankavatar %} tag returns url to default image"""

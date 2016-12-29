@@ -13,7 +13,7 @@ from . import store
 
 
 ALLOWED_EXTENSIONS = ('.gif', '.png', '.jpg', '.jpeg')
-ALLOWED_MIME_TYPES = ('image/gif', 'image/jpeg', 'image/png')
+ALLOWED_MIME_TYPES = ('image/gif', 'image/jpeg', 'image/png', 'image/mpo')
 
 
 def validate_file_size(uploaded_file):

@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
                 ('groups', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Group', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of his/her group.', verbose_name='groups')),
                 ('roles', models.ManyToManyField(to='misago_acl.Role')),
                 ('user_permissions', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Permission', blank=True, help_text='Specific permissions for this user.', verbose_name='user permissions')),
-                ('avatar_temp', models.ImageField(upload_to=misago.users.avatars.store.upload_to, null=True, blank=True)),
+                ('avatar_tmp', models.ImageField(upload_to=misago.users.avatars.store.upload_to, null=True, blank=True)),
                 ('avatar_src', models.ImageField(upload_to=misago.users.avatars.store.upload_to, null=True, blank=True)),
                 ('avatar_crop', models.CharField(max_length=255, null=True, blank=True)),
                 ('avatars', JSONField(null=True, blank=True)),

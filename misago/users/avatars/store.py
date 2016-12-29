@@ -48,14 +48,6 @@ def get_user_avatar_tokens(user):
     return tokens
 
 
-def store_temporary_avatar(user, image):
-    avatars_dir = get_existing_avatars_dir(user)
-    avatar_file = '%s_tmp.png' % user.pk
-
-    normalize_image(image)
-    image.save(os.path.join(avatars_dir, avatar_file), "PNG")
-
-
 def store_original_avatar(user):
     org_path = avatar_file_path(user, 'org')
     if org_path.exists():

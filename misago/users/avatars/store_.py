@@ -17,6 +17,13 @@ def normalize_image(image):
     return image.copy().convert('RGBA')
 
 
+def delete_avatar(user, exclude=None):
+    exclude = exclude or []
+    for avatar in user.avatar_set.exclude(id__in=exclude):
+        avatar.image.delete(False)
+    user.avatar_set.exclude(id__in=exclude).delete()
+
+
 def store_avatar(user, image):
     from ..models import Avatar
     image = normalize_image(image)
@@ -40,11 +47,25 @@ def store_avatar(user, image):
         delete_avatar(user, exclude=[a.id for a in avatars])
 
 
-def delete_avatar(user, exclude=None):
-    exclude = exclude or []
-    for avatar in user.avatar_set.exclude(id__in=exclude):
-        avatar.image.delete(False)
-    user.avatar_set.exclude(id__in=exclude).delete()
+def store_temporary_avatar(user, image):
+    image_stream = BytesIO()
+
+    normalize_image(image)
+    image.save(image_stream, "PNG")
+
+    if user.avatar_tmp:
+        user.avatar_tmp.delete(False)
+
+    user.avatar_tmp = ContentFile(image_stream.getvalue(), 'avatar')
+    user.save(update_fields=['avatar_tmp'])
+
+
+def store_original_avatar(user):
+    if user.avatar_src:
+        user.avatar_src.delete(False)
+    user.avatar_src = user.avatar_tmp.path
+    user.avatar_tmp = None
+    user.save(update_fields=['avatar_tmp', 'avatar_src'])
 
 
 def upload_to(instance, filename):
