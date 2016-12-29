@@ -1,6 +1,8 @@
 from django import template
 from django.urls import reverse
 
+from misago.conf import settings
+
 
 register = template.Library()
 
@@ -13,7 +15,3 @@ def avatar(user, size=200):
             found_avatar = user_avatar
     return found_avatar['url']
 
-
-@register.simple_tag
-def blankavatar(size=200):
-    return reverse('misago:blank-avatar', kwargs={'size': size})

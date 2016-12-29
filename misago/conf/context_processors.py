@@ -1,14 +1,22 @@
 import json
 
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.urls import reverse
 
+from misago.conf import settings
+
 from .gateway import db_settings, dj_settings  # noqa
+
+
+BLANK_AVATAR_URL = static(settings.MISAGO_BLANK_AVATAR)
 
 
 def settings(request):
     return {
         'DEBUG': dj_settings.DEBUG,
         'misago_settings': db_settings,
+
+        'BLANK_AVATAR_URL': BLANK_AVATAR_URL,
 
         'THREADS_ON_INDEX': dj_settings.MISAGO_THREADS_ON_INDEX,
 
@@ -34,8 +42,8 @@ def preload_settings_json(request):
         'SETTINGS': preloaded_settings,
 
         'MISAGO_PATH': reverse('misago:index'),
-        'STATIC_URL': dj_settings.STATIC_URL,
-        'MEDIA_URL': dj_settings.MEDIA_URL,
+
+        'BLANK_AVATAR_URL': BLANK_AVATAR_URL,
 
         'CSRF_COOKIE_NAME': dj_settings.CSRF_COOKIE_NAME,
 

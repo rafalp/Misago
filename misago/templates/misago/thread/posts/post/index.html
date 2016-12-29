@@ -7,7 +7,7 @@
           <img class="user-avatar" src="{{ post.poster|avatar:100 }}" alt="">
         </a>
       {% else %}
-        <img class="user-avatar" src="{% blankavatar 100 %}" alt="">
+        <img class="user-avatar" src="{{ BLANK_AVATAR_URL }}" width="100" height="100" alt="">
       {% endif %}
     </div>
     <div class="post-body">

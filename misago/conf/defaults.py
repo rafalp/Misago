@@ -263,6 +263,8 @@ MISAGO_AVATARS_SIZES = (400, 200, 150, 100, 64, 50, 30, 20)
 # Request/Response processing for performance reasons
 MISAGO_AVATAR_SERVER_PATH = '/user-avatar'
 
+MISAGO_BLANK_AVATAR = 'blank-avatar.png'
+
 
 # Number of threads displayed on single page
 MISAGO_THREADS_PER_PAGE = 25

@@ -234,16 +234,16 @@ MISAGO_AVATAR_SERVER_PATH
 Url path that that all avatar server urls starts with. If you are running Misago subdirectory, make sure to update it (i.e. valid path for  "http://somesite.com/forums/" is ``/forums/user-avatar``).
 
 
-MISAGO_AVATAR_STORE
--------------------
-
-Path to directory that Misago should use to store user avatars. This directory shouldn't be accessible from outside world.
-
-
 MISAGO_AVATARS_SIZES
 --------------------
 
 Misago uses avatar cache that prescales avatars to requested sizes. Enter here sizes to which those should be optimized.
+
+
+MISAGO_BLANK_AVATAR
+-------------------
+
+This path to image file that Misago should use as blank avatar.
 
 
 MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH

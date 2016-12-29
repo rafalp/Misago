@@ -6,8 +6,8 @@ from django.test import TestCase
 class TemplateTagsTests(TestCase):
     def test_user_avatar_filter(self):
         """avatar filter returns url to avatar image"""
-        User = get_user_model()
-        user = User.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        UserModel = get_user_model()
+        user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
 
         user.avatars = [
             {
@@ -40,18 +40,3 @@ class TemplateTagsTests(TestCase):
         self.assertEqual(render[1].strip(), user.avatars[1]['url'])
         self.assertEqual(render[2].strip(), user.avatars[2]['url'])
         self.assertEqual(render[3].strip(), user.avatars[2]['url'])
-
-    def test_blankavatar_tag(self):
-        """{% blankavatar %} tag returns url to default image"""
-        tpl_content = """
-{% load misago_avatars %}
-
-{% blankavatar %}
-{% blankavatar 100 %}
-"""
-
-        tpl = Template(tpl_content)
-        render = tpl.render(Context()).strip().splitlines()
-
-        self.assertEqual(render[0].strip(), '/user-avatar/200.png')
-        self.assertEqual(render[1].strip(), '/user-avatar/100.png')

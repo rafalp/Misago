@@ -3,25 +3,26 @@ import React from 'react';
 import misago from 'misago';
 
 export default function(props) {
+  const size = props.size || 100;
+
   return (
     <img
       className={props.className || 'user-avatar'}
-      src={getSrc(props)}
+      src={getSrc(props.user, size)}
       title={gettext("User avatar")}
+      width={100}
+      height={100}
     />
   );
 }
 
-export function getSrc(props) {
-  const size = props.size || 100; // jshint ignore:line
-  let url = misago.get('MISAGO_PATH') + 'user-avatar/';
-
-  if (props.user && props.user.id) {
+export function getSrc(user, size) {
+  if (user && user.id) {
     // just avatar hash, size and user id
-    return resolveAvatarForSize(props.user.avatars, size).url;
+    return resolveAvatarForSize(user.avatars, size).url;
   } else {
     // just append avatar size to file to produce no-avatar placeholder
-    return misago.get('MISAGO_PATH') + 'user-avatar/' + size + '.png';
+    return misago.get('BLANK_AVATAR_URL');
   }
 }
 
