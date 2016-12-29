@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
@@ -51,13 +52,13 @@ class SlugifyTests(TestCase):
     def test_valid_slugify_output(self):
         """Misago's slugify correctly slugifies string"""
         test_cases = (
-            (u'Bob', u'bob'),
-            (u'Eric The Fish', u'eric-the-fish'),
-            (u'John   Snow', u'john-snow'),
-            (u'J0n', u'j0n'),
-            (u'An###ne', u'anne'),
-            (u'S**t', u'st'),
-            (u'Łók', u'lok'),
+            ('Bob', 'bob'),
+            ('Eric The Fish', 'eric-the-fish'),
+            ('John   Snow', 'john-snow'),
+            ('J0n', 'j0n'),
+            ('An###ne', 'anne'),
+            ('S**t', 'st'),
+            ('Łók', 'lok'),
         )
 
         for original, slug in test_cases:
@@ -93,28 +94,28 @@ class ParseIso8601StringTests(TestCase):
 
 PLAINTEXT_FORMAT_CASES = (
     (
-        u'Lorem ipsum.',
-        u'<p>Lorem ipsum.</p>'
+        'Lorem ipsum.',
+        '<p>Lorem ipsum.</p>'
     ),
     (
-        u'Lorem <b>ipsum</b>.',
-        u'<p>Lorem &lt;b&gt;ipsum&lt;/b&gt;.</p>'
+        'Lorem <b>ipsum</b>.',
+        '<p>Lorem &lt;b&gt;ipsum&lt;/b&gt;.</p>'
     ),
     (
-        u'Lorem "ipsum" dolor met.',
-        u'<p>Lorem &quot;ipsum&quot; dolor met.</p>'
+        'Lorem "ipsum" dolor met.',
+        '<p>Lorem &quot;ipsum&quot; dolor met.</p>'
     ),
     (
-        u'Lorem ipsum.\nDolor met.',
-        u'<p>Lorem ipsum.<br />Dolor met.</p>'
+        'Lorem ipsum.\nDolor met.',
+        '<p>Lorem ipsum.<br />Dolor met.</p>'
     ),
     (
-        u'Lorem ipsum.\n\nDolor met.',
-        u'<p>Lorem ipsum.</p>\n\n<p>Dolor met.</p>'
+        'Lorem ipsum.\n\nDolor met.',
+        '<p>Lorem ipsum.</p>\n\n<p>Dolor met.</p>'
     ),
     (
-        u'http://misago-project.org/login/',
-        u'<p><a href="http://misago-project.org/login/">http://misago-project.org/login/</a></p>'
+        'http://misago-project.org/login/',
+        '<p><a href="http://misago-project.org/login/">http://misago-project.org/login/</a></p>'
     ),
 )
 
