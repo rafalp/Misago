@@ -43,7 +43,7 @@ urlpatterns += [
 
 
 urlpatterns += [
-    url(r'^user/(?P<slug>[a-zA-Z0-9]+)-(?P<pk>\d+)/', include([
+    url(r'^u/(?P<slug>[a-zA-Z0-9]+)-(?P<pk>\d+)/', include([
         url(r'^$', profile.landing, name='user'),
         url(r'^posts/$', profile.posts, name='user-posts'),
         url(r'^threads/$', profile.threads, name='user-threads'),
