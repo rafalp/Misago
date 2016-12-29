@@ -3,6 +3,7 @@ from hashlib import md5
 from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import UserManager as BaseUserManager
+from django.contrib.postgres.fields import JSONField
 from django.core.mail import send_mail
 from django.db import IntegrityError, models, transaction
 from django.dispatch import receiver
@@ -128,16 +129,13 @@ class UserManager(BaseUserManager):
 
         if set_default_avatar:
             avatars.set_default_avatar(user)
-            user.avatar_hash = avatars.get_avatar_hash(user)
-        else:
-            user.avatar_hash = 'abcdef01'
 
         authenticated_role = Role.objects.get(special_role='authenticated')
         if authenticated_role not in user.roles.all():
             user.roles.add(authenticated_role)
         user.update_acl_key()
 
-        user.save(update_fields=['avatar_hash', 'acl_key'])
+        user.save(update_fields=['avatars', 'acl_key'])
 
         # populate online tracker with default value
         Online.objects.create(
@@ -227,16 +225,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     is_active_staff_message = models.TextField(null=True, blank=True)
 
-    is_avatar_locked = models.BooleanField(default=False)
-    avatar_hash = models.CharField(max_length=8, default='-')
+    avatar_temp = models.ImageField(upload_to=avatars.store.upload_to, null=True, blank=True)
+    avatar_src = models.ImageField(upload_to=avatars.store.upload_to, null=True, blank=True)
     avatar_crop = models.CharField(max_length=255, null=True, blank=True)
+    avatars = JSONField(null=True, blank=True)
+    is_avatar_locked = models.BooleanField(default=False)
     avatar_lock_user_message = models.TextField(null=True, blank=True)
     avatar_lock_staff_message = models.TextField(null=True, blank=True)
 
-    is_signature_locked = models.BooleanField(default=False)
     signature = models.TextField(null=True, blank=True)
     signature_parsed = models.TextField(null=True, blank=True)
     signature_checksum = models.CharField(max_length=64, null=True, blank=True)
+    is_signature_locked = models.BooleanField(default=False)
     signature_lock_user_message = models.TextField(null=True, blank=True)
     signature_lock_staff_message = models.TextField(null=True, blank=True)
 

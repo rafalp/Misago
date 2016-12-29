@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.conf import settings
+from django.contrib.postgres.fields import JSONField
+from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
-from django.conf import settings
-from django.db import migrations, models
 
 from misago.core.pgutils import CreatePartialIndex
+import misago.users.avatars.store
 
 
 class Migration(migrations.Migration):
@@ -46,15 +48,17 @@ class Migration(migrations.Migration):
                 ('groups', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Group', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of his/her group.', verbose_name='groups')),
                 ('roles', models.ManyToManyField(to='misago_acl.Role')),
                 ('user_permissions', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Permission', blank=True, help_text='Specific permissions for this user.', verbose_name='user permissions')),
-                ('is_avatar_locked', models.BooleanField(default=False)),
-                ('avatar_hash', models.CharField(max_length=8, default='-')),
+                ('avatar_temp', models.ImageField(upload_to=misago.users.avatars.store.upload_to, null=True, blank=True)),
+                ('avatar_src', models.ImageField(upload_to=misago.users.avatars.store.upload_to, null=True, blank=True)),
                 ('avatar_crop', models.CharField(max_length=255, null=True, blank=True)),
+                ('avatars', JSONField(null=True, blank=True)),
+                ('is_avatar_locked', models.BooleanField(default=False)),
                 ('avatar_lock_user_message', models.TextField(null=True, blank=True)),
                 ('avatar_lock_staff_message', models.TextField(null=True, blank=True)),
-                ('is_signature_locked', models.BooleanField(default=False)),
                 ('signature', models.TextField(null=True, blank=True)),
                 ('signature_parsed', models.TextField(null=True, blank=True)),
                 ('signature_checksum', models.CharField(max_length=64, null=True, blank=True)),
+                ('is_signature_locked', models.BooleanField(default=False)),
                 ('signature_lock_user_message', models.TextField(null=True, blank=True)),
                 ('signature_lock_staff_message', models.TextField(null=True, blank=True)),
                 ('warning_level', models.PositiveIntegerField(default=0)),
@@ -161,6 +165,15 @@ class Migration(migrations.Migration):
             options={
             },
             bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Avatar',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('size', models.PositiveIntegerField(default=0)),
+                ('image', models.ImageField(upload_to=misago.users.avatars.store.upload_to)),
+            ],
         ),
         migrations.CreateModel(
             name='Ban',

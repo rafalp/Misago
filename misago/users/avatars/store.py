@@ -11,10 +11,7 @@ from misago.conf import settings
 from .paths import AVATARS_STORE
 
 
-def normalize_image(image):
-    """if image is gif, strip it of animation"""
-    image.seek(0)
-    return image.copy().convert('RGBA')
+from .store_ import *
 
 
 def get_avatar_hash(user, suffix=None):
@@ -33,29 +30,6 @@ def get_avatar_hash(user, suffix=None):
                 break
             md5_hash.update(data)
     return md5_hash.hexdigest()[:8]
-
-
-def store_avatar(user, image):
-    avatars_dir = get_existing_avatars_dir(user)
-
-    normalize_image(image)
-    for size in sorted(settings.MISAGO_AVATARS_SIZES, reverse=True):
-        avatar_file = '%s_%s.png' % (user.pk, size)
-        avatar_file = Path(os.path.join(avatars_dir, avatar_file))
-
-        image = image.resize((size, size), Image.ANTIALIAS)
-        image.save(avatar_file, "PNG")
-
-
-def delete_avatar(user):
-    avatars_dir = get_existing_avatars_dir(user)
-    suffixes_to_delete = settings.MISAGO_AVATARS_SIZES + ('org', 'tmp')
-
-    for size in suffixes_to_delete:
-        avatar_file = '%s_%s.png' % (user.pk, size)
-        avatar_file = Path(os.path.join(avatars_dir, avatar_file))
-        if avatar_file.exists():
-            avatar_file.remove()
 
 
 def get_user_avatar_tokens(user):

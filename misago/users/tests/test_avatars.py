@@ -8,53 +8,78 @@ from django.test import TestCase
 from misago.conf import settings
 
 from ..avatars import dynamic, gallery, gravatar, store, uploaded
+from ..models import Avatar
 
 
 class AvatarsStoreTests(TestCase):
     def test_store(self):
         """store successfully stores and deletes avatar"""
         User = get_user_model()
-        test_user = User.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        user = User.objects.create_user('Bob', 'bob@bob.com', 'pass123')
 
         test_image = Image.new("RGBA", (100, 100), 0)
-        store.store_avatar(test_user, test_image)
+        store.store_avatar(user, test_image)
 
-        # Assert that avatar was stored
-        avatar_dir = store.get_existing_avatars_dir(test_user)
+        # reload user
+        test_user = User.objects.get(pk=user.pk)
+
+        # assert that avatars were stored in media
+        avatars_dict = {}
         for size in settings.MISAGO_AVATARS_SIZES:
-            avatar = Path('%s/%s_%s.png' % (avatar_dir, test_user.pk, size))
-            self.assertTrue(avatar.exists())
-            self.assertTrue(avatar.isfile())
+            avatar = user.avatar_set.get(size=size)
 
-        # Delete avatar and assert its gone
-        store.delete_avatar(test_user)
+            self.assertTrue(avatar.image.url)
+            self.assertEqual(avatar.url, avatar.image.url)
+
+            avatars_dict[size] = avatar
+
+        # asserts that user.avatars cache was set
+        self.assertEqual(len(avatars_dict), len(settings.MISAGO_AVATARS_SIZES))
+        self.assertEqual(len(user.avatars), len(settings.MISAGO_AVATARS_SIZES))
+        self.assertEqual(len(user.avatars), len(avatars_dict))
+
+        for avatar in user.avatars:
+            self.assertIn(avatar['size'], settings.MISAGO_AVATARS_SIZES)
+            self.assertEqual(avatar['url'], avatars_dict[avatar['size']].url)
+
+        # another avatar change deleted old avatars
+        store.store_avatar(user, test_image)
+        for old_avatar in avatars_dict.values():
+            avatar_path = Path(old_avatar.image.path)
+            self.assertFalse(avatar_path.exists())
+            self.assertFalse(avatar_path.isfile())
+
+            with self.assertRaises(Avatar.DoesNotExist):
+                Avatar.objects.get(pk=old_avatar.pk)
+
+        # and updated user avatars again
+        new_avatars_dict = {}
         for size in settings.MISAGO_AVATARS_SIZES:
-            avatar = Path('%s/%s_%s.png' % (avatar_dir, test_user.pk, size))
-            self.assertFalse(avatar.exists())
+            avatar = user.avatar_set.get(size=size)
 
-        # Override new avatar and test that it was changed
-        store.store_avatar(test_user, test_image)
-        store.store_new_avatar(test_user, test_image)
-        for size in settings.MISAGO_AVATARS_SIZES:
-            avatar = Path('%s/%s_%s.png' % (avatar_dir, test_user.pk, size))
-            self.assertTrue(avatar.exists())
-            self.assertTrue(avatar.isfile())
+            self.assertTrue(avatar.image.url)
+            self.assertEqual(avatar.url, avatar.image.url)
 
-        # Compute avatar hash
-        test_user.avatar_hash = store.get_avatar_hash(test_user)
-        self.assertEqual(len(test_user.avatar_hash), 8)
-        test_user.save(update_fields=['avatar_hash'])
+            new_avatars_dict[size] = avatar
 
-        # Get avatar tokens
-        tokens = store.get_user_avatar_tokens(test_user)
-        self.assertEqual(tokens[tokens['org']], 'org')
-        self.assertEqual(tokens[tokens['tmp']], 'tmp')
+        self.assertTrue(avatars_dict != new_avatars_dict)
 
-        # Delete avatar
-        store.delete_avatar(test_user)
-        for size in settings.MISAGO_AVATARS_SIZES:
-            avatar = Path('%s/%s_%s.png' % (avatar_dir, test_user.pk, size))
-            self.assertFalse(avatar.exists())
+        # asserts that user.avatars cache was updated
+        self.assertEqual(len(user.avatars), len(settings.MISAGO_AVATARS_SIZES))
+        for avatar in user.avatars:
+            self.assertIn(avatar['size'], settings.MISAGO_AVATARS_SIZES)
+            self.assertEqual(avatar['url'], new_avatars_dict[avatar['size']].url)
+
+        # delete avatar
+        store.delete_avatar(user)
+
+        for removed_avatar in new_avatars_dict.values():
+            avatar_path = Path(removed_avatar.image.path)
+            self.assertFalse(avatar_path.exists())
+            self.assertFalse(avatar_path.isfile())
+
+            with self.assertRaises(Avatar.DoesNotExist):
+                Avatar.objects.get(pk=removed_avatar.pk)
 
 
 class AvatarSetterTests(TestCase):
