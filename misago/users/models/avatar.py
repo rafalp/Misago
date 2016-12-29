@@ -10,7 +10,7 @@ class Avatar(models.Model):
         on_delete=models.CASCADE
     )
     size = models.PositiveIntegerField(default=0)
-    image = models.ImageField(upload_to=store.upload_to)
+    image = models.ImageField(max_length=255, upload_to=store.upload_to)
 
     @property
     def url(self):

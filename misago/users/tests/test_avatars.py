@@ -18,20 +18,18 @@ class AvatarsStoreTests(TestCase):
         user = User.objects.create_user('Bob', 'bob@bob.com', 'pass123')
 
         test_image = Image.new("RGBA", (100, 100), 0)
-        store.store_avatar(user, test_image)
+        store.store_new_avatar(user, test_image)
 
         # reload user
         test_user = User.objects.get(pk=user.pk)
 
         # assert that avatars were stored in media
         avatars_dict = {}
-        for size in settings.MISAGO_AVATARS_SIZES:
-            avatar = user.avatar_set.get(size=size)
-
+        for avatar in user.avatar_set.all():
             self.assertTrue(avatar.image.url)
             self.assertEqual(avatar.url, avatar.image.url)
 
-            avatars_dict[size] = avatar
+            avatars_dict[avatar.size] = avatar
 
         # asserts that user.avatars cache was set
         self.assertEqual(len(avatars_dict), len(settings.MISAGO_AVATARS_SIZES))
@@ -43,7 +41,7 @@ class AvatarsStoreTests(TestCase):
             self.assertEqual(avatar['url'], avatars_dict[avatar['size']].url)
 
         # another avatar change deleted old avatars
-        store.store_avatar(user, test_image)
+        store.store_new_avatar(user, test_image)
         for old_avatar in avatars_dict.values():
             avatar_path = Path(old_avatar.image.path)
             self.assertFalse(avatar_path.exists())
@@ -87,23 +85,34 @@ class AvatarSetterTests(TestCase):
         User = get_user_model()
         self.user = User.objects.create_user(
             'Bob', 'kontakt@rpiton.com', 'pass123')
-        store.delete_avatar(self.user)
+
+        self.user.avatars = None
+        self.user.save()
 
     def tearDown(self):
         store.delete_avatar(self.user)
 
+    def get_current_user(self):
+        User = get_user_model()
+        return User.objects.get(pk=self.user.pk)
+
     def assertNoAvatarIsSet(self):
-        avatar_dir = store.get_existing_avatars_dir(self.user)
-        for size in settings.MISAGO_AVATARS_SIZES:
-            avatar = Path('%s/%s_%s.png' % (avatar_dir, self.user.pk, size))
-            self.assertFalse(avatar.exists())
+        user = self.get_current_user()
+        self.assertFalse(user.avatars)
 
     def assertAvatarWasSet(self):
-        avatar_dir = store.get_existing_avatars_dir(self.user)
-        for size in settings.MISAGO_AVATARS_SIZES:
-            avatar = Path('%s/%s_%s.png' % (avatar_dir, self.user.pk, size))
-            self.assertTrue(avatar.exists())
-            self.assertTrue(avatar.isfile())
+        user = self.get_current_user()
+
+        avatars_dict = {}
+        for avatar in user.avatar_set.all():
+            avatar_path = Path(avatar.image.path)
+            self.assertTrue(avatar_path.exists())
+            self.assertTrue(avatar_path.isfile())
+
+            avatars_dict[avatar.size] = avatar
+
+        self.assertEqual(len(user.avatars), len(avatars_dict))
+        self.assertEqual(len(user.avatars), len(settings.MISAGO_AVATARS_SIZES))
 
     def test_dynamic_avatar(self):
         """dynamic avatar gets created"""

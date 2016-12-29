@@ -1,94 +1,84 @@
 import os
 from hashlib import md5
+from io import BytesIO
 
-from path import Path
 from PIL import Image
 
-from django.utils.encoding import force_bytes
+from django.core.files.base import ContentFile
+from django.utils.crypto import get_random_string
 
 from misago.conf import settings
 
-from .paths import AVATARS_STORE
+
+def normalize_image(image):
+    """strip image of animation, convert to RGBA"""
+    image.seek(0)
+    return image.copy().convert('RGBA')
 
 
-from .store_ import *
+def delete_avatar(user):
+    if user.avatar_tmp:
+        user.avatar_tmp.delete(False)
+
+    if user.avatar_src:
+        user.avatar_src.delete(False)
+
+    for avatar in user.avatar_set.all():
+        avatar.image.delete(False)
+    user.avatar_set.all().delete()
 
 
-def get_avatar_hash(user, suffix=None):
-    avatars_dir = get_existing_avatars_dir(user)
+def store_avatar(user, image):
+    from ..models import Avatar
+    image = normalize_image(image)
 
-    avatar_suffix = suffix or max(settings.MISAGO_AVATARS_SIZES)
-    avatar_file = '%s_%s.png' % (user.pk, avatar_suffix)
-    avatar_file = Path(os.path.join(avatars_dir, avatar_file))
+    avatars = []
+    for size in sorted(settings.MISAGO_AVATARS_SIZES, reverse=True):
+        image_stream = BytesIO()
 
-    md5_hash = md5()
+        image = image.resize((size, size), Image.ANTIALIAS)
+        image.save(image_stream, "PNG")
 
-    with open(avatar_file, 'rb') as f:
-        while True:
-            data = f.read(128)
-            if not data:
-                break
-            md5_hash.update(data)
-    return md5_hash.hexdigest()[:8]
+        avatars.append(Avatar.objects.create(
+            user=user,
+            size=size,
+            image=ContentFile(image_stream.getvalue(), 'avatar')
+        ))
 
-
-def get_user_avatar_tokens(user):
-    token_seeds = (user.email, user.avatar_hash, settings.SECRET_KEY)
-
-    tokens = {
-        'org': md5(force_bytes('org:%s:%s:%s' % token_seeds)).hexdigest()[:8],
-        'tmp': md5(force_bytes('tmp:%s:%s:%s' % token_seeds)).hexdigest()[:8],
-    }
-
-    tokens.update({
-        tokens['org']: 'org',
-        tokens['tmp']: 'tmp',
-    })
-
-    return tokens
-
-
-def store_original_avatar(user):
-    org_path = avatar_file_path(user, 'org')
-    if org_path.exists():
-        org_path.remove()
-    avatar_file_path(user, 'tmp').rename(org_path)
-
-
-def avatar_file_path(user, size):
-    avatars_dir = get_existing_avatars_dir(user)
-    avatar_file = '%s_%s.png' % (user.pk, size)
-    return Path(os.path.join(avatars_dir, avatar_file))
-
-
-def avatar_file_exists(user, size):
-    return avatar_file_path(user, size).exists()
+    user.avatars = [{'size': a.size, 'url': a.url} for a in avatars]
+    user.save(update_fields=['avatars'])
 
 
 def store_new_avatar(user, image):
-    """
-    Deletes old image before storing new one
-    """
     delete_avatar(user)
     store_avatar(user, image)
 
 
-def get_avatars_dir_path(user=None):
-    if user:
-        try:
-            user_pk = user.pk
-        except AttributeError:
-            user_pk = user
+def store_temporary_avatar(user, image):
+    image_stream = BytesIO()
 
-        dir_hash = md5(str(user_pk).encode()).hexdigest()
-        hash_path = [dir_hash[0:1], dir_hash[2:3]]
-        return Path(os.path.join(AVATARS_STORE, *hash_path))
-    else:
-        return Path(os.path.join(AVATARS_STORE, 'blank'))
+    normalize_image(image)
+    image.save(image_stream, "PNG")
+
+    if user.avatar_tmp:
+        user.avatar_tmp.delete(False)
+
+    user.avatar_tmp = ContentFile(image_stream.getvalue(), 'avatar')
+    user.save(update_fields=['avatar_tmp'])
 
 
-def get_existing_avatars_dir(user=None):
-    avatars_dir = get_avatars_dir_path(user)
-    if not avatars_dir.exists():
-        avatars_dir.makedirs()
-    return avatars_dir
+def store_original_avatar(user):
+    if user.avatar_src:
+        user.avatar_src.delete(False)
+    user.avatar_src = user.avatar_tmp.path
+    user.avatar_tmp = None
+    user.save(update_fields=['avatar_tmp', 'avatar_src'])
+
+
+def upload_to(instance, filename):
+    spread_path = md5(get_random_string(64).encode()).hexdigest()
+    secret = get_random_string(32)
+    filename_clean = '%s.png' % get_random_string(32)
+
+    return os.path.join(
+        'avatars', spread_path[:2], spread_path[2:4], secret, filename_clean)

@@ -30,7 +30,8 @@ def upload_to(instance, filename):
         extension
     ))
 
-    return os.path.join('attachments', spread_path[:2], spread_path[2:4], secret, filename_clean)
+    return os.path.join(
+        'attachments', spread_path[:2], spread_path[2:4], secret, filename_clean)
 
 
 @python_2_unicode_compatible
@@ -60,8 +61,18 @@ class Attachment(models.Model):
     size = models.PositiveIntegerField(default=0, db_index=True)
 
     thumbnail = models.ImageField(blank=True, null=True, upload_to=upload_to)
-    image = models.ImageField(blank=True, null=True, upload_to=upload_to)
-    file = models.FileField(blank=True, null=True, upload_to=upload_to)
+    image = models.ImageField(
+        max_length=255,
+        blank=True,
+        null=True,
+        upload_to=upload_to
+    )
+    file = models.FileField(
+        max_length=255,
+        blank=True,
+        null=True,
+        upload_to=upload_to
+    )
 
     def __str__(self):
         return self.filename
