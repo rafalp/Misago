@@ -8,11 +8,11 @@ from django.utils.six import StringIO
 from django.utils.six.moves import range
 
 from .. import bans
-from ..management.commands import bansmaintenance
+from ..management.commands import invalidatebans
 from ..models import Ban, BanCache
 
 
-class BansMaintenanceTests(TestCase):
+class InvalidateBansTests(TestCase):
     def test_expired_bans_handling(self):
         """expired bans are flagged as such"""
         # create 5 bans then update their valid date to past one
@@ -23,7 +23,7 @@ class BansMaintenanceTests(TestCase):
 
         self.assertEqual(Ban.objects.filter(is_checked=True).count(), 5)
 
-        command = bansmaintenance.Command()
+        command = invalidatebans.Command()
 
         out = StringIO()
         call_command(command, stdout=out)
@@ -47,7 +47,7 @@ class BansMaintenanceTests(TestCase):
         self.assertEqual(Ban.objects.filter(is_checked=True).count(), 1)
 
         # first call didn't touch ban
-        command = bansmaintenance.Command()
+        command = invalidatebans.Command()
 
         out = StringIO()
         call_command(command, stdout=out)

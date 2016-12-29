@@ -7,7 +7,10 @@ from ...models import Ban, BanCache
 
 
 class Command(BaseCommand):
-    help = 'Runs maintenance on Misago bans system.'
+    help = (
+        "Runs maintenance on Misago bans system, "
+        "invalidating expired bans and pruning caches."
+    )
 
     def handle(self, *args, **options):
         self.handle_expired_bans()

@@ -1,0 +1,4 @@
+15 0 * * * python manage.py buildactivepostersranking
+15 0 * * * python manage.py clearsessions
+15 0 * * * python manage.py invalidatebans
+15 0 * * * python manage.py prunecategories
