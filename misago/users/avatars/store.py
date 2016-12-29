@@ -70,7 +70,7 @@ def store_temporary_avatar(user, image):
 def store_original_avatar(user):
     if user.avatar_src:
         user.avatar_src.delete(False)
-    user.avatar_src = user.avatar_tmp.path
+    user.avatar_src = user.avatar_tmp
     user.avatar_tmp = None
     user.save(update_fields=['avatar_tmp', 'avatar_src'])
 

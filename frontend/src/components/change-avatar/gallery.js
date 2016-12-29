@@ -99,7 +99,7 @@ export default class extends React.Component {
       });
 
       snackbar.success(response.detail);
-      this.props.onComplete(response.avatar_hash, response.options);
+      this.props.onComplete(response.avatars, response.options);
     }, (rejection) => {
       if (rejection.status === 400) {
         snackbar.error(rejection.detail);

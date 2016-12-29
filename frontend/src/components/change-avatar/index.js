@@ -29,9 +29,9 @@ export default class extends React.Component {
       this.setState({
         'isLoading': false
       });
-
+      console.log(response);
       snackbar.success(response.detail);
-      this.props.onComplete(response.avatar_hash, response.options);
+      this.props.onComplete(response);
     }, (rejection) => {
       if (rejection.status === 400) {
         snackbar.error(rejection.detail);
@@ -69,7 +69,7 @@ export default class extends React.Component {
   }
 
   getCropButton() {
-    if (this.props.options.crop_org) {
+    if (this.props.options.crop_src) {
       /* jshint ignore:start */
       return <Button onClick={this.props.showCrop}
               disabled={this.state.isLoading}
@@ -114,7 +114,7 @@ export default class extends React.Component {
     /* jshint ignore:start */
     let userPeview = {
       id: this.props.user.id,
-      avatar_hash: this.props.options.avatar_hash
+      avatars: this.props.options.avatars
     }
     /* jshint ignore:end */
 

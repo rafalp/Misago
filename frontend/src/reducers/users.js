@@ -38,11 +38,11 @@ export function hydrateUser(user) {
   });
 }
 
-export function updateAvatar(user, avatarHash) {
+export function updateAvatar(user, avatars) {
   return {
     type: UPDATE_AVATAR,
     userId: user.id,
-    avatarHash
+    avatars
   };
 }
 
@@ -77,7 +77,7 @@ export default function user(state=[], action=null) {
       return state.map(function(item) {
         item = Object.assign({}, item);
         if (item.id === action.userId) {
-          item.avatar_hash = action.avatarHash;
+          item.avatars = action.avatars;
         }
 
         return item;

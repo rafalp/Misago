@@ -123,7 +123,9 @@ class UserAvatarTests(AuthenticatedUserTestCase):
             self.assertEqual(response.status_code, 200)
 
             response_json = response.json()
-            self.assertTrue(response_json['options']['crop_tmp'])
+            self.assertTrue(response_json['crop_tmp'])
+            self.assertEqual(
+                self.get_current_user().avatar_tmp.url, response_json['crop_tmp']['url'])
 
         avatar = Path(self.get_current_user().avatar_tmp.path)
         self.assertTrue(avatar.exists())
@@ -170,6 +172,16 @@ class UserAvatarTests(AuthenticatedUserTestCase):
             }
         }), content_type="application/json")
         self.assertContains(response, "Avatar was re-cropped.")
+
+        # delete user avatars, test if it deletes src and tmp
+        user = self.get_current_user()
+        store.delete_avatar(self.get_current_user())
+
+        self.assertTrue(self.get_current_user().avatar_src.path)
+
+        avatar = Path(self.get_current_user().avatar_src.path)
+        self.assertFalse(avatar.exists())
+        self.assertFalse(avatar.isfile())
 
     def test_gallery(self):
         """its possible to set avatar from gallery"""

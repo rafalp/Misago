@@ -53,7 +53,7 @@ export default function auth(state=initialState, action=null) {
       if (state.isAuthenticated && state.user.id === action.userId) {
         let newState = Object.assign({}, state);
         newState.user = Object.assign({}, state.user, {
-          'avatar_hash': action.avatarHash
+          'avatars': action.avatars
         });
         return newState;
       }

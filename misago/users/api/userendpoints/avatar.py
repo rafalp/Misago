@@ -36,7 +36,6 @@ def avatar_endpoint(request, pk=None):
 def get_avatar_options(user):
     options = {
         'avatars': user.avatars,
-
         'generated': True,
         'gravatar': False,
         'crop_src': False,
@@ -110,10 +109,8 @@ def avatar_post(options, user, data):
         }, status=status.HTTP_400_BAD_REQUEST)
 
     user.save()
-    response_dict['avatars'] = user.avatars
 
-    response_dict['options'] = get_avatar_options(user)
-
+    response_dict.update(get_avatar_options(user))
     return Response(response_dict)
 
 

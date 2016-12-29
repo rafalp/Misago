@@ -82,8 +82,8 @@ export default class extends React.Component {
     });
   };
 
-  completeFlow = (avatarHash, options) => {
-    store.dispatch(updateAvatar(this.props.user, avatarHash));
+  completeFlow = (options) => {
+    store.dispatch(updateAvatar(this.props.user, options.avatars));
 
     this.setState({
       'component': AvatarIndex,

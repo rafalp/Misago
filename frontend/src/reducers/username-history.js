@@ -60,7 +60,7 @@ export default function username(state=[], action=null) {
         item = Object.assign({}, item);
         if (item.changed_by && item.changed_by.id === action.userId) {
           item.changed_by = Object.assign({}, item.changed_by, {
-            'avatar_hash': action.avatarHash
+            avatars: action.avatars
           });
         }
 
@@ -72,8 +72,8 @@ export default function username(state=[], action=null) {
         item = Object.assign({}, item);
         if (item.changed_by && item.changed_by.id === action.userId) {
           item.changed_by = Object.assign({}, item.changed_by, {
-            'username': action.username,
-            'slug': action.slug
+            username: action.username,
+            slug: action.slug
           });
         }
 

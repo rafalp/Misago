@@ -18,11 +18,19 @@ export function getSrc(props) {
 
   if (props.user && props.user.id) {
     // just avatar hash, size and user id
-    url += props.user.avatar_hash + '/' + size + '/' + props.user.id + '.png';
+    return resolveAvatarForSize(props.user.avatars, size).url;
   } else {
     // just append avatar size to file to produce no-avatar placeholder
-    url += size + '.png';
+    return misago.get('MISAGO_PATH') + 'user-avatar/' + size + '.png';
   }
+}
 
-  return url;
+export function resolveAvatarForSize(avatars, size) {
+  let avatar = avatars[0];
+  avatars.forEach((av) => {
+    if (av.size >= size) {
+      avatar = av;
+    }
+  });
+  return avatar;
 }

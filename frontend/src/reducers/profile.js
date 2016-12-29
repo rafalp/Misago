@@ -32,7 +32,7 @@ export default function auth(state={}, action=null) {
     case UPDATE_AVATAR:
       if (state.id === action.userId) {
         return Object.assign({}, state, {
-          avatar_hash: action.avatarHash
+          avatars: action.avatars
         });
       }
       return state;

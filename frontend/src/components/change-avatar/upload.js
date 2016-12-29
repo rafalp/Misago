@@ -74,7 +74,7 @@ export default class extends React.Component {
       });
     }).then((data) => {
       this.setState({
-        'options': data.options,
+        'options': data,
         'uploaded': data.detail
       });
       snackbar.info(gettext("Your image has been uploaded and you may now crop it."));
