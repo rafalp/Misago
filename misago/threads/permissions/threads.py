@@ -585,6 +585,7 @@ def allow_edit_post(user, target):
             raise PermissionDenied(_("This post is protected. You can't edit it."))
 
         if not has_time_to_edit_post(user, target):
+            raise Exception()
             message = ungettext(
                 "You can't edit posts that are older than %(minutes)s minute.",
                 "You can't edit posts that are older than %(minutes)s minutes.",
@@ -685,9 +686,9 @@ def allow_delete_post(user, target):
 
         if not category_acl['can_close_threads']:
             if target.category.is_closed:
-                raise PermissionDenied(_("This category is closed. You can't delete posts from it."))
+                raise PermissionDenied(_("This category is closed. You can't delete posts in it."))
             if target.thread.is_closed:
-                raise PermissionDenied(_("This thread is closed. You can't delete posts from it."))
+                raise PermissionDenied(_("This thread is closed. You can't delete posts in it."))
 
         if target.is_protected and not category_acl['can_protect_posts']:
             raise PermissionDenied(_("This post is protected. You can't delete it."))
