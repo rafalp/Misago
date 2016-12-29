@@ -255,7 +255,7 @@ MISAGO_DYNAMIC_AVATAR_DRAWER = 'misago.users.avatars.dynamic.draw_default'
 # For which sizes avatars should be cached
 # Keep sizes ordered from greatest to smallest
 # Max size also controls min size of uploaded image as well as crop size
-MISAGO_AVATARS_SIZES = (400, 200, 150, 100, 64, 50, 30, 20)
+MISAGO_AVATARS_SIZES = (400, 200, 150, 100, 64, 50, 30)
 
 # Path to blank avatar
 MISAGO_BLANK_AVATAR = 'blank-avatar.png'

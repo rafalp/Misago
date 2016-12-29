@@ -234,6 +234,9 @@ MISAGO_AVATARS_SIZES
 
 Misago uses avatar cache that prescales avatars to requested sizes. Enter here sizes to which those should be optimized.
 
+.. warning::
+   It's impossible to regenerate user avatars store for existing avatars. Misago comes with sane defaults for avatar sizes, with min. height for user avatar being 400 pixels square, and steps of 200, 150, 100, 64, 50 and 30px. However if you need larger avatar or different pregenerated dimensions, changing those will require you to manually remove ``avatars`` directory from your media storage as well as running ``misago.users.avatars.set_default_avatar`` function against every user registered.
+
 
 MISAGO_BLANK_AVATAR
 -------------------
