@@ -531,3 +531,25 @@ class ThreadLikedPostsViewTests(ThreadViewTestCase):
         self.assertNotContains(response, '"is_liked": true')
         self.assertNotContains(response, '"is_liked": false')
         self.assertContains(response, '"is_liked": null')
+
+
+class ThreadAnonViewTests(ThreadViewTestCase):
+    def test_anonymous_user_view_no_showstoppers_display(self):
+        """kitchensink thread view has no showstoppers for anons"""
+        poll = testutils.post_poll(self.thread, self.user)
+        event = record_event(MockRequest(self.user), self.thread, 'closed')
+
+        hidden_event = record_event(MockRequest(self.user), self.thread, 'opened')
+        hide_post(self.user, hidden_event)
+
+        unapproved_post = testutils.reply_thread(self.thread, is_unapproved=True)
+        post = testutils.reply_thread(self.thread)
+
+        self.logout_user()
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertContains(response, poll.question)
+        self.assertContains(response, event.get_absolute_url())
+        self.assertContains(response, post.get_absolute_url())
+        self.assertNotContains(response, hidden_event.get_absolute_url())
+        self.assertNotContains(response, unapproved_post.get_absolute_url())

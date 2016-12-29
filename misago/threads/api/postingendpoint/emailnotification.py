@@ -30,7 +30,9 @@ class EmailNotificationMiddleware(PostingMiddleware):
             send_messages(notifications)
 
     def notify_user_of_post(self, subscriber):
-        return can_see_thread(subscriber, self.thread) and can_see_post(subscriber, self.post)
+        see_thread = can_see_thread(subscriber, self.thread)
+        see_post = can_see_post(subscriber, self.post)
+        return see_thread and see_post
 
     def build_mail(self, subscriber):
         if subscriber.id == self.thread.starter_id:
