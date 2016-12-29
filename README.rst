@@ -2,13 +2,13 @@
 Misago
 ======
 
-.. image:: https://travis-ci.org/rafalp/Misago.png?branch=master
+.. image:: https://travis-ci.org/rafalp/Misago.svg?branch=master
    :target: https://travis-ci.org/rafalp/Misago
    :alt: Tests Result
 
-.. image:: https://coveralls.io/repos/rafalp/Misago/badge.png?branch=master
-   :target: https://coveralls.io/r/rafalp/Misago?branch=master
-   :alt: Code Coverage
+.. image:: https://coveralls.io/repos/github/rafalp/Misago/badge.svg?branch=master
+   :target: https://coveralls.io/github/rafalp/Misago?branch=master
+   :alt: Test Coverage
 
 .. image:: https://badges.gitter.im/Misago/Misago.svg
    :target: https://gitter.im/Misago/Misago?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
