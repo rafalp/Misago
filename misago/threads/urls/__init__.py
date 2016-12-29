@@ -57,12 +57,12 @@ else:
 
 
 urlpatterns += threads_list_patterns('category', CategoryThreads, (
-    r'^c/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/$',
-    r'^c/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/my/$',
-    r'^c/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/new/$',
-    r'^c/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/unread/$',
-    r'^c/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/subscribed/$',
-    r'^c/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/unapproved/$',
+    r'^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/$',
+    r'^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/my/$',
+    r'^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/new/$',
+    r'^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/unread/$',
+    r'^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/subscribed/$',
+    r'^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/unapproved/$',
 ))
 
 
@@ -77,8 +77,8 @@ urlpatterns += threads_list_patterns('private-threads', PrivateThreads, (
 
 def thread_view_patterns(prefix, view):
     urls = [
-        url(r'^%s/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/$' % prefix[0], view.as_view(), name=prefix),
-        url(r'^%s/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/(?P<page>\d+)/$' % prefix[0], view.as_view(), name=prefix),
+        url(r'^%s/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/$' % prefix[0], view.as_view(), name=prefix),
+        url(r'^%s/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/(?P<page>\d+)/$' % prefix[0], view.as_view(), name=prefix),
     ]
     return urls
 
@@ -92,12 +92,12 @@ def goto_patterns(prefix, **views):
 
     post_view = views.pop('post', None)
     if post_view:
-        url_pattern = r'^%s/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/post/(?P<post>\d+)/$' % prefix[0]
+        url_pattern = r'^%s/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/post/(?P<post>\d+)/$' % prefix[0]
         url_name = '%s-post' % prefix
         urls.append(url(url_pattern, post_view.as_view(), name=url_name))
 
     for name, view in views.items():
-        url_pattern = r'^%s/(?P<slug>[-a-zA-Z0-9]+)-(?P<pk>\d+)/%s/$' % (prefix[0], name)
+        url_pattern = r'^%s/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/%s/$' % (prefix[0], name)
         url_name = '%s-%s' % (prefix, name)
         urls.append(url(url_pattern, view.as_view(), name=url_name))
 
@@ -121,6 +121,6 @@ urlpatterns += goto_patterns(
 
 
 urlpatterns += [
-    url(r'^a/(?P<secret>[-a-zA-Z0-9]+)-(?P<pk>\d+)/', attachment_server, name='attachment'),
-    url(r'^a/thumb/(?P<secret>[-a-zA-Z0-9]+)-(?P<pk>\d+)/', attachment_server, name='attachment-thumbnail', kwargs={'thumbnail': True}),
+    url(r'^a/(?P<secret>[-a-zA-Z0-9]+)/(?P<pk>\d+)/', attachment_server, name='attachment'),
+    url(r'^a/thumb/(?P<secret>[-a-zA-Z0-9]+)/(?P<pk>\d+)/', attachment_server, name='attachment-thumbnail', kwargs={'thumbnail': True}),
 ]
