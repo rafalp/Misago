@@ -49,7 +49,7 @@ def add_likes_to_posts(user, posts):
         post.is_liked = False
 
     queryset = PostLike.objects.filter(
-        user=user, post_id__in=posts_map.keys())
+        liker=user, post_id__in=posts_map.keys())
 
     for like in queryset.values('post_id'):
         posts_map[like['post_id']].is_liked = True

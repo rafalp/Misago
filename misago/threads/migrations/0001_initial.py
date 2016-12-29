@@ -332,9 +332,9 @@ class Migration(migrations.Migration):
             name='PostLike',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('user_name', models.CharField(max_length=255, db_index=True)),
-                ('user_slug', models.CharField(max_length=255)),
-                ('user_ip', models.GenericIPAddressField()),
+                ('liker_name', models.CharField(max_length=255, db_index=True)),
+                ('liker_slug', models.CharField(max_length=255)),
+                ('liker_ip', models.GenericIPAddressField()),
                 ('liked_on', models.DateTimeField(default=django.utils.timezone.now)),
                 ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_categories.Category')),
             ],
@@ -354,7 +354,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='postlike',
-            name='user',
+            name='liker',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(

@@ -8,15 +8,15 @@ class PostLike(models.Model):
     thread = models.ForeignKey('misago_threads.Thread')
     post = models.ForeignKey('misago_threads.Post')
 
-    user = models.ForeignKey(
+    liker = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
     )
-    user_name = models.CharField(max_length=255, db_index=True)
-    user_slug = models.CharField(max_length=255)
-    user_ip = models.GenericIPAddressField()
+    liker_name = models.CharField(max_length=255, db_index=True)
+    liker_slug = models.CharField(max_length=255)
+    liker_ip = models.GenericIPAddressField()
 
     liked_on = models.DateTimeField(default=timezone.now)
 

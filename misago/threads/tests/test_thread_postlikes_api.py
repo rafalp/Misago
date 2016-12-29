@@ -45,7 +45,7 @@ class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
         like = testutils.like_post(self.post, self.user)
         other_like = testutils.like_post(self.post, self.user)
 
-        other_like.user = None
+        other_like.liker = None
         other_like.save()
 
         response = self.client.get(self.api_link)

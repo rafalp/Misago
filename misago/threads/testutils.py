@@ -183,33 +183,33 @@ def post_poll(thread, poster):
     return poll
 
 
-def like_post(post, user=None, username=None):
+def like_post(post, liker=None, username=None):
     if not post.last_likes:
         post.last_likes = []
 
-    if user:
+    if liker:
         like = post.postlike_set.create(
             category=post.category,
             thread=post.thread,
-            user=user,
-            user_name=user.username,
-            user_slug=user.slug,
-            user_ip='127.0.0.1'
+            liker=liker,
+            liker_name=liker.username,
+            liker_slug=liker.slug,
+            liker_ip='127.0.0.1'
         )
 
         post.last_likes = [
             {
-                'id': user.id,
-                'username': user.username
+                'id': liker.id,
+                'username': liker.username
             }
         ] + post.last_likes
     else:
         like = post.postlike_set.create(
             category=post.category,
             thread=post.thread,
-            user_name=username,
-            user_slug=slugify(username),
-            user_ip='127.0.0.1'
+            liker_name=username,
+            liker_slug=slugify(username),
+            liker_ip='127.0.0.1'
         )
 
         post.last_likes = [

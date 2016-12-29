@@ -118,9 +118,9 @@ def update_usernames(sender, **kwargs):
         editor_slug=sender.slug
     )
 
-    PostLike.objects.filter(user=sender).update(
-        user_name=sender.username,
-        user_slug=sender.slug
+    PostLike.objects.filter(liker=sender).update(
+        liker_name=sender.username,
+        liker_slug=sender.slug
     )
 
     Attachment.objects.filter(uploader=sender).update(
