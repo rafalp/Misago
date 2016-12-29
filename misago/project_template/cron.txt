@@ -1,3 +1,7 @@
+# this is example crontab configuration
+# you'll likely need to change it to use
+# valid python version or paths to manage.py
+
 15 0 * * * python manage.py buildactivepostersranking
 15 0 * * * python manage.py clearsessions
 15 0 * * * python manage.py invalidatebans
