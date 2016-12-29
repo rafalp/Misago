@@ -9,7 +9,7 @@ __all__ = ['ThreadParticipantSerializer']
 class ThreadParticipantSerializer(serializers.ModelSerializer):
     id = serializers.SerializerMethodField()
     username = serializers.SerializerMethodField()
-    avatar_hash = serializers.SerializerMethodField()
+    avatars = serializers.SerializerMethodField()
 
     url = serializers.SerializerMethodField()
 
@@ -18,7 +18,7 @@ class ThreadParticipantSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'username',
-            'avatar_hash',
+            'avatars',
             'url',
             'is_owner'
         )
@@ -29,8 +29,8 @@ class ThreadParticipantSerializer(serializers.ModelSerializer):
     def get_username(self, obj):
         return obj.user.username
 
-    def get_avatar_hash(self, obj):
-        return obj.user.avatar_hash
+    def get_avatars(self, obj):
+        return obj.user.avatars
 
     def get_url(self, obj):
         return obj.user.get_absolute_url()
