@@ -35,7 +35,7 @@ ALLOWED_HOSTS = []
 DATABASES = {
     'default': {
         # Only PostgreSQL is supported
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': '',
         'USER': '',
         'HOST': 'localhost',
