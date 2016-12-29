@@ -260,6 +260,11 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         ThreadParticipant.objects.set_owner(self.thread, self.other_user)
         ThreadParticipant.objects.add_participants(self.thread, [self.user])
 
+        self.user.subscription_set.create(
+            category=self.category,
+            thread=self.thread,
+        )
+
         response = self.patch(self.api_link, [
             {'op': 'remove', 'path': 'participants', 'value': self.user.pk}
         ])
@@ -283,6 +288,9 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         # user was removed from participation
         self.assertEqual(self.thread.participants.count(), 1)
         self.assertEqual(self.thread.participants.filter(pk=self.user.pk).count(), 0)
+
+        # thread was removed from user subscriptions
+        self.assertEqual(self.user.subscription_set.count(), 0)
 
     def test_user_leave_closed_thread(self):
         """api allows user to remove himself from closed thread"""

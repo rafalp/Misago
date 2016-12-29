@@ -1,7 +1,7 @@
 from django.dispatch import Signal, receiver
 
 from misago.categories.models import PRIVATE_THREADS_ROOT_NAME
-from misago.categories.signals import move_category_content
+from misago.categories.signals import delete_category_content, move_category_content
 from misago.threads.signals import move_thread
 
 
@@ -14,6 +14,12 @@ thread_read = Signal(providing_args=["thread"])
 """
 Signal handlers
 """
+@receiver(delete_category_content)
+def delete_category_threads(sender, **kwargs):
+    sender.categoryread_set.all().delete()
+    sender.threadread_set.all().delete()
+
+
 @receiver(move_category_content)
 def delete_category_tracker(sender, **kwargs):
     sender.categoryread_set.all().delete()

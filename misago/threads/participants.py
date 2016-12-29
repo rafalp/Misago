@@ -176,6 +176,7 @@ def remove_participant(request, thread, user):
         thread.delete()
     else:
         thread.threadparticipant_set.filter(user=user).delete()
+        thread.subscription_set.filter(user=user).delete()
 
         if removed_owner:
             thread.is_closed = True # flag thread to close
