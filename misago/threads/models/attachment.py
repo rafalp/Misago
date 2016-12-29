@@ -25,7 +25,7 @@ def upload_to(instance, filename):
         if filename_lowered.endswith(extension):
             break
 
-    filename_clean = u'.'.join((
+    filename_clean = '.'.join((
         slugify(filename[:(len(extension) + 1) * -1])[:16],
         extension
     ))

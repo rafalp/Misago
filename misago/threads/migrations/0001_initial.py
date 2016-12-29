@@ -123,7 +123,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='thread',
             name='participants',
-            field=models.ManyToManyField(related_name='private_thread_set', through='misago_threads.ThreadParticipant', through_fields=('thread', 'user'), to=settings.AUTH_USER_MODEL),
+            field=models.ManyToManyField(related_name='privatethread_set', through='misago_threads.ThreadParticipant', to=settings.AUTH_USER_MODEL),
             preserve_default=True,
         ),
         CreatePartialIndex(
