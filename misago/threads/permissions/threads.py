@@ -746,9 +746,11 @@ def allow_move_post(user, target):
 
     if not category_acl['can_move_posts']:
         raise PermissionDenied(_("You can't move posts in this category."))
+    if target.is_event:
+        raise PermissionDenied(_("Events can't be moved."))
     if target.is_first_post:
         raise PermissionDenied(_("You can't move thread's first post."))
-    if not target.is_first_post and not category_acl['can_hide_posts'] and target.is_hidden:
+    if not category_acl['can_hide_posts'] and target.is_hidden:
         raise PermissionDenied(_("You can't move posts the content you can't see."))
 can_move_post = return_boolean(allow_move_post)
 
