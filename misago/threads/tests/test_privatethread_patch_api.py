@@ -81,6 +81,20 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
 
         self.assertContains(response, "BobBoberson is blocking you.", status_code=400)
 
+    def test_add_no_perm_user(self):
+        """can't add user that has no permission to use private threads"""
+        ThreadParticipant.objects.set_owner(self.thread, self.user)
+
+        override_acl(self.other_user, {
+            'can_use_private_threads': 0
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'add', 'path': 'participants', 'value': self.other_user.username}
+        ])
+
+        self.assertContains(response, "BobBoberson can't participate", status_code=400)
+
     def test_add_too_many_users(self):
         """can't add user that is already participant"""
         ThreadParticipant.objects.set_owner(self.thread, self.user)
@@ -301,6 +315,44 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         # user was removed from participation
         self.assertEqual(self.thread.participants.count(), 1)
         self.assertEqual(self.thread.participants.filter(pk=self.user.pk).count(), 0)
+
+    def test_moderator_remove_user(self):
+        """api allows moderator to remove other user"""
+        User = get_user_model()
+        removed_user = User.objects.create_user(
+            'Vigilante', 'test@test.com', 'pass123')
+
+        ThreadParticipant.objects.set_owner(self.thread, self.other_user)
+        ThreadParticipant.objects.add_participants(self.thread, [self.user, removed_user])
+
+        override_acl(self.user, {
+            'can_moderate_private_threads': True
+        })
+
+        response = self.patch(self.api_link, [
+            {'op': 'remove', 'path': 'participants', 'value': removed_user.pk}
+        ])
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.json()['deleted'])
+
+        # thread still exists
+        self.assertTrue(Thread.objects.get(pk=self.thread.pk))
+
+        # leave event has valid type
+        event = self.thread.post_set.order_by('id').last()
+        self.assertTrue(event.is_event)
+        self.assertTrue(event.event_type, 'participant_removed')
+
+        # valid users were flagged for sync
+        User = get_user_model()
+        self.assertTrue(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
+        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
+        self.assertTrue(User.objects.get(pk=removed_user.pk).sync_unread_private_threads)
+
+        # user was removed from participation
+        self.assertEqual(self.thread.participants.count(), 2)
+        self.assertEqual(self.thread.participants.filter(pk=removed_user.pk).count(), 0)
 
     def test_owner_remove_user(self):
         """api allows owner to remove other user"""

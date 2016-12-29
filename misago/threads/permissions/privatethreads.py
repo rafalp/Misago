@@ -18,8 +18,6 @@ __all__ = [
     'can_use_private_threads',
     'allow_see_private_thread',
     'can_see_private_thread',
-    'allow_see_private_post',
-    'can_see_private_post',
     'allow_change_owner',
     'can_change_owner',
     'allow_add_participants',
@@ -30,7 +28,6 @@ __all__ = [
     'can_add_participant',
     'allow_message_user',
     'can_message_user',
-    'exclude_invisible_private_threads',
 ]
 
 
@@ -197,16 +194,6 @@ def allow_see_private_thread(user, target):
 can_see_private_thread = return_boolean(allow_see_private_thread)
 
 
-def allow_see_private_post(user, target):
-    can_see_reported = user.acl['can_moderate_private_threads']
-    if not (can_see_reported and target.thread.has_reported_posts):
-        for participant in target.thread.participants_list:
-            if participant.user == user and participant.is_removed:
-                if post.posted_on > target.last_post_on:
-                    raise Http404()
-can_see_private_post = return_boolean(allow_see_private_post)
-
-
 def allow_change_owner(user, target):
     is_moderator = user.acl['can_moderate_private_threads']
     is_owner = target.participant and target.participant.is_owner
@@ -284,24 +271,5 @@ can_add_participant = return_boolean(allow_add_participant)
 
 def allow_message_user(user, target):
     allow_use_private_threads(user)
-
-    if user == target:
-        raise PermissionDenied(_("You can't message yourself."))
-
-    if not user.acl['can_start_private_threads']:
-        raise PermissionDenied(_("You can't start private threads."))
-
     allow_add_participant(user, target)
 can_message_user = return_boolean(allow_message_user)
-
-
-"""
-Queryset helpers
-"""
-def exclude_invisible_private_threads(queryset, user):
-    if user.acl['can_moderate_private_threads']:
-        see_participating = Q(participants=user)
-        see_reported = Q(has_reported_posts=True)
-        return queryset.filter(see_reported | see_participating)
-    else:
-        return queryset.filter(participants=user)
