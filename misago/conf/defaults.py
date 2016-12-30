@@ -252,7 +252,12 @@ MISAGO_HOURLY_POST_LIMIT = 100
 # Function used for generating individual avatar for user
 MISAGO_DYNAMIC_AVATAR_DRAWER = 'misago.users.avatars.dynamic.draw_default'
 
-# For which sizes avatars should be cached
+
+# Path to directory containing avatar galleries
+# Those galleries can be loaded by running loadavatargallery command
+MISAGO_AVATAR_GALLERY = None
+
+# Save user avatars for sizes
 # Keep sizes ordered from greatest to smallest
 # Max size also controls min size of uploaded image as well as crop size
 MISAGO_AVATARS_SIZES = (400, 200, 150, 100, 64, 50, 30)

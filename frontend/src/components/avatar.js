@@ -10,8 +10,8 @@ export default function(props) {
       className={props.className || 'user-avatar'}
       src={getSrc(props.user, size)}
       title={gettext("User avatar")}
-      width={100}
-      height={100}
+      width={size}
+      height={size}
     />
   );
 }

@@ -19,7 +19,7 @@ TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testfi
 TEST_DOCUMENT_PATH = os.path.join(TESTFILES_DIR, 'document.pdf')
 TEST_LARGEPNG_PATH = os.path.join(TESTFILES_DIR, 'large.png')
 TEST_SMALLJPG_PATH = os.path.join(TESTFILES_DIR, 'small.jpg')
-TEST_ANIMATEDGIT_PATH = os.path.join(TESTFILES_DIR, 'animated.gif')
+TEST_ANIMATEDGIF_PATH = os.path.join(TESTFILES_DIR, 'animated.gif')
 TEST_CORRUPTEDIMG_PATH = os.path.join(TESTFILES_DIR, 'corrupted.gif')
 
 
@@ -315,7 +315,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
             mimetypes='image/gif'
         )
 
-        with open(TEST_ANIMATEDGIT_PATH, 'rb') as upload:
+        with open(TEST_ANIMATEDGIF_PATH, 'rb') as upload:
             response = self.client.post(self.api_link, data={
                 'upload': upload
             })

@@ -8,7 +8,7 @@ from django.test import TestCase
 from misago.conf import settings
 
 from ..avatars import dynamic, gallery, gravatar, store, uploaded
-from ..models import Avatar
+from ..models import Avatar, AvatarGallery
 
 
 class AvatarsStoreTests(TestCase):
@@ -120,16 +120,26 @@ class AvatarSetterTests(TestCase):
         dynamic.set_avatar(self.user)
         self.assertAvatarWasSet()
 
+    def test_random_gallery_avatar_no_gallery(self):
+        """runtime error is raised when no gallery exists"""
+        with self.assertRaises(RuntimeError):
+            gallery.set_random_avatar(self.user)
+
     def test_random_gallery_avatar(self):
         """dynamic avatar gets created"""
+        gallery.load_avatar_galleries()
+
         self.assertNoAvatarIsSet()
         gallery.set_random_avatar(self.user)
         self.assertAvatarWasSet()
 
     def test_selected_gallery_avatar(self):
         """dynamic avatar gets created"""
+        gallery.load_avatar_galleries()
+
         self.assertNoAvatarIsSet()
-        gallery.set_avatar(self.user, 'avatars/Nature/serval.jpg')
+        test_avatar = AvatarGallery.objects.order_by('id').last()
+        gallery.set_avatar(self.user, test_avatar)
         self.assertAvatarWasSet()
 
     def test_gravatar(self):

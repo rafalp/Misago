@@ -229,6 +229,16 @@ Length of attachment's secret (filenames and url token). The longer, the harder 
    Generaly, neither you nor your users should use forums to exchange files containing valuable data, but if you do, you should make sure to secure it additionaly via other means like password-protected archives or file encryption solutions.
 
 
+MISAGO_AVATAR_GALLERY
+---------------------
+
+Path to directory containing avatar galleries. Those galleries can be loaded by running ``loadavatargallery`` command.
+
+Feel free to remove existing galleries or add your own.
+
+If you create gallery named ``__default__`` and set avatar gallery as default user avatar, Misago will select new users avatars from it while keeping this gallery hidden from existing users.
+
+
 MISAGO_AVATARS_SIZES
 --------------------
 

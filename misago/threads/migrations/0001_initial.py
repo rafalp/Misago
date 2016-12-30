@@ -260,7 +260,7 @@ class Migration(migrations.Migration):
                 ('size', models.PositiveIntegerField(default=0, db_index=True)),
                 ('thumbnail', models.ImageField(max_length=255, blank=True, null=True, upload_to=misago.threads.models.attachment.upload_to)),
                 ('image', models.ImageField(max_length=255, blank=True, null=True, upload_to=misago.threads.models.attachment.upload_to)),
-                ('file', models.FileField(blank=True, null=True, upload_to=misago.threads.models.attachment.upload_to)),
+                ('file', models.FileField(max_length=255, blank=True, null=True, upload_to=misago.threads.models.attachment.upload_to)),
                 ('post', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='misago_threads.Post')),
             ],
         ),

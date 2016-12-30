@@ -11,6 +11,7 @@ from misago.core.utils import format_plaintext_for_html
 
 from ... import avatars
 from ...forms.moderation import ModerateAvatarForm
+from ...models import AvatarGallery
 
 
 def avatar_endpoint(request, pk=None):
@@ -46,7 +47,18 @@ def get_avatar_options(user):
 
     # Allow existing galleries
     if avatars.gallery.galleries_exist():
-        options['galleries'] = avatars.gallery.get_available_galleries()
+        options['galleries'] = []
+        for gallery in avatars.gallery.get_available_galleries():
+            gallery_images = []
+            for image in gallery['images']:
+                gallery_images.append({
+                    'id': image.id,
+                    'url': image.url
+                })
+            options['galleries'].append({
+                'name': gallery['name'],
+                'images': gallery_images
+            })
 
     # Can't have custom avatar?
     if not settings.allow_custom_avatars:
@@ -134,11 +146,14 @@ def avatar_gravatar(user, data):
 
 
 def avatar_gallery(user, data):
-    image = data.get('image') or 'not-possible'
-    if avatars.gallery.is_avatar_from_gallery(image):
+    try:
+        image_pk = int(data.get('image'))
+        image = AvatarGallery.objects.get(pk=image_pk)
+        if image.gallery == '__default__':
+            raise ValueError()
         avatars.gallery.set_avatar(user, image)
         return _("Avatar from gallery was set.")
-    else:
+    except (TypeError, ValueError, AvatarGallery.DoesNotExist):
         raise AvatarError(_("Incorrect image."))
 
 

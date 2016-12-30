@@ -60,7 +60,12 @@ class Attachment(models.Model):
     filename = models.CharField(max_length=255, db_index=True)
     size = models.PositiveIntegerField(default=0, db_index=True)
 
-    thumbnail = models.ImageField(blank=True, null=True, upload_to=upload_to)
+    thumbnail = models.ImageField(
+        max_length=255,
+        blank=True,
+        null=True,
+        upload_to=upload_to
+    )
     image = models.ImageField(
         max_length=255,
         blank=True,

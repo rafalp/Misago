@@ -10,7 +10,8 @@ from django.utils.encoding import smart_str
 from misago.acl.testutils import override_acl
 from misago.conf import settings
 
-from ..avatars import store
+from ..avatars import gallery, store
+from ..models import AvatarGallery
 from ..testutils import AuthenticatedUserTestCase
 
 
@@ -36,13 +37,13 @@ class UserAvatarTests(AuthenticatedUserTestCase):
             response = self.client.get(self.link)
             self.assertEqual(response.status_code, 200)
 
-            options = json.loads(smart_str(response.content))
+            options = response.json()
             self.assertTrue(options['generated'])
             self.assertFalse(options['gravatar'])
             self.assertFalse(options['crop_src'])
             self.assertFalse(options['crop_tmp'])
             self.assertFalse(options['upload'])
-            self.assertTrue(options['galleries'])
+            self.assertFalse(options['galleries'])
 
     def test_avatars_on(self):
         """custom avatars are not allowed"""
@@ -50,13 +51,23 @@ class UserAvatarTests(AuthenticatedUserTestCase):
             response = self.client.get(self.link)
             self.assertEqual(response.status_code, 200)
 
-            options = json.loads(smart_str(response.content))
+            options = response.json()
             self.assertTrue(options['generated'])
             self.assertTrue(options['gravatar'])
             self.assertFalse(options['crop_src'])
             self.assertFalse(options['crop_tmp'])
             self.assertTrue(options['upload'])
-            self.assertTrue(options['galleries'])
+            self.assertFalse(options['galleries'])
+
+    def test_gallery_exists(self):
+        """api returns gallery"""
+        gallery.load_avatar_galleries()
+
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+
+        options = response.json()
+        self.assertTrue(options['galleries'])
 
     def test_avatar_locked(self):
         """requests to api error if user's avatar is locked"""
@@ -183,22 +194,81 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.assertFalse(avatar.exists())
         self.assertFalse(avatar.isfile())
 
-    def test_gallery(self):
-        """its possible to set avatar from gallery"""
+    def test_gallery_set_empty_gallery(self):
+        """gallery handles set avatar on empty gallery"""
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
-        options = json.loads(smart_str(response.content))
+        response = self.client.post(self.link, data={
+            'avatar': 'galleries',
+            'image': 123
+        })
+
+        self.assertContains(
+            response, "This avatar type is not allowed.", status_code=400)
+
+    def test_gallery_image_validation(self):
+        """gallery validates image to set"""
+        gallery.load_avatar_galleries()
+
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+
+        # no image id is handled
+        response = self.client.post(self.link, data={
+            'avatar': 'galleries',
+        })
+        self.assertContains(response, "Incorrect image.", status_code=400)
+
+        # invalid id is handled
+        response = self.client.post(self.link, data={
+            'avatar': 'galleries',
+            'image': 'asdsadsadsa'
+        })
+        self.assertContains(response, "Incorrect image.", status_code=400)
+
+        # nonexistant image is handled
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+
+        options = response.json()
         self.assertTrue(options['galleries'])
 
-        for gallery in options['galleries']:
-            for image in gallery['images']:
-                response = self.client.post(self.link, data={
-                    'avatar': 'galleries',
-                    'image': image
-                })
+        test_avatar = options['galleries'][0]['images'][0]['id']
+        response = self.client.post(self.link, data={
+            'avatar': 'galleries',
+            'image': test_avatar + 5000
+        })
+        self.assertContains(response, "Incorrect image.", status_code=400)
 
-                self.assertContains(response, 'Avatar from gallery was set.')
+        # default gallery image is handled
+        AvatarGallery.objects.filter(pk=test_avatar).update(
+            gallery=gallery.DEFAULT_GALLERY
+        )
+
+        response = self.client.post(self.link, data={
+            'avatar': 'galleries',
+            'image': test_avatar
+        })
+        self.assertContains(response, "Incorrect image.", status_code=400)
+
+    def test_gallery_set_valid_avatar(self):
+        """its possible to set avatar from gallery"""
+        gallery.load_avatar_galleries()
+
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+
+        options = response.json()
+        self.assertTrue(options['galleries'])
+
+        test_avatar = options['galleries'][0]['images'][0]['id']
+        response = self.client.post(self.link, data={
+            'avatar': 'galleries',
+            'image': test_avatar
+        })
+
+        self.assertContains(response, "Avatar from gallery was set.")
 
 
 class UserAvatarModerationTests(AuthenticatedUserTestCase):
@@ -239,7 +309,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
-        options = json.loads(smart_str(response.content))
+        options = response.json()
         self.assertEqual(
             options['is_avatar_locked'], self.other_user.is_avatar_locked)
         self.assertEqual(
@@ -252,17 +322,17 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         })
 
         response = self.client.post(self.link, json.dumps({
-                'is_avatar_locked': True,
-                'avatar_lock_user_message': "Test user message.",
-                'avatar_lock_staff_message': "Test staff message.",
-            }),
-            content_type="application/json")
+            'is_avatar_locked': True,
+            'avatar_lock_user_message': "Test user message.",
+            'avatar_lock_staff_message': "Test staff message.",
+        }),
+        content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
         User = get_user_model()
         other_user = User.objects.get(pk=self.other_user.pk)
 
-        options = json.loads(smart_str(response.content))
+        options = response.json()
         self.assertEqual(other_user.is_avatar_locked, True)
         self.assertEqual(
             other_user.avatar_lock_user_message, "Test user message.")
@@ -283,16 +353,16 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         })
 
         response = self.client.post(self.link, json.dumps({
-                'is_avatar_locked': False,
-                'avatar_lock_user_message': None,
-                'avatar_lock_staff_message': None,
-            }),
-            content_type="application/json")
+            'is_avatar_locked': False,
+            'avatar_lock_user_message': None,
+            'avatar_lock_staff_message': None,
+        }),
+        content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
         other_user = User.objects.get(pk=self.other_user.pk)
 
-        options = json.loads(smart_str(response.content))
+        options = response.json()
         self.assertEqual(
             options['avatars'], other_user.avatars)
         self.assertEqual(

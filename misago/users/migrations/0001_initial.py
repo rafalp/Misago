@@ -176,6 +176,17 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='AvatarGallery',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('gallery', models.CharField(max_length=255)),
+                ('image', models.ImageField(max_length=255, upload_to=misago.users.avatars.store.upload_to)),
+            ],
+            options={
+                'ordering': ['gallery', 'name'],
+            },
+        ),
+        migrations.CreateModel(
             name='Ban',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),

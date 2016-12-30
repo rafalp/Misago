@@ -88,10 +88,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 
-# Automatically setup default paths to media and attachments directories
-MISAGO_ATTACHMENTS_ROOT = os.path.join(BASE_DIR, 'attachments')
-MISAGO_AVATAR_STORE = os.path.join(BASE_DIR, 'avatar_store')
-
+# Automatically setup default paths to media and static directories
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -121,21 +118,9 @@ TEMPLATES = [
 SECRET_KEY = '{{ secret_key }}'
 
 
-# X-Sendfile support
-# X-Sendfile is feature provided by Http servers that allows web apps to
-# delegate serving files over to the better performing server instead of
-# doing it within app.
-# If your server supports X-Sendfile or its variation, enter header name here.
-# For example if you are using Nginx with X-accel enabled, set this setting
-# to "X-Accel-Redirect".
-# Leave this setting empty to Django fallback instead
-MISAGO_SENDFILE_HEADER = ''
-
-# Allows you to use location feature of your Http server
-# For example, if you have internal location /mymisago/avatar_cache/
-# that points at /home/myweb/misagoforum/avatar_cache/, set this setting
-# to "mymisago".
-MISAGO_SENDFILE_LOCATIONS_PATH = ''
+# Path to directory containing avatar galleries
+# Those galleries can be loaded by running loadavatargallery command
+MISAGO_AVATAR_GALLERY = os.path.join(BASE_DIR, 'avatargallery')
 
 
 # Application definition

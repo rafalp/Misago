@@ -4,10 +4,7 @@ from django.conf import settings
 from django.http import HttpResponse, StreamingHttpResponse
 
 
-SERVED_PATHS = (
-    settings.MISAGO_ATTACHMENTS_ROOT,
-    settings.MISAGO_AVATAR_STORE,
-)
+SERVED_PATHS = ()
 
 
 def make_file_response(file_path, content_type, attachment=None):

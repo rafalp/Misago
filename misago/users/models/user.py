@@ -228,8 +228,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     is_active_staff_message = models.TextField(null=True, blank=True)
 
-    avatar_tmp = models.ImageField(upload_to=avatars.store.upload_to, null=True, blank=True)
-    avatar_src = models.ImageField(upload_to=avatars.store.upload_to, null=True, blank=True)
+    avatar_tmp = models.ImageField(
+        max_length=255,
+        upload_to=avatars.store.upload_to,
+        null=True,
+        blank=True
+    )
+    avatar_src = models.ImageField(
+        max_length=255,
+        upload_to=avatars.store.upload_to,
+        null=True,
+        blank=True
+    )
     avatar_crop = models.CharField(max_length=255, null=True, blank=True)
     avatars = JSONField(null=True, blank=True)
     is_avatar_locked = models.BooleanField(default=False)
