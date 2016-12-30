@@ -24,7 +24,6 @@ from ..permissions.profiles import allow_block_user, allow_follow_user
 from ..serializers import BanDetailsSerializer, UserProfileSerializer, UserSerializer
 from ..serializers.usernamechange import UsernameChangeSerializer
 from ..viewmodels import UserPosts, UserThreads
-from ..warnings import get_user_warning_level, get_user_warning_obj, get_warning_levels
 
 
 def profile_view(f):

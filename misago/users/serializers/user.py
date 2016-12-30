@@ -51,7 +51,6 @@ class AuthenticatedUserSerializer(serializers.ModelSerializer):
             'short_title',
             'rank',
             'avatars',
-            'new_notifications',
             'limits_private_thread_invites_to',
             'unread_private_threads',
             'subscribe_to_started_threads',

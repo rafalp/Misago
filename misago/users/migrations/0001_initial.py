@@ -61,11 +61,8 @@ class Migration(migrations.Migration):
                 ('is_signature_locked', models.BooleanField(default=False)),
                 ('signature_lock_user_message', models.TextField(null=True, blank=True)),
                 ('signature_lock_staff_message', models.TextField(null=True, blank=True)),
-                ('warning_level', models.PositiveIntegerField(default=0)),
-                ('warning_level_update_on', models.DateTimeField(null=True, blank=True)),
                 ('following', models.PositiveIntegerField(default=0)),
                 ('followers', models.PositiveIntegerField(default=0)),
-                ('new_notifications', models.PositiveIntegerField(default=0)),
                 ('limits_private_thread_invites_to', models.PositiveIntegerField(default=0)),
                 ('unread_private_threads', models.PositiveIntegerField(default=0)),
                 ('sync_unread_private_threads', models.BooleanField(default=False)),
@@ -212,44 +209,5 @@ class Migration(migrations.Migration):
             options={
             },
             bases=(models.Model,),
-        ),
-        migrations.CreateModel(
-            name='WarningLevel',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=255)),
-                ('level', models.PositiveIntegerField(default=1, db_index=True)),
-                ('length_in_minutes', models.PositiveIntegerField(default=0)),
-                ('restricts_posting_replies', models.PositiveIntegerField(default=0)),
-                ('restricts_posting_threads', models.PositiveIntegerField(default=0)),
-            ],
-            options={
-            },
-            bases=(models.Model,),
-        ),
-        migrations.CreateModel(
-            name='UserWarning',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('reason', models.TextField(null=True, blank=True)),
-                ('given_on', models.DateTimeField(default=django.utils.timezone.now)),
-                ('giver_username', models.CharField(max_length=255)),
-                ('giver_slug', models.CharField(max_length=255)),
-                ('is_canceled', models.BooleanField(default=False)),
-                ('canceled_on', models.DateTimeField(null=True, blank=True)),
-                ('canceler_username', models.CharField(max_length=255)),
-                ('canceler_slug', models.CharField(max_length=255)),
-                ('canceler', models.ForeignKey(related_name='warnings_canceled', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
-                ('giver', models.ForeignKey(related_name='warnings_given', on_delete=django.db.models.deletion.SET_NULL, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
-                ('user', models.ForeignKey(related_name='warnings', to=settings.AUTH_USER_MODEL)),
-            ],
-            options={
-            },
-            bases=(models.Model,),
-        ),
-        CreatePartialIndex(
-            field='UserWarning.is_canceled',
-            index_name='misago_userwarning_is_canceled_partial',
-            condition='is_canceled = FALSE',
         ),
     ]

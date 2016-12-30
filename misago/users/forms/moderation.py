@@ -11,21 +11,6 @@ from misago.core import forms
 from ..bans import ban_user
 
 
-class WarnUserForm(forms.Form):
-    reason = forms.CharField(label=_("Warning Reason"),
-                             help_text=_("Optional message explaining why "
-                                         "this warning was given."),
-                             widget=forms.Textarea(attrs={'rows': 8}),
-                             required=False)
-
-    def clean_reason(self):
-        data = self.cleaned_data['reason']
-        if len(data) > 2000:
-            message = _("Warning reason can't be longer than 2000 characters.")
-            raise forms.ValidationError(message)
-        return data
-
-
 class ModerateAvatarForm(forms.ModelForm):
     is_avatar_locked = forms.YesNoSwitch()
     avatar_lock_user_message = forms.CharField(required=False)

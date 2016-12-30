@@ -253,9 +253,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     signature_lock_user_message = models.TextField(null=True, blank=True)
     signature_lock_staff_message = models.TextField(null=True, blank=True)
 
-    warning_level = models.PositiveIntegerField(default=0)
-    warning_level_update_on = models.DateTimeField(null=True, blank=True)
-
     followers = models.PositiveIntegerField(default=0)
     following = models.PositiveIntegerField(default=0)
 
@@ -267,8 +264,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         related_name='blocked_by',
         symmetrical=False,
     )
-
-    new_notifications = models.PositiveIntegerField(default=0)
 
     limits_private_thread_invites_to = models.PositiveIntegerField(
         default=LIMITS_PRIVATE_THREAD_INVITES_TO_NONE

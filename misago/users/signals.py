@@ -13,11 +13,3 @@ def handle_name_change(sender, **kwargs):
     sender.user_renames.update(
         changed_by_username=sender.username
     )
-    sender.warnings_given.update(
-        giver_username=sender.username,
-        giver_slug=sender.slug
-    )
-    sender.warnings_canceled.update(
-        canceler_username=sender.username,
-        canceler_slug=sender.slug
-    )

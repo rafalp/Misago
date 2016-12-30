@@ -8,13 +8,8 @@ from misago.core import forms, threadstore
 from misago.core.validators import validate_sluggable
 
 from ..models import (
-    AUTO_SUBSCRIBE_CHOICES,
-    BANS_CHOICES,
-    PRIVATE_THREAD_INVITES_LIMITS_CHOICES,
-    RESTRICTIONS_CHOICES,
-    Ban,
-    Rank,
-    WarningLevel
+    AUTO_SUBSCRIBE_CHOICES, BANS_CHOICES, PRIVATE_THREAD_INVITES_LIMITS_CHOICES,
+    Ban, Rank
 )
 from ..validators import validate_email, validate_password, validate_username
 
@@ -603,38 +598,3 @@ class SearchBansForm(forms.Form):
             queryset = queryset.filter(is_checked=False)
 
         return queryset
-
-
-"""
-Warning levels
-"""
-class WarningLevelForm(forms.ModelForm):
-    name = forms.CharField(label=_("Level name"), max_length=255)
-    length_in_minutes = forms.IntegerField(
-        label=_("Length in minutes"),
-        min_value=0,
-        help_text=_(
-            "Enter number of minutes since this warning level was "
-            "imposed on member until it's reduced, or 0 to make "
-            "this warning level permanent."
-        )
-    )
-    restricts_posting_replies = forms.TypedChoiceField(
-        label=_("Posting replies"),
-        coerce=int,
-        choices=RESTRICTIONS_CHOICES
-    )
-    restricts_posting_threads = forms.TypedChoiceField(
-        label=_("Posting threads"),
-        coerce=int,
-        choices=RESTRICTIONS_CHOICES
-    )
-
-    class Meta:
-        model = WarningLevel
-        fields = [
-            'name',
-            'length_in_minutes',
-            'restricts_posting_replies',
-            'restricts_posting_threads',
-        ]

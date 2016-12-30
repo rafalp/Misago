@@ -111,14 +111,6 @@ def create_default_roles(apps, schema_editor):
                 'can_see_hidden_users': 1,
             },
 
-            # warnings
-            'misago.users.permissions.warnings': {
-                'can_see_other_users_warnings': 1,
-                'can_warn_users': 1,
-                'can_cancel_warnings': 1,
-                'can_be_warned': 0,
-            },
-
             # attachments
             'misago.threads.permissions.attachments': {
                 'max_attachment_size': 8 * 1024,
@@ -150,16 +142,6 @@ def create_default_roles(apps, schema_editor):
             'misago.users.permissions.delete': {
                 'can_delete_users_newer_than': 0,
                 'can_delete_users_with_less_posts_than': 0,
-            },
-        }
-    )
-
-    Role.objects.create(
-        name=_("See warnings"),
-        permissions={
-            # warnings
-            'misago.users.permissions.warnings': {
-                'can_see_other_users_warnings': 1,
             },
         }
     )
