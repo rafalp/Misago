@@ -382,28 +382,6 @@ Standard configs as of PostgreSQL 9.5 are: ``dutch``, ``english``, ``finnish``, 
    Items in Misago are usually indexed in search engine on save or update. If you change search configuration, you'll need to rebuild search for past posts to get reindexed using new configuration. Misago comes with ``rebuildpostssearch`` tool for this purpose.
 
 
-MISAGO_SENDFILE_HEADER
-----------------------
-
-If your server provides proxy for serving files from application, like "X-Sendfile", set its header name in this setting.
-
-Leave this setting empty to use Django fallback.
-
-
-MISAGO_SENDFILE_LOCATIONS_PATH
-------------------------------
-
-Some Http servers (like Nginx) allow you to restrict X-Sendfile to certain locations.
-
-Misago supports this feature with this setting, however with limitation to one "root" path. This setting is used for paths defined in ATTACHMENTS_ROOT and AVATAR_CACHE settings.
-
-Rewrite algorithm used by Misago replaces path until last part with value of this setting.
-
-For example, defining ``MISAGO_SENDFILE_LOCATIONS_PATH = 'misago_served_internals'`` will result in following rewrite:
-
-``/home/mysite/www/attachments/13_05/142123.rar`` => ``/misago_served_internals/attachments/13_05/142123.rar``
-
-
 MISAGO_STOP_FORUM_SPAM_USE
 --------------------------
 

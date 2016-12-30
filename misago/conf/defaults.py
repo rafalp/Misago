@@ -323,23 +323,6 @@ MISAGO_USERS_PER_PAGE = 12
 MISAGO_READTRACKER_CUTOFF = 40
 
 
-# X-Sendfile
-# X-Sendfile is feature provided by Http servers that allows web apps to
-# delegate serving files over to the better performing server instead of
-# doing it within app.
-# If your server supports X-Sendfile or its variation, enter header name here.
-# For example if you are using Nginx with X-accel enabled, set this setting
-# to "X-Accel-Redirect".
-# Leave this setting empty to Django fallback instead
-MISAGO_SENDFILE_HEADER = ''
-
-# Allows you to use location feature of your Http server
-# For example, if you have internal location /mymisago/avatar_cache/
-# that points at /home/myweb/misagoforum/avatar_cache/, set this setting
-# to "mymisago".
-MISAGO_SENDFILE_LOCATIONS_PATH = ''
-
-
 # Default forms templates
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
