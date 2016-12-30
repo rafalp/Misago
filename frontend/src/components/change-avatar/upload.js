@@ -79,7 +79,7 @@ export default class extends React.Component {
       });
       snackbar.info(gettext("Your image has been uploaded and you may now crop it."));
     }, (rejection) => {
-      if (rejection.status === 400) {
+      if (rejection.status === 400 || rejection.status === 413) {
         snackbar.error(rejection.detail);
         this.setState({
           'isLoading': false,
