@@ -163,26 +163,6 @@ class MockUser(object):
     slug = "bob"
 
 
-class PaginationTests(TestCase):
-    def setUp(self):
-        self.page = paginate(range(500), 11, 20, 5)
-        self.context = Context({
-            'page': self.page,
-            'user': MockUser()
-        })
-
-    def _test_pagination(self):
-        """capture content to variable"""
-        tpl_content = """
-{% load misago_pagination %}
-
-{% pagination page "misago/user/pagination.html" 'misago:user_warnings' slug=user.slug pk=user.pk %}
-"""
-
-        tpl = Template(tpl_content)
-        tpl.render(self.context).strip()
-
-
 class ShorthandsTests(TestCase):
     def test_iftrue_for_true(self):
         """iftrue renders value for true"""
