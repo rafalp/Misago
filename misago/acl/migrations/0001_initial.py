@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.postgres.fields import JSONField
 from django.db import migrations, models
+
+from misago.acl.models import permissions_default
 
 
 class Migration(migrations.Migration):
@@ -16,7 +19,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=255)),
                 ('special_role', models.CharField(max_length=255, null=True, blank=True)),
-                ('pickled_permissions', models.TextField(null=True, blank=True)),
+                ('permissions', JSONField(default=permissions_default)),
             ],
             options={
                 'abstract': False,

@@ -4,12 +4,6 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 from django.utils.translation import ugettext as _
 
-from misago.core import serializer
-
-
-def pickle_permissions(role, permissions):
-    role.pickled_permissions = serializer.dumps(permissions)
-
 
 def create_default_categories_roles(apps, schema_editor):
     """
@@ -17,20 +11,20 @@ def create_default_categories_roles(apps, schema_editor):
     """
     CategoryRole = apps.get_model('misago_categories', 'CategoryRole')
 
-    see_only = CategoryRole(name=_('See only'))
-    pickle_permissions(see_only,
-        {
+    see_only = CategoryRole.objects.create(
+        name=_('See only'),
+        permissions={
             # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
                 'can_browse': 0
             },
-        })
-    see_only.save()
+        }
+    )
 
-    read_only = CategoryRole(name=_('Read only'))
-    pickle_permissions(read_only,
-        {
+    read_only = CategoryRole.objects.create(
+        name=_('Read only'),
+        permissions={
             # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
@@ -44,12 +38,12 @@ def create_default_categories_roles(apps, schema_editor):
                 'can_download_other_users_attachments': 1,
                 'can_like_posts': 1
             },
-        })
-    read_only.save()
+        }
+    )
 
-    reply_only = CategoryRole(name=_('Reply to threads'))
-    pickle_permissions(reply_only,
-        {
+    reply_only = CategoryRole.objects.create(
+        name=_('Reply to threads'),
+        permissions={
             # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
@@ -66,12 +60,12 @@ def create_default_categories_roles(apps, schema_editor):
                 'can_see_posts_likes': 2,
                 'can_like_posts': 1
             },
-        })
-    reply_only.save()
+        }
+    )
 
-    standard = CategoryRole(name=_('Start and reply threads'))
-    pickle_permissions(standard,
-        {
+    standard = CategoryRole.objects.create(
+        name=_('Start and reply threads'),
+        permissions={
             # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
@@ -90,12 +84,12 @@ def create_default_categories_roles(apps, schema_editor):
                 'can_see_posts_likes': 2,
                 'can_like_posts': 1
             },
-        })
-    standard.save()
+        }
+    )
 
-    standard_with_polls = CategoryRole(name=_('Start and reply threads, make polls'))
-    pickle_permissions(standard_with_polls,
-        {
+    standard_with_polls = CategoryRole.objects.create(
+        name=_('Start and reply threads, make polls'),
+        permissions={
             # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
@@ -114,12 +108,12 @@ def create_default_categories_roles(apps, schema_editor):
                 'can_see_posts_likes': 2,
                 'can_like_posts': 1
             },
-        })
-    standard_with_polls.save()
+        }
+    )
 
-    moderator = CategoryRole(name=_('Moderator'))
-    pickle_permissions(moderator,
-        {
+    moderator = CategoryRole.objects.create(
+        name=_('Moderator'),
+        permissions={
             # categories perms
             'misago.categories.permissions': {
                 'can_see': 1,
@@ -157,41 +151,33 @@ def create_default_categories_roles(apps, schema_editor):
                 'can_see_reports': 1,
                 'can_hide_events': 2
             },
-        })
-    moderator.save()
+        }
+    )
 
-    """
-    Assign category roles to roles
-    """
+    # assign category roles to roles
     Category = apps.get_model('misago_categories', 'Category')
     Role = apps.get_model('misago_acl', 'Role')
     RoleCategoryACL = apps.get_model('misago_categories', 'RoleCategoryACL')
 
-    moderators = Role.objects.get(name=_('Moderator'))
-    members = Role.objects.get(special_role='authenticated')
-    guests = Role.objects.get(special_role='anonymous')
-
     category = Category.objects.get(tree_id=1, level=1)
 
-    RoleCategoryACL.objects.bulk_create([
-        RoleCategoryACL(
-            role=moderators,
-            category=category,
-            category_role=moderator
-        ),
+    RoleCategoryACL.objects.create(
+        role=Role.objects.get(name=_('Moderator')),
+        category=category,
+        category_role=moderator
+    )
 
-        RoleCategoryACL(
-            role=members,
-            category=category,
-            category_role=standard
-        ),
+    RoleCategoryACL.objects.create(
+        role=Role.objects.get(special_role='authenticated'),
+        category=category,
+        category_role=standard
+    )
 
-        RoleCategoryACL(
-            role=guests,
-            category=category,
-            category_role=read_only
-        ),
-    ])
+    RoleCategoryACL.objects.create(
+        role=Role.objects.get(special_role='anonymous'),
+        category=category,
+        category_role=read_only
+    )
 
 
 class Migration(migrations.Migration):
