@@ -124,7 +124,7 @@ SFS_API_URL = 'http://api.stopforumspam.org/api?email=%(email)s&ip=%(ip)s&f=json
 
 
 def validate_with_sfs(ip, username, email):
-    if settings.MISAGO_STOP_FORUM_SPAM_USE:
+    if settings.MISAGO_USE_STOP_FORUM_SPAM:
         _real_validate_with_sfs(ip, email)
 
 

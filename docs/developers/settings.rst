@@ -291,7 +291,7 @@ In case of more events than specified being found, oldest events will be truncat
 
 
 MISAGO_HOURLY_POST_LIMIT
------------------------
+------------------------
 
 Hourly limit of posts that may be posted from single account. Fail-safe for situations when forum is flooded by spam bot. Change to 0 to lift this restriction.
 
@@ -382,12 +382,6 @@ Standard configs as of PostgreSQL 9.5 are: ``dutch``, ``english``, ``finnish``, 
    Items in Misago are usually indexed in search engine on save or update. If you change search configuration, you'll need to rebuild search for past posts to get reindexed using new configuration. Misago comes with ``rebuildpostssearch`` tool for this purpose.
 
 
-MISAGO_STOP_FORUM_SPAM_USE
---------------------------
-
-This settings allows you to decide wheter of not `Stop Forum Spam <http://www.stopforumspam.com/>`_ database should be used to validate IPs and emails during new users registrations.
-
-
 MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE
 -------------------------------------
 
@@ -395,19 +389,19 @@ Minimum confidence returned by `Stop Forum Spam <http://www.stopforumspam.com/>`
 
 
 MISAGO_THREADS_ON_INDEX
---------------------------
+-----------------------
 
 Change this setting to ``False`` to display categories list instead of threads list on board index.
 
 
 MISAGO_THREADS_PER_PAGE
----------------------
+-----------------------
 
 Controls number of threads displayed on page. Greater numbers can increase number of objects loaded into memory and thus depending on features enabled greatly increase memory usage.
 
 
 MISAGO_THREADS_TAIL
-------------------
+-------------------
 
 Defines minimal number of threads for lists last page. If number of threads on last page is smaller or equal to one specified in this setting, last page will be appended to previous page instead.
 
@@ -416,6 +410,12 @@ MISAGO_THREAD_TYPES
 -------------------
 
 List of clasess defining thread types.
+
+
+MISAGO_USE_STOP_FORUM_SPAM
+--------------------------
+
+This settings allows you to decide wheter of not `Stop Forum Spam <http://www.stopforumspam.com/>`_ database should be used to validate IPs and emails during new users registrations.
 
 
 MISAGO_USERS_PER_PAGE
