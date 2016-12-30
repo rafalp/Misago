@@ -66,6 +66,9 @@ INSTALLED_APPS = (
     'misago.readtracker',
     'misago.search',
     'misago.faker',
+
+    # Utility for moving data from Misago 0.5
+    'misago.datamover',
 )
 
 MIDDLEWARE_CLASSES = (

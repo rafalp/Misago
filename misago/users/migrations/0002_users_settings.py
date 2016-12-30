@@ -25,8 +25,8 @@ def create_users_settings_group(apps, schema_editor):
                 'field_extra': {
                     'choices': (
                         ('none', _("No activation required")),
-                        ('user', _("Activation Token sent to User")),
-                        ('admin', _("Activation by Administrator")),
+                        ('user', _("Activation token sent to User")),
+                        ('admin', _("Activation by administrator")),
                         ('closed', _("Don't allow new registrations"))
                     )
                 },
