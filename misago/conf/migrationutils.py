@@ -1,4 +1,3 @@
-from misago.core import serializer
 from misago.core.cache import cache as default_cache
 
 from .dbsettings import CACHE_KEY
@@ -54,8 +53,7 @@ def migrate_setting(Setting, group, setting_fixture, order, old_value):
         setting.default_value = dehydrate_value(
             setting.python_type, setting_fixture.get("default_value"))
 
-    if field_extra:
-        setting.pickled_field_extra = serializer.dumps(field_extra)
+    setting.field_extra = field_extra or {}
 
     setting.save()
 

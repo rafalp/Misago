@@ -1,8 +1,5 @@
+from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.dispatch import receiver
-
-from misago.core import serializer
-from misago.core.signals import secret_key_changed
 
 from . import hydrators
 
@@ -56,24 +53,24 @@ class Setting(models.Model):
     is_public = models.BooleanField(default=False)
     is_lazy = models.BooleanField(default=False)
     form_field = models.CharField(max_length=255, default='text')
-    pickled_field_extra = models.TextField(null=True, blank=True)
+    field_extra = JSONField()
 
     objects = SettingsManager()
 
     @property
     def value(self):
         if not self.dry_value and self.default_value:
-            return hydrators.hydrate_value(self.python_type,
-                                           self.default_value)
+            return hydrators.hydrate_value(
+                self.python_type, self.default_value)
         else:
-            return hydrators.hydrate_value(self.python_type,
-                                           self.dry_value)
+            return hydrators.hydrate_value(
+                self.python_type, self.dry_value)
 
     @value.setter
     def value(self, new_value):
         if new_value is not None:
-            self.dry_value = hydrators.dehydrate_value(self.python_type,
-                                                       new_value)
+            self.dry_value = hydrators.dehydrate_value(
+                self.python_type, new_value)
         else:
             self.dry_value = None
         return self.value
@@ -81,27 +78,3 @@ class Setting(models.Model):
     @property
     def has_custom_value(self):
         return self.dry_value and self.dry_value != self.default_value
-
-    @property
-    def field_extra(self):
-        if self.pickled_field_extra:
-            return serializer.loads(self.pickled_field_extra)
-        else:
-            return {}
-
-    @field_extra.setter
-    def field_extra(self, new_extra):
-        if new_extra:
-            self.pickled_field_extra = serializer.dumps(new_extra)
-
-
-"""
-Signal handlers
-"""
-@receiver(secret_key_changed)
-def update_settings_pickles(sender, **kwargs):
-    for setting in Setting.objects.iterator():
-        if setting.pickled_field_extra:
-            setting.pickled_field_extra = serializer.regenerate_checksum(
-                setting.pickled_field_extra)
-            setting.save(update_fields=['pickled_field_extra'])

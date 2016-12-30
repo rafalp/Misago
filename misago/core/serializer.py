@@ -26,6 +26,8 @@ def loads(dry):
 
 
 def dumps(wet):
+    from misago.core.deprecations import warn
+    warn('misago.core.serializer is being replaced with json')
     base = base64.encodestring(pickle.dumps(wet, pickle.HIGHEST_PROTOCOL)).decode()
     checksum = _checksum(base)
     return '%s%s' % (checksum, base)

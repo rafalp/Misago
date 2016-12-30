@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.postgres.fields import JSONField
 from django.db import migrations, models
 
 
@@ -25,7 +26,7 @@ class Migration(migrations.Migration):
                 ('is_public', models.BooleanField(default=False)),
                 ('is_lazy', models.BooleanField(default=False)),
                 ('form_field', models.CharField(default='text', max_length=255)),
-                ('pickled_field_extra', models.TextField(null=True, blank=True)),
+                ('field_extra', JSONField()),
             ],
             options={
             },

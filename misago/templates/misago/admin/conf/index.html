@@ -25,7 +25,7 @@
         {% for group in settings_groups %}
         <li {% if group.key == active_group.key %}class="active"{% endif %}>
           <a href="{% url 'misago:admin:system:settings:group' key=group.key %}">
-            {{ group.name }}
+            {% trans group.name %}
           </a>
         </li>
         {% endfor %}
@@ -40,9 +40,9 @@
 
           {% for group in settings_groups %}
           <a href="{% url 'misago:admin:system:settings:group' key=group.key %}" class="list-group-item">
-            <h4 class="list-group-item-heading">{{ group.name }}</h4>
+            <h4 class="list-group-item-heading">{% trans group.name %}</h4>
             {% if group.description %}
-            <p class="list-group-item-text">{{ group.description }}</p>
+            <p class="list-group-item-text">{% trans group.description %}</p>
             {% endif %}
           </a>
           {% endfor %}
