@@ -14,7 +14,7 @@ Misago
    :target: https://gitter.im/Misago/Misago?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
    :alt: Development Chat
 
-.. image:: https://img.shields.io/badge/python-2.7%2C%203.5%2C%203.6-blue.svg
+.. image:: https://img.shields.io/badge/python-2.7%2C%203.4%2C%203.5%2C%203.6-blue.svg
    :target: https://travis-ci.org/rafalp/Misago
    :alt: Works on Python 2.7, 3.5, 3,6
 
