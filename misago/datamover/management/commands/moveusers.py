@@ -1,5 +1,5 @@
 from ... import avatars, bans, users
-from ..base import BaseCommand, CommandError
+from ..base import BaseCommand
 
 
 class Command(BaseCommand):

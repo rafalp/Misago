@@ -1,5 +1,5 @@
 from ...settings import move_settings
-from ..base import BaseCommand, CommandError
+from ..base import BaseCommand
 
 
 class Command(BaseCommand):
