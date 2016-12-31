@@ -81,6 +81,14 @@ Wrapping up migration
 Not everything is moved over. Thread labels will be turned into subcategories of their categories. With exception of pre-made superuser accounts, all users will be assigned to "Members" rank and will have only default roles of forum members. Likewise no permissions will be moved over to users, categories or ranks, and you will have to reset those manually.
 
 
+Recounting data
+---------------
+
+After moving users data over to new site, you'll need to rebuild their stats, trackers and bans. To do this use ``invalidatebans``, ``populateonlinetracker`` and ``synchronizeusers`` commands that you can run via ``manage.py``.
+
+Likewise you'll need to rebuild threads and categories via ``synchronizethreads`` and then ``synchronizecategories``.
+
+
 Changed links
 -------------
 
