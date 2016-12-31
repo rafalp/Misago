@@ -3,7 +3,7 @@ from ..base import BaseCommand
 
 
 class Command(BaseCommand):
-    help = "Moves settings from Misago 0.5 installation"
+    help = "Moves settings from Misago 0.5"
 
     def handle(self, *args, **options):
         self.stdout.write("Moving settings from Misago 0.5:")

@@ -5,7 +5,7 @@ from ..base import BaseCommand
 class Command(BaseCommand):
     help = (
         "Moves users, avatars, followers, blocks "
-        "and bans from Misago 0.5 installation"
+        "and bans from Misago 0.5"
     )
 
     def handle(self, *args, **options):

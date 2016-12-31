@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from misago.conf import db_settings
 from misago.conf.models import Setting
 

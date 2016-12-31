@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from misago.users.models import Ban
 
 from . import fetch_assoc, localise_datetime

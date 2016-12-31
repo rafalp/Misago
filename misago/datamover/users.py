@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.crypto import get_random_string
