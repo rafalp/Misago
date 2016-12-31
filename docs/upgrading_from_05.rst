@@ -78,7 +78,7 @@ Todo
 Wrapping up migration
 =====================
 
-Not everything is moved over. Thread labels will be turned into subcategories of their categories. With exception of pre-made superuser accounts, all users will be assigned to "Members" rank and will have only default roles of forum members. Likewise no permissions will be moved over to users, categories or ranks, and you will have to reset those manually. Reports and events will also be omitted by migration.
+Not everything is moved over. Thread labels will be turned into subcategories of their categories. With exception of pre-made superuser accounts, all users will be assigned to "Members" rank and will have only default roles of forum members. Likewise no permissions will be moved over to users, categories or ranks, and you will have to reset those manually. Reports, events, subscriptions and read tracker will also be omitted by migration.
 
 
 Recounting data
