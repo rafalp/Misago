@@ -6,15 +6,13 @@ from django.core.exceptions import ValidationError
 from misago.conf import settings
 from misago.users.avatars import store, gravatar, dynamic, gallery, uploaded
 
-from . import OLD_FORUM, defstdout, fetch_assoc, movedids
+from . import OLD_FORUM, fetch_assoc, movedids
 
 
 UserModel = get_user_model()
 
 
-def move_avatars(stdout=None, style=None):
-    stdout = stdout or defstdout
-
+def move_avatars(stdout, style):
     for old_user in fetch_assoc('SELECT * FROM misago_user ORDER BY id'):
         user = UserModel.objects.get(pk=movedids.get('user', old_user['id']))
 
@@ -50,10 +48,7 @@ def move_avatars(stdout=None, style=None):
 
 
 def print_warning(warning, stdout, style):
-    if style:
-        stdout.write(style.ERROR(warning))
-    else:
-        stdout.write(warning)
+    stdout.write(style.ERROR(warning))
 
 
 def convert_crop(image, user):

@@ -5,7 +5,7 @@ from django.utils.crypto import get_random_string
 from misago.users.models import UsernameChange
 from misago.users.signatures import make_signature_checksum
 
-from . import defstdout, fetch_assoc, movedids, localise_datetime
+from . import fetch_assoc, movedids, localise_datetime
 
 
 UserModel = get_user_model()
@@ -19,13 +19,7 @@ PRIVATE_THREAD_INVITES = {
 }
 
 
-def move_users(stdout=None, style=None):
-    stdout = stdout or defstdout
-
-    from .models import MovedId
-    MovedId.objects.all().delete()
-    [u.delete() for u in UserModel.objects.filter(pk__gt=1).iterator()]
-
+def move_users(stdout, style):
     existing_users = get_existing_users()
 
     for user in fetch_assoc('SELECT * FROM misago_user ORDER BY id'):
@@ -41,13 +35,9 @@ def move_users(stdout=None, style=None):
                 new_user = UserModel.objects.create_user(
                     new_name, user['email'], 'Pass.123')
 
-                if style:
-                    formats = (user['username'], new_name)
-                    stdout.write(style.ERROR(
-                        '"%s" has been registered as "%s"' % formats))
-                else:
-                    stdout.write(
-                        '"%s" has been registered as "%s"' % formats)
+                formats = (user['username'], new_name)
+                stdout.write(style.ERROR(
+                    '"%s" has been registered as "%s"' % formats))
 
             new_user.password = user['password']
 
@@ -96,7 +86,7 @@ def get_existing_users():
     return existing_users
 
 
-def move_followers(stdout=None):
+def move_followers():
     for follow in fetch_assoc('SELECT * FROM misago_user_follows ORDER BY id'):
         from_user_id = movedids.get('user', follow['from_user_id'])
         to_user_id = movedids.get('user', follow['to_user_id'])
@@ -107,7 +97,7 @@ def move_followers(stdout=None):
         from_user.follows.add(to_user)
 
 
-def move_blocks(stdout=None):
+def move_blocks():
     for follow in fetch_assoc('SELECT * FROM misago_user_ignores ORDER BY id'):
         from_user_id = movedids.get('user', follow['from_user_id'])
         to_user_id = movedids.get('user', follow['to_user_id'])
@@ -118,7 +108,7 @@ def move_blocks(stdout=None):
         from_user.blocks.add(to_user)
 
 
-def move_namehistory(stdout):
+def move_namehistory():
     for user in fetch_assoc(
             'SELECT DISTINCT user_id FROM misago_usernamechange ORDER BY user_id'):
         new_id = movedids.get('user', user['user_id'])

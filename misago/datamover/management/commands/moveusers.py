@@ -22,21 +22,21 @@ class Command(BaseCommand):
             self.style.SUCCESS("Moved avatars in %s" % self.stop_timer()))
 
         self.start_timer()
-        users.move_followers(self.stdout)
+        users.move_followers()
         self.stdout.write(
             self.style.SUCCESS("Moved followers in %s" % self.stop_timer()))
 
         self.start_timer()
-        users.move_blocks(self.stdout)
+        users.move_blocks()
         self.stdout.write(
             self.style.SUCCESS("Moved blocks in %s" % self.stop_timer()))
 
         self.start_timer()
-        users.move_namehistory(self.stdout)
+        users.move_namehistory()
         self.stdout.write(
             self.style.SUCCESS("Moved name history in %s" % self.stop_timer()))
 
         self.start_timer()
-        bans.move_bans(self.stdout)
+        bans.move_bans()
         self.stdout.write(
             self.style.SUCCESS("Moved bans in %s" % self.stop_timer()))
