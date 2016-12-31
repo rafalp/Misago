@@ -3,11 +3,13 @@ from PIL import Image
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.test import TestCase
+from django.test import TestCase, override_settings
+from django.utils.crypto import get_random_string
 
 from misago.conf import settings
 
-from ..avatars import dynamic, gallery, gravatar, store, uploaded
+from ..avatars import (
+    set_default_avatar, dynamic, gallery, gravatar, store, uploaded)
 from ..models import Avatar, AvatarGallery
 
 
@@ -146,6 +148,35 @@ class AvatarSetterTests(TestCase):
         """dynamic avatar gets created"""
         self.assertNoAvatarIsSet()
         gravatar.set_avatar(self.user)
+        self.assertAvatarWasSet()
+
+    def test_default_avatar_gravatar(self):
+        """default gravatar gets set"""
+        self.assertNoAvatarIsSet()
+        set_default_avatar(self.user, 'gravatar', 'dynamic')
+        self.assertAvatarWasSet()
+
+    def test_default_avatar_gravatar_fallback_dynamic(self):
+        """default gravatar fails but fallback dynamic works"""
+        gibberish_email = '%s@%s.%s' % (
+            get_random_string(6), get_random_string(6), get_random_string(3))
+        self.user.set_email(gibberish_email)
+        self.user.save()
+
+        self.assertNoAvatarIsSet()
+        set_default_avatar(self.user, 'gravatar', 'dynamic')
+        self.assertAvatarWasSet()
+
+    def test_default_avatar_gravatar_fallback_empty_gallery(self):
+        """default both gravatar and fallback fail set"""
+        gibberish_email = '%s@%s.%s' % (
+            get_random_string(6), get_random_string(6), get_random_string(3))
+        self.user.set_email(gibberish_email)
+        self.user.save()
+
+        self.assertNoAvatarIsSet()
+        self.user.save()
+        set_default_avatar(self.user, 'gravatar', 'gallery')
         self.assertAvatarWasSet()
 
 

@@ -128,7 +128,8 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
 
         if set_default_avatar:
-            avatars.set_default_avatar(user)
+            avatars.set_default_avatar(
+                user, settings.default_avatar, settings.default_gravatar_fallback)
         else:
             # just for test purposes
             user.avatars = [{'size': 400, 'url': '//placekitten.com/400/400'}]

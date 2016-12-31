@@ -138,11 +138,11 @@ def avatar_gravatar(user, data):
     try:
         avatars.gravatar.set_avatar(user)
         return _("Gravatar was downloaded and set as new avatar.")
-    except avatars.gravatar.GravatarError:
-        raise AvatarError(_("Failed to connect to Gravatar servers."))
     except avatars.gravatar.NoGravatarAvailable:
         raise AvatarError(
             _("No Gravatar is associated with your e-mail address."))
+    except avatars.gravatar.GravatarError:
+        raise AvatarError(_("Failed to connect to Gravatar servers."))
 
 
 def avatar_gallery(user, data):
