@@ -282,7 +282,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     posts = models.PositiveIntegerField(default=0, db_index=True)
 
     last_posted_on = models.DateTimeField(null=True, blank=True)
-    last_searched_on = models.DateTimeField(null=True, blank=True)
 
     USERNAME_FIELD = 'slug'
     REQUIRED_FIELDS = ['email']

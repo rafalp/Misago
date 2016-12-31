@@ -152,7 +152,7 @@ class UserSerializer(BaseSerializer):
 
     def get_signature(self, obj):
         if obj.has_valid_signature:
-            return obj.signature.signature_parsed
+            return obj.signature_parsed
         else:
             return None
 

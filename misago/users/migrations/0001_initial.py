@@ -71,7 +71,6 @@ class Migration(migrations.Migration):
                 ('threads', models.PositiveIntegerField(default=0)),
                 ('posts', models.PositiveIntegerField(default=0, db_index=True)),
                 ('last_posted_on', models.DateTimeField(null=True, blank=True)),
-                ('last_searched_on', models.DateTimeField(null=True, blank=True)),
             ],
             options={
                 'abstract': False,
@@ -180,7 +179,7 @@ class Migration(migrations.Migration):
                 ('image', models.ImageField(max_length=255, upload_to=misago.users.avatars.store.upload_to)),
             ],
             options={
-                'ordering': ['gallery', 'name'],
+                'ordering': ['gallery', 'pk'],
             },
         ),
         migrations.CreateModel(

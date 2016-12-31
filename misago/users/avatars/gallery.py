@@ -42,7 +42,8 @@ def get_available_galleries(include_default=False):
 
 
 def galleries_exist():
-    return bool(get_available_galleries())
+    from ..models import AvatarGallery
+    return AvatarGallery.objects.exists()
 
 
 def load_avatar_galleries():

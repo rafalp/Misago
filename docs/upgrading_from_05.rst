@@ -42,10 +42,46 @@ You'll actually won't need all of your old forum's files for move, only attachme
     }
 
 
+Creating superuser
+------------------
+
+Its good idea to create superuser accounts for all site administrators. Don't worry about their e-mails being same as ones on old forum. If this happens Misago will simply reuse those accounts, instead of creating new ones. 
+
+
 Moving forum configuration
---------------------------
+==========================
 
 To move configuration over to new forum, run ``python manage.py movesettings`` command.
 
 .. note::
-   Some settings have been moved from admin to configuration file, or removed. Those will not be migrated. Please consult :doc:`configuration reference </developers/settings>`.
+   Some settings have been moved from admin to configuration file or removed. Those will not be migrated. Please consult :doc:`configuration reference </developers/settings>` for available settings that you will need to add yourself.
+
+
+Moving users
+============
+
+To move users over to new forum, run ``python manage.py moveusers`` command.
+
+Moved users will be assigned default rank and permissions as those aren't moved by the datamover. If user with such e-mail address already exists in database (because you've used this e-mail ealier to create superuser account), his or her permissions and rank will be left as they are in new database.
+
+If user avatar could not be moved (for .eg because uploaded picture is smaller than allowed by ``MISAGO_AVATARS_SIZES``), default avatar will be set for this user.
+
+In case of username collision, Misago will append digits to new user's username and print a warning in console to let you know about this.
+
+
+Moving threads
+==============
+
+Todo
+
+
+Wrapping up migration
+=====================
+
+Not everything is moved over. Thread labels will be turned into subcategories of their categories. With exception of pre-made superuser accounts, all users will be assigned to "Members" rank and will have only default roles of forum members. Likewise no permissions will be moved over to users, categories or ranks, and you will have to reset those manually.
+
+
+Changed links
+-------------
+
+Todo

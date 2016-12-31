@@ -2,7 +2,6 @@ from misago.conf import db_settings
 from misago.conf.models import Setting
 
 from . import defstdout, fetch_assoc
-import pprint
 
 
 def copy_value(setting):
@@ -55,8 +54,16 @@ SETTING_CONVERTER = {
     'avatars_types': convert_allow_custom_avatars,
     'default_avatar': copy_value('default_avatar'),
     'upload_limit': copy_value('avatar_upload_limit'),
-    'subscribe_start': copy_value('subscribe_start'),
-    'subscribe_reply': copy_value('subscribe_reply'),
+    'subscribe_start': map_value('subscribe_start', {
+        '0': 'no',
+        '1': 'watch',
+        '2': 'watch_email',
+    }),
+    'subscribe_reply': map_value('subscribe_reply', {
+        '0': 'no',
+        '1': 'watch',
+        '2': 'watch_email',
+    }),
     'bots_registration': map_value('captcha_type', {
         'no': 'no',
         'recaptcha': 're',
@@ -70,7 +77,7 @@ SETTING_CONVERTER = {
 }
 
 
-def move_settings(stdout):
+def move_settings(stdout=None):
     stdout = stdout or defstdout
 
     for row in fetch_assoc('SELECT * FROM misago_setting'):
