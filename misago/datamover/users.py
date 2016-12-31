@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.crypto import get_random_string
 
+from misago.users.models import UsernameChange
 from misago.users.signatures import make_signature_checksum
 
 from . import defstdout, fetch_assoc, movedids, localise_datetime
@@ -118,5 +119,27 @@ def move_blocks(stdout=None):
 
 
 def move_namehistory(stdout):
-    pass
+    for user in fetch_assoc(
+            'SELECT DISTINCT user_id FROM misago_usernamechange ORDER BY user_id'):
+        new_id = movedids.get('user', user['user_id'])
+        new_user = UserModel.objects.get(pk=new_id)
+        move_users_namehistory(new_user, user['user_id'])
 
+
+def move_users_namehistory(user, old_id):
+    username_history = []
+    for namechange in fetch_assoc(
+            'SELECT * FROM misago_usernamechange WHERE user_id = %s  ORDER BY id', [old_id]):
+        if username_history:
+            username_history[-1].new_username = namechange['old_username']
+
+        username_history.append(UsernameChange(
+            user=user,
+            changed_by=user,
+            changed_by_username=user.username,
+            changed_on=localise_datetime(namechange['date']),
+            new_username=user.username,
+            old_username=namechange['old_username']
+        ))
+
+    UsernameChange.objects.bulk_create(username_history)
