@@ -9,7 +9,7 @@ class Command(BaseCommand):
         self.stdout.write("Moving users from Misago 0.5:")
 
         self.start_timer()
-        # categories.move_categories(self.stdout, self.style)
+        categories.move_categories(self.stdout, self.style)
         self.stdout.write(
             self.style.SUCCESS("Moved categories in %s" % self.stop_timer()))
 
