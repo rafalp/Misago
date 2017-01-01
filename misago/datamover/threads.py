@@ -5,7 +5,7 @@ from django.utils import timezone
 
 from misago.categories.models import Category
 from misago.threads.checksums import update_post_checksum
-from misago.threads.models import Thread, Post
+from misago.threads.models import Thread, Post, PostEdit, PostLike
 
 from . import fetch_assoc, markup, movedids, localise_datetime
 
@@ -117,6 +117,113 @@ def move_posts():
         new_post.save()
 
         movedids.set('post', post['id'], new_post.pk)
+
+
+def move_mentions():
+    for metion in fetch_assoc('SELECT * FROM misago_post_mentions'):
+        try:
+            post_pk = movedids.get('post', metion['post_id'])
+            user_pk = movedids.get('user', metion['user_id'])
+
+            post = Post.objects.get(pk=post_pk)
+            user = UserModel.objects.get(pk=user_pk)
+
+            post.mentions.add(user)
+        except:
+            continue
+
+
+def move_edits():
+    query = 'SELECT DISTINCT post_id FROM misago_change ORDER BY post_id'
+    for edit in fetch_assoc(query):
+        post_pk = movedids.get('post', edit['post_id'])
+        post = Post.objects.select_related().get(pk=post_pk)
+
+        move_post_edits(post, edit['post_id'])
+
+
+def move_post_edits(post, old_id):
+    query = '''
+        SELECT *
+        FROM
+            misago_change
+        WHERE
+            post_id = %s AND `change` <> 0
+        ORDER BY
+            id
+    '''
+
+    changelog = []
+    for edit in fetch_assoc(query, [old_id]):
+        if edit['user_id']:
+            editor_pk = movedids.get('user', edit['user_id'])
+            editor = UserModel.objects.get(pk=editor_pk)
+        else:
+            editor = None
+
+        if changelog:
+            changelog[-1].edited_to = edit['post_content']
+
+        changelog.append(PostEdit(
+            category=post.category,
+            thread=post.thread,
+            post=post,
+            edited_on=localise_datetime(edit['date']),
+            editor=editor,
+            editor_name=edit['user_name'],
+            editor_slug=edit['user_slug'],
+            editor_ip=edit['ip'],
+            edited_from=edit['post_content'],
+            edited_to=post.original,
+        ))
+
+    if changelog:
+        PostEdit.objects.bulk_create(changelog)
+
+
+def move_likes():
+    query = '''
+        SELECT *
+        FROM
+            misago_karma
+        WHERE
+            score > 0
+        ORDER BY
+            id
+    '''
+
+    posts = []
+    for karma in fetch_assoc(query):
+        post_pk = movedids.get('post', karma['post_id'])
+        post = Post.objects.select_related().get(pk=post_pk)
+
+        if karma['user_id']:
+            liker_pk = movedids.get('user', karma['user_id'])
+            liker = UserModel.objects.get(pk=liker_pk)
+        else:
+            liker = None
+
+        PostLike.objects.create(
+            category=post.category,
+            thread=post.thread,
+            post=post,
+            liker=liker,
+            liker_name=karma['user_name'],
+            liker_slug=karma['user_slug'],
+            liker_ip=karma['ip'],
+            liked_on=localise_datetime(karma['date']),
+        )
+
+        posts.append(post_pk)
+
+    for post in Post.objects.filter(id__in=posts).iterator():
+        post.last_likes = []
+        for like in post.postlike_set.all()[:4]:
+            post.last_likes.append({
+                'id': like.liker_id,
+                'username': like.liker_name
+            })
+        post.save(update_fields=['last_likes'])
 
 
 def get_special_categories_dict():

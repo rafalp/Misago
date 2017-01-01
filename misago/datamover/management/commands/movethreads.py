@@ -17,3 +17,18 @@ class Command(BaseCommand):
         threads.move_posts()
         self.stdout.write(
             self.style.SUCCESS("Moved posts in %s" % self.stop_timer()))
+
+        self.start_timer()
+        threads.move_mentions()
+        self.stdout.write(
+            self.style.SUCCESS("Moved mentions in %s" % self.stop_timer()))
+
+        self.start_timer()
+        threads.move_edits()
+        self.stdout.write(
+            self.style.SUCCESS("Moved edits histories in %s" % self.stop_timer()))
+
+        self.start_timer()
+        threads.move_likes()
+        self.stdout.write(
+            self.style.SUCCESS("Moved likes in %s" % self.stop_timer()))

@@ -111,8 +111,8 @@ def move_blocks():
 
 
 def move_namehistory():
-    for user in fetch_assoc(
-            'SELECT DISTINCT user_id FROM misago_usernamechange ORDER BY user_id'):
+    query = 'SELECT DISTINCT user_id FROM misago_usernamechange ORDER BY user_id'
+    for user in fetch_assoc(query):
         new_id = movedids.get('user', user['user_id'])
         new_user = UserModel.objects.get(pk=new_id)
         move_users_namehistory(new_user, user['user_id'])
@@ -120,8 +120,8 @@ def move_namehistory():
 
 def move_users_namehistory(user, old_id):
     username_history = []
-    for namechange in fetch_assoc(
-            'SELECT * FROM misago_usernamechange WHERE user_id = %s  ORDER BY id', [old_id]):
+    query = 'SELECT * FROM misago_usernamechange WHERE user_id = %s ORDER BY id'
+    for namechange in fetch_assoc(query, [old_id]):
         if username_history:
             username_history[-1].new_username = namechange['old_username']
 
