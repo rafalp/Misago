@@ -52,6 +52,7 @@ def batch_update(queryset, step=50):
     """
     Util because psycopg2 iterators aren't really memory effective
     """
+    queryset = queryset.order_by('pk')
     paginator = Paginator(queryset, step)
     for page_number in paginator.page_range:
         for obj in paginator.page(page_number).object_list:
@@ -63,6 +64,7 @@ def batch_delete(queryset, step=50):
     Another util cos paginator goes bobbins when you are deleting
     """
     queryset_exists = True
+    queryset = queryset.order_by('pk')
     while queryset_exists:
         for obj in queryset[:step]:
             yield obj
