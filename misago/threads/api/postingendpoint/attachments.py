@@ -113,7 +113,6 @@ class AttachmentsSerializer(serializers.Serializer):
         post.update_fields.append('attachments_cache')
 
 
-
 def validate_attachments_count(data):
     total_attachments = len(data)
     if total_attachments > settings.MISAGO_POST_ATTACHMENTS_LIMIT:

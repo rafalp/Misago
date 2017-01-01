@@ -130,7 +130,11 @@ class Thread(models.Model):
         except ObjectDoesNotExist:
             self.has_poll = False
 
-        self.replies = self.post_set.filter(is_event=False, is_unapproved=False).count()
+        self.replies = self.post_set.filter(
+            is_event=False,
+            is_unapproved=False
+        ).count()
+
         if self.replies > 0:
             self.replies -= 1
 

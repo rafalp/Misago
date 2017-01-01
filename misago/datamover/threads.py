@@ -55,6 +55,7 @@ def move_threads(stdout, style):
 
 def move_posts():
     special_categories = get_special_categories_dict()
+
     for post in fetch_assoc('SELECT * FROM misago_post ORDER BY id'):
         if special_categories.get(post['forum_id']) == 'reports':
             continue
@@ -68,7 +69,6 @@ def move_posts():
         if post['user_id']:
             poster_id = movedids.get('user', post['user_id'])
             poster = UserModel.objects.get(pk=poster_id)
-
 
         if post['edit_user_id']:
             last_editor_id = movedids.get('user', post['edit_user_id'])

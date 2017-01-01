@@ -1,4 +1,4 @@
-from ... import threads
+from ... import attachments, threads
 from ..base import BaseCommand
 
 
@@ -32,3 +32,8 @@ class Command(BaseCommand):
         threads.move_likes()
         self.stdout.write(
             self.style.SUCCESS("Moved likes in %s" % self.stop_timer()))
+
+        self.start_timer()
+        attachments.move_attachments(self.stdout, self.style)
+        self.stdout.write(
+            self.style.SUCCESS("Moved attachments in %s" % self.stop_timer()))
