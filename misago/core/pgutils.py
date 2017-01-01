@@ -64,7 +64,6 @@ def batch_delete(queryset, step=50):
     Another util cos paginator goes bobbins when you are deleting
     """
     queryset_exists = True
-    queryset = queryset.order_by('pk')
     while queryset_exists:
         for obj in queryset[:step]:
             yield obj
