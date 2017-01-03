@@ -1,4 +1,4 @@
-from ... import attachments, threads
+from ... import attachments, polls, threads
 from ..base import BaseCommand
 
 
@@ -37,3 +37,18 @@ class Command(BaseCommand):
         attachments.move_attachments(self.stdout, self.style)
         self.stdout.write(
             self.style.SUCCESS("Moved attachments in %s" % self.stop_timer()))
+
+        self.start_timer()
+        polls.move_polls()
+        self.stdout.write(
+            self.style.SUCCESS("Moved polls in %s" % self.stop_timer()))
+
+        self.start_timer()
+        threads.move_participants()
+        self.stdout.write(
+            self.style.SUCCESS("Moved threads participants in %s" % self.stop_timer()))
+
+        self.start_timer()
+        threads.clean_private_threads(self.stdout, self.style)
+        self.stdout.write(
+            self.style.SUCCESS("Cleaned private threads in %s" % self.stop_timer()))

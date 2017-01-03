@@ -5,7 +5,8 @@ from django.utils import timezone
 
 from misago.categories.models import Category
 from misago.threads.checksums import update_post_checksum
-from misago.threads.models import Thread, Post, PostEdit, PostLike
+from misago.threads.models import (
+    Thread, ThreadParticipant, Post, PostEdit, PostLike)
 
 from . import fetch_assoc, markup, movedids, localise_datetime
 
@@ -224,6 +225,44 @@ def move_likes():
                 'username': like.liker_name
             })
         post.save(update_fields=['last_likes'])
+
+
+def move_participants():
+    for participant in fetch_assoc('SELECT * FROM misago_thread_participants'):
+        thread_pk = movedids.get('thread', participant['thread_id'])
+        thread = Thread.objects.get(pk=thread_pk)
+
+        user_pk = movedids.get('user', participant['user_id'])
+        user = UserModel.objects.get(pk=user_pk)
+
+        starter = thread.post_set.order_by('id').first().poster
+
+        ThreadParticipant.objects.create(
+            thread=thread,
+            user=user,
+            is_owner=(user == starter)
+        )
+
+
+def clean_private_threads(stdout, style):
+    category = Category.objects.private_threads()
+
+    # prune threads without participants
+    participated_threads = ThreadParticipant.objects.values_list(
+        'thread_id', flat=True).distinct()
+    for thread in category.thread_set.exclude(pk__in=participated_threads):
+        thread.delete()
+
+    # close threads with single participant, delete empty ones
+    for thread in category.thread_set.iterator():
+        participants_count = thread.participants.count()
+        if participants_count == 1:
+            thread.is_closed = True
+            thread.save()
+        elif participants_count == 0:
+            thread.delete()
+            stdout.write(style.ERROR(
+                "Delete empty private thread: %s" % thread.title))
 
 
 def get_special_categories_dict():

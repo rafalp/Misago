@@ -18,7 +18,8 @@ from ..permissions.polls import (
     allow_start_poll,
     can_start_poll
 )
-from ..serializers import EditPollSerializer, NewPollSerializer, PollSerializer, PollVoteSerializer
+from ..serializers import (
+    EditPollSerializer, NewPollSerializer, PollSerializer, PollVoteSerializer)
 from ..viewmodels import ForumThread
 from .pollvotecreateendpoint import poll_vote_create
 
