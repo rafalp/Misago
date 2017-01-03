@@ -72,7 +72,12 @@ In case of username collision, Misago will append digits to new user's username 
 Moving threads
 ==============
 
-Todo
+To move threads and categories over, run following commands::
+
+    python manage.py movecategories
+    python manage.py movethreads
+
+This will move first the categories and then threads, posts, polls, attachments and finally private threads. This step will also take care of updating your posts markup.
 
 
 Wrapping up migration
@@ -92,4 +97,20 @@ Likewise you'll need to rebuild threads and categories via ``synchronizethreads`
 Changed links
 -------------
 
-Todo
+Links in Misago have changed with 0.6 release, but Misago will not update posted url's for you. Instead it comes with small utility that will catch old urls and return 301 (permament) redirect to new url, keeping old urls alive.
+
+To enable this feature you'll need to insert new url in your forum's ``urls.py``, so it looks like this::
+
+    urlpatterns = [
+        # insert below line above url with namespace='misago'
+        url(r'^', include('misago.datamover.urls')),
+        url(r'^', include('misago.urls', namespace='misago')),
+
+This will make Misago redirect users from old urls to new ones, altrough it'll wont preserve the meaning:
+
+- All links to forum will redirect to category's start page
+- All links to different profile pages of user profile will redirect to user's profile start page
+- All links to thread will lead to thread's first page
+- All links to post will lead to redirect to post in thread view
+
+This script also comes with one limitation: Because it comes before Misago's urls, it will catch all requests to ranks whose names end with number and try to map them to old user profiles. This means that naming the rank "Squadron 42" will produce url ``/users/squadron-42/`` that will be interpreted as link to old user. To avoid this make sure your ranks names end with non-alphametical characters, eg. "Squadron 42th" will produce ``/users/squardon-42th/`` as link that will successfully resolve to rank.

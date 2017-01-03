@@ -22,4 +22,17 @@ class Migration(migrations.Migration):
                 ('new_id', models.CharField(max_length=255)),
             ],
         ),
+        migrations.CreateModel(
+            name='OldIdRedirect',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('model', models.PositiveIntegerField()),
+                ('old_id', models.PositiveIntegerField()),
+                ('new_id', models.PositiveIntegerField()),
+            ],
+        ),
+        migrations.AlterIndexTogether(
+            name='oldidredirect',
+            index_together=set([('model', 'old_id')]),
+        ),
     ]

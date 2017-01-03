@@ -28,8 +28,10 @@ class Command(BaseCommand):
         show_progress(self, synchronized_count, users_to_sync)
         start_time = time.time()
         for user in batch_update(get_user_model().objects.all()):
-            user.threads = user.thread_set.count()
-            user.posts = user.post_set.count()
+            if user.pk == 1:
+                print user.username
+            user.threads = user.thread_set.filter(is_unapproved=False).count()
+            user.posts = user.post_set.filter(is_unapproved=False).count()
             user.followers = user.followed_by.count()
             user.following = user.follows.count()
             user.save()
