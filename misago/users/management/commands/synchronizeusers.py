@@ -31,10 +31,12 @@ class Command(BaseCommand):
         for user in batch_update(get_user_model().objects.all()):
             user.threads = user.thread_set.filter(
                 category__in=categories,
+                is_hidden=False,
                 is_unapproved=False
             ).count()
             user.posts = user.post_set.filter(
                 category__in=categories,
+                is_event=False,
                 is_unapproved=False
             ).count()
             user.followers = user.followed_by.count()
