@@ -88,9 +88,12 @@ class AttachmentsSerializer(serializers.Serializer):
             return
 
         if self.removed_attachments:
+            for attachment in self.removed_attachments:
+                attachment.delete_files()
+
             self.context['post'].attachment_set.filter(
                 id__in=[a.id for a in self.removed_attachments]
-            ).update(post=None)
+            ).delete()
 
         if self.final_attachments:
             # sort final attachments by id, descending
