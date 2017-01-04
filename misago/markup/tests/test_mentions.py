@@ -77,3 +77,19 @@ class MentionsTests(AuthenticatedUserTestCase):
         add_mentions(MockRequest(self.user), result)
         self.assertEqual(result['parsed_text'], after)
         self.assertEqual(result['mentions'], [self.user])
+
+    def test_repeated_mention(self):
+        """markup extension handles mentions across document"""
+        before = '<p>Hello @{0}</p><p>@{0}, how is it going?</p>'.format(self.user.username)
+
+        formats = (self.user.get_absolute_url(), self.user.username)
+        after = '<p>Hello <a href="{0}">@{1}</a></p><p><a href="{0}">@{1}</a>, how is it going?</p>'.format(*formats)
+
+        result = {
+            'parsed_text': before,
+            'mentions': []
+        }
+
+        add_mentions(MockRequest(self.user), result)
+        self.assertEqual(result['parsed_text'], after)
+        self.assertEqual(result['mentions'], [self.user])

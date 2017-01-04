@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 
 
 HEADER_RE = re.compile(r'''
-<header>(?P<author>.*?)</header>
+<header>(?P<title>.*?)</header>
 '''.strip(), re.IGNORECASE | re.MULTILINE | re.DOTALL);
 
 
@@ -15,9 +15,9 @@ def finalise_markup(post):
 
 
 def replace_headers(matchobj):
-    author = matchobj.group('author')
-    if author:
-        quote_title = _("%(author)s has written:") % {'author': author}
+    title = matchobj.group('title')
+    if title:
+        quote_title = _("%(title)s has written:") % {'title': title}
     else:
         quote_title = _("Quoted message:")
     return '<header>{}</header>'.format(quote_title)
