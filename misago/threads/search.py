@@ -33,8 +33,6 @@ class SearchThreads(SearchProvider):
         paginator = pagination_dict(list_page, include_page_range=False)
 
         posts = list(list_page.object_list)
-        #for post in posts:
-        #    print post.search_rank
         threads = []
 
         for post in posts:
