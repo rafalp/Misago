@@ -18,7 +18,8 @@ class MockRequest(object):
 
 
 class MockPoster(object):
-    pass
+    username = 'LoremIpsum'
+    slug = 'loremipsum'
 
 
 class BBCodeTests(TestCase):
@@ -60,7 +61,7 @@ Lorem [b]ipsum[/B].
         """block elements are correctly parsed"""
         test_text = """
 Lorem ipsum.
-[hR]
+[hr]
 Dolor met.
 """.strip()
 
@@ -307,7 +308,7 @@ Lorem ipsum.
         test_text = """
 Lorem ipsum.
 [quote]Dolor met[/quote]
-[quote=\"Bob\"]Dolor <b>met</b>[/quote]
+[quote=\"@Bob\"]Dolor <b>met</b>[/quote]
 [quote]Dolor **met**[quote=@Bob]Dolor met[/quote][/quote]
 """.strip()
 
@@ -331,34 +332,23 @@ Lorem ipsum.
 </blockquote>
 """.strip()
 
-        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        request = MockRequest(user=MockPoster())
+        result = parse(test_text, request, MockPoster(), minify=False)
         self.assertEqual(expected_result, result['parsed_text'])
 
-    def test_invalid_author_quote(self):
-        """parser handles invalid author quote"""
+    def test_custom_quote_title(self):
+        """parser handles custom quotetitle"""
         test_text = """
 Lorem ipsum.
-[quote=\"Bob Sasasasa]Dolor <b>met</b>[/quote]
+[quote=\"Lorem ipsum very test\"]Dolor <b>met</b>[/quote]
 """.strip()
 
         expected_result = """
-<p>Lorem ipsum.<br/>
-[quote="Bob Sasasasa]Dolor &lt;b&gt;met&lt;/b&gt;[/quote]</p>
-""".strip()
-
-        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
-        self.assertEqual(expected_result, result['parsed_text'])
-
-    def test_invalid_author_quote(self):
-        """parser handles invalid author quote"""
-        test_text = """
-Lorem ipsum.
-[quote=\"Bob Sasasasa]Dolor <b>met</b>[/quote]
-""".strip()
-
-        expected_result = """
-<p>Lorem ipsum.<br/>
-[quote="Bob Sasasasa]Dolor &lt;b&gt;met&lt;/b&gt;[/quote]</p>
+<p>Lorem ipsum.</p>
+<blockquote>
+<header>Lorem ipsum very test</header>
+<p>Dolor &lt;b&gt;met&lt;/b&gt;</p>
+</blockquote>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=False)
