@@ -11,28 +11,36 @@ class QuoteTests(TestCase):
         """quote header is replaced"""
         test_text = '''
 <p>Lorem ipsum.</p>
-<blockquote>
-<header></header>
+<aside class="quote-block">
+<div class="quote-heading"></div>
+<blockquote class="quote-body">
 <p>Dolor met</p>
-<blockquote>
-<header><a href="/users/bob-1/">@Bob</a></header>
+<aside class="quote-block">
+<div class="quote-heading"><a href="/users/bob-1/">@Bob</a></div>
+<blockquote class="quote-body">
 <p>Dolor met</p>
 </blockquote>
+</aside>
 </blockquote>
-<p>Lorem ipsum dolor.</>
+</aside>
+<p>Lorem ipsum dolor.</p>
 '''.strip()
 
         expected_result = '''
 <p>Lorem ipsum.</p>
-<blockquote>
-<header>Quoted message:</header>
+<aside class="quote-block">
+<div class="quote-heading">Quoted message:</div>
+<blockquote class="quote-body">
 <p>Dolor met</p>
-<blockquote>
-<header><a href="/users/bob-1/">@Bob</a> has written:</header>
+<aside class="quote-block">
+<div class="quote-heading"><a href="/users/bob-1/">@Bob</a> has written:</div>
+<blockquote class="quote-body">
 <p>Dolor met</p>
 </blockquote>
+</aside>
 </blockquote>
-<p>Lorem ipsum dolor.</>
+</aside>
+<p>Lorem ipsum dolor.</p>
 '''.strip()
 
         self.assertEqual(expected_result, finalise_markup(test_text))
@@ -40,11 +48,11 @@ class QuoteTests(TestCase):
     def test_finalise_minified_markup(self):
         """header is replaced in minified post"""
         test_text = '''
-<p>Lorem ipsum.</p><blockquote><header><a href="/users/bob-1/">@Bob</a></header><p>Dolor met</p></blockquote>
+<p>Lorem ipsum.</p><aside class="quote-block"><div class="quote-heading"></div><blockquote class="quote-body"><p>Dolor met</p><aside class="quote-block"><div class="quote-heading"><a href="/users/bob-1/">@Bob</a></div><blockquote class="quote-body"><p>Dolor met</p></blockquote></aside></blockquote></aside><p>Lorem ipsum dolor.</p>
 '''.strip()
 
         expected_result = '''
-<p>Lorem ipsum.</p><blockquote><header><a href="/users/bob-1/">@Bob</a> has written:</header><p>Dolor met</p></blockquote>
+<p>Lorem ipsum.</p><aside class="quote-block"><div class="quote-heading">Quoted message:</div><blockquote class="quote-body"><p>Dolor met</p><aside class="quote-block"><div class="quote-heading"><a href="/users/bob-1/">@Bob</a> has written:</div><blockquote class="quote-body"><p>Dolor met</p></blockquote></aside></blockquote></aside><p>Lorem ipsum dolor.</p>
 '''.strip()
 
         self.assertEqual(expected_result, finalise_markup(test_text))

@@ -8,6 +8,20 @@
 }
 
 
+// Even out blocks
+.misago-markup>*, .misago-markup blockquote>* {
+  margin: @line-height-computed 0px;
+
+  &:first-child {
+    margin-top: 0px;
+  }
+
+  &:last-child {
+    margin-bottom: 0px;
+  }
+}
+
+
 // Downscale images so they don't expand area
 .misago-markup img {
   max-width: 100%;
@@ -16,23 +30,33 @@
 
 
 // Make quotes stand out a little
+.misago-markup .quote-block,
 .misago-markup blockquote {
   background: @gray-lighter;
   border: none;
-  padding-bottom: @line-height-computed;
 
   font-size: @font-size-base;
 
-  header {
+  .quote-heading {
+    border-bottom: 1px solid darken(@gray-lighter, 8%);
+    padding: (@line-height-computed / 2) @line-height-computed;
+
+    font-size: @font-size-small;
     font-weight: bold;
   }
+}
 
-  blockquote {
-    background: darken(@gray-lighter, 5%);
+.misago-markup>.quote-block,
+.misago-markup>blockquote {
+  border: 1px solid darken(@gray-lighter, 8%);
+}
 
-    blockquote {
-      background: darken(@gray-lighter, 8%);
-    }
+.misago-markup .quote-body {
+  background: @body-bg;
+  margin: 0px;
+
+  &>.quote-block, &>blockquote {
+    border: 1px solid darken(@gray-lighter, 8%);
   }
 }
 
@@ -51,19 +75,5 @@
 
   li {
     list-style-type: decimal;
-  }
-}
-
-
-// Even out blocks
-.misago-markup>*, .misago-markup blockquote>*:not(header) {
-  margin: @line-height-computed 0px;
-
-  &:first-child {
-    margin-top: 0px;
-  }
-
-  &:last-child {
-    margin-bottom: 0px;
   }
 }

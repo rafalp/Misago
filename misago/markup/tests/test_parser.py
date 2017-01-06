@@ -282,22 +282,30 @@ Lorem ipsum.
 
         expected_result = """
 <p>Lorem ipsum.</p>
-<blockquote>
-<header></header>
+<aside class="quote-block">
+<div class="quote-heading"></div>
+<blockquote class="quote-body">
 <p>Dolor met</p>
 </blockquote>
-<blockquote>
-<header></header>
+</aside>
+<aside class="quote-block">
+<div class="quote-heading"></div>
+<blockquote class="quote-body">
 <p>Dolor &lt;b&gt;met&lt;/b&gt;</p>
 </blockquote>
-<blockquote>
-<header></header>
+</aside>
+<aside class="quote-block">
+<div class="quote-heading"></div>
+<blockquote class="quote-body">
 <p>Dolor <strong>met</strong></p>
-<blockquote>
-<header></header>
+<aside class="quote-block">
+<div class="quote-heading"></div>
+<blockquote class="quote-body">
 <p>Dolor met</p>
 </blockquote>
+</aside>
 </blockquote>
+</aside>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=False)
@@ -314,22 +322,30 @@ Lorem ipsum.
 
         expected_result = """
 <p>Lorem ipsum.</p>
-<blockquote>
-<header></header>
+<aside class="quote-block">
+<div class="quote-heading"></div>
+<blockquote class="quote-body">
 <p>Dolor met</p>
 </blockquote>
-<blockquote>
-<header>@Bob</header>
+</aside>
+<aside class="quote-block">
+<div class="quote-heading">@Bob</div>
+<blockquote class="quote-body">
 <p>Dolor &lt;b&gt;met&lt;/b&gt;</p>
 </blockquote>
-<blockquote>
-<header></header>
+</aside>
+<aside class="quote-block">
+<div class="quote-heading"></div>
+<blockquote class="quote-body">
 <p>Dolor <strong>met</strong></p>
-<blockquote>
-<header>@Bob</header>
+<aside class="quote-block">
+<div class="quote-heading">@Bob</div>
+<blockquote class="quote-body">
 <p>Dolor met</p>
 </blockquote>
+</aside>
 </blockquote>
+</aside>
 """.strip()
 
         request = MockRequest(user=MockPoster())
@@ -345,10 +361,12 @@ Lorem ipsum.
 
         expected_result = """
 <p>Lorem ipsum.</p>
-<blockquote>
-<header>Lorem ipsum very test</header>
+<aside class="quote-block">
+<div class="quote-heading">Lorem ipsum very test</div>
+<blockquote class="quote-body">
 <p>Dolor &lt;b&gt;met&lt;/b&gt;</p>
 </blockquote>
+</aside>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=False)
@@ -367,12 +385,14 @@ Amet elit
 
         expected_result = """
 <p>Lorem ipsum.</p>
-<blockquote>
-<header></header>
+<aside class="quote-block">
+<div class="quote-heading"></div>
+<blockquote class="quote-body">
 <p>Dolor met</p>
 <hr/>
 <p>Amet elit</p>
 </blockquote>
+</aside>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=False)

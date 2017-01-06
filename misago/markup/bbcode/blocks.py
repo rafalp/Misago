@@ -86,9 +86,16 @@ class QuoteBlockProcessor(BlockProcessor):
             children, self._children = self._children[1:-1], []
             title, self._title = self._title, None
 
-            blockquote = etree.SubElement(parent, 'blockquote')
-            header = etree.SubElement(blockquote, 'header')
+            aside = etree.SubElement(parent, 'aside')
+            aside.set('class', 'quote-block')
+
+            heading = etree.SubElement(aside, 'div')
+            heading.set('class', 'quote-heading')
+
+            blockquote = etree.SubElement(aside, 'blockquote')
+            blockquote.set('class', 'quote-body')
+
             if title:
-                header.text = title
+                heading.text = title
 
             self.parser.parseBlocks(blockquote, children)
