@@ -57,8 +57,8 @@ Lorem [b]ipsum[/B].
         result = parse(test_text, MockRequest(), MockPoster(), minify=False)
         self.assertEqual(expected_result, result['parsed_text'])
 
-    def test_blocks(self):
-        """block elements are correctly parsed"""
+    def test_hr(self):
+        """hr bbcode is correctly parsed"""
         test_text = """
 Lorem ipsum.
 [hr]
@@ -393,6 +393,113 @@ Amet elit
 <p>Amet elit</p>
 </blockquote>
 </aside>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+
+class CodeTests(TestCase):
+    def test_code(self):
+        """code bbcode is correctly parsed"""
+        test_text = """
+Lorem ipsum.
+[code]
+Dolor [b]met.[/b]
+[/code]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.</p>
+<pre><code>Dolor [b]met.[/b]</code></pre>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_inline_code(self):
+        """inline code bbcode is correctly parsed"""
+        test_text = """
+Lorem ipsum.
+
+[code]Dolor [b]met.[/b][/code]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.</p>
+<pre><code>Dolor [b]met.[/b]</code></pre>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_code_strip(self):
+        """code bbcode trims its content"""
+        test_text = """
+Lorem ipsum.
+
+[code]
+
+   Dolor [b]met.[/b]
+
+
+[/code]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.</p>
+<pre><code>   Dolor [b]met.[/b]</code></pre>
+""".strip()
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_code_language(self):
+        """code bbcode with language is correctly parsed"""
+        test_text = """
+Lorem ipsum.
+
+[code="python"]
+Dolor [b]met.[/b]
+[/code]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.</p>
+<pre><code class="python">Dolor [b]met.[/b]</code></pre>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_code_language_optional_quotes(self):
+        """code quotes around language name are optional"""
+        test_text = """
+Lorem ipsum.
+
+[code=python"]
+Dolor [b]met.[/b]
+[/code]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.</p>
+<pre><code class="python">Dolor [b]met.[/b]</code></pre>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+        test_text = """
+Lorem ipsum.
+
+[code="python]
+Dolor [b]met.[/b]
+[/code]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.</p>
+<pre><code class="python">Dolor [b]met.[/b]</code></pre>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=False)
