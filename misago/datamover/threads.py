@@ -97,8 +97,8 @@ def move_posts():
             poster=poster,
             poster_name=post['user_name'],
             poster_ip=post['ip'],
-            original=markup.convert_original(post['post']),
-            parsed=markup.convert_parsed(post['post_preparsed']),
+            original=post['post'],
+            parsed=post['post_preparsed'],
             posted_on=localise_datetime(post['date']),
             updated_on=localise_datetime(post['current_date'] or post['date']),
             hidden_on=localise_datetime(post['delete_date'] or post['date']),
@@ -113,9 +113,6 @@ def move_posts():
             is_protected=post['protected'],
             likes=post['upvotes']
         )
-
-        update_post_checksum(new_post)
-        new_post.save()
 
         movedids.set('post', post['id'], new_post.pk)
 
@@ -163,7 +160,7 @@ def move_post_edits(post, old_id):
             editor = None
 
         if changelog:
-            changelog[-1].edited_to = edit['post_content']
+            changelog[-1].edited_to = markup.clean_original(edit['post_content'])
 
         changelog.append(PostEdit(
             category=post.category,
@@ -174,8 +171,8 @@ def move_post_edits(post, old_id):
             editor_name=edit['user_name'],
             editor_slug=edit['user_slug'],
             editor_ip=edit['ip'],
-            edited_from=edit['post_content'],
-            edited_to=post.original,
+            edited_from=markup.clean_original(edit['post_content']),
+            edited_to=markup.clean_original(post.original),
         ))
 
     if changelog:

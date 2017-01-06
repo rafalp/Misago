@@ -1,4 +1,4 @@
-from ... import attachments, polls, threads
+from ... import attachments, markup, polls, threads
 from ..base import BaseCommand
 
 
@@ -52,3 +52,8 @@ class Command(BaseCommand):
         threads.clean_private_threads(self.stdout, self.style)
         self.stdout.write(
             self.style.SUCCESS("Cleaned private threads in %s" % self.stop_timer()))
+
+        self.start_timer()
+        markup.clean_posts()
+        self.stdout.write(
+            self.style.SUCCESS("Cleaned markup in %s" % self.stop_timer()))
