@@ -8,11 +8,10 @@ class MovedId(models.Model):
 
 
 class OldIdRedirect(models.Model):
-    ATTACHMENT = 0
-    CATEGORY = 1
-    POST = 2
-    THREAD = 3
-    USER = 4
+    CATEGORY = 0
+    POST = 1
+    THREAD = 2
+    USER = 3
 
     model = models.PositiveIntegerField()
     old_id = models.PositiveIntegerField()

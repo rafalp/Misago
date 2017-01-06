@@ -1,13 +1,14 @@
+from misago.core.pgutils import batch_update
+
 from ...models import MovedId, OldIdRedirect
 from ..base import BaseCommand
 
 
 MAPPINGS = {
-    'attachment': 0,
-    'category': 1,
-    'post': 2,
-    'thread': 3,
-    'user': 4,
+    'category': OldIdRedirect.CATEGORY,
+    'post': OldIdRedirect.POST,
+    'thread': OldIdRedirect.THREAD,
+    'user': OldIdRedirect.USER,
 }
 
 
@@ -22,8 +23,12 @@ class Command(BaseCommand):
         counter = 1
         self.start_timer()
 
-        for moved_id in MovedId.objects.exclude(model='label').iterator():
+        for moved_id in batch_update(MovedId.objects):
             counter += 1
+
+            if moved_id.model not in MAPPINGS:
+                continue
+
             OldIdRedirect.objects.create(
                 model=MAPPINGS[moved_id.model],
                 old_id=moved_id.old_id,
