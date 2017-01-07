@@ -25,7 +25,10 @@ def update_thumb_url(matchobj):
     hash = matchobj.group('hash')
     attachment = get_attachment_for_hash(hash)
     if attachment:
-        return attachment.get_thumbnail_url()
+        if attachment.thumbnail:
+            return attachment.get_thumbnail_url()
+        else:
+            return attachment.get_absolute_url()
     return matchobj.group(0)
 
 

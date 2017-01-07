@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from misago.conf import db_settings
 from misago.conf.models import Setting
 
-from . import defstdout, fetch_assoc
+from . import fetch_assoc
 
 
 def copy_value(setting):
@@ -80,8 +80,6 @@ SETTING_CONVERTER = {
 
 
 def move_settings(stdout=None):
-    stdout = stdout or defstdout
-
     for row in fetch_assoc('SELECT * FROM misago_setting'):
         setting_key = row['setting']
         if setting_key in SETTING_CONVERTER:

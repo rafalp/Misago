@@ -33,7 +33,7 @@ def move_users(stdout, style):
                 new_user = UserModel.objects.create_user(
                     user['username'], user['email'], 'Pass.123')
             except ValidationError:
-                new_name = ''.join([user['username'], get_random_string(4)])
+                new_name = ''.join([user['username'][:10], get_random_string(4)])
                 new_user = UserModel.objects.create_user(
                     new_name, user['email'], 'Pass.123')
 
