@@ -5,25 +5,6 @@ Template Tags Reference
 Misago defines plenty of custom tags and filters for use by template authors.
 
 
-misago_avatars
-==============
-
-``avatar`` filter
------------------
-
-Accepts user model instance or integer representing user's PK, returns link to avatar server that can be used as ``src`` attribute value for ``img``.
-
-Takes one optional argument, image size.
-
-
-``blankavatar`` tag
--------------------
-
-Returns link to avatar blank avatar that can be used as ``src`` attribute value for ``img``. Should be used when no user pk is avaialable to render avatar, eg. displaying items belonging to deleted users.
-
-Takes one optional argument, image size.
-
-
 misago_batch
 ============
 
@@ -39,7 +20,7 @@ Takes one argument, integer individual batch length, then turns big list into li
 
 
 ``batchnonefilled`` filter
-----------------
+--------------------------
 
 Works same as ``batch`` filter, but with one difference:
 
@@ -73,12 +54,6 @@ misago_editor
 -------------------
 
 Renders Misago Markup editor body in template. Requires one argument: variable containing editor instance.
-
-
-``editor_js`` tag
------------------
-
-Renders Misago Markup editor's javascript in template. Requires one argument: variable containing editor instance.
 
 
 misago_forms
@@ -124,17 +99,3 @@ Shorthand for simple if clauses: ``{{ "fade in"|iftrue:thread.is_closed }}`` wil
 -----------------
 
 Opposite filter for ``iftrue``.
-
-
-misago_pagination
-=================
-
-Shortcut for rendering paginators using template. Accepts following arguments:
-
-* **page** - paginator's page object
-* **template** - template to use to render paginator
-* **link_name** - link name to use for pages
-
-Also accepts kwargs which will be passed to template context as they were given to tag.
-
-Paginator template gets ``paginator``, ``page`` and ``link_name`` values to use in rendering.

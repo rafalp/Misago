@@ -20,18 +20,15 @@ Both types of settings can accessed as attributes of ``misago.conf.settings`` ob
 Defining Custom DB Settings
 ===========================
 
-.. note::
-   Current Misago 0.6 migrations are south-based placeholders that will be replaced with new migrations introduced in Django 1.7 before release. For this reason this instruction focuses exclusively on usage of utility function provided by Misago.
-
 In order to define or change high-level (stored in database) settings you have to add new rows to ``conf_settingsgroup`` and ``conf_settings`` database tables. This can be done by plenty of different ways, but preffered one is by creating new data migration and using functions from ``misago.conf.migrationutils`` module.
 
 
 migrate_settings_group
 ----------------------
 
-.. function:: migrate_settings_group(orm, group_fixture, old_group_key=None)
+.. function:: migrate_settings_group(apps, group_fixture, old_group_key=None)
 
-This function uses south supplied ORM instance to insert/update settings group in database according to provided dict contianing its name, description and contained settings. If new group should replace old one, you can provide its key in ``old_group_key`` argument.
+This function uses Django supplied ``apps`` instance to insert/update settings group in database according to provided dict contianing its name, description and contained settings. If new group should replace old one, you can provide its key in ``old_group_key`` argument.
 
 The ``group_fixture`` dict should define following keys:
 
@@ -56,34 +53,12 @@ Each dict in ``settings`` tuple should define following keys:
 
 
 .. note::
-   If you wish to make your names and messages translateable, you should use ``ugettext_lazy`` function provided by Misago instead of Django one. This function is defined in ``misago.core.migrationutils`` module and differs from Django one by the fact that it preserves untranslated message on its ``message`` attribute.
+   If you wish to make your names and messages translateable, you should define fake ``gettext`` function in your code to wrap translated strings with:
 
-   For your convience ``migrate_settings_group`` triess to switch translation messages with their "message" attribute when it writes to database and thus making their translation to new languages in future possible.
+       _ = lambda x: x
 
-
-with_conf_models
-----------------
-
-.. function:: with_conf_models(migration, this_migration=None)
-
-South migrations define special ``models`` attribute that holds dict representing structure of database at time of migration execution. This dict will by default contain only your apps models. To add settings models that ``migrate_settings_group`` requires to work, you have to use ``with_conf_models`` function. This function accepts two arguments:
-
-* **migration** - name of migration in ``misago.conf`` app containing models definitions current for the time of your data migration.
-* **this_migration** - dict with model definitions for this migration.
-
-In addition to this, make sure that your migration ``depends_on`` attribute defines dependency on migration from ``misago.conf`` app::
-
-    class Migration(DataMigration):
-
-        # Migration code...
-
-        models = with_conf_models('0001_initial', {
-            # This migration models
-        })
-
-        depends_on = (
-            ("conf", "0001_initial"),
-        )
+       # below line will be made translatable by makemessages:
+       _('Some string')
 
 
 delete_settings_cache
