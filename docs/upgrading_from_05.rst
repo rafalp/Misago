@@ -5,6 +5,10 @@ Upgrading from Misago 0.5
 Misago 0.6 comes with special utility that allows those upgrading from Misago 0.5 to move their data to new site. This utility, named ``datamover``, provides set of management commands allowing you to move data over.
 
 
+.. note::
+   If you are already familiar with migration process, Misago comes with special ``runmigration`` command that calls all required commands for you.
+
+
 Preparing for move
 ==================
 
@@ -106,7 +110,7 @@ To enable this feature you'll need to insert new url in your forum's ``urls.py``
         url(r'^', include('misago.datamover.urls')),
         url(r'^', include('misago.urls', namespace='misago')),
 
-This will make Misago redirect users from old urls to new ones, altrough it'll wont preserve the meaning:
+Now build redirects index running ``buildmovesindex`` command. This will make Misago redirect users from old urls to new ones, altrough it'll wont preserve the meaning:
 
 - All links to forum will redirect to category's start page
 - All links to different profile pages of user profile will redirect to user's profile start page

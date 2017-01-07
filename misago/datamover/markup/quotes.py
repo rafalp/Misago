@@ -17,8 +17,12 @@ def convert_quotes_to_bbcode(post):
                 quote.append(line[1:].lstrip())
             else:
                 clean_lines.append('')
+
                 if quote_author:
                     clean_lines.append('[quote="%s"]' % quote_author)
+                else:
+                    clean_lines.append('[quote]')
+
                 clean_lines += quote
                 clean_lines.append('[/quote]')
                 clean_lines.append('')
