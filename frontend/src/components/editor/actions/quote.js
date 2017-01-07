@@ -18,11 +18,11 @@ export default function(props) {
 }
 
 export function insertQuote(selection, replace) {
-  let title = $.trim(prompt(gettext("Enter quote title, prefix usernames with @") + ':', title));
+  let title = $.trim(prompt(gettext("Enter quote autor, prefix usernames with @") + ':', title));
 
   if (title) {
     replace('\n\n[quote="' + title + '"]\n' + selection + '\n[/quote]\n\n');
   } else {
-    replace('\n\n[quote=]\n' + selection + '\n[/quote]\n\n');
+    replace('\n\n[quote]\n' + selection + '\n[/quote]\n\n');
   }
 }
