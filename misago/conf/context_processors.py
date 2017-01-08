@@ -44,6 +44,7 @@ def preload_settings_json(request):
         'MISAGO_PATH': reverse('misago:index'),
 
         'BLANK_AVATAR_URL': BLANK_AVATAR_URL,
+        'STATIC_URL': dj_settings.STATIC_URL,
 
         'CSRF_COOKIE_NAME': dj_settings.CSRF_COOKIE_NAME,
 

@@ -9,12 +9,12 @@ MOVE_COMMANDS = (
     'movecategories',
     'movethreads',
     'buildmovesindex',
-    'invalidatebans',
-    'populateonlinetracker',
-    'synchronizeusers',
     'synchronizethreads',
     'synchronizecategories',
     'rebuildpostssearch',
+    'invalidatebans',
+    'populateonlinetracker',
+    'synchronizeusers',
 )
 
 
