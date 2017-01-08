@@ -17,13 +17,13 @@ def home_redirect(*args, **kwargs):
     return redirect('misago:index')
 
 
-@cache_page(86400, key_prefix='misagojsi18n')
+@cache_page(86400 * 2, key_prefix='misagojsi18n')
 @last_modified(lambda req, **kw: timezone.now())
 def javascript_catalog(request):
     return i18n.javascript_catalog(request, 'djangojs', None)
 
 
-@cache_page(86400, key_prefix='momentjsi18n')
+@cache_page(86400 * 2, key_prefix='momentjsi18n')
 @last_modified(lambda req, **kw: timezone.now())
 def momentjs_catalog(request):
     locale_path = momentjs.get_locale_path(get_language())
