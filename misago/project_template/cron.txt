@@ -2,8 +2,8 @@
 # you'll likely need to change it to use
 # valid python version or paths to manage.py
 
-15 0 * * * python manage.py buildactivepostersranking
-15 0 * * * python manage.py clearattachments
-15 0 * * * python manage.py clearsessions
-15 0 * * * python manage.py invalidatebans
 15 0 * * * python manage.py prunecategories
+25 0 * * * python manage.py buildactivepostersranking
+25 0 * * * python manage.py clearattachments
+25 0 * * * python manage.py clearsessions
+25 0 * * * python manage.py invalidatebans
