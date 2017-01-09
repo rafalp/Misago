@@ -9,12 +9,17 @@ class MisagoMailerTests(TestCase):
     def test_mail_user(self):
         """mail_user sets message in backend"""
         User = get_user_model()
-        User.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        user = User.objects.create_user('Bob', 'bob@bob.com', 'pass123')
 
         response = self.client.get(reverse('test-mail-user'))
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(mail.outbox[0].subject, "Misago Test Mail")
+
+        # assert that url to user's avatar is valid
+        html_body = mail.outbox[0].alternatives[0][0]
+        user_avatar_url = 'http://testserver%s' % user.avatars[0]['url']
+        self.assertIn(user_avatar_url, html_body)
 
     def test_mail_users(self):
         """mail_users sets messages in backend"""
