@@ -126,14 +126,12 @@ export default class extends React.Component {
     /* jshint ignore:start */
     return <div className={this.getClassName()}>
       <div className="user-card-bg-image">
-        <Avatar user={this.props.user} size="400" className="bg-image" />
-
         <div className="user-card-bg">
           <div className="user-details">
 
             <div className="user-avatar">
               <a href={this.props.user.absolute_url}>
-                <Avatar user={this.props.user} size="400" />
+                <Avatar user={this.props.user} size="60" />
               </a>
             </div>
 
