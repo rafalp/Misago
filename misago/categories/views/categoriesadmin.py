@@ -120,8 +120,6 @@ class DeleteCategory(CategoryAdmin, generic.ModelFormView):
                     move_threads_to = child
         else:
             for child in target.get_descendants().order_by('-lft'):
-                # refresh child
-                child = Category.objects.get(pk=child.pk)
                 child.delete_content()
                 child.delete()
 
