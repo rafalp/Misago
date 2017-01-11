@@ -21,6 +21,10 @@ class MentionsTests(AuthenticatedUserTestCase):
                 '<h1>Hello, <a href="{}">@{}</a>!</h1>'
             ),
             (
+                '<div>Hello, @{}!</div>',
+                '<div>Hello, <a href="{}">@{}</a>!</div>'
+            ),
+            (
                 '<h1>Hello, <strong>@{}!</strong></h1>',
                 '<h1>Hello, <strong><a href="{}">@{}</a>!</strong></h1>'
             ),
