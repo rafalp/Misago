@@ -105,6 +105,7 @@ def read_category(user, category):
         categories += queryset.values_list('id', flat=True)
 
     user.categoryread_set.filter(category_id__in=categories).delete()
+    user.threadread_set.filter(category_id__in=categories).delete()
 
     now = timezone.now()
     new_reads = []

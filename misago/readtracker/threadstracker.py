@@ -93,6 +93,8 @@ def make_thread_read_aware(user, thread):
         try:
             category_record = user.categoryread_set.get(
                 category_id=thread.category_id)
+            thread.last_read_on = category_record.last_read_on
+
             if thread.last_post_on > category_record.last_read_on:
                 try:
                     thread_record = user.threadread_set.get(thread=thread)

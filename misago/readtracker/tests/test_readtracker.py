@@ -166,6 +166,20 @@ class CategoriesTrackerTests(ReadTrackerTests):
         child_read = self.user.categoryread_set.get(category=self.category)
         self.assertTrue(child_read.last_read_on > timezone.now() - timedelta(seconds=3))
 
+    def test_read_category_prunes_threadreads(self):
+        """read_category prunes threadreads in this category"""
+        thread = self.post_thread(timezone.now())
+
+        threadstracker.make_read_aware(self.user, thread)
+        threadstracker.read_thread(self.user, thread, thread.last_post)
+
+        self.assertTrue(self.user.threadread_set.exists())
+
+        categoriestracker.read_category(self.user, self.category)
+
+        self.assertTrue(self.user.categoryread_set.get(category=self.category))
+        self.assertFalse(self.user.threadread_set.exists())
+
 
 class ThreadsTrackerTests(ReadTrackerTests):
     def setUp(self):
@@ -203,7 +217,7 @@ class ThreadsTrackerTests(ReadTrackerTests):
         threadstracker.make_read_aware(self.user, self.thread)
         self.assertFalse(self.thread.is_read)
 
-    def _test_thread_read(self):
+    def test_thread_read(self):
         """thread read flag is set for user, then its set as unread by reply"""
         self.reply_thread()
 
@@ -234,3 +248,36 @@ class ThreadsTrackerTests(ReadTrackerTests):
         for post in posts[:-1]:
             self.assertTrue(post.is_read)
         self.assertFalse(posts[-1].is_read)
+
+    def test_thread_read_category_cutoff(self):
+        """thread read is handled when category cutoff is present"""
+        self.reply_thread()
+
+        add_acl(self.user, self.categories)
+        threadstracker.make_read_aware(self.user, self.thread)
+        self.assertFalse(self.thread.is_read)
+
+        categoriestracker.read_category(self.user, self.category)
+        threadstracker.make_read_aware(self.user, self.thread)
+        self.assertTrue(self.thread.is_read)
+
+        categoriestracker.make_read_aware(self.user, self.categories)
+        self.assertTrue(self.category.is_read)
+
+        posts = list(self.thread.post_set.order_by('id'))
+        threadstracker.make_posts_read_aware(self.user, self.thread, posts)
+
+        for post in posts:
+            self.assertTrue(post.is_read)
+
+        # post reply
+        self.reply_thread()
+
+        # test if only last post is unread
+        posts = list(self.thread.post_set.order_by('id'))
+        threadstracker.make_read_aware(self.user, self.thread)
+        threadstracker.make_posts_read_aware(self.user, self.thread, posts)
+
+        for post in posts[:-1]:
+            self.assertTrue(post.is_read)
+        self.assertTrue(posts[-1].is_new)
