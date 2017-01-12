@@ -58,17 +58,7 @@ export function updateUsername(user, username, slug) {
 export default function user(state=[], action=null) {
   switch (action.type) {
     case APPEND_USERS:
-      let mergedState = concatUnique(state, action.items.map(hydrateUser));
-
-      return mergedState.sort(function(a, b) {
-        if (a.username < b.username) {
-          return -1;
-        } else if (a.username > b.username) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
+      return concatUnique(state, action.items.map(hydrateUser));
 
     case HYDRATE_USERS:
       return action.items.map(hydrateUser);
