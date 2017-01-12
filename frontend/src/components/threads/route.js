@@ -177,10 +177,10 @@ export default class extends WithDropdown {
   }
 
   getSorting() {
-    if (this.props.route.category.special_role) {
-      return compareGlobalWeight;
-    } else {
+    if (this.props.route.category.level) {
       return compareWeight;
+    } else {
+      return compareGlobalWeight;
     }
   }
 
