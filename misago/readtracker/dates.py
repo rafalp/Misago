@@ -4,6 +4,10 @@ from django.conf import settings
 from django.utils import timezone
 
 
+def get_cutoff_date(*dates):
+    return timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)
+
+
 def is_date_tracked(date, user, category_read_cutoff=None):
     if date:
         cutoff_date = timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)

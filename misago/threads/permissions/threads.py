@@ -902,7 +902,7 @@ def exclude_invisible_threads(user, categories, queryset):
             conditions = condition
 
     if conditions:
-        return Thread.objects.filter(conditions)
+        return queryset.filter(conditions)
     else:
         return Thread.objects.none()
 
