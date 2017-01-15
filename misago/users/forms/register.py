@@ -11,3 +11,14 @@ class RegisterForm(forms.Form):
 
     # placeholder field for setting captcha errors on form
     captcha = forms.CharField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super(RegisterForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super(RegisterForm, self).clean()
+
+        validators.validate_new_registration(self.request, self, cleaned_data)
+
+        return cleaned_data

@@ -59,8 +59,10 @@ def setup_testproject():
         settings_file = settings_file.replace('{{ secret_key }}', 't3stpr0j3ct')
 
         settings_file += """
-# disable account validation via API's
-MISAGO_NEW_REGISTRATIONS_VALIDATORS = ()
+# disable account validation via Stop Forum Spam
+MISAGO_NEW_REGISTRATIONS_VALIDATORS = (
+    'misago.users.validators.validate_gmail_email',
+)
 
 # store mails in memory
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'

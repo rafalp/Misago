@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 from django.contrib.auth import get_user_model
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from misago.conf import settings
@@ -82,15 +82,14 @@ class ValidateUsernameTests(TestCase):
 class ValidateUsernameAvailableTests(TestCase):
     def setUp(self):
         User = get_user_model()
-        self.test_user = User.objects.create_user('EricTheFish',
-                                                  'eric@test.com',
-                                                  'pass123')
+        self.test_user = User.objects.create_user(
+            'EricTheFish', 'eric@test.com', 'pass123')
 
     def test_valid_name(self):
         """validate_username_available allows available names"""
         validate_username_available('BobBoberson')
-        validate_username_available(self.test_user.username,
-                                    exclude=self.test_user)
+        validate_username_available(
+            self.test_user.username, exclude=self.test_user)
 
     def test_invalid_name(self):
         """validate_username_available disallows unvailable names"""
@@ -147,11 +146,25 @@ class ValidateUsernameLengthTests(TestCase):
             validate_username_length('a' * (settings.username_length_max + 1))
 
 
+class MockForm(object):
+    def __init__(self):
+        self.errors = {}
+
+    def add_error(self, field, error):
+        self.errors[field] = error
+
+
 class ValidateGmailEmailTests(TestCase):
     def test_validate_gmail_email(self):
         """validate_gmail_email spots spammy gmail address"""
-        validate_gmail_email('', '', 'the.bob.boberson@gmail.com')
-        validate_gmail_email('', '', 'the.bob.boberson@hotmail.com')
+        form = MockForm()
 
-        with self.assertRaises(PermissionDenied):
-            validate_gmail_email('', '', 'the.b.o.b.b.ob.e.r.son@gmail.com')
+        validate_gmail_email(None, form, {})
+        validate_gmail_email(None, form, {'email': 'invalid-email'})
+        validate_gmail_email(None, form, {'email': 'the.bob.boberson@gmail.com'})
+        validate_gmail_email(None, form, {'email': 'the.bob.boberson@hotmail.com'})
+
+        self.assertFalse(form.errors)
+
+        validate_gmail_email(None, form, {'email': 'the.b.o.b.b.ob.e.r.son@gmail.com'})
+        self.assertTrue(form.errors)

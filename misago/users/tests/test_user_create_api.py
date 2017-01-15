@@ -34,6 +34,16 @@ class UserCreateTests(UserTestCase):
         response = self.client.post(self.api_link)
         self.assertContains(response, 'closed', status_code=403)
 
+    def test_registration_calls_validate_new_registration(self):
+        """api uses validate_new_registration to validate registrations"""
+        response = self.client.post(self.api_link, data={
+            'username': 'Bob',
+            'email': 'l.o.r.e.m.i.p.s.u.m@gmail.com',
+            'password': 'pass123'
+        })
+
+        self.assertContains(response, "email is not allowed", status_code=400)
+
     def test_registration_creates_active_user(self):
         """api creates active and signed in user on POST"""
         settings.override_setting('account_activation', 'none')

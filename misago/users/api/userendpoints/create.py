@@ -11,12 +11,10 @@ from misago.core import forms
 from misago.core.mail import mail_user
 
 from ... import captcha
-from ...bans import ban_ip
 from ...forms.register import RegisterForm
 from ...models import ACTIVATION_REQUIRED_ADMIN, ACTIVATION_REQUIRED_USER
 from ...serializers import AuthenticatedUserSerializer
 from ...tokens import make_activation_token
-from ...validators import validate_new_registration
 
 
 @csrf_protect
@@ -24,7 +22,7 @@ def create_endpoint(request):
     if settings.account_activation == 'closed':
         raise PermissionDenied(_("New users registrations are currently closed."))
 
-    form = RegisterForm(request.data)
+    form = RegisterForm(request.data, request=request)
 
     try:
         captcha.test_request(request)
@@ -33,26 +31,6 @@ def create_endpoint(request):
 
     if not form.is_valid():
         return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    try:
-        validate_new_registration(
-            request.user_ip,
-            form.cleaned_data['username'],
-            form.cleaned_data['email'])
-    except PermissionDenied:
-        staff_message = _("This ban was automatically imposed on "
-                          "%(date)s due to denied registration attempt.")
-
-        message_formats = {'date': date_format(timezone.now())}
-        staff_message = staff_message % message_formats
-        ban_ip(
-            request.user_ip,
-            staff_message=staff_message,
-            length={'days': 14}
-        )
-
-        raise PermissionDenied(
-            _("Your IP address is banned from registering on this site."))
 
     activation_kwargs = {}
     if settings.account_activation == 'user':
