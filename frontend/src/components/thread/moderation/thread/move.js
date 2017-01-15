@@ -26,7 +26,7 @@ export default class extends Form {
   }
 
   componentDidMount() {
-    ajax.get(misago.get('THREAD_EDITOR_URL')).then((data) => {
+    ajax.get(misago.get('THREAD_EDITOR_API')).then((data) => {
       let category = null;
 
       // hydrate categories, extract posting options

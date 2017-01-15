@@ -32,7 +32,7 @@ export class PostingConfig extends React.Component {
   }
 
   componentDidMount() {
-    ajax.get(misago.get('THREAD_EDITOR_URL')).then((data) => {
+    ajax.get(misago.get('THREAD_EDITOR_API')).then((data) => {
       // hydrate categories, extract posting options
       const categories = data.map((item) => {
         return Object.assign(item, {
