@@ -67,7 +67,7 @@ export default class extends Form {
 
   handleSuccess() {
     // refresh thread and displayed posts
-    ajax.get(this.props.thread.api.posts, {page: this.props.posts.page}).then((data) => {
+    ajax.get(this.props.thread.api.posts.index, {page: this.props.posts.page}).then((data) => {
       store.dispatch(thread.replace(data));
       store.dispatch(posts.load(data.post_set));
       store.dispatch(thread.release());
