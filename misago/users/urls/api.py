@@ -10,6 +10,7 @@ from ..api.users import UserViewSet
 
 urlpatterns = [
     url(r'^auth/$', auth.gateway, name='auth'),
+    url(r'^auth/token/$', auth.get_token, name='get-token'),
     url(r'^auth/send-activation/$', auth.send_activation, name='send-activation'),
     url(r'^auth/send-password-form/$', auth.send_password_form, name='send-password-form'),
     url(r'^auth/change-password/(?P<pk>\d+)/(?P<token>[a-zA-Z0-9]+)/$', auth.change_forgotten_password, name='change-forgotten-password'),

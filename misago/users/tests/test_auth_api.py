@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.test import TestCase
@@ -5,6 +6,17 @@ from django.utils.encoding import smart_str
 
 from ..models import BAN_USERNAME, Ban
 from ..tokens import make_activation_token, make_password_change_token
+
+
+class GetTokenTests(TestCase):
+    def test_token_api(self):
+        """api returns CSRF token on GET request"""
+        response = self.client.get('/api/auth/token/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'detail': 'ok'})
+
+        self.assertIn(settings.CSRF_COOKIE_NAME, response.client.cookies)
 
 
 class GatewayTests(TestCase):
