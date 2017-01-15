@@ -170,3 +170,33 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
 
         last_post = self.thread.post_set.order_by('id').last()
         self.assertIn(last_post.get_absolute_url(), message)
+
+    def test_other_notified_after_reading(self):
+        """email is sent to subscriber that had sub updated by read api"""
+        self.other_user.subscription_set.create(
+            thread=self.thread,
+            category=self.category,
+            last_read_on=self.thread.last_post_on,
+            send_email=True
+        )
+        self.override_other_user_acl()
+
+        response = self.client.post(self.api_link, data={
+            'post': 'This is test response!'
+        })
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(len(mail.outbox), 1)
+        last_email = mail.outbox[-1]
+
+        self.assertIn(self.user.username, last_email.subject)
+        self.assertIn(self.thread.title, last_email.subject)
+
+        message = smart_str(last_email.body)
+
+        self.assertIn(self.user.username, message)
+        self.assertIn(self.thread.title, message)
+        self.assertIn(self.thread.get_absolute_url(), message)
+
+        last_post = self.thread.post_set.order_by('id').last()
+        self.assertIn(last_post.get_absolute_url(), message)

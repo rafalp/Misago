@@ -18,7 +18,7 @@ class EmailNotificationMiddleware(PostingMiddleware):
     def post_save(self, serializer):
         queryset = self.thread.subscription_set.filter(
             send_email=True,
-            last_read_on__gt=self.previous_last_post_on
+            last_read_on__gte=self.previous_last_post_on
         ).exclude(user=self.user).select_related('user')
 
         notifications = []
