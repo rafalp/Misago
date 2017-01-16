@@ -17,7 +17,7 @@ def set_avatar(user):
     drawer_function = getattr(drawer_module, name_bits[-1])
 
     image = drawer_function(user)
-    store.store_avatar(user, image)
+    store.store_new_avatar(user, image)
 
 
 """
