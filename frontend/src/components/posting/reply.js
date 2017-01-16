@@ -58,12 +58,12 @@ export default class extends Form {
   };
 
   appendData = (data) => {
-    const newPost = data.post ? ('\n\n[quote="@' +  data.poster + '"]\n' + data.post + '\n[/quote]') : '';
+    const newPost = data.post ? ('[quote="@' +  data.poster + '"]\n' + data.post + '\n[/quote]\n\n') : '';
 
     this.setState((prevState, props) => {
-      if (prevState.post) {
+      if (prevState.post.length > 0) {
         return {
-          post: prevState.post + newPost
+          post: prevState.post + '\n\n' + newPost
         };
       }
 
