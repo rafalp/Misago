@@ -74,7 +74,7 @@ export default class extends React.Component {
       <div className="editor-border">
         <textarea
           className="form-control"
-          defaultValue={this.props.value}
+          value={this.props.value}
           disabled={this.props.loading}
           id="editor-textarea"
           onChange={this.props.onChange}

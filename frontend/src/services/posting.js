@@ -33,6 +33,8 @@ export class Posting {
         this._isOpen = props.submit;
         this._realOpen(props);
       }
+    } else if (props.mode == 'REPLY' && this._isOpen === props.submit) {
+      this._realOpen(props);
     }
   }
 

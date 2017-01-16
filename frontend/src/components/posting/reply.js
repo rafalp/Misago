@@ -33,6 +33,12 @@ export default class extends Form {
     ajax.get(this.props.config, this.props.context || null).then(this.loadSuccess, this.loadError);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.context.reply === nextProps.context.reply) return;
+
+    ajax.get(nextProps.config, nextProps.context || null).then(this.appendData, snackbar.apiError);
+  }
+
   /* jshint ignore:start */
   loadSuccess = (data) => {
     this.setState({
@@ -45,6 +51,22 @@ export default class extends Form {
   loadError = (rejection) => {
     this.setState({
       isErrored: rejection.detail
+    });
+  };
+
+  appendData = (data) => {
+    const newPost = data.post ? ('\n\n[quote="@' +  data.poster + '"]\n' + data.post + '\n[/quote]') : '';
+
+    this.setState((prevState, props) => {
+      if (prevState.post) {
+        return {
+          post: prevState.post + newPost
+        };
+      }
+
+      return {
+        post: newPost
+      };
     });
   };
 
