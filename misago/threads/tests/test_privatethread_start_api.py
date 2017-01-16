@@ -296,9 +296,10 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         self.assertContains(response, thread.title)
         self.assertContains(response, "<p>Lorem ipsum dolor met!</p>")
 
+        # don't count private threads
         self.reload_user()
-        self.assertEqual(self.user.threads, 1)
-        self.assertEqual(self.user.posts, 1)
+        self.assertEqual(self.user.threads, 0)
+        self.assertEqual(self.user.posts, 0)
 
         self.assertEqual(thread.category_id, self.category.pk)
         self.assertEqual(thread.title, "Hello, I am test thread!")

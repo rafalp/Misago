@@ -9,12 +9,7 @@
       <span class="material-icon">
         {{ section.icon }}
       </span>
-
       {{ section.name }}
-
-      {% if 'metadata' in section %}
-        <span class="badge">{{ section.metadata.value }}</span>
-      {% endif %}
     </a>
   {% endfor %}
 </div>

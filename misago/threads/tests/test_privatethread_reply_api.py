@@ -18,7 +18,7 @@ class PrivateThreadReplyApiTestCase(PrivateThreadsTestCase):
         self.other_user = User.objects.create_user(
             'BobBoberson', 'bob@boberson.com', 'pass123')
 
-    def test_api_sets_user_sync_flag(self):
+    def test_reply_private_thread(self):
         """api sets other private thread participants sync thread flag"""
         ThreadParticipant.objects.set_owner(self.thread, self.user)
         ThreadParticipant.objects.add_participants(self.thread, [self.other_user])
@@ -27,6 +27,11 @@ class PrivateThreadReplyApiTestCase(PrivateThreadsTestCase):
             'post': "This is test response!"
         })
         self.assertEqual(response.status_code, 200)
+
+        # don't count private thread replies
+        self.reload_user()
+        self.assertEqual(self.user.threads, 0)
+        self.assertEqual(self.user.posts, 0)
 
         # valid user was flagged to sync
         User = get_user_model()

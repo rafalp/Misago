@@ -46,30 +46,6 @@ class MisagoUsersConfig(AppConfig):
             name=_('Active posters'))
 
     def register_default_user_profile_pages(self):
-        def posts_badge(request, profile):
-            return {
-                'value': profile.posts,
-                'attr': 'posts',
-            }
-
-        def threads_badge(request, profile):
-            return {
-                'value': profile.threads,
-                'attr': 'threads',
-            }
-
-        def followers_badge(request, profile):
-            return {
-                'value': profile.followers,
-                'attr': 'followers',
-            }
-
-        def following_badge(request, profile):
-            return {
-                'value': profile.following,
-                'attr': 'following',
-            }
-
         def can_see_names_history(request, profile):
             if request.user.is_authenticated():
                 is_account_owner = profile.pk == request.user.pk
@@ -93,28 +69,24 @@ class MisagoUsersConfig(AppConfig):
             name=_("Posts"),
             icon='message',
             component='posts',
-            get_metadata=posts_badge,
         )
         user_profile.add_section(
             link='misago:user-threads',
             name=_("Threads"),
             icon='forum',
             component='threads',
-            get_metadata=threads_badge,
         )
         user_profile.add_section(
             link='misago:user-followers',
             name=_("Followers"),
             icon='favorite',
             component='followers',
-            get_metadata=followers_badge,
         )
         user_profile.add_section(
             link='misago:user-follows',
             name=_("Follows"),
             icon='favorite_border',
             component='follows',
-            get_metadata=following_badge,
         )
         user_profile.add_section(
             link='misago:username-history',

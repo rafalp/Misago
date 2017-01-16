@@ -5,16 +5,6 @@ import FollowButton from 'misago/components/profile/follow-button'; // jshint ig
 import misago from 'misago/index'; //jshint ignore:line
 
 export class SideNav extends React.Component {
-  getMeta(meta) {
-    if (meta) {
-      // jshint ignore:start
-      return <span className="badge">{this.props.profile[meta.attr]}</span>;
-      // jshint ignore:end
-    } else {
-      return null;
-    }
-  }
-
   render() {
     // jshint ignore:start
     return <div className="list-group nav-side">
@@ -27,7 +17,6 @@ export class SideNav extends React.Component {
             {page.icon}
           </span>
           {page.name}
-          {this.getMeta(page.meta)}
         </Link>;
       })}
     </div>;
@@ -94,7 +83,6 @@ export class CompactNav extends SideNav {
               {page.icon}
             </span>
             {page.name}
-            {this.getMeta(page.meta)}
           </Link>
         </Li>;
       })}

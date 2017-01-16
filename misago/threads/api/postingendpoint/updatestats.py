@@ -1,5 +1,7 @@
 from django.db.models import F
 
+from misago.categories.models import THREADS_ROOT_NAME
+
 from . import PostingEndpoint, PostingMiddleware
 
 
@@ -31,10 +33,11 @@ class UpdateStatsMiddleware(PostingMiddleware):
         thread.update_all = True
 
     def update_user(self, user):
-        if self.mode == PostingEndpoint.START:
-            user.threads = F('threads') + 1
-            user.update_fields.append('threads')
+        if self.thread.thread_type.root_name == THREADS_ROOT_NAME:
+            if self.mode == PostingEndpoint.START:
+                user.threads = F('threads') + 1
+                user.update_fields.append('threads')
 
-        if self.mode != PostingEndpoint.EDIT:
-            user.posts = F('posts') + 1
-            user.update_fields.append('posts')
+            if self.mode != PostingEndpoint.EDIT:
+                user.posts = F('posts') + 1
+                user.update_fields.append('posts')

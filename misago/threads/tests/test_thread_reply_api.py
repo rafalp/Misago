@@ -150,7 +150,9 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, "<p>This is test response!</p>")
 
+        # api increased user's posts counts
         self.reload_user()
+        self.assertEqual(self.user.threads, 0)
         self.assertEqual(self.user.posts, 1)
 
         post = self.user.post_set.all()[:1][0]
