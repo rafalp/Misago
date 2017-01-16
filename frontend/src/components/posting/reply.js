@@ -34,7 +34,10 @@ export default class extends Form {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.context.reply === nextProps.context.reply) return;
+    const context = this.props.context;
+    const newContext = nextProps.context;
+
+    if (context && newContext && context.reply === newContext.reply) return;
 
     ajax.get(nextProps.config, nextProps.context || null).then(this.appendData, snackbar.apiError);
   }
