@@ -74,7 +74,7 @@ export default class extends React.Component {
     return <li className={this.getClassName()}>
       <div className="rank-user-avatar">
         <a href={this.props.user.absolute_url}>
-          <Avatar user={this.props.user} size="50" />
+          <Avatar user={this.props.user} size={50} size2x={64} />
         </a>
       </div>
 

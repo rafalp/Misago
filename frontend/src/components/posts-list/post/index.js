@@ -44,7 +44,7 @@ export function PosterAvatar(props) {
   if (props.post.poster) {
     return (
       <a href={props.post.poster.absolute_url}>
-        <Avatar size={100} user={props.post.poster} />
+        <Avatar size={100} size2x={150} user={props.post.poster} />
       </a>
     );
   } else {

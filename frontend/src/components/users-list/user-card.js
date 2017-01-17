@@ -131,7 +131,7 @@ export default class extends React.Component {
 
             <div className="user-avatar">
               <a href={this.props.user.absolute_url}>
-                <Avatar user={this.props.user} size="60" />
+                <Avatar user={this.props.user} size={60} size2x={100} />
               </a>
             </div>
 
