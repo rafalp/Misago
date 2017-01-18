@@ -13,7 +13,7 @@ export class OneBox {
     for(let i = 0; i < anchors.length; i++ ) {
       const a = anchors[i];
       const p = a.parentNode;
-      const onlyChild = p.children.length === 1;
+      const onlyChild = p.childNodes.length === 1;
 
       if (!this._youtube[a.href]) {
         this._youtube[a.href] = parseYoutubeUrl(a.href);
