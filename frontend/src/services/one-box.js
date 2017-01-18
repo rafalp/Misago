@@ -43,7 +43,7 @@ export default new OneBox();
 
 export function parseYoutubeUrl(url) {
   const cleanedUrl = cleanUrl(url);
-  const video = cleanedUrl.match(ytRegExp)[1];
+  const video = getVideoIdFromUrl(cleanedUrl);
 
   if (!video) return null;
 
@@ -87,4 +87,12 @@ export function cleanUrl(url) {
   }
 
   return clean;
+}
+
+export function getVideoIdFromUrl(url) {
+  const video = url.match(ytRegExp);
+  if (video) {
+    return video[1];
+  }
+  return null;
 }
