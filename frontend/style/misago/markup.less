@@ -77,3 +77,18 @@
     list-style-type: decimal;
   }
 }
+
+
+// Expand code blocks a little
+.misago-markup pre {
+  background: rgb(25, 23, 28);
+  border: none;
+  padding: @padding-large-vertical;
+  overflow: hidden;
+
+  color: #8b8792;
+
+  code.hljs {
+    margin: @padding-large-vertical * -1;
+  }
+}

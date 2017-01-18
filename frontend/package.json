@@ -16,7 +16,8 @@
     "bootstrap-modal": "./node_modules/bootstrap/js/modal.js",
     "bootstrap-dropdown": "./node_modules/bootstrap/js/dropdown.js",
     "dropzone": "./node_modules/dropzone/dist/dropzone.js",
-    "waypoints": "./node_modules/waypoints/lib/jquery.waypoints.js"
+    "waypoints": "./node_modules/waypoints/lib/jquery.waypoints.js",
+    "highlight": "./highlight/highlight.pack.js"
   },
   "browserify-shim": {
     "jquery": "jQuery"

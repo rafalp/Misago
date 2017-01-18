@@ -25,6 +25,7 @@
 
     "$",
     "jQuery",
+    "hljs",
 
     "phantom"
   ]

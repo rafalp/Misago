@@ -9,6 +9,20 @@ export class OneBox {
   render = (domnode) => {
     if (!domnode) return;
 
+    this.highlightCode(domnode);
+    this.embedYoutubePlayers(domnode);
+  };
+  // jshint ignore:end
+
+  highlightCode(domnode) {
+    const codeblocks = domnode.querySelectorAll('pre>code');
+    for(let i = 0; i < codeblocks.length; i++ ) {
+      const code = codeblocks[i];
+      hljs.highlightBlock(code);
+    }
+  }
+
+  embedYoutubePlayers(domnode) {
     const anchors = domnode.querySelectorAll('p>a');
     for(let i = 0; i < anchors.length; i++ ) {
       const a = anchors[i];
@@ -24,8 +38,7 @@ export class OneBox {
         this.swapYoutubePlayer(a, youtubeMovie);
       }
     }
-  };
-  // jshint ignore:end
+  }
 
   swapYoutubePlayer(element, youtube) {
     let url = 'https://www.youtube.com/embed/';
