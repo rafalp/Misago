@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.conf.urls import include, url
+from django.views.generic import TemplateView
 
 from misago.core.views import forum_index
 
@@ -11,6 +12,9 @@ urlpatterns = [
     url(r'^', include('misago.categories.urls')),
     url(r'^', include('misago.threads.urls')),
     url(r'^', include('misago.search.urls')),
+
+    # default robots.txt
+    url(r'^robots.txt$', TemplateView.as_view(template_name='misago/robots.txt')),
 
     # "misago:index" link symbolises "root" of Misago links space
     # any request with path that falls below this one is assumed to be directed

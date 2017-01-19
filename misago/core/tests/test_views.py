@@ -22,6 +22,12 @@ class PreloadJSDataViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+class RobotsTxtViewTests(TestCase):
+    def test_robots_txt_returns_200(self):
+        """robots.txt has no showstoppers"""
+        response = self.client.get('/robots.txt')
+        self.assertContains(response, '/api/')
+
 
 @override_settings(ROOT_URLCONF='misago.core.testproject.urls')
 class RedirectViewTests(TestCase):

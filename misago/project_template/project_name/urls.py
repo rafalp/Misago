@@ -1,11 +1,9 @@
 from django.conf import settings
 from django.conf.urls import include, url
-# Serve static and media files in development
 from django.conf.urls.static import static
-# Setup Django admin to work with Misago auth
 from django.contrib import admin
+from django.views.generic import TemplateView
 
-# Register default views
 from misago.core.views import javascript_catalog, momentjs_catalog
 from misago.users.forms.auth import AdminAuthenticationForm
 

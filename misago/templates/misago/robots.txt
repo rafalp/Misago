@@ -1,0 +1,11 @@
+# Forbid crawlers from indexing API
+User-agent: *
+Disallow: {% url 'misago:index' %}api/
+Disallow: {% url 'misago:index' %}activation/
+Disallow: {% url 'misago:banned' %}
+Disallow: {% url 'misago:blank-avatar' %}
+Disallow: {% url 'misago:forgotten-password' %}
+Disallow: {% url 'misago:login' %}
+Disallow: {% url 'misago:request-activation' %}
+Disallow: {% url 'misago:search' %}
+Disallow: {% url 'misago:index' %}u/
