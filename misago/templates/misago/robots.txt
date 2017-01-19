@@ -1,4 +1,4 @@
-# Forbid crawlers from indexing API
+# Forbid crawlers from indexing parts of site
 User-agent: *
 Disallow: {% url 'misago:index' %}api/
 Disallow: {% url 'misago:index' %}activation/
