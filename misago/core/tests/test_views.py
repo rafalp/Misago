@@ -26,6 +26,7 @@ class RobotsTxtViewTests(TestCase):
     def test_robots_txt_returns_200(self):
         """robots.txt has no showstoppers"""
         response = self.client.get('/robots.txt')
+        self.assertEqual(response['Content-type'], 'text/plain')
         self.assertContains(response, '/api/')
 
 

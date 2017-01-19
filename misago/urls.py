@@ -14,7 +14,10 @@ urlpatterns = [
     url(r'^', include('misago.search.urls')),
 
     # default robots.txt
-    url(r'^robots.txt$', TemplateView.as_view(template_name='misago/robots.txt')),
+    url(r'^robots.txt$', TemplateView.as_view(
+        content_type='text/plain',
+        template_name='misago/robots.txt'
+    )),
 
     # "misago:index" link symbolises "root" of Misago links space
     # any request with path that falls below this one is assumed to be directed
