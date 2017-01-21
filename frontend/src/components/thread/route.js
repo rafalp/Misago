@@ -84,6 +84,7 @@ export default class extends React.Component {
   setPageTitle() {
     title.set({
       title: this.props.thread.title,
+      parent: this.props.thread.category.name,
       page: (this.props.params.page || 1) * 1
     });
   }
