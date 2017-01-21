@@ -123,19 +123,13 @@ STATICFILES_DIRS = (
 # Email configuration
 # https://docs.djangoproject.com/en/{{ docs_version }}/ref/settings/#email-backend
 
-# The host to use for sending email.
-
 EMAIL_HOST = 'localhost'
+EMAIL_PORT = 25
 
 
-# Username to use for the SMTP server defined in EMAIL_HOST. If empty, Django won’t attempt authentication.
+# If either of these settings is empty, Django won't attempt authentication.
 
 EMAIL_HOST_USER = ''
-
-
-# Password to use for the SMTP server defined in EMAIL_HOST. This setting is used in conjunction with EMAIL_HOST_USER
-# when authenticating to the SMTP server. If either of these settings is empty, Django won’t attempt authentication.
-
 EMAIL_HOST_PASSWORD = ''
 
 
