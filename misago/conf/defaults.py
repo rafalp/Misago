@@ -73,16 +73,21 @@ INSTALLED_APPS = (
 
 MIDDLEWARE_CLASSES = (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+
     'misago.users.middleware.RealIPMiddleware',
     'misago.core.middleware.frontendcontext.FrontendContextMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+
     'misago.users.middleware.UserMiddleware',
+
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
     'misago.core.middleware.exceptionhandler.ExceptionHandlerMiddleware',
     'misago.users.middleware.OnlineTrackerMiddleware',
     'misago.admin.middleware.AdminAuthMiddleware',
@@ -91,12 +96,13 @@ MIDDLEWARE_CLASSES = (
 )
 
 DEFAULT_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
     'django.template.context_processors.debug',
     'django.template.context_processors.i18n',
     'django.template.context_processors.media',
     'django.template.context_processors.static',
     'django.template.context_processors.tz',
+
+    'django.contrib.auth.context_processors.auth',
     'django.contrib.messages.context_processors.messages',
 
     'misago.core.context_processors.site_address',
