@@ -1,11 +1,11 @@
 from datetime import timedelta
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import Count
 from django.utils import timezone
 
 from misago.categories.models import Category
+from misago.conf import settings
 
 from .models import ActivityRanking
 

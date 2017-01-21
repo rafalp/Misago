@@ -1,10 +1,10 @@
-from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
 from rest_framework import serializers
 
 from misago.acl import add_acl
+from misago.conf import settings
 
 from . import PostingEndpoint, PostingInterrupt, PostingMiddleware
 from ...serializers import AttachmentSerializer

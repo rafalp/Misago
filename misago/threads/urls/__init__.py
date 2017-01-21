@@ -1,5 +1,6 @@
-from django.conf import settings
 from django.conf.urls import url
+
+from misago.conf import settings
 
 from ..views.attachment import attachment_server
 from ..views.goto import (

@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
@@ -11,6 +10,7 @@ from django.utils import six
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
+from misago.conf import settings
 from misago.core.decorators import require_POST
 from misago.core.shortcuts import get_object_or_404, paginate, pagination_dict, validate_slug
 from misago.core.utils import clean_return_path

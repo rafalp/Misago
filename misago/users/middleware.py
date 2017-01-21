@@ -2,13 +2,14 @@ import pytz
 
 from django.contrib.auth import logout
 from django.contrib.auth.models import AnonymousUser as DjAnonymousUser
+from django.utils.deprecation import MiddlewareMixin
 
 from .bans import get_request_ip_ban, get_user_ban
 from .models import AnonymousUser, Online
 from .online import tracker
 
 
-class RealIPMiddleware(object):
+class RealIPMiddleware(MiddlewareMixin):
     def process_request(self, request):
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
         if x_forwarded_for:
@@ -17,7 +18,7 @@ class RealIPMiddleware(object):
             request.user_ip = request.META.get('REMOTE_ADDR')
 
 
-class UserMiddleware(object):
+class UserMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if request.user.is_anonymous():
             request.user = AnonymousUser()
@@ -27,7 +28,7 @@ class UserMiddleware(object):
                 request.user = AnonymousUser()
 
 
-class OnlineTrackerMiddleware(object):
+class OnlineTrackerMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if request.user.is_authenticated():
             try:

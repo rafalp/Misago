@@ -1,3 +1,5 @@
+from django.utils.deprecation import MiddlewareMixin
+
 from misago.categories.models import Category
 
 from .models import Thread
@@ -5,7 +7,7 @@ from .permissions import exclude_invisible_threads
 from .viewmodels import filter_read_threads_queryset
 
 
-class UnreadThreadsCountMiddleware(object):
+class UnreadThreadsCountMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if request.user.is_anonymous():
             return

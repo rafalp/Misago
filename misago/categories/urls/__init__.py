@@ -1,7 +1,8 @@
-from django.conf import settings
 from django.conf.urls import url
 
+from misago.conf import settings
 from misago.core.views import home_redirect
+
 from ..views.categorieslist import categories
 
 

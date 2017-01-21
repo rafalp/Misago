@@ -1,10 +1,11 @@
 from hashlib import md5
 from time import time
 
-from django.conf import settings
 from django.contrib import auth as dj_auth
 from django.contrib import messages
 from django.utils.translation import ugettext as _
+
+from misago.conf import settings
 
 
 KEY_TOKEN = 'misago_admin_session_token'

@@ -5,6 +5,7 @@ from django.test import TestCase
 from misago.core import threadstore
 from misago.core.cache import cache
 
+from .. import defaults
 from ..dbsettings import db_settings
 from ..gateway import settings as gateway
 from ..migrationutils import migrate_settings_group
@@ -27,8 +28,10 @@ class GatewaySettingsTests(TestCase):
     def test_get_existing_setting(self):
         """forum_name is defined"""
         self.assertEqual(gateway.forum_name, db_settings.forum_name)
+        self.assertEqual(gateway.INSTALLED_APPS,
+                         dj_settings.INSTALLED_APPS)
         self.assertEqual(gateway.MISAGO_MAILER_BATCH_SIZE,
-                         dj_settings.MISAGO_MAILER_BATCH_SIZE)
+                         defaults.MISAGO_MAILER_BATCH_SIZE)
 
         with self.assertRaises(AttributeError):
             gateway.LoremIpsum

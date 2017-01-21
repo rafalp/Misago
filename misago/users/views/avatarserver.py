@@ -1,7 +1,8 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.shortcuts import redirect
+
+from misago.conf import settings
 
 
 def user_avatar(request, pk, size):

@@ -1,7 +1,7 @@
-from django.conf import settings
 from django.conf.urls import include, url
 from django.views.generic import TemplateView
 
+from misago.conf import settings
 from misago.core.views import forum_index
 
 

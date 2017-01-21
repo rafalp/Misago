@@ -4,7 +4,6 @@ from io import BytesIO
 
 from PIL import Image
 
-from django.conf import settings
 from django.core.files import File
 from django.core.files.base import ContentFile
 from django.db import models
@@ -13,6 +12,7 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.encoding import python_2_unicode_compatible
 
+from misago.conf import settings
 from misago.core.utils import slugify
 
 

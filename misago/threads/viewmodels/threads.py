@@ -1,6 +1,5 @@
 from datetime import timedelta
 
-from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.db.models import F, Q
 from django.http import Http404
@@ -9,6 +8,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 
 from misago.acl import add_acl
+from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
 from misago.readtracker import threadstracker
 

@@ -1,6 +1,6 @@
 from importlib import import_module
 
-from django.conf import settings
+from misago.conf import settings
 
 
 __ALL__ = ['providers']

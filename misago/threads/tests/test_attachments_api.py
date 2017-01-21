@@ -3,13 +3,13 @@ import os
 
 from PIL import Image
 
-from django.conf import settings
 from django.urls import reverse
 from django.utils import six
 from django.utils.encoding import smart_str
 
 from misago.acl.models import Role
 from misago.acl.testutils import override_acl
+from misago.conf import settings
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from ..models import Attachment, AttachmentType

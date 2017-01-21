@@ -1,9 +1,10 @@
 # pylint: disable=protected-access
 from types import ModuleType
 
-from django.conf import settings
 from django.test import TestCase
 from django.utils import six
+
+from misago.conf import settings
 
 from ..providers import PermissionProviders
 

@@ -3,8 +3,9 @@ import random
 from path import Path
 from PIL import Image
 
-from django.conf import settings
 from django.core.files.base import ContentFile
+
+from misago.conf import settings
 
 from . import store
 

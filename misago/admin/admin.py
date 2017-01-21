@@ -1,8 +1,9 @@
 from django.conf.urls import url
+from django.utils.deprecation import MiddlewareMixin
 from django.utils.translation import ugettext_lazy as _
 
 
-class MisagoAdminExtension(object):
+class MisagoAdminExtension(MiddlewareMixin):
     def register_urlpatterns(self, urlpatterns):
         pass
 

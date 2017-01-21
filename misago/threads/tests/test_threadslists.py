@@ -1,7 +1,6 @@
 from datetime import timedelta
 from json import loads as json_loads
 
-from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import smart_str
@@ -9,6 +8,7 @@ from django.utils.six.moves import range
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
+from misago.conf import settings
 from misago.core import threadstore
 from misago.core.cache import cache
 from misago.readtracker import categoriestracker, threadstracker

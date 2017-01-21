@@ -1,10 +1,11 @@
-from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.utils import six
 from django.utils.translation import ugettext as _, ungettext
 
 from rest_framework.response import Response
+
+from misago.conf import settings
 
 from ...permissions.threads import allow_move_post, exclude_invisible_posts
 from ...utils import get_thread_id_from_url
