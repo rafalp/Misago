@@ -1,5 +1,11 @@
 include LICENSE.rst
+include MANIFEST.in
 include README.rst
-recursive-include docs *
-recursive-exclude docs/build *
-recursive-include misago *
+include requirements.txt
+graft docs
+prune docs/build
+prune testproject
+graft misago
+global-exclude __pycache__
+global-exclude *.py[co]
+global-exclude .DS_Store
