@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>{% spaceless %}{% block title %}{{ misago_settings.forum_name }}{% endblock %}{% endspaceless %}</title>
     <meta name="description" content="{% spaceless %}{% block meta-description %}{% endblock %}{% endspaceless %}">
+    {% spaceless %}
+      {% block meta-extra %}{% endblock meta-extra %}
+    {% endspaceless %}
     <link href="{% static 'misago/css/misago.css' %}" rel="stylesheet">
     <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
     <link rel="apple-touch-icon" sizes="57x57" href="{% static 'apple-touch-icon-57.png' %}">
