@@ -28,6 +28,18 @@ Misago aims to be complete, featured and modern forum solution that has no fear 
 * **Code & BugTracker:** https://github.com/rafalp/Misago/
 
 
+Screenshots
+===========
+
+.. image:: https://misago-project.org/media/mporg-home.png
+   :target: https://travis-ci.org/rafalp/Misago
+   :alt: Forum index
+
+.. image:: https://misago-project.org/media/mporg-thread.png
+   :target: https://travis-ci.org/rafalp/Misago
+   :alt: Thread view
+
+
 Production use
 ==============
 
