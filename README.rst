@@ -32,11 +32,11 @@ Screenshots
 ===========
 
 .. image:: https://misago-project.org/media/mporg-home.png
-   :target: https://travis-ci.org/rafalp/Misago
+   :target: https://misago-project.org
    :alt: Forum index
 
 .. image:: https://misago-project.org/media/mporg-thread.png
-   :target: https://travis-ci.org/rafalp/Misago
+   :target: https://misago-project.org
    :alt: Thread view
 
 
