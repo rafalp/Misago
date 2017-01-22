@@ -19,28 +19,46 @@ Misago
    :alt: Works on Python 2.7, 3.5, 3,6
 
 
-**Development Status: Pre-Alpha**
+**Development Status: Alpha**
 
 Misago aims to be complete, featured and modern forum solution that has no fear to say 'NO' to common and outdated opinions about how forum software should be made and what it should do.
-
-If you can run Python apps on your hosting and you are looking for modern solution using latest paradigms in web development, or you are Django developer and forum is going to be core component of your next project then Misago is option for you.
 
 * **Homepage:** http://misago-project.org/
 * **Documentation:** http://misago.readthedocs.org/en/latest/
 * **Code & BugTracker:** https://github.com/rafalp/Misago/
 
 
-Don't use this branch in production!
-====================================
+Production use
+==============
 
-This branch contains in-development code of next major Misago release, 0.6. **It's not feature-complete.** If you are looking at running "real" forum on Misago, please use latest 0.5 release instead.
+As of now Misago implements all features considered "must have" on internet forum:
 
-**There is no update path for pre-release 0.6 installations!** If you run your site off codebase pulled straight from git branch instead of release or pypi install, you'll won't be able to do smooth update via ``python manage.py migrate``.
+* Your users may register accounts, set avatars, change options and edit their profiles. They have option to reset forgotten password.
+* Site admins may require users to confirm validity of their e-mail addresses via e-mail sent activation link, or limit user account activation to administrator action.
+* Create categories together with unlimited number and depth of subcategories.
+* Write messages using either GitHub flavoured markdown, subset of BBCode or both.
+* Presence features let site members know when other users are online, offline or banned. Individual users have setting to hide their activity from non-admins.
+* Complete moderation toolkit allowing admin-approved moderators to edit, move, hide, approve, delete or close user posted content. This also includes option to delete or block user accounts or avatars.
+* Ban system allows you to ban existing users as well as forbid certain user names, e-mails or IP addresses from registering accounts.
+* Permission system allowing you to control which features are available to users based on their rank, roles or category they are in.
+* Private threads feature allowing users to create threads visible only to them and those they've invited to it. 
+* Highly configurable polls, including those with public and private voters, single and multiple choice polls as well as ones that allow vote change or allow voting for limited period of time.
+* Post attachments complete thumbnailing and gif's animation removal.
+* Posts edits log allowing you to see how user messages used to look in past as well as revert function protecting you from malignant users emptying their posts contents.
+
+Even more features will follow in future releases:
+
+* moderation queue
+* content reporting
+* warning system
+* notifications
+* custom design
+
+If you are looking into using Misago to run live forum, you are absolutely invited to, but please keep in mind that Misago is relatively immature software that may contain serious bugs or issues as well as quirks thay may take time to resolve, despite best efforts. 
 
 
 Development
 ===========
-
 
 To start Misago site locally, first setup and activate virtual environment for it and then fire following commands::
 

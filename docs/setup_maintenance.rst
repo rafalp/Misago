@@ -33,7 +33,7 @@ Setup
 
 To install Misago setup and activate virtual environment for your site and then fire following command::
 
-    pip install misago
+    pip install misago --pre
 
 This will install Misago in your virtual environment and make "misago-start.py" script available for you to use to create pre-configured Misago site.
 
