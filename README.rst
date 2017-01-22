@@ -31,18 +31,18 @@ Misago aims to be complete, featured and modern forum solution that has no fear 
 Production use
 ==============
 
-As of now Misago implements all features considered "must have" on internet forum:
+As of now Misago implements all features considered "must have" on live internet forum:
 
 * Your users may register accounts, set avatars, change options and edit their profiles. They have option to reset forgotten password.
-* Site admins may require users to confirm validity of their e-mail addresses via e-mail sent activation link, or limit user account activation to administrator action.
+* Site admins may require users to confirm validity of their e-mail addresses via e-mail sent activation link, or limit user account activation to administrator action. They can use custom Q&A challenge, ReCAPTCHA, Stop Forum Spam or IP's blacklist to combat spam registrations. Pletora of settings are available to control user account behaviour, like username lengths or avatar restrictions.
 * Create categories together with unlimited number and depth of subcategories.
-* Write messages using either GitHub flavoured markdown, subset of BBCode or both.
+* Write messages using either GitHub flavoured markdown, BBCode subset, or both.
 * Presence features let site members know when other users are online, offline or banned. Individual users have setting to hide their activity from non-admins.
-* Complete moderation toolkit allowing admin-approved moderators to edit, move, hide, approve, delete or close user posted content. This also includes option to delete or block user accounts or avatars.
+* Complete moderation toolset allowing admin-approved moderators to edit, move, hide, approve, delete or close user posted content. This also includes option to delete or block user accounts or avatars.
 * Ban system allows you to ban existing users as well as forbid certain user names, e-mails or IP addresses from registering accounts.
 * Permission system allowing you to control which features are available to users based on their rank, roles or category they are in.
-* Private threads feature allowing users to create threads visible only to them and those they've invited to it. 
-* Highly configurable polls, including those with public and private voters, single and multiple choice polls as well as ones that allow vote change or allow voting for limited period of time.
+* Private threads feature allowing users to create threads visible only to them and those they've invited. 
+* Rich polls  system, allowing polls with public and private voters, single and multiple choices as well as ones that allow vote change or limit voting tp limited period of time.
 * Post attachments complete thumbnailing and gif's animation removal.
 * Posts edits log allowing you to see how user messages used to look in past as well as revert function protecting you from malignant users emptying their posts contents.
 
@@ -54,7 +54,7 @@ Even more features will follow in future releases:
 * notifications
 * custom design
 
-If you are looking into using Misago to run live forum, you are absolutely invited to, but please keep in mind that Misago is relatively immature software that may contain serious bugs or issues as well as quirks thay may take time to resolve, despite best efforts. 
+If you are looking into using Misago to run live forum, you are absolutely invited to, but please keep in mind that Misago is relatively immature software that may contain serious bugs or issues as well as quirks and lackings thay may take time to resolve, despite best efforts. 
 
 
 Development
