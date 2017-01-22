@@ -27,11 +27,11 @@ setup(
     name='Misago',
     version=version,
     license='GNU General Public License v2 (GPLv2)',
-    description=[
+    description=(
         "Misago is modern, fully featured forum application written in "
         "Python and ES6, powered by Django and React.js. It works out of "
         "the box and plays nice with other projects like Django-CMS."
-    ],
+    ),
     url='http://www.misago-project.org/',
     author=u'Rafał Pitoń',
     author_email='kontakt@rpiton.com',
