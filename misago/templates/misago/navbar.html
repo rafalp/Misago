@@ -40,11 +40,13 @@
           {% trans "Users" %}
         </a>
       </li>
+      {% if user.acl.can_search %}
       <li>
-        <a href="#">
+        <a href="{% url 'misago:search' %}">
           {% trans "Search" %}
         </a>
       </li>
+      {% endif %}
     </ul>
 
     <div id="user-menu-mount"></div>
@@ -98,11 +100,13 @@
         <i class="material-icon">group</i>
       </a>
     </li>
-    <li>
-      <a href="#">
-        <i class="material-icon">search</i>
-      </a>
-    </li>
+    {% if user.acl.can_search %}
+      <li>
+        <a href="{% url 'misago:search' %}">
+          <i class="material-icon">search</i>
+        </a>
+      </li>
+    {% endif %}
     <li id="user-menu-compact-mount"></li>
   </ul>
   <!-- /compact navbar -->

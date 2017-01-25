@@ -2,12 +2,15 @@ import { connect } from 'react-redux';
 import Route from 'misago/components/threads/route';
 import misago from 'misago/index';
 
-export function select(store) {
-  return {
-    'selection': store.selection,
-    'threads': store.threads,
-    'tick': store.tick.tick,
-    'user': store.auth.user
+export function getSelect(options) {
+  return function(store) {
+    return {
+      'options': options,
+      'selection': store.selection,
+      'threads': store.threads,
+      'tick': store.tick.tick,
+      'user': store.auth.user
+    };
   };
 }
 
@@ -60,7 +63,7 @@ export function getLists(user) {
   return lists;
 }
 
-export function paths(user) {
+export function paths(user, mode) {
   let lists = getLists(user);
   let routes = [];
   let categoriesMap = {};
@@ -71,7 +74,7 @@ export function paths(user) {
 
       routes.push({
         path: category.absolute_url + list.path,
-        component: connect(select)(Route),
+        component: connect(getSelect(mode))(Route),
 
         categories: misago.get('CATEGORIES'),
         categoriesMap,

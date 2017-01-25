@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.utils import six
 from django.utils.translation import gettext as _
@@ -9,8 +10,15 @@ from misago.categories.serializers import CategorySerializer
 from misago.core.apipatch import ApiPatch
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
 
+from ...models import ThreadParticipant
 from ...moderation import threads as moderation
-from ...permissions import allow_start_thread
+from ...participants import (
+    add_participant, change_owner, make_participants_aware, remove_participant)
+from ...permissions import (
+    allow_add_participants, allow_add_participant,
+    allow_change_owner, allow_edit_thread,
+    allow_remove_participant, allow_start_thread)
+from ...serializers import ThreadParticipantSerializer
 from ...utils import add_categories_to_items
 from ...validators import validate_title
 
@@ -39,8 +47,7 @@ def patch_title(request, thread, value):
     except ValidationError as e:
         raise PermissionDenied(e.args[0])
 
-    if not thread.acl.get('can_edit'):
-        raise PermissionDenied(_("You don't have permission to edit this thread."))
+    allow_edit_thread(request.user, thread)
 
     moderation.change_thread_title(request, thread, value_cleaned)
     return {'title': thread.title}
@@ -69,26 +76,27 @@ thread_patch_dispatcher.replace('weight', patch_weight)
 
 
 def patch_move(request, thread, value):
-    if thread.acl.get('can_move'):
-        category_pk = get_int_or_404(value)
-        new_category = get_object_or_404(
-            Category.objects.all_categories().select_related('parent'),
-            pk=category_pk
-        )
-
-        add_acl(request.user, new_category)
-        allow_see_category(request.user, new_category)
-        allow_browse_category(request.user, new_category)
-        allow_start_thread(request.user, new_category)
-
-        if new_category == thread.category:
-            raise PermissionDenied(_("You can't move thread to the category it's already in."))
-
-        moderation.move_thread(request, thread, new_category)
-
-        return {'category': CategorySerializer(new_category).data}
-    else:
+    if not thread.acl.get('can_move'):
         raise PermissionDenied(_("You don't have permission to move this thread."))
+
+    category_pk = get_int_or_404(value)
+    new_category = get_object_or_404(
+        Category.objects.all_categories().select_related('parent'),
+        pk=category_pk
+    )
+
+    add_acl(request.user, new_category)
+    allow_see_category(request.user, new_category)
+    allow_browse_category(request.user, new_category)
+    allow_start_thread(request.user, new_category)
+
+    if new_category == thread.category:
+        raise PermissionDenied(_("You can't move thread to the category it's already in."))
+
+    moderation.move_thread(request, thread, new_category)
+
+    return {'category': CategorySerializer(new_category).data}
+
 thread_patch_dispatcher.replace('category', patch_move)
 
 
@@ -166,7 +174,7 @@ def patch_is_hidden(request, thread, value):
 thread_patch_dispatcher.replace('is-hidden', patch_is_hidden)
 
 
-def patch_subscribtion(request, thread, value):
+def patch_subscription(request, thread, value):
     request.user.subscription_set.filter(thread=thread).delete()
 
     if value == 'notify':
@@ -189,7 +197,93 @@ def patch_subscribtion(request, thread, value):
         return {'subscription': True}
     else:
         return {'subscription': None}
-thread_patch_dispatcher.replace('subscription', patch_subscribtion)
+thread_patch_dispatcher.replace('subscription', patch_subscription)
+
+
+def patch_add_participant(request, thread, value):
+    allow_add_participants(request.user, thread)
+
+    User = get_user_model()
+    try:
+        username = six.text_type(value).strip().lower()
+        if not username:
+            raise PermissionDenied(
+                _("You have to enter new participant's username."))
+        participant = User.objects.get(slug=username)
+    except User.DoesNotExist:
+        raise PermissionDenied(_("No user with such name exists."))
+
+    if participant in [p.user for p in thread.participants_list]:
+        raise PermissionDenied(_("This user is already thread participant."))
+
+    allow_add_participant(request.user, participant)
+    add_participant(request, thread, participant)
+
+    make_participants_aware(request.user, thread)
+    participants = ThreadParticipantSerializer(
+        thread.participants_list, many=True)
+
+    return {
+        'participants': participants.data
+    }
+thread_patch_dispatcher.add('participants', patch_add_participant)
+
+
+def patch_remove_participant(request, thread, value):
+    try:
+        user_id = int(value)
+    except (ValueError, TypeError):
+        user_id = 0
+
+    for participant in thread.participants_list:
+        if participant.user_id == user_id:
+            break
+    else:
+        raise PermissionDenied(_("Participant doesn't exist."))
+
+    allow_remove_participant(request.user, thread, participant.user)
+    remove_participant(request, thread, participant.user)
+
+    if len(thread.participants_list) == 1:
+        return {
+            'deleted': True
+        }
+    else:
+        make_participants_aware(request.user, thread)
+        participants = ThreadParticipantSerializer(
+            thread.participants_list, many=True)
+
+        return {
+            'deleted': False,
+            'participants': participants.data
+        }
+thread_patch_dispatcher.remove('participants', patch_remove_participant)
+
+
+def patch_replace_owner(request, thread, value):
+    try:
+        user_id = int(value)
+    except (ValueError, TypeError):
+        user_id = 0
+
+    for participant in thread.participants_list:
+        if participant.user_id == user_id:
+            if participant.is_owner:
+                raise PermissionDenied(_("This user already is thread owner."))
+            else:
+                break
+    else:
+        raise PermissionDenied(_("Participant doesn't exist."))
+
+    allow_change_owner(request.user, thread)
+    change_owner(request, thread, participant.user)
+
+    make_participants_aware(request.user, thread)
+    participants = ThreadParticipantSerializer(thread.participants_list, many=True)
+    return {
+        'participants': participants.data
+    }
+thread_patch_dispatcher.replace('owner', patch_replace_owner)
 
 
 def thread_patch_endpoint(request, thread):

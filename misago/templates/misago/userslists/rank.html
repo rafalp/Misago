@@ -4,13 +4,25 @@
 
 {% block title %}{% pagetitle rank.name page=paginator.page %} | {{ block.super }}{% endblock %}
 {% block meta-description %}
-{% blocktrans trimmed with rank=rank.name users=users.paginator.count count counter=users.paginator.count %}
-There is {{ users }} user with {{ rank }} rank.
-{% plural %}
-There are {{ users }} users with {{ rank }} rank.
-{% endblocktrans %}
 {{ rank.description|default:"" }}
 {% endblock %}
+
+
+{% block meta-extra %}
+{% if paginator.page > 1 %}
+<link rel="canonical" href="{% url 'misago:users-rank' slug=rank.slug page=paginator.page %}" />
+{% else %}
+<link rel="canonical" href="{% url 'misago:users-rank' slug=rank.slug %}" />
+{% endif %}
+{% if paginator.previous > 1 %}
+<link rel="prev" href="{% url 'misago:users-rank' slug=rank.slug page=paginator.previous %}" />
+{% elif paginator.previous %}
+<link rel="prev" href="{% url 'misago:users-rank' slug=rank.slug %}" />
+{% endif %}
+{% if paginator.next %}
+<link rel="next" href="{% url 'misago:users-rank' slug=rank.slug page=paginator.next %}" />
+{% endif %}
+{% endblock meta-extra %}
 
 
 {% block content %}
@@ -20,141 +32,141 @@ There are {{ users }} users with {{ rank }} rank.
   <div class="container">
 
     {% if rank.description %}
-    <div class="rank-description">
-      <div class="page-lead {{ rank.description|escape|linebreaks|isdescriptionshort|iftrue:"lead" }}">
-        {{ rank.description|escape|urlize|linebreaks|safe }}
+      <div class="rank-description">
+        <div class="page-lead {{ rank.description|escape|linebreaks|isdescriptionshort|iftrue:"lead" }}">
+          {{ rank.description|escape|urlize|linebreaks|safe }}
+        </div>
       </div>
-    </div>
     {% endif %}
 
     {% if paginator.count %}
-    <div>
-      <div class="users-cards-list ui-ready">
-        {% for row in users|batch:3 %}
-          <div class="row">
-            {% for user in row %}
-              <div class="col-md-4">
+      <div>
+        <div class="users-cards-list ui-ready">
+          {% for row in users|batch:3 %}
+            <div class="row">
+              {% for user in row %}
+                <div class="col-md-4">
 
-                <div class="user-card {% if rank.css_class %} user-card-{{ rank.css_class }}{% endif %}">
-                  <div class="user-card-bg-image">
-                    <img src="{{ user|avatar:400 }}" alt="" class="bg-image">
+                  <div class="user-card {% if rank.css_class %} user-card-{{ rank.css_class }}{% endif %}">
+                    <div class="user-card-bg-image">
+                      <img src="{{ user|avatar:400 }}" alt="" class="bg-image">
 
-                    <div class="user-card-bg">
-                      <div class="user-details">
+                      <div class="user-card-bg">
+                        <div class="user-details">
 
-                        <div class="user-avatar">
-                          <a href="{{ user.get_absolute_url }}">
-                            <img src="{{ user|avatar:400 }}" alt="">
-                          </a>
+                          <div class="user-avatar">
+                            <a href="{{ user.get_absolute_url }}">
+                              <img src="{{ user|avatar:400 }}" alt="">
+                            </a>
+                          </div>
+
+                          <h4 class="user-name">
+                            <a href="{{ user.get_absolute_url }}" class="item-title">
+                              {{ user.username }}
+                            </a>
+                          </h4>
+
+                          <p class="user-subscript">
+                            {% if user.title %}
+                              <span class="user-title">{{ user.title }}</span>
+                            {% endif %}
+                            <span class="user-joined-on">
+                              {% blocktrans trimmed with joined_on=user.joined_on|date %}
+                                Joined on {{ joined_on }}
+                              {% endblocktrans %}
+                            </span>
+                          </p>
+
                         </div>
+                      </div>
+                      <div class="user-card-stats">
 
-                        <h4 class="user-name">
-                          <a href="{{ user.get_absolute_url }}" class="item-title">
-                            {{ user.username }}
-                          </a>
-                        </h4>
-
-                        <p class="user-subscript">
-                          {% if user.title %}
-                            <span class="user-title">{{ user.title }}</span>
-                          {% endif %}
-                          <span class="user-joined-on">
-                            {% blocktrans trimmed with joined_on=user.joined_on|date %}
-                              Joined on {{ joined_on }}
+                        <ul class="list-unstyled">
+                          <li class="user-posts-count">
+                            {% blocktrans trimmed count posts=user.posts %}
+                              {{ posts }} post
+                            {% plural %}
+                              {{ posts }} posts
                             {% endblocktrans %}
-                          </span>
-                        </p>
+                          </li>
+                          <li class="user-threads-count">
+                            {% blocktrans trimmed count threads=user.threads %}
+                              {{ threads }} thread
+                            {% plural %}
+                              {{ threads }} threads
+                            {% endblocktrans %}
+                          </li>
+                          <li class="user-followers-count">
+                            {% blocktrans trimmed count followers=user.followers %}
+                              {{ followers }} follower
+                            {% plural %}
+                              {{ followers }} followers
+                            {% endblocktrans %}
+                          </li>
+                        </ul>
 
                       </div>
                     </div>
-                    <div class="user-card-stats">
-
-                      <ul class="list-unstyled">
-                        <li class="user-posts-count">
-                          {% blocktrans trimmed count posts=user.posts %}
-                            {{ posts }} post
-                          {% plural %}
-                            {{ posts }} posts
-                          {% endblocktrans %}
-                        </li>
-                        <li class="user-threads-count">
-                          {% blocktrans trimmed count threads=user.threads %}
-                            {{ threads }} thread
-                          {% plural %}
-                            {{ threads }} threads
-                          {% endblocktrans %}
-                        </li>
-                        <li class="user-followers-count">
-                          {% blocktrans trimmed count followers=user.followers %}
-                            {{ followers }} follower
-                          {% plural %}
-                            {{ followers }} followers
-                          {% endblocktrans %}
-                        </li>
-                      </ul>
-
-                    </div>
                   </div>
+
                 </div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
 
-              </div>
-            {% endfor %}
-          </div>
-        {% endfor %}
-      </div>
-
-      {% if paginator.pages > 1 %}
-      <div class="pager-undercontent">
-        <nav>
-          <ul class="pager">
-            {% if paginator.previous %}
-            <li class="previous">
-              <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.previous %}">
-                <span aria-hidden="true" class="material-icon">
-                  arrow_back
-                </span>
-              </a>
-            </li>
-            {% elif paginator.first %}
-            <li class="previous">
-              <a href="{% url 'misago:users-rank' slug=rank.slug %}">
-                <span aria-hidden="true" class="material-icon">
-                  arrow_back
-                </span>
-              </a>
-            </li>
-            {% endif %}
-            {% if paginator.next %}
-            <li class="next">
-              <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.next %}">
-                <span aria-hidden="true" class="material-icon">
-                  arrow_forward
-                </span>
-              </a>
-            </li>
-            {% endif %}
-          </ul>
-          <ul class="pager-progress-bar">
-            {% for page in paginator.page_range %}
-              <li{% if page == paginator.page %} class="active"{% endif %}>
-                {% if page > 1 %}
-                <a href="{% url 'misago:users-rank' slug=rank.slug page=page %}">
-                {% else %}
-                <a href="{% url 'misago:users-rank' slug=rank.slug %}">
+        {% if paginator.pages > 1 %}
+          <div class="pager-undercontent">
+            <nav>
+              <ul class="pager">
+                {% if paginator.previous %}
+                <li class="previous">
+                  <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.previous %}">
+                    <span aria-hidden="true" class="material-icon">
+                      arrow_back
+                    </span>
+                  </a>
+                </li>
+                {% elif paginator.first %}
+                <li class="previous">
+                  <a href="{% url 'misago:users-rank' slug=rank.slug %}">
+                    <span aria-hidden="true" class="material-icon">
+                      arrow_back
+                    </span>
+                  </a>
+                </li>
                 {% endif %}
-                  {{ page }}
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
-        </nav>
+                {% if paginator.next %}
+                <li class="next">
+                  <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.next %}">
+                    <span aria-hidden="true" class="material-icon">
+                      arrow_forward
+                    </span>
+                  </a>
+                </li>
+                {% endif %}
+              </ul>
+              <ul class="pager-progress-bar">
+                {% for page in paginator.page_range %}
+                  <li{% if page == paginator.page %} class="active"{% endif %}>
+                    {% if page > 1 %}
+                    <a href="{% url 'misago:users-rank' slug=rank.slug page=page %}">
+                    {% else %}
+                    <a href="{% url 'misago:users-rank' slug=rank.slug %}">
+                    {% endif %}
+                      {{ page }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </nav>
+          </div>
+        {% endif %}
       </div>
-      {% endif %}
-    </div>
     {% else %}
-    <p class="lead">
-      {% trans "There are no users with this rank at the moment." %}
-    </p>
+      <p class="lead">
+        {% trans "There are no users with this rank at the moment." %}
+      </p>
     {% endif %}
 
   </div>

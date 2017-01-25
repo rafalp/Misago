@@ -28,7 +28,7 @@ def patch_is_liked(request, post, value):
 
     # grab like state for this post and user
     try:
-        user_like = post.postlike_set.get(user=request.user)
+        user_like = post.postlike_set.get(liker=request.user)
     except PostLike.DoesNotExist:
         user_like = None
 
@@ -45,10 +45,10 @@ def patch_is_liked(request, post, value):
         post.postlike_set.create(
             category=post.category,
             thread=post.thread,
-            user=request.user,
-            user_name=request.user.username,
-            user_slug=request.user.slug,
-            user_ip=request.user_ip
+            liker=request.user,
+            liker_name=request.user.username,
+            liker_slug=request.user.slug,
+            liker_ip=request.user_ip
         )
         post.likes += 1
 
@@ -60,8 +60,8 @@ def patch_is_liked(request, post, value):
     post.last_likes = []
     for like in post.postlike_set.all()[:4]:
         post.last_likes.append({
-            'id': like.user_id,
-            'username': like.user_name
+            'id': like.liker_id,
+            'username': like.liker_name
         })
 
     post.save(update_fields=['likes', 'last_likes'])

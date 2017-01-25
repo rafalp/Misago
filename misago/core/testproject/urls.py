@@ -4,6 +4,7 @@ from django.contrib import admin
 
 from misago.users.forms.auth import AdminAuthenticationForm
 
+from ..views import javascript_catalog, momentjs_catalog
 from . import views
 
 
@@ -15,6 +16,9 @@ admin.site.login_form = AdminAuthenticationForm
 urlpatterns = [
     url(r'^forum/', include('misago.urls', namespace='misago')),
     url(r'^django-admin/', include(admin.site.urls)),
+
+    url(r'^django-i18n.js$', javascript_catalog, name='django-i18n'),
+    url(r'^moment-i18n.js$', momentjs_catalog, name='moment-i18n'),
 
     url(r'^forum/test-mail-user/$', views.test_mail_user, name='test-mail-user'),
     url(r'^forum/test-mail-users/$', views.test_mail_users, name='test-mail-users'),

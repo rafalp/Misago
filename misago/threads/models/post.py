@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import copy
 
 from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import models
 from django.dispatch import receiver
 from django.urls import reverse
@@ -79,6 +80,9 @@ class Post(models.Model):
         related_name='liked_post_set',
         through='misago_threads.PostLike',
     )
+
+    search_document = models.TextField(null=True, blank=True)
+    search_vector = SearchVectorField()
 
     class Meta:
         index_together = [
@@ -160,6 +164,18 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return self.thread_type.get_post_absolute_url(self)
+
+    def set_search_document(self, thread_title=None):
+        if thread_title:
+            self.search_document = '\n\n'.join([thread_title, self.original])
+        else:
+            self.search_document = self.original
+
+    def update_search_vector(self):
+        self.search_vector = SearchVector(
+            'search_document',
+            config=settings.MISAGO_SEARCH_CONFIG,
+        )
 
     @property
     def short(self):

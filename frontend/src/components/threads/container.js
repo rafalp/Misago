@@ -4,42 +4,26 @@ import Toolbar from 'misago/components/threads/toolbar'; // jshint ignore:line
 
 export default class extends React.Component {
   getCategoryDescription() {
-    if (this.props.route.category.description) {
+    if (this.props.pageLead) {
       /* jshint ignore:start */
-      return <div className="category-description">
-        <PageLead copy={this.props.route.category.description.html} />
-      </div>;
+      return (
+        <div className="category-description">
+          <div className="page-lead">
+            <p>{this.props.pageLead}</p>
+          </div>
+        </div>
+      );
+      /* jshint ignore:end */
+    } else if (this.props.route.category.description) {
+      /* jshint ignore:start */
+      return (
+        <div className="category-description">
+          <PageLead copy={this.props.route.category.description.html} />
+        </div>
+      );
       /* jshint ignore:end */
     } else {
       return null;
-    }
-  }
-
-  getToolbarLabel() {
-    if (this.props.isLoaded) {
-      let label = null;
-      if (this.props.route.list.path) {
-        label = ngettext(
-          "%(threads)s thread found.",
-          "%(threads)s threads found.",
-          this.props.threadsCount);
-      } else if (this.props.route.category.parent) {
-        label = ngettext(
-          "There is %(threads)s thread in this category.",
-          "There are %(threads)s threads in this category.",
-          this.props.threadsCount);
-      } else {
-        label = ngettext(
-          "There is %(threads)s thread on our forums.",
-          "There are %(threads)s threads on our forums.",
-          this.props.threadsCount);
-      }
-
-      return interpolate(label, {
-        threads: this.props.threadsCount
-      }, true);
-    } else {
-      return gettext("Loading threads...");
     }
   }
 
@@ -69,7 +53,6 @@ export default class extends React.Component {
                       route={this.props.route}
                       disabled={this.getDisableToolbar()}
                       user={this.props.user}>
-        {this.getToolbarLabel()}
       </Toolbar>;
       /* jshint ignore:end */
     } else {

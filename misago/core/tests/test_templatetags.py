@@ -4,6 +4,7 @@ from django.test import TestCase
 from .. import forms
 from ..shortcuts import paginate
 from ..templatetags import misago_batch
+from ..utils import encode_json_html
 
 
 class CaptureTests(TestCase):
@@ -162,26 +163,6 @@ class MockUser(object):
     slug = "bob"
 
 
-class PaginationTests(TestCase):
-    def setUp(self):
-        self.page = paginate(range(500), 11, 20, 5)
-        self.context = Context({
-            'page': self.page,
-            'user': MockUser()
-        })
-
-    def _test_pagination(self):
-        """capture content to variable"""
-        tpl_content = """
-{% load misago_pagination %}
-
-{% pagination page "misago/user/pagination.html" 'misago:user_warnings' slug=user.slug pk=user.pk %}
-"""
-
-        tpl = Template(tpl_content)
-        tpl.render(self.context).strip()
-
-
 class ShorthandsTests(TestCase):
     def test_iftrue_for_true(self):
         """iftrue renders value for true"""
@@ -242,7 +223,7 @@ class ShorthandsTests(TestCase):
 
 class JSONTests(TestCase):
     def test_json_filter(self):
-        """as_json filter renders dict as json"""
+        """as_json filter renders dict as safe json"""
         tpl_content = """
 {% load misago_json %}
 
@@ -251,8 +232,8 @@ class JSONTests(TestCase):
 
         tpl = Template(tpl_content)
         self.assertEqual(tpl.render(Context({
-            'value': {'he<llo': 'bo"b!'}
-        })).strip(), '{"he<llo": "bo\\"b!"}')
+            'value': {'he</script>llo': 'bo"b!'}
+        })).strip(), r'{"he\u003C/script>llo": "bo\"b!"}')
 
 
 class PageTitleTests(TestCase):

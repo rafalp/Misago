@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from 'misago/components/button'; // jshint ignore:line
-import Search from 'misago/components/search'; // jshint ignore:line
+import Search from 'misago/components/quick-search'; // jshint ignore:line
 import UsersList from 'misago/components/users-list/root'; // jshint ignore:line
 import misago from 'misago/index';
 import { hydrate, append } from 'misago/reducers/users'; // jshint ignore:line

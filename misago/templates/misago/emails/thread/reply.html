@@ -4,7 +4,7 @@
 
 {% block content %}
 {% capture trimmed as thread_link %}
-  <a href="{{ thread.get_absolute_url }}">{{ thread }}</a>
+  <a href="{{ SITE_ADDRESS }}{{ thread.get_absolute_url }}">{{ thread }}</a>
 {% endcapture %}
 {% blocktrans trimmed with user=recipient poster=user thread=thread_link|safe %}
 {{ user }}, you are receiving this message because {{ poster }} has replied to the thread {{ thread }} that you are subscribed to.

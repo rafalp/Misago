@@ -2,6 +2,7 @@ import json
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
@@ -124,6 +125,19 @@ class FollowsListTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, test_follower.username)
 
+    def test_filled_list_search(self):
+        """follows list is searchable"""
+        User = get_user_model()
+        test_follower = User.objects.create_user(
+            "TestFollower", "test@follower.com", self.USER_PASSWORD)
+        self.user.follows.add(test_follower)
+
+        api_link = self.link % self.user.pk
+
+        response = self.client.get('%s&name=%s' % (api_link, 'test'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, test_follower.username)
+
 
 class RankListTests(AuthenticatedUserTestCase):
     """
@@ -157,6 +171,13 @@ class RankListTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link % self.user.rank.pk)
         self.assertEqual(response.status_code, 404)
 
+    def test_list_search(self):
+        """rank list is not searchable"""
+        api_link = self.link % self.user.rank.pk
+
+        response = self.client.get('%s&name=%s' % (api_link, 'test'))
+        self.assertEqual(response.status_code, 404)
+
     def test_filled_list(self):
         """tab rank with members return 200"""
         self.user.rank.is_tab = True
@@ -166,25 +187,81 @@ class RankListTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.user.username)
 
+    def test_disabled_users(self):
+        """api follows disabled users visibility"""
+        test_rank = Rank.objects.create(
+            name="Test rank",
+            slug="test-rank",
+            is_tab=True
+        )
+
+        User = get_user_model()
+        test_user = User.objects.create_user(
+            'Visible', 'visible@te.com', 'Pass.123',
+            rank=test_rank, is_active=False
+        )
+
+        response = self.client.get(self.link % test_rank.pk)
+        self.assertNotContains(response, test_user.get_absolute_url())
+
+        # api shows disabled accounts to staff
+        self.user.is_staff = True
+        self.user.save()
+
+        response = self.client.get(self.link % test_rank.pk)
+        self.assertContains(response, test_user.get_absolute_url())
+
 
 class SearchNamesListTests(AuthenticatedUserTestCase):
     """
-    tests for generic list (GET /users/) filtered by username
+    tests for generic list (GET /users/) filtered by username disallowing searches
     """
     def setUp(self):
         super(SearchNamesListTests, self).setUp()
         self.link = '/api/users/?&name='
 
     def test_empty_list(self):
-        """empty list returns 200"""
+        """empty list returns 404"""
         response = self.client.get(self.link + 'this-user-is-fake')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
 
     def test_filled_list(self):
-        """filled list returns 200"""
+        """results list returns 404"""
         response = self.client.get(self.link + self.user.slug)
+        self.assertEqual(response.status_code, 404)
+
+
+class UserRetrieveTests(AuthenticatedUserTestCase):
+    def setUp(self):
+        super(UserRetrieveTests, self).setUp()
+
+        User = get_user_model()
+        self.test_user = User.objects.create_user('Tyrael', 't123@test.com', 'pass123')
+        self.link = reverse('misago:api:user-detail', kwargs={
+            'pk': self.test_user.pk
+        })
+
+    def test_get_user(self):
+        """api user retrieve endpoint has no showstoppers"""
+        response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.user.username)
+
+    def test_disabled_user(self):
+        """api user retrieve handles disabled users"""
+        self.user.is_staff = False
+        self.user.save()
+
+        self.test_user.is_active = False
+        self.test_user.save()
+
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 404)
+
+        self.user.is_staff = True
+        self.user.save()
+
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
 
 
 class UserCategoriesOptionsTests(AuthenticatedUserTestCase):

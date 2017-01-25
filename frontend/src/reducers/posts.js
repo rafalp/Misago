@@ -6,6 +6,7 @@ export const DESELECT_POST = 'DESELECT_POST';
 export const DESELECT_POSTS = 'DESELECT_POSTS';
 export const LOAD_POSTS = 'LOAD_POSTS';
 export const UNLOAD_POSTS = 'UNLOAD_POSTS';
+export const UPDATE_POSTS = 'UPDATE_POSTS';
 
 export function select(post) {
   return {
@@ -53,6 +54,13 @@ export function append(newState, hydrated=false) {
 export function unload() {
   return {
     type: UNLOAD_POSTS
+  };
+}
+
+export function update(newState) {
+  return {
+    type: UPDATE_POSTS,
+    update: newState
   };
 }
 
@@ -122,6 +130,9 @@ export default function posts(state={}, action=null) {
       return Object.assign({}, state, {
         isLoaded: false,
       });
+
+    case UPDATE_POSTS:
+      return Object.assign({}, state, action.update);
 
     case PATCH_POST:
       const reducedPosts = state.results.map((post) => {

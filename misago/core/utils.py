@@ -22,6 +22,10 @@ def format_plaintext_for_html(string):
     return html.linebreaks(html.urlize(html.escape(string)))
 
 
+def encode_json_html(string):
+    return string.replace('<', r'\u003C')
+
+
 """
 Turn ISO 8601 string into datetime object
 """

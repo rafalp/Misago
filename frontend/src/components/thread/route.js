@@ -1,4 +1,5 @@
 import React from 'react';
+import Participants from 'misago/components/participants'; // jshint ignore:line
 import { Poll } from 'misago/components/poll'; // jshint ignore:line
 import PostsList from 'misago/components/posts-list'; // jshint ignore:line
 import Header from './header'; // jshint ignore:line
@@ -7,6 +8,7 @@ import ReplyButton from './reply-button'; // jshint ignore:line
 import Subscription from './subscription'; // jshint ignore:line
 import ToolbarTop from './toolbar-top'; // jshint ignore:line
 import PostsModeration from './moderation/posts'; // jshint ignore:line
+import * as participants from 'misago/reducers/participants'; // jshint ignore:line
 import * as poll from 'misago/reducers/poll'; // jshint ignore:line
 import * as posts from 'misago/reducers/posts';
 import * as thread from 'misago/reducers/thread'; // jshint ignore:line
@@ -82,6 +84,7 @@ export default class extends React.Component {
   setPageTitle() {
     title.set({
       title: this.props.thread.title,
+      parent: this.props.thread.category.name,
       page: (this.props.params.page || 1) * 1
     });
   }
@@ -90,6 +93,10 @@ export default class extends React.Component {
   update = (data) => {
     store.dispatch(thread.replace(data));
     store.dispatch(posts.load(data.post_set));
+
+    if (data.participants) {
+      store.dispatch(participants.replace(data.participants));
+    }
 
     if (data.poll) {
       store.dispatch(poll.replace(data.poll));
@@ -117,6 +124,11 @@ export default class extends React.Component {
         <ToolbarTop openReplyForm={this.openReplyForm} {...this.props} />
         <Poll
           poll={this.props.poll}
+          thread={this.props.thread}
+          user={this.props.user}
+        />
+        <Participants
+          participants={this.props.participants}
           thread={this.props.thread}
           user={this.props.user}
         />

@@ -1,7 +1,8 @@
 from django.dispatch import Signal, receiver
 
-from misago.categories.signals import move_category_content
-from misago.threads.signals import move_thread, remove_thread_participant
+from misago.categories.models import PRIVATE_THREADS_ROOT_NAME
+from misago.categories.signals import delete_category_content, move_category_content
+from misago.threads.signals import move_thread
 
 
 all_read = Signal()
@@ -13,6 +14,12 @@ thread_read = Signal(providing_args=["thread"])
 """
 Signal handlers
 """
+@receiver(delete_category_content)
+def delete_category_threads(sender, **kwargs):
+    sender.categoryread_set.all().delete()
+    sender.threadread_set.all().delete()
+
+
 @receiver(move_category_content)
 def delete_category_tracker(sender, **kwargs):
     sender.categoryread_set.all().delete()
@@ -28,12 +35,10 @@ def delete_thread_tracker(sender, **kwargs):
 def decrease_unread_private_count(sender, **kwargs):
     user = sender
     thread = kwargs['thread']
-    if user.pk != thread.starter_id and user.unread_private_threads:
+
+    if thread.category.thread_type.root_name != PRIVATE_THREADS_ROOT_NAME:
+        return
+
+    if user.unread_private_threads:
         user.unread_private_threads -= 1
         user.save(update_fields=['unread_private_threads'])
-
-
-@receiver(remove_thread_participant)
-def remove_private_thread_readtrackers(sender, **kwargs):
-    user = kwargs['user']
-    user.threadread_set.filter(thread=sender).delete()

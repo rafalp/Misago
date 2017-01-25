@@ -11,6 +11,7 @@ from misago.core.utils import format_plaintext_for_html
 
 from ... import avatars
 from ...forms.moderation import ModerateAvatarForm
+from ...models import AvatarGallery
 
 
 def avatar_endpoint(request, pk=None):
@@ -22,10 +23,9 @@ def avatar_endpoint(request, pk=None):
             reason = None
 
         return Response({
-                'detail': _("Your avatar is locked. You can't change it."),
-                'reason': reason
-            },
-            status=status.HTTP_403_FORBIDDEN)
+            'detail': _("Your avatar is locked. You can't change it."),
+            'reason': reason
+        }, status=status.HTTP_403_FORBIDDEN)
 
     avatar_options = get_avatar_options(request.user)
     if request.method == 'POST':
@@ -36,11 +36,10 @@ def avatar_endpoint(request, pk=None):
 
 def get_avatar_options(user):
     options = {
-        'avatar_hash': user.avatar_hash,
-
+        'avatars': user.avatars,
         'generated': True,
         'gravatar': False,
-        'crop_org': False,
+        'crop_src': False,
         'crop_tmp': False,
         'upload': False,
         'galleries': False
@@ -48,7 +47,18 @@ def get_avatar_options(user):
 
     # Allow existing galleries
     if avatars.gallery.galleries_exist():
-        options['galleries'] = avatars.gallery.get_available_galleries()
+        options['galleries'] = []
+        for gallery in avatars.gallery.get_available_galleries():
+            gallery_images = []
+            for image in gallery['images']:
+                gallery_images.append({
+                    'id': image.id,
+                    'url': image.url
+                })
+            options['galleries'].append({
+                'name': gallery['name'],
+                'images': gallery_images
+            })
 
     # Can't have custom avatar?
     if not settings.allow_custom_avatars:
@@ -57,14 +67,11 @@ def get_avatar_options(user):
     # Allow Gravatar download
     options['gravatar'] = True
 
-    # Get avatar tokens
-    tokens = avatars.get_user_avatar_tokens(user)
-
-    # Allow crop with token if we have uploaded avatar
-    if avatars.uploaded.has_original_avatar(user):
+    # Allow crop if we have uploaded temporary avatar
+    if avatars.uploaded.has_source_avatar(user):
         try:
-            options['crop_org'] = {
-                'secret': tokens['org'],
+            options['crop_src'] = {
+                'url': user.avatar_src.url,
                 'crop': json.loads(user.avatar_crop),
                 'size': max(settings.MISAGO_AVATARS_SIZES)
             }
@@ -74,7 +81,7 @@ def get_avatar_options(user):
     # Allow crop of uploaded avatar
     if avatars.uploaded.has_temporary_avatar(user):
         options['crop_tmp'] = {
-            'secret': tokens['tmp'],
+            'url': user.avatar_tmp.url,
             'size': max(settings.MISAGO_AVATARS_SIZES)
         }
 
@@ -96,26 +103,26 @@ def avatar_post(options, user, data):
     try:
         type_options = options[data.get('avatar', 'nope')]
         if not type_options:
-            return Response({'detail': _("This avatar type is not allowed.")},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                'detail': _("This avatar type is not allowed.")
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         rpc_handler = AVATAR_TYPES[data.get('avatar', 'nope')]
     except KeyError:
-        return Response({'detail': _("Unknown avatar type.")},
-                        status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            'detail': _("Unknown avatar type.")
+        }, status=status.HTTP_400_BAD_REQUEST)
 
     try:
         response_dict = {'detail': rpc_handler(user, data)}
     except AvatarError as e:
-        return Response({'detail': e.args[0]},
-                        status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            'detail': e.args[0]
+        }, status=status.HTTP_400_BAD_REQUEST)
 
-    user.avatar_hash = avatars.get_avatar_hash(user)
-    user.save(update_fields=['avatar_hash', 'avatar_crop'])
-    response_dict['avatar_hash'] = user.avatar_hash
+    user.save()
 
-    response_dict['options'] = get_avatar_options(user)
-
+    response_dict.update(get_avatar_options(user))
     return Response(response_dict)
 
 
@@ -131,19 +138,22 @@ def avatar_gravatar(user, data):
     try:
         avatars.gravatar.set_avatar(user)
         return _("Gravatar was downloaded and set as new avatar.")
-    except avatars.gravatar.GravatarError:
-        raise AvatarError(_("Failed to connect to Gravatar servers."))
     except avatars.gravatar.NoGravatarAvailable:
         raise AvatarError(
             _("No Gravatar is associated with your e-mail address."))
+    except avatars.gravatar.GravatarError:
+        raise AvatarError(_("Failed to connect to Gravatar servers."))
 
 
 def avatar_gallery(user, data):
-    image = data.get('image') or 'not-possible'
-    if avatars.gallery.is_avatar_from_gallery(image):
+    try:
+        image_pk = int(data.get('image'))
+        image = AvatarGallery.objects.get(pk=image_pk)
+        if image.gallery == '__default__':
+            raise ValueError()
         avatars.gallery.set_avatar(user, image)
         return _("Avatar from gallery was set.")
-    else:
+    except (TypeError, ValueError, AvatarGallery.DoesNotExist):
         raise AvatarError(_("Incorrect image."))
 
 
@@ -157,12 +167,12 @@ def avatar_upload(user, data):
     except ValidationError as e:
         raise AvatarError(e.args[0])
 
-    # send back token for temp image
-    return avatars.get_avatar_hash(user, 'tmp')
+    # send back url for temp image
+    return user.avatar_tmp.url
 
 
-def avatar_crop_org(user, data):
-    avatar_crop(user, data, 'org')
+def avatar_crop_src(user, data):
+    avatar_crop(user, data, 'src')
     return _("Avatar was re-cropped.")
 
 
@@ -186,7 +196,7 @@ AVATAR_TYPES = {
     'galleries': avatar_gallery,
     'upload': avatar_upload,
 
-    'crop_org': avatar_crop_org,
+    'crop_src': avatar_crop_src,
     'crop_tmp': avatar_crop_tmp,
 }
 
@@ -198,11 +208,10 @@ def moderate_avatar_endpoint(request, profile):
         if form.is_valid():
             if form.cleaned_data['is_avatar_locked'] and not is_avatar_locked:
                 avatars.dynamic.set_avatar(profile)
-                profile.avatar_hash = avatars.get_avatar_hash(profile)
             form.save()
 
             return Response({
-                'avatar_hash': profile.avatar_hash,
+                'avatars': profile.avatars,
                 'is_avatar_locked': int(profile.is_avatar_locked),
                 'avatar_lock_user_message': profile.avatar_lock_user_message,
                 'avatar_lock_staff_message': profile.avatar_lock_staff_message,

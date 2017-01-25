@@ -2,7 +2,7 @@
 cd misago
 
 echo "Extracting messages from .py and .html files..."
-django-admin.py makemessages -l $1 --ignore=frontend/*
+django-admin.py makemessages -l $1 -e html,txt,py
 
 echo "Extracting messages from js files..."
-django-admin.py makemessages -l $1 -d djangojs --ignore=frontend/bower_components/* --ignore=frontend/node_modules/* --ignore=frontend/dist/* --ignore=frontend/static/* --ignore=frontend/test/*  --ignore=frontend/vendor/*
+django-admin.py makemessages -l $1 -d djangojs

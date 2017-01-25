@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models import F
+from django.http import Http404
 from django.utils.translation import ugettext as _
 
 from rest_framework import mixins, status, viewsets
@@ -61,8 +62,11 @@ class UserViewSet(viewsets.GenericViewSet):
         relations = ('rank', 'online_tracker', 'ban_cache')
         return self.queryset.select_related(*relations)
 
-    def get_user(self, pk):
-        return get_object_or_404(self.get_queryset(), pk=get_int_or_404(pk))
+    def get_user(self, request, pk):
+        user = get_object_or_404(self.get_queryset(), pk=get_int_or_404(pk))
+        if not user.is_active and not request.user.is_staff:
+            raise Http404()
+        return user
 
     def list(self, request):
         allow_browse_users_list(request.user)
@@ -72,13 +76,18 @@ class UserViewSet(viewsets.GenericViewSet):
         return create_endpoint(request)
 
     def retrieve(self, request, pk=None):
-        profile = self.get_user(pk)
+        profile = self.get_user(request, pk)
 
         add_acl(request.user, profile)
         profile.status = get_user_status(request.user, profile)
 
         serializer = UserProfileSerializer(profile, context={'user': request.user})
-        return Response(serializer.data)
+        profile_json = serializer.data
+
+        if not profile.is_active:
+            profile_json['is_active'] = False
+
+        return Response(profile_json)
 
     @detail_route(methods=['get', 'post'])
     def avatar(self, request, pk=None):
@@ -131,7 +140,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @detail_route(methods=['post'])
     def follow(self, request, pk=None):
-        profile = self.get_user(pk)
+        profile = self.get_user(request, pk)
         allow_follow_user(request.user, profile)
 
         profile_followers = profile.followers
@@ -162,7 +171,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @detail_route()
     def ban(self, request, pk=None):
-        profile = self.get_user(pk)
+        profile = self.get_user(request, pk)
         allow_see_ban_details(request.user, profile)
 
         ban = get_user_ban(profile)
@@ -173,21 +182,21 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @detail_route(methods=['get', 'post'])
     def moderate_avatar(self, request, pk=None):
-        profile = self.get_user(pk)
+        profile = self.get_user(request, pk)
         allow_moderate_avatar(request.user, profile)
 
         return moderate_avatar_endpoint(request, profile)
 
     @detail_route(methods=['get', 'post'])
     def moderate_username(self, request, pk=None):
-        profile = self.get_user(pk)
+        profile = self.get_user(request, pk)
         allow_rename_user(request.user, profile)
 
         return moderate_username_endpoint(request, profile)
 
     @detail_route(methods=['get', 'post'])
     def delete(self, request, pk=None):
-        profile = self.get_user(pk)
+        profile = self.get_user(request, pk)
         allow_delete_user(request.user, profile)
 
         if request.method == 'POST':
@@ -222,7 +231,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @detail_route(methods=['get'])
     def threads(self, request, pk=None):
-        profile = self.get_user(pk)
+        profile = self.get_user(request, pk)
 
         page = get_int_or_404(request.query_params.get('page', 0))
         if page == 1:
@@ -234,7 +243,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @detail_route(methods=['get'])
     def posts(self, request, pk=None):
-        profile = self.get_user(pk)
+        profile = self.get_user(request, pk)
 
         page = get_int_or_404(request.query_params.get('page', 0))
         if page == 1:

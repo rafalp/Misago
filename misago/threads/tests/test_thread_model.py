@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from misago.categories.models import Category
 
-from ..models import Post, Thread, ThreadParticipant
+from ..models import Poll, Post, Thread, ThreadParticipant
 
 
 class ThreadModelTests(TestCase):
@@ -162,7 +162,7 @@ class ThreadModelTests(TestCase):
         self.assertEqual(self.thread.replies, 3)
 
          # add event post
-        hidden_post = Post.objects.create(
+        event = Post.objects.create(
             category=self.category,
             thread=self.thread,
             poster=user,
@@ -176,17 +176,59 @@ class ThreadModelTests(TestCase):
             is_event=True
         )
 
-        # events don't count to reply count
         self.thread.synchronize()
-        self.assertEqual(self.thread.last_post, hidden_post)
-        self.assertEqual(self.thread.last_post_on, hidden_post.posted_on)
+        self.assertEqual(self.thread.last_post, event)
+        self.assertEqual(self.thread.last_post_on, event.posted_on)
         self.assertEqual(self.thread.last_poster, user)
         self.assertEqual(self.thread.last_poster_name, user.username)
         self.assertEqual(self.thread.last_poster_slug, user.slug)
+        self.assertTrue(self.thread.last_post_is_event)
+        self.assertTrue(self.thread.has_events)
         self.assertFalse(self.thread.has_reported_posts)
         self.assertFalse(self.thread.has_unapproved_posts)
         self.assertFalse(self.thread.has_hidden_posts)
+        # events don't count to reply count
         self.assertEqual(self.thread.replies, 3)
+
+        # create another post to provoke other has_events resolution path
+        Post.objects.create(
+            category=self.category,
+            thread=self.thread,
+            poster=user,
+            poster_name=user.username,
+            poster_ip='127.0.0.1',
+            original="Hello! I am test message!",
+            parsed="<p>Hello! I am test message!</p>",
+            checksum="nope",
+            posted_on=datetime,
+            updated_on=datetime
+        )
+
+        self.thread.synchronize()
+        self.assertFalse(self.thread.last_post_is_event)
+        self.assertTrue(self.thread.has_events)
+
+        # remove event
+        event.delete()
+
+        self.thread.synchronize()
+        self.assertFalse(self.thread.last_post_is_event)
+        self.assertFalse(self.thread.has_events)
+
+        # has poll flag
+        self.assertFalse(self.thread.has_poll)
+
+        Poll.objects.create(
+            thread=self.thread,
+            category=self.category,
+            poster_name='test',
+            poster_slug='test',
+            poster_ip='127.0.0.1',
+            choices=[]
+        )
+
+        self.thread.synchronize()
+        self.assertTrue(self.thread.has_poll)
 
     def test_set_first_post(self):
         """set_first_post sets first post and poster data on thread"""

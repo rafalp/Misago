@@ -1,4 +1,7 @@
+from datetime import timedelta
+
 from django.urls import reverse
+from django.utils import timezone
 
 from .. import testutils
 from ..models import Post, Thread
@@ -32,6 +35,81 @@ class PostDeleteApiTests(ThreadsApiTestCase):
 
         response = self.client.delete(self.api_link)
         self.assertContains(response, "You can't delete posts in this category.", status_code=403)
+
+    def test_delete_other_user_post_no_permission(self):
+        """api valdiates if user can delete other users posts"""
+        self.override_acl({
+            'post_edit_time': 0,
+            'can_hide_own_posts': 2,
+            'can_hide_posts': 0
+        })
+
+        self.post.poster = None
+        self.post.save()
+
+        response = self.client.delete(self.api_link)
+        self.assertContains(
+            response, "You can't delete other users posts in this category", status_code=403)
+
+    def test_delete_protected_post_no_permission(self):
+        """api validates if user can delete protected post"""
+        self.override_acl({
+            'can_protect_posts': 0,
+            'can_hide_own_posts': 2,
+            'can_hide_posts': 0,
+        })
+
+        self.post.is_protected = True
+        self.post.save()
+
+        response = self.client.delete(self.api_link)
+        self.assertContains(
+            response, "This post is protected. You can't delete it.", status_code=403)
+
+    def test_delete_protected_post_after_edit_time(self):
+        """api validates if user can delete delete post after edit time"""
+        self.override_acl({
+            'post_edit_time': 1,
+            'can_hide_own_posts': 2,
+            'can_hide_posts': 0,
+        })
+
+        self.post.posted_on = timezone.now() - timedelta(minutes=10)
+        self.post.save()
+
+        response = self.client.delete(self.api_link)
+        self.assertContains(
+            response, "You can't delete posts that are older than 1 minute.", status_code=403)
+
+    def test_delete_post_closed_thread_no_permission(self):
+        """api valdiates if user can delete posts in closed threads"""
+        self.override_acl({
+            'can_hide_own_posts': 2,
+            'can_hide_posts': 0,
+        })
+
+        self.thread.is_closed = True
+        self.thread.save()
+        self.post.save()
+
+        response = self.client.delete(self.api_link)
+        self.assertContains(
+            response, "This thread is closed. You can't delete posts in it.", status_code=403)
+
+    def test_delete_post_closed_category_no_permission(self):
+        """api valdiates if user can delete posts in closed categories"""
+        self.override_acl({
+            'can_hide_own_posts': 2,
+            'can_hide_posts': 0,
+        })
+
+        self.category.is_closed = True
+        self.category.save()
+        self.post.save()
+
+        response = self.client.delete(self.api_link)
+        self.assertContains(
+            response, "This category is closed. You can't delete posts in it.", status_code=403)
 
     def test_delete_first_post(self):
         """api disallows first post's deletion"""

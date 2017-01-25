@@ -9,8 +9,6 @@ from django.conf import settings
 from django.utils import six
 from django.utils.encoding import force_bytes
 
-from misago.core import serializer
-
 
 __all__ = ['create_change_token', 'read_token']
 

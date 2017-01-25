@@ -31,9 +31,7 @@ export default class extends React.Component {
   };
 
   render() {
-    if (!this.props.thread.poll) {
-      return null;
-    }
+    if (!this.props.thread.poll) return null;
 
     const isPollOver = getIsPollOver(this.props.poll);
 

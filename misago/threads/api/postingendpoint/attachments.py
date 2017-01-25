@@ -1,10 +1,10 @@
-from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
 from rest_framework import serializers
 
 from misago.acl import add_acl
+from misago.conf import settings
 
 from . import PostingEndpoint, PostingInterrupt, PostingMiddleware
 from ...serializers import AttachmentSerializer
@@ -88,9 +88,12 @@ class AttachmentsSerializer(serializers.Serializer):
             return
 
         if self.removed_attachments:
+            for attachment in self.removed_attachments:
+                attachment.delete_files()
+
             self.context['post'].attachment_set.filter(
                 id__in=[a.id for a in self.removed_attachments]
-            ).update(post=None)
+            ).delete()
 
         if self.final_attachments:
             # sort final attachments by id, descending
@@ -111,7 +114,6 @@ class AttachmentsSerializer(serializers.Serializer):
         else:
             post.attachments_cache = None
         post.update_fields.append('attachments_cache')
-
 
 
 def validate_attachments_count(data):

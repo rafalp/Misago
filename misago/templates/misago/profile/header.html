@@ -2,6 +2,12 @@
 <div class="page-header with-stats">
   <div class="container">
 
+    {% if not profile.is_active %}
+      <div class="alert alert-danger">
+        <p>{% trans "This user's account has been disabled by administrator." %}</p>
+      </div>
+    {% endif %}
+
     <div class="row">
       <div class="col-md-9 col-md-offset-3">
 

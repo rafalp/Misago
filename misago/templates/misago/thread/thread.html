@@ -4,11 +4,28 @@
 
 {% block title %}
 {% if paginator.page > 1 %}
-  {{ thread.title }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ block.super }}
+  {{ thread.title }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ category.name }} | {{ block.super }}
 {% else %}
-  {{ thread.title }} | {{ block.super }}
+  {{ thread.title }} | {{ category.name }} | {{ block.super }}
 {% endif %}
 {% endblock title %}
+
+
+{% block meta-extra %}
+{% if paginator.page > 1 %}
+<link rel="canonical" href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.page %}" />
+{% else %}
+<link rel="canonical" href="{% url url_name slug=thread.slug pk=thread.pk %}" />
+{% endif %}
+{% if paginator.previous > 1 %}
+<link rel="prev" href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.previous %}" />
+{% elif paginator.first %}
+<link rel="prev" href="{% url url_name slug=thread.slug pk=thread.pk %}" />
+{% endif %}
+{% if paginator.next %}
+<link rel="next" href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.next %}" />
+{% endif %}
+{% endblock meta-extra %}
 
 
 {% block content %}
@@ -25,7 +42,6 @@
   <div class="container">
 
     {% include "misago/thread/toolbar-top.html" %}
-
     {% if thread.poll %}
       {% include "misago/poll/index.html" with poll=thread.poll %}
     {% endif %}

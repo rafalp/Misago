@@ -1,6 +1,6 @@
 import React from 'react';
-import { GuestNav, CompactGuestNav } from 'misago/components/user-menu/guest-nav'; // jshint ignore:line
-import { UserNav, CompactUserNav} from 'misago/components/user-menu/user-nav'; // jshint ignore:line
+import { GuestNav, CompactGuestNav } from './guest-nav'; // jshint ignore:line
+import { UserNav, CompactUserNav} from './user-nav'; // jshint ignore:line
 
 export class UserMenu extends React.Component {
   render() {

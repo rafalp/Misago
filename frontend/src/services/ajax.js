@@ -7,7 +7,6 @@ export class Ajax {
 
   init(cookieName) {
     this._cookieName = cookieName;
-    this._csrfToken = this.getCsrfToken();
   }
 
   getCsrfToken() {
@@ -27,7 +26,7 @@ export class Ajax {
         url: url,
         method: method,
         headers: {
-          'X-CSRFToken': self._csrfToken
+          'X-CSRFToken': self.getCsrfToken()
         },
 
         data: (data ? JSON.stringify(data) : null),
@@ -51,10 +50,6 @@ export class Ajax {
             if (!rejection.detail || rejection.detail === 'NOT FOUND') {
               rejection.detail = gettext("Action link is invalid.");
             }
-          }
-
-          if (rejection.status === 413 && !rejection.detail) {
-            rejection.detail = gettext("Payload sent to application was too large.");
           }
 
           if (rejection.status === 500 && !rejection.detail) {
@@ -185,7 +180,7 @@ export class Ajax {
         url: url,
         method: 'POST',
         headers: {
-          'X-CSRFToken': self._csrfToken
+          'X-CSRFToken': self.getCsrfToken()
         },
 
         data: data,
@@ -213,6 +208,10 @@ export class Ajax {
 
           if (rejection.status === 0) {
             rejection.detail = gettext("Lost connection with application.");
+          }
+
+          if (rejection.status === 413 && !rejection.detail) {
+            rejection.detail = gettext("Upload was rejected by server as too large.");
           }
 
           if (rejection.status === 404) {

@@ -1,6 +1,5 @@
 from datetime import timedelta
 
-from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.db.models import F, Q
 from django.http import Http404
@@ -9,17 +8,19 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 
 from misago.acl import add_acl
+from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
 from misago.readtracker import threadstracker
 
 from ..models import Thread
+from ..participants import make_participants_aware
 from ..permissions import exclude_invisible_threads
 from ..serializers import ThreadsListSerializer
 from ..subscriptions import make_subscription_aware
 from ..utils import add_categories_to_items
 
 
-__all__ = ['ForumThreads', 'PrivateThreads']
+__all__ = ['ForumThreads', 'PrivateThreads', 'filter_read_threads_queryset']
 
 
 LISTS_NAMES = {
@@ -71,6 +72,8 @@ class ViewModel(object):
         add_acl(request.user, threads)
         make_subscription_aware(request.user, threads)
 
+        self.filter_threads(request, threads)
+
         # set state on object for easy access from hooks
         self.category = category
         self.threads = threads
@@ -99,6 +102,9 @@ class ViewModel(object):
 
     def get_remaining_threads_queryset(self, queryset, category, threads_categories):
         return []
+
+    def filter_threads(self, request, threads):
+        pass # hook for custom thread types to add features to extend threads
 
     def get_frontend_context(self):
         context = {
@@ -161,6 +167,9 @@ class PrivateThreads(ViewModel):
 
     def get_remaining_threads_queryset(self, queryset, category, threads_categories):
         return queryset.filter(category__in=threads_categories)
+
+    def filter_threads(self, request, threads):
+        make_participants_aware(request.user, threads)
 
 
 """

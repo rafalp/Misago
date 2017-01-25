@@ -4,20 +4,14 @@ from __future__ import unicode_literals
 from django.db import migrations
 from django.utils.translation import ugettext as _
 
-from misago.core import serializer
-
-
-def pickle_permissions(role, permissions):
-    role.pickled_permissions = serializer.dumps(permissions)
-
 
 def create_default_roles(apps, schema_editor):
     Role = apps.get_model('misago_acl', 'Role')
 
-    role = Role(name=_("Member"), special_role='authenticated')
-    pickle_permissions(
-        role,
-        {
+    Role.objects.create(
+        name=_("Member"),
+        special_role='authenticated',
+        permissions={
             # account
             'misago.users.permissions.account': {
                 'name_changes_allowed': 2,
@@ -51,18 +45,17 @@ def create_default_roles(apps, schema_editor):
                 'can_edit_polls': 1
             },
 
-            # delete users
-            'misago.users.permissions.delete': {
-                'can_delete_users_newer_than': 0,
-                'can_delete_users_with_less_posts_than': 0,
+            # search
+            'misago.search.permissions': {
+                'can_search': 1,
             },
-        })
-    role.save()
+        }
+    )
 
-    role = Role(name=_("Guest"), special_role='anonymous')
-    pickle_permissions(
-        role,
-        {
+    Role.objects.create(
+        name=_("Guest"),
+        special_role='anonymous',
+        permissions={
             # account
             'misago.users.permissions.account': {
                 'name_changes_allowed': 0,
@@ -87,18 +80,16 @@ def create_default_roles(apps, schema_editor):
                 'can_download_other_users_attachments': True,
             },
 
-            # delete users
-            'misago.users.permissions.delete': {
-                'can_delete_users_newer_than': 0,
-                'can_delete_users_with_less_posts_than': 0,
+            # search
+            'misago.search.permissions': {
+                'can_search': 1,
             },
-        })
-    role.save()
+        }
+    )
 
-    role = Role(name=_("Moderator"))
-    pickle_permissions(
-        role,
-        {
+    Role.objects.create(
+        name=_("Moderator"),
+        permissions={
             # account
             'misago.users.permissions.account': {
                 'name_changes_allowed': 5,
@@ -118,14 +109,6 @@ def create_default_roles(apps, schema_editor):
                 'can_see_users_emails': 1,
                 'can_see_users_ips': 1,
                 'can_see_hidden_users': 1,
-            },
-
-            # warnings
-            'misago.users.permissions.warnings': {
-                'can_see_other_users_warnings': 1,
-                'can_warn_users': 1,
-                'can_cancel_warnings': 1,
-                'can_be_warned': 0,
             },
 
             # attachments
@@ -160,35 +143,22 @@ def create_default_roles(apps, schema_editor):
                 'can_delete_users_newer_than': 0,
                 'can_delete_users_with_less_posts_than': 0,
             },
-        })
-    role.save()
+        }
+    )
 
-    role = Role(name=_("See warnings"))
-    pickle_permissions(
-        role,
-        {
-            # warnings
-            'misago.users.permissions.warnings': {
-                'can_see_other_users_warnings': 1,
-            },
-        })
-    role.save()
-
-    role = Role(name=_("Renaming users"))
-    pickle_permissions(
-        role,
-        {
+    Role.objects.create(
+        name=_("Renaming users"),
+        permissions={
             # rename users
             'misago.users.permissions.moderation': {
                 'can_rename_users': 1,
             },
-        })
-    role.save()
+        }
+    )
 
-    role = Role(name=_("Banning users"))
-    pickle_permissions(
-        role,
-        {
+    Role.objects.create(
+        name=_("Banning users"),
+        permissions={
             # ban users
             'misago.users.permissions.profiles': {
                 'can_see_ban_details': 1,
@@ -200,36 +170,33 @@ def create_default_roles(apps, schema_editor):
                 'can_lift_bans': 1,
                 'max_lifted_ban_length': 14,
             },
-        })
-    role.save()
+        }
+    )
 
-    role = Role(name=_("Deleting users"))
-    pickle_permissions(
-        role,
-        {
+    Role.objects.create(
+        name=_("Deleting users"),
+        permissions={
             # delete users
             'misago.users.permissions.delete': {
                 'can_delete_users_newer_than': 3,
                 'can_delete_users_with_less_posts_than': 7,
             },
-        })
-    role.save()
+        }
+    )
 
-    role = Role(name=_("Can't be blocked"))
-    pickle_permissions(
-        role,
-        {
+    Role.objects.create(
+        name=_("Can't be blocked"),
+        permissions={
             # profiles
             'misago.users.permissions.profiles': {
                 'can_be_blocked': 0,
             },
-        })
-    role.save()
+        }
+    )
 
-    role = Role(name=_("Private threads"))
-    pickle_permissions(
-        role,
-        {
+    Role.objects.create(
+        name=_("Private threads"),
+        permissions={
             # private threads
             'misago.threads.permissions.privatethreads': {
                 'can_use_private_threads': 1,
@@ -239,13 +206,12 @@ def create_default_roles(apps, schema_editor):
                 'can_report_private_threads': 1,
                 'can_moderate_private_threads': 0,
             },
-        })
-    role.save()
+        }
+    )
 
-    role = Role(name=_("Private threads moderator"))
-    pickle_permissions(
-        role,
-        {
+    Role.objects.create(
+        name=_("Private threads moderator"),
+        permissions={
             # private threads
             'misago.threads.permissions.privatethreads': {
                 'can_use_private_threads': 1,
@@ -255,8 +221,8 @@ def create_default_roles(apps, schema_editor):
                 'can_report_private_threads': 1,
                 'can_moderate_private_threads': 1,
             },
-        })
-    role.save()
+        }
+    )
 
 
 class Migration(migrations.Migration):

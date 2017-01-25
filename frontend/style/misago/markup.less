@@ -1,0 +1,94 @@
+//
+// Markup styles
+// --------------------------------------------------
+
+// Force word wrap for user text
+.misago-markup p {
+  word-wrap: break-word;
+}
+
+
+// Even out blocks
+.misago-markup>*, .misago-markup blockquote>* {
+  margin: @line-height-computed 0px;
+
+  &:first-child {
+    margin-top: 0px;
+  }
+
+  &:last-child {
+    margin-bottom: 0px;
+  }
+}
+
+
+// Downscale images so they don't expand area
+.misago-markup img {
+  max-width: 100%;
+  max-height: 500px;
+}
+
+
+// Make quotes stand out a little
+.misago-markup .quote-block,
+.misago-markup blockquote {
+  background: @gray-lighter;
+  border: none;
+
+  font-size: @font-size-base;
+
+  .quote-heading {
+    border-bottom: 1px solid darken(@gray-lighter, 8%);
+    padding: (@line-height-computed / 2) @line-height-computed;
+
+    font-size: @font-size-small;
+    font-weight: bold;
+  }
+}
+
+.misago-markup>.quote-block,
+.misago-markup>blockquote {
+  border: 1px solid darken(@gray-lighter, 8%);
+}
+
+.misago-markup .quote-body {
+  background: @body-bg;
+  margin: 0px;
+
+  &>.quote-block, &>blockquote {
+    border: 1px solid darken(@gray-lighter, 8%);
+  }
+}
+
+
+// Add bullets to lists
+.misago-markup ul {
+  list-style-type: square;
+
+  li {
+    list-style-type: square;
+  }
+}
+
+.misago-markup ol {
+  list-style-type: decimal;
+
+  li {
+    list-style-type: decimal;
+  }
+}
+
+
+// Expand code blocks a little
+.misago-markup pre {
+  background: rgb(25, 23, 28);
+  border: none;
+  padding: @padding-large-vertical;
+  overflow: hidden;
+
+  color: #8b8792;
+
+  code.hljs {
+    margin: @padding-large-vertical * -1;
+  }
+}

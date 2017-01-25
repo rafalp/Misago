@@ -35,7 +35,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_cant_use_private_threads(self):
-        """has no permission to see selected category"""
+        """has no permission to use private threads"""
         override_acl(self.user, {'can_use_private_threads': 0})
 
         response = self.client.post(self.api_link)
@@ -137,6 +137,25 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(response.json(), {
             'to': [
                 "You can't add more than 3 users to private thread (you've added 50)."
+            ]
+        })
+
+    def test_cant_invite_no_permission(self):
+        """api validates invited user permission to private thread"""
+        override_acl(self.other_user, {
+            'can_use_private_threads': 0
+        })
+
+        response = self.client.post(self.api_link, data={
+            'to': [self.other_user.username],
+            'title': "Lorem ipsum dolor met",
+            'post': "Lorem ipsum dolor.",
+        })
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'to': [
+                "BobBoberson can't participate in private threads."
             ]
         })
 
@@ -277,9 +296,10 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         self.assertContains(response, thread.title)
         self.assertContains(response, "<p>Lorem ipsum dolor met!</p>")
 
+        # don't count private threads
         self.reload_user()
-        self.assertEqual(self.user.threads, 1)
-        self.assertEqual(self.user.posts, 1)
+        self.assertEqual(self.user.threads, 0)
+        self.assertEqual(self.user.posts, 0)
 
         self.assertEqual(thread.category_id, self.category.pk)
         self.assertEqual(thread.title, "Hello, I am test thread!")

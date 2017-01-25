@@ -8,7 +8,8 @@ from misago.categories.signals import delete_category_content, move_category_con
 from misago.core.pgutils import batch_delete, batch_update
 from misago.users.signals import delete_user_content, username_changed
 
-from .models import Attachment, Poll, PollVote, Post, PostEdit, PostLike, Thread
+from .models import (
+    Attachment, Poll, PollVote, Post, PostEdit, PostLike, Thread)
 
 
 delete_post = Signal()
@@ -17,7 +18,6 @@ merge_post = Signal(providing_args=["other_post"])
 merge_thread = Signal(providing_args=["other_thread"])
 move_post = Signal()
 move_thread = Signal()
-remove_thread_participant = Signal(providing_args=["user"])
 
 
 """
@@ -38,16 +38,23 @@ def merge_posts(sender, **kwargs):
 
 @receiver(move_thread)
 def move_thread_content(sender, **kwargs):
-    Post.objects.filter(thread=sender).update(category=sender.category)
-    PostEdit.objects.filter(thread=sender).update(category=sender.category)
-    PostLike.objects.filter(thread=sender).update(category=sender.category)
+    sender.post_set.update(category=sender.category)
+    sender.postedit_set.update(category=sender.category)
+    sender.postlike_set.update(category=sender.category)
+    sender.pollvote_set.update(category=sender.category)
+    sender.subscription_set.update(category=sender.category)
+
     Poll.objects.filter(thread=sender).update(category=sender.category)
-    PollVote.objects.filter(thread=sender).update(category=sender.category)
 
 
 @receiver(delete_category_content)
 def delete_category_threads(sender, **kwargs):
+    sender.subscription_set.all().delete()
+    sender.pollvote_set.all().delete()
+    sender.poll_set.all().delete()
+    sender.postlike_set.all().delete()
     sender.thread_set.all().delete()
+    sender.postedit_set.all().delete()
     sender.post_set.all().delete()
 
 
@@ -55,12 +62,13 @@ def delete_category_threads(sender, **kwargs):
 def move_category_threads(sender, **kwargs):
     new_category = kwargs['new_category']
 
-    Thread.objects.filter(category=sender).update(category=new_category)
-    Post.objects.filter(category=sender).update(category=new_category)
-    PostEdit.objects.filter(category=sender).update(category=new_category)
-    PostLike.objects.filter(category=sender).update(category=new_category)
-    Poll.objects.filter(category=sender).update(category=new_category)
-    PollVote.objects.filter(category=sender).update(category=new_category)
+    sender.thread_set.update(category=new_category)
+    sender.post_set.filter(category=sender).update(category=new_category)
+    sender.postedit_set.filter(category=sender).update(category=new_category)
+    sender.postlike_set.filter(category=sender).update(category=new_category)
+    sender.poll_set.filter(category=sender).update(category=new_category)
+    sender.pollvote_set.update(category=new_category)
+    sender.subscription_set.update(category=new_category)
 
 
 @receiver(delete_user_content)
@@ -115,9 +123,9 @@ def update_usernames(sender, **kwargs):
         editor_slug=sender.slug
     )
 
-    PostLike.objects.filter(user=sender).update(
-        user_name=sender.username,
-        user_slug=sender.slug
+    PostLike.objects.filter(liker=sender).update(
+        liker_name=sender.username,
+        liker_slug=sender.slug
     )
 
     Attachment.objects.filter(uploader=sender).update(

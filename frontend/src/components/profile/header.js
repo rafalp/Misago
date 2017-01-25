@@ -127,6 +127,10 @@ export default class extends React.Component {
     return<div className="page-header">
       <div className="container">
 
+        <IsDisabledMessage
+          isActive={this.props.profile.is_active}
+        />
+
         <div className="row">
           <div className="col-md-9 col-md-offset-3">
 
@@ -171,3 +175,15 @@ export default class extends React.Component {
     /* jshint ignore:end */
   }
 }
+
+/* jshint ignore:start */
+export function IsDisabledMessage(props) {
+  if (props.isActive !== false) return null;
+
+  return (
+    <div className="alert alert-danger">
+      <p>{gettext("This user's account has been disabled by administrator.")}</p>
+    </div>
+  );
+}
+/* jshint ignore:end */

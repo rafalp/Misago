@@ -40,7 +40,7 @@ class ActivationError(Exception):
 @activation_view
 def activate_by_token(request, pk, token):
     User = get_user_model()
-    inactive_user = get_object_or_404(User.objects, pk=pk)
+    inactive_user = get_object_or_404(User.objects, pk=pk, is_active=True)
 
     try:
         if not inactive_user.requires_activation:

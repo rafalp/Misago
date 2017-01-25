@@ -1,5 +1,4 @@
 import React from 'react';
-import misago from 'misago';
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
 import Button from 'misago/components/button'; // jshint ignore:line
 import ajax from 'misago/services/ajax'; // jshint ignore:line
@@ -18,28 +17,16 @@ export default class extends React.Component {
     if (this.props.upload) {
       return this.props.options.crop_tmp.size;
     } else {
-      return this.props.options.crop_org.size;
+      return this.props.options.crop_src.size;
     }
-  }
-
-  getAvatarSecret() {
-    if (this.props.upload) {
-      return this.props.options.crop_tmp.secret;
-    } else {
-      return this.props.options.crop_org.secret;
-    }
-  }
-
-  getAvatarHash() {
-    return this.props.upload || this.props.user.avatar_hash;
   }
 
   getImagePath() {
-    return [
-      misago.get('MISAGO_PATH') + 'user-avatar',
-      this.getAvatarSecret() + ':' + this.getAvatarHash(),
-      this.props.user.id + '.png'
-    ].join('/');
+    if (this.props.upload) {
+      return this.props.options.crop_tmp.url;
+    } else {
+      return this.props.options.crop_src.url;
+    }
   }
 
   componentDidMount() {
@@ -83,7 +70,7 @@ export default class extends React.Component {
           }
         } else {
           // use preserved crop
-          let crop = this.props.options.crop_org.crop;
+          let crop = this.props.options.crop_src.crop;
           if (crop) {
             cropit.cropit('zoom', crop.zoom);
             cropit.cropit('offset', {
@@ -110,7 +97,7 @@ export default class extends React.Component {
       'isLoading': true
     });
 
-    let avatarType = this.props.upload ? 'crop_tmp' : 'crop_org';
+    let avatarType = this.props.upload ? 'crop_tmp' : 'crop_src';
     let cropit = $('.crop-form');
 
     ajax.post(this.props.user.api_url.avatar, {
@@ -120,7 +107,7 @@ export default class extends React.Component {
         'zoom': cropit.cropit('zoom')
       }
     }).then((data) => {
-      this.props.onComplete(data.avatar_hash, data.options);
+      this.props.onComplete(data);
       snackbar.success(data.detail);
     }, (rejection) => {
       if (rejection.status === 400) {

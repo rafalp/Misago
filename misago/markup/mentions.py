@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.utils import six
 
 
-SUPPORTED_TAGS = ('h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p')
+SUPPORTED_TAGS = ('h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'p')
 USERNAME_RE = re.compile(r'@[0-9a-z]+', re.IGNORECASE)
 MENTIONS_LIMIT = 24
 
@@ -19,10 +19,12 @@ def add_mentions(request, result):
 
     soup = BeautifulSoup(result['parsed_text'], 'html5lib')
 
+    elements = []
     for tagname in SUPPORTED_TAGS:
         if tagname in result['parsed_text']:
-            for element in soup.find_all(tagname):
-                add_mentions_to_element(request, element, mentions_dict)
+            elements += soup.find_all(tagname)
+    for element in elements:
+        add_mentions_to_element(request, element, mentions_dict)
 
     result['parsed_text'] = six.text_type(soup.body)[6:-7].strip()
     result['mentions'] = list(filter(bool, mentions_dict.values()))

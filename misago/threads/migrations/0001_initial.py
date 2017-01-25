@@ -5,6 +5,7 @@ import django.db.models.deletion
 import django.utils.timezone
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.search import SearchVectorField
 from django.db import migrations, models
 
 import misago.threads.models.attachment
@@ -51,6 +52,8 @@ class Migration(migrations.Migration):
                 ('event_context', JSONField(null=True, blank=True)),
                 ('likes', models.PositiveIntegerField(default=0)),
                 ('last_likes', JSONField(blank=True, null=True)),
+                ('search_document', models.TextField(blank=True, null=True)),
+                ('search_vector', SearchVectorField()),
             ],
             options={
             },
@@ -73,6 +76,8 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=255)),
                 ('slug', models.CharField(max_length=255)),
                 ('replies', models.PositiveIntegerField(default=0, db_index=True)),
+                ('has_events', models.BooleanField(default=False)),
+                ('has_poll', models.BooleanField(default=False)),
                 ('has_reported_posts', models.BooleanField(default=False)),
                 ('has_open_reports', models.BooleanField(default=False)),
                 ('has_unapproved_posts', models.BooleanField(default=False)),
@@ -80,11 +85,11 @@ class Migration(migrations.Migration):
                 ('started_on', models.DateTimeField(db_index=True)),
                 ('starter_name', models.CharField(max_length=255)),
                 ('starter_slug', models.CharField(max_length=255)),
+                ('last_post_is_event', models.BooleanField(default=False)),
                 ('last_post_on', models.DateTimeField(db_index=True)),
                 ('last_poster_name', models.CharField(max_length=255, null=True, blank=True)),
                 ('last_poster_slug', models.CharField(max_length=255, null=True, blank=True)),
                 ('weight', models.PositiveIntegerField(default=0)),
-                ('is_poll', models.BooleanField(default=False)),
                 ('is_unapproved', models.BooleanField(default=False, db_index=True)),
                 ('is_hidden', models.BooleanField(default=False)),
                 ('is_closed', models.BooleanField(default=False)),
@@ -118,7 +123,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='thread',
             name='participants',
-            field=models.ManyToManyField(related_name='private_thread_set', through='misago_threads.ThreadParticipant', through_fields=('thread', 'user'), to=settings.AUTH_USER_MODEL),
+            field=models.ManyToManyField(related_name='privatethread_set', through='misago_threads.ThreadParticipant', to=settings.AUTH_USER_MODEL),
             preserve_default=True,
         ),
         CreatePartialIndex(
@@ -253,9 +258,9 @@ class Migration(migrations.Migration):
                 ('uploader_ip', models.GenericIPAddressField()),
                 ('filename', models.CharField(max_length=255, db_index=True)),
                 ('size', models.PositiveIntegerField(default=0, db_index=True)),
-                ('thumbnail', models.ImageField(blank=True, null=True, upload_to=misago.threads.models.attachment.upload_to)),
-                ('image', models.ImageField(blank=True, null=True, upload_to=misago.threads.models.attachment.upload_to)),
-                ('file', models.FileField(blank=True, null=True, upload_to=misago.threads.models.attachment.upload_to)),
+                ('thumbnail', models.ImageField(max_length=255, blank=True, null=True, upload_to=misago.threads.models.attachment.upload_to)),
+                ('image', models.ImageField(max_length=255, blank=True, null=True, upload_to=misago.threads.models.attachment.upload_to)),
+                ('file', models.FileField(max_length=255, blank=True, null=True, upload_to=misago.threads.models.attachment.upload_to)),
                 ('post', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='misago_threads.Post')),
             ],
         ),
@@ -327,9 +332,9 @@ class Migration(migrations.Migration):
             name='PostLike',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('user_name', models.CharField(max_length=255, db_index=True)),
-                ('user_slug', models.CharField(max_length=255)),
-                ('user_ip', models.GenericIPAddressField()),
+                ('liker_name', models.CharField(max_length=255, db_index=True)),
+                ('liker_slug', models.CharField(max_length=255)),
+                ('liker_ip', models.GenericIPAddressField()),
                 ('liked_on', models.DateTimeField(default=django.utils.timezone.now)),
                 ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='misago_categories.Category')),
             ],
@@ -349,7 +354,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='postlike',
-            name='user',
+            name='liker',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(

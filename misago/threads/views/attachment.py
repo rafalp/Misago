@@ -2,11 +2,12 @@ from __future__ import unicode_literals
 
 import os
 
-from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.db.models import F
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
+
+from misago.conf import settings
 
 from ..models import Attachment, AttachmentType
 

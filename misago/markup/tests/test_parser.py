@@ -18,7 +18,8 @@ class MockRequest(object):
 
 
 class MockPoster(object):
-    pass
+    username = 'LoremIpsum'
+    slug = 'loremipsum'
 
 
 class BBCodeTests(TestCase):
@@ -56,11 +57,11 @@ Lorem [b]ipsum[/B].
         result = parse(test_text, MockRequest(), MockPoster(), minify=False)
         self.assertEqual(expected_result, result['parsed_text'])
 
-    def test_blocks(self):
-        """block elements are correctly parsed"""
+    def test_hr(self):
+        """hr bbcode is correctly parsed"""
         test_text = """
 Lorem ipsum.
-[hR]
+[hr]
 Dolor met.
 """.strip()
 
@@ -217,11 +218,11 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
     def test_clean_linked_image(self):
         """parser handles image element nested in link"""
         test_text = """
-[![3.png](http://test.com/attachment/thumb/test-43/)](http://test.com/attachment/test-43/)
+[![3.png](http://test.com/a/thumb/test/43/)](http://test.com/a/test/43/)
         """.strip()
 
         expected_result = """
-<p><a href="/attachment/test-43/" rel="nofollow"><img alt="3.png" src="/attachment/thumb/test-43/"/></a></p>
+<p><a href="/a/test/43/" rel="nofollow"><img alt="3.png" src="/a/thumb/test/43/"/></a></p>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
@@ -230,11 +231,11 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
     def test_force_shva(self):
         """parser appends ?shva=1 bit to attachment links if flag is present"""
         test_text = """
-![3.png](http://test.com/attachment/thumb/test-43/)
+![3.png](http://test.com/a/thumb/test/43/)
         """.strip()
 
         expected_result = """
-<p><img alt="3.png" src="/attachment/thumb/test-43/?shva=1"/></p>
+<p><img alt="3.png" src="/a/thumb/test/43/?shva=1"/></p>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True, force_shva=True)
@@ -243,11 +244,11 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
     def test_remove_shva(self):
         """parser removes ?shva=1 bit from attachment links if flag is absent"""
         test_text = """
-![3.png](http://test.com/attachment/thumb/test-43/?shva=1)
+![3.png](http://test.com/a/thumb/test/43/?shva=1)
         """.strip()
 
         expected_result = """
-<p><img alt="3.png" src="/attachment/thumb/test-43/"/></p>
+<p><img alt="3.png" src="/a/thumb/test/43/"/></p>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
@@ -281,22 +282,30 @@ Lorem ipsum.
 
         expected_result = """
 <p>Lorem ipsum.</p>
-<blockquote>
-<header></header>
+<aside class="quote-block">
+<div class="quote-heading"></div>
+<blockquote class="quote-body">
 <p>Dolor met</p>
 </blockquote>
-<blockquote>
-<header></header>
+</aside>
+<aside class="quote-block">
+<div class="quote-heading"></div>
+<blockquote class="quote-body">
 <p>Dolor &lt;b&gt;met&lt;/b&gt;</p>
 </blockquote>
-<blockquote>
-<header></header>
+</aside>
+<aside class="quote-block">
+<div class="quote-heading"></div>
+<blockquote class="quote-body">
 <p>Dolor <strong>met</strong></p>
-<blockquote>
-<header></header>
+<aside class="quote-block">
+<div class="quote-heading"></div>
+<blockquote class="quote-body">
 <p>Dolor met</p>
 </blockquote>
+</aside>
 </blockquote>
+</aside>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=False)
@@ -307,58 +316,57 @@ Lorem ipsum.
         test_text = """
 Lorem ipsum.
 [quote]Dolor met[/quote]
-[quote=\"Bob\"]Dolor <b>met</b>[/quote]
+[quote=\"@Bob\"]Dolor <b>met</b>[/quote]
 [quote]Dolor **met**[quote=@Bob]Dolor met[/quote][/quote]
 """.strip()
 
         expected_result = """
 <p>Lorem ipsum.</p>
-<blockquote>
-<header></header>
+<aside class="quote-block">
+<div class="quote-heading"></div>
+<blockquote class="quote-body">
 <p>Dolor met</p>
 </blockquote>
-<blockquote>
-<header>@Bob</header>
+</aside>
+<aside class="quote-block">
+<div class="quote-heading">@Bob</div>
+<blockquote class="quote-body">
 <p>Dolor &lt;b&gt;met&lt;/b&gt;</p>
 </blockquote>
-<blockquote>
-<header></header>
+</aside>
+<aside class="quote-block">
+<div class="quote-heading"></div>
+<blockquote class="quote-body">
 <p>Dolor <strong>met</strong></p>
-<blockquote>
-<header>@Bob</header>
+<aside class="quote-block">
+<div class="quote-heading">@Bob</div>
+<blockquote class="quote-body">
 <p>Dolor met</p>
 </blockquote>
+</aside>
 </blockquote>
+</aside>
 """.strip()
 
-        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        request = MockRequest(user=MockPoster())
+        result = parse(test_text, request, MockPoster(), minify=False)
         self.assertEqual(expected_result, result['parsed_text'])
 
-    def test_invalid_author_quote(self):
-        """parser handles invalid author quote"""
+    def test_custom_quote_title(self):
+        """parser handles custom quotetitle"""
         test_text = """
 Lorem ipsum.
-[quote=\"Bob Sasasasa]Dolor <b>met</b>[/quote]
+[quote=\"Lorem ipsum very test\"]Dolor <b>met</b>[/quote]
 """.strip()
 
         expected_result = """
-<p>Lorem ipsum.<br/>
-[quote="Bob Sasasasa]Dolor &lt;b&gt;met&lt;/b&gt;[/quote]</p>
-""".strip()
-
-        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
-        self.assertEqual(expected_result, result['parsed_text'])
-
-    def test_invalid_author_quote(self):
-        """parser handles invalid author quote"""
-        test_text = """
-Lorem ipsum.
-[quote=\"Bob Sasasasa]Dolor <b>met</b>[/quote]
-""".strip()
-
-        expected_result = """
-<p>Lorem ipsum.<br/>
-[quote="Bob Sasasasa]Dolor &lt;b&gt;met&lt;/b&gt;[/quote]</p>
+<p>Lorem ipsum.</p>
+<aside class="quote-block">
+<div class="quote-heading">Lorem ipsum very test</div>
+<blockquote class="quote-body">
+<p>Dolor &lt;b&gt;met&lt;/b&gt;</p>
+</blockquote>
+</aside>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=False)
@@ -377,12 +385,121 @@ Amet elit
 
         expected_result = """
 <p>Lorem ipsum.</p>
-<blockquote>
-<header></header>
+<aside class="quote-block">
+<div class="quote-heading"></div>
+<blockquote class="quote-body">
 <p>Dolor met</p>
 <hr/>
 <p>Amet elit</p>
 </blockquote>
+</aside>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+
+class CodeTests(TestCase):
+    def test_code(self):
+        """code bbcode is correctly parsed"""
+        test_text = """
+Lorem ipsum.
+[code]
+Dolor [b]met.[/b]
+[/code]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.</p>
+<pre><code>Dolor [b]met.[/b]</code></pre>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_inline_code(self):
+        """inline code bbcode is correctly parsed"""
+        test_text = """
+Lorem ipsum.
+
+[code]Dolor [b]met.[/b][/code]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.</p>
+<pre><code>Dolor [b]met.[/b]</code></pre>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_code_strip(self):
+        """code bbcode trims its content"""
+        test_text = """
+Lorem ipsum.
+
+[code]
+
+   Dolor [b]met.[/b]
+
+
+[/code]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.</p>
+<pre><code>   Dolor [b]met.[/b]</code></pre>
+""".strip()
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_code_language(self):
+        """code bbcode with language is correctly parsed"""
+        test_text = """
+Lorem ipsum.
+
+[code="python"]
+Dolor [b]met.[/b]
+[/code]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.</p>
+<pre><code class="python">Dolor [b]met.[/b]</code></pre>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+    def test_code_language_optional_quotes(self):
+        """code quotes around language name are optional"""
+        test_text = """
+Lorem ipsum.
+
+[code=python"]
+Dolor [b]met.[/b]
+[/code]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.</p>
+<pre><code class="python">Dolor [b]met.[/b]</code></pre>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+        test_text = """
+Lorem ipsum.
+
+[code="python]
+Dolor [b]met.[/b]
+[/code]
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum.</p>
+<pre><code class="python">Dolor [b]met.[/b]</code></pre>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=False)

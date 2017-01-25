@@ -1,0 +1,40 @@
+{% load i18n misago_avatars misago_batch %}
+<div class="panel panel-default panel-participants">
+  <div class="panel-body">
+    <div class="participants-cards">
+      {% for row in participants|batch:4 %}
+        <div class="row">
+          {% for participant in row %}
+            <div class="col-md-3 participant-card">
+              <a class="avatar-link" href="{{ participant.user.get_absolute_url }}">
+                <img class="user-avatar" src="{{ participant.user|avatar:50 }}" alt="">
+              </a>
+              <div class="participant-profile">
+                <a class="item-title" href="{{ participant.user.get_absolute_url }}">
+                  {{ participant.user }}
+                </a>
+                <ul class="list-unstyled list-inline">
+                  {% if participant.is_owner %}
+                    <li class="participant-owner">
+                      <span class="material-icon">
+                        grade
+                      </span>
+                      {% trans "Owner" %}
+                    </li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+    <p>
+      {% blocktrans trimmed count users=participants|length %}
+        This thread has {{ users }} participant.
+      {% plural %}
+        This thread has {{ users }} participants.
+      {% endblocktrans %}
+    </p>
+  </div>
+</div>

@@ -6,7 +6,7 @@ const ICON = {
 
   pinned_globally: 'bookmark',
   pinned_locally: 'bookmark_border',
-  unpoinned: 'panorama_fish_eye',
+  unpinned: 'panorama_fish_eye',
 
   moved: 'arrow_forward',
   merged: 'call_merge',
@@ -17,7 +17,16 @@ const ICON = {
   closed: 'lock_outline',
 
   unhid: 'visibility',
-  hid: 'visibility_off'
+  hid: 'visibility_off',
+
+  changed_owner: 'grade',
+  tookover: 'grade',
+
+  added_participant: 'person_add',
+
+  owner_left: 'person_outline',
+  participant_left: 'person_outline',
+  removed_participant: 'remove_circle_outline',
 }
 
 export default function(props) {

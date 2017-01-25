@@ -14,7 +14,7 @@ from ..models import Post
 from ..moderation import posts as moderation
 from ..permissions.threads import allow_delete_event, allow_delete_post, allow_edit_post, allow_reply_thread
 from ..serializers import AttachmentSerializer, PostSerializer
-from ..viewmodels import ForumThread, ThreadPost, ThreadPosts
+from ..viewmodels import ForumThread, PrivateThread, ThreadPost, ThreadPosts
 from .postendpoints.edits import get_edit_endpoint, revert_post_endpoint
 from .postendpoints.likes import likes_list_endpoint
 from .postendpoints.merge import posts_merge_endpoint
@@ -28,8 +28,8 @@ from .postingendpoint import PostingEndpoint
 
 class ViewSet(viewsets.ViewSet):
     thread = None
-    posts = None
-    post_ = None
+    posts = ThreadPosts
+    post_ = ThreadPost
 
     def get_thread(self, request, pk, read_aware=True, subscription_aware=True, select_for_update=False):
         return self.thread(
@@ -150,8 +150,6 @@ class ViewSet(viewsets.ViewSet):
         else:
             return Response(posting.errors, status=400)
 
-        return Response({})
-
     @transaction.atomic
     def partial_update(self, request, thread_pk, pk):
         thread = self.get_thread_for_update(request, thread_pk)
@@ -185,10 +183,10 @@ class ViewSet(viewsets.ViewSet):
     @detail_route(methods=['post'])
     @transaction.atomic
     def read(self, request, thread_pk, pk):
+        request.user.lock()
+
         thread = self.get_thread(request, thread_pk).unwrap()
         post = self.get_post(request, thread, pk).unwrap()
-
-        request.user.lock()
 
         return post_read_endpoint(request, thread, post)
 
@@ -277,9 +275,7 @@ class ViewSet(viewsets.ViewSet):
 
 class ThreadPostsViewSet(ViewSet):
     thread = ForumThread
-    posts = ThreadPosts
-    post_ = ThreadPost
 
 
 class PrivateThreadPostsViewSet(ViewSet):
-    pass
+    thread = PrivateThread

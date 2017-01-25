@@ -20,18 +20,15 @@ Both types of settings can accessed as attributes of ``misago.conf.settings`` ob
 Defining Custom DB Settings
 ===========================
 
-.. note::
-   Current Misago 0.6 migrations are south-based placeholders that will be replaced with new migrations introduced in Django 1.7 before release. For this reason this instruction focuses exclusively on usage of utility function provided by Misago.
-
 In order to define or change high-level (stored in database) settings you have to add new rows to ``conf_settingsgroup`` and ``conf_settings`` database tables. This can be done by plenty of different ways, but preffered one is by creating new data migration and using functions from ``misago.conf.migrationutils`` module.
 
 
 migrate_settings_group
 ----------------------
 
-.. function:: migrate_settings_group(orm, group_fixture, old_group_key=None)
+.. function:: migrate_settings_group(apps, group_fixture, old_group_key=None)
 
-This function uses south supplied ORM instance to insert/update settings group in database according to provided dict contianing its name, description and contained settings. If new group should replace old one, you can provide its key in ``old_group_key`` argument.
+This function uses Django supplied ``apps`` instance to insert/update settings group in database according to provided dict contianing its name, description and contained settings. If new group should replace old one, you can provide its key in ``old_group_key`` argument.
 
 The ``group_fixture`` dict should define following keys:
 
@@ -56,34 +53,12 @@ Each dict in ``settings`` tuple should define following keys:
 
 
 .. note::
-   If you wish to make your names and messages translateable, you should use ``ugettext_lazy`` function provided by Misago instead of Django one. This function is defined in ``misago.core.migrationutils`` module and differs from Django one by the fact that it preserves untranslated message on its ``message`` attribute.
+   If you wish to make your names and messages translateable, you should define fake ``gettext`` function in your code to wrap translated strings with:
 
-   For your convience ``migrate_settings_group`` triess to switch translation messages with their "message" attribute when it writes to database and thus making their translation to new languages in future possible.
+       _ = lambda x: x
 
-
-with_conf_models
-----------------
-
-.. function:: with_conf_models(migration, this_migration=None)
-
-South migrations define special ``models`` attribute that holds dict representing structure of database at time of migration execution. This dict will by default contain only your apps models. To add settings models that ``migrate_settings_group`` requires to work, you have to use ``with_conf_models`` function. This function accepts two arguments:
-
-* **migration** - name of migration in ``misago.conf`` app containing models definitions current for the time of your data migration.
-* **this_migration** - dict with model definitions for this migration.
-
-In addition to this, make sure that your migration ``depends_on`` attribute defines dependency on migration from ``misago.conf`` app::
-
-    class Migration(DataMigration):
-
-        # Migration code...
-
-        models = with_conf_models('0001_initial', {
-            # This migration models
-        })
-
-        depends_on = (
-            ("conf", "0001_initial"),
-        )
+       # below line will be made translatable by makemessages:
+       _('Some string')
 
 
 delete_settings_cache
@@ -229,21 +204,29 @@ Length of attachment's secret (filenames and url token). The longer, the harder 
    Generaly, neither you nor your users should use forums to exchange files containing valuable data, but if you do, you should make sure to secure it additionaly via other means like password-protected archives or file encryption solutions.
 
 
-MISAGO_AVATAR_SERVER_PATH
--------------------------
-Url path that that all avatar server urls starts with. If you are running Misago subdirectory, make sure to update it (i.e. valid path for  "http://somesite.com/forums/" is ``/forums/user-avatar``).
+MISAGO_AVATAR_GALLERY
+---------------------
 
+Path to directory containing avatar galleries. Those galleries can be loaded by running ``loadavatargallery`` command.
 
-MISAGO_AVATAR_STORE
--------------------
+Feel free to remove existing galleries or add your own.
 
-Path to directory that Misago should use to store user avatars. This directory shouldn't be accessible from outside world.
+If you create gallery named ``__default__`` and set avatar gallery as default user avatar, Misago will select new users avatars from it while keeping this gallery hidden from existing users.
 
 
 MISAGO_AVATARS_SIZES
 --------------------
 
 Misago uses avatar cache that prescales avatars to requested sizes. Enter here sizes to which those should be optimized.
+
+.. warning::
+   It's impossible to regenerate user avatars store for existing avatars. Misago comes with sane defaults for avatar sizes, with min. height for user avatar being 400 pixels square, and steps of 200, 150, 100, 64, 50 and 30px. However if you need larger avatar or different pregenerated dimensions, changing those will require you to manually remove ``avatars`` directory from your media storage as well as running ``misago.users.avatars.set_default_avatar`` function against every user registered.
+
+
+MISAGO_BLANK_AVATAR
+-------------------
+
+This path to image file that Misago should use as blank avatar.
 
 
 MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH
@@ -274,8 +257,16 @@ MISAGO_DYNAMIC_AVATAR_DRAWER
 Function used to create unique avatar for this user. Allows for customization of algorithm used to generate those.
 
 
+MISAGO_EVENTS_PER_PAGE
+----------------------
+
+Misago reads events to display in separate database query to avoid situation when thread with large number of eg. moderator actions displays pages consisting exclusively of events. Using this setting you may specify upper limit of events displayed on thread's single page. This setting is intented as fail safe, both to save threads from excessively long lists of events your users will have to scroll trough, as well as to keep memory usage within limts.
+
+In case of more events than specified being found, oldest events will be truncated.
+
+
 MISAGO_HOURLY_POST_LIMIT
------------------------
+------------------------
 
 Hourly limit of posts that may be posted from single account. Fail-safe for situations when forum is flooded by spam bot. Change to 0 to lift this restriction.
 
@@ -352,32 +343,18 @@ MISAGO_READTRACKER_CUTOFF
 Controls amount of data used by readtracking system. All content older than number of days specified in this setting is considered old and read, even if opposite is true. Active forums can try lowering this value while less active ones may wish to increase it instead.
 
 
-MISAGO_SENDFILE_HEADER
-----------------------
+MISAGO_SEARCH_CONFIG
+--------------------
 
-If your server provides proxy for serving files from application, like "X-Sendfile", set its header name in this setting.
+PostgreSQL text search configuration to use in searches. Defaults to "simple", for list of installed configurations run "\dF" in "psql".
 
-Leave this setting empty to use Django fallback.
+Standard configs as of PostgreSQL 9.5 are: ``dutch``, ``english``, ``finnish``, ``french``, ``german``, ``hungarian``, ``italian``, ``norwegian``, ``portuguese``, ``romanian``, ``russian``, ``simple``, ``spanish``, ``swedish``, ``turkish``.
 
+.. note::
+   Example on adding custom language can be found `here <https://github.com/lemonskyjwt/plpstgrssearch>`_.
 
-MISAGO_SENDFILE_LOCATIONS_PATH
-------------------------------
-
-Some Http servers (like Nginx) allow you to restrict X-Sendfile to certain locations.
-
-Misago supports this feature with this setting, however with limitation to one "root" path. This setting is used for paths defined in ATTACHMENTS_ROOT and AVATAR_CACHE settings.
-
-Rewrite algorithm used by Misago replaces path until last part with value of this setting.
-
-For example, defining ``MISAGO_SENDFILE_LOCATIONS_PATH = 'misago_served_internals'`` will result in following rewrite:
-
-``/home/mysite/www/attachments/13_05/142123.rar`` => ``/misago_served_internals/attachments/13_05/142123.rar``
-
-
-MISAGO_STOP_FORUM_SPAM_USE
---------------------------
-
-This settings allows you to decide wheter of not `Stop Forum Spam <http://www.stopforumspam.com/>`_ database should be used to validate IPs and emails during new users registrations.
+.. note::
+   Items in Misago are usually indexed in search engine on save or update. If you change search configuration, you'll need to rebuild search for past posts to get reindexed using new configuration. Misago comes with ``rebuildpostssearch`` tool for this purpose.
 
 
 MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE
@@ -387,19 +364,19 @@ Minimum confidence returned by `Stop Forum Spam <http://www.stopforumspam.com/>`
 
 
 MISAGO_THREADS_ON_INDEX
---------------------------
+-----------------------
 
 Change this setting to ``False`` to display categories list instead of threads list on board index.
 
 
 MISAGO_THREADS_PER_PAGE
----------------------
+-----------------------
 
 Controls number of threads displayed on page. Greater numbers can increase number of objects loaded into memory and thus depending on features enabled greatly increase memory usage.
 
 
 MISAGO_THREADS_TAIL
-------------------
+-------------------
 
 Defines minimal number of threads for lists last page. If number of threads on last page is smaller or equal to one specified in this setting, last page will be appended to previous page instead.
 
@@ -408,6 +385,12 @@ MISAGO_THREAD_TYPES
 -------------------
 
 List of clasess defining thread types.
+
+
+MISAGO_USE_STOP_FORUM_SPAM
+--------------------------
+
+This settings allows you to decide wheter of not `Stop Forum Spam <http://www.stopforumspam.com/>`_ database should be used to validate IPs and emails during new users registrations.
 
 
 MISAGO_USERS_PER_PAGE

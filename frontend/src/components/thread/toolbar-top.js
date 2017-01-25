@@ -2,6 +2,8 @@
 import React from 'react';
 import ReplyButton from './reply-button';
 import Subscription from './subscription';
+import AddParticipantModal from 'misago/components/add-participant';
+import modal from 'misago/services/modal';
 import posting from 'misago/services/posting';
 
 export default function(props) {
@@ -13,6 +15,7 @@ export default function(props) {
         <GotoLast thread={props.thread} />
         <Reply openReplyForm={props.openReplyForm} thread={props.thread} />
         <StartPoll poll={props.poll} thread={props.thread} />
+        <AddParticipant thread={props.thread} />
         <SubscriptionMenu {...props} />
       </ul>
     </div>
@@ -108,6 +111,33 @@ export class StartPoll extends React.Component {
             poll
           </span>
           {gettext("Add poll")}
+        </button>
+      </li>
+    );
+  }
+}
+
+export class AddParticipant extends React.Component {
+  onClick = () => {
+    modal.show(
+      <AddParticipantModal thread={this.props.thread} />
+    );
+  }
+
+  render() {
+    if (!this.props.thread.acl.can_add_participants) return null;
+
+    return (
+      <li className="pull-right">
+        <button
+          className="btn btn-default"
+          onClick={this.onClick}
+          type="button"
+        >
+          <span className="material-icon">
+            person_add
+          </span>
+          {gettext("Add participant")}
         </button>
       </li>
     );

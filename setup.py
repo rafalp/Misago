@@ -9,8 +9,6 @@ from misago import __version__ as version
 SETUP_DIR = os.path.dirname(__file__)
 
 
-README = open(os.path.join(SETUP_DIR, 'README.rst')).read()
-
 with open(os.path.join(SETUP_DIR, 'requirements.txt'), "r") as f:
     REQUIREMENTS = [x.strip() for x in f.readlines()]
 
@@ -29,8 +27,11 @@ setup(
     name='Misago',
     version=version,
     license='GNU General Public License v2 (GPLv2)',
-    description='Misago is complete, featured and modern forum solution.',
-    long_description=README,
+    description=(
+        "Misago is modern, fully featured forum application written in "
+        "Python and ES6, powered by Django and React.js. It works out of "
+        "the box and plays nice with other projects like Django-CMS."
+    ),
     url='http://www.misago-project.org/',
     author=u'Rafał Pitoń',
     author_email='kontakt@rpiton.com',
@@ -45,15 +46,18 @@ setup(
     ]},
     test_suite="runtests.runtests",
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',
+        'Intended Audience :: System Administrators',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         "Topic :: Internet :: WWW/HTTP :: WSGI",

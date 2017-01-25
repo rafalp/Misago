@@ -28,6 +28,30 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
         self.assertEqual(response.status_code, 301)
 
+    def test_user_disabled(self):
+        """disabled user's profile returns 404 for non-admins"""
+        self.user.is_staff = False
+        self.user.save()
+
+        User = get_user_model()
+        test_user = User.objects.create_user('Tyrael', 't123@test.com', 'pass123')
+
+        test_user.is_active = False
+        test_user.save()
+
+        response = self.client.get(test_user.get_absolute_url())
+        self.assertEqual(response.status_code, 404)
+
+        self.user.is_staff = True
+        self.user.save()
+
+        response = self.client.get(test_user.get_absolute_url())
+        self.assertEqual(response.status_code, 302)
+
+        # profile page displays notice about user being disabled
+        response = self.client.get(response['location'])
+        self.assertContains(response, "account has been disabled", status_code=200)
+
     def test_user_posts_list(self):
         """user profile posts list has no showstoppers"""
         link = reverse('misago:user-posts', kwargs=self.link_kwargs)

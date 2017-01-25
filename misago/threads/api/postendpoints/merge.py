@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
@@ -6,6 +5,7 @@ from django.utils.translation import ungettext
 from rest_framework.response import Response
 
 from misago.acl import add_acl
+from misago.conf import settings
 
 from ...permissions.threads import exclude_invisible_posts
 from ...serializers import PostSerializer
@@ -32,7 +32,16 @@ def posts_merge_endpoint(request, thread):
     for post in merged_posts:
         post.merge(first_post)
         post.delete()
+
+    if first_post.pk == thread.first_post_id:
+        first_post.set_search_document(thread.title)
+    else:
+        first_post.set_search_document()
+
     first_post.save()
+
+    first_post.update_search_vector()
+    first_post.save(update_fields=['search_vector'])
 
     thread.synchronize()
     thread.save()

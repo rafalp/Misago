@@ -4,7 +4,6 @@ from io import BytesIO
 
 from PIL import Image
 
-from django.conf import settings
 from django.core.files import File
 from django.core.files.base import ContentFile
 from django.db import models
@@ -13,6 +12,7 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.encoding import python_2_unicode_compatible
 
+from misago.conf import settings
 from misago.core.utils import slugify
 
 
@@ -25,12 +25,13 @@ def upload_to(instance, filename):
         if filename_lowered.endswith(extension):
             break
 
-    filename_clean = u'.'.join((
+    filename_clean = '.'.join((
         slugify(filename[:(len(extension) + 1) * -1])[:16],
         extension
     ))
 
-    return os.path.join('attachments', spread_path[:2], spread_path[2:4], secret, filename_clean)
+    return os.path.join(
+        'attachments', spread_path[:2], spread_path[2:4], secret, filename_clean)
 
 
 @python_2_unicode_compatible
@@ -59,9 +60,24 @@ class Attachment(models.Model):
     filename = models.CharField(max_length=255, db_index=True)
     size = models.PositiveIntegerField(default=0, db_index=True)
 
-    thumbnail = models.ImageField(blank=True, null=True, upload_to=upload_to)
-    image = models.ImageField(blank=True, null=True, upload_to=upload_to)
-    file = models.FileField(blank=True, null=True, upload_to=upload_to)
+    thumbnail = models.ImageField(
+        max_length=255,
+        blank=True,
+        null=True,
+        upload_to=upload_to
+    )
+    image = models.ImageField(
+        max_length=255,
+        blank=True,
+        null=True,
+        upload_to=upload_to
+    )
+    file = models.FileField(
+        max_length=255,
+        blank=True,
+        null=True,
+        upload_to=upload_to
+    )
 
     def __str__(self):
         return self.filename

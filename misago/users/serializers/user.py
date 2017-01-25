@@ -50,8 +50,7 @@ class AuthenticatedUserSerializer(serializers.ModelSerializer):
             'full_title',
             'short_title',
             'rank',
-            'avatar_hash',
-            'new_notifications',
+            'avatars',
             'limits_private_thread_invites_to',
             'unread_private_threads',
             'subscribe_to_started_threads',
@@ -114,7 +113,7 @@ class BasicUserSerializer(BaseSerializer):
             'id',
             'username',
             'slug',
-            'avatar_hash',
+            'avatars',
             'absolute_url',
         )
 
@@ -132,7 +131,7 @@ class UserSerializer(BaseSerializer):
             'username',
             'slug',
             'joined_on',
-            'avatar_hash',
+            'avatars',
             'title',
             'short_title',
             'rank',
@@ -153,7 +152,7 @@ class UserSerializer(BaseSerializer):
 
     def get_signature(self, obj):
         if obj.has_valid_signature:
-            return obj.signature.signature_parsed
+            return obj.signature_parsed
         else:
             return None
 
@@ -168,7 +167,7 @@ class ScoredUserSerializer(UserSerializer):
             'username',
             'slug',
             'joined_on',
-            'avatar_hash',
+            'avatars',
             'title',
             'rank',
             'signature',
@@ -201,7 +200,7 @@ class UserProfileSerializer(UserSerializer):
             'email',
             'joined_on',
             'is_avatar_locked',
-            'avatar_hash',
+            'avatars',
             'title',
             'rank',
             'signature',

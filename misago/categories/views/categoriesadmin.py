@@ -111,7 +111,11 @@ class DeleteCategory(CategoryAdmin, generic.ModelFormView):
 
         if move_children_to:
             for child in target.get_children():
-                Category.objects.move_node(child, move_children_to, 'last-child')
+                # refresh child and new parent
+                move_children_to = Category.objects.get(pk=move_children_to.pk)
+                child = Category.objects.get(pk=child.pk)
+
+                child.move_to(move_children_to, 'last-child')
                 if move_threads_to and child.pk == move_threads_to.pk:
                     move_threads_to = child
         else:
@@ -126,7 +130,9 @@ class DeleteCategory(CategoryAdmin, generic.ModelFormView):
         else:
             target.delete_content()
 
-        form.instance.delete()
+        # refresh instance
+        instance = Category.objects.get(pk=form.instance.pk)
+        instance.delete()
 
         messages.success(request, self.message_submit % {'name': target.name})
         return redirect(self.root_link)

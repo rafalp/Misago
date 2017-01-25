@@ -14,7 +14,9 @@ from misago.core.pgutils import batch_update
 from misago.threads.models import Thread
 
 from ...avatars.dynamic import set_avatar as set_dynamic_avatar
-from ...forms.admin import BanUsersForm, EditUserForm, NewUserForm, SearchUsersForm, StaffFlagUserFormFactory
+from ...forms.admin import (
+    BanUsersForm, NewUserForm, SearchUsersForm,
+    EditUserForm, EditUserFormFactory)
 from ...models import ACTIVATION_REQUIRED_NONE, Ban, User
 from ...models.ban import BAN_EMAIL, BAN_IP, BAN_USERNAME
 from ...signatures import set_user_signature
@@ -28,13 +30,23 @@ class UserAdmin(generic.AdminBaseMixin):
         return get_user_model()
 
     def create_form_type(self, request, target):
-        if request.user.is_superuser:
-            add_staff_field = request.user.pk != target.pk
-        else:
-            add_staff_field = False
+        add_is_active_fields = False
+        add_admin_fields = False
 
-        return StaffFlagUserFormFactory(
-            self.Form, target, add_staff_field=add_staff_field)
+        if target.is_staff:
+            if request.user.is_superuser:
+                add_is_active_fields = request.user.pk != target.pk
+        else:
+            add_is_active_fields = True
+
+        if request.user.is_superuser:
+            add_admin_fields = request.user.pk != target.pk
+
+        return EditUserFormFactory(
+            self.Form, target,
+            add_is_active_fields=add_is_active_fields,
+            add_admin_fields=add_admin_fields,
+        )
 
 
 class UsersList(UserAdmin, generic.ListView):
@@ -98,12 +110,11 @@ class UsersList(UserAdmin, generic.ListView):
             queryset = User.objects.filter(pk__in=activated_users_pks)
             queryset.update(requires_activation=ACTIVATION_REQUIRED_NONE)
 
-            mail_subject = _("Your account on %(forum_name)s "
-                             "forums has been activated")
-            subject_formats = {'forum_name': settings.forum_name}
-            mail_subject = mail_subject % subject_formats
+            subject = _("Your account on %(forum_name)s forums has been activated")
+            mail_subject = subject % {
+                'forum_name': settings.forum_name
+            }
 
-            mail_subject = mail_subject
             mail_users(request, inactive_users, mail_subject,
                        'misago/emails/activation/by_admin')
 
@@ -264,10 +275,9 @@ class EditUser(UserAdmin, generic.ModelFormView):
 
     def handle_form(self, form, request, target):
         target.username = target.old_username
-
         if target.username != form.cleaned_data.get('username'):
-            target.set_username(form.cleaned_data.get('username'),
-                                changed_by=request.user)
+            target.set_username(
+                form.cleaned_data.get('username'), changed_by=request.user)
 
         if form.cleaned_data.get('new_password'):
             target.set_password(form.cleaned_data['new_password'])
@@ -285,8 +295,13 @@ class EditUser(UserAdmin, generic.ModelFormView):
             if not target.old_is_avatar_locked:
                 set_dynamic_avatar(target)
 
-        if 'staff_level' in form.cleaned_data:
-            target.staff_level = form.cleaned_data['staff_level']
+        if 'is_staff' in form.fields and 'is_superuser' in form.fields:
+            target.is_staff = form.cleaned_data.get('is_staff')
+            target.is_superuser = form.cleaned_data.get('is_superuser')
+
+        if 'is_active' in form.fields and 'is_active_staff_message' in form.fields:
+            target.is_active = form.cleaned_data.get('is_active')
+            target.is_active_staff_message = form.cleaned_data.get('is_active_staff_message')
 
         target.rank = form.cleaned_data.get('rank')
 

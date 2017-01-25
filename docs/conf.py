@@ -49,7 +49,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Misago Documentation'
-copyright = u'2014, Rafał Pitoń'
+copyright = u'2017, Rafał Pitoń'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

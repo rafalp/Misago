@@ -1,9 +1,8 @@
-from django.conf import settings
-
 from rest_framework import serializers
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
+from misago.conf import settings
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from .. import testutils
@@ -22,9 +21,8 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         super(AttachmentsMiddlewareTests, self).setUp()
 
         self.category = Category.objects.get(slug='first-category')
-        self.post = testutils.post_thread(
-            category=self.category
-        ).first_post
+        self.thread = testutils.post_thread(category=self.category)
+        self.post = self.thread.first_post
 
         self.post.update_fields = []
 
@@ -194,7 +192,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         self.assertEqual([a['filename'] for a in self.post.attachments_cache], attachments_filenames)
 
     def test_remove_attachments(self):
-        """middleware removes attachment from post"""
+        """middleware removes attachment from post and db"""
         attachments = [
             self.mock_attachment(post=self.post),
             self.mock_attachment(post=self.post),
@@ -217,8 +215,39 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         self.assertEqual(self.post.update_fields, ['attachments_cache'])
         self.assertEqual(self.post.attachment_set.count(), 1)
 
+        self.assertEqual(Attachment.objects.count(), 1)
+
         attachments_filenames = [attachments[0].filename]
         self.assertEqual([a['filename'] for a in self.post.attachments_cache], attachments_filenames)
+
+    def test_steal_attachments(self):
+        """middleware validates if attachments are already assigned to other posts"""
+        other_post = testutils.reply_thread(self.thread)
+
+        attachments = [
+            self.mock_attachment(post=other_post),
+            self.mock_attachment(),
+        ]
+
+        middleware = AttachmentsMiddleware(
+            request=RequestMock({
+                'attachments': [attachments[0].pk, attachments[1].pk]
+            }),
+            mode=PostingEndpoint.EDIT,
+            user=self.user,
+            post=self.post
+        )
+
+        serializer = middleware.get_serializer()
+        self.assertTrue(serializer.is_valid())
+        middleware.save(serializer)
+
+        # only unassociated attachment was associated with post
+        self.assertEqual(self.post.update_fields, ['attachments_cache'])
+        self.assertEqual(self.post.attachment_set.count(), 1)
+
+        self.assertEqual(Attachment.objects.get(pk=attachments[0].pk).post, other_post)
+        self.assertEqual(Attachment.objects.get(pk=attachments[1].pk).post, self.post)
 
     def test_edit_attachments(self):
         """middleware removes and adds attachments to post"""

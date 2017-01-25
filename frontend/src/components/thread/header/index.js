@@ -9,12 +9,18 @@ export default function(props) {
   return <div className="page-header with-stats with-breadcrumbs">
     <Breadcrumbs path={props.thread.path} />
     <div className="container">
-      <Title thread={props.thread} user={props.user} />
-      <Moderation
-        posts={props.posts}
-        thread={props.thread}
-        user={props.user}
-      />
+      <div className="row">
+        <div className="col-md-10">
+          <Title thread={props.thread} user={props.user} />
+        </div>
+        <div className="col-md-2">
+          <Moderation
+            posts={props.posts}
+            thread={props.thread}
+            user={props.user}
+          />
+        </div>
+      </div>
     </div>
     <Stats thread={props.thread} />
   </div>;
@@ -29,7 +35,7 @@ export function Moderation(props) {
           aria-haspopup="true"
           className="btn btn-default dropdown-toggle"
           data-toggle="dropdown"
-          disable={props.thread.isBusy}
+          disabled={props.thread.isBusy}
           type="button"
         >
           <span className="material-icon">

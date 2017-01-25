@@ -5,7 +5,7 @@ from importlib import import_module
 import requests
 
 from django.contrib.auth import get_user_model
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import ValidationError
 from django.core.validators import validate_email as validate_email_content
 from django.utils.encoding import force_str
 from django.utils.translation import ugettext_lazy as _
@@ -120,18 +120,23 @@ def validate_username(value, exclude=None):
 """
 New account validators
 """
-SFS_API_URL = 'http://api.stopforumspam.org/api?email=%(email)s&ip=%(ip)s&f=json&confidence'  # noqa
+SFS_API_URL = u'http://api.stopforumspam.org/api?email=%(email)s&ip=%(ip)s&f=json&confidence'  # noqa
 
 
-def validate_with_sfs(ip, username, email):
-    if settings.MISAGO_STOP_FORUM_SPAM_USE:
-        _real_validate_with_sfs(ip, email)
+def validate_with_sfs(request, form, cleaned_data):
+    if settings.MISAGO_USE_STOP_FORUM_SPAM and cleaned_data.get('email'):
+        _real_validate_with_sfs(request.user_ip, cleaned_data['email'])
 
 
 def _real_validate_with_sfs(ip, email):
     try:
-        r = requests.get(SFS_API_URL % {'email': email, 'ip': ip},
-                         timeout=3)
+        r = requests.get(SFS_API_URL % {
+            'email': email,
+            'ip': ip
+        }, timeout=5)
+
+        r.raise_for_status()
+
         api_response = json.loads(force_str(r.content))
         ip_score = api_response.get('ip', {}).get('confidence', 0)
         email_score = api_response.get('email', {}).get('confidence', 0)
@@ -139,15 +144,19 @@ def _real_validate_with_sfs(ip, email):
         api_score = max((ip_score, email_score))
 
         if api_score > settings.MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE:
-            raise PermissionDenied()
+            raise ValidationError(_("Data entered was found in spammers database."))
     except requests.exceptions.RequestException:
         pass # todo: log those somewhere
 
 
-def validate_gmail_email(ip, username, email):
-    username, domain = email.split('@')
-    if domain == 'gmail.com' and username.count('.') > 6:
-        raise PermissionDenied()
+def validate_gmail_email(request, form, cleaned_data):
+    email = cleaned_data.get('email', '')
+    if '@' not in email:
+        return
+
+    username, domain = email.lower().split('@')
+    if domain == 'gmail.com' and username.count('.') > 5:
+        form.add_error('email', ValidationError(_("This email is not allowed.")))
 
 
 """
@@ -165,8 +174,8 @@ validators_list = settings.MISAGO_NEW_REGISTRATIONS_VALIDATORS
 REGISTRATION_VALIDATORS = load_registration_validators(validators_list)
 
 
-def validate_new_registration(ip, username, email, validators=None):
+def validate_new_registration(request, form, cleaned_data, validators=None):
     validators = validators or REGISTRATION_VALIDATORS
 
     for validator in validators:
-        validator(ip, username, email)
+        validator(request, form, cleaned_data)

@@ -11,7 +11,7 @@ from django.db import IntegrityError
 from django.utils.six.moves import range
 
 from misago.core.management.progressbar import show_progress
-from misago.users.avatars import dynamic, gallery, get_avatar_hash
+from misago.users.avatars import dynamic, gallery
 from misago.users.models import Rank
 
 
@@ -58,9 +58,7 @@ class Command(BaseCommand):
                     dynamic.set_avatar(user)
                 else:
                     gallery.set_random_avatar(user)
-
-                user.avatar_hash = get_avatar_hash(user)
-                user.save(update_fields=['avatar_hash'])
+                user.save(update_fields=['avatars'])
             except (ValidationError, IntegrityError):
                 pass
             else:

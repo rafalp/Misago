@@ -66,6 +66,8 @@ dev/
 dev-manage.py
 futuredep/
 venv/
+venv2/
+venv3/
 future-manage.py
 misago-admin.py
 db.sqlite3

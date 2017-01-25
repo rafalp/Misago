@@ -4,6 +4,7 @@ import re
 
 import markdown
 from markdown.blockprocessors import BlockProcessor, HRProcessor
+from markdown.extensions.fenced_code import FencedBlockPreprocessor
 from markdown.preprocessors import Preprocessor
 from markdown.util import etree
 
@@ -33,8 +34,8 @@ class QuotePreprocessor(Preprocessor):
     QUOTE_BLOCK_RE = re.compile(r'''
 \[quote\](?P<text>.*?)\[/quote\]
 '''.strip(), re.IGNORECASE | re.MULTILINE | re.DOTALL);
-    QUOTE_BLOCK_AUTHORED_RE = re.compile(r'''
-\[quote=("?)(@?)(?P<author>[0-9a-zA-Z]+)("?)](?P<text>.*?)\[/quote\]
+    QUOTE_BLOCK_TITLE_RE = re.compile(r'''
+\[quote=("?)(?P<title>.*?)("?)](?P<text>.*?)\[/quote\]
 '''.strip(), re.IGNORECASE | re.MULTILINE | re.DOTALL);
 
 
@@ -42,20 +43,20 @@ class QuotePreprocessor(Preprocessor):
         text = '\n'.join(lines)
         while self.QUOTE_BLOCK_RE.search(text):
             text = self.QUOTE_BLOCK_RE.sub(self.replace, text)
-        while self.QUOTE_BLOCK_AUTHORED_RE.search(text):
-            text = self.QUOTE_BLOCK_AUTHORED_RE.sub(self.replace_authored, text)
+        while self.QUOTE_BLOCK_TITLE_RE.search(text):
+            text = self.QUOTE_BLOCK_TITLE_RE.sub(self.replace_titled, text)
         return text.split('\n')
 
     def replace(self, matchobj):
         text = matchobj.group('text')
         return '\n\n{}\n\n{}\n\n{}\n\n'.format(QUOTE_START, text, QUOTE_END)
 
-    def replace_authored(self, matchobj):
-        author = matchobj.group('author').lstrip('@').strip()
+    def replace_titled(self, matchobj):
+        title = matchobj.group('title').strip()
         text = matchobj.group('text')
 
-        if author:
-            return '\n\n{}{}\n\n{}\n\n{}\n\n'.format(QUOTE_START, author, text, QUOTE_END)
+        if title:
+            return '\n\n{}{}\n\n{}\n\n{}\n\n'.format(QUOTE_START, title, text, QUOTE_END)
         else:
             return '\n\n{}\n\n{}\n\n{}\n\n'.format(QUOTE_START, text, QUOTE_END)
 
@@ -63,7 +64,7 @@ class QuotePreprocessor(Preprocessor):
 class QuoteBlockProcessor(BlockProcessor):
     def __init__(self, *args, **kwargs):
         super(QuoteBlockProcessor, self).__init__(*args, **kwargs)
-        self._author = None
+        self._title = None
         self._quote = 0
         self._children = []
 
@@ -75,7 +76,7 @@ class QuoteBlockProcessor(BlockProcessor):
         if block.strip().startswith(QUOTE_START):
             self._quote += 1
             if self._quote == 1:
-                self._author = block[len(QUOTE_START):].strip() or None
+                self._title = block[len(QUOTE_START):].strip() or None
 
         self._children.append(block)
 
@@ -84,11 +85,33 @@ class QuoteBlockProcessor(BlockProcessor):
 
         if not self._quote:
             children, self._children = self._children[1:-1], []
-            author, self._author = self._author, None
+            title, self._title = self._title, None
 
-            blockquote = etree.SubElement(parent, 'blockquote')
-            header = etree.SubElement(blockquote, 'header')
-            if author:
-                header.text = '@{}'.format(author)
+            aside = etree.SubElement(parent, 'aside')
+            aside.set('class', 'quote-block')
+
+            heading = etree.SubElement(aside, 'div')
+            heading.set('class', 'quote-heading')
+
+            blockquote = etree.SubElement(aside, 'blockquote')
+            blockquote.set('class', 'quote-body')
+
+            if title:
+                heading.text = title
 
             self.parser.parseBlocks(blockquote, children)
+
+
+class CodeBlockExtension(markdown.Extension):
+    def extendMarkdown(self, md):
+        md.registerExtension(self)
+
+        md.preprocessors.add('misago_code_bbcode',
+                             CodeBlockPreprocessor(md),
+                             ">normalize_whitespace")
+
+
+class CodeBlockPreprocessor(FencedBlockPreprocessor):
+        FENCED_BLOCK_RE = re.compile(r'''
+\[code(=("?)(?P<lang>.*?)("?))?](([ ]*\n)+)?(?P<code>.*?)((\s|\n)+)?\[/code\]
+''', re.IGNORECASE | re.MULTILINE | re.DOTALL | re.VERBOSE)

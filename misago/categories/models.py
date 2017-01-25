@@ -105,15 +105,12 @@ class Category(MPTTModel):
 
     objects = CategoryManager()
 
-    @property
-    def thread_type(self):
-        return trees_map.get_type_for_tree_id(self.tree_id)
-
     def __str__(self):
         return six.text_type(self.thread_type.get_category_name(self))
 
-    def lock(self):
-        return Category.objects.select_for_update().get(id=self.id)
+    @property
+    def thread_type(self):
+        return trees_map.get_type_for_tree_id(self.tree_id)
 
     def delete(self, *args, **kwargs):
         Category.objects.clear_cache()

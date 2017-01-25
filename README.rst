@@ -2,41 +2,75 @@
 Misago
 ======
 
-.. image:: https://travis-ci.org/rafalp/Misago.png?branch=master
+.. image:: https://travis-ci.org/rafalp/Misago.svg?branch=master
    :target: https://travis-ci.org/rafalp/Misago
    :alt: Tests Result
 
-.. image:: https://coveralls.io/repos/rafalp/Misago/badge.png?branch=master
-   :target: https://coveralls.io/r/rafalp/Misago?branch=master
-   :alt: Code Coverage
+.. image:: https://coveralls.io/repos/github/rafalp/Misago/badge.svg?branch=master
+   :target: https://coveralls.io/github/rafalp/Misago?branch=master
+   :alt: Test Coverage
 
 .. image:: https://badges.gitter.im/Misago/Misago.svg
    :target: https://gitter.im/Misago/Misago?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
    :alt: Development Chat
 
+.. image:: https://img.shields.io/badge/python-2.7%2C%203.4%2C%203.5%2C%203.6-blue.svg
+   :target: https://travis-ci.org/rafalp/Misago
+   :alt: Works on Python 2.7, 3.5, 3,6
 
-**Development Status: Pre-Alpha**
+
+**Development Status: Alpha**
 
 Misago aims to be complete, featured and modern forum solution that has no fear to say 'NO' to common and outdated opinions about how forum software should be made and what it should do.
-
-If you can run Python apps on your hosting and you are looking for modern solution using latest paradigms in web development, or you are Django developer and forum is going to be core component of your next project then Misago is option for you.
 
 * **Homepage:** http://misago-project.org/
 * **Documentation:** http://misago.readthedocs.org/en/latest/
 * **Code & BugTracker:** https://github.com/rafalp/Misago/
 
 
-Don't use this branch in production!
-====================================
+Screenshots
+===========
 
-This branch contains in-development code of next major Misago release, 0.6. **It's not feature-complete.** If you are looking at running "real" forum on Misago, please use latest 0.5 release instead.
+.. image:: https://misago-project.org/media/mporg-home.png
+   :target: https://misago-project.org
+   :alt: Forum index
 
-**There is no update path for pre-release 0.6 installations!** If you run your site off codebase pulled straight from git branch instead of release or pypi install, you'll won't be able to do smooth update via ``python manage.py migrate``.
+.. image:: https://misago-project.org/media/mporg-thread.png
+   :target: https://misago-project.org
+   :alt: Thread view
+
+
+Production use
+==============
+
+As of now Misago implements all features considered "must have" on live internet forum:
+
+* Your users may register accounts, set avatars, change options and edit their profiles. They have option to reset forgotten password.
+* Site admins may require users to confirm validity of their e-mail addresses via e-mail sent activation link, or limit user account activation to administrator action. They can use custom Q&A challenge, ReCAPTCHA, Stop Forum Spam or IP's blacklist to combat spam registrations. Pletora of settings are available to control user account behaviour, like username lengths or avatar restrictions.
+* Create categories together with unlimited number and depth of subcategories.
+* Write messages using either GitHub flavoured markdown, BBCode subset, or both.
+* Presence features let site members know when other users are online, offline or banned. Individual users have setting to hide their activity from non-admins.
+* Complete moderation toolset allowing admin-approved moderators to edit, move, hide, approve, delete or close user posted content. This also includes option to delete or block user accounts or avatars.
+* Ban system allows you to ban existing users as well as forbid certain user names, e-mails or IP addresses from registering accounts.
+* Permission system allowing you to control which features are available to users based on their rank, roles or category they are in.
+* Private threads feature allowing users to create threads visible only to them and those they've invited. 
+* Rich polls  system, allowing polls with public and private voters, single and multiple choices as well as ones that allow vote change or limit voting tp limited period of time.
+* Post attachments complete thumbnailing and gif's animation removal.
+* Posts edits log allowing you to see how user messages used to look in past as well as revert function protecting you from malignant users emptying their posts contents.
+
+Even more features will follow in future releases:
+
+* moderation queue
+* content reporting
+* warning system
+* notifications
+* custom design
+
+If you are looking into using Misago to run live forum, you are absolutely invited to, but please keep in mind that Misago is relatively immature software that may contain serious bugs or issues as well as quirks and lackings thay may take time to resolve, despite best efforts. 
 
 
 Development
 ===========
-
 
 To start Misago site locally, first setup and activate virtual environment for it and then fire following commands::
 
@@ -118,6 +152,9 @@ Authors
 * http://rpiton.com
 * http://github.com/rafalp
 * https://twitter.com/RafalPiton
+
+
+English sentences used within ``misago.faker.phrases`` were extracted from `National Aeronautics and Space Administration Solar System Exploration Portal <http://solarsystem.nasa.gov/planets/>`_ and are not copyrighted as per `Media and content usage guidelines <https://www.nasa.gov/multimedia/guidelines/index.html>`_.
 
 
 Copyright and license

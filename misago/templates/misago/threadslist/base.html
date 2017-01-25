@@ -2,6 +2,19 @@
 {% load i18n %}
 
 
+{% block meta-extra %}
+<link rel="canonical" href="{{ REQUEST_PATH }}" />
+{% if paginator.previous > 1 %}
+<link rel="prev" href="{{ REQUEST_PATH }}?page={{ paginator.previous }}" />
+{% elif paginator.first %}
+<link rel="prev" href="{{ REQUEST_PATH }}" />
+{% endif %}
+{% if paginator.next %}
+<link rel="next" href="{{ REQUEST_PATH }}?page={{ paginator.next }}" />
+{% endif %}
+{% endblock meta-extra %}
+
+
 {% block content %}
 <div class="page page-threads page-threads-{{ list_type|default:'all' }} {% spaceless %}
   {% block extra-css %}{% endblock extra-css %}
@@ -14,7 +27,7 @@
 
     {% block list-container %}
       {% if subcategories %}
-        <div class="toolbar">
+        <section class="toolbar">
           <ul class="list-inline subcategories-list">
             {% for subcategory in subcategories %}
               <li>
@@ -24,74 +37,76 @@
               </li>
             {% endfor %}
           </ul>
-        </div>
+        </section>
       {% endif %}
 
-      <div class="threads-list ui-ready">
-        {% block threads-list %}
-          <ul class="list-group">
-            {% for thread in threads %}
-              {% block thread %}
-                {% include "misago/threadslist/thread.html" %}
-              {% endblock thread %}
-            {% empty %}
-              <li class="list-group-item empty-message">
-                {% block list-empty-message %}
-                  {% if list_type == 'all' %}
-                    <p class="lead">
-                      {% if category.depth %}
-                        {% trans "There are no threads in this category." %}
-                      {% else %}
-                        {% trans "There are no threads on this forum... yet!" %}
-                      {% endif %}
-                    </p>
-                    <p>
-                      {% trans "Why not start one yourself?" %}
-                    </p>
-                  {% else %}
-                    {% trans "No threads matching specified criteria were found." %}
-                  {% endif %}
-                {% endblock list-empty-message %}
-              </li>
-            {% endfor %}
-          </ul>
-        {% endblock threads-list %}
-      </div>
-
-      <noscript>
-        {% if paginator.pages > 1 %}
-          <nav>
-            <ul class="pager">
-              {% if paginator.previous %}
-                <li class="previous">
-                  <a href="{{ REQUEST_PATH }}?page={{ paginator.previous }}">
-                    <span aria-hidden="true" class="material-icon">
-                      arrow_back
-                    </span>
-                  </a>
+      <section>
+        <div class="threads-list ui-ready">
+          {% block threads-list %}
+            <ul class="list-group">
+              {% for thread in threads %}
+                {% block thread %}
+                  {% include "misago/threadslist/thread.html" %}
+                {% endblock thread %}
+              {% empty %}
+                <li class="list-group-item empty-message">
+                  {% block list-empty-message %}
+                    {% if list_type == 'all' %}
+                      <p class="lead">
+                        {% if category.depth %}
+                          {% trans "There are no threads in this category." %}
+                        {% else %}
+                          {% trans "There are no threads on this forum... yet!" %}
+                        {% endif %}
+                      </p>
+                      <p>
+                        {% trans "Why not start one yourself?" %}
+                      </p>
+                    {% else %}
+                      {% trans "No threads matching specified criteria were found." %}
+                    {% endif %}
+                  {% endblock list-empty-message %}
                 </li>
-              {% elif paginator.first %}
-                <li class="previous">
-                  <a href="{{ REQUEST_PATH }}">
-                    <span aria-hidden="true" class="material-icon">
-                      arrow_back
-                    </span>
-                  </a>
-                </li>
-              {% endif %}
-              {% if paginator.next %}
-                <li class="next">
-                  <a href="{{ REQUEST_PATH }}?page={{ paginator.next }}">
-                    <span aria-hidden="true" class="material-icon">
-                      arrow_forward
-                    </span>
-                  </a>
-                </li>
-              {% endif %}
+              {% endfor %}
             </ul>
-          </nav>
-        {% endif %}
-      </noscript>
+          {% endblock threads-list %}
+        </div>
+
+        <noscript>
+          {% if paginator.pages > 1 %}
+            <nav>
+              <ul class="pager">
+                {% if paginator.previous %}
+                  <li class="previous">
+                    <a href="{{ REQUEST_PATH }}?page={{ paginator.previous }}">
+                      <span aria-hidden="true" class="material-icon">
+                        arrow_back
+                      </span>
+                    </a>
+                  </li>
+                {% elif paginator.first %}
+                  <li class="previous">
+                    <a href="{{ REQUEST_PATH }}">
+                      <span aria-hidden="true" class="material-icon">
+                        arrow_back
+                      </span>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if paginator.next %}
+                  <li class="next">
+                    <a href="{{ REQUEST_PATH }}?page={{ paginator.next }}">
+                      <span aria-hidden="true" class="material-icon">
+                        arrow_forward
+                      </span>
+                    </a>
+                  </li>
+                {% endif %}
+              </ul>
+            </nav>
+          {% endif %}
+        </noscript>
+      </section>
     {% endblock list-container %}
   </div>
 </div>

@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
@@ -11,6 +10,7 @@ from django.utils import six
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
+from misago.conf import settings
 from misago.core.decorators import require_POST
 from misago.core.shortcuts import get_object_or_404, paginate, pagination_dict, validate_slug
 from misago.core.utils import clean_return_path
@@ -24,7 +24,6 @@ from ..permissions.profiles import allow_block_user, allow_follow_user
 from ..serializers import BanDetailsSerializer, UserProfileSerializer, UserSerializer
 from ..serializers.usernamechange import UsernameChangeSerializer
 from ..viewmodels import UserPosts, UserThreads
-from ..warnings import get_user_warning_level, get_user_warning_obj, get_warning_levels
 
 
 def profile_view(f):
@@ -35,6 +34,9 @@ def profile_view(f):
         queryset = User.objects.select_related(*relations)
 
         profile = get_object_or_404(queryset, pk=kwargs.pop('pk'))
+
+        if not profile.is_active and not request.user.is_staff:
+            raise Http404()
 
         validate_slug(profile, kwargs.pop('slug'))
         kwargs['profile'] = profile
@@ -92,6 +94,9 @@ def render(request, template, context):
 
     request.frontend_context['PROFILE'] = UserProfileSerializer(
         context['profile'], context={'user': request.user}).data
+
+    if not context['profile'].is_active:
+        request.frontend_context['PROFILE']['is_active'] = False
 
     return django_render(request, template, context)
 

@@ -19,6 +19,7 @@ Table of Contents
    :maxdepth: 1
 
    setup_maintenance
+   upgrading_from_05
    developers/index
    developers/acls
    developers/admin_actions

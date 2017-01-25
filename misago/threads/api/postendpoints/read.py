@@ -7,6 +7,10 @@ def post_read_endpoint(request, thread, post):
     make_posts_read_aware(request.user, thread, [post])
     if not post.is_read:
         read_thread(request.user, thread, post)
-        if thread.subscription:
+        if thread.subscription and thread.subscription.last_read_on < post.posted_on:
             thread.subscription.last_read_on = post.posted_on
-    return Response({'detail': 'ok'})
+            thread.subscription.save()
+        return Response({
+            'thread_is_read': thread.last_post_on <= post.posted_on
+        })
+    return Response({'thread_is_read': True})

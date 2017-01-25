@@ -35,7 +35,6 @@ class LimitedPermissionsForm(forms.Form):
 
     can_browse_users_list = CAN_BROWSE_USERS_LIST
     can_search_users = CAN_SEARCH_USERS
-    can_search_users = CAN_SEARCH_USERS
     can_see_users_name_history = CAN_SEE_USER_NAME_HISTORY
     can_see_ban_details = CAN_SEE_BAN_DETAILS
 

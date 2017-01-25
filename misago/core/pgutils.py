@@ -52,7 +52,7 @@ def batch_update(queryset, step=50):
     """
     Util because psycopg2 iterators aren't really memory effective
     """
-    paginator = Paginator(queryset, step)
+    paginator = Paginator(queryset.order_by('pk'), step)
     for page_number in paginator.page_range:
         for obj in paginator.page(page_number).object_list:
             yield obj

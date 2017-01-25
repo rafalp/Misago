@@ -21,6 +21,10 @@ class MentionsTests(AuthenticatedUserTestCase):
                 '<h1>Hello, <a href="{}">@{}</a>!</h1>'
             ),
             (
+                '<div>Hello, @{}!</div>',
+                '<div>Hello, <a href="{}">@{}</a>!</div>'
+            ),
+            (
                 '<h1>Hello, <strong>@{}!</strong></h1>',
                 '<h1>Hello, <strong><a href="{}">@{}</a>!</strong></h1>'
             ),
@@ -68,6 +72,22 @@ class MentionsTests(AuthenticatedUserTestCase):
 
         formats = (self.user.get_absolute_url(), self.user.username)
         after = '<p>Hello <a href="{0}">@{1}</a> and <a href="{0}">@{1}</a>, how is it going?</p>'.format(*formats)
+
+        result = {
+            'parsed_text': before,
+            'mentions': []
+        }
+
+        add_mentions(MockRequest(self.user), result)
+        self.assertEqual(result['parsed_text'], after)
+        self.assertEqual(result['mentions'], [self.user])
+
+    def test_repeated_mention(self):
+        """markup extension handles mentions across document"""
+        before = '<p>Hello @{0}</p><p>@{0}, how is it going?</p>'.format(self.user.username)
+
+        formats = (self.user.get_absolute_url(), self.user.username)
+        after = '<p>Hello <a href="{0}">@{1}</a></p><p><a href="{0}">@{1}</a>, how is it going?</p>'.format(*formats)
 
         result = {
             'parsed_text': before,

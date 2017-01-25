@@ -3,10 +3,14 @@ import random
 from path import Path
 from PIL import Image
 
-from django.conf import settings
+from django.core.files.base import ContentFile
+
+from misago.conf import settings
 
 from . import store
-from .paths import MEDIA_AVATARS
+
+
+DEFAULT_GALLERY = '__default__'
 
 
 def get_available_galleries(include_default=False):
@@ -16,44 +20,56 @@ def get_available_galleries(include_default=False):
     Only jpgs, gifs and pngs are supported avatar images.
     Galleries are
     """
+    from ..models import AvatarGallery
+
     galleries = []
+    galleries_dicts = {}
 
-    for directory in Path(MEDIA_AVATARS).dirs():
-        if include_default or directory[-8:] != '_default':
-            gallery = {'name': directory.name, 'images': []}
+    for image in AvatarGallery.objects.all():
+        if image.gallery == DEFAULT_GALLERY and not include_default:
+            continue
 
-            images = directory.files('*.gif')
-            images += directory.files('*.jpg')
-            images += directory.files('*.jpeg')
-            images += directory.files('*.png')
+        if image.gallery not in galleries_dicts:
+            galleries_dicts[image.gallery] = {
+                'name': image.gallery,
+                'images': []
+            }
 
-            for image in images:
-                image_path = image[len(settings.MEDIA_ROOT):]
-                if image_path.startswith('/'):
-                    image_path = image_path[1:]
-                gallery['images'].append(image_path)
+            galleries.append(galleries_dicts[image.gallery])
 
-            if gallery['images']:
-                galleries.append(gallery)
+        galleries_dicts[image.gallery]['images'].append(image)
 
     return galleries
 
 
 def galleries_exist():
-    return bool(get_available_galleries())
+    from ..models import AvatarGallery
+    return AvatarGallery.objects.exists()
 
 
-def is_avatar_from_gallery(image_path):
-    for gallery in get_available_galleries():
-        if image_path in gallery['images']:
-            return True
-    else:
-        return False
+def load_avatar_galleries():
+    from ..models import AvatarGallery
+
+    galleries = []
+    for directory in Path(settings.MISAGO_AVATAR_GALLERY).dirs():
+        gallery_name = directory.name
+
+        images = directory.files('*.gif')
+        images += directory.files('*.jpg')
+        images += directory.files('*.jpeg')
+        images += directory.files('*.png')
+
+        for image in images:
+            with open(image, 'rb') as image_file:
+                galleries.append(AvatarGallery.objects.create(
+                    gallery=gallery_name,
+                    image=ContentFile(image_file.read(), 'image')
+                ))
+    return galleries
 
 
-def set_avatar(user, gallery_image_path):
-    image = Image.open('%s/%s' % (settings.MEDIA_ROOT, gallery_image_path))
-    store.store_new_avatar(user, image)
+def set_avatar(user, image):
+    store.store_new_avatar(user, Image.open(image.path))
 
 
 def set_random_avatar(user):
@@ -62,12 +78,12 @@ def set_random_avatar(user):
         raise RuntimeError("no avatar galleries are set")
 
     avatars_list = []
-
     for gallery in galleries:
-        if gallery['name'] == '_default':
+        if gallery['name'] == DEFAULT_GALLERY:
             avatars_list = gallery['images']
             break
         else:
             avatars_list += gallery['images']
 
-    set_avatar(user, random.choice(avatars_list))
+    random_image_path = random.choice(avatars_list).path
+    store.store_new_avatar(user, Image.open(random_image_path))

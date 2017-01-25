@@ -40,7 +40,6 @@ def create_default_categories_tree(apps, schema_editor):
         level=1,
         name=category_name,
         slug=slugify(category_name),
-        css_class='accent'
     )
 
 

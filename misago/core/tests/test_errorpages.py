@@ -5,6 +5,7 @@ from django.urls import reverse
 from misago.users.models import AnonymousUser
 
 from ..testproject.views import mock_custom_403_error_page, mock_custom_404_error_page
+from ..utils import encode_json_html
 
 
 class CSRFErrorViewTests(TestCase):
@@ -23,21 +24,26 @@ class ErrorPageViewsTests(TestCase):
     def test_banned_returns_403(self):
         """banned error page has no show-stoppers"""
         response = self.client.get(reverse('raise-misago-banned'))
-        self.assertContains(response, "<p>Banned for test!</p>", status_code=403)
+        self.assertContains(response, "misago:error-banned", status_code=403)
+        self.assertContains(
+            response, encode_json_html("<p>Banned for test!</p>"), status_code=403)
 
     def test_permission_denied_returns_403(self):
         """permission_denied error page has no show-stoppers"""
         response = self.client.get(reverse('raise-misago-403'))
+        self.assertContains(response, "misago:error-403", status_code=403)
         self.assertContains(response, "Page not available", status_code=403)
 
     def test_page_not_found_returns_404(self):
         """page_not_found error page has no show-stoppers"""
         response = self.client.get(reverse('raise-misago-404'))
+        self.assertContains(response, "misago:error-404", status_code=404)
         self.assertContains(response, "Page not found", status_code=404)
 
     def test_not_allowed_returns_405(self):
         """not allowed error page has no showstoppers"""
         response = self.client.get(reverse('raise-misago-405'))
+        self.assertContains(response, "misago:error-405", status_code=405)
         self.assertContains(response, "Wrong way", status_code=405)
 
 

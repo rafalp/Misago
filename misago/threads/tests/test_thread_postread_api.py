@@ -46,7 +46,7 @@ class PostReadApiTests(ThreadsApiTestCase):
             user=self.user,
             thread=self.thread,
             category=self.thread.category,
-            last_read_on=self.thread.post_set.order_by('id').last().posted_on
+            last_read_on=self.thread.post_set.order_by('id').first().posted_on
         )
 
         response = self.client.post(self.api_link)
@@ -61,3 +61,4 @@ class PostReadApiTests(ThreadsApiTestCase):
 
         subscription = self.thread.subscription_set.order_by('id').last()
         self.assertEqual(subscription.last_read_on, self.post.posted_on)
+

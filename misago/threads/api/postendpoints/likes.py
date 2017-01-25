@@ -5,7 +5,7 @@ from ...serializers import PostLikeSerializer
 
 def likes_list_endpoint(request, post):
     queryset = post.postlike_set.values(
-        'id', 'user_id', 'user_name', 'user_slug', 'liked_on'
+        'id', 'liker_id', 'liker_name', 'liker_slug', 'liked_on'
     )
 
     likes = []

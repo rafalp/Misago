@@ -2,17 +2,17 @@
 {% load i18n misago_forms %}
 
 
-{% block title %}{{ active_group.name }} | {{ block.super }}{% endblock %}
+{% block title %}{% trans active_group.name %} | {{ block.super }}{% endblock %}
 
 
 {% block header %}
   <div class="main">
-    <span class="fa fa-sliders">
+    <span class="fa fa-sliders"></span>
     <a href="{% url 'misago:admin:system:settings:index' %}">{% trans "Settings" %}</a>
   </div>
   <div class="sub">
     <span class="fa fa-chevron-right"></span>
-    {{ active_group.name }}
+    {% trans active_group.name %}
   </div>
 {% endblock header%}
 
@@ -23,9 +23,9 @@
     {% csrf_token %}
 
     <div class="form-header">
-      <h1>{{ active_group.name }} </h1>
+      <h1>{% trans active_group.name %}</h1>
       {% if active_group.description %}
-      <p>{{ active_group.description }}</p>
+      <p>{% trans active_group.description %}</p>
       {% endif %}
     </div>
 
@@ -41,7 +41,7 @@
         {% for fieldset in fieldsets %}
         <fieldset>
           {% if fieldset.legend %}
-          <legend>{{ fieldset.legend }}</legend>
+          <legend>{% trans fieldset.legend %}</legend>
           {% endif %}
 
           {% for field in fieldset.form %}

@@ -1,8 +1,42 @@
-from misago.core import serializer
 from misago.core.cache import cache as default_cache
 
 from .dbsettings import CACHE_KEY
 from .hydrators import dehydrate_value
+
+
+def migrate_settings_group(apps, group_fixture, old_group_key=None):
+    SettingsGroup = apps.get_model('misago_conf', 'SettingsGroup')
+    Setting = apps.get_model('misago_conf', 'Setting')
+    group_key = group_fixture['key']
+
+    # Fetch settings group
+
+    if old_group_key:
+        group = get_group(SettingsGroup, old_group_key)
+        custom_settings_values = get_custom_settings_values(group)
+    else:
+        group = get_group(SettingsGroup, group_key)
+        if group.pk:
+            custom_settings_values = get_custom_settings_values(group)
+        else:
+            custom_settings_values = {}
+
+    # Update group's attributes
+
+    group.key = group_fixture['key']
+    group.name = group_fixture['name']
+    if group_fixture.get('description'):
+        group.description = group_fixture.get('description')
+    group.save()
+
+    # Delete groups settings and make new ones
+    # Its easier to create news ones and then assign them old values
+
+    group.setting_set.all().delete()
+
+    for order, setting_fixture in enumerate(group_fixture['settings']):
+        old_value = custom_settings_values.pop(setting_fixture['name'], None)
+        migrate_setting(Setting, group, setting_fixture, order, old_value)
 
 
 def get_group(SettingsGroup, group_key):
@@ -54,45 +88,9 @@ def migrate_setting(Setting, group, setting_fixture, order, old_value):
         setting.default_value = dehydrate_value(
             setting.python_type, setting_fixture.get("default_value"))
 
-    if field_extra:
-        setting.pickled_field_extra = serializer.dumps(field_extra)
+    setting.field_extra = field_extra or {}
 
     setting.save()
-
-
-def migrate_settings_group(apps, group_fixture, old_group_key=None):
-    SettingsGroup = apps.get_model('misago_conf', 'SettingsGroup')
-    Setting = apps.get_model('misago_conf', 'Setting')
-    group_key = group_fixture['key']
-
-    # Fetch settings group
-
-    if old_group_key:
-        group = get_group(SettingsGroup, old_group_key)
-        custom_settings_values = get_custom_settings_values(group)
-    else:
-        group = get_group(SettingsGroup, group_key)
-        if group.pk:
-            custom_settings_values = get_custom_settings_values(group)
-        else:
-            custom_settings_values = {}
-
-    # Update group's attributes
-
-    group.key = group_fixture['key']
-    group.name = group_fixture['name']
-    if group_fixture.get('description'):
-        group.description = group_fixture.get('description')
-    group.save()
-
-    # Delete groups settings and make new ones
-    # Its easier to create news ones and then assign them old values
-
-    group.setting_set.all().delete()
-
-    for order, setting_fixture in enumerate(group_fixture['settings']):
-        old_value = custom_settings_values.pop(setting_fixture['name'], None)
-        migrate_setting(Setting, group, setting_fixture, order, old_value)
 
 
 def delete_settings_cache():

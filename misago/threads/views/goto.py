@@ -36,19 +36,30 @@ class GotoView(View):
         raise NotImplementedError("goto views should define their own get_target_post method")
 
     def compute_post_page(self, target_post, posts_queryset):
+        # filter out events
+        posts_queryset = posts_queryset.filter(is_event=False)
+
         thread_len = posts_queryset.count()
         if thread_len <= settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL:
             return 1 # no chance for post to be on other page than only page
 
         # compute total count of thread pages
-        thread_pages = thread_len // settings.MISAGO_POSTS_PER_PAGE
-        thread_tail = thread_len - thread_pages * settings.MISAGO_POSTS_PER_PAGE
-        if thread_tail > settings.MISAGO_POSTS_TAIL:
-            thread_pages += 1
+        hits = max(1, thread_len - settings.MISAGO_POSTS_TAIL)
+        hits += int(ceil(hits / float(settings.MISAGO_POSTS_PER_PAGE)))
+        thread_pages = int(ceil(hits / float(settings.MISAGO_POSTS_PER_PAGE)))
+
+        # is target an event?
+        if target_post.is_event:
+            target_event = target_post
+            previous_posts = posts_queryset.filter(pk__lt=target_event.pk)
+            target_post = previous_posts.order_by('id').last()
 
         # resolve post's page
         post_offset = posts_queryset.filter(pk__lte=target_post.pk).count()
-        post_page = int(ceil(float(post_offset) / settings.MISAGO_POSTS_PER_PAGE))
+        hits = max(1, post_offset)
+        hits += int(ceil(hits / float(settings.MISAGO_POSTS_PER_PAGE)))
+        post_page = int(ceil(hits / float(settings.MISAGO_POSTS_PER_PAGE)))
+
         if post_page > thread_pages:
             post_page = thread_pages
 

@@ -66,7 +66,7 @@ export default class extends React.Component {
           <span className="material-icon">
             settings
           </span>
-          {gettext("Moderation")}
+          {gettext("Options")}
         </button>
 
         <ModerationControls
@@ -94,9 +94,6 @@ export default class extends React.Component {
     /* jshint ignore:start */
     return <div className="toolbar with-js">
       {this.getCategoryPicker()}
-      <p className="toolbar-left hidden-xs hidden-sm">
-        {this.props.children}
-      </p>
       {this.getSelectionButton()}
       {this.getModerationButton()}
     </div>;

@@ -28,6 +28,9 @@ class GotoPostTests(GotoViewTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id))
 
+        response = self.client.get(response['location'])
+        self.assertContains(response, self.thread.first_post.get_absolute_url())
+
     def test_goto_last_post_on_page(self):
         """last post on page redirect url is valid"""
         for i in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
@@ -36,6 +39,9 @@ class GotoPostTests(GotoViewTestCase):
         response = self.client.get(post.get_absolute_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], GOTO_URL % (self.thread.get_absolute_url(), post.pk))
+
+        response = self.client.get(response['location'])
+        self.assertContains(response, post.get_absolute_url())
 
     def test_goto_first_post_on_next_page(self):
         """first post on next page redirect url is valid"""
@@ -46,14 +52,58 @@ class GotoPostTests(GotoViewTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk))
 
+        response = self.client.get(response['location'])
+        self.assertContains(response, post.get_absolute_url())
+
+    def test_goto_first_post_on_page_three_out_of_five(self):
+        """first post on next page redirect url is valid"""
+        posts = []
+        for i in range(settings.MISAGO_POSTS_PER_PAGE * 4 - 1):
+            post = testutils.reply_thread(self.thread)
+            posts.append(post)
+
+        post = posts[settings.MISAGO_POSTS_PER_PAGE * 2 - 3]
+
+        response = self.client.get(post.get_absolute_url())
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 3, post.pk))
+
+        response = self.client.get(response['location'])
+        self.assertContains(response, post.get_absolute_url())
+
+    def test_goto_first_event_on_page_three_out_of_five(self):
+        """event redirect url is valid"""
+        posts = []
+        for i in range(settings.MISAGO_POSTS_PER_PAGE * 4 - 1):
+            post = testutils.reply_thread(self.thread)
+            posts.append(post)
+
+        post = posts[settings.MISAGO_POSTS_PER_PAGE * 2 - 2]
+
+        self.thread.has_events = True
+        self.thread.save()
+
+        post.is_event = True
+        post.save()
+
+        response = self.client.get(post.get_absolute_url())
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 3, post.pk))
+
+        response = self.client.get(response['location'])
+        self.assertContains(response, post.get_absolute_url())
+
 
 class GotoLastTests(GotoViewTestCase):
-    def test_goto_first_post(self):
+    def test_goto_last_post(self):
         """first post redirect url is valid"""
         response = self.client.get(self.thread.get_last_post_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id))
 
+        response = self.client.get(response['location'])
+        self.assertContains(response, self.thread.last_post.get_absolute_url())
+
     def test_goto_last_post_on_page(self):
         """last post on page redirect url is valid"""
         for i in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
@@ -63,14 +113,8 @@ class GotoLastTests(GotoViewTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], GOTO_URL % (self.thread.get_absolute_url(), post.pk))
 
-    def test_goto_first_post_on_next_page(self):
-        """first post on next page redirect url is valid"""
-        for i in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
-            post = testutils.reply_thread(self.thread)
-
-        response = self.client.get(self.thread.get_last_post_url())
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk))
+        response = self.client.get(response['location'])
+        self.assertContains(response, post.get_absolute_url())
 
 
 class GotoNewTests(GotoViewTestCase):
@@ -134,7 +178,7 @@ class GotoNewTests(GotoViewTestCase):
 
 
 class GotoUnapprovedTests(GotoViewTestCase):
-    def grand_permission(self):
+    def grant_permission(self):
         self.user.acl['categories'][self.category.pk]['can_approve_content'] = 1
         override_acl(self.user, self.user.acl)
 
@@ -143,14 +187,14 @@ class GotoUnapprovedTests(GotoViewTestCase):
         response = self.client.get(self.thread.get_unapproved_post_url())
         self.assertContains(response, "You need permission to approve content", status_code=403)
 
-        self.grand_permission()
+        self.grant_permission()
 
         response = self.client.get(self.thread.get_unapproved_post_url())
         self.assertEqual(response.status_code, 302)
 
     def test_view_handles_no_unapproved_posts(self):
         """if thread has no unapproved posts, redirect to last post"""
-        self.grand_permission()
+        self.grant_permission()
 
         response = self.client.get(self.thread.get_unapproved_post_url())
         self.assertEqual(response.status_code, 302)
@@ -168,7 +212,7 @@ class GotoUnapprovedTests(GotoViewTestCase):
         for i in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
             testutils.reply_thread(self.thread, posted_on=timezone.now())
 
-        self.grand_permission()
+        self.grant_permission()
 
         response = self.client.get(self.thread.get_new_post_url())
         self.assertEqual(response.status_code, 302)

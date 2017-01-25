@@ -3,21 +3,13 @@
 
 
 {% block title %}
-{% if THREADS_ON_INDEX %}
+{% if THREADS_ON_INDEX and paginator.page == 1 %}
   {% if list_name %}
     {{ list_name }} | {{ block.super }}
-  {% elif paginator.page > 1 %}
-    {% if misago_settings.forum_index_title %}
-      {{ misago_settings.forum_index_title }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %})
-    {% else %}
-      {{ misago_settings.forum_name }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %})
-    {% endif %}
+  {% elif misago_settings.forum_index_title %}
+    {{ misago_settings.forum_index_title }}
   {% else %}
-    {% if misago_settings.forum_index_title %}
-      {{ misago_settings.forum_index_title }}
-    {% else %}
-      {{ misago_settings.forum_name }}
-    {% endif %}
+    {{ misago_settings.forum_name }}
   {% endif %}
 {% else %}
   {% if list_name %}

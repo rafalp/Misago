@@ -33,7 +33,7 @@ export default class extends React.Component {
       Object.assign(upload, data);
       this.props.onAttachmentsChange(this.props.attachments.concat());
     }, (rejection) => {
-      if (rejection.status === 400) {
+      if (rejection.status === 400 || rejection.status === 413) {
         upload.error = rejection.detail;
         this.props.onAttachmentsChange(this.props.attachments.concat());
       } else {

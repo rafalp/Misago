@@ -50,7 +50,9 @@ class EventsAPITests(TestCase):
         event = record_event(request, self.thread, 'announcement', context)
 
         event_post = self.thread.post_set.order_by('-id')[:1][0]
-        self.assertTrue(self.thread.last_post, event_post)
+        self.assertEqual(self.thread.last_post, event_post)
+        self.assertTrue(self.thread.has_events)
+        self.assertTrue(self.thread.last_post_is_event)
 
         self.assertEqual(event.pk, event_post.pk)
         self.assertTrue(event_post.is_event)

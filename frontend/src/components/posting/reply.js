@@ -33,18 +33,43 @@ export default class extends Form {
     ajax.get(this.props.config, this.props.context || null).then(this.loadSuccess, this.loadError);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const context = this.props.context;
+    const newContext = nextProps.context;
+
+    if (context && newContext && context.reply === newContext.reply) return;
+
+    ajax.get(nextProps.config, nextProps.context || null).then(this.appendData, snackbar.apiError);
+  }
+
   /* jshint ignore:start */
   loadSuccess = (data) => {
     this.setState({
       isReady: true,
 
-      post: data.post ? ('[quote="' +  data.poster + '"]\n' + data.post + '\n[/quote]') : ''
+      post: data.post ? ('[quote="@' +  data.poster + '"]\n' + data.post + '\n[/quote]') : ''
     });
   };
 
   loadError = (rejection) => {
     this.setState({
       isErrored: rejection.detail
+    });
+  };
+
+  appendData = (data) => {
+    const newPost = data.post ? ('[quote="@' +  data.poster + '"]\n' + data.post + '\n[/quote]\n\n') : '';
+
+    this.setState((prevState, props) => {
+      if (prevState.post.length > 0) {
+        return {
+          post: prevState.post + '\n\n' + newPost
+        };
+      }
+
+      return {
+        post: newPost
+      };
     });
   };
 

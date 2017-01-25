@@ -8,6 +8,7 @@ from htmlmin.minify import html_minify
 from django.http import Http404
 from django.urls import resolve
 from django.utils import six
+from markdown.extensions.fenced_code import FencedCodeExtension
 
 from .bbcode import blocks, inline
 from .md.shortimgs import ShortImagesExtension
@@ -110,6 +111,12 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
     if allow_blocks:
         # Add [hr] and [quote] blocks
         md.parser.blockprocessors.add('bb_hr', blocks.BBCodeHRProcessor(md.parser), '>hr')
+
+        fenced_code = FencedCodeExtension()
+        fenced_code.extendMarkdown(md, None)
+
+        code_bbcode = blocks.CodeBlockExtension()
+        code_bbcode.extendMarkdown(md)
 
         quote_bbcode = blocks.QuoteExtension()
         quote_bbcode.extendMarkdown(md)

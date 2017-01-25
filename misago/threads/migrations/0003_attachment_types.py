@@ -37,6 +37,24 @@ ATTACHMENTS = (
         'size_limit': 4 * 1024
     },
     {
+        'name': 'Text',
+        'extensions': ('txt',),
+        'mimetypes': ('text/plain',),
+        'size_limit': 4 * 1024
+    },
+    {
+        'name': 'Markdown',
+        'extensions': ('md',),
+        'mimetypes': ('text/markdown',),
+        'size_limit': 4 * 1024
+    },
+    {
+        'name': 'reStructuredText',
+        'extensions': ('rst',),
+        'mimetypes': ('text/x-rst',),
+        'size_limit': 4 * 1024
+    },
+    {
         'name': '7Z',
         'extensions': ('7z',),
         'mimetypes': ('application/x-7z-compressed',),

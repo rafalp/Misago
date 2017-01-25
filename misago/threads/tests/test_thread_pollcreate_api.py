@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from ..models import Poll
+from ..models import Poll, Thread
 from ..serializers.poll import MAX_POLL_OPTIONS
 from .test_thread_poll_api import ThreadPollApiTestCase
 
@@ -290,7 +290,10 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         self.assertEqual(len(set([c['hash'] for c in response_json['choices']])), 3)
         self.assertEqual([c['label'] for c in response_json['choices']], ['Red', 'Green', 'Blue'])
 
-        poll = self.thread.poll
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertTrue(thread.has_poll)
+
+        poll = thread.poll
 
         self.assertEqual(poll.category_id, self.category.id)
         self.assertEqual(poll.thread_id, self.thread.id)

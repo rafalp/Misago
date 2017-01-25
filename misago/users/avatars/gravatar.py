@@ -15,7 +15,7 @@ class GravatarError(RuntimeError):
     pass
 
 
-class NoGravatarAvailable(RuntimeError):
+class NoGravatarAvailable(GravatarError):
     pass
 
 

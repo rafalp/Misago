@@ -13,17 +13,24 @@ def _ajax_error(code=406, message=None):
 
 @admin_error_page
 def _error_page(request, code, message=None):
+    request.frontend_context.update({
+        'CURRENT_LINK': 'misago:error-%s' % code
+    })
+
     return render(request, 'misago/errorpages/%s.html' % code, {
-            'message': message
-        }, status=code)
+        'message': message
+    }, status=code)
 
 
 def banned(request, ban):
-    request.frontend_context['BAN_MESSAGE'] = ban.get_serialized_message()
+    request.frontend_context.update({
+        'BAN_MESSAGE': ban.get_serialized_message(),
+        'CURRENT_LINK': 'misago:error-banned'
+    })
 
     return render(request, 'misago/errorpages/banned.html', {
-            'ban': ban
-        }, status=403)
+        'ban': ban
+    }, status=403)
 
 
 def permission_denied(request, message=None):
@@ -51,9 +58,7 @@ def csrf_failure(request, reason=""):
 
 
 def not_allowed(request):
-    response = render(request, 'misago/errorpages/405.html')
-    response.status_code = 405
-    return response
+    return _error_page(request, 405)
 
 
 # Decorators for custom error page handlers

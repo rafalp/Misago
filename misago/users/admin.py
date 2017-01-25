@@ -5,17 +5,10 @@ from django.utils.translation import ugettext_lazy as _
 from .djangoadmin import User, UserAdminModel
 from .views.admin.bans import BansList, DeleteBan, EditBan, NewBan
 from .views.admin.ranks import (
-    DefaultRank,
-    DeleteRank,
-    EditRank,
-    MoveDownRank,
-    MoveUpRank,
-    NewRank,
-    RanksList,
-    RankUsers
-)
-from .views.admin.users import DeleteAccountStep, DeletePostsStep, DeleteThreadsStep, EditUser, NewUser, UsersList
-from .views.admin.warnings import DeleteWarning, EditWarning, MoveDownWarning, MoveUpWarning, NewWarning, WarningsList
+    DefaultRank, DeleteRank, EditRank, MoveDownRank, MoveUpRank, NewRank,
+    RanksList, RankUsers)
+from .views.admin.users import (
+    DeleteAccountStep, DeletePostsStep, DeleteThreadsStep, EditUser, NewUser, UsersList)
 
 
 # register misago user model in django admin panel
@@ -62,17 +55,6 @@ class MisagoAdminExtension(object):
             url(r'^delete/(?P<pk>\d+)/$', DeleteBan.as_view(), name='delete'),
         )
 
-        # Warnings
-        urlpatterns.namespace(r'^warnings/', 'warnings', 'users')
-        urlpatterns.patterns('users:warnings',
-            url(r'^$', WarningsList.as_view(), name='index'),
-            url(r'^new/$', NewWarning.as_view(), name='new'),
-            url(r'^edit/(?P<pk>\d+)/$', EditWarning.as_view(), name='edit'),
-            url(r'^move/down/(?P<pk>\d+)/$', MoveDownWarning.as_view(), name='down'),
-            url(r'^move/up/(?P<pk>\d+)/$', MoveUpWarning.as_view(), name='up'),
-            url(r'^delete/(?P<pk>\d+)/$', DeleteWarning.as_view(), name='delete'),
-        )
-
     def register_navigation_nodes(self, site):
         site.add_node(
             name=_("Users"),
@@ -107,13 +89,4 @@ class MisagoAdminExtension(object):
             after='misago:admin:users:ranks:index',
             namespace='misago:admin:users:bans',
             link='misago:admin:users:bans:index',
-        )
-
-        site.add_node(
-            name=_("Warning levels"),
-            icon='fa fa-exclamation-triangle',
-            parent='misago:admin:users',
-            after='misago:admin:users:bans:index',
-            namespace='misago:admin:users:warnings',
-            link='misago:admin:users:warnings:index',
         )

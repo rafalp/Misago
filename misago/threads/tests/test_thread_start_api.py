@@ -180,6 +180,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
         self.assertContains(response, thread.title)
         self.assertContains(response, "<p>Lorem ipsum dolor met!</p>")
 
+        # api increased user's threads and posts counts
         self.reload_user()
         self.assertEqual(self.user.threads, 1)
         self.assertEqual(self.user.posts, 1)

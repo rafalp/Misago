@@ -1,7 +1,7 @@
 from django.contrib import auth
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -53,6 +53,15 @@ def session_user(request):
         UserSerializer = AnonymousUserSerializer
 
     return Response(UserSerializer(request.user).data)
+
+
+"""
+GET /auth/token/ will return cookie with current auth token
+"""
+@api_view(['GET'])
+@ensure_csrf_cookie
+def get_token(request):
+    return Response({'detail': 'ok'})
 
 
 """
@@ -140,7 +149,7 @@ def change_forgotten_password(request, pk, token):
 
     try:
         try:
-            user = User.objects.get(pk=pk)
+            user = User.objects.get(pk=pk, is_active=True)
         except User.DoesNotExist:
             raise PasswordChangeFailed(invalid_message)
 

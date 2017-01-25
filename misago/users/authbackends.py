@@ -11,18 +11,20 @@ class MisagoBackend(ModelBackend):
 
         try:
             user = UserModel.objects.get_by_username_or_email(username)
-            if user.check_password(password):
-                return user
         except UserModel.DoesNotExist:
             # Run the default password hasher once to reduce the timing
             # difference between an existing and a non-existing user (#20760).
             UserModel().set_password(password)
+        else:
+            if user.check_password(password) and self.user_can_authenticate(user):
+                return user
 
     def get_user(self, pk):
         UserModel = get_user_model()
         try:
             manager = UserModel._default_manager
             relations = ('rank', 'online_tracker', 'ban_cache')
-            return manager.select_related(*relations).get(pk=pk)
+            user = manager.select_related(*relations).get(pk=pk)
         except UserModel.DoesNotExist:
             return None
+        return user if self.user_can_authenticate(user) else None

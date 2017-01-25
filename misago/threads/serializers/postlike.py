@@ -11,7 +11,7 @@ __all__ = [
 
 
 class PostLikeSerializer(serializers.ModelSerializer):
-    user_id = serializers.SerializerMethodField()
+    liker_id = serializers.SerializerMethodField()
     username = serializers.SerializerMethodField()
 
     url = serializers.SerializerMethodField()
@@ -22,23 +22,23 @@ class PostLikeSerializer(serializers.ModelSerializer):
             'id',
             'liked_on',
 
-            'user_id',
+            'liker_id',
             'username',
 
             'url',
         )
 
-    def get_user_id(self, obj):
-        return obj['user_id']
+    def get_liker_id(self, obj):
+        return obj['liker_id']
 
     def get_username(self, obj):
-        return obj['user_name']
+        return obj['liker_name']
 
     def get_url(self, obj):
-        if obj['user_id']:
+        if obj['liker_id']:
             return reverse('misago:user', kwargs={
-                'slug': obj['user_slug'],
-                'pk': obj['user_id'],
+                'slug': obj['liker_slug'],
+                'pk': obj['liker_id'],
             })
         else:
             return None

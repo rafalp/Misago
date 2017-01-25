@@ -1,8 +1,9 @@
 from hashlib import md5
 
 from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
-from django.contrib.auth.models import UserManager as BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import UserManager as BaseUserManager
+from django.contrib.postgres.fields import JSONField
 from django.core.mail import send_mail
 from django.db import IntegrityError, models, transaction
 from django.dispatch import receiver
@@ -72,96 +73,103 @@ PRIVATE_THREAD_INVITES_LIMITS_CHOICES = (
 
 
 class UserManager(BaseUserManager):
+    @transaction.atomic
     def create_user(self, username, email, password=None, set_default_avatar=False, **extra_fields):
         from ..validators import validate_email, validate_password, validate_username
 
-        with transaction.atomic():
-            if not email:
-                raise ValueError(_("User must have an email address."))
-            if not password:
-                raise ValueError(_("User must have a password."))
+        email = self.normalize_email(email)
+        username = self.model.normalize_username(username)
 
-            validate_username(username)
-            validate_email(email)
-            validate_password(password)
+        if not email:
+            raise ValueError(_("User must have an email address."))
+        if not password:
+            raise ValueError(_("User must have a password."))
 
-            if not 'joined_from_ip' in extra_fields:
-                extra_fields['joined_from_ip'] = '127.0.0.1'
+        validate_username(username)
+        validate_email(email)
+        validate_password(password)
 
-            WATCH_DICT = {
-                'no': AUTO_SUBSCRIBE_NONE,
-                'watch': AUTO_SUBSCRIBE_NOTIFY,
-                'watch_email': AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL,
-            }
+        if not 'joined_from_ip' in extra_fields:
+            extra_fields['joined_from_ip'] = '127.0.0.1'
 
-            if not 'subscribe_to_started_threads' in extra_fields:
-                new_value = WATCH_DICT[settings.subscribe_start]
-                extra_fields['subscribe_to_started_threads'] = new_value
+        WATCH_DICT = {
+            'no': AUTO_SUBSCRIBE_NONE,
+            'watch': AUTO_SUBSCRIBE_NOTIFY,
+            'watch_email': AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL,
+        }
 
-            if not 'subscribe_to_replied_threads' in extra_fields:
-                new_value = WATCH_DICT[settings.subscribe_reply]
-                extra_fields['subscribe_to_replied_threads'] = new_value
+        if not 'subscribe_to_started_threads' in extra_fields:
+            new_value = WATCH_DICT[settings.subscribe_start]
+            extra_fields['subscribe_to_started_threads'] = new_value
 
-            now = timezone.now()
-            user = self.model(
-                is_staff=False,
-                is_superuser=False,
-                last_login=now,
-                joined_on=now,
-                **extra_fields
-            )
+        if not 'subscribe_to_replied_threads' in extra_fields:
+            new_value = WATCH_DICT[settings.subscribe_reply]
+            extra_fields['subscribe_to_replied_threads'] = new_value
 
-            user.set_username(username)
-            user.set_email(email)
-            user.set_password(password)
+        extra_fields.update({
+            'is_staff': False,
+            'is_superuser': False
+        })
 
-            if not 'rank' in extra_fields:
-                user.rank = Rank.objects.get_default()
+        now = timezone.now()
+        user = self.model(
+            last_login=now,
+            joined_on=now,
+            **extra_fields
+        )
 
-            user.save(using=self._db)
+        user.set_username(username)
+        user.set_email(email)
+        user.set_password(password)
 
-            if set_default_avatar:
-                avatars.set_default_avatar(user)
-                user.avatar_hash = avatars.get_avatar_hash(user)
-            else:
-                user.avatar_hash = 'abcdef01'
+        if not 'rank' in extra_fields:
+            user.rank = Rank.objects.get_default()
 
-            authenticated_role = Role.objects.get(special_role='authenticated')
-            if authenticated_role not in user.roles.all():
-                user.roles.add(authenticated_role)
-            user.update_acl_key()
+        user.save(using=self._db)
 
-            user.save(update_fields=['avatar_hash', 'acl_key'])
+        if set_default_avatar:
+            avatars.set_default_avatar(user, settings.default_avatar,
+                                       settings.default_gravatar_fallback)
+        else:
+            # just for test purposes
+            user.avatars = [{'size': 400, 'url': '/placekitten.com/400/400'}]
 
-            # populate online tracker with default value
-            Online.objects.create(
-                user=user,
-                current_ip=extra_fields['joined_from_ip'],
-                last_click=now,
-            )
+        authenticated_role = Role.objects.get(special_role='authenticated')
+        if authenticated_role not in user.roles.all():
+            user.roles.add(authenticated_role)
+        user.update_acl_key()
 
-            return user
+        user.save(update_fields=['avatars', 'acl_key'])
 
+        # populate online tracker with default value
+        Online.objects.create(
+            user=user,
+            current_ip=extra_fields['joined_from_ip'],
+            last_click=now,
+        )
+
+        return user
+
+    @transaction.atomic
     def create_superuser(self, username, email, password,
                          set_default_avatar=False):
-        with transaction.atomic():
-            user = self.create_user(username, email,
-                password=password,
-                set_default_avatar=set_default_avatar,
-            )
+        user = self.create_user(username, email,
+            password=password,
+            set_default_avatar=set_default_avatar,
+        )
 
-            try:
-                user.rank = Rank.objects.get(name=_("Forum team"))
-                user.update_acl_key()
-            except Rank.DoesNotExist:
-                pass
+        try:
+            user.rank = Rank.objects.get(name=_("Forum team"))
+            user.update_acl_key()
+        except Rank.DoesNotExist:
+            pass
 
-            user.is_staff = True
-            user.is_superuser = True
+        user.is_staff = True
+        user.is_superuser = True
 
-            updated_fields = ('rank', 'acl_key', 'is_staff', 'is_superuser')
-            user.save(update_fields=updated_fields, using=self._db)
-            return user
+        updated_fields = ('rank', 'acl_key', 'is_staff', 'is_superuser')
+        user.save(update_fields=updated_fields, using=self._db)
+        return user
 
     def get_by_username(self, username):
         return self.get(slug=slugify(username))
@@ -201,28 +209,50 @@ class User(AbstractBaseUser, PermissionsMixin):
     rank = models.ForeignKey('Rank', null=True, blank=True, on_delete=models.deletion.PROTECT)
     title = models.CharField(max_length=255, null=True, blank=True)
     requires_activation = models.PositiveIntegerField(default=ACTIVATION_REQUIRED_NONE)
+
     is_staff = models.BooleanField(_('staff status'),
         default=False,
         help_text=_('Designates whether the user can log into admin sites.'),
     )
+
     roles = models.ManyToManyField('misago_acl.Role')
     acl_key = models.CharField(max_length=12, null=True, blank=True)
 
-    is_avatar_locked = models.BooleanField(default=False)
-    avatar_hash = models.CharField(max_length=8, default='-')
+    is_active = models.BooleanField(
+        _('active'),
+        db_index=True,
+        default=True,
+        help_text=_(
+            "Designates whether this user should be treated as active. "
+            "Unselect this instead of deleting accounts."
+        ),
+    )
+    is_active_staff_message = models.TextField(null=True, blank=True)
+
+    avatar_tmp = models.ImageField(
+        max_length=255,
+        upload_to=avatars.store.upload_to,
+        null=True,
+        blank=True
+    )
+    avatar_src = models.ImageField(
+        max_length=255,
+        upload_to=avatars.store.upload_to,
+        null=True,
+        blank=True
+    )
     avatar_crop = models.CharField(max_length=255, null=True, blank=True)
+    avatars = JSONField(null=True, blank=True)
+    is_avatar_locked = models.BooleanField(default=False)
     avatar_lock_user_message = models.TextField(null=True, blank=True)
     avatar_lock_staff_message = models.TextField(null=True, blank=True)
 
-    is_signature_locked = models.BooleanField(default=False)
     signature = models.TextField(null=True, blank=True)
     signature_parsed = models.TextField(null=True, blank=True)
     signature_checksum = models.CharField(max_length=64, null=True, blank=True)
+    is_signature_locked = models.BooleanField(default=False)
     signature_lock_user_message = models.TextField(null=True, blank=True)
     signature_lock_staff_message = models.TextField(null=True, blank=True)
-
-    warning_level = models.PositiveIntegerField(default=0)
-    warning_level_update_on = models.DateTimeField(null=True, blank=True)
 
     followers = models.PositiveIntegerField(default=0)
     following = models.PositiveIntegerField(default=0)
@@ -235,8 +265,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         related_name='blocked_by',
         symmetrical=False,
     )
-
-    new_notifications = models.PositiveIntegerField(default=0)
 
     limits_private_thread_invites_to = models.PositiveIntegerField(
         default=LIMITS_PRIVATE_THREAD_INVITES_TO_NONE
@@ -255,12 +283,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     posts = models.PositiveIntegerField(default=0, db_index=True)
 
     last_posted_on = models.DateTimeField(null=True, blank=True)
-    last_searched_on = models.DateTimeField(null=True, blank=True)
 
     USERNAME_FIELD = 'slug'
     REQUIRED_FIELDS = ['email']
 
     objects = UserManager()
+
+    def clean(self):
+        self.username = self.normalize_username(self.username)
+        self.email = self.__class__.objects.normalize_email(self.email)
 
     def lock(self):
         """Locks user in DB"""
@@ -307,15 +338,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.requires_activation == ACTIVATION_REQUIRED_USER
 
     @property
-    def staff_level(self):
-        if self.is_superuser:
-            return 2
-        elif self.is_staff:
-            return 1
-        else:
-            return 0
-
-    @property
     def can_be_messaged_by_everyone(self):
         preference = self.limits_private_thread_invites_to
         return preference == LIMITS_PRIVATE_THREAD_INVITES_TO_NONE
@@ -333,18 +355,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def has_valid_signature(self):
         return is_user_signature_valid(self)
-
-    @staff_level.setter
-    def staff_level(self, new_level):
-        if new_level == 2:
-            self.is_superuser = True
-            self.is_staff = True
-        elif new_level == 1:
-            self.is_superuser = False
-            self.is_staff = True
-        else:
-            self.is_superuser = False
-            self.is_staff = False
 
     def get_absolute_url(self):
         return reverse('misago:user', kwargs={
@@ -365,6 +375,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.username
 
     def set_username(self, new_username, changed_by=None):
+        new_username = self.normalize_username(new_username)
         if new_username != self.username:
             old_username = self.username
             self.username = new_username

@@ -48,17 +48,14 @@ def group(request, key):
             db_settings.flush_cache()
 
             messages.success(
-                request, _('Changes in settings have been saved!'))
+                request, _("Changes in settings have been saved!"))
             return redirect('misago:admin:system:settings:group', key=key)
 
-    use_single_form_template = (len(fieldsets) == 1 and
-                                not fieldsets[0]['legend'])
+    use_single_form_template = (
+        len(fieldsets) == 1 and not fieldsets[0]['legend'])
 
-    return render(
-        request,
-        'misago/admin/conf/group.html',
-        {
-            'active_group': active_group,
-            'fieldsets': fieldsets,
-            'use_single_form_template': use_single_form_template,
-        })
+    return render(request, 'misago/admin/conf/group.html',{
+        'active_group': active_group,
+        'fieldsets': fieldsets,
+        'use_single_form_template': use_single_form_template,
+    })

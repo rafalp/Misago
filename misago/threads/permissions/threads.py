@@ -685,9 +685,9 @@ def allow_delete_post(user, target):
 
         if not category_acl['can_close_threads']:
             if target.category.is_closed:
-                raise PermissionDenied(_("This category is closed. You can't delete posts from it."))
+                raise PermissionDenied(_("This category is closed. You can't delete posts in it."))
             if target.thread.is_closed:
-                raise PermissionDenied(_("This thread is closed. You can't delete posts from it."))
+                raise PermissionDenied(_("This thread is closed. You can't delete posts in it."))
 
         if target.is_protected and not category_acl['can_protect_posts']:
             raise PermissionDenied(_("This post is protected. You can't delete it."))
@@ -746,9 +746,11 @@ def allow_move_post(user, target):
 
     if not category_acl['can_move_posts']:
         raise PermissionDenied(_("You can't move posts in this category."))
+    if target.is_event:
+        raise PermissionDenied(_("Events can't be moved."))
     if target.is_first_post:
         raise PermissionDenied(_("You can't move thread's first post."))
-    if not target.is_first_post and not category_acl['can_hide_posts'] and target.is_hidden:
+    if not category_acl['can_hide_posts'] and target.is_hidden:
         raise PermissionDenied(_("You can't move posts the content you can't see."))
 can_move_post = return_boolean(allow_move_post)
 
@@ -802,31 +804,6 @@ def has_time_to_edit_post(user, target):
 """
 Queryset helpers
 """
-def exclude_invisible_category_threads(queryset, user, category):
-    if user.is_authenticated():
-        condition_author = Q(starter_id=user.id)
-
-        can_mod = category.acl['can_approve_content']
-        can_hide = category.acl['can_hide_threads']
-
-        if not can_mod and not can_hide:
-            condition = Q(is_unapproved=False) & Q(is_hidden=False)
-            queryset = queryset.filter(condition_author | condition)
-        elif not can_mod:
-            condition = Q(is_unapproved=False)
-            queryset = queryset.filter(condition_author | condition)
-        elif not can_hide:
-            condition = Q(is_hidden=False)
-            queryset = queryset.filter(condition_author | condition)
-    else:
-        if not category.acl['can_approve_content']:
-            queryset = queryset.filter(is_unapproved=False)
-        if not category.acl['can_hide_threads']:
-            queryset = queryset.filter(is_hidden=False)
-
-    return queryset
-
-
 def exclude_invisible_threads(user, categories, queryset):
     show_all = []
     show_accepted_visible = []
@@ -925,7 +902,7 @@ def exclude_invisible_threads(user, categories, queryset):
             conditions = condition
 
     if conditions:
-        return Thread.objects.filter(conditions)
+        return queryset.filter(conditions)
     else:
         return Thread.objects.none()
 

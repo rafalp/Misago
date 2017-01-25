@@ -1,7 +1,7 @@
+from datetime import timedelta
 import json
 
-from django.utils import six
-from django.utils.encoding import smart_str
+from django.utils import six, timezone
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
@@ -11,7 +11,8 @@ from .test_threads_api import ThreadsApiTestCase
 
 class ThreadPatchApiTestCase(ThreadsApiTestCase):
     def patch(self, api_link, ops):
-        return self.client.patch(api_link, json.dumps(ops), content_type="application/json")
+        return self.client.patch(
+            api_link, json.dumps(ops), content_type="application/json")
 
 
 class ThreadAddAclApiTests(ThreadPatchApiTestCase):
@@ -22,7 +23,7 @@ class ThreadAddAclApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertTrue(response_json['acl'])
 
     def test_add_acl_false(self):
@@ -32,7 +33,7 @@ class ThreadAddAclApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertIsNone(response_json['acl'])
 
 
@@ -62,9 +63,29 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0],
-            "You don't have permission to edit this thread.")
+            "You can't edit threads in this category.")
+
+    def test_change_thread_title_after_edit_time(self):
+        """api cleans, validates and rejects too short title"""
+        self.override_acl({
+            'thread_edit_time': 1,
+            'can_edit_threads': 1
+        })
+
+        self.thread.starter = self.user
+        self.thread.started_on = timezone.now() - timedelta(minutes=10)
+        self.thread.save()
+
+        response = self.patch(self.api_link, [
+            {'op': 'replace', 'path': 'title', 'value': "Lorem ipsum change!"}
+        ])
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(response_json['detail'][0],
+            "You can't edit threads that are older than 1 minute.")
 
     def test_change_thread_title_invalid(self):
         """api cleans, validates and rejects too short title"""
@@ -77,7 +98,7 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0],
             "Thread title should be at least 5 characters long (it has 2).")
 
@@ -128,7 +149,7 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0],
             "You don't have permission to pin this thread globally.")
 
@@ -152,7 +173,7 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0],
             "You don't have permission to change this thread's weight.")
 
@@ -206,7 +227,7 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0],
             "You don't have permission to change this thread's weight.")
 
@@ -230,7 +251,7 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0],
             "You don't have permission to change this thread's weight.")
 
@@ -293,7 +314,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category_b.pk)
 
-        reponse_json = json.loads(smart_str(response.content))
+        reponse_json = response.json()
         self.assertEqual(reponse_json['category'], self.category_b.pk)
         self.assertEqual(reponse_json['top_category'], None)
 
@@ -322,7 +343,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category_b.pk)
 
-        reponse_json = json.loads(smart_str(response.content))
+        reponse_json = response.json()
         self.assertEqual(reponse_json['category'], self.category_b.pk)
         self.assertEqual(reponse_json['top_category'], self.category.pk)
 
@@ -338,7 +359,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0],
             "You don't have permission to move this thread.")
 
@@ -361,7 +382,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0], 'NOT FOUND')
 
         self.override_other_acl({})
@@ -383,7 +404,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0],
             'You don\'t have permission to browse "Category B" contents.')
 
@@ -406,7 +427,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0],
             "You can't move thread to the category it's already in.")
 
@@ -422,7 +443,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['category'], self.category.pk)
 
     def test_thread_top_flatten_categories(self):
@@ -442,7 +463,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['top_category'], self.category.pk)
         self.assertEqual(response_json['category'], self.category_b.pk)
 
@@ -493,7 +514,7 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0],
             "You don't have permission to close this thread.")
 
@@ -517,7 +538,7 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0],
             "You don't have permission to open this thread.")
 
@@ -554,7 +575,7 @@ class ThreadApproveApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0],
             "Content approval can't be reversed.")
 
@@ -617,7 +638,7 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
         ])
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['detail'][0],
             "You don't have permission to hide this thread.")
 
