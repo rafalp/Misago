@@ -1,0 +1,443 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Settings · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="./" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../SetupMaintenance.html">
+            
+                <a href="../SetupMaintenance.html">
+            
+                    
+                    Setup and Maintenance
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../UpgradingFrom05.html">
+            
+                <a href="../UpgradingFrom05.html">
+            
+                    
+                    Upgrading from Misago 0.5
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    References
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.4.1" data-path="Settings.html">
+            
+                <a href="Settings.html">
+            
+                    
+                    Settings
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Settings</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="settings">Settings</h1>
+<h2 id="core-settings">Core Settings</h2>
+<p>Those settings are set in <code>settings.py</code> file and available via <code>django.conf.settings</code> or <code>misago.conf.settings</code></p>
+<h3 id="misago403image">MISAGO_403_IMAGE</h3>
+<p>Url (relative to <code>STATIC_URL</code>) to file that should be served if user has no permission to see requested attachment.</p>
+<h3 id="misago404image">MISAGO_404_IMAGE</h3>
+<p>Url (relative to <code>STATIC_URL</code>) to file that should be served if user has requested nonexistant attachment.</p>
+<h3 id="misagoaclextensions">MISAGO_ACL_EXTENSIONS</h3>
+<p>List of Misago ACL framework extensions.</p>
+<h3 id="misagoadminnamespaces">MISAGO_ADMIN_NAMESPACES</h3>
+<p>Link namespaces that are administrator-only areas that require additional security from Misago. Users will have to re-authenticate themselves to access those namespaces, even if they are already signed in your frontend. In addition they will be requested to reauthenticated if they were inactive in those namespaces for certain time.</p>
+<p>Defautly <code>misago:admin</code> and <code>admin</code> namespaces are specified, putting both Misago and Django default admin interfaces under extended security mechanics.</p>
+<h3 id="misagoadminpath">MISAGO_ADMIN_PATH</h3>
+<p>Path prefix for Misago administration backend. Defautly &quot;admincp&quot;, but you may set it to empty string if you with to disable your forum administration backend.</p>
+<h3 id="misagoadminsessionexpiration">MISAGO_ADMIN_SESSION_EXPIRATION</h3>
+<p>Maximum allowed lenght of inactivity period between two requests to admin namespaces. If its exceeded, user will be asked to sign in again to admin backed before being allowed to continue activities.</p>
+<h3 id="misagoattachmentimagesizelimit">MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT</h3>
+<p>Max dimensions (width and height) of user-uploaded images embedded in posts. If uploaded image is greater than dimensions specified in this settings, Misago will generate thumbnail for it.</p>
+<h5 id="note">Note</h5>
+<p>Because user-uploaded GIF&apos;s may be smaller than dimensions specified, but still be considerably heavy due to animation, Misago always generates thumbnails for user-uploaded GIFS, stripping the animations from them.</p>
+<h3 id="misagoattachmentorphanedexpire">MISAGO_ATTACHMENT_ORPHANED_EXPIRE</h3>
+<p>How old (in minutes) should attachments unassociated with any be before they&apos;ll automatically deleted by <code>clearattachments</code> task.</p>
+<h3 id="misagoattachmentsecretlength">MISAGO_ATTACHMENT_SECRET_LENGTH</h3>
+<p>Length of attachment&apos;s secret (filenames and url token). The longer, the harder it is to bruteforce, but too long may conflict with your uploaded files storage limits (eg. filesystem path length limits).</p>
+<h5 id="warning">Warning</h5>
+<p>In order for Misago to support clustered deployments or CDN&apos;s (like Amazon&apos;s S3), its unable to validate user&apos;s permission to see the attachment at its source. Instead it has to rely on exessively long and hard to guess urls to attachments and assumption that your users will not &quot;leak&quot; source urls to attachments further.</p>
+<p>Generaly, neither you nor your users should use forums to exchange files containing valuable data, but if you do, you should make sure to secure it additionaly via other means like password-protected archives or file encryption solutions.</p>
+<h3 id="misagoavatargallery">MISAGO_AVATAR_GALLERY</h3>
+<p>Path to directory containing avatar galleries. Those galleries can be loaded by running <code>loadavatargallery</code> command.</p>
+<p>Feel free to remove existing galleries or add your own.</p>
+<p>If you create gallery named <code>__default__</code> and set avatar gallery as default user avatar, Misago will select new users avatars from it while keeping this gallery hidden from existing users.</p>
+<h3 id="misagoavatarssizes">MISAGO_AVATARS_SIZES</h3>
+<p>Misago uses avatar cache that prescales avatars to requested sizes. Enter here sizes to which those should be optimized.</p>
+<h5 id="warning">Warning</h5>
+<p>It&apos;s impossible to regenerate user avatars store for existing avatars. Misago comes with sane defaults for avatar sizes, with min. height for user avatar being 400 pixels square, and steps of 200, 150, 100, 64, 50 and 30px. However if you need larger avatar or different pregenerated dimensions, changing those will require you to manually remove <code>avatars</code> directory from your media storage as well as running <code>misago.users.avatars.set_default_avatar</code> function against every user registered.</p>
+<h3 id="misagoblankavatar">MISAGO_BLANK_AVATAR</h3>
+<p>This path to image file that Misago should use as blank avatar.</p>
+<h3 id="misagocompactdateformatdaymonth">MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH</h3>
+<p>Date format used by Misago <code>compact_date</code> filter for dates in this year.</p>
+<p>Expects standard Django date format, documented <a href="https://docs.djangoproject.com/en/dev/ref/templates/builtins/#date" target="_blank">here</a></p>
+<h3 id="misagocompactdateformatdaymonthyear">MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH_YEAR</h3>
+<p>Date format used by Misago <code>compact_date</code> filter for dates in past years.</p>
+<p>Expects standard Django date format, documented <a href="https://docs.djangoproject.com/en/dev/ref/templates/builtins/#date" target="_blank">here</a></p>
+<h3 id="misagodialypostlimit">MISAGO_DIALY_POST_LIMIT</h3>
+<p>Dialy limit of posts that may be posted from single account. Fail-safe for situations when forum is flooded by spam bot. Change to 0 to lift this restriction.</p>
+<h3 id="misagodynamicavatardrawer">MISAGO_DYNAMIC_AVATAR_DRAWER</h3>
+<p>Function used to create unique avatar for this user. Allows for customization of algorithm used to generate those.</p>
+<h3 id="misagoeventsperpage">MISAGO_EVENTS_PER_PAGE</h3>
+<p>Misago reads events to display in separate database query to avoid situation when thread with large number of eg. moderator actions displays pages consisting exclusively of events. Using this setting you may specify upper limit of events displayed on thread&apos;s single page. This setting is intented as fail safe, both to save threads from excessively long lists of events your users will have to scroll trough, as well as to keep memory usage within limts.</p>
+<p>In case of more events than specified being found, oldest events will be truncated.</p>
+<h3 id="misagohourlypostlimit">MISAGO_HOURLY_POST_LIMIT</h3>
+<p>Hourly limit of posts that may be posted from single account. Fail-safe for situations when forum is flooded by spam bot. Change to 0 to lift this restriction.</p>
+<h3 id="misagologinapiurl">MISAGO_LOGIN_API_URL</h3>
+<p>URL to API endpoint used to authenticate sign-in credentials. Musn&apos;t contain api prefix or wrapping slashes. Defaults to &apos;auth/login&apos;.</p>
+<h3 id="misagomarkupextensions">MISAGO_MARKUP_EXTENSIONS</h3>
+<p>List of python modules extending Misago markup.</p>
+<h3 id="misagonewregistrationsvalidators">MISAGO_NEW_REGISTRATIONS_VALIDATORS</h3>
+<p>List of functions to be called when somebody attempts to register on forums using registration form.</p>
+<h3 id="misagonotificationsmaxage">MISAGO_NOTIFICATIONS_MAX_AGE</h3>
+<p>Max age, in days, of notifications stored in database. Notifications older than this will be delted.</p>
+<h3 id="misagopostattachmentslimit">MISAGO_POST_ATTACHMENTS_LIMIT</h3>
+<p>Limit of attachments that may be uploaded in single post. Lower limits may hamper image-heavy forums, but help keep memory usage by posting process. </p>
+<h3 id="misagopostingmiddlewares">MISAGO_POSTING_MIDDLEWARES</h3>
+<p>List of middleware classes participating in posting process.</p>
+<h3 id="misagopostsperpage">MISAGO_POSTS_PER_PAGE</h3>
+<p>Controls number of posts displayed on thread page. Greater numbers can increase number of objects loaded into memory and thus depending on features enabled greatly increase memory usage.</p>
+<h3 id="misagopoststail">MISAGO_POSTS_TAIL</h3>
+<p>Defines minimal number of posts for thread&apos;s last page. If number of posts on last page is smaller or equal to one specified in this setting, last page will be appended to previous page instead.</p>
+<h3 id="misagorankinglength">MISAGO_RANKING_LENGTH</h3>
+<p>Some lists act as rankings, displaying users in order of certain scoring criteria, like number of posts or likes received.
+This setting controls maximum age in days of items that should count to ranking.</p>
+<h3 id="misagorankingsize">MISAGO_RANKING_SIZE</h3>
+<p>Maximum number of items on ranking page.</p>
+<h3 id="misagoreadtrackercutoff">MISAGO_READTRACKER_CUTOFF</h3>
+<p>Controls amount of data used by readtracking system. All content older than number of days specified in this setting is considered old and read, even if opposite is true. Active forums can try lowering this value while less active ones may wish to increase it instead.</p>
+<h3 id="misagosearchconfig">MISAGO_SEARCH_CONFIG</h3>
+<p>PostgreSQL text search configuration to use in searches. Defaults to &quot;simple&quot;, for list of installed configurations run &quot;\dF&quot; in &quot;psql&quot;.</p>
+<p>Standard configs as of PostgreSQL 9.5 are: <code>dutch</code>, <code>english</code>, <code>finnish</code>, <code>french</code>, <code>german</code>, <code>hungarian</code>, <code>italian</code>, <code>norwegian</code>, <code>portuguese</code>, <code>romanian</code>, <code>russian</code>, <code>simple</code>, <code>spanish</code>, <code>swedish</code>, <code>turkish</code>.</p>
+<p>Example on adding custom language can be found <a href="https://github.com/lemonskyjwt/plpstgrssearch" target="_blank">here</a>.</p>
+<h5 id="note">Note</h5>
+<p>Items in Misago are usually indexed in search engine on save or update. If you change search configuration, you&apos;ll need to rebuild search for past posts to get reindexed using new configuration. Misago comes with <code>rebuildpostssearch</code> tool for this purpose.</p>
+<h3 id="misagostopforumspamminconfidence">MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE</h3>
+<p>Minimum confidence returned by <a href="http://www.stopforumspam.com/" target="_blank">Stop Forum Spam</a> for Misago to reject new registration and block IP address for 1 day.</p>
+<h3 id="misagothreadsonindex">MISAGO_THREADS_ON_INDEX</h3>
+<p>Change this setting to <code>False</code> to display categories list instead of threads list on board index.</p>
+<h3 id="misagothreadsperpage">MISAGO_THREADS_PER_PAGE</h3>
+<p>Controls number of threads displayed on page. Greater numbers can increase number of objects loaded into memory and thus depending on features enabled greatly increase memory usage.</p>
+<h3 id="misagothreadstail">MISAGO_THREADS_TAIL</h3>
+<p>Defines minimal number of threads for lists last page. If number of threads on last page is smaller or equal to one specified in this setting, last page will be appended to previous page instead.</p>
+<h3 id="misagothreadtypes">MISAGO_THREAD_TYPES</h3>
+<p>List of clasess defining thread types.</p>
+<h3 id="misagousestopforumspam">MISAGO_USE_STOP_FORUM_SPAM</h3>
+<p>This settings allows you to decide wheter of not <a href="http://www.stopforumspam.com/" target="_blank">Stop Forum Spam</a>database should be used to validate IPs and emails during new users registrations.</p>
+<h3 id="misagousersperpage">MISAGO_USERS_PER_PAGE</h3>
+<p>Controls pagination of users lists.</p>
+<h1 id="database-settings">Database Settings</h1>
+<p>Those settings are stored in database and are available via <code>misago.conf.settings</code>. To change those settings you need to use admin control panel</p>
+<h3 id="accountactivation">account_activation</h3>
+<p>Preffered way in which new user accounts are activated. Can be either of those:</p>
+<ul>
+<li><code>none</code> - no activation required.</li>
+<li><code>user</code> - new user has to click link in activation e-mail.</li>
+<li><code>admin</code> - board administrator has to activate new accounts manually.</li>
+<li><code>block</code> - turn new registrations off.</li>
+</ul>
+<h3 id="allowcustomavatars">allow_custom_avatars</h3>
+<p>Controls if users may set avatars from outside forums.</p>
+<h3 id="avataruploadlimit">avatar_upload_limit</h3>
+<p>Max allowed size of uploaded avatars in kilobytes.</p>
+<h3 id="defaultavatar">default_avatar</h3>
+<p>Default avatar assigned to new accounts. Can be either <code>initials</code> for randomly generated pic with initials, <code>gravatar</code> or <code>gallery</code> which will make Misago pick random avatar from gallery instead.</p>
+<h3 id="defaulttimezone">default_timezone</h3>
+<p>Default timezone used by guests and newly registered users that haven&apos;t changed their timezone prefferences.</p>
+<h3 id="forumbrandingdisplay">forum_branding_display</h3>
+<p>Controls branding&apos;s visibility in forum navbar.</p>
+<h3 id="forumbrandingtext">forum_branding_text</h3>
+<p>Allows you to include text besides brand logo on your forum.</p>
+<h3 id="forumname">forum_name</h3>
+<p>Forum name, displayed in titles of pages.</p>
+<h3 id="forumindexmetadescription">forum_index_meta_description</h3>
+<p>Forum index Meta Description used as value meta description attribute on forum index.</p>
+<h3 id="forumindextitle">forum_index_title</h3>
+<p>Forum index title. Can be empty string if not set, in which case <code>forum_name</code> should be used instead.</p>
+<h3 id="passwordcomplexity">password_complexity</h3>
+<p>Complexity requirements for new user passwords. It&apos;s value is list of strings representing following requirements:</p>
+<ul>
+<li><code>case</code> - mixed case.</li>
+<li><code>alphanumerics</code> - both digits and letters.</li>
+<li><code>special</code> - special characters.</li>
+</ul>
+<h3 id="passwordlengthmin">password_length_min</h3>
+<p>Minimal required length of new user passwords.</p>
+<h3 id="postlengthmax">post_length_max</h3>
+<p>Maximal allowed post content length.</p>
+<h3 id="postlengthmin">post_length_min</h3>
+<p>Minimal allowed post content length.</p>
+<h3 id="signaturelengthmax">signature_length_max</h3>
+<p>Maximal allowed length of users signatures.</p>
+<h3 id="subscribereply">subscribe_reply</h3>
+<p>Default value for automatic subscription to replied threads prefference for new user accounts. Its value represents one of those settings:</p>
+<ul>
+<li><strong>no</strong> - don&apos;t watch.</li>
+<li><strong>watch</strong> - put on watched threads list.</li>
+<li><strong>watch_email</strong> - put on watched threads list and send e-mail when somebody replies.</li>
+</ul>
+<h3 id="subscribestart">subscribe_start</h3>
+<p>Default value for automatic subscription to started threads prefference for new user accounts. Allows for same values as <code>subscribe_reply</code>.</p>
+<h3 id="threadtitlelengthmax">thread_title_length_max</h3>
+<p>Maximal allowed thread title length.</p>
+<h3 id="threadtitlelengthmin">thread_title_length_min</h3>
+<p>Minimal allowed thread title length.</p>
+<h3 id="usernamelengthmax">username_length_max</h3>
+<p>Maximal allowed username length.</p>
+<h3 id="usernamelengthmin">username_length_min</h3>
+<p>Minimal allowed username length.</p>
+<h1 id="django-settings-reference">Django Settings Reference</h1>
+<p>Django defines plenty of configuration options that control behaviour of different features that Misago relies on.</p>
+<p>Those are documented and available in <a href="https://docs.djangoproject.com/en/1.6/ref/settings/" target="_blank">Django documentation</a>.</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="./" class="navigation navigation-prev navigation-unique" aria-label="Previous page: References">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Settings","level":"1.4.1","depth":2,"previous":{"title":"References","level":"1.4","depth":1,"path":"ref/README.md","ref":"./ref/README.md","articles":[{"title":"Settings","level":"1.4.1","depth":2,"path":"ref/Settings.md","ref":"./ref/Settings.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"ref/Settings.md","mtime":"2017-01-25T21:19:08.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-01-25T21:11:57.373Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

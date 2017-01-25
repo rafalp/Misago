@@ -1,0 +1,354 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Upgrading from Misago 0.5 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.2">
+        
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="ref/" />
+    
+    
+    <link rel="prev" href="SetupMaintenance.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="SetupMaintenance.html">
+            
+                <a href="SetupMaintenance.html">
+            
+                    
+                    Setup and Maintenance
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3" data-path="UpgradingFrom05.html">
+            
+                <a href="UpgradingFrom05.html">
+            
+                    
+                    Upgrading from Misago 0.5
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="ref/">
+            
+                <a href="ref/">
+            
+                    
+                    References
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="ref/Settings.html">
+            
+                <a href="ref/Settings.html">
+            
+                    
+                    Settings
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Upgrading from Misago 0.5</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="upgrading-from-misago-05">Upgrading from Misago 0.5</h1>
+<p>Misago 0.6 comes with special utility that allows those upgrading from Misago 0.5 to move their data to new site. This utility, named <code>datamover</code>, provides set of management commands allowing you to move data over.</p>
+<h5 id="note">Note:</h5>
+<p>If you are already familiar with migration process, Misago comes with special <code>runmigration</code> command that calls all required commands for you.</p>
+<h2 id="preparing-for-move">Preparing for move</h2>
+<p>To move your data to new site, you&apos;ll need to first install Misago 0.6, and then tell mover how to access your old data.</p>
+<h3 id="database">Database</h3>
+<p>In your site&apos;s <code>settings.py</code> find <code>DATABASES</code> setting, and add connection named <code>misago05</code>:</p>
+<pre><code>DATABASES = {
+    &apos;default&apos;: {
+        # new database used by Misago
+    },
+    &apos;misago05&apos;: {
+        &apos;ENGINE&apos;: &apos;django.db.backends.mysql&apos;,
+        &apos;NAME&apos;: &apos;your_misago_05_database_name&apos;,
+        &apos;USER&apos;: &apos;your_misago_05_database_user&apos;,
+        &apos;PASSWORD&apos;: &apos;your_misago_05_database_password&apos;,
+        &apos;HOST&apos;: &apos;localhost&apos;,
+        &apos;PORT&apos;: &apos;3306&apos;,
+    }
+}
+</code></pre><h3 id="user-uploads">User uploads</h3>
+<p>You&apos;ll actually won&apos;t need all of your old forum&apos;s files for move, only attachments and media directories. To tell data mover where it can find those directories, add <code>MISAGO_OLD_FORUM</code> setting somewhere in your <code>settings.py</code>, just like in example below:</p>
+<pre><code>MISAGO_OLD_FORUM = {
+    &apos;ATTACHMENTS&apos;: &apos;/home/somewhere/myoldmisago/attachments/&apos;,
+    &apos;MEDIA&apos;: &apos;/home/somewhere/myoldmisago/media/&apos;,
+}
+</code></pre><h3 id="creating-superuser">Creating superuser</h3>
+<p>Its good idea to create superuser accounts for all site administrators. Don&apos;t worry about their e-mails being same as ones on old forum. If this happens Misago will simply reuse those accounts, instead of creating new ones. </p>
+<h2 id="moving-forum-configuration">Moving forum configuration</h2>
+<p>To move configuration over to new forum, run <code>python manage.py movesettings</code> command.</p>
+<h4 id="note">Note:</h4>
+<p>Some settings have been moved from admin to configuration file or removed. Those will not be migrated. Please consult the <a href="docs/ref/Settings.md">reference</a> for available settings that you will need to add yourself.</p>
+<h2 id="moving-users">Moving users</h2>
+<p>To move users over to new forum, run <code>python manage.py moveusers</code> command.</p>
+<p>Moved users will be assigned default rank and permissions as those aren&apos;t moved by the datamover. If user with such e-mail address already exists in database (because you&apos;ve used this e-mail ealier to create superuser account), his or her permissions and rank will be left as they are in new database.</p>
+<p>If user avatar could not be moved (for .eg because uploaded picture is smaller than allowed by <code>MISAGO_AVATARS_SIZES</code>), default avatar will be set for this user.</p>
+<p>In case of username collision, Misago will append digits to new user&apos;s username and print a warning in console to let you know about this.</p>
+<h2 id="moving-threads">Moving threads</h2>
+<p>To move threads and categories over, run following commands:</p>
+<pre><code>python manage.py movecategories
+python manage.py movethreads
+</code></pre><p>This will move first the categories and then threads, posts, polls, attachments and finally private threads. This step will also take care of updating your posts markup.</p>
+<h2 id="wrapping-up-migration">Wrapping up migration</h2>
+<p>Not everything is moved over. Thread labels will be turned into subcategories of their categories. With exception of pre-made superuser accounts, all users will be assigned to &quot;Members&quot; rank and will have only default roles of forum members. Likewise no permissions will be moved over to users, categories or ranks, and you will have to reset those manually. Reports, events, subscriptions and read tracker will also be omitted by migration.</p>
+<h3 id="recounting-data">Recounting data</h3>
+<p>After moving users data over to new site, you&apos;ll need to rebuild their stats, trackers and bans. To do this use <code>invalidatebans</code>, <code>populateonlinetracker</code> and <code>synchronizeusers</code> commands that you can run via <code>manage.py</code>.</p>
+<p>Likewise you&apos;ll need to rebuild threads and categories via <code>synchronizethreads</code>, then <code>synchronizecategories</code> and <code>rebuildpostssearch</code>.</p>
+<h3 id="changed-links">Changed links</h3>
+<p>Links in Misago have changed with 0.6 release, but Misago will not update posted url&apos;s for you. Instead it comes with small utility that will catch old urls and return 301 (permament) redirect to new url, keeping old urls alive.</p>
+<p>To enable this feature you&apos;ll need to insert new url in your forum&apos;s <code>urls.py</code>, so it looks like this:</p>
+<pre><code>urlpatterns = [
+    # insert below line above url with namespace=&apos;misago&apos;
+    url(r&apos;^&apos;, include(&apos;misago.datamover.urls&apos;)),
+    url(r&apos;^&apos;, include(&apos;misago.urls&apos;, namespace=&apos;misago&apos;)),
+</code></pre><p>Now build redirects index running <code>buildmovesindex</code> command. This will make Misago redirect users from old urls to new ones, altrough it&apos;ll wont preserve the meaning:</p>
+<ul>
+<li>All links to forum will redirect to category&apos;s start page</li>
+<li>All links to different profile pages of user profile will redirect to user&apos;s profile start page</li>
+<li>All links to thread will lead to thread&apos;s first page</li>
+<li>All links to post will lead to redirect to post in thread view</li>
+</ul>
+<p>This script also comes with one limitation: Because it comes before Misago&apos;s urls, it will catch all requests to ranks whose names end with number and try to map them to old user profiles. This means that naming the rank &quot;Squadron 42&quot; will produce url <code>/users/squadron-42/</code> that will be interpreted as link to old user. To avoid this make sure your ranks names end with non-alphametical characters, eg. &quot;Squadron 42th&quot; will produce <code>/users/squardon-42th/</code> as link that will successfully resolve to rank.</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="SetupMaintenance.html" class="navigation navigation-prev " aria-label="Previous page: Setup and Maintenance">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="ref/" class="navigation navigation-next " aria-label="Next page: References">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Upgrading from Misago 0.5","level":"1.3","depth":1,"next":{"title":"References","level":"1.4","depth":1,"path":"ref/README.md","ref":"./ref/README.md","articles":[{"title":"Settings","level":"1.4.1","depth":2,"path":"ref/Settings.md","ref":"./ref/Settings.md","articles":[]}]},"previous":{"title":"Setup and Maintenance","level":"1.2","depth":1,"path":"SetupMaintenance.md","ref":"./SetupMaintenance.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"UpgradingFrom05.md","mtime":"2017-01-25T21:16:57.000Z","type":"markdown"},"gitbook":{"version":"3.2.2","time":"2017-01-25T21:11:57.373Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

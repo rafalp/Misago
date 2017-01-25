@@ -1,0 +1,4 @@
+References
+==========
+
+* [Settings](./Settings.md)
