@@ -1,6 +1,6 @@
 {
   "gitbook": "3.2.2",
-  "title": "Misago",
+  "title": "Misago Documentation",
   "plugins": ["github", "anchorjs"],
   "pluginsConfig": {
     "github": {
