@@ -18,6 +18,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+node_modules/
 
 # OS stuff
 .DS_Store
@@ -58,8 +59,8 @@ flake8.txt
 /media/
 /testproject/
 
-# Sphinx documentation
-docs/_build/
+# GitBook Documentation
+_book/
 
 # Local development stuff
 dev/

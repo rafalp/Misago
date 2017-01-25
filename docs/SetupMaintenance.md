@@ -27,15 +27,15 @@ Speaking of shared servers, ability to download, compile and run software from i
 
 ### Setup
 
-To install Misago setup and activate virtual environment for your site and then fire following command::
+To install Misago setup and activate virtual environment for your site and then fire following command:
 
     pip install misago --pre
 
-This will install Misago in your virtual environment and make "misago-start.py" script available for you to use to create pre-configured Misago site.
+This will install Misago in your virtual environment and make `misago-start.py` script available for you to use to create pre-configured Misago site.
 
 Now decide on your site's module name. This name will be used for python module that will contain your configuration files. This means it should be only latin lowercase letters and (optionally) digits or underscore sign ("_"). Good idea is to use your domain name as source for project namespace, for example turning "misago-forum.org" into "misagoforumorg".
 
-Once you've decided on your name, create your site configuration module. In example we assume your site will be named "misagoforumorg"::
+Once you've decided on your name, create your site configuration module. In example we assume your site will be named "misagoforumorg":
 
 	misago-start.py misagoforumorg
 
@@ -57,28 +57,31 @@ This will create directory "misagoforumorg" in your working directory. Inside yo
 
 We will get to ``misagoforumorg`` in a minute, but before that lets spend few more moments in our current location.
 
-This directory has special purpose. It serves as "container" for your customizations for Misago. If you want to install extension or plugin that has no "setup.py" of its own or use custom styles or templates on your site, you will put them there, making them easily accessible for your Misago installation.
+This directory has special purpose. It serves as "container" for your customizations for Misago. If you want to install extension or plugin that has no `setup.py` of its own or use custom styles or templates on your site, you will put them there, making them easily accessible for your Misago installation.
 
-Let's go deeper. Change your current directory to "misagoforumorg". By default this directory will contain four files: "__init__.py", thats special file that tells python this directory is python package, "settings.py" that contains all low-level settings of your site, "urls.py" that tells your forum about links on your site and finally "wsgi.py", thats special file servers use to understand and talk with your application. Unless you are building entire site around your forum, you can ignore "urls.py".
+Let's go deeper. Change your current directory to "misagoforumorg". By default this directory will contain four files: `__init__.py`, thats special file that tells python this directory is python package, `settings.py` that contains all low-level settings of your site, `urls.py` that tells your forum about links on your site and finally `wsgi.py`, thats special file servers use to understand and talk with your application. Unless you are building entire site around your forum, you can ignore `urls.py`.
 
-Open "settings.py" in your code editor of choice and give a look in values listed here. Each value is accompanied by commentary explaining its purpose. See if any tuning is needed, then save your changes and leave editor.
+Open `settings.py` in your code editor of choice and give a look in values listed here. Each value is accompanied by commentary explaining its purpose. See if any tuning is needed, then save your changes and leave editor.
 
-.. note::
-   To simplify setup process, by default "settings.py" file contains only most basic settings that are needed for your site to run, with everything else being set for you automatically at the beginning of file.
 
-Move back to directory with manage.py and use it to initialize Misago database by firing migrate::
+##### Note
+
+To simplify setup process, by default `settings.py` file contains only most basic settings that are needed for your site to run, with everything else being set for you automatically at the beginning of file.
+
+
+Move back to directory with manage.py and use it to initialize Misago database by firing migrate:
 
     python manage.py migrate
 
-Next, call createsuperuser command to create super admin in database::
+Next, call createsuperuser command to create super admin in database:
 
     python manage.py createsuperuser
 
-Finally, start development server using "runserver" command::
+Finally, start development server using "runserver" command:
 
     python manage.py runserver
 
-If server starts, you should be able to visit 127.0.0.1:8000 in your browser and see forum index, however as work on project is underway revisions may frequently introduce changes that will break runserver.
+If server starts, you should be able to visit `http://127.0.0.1:8000` in your browser and see forum index, however as work on project is underway revisions may frequently introduce changes that will break runserver.
 
 
 ### Deployment

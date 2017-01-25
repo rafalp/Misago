@@ -1,0 +1,11 @@
+{
+  "gitbook": "3.2.2",
+  "title": "Misago",
+  "plugins": ["github", "anchorjs"],
+  "pluginsConfig": {
+    "github": {
+      "url": "https://github.com/rafalp/Misago/"
+    }
+  },
+  "root": "./docs"
+}

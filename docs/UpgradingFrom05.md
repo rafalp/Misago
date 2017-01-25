@@ -59,7 +59,7 @@ To move configuration over to new forum, run `python manage.py movesettings` com
 
 #### Note:
 
-Some settings have been moved from admin to configuration file or removed. Those will not be migrated. Please consult the [reference](/docs/ref/Settings.md) for available settings that you will need to add yourself.
+Some settings have been moved from admin to configuration file or removed. Those will not be migrated. Please consult the [reference](./ref/settings/README.md) for available settings that you will need to add yourself.
 
 
 ## Moving users
@@ -106,7 +106,7 @@ To enable this feature you'll need to insert new url in your forum's `urls.py`, 
         # insert below line above url with namespace='misago'
         url(r'^', include('misago.datamover.urls')),
         url(r'^', include('misago.urls', namespace='misago')),
-        
+
         # ...rest of entries
     ]
 ```
