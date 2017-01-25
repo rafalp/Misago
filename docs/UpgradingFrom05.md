@@ -18,29 +18,33 @@ To move your data to new site, you'll need to first install Misago 0.6, and then
 
 In your site's `settings.py` find `DATABASES` setting, and add connection named `misago05`:
 
-    DATABASES = {
-        'default': {
-            # new database used by Misago
-        },
-        'misago05': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'your_misago_05_database_name',
-            'USER': 'your_misago_05_database_user',
-            'PASSWORD': 'your_misago_05_database_password',
-            'HOST': 'localhost',
-            'PORT': '3306',
-        }
+```python
+DATABASES = {
+    'default': {
+        # new database used by Misago
+    },
+    'misago05': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'your_misago_05_database_name',
+        'USER': 'your_misago_05_database_user',
+        'PASSWORD': 'your_misago_05_database_password',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
+}
+```
 
 
 ### User uploads
 
 You'll actually won't need all of your old forum's files for move, only attachments and media directories. To tell data mover where it can find those directories, add `MISAGO_OLD_FORUM` setting somewhere in your `settings.py`, just like in example below:
 
-    MISAGO_OLD_FORUM = {
-        'ATTACHMENTS': '/home/somewhere/myoldmisago/attachments/',
-        'MEDIA': '/home/somewhere/myoldmisago/media/',
-    }
+```python
+MISAGO_OLD_FORUM = {
+    'ATTACHMENTS': '/home/somewhere/myoldmisago/attachments/',
+    'MEDIA': '/home/somewhere/myoldmisago/media/',
+}
+```
 
 
 ### Creating superuser
@@ -97,10 +101,15 @@ Links in Misago have changed with 0.6 release, but Misago will not update posted
 
 To enable this feature you'll need to insert new url in your forum's `urls.py`, so it looks like this:
 
+```python
     urlpatterns = [
         # insert below line above url with namespace='misago'
         url(r'^', include('misago.datamover.urls')),
         url(r'^', include('misago.urls', namespace='misago')),
+        
+        # ...rest of entries
+    ]
+```
 
 Now build redirects index running `buildmovesindex` command. This will make Misago redirect users from old urls to new ones, altrough it'll wont preserve the meaning:
 
