@@ -276,12 +276,6 @@ MISAGO_LOGIN_API_URL
 URL to API endpoint used to authenticate sign-in credentials. Musn't contain api prefix or wrapping slashes. Defaults to 'auth/login'.
 
 
-MISAGO_MAILER_BATCH_SIZE
-------------------------
-
-Default maximum size of single mails package that Misago will build before sending mails and creating next package.
-
-
 MISAGO_MARKUP_EXTENSIONS
 ------------------------
 

@@ -1,6 +1,6 @@
 from django.apps import apps
 from django.conf import settings as dj_settings
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from misago.core import threadstore
 from misago.core.cache import cache
@@ -17,7 +17,7 @@ class DBSettingsTests(TestCase):
         self.assertEqual(db_settings.forum_name, 'Misago')
 
         with self.assertRaises(AttributeError):
-            db_settings.MISAGO_MAILER_BATCH_SIZE
+            db_settings.MISAGO_THREADS_PER_PAGE
 
 
 class GatewaySettingsTests(TestCase):
@@ -30,11 +30,16 @@ class GatewaySettingsTests(TestCase):
         self.assertEqual(gateway.forum_name, db_settings.forum_name)
         self.assertEqual(gateway.INSTALLED_APPS,
                          dj_settings.INSTALLED_APPS)
-        self.assertEqual(gateway.MISAGO_MAILER_BATCH_SIZE,
-                         defaults.MISAGO_MAILER_BATCH_SIZE)
+        self.assertEqual(gateway.MISAGO_THREADS_PER_PAGE,
+                         defaults.MISAGO_THREADS_PER_PAGE)
 
         with self.assertRaises(AttributeError):
             gateway.LoremIpsum
+
+    @override_settings(MISAGO_THREADS_PER_PAGE=1234)
+    def test_override_file_setting(self):
+        """file settings are overrideable"""
+        self.assertEqual(gateway.MISAGO_THREADS_PER_PAGE, 1234)
 
     def test_setting_public(self):
         """get_public_settings returns public settings"""

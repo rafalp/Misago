@@ -101,12 +101,6 @@ MISAGO_USE_STOP_FORUM_SPAM = True
 MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE = 80
 
 
-# How many e-mails should be sent in single step.
-# This is used for conserving memory usage when mailing many users at same time
-
-MISAGO_MAILER_BATCH_SIZE = 20
-
-
 # Login API URL
 
 MISAGO_LOGIN_API_URL = 'auth'
