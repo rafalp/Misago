@@ -1,4 +1,4 @@
 References
 ==========
 
-* [Settings](./Settings.md)
+* [Settings](./settings/README.md)
