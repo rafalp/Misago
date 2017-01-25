@@ -147,11 +147,11 @@ export default class extends Form {
   };
 
   onHide = () => {
-    this.changeValue('hide', 1);
+    this.changeValue('hide', true);
   };
 
   onUnhide = () => {
-    this.changeValue('hide', 0);
+    this.changeValue('hide', false);
   };
   /* jshint ignore:end */
 
