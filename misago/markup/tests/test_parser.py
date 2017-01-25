@@ -255,6 +255,21 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
         self.assertEqual(expected_result, result['parsed_text'])
 
 
+class LinkifyTests(TestCase):
+    def test_clean_current_link(self):
+        """clean_links step cleans http://test.com"""
+        test_text = """
+Lorem ipsum: `<http://test.com>`
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum: <code>&lt;http://test.com&gt;</code></p>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=True)
+        self.assertEqual(expected_result, result['parsed_text'])
+
+
 class StriketroughTests(TestCase):
     def test_striketrough(self):
         """striketrough markdown deletes test"""

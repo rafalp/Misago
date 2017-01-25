@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+import warnings
+
 import bleach
 import markdown
 from bs4 import BeautifulSoup
@@ -134,7 +136,19 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
 
 
 def linkify_paragraphs(result):
-    result['parsed_text'] = bleach.linkify(result['parsed_text'], skip_pre=True, parse_email=True)
+    result['parsed_text'] = bleach.linkify(
+        result['parsed_text'], skip_pre=True, parse_email=True)
+
+    # dirty fix for
+    if '<code>' in result['parsed_text'] and '<a' in result['parsed_text']:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+
+            soup = BeautifulSoup(result['parsed_text'], 'html5lib')
+            for link in soup.select('code > a'):
+                link.replace_with(BeautifulSoup(link.string, 'html.parser'))
+            # [6:-7] trims <body></body> wrap
+            result['parsed_text'] = six.text_type(soup.body)[6:-7]
 
 
 def clean_links(request, result, force_shva=False):
