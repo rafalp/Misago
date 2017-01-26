@@ -1,7 +1,7 @@
 Database Settings
 =================
 
-Those settings are stored in database and are available via `misago.conf.settings`. To change those settings you need to use admin control panel
+Those settings are stored in database and are available via `misago.conf.settings`. To change those settings you need to use admin control panel.
 
 
 ## account_activation

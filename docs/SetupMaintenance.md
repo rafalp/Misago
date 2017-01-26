@@ -41,21 +41,15 @@ Once you've decided on your name, create your site configuration module. In exam
 
 This will create directory "misagoforumorg" in your working directory. Inside you will find following items:
 
-* ``manage.py`` script that you can use to run administrative commands Misago provides as well as access its python shell which is usefull for quick and dirty administration work.
+* `manage.py` script that you can use to run administrative commands Misago provides as well as access its python shell which is usefull for quick and dirty administration work.
+* `cron.txt` that contains example crontab configuration for automating maintenance tasks on your site.
+* `avatargallery` directory that contains example avatar gallery you may load using `manage.py` script to run `loadavatargallery` task that will load it into avatar gallery.
+* `media` directory for user uploaded files.
+* `misagoforumorg` python module with configuration files for your site.
+* `static` directory for static assets like css, js or images.
+* `theme` directory for overriding default assets with your own ones.
 
-* ``cron.txt`` that contains example crontab configuration for automating maintenance tasks on your site.
-
-* ``avatargallery`` directory that contains example avatar gallery you may load using ``manage.py`` script to run ``loadavatargallery`` task that will load it into avatar gallery.
-
-* ``media`` directory for user uploaded files.
-
-* ``misagoforumorg`` python module with configuration files for your site.
-
-* ``static`` directory for static assets like css, js or images.
-
-* ``theme`` directory for overriding default assets with your own ones.
-
-We will get to ``misagoforumorg`` in a minute, but before that lets spend few more moments in our current location.
+We will get to `misagoforumorg` in a minute, but before that lets spend few more moments in our current location.
 
 This directory has special purpose. It serves as "container" for your customizations for Misago. If you want to install extension or plugin that has no `setup.py` of its own or use custom styles or templates on your site, you will put them there, making them easily accessible for your Misago installation.
 
@@ -95,4 +89,4 @@ If you need example, UWSGI project's documentation has tutorial on configuring N
 
 ### Securing MEDIA_ROOT
 
-By default Misago uses the ``FileSystemStorage`` strategy that stores user-uploaded files in your site's ``media`` directory. You need to make sure that you have disabled indexing/listing of this directory contents in your HTTP server's settings, or your user-uploaded files will be easily discoverable from internet. This is especially important because Misago has no special protection system in place for uploaded files.
+By default Misago uses the `FileSystemStorage` strategy that stores user-uploaded files in your site's `media` directory. You need to make sure that you have disabled indexing/listing of this directory contents in your HTTP server's settings, or your user-uploaded files will be easily discoverable from internet. This is especially important because Misago has no special protection system in place for uploaded files.

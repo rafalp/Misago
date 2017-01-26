@@ -59,7 +59,7 @@ To move configuration over to new forum, run `python manage.py movesettings` com
 
 #### Note:
 
-Some settings have been moved from admin to configuration file or removed. Those will not be migrated. Please consult the [reference](./ref/settings/README.md) for available settings that you will need to add yourself.
+Some settings have been moved from admin to configuration file or removed. Those will not be migrated. Please consult the [reference](./settings/README.md) for available settings that you will need to add yourself.
 
 
 ## Moving users

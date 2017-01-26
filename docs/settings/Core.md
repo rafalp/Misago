@@ -1,7 +1,7 @@
 Core Settings
 =============
 
-Those settings are set in `settings.py` file and available via `django.conf.settings` or `misago.conf.settings`
+Those settings are set in `settings.py` file with defaults defined in `misago.conf.defaults` module. 
 
 
 ## MISAGO_403_IMAGE
