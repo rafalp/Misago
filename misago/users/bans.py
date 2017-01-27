@@ -67,8 +67,11 @@ def _set_user_ban_cache(user):
     ban_cache.bans_version = cachebuster.get_version(BAN_VERSION_KEY)
 
     try:
-        user_ban = Ban.objects.get_ban(username=user.username,
-                                       email=user.email)
+        user_ban = Ban.objects.get_ban(
+            username=user.username,
+            email=user.email
+        )
+
         ban_cache.ban = user_ban
         ban_cache.expires_on = user_ban.expires_on
         ban_cache.user_message = user_ban.user_message

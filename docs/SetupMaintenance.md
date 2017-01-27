@@ -1,4 +1,4 @@
-Setup and Maintenance
+Setup and maintenance
 =====================
 
 Misago is Python and Django application which means system requirements as well as setup process and way maintenace taks are performed may appear confusing and suprising to administrators that have no experience outside of running PHP solutions.
@@ -87,6 +87,6 @@ Misago is de facto Django with extra features added. This means deployment of Mi
 If you need example, UWSGI project's documentation has tutorial on configuring NGINX with UWSGI to run [django applications](http://uwsgi-docs.readthedocs.io/en/latest/WSGIquickstart.html).
 
 
-### Securing MEDIA_ROOT
+### Securing `MEDIA_ROOT`
 
 By default Misago uses the `FileSystemStorage` strategy that stores user-uploaded files in your site's `media` directory. You need to make sure that you have disabled indexing/listing of this directory contents in your HTTP server's settings, or your user-uploaded files will be easily discoverable from internet. This is especially important because Misago has no special protection system in place for uploaded files.
