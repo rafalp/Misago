@@ -198,7 +198,7 @@ Registers new namespace in admin links hierarchy.
 
 #### `patterns(namespace, *urlpatterns)`
 
-Registers urlpatterns under defined namespace. Expects first argument to be name of namespace that defined links belong to (eg. `users:accounts`). Every next argument is expected to be valid Django link created with `url` function from :py:mod:`django.conf.urls` module.
+Registers urlpatterns under defined namespace. Expects first argument to be name of namespace that defined links belong to (eg. `users:accounts`). Every next argument is expected to be valid Django link created with `url` function from `django.conf.urls` module.
 
 `misago:admin` prefix of namespaces is implicit. Do not prefix namespaces passed as arguments to those functions with it.
 
