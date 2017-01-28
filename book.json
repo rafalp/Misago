@@ -1,0 +1,14 @@
+{
+  "gitbook": "3.2.2",
+  "title": "Misago Documentation",
+  "plugins": ["github", "anchorjs"],
+  "pluginsConfig": {
+    "github": {
+      "url": "https://github.com/rafalp/Misago/"
+    }
+  },
+  "root": "./docs",
+  "variables": {
+    "django_version": "1.10"
+  }
+}
