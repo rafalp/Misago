@@ -302,6 +302,35 @@ class UserCategoriesOptionsTests(AuthenticatedUserTestCase):
         self.assertEqual(self.user.subscribe_to_started_threads, 2)
         self.assertEqual(self.user.subscribe_to_replied_threads, 1)
 
+        response = self.client.post(self.link, data={
+            'is_hiding_presence': 'true',
+            'limits_private_thread_invites_to': 1,
+            'subscribe_to_started_threads': 2,
+            'subscribe_to_replied_threads': 1
+        })
+        self.assertEqual(response.status_code, 200)
+
+        self.reload_user();
+
+        self.assertTrue(self.user.is_hiding_presence)
+        self.assertEqual(self.user.limits_private_thread_invites_to, 1)
+        self.assertEqual(self.user.subscribe_to_started_threads, 2)
+        self.assertEqual(self.user.subscribe_to_replied_threads, 1)
+
+        response = self.client.post(self.link, data={
+            'is_hiding_presence': 'false',
+            'limits_private_thread_invites_to': 1,
+            'subscribe_to_started_threads': 2,
+            'subscribe_to_replied_threads': 1
+        })
+        self.assertEqual(response.status_code, 200)
+
+        self.reload_user();
+
+        self.assertFalse(self.user.is_hiding_presence)
+        self.assertEqual(self.user.limits_private_thread_invites_to, 1)
+        self.assertEqual(self.user.subscribe_to_started_threads, 2)
+        self.assertEqual(self.user.subscribe_to_replied_threads, 1)
 
 class UserFollowTests(AuthenticatedUserTestCase):
     """

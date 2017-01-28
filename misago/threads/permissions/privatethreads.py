@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
@@ -8,7 +9,7 @@ from misago.acl import add_acl, algebra
 from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
 from misago.categories.models import PRIVATE_THREADS_ROOT_NAME, Category
-from misago.core import forms
+from misago.core.forms import YesNoSwitch
 
 from ..models import Thread
 
@@ -37,24 +38,24 @@ Admin Permissions Form
 class PermissionsForm(forms.Form):
     legend = _("Private threads")
 
-    can_use_private_threads = forms.YesNoSwitch(label=_("Can use private threads"))
-    can_start_private_threads = forms.YesNoSwitch(label=_("Can start private threads"))
+    can_use_private_threads = YesNoSwitch(label=_("Can use private threads"))
+    can_start_private_threads = YesNoSwitch(label=_("Can start private threads"))
     max_private_thread_participants = forms.IntegerField(
         label=_("Max number of users invited to private thread"),
         help_text=_("Enter 0 to don't limit number of participants."),
         initial=3,
         min_value=0
     )
-    can_add_everyone_to_private_threads = forms.YesNoSwitch(
+    can_add_everyone_to_private_threads = YesNoSwitch(
         label=_("Can add everyone to threads"),
         help_text=_("Allows user to add users that are blocking him to private threads.")
     )
-    can_report_private_threads = forms.YesNoSwitch(
+    can_report_private_threads = YesNoSwitch(
         label=_("Can report private threads"),
         help_text=_("Allows user to report private threads they are "
                     "participating in, making them accessible to moderators.")
     )
-    can_moderate_private_threads = forms.YesNoSwitch(
+    can_moderate_private_threads = YesNoSwitch(
         label=_("Can moderate private threads"),
         help_text=_("Allows user to read, reply, edit and delete content "
                     "in reported private threads.")

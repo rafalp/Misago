@@ -1,10 +1,11 @@
 from mptt.forms import *  # noqa
 
+from django import forms
 from django.db import models
 from django.utils.html import conditional_escape, mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-from misago.core import forms
+from misago.core.forms import YesNoSwitch
 from misago.core.validators import validate_sluggable
 from misago.threads.threadtypes import trees_map
 
@@ -45,47 +46,6 @@ class AdminCategoryMultipleChoiceField(
     pass
 
 
-class MisagoCategoryMixin(object):
-    def __init__(self, *args, **kwargs):
-        self.parent = None
-        if not 'queryset' in kwargs:
-            kwargs['queryset'] = Category.objects.order_by('lft')
-
-        if kwargs.get('error_messages', {}):
-            kwargs['error_messages'].update({
-                'invalid_choice': self.INVALID_CHOICE_ERROR
-            })
-        else:
-            kwargs['error_messages'] = {
-                'invalid_choice': self.INVALID_CHOICE_ERROR
-            }
-
-        super(MisagoCategoryMixin, self).__init__(*args, **kwargs)
-
-    def set_acl(self, acl=None):
-        queryset = Category.objects.root_category().get_descendants()
-        if acl:
-            allowed_ids = [0]
-            for category_id, perms in acl.get('categories', {}).items():
-                if perms.get('can_see') and perms.get('can_browse'):
-                    allowed_ids.append(category_id)
-            queryset = queryset.filter(id__in=allowed_ids)
-        self.queryset = queryset
-
-    def _get_level_indicator(self, obj):
-        level = obj.level - 1
-        return mark_safe(conditional_escape('- - ') * level)
-
-
-class CategoryChoiceField(MisagoCategoryMixin, TreeNodeChoiceField):
-    INVALID_CHOICE_ERROR = _("Select valid category.")
-
-
-class CategorysMultipleChoiceField(
-        MisagoCategoryMixin, TreeNodeMultipleChoiceField):
-    INVALID_CHOICE_ERROR = _("Select valid categories.")
-
-
 """
 Forms
 """
@@ -107,7 +67,7 @@ class CategoryFormBase(forms.ModelForm):
         help_text=_("Optional CSS class used to customize this category "
                     "appearance from templates.")
     )
-    is_closed = forms.YesNoSwitch(
+    is_closed = YesNoSwitch(
         label=_("Closed category"),
         required=False,
         help_text=_("Only members with valid permissions can post in "

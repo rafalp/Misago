@@ -1,9 +1,9 @@
+from django import forms
 from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext
 
 from misago.acl import algebra
 from misago.acl.models import Role
-from misago.core import forms
+from misago.core.forms import YesNoSwitch
 
 
 """
@@ -12,7 +12,7 @@ Admin Permissions Form
 class PermissionsForm(forms.Form):
     legend = _("Search")
 
-    can_search = forms.YesNoSwitch(
+    can_search = YesNoSwitch(
         label=_("Can search site"),
         initial=1
     )

@@ -11,36 +11,15 @@ Misago's admin uses [Crispy Forms](http://django-crispy-forms.readthedocs.org/en
 
 Finally, Misago defines few custom field types:
 
+
 ### `misago.core.forms.YesNoSwitch`
 
 Thin wrapper around Django's `TypedChoiceField`. In admin this field renders nice yes/no switch as its input.
 
+
 ##### Warning!
 
 `YesNoSwitch` coerces its value to `int` (eg. `0` or `1`)! Remember about this when writing code dealing with forms containing this field!
-
-
-## `misago.forums.forms`
-
-This module defines two fields you may use for making forum selections in your forms:
-
-* `ForumChoiceField` that extends `django.core.forms.ModelChoiceField`
-* `ModelMultipleChoiceField` that extends `django.core.forms.ModelMultipleChoiceField`
-
-Because those fields need to know ACL, you are required to call their `set_acl` method from your form's `__init__`:
-
-```python
-class MoveThreadsForm(forms.Form):
-    new_forum = ForumChoiceField(label=_("Move threads to forum"))
-
-    def __init__(self, *args, **kwargs):
-        self.forum = kwargs.pop('forum')
-        acl = kwargs.pop('acl')
-
-        super(MoveThreadsForm, self).__init__(*args, **kwargs)
-
-        self.fields['new_forum'].set_acl(acl)
-```
 
 
 ## Template tags

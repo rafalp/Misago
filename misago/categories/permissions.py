@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
@@ -5,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from misago.acl import algebra
 from misago.acl.decorators import return_boolean
-from misago.core import forms
+from misago.core.forms import YesNoSwitch
 from misago.users.models import AnonymousUser
 
 from .models import Category, CategoryRole, RoleCategoryACL
@@ -17,8 +18,8 @@ Admin Permissions Form
 class PermissionsForm(forms.Form):
     legend = _("Category access")
 
-    can_see = forms.YesNoSwitch(label=_("Can see category"))
-    can_browse = forms.YesNoSwitch(label=_("Can see category contents"))
+    can_see = YesNoSwitch(label=_("Can see category"))
+    can_browse = YesNoSwitch(label=_("Can see category contents"))
 
 
 def change_permissions_form(role):

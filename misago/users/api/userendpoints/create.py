@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, get_user_model, login
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 
@@ -7,7 +7,6 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from misago.conf import settings
-from misago.core import forms
 from misago.core.mail import mail_user
 
 from ... import captcha
@@ -26,7 +25,7 @@ def create_endpoint(request):
 
     try:
         captcha.test_request(request)
-    except forms.ValidationError as e:
+    except ValidationError as e:
         form.add_error('captcha', e)
 
     if not form.is_valid():

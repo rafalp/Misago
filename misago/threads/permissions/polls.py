@@ -1,3 +1,4 @@
+from django import forms
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -6,7 +7,7 @@ from django.utils.translation import ungettext
 from misago.acl import algebra
 from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
-from misago.core import forms
+from misago.core.forms import YesNoSwitch
 
 from ..models import Poll, Thread
 
@@ -53,7 +54,7 @@ class RolePermissionsForm(forms.Form):
         initial=0,
         min_value=0
     )
-    can_always_see_poll_voters = forms.YesNoSwitch(
+    can_always_see_poll_voters = YesNoSwitch(
         label=_("Can always see polls voters"),
         help_text=_("Allows users to see who voted in poll even if poll votes are secret.")
     )

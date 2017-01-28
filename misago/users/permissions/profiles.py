@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext_lazy as _
@@ -5,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from misago.acl import algebra
 from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
-from misago.core import forms
+from misago.core.forms import YesNoSwitch
 
 from .decorators import authenticated_only
 
@@ -13,18 +14,18 @@ from .decorators import authenticated_only
 """
 Admin Permissions Form
 """
-CAN_BROWSE_USERS_LIST = forms.YesNoSwitch(
+CAN_BROWSE_USERS_LIST = YesNoSwitch(
     label=_("Can browse users list"),
     initial=1
 )
-CAN_SEARCH_USERS = forms.YesNoSwitch(
+CAN_SEARCH_USERS = YesNoSwitch(
     label=_("Can search user profiles"),
     initial=1
 )
-CAN_SEE_USER_NAME_HISTORY = forms.YesNoSwitch(
+CAN_SEE_USER_NAME_HISTORY = YesNoSwitch(
     label=_("Can see other members name history")
 )
-CAN_SEE_BAN_DETAILS = forms.YesNoSwitch(
+CAN_SEE_BAN_DETAILS = YesNoSwitch(
     label=_("Can see members bans details"),
     help_text=_("Allows users with this permission to see user and staff ban messages.")
 )
@@ -42,23 +43,23 @@ class LimitedPermissionsForm(forms.Form):
 class PermissionsForm(LimitedPermissionsForm):
     can_browse_users_list = CAN_BROWSE_USERS_LIST
     can_search_users = CAN_SEARCH_USERS
-    can_follow_users = forms.YesNoSwitch(
+    can_follow_users = YesNoSwitch(
         label=_("Can follow other users"),
         initial=1
     )
-    can_be_blocked = forms.YesNoSwitch(
+    can_be_blocked = YesNoSwitch(
         label=_("Can be blocked by other users"),
         initial=0
     )
     can_see_users_name_history = CAN_SEE_USER_NAME_HISTORY
     can_see_ban_details = CAN_SEE_BAN_DETAILS
-    can_see_users_emails = forms.YesNoSwitch(
+    can_see_users_emails = YesNoSwitch(
         label=_("Can see members e-mails")
     )
-    can_see_users_ips = forms.YesNoSwitch(
+    can_see_users_ips = YesNoSwitch(
         label=_("Can see members IPs")
     )
-    can_see_hidden_users = forms.YesNoSwitch(
+    can_see_hidden_users = YesNoSwitch(
         label=_("Can see members that hide their presence")
     )
 

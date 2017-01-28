@@ -26,7 +26,7 @@ class ViewModel(object):
         posts_orphans = settings.MISAGO_POSTS_TAIL
         list_page = paginate(posts_queryset, page, posts_limit, posts_orphans,
                              paginator=PostsPaginator)
-        paginator = pagination_dict(list_page, include_page_range=False)
+        paginator = pagination_dict(list_page)
 
         posts = list(list_page.object_list)
         posters = []

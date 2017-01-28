@@ -41,27 +41,6 @@ export default class extends React.Component {
     }
   }
 
-  getProgessBar() {
-    /* jshint ignore:start */
-    return <ul className="pager-progress-bar">
-      {this.props.page_range.map((page) => {
-        let className = page === this.props.page ? 'active' : null;
-        let url = this.props.baseUrl;
-
-        if (page > 1) {
-          url += page + '/';
-        }
-
-        return <li key={page} className={className}>
-          <Link to={url} onClick={resetScroll}>
-            {page}
-          </Link>
-        </li>;
-      })}
-    </ul>;
-    /* jshint ignore:end */
-  }
-
   render() {
     /* jshint ignore:start */
     return <div className="pager-undercontent">
@@ -70,7 +49,6 @@ export default class extends React.Component {
           {this.getPreviousPage()}
           {this.getNextPage()}
         </ul>
-        {this.getProgessBar()}
       </nav>
     </div>;
     /* jshint ignore:end */

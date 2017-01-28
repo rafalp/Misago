@@ -1,4 +1,4 @@
-from misago.core import forms
+from django import forms
 
 from .. import validators
 

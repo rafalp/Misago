@@ -1,16 +1,17 @@
+from django import forms
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext
 
 from misago.conf import settings
-from misago.core import forms
+from misago.core.forms import YesNoSwitch
 
 from ..models import AUTO_SUBSCRIBE_CHOICES, PRIVATE_THREAD_INVITES_LIMITS_CHOICES
 from ..validators import validate_email, validate_password
 
 
 class ForumOptionsForm(forms.ModelForm):
-    is_hiding_presence = forms.YesNoSwitch()
+    is_hiding_presence = YesNoSwitch()
 
     limits_private_thread_invites_to = forms.TypedChoiceField(
         coerce=int, choices=PRIVATE_THREAD_INVITES_LIMITS_CHOICES)
