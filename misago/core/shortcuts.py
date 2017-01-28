@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 import six
 
 from django.http import Http404
@@ -10,7 +8,6 @@ def paginate(object_list, page, per_page, orphans=0,
              allow_empty_first_page=True,
              allow_explicit_first_page=False,
              paginator=None):
-    from django.http import Http404
     from django.core.paginator import Paginator, EmptyPage, InvalidPage
     from .exceptions import ExplicitFirstPage
 
@@ -29,11 +26,11 @@ def paginate(object_list, page, per_page, orphans=0,
         raise Http404()
 
 
-def pagination_dict(page, include_page_range=True):
+def pagination_dict(page):
     pagination = {
         'page': page.number,
         'pages': page.paginator.num_pages,
-        'page_range': None,
+        'count': page.paginator.count,
         'first': None,
         'previous': None,
         'next': None,
@@ -41,9 +38,6 @@ def pagination_dict(page, include_page_range=True):
         'before': 0,
         'more': 0,
     }
-
-    if include_page_range:
-        pagination['page_range'] = list(page.paginator.page_range)
 
     if page.has_previous():
         pagination['first'] = 1
@@ -59,18 +53,7 @@ def pagination_dict(page, include_page_range=True):
         pagination['before'] = page.start_index() - 1
     pagination['more'] = page.paginator.count - page.end_index()
 
-    return OrderedDict([
-        ('count', page.paginator.count),
-        ('page', pagination['page']),
-        ('pages', pagination['pages']),
-        ('page_range', pagination['page_range']),
-        ('first', pagination['first']),
-        ('previous', pagination['previous']),
-        ('next', pagination['next']),
-        ('last', pagination['last']),
-        ('before', pagination['before']),
-        ('more', pagination['more'])
-    ])
+    return pagination
 
 
 def validate_slug(model, slug):

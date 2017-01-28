@@ -30,7 +30,7 @@ class SearchThreads(SearchProvider):
         list_page = paginate(
             results, page, settings.MISAGO_POSTS_PER_PAGE, settings.MISAGO_POSTS_TAIL,
             allow_explicit_first_page=True)
-        paginator = pagination_dict(list_page, include_page_range=False)
+        paginator = pagination_dict(list_page)
 
         posts = list(list_page.object_list)
         threads = []

@@ -53,7 +53,7 @@ class ViewModel(object):
         threads_queryset = self.get_remaining_threads_queryset(base_queryset, category_model, threads_categories)
 
         list_page = paginate(threads_queryset, page, settings.MISAGO_THREADS_PER_PAGE, settings.MISAGO_THREADS_TAIL)
-        paginator = pagination_dict(list_page, include_page_range=False)
+        paginator = pagination_dict(list_page)
 
         if list_page.number > 1:
             threads = list(list_page.object_list)

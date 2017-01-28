@@ -26,7 +26,7 @@ class UserThreads(object):
 
         list_page = paginate(
             posts_queryset, page, settings.MISAGO_POSTS_PER_PAGE, settings.MISAGO_POSTS_TAIL)
-        paginator = pagination_dict(list_page, include_page_range=False)
+        paginator = pagination_dict(list_page)
 
         posts = list(list_page.object_list)
         threads = []

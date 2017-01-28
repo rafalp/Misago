@@ -146,19 +146,6 @@
                 </li>
                 {% endif %}
               </ul>
-              <ul class="pager-progress-bar">
-                {% for page in paginator.page_range %}
-                  <li{% if page == paginator.page %} class="active"{% endif %}>
-                    {% if page > 1 %}
-                    <a href="{% url 'misago:users-rank' slug=rank.slug page=page %}">
-                    {% else %}
-                    <a href="{% url 'misago:users-rank' slug=rank.slug %}">
-                    {% endif %}
-                      {{ page }}
-                    </a>
-                  </li>
-                {% endfor %}
-              </ul>
             </nav>
           </div>
         {% endif %}
