@@ -241,6 +241,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 'misago.core.context_processors.site_address',
+                'misago.core.context_processors.internet_explorer',
                 'misago.conf.context_processors.settings',
                 'misago.users.context_processors.user_links',
                 'misago.legal.context_processors.legal_links',

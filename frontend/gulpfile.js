@@ -39,6 +39,7 @@ gulp.task('fastbuild', [
   'faststyle',
   'faststatic',
   'fastvendorsources',
+  'copypolyfill',
   'copyzxcvbn'
 ]);
 
@@ -47,6 +48,7 @@ gulp.task('build', [
   'style',
   'static',
   'vendorsources',
+  'copypolyfill',
   'copyzxcvbn'
 ]);
 
@@ -77,6 +79,8 @@ gulp.task('lintsource', function() {
 });
 
 gulp.task('fastsource', ['lintsource'], function() {
+  process.env.NODE_ENV = 'development';
+
   return browserify({
       entries: getSources(),
       debug: true,
@@ -96,6 +100,8 @@ gulp.task('fastsource', ['lintsource'], function() {
 });
 
 gulp.task('watchifybuild', ['fastbuild'], function() {
+  process.env.NODE_ENV = 'development';
+
   var b = browserify({
       entries: getSources(),
       debug: true,
@@ -209,6 +215,8 @@ gulp.task('static', ['copyfonts', 'copyimages']);
 // Vendor tasks
 
 gulp.task('fastvendorsources', function() {
+  process.env.NODE_ENV = 'development';
+
   return browserify({
       entries: 'src/vendor.js',
       debug: true
@@ -254,6 +262,16 @@ gulp.task('vendorsources', function() {
 
 gulp.task('copyzxcvbn', function() {
   return gulp.src('node_modules/zxcvbn/dist/*')
+    .pipe(gulp.dest(misago + 'js'));
+});
+
+gulp.task('copypolyfill', function() {
+  return gulp.src('node_modules/babel-polyfill/dist/polyfill.js')
+    .pipe(rename('es2015.js'))
+    .pipe(buffer())
+    .pipe(sourcemaps.init())
+    .pipe(uglify())
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(misago + 'js'));
 });
 
