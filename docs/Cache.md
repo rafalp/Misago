@@ -8,7 +8,7 @@ Misago uses caching aggressivelly to save costful operations results like users 
 
 You can make Misago use its own cache instead of sharing cache with rest of your Django site. To do so, add new cache named `misago` to your `CACHES` setting:
 
-``python
+```python
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
@@ -19,7 +19,8 @@ CACHES = {
         'LOCATION': '127.0.0.1:11212',
     }
 }
-``
+```
+
 
 ## Cache buster
 
@@ -62,6 +63,7 @@ if not cachebuster.is_valid('bans', ban['version']):
 ### Adding Custom Cache Buster
 
 You may add and remove your own cache names to cache buster by using following commands:
+
 
 ##### Note
 

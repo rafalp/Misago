@@ -121,7 +121,7 @@ This will not work for instances of User model, that already reserves `acl` attr
 
 Serializers are functions called when ACL-aware object is being prepared for JSON serialization. Because python's `dict` type isnt 1:1 interchangeable with JSON, serializers allow ACL extensions to perform additional convertion or cleanup before model's ACL is serialized. They always receive single argument:
 
-* ``serialized_acl`` - ACL that will be JSON serialized
+* `serialized_acl` - ACL that will be JSON serialized
 
 Example serializer for extension setting dict using integers for keys could for example remove this dictionary from ACL to avoid problems during ACL serialization:
 

@@ -25,7 +25,7 @@ def index(request, page=None):
 ```
 
 
-#### Note
+##### Note
 
 Giving `page` argument default value of 1 will make `paginate` function assume that first page was reached via link with explicit first page number and cause redirect loop.
 
@@ -50,7 +50,7 @@ def cake_fans(request, cake_id, cake_slug):
 ```
 
 
-#### Notes
+##### Notes
 
 You may have noticed that there's no exception handling for either `Http404` exception raised by `get_object_or_404`, nor `OutdatedSlug` exception raised by `validate_slug`. This is by design. Both exceptions are handled by Misago for you so you don't have to spend time writing exception handling boiler plate on every view that fetches objects from database and validates their links.
 
