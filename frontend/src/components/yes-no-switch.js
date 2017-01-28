@@ -10,7 +10,7 @@ export default class extends React.Component {
   }
 
   getIcon() {
-    if (this.props.value) {
+    if (!!this.props.value) {
       return this.props.iconOn || 'check_box';
     } else {
       return this.props.iconOff || 'check_box_outline_blank';
@@ -18,7 +18,7 @@ export default class extends React.Component {
   }
 
   getLabel() {
-    if (this.props.value) {
+    if (!!this.props.value) {
       return this.props.labelOn || gettext("yes");
     } else {
       return this.props.labelOff || gettext("no");

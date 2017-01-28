@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.template.defaultfilters import date as format_date
@@ -9,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from misago.acl import algebra
 from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
-from misago.core import forms
+from misago.core.forms import YesNoSwitch
 
 from ..bans import get_user_ban
 
@@ -20,17 +21,17 @@ Admin Permissions Form
 class PermissionsForm(forms.Form):
     legend = _("Users moderation")
 
-    can_rename_users = forms.YesNoSwitch(label=_("Can rename users"))
-    can_moderate_avatars = forms.YesNoSwitch(label=_("Can moderate avatars"))
-    can_moderate_signatures = forms.YesNoSwitch(label=_("Can moderate signatures"))
-    can_ban_users = forms.YesNoSwitch(label=_("Can ban users"))
+    can_rename_users = YesNoSwitch(label=_("Can rename users"))
+    can_moderate_avatars = YesNoSwitch(label=_("Can moderate avatars"))
+    can_moderate_signatures = YesNoSwitch(label=_("Can moderate signatures"))
+    can_ban_users = YesNoSwitch(label=_("Can ban users"))
     max_ban_length = forms.IntegerField(
         label=_("Max length, in days, of imposed ban"),
         help_text=_("Enter zero to let moderators impose permanent bans."),
         min_value=0,
         initial=0
     )
-    can_lift_bans = forms.YesNoSwitch(label=_("Can lift bans"))
+    can_lift_bans = YesNoSwitch(label=_("Can lift bans"))
     max_lifted_ban_length = forms.IntegerField(
         label=_("Max length, in days, of lifted ban"),
         help_text=_("Enter zero to let moderators lift permanent bans."),

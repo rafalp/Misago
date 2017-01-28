@@ -9,13 +9,12 @@ Registration call is placed in :mod:`misago.users.admin`.
 
 Test for the model is placed in :mod:`misago.users.tests.test_djangoadmin_user`.
 """
+from django import forms
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import ugettext as _
-
-from misago.core import forms
 
 
 # Misago user model

@@ -1,8 +1,9 @@
+from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from misago.acl import algebra
 from misago.acl.models import Role
-from misago.core import forms
+from misago.core.forms import YesNoSwitch
 
 
 """
@@ -24,10 +25,10 @@ class PermissionsForm(forms.Form):
         min_value=0,
         initial=0
     )
-    can_have_signature = forms.YesNoSwitch(label=_("Can have signature"))
-    allow_signature_links = forms.YesNoSwitch(label=_("Can put links in signature"))
-    allow_signature_images = forms.YesNoSwitch(label=_("Can put images in signature"))
-    allow_signature_blocks = forms.YesNoSwitch(
+    can_have_signature = YesNoSwitch(label=_("Can have signature"))
+    allow_signature_links = YesNoSwitch(label=_("Can put links in signature"))
+    allow_signature_images = YesNoSwitch(label=_("Can put images in signature"))
+    allow_signature_blocks = YesNoSwitch(
         label=_("Can use text blocks in signature"),
         help_text=_("Controls whether or not users can put quote, code, "
                     "spoiler blocks and horizontal lines in signatures.")

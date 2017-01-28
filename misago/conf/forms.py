@@ -1,7 +1,7 @@
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django import forms
+from django.utils.translation import ugettext as _, ungettext
 
-from misago.core import forms
+from misago.core.forms import YesNoSwitch
 
 
 __ALL__ = ['ChangeSettingsForm']
@@ -112,7 +112,7 @@ def create_textarea(setting, kwargs, extra):
 
 
 def create_yesno(setting, kwargs, extra):
-    return forms.YesNoSwitch(**kwargs)
+    return YesNoSwitch(**kwargs)
 
 
 FIELD_STYPES = {

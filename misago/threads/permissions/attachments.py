@@ -1,8 +1,9 @@
+from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from misago.acl import algebra
 from misago.acl.models import Role
-from misago.core import forms
+from misago.core.forms import YesNoSwitch
 
 from ..models import Attachment
 
@@ -20,14 +21,14 @@ class PermissionsForm(forms.Form):
         min_value=0
     )
 
-    can_download_other_users_attachments = forms.YesNoSwitch(label=_("Can download other users attachments"))
-    can_delete_other_users_attachments = forms.YesNoSwitch(label=_("Can delete other users attachments"))
+    can_download_other_users_attachments = YesNoSwitch(label=_("Can download other users attachments"))
+    can_delete_other_users_attachments = YesNoSwitch(label=_("Can delete other users attachments"))
 
 
 class AnonymousPermissionsForm(forms.Form):
     legend = _("Attachments")
 
-    can_download_other_users_attachments = forms.YesNoSwitch(label=_("Can download attachments"))
+    can_download_other_users_attachments = YesNoSwitch(label=_("Can download attachments"))
 
 
 def change_permissions_form(role):

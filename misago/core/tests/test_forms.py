@@ -1,10 +1,11 @@
+from django import forms
 from django.test import TestCase
 
-from .. import forms
+from misago.core.forms import YesNoSwitch
 
 
 class YesNoForm(forms.Form):
-    test_field = forms.YesNoSwitch(label='Hello!')
+    test_field = YesNoSwitch(label='Hello!')
 
 
 class YesNoSwitchTests(TestCase):

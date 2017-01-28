@@ -1,10 +1,5 @@
-from datetime import datetime, timedelta
-
-from mptt.forms import *  # noqa
-
-from django.forms import *  # noqa
-from django.utils import timezone
-from django.utils.encoding import force_text
+from django.forms import (
+    DateTimeField, RadioSelect, TypedChoiceField, ValidationError)
 from django.utils.translation import ugettext_lazy as _
 
 from .utils import parse_iso8601_string

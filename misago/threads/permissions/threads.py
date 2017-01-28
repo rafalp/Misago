@@ -1,3 +1,4 @@
+from django import forms
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http import Http404
@@ -10,7 +11,7 @@ from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
 from misago.categories.models import Category, CategoryRole, RoleCategoryACL
 from misago.categories.permissions import get_categories_roles
-from misago.core import forms
+from misago.core.forms import YesNoSwitch
 
 from ..models import Post, Thread
 
@@ -21,7 +22,7 @@ Admin Permissions Forms
 class RolePermissionsForm(forms.Form):
     legend = _("Threads")
 
-    can_see_unapproved_content_lists = forms.YesNoSwitch(
+    can_see_unapproved_content_lists = YesNoSwitch(
         label=_("Can see unapproved content list"),
         help_text=_('Allows access to "unapproved" tab on threads lists for '
                     "easy listing of threads that are unapproved or contain "
@@ -30,7 +31,7 @@ class RolePermissionsForm(forms.Form):
                     "categories in which the user has permission to approve "
                     "content.")
     )
-    can_see_reported_content_lists = forms.YesNoSwitch(
+    can_see_reported_content_lists = YesNoSwitch(
         label=_("Can see reported content list"),
         help_text=_('Allows access to "reported" tab on threads lists for '
                     "easy listing of threads that contain reported posts. "
@@ -39,7 +40,7 @@ class RolePermissionsForm(forms.Form):
                     "categories in which the user has permission to see posts "
                     "reports.")
     )
-    can_omit_flood_protection = forms.YesNoSwitch(
+    can_omit_flood_protection = YesNoSwitch(
         label=_("Can omit flood protection"),
         help_text=_("Allows posting more frequently than flood protection would.")
     )
@@ -55,8 +56,8 @@ class CategoryPermissionsForm(forms.Form):
         choices=((0, _("Started threads")), (1, _("All threads")))
     )
 
-    can_start_threads = forms.YesNoSwitch(label=_("Can start threads"))
-    can_reply_threads = forms.YesNoSwitch(label=_("Can reply to threads"))
+    can_start_threads = YesNoSwitch(label=_("Can start threads"))
+    can_reply_threads = YesNoSwitch(label=_("Can reply to threads"))
 
     can_edit_threads = forms.TypedChoiceField(
         label=_("Can edit threads"),
@@ -103,9 +104,9 @@ class CategoryPermissionsForm(forms.Form):
             (2, _("Globally"))
         )
     )
-    can_close_threads = forms.YesNoSwitch(label=_("Can close threads"))
-    can_move_threads = forms.YesNoSwitch(label=_("Can move threads"))
-    can_merge_threads = forms.YesNoSwitch(label=_("Can merge threads"))
+    can_close_threads = YesNoSwitch(label=_("Can close threads"))
+    can_move_threads = YesNoSwitch(label=_("Can move threads"))
+    can_merge_threads = YesNoSwitch(label=_("Can merge threads"))
 
     can_edit_posts = forms.TypedChoiceField(
         label=_("Can edit posts"),
@@ -151,26 +152,26 @@ class CategoryPermissionsForm(forms.Form):
             (2, _("Number and list of likers"))
         )
     )
-    can_like_posts = forms.YesNoSwitch(
+    can_like_posts = YesNoSwitch(
         label=_("Can like posts"),
         help_text=_("Only users with this permission to see likes can like posts.")
     )
 
-    can_protect_posts = forms.YesNoSwitch(
+    can_protect_posts = YesNoSwitch(
         label=_("Can protect posts"),
         help_text=_("Only users with this permission can edit protected posts.")
     )
-    can_move_posts = forms.YesNoSwitch(
+    can_move_posts = YesNoSwitch(
         label=_("Can move posts"),
         help_text=_("Will be able to move posts to other threads.")
     )
-    can_merge_posts = forms.YesNoSwitch(label=_("Can merge posts"))
-    can_approve_content = forms.YesNoSwitch(
+    can_merge_posts = YesNoSwitch(label=_("Can merge posts"))
+    can_approve_content = YesNoSwitch(
         label=_("Can approve content"),
         help_text=_("Will be able to see and approve unapproved content.")
     )
-    can_report_content = forms.YesNoSwitch(label=_("Can report posts"))
-    can_see_reports = forms.YesNoSwitch(label=_("Can see reports"))
+    can_report_content = YesNoSwitch(label=_("Can report posts"))
+    can_see_reports = YesNoSwitch(label=_("Can see reports"))
 
     can_hide_events = forms.TypedChoiceField(
         label=_("Can hide events"),

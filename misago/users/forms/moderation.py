@@ -1,18 +1,19 @@
 from datetime import timedelta
 
+from django import forms
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext
 
 from misago.conf import settings
-from misago.core import forms
+from misago.core.forms import YesNoSwitch
 
 from ..bans import ban_user
 
 
 class ModerateAvatarForm(forms.ModelForm):
-    is_avatar_locked = forms.YesNoSwitch()
+    is_avatar_locked = YesNoSwitch()
     avatar_lock_user_message = forms.CharField(required=False)
     avatar_lock_staff_message = forms.CharField(required=False)
 
@@ -30,7 +31,7 @@ class ModerateSignatureForm(forms.ModelForm):
         label=_("Signature contents"),
         widget=forms.Textarea(attrs={'rows': 3}),
         required=False)
-    is_signature_locked = forms.YesNoSwitch(
+    is_signature_locked = YesNoSwitch(
         label=_("Lock signature"),
         help_text=_("Setting this to yes will stop user from "
                     "making changes to his/her signature."))

@@ -1,10 +1,12 @@
+from django import forms
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext
 
 from misago.acl.models import Role
 from misago.conf import settings
-from misago.core import forms, threadstore
+from misago.core import threadstore
+from misago.core.forms import IsoDateTimeField, YesNoSwitch
 from misago.core.validators import validate_sluggable
 
 from ..models import (
@@ -100,7 +102,7 @@ class EditUserForm(UserBaseForm):
         required=False
     )
 
-    is_avatar_locked = forms.YesNoSwitch(
+    is_avatar_locked = YesNoSwitch(
         label=_("Lock avatar"),
         help_text=_(
             "Setting this to yes will stop user from changing "
@@ -132,7 +134,7 @@ class EditUserForm(UserBaseForm):
         widget=forms.Textarea(attrs={'rows': 3}),
         required=False
     )
-    is_signature_locked = forms.YesNoSwitch(
+    is_signature_locked = YesNoSwitch(
         label=_("Lock signature"),
         help_text=_(
             "Setting this to yes will stop user from "
@@ -156,7 +158,7 @@ class EditUserForm(UserBaseForm):
         required=False
     )
 
-    is_hiding_presence = forms.YesNoSwitch(label=_("Hides presence"))
+    is_hiding_presence = YesNoSwitch(label=_("Hides presence"))
 
     limits_private_thread_invites_to = forms.TypedChoiceField(
         label=_("Who can add user to private threads"),
@@ -238,12 +240,12 @@ def UserFormFactory(FormType, instance):
 
 def StaffFlagUserFormFactory(FormType, instance):
     staff_fields = {
-        'is_staff': forms.YesNoSwitch(
+        'is_staff': YesNoSwitch(
             label=EditUserForm.IS_STAFF_LABEL,
             help_text=EditUserForm.IS_STAFF_HELP_TEXT,
             initial=instance.is_staff
         ),
-        'is_superuser': forms.YesNoSwitch(
+        'is_superuser': YesNoSwitch(
             label=EditUserForm.IS_SUPERUSER_LABEL,
             help_text=EditUserForm.IS_SUPERUSER_HELP_TEXT,
             initial=instance.is_superuser
@@ -255,7 +257,7 @@ def StaffFlagUserFormFactory(FormType, instance):
 
 def UserIsActiveFormFactory(FormType, instance):
     is_active_fields = {
-        'is_active': forms.YesNoSwitch(
+        'is_active': YesNoSwitch(
             label=EditUserForm.IS_ACTIVE_LABEL,
             help_text=EditUserForm.IS_ACTIVE_HELP_TEXT,
             initial=instance.is_active
@@ -288,9 +290,9 @@ def EditUserFormFactory(FormType, instance,
 class SearchUsersFormBase(forms.Form):
     username = forms.CharField(label=_("Username starts with"), required=False)
     email = forms.CharField(label=_("E-mail starts with"), required=False)
-    inactive = forms.YesNoSwitch(label=_("Inactive only"))
-    disabled = forms.YesNoSwitch(label=_("Disabled only"))
-    is_staff = forms.YesNoSwitch(label=_("Admins only"))
+    inactive = YesNoSwitch(label=_("Inactive only"))
+    disabled = YesNoSwitch(label=_("Disabled only"))
+    is_staff = YesNoSwitch(label=_("Admins only"))
 
     def filter_queryset(self, criteria, queryset):
         if criteria.get('username'):
@@ -475,7 +477,7 @@ class BanUsersForm(forms.Form):
             'max_length': _("Message can't be longer than 1000 characters.")
         }
     )
-    expires_on = forms.IsoDateTimeField(
+    expires_on = IsoDateTimeField(
         label=_("Expires on"),
         required=False,
         help_text=_("Leave this field empty for set bans to never expire.")
@@ -521,7 +523,7 @@ class BanForm(forms.ModelForm):
             'max_length': _("Message can't be longer than 1000 characters.")
         }
     )
-    expires_on = forms.IsoDateTimeField(
+    expires_on = IsoDateTimeField(
         label=_("Expires on"),
         required=False,
         help_text=_("Leave this field empty for this ban to never expire.")

@@ -1,6 +1,5 @@
+from django import forms
 from django.utils.translation import ugettext_lazy as _
-
-from misago.core import forms
 
 from .models import Role
 from .providers import providers
