@@ -16,6 +16,8 @@
 * [Markup](./Markup.md)
 * [Posting process](./PostingProcess.md)
 * [Extending pages](./ExtendingPages.md)
+* [Template tags](./TemplateTags.md)
+* [Shortcuts](./Shortcuts.md)
 * [Settings](./settings/README.md)
   * [Core settings](./settings/Core.md)
   * [Database settings](./settings/Database.md)

@@ -148,8 +148,7 @@ If `kwargs` len is 1, its assumed to be value of seeked model pk value. This mak
 Once model instance is obtained either from database or empty instance is created, this function is called to see intended action is allowed for this request and target. This function is expected to return `None` if no issues are found or string containing error message. If string is returned, its set as error messages, and view interrupts its execution by returning redirect to `root_link`.
 
 
-.. note::
-   While target argument value is always present, you don't have to do anything with it if its not making any sense for your view.
+While target argument value is always present, you don't have to do anything with it if its not making any sense for your view.
 
 
 In addition, views are wrapped in database transaction. To turn this behaviour off, define `is_atomic` attribute with value `False`.
