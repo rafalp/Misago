@@ -177,18 +177,19 @@ def username_history(request, profile):
     queryset = profile.namechanges.select_related('user', 'changed_by')
     queryset = queryset.order_by('-id')
 
-    page = paginate(queryset, None, settings.MISAGO_USERS_PER_PAGE, 4)
-    paginator = pagination_dict(page)
+    page = paginate(queryset, None, 14, 4)
 
-    request.frontend_context['PROFILE_NAME_HISTORY'] = dict(
-        results=UsernameChangeSerializer(page.object_list, many=True).data,
-        **paginator
-    )
+    data = pagination_dict(page)
+    data.update({
+        'results': UsernameChangeSerializer(page.object_list, many=True).data
+    })
+
+    request.frontend_context['PROFILE_NAME_HISTORY'] = data
 
     return render(request, 'misago/profile/username_history.html', {
         'profile': profile,
         'history': page.object_list,
-        'count': paginator['count'],
+        'count': data['count'],
     })
 
 

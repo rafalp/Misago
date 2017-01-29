@@ -4,6 +4,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import View
 
+from misago.core.shortcuts import get_int_or_404
+
 from ..viewmodels import ForumThreads, PrivateThreads, PrivateThreadsCategory, ThreadsCategory, ThreadsRootCategory
 
 
@@ -14,10 +16,7 @@ class ListBase(View):
     template_name = None
 
     def get(self, request, list_type=None, **kwargs):
-        try:
-            page = int(request.GET.get('page', 0))
-        except (ValueError, TypeError):
-            raise Http404()
+        page = get_int_or_404(request.GET.get('page', 0))
 
         category = self.get_category(request, **kwargs)
         threads = self.get_threads(request, category, list_type, page)

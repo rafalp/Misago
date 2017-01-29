@@ -6,8 +6,8 @@ from django.utils.translation import ugettext as _
 from rest_framework import mixins, status, viewsets
 from rest_framework.response import Response
 
-from misago.core.apipaginator import ApiPaginator
-from misago.core.shortcuts import get_int_or_404, get_object_or_404
+from misago.core.shortcuts import (
+    get_int_or_404, get_object_or_404, paginate, pagination_dict)
 
 from ..models import UsernameChange
 from ..serializers.usernamechange import UsernameChangeSerializer
@@ -29,10 +29,9 @@ class UsernameChangesViewSetPermission(BasePermission):
         return True
 
 
-class UsernameChangesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class UsernameChangesViewSet(viewsets.GenericViewSet):
     permission_classes = (UsernameChangesViewSetPermission,)
     serializer_class = UsernameChangeSerializer
-    pagination_class = ApiPaginator(12, 4)
 
     def get_queryset(self):
         queryset = UsernameChange.objects
@@ -52,3 +51,19 @@ class UsernameChangesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
                 )
 
         return queryset.select_related('user', 'changed_by').order_by('-id')
+
+    def list(self, request):
+        page = get_int_or_404(request.GET.get('page', 0))
+        if page == 1:
+            page = 0 # api allows explicit first page
+
+        queryset = self.get_queryset()
+
+        list_page = paginate(queryset, page, 12, 4)
+
+        data = pagination_dict(list_page)
+        data.update({
+            'results': UsernameChangeSerializer(list_page.object_list, many=True).data
+        })
+
+        return Response(data)

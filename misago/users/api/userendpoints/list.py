@@ -8,17 +8,14 @@ from django.utils import timezone
 from rest_framework.response import Response
 
 from misago.conf import settings
-from misago.core.apipaginator import ApiPaginator
 from misago.core.cache import cache
-from misago.core.shortcuts import get_int_or_404, get_object_or_404
+from misago.core.shortcuts import (
+    get_int_or_404, get_object_or_404, paginate, pagination_dict)
 
 from ...activepostersranking import get_active_posters_ranking
 from ...models import Rank
 from ...online.utils import make_users_status_aware
 from ...serializers import ScoredUserSerializer, UserSerializer
-
-
-Paginator = ApiPaginator(settings.MISAGO_USERS_PER_PAGE, 4)
 
 
 def active(request):
@@ -33,6 +30,10 @@ def active(request):
 
 
 def generic(request):
+    page = get_int_or_404(request.GET.get('page', 0))
+    if page == 1:
+        page = 0 # api allows explicit first page
+
     allow_name_search = True
     queryset = get_user_model().objects
 
@@ -60,14 +61,20 @@ def generic(request):
         else:
             raise Http404()
 
-    queryset = queryset.select_related('rank', 'ban_cache', 'online_tracker')
+    queryset = queryset.select_related(
+        'rank', 'ban_cache', 'online_tracker').order_by('slug')
 
-    paginator = Paginator()
-    users = paginator.paginate_queryset(queryset.order_by('slug'), request)
+    list_page = paginate(queryset, page, settings.MISAGO_USERS_PER_PAGE, 4)
 
+    users = list_page.object_list
     make_users_status_aware(request.user, users)
-    return paginator.get_paginated_response(
-        UserSerializer(users, many=True).data)
+
+    data = pagination_dict(list_page)
+    data.update({
+        'results': UserSerializer(users, many=True).data
+    })
+
+    return Response(data)
 
 
 LISTS = {

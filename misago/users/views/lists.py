@@ -103,12 +103,13 @@ def rank(request, slug, page=0):
         queryset = queryset.filter(is_active=True)
 
     page = paginate(queryset, page, settings.MISAGO_USERS_PER_PAGE, 4)
-    paginator = pagination_dict(page)
 
-    request.frontend_context['USERS'] = dict(
-        results=UserSerializer(page.object_list, many=True).data,
-        **paginator
-    )
+    data = pagination_dict(page)
+    data.update({
+        'results': UserSerializer(page.object_list, many=True).data
+    })
+
+    request.frontend_context['USERS'] = data
 
     if rank.description:
         description = {
@@ -123,5 +124,5 @@ def rank(request, slug, page=0):
         'rank': rank,
         'users': page.object_list,
 
-        'paginator': paginator
+        'paginator': data
     })
