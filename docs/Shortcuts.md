@@ -25,6 +25,30 @@ def index(request, page=None):
 ```
 
 
+## `pagination_dict(page)`
+
+Utility function that returns JSON-serializable dict for `Page` object defining following keys:
+
+* `page` - The 1-based page number for current page.
+* `pages` - The total number of pages.
+* `count` - The total number of items on list.
+* `first` - None if this is first page, otherwhise `1`.
+* `previous` - None if this is first page, otherwhise number of previous page.
+* `next` - None if this is last page, otherwhise number of next page.
+* `last` - None if this is last page, otherwhise number of the last page.
+* `before` - Total number of items on previous pages.
+* `more` - Total number of items left to display on next pages.
+
+
+## `paginated_response(page, serializer=None, data=None, extra=None)`
+
+Shortcut function for returning paginated responses from API. Takes one required argument, the `Page` object, and following optional arguments:
+
+* `serializer` - Serializer to use. If its omited, no additional serialization step will be taken.
+* `data` - Data object to use. If its omited, `page.object_list` will be used by default.
+* `extra` - Dict with additional data to be included in response's JSON. Because dict in `extra` is added to response via `response_json.update(extra)`, this dict can be used for last minute overrides as well.
+
+
 ##### Note
 
 Giving `page` argument default value of 1 will make `paginate` function assume that first page was reached via link with explicit first page number and cause redirect loop.

@@ -3,6 +3,8 @@ import six
 from django.http import Http404
 from django.shortcuts import *  # noqa
 
+from rest_framework.response import Response
+
 
 def paginate(object_list, page, per_page, orphans=0,
              allow_empty_first_page=True,
@@ -41,19 +43,34 @@ def pagination_dict(page):
 
     if page.has_previous():
         pagination['first'] = 1
-        if page.previous_page_number() > 1:
-            pagination['previous'] = page.previous_page_number()
+        pagination['previous'] = page.previous_page_number()
 
     if page.has_next():
         pagination['last'] = page.paginator.num_pages
-        if page.next_page_number() <= page.paginator.num_pages:
-            pagination['next'] = page.next_page_number()
+        pagination['next'] = page.next_page_number()
 
     if page.start_index():
         pagination['before'] = page.start_index() - 1
     pagination['more'] = page.paginator.count - page.end_index()
 
     return pagination
+
+
+def paginated_response(page, serializer=None, data=None, extra=None):
+    response_data = pagination_dict(page)
+
+    results = list(data or page.object_list)
+    if serializer:
+        results = serializer(results, many=True).data
+
+    response_data.update({
+        'results': results
+    })
+
+    if extra:
+        response_data.update(extra)
+
+    return Response(response_data)
 
 
 def validate_slug(model, slug):

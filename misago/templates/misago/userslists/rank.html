@@ -119,7 +119,7 @@
           <div class="pager-undercontent">
             <nav>
               <ul class="pager">
-                {% if paginator.previous %}
+                {% if paginator.previous > 1 %}
                 <li class="previous">
                   <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.previous %}">
                     <span aria-hidden="true" class="material-icon">

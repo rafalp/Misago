@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from misago.conf import settings
 from misago.core.cache import cache
 from misago.core.shortcuts import (
-    get_int_or_404, get_object_or_404, paginate, pagination_dict)
+    get_int_or_404, get_object_or_404, paginate, paginated_response)
 
 from ...activepostersranking import get_active_posters_ranking
 from ...models import Rank
@@ -66,15 +66,9 @@ def generic(request):
 
     list_page = paginate(queryset, page, settings.MISAGO_USERS_PER_PAGE, 4)
 
-    users = list_page.object_list
-    make_users_status_aware(request.user, users)
+    make_users_status_aware(request.user, list_page.object_list)
 
-    data = pagination_dict(list_page)
-    data.update({
-        'results': UserSerializer(users, many=True).data
-    })
-
-    return Response(data)
+    return paginated_response(list_page, serializer=UserSerializer)
 
 
 LISTS = {

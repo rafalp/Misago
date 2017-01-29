@@ -54,7 +54,7 @@ class ValidateSlugTests(TestCase):
         self.assertEqual(response['Location'], valid_url)
 
 
-class GetIntOr404(TestCase):
+class GetIntOr404Tests(TestCase):
     def test_valid_inputs(self):
         """get_int_or_404 returns int for valid values"""
         VALID_VALUES = (
@@ -84,3 +84,102 @@ class GetIntOr404(TestCase):
         for value in INVALID_VALUES:
             with self.assertRaises(Http404):
                 get_int_or_404(value)
+
+
+@override_settings(ROOT_URLCONF='misago.core.testproject.urls')
+class PaginatedResponseTests(TestCase):
+    def test_page_response(self):
+        """utility returns response for only page arg"""
+        response = self.client.get(reverse('test-paginated-response'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'results': [i + 10 for i in range(10)],
+            'page': 2,
+            'pages': 10,
+            'count': 100,
+            'first': 1,
+            'previous': 1,
+            'next': 3,
+            'last': 10,
+            'before': 10,
+            'more': 80,
+        })
+
+    def test_explicit_data_response(self):
+        """utility returns response with explicit data"""
+        response = self.client.get(reverse('test-paginated-response-data'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'results': ['a', 'b', 'c', 'd', 'e'],
+            'page': 2,
+            'pages': 10,
+            'count': 100,
+            'first': 1,
+            'previous': 1,
+            'next': 3,
+            'last': 10,
+            'before': 10,
+            'more': 80,
+        })
+
+    def test_explicit_serializer_response(self):
+        """utility returns response with data serialized via serializer"""
+        response = self.client.get(reverse('test-paginated-response-serializer'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'results': [
+                {'id': 0},
+                {'id': 2},
+                {'id': 4},
+                {'id': 6},
+            ],
+            'page': 1,
+            'pages': 1,
+            'count': 4,
+            'first': None,
+            'previous': None,
+            'next': None,
+            'last': None,
+            'before': 0,
+            'more': 0,
+        })
+
+    def test_explicit_data_serializer_response(self):
+        """utility returns response with explicit data serialized via serializer"""
+        response = self.client.get(reverse('test-paginated-response-data-serializer'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'results': [
+                {'id': 'aa'},
+                {'id': 'bb'},
+                {'id': 'cc'},
+                {'id': 'dd'},
+            ],
+            'page': 1,
+            'pages': 1,
+            'count': 4,
+            'first': None,
+            'previous': None,
+            'next': None,
+            'last': None,
+            'before': 0,
+            'more': 0,
+        })
+
+    def test_explicit_data_extra_response(self):
+        """utility returns response with explicit data and extra"""
+        response = self.client.get(reverse('test-paginated-response-data-extra'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'results': ['a', 'b', 'c', 'd'],
+            'page': 1,
+            'pages': 1,
+            'count': 4,
+            'first': None,
+            'previous': None,
+            'next': 'EXTRA',
+            'last': None,
+            'before': 0,
+            'more': 0,
+            'lorem': 'ipsum'
+        })
