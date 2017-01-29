@@ -122,7 +122,7 @@ export function getLikesMessage(likes, users) {
     hiddenLikes);
 
   return interpolate(message, {
-    users: usernamesList,
+    users: usernames.join(', '),
     likes: hiddenLikes
   }, true);
 }

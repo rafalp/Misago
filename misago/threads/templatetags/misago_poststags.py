@@ -22,7 +22,10 @@ def likes_label(post):
         return _("%(user)s likes this.") % {'user': usernames[0]}
 
     hidden_likes = post.likes - len(usernames)
-    usernames_string = humanize_usernames_list(usernames)
+    if len(last_likes) < 4:
+        usernames_string = humanize_usernames_list(usernames)
+    else:
+        usernames_string = ', '.join(usernames)
 
     if not hidden_likes:
         return _("%(users)s like this.") % {'users': usernames_string}
