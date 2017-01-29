@@ -63,9 +63,8 @@ export default function(props) {
 export function ChangedTitle(props) {
   const msgstring = escapeHtml(gettext("Thread title has been changed from %(old_title)s."));
   const oldTitle = interpolate(ITEM_SPAN, {
-    old_title: escapeHtml(props.post.event_context.old_title)
+    name: escapeHtml(props.post.event_context.old_title)
   }, true);
-
   const message = interpolate(msgstring, {
     old_title: oldTitle
   }, true);
