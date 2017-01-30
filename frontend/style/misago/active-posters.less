@@ -56,27 +56,35 @@
 .active-posters .user-details {
   overflow: auto;
 
+  font-family: Sans-Serif;
+
   .user-status, .rank-name, .user-title {
     display: block;
     float: left;
     margin-right: 3px;
 
-    font-size: @font-size-base * .75;
+    font-size: @font-size-small;
 
     @media screen and (min-width: @screen-md-min) {
       margin-right: 8px;
-
-      font-size: @font-size-small;
     }
   }
 
-  @media screen and (min-width: @screen-md-min) {
-    .rank-title {
-      margin-top: 0px;
-    }
+  .user-title {
+    margin-right: 0px;
+  }
 
-    .user-title {
-      margin-top: 1px;
+  @media screen and (min-width: @screen-md-min) {
+    overflow: visible;
+
+    .rank-name, .user-title {
+      height: 14px;
+      overflow: hidden;
+
+      position: relative;
+      top: 1px;
+
+      vertical-align: baseline;
     }
   }
 }
