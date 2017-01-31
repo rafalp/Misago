@@ -1,10 +1,8 @@
 from datetime import datetime, timedelta
+from importlib import import_module
 
-import six
-from unidecode import unidecode
-
+from django.conf import settings
 from django.http import Http404
-from django.template.defaultfilters import slugify as django_slugify
 from django.urls import resolve, reverse
 from django.utils import html, timezone
 from django.utils.encoding import force_text
@@ -12,10 +10,28 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
 
 
+MISAGO_SLUGIFY = getattr(settings, 'MISAGO_SLUGIFY', 'misago.core.slugify.default')
+
+
 def slugify(string):
     string = six.text_type(string)
     string = unidecode(string)
     return django_slugify(string.replace('_', ' ').strip())
+
+
+def resolve_slugify(path):
+    path_bits = path.split('.')
+    module, name = '.'.join(path_bits[:-1]), path_bits[-1]
+
+    try:
+        return getattr(import_module(module), name)
+    except AttributeError:
+        raise ImportError("name {} not found in {} module".format(name, module))
+    except ImportError:
+        raise ImportError("module {} does not exist".format(module))
+
+
+slugify = resolve_slugify(MISAGO_SLUGIFY)
 
 
 def format_plaintext_for_html(string):
