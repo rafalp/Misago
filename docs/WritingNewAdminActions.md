@@ -1,7 +1,7 @@
 Writing new admin actions
 =========================
 
-Misago brings its own admin site just like [Django does](https://docs.djangoproject.com/en/1.6/#the-admin>). This means you have to make a decision which one your app will use for it's administration.
+Misago brings its own admin site just like [Django does](https://docs.djangoproject.com/en/{{ book.django_version }}/#the-admin>). This means you have to make a decision which one your app will use for it's administration.
 
 If you intend to be sole user of your app, Django admin will propably be faster to get going. However if you plan for your app to be available to wider audience, its good for your admin interface to be part of Misago admin site. This will require you to write more code than in case you've went Django way, but will give your users more consistent experience and, in case for some languages, save them of quirkyness that comes with Django admin automatically created messages.
 

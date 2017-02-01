@@ -55,13 +55,7 @@ This directory has special purpose. It serves as "container" for your customizat
 
 Let's go deeper. Change your current directory to "misagoforumorg". By default this directory will contain four files: `__init__.py`, thats special file that tells python this directory is python package, `settings.py` that contains all low-level settings of your site, `urls.py` that tells your forum about links on your site and finally `wsgi.py`, thats special file servers use to understand and talk with your application. Unless you are building entire site around your forum, you can ignore `urls.py`.
 
-Open `settings.py` in your code editor of choice and give a look in values listed here. Each value is accompanied by commentary explaining its purpose. See if any tuning is needed, then save your changes and leave editor.
-
-
-##### Note
-
-To simplify setup process, by default `settings.py` file contains only most basic settings that are needed for your site to run, with everything else being set for you automatically at the beginning of file.
-
+Open `settings.py` in your code editor of choice and give a look in values listed here. Each value is accompanied by commentary explaining its purpose. You'll need to setup database connection
 
 Move back to directory with manage.py and use it to initialize Misago database by firing migrate:
 
@@ -82,9 +76,14 @@ If server starts, you should be able to visit `http://127.0.0.1:8000` in your br
 
 Deployment is a process in which you get your site running and reachable by your users.
 
-Misago is de facto Django with extra features added. This means deployment of Misago should be largery same to deployment of other Django-based solutions. Django documentation [already covers](https://docs.djangoproject.com/en/1.6/howto/deployment/) supported deployment methods, and while on dedicated and VPS options deployment method depends largery on your choice and employed software stack, shared servers may differ greatly by the way how Django should be deployed. If thats the case, make sure you consult your ISP documentation and/or ask its rep for details about supported deployment method.
+Misago is de facto Django with extra features added. This means deployment of Misago should be largery same to deployment of other Django-based software. Django documentation covers supported [deployment methods](https://docs.djangoproject.com/en/{{ book.django_version }}/howto/deployment/wsgi/) as well provides [checklist](https://docs.djangoproject.com/en/{{ book.django_version }}/howto/deployment/checklist/) of things that **need** to be done on deployment.
 
 If you need example, UWSGI project's documentation has tutorial on configuring NGINX with UWSGI to run [django applications](http://uwsgi-docs.readthedocs.io/en/latest/WSGIquickstart.html).
+
+
+##### Note about shared and Platform as a Service providers
+
+While on dedicated and VPS serves the deployment method depends largery on your preference, shared servers may differ greatly when it comes to the way how Django should be deployed as well as with services such as media and staticfiles storage or cache engines. If that's the case, make sure you consult your ISP documentation and/or ask its support for details about deployment methods available.
 
 
 ### Securing `MEDIA_ROOT`
