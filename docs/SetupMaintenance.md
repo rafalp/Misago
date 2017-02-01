@@ -81,7 +81,7 @@ Misago is de facto Django with extra features added. This means deployment of Mi
 If you need example, UWSGI project's documentation has tutorial on configuring NGINX with UWSGI to run [django applications](http://uwsgi-docs.readthedocs.io/en/latest/WSGIquickstart.html).
 
 
-##### Note about shared and Platform as a Service providers
+##### Note about shared hostings and Platform as a Service providers
 
 While on dedicated and VPS serves the deployment method depends largery on your preference, shared servers may differ greatly when it comes to the way how Django should be deployed as well as with services such as media and staticfiles storage or cache engines. If that's the case, make sure you consult your ISP documentation and/or ask its support for details about deployment methods available.
 
