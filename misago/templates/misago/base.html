@@ -43,15 +43,19 @@
 
     <div class="modal fade" id="modal-mount" tabindex="-1" role="dialog" aria-labelledby="misago-modal-label"></div>
 
-    {% if is_ie %}
-    <script src="{% static 'misago/js/es2015.js' %}"></script>
-    {% endif %}
-    <script type="text/javascript" src="{% url 'django-i18n' %}"></script>
+    <script src="{% url 'django-i18n' %}"></script>
     {% if LANGUAGE_CODE != "en-us" %}
-    <script type="text/javascript" src="{% url 'moment-i18n' %}"></script>
+    <script src="{% url 'moment-i18n' %}"></script>
     {% endif %}
-    <script type="text/javascript" src="{% static 'misago/js/vendor.js' %}"></script>
-    <script type="text/javascript" src="{% static 'misago/js/misago.js' %}"></script>
+    <script type="text/javascript">
+      if (!(Object.assign && Array.from)) {
+        var polyfill = document.createElement('script');
+        polyfill.src = '{% static "misago/js/es2015.js" %}';
+        document.getElementsByTagName('head')[0].appendChild(polyfill);
+      }
+    </script>
+    <script src="{% static 'misago/js/vendor.js' %}"></script>
+    <script src="{% static 'misago/js/misago.js' %}"></script>
     {% include "misago/scripts.html" %}
     <script type="text/javascript">
       misago.init({{ frontend_context|as_json }});

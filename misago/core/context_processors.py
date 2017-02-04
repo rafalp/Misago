@@ -39,9 +39,3 @@ def frontend_context(request):
         return {'frontend_context': request.frontend_context}
     else:
         return {}
-
-
-def internet_explorer(request):
-    return {
-        'is_ie': 'Trident/' in request.META.get('HTTP_USER_AGENT', '')
-    }
