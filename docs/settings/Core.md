@@ -132,6 +132,11 @@ URL to API endpoint used to authenticate sign-in credentials. Musn't contain api
 List of python modules extending Misago markup.
 
 
+## `MISAGO_MOMENT_JS_LOCALES`
+
+List of Moment.js locals available.
+
+
 ## `MISAGO_NEW_REGISTRATIONS_VALIDATORS`
 
 List of functions to be called when somebody attempts to register on forums using registration form.

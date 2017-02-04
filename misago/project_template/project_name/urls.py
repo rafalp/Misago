@@ -19,7 +19,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
 
-from misago.core.views import javascript_catalog, momentjs_catalog
+from misago.core.views import javascript_catalog
 from misago.users.forms.auth import AdminAuthenticationForm
 
 
@@ -32,7 +32,6 @@ urlpatterns = [
 
     # Javascript translations
     url(r'^django-i18n.js$', javascript_catalog, name='django-i18n'),
-    url(r'^moment-i18n.js$', momentjs_catalog, name='moment-i18n'),
 
     # Uncomment next line if you plan to use Django admin for 3rd party apps
     #url(r'^django-admin/', include(admin.site.urls)),

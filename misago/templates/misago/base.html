@@ -1,6 +1,6 @@
 {% load i18n staticfiles misago_json %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -44,9 +44,6 @@
     <div class="modal fade" id="modal-mount" tabindex="-1" role="dialog" aria-labelledby="misago-modal-label"></div>
 
     <script src="{% url 'django-i18n' %}"></script>
-    {% if LANGUAGE_CODE != "en-us" %}
-    <script src="{% url 'moment-i18n' %}"></script>
-    {% endif %}
     <script type="text/javascript">
       if (!(Object.assign && Array.from)) {
         var polyfill = document.createElement('script');
@@ -55,6 +52,9 @@
       }
     </script>
     <script src="{% static 'misago/js/vendor.js' %}"></script>
+    {% if LANGUAGE_CODE != "en-us" and MOMENTJS_LOCALE_URL %}
+    <script src="{% static MOMENTJS_LOCALE_URL %}"></script>
+    {% endif %}
     <script src="{% static 'misago/js/misago.js' %}"></script>
     {% include "misago/scripts.html" %}
     <script type="text/javascript">

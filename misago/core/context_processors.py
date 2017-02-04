@@ -1,3 +1,8 @@
+from django.utils.translation import get_language
+
+from .momentjs import get_locale_url
+
+
 def site_address(request):
     if request.is_secure():
         site_protocol = 'https'
@@ -32,6 +37,12 @@ def current_link(request):
     })
 
     return {}
+
+
+def momentjs_locale(request):
+    return {
+        'MOMENTJS_LOCALE_URL': get_locale_url(get_language())
+    }
 
 
 def frontend_context(request):

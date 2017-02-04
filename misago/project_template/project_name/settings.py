@@ -120,9 +120,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # is enabled, e.g. if you use the collectstatic or findstatic management command or use the static file serving view.
 # https://docs.djangoproject.com/en/1.10/ref/settings/#staticfiles-dirs
 
-STATICFILES_DIRS = (
+STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'theme', 'static'),
-)
+]
 
 
 # Email configuration
@@ -147,9 +147,9 @@ DEFAULT_FROM_EMAIL = 'Forums <%s>' % EMAIL_HOST_USER
 
 AUTH_USER_MODEL = 'misago_users.User'
 
-AUTHENTICATION_BACKENDS = (
+AUTHENTICATION_BACKENDS = [
     'misago.users.authbackends.MisagoBackend',
-)
+]
 
 CSRF_FAILURE_VIEW = 'misago.core.errorpages.csrf_failure'
 
@@ -190,7 +190,9 @@ INSTALLED_APPS = [
     'misago.datamover',
 ]
 
-INTERNAL_IPS = ['127.0.0.1']
+INTERNAL_IPS = [
+    '127.0.0.1'
+]
 
 LOGIN_REDIRECT_URL = 'misago:index'
 
@@ -241,6 +243,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 'misago.core.context_processors.site_address',
+                'misago.core.context_processors.momentjs_locale',
                 'misago.conf.context_processors.settings',
                 'misago.users.context_processors.user_links',
                 'misago.legal.context_processors.legal_links',
@@ -272,7 +275,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # Django Debug Toolbar
 # http://django-debug-toolbar.readthedocs.io/en/stable/configuration.html
 
-DEBUG_TOOLBAR_PANELS = (
+DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.versions.VersionsPanel',
     'debug_toolbar.panels.timer.TimerPanel',
     'debug_toolbar.panels.settings.SettingsPanel',
@@ -287,19 +290,19 @@ DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.cache.CachePanel',
     'debug_toolbar.panels.signals.SignalsPanel',
     'debug_toolbar.panels.logging.LoggingPanel',
-)
+]
 
 
 # Django Rest Framework
 # http://www.django-rest-framework.org/api-guide/settings/
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
+    'DEFAULT_PERMISSION_CLASSES': [
         'misago.core.rest_permissions.IsAuthenticatedOrReadOnly',
-    ),
-    'DEFAULT_RENDERER_CLASSES': (
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-    ),
+    ],
     'EXCEPTION_HANDLER': 'misago.core.exceptionhandler.handle_api_exception',
     'UNAUTHENTICATED_USER': 'misago.users.models.AnonymousUser',
     'URL_FORMAT_OVERRIDE': None,

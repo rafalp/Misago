@@ -1,35 +1,30 @@
-import os
-
-from path import Path
+from misago.conf import settings
 
 
-__all__ = ['list_available_locales', 'get_locale_path']
+MOMENT_STATIC_PATH = 'misago/momentjs/{}.js'
 
 
-def list_available_locales():
-    misago_dir = os.path.dirname(os.path.dirname(__file__))
-    locales_dir = os.path.join(
-        misago_dir, os.path.join(misago_dir, 'locale'), 'momentjs')
+def get_locale_url(language):
+    clean_language = clean_language_name(language)
+    if clean_language:
+        return MOMENT_STATIC_PATH.format(clean_language)
 
-    locales = {}
-
-    for locale in Path(locales_dir).files('*.js'):
-        locales[locale.basename()[:-3]] = locale
-
-    return locales
+    return None
 
 
-def get_locale_path(language):
-    locales = list_available_locales()
+def clean_language_name(language):
+    # lowercase language
+    language = language.lower()
 
     # first try: literal match
-    if language in locales:
-        return locales[language]
+    if language in settings.MISAGO_MOMENT_JS_LOCALES:
+        return language
 
     # second try: fallback to macrolanguage
     language = language.split('-')[0]
-    if language in locales:
-        return locales[language]
+    if language in settings.MISAGO_MOMENT_JS_LOCALES:
+        return language
 
     # nothing was found
     return None
+

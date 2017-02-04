@@ -15,7 +15,7 @@ _MISAGO_JS_DEBUG = False
 # Permissions system extensions
 # https://misago.readthedocs.io/en/latest/developers/acls.html#extending-permissions-system
 
-MISAGO_ACL_EXTENSIONS = (
+MISAGO_ACL_EXTENSIONS = [
     'misago.users.permissions.account',
     'misago.users.permissions.profiles',
     'misago.users.permissions.moderation',
@@ -26,18 +26,18 @@ MISAGO_ACL_EXTENSIONS = (
     'misago.threads.permissions.threads',
     'misago.threads.permissions.privatethreads',
     'misago.search.permissions',
-)
+]
 
 
 # Custom markup extensions
 
-MISAGO_MARKUP_EXTENSIONS = ()
+MISAGO_MARKUP_EXTENSIONS = []
 
 
 # Posting middlewares
 # https://misago.readthedocs.io/en/latest/developers/posting_process.html
 
-MISAGO_POSTING_MIDDLEWARES = (
+MISAGO_POSTING_MIDDLEWARES = [
     # Always keep FloodProtectionMiddleware middleware first one
     'misago.threads.api.postingendpoint.floodprotection.FloodProtectionMiddleware',
 
@@ -61,23 +61,23 @@ MISAGO_POSTING_MIDDLEWARES = (
 
     # Those middlewares are last because they don't change app state
     'misago.threads.api.postingendpoint.emailnotification.EmailNotificationMiddleware',
-)
+]
 
 
 # Configured thread types
 
-MISAGO_THREAD_TYPES = (
+MISAGO_THREAD_TYPES = [
     'misago.threads.threadtypes.thread.Thread',
     'misago.threads.threadtypes.privatethread.PrivateThread',
-)
+]
 
 
 # Search extensions
 
-MISAGO_SEARCH_EXTENSIONS = (
+MISAGO_SEARCH_EXTENSIONS = [
     'misago.threads.search.SearchThreads',
     'misago.users.search.SearchUsers',
-)
+]
 
 
 # Misago-admin specific date formats
@@ -89,10 +89,10 @@ MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH_YEAR = 'M \'y'
 # Additional registration validators
 # https://misago.readthedocs.io/en/latest/developers/validating_registrations.html
 
-MISAGO_NEW_REGISTRATIONS_VALIDATORS = (
+MISAGO_NEW_REGISTRATIONS_VALIDATORS = [
     'misago.users.validators.validate_gmail_email',
     'misago.users.validators.validate_with_sfs',
-)
+]
 
 
 # Stop Forum Spam settings
@@ -114,10 +114,10 @@ MISAGO_ADMIN_PATH = 'admincp'
 
 # Admin urls namespaces that Misago's AdminAuthMiddleware should protect
 
-MISAGO_ADMIN_NAMESPACES = (
+MISAGO_ADMIN_NAMESPACES = [
     'admin',
     'misago:admin',
-)
+]
 
 
 # How long (in minutes) since previous request to admin namespace should admin session last.
@@ -159,7 +159,7 @@ MISAGO_AVATAR_GALLERY = None
 # Keep sizes ordered from greatest to smallest
 # Max size also controls min size of uploaded image as well as crop size
 
-MISAGO_AVATARS_SIZES = (400, 200, 150, 100, 64, 50, 30)
+MISAGO_AVATARS_SIZES = [400, 200, 150, 100, 64, 50, 30]
 
 
 # Path to blank avatar image used for guests and removed users.
@@ -236,3 +236,77 @@ MISAGO_USERS_PER_PAGE = 12
 # To decrease or increase this number to fine-tune readtracker performance
 
 MISAGO_READTRACKER_CUTOFF = 40
+
+
+# Available Moment.js locales
+
+MISAGO_MOMENT_JS_LOCALES = [
+    'af',
+    'ar-ma', 'ar-sa', 'ar-tn', 'ar',
+    'az',
+    'be',
+    'bg',
+    'bn',
+    'bo',
+    'br',
+    'bs',
+    'ca',
+    'cs',
+    'cv',
+    'cy',
+    'da',
+    'de-at', 'de',
+    'el',
+    'en-au', 'en-ca', 'en-gb',
+    'eo',
+    'es',
+    'et',
+    'eu',
+    'fa',
+    'fi',
+    'fo',
+    'fr-ca',
+    'fr',
+    'fy',
+    'gl',
+    'he',
+    'hi',
+    'hr',
+    'hu', 'hy-am',
+    'id',
+    'is',
+    'it',
+    'ja',
+    'ka',
+    'km',
+    'ko',
+    'lb',
+    'lt',
+    'lv',
+    'mk',
+    'ml',
+    'mr',
+    'ms-my', 'my',
+    'nb',
+    'ne',
+    'nl',
+    'nn',
+    'pl',
+    'pt-br', 'pt',
+    'ro',
+    'ru',
+    'sk',
+    'sl',
+    'sq',
+    'sr-cyrl', 'sr',
+    'sv',
+    'ta',
+    'th',
+    'tl-ph',
+    'tr',
+    'tzm-latn', 'tzm',
+    'uk',
+    'uz',
+    'vi',
+    'zh-cn', 'zh-tw',
+]
