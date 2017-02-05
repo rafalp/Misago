@@ -24,6 +24,16 @@ export default class extends React.Component {
     this._score = 0;
     this._password = null;
     this._inputs = [];
+
+    this.state = {
+      loaded: false
+    };
+  }
+
+  componentDidMount() {
+    zxcvbn.load().then(() => {
+      this.setState({ loaded: true });
+    });
   }
 
   getScore(password, inputs) {
@@ -55,6 +65,8 @@ export default class extends React.Component {
   }
 
   render() {
+    if (!this.state.loaded) return null;
+
     /* jshint ignore:start */
     let score = this.getScore(this.props.password, this.props.inputs);
 

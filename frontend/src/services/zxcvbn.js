@@ -2,15 +2,20 @@
 export class Zxcvbn {
   init(include) {
     this._include = include;
+    this._isLoaded = false;
   }
 
   scorePassword(password, inputs) {
     // 0-4 score, the more the stronger password
-    return zxcvbn(password, inputs).score;
+    if (this._isLoaded) {
+      return zxcvbn(password, inputs).score;
+    }
+
+    return 0;
   }
 
   load() {
-    if (typeof zxcvbn === "undefined") {
+    if (!this._isLoaded) {
       this._include.include('misago/js/zxcvbn.js');
       return this._loadingPromise();
     } else {
@@ -19,13 +24,19 @@ export class Zxcvbn {
   }
 
   _loadingPromise() {
-    return new Promise(function(resolve) {
-      var wait = function() {
-        if (typeof zxcvbn === "undefined") {
+    const self = this;
+
+    return new Promise(function(resolve, reject) {
+      var wait = function(tries=0) {
+        tries += 1;
+        if (tries > 200) {
+          reject();
+        } else if (typeof zxcvbn === "undefined") {
           window.setTimeout(function() {
-            wait();
+            wait(tries);
           }, 200);
         } else {
+          self._isLoaded = true;
           resolve();
         }
       };
