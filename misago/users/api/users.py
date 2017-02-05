@@ -47,7 +47,7 @@ class UserViewSetPermission(BasePermission):
 
 
 def allow_self_only(user, pk, message):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to perform this action."))
     if user.pk != int(pk):
         raise PermissionDenied(message)

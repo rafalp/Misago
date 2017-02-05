@@ -19,7 +19,7 @@ def make_user_admin_token(user):
 
 # Admin session state controls
 def is_admin_session(request):
-    if request.user.is_anonymous():
+    if request.user.is_anonymous:
         return False
 
     if not request.user.is_staff:

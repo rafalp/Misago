@@ -15,7 +15,7 @@ def make_threads_subscription_aware(user, threads):
     if not threads:
         return
 
-    if user.is_anonymous():
+    if user.is_anonymous:
         for thread in threads:
             thread.subscription = None
     else:
@@ -33,7 +33,7 @@ def make_threads_subscription_aware(user, threads):
 
 
 def make_thread_subscription_aware(user, thread):
-    if user.is_anonymous():
+    if user.is_anonymous:
         thread.subscription = None
     else:
         try:

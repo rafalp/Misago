@@ -47,7 +47,7 @@ class MisagoUsersConfig(AppConfig):
 
     def register_default_user_profile_pages(self):
         def can_see_names_history(request, profile):
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 is_account_owner = profile.pk == request.user.pk
                 has_permission = request.user.acl['can_see_users_name_history']
                 return is_account_owner or has_permission
@@ -55,7 +55,7 @@ class MisagoUsersConfig(AppConfig):
                 return False
 
         def can_see_ban_details(request, profile):
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 if request.user.acl['can_see_ban_details']:
                     from .bans import get_user_ban
                     return bool(get_user_ban(profile))

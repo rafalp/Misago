@@ -329,7 +329,7 @@ def add_acl_to_category(user, category):
         can_see_posts_likes=algebra.greater,
     )
 
-    if user.is_authenticated():
+    if user.is_authenticated:
         algebra.sum_acls(category.acl, acls=[category_acl],
             can_start_threads=algebra.greater,
             can_reply_threads=algebra.greater,
@@ -402,7 +402,7 @@ def add_acl_to_post(user, post):
 
 
 def add_acl_to_event(user, event):
-    if user.is_authenticated():
+    if user.is_authenticated:
         category_acl = user.acl['categories'].get(event.category_id, {})
         can_hide_events = category_acl.get('can_hide_events', 0)
     else:
@@ -436,7 +436,7 @@ def add_acl_to_reply(user, post):
 
     if not post.acl['can_see_hidden']:
         post.acl['can_see_hidden'] = post.id == post.thread.first_post_id
-    if user.is_authenticated() and post.acl['can_see_likes']:
+    if user.is_authenticated and post.acl['can_see_likes']:
         post.acl['can_like'] = category_acl.get('can_like_posts', False)
 
 
@@ -458,10 +458,10 @@ def allow_see_thread(user, target):
     if not (category_acl['can_see'] and category_acl['can_browse']):
         raise Http404()
 
-    if target.is_hidden and (user.is_anonymous() or not category_acl['can_hide_threads']):
+    if target.is_hidden and (user.is_anonymous or not category_acl['can_hide_threads']):
         raise Http404()
 
-    if user.is_anonymous() or user.pk != target.starter_id:
+    if user.is_anonymous or user.pk != target.starter_id:
         if not category_acl['can_see_all_threads']:
             raise Http404()
 
@@ -471,7 +471,7 @@ can_see_thread = return_boolean(allow_see_thread)
 
 
 def allow_start_thread(user, target):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to start threads."))
 
     category_acl = user.acl['categories'].get(target.pk, {
@@ -488,7 +488,7 @@ can_start_thread = return_boolean(allow_start_thread)
 
 
 def allow_reply_thread(user, target):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to reply threads."))
 
     category_acl = user.acl['categories'].get(target.category_id, {
@@ -508,7 +508,7 @@ can_reply_thread = return_boolean(allow_reply_thread)
 
 
 def allow_edit_thread(user, target):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to edit threads."))
 
     category_acl = user.acl['categories'].get(target.category_id, {
@@ -544,7 +544,7 @@ def allow_see_post(user, target):
     })
 
     if not target.is_event and target.is_unapproved:
-        if user.is_anonymous():
+        if user.is_anonymous:
             raise Http404()
 
         if not category_acl['can_approve_content'] and user.id != target.poster_id:
@@ -556,7 +556,7 @@ can_see_post = return_boolean(allow_see_post)
 
 
 def allow_edit_post(user, target):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to edit posts."))
 
     if target.is_event:
@@ -595,7 +595,7 @@ can_edit_post = return_boolean(allow_edit_post)
 
 
 def allow_unhide_post(user, target):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to reveal posts."))
 
     category_acl = user.acl['categories'].get(target.category_id, {
@@ -632,7 +632,7 @@ can_unhide_post = return_boolean(allow_unhide_post)
 
 
 def allow_hide_post(user, target):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to hide posts."))
 
     category_acl = user.acl['categories'].get(target.category_id, {
@@ -669,7 +669,7 @@ can_hide_post = return_boolean(allow_hide_post)
 
 
 def allow_delete_post(user, target):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to delete posts."))
 
     category_acl = user.acl['categories'].get(target.category_id, {
@@ -706,7 +706,7 @@ can_delete_post = return_boolean(allow_delete_post)
 
 
 def allow_protect_post(user, target):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to protect posts."))
 
     category_acl = user.acl['categories'].get(target.category_id, {
@@ -721,7 +721,7 @@ can_protect_post = return_boolean(allow_protect_post)
 
 
 def allow_approve_post(user, target):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to approve posts."))
 
     category_acl = user.acl['categories'].get(target.category_id, {
@@ -738,7 +738,7 @@ can_approve_post = return_boolean(allow_approve_post)
 
 
 def allow_move_post(user, target):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to move posts."))
 
     category_acl = user.acl['categories'].get(target.category_id, {
@@ -757,7 +757,7 @@ can_move_post = return_boolean(allow_move_post)
 
 
 def allow_delete_event(user, target):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to delete events."))
 
     category_acl = user.acl['categories'].get(target.category_id)
@@ -771,7 +771,7 @@ can_delete_event = return_boolean(allow_delete_event)
 Permission check helpers
 """
 def can_change_owned_thread(user, target):
-    if user.is_anonymous() or user.pk != target.starter_id:
+    if user.is_anonymous or user.pk != target.starter_id:
         return False
 
     if target.category.is_closed or target.is_closed:
@@ -825,7 +825,7 @@ def exclude_invisible_threads(user, categories, queryset):
 
             if can_mod and can_hide:
                 show_all.append(category)
-            elif user.is_authenticated():
+            elif user.is_authenticated:
                 if not can_mod and not can_hide:
                     show_accepted_visible.append(category)
                 elif not can_mod:
@@ -834,7 +834,7 @@ def exclude_invisible_threads(user, categories, queryset):
                     show_visible.append(category)
             else:
                 show_accepted_visible.append(category)
-        elif user.is_authenticated():
+        elif user.is_authenticated:
             if can_hide:
                 show_owned.append(category)
             else:
@@ -845,7 +845,7 @@ def exclude_invisible_threads(user, categories, queryset):
         conditions = Q(category__in=show_all)
 
     if show_accepted_visible:
-        if user.is_authenticated():
+        if user.is_authenticated:
             condition = Q(
                 Q(starter=user) | Q(is_unapproved=False),
                 category__in=show_accepted_visible,
@@ -910,7 +910,7 @@ def exclude_invisible_threads(user, categories, queryset):
 
 def exclude_invisible_posts(user, category, queryset):
     if not category.acl['can_approve_content']:
-        if user.is_authenticated():
+        if user.is_authenticated:
             queryset = queryset.filter(Q(is_unapproved=False) | Q(poster=user))
         else:
             queryset = queryset.exclude(is_unapproved=True)

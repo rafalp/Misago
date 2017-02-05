@@ -65,7 +65,7 @@ class Poll(models.Model):
         return self.thread_type.get_poll_votes_api_url(self)
 
     def make_choices_votes_aware(self, user):
-        if user.is_anonymous():
+        if user.is_anonymous:
             for choice in self.choices:
                 choice['selected'] = False
             return

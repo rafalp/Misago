@@ -175,7 +175,7 @@ def register_with(registry):
 ACL tests
 """
 def allow_use_private_threads(user):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to use private threads."))
     if not user.acl['can_use_private_threads']:
         raise PermissionDenied(_("You can't use private threads."))

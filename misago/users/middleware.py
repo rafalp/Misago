@@ -20,7 +20,7 @@ class RealIPMiddleware(MiddlewareMixin):
 
 class UserMiddleware(MiddlewareMixin):
     def process_request(self, request):
-        if request.user.is_anonymous():
+        if request.user.is_anonymous:
             request.user = AnonymousUser()
         elif not request.user.is_staff:
             if get_request_ip_ban(request) or get_user_ban(request.user):
@@ -30,7 +30,7 @@ class UserMiddleware(MiddlewareMixin):
 
 class OnlineTrackerMiddleware(MiddlewareMixin):
     def process_request(self, request):
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             try:
                 request._misago_online_tracker = request.user.online_tracker
             except Online.DoesNotExist:
@@ -43,7 +43,7 @@ class OnlineTrackerMiddleware(MiddlewareMixin):
             online_tracker = request._misago_online_tracker
 
             if online_tracker:
-                if request.user.is_anonymous():
+                if request.user.is_anonymous:
                     tracker.stop_tracking(request, online_tracker)
                 else:
                     tracker.update_tracker(request, online_tracker)

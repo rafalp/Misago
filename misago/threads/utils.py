@@ -40,7 +40,7 @@ def add_categories_to_items(root_category, categories, items):
 
 
 def add_likes_to_posts(user, posts):
-    if user.is_anonymous():
+    if user.is_anonymous:
         return
 
     posts_map = {}

@@ -35,7 +35,7 @@ def reset_password_form(request, pk, token):
     requesting_user = get_object_or_404(User.objects, pk=pk)
 
     try:
-        if (request.user.is_authenticated() and
+        if (request.user.is_authenticated and
                 request.user.id != requesting_user.id):
             message = _("%(user)s, your link has expired. "
                         "Please request new link and try again.")

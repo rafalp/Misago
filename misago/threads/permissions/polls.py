@@ -115,7 +115,7 @@ def register_with(registry):
 ACL tests
 """
 def allow_start_poll(user, target):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to start polls."))
 
     category_acl = user.acl['categories'].get(target.category_id, {
@@ -136,7 +136,7 @@ can_start_poll = return_boolean(allow_start_poll)
 
 
 def allow_edit_poll(user, target):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to edit polls."))
 
     category_acl = user.acl['categories'].get(target.category_id, {
@@ -168,7 +168,7 @@ can_edit_poll = return_boolean(allow_edit_poll)
 
 
 def allow_delete_poll(user, target):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to delete polls."))
 
     category_acl = user.acl['categories'].get(target.category_id, {
@@ -199,7 +199,7 @@ can_delete_poll = return_boolean(allow_delete_poll)
 
 
 def allow_vote_poll(user, target):
-    if user.is_anonymous():
+    if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to vote in polls."))
 
     if target.has_selected_choices and not target.allow_revotes:

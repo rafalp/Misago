@@ -14,7 +14,7 @@ class MisagoACLPanel(Panel):
     def nav_subtitle(self):
         misago_user = self.get_stats().get('misago_user')
 
-        if misago_user and misago_user.is_authenticated():
+        if misago_user and misago_user.is_authenticated:
             return misago_user.username
         else:
             return _("Anonymous user")

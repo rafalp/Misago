@@ -35,10 +35,10 @@ def preload_user_json(request):
         return {}
 
     request.frontend_context.update({
-        'isAuthenticated': request.user.is_authenticated(),
+        'isAuthenticated': bool(request.user.is_authenticated),
     })
 
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         request.frontend_context.update({
             'user': AuthenticatedUserSerializer(request.user).data
         })

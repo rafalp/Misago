@@ -10,22 +10,22 @@ class UserTestCaseTests(UserTestCase):
     def test_get_anonymous_user(self):
         """get_anonymous_user returns anon user instance"""
         user = self.get_anonymous_user()
-        self.assertFalse(user.is_authenticated())
-        self.assertTrue(user.is_anonymous())
+        self.assertFalse(user.is_authenticated)
+        self.assertTrue(user.is_anonymous)
 
     def test_get_authenticated_user(self):
         """get_authenticated_user returns auth user instance"""
         user = self.get_authenticated_user()
-        self.assertTrue(user.is_authenticated())
-        self.assertFalse(user.is_anonymous())
+        self.assertTrue(user.is_authenticated)
+        self.assertFalse(user.is_anonymous)
         self.assertFalse(user.is_staff)
         self.assertFalse(user.is_superuser)
 
     def test_get_superuser(self):
         """get_superuser returns auth user instance"""
         user = self.get_superuser()
-        self.assertTrue(user.is_authenticated())
-        self.assertFalse(user.is_anonymous())
+        self.assertTrue(user.is_authenticated)
+        self.assertFalse(user.is_anonymous)
         self.assertTrue(user.is_staff)
         self.assertTrue(user.is_superuser)
 

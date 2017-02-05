@@ -51,7 +51,7 @@ def serve_file(request, pk, secret, thumbnail):
 
 
 def allow_file_download(request, attachment):
-    is_authenticated = request.user.is_authenticated()
+    is_authenticated = request.user.is_authenticated
 
     if not is_authenticated or request.user.id != attachment.uploader_id:
         if not attachment.post_id:

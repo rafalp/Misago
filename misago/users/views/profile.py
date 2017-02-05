@@ -76,13 +76,13 @@ def render(request, template, context):
         if section['is_active']:
             context['active_section'] = section
 
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         is_authenticated_user = context['profile'].pk == request.user.pk
     else:
         is_authenticated_user = False
     context['is_authenticated_user'] = is_authenticated_user
 
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         if is_authenticated_user:
             context['show_email'] = True
         else:

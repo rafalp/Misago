@@ -10,7 +10,7 @@ from .models import BAN_IP, Ban
 
 def deny_authenticated(f):
     def decorator(request, *args, **kwargs):
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             raise PermissionDenied(
                 _("This page is not available to signed in users."))
         else:
@@ -20,7 +20,7 @@ def deny_authenticated(f):
 
 def deny_guests(f):
     def decorator(request, *args, **kwargs):
-        if request.user.is_anonymous():
+        if request.user.is_anonymous:
             raise PermissionDenied(
                 _("You have to sign in to access this page."))
         else:

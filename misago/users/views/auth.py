@@ -27,6 +27,6 @@ def login(request):
 @never_cache
 @csrf_protect
 def logout(request):
-    if request.method == 'POST' and request.user.is_authenticated():
+    if request.method == 'POST' and request.user.is_authenticated:
         auth.logout(request)
     return redirect(settings.LOGIN_REDIRECT_URL)

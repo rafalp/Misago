@@ -63,13 +63,13 @@ def build_acl(acl, roles, key_name):
 ACL's for targets
 """
 def add_acl_to_attachment(user, attachment):
-    if user.is_authenticated() and user.id == attachment.uploader_id:
+    if user.is_authenticated and user.id == attachment.uploader_id:
         attachment.acl.update({
             'can_delete': True,
         })
     else:
         attachment.acl.update({
-            'can_delete': user.is_authenticated() and user.acl['can_delete_other_users_attachments'],
+            'can_delete': user.is_authenticated and user.acl['can_delete_other_users_attachments'],
         })
 
 

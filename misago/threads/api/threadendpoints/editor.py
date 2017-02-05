@@ -11,7 +11,7 @@ from ...threadtypes import trees_map
 
 
 def thread_start_editor(request):
-    if request.user.is_anonymous():
+    if request.user.is_anonymous:
         raise PermissionDenied(_("You need to be signed in to start threads."))
 
     # list of categories that allow or contain subcategories that allow new threads

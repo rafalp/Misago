@@ -29,7 +29,7 @@ def override_acl(user, new_acl):
     final_cache = deepcopy(user.acl)
     final_cache.update(new_acl)
 
-    if user.is_authenticated():
+    if user.is_authenticated:
         user._acl_cache = final_cache
         user.acl_key = md5(str(user.pk).encode()).hexdigest()[:8]
         user.save(update_fields=['acl_key'])

@@ -20,7 +20,7 @@ def make_threads_read_aware(user, threads):
     if not threads:
         return
 
-    if user.is_anonymous():
+    if user.is_anonymous:
         make_read(threads)
     else:
         make_categories_threads_read_aware(user, threads)
@@ -81,12 +81,12 @@ def make_thread_read_aware(user, thread):
     thread.is_new = False
     thread.read_record = None
 
-    if user.is_anonymous():
+    if user.is_anonymous:
         thread.last_read_on = timezone.now()
     else:
         thread.last_read_on = user.joined_on
 
-    if user.is_authenticated() and is_date_tracked(thread.last_post_on, user):
+    if user.is_authenticated and is_date_tracked(thread.last_post_on, user):
         thread.is_read = False
         thread.is_new = True
 

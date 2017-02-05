@@ -84,7 +84,7 @@ class ViewModel(object):
         if list_type not in LISTS_NAMES:
             raise Http404()
 
-        if request.user.is_anonymous():
+        if request.user.is_anonymous:
             if list_type in LIST_DENIED_MESSAGES:
                 raise PermissionDenied(LIST_DENIED_MESSAGES[list_type])
         else:

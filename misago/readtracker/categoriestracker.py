@@ -15,7 +15,7 @@ def make_read_aware(user, categories):
     if not hasattr(categories, '__iter__'):
         categories = [categories]
 
-    if user.is_anonymous():
+    if user.is_anonymous:
         make_read(categories)
         return None
 

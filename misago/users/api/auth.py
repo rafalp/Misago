@@ -47,7 +47,7 @@ GET /auth/ will return current auth user, either User or AnonymousUser
 """
 @api_view()
 def session_user(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         UserSerializer = AuthenticatedUserSerializer
     else:
         UserSerializer = AnonymousUserSerializer
@@ -169,7 +169,7 @@ def change_forgotten_password(request, pk, token):
         except User.DoesNotExist:
             raise PasswordChangeFailed(invalid_message)
 
-        if request.user.is_authenticated() and request.user.id != user.id:
+        if request.user.is_authenticated and request.user.id != user.id:
             raise PasswordChangeFailed(invalid_message)
         if not is_password_change_token_valid(user, token):
             raise PasswordChangeFailed(invalid_message)
