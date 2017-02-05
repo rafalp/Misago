@@ -3,7 +3,7 @@ from django.urls import reverse
 
 from misago.core.testutils import MisagoTestCase
 
-from .models import AnonymousUser
+from .models import AnonymousUser, Online
 
 
 class UserTestCase(MisagoTestCase):
@@ -30,15 +30,12 @@ class UserTestCase(MisagoTestCase):
             "TestSuperUser", "test@superuser.com", self.USER_PASSWORD)
 
     def login_user(self, user, password=None):
-        self.client.post('/api/auth/', data={
-            'username': user.email,
-            'password': password or self.USER_PASSWORD,
-        })
-        self.client.get(reverse('misago:index'))
+        self.client.force_login(user)
 
     def logout_user(self):
-        self.client.post(reverse('misago:logout'))
-        self.client.get(reverse('misago:index'))
+        if self.user.is_authenticated:
+            Online.objects.filter(user=self.user).delete()
+        self.client.logout()
 
 
 class AuthenticatedUserTestCase(UserTestCase):
