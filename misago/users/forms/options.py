@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext
 
@@ -7,7 +8,7 @@ from misago.conf import settings
 from misago.core.forms import YesNoSwitch
 
 from ..models import AUTO_SUBSCRIBE_CHOICES, PRIVATE_THREAD_INVITES_LIMITS_CHOICES
-from ..validators import validate_email, validate_password
+from ..validators import validate_email
 
 
 class ForumOptionsForm(forms.ModelForm):
@@ -62,7 +63,7 @@ class ChangePasswordForm(forms.Form):
 
     def clean_new_password(self):
         data = self.cleaned_data['new_password']
-        validate_password(data)
+        validate_password(data, user=self.user)
         return data
 
 

@@ -6,7 +6,6 @@ from django.core.validators import validate_email
 from django.utils.translation import ugettext_lazy as _
 
 from ..bans import get_user_ban
-from ..validators import validate_password
 
 
 class MisagoAuthMixin(object):

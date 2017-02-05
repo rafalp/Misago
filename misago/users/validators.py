@@ -50,14 +50,6 @@ def validate_email(value, exclude=None):
 
 
 """
-Password validators
-"""
-def validate_password(value):
-    from misago.core.deprecations import warn
-    warn("misago.users.validators.validate_password has been deprecated!")
-
-
-"""
 Username validators
 """
 def validate_username_available(value, exclude=None):
