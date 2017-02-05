@@ -6,13 +6,14 @@ import sys
 from getpass import getpass
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import DEFAULT_DB_ALIAS, IntegrityError
 from django.utils.encoding import force_str
 from django.utils.six.moves import input
 
-from ...validators import validate_email, validate_password, validate_username
+from ...validators import validate_email, validate_username
 
 
 class NotRunningInTTYException(Exception):
@@ -107,10 +108,16 @@ class Command(BaseCommand):
                     except ValidationError as e:
                         self.stderr.write(e.messages[0])
 
+                User = get_user_model()
+
                 while not password:
                     try:
                         raw_value = getpass("Enter password: ").strip()
-                        validate_password(raw_value)
+                        validate_password(raw_value, user=User(
+                            username=username,
+                            email=email
+                        ))
+
                         repeat_raw_value = getpass("Repeat password: ").strip()
                         if raw_value != repeat_raw_value:
                             raise ValidationError(
