@@ -8,7 +8,7 @@ export default function initializer(context) {
 }
 
 misago.addInitializer({
-  name: 'component:baned-page',
+  name: 'component:banmed-page',
   initializer: initializer,
   after: 'store'
 });

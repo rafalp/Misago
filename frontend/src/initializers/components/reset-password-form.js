@@ -1,4 +1,4 @@
-import misago from 'misago/index';
+import misago from 'misago';
 import ResetPasswordForm from 'misago/components/reset-password-form';
 import mount from 'misago/utils/mount-component';
 

@@ -10,7 +10,7 @@ export default function initializer() {
 }
 
 misago.addInitializer({
-  name: 'component:reset-password-form',
+  name: 'component:categories',
   initializer: initializer,
   after: 'store'
 });

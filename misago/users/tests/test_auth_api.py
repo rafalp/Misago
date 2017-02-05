@@ -166,6 +166,13 @@ class GatewayTests(TestCase):
         self.assertIsNone(user_json['id'])
 
 
+class UserCredentialsTests(TestCase):
+    def test_edge_returns_response(self):
+        """api edge has no showstoppers"""
+        response = self.client.get('/api/auth/criteria/')
+        self.assertEqual(response.status_code, 200)
+
+
 class SendActivationAPITests(TestCase):
     def setUp(self):
         User = get_user_model()
@@ -323,7 +330,7 @@ class ChangePasswordAPITests(TestCase):
         self.link = '/api/auth/change-password/%s/%s/'
 
     def test_submit_valid(self):
-        """submit change password form api errors for empty body"""
+        """submit change password form api changes password"""
         response = self.client.post(self.link % (
             self.user.pk,
             make_password_change_token(self.user)
@@ -393,4 +400,4 @@ class ChangePasswordAPITests(TestCase):
             self.user.pk,
             make_password_change_token(self.user)
         ))
-        self.assertContains(response, "Valid password must", status_code=400)
+        self.assertContains(response, "This password is too shor", status_code=400)

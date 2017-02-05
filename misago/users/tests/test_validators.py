@@ -11,7 +11,6 @@ from ..validators import (
     validate_email_available,
     validate_email_banned,
     validate_gmail_email,
-    validate_password,
     validate_username,
     validate_username_available,
     validate_username_banned,
@@ -58,17 +57,6 @@ class ValidateEmailTests(TestCase):
         validate_email('bob@boberson.com')
         with self.assertRaises(ValidationError):
             validate_email('*')
-
-
-class ValidatePasswordTests(TestCase):
-    def test_valid_password(self):
-        """validate_password allows valid password"""
-        validate_password('A' * (settings.password_length_min + 1))
-
-    def test_invalid_name(self):
-        """validate_password disallows invalid password"""
-        with self.assertRaises(ValidationError):
-            validate_password('A' * (settings.password_length_min - 1))
 
 
 class ValidateUsernameTests(TestCase):

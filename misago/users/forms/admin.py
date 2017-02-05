@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext
 
@@ -13,7 +14,7 @@ from ..models import (
     AUTO_SUBSCRIBE_CHOICES, BANS_CHOICES, PRIVATE_THREAD_INVITES_LIMITS_CHOICES,
     Ban, Rank
 )
-from ..validators import validate_email, validate_password, validate_username
+from ..validators import validate_email, validate_username
 
 
 """
@@ -41,7 +42,7 @@ class UserBaseForm(forms.ModelForm):
     def clean_new_password(self):
         data = self.cleaned_data['new_password']
         if data:
-            validate_password(data)
+            validate_password(data, user=self.instance)
         return data
 
     def clean_roles(self):

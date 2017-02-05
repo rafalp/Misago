@@ -1,9 +1,10 @@
 from django.contrib import auth
+from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
@@ -14,7 +15,6 @@ from ..bans import get_user_ban
 from ..forms.auth import AuthenticationForm, ResendActivationForm, ResetPasswordForm
 from ..serializers import AnonymousUserSerializer, AuthenticatedUserSerializer
 from ..tokens import is_password_change_token_valid, make_activation_token, make_password_change_token
-from ..validators import validate_password
 from .rest_permissions import UnbannedAnonOnly, UnbannedOnly
 
 
@@ -53,6 +53,31 @@ def session_user(request):
         UserSerializer = AnonymousUserSerializer
 
     return Response(UserSerializer(request.user).data)
+
+
+"""
+GET /auth/criteria/ will return password and username criteria for accounts
+"""
+@api_view(['GET'])
+def get_criteria(request):
+    criteria = {
+        'username': {
+            'min_length': settings.username_length_min,
+            'max_length': settings.username_length_max,
+        },
+        'password': [],
+    }
+
+    for validator in settings.AUTH_PASSWORD_VALIDATORS:
+        validator_dict = {
+            'name': validator['NAME'].split('.')[-1]
+        }
+
+        validator_dict.update(validator.get('OPTIONS', {}))
+
+        criteria['password'].append(validator_dict)
+
+    return Response(criteria)
 
 
 """
@@ -160,7 +185,7 @@ def change_forgotten_password(request, pk, token):
 
     try:
         new_password = request.data.get('password', '').strip()
-        validate_password(new_password)
+        validate_password(new_password, user=user)
         user.set_password(new_password)
         user.save()
     except ValidationError as e:

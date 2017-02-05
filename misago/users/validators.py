@@ -50,19 +50,6 @@ def validate_email(value, exclude=None):
 
 
 """
-Password validators
-"""
-def validate_password(value):
-    if len(value) < settings.password_length_min:
-        message = ungettext(
-            'Valid password must be at least %(limit_value)s character long.',
-            'Valid password must be at least %(limit_value)s characters long.',
-            settings.password_length_min)
-        message = message % {'limit_value': settings.password_length_min}
-        raise ValidationError(message)
-
-
-"""
 Username validators
 """
 def validate_username_available(value, exclude=None):

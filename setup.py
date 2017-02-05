@@ -30,7 +30,7 @@ setup(
     description=(
         "Misago is modern, fully featured forum application written in "
         "Python and ES6, powered by Django and React.js. It works out of "
-        "the box and plays nice with other projects like Django-CMS."
+        "the box and plays nicely with other projects like Django-CMS."
     ),
     url='http://www.misago-project.org/',
     author=u'Rafał Pitoń',
