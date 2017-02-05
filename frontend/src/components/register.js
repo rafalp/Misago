@@ -21,7 +21,7 @@ export class RegisterForm extends Form {
     let passwordMinLength = 0;
     password.forEach((item) => {
       if (item.name === 'MinimumLengthValidator') {
-        passwordMinLength = item.min_length
+        passwordMinLength = item.min_length;
       }
     });
 

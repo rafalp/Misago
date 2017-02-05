@@ -68,7 +68,7 @@ export function usernameMinLength(lengthMin) {
       "Username must be at least %(limit_value)s characters long.",
       lengthMin);
   };
-  return this.minLength(lengthMin);
+  return minLength(lengthMin, message);
 }
 
 export function usernameMaxLength(lengthMax) {
@@ -78,7 +78,7 @@ export function usernameMaxLength(lengthMax) {
       "Username cannot be longer than %(limit_value)s characters.",
       lengthMax);
   };
-  return this.maxLength(lengthMax);
+  return maxLength(lengthMax, message);
 }
 
 export function usernameContent() {
@@ -96,5 +96,5 @@ export function passwordMinLength(lengthMin) {
       "Valid password must be at least %(limit_value)s characters long.",
       lengthMin);
   };
-  return this.minLength(lengthMin);
+  return minLength(lengthMin, message);
 }

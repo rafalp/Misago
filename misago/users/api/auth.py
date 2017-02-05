@@ -1,4 +1,5 @@
 from django.contrib import auth
+from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
@@ -14,7 +15,6 @@ from ..bans import get_user_ban
 from ..forms.auth import AuthenticationForm, ResendActivationForm, ResetPasswordForm
 from ..serializers import AnonymousUserSerializer, AuthenticatedUserSerializer
 from ..tokens import is_password_change_token_valid, make_activation_token, make_password_change_token
-from ..validators import validate_password
 from .rest_permissions import UnbannedAnonOnly, UnbannedOnly
 
 
@@ -185,7 +185,7 @@ def change_forgotten_password(request, pk, token):
 
     try:
         new_password = request.data.get('password', '').strip()
-        validate_password(new_password)
+        validate_password(new_password, user=user)
         user.set_password(new_password)
         user.save()
     except ValidationError as e:
