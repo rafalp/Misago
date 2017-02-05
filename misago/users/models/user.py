@@ -3,6 +3,7 @@ from hashlib import md5
 from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import UserManager as BaseUserManager
+from django.contrib.auth.password_validation import validate_password
 from django.contrib.postgres.fields import JSONField
 from django.core.mail import send_mail
 from django.db import IntegrityError, models, transaction
@@ -75,7 +76,7 @@ PRIVATE_THREAD_INVITES_LIMITS_CHOICES = (
 class UserManager(BaseUserManager):
     @transaction.atomic
     def create_user(self, username, email, password=None, set_default_avatar=False, **extra_fields):
-        from ..validators import validate_email, validate_password, validate_username
+        from ..validators import validate_email, validate_username
 
         email = self.normalize_email(email)
         username = self.model.normalize_username(username)
@@ -84,10 +85,6 @@ class UserManager(BaseUserManager):
             raise ValueError(_("User must have an email address."))
         if not password:
             raise ValueError(_("User must have a password."))
-
-        validate_username(username)
-        validate_email(email)
-        validate_password(password)
 
         if not 'joined_from_ip' in extra_fields:
             extra_fields['joined_from_ip'] = '127.0.0.1'
@@ -121,6 +118,10 @@ class UserManager(BaseUserManager):
         user.set_username(username)
         user.set_email(email)
         user.set_password(password)
+
+        validate_username(username)
+        validate_email(email)
+        validate_password(password, user=user)
 
         if not 'rank' in extra_fields:
             user.rank = Rank.objects.get_default()

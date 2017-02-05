@@ -53,13 +53,8 @@ def validate_email(value, exclude=None):
 Password validators
 """
 def validate_password(value):
-    if len(value) < settings.password_length_min:
-        message = ungettext(
-            'Valid password must be at least %(limit_value)s character long.',
-            'Valid password must be at least %(limit_value)s characters long.',
-            settings.password_length_min)
-        message = message % {'limit_value': settings.password_length_min}
-        raise ValidationError(message)
+    from misago.core.deprecations import warn
+    warn("misago.users.validators.validate_password has been deprecated!")
 
 
 """

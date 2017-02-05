@@ -1,6 +1,7 @@
 import React from 'react';
 import Loader from 'misago/components/loader'; // jshint ignore:line
-import RegisterModal from 'misago/components/register.js'; // jshint ignore:line
+import RegisterForm from 'misago/components/register.js'; // jshint ignore:line
+import ajax from 'misago/services/ajax'; // jshint ignore:line
 import captcha from 'misago/services/captcha'; // jshint ignore:line
 import modal from 'misago/services/modal'; // jshint ignore:line
 import snackbar from 'misago/services/snackbar'; // jshint ignore:line
@@ -11,24 +12,40 @@ export default class extends React.Component {
 
     this.state = {
       isLoading: false,
-      isLoaded: false
+      isLoaded: false,
+
+      criteria: null,
     };
   }
 
   /* jshint ignore:start */
-  showRegisterModal = () => {
+  showRegisterForm = () => {
     if (misago.get('SETTINGS').account_activation === 'closed') {
       snackbar.info(gettext("New registrations are currently disabled."));
     } else if (this.state.isLoaded) {
-      modal.show(RegisterModal);
+      modal.show(
+        <RegisterForm
+          criteria={this.state.criteria}
+        />
+      );
     } else {
       this.setState({ isLoading: true });
 
       Promise.all([
-        captcha.load()
-      ]).then(() => {
-        this.setState({ isLoading: false });
-        modal.show(RegisterModal);
+        captcha.load(),
+        ajax.get(misago.get('AUTH_CRITERIA_API'))
+      ]).then((result) => {
+        this.setState({
+          isLoading: false,
+          isLoaded: true,
+          criteria: result[1]
+        });
+
+        modal.show(
+          <RegisterForm
+            criteria={result[1]}
+          />
+        );
       }, () => {
         this.setState({ isLoading: false });
 
@@ -48,7 +65,7 @@ export default class extends React.Component {
       <button
         className={'btn ' + this.getClassName()}
         disabled={this.state.isLoading}
-        onClick={this.showRegisterModal}
+        onClick={this.showRegisterForm}
         type="button"
       >
         {gettext("Register")}
