@@ -4,7 +4,6 @@ import Form from 'misago/components/form';
 import FormGroup from 'misago/components/form-group'; // jshint ignore:line
 import Loader from 'misago/components/modal-loader'; // jshint ignore:line
 import ModalMessage from 'misago/components/modal-message'; // jshint ignore:line
-import misago from 'misago/index';
 import { addNameChange } from 'misago/reducers/username-history'; // jshint ignore:line
 import { updateUsername } from 'misago/reducers/users'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
@@ -24,9 +23,7 @@ export default class extends Form {
       username: '',
       validators: {
         username: [
-          validators.usernameContent(),
-          validators.usernameMinLength(misago.get('SETTINGS')),
-          validators.usernameMaxLength(misago.get('SETTINGS'))
+          validators.usernameContent()
         ]
       }
     };

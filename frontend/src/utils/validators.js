@@ -61,24 +61,24 @@ export function maxLength(limitValue, message) {
   };
 }
 
-export function usernameMinLength(settings) {
-  var message = function(limitValue) {
+export function usernameMinLength(lengthMin) {
+  var message = function(lengthMin) {
     return ngettext(
       "Username must be at least %(limit_value)s character long.",
       "Username must be at least %(limit_value)s characters long.",
-      limitValue);
+      lengthMin);
   };
-  return this.minLength(settings.username_length_min, message);
+  return minLength(lengthMin, message);
 }
 
-export function usernameMaxLength(settings) {
-  var message = function(limitValue) {
+export function usernameMaxLength(lengthMax) {
+  var message = function(lengthMax) {
     return ngettext(
       "Username cannot be longer than %(limit_value)s character.",
       "Username cannot be longer than %(limit_value)s characters.",
-      limitValue);
+      lengthMax);
   };
-  return this.maxLength(settings.username_length_max, message);
+  return maxLength(lengthMax, message);
 }
 
 export function usernameContent() {
@@ -89,12 +89,12 @@ export function usernameContent() {
   };
 }
 
-export function passwordMinLength(settings) {
-  var message = function(limitValue) {
+export function passwordMinLength(lengthMin) {
+  var message = function(lengthMin) {
     return ngettext(
       "Valid password must be at least %(limit_value)s character long.",
       "Valid password must be at least %(limit_value)s characters long.",
-      limitValue);
+      lengthMin);
   };
-  return this.minLength(settings.password_length_min, message);
+  return minLength(lengthMin, message);
 }

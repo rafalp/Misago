@@ -2,10 +2,8 @@ import React from 'react'; // jshint ignore:line
 import Button from 'misago/components/button'; // jshint ignore:line
 import Form from 'misago/components/form';
 import FormGroup from 'misago/components/form-group'; // jshint ignore:line
-import misago from 'misago/index';
 import ajax from 'misago/services/ajax';
 import snackbar from 'misago/services/snackbar';
-import * as validators from 'misago/utils/validators';
 
 export default class extends Form {
   constructor(props) {
@@ -17,9 +15,7 @@ export default class extends Form {
       password: '',
 
       validators: {
-        new_password: [
-          validators.passwordMinLength(misago.get('SETTINGS'))
-        ],
+        new_password: [],
         repeat_password: [],
         password: []
       },

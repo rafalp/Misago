@@ -16,12 +16,8 @@ export default class extends Form {
       validators: {
         username: [
           validators.usernameContent(),
-          validators.usernameMinLength({
-            username_length_min: props.options.length_min
-          }),
-          validators.usernameMaxLength({
-            username_length_max: props.options.length_max
-          })
+          validators.usernameMinLength(props.options.length_min),
+          validators.usernameMaxLength(props.options.length_max)
         ]
       },
 

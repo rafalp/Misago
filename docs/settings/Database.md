@@ -59,20 +59,6 @@ Forum index Meta Description used as value meta description attribute on forum i
 Forum index title. Can be empty string if not set, in which case `forum_name` should be used instead.
 
 
-## password_complexity
-
-Complexity requirements for new user passwords. It's value is list of strings representing following requirements:
-
-* `case` - mixed case.
-* `alphanumerics` - both digits and letters.
-* `special` - special characters.
-
-
-## password_length_min
-
-Minimal required length of new user passwords.
-
-
 ## post_length_max
 
 Maximal allowed post content length.

@@ -8,7 +8,6 @@ import ajax from 'misago/services/ajax';
 import auth from 'misago/services/auth'; // jshint ignore:line
 import modal from 'misago/services/modal';
 import snackbar from 'misago/services/snackbar';
-import * as validators from 'misago/utils/validators';
 import showBannedPage from 'misago/utils/banned-page';
 
 export class ResetPasswordForm extends Form {
@@ -18,13 +17,7 @@ export class ResetPasswordForm extends Form {
     this.state = {
       'isLoading': false,
 
-      'password': '',
-
-      'validators': {
-        'password': [
-          validators.passwordMinLength(misago.get('SETTINGS'))
-        ]
-      }
+      'password': ''
     };
   }
 
@@ -32,11 +25,7 @@ export class ResetPasswordForm extends Form {
     if (this.isValid()) {
       return true;
     } else {
-      if (this.state.password.trim().length) {
-        snackbar.error(this.state.errors.password[0]);
-      } else {
-        snackbar.error(gettext("Enter new password."));
-      }
+      snackbar.error(gettext("Enter new password."));
       return false;
     }
   }

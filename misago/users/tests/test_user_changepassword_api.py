@@ -17,7 +17,7 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 405)
 
-    def test_change_email(self):
+    def test_change_password(self):
         """api allows users to change their passwords"""
         response = self.client.post(self.link, data={
             'new_password': 'N3wP@55w0rd',
@@ -53,4 +53,4 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
             'new_password': 'n',
             'password': self.USER_PASSWORD
         })
-        self.assertContains(response, 'password must be', status_code=400)
+        self.assertContains(response, 'password is too short', status_code=400)
