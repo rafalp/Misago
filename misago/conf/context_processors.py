@@ -2,6 +2,7 @@ import json
 
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.urls import reverse
+from django.utils.translation import get_language
 
 from .gateway import db_settings, settings as misago_settings  # noqa
 
@@ -12,6 +13,9 @@ BLANK_AVATAR_URL = static(misago_settings.MISAGO_BLANK_AVATAR)
 def settings(request):
     return {
         'DEBUG': misago_settings.DEBUG,
+
+        'LANGUAGE_CODE_SHORT': get_language()[:2],
+
         'misago_settings': db_settings,
 
         'BLANK_AVATAR_URL': BLANK_AVATAR_URL,
