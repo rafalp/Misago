@@ -166,6 +166,13 @@ class GatewayTests(TestCase):
         self.assertIsNone(user_json['id'])
 
 
+class UserCredentialsTests(TestCase):
+    def test_edge_returns_response(self):
+        """api edge has no showstoppers"""
+        response = self.client.get('/api/auth/criteria/')
+        self.assertEqual(response.status_code, 200)
+
+
 class SendActivationAPITests(TestCase):
     def setUp(self):
         User = get_user_model()

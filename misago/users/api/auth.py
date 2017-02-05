@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
@@ -53,6 +53,31 @@ def session_user(request):
         UserSerializer = AnonymousUserSerializer
 
     return Response(UserSerializer(request.user).data)
+
+
+"""
+GET /auth/criteria/ will return password and username criteria for accounts
+"""
+@api_view(['GET'])
+def get_criteria(request):
+    criteria = {
+        'username': {
+            'min_length': settings.username_length_min,
+            'max_length': settings.username_length_max,
+        },
+        'password': [],
+    }
+
+    for validator in settings.AUTH_PASSWORD_VALIDATORS:
+        validator_dict = {
+            'name': validator['NAME'].split('.')[-1]
+        }
+
+        validator_dict.update(validator.get('OPTIONS', {}))
+
+        criteria['password'].append(validator_dict)
+
+    return Response(criteria)
 
 
 """

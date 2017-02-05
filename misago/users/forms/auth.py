@@ -51,7 +51,7 @@ class MisagoAuthMixin(object):
 class AuthenticationForm(MisagoAuthMixin, BaseAuthenticationForm):
     """
     Base class for authenticating users, Floppy-forms and
-    Misago login field comliant
+    Misago login field compliant
     """
     username = forms.CharField(
         label=_("Username or e-mail"),
