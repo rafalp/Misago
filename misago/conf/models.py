@@ -1,7 +1,7 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
-from . import hydrators
+from . import hydrators, utils
 
 
 class SettingsGroupsManager(models.Manager):
@@ -59,22 +59,12 @@ class Setting(models.Model):
 
     @property
     def value(self):
-        if not self.dry_value and self.default_value:
-            return hydrators.hydrate_value(
-                self.python_type, self.default_value)
-        else:
-            return hydrators.hydrate_value(
-                self.python_type, self.dry_value)
+        return utils.get_setting_value(self)
 
     @value.setter
     def value(self, new_value):
-        if new_value is not None:
-            self.dry_value = hydrators.dehydrate_value(
-                self.python_type, new_value)
-        else:
-            self.dry_value = None
-        return self.value
+        return utils.set_setting_value(self, new_value)
 
     @property
     def has_custom_value(self):
-        return self.dry_value and self.dry_value != self.default_value
+        return utils.has_custom_value(self)
