@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 
-from rest_framework import status, viewsets
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
