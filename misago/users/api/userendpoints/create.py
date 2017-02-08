@@ -36,11 +36,11 @@ def create_endpoint(request):
     activation_kwargs = {}
     if settings.account_activation == 'user':
         activation_kwargs = {
-            'requires_activation': UserModel.ACTIVATION_REQUIRED_USER
+            'requires_activation': UserModel.ACTIVATION_USER
         }
     elif settings.account_activation == 'admin':
         activation_kwargs = {
-            'requires_activation': UserModel.ACTIVATION_REQUIRED_ADMIN
+            'requires_activation': UserModel.ACTIVATION_ADMIN
         }
 
     new_user = UserModel.objects.create_user(

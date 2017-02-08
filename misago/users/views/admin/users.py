@@ -108,7 +108,7 @@ class UsersList(UserAdmin, generic.ListView):
         else:
             activated_users_pks = [u.pk for u in inactive_users]
             queryset = User.objects.filter(pk__in=activated_users_pks)
-            queryset.update(requires_activation=User.ACTIVATION_REQUIRED_NONE)
+            queryset.update(requires_activation=User.ACTIVATION_NONE)
 
             subject = _("Your account on %(forum_name)s forums has been activated")
             mail_subject = subject % {

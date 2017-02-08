@@ -143,9 +143,9 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    ACTIVATION_REQUIRED_NONE = 0
-    ACTIVATION_REQUIRED_USER = 1
-    ACTIVATION_REQUIRED_ADMIN = 2
+    ACTIVATION_NONE = 0
+    ACTIVATION_USER = 1
+    ACTIVATION_ADMIN = 2
 
     SUBSCRIBE_NONE = 0
     SUBSCRIBE_NOTIFY = 1
@@ -191,7 +191,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     rank = models.ForeignKey('Rank', null=True, blank=True, on_delete=models.deletion.PROTECT)
     title = models.CharField(max_length=255, null=True, blank=True)
-    requires_activation = models.PositiveIntegerField(default=ACTIVATION_REQUIRED_NONE)
+    requires_activation = models.PositiveIntegerField(default=ACTIVATION_NONE)
 
     is_staff = models.BooleanField(_('staff status'),
         default=False,
@@ -314,11 +314,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def requires_activation_by_admin(self):
-        return self.requires_activation == User.ACTIVATION_REQUIRED_ADMIN
+        return self.requires_activation == User.ACTIVATION_ADMIN
 
     @property
     def requires_activation_by_user(self):
-        return self.requires_activation == User.ACTIVATION_REQUIRED_USER
+        return self.requires_activation == User.ACTIVATION_USER
 
     @property
     def can_be_messaged_by_everyone(self):

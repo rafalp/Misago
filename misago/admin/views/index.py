@@ -25,7 +25,7 @@ def admin_index(request):
         'posts': Post.objects.count(),
         'users': UserModel.objects.count(),
         'inactive_users': UserModel.objects.exclude(
-            requires_activation=UserModel.ACTIVATION_REQUIRED_NONE
+            requires_activation=UserModel.ACTIVATION_NONE
         ).count()
     }
 
