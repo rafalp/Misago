@@ -151,9 +151,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     SUBSCRIBE_NOTIFY = 1
     SUBSCRIBE_ALL = 2
 
-    LIMITS_PRIVATE_THREAD_INVITES_TO_NONE = 0
-    LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED = 1
-    LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY = 2
+    LIMIT_INVITES_TO_NONE = 0
+    LIMIT_INVITES_TO_FOLLOWED = 1
+    LIMIT_INVITES_TO_NOBODY = 2
 
     SUBSCRIBE_CHOICES = (
         (SUBSCRIBE_NONE, _("No")),
@@ -162,9 +162,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     PRIVATE_THREAD_INVITES_LIMITS_CHOICES = (
-        (LIMITS_PRIVATE_THREAD_INVITES_TO_NONE, _("Everybody")),
-        (LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED, _("Users I follow")),
-        (LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY, _("Nobody")),
+        (LIMIT_INVITES_TO_NONE, _("Everybody")),
+        (LIMIT_INVITES_TO_FOLLOWED, _("Users I follow")),
+        (LIMIT_INVITES_TO_NOBODY, _("Nobody")),
     )
 
     """
@@ -250,7 +250,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     limits_private_thread_invites_to = models.PositiveIntegerField(
-        default=LIMITS_PRIVATE_THREAD_INVITES_TO_NONE
+        default=LIMIT_INVITES_TO_NONE
     )
     unread_private_threads = models.PositiveIntegerField(default=0)
     sync_unread_private_threads = models.BooleanField(default=False)
@@ -323,17 +323,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def can_be_messaged_by_everyone(self):
         preference = self.limits_private_thread_invites_to
-        return preference == User.LIMITS_PRIVATE_THREAD_INVITES_TO_NONE
+        return preference == User.LIMIT_INVITES_TO_NONE
 
     @property
     def can_be_messaged_by_followed(self):
         preference = self.limits_private_thread_invites_to
-        return preference == User.LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED
+        return preference == User.LIMIT_INVITES_TO_FOLLOWED
 
     @property
     def can_be_messaged_by_nobody(self):
         preference = self.limits_private_thread_invites_to
-        return preference == User.LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY
+        return preference == User.LIMIT_INVITES_TO_NOBODY
 
     @property
     def has_valid_signature(self):

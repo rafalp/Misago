@@ -195,7 +195,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         """api validates that you cant invite followers-only user to thread"""
         User = get_user_model()
 
-        user_constant = User.LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED
+        user_constant = User.LIMIT_INVITES_TO_FOLLOWED
         self.other_user.limits_private_thread_invites_to = user_constant
         self.other_user.save()
 
@@ -249,7 +249,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         """api validates that you cant invite nobody user to thread"""
         User = get_user_model()
 
-        user_constant = User.LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY
+        user_constant = User.LIMIT_INVITES_TO_NOBODY
         self.other_user.limits_private_thread_invites_to = user_constant
         self.other_user.save()
 
