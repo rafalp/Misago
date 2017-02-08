@@ -5,7 +5,7 @@ from django.utils.translation import gettext as _
 from misago.core.exceptions import Banned
 
 from .bans import get_request_ip_ban
-from .models import BAN_IP, Ban
+from .models import Ban
 
 
 def deny_authenticated(f):
@@ -33,9 +33,10 @@ def deny_banned_ips(f):
         ban = get_request_ip_ban(request)
         if ban:
             hydrated_ban = Ban(
-                check_type=BAN_IP,
+                check_type=Ban.BAN_IP,
                 user_message=ban['message'],
-                expires_on=ban['expires_on'])
+                expires_on=ban['expires_on']
+            )
             raise Banned(hydrated_ban)
         else:
             return f(request, *args, **kwargs)

@@ -18,7 +18,6 @@ from ...forms.admin import (
     BanUsersForm, NewUserForm, SearchUsersForm,
     EditUserForm, EditUserFormFactory)
 from ...models import Ban, User
-from ...models.ban import BAN_EMAIL, BAN_IP, BAN_USERNAME
 from ...signatures import set_user_signature
 
 
@@ -145,25 +144,25 @@ class UsersList(UserAdmin, generic.ListView):
                 for user in users:
                     for ban in cleaned_data['ban_type']:
                         if ban == 'usernames':
-                            check_type = BAN_USERNAME
+                            check_type = Ban.BAN_USERNAME
                             banned_value = user.username.lower()
 
                         if ban == 'emails':
-                            check_type = BAN_EMAIL
+                            check_type = Ban.BAN_EMAIL
                             banned_value = user.email.lower()
 
                         if ban == 'domains':
-                            check_type = BAN_EMAIL
+                            check_type = Ban.BAN_EMAIL
                             banned_value = user.email.lower()
                             at_pos = banned_value.find('@')
                             banned_value = '*%s' % banned_value[at_pos:]
 
                         if ban == 'ip':
-                            check_type = BAN_IP
+                            check_type = Ban.BAN_IP
                             banned_value = user.joined_from_ip
 
                         if ban in ('ip_first', 'ip_two'):
-                            check_type = BAN_IP
+                            check_type = Ban.BAN_IP
 
                             if ':' in user.joined_from_ip:
                                 ip_separator = ':'

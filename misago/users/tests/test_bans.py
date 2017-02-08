@@ -4,8 +4,10 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
-from ..bans import ban_ip, ban_user, get_email_ban, get_ip_ban, get_request_ip_ban, get_user_ban, get_username_ban
-from ..models import BAN_EMAIL, BAN_IP, BAN_USERNAME, Ban
+from ..bans import (
+    ban_ip, ban_user, get_email_ban, get_ip_ban,
+    get_request_ip_ban, get_user_ban, get_username_ban)
+from ..models import Ban
 
 
 class GetBanTests(TestCase):
@@ -24,7 +26,7 @@ class GetBanTests(TestCase):
 
         Ban.objects.create(
             banned_value='wrongtype',
-            check_type=BAN_EMAIL
+            check_type=Ban.BAN_EMAIL
         )
 
         wrong_type_ban = get_username_ban('wrongtype')
@@ -43,7 +45,7 @@ class GetBanTests(TestCase):
 
         Ban.objects.create(
             banned_value='ex@pired.com',
-            check_type=BAN_EMAIL,
+            check_type=Ban.BAN_EMAIL,
             expires_on=timezone.now() - timedelta(days=7)
         )
 
@@ -52,7 +54,7 @@ class GetBanTests(TestCase):
 
         Ban.objects.create(
             banned_value='wrong@type.com',
-            check_type=BAN_IP
+            check_type=Ban.BAN_IP
         )
 
         wrong_type_ban = get_email_ban('wrong@type.com')
@@ -60,7 +62,7 @@ class GetBanTests(TestCase):
 
         valid_ban = Ban.objects.create(
             banned_value='*.ru',
-            check_type=BAN_EMAIL,
+            check_type=Ban.BAN_EMAIL,
             expires_on=timezone.now() + timedelta(days=7)
         )
         self.assertEqual(get_email_ban('banned@mail.ru').pk, valid_ban.pk)
@@ -72,7 +74,7 @@ class GetBanTests(TestCase):
 
         Ban.objects.create(
             banned_value='124.0.0.1',
-            check_type=BAN_IP,
+            check_type=Ban.BAN_IP,
             expires_on=timezone.now() - timedelta(days=7)
         )
 
@@ -81,7 +83,7 @@ class GetBanTests(TestCase):
 
         Ban.objects.create(
             banned_value='wrongtype',
-            check_type=BAN_EMAIL
+            check_type=Ban.BAN_EMAIL
         )
 
         wrong_type_ban = get_ip_ban('wrongtype')
@@ -89,7 +91,7 @@ class GetBanTests(TestCase):
 
         valid_ban = Ban.objects.create(
             banned_value='125.0.0.*',
-            check_type=BAN_IP,
+            check_type=Ban.BAN_IP,
             expires_on=timezone.now() + timedelta(days=7)
         )
         self.assertEqual(get_ip_ban('125.0.0.1').pk, valid_ban.pk)
@@ -173,7 +175,7 @@ class RequestIPBansTests(TestCase):
     def test_permanent_ban(self):
         """ip is caught by permanent ban"""
         Ban.objects.create(
-            check_type=BAN_IP,
+            check_type=Ban.BAN_IP,
             banned_value='127.0.0.1',
             user_message='User reason'
         )
@@ -189,7 +191,7 @@ class RequestIPBansTests(TestCase):
     def test_temporary_ban(self):
         """ip is caught by temporary ban"""
         Ban.objects.create(
-            check_type=BAN_IP,
+            check_type=Ban.BAN_IP,
             banned_value='127.0.0.1',
             user_message='User reason',
             expires_on=timezone.now() + timedelta(days=7)
@@ -206,7 +208,7 @@ class RequestIPBansTests(TestCase):
     def test_expired_ban(self):
         """ip is not caught by expired ban"""
         Ban.objects.create(
-            check_type=BAN_IP,
+            check_type=Ban.BAN_IP,
             banned_value='127.0.0.1',
             user_message='User reason',
             expires_on=timezone.now() - timedelta(days=7)

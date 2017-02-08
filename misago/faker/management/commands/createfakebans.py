@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.utils.six.moves import range
 
 from misago.core.management.progressbar import show_progress
-from misago.users.models import BAN_EMAIL, BAN_IP, BAN_USERNAME, Ban
+from misago.users.models import Ban
 
 
 def fake_username_ban(fake):
@@ -69,11 +69,11 @@ def fake_ip_ban(fake):
 
 
 def create_fake_test(fake, test_type):
-    if test_type == BAN_USERNAME:
+    if test_type == Ban.BAN_USERNAME:
         return fake_username_ban(fake)
-    elif test_type == BAN_EMAIL:
+    elif test_type == Ban.BAN_EMAIL:
         return fake_email_ban(fake)
-    elif test_type == BAN_IP:
+    elif test_type == Ban.BAN_IP:
         return fake_ip_ban(fake)
 
 
@@ -99,7 +99,7 @@ class Command(BaseCommand):
         created_count = 0
         show_progress(self, created_count, fake_bans_to_create)
         for i in range(fake_bans_to_create):
-            ban = Ban(check_type=random.randint(BAN_USERNAME, BAN_IP))
+            ban = Ban(check_type=random.randint(Ban.BAN_USERNAME, Ban.BAN_IP))
             ban.banned_value = create_fake_test(fake, ban.check_type)
 
             if random.randint(0, 10) == 0:

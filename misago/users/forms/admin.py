@@ -10,7 +10,7 @@ from misago.core import threadstore
 from misago.core.forms import IsoDateTimeField, YesNoSwitch
 from misago.core.validators import validate_sluggable
 
-from ..models import BANS_CHOICES, Ban, Rank
+from ..models import Ban, Rank
 from ..validators import validate_email, validate_username
 
 
@@ -489,7 +489,7 @@ class BanForm(forms.ModelForm):
     check_type = forms.TypedChoiceField(
         label=_("Check type"),
         coerce=int,
-        choices=BANS_CHOICES
+        choices=Ban.BANS_CHOICES
     )
     banned_value = forms.CharField(
         label=_("Banned value"),
@@ -551,15 +551,14 @@ class BanForm(forms.ModelForm):
         return data
 
 
-SARCH_BANS_CHOICES = (
-    ('', _('All bans')),
-    ('names', _('Usernames')),
-    ('emails', _('E-mails')),
-    ('ips', _('IPs')),
-)
-
-
 class SearchBansForm(forms.Form):
+    SARCH_BANS_CHOICES = (
+        ('', _('All bans')),
+        ('names', _('Usernames')),
+        ('emails', _('E-mails')),
+        ('ips', _('IPs')),
+    )
+
     check_type = forms.ChoiceField(
         label=_("Type"),
         required=False,

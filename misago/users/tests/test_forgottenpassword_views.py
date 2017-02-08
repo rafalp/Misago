@@ -3,7 +3,7 @@ from django.urls import reverse
 
 from misago.core.utils import encode_json_html
 
-from ..models import BAN_USERNAME, Ban
+from ..models import Ban
 from ..testutils import UserTestCase
 from ..tokens import make_password_change_token
 
@@ -27,7 +27,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
         test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
         Ban.objects.create(
-            check_type=BAN_USERNAME,
+            check_type=Ban.BAN_USERNAME,
             banned_value='bob',
             user_message='Nope!',
         )

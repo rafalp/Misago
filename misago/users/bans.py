@@ -12,7 +12,7 @@ from django.utils.dateparse import parse_datetime
 
 from misago.core import cachebuster
 
-from .models import BAN_IP, Ban, BanCache
+from .models import Ban, BanCache
 
 
 BAN_CACHE_SESSION_KEY = 'misago_ip_check'
@@ -177,7 +177,7 @@ def ban_ip(ip, user_message=None, staff_message=None, length=None,
         expires_on = timezone.now() + timedelta(**length)
 
     ban = Ban.objects.create(
-        check_type=BAN_IP,
+        check_type=Ban.BAN_IP,
         banned_value=ip,
         user_message=user_message,
         staff_message=staff_message,

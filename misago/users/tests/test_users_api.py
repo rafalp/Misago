@@ -14,7 +14,7 @@ from misago.threads.models import Post, Thread
 from misago.threads.testutils import post_thread
 
 from ..activepostersranking import build_active_posters_ranking
-from ..models import BAN_USERNAME, Ban, Rank
+from ..models import Ban, Rank
 from ..testutils import AuthenticatedUserTestCase
 
 
@@ -439,9 +439,11 @@ class UserBanTests(AuthenticatedUserTestCase):
             'can_see_ban_details': 1
         })
 
-        Ban.objects.create(check_type=BAN_USERNAME,
-                           banned_value=self.other_user.username,
-                           user_message='Nope!')
+        Ban.objects.create(
+            check_type=Ban.BAN_USERNAME,
+            banned_value=self.other_user.username,
+            user_message='Nope!'
+        )
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)

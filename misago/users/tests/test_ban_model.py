@@ -1,15 +1,24 @@
 #-*- coding: utf-8 -*-
 from django.test import TestCase
 
-from ..models import BAN_EMAIL, BAN_IP, BAN_USERNAME, Ban
+from ..models import Ban
 
 
 class BansManagerTests(TestCase):
     def setUp(self):
         Ban.objects.bulk_create([
-            Ban(check_type=BAN_USERNAME, banned_value='bob'),
-            Ban(check_type=BAN_EMAIL, banned_value='bob@test.com'),
-            Ban(check_type=BAN_IP, banned_value='127.0.0.1'),
+            Ban(
+                check_type=Ban.BAN_USERNAME,
+                banned_value='bob'
+            ),
+            Ban(
+                check_type=Ban.BAN_EMAIL,
+                banned_value='bob@test.com'
+            ),
+            Ban(
+                check_type=Ban.BAN_IP,
+                banned_value='127.0.0.1'
+            ),
         ])
 
     def test_get_ban_for_banned_name(self):
