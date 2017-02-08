@@ -1,9 +1,6 @@
 from .models import Subscription
 
 
-__all__ = ['make_subscription_aware']
-
-
 def make_subscription_aware(user, target):
     if hasattr(target, '__iter__'):
         make_threads_subscription_aware(user, target)

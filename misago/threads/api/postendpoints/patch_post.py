@@ -6,7 +6,8 @@ from misago.core.apipatch import ApiPatch
 
 from ...models import PostLike
 from ...moderation import posts as moderation
-from ...permissions.threads import allow_approve_post, allow_hide_post, allow_protect_post, allow_unhide_post
+from ...permissions.threads import (
+    allow_approve_post, allow_hide_post, allow_protect_post, allow_unhide_post)
 
 
 post_patch_dispatcher = ApiPatch()

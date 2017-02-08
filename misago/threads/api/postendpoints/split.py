@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from misago.conf import settings
 
 from ...events import record_event
-from ...models import THREAD_WEIGHT_GLOBAL, Thread
+from ...models import Thread
 from ...moderation import threads as moderation
 from ...permissions.threads import exclude_invisible_posts
 from ...serializers import NewThreadSerializer
@@ -94,7 +94,7 @@ def split_posts_to_new_thread(request, thread, validated_data, posts):
     new_thread.synchronize()
     new_thread.save()
 
-    if validated_data.get('weight') == THREAD_WEIGHT_GLOBAL:
+    if validated_data.get('weight') == Thread.WEIGHT_GLOBAL:
         moderation.pin_thread_globally(request, new_thread)
     elif validated_data.get('weight'):
         moderation.pin_thread_locally(request, new_thread)

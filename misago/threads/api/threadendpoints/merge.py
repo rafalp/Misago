@@ -10,7 +10,7 @@ from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
 
 from ...events import record_event
-from ...models import THREAD_WEIGHT_GLOBAL, Thread
+from ...models import Thread
 from ...moderation import threads as moderation
 from ...permissions import can_reply_thread, can_see_thread
 from ...serializers import NewThreadSerializer, ThreadsListSerializer
@@ -201,7 +201,7 @@ def merge_threads(request, validated_data, threads, poll):
     new_thread.synchronize()
     new_thread.save()
 
-    if validated_data.get('weight') == THREAD_WEIGHT_GLOBAL:
+    if validated_data.get('weight') == Thread.WEIGHT_GLOBAL:
         moderation.pin_thread_globally(request, new_thread)
     elif validated_data.get('weight'):
         moderation.pin_thread_locally(request, new_thread)

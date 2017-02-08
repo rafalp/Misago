@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 from misago.acl import add_acl
 
-from ..models import THREAD_WEIGHT_DEFAULT, THREAD_WEIGHT_GLOBAL
+from ..models import Thread
 from ..permissions import can_start_thread
 from ..validators import validate_category, validate_title
 
@@ -22,8 +22,8 @@ class NewThreadSerializer(serializers.Serializer):
     weight = serializers.IntegerField(
         required=False,
         allow_null=True,
-        max_value=THREAD_WEIGHT_GLOBAL,
-        min_value=THREAD_WEIGHT_DEFAULT,
+        max_value=Thread.WEIGHT_GLOBAL,
+        min_value=Thread.WEIGHT_DEFAULT,
     )
     is_hidden = serializers.NullBooleanField(required=False)
     is_closed = serializers.NullBooleanField(required=False)

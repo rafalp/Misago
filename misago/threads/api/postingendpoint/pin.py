@@ -1,5 +1,6 @@
 from . import PostingEndpoint, PostingMiddleware
-from ... import moderation
+from misago.threads import moderation
+from misago.threads.models import Thread
 
 
 class PinMiddleware(PostingMiddleware):
@@ -15,7 +16,7 @@ class PinMiddleware(PostingMiddleware):
                 pin = 0
 
             if pin <= allowed_pin:
-                if pin == 2:
+                if pin == Thread.WEIGHT_GLOBAL:
                     moderation.pin_thread_globally(self.request, self.thread)
-                elif pin == 1:
+                elif pin == Thread.WEIGHT_PINNED:
                     moderation.pin_thread_locally(self.request, self.thread)

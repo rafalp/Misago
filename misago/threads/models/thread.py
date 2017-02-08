@@ -7,29 +7,18 @@ from misago.conf import settings
 from misago.core.utils import slugify
 
 
-__all__ = [
-    'THREAD_WEIGHT_DEFAULT',
-    'THREAD_WEIGHT_PINNED',
-    'THREAD_WEIGHT_GLOBAL',
-    'THREAD_WEIGHT_CHOICES',
-
-    'Thread',
-]
-
-
-THREAD_WEIGHT_DEFAULT = 0
-THREAD_WEIGHT_PINNED = 1
-THREAD_WEIGHT_GLOBAL = 2
-
-THREAD_WEIGHT_CHOICES = (
-    (THREAD_WEIGHT_DEFAULT, _("Don't pin thread")),
-    (THREAD_WEIGHT_PINNED, _("Pin thread within category")),
-    (THREAD_WEIGHT_GLOBAL, _("Pin thread globally"))
-)
-
-
 @python_2_unicode_compatible
 class Thread(models.Model):
+    WEIGHT_DEFAULT = 0
+    WEIGHT_PINNED = 1
+    WEIGHT_GLOBAL = 2
+
+    WEIGHT_CHOICES = (
+        (WEIGHT_DEFAULT, _("Don't pin thread")),
+        (WEIGHT_PINNED, _("Pin thread within category")),
+        (WEIGHT_GLOBAL, _("Pin thread globally"))
+    )
+
     category = models.ForeignKey('misago_categories.Category')
     title = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
@@ -79,7 +68,7 @@ class Thread(models.Model):
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
     last_poster_slug = models.CharField(max_length=255, null=True, blank=True)
 
-    weight = models.PositiveIntegerField(default=THREAD_WEIGHT_DEFAULT)
+    weight = models.PositiveIntegerField(default=WEIGHT_DEFAULT)
 
     is_unapproved = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
