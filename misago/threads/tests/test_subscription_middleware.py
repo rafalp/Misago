@@ -40,8 +40,8 @@ class SubscribeStartedThreadTests(SubscriptionMiddlewareTestCase):
 
     def test_dont_subscribe(self):
         """middleware makes no subscription to thread"""
-        self.user.subscribe_to_started_threads = UserModel.AUTO_SUBSCRIBE_NONE
-        self.user.subscribe_to_replied_threads = UserModel.AUTO_SUBSCRIBE_NOTIFY
+        self.user.subscribe_to_started_threads = UserModel.SUBSCRIBE_NONE
+        self.user.subscribe_to_replied_threads = UserModel.SUBSCRIBE_NOTIFY
         self.user.save()
 
         response = self.client.post(self.api_link, data={
@@ -56,7 +56,7 @@ class SubscribeStartedThreadTests(SubscriptionMiddlewareTestCase):
 
     def test_subscribe(self):
         """middleware subscribes thread"""
-        self.user.subscribe_to_started_threads = UserModel.AUTO_SUBSCRIBE_NOTIFY
+        self.user.subscribe_to_started_threads = UserModel.SUBSCRIBE_NOTIFY
         self.user.save()
 
         response = self.client.post(self.api_link, data={
@@ -75,7 +75,7 @@ class SubscribeStartedThreadTests(SubscriptionMiddlewareTestCase):
 
     def test_email_subscribe(self):
         """middleware subscribes thread with an email"""
-        self.user.subscribe_to_started_threads = UserModel.AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL
+        self.user.subscribe_to_started_threads = UserModel.SUBSCRIBE_ALL
         self.user.save()
 
         response = self.client.post(self.api_link, data={
@@ -103,8 +103,8 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
 
     def test_dont_subscribe(self):
         """middleware makes no subscription to thread"""
-        self.user.subscribe_to_started_threads = UserModel.AUTO_SUBSCRIBE_NOTIFY
-        self.user.subscribe_to_replied_threads = UserModel.AUTO_SUBSCRIBE_NONE
+        self.user.subscribe_to_started_threads = UserModel.SUBSCRIBE_NOTIFY
+        self.user.subscribe_to_replied_threads = UserModel.SUBSCRIBE_NONE
         self.user.save()
 
         response = self.client.post(self.api_link, data={
@@ -117,7 +117,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
 
     def test_subscribe(self):
         """middleware subscribes thread"""
-        self.user.subscribe_to_replied_threads = UserModel.AUTO_SUBSCRIBE_NOTIFY
+        self.user.subscribe_to_replied_threads = UserModel.SUBSCRIBE_NOTIFY
         self.user.save()
 
         response = self.client.post(self.api_link, data={
@@ -133,7 +133,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
 
     def test_email_subscribe(self):
         """middleware subscribes thread with an email"""
-        self.user.subscribe_to_replied_threads = UserModel.AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL
+        self.user.subscribe_to_replied_threads = UserModel.SUBSCRIBE_ALL
         self.user.save()
 
         response = self.client.post(self.api_link, data={
@@ -149,7 +149,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
 
     def test_dont_subscribe_replied(self):
         """middleware omits threads user already replied"""
-        self.user.subscribe_to_replied_threads = UserModel.AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL
+        self.user.subscribe_to_replied_threads = UserModel.SUBSCRIBE_ALL
         self.user.save()
 
         response = self.client.post(self.api_link, data={

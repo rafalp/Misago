@@ -6,9 +6,6 @@ from ...models import Subscription
 
 UserModel = get_user_model()
 
-SUBSCRIBE_NONE = UserModel.AUTO_SUBSCRIBE_NONE
-SUBSCRIBE_ALL = UserModel.AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL
-
 
 class SubscribeMiddleware(PostingMiddleware):
     def use_this_middleware(self):
@@ -22,20 +19,20 @@ class SubscribeMiddleware(PostingMiddleware):
         if self.mode != PostingEndpoint.START:
             return
 
-        if self.user.subscribe_to_started_threads == SUBSCRIBE_NONE:
+        if self.user.subscribe_to_started_threads == UserModel.SUBSCRIBE_NONE:
             return
 
         self.user.subscription_set.create(
             category=self.thread.category,
             thread=self.thread,
-            send_email=self.user.subscribe_to_started_threads == SUBSCRIBE_ALL
+            send_email=self.user.subscribe_to_started_threads == UserModel.SUBSCRIBE_ALL
         )
 
     def subscribe_replied_thread(self):
         if self.mode != PostingEndpoint.REPLY:
             return
 
-        if self.user.subscribe_to_replied_threads == SUBSCRIBE_NONE:
+        if self.user.subscribe_to_replied_threads == UserModel.SUBSCRIBE_NONE:
             return
 
         try:
@@ -51,5 +48,5 @@ class SubscribeMiddleware(PostingMiddleware):
         self.user.subscription_set.create(
             category=self.thread.category,
             thread=self.thread,
-            send_email=self.user.subscribe_to_replied_threads == SUBSCRIBE_ALL
+            send_email=self.user.subscribe_to_replied_threads == UserModel.SUBSCRIBE_ALL
         )

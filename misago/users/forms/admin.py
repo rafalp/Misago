@@ -167,12 +167,12 @@ class EditUserForm(UserBaseForm):
     subscribe_to_started_threads = forms.TypedChoiceField(
         label=_("Started threads"),
         coerce=int,
-        choices=User.AUTO_SUBSCRIBE_CHOICES
+        choices=User.SUBSCRIBE_CHOICES
     )
     subscribe_to_replied_threads = forms.TypedChoiceField(
         label=_("Replid threads"),
         coerce=int,
-        choices=User.AUTO_SUBSCRIBE_CHOICES
+        choices=User.SUBSCRIBE_CHOICES
     )
 
     class Meta:

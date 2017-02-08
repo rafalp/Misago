@@ -48,9 +48,9 @@ class UserManager(BaseUserManager):
             extra_fields['joined_from_ip'] = '127.0.0.1'
 
         WATCH_DICT = {
-            'no':  self.model.AUTO_SUBSCRIBE_NONE,
-            'watch':  self.model.AUTO_SUBSCRIBE_NOTIFY,
-            'watch_email':  self.model.AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL,
+            'no':  self.model.SUBSCRIBE_NONE,
+            'watch':  self.model.SUBSCRIBE_NOTIFY,
+            'watch_email':  self.model.SUBSCRIBE_ALL,
         }
 
         if not 'subscribe_to_started_threads' in extra_fields:
@@ -147,18 +147,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     ACTIVATION_REQUIRED_USER = 1
     ACTIVATION_REQUIRED_ADMIN = 2
 
-    AUTO_SUBSCRIBE_NONE = 0
-    AUTO_SUBSCRIBE_NOTIFY = 1
-    AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL = 2
+    SUBSCRIBE_NONE = 0
+    SUBSCRIBE_NOTIFY = 1
+    SUBSCRIBE_ALL = 2
 
     LIMITS_PRIVATE_THREAD_INVITES_TO_NONE = 0
     LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED = 1
     LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY = 2
 
-    AUTO_SUBSCRIBE_CHOICES = (
-        (AUTO_SUBSCRIBE_NONE, _("No")),
-        (AUTO_SUBSCRIBE_NOTIFY, _("Notify")),
-        (AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL, _("Notify with e-mail"))
+    SUBSCRIBE_CHOICES = (
+        (SUBSCRIBE_NONE, _("No")),
+        (SUBSCRIBE_NOTIFY, _("Notify")),
+        (SUBSCRIBE_ALL, _("Notify with e-mail"))
     )
 
     PRIVATE_THREAD_INVITES_LIMITS_CHOICES = (
@@ -256,10 +256,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     sync_unread_private_threads = models.BooleanField(default=False)
 
     subscribe_to_started_threads = models.PositiveIntegerField(
-        default=AUTO_SUBSCRIBE_NONE
+        default=SUBSCRIBE_NONE
     )
     subscribe_to_replied_threads = models.PositiveIntegerField(
-        default=AUTO_SUBSCRIBE_NONE
+        default=SUBSCRIBE_NONE
     )
 
     threads = models.PositiveIntegerField(default=0)

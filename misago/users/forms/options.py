@@ -21,11 +21,11 @@ class ForumOptionsForm(forms.ModelForm):
         coerce=int,
     )
     subscribe_to_started_threads = forms.TypedChoiceField(
-        choices=UserModel.AUTO_SUBSCRIBE_CHOICES,
+        choices=UserModel.SUBSCRIBE_CHOICES,
         coerce=int,
     )
     subscribe_to_replied_threads = forms.TypedChoiceField(
-        choices=UserModel.AUTO_SUBSCRIBE_CHOICES,
+        choices=UserModel.SUBSCRIBE_CHOICES,
         coerce=int,
     )
 
