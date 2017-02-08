@@ -151,17 +151,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     SUBSCRIBE_NOTIFY = 1
     SUBSCRIBE_ALL = 2
 
-    LIMIT_INVITES_TO_NONE = 0
-    LIMIT_INVITES_TO_FOLLOWED = 1
-    LIMIT_INVITES_TO_NOBODY = 2
-
     SUBSCRIBE_CHOICES = (
         (SUBSCRIBE_NONE, _("No")),
         (SUBSCRIBE_NOTIFY, _("Notify")),
         (SUBSCRIBE_ALL, _("Notify with e-mail"))
     )
 
-    PRIVATE_THREAD_INVITES_LIMITS_CHOICES = (
+    LIMIT_INVITES_TO_NONE = 0
+    LIMIT_INVITES_TO_FOLLOWED = 1
+    LIMIT_INVITES_TO_NOBODY = 2
+
+    LIMIT_INVITES_TO_CHOICES = (
         (LIMIT_INVITES_TO_NONE, _("Everybody")),
         (LIMIT_INVITES_TO_FOLLOWED, _("Users I follow")),
         (LIMIT_INVITES_TO_NOBODY, _("Nobody")),
@@ -314,26 +314,26 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def requires_activation_by_admin(self):
-        return self.requires_activation == User.ACTIVATION_ADMIN
+        return self.requires_activation == self.ACTIVATION_ADMIN
 
     @property
     def requires_activation_by_user(self):
-        return self.requires_activation == User.ACTIVATION_USER
+        return self.requires_activation == self.ACTIVATION_USER
 
     @property
     def can_be_messaged_by_everyone(self):
         preference = self.limits_private_thread_invites_to
-        return preference == User.LIMIT_INVITES_TO_NONE
+        return preference == self.LIMIT_INVITES_TO_NONE
 
     @property
     def can_be_messaged_by_followed(self):
         preference = self.limits_private_thread_invites_to
-        return preference == User.LIMIT_INVITES_TO_FOLLOWED
+        return preference == self.LIMIT_INVITES_TO_FOLLOWED
 
     @property
     def can_be_messaged_by_nobody(self):
         preference = self.limits_private_thread_invites_to
-        return preference == User.LIMIT_INVITES_TO_NOBODY
+        return preference == self.LIMIT_INVITES_TO_NOBODY
 
     @property
     def has_valid_signature(self):

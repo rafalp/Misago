@@ -10,8 +10,11 @@ from misago.core import threadstore
 from misago.core.forms import IsoDateTimeField, YesNoSwitch
 from misago.core.validators import validate_sluggable
 
-from ..models import BANS_CHOICES, Ban, Rank, User
+from ..models import BANS_CHOICES, Ban, Rank
 from ..validators import validate_email, validate_username
+
+
+UserModel = get_user_model()
 
 
 """
@@ -23,7 +26,7 @@ class UserBaseForm(forms.ModelForm):
     email = forms.EmailField(label=_("E-mail address"))
 
     class Meta:
-        model = get_user_model()
+        model = UserModel
         fields = ['username', 'email', 'title']
 
     def clean_username(self):
@@ -62,7 +65,7 @@ class NewUserForm(UserBaseForm):
     )
 
     class Meta:
-        model = get_user_model()
+        model = UserModel
         fields = ['username', 'email', 'title']
 
 
@@ -161,22 +164,22 @@ class EditUserForm(UserBaseForm):
     limits_private_thread_invites_to = forms.TypedChoiceField(
         label=_("Who can add user to private threads"),
         coerce=int,
-        choices=User.PRIVATE_THREAD_INVITES_LIMITS_CHOICES
+        choices=UserModel.LIMIT_INVITES_TO_CHOICES
     )
 
     subscribe_to_started_threads = forms.TypedChoiceField(
         label=_("Started threads"),
         coerce=int,
-        choices=User.SUBSCRIBE_CHOICES
+        choices=UserModel.SUBSCRIBE_CHOICES
     )
     subscribe_to_replied_threads = forms.TypedChoiceField(
         label=_("Replid threads"),
         coerce=int,
-        choices=User.SUBSCRIBE_CHOICES
+        choices=UserModel.SUBSCRIBE_CHOICES
     )
 
     class Meta:
-        model = get_user_model()
+        model = UserModel
         fields = [
             'username',
             'email',

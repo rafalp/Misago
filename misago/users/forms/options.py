@@ -17,7 +17,7 @@ class ForumOptionsForm(forms.ModelForm):
     is_hiding_presence = YesNoSwitch()
 
     limits_private_thread_invites_to = forms.TypedChoiceField(
-        choices=UserModel.PRIVATE_THREAD_INVITES_LIMITS_CHOICES,
+        choices=UserModel.LIMIT_INVITES_TO_CHOICES,
         coerce=int,
     )
     subscribe_to_started_threads = forms.TypedChoiceField(
