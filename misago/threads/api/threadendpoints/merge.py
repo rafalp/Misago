@@ -6,7 +6,8 @@ from django.utils.translation import ungettext
 from rest_framework.response import Response
 
 from misago.acl import add_acl
-from misago.categories.models import THREADS_ROOT_NAME, Category
+from misago.categories import THREADS_ROOT_NAME
+from misago.categories.models import Category
 
 from ...events import record_event
 from ...models import THREAD_WEIGHT_GLOBAL, Thread

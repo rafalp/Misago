@@ -10,11 +10,11 @@ from misago.core import threadstore
 from misago.core.forms import IsoDateTimeField, YesNoSwitch
 from misago.core.validators import validate_sluggable
 
-from ..models import (
-    AUTO_SUBSCRIBE_CHOICES, BANS_CHOICES, PRIVATE_THREAD_INVITES_LIMITS_CHOICES,
-    Ban, Rank
-)
+from ..models import Ban, Rank
 from ..validators import validate_email, validate_username
+
+
+UserModel = get_user_model()
 
 
 """
@@ -26,7 +26,7 @@ class UserBaseForm(forms.ModelForm):
     email = forms.EmailField(label=_("E-mail address"))
 
     class Meta:
-        model = get_user_model()
+        model = UserModel
         fields = ['username', 'email', 'title']
 
     def clean_username(self):
@@ -65,7 +65,7 @@ class NewUserForm(UserBaseForm):
     )
 
     class Meta:
-        model = get_user_model()
+        model = UserModel
         fields = ['username', 'email', 'title']
 
 
@@ -164,22 +164,22 @@ class EditUserForm(UserBaseForm):
     limits_private_thread_invites_to = forms.TypedChoiceField(
         label=_("Who can add user to private threads"),
         coerce=int,
-        choices=PRIVATE_THREAD_INVITES_LIMITS_CHOICES
+        choices=UserModel.LIMIT_INVITES_TO_CHOICES
     )
 
     subscribe_to_started_threads = forms.TypedChoiceField(
         label=_("Started threads"),
         coerce=int,
-        choices=AUTO_SUBSCRIBE_CHOICES
+        choices=UserModel.SUBSCRIBE_CHOICES
     )
     subscribe_to_replied_threads = forms.TypedChoiceField(
         label=_("Replid threads"),
         coerce=int,
-        choices=AUTO_SUBSCRIBE_CHOICES
+        choices=UserModel.SUBSCRIBE_CHOICES
     )
 
     class Meta:
-        model = get_user_model()
+        model = UserModel
         fields = [
             'username',
             'email',
@@ -489,7 +489,7 @@ class BanForm(forms.ModelForm):
     check_type = forms.TypedChoiceField(
         label=_("Check type"),
         coerce=int,
-        choices=BANS_CHOICES
+        choices=Ban.CHOICES
     )
     banned_value = forms.CharField(
         label=_("Banned value"),
@@ -551,19 +551,18 @@ class BanForm(forms.ModelForm):
         return data
 
 
-SARCH_BANS_CHOICES = (
-    ('', _('All bans')),
-    ('names', _('Usernames')),
-    ('emails', _('E-mails')),
-    ('ips', _('IPs')),
-)
-
-
 class SearchBansForm(forms.Form):
+    SARCH_CHOICES = (
+        ('', _('All bans')),
+        ('names', _('Usernames')),
+        ('emails', _('E-mails')),
+        ('ips', _('IPs')),
+    )
+
     check_type = forms.ChoiceField(
         label=_("Type"),
         required=False,
-        choices=SARCH_BANS_CHOICES
+        choices=SARCH_CHOICES
     )
     value = forms.CharField(
         label=_("Banned value begins with"),

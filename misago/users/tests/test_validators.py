@@ -5,7 +5,7 @@ from django.test import TestCase
 
 from misago.conf import settings
 
-from ..models import BAN_EMAIL, BAN_USERNAME, Ban
+from ..models import Ban
 from ..validators import (
     validate_email,
     validate_email_available,
@@ -39,7 +39,10 @@ class ValidateEmailAvailableTests(TestCase):
 
 class ValidateEmailBannedTests(TestCase):
     def setUp(self):
-        Ban.objects.create(check_type=BAN_EMAIL, banned_value="ban@test.com")
+        Ban.objects.create(
+            check_type=Ban.EMAIL,
+            banned_value="ban@test.com"
+        )
 
     def test_unbanned_name(self):
         """unbanned email passes validation"""
@@ -87,7 +90,10 @@ class ValidateUsernameAvailableTests(TestCase):
 
 class ValidateUsernameBannedTests(TestCase):
     def setUp(self):
-        Ban.objects.create(check_type=BAN_USERNAME, banned_value="Bob")
+        Ban.objects.create(
+            check_type=Ban.USERNAME,
+            banned_value="Bob"
+        )
 
     def test_unbanned_name(self):
         """unbanned name passes validation"""

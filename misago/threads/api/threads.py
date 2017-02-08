@@ -6,7 +6,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 
-from misago.categories.models import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
+from misago.categories import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
 from misago.core.shortcuts import get_int_or_404
 
 from ..models import Post, Thread

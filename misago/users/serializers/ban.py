@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from misago.core.utils import format_plaintext_for_html
 
-from ..models import BAN_IP, Ban
+from ..models import Ban
 
 
 __all__ = [
@@ -33,7 +33,7 @@ class BanMessageSerializer(serializers.ModelSerializer):
     def get_message(self, obj):
         if obj.user_message:
             message = obj.user_message
-        elif obj.check_type == BAN_IP:
+        elif obj.check_type == Ban.IP:
             message = _("Your IP address is banned.")
         else:
             message = _("You are banned.")

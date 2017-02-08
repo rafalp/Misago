@@ -6,7 +6,7 @@ from rest_framework.permissions import BasePermission
 from misago.core.exceptions import Banned
 
 from ..bans import get_request_ip_ban
-from ..models import BAN_IP, Ban
+from ..models import Ban
 
 
 __all__ = [
@@ -20,7 +20,7 @@ class UnbannedOnly(BasePermission):
         ban = get_request_ip_ban(request)
         if ban:
             hydrated_ban = Ban(
-                check_type=BAN_IP,
+                check_type=Ban.IP,
                 user_message=ban['message'],
                 expires_on=ban['expires_on'])
             raise Banned(hydrated_ban)

@@ -5,9 +5,11 @@ from django.db import migrations, models
 
 from misago.core.migrationutils import cachebuster_register_cache
 
+from misago.users.constants import BANS_CACHEBUSTER
+
 
 def register_bans_version_tracker(apps, schema_editor):
-    cachebuster_register_cache(apps, 'misago_bans')
+    cachebuster_register_cache(apps, BANS_CACHEBUSTER)
 
 
 class Migration(migrations.Migration):

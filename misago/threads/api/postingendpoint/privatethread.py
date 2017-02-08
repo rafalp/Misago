@@ -1,5 +1,6 @@
 from misago.acl import add_acl
-from misago.categories.models import PRIVATE_THREADS_ROOT_NAME, Category
+from misago.categories import PRIVATE_THREADS_ROOT_NAME
+from misago.categories.models import Category
 
 from . import PostingEndpoint, PostingMiddleware
 

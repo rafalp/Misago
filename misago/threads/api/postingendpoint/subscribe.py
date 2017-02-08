@@ -1,7 +1,10 @@
-from misago.users.models import AUTO_SUBSCRIBE_NONE, AUTO_SUBSCRIBE_NOTIFY, AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL
+from django.contrib.auth import get_user_model
 
 from . import PostingEndpoint, PostingMiddleware
 from ...models import Subscription
+
+
+UserModel = get_user_model()
 
 
 class SubscribeMiddleware(PostingMiddleware):
@@ -16,20 +19,20 @@ class SubscribeMiddleware(PostingMiddleware):
         if self.mode != PostingEndpoint.START:
             return
 
-        if self.user.subscribe_to_started_threads == AUTO_SUBSCRIBE_NONE:
+        if self.user.subscribe_to_started_threads == UserModel.SUBSCRIBE_NONE:
             return
 
         self.user.subscription_set.create(
             category=self.thread.category,
             thread=self.thread,
-            send_email=self.user.subscribe_to_started_threads == AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL
+            send_email=self.user.subscribe_to_started_threads == UserModel.SUBSCRIBE_ALL
         )
 
     def subscribe_replied_thread(self):
         if self.mode != PostingEndpoint.REPLY:
             return
 
-        if self.user.subscribe_to_replied_threads == AUTO_SUBSCRIBE_NONE:
+        if self.user.subscribe_to_replied_threads == UserModel.SUBSCRIBE_NONE:
             return
 
         try:
@@ -45,5 +48,5 @@ class SubscribeMiddleware(PostingMiddleware):
         self.user.subscription_set.create(
             category=self.thread.category,
             thread=self.thread,
-            send_email=self.user.subscribe_to_replied_threads == AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL
+            send_email=self.user.subscribe_to_replied_threads == UserModel.SUBSCRIBE_ALL
         )

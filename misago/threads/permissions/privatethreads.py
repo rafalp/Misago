@@ -8,28 +8,11 @@ from django.utils.translation import ugettext_lazy as _
 from misago.acl import add_acl, algebra
 from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
-from misago.categories.models import PRIVATE_THREADS_ROOT_NAME, Category
+from misago.categories import PRIVATE_THREADS_ROOT_NAME
+from misago.categories.models import Category
 from misago.core.forms import YesNoSwitch
 
 from ..models import Thread
-
-
-__all__ = [
-    'allow_use_private_threads',
-    'can_use_private_threads',
-    'allow_see_private_thread',
-    'can_see_private_thread',
-    'allow_change_owner',
-    'can_change_owner',
-    'allow_add_participants',
-    'can_add_participants',
-    'allow_remove_participant',
-    'can_remove_participant',
-    'allow_add_participant',
-    'can_add_participant',
-    'allow_message_user',
-    'can_message_user',
-]
 
 
 """

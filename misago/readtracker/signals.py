@@ -1,6 +1,6 @@
 from django.dispatch import Signal, receiver
 
-from misago.categories.models import PRIVATE_THREADS_ROOT_NAME
+from misago.categories import PRIVATE_THREADS_ROOT_NAME
 from misago.categories.signals import delete_category_content, move_category_content
 from misago.threads.signals import move_thread
 

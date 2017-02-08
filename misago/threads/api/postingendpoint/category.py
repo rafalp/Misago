@@ -5,7 +5,8 @@ from django.utils.translation import ugettext_lazy
 from rest_framework import serializers
 
 from misago.acl import add_acl
-from misago.categories.models import THREADS_ROOT_NAME, Category
+from misago.categories import THREADS_ROOT_NAME
+from misago.categories.models import Category
 from misago.categories.permissions import can_browse_category, can_see_category
 
 from . import PostingEndpoint, PostingMiddleware

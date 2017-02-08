@@ -3,6 +3,7 @@ import json
 import requests
 from requests.exceptions import RequestException
 
+from django.contrib.auth import get_user_model
 from django.http import Http404, JsonResponse
 from django.utils.six.moves import range
 from django.utils.translation import ugettext as _
@@ -10,21 +11,22 @@ from django.utils.translation import ugettext as _
 from misago import __version__
 from misago.core.cache import cache
 from misago.threads.models import Post, Thread
-from misago.users.models import ACTIVATION_REQUIRED_NONE, User
 
 from . import render
 
-
 VERSION_CHECK_CACHE_KEY = "misago_version_check"
+
+UserModel = get_user_model()
 
 
 def admin_index(request):
-    inactive_users = {'requires_activation__gt': ACTIVATION_REQUIRED_NONE}
     db_stats = {
         'threads': Thread.objects.count(),
         'posts': Post.objects.count(),
-        'users': User.objects.count(),
-        'inactive_users': User.objects.filter(**inactive_users).count()
+        'users': UserModel.objects.count(),
+        'inactive_users': UserModel.objects.exclude(
+            requires_activation=UserModel.ACTIVATION_NONE
+        ).count()
     }
 
     return render(request, 'misago/admin/index.html', {

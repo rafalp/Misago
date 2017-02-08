@@ -25,7 +25,7 @@ CAN_SEARCH_USERS = YesNoSwitch(
 CAN_SEE_USER_NAME_HISTORY = YesNoSwitch(
     label=_("Can see other members name history")
 )
-CAN_SEE_BAN_DETAILS = YesNoSwitch(
+CAN_SEE_DETAILS = YesNoSwitch(
     label=_("Can see members bans details"),
     help_text=_("Allows users with this permission to see user and staff ban messages.")
 )
@@ -37,7 +37,7 @@ class LimitedPermissionsForm(forms.Form):
     can_browse_users_list = CAN_BROWSE_USERS_LIST
     can_search_users = CAN_SEARCH_USERS
     can_see_users_name_history = CAN_SEE_USER_NAME_HISTORY
-    can_see_ban_details = CAN_SEE_BAN_DETAILS
+    can_see_ban_details = CAN_SEE_DETAILS
 
 
 class PermissionsForm(LimitedPermissionsForm):
@@ -52,7 +52,7 @@ class PermissionsForm(LimitedPermissionsForm):
         initial=0
     )
     can_see_users_name_history = CAN_SEE_USER_NAME_HISTORY
-    can_see_ban_details = CAN_SEE_BAN_DETAILS
+    can_see_ban_details = CAN_SEE_DETAILS
     can_see_users_emails = YesNoSwitch(
         label=_("Can see members e-mails")
     )

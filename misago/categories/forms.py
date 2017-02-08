@@ -9,7 +9,8 @@ from misago.core.forms import YesNoSwitch
 from misago.core.validators import validate_sluggable
 from misago.threads.threadtypes import trees_map
 
-from .models import THREADS_ROOT_NAME, Category, CategoryRole
+from . import THREADS_ROOT_NAME
+from .models import Category, CategoryRole
 
 
 """

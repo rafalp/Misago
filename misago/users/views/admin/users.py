@@ -17,8 +17,7 @@ from ...avatars.dynamic import set_avatar as set_dynamic_avatar
 from ...forms.admin import (
     BanUsersForm, NewUserForm, SearchUsersForm,
     EditUserForm, EditUserFormFactory)
-from ...models import ACTIVATION_REQUIRED_NONE, Ban, User
-from ...models.ban import BAN_EMAIL, BAN_IP, BAN_USERNAME
+from ...models import Ban, User
 from ...signatures import set_user_signature
 
 
@@ -108,7 +107,7 @@ class UsersList(UserAdmin, generic.ListView):
         else:
             activated_users_pks = [u.pk for u in inactive_users]
             queryset = User.objects.filter(pk__in=activated_users_pks)
-            queryset.update(requires_activation=ACTIVATION_REQUIRED_NONE)
+            queryset.update(requires_activation=User.ACTIVATION_NONE)
 
             subject = _("Your account on %(forum_name)s forums has been activated")
             mail_subject = subject % {
@@ -145,25 +144,25 @@ class UsersList(UserAdmin, generic.ListView):
                 for user in users:
                     for ban in cleaned_data['ban_type']:
                         if ban == 'usernames':
-                            check_type = BAN_USERNAME
+                            check_type = Ban.USERNAME
                             banned_value = user.username.lower()
 
                         if ban == 'emails':
-                            check_type = BAN_EMAIL
+                            check_type = Ban.EMAIL
                             banned_value = user.email.lower()
 
                         if ban == 'domains':
-                            check_type = BAN_EMAIL
+                            check_type = Ban.EMAIL
                             banned_value = user.email.lower()
                             at_pos = banned_value.find('@')
                             banned_value = '*%s' % banned_value[at_pos:]
 
                         if ban == 'ip':
-                            check_type = BAN_IP
+                            check_type = Ban.IP
                             banned_value = user.joined_from_ip
 
                         if ban in ('ip_first', 'ip_two'):
-                            check_type = BAN_IP
+                            check_type = Ban.IP
 
                             if ':' in user.joined_from_ip:
                                 ip_separator = ':'

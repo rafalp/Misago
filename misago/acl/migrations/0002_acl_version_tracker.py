@@ -6,9 +6,11 @@ from django.db import migrations, models
 
 from misago.core.migrationutils import cachebuster_register_cache
 
+from misago.acl.constants import ACL_CACHEBUSTER
+
 
 def register_acl_version_tracker(apps, schema_editor):
-    cachebuster_register_cache(apps, 'misago_acl')
+    cachebuster_register_cache(apps, ACL_CACHEBUSTER)
 
 
 class Migration(migrations.Migration):

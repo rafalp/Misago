@@ -6,8 +6,9 @@ from misago.acl import version as acl_version
 from misago.admin.views import generic
 from misago.threads.threadtypes import trees_map
 
-from ..forms import CategoryFormFactory, DeleteFormFactory
-from ..models import THREADS_ROOT_NAME, Category, RoleCategoryACL
+from misago.categories import THREADS_ROOT_NAME
+from misago.categories.forms import CategoryFormFactory, DeleteFormFactory
+from misago.categories.models import Category, RoleCategoryACL
 
 
 class CategoryAdmin(generic.AdminBaseMixin):

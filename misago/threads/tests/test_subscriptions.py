@@ -12,13 +12,16 @@ from .. import testutils
 from ..subscriptions import make_subscription_aware
 
 
+UserModel = get_user_model()
+
+
 class SubscriptionsTests(TestCase):
     def setUp(self):
         self.category = list(Category.objects.all_categories()[:1])[0]
         self.thread = self.post_thread(timezone.now() - timedelta(days=10))
 
-        User = get_user_model()
-        self.user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        self.user = UserModel.objects.create_user(
+            "Bob", "bob@test.com", "Pass.123")
         self.anon = AnonymousUser()
 
     def post_thread(self, datetime):

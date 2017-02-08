@@ -7,24 +7,30 @@ from django.utils.translation import ungettext
 from misago.conf import settings
 from misago.core.forms import YesNoSwitch
 
-from ..models import AUTO_SUBSCRIBE_CHOICES, PRIVATE_THREAD_INVITES_LIMITS_CHOICES
 from ..validators import validate_email
+
+
+UserModel = get_user_model()
 
 
 class ForumOptionsForm(forms.ModelForm):
     is_hiding_presence = YesNoSwitch()
 
     limits_private_thread_invites_to = forms.TypedChoiceField(
-        coerce=int, choices=PRIVATE_THREAD_INVITES_LIMITS_CHOICES)
-
+        choices=UserModel.LIMIT_INVITES_TO_CHOICES,
+        coerce=int,
+    )
     subscribe_to_started_threads = forms.TypedChoiceField(
-        coerce=int, choices=AUTO_SUBSCRIBE_CHOICES)
-
+        choices=UserModel.SUBSCRIBE_CHOICES,
+        coerce=int,
+    )
     subscribe_to_replied_threads = forms.TypedChoiceField(
-        coerce=int, choices=AUTO_SUBSCRIBE_CHOICES)
+        choices=UserModel.SUBSCRIBE_CHOICES,
+        coerce=int,
+    )
 
     class Meta:
-        model = get_user_model()
+        model = UserModel
         fields = [
             'is_hiding_presence',
             'limits_private_thread_invites_to',
@@ -37,7 +43,7 @@ class EditSignatureForm(forms.ModelForm):
     signature = forms.CharField(required=False)
 
     class Meta:
-        model = get_user_model()
+        model = UserModel
         fields = ['signature']
 
     def clean(self):

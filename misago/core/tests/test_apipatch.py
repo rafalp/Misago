@@ -21,40 +21,40 @@ class ApiPatchTests(TestCase):
         """add method adds function to patch object"""
         patch = ApiPatch()
 
-        def test_function():
+        def mock_function():
             pass
-        patch.add('test-add', test_function)
+        patch.add('test-add', mock_function)
 
         self.assertEqual(len(patch._actions), 1)
         self.assertEqual(patch._actions[0]['op'], 'add')
         self.assertEqual(patch._actions[0]['path'], 'test-add')
-        self.assertEqual(patch._actions[0]['handler'], test_function)
+        self.assertEqual(patch._actions[0]['handler'], mock_function)
 
     def test_remove(self):
         """remove method adds function to patch object"""
         patch = ApiPatch()
 
-        def test_function():
+        def mock_function():
             pass
-        patch.remove('test-remove', test_function)
+        patch.remove('test-remove', mock_function)
 
         self.assertEqual(len(patch._actions), 1)
         self.assertEqual(patch._actions[0]['op'], 'remove')
         self.assertEqual(patch._actions[0]['path'], 'test-remove')
-        self.assertEqual(patch._actions[0]['handler'], test_function)
+        self.assertEqual(patch._actions[0]['handler'], mock_function)
 
     def test_replace(self):
         """replace method adds function to patch object"""
         patch = ApiPatch()
 
-        def test_function():
+        def mock_function():
             pass
-        patch.replace('test-replace', test_function)
+        patch.replace('test-replace', mock_function)
 
         self.assertEqual(len(patch._actions), 1)
         self.assertEqual(patch._actions[0]['op'], 'replace')
         self.assertEqual(patch._actions[0]['path'], 'test-replace')
-        self.assertEqual(patch._actions[0]['handler'], test_function)
+        self.assertEqual(patch._actions[0]['handler'], mock_function)
 
     def test_validate_action(self):
         """validate_action method validates action dict"""

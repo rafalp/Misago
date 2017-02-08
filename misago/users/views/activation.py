@@ -9,7 +9,6 @@ from misago.core.mail import mail_user
 
 from ..bans import get_user_ban
 from ..decorators import deny_authenticated, deny_banned_ips
-from ..models import ACTIVATION_REQUIRED_NONE
 from ..tokens import is_activation_token_valid
 
 
@@ -66,7 +65,7 @@ def activate_by_token(request, pk, token):
                 'message': e.args[0],
             }, status=400)
 
-    inactive_user.requires_activation = ACTIVATION_REQUIRED_NONE
+    inactive_user.requires_activation = User.ACTIVATION_NONE
     inactive_user.save(update_fields=['requires_activation'])
 
     message = _("%(user)s, your account has been activated!")

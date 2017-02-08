@@ -24,53 +24,11 @@ from .rank import Rank
 
 
 __all__ = [
-    'ACTIVATION_REQUIRED_NONE',
-    'ACTIVATION_REQUIRED_USER',
-    'ACTIVATION_REQUIRED_ADMIN',
-
-    'AUTO_SUBSCRIBE_NONE',
-    'AUTO_SUBSCRIBE_NOTIFY',
-    'AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL',
-    'AUTO_SUBSCRIBE_CHOICES',
-
-    'LIMITS_PRIVATE_THREAD_INVITES_TO_NONE',
-    'LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED',
-    'LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY',
-    'PRIVATE_THREAD_INVITES_LIMITS_CHOICES',
-
     'AnonymousUser',
     'User',
     'UsernameChange',
     'Online',
 ]
-
-
-ACTIVATION_REQUIRED_NONE = 0
-ACTIVATION_REQUIRED_USER = 1
-ACTIVATION_REQUIRED_ADMIN = 2
-
-
-AUTO_SUBSCRIBE_NONE = 0
-AUTO_SUBSCRIBE_NOTIFY = 1
-AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL = 2
-
-AUTO_SUBSCRIBE_CHOICES = (
-    (AUTO_SUBSCRIBE_NONE, _("No")),
-    (AUTO_SUBSCRIBE_NOTIFY, _("Notify")),
-    (AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL,
-     _("Notify with e-mail"))
-)
-
-
-LIMITS_PRIVATE_THREAD_INVITES_TO_NONE = 0
-LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED = 1
-LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY = 2
-
-PRIVATE_THREAD_INVITES_LIMITS_CHOICES = (
-    (LIMITS_PRIVATE_THREAD_INVITES_TO_NONE, _("Everybody")),
-    (LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED, _("Users I follow")),
-    (LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY, _("Nobody")),
-)
 
 
 class UserManager(BaseUserManager):
@@ -90,9 +48,9 @@ class UserManager(BaseUserManager):
             extra_fields['joined_from_ip'] = '127.0.0.1'
 
         WATCH_DICT = {
-            'no': AUTO_SUBSCRIBE_NONE,
-            'watch': AUTO_SUBSCRIBE_NOTIFY,
-            'watch_email': AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL,
+            'no':  self.model.SUBSCRIBE_NONE,
+            'watch':  self.model.SUBSCRIBE_NOTIFY,
+            'watch_email':  self.model.SUBSCRIBE_ALL,
         }
 
         if not 'subscribe_to_started_threads' in extra_fields:
@@ -185,6 +143,30 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    ACTIVATION_NONE = 0
+    ACTIVATION_USER = 1
+    ACTIVATION_ADMIN = 2
+
+    SUBSCRIBE_NONE = 0
+    SUBSCRIBE_NOTIFY = 1
+    SUBSCRIBE_ALL = 2
+
+    SUBSCRIBE_CHOICES = (
+        (SUBSCRIBE_NONE, _("No")),
+        (SUBSCRIBE_NOTIFY, _("Notify")),
+        (SUBSCRIBE_ALL, _("Notify with e-mail"))
+    )
+
+    LIMIT_INVITES_TO_NONE = 0
+    LIMIT_INVITES_TO_FOLLOWED = 1
+    LIMIT_INVITES_TO_NOBODY = 2
+
+    LIMIT_INVITES_TO_CHOICES = (
+        (LIMIT_INVITES_TO_NONE, _("Everybody")),
+        (LIMIT_INVITES_TO_FOLLOWED, _("Users I follow")),
+        (LIMIT_INVITES_TO_NOBODY, _("Nobody")),
+    )
+
     """
     Note that "username" field is purely for shows.
     When searching users by their names, always use lowercased string
@@ -209,7 +191,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     rank = models.ForeignKey('Rank', null=True, blank=True, on_delete=models.deletion.PROTECT)
     title = models.CharField(max_length=255, null=True, blank=True)
-    requires_activation = models.PositiveIntegerField(default=ACTIVATION_REQUIRED_NONE)
+    requires_activation = models.PositiveIntegerField(default=ACTIVATION_NONE)
 
     is_staff = models.BooleanField(_('staff status'),
         default=False,
@@ -268,16 +250,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     limits_private_thread_invites_to = models.PositiveIntegerField(
-        default=LIMITS_PRIVATE_THREAD_INVITES_TO_NONE
+        default=LIMIT_INVITES_TO_NONE
     )
     unread_private_threads = models.PositiveIntegerField(default=0)
     sync_unread_private_threads = models.BooleanField(default=False)
 
     subscribe_to_started_threads = models.PositiveIntegerField(
-        default=AUTO_SUBSCRIBE_NONE
+        default=SUBSCRIBE_NONE
     )
     subscribe_to_replied_threads = models.PositiveIntegerField(
-        default=AUTO_SUBSCRIBE_NONE
+        default=SUBSCRIBE_NONE
     )
 
     threads = models.PositiveIntegerField(default=0)
@@ -332,26 +314,26 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def requires_activation_by_admin(self):
-        return self.requires_activation == ACTIVATION_REQUIRED_ADMIN
+        return self.requires_activation == self.ACTIVATION_ADMIN
 
     @property
     def requires_activation_by_user(self):
-        return self.requires_activation == ACTIVATION_REQUIRED_USER
+        return self.requires_activation == self.ACTIVATION_USER
 
     @property
     def can_be_messaged_by_everyone(self):
         preference = self.limits_private_thread_invites_to
-        return preference == LIMITS_PRIVATE_THREAD_INVITES_TO_NONE
+        return preference == self.LIMIT_INVITES_TO_NONE
 
     @property
     def can_be_messaged_by_followed(self):
         preference = self.limits_private_thread_invites_to
-        return preference == LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED
+        return preference == self.LIMIT_INVITES_TO_FOLLOWED
 
     @property
     def can_be_messaged_by_nobody(self):
         preference = self.limits_private_thread_invites_to
-        return preference == LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY
+        return preference == self.LIMIT_INVITES_TO_NOBODY
 
     @property
     def has_valid_signature(self):

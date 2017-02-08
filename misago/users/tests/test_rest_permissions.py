@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from ..models import BAN_IP, Ban
+from ..models import Ban
 from ..testutils import UserTestCase
 
 
@@ -29,9 +29,10 @@ class UnbannedOnlyTests(UserTestCase):
     def test_api_blocks_banned(self):
         """policy blocked banned ip"""
         Ban.objects.create(
-            check_type=BAN_IP,
+            check_type=Ban.IP,
             banned_value='127.*',
-            user_message='Ya got banned!')
+            user_message='Ya got banned!'
+        )
 
         response = self.client.post(
             reverse('misago:api:send-password-form'), data={
@@ -68,9 +69,10 @@ class UnbannedAnonOnlyTests(UserTestCase):
     def test_api_blocks_banned(self):
         """policy blocked banned ip"""
         Ban.objects.create(
-            check_type=BAN_IP,
+            check_type=Ban.IP,
             banned_value='127.*',
-            user_message='Ya got banned!')
+            user_message='Ya got banned!'
+        )
 
         response = self.client.post(
             reverse('misago:api:send-activation'), data={

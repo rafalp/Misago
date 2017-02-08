@@ -1,7 +1,8 @@
 from django.urls import reverse
 
 from misago.acl.testutils import override_acl
-from misago.categories.models import THREADS_ROOT_NAME, Category
+from misago.categories import THREADS_ROOT_NAME
+from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from .. import testutils
