@@ -67,20 +67,20 @@ class PermissionProvidersTests(TestCase):
         """its possible to register and get annotators"""
         providers = PermissionProviders()
 
-        def test_annotator(*args):
+        def mock_annotator(*args):
             pass
 
-        providers.acl_annotator(TestType, test_annotator)
+        providers.acl_annotator(TestType, mock_annotator)
         annotators_list = providers.get_type_annotators(TestType())
-        self.assertEqual(annotators_list[0], test_annotator)
+        self.assertEqual(annotators_list[0], mock_annotator)
 
     def test_serializers(self):
         """its possible to register and get annotators"""
         providers = PermissionProviders()
 
-        def test_serializer(*args):
+        def mock_serializer(*args):
             pass
 
-        providers.acl_serializer(TestType, test_serializer)
+        providers.acl_serializer(TestType, mock_serializer)
         serializers_list = providers.get_type_serializers(TestType())
-        self.assertEqual(serializers_list[0], test_serializer)
+        self.assertEqual(serializers_list[0], mock_serializer)

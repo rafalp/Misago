@@ -1,16 +1,15 @@
-from misago.core import cachebuster as cb
+from misago.core import cachebuster
 
-
-ACL_CACHE_NAME = 'misago_acl'
+from .constants import ACL_CACHEBUSTER
 
 
 def get_version():
-    return cb.get_version(ACL_CACHE_NAME)
+    return cachebuster.get_version(ACL_CACHEBUSTER)
 
 
 def is_valid(version):
-    return cb.is_valid(ACL_CACHE_NAME, version)
+    return cachebuster.is_valid(ACL_CACHEBUSTER, version)
 
 
 def invalidate():
-    cb.invalidate(ACL_CACHE_NAME)
+    cachebuster.invalidate(ACL_CACHEBUSTER)

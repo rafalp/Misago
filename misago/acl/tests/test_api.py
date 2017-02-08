@@ -1,14 +1,20 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from misago.users.models import AnonymousUser, User
+from misago.users.models import AnonymousUser
 
 from ..api import get_user_acl
+
+
+UserModel = get_user_model()
 
 
 class GetUserACLTests(TestCase):
     def test_get_authenticated_acl(self):
         """get ACL for authenticated user"""
-        test_user = User.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        test_user = UserModel.objects.create_user(
+            'Bob', 'bob@bob.com', 'pass123')
+
         acl = get_user_acl(test_user)
 
         self.assertTrue(acl)
