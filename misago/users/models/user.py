@@ -24,53 +24,11 @@ from .rank import Rank
 
 
 __all__ = [
-    'ACTIVATION_REQUIRED_NONE',
-    'ACTIVATION_REQUIRED_USER',
-    'ACTIVATION_REQUIRED_ADMIN',
-
-    'AUTO_SUBSCRIBE_NONE',
-    'AUTO_SUBSCRIBE_NOTIFY',
-    'AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL',
-    'AUTO_SUBSCRIBE_CHOICES',
-
-    'LIMITS_PRIVATE_THREAD_INVITES_TO_NONE',
-    'LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED',
-    'LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY',
-    'PRIVATE_THREAD_INVITES_LIMITS_CHOICES',
-
     'AnonymousUser',
     'User',
     'UsernameChange',
     'Online',
 ]
-
-
-ACTIVATION_REQUIRED_NONE = 0
-ACTIVATION_REQUIRED_USER = 1
-ACTIVATION_REQUIRED_ADMIN = 2
-
-
-AUTO_SUBSCRIBE_NONE = 0
-AUTO_SUBSCRIBE_NOTIFY = 1
-AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL = 2
-
-AUTO_SUBSCRIBE_CHOICES = (
-    (AUTO_SUBSCRIBE_NONE, _("No")),
-    (AUTO_SUBSCRIBE_NOTIFY, _("Notify")),
-    (AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL,
-     _("Notify with e-mail"))
-)
-
-
-LIMITS_PRIVATE_THREAD_INVITES_TO_NONE = 0
-LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED = 1
-LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY = 2
-
-PRIVATE_THREAD_INVITES_LIMITS_CHOICES = (
-    (LIMITS_PRIVATE_THREAD_INVITES_TO_NONE, _("Everybody")),
-    (LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED, _("Users I follow")),
-    (LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY, _("Nobody")),
-)
 
 
 class UserManager(BaseUserManager):
@@ -90,9 +48,9 @@ class UserManager(BaseUserManager):
             extra_fields['joined_from_ip'] = '127.0.0.1'
 
         WATCH_DICT = {
-            'no': AUTO_SUBSCRIBE_NONE,
-            'watch': AUTO_SUBSCRIBE_NOTIFY,
-            'watch_email': AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL,
+            'no':  self.model.AUTO_SUBSCRIBE_NONE,
+            'watch':  self.model.AUTO_SUBSCRIBE_NOTIFY,
+            'watch_email':  self.model.AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL,
         }
 
         if not 'subscribe_to_started_threads' in extra_fields:
@@ -185,6 +143,30 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    ACTIVATION_REQUIRED_NONE = 0
+    ACTIVATION_REQUIRED_USER = 1
+    ACTIVATION_REQUIRED_ADMIN = 2
+
+    AUTO_SUBSCRIBE_NONE = 0
+    AUTO_SUBSCRIBE_NOTIFY = 1
+    AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL = 2
+
+    LIMITS_PRIVATE_THREAD_INVITES_TO_NONE = 0
+    LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED = 1
+    LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY = 2
+
+    AUTO_SUBSCRIBE_CHOICES = (
+        (AUTO_SUBSCRIBE_NONE, _("No")),
+        (AUTO_SUBSCRIBE_NOTIFY, _("Notify")),
+        (AUTO_SUBSCRIBE_NOTIFY_AND_EMAIL, _("Notify with e-mail"))
+    )
+
+    PRIVATE_THREAD_INVITES_LIMITS_CHOICES = (
+        (LIMITS_PRIVATE_THREAD_INVITES_TO_NONE, _("Everybody")),
+        (LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED, _("Users I follow")),
+        (LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY, _("Nobody")),
+    )
+
     """
     Note that "username" field is purely for shows.
     When searching users by their names, always use lowercased string
@@ -332,26 +314,26 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def requires_activation_by_admin(self):
-        return self.requires_activation == ACTIVATION_REQUIRED_ADMIN
+        return self.requires_activation == User.ACTIVATION_REQUIRED_ADMIN
 
     @property
     def requires_activation_by_user(self):
-        return self.requires_activation == ACTIVATION_REQUIRED_USER
+        return self.requires_activation == User.ACTIVATION_REQUIRED_USER
 
     @property
     def can_be_messaged_by_everyone(self):
         preference = self.limits_private_thread_invites_to
-        return preference == LIMITS_PRIVATE_THREAD_INVITES_TO_NONE
+        return preference == User.LIMITS_PRIVATE_THREAD_INVITES_TO_NONE
 
     @property
     def can_be_messaged_by_followed(self):
         preference = self.limits_private_thread_invites_to
-        return preference == LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED
+        return preference == User.LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED
 
     @property
     def can_be_messaged_by_nobody(self):
         preference = self.limits_private_thread_invites_to
-        return preference == LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY
+        return preference == User.LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY
 
     @property
     def has_valid_signature(self):

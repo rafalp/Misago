@@ -10,10 +10,7 @@ from misago.core import threadstore
 from misago.core.forms import IsoDateTimeField, YesNoSwitch
 from misago.core.validators import validate_sluggable
 
-from ..models import (
-    AUTO_SUBSCRIBE_CHOICES, BANS_CHOICES, PRIVATE_THREAD_INVITES_LIMITS_CHOICES,
-    Ban, Rank
-)
+from ..models import BANS_CHOICES, Ban, Rank, User
 from ..validators import validate_email, validate_username
 
 
@@ -164,18 +161,18 @@ class EditUserForm(UserBaseForm):
     limits_private_thread_invites_to = forms.TypedChoiceField(
         label=_("Who can add user to private threads"),
         coerce=int,
-        choices=PRIVATE_THREAD_INVITES_LIMITS_CHOICES
+        choices=User.PRIVATE_THREAD_INVITES_LIMITS_CHOICES
     )
 
     subscribe_to_started_threads = forms.TypedChoiceField(
         label=_("Started threads"),
         coerce=int,
-        choices=AUTO_SUBSCRIBE_CHOICES
+        choices=User.AUTO_SUBSCRIBE_CHOICES
     )
     subscribe_to_replied_threads = forms.TypedChoiceField(
         label=_("Replid threads"),
         coerce=int,
-        choices=AUTO_SUBSCRIBE_CHOICES
+        choices=User.AUTO_SUBSCRIBE_CHOICES
     )
 
     class Meta:

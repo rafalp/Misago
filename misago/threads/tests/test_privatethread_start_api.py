@@ -10,7 +10,6 @@ from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
-from misago.users.models import LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED, LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from ..models import Thread, ThreadParticipant
@@ -194,7 +193,10 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
 
     def test_cant_invite_followers_only(self):
         """api validates that you cant invite followers-only user to thread"""
-        self.other_user.limits_private_thread_invites_to = LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED
+        User = get_user_model()
+
+        user_constant = User.LIMITS_PRIVATE_THREAD_INVITES_TO_FOLLOWED
+        self.other_user.limits_private_thread_invites_to = user_constant
         self.other_user.save()
 
         response = self.client.post(self.api_link, data={
@@ -245,7 +247,10 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
 
     def test_cant_invite_anyone(self):
         """api validates that you cant invite nobody user to thread"""
-        self.other_user.limits_private_thread_invites_to = LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY
+        User = get_user_model()
+
+        user_constant = User.LIMITS_PRIVATE_THREAD_INVITES_TO_NOBODY
+        self.other_user.limits_private_thread_invites_to = user_constant
         self.other_user.save()
 
         response = self.client.post(self.api_link, data={

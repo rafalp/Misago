@@ -17,7 +17,7 @@ from ...avatars.dynamic import set_avatar as set_dynamic_avatar
 from ...forms.admin import (
     BanUsersForm, NewUserForm, SearchUsersForm,
     EditUserForm, EditUserFormFactory)
-from ...models import ACTIVATION_REQUIRED_NONE, Ban, User
+from ...models import Ban, User
 from ...models.ban import BAN_EMAIL, BAN_IP, BAN_USERNAME
 from ...signatures import set_user_signature
 
@@ -108,7 +108,7 @@ class UsersList(UserAdmin, generic.ListView):
         else:
             activated_users_pks = [u.pk for u in inactive_users]
             queryset = User.objects.filter(pk__in=activated_users_pks)
-            queryset.update(requires_activation=ACTIVATION_REQUIRED_NONE)
+            queryset.update(requires_activation=User.ACTIVATION_REQUIRED_NONE)
 
             subject = _("Your account on %(forum_name)s forums has been activated")
             mail_subject = subject % {

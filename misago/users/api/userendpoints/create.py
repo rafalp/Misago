@@ -11,9 +11,11 @@ from misago.core.mail import mail_user
 
 from ... import captcha
 from ...forms.register import RegisterForm
-from ...models import ACTIVATION_REQUIRED_ADMIN, ACTIVATION_REQUIRED_USER
 from ...serializers import AuthenticatedUserSerializer
 from ...tokens import make_activation_token
+
+
+UserModel = get_user_model()
 
 
 @csrf_protect
@@ -34,15 +36,14 @@ def create_endpoint(request):
     activation_kwargs = {}
     if settings.account_activation == 'user':
         activation_kwargs = {
-            'requires_activation': ACTIVATION_REQUIRED_USER
+            'requires_activation': UserModel.ACTIVATION_REQUIRED_USER
         }
     elif settings.account_activation == 'admin':
         activation_kwargs = {
-            'requires_activation': ACTIVATION_REQUIRED_ADMIN
+            'requires_activation': UserModel.ACTIVATION_REQUIRED_ADMIN
         }
 
-    User = get_user_model()
-    new_user = User.objects.create_user(
+    new_user = UserModel.objects.create_user(
         form.cleaned_data['username'],
         form.cleaned_data['email'],
         form.cleaned_data['password'],
