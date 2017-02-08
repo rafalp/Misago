@@ -4,7 +4,8 @@ from misago.core.testutils import MisagoTestCase
 from misago.threads import testutils
 from misago.threads.threadtypes import trees_map
 
-from ..models import THREADS_ROOT_NAME, Category
+from misago.categories import THREADS_ROOT_NAME
+from misago.categories.models import Category
 
 
 class CategoryManagerTests(MisagoTestCase):

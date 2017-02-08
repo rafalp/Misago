@@ -12,10 +12,10 @@ from misago.core.cache import cache
 from misago.core.utils import slugify
 from misago.threads.threadtypes import trees_map
 
+from . import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
+
 
 CACHE_NAME = 'misago_categories_tree'
-PRIVATE_THREADS_ROOT_NAME = 'private_threads'
-THREADS_ROOT_NAME = 'root_category'
 
 
 class CategoryManager(TreeManager):

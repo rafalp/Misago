@@ -1,6 +1,6 @@
 from django.db.models import F
 
-from misago.categories.models import THREADS_ROOT_NAME
+from misago.categories import THREADS_ROOT_NAME
 
 from . import PostingEndpoint, PostingMiddleware
 

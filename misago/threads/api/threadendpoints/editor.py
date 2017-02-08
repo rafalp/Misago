@@ -4,7 +4,8 @@ from django.utils.translation import gettext as _
 from rest_framework.response import Response
 
 from misago.acl import add_acl
-from misago.categories.models import THREADS_ROOT_NAME, Category
+from misago.categories import THREADS_ROOT_NAME
+from misago.categories.models import Category
 
 from ...permissions.threads import can_start_thread
 from ...threadtypes import trees_map

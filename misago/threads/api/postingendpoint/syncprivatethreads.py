@@ -1,4 +1,4 @@
-from misago.categories.models import PRIVATE_THREADS_ROOT_NAME
+from misago.categories import PRIVATE_THREADS_ROOT_NAME
 
 from ...participants import set_users_unread_private_threads_sync
 from . import PostingEndpoint, PostingMiddleware

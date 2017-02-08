@@ -6,7 +6,7 @@ from django.utils.translation import ungettext
 
 from rest_framework import serializers
 
-from misago.categories.models import PRIVATE_THREADS_ROOT_NAME
+from misago.categories import PRIVATE_THREADS_ROOT_NAME
 
 from . import PostingEndpoint, PostingMiddleware
 from ...participants import add_participants, set_owner

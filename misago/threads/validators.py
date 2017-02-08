@@ -2,7 +2,8 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
-from misago.categories.models import THREADS_ROOT_NAME, Category
+from misago.categories import THREADS_ROOT_NAME
+from misago.categories.models import Category
 from misago.categories.permissions import can_browse_category, can_see_category
 from misago.conf import settings
 from misago.core.validators import validate_sluggable

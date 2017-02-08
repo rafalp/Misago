@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from misago.categories.models import PRIVATE_THREADS_ROOT_NAME
+from misago.categories import PRIVATE_THREADS_ROOT_NAME
 
 from . import ThreadType
 
