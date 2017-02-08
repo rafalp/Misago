@@ -19,10 +19,7 @@ from .mentions import add_mentions
 from .pipeline import pipeline
 
 
-__all__ = ['parse']
-
 MISAGO_ATTACHMENT_VIEWS = ('misago:attachment', 'misago:attachment-thumbnail')
-
 
 
 def parse(text, request, poster, allow_mentions=True, allow_links=True,

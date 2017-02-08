@@ -6,9 +6,6 @@ from .dates import is_date_tracked
 from .models import CategoryRead, ThreadRead
 
 
-__all__ = ['make_read_aware', 'read_thread']
-
-
 def make_read_aware(user, target):
     if hasattr(target, '__iter__'):
         make_threads_read_aware(user, target)

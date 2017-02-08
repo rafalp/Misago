@@ -6,9 +6,6 @@ from .hierarchy import site
 from .urlpatterns import urlpatterns
 
 
-__ALL__ = ['discover_misago_admin']
-
-
 def discover_misago_admin():
     for app in apps.get_app_configs():
         module = import_module(app.name)

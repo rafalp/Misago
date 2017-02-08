@@ -5,13 +5,6 @@ from misago.readtracker import categoriestracker
 from .models import Category
 
 
-__all__ = [
-    'get_categories_tree',
-    'get_category_path',
-    'get_category_next_parent'
-]
-
-
 def get_categories_tree(user, parent=None):
     if not user.acl['visible_categories']:
         return []

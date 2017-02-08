@@ -10,9 +10,6 @@ from django.utils import six
 from django.utils.encoding import force_bytes
 
 
-__all__ = ['create_change_token', 'read_token']
-
-
 def store_new_credential(request, credential_type, credential_value):
     credential_key = 'new_credential_%s' % credential_type
     token = _make_change_token(request.user, credential_type)

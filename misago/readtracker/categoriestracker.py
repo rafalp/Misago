@@ -8,9 +8,6 @@ from .dates import get_cutoff_date, is_date_tracked
 from .models import CategoryRead
 
 
-__all__ = ['make_read_aware', 'sync_record']
-
-
 def make_read_aware(user, categories):
     if not hasattr(categories, '__iter__'):
         categories = [categories]
