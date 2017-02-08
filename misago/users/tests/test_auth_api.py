@@ -51,7 +51,7 @@ class GatewayTests(TestCase):
         User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
         ban = Ban.objects.create(
-            check_type=Ban.BAN_USERNAME,
+            check_type=Ban.USERNAME,
             banned_value='bob',
             user_message='You are tragically banned.',
         )
@@ -84,7 +84,7 @@ class GatewayTests(TestCase):
         user.save()
 
         ban = Ban.objects.create(
-            check_type=Ban.BAN_USERNAME,
+            check_type=Ban.USERNAME,
             banned_value='bob',
             user_message='You are tragically banned.',
         )
@@ -192,7 +192,7 @@ class SendActivationAPITests(TestCase):
     def test_submit_banned(self):
         """request activation link api passes for banned users"""
         Ban.objects.create(
-            check_type=Ban.BAN_USERNAME,
+            check_type=Ban.USERNAME,
             banned_value=self.user.username,
             user_message='Nope!',
         )
@@ -271,7 +271,7 @@ class SendPasswordFormAPITests(TestCase):
     def test_submit_banned(self):
         """request change password form link api sends reset link mail"""
         Ban.objects.create(
-            check_type=Ban.BAN_USERNAME,
+            check_type=Ban.USERNAME,
             banned_value=self.user.username,
             user_message='Nope!',
         )
@@ -352,7 +352,7 @@ class ChangePasswordAPITests(TestCase):
     def test_banned_user_link(self):
         """request errors because user is banned"""
         Ban.objects.create(
-            check_type=Ban.BAN_USERNAME,
+            check_type=Ban.USERNAME,
             banned_value=self.user.username,
             user_message='Nope!',
         )

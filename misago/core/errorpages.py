@@ -24,7 +24,7 @@ def _error_page(request, code, message=None):
 
 def banned(request, ban):
     request.frontend_context.update({
-        'BAN_MESSAGE': ban.get_serialized_message(),
+        'MESSAGE': ban.get_serialized_message(),
         'CURRENT_LINK': 'misago:error-banned'
     })
 

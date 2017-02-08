@@ -27,7 +27,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
         test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
         Ban.objects.create(
-            check_type=Ban.BAN_USERNAME,
+            check_type=Ban.USERNAME,
             banned_value='bob',
             user_message='Nope!',
         )

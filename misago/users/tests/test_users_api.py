@@ -440,7 +440,7 @@ class UserBanTests(AuthenticatedUserTestCase):
         })
 
         Ban.objects.create(
-            check_type=Ban.BAN_USERNAME,
+            check_type=Ban.USERNAME,
             banned_value=self.other_user.username,
             user_message='Nope!'
         )

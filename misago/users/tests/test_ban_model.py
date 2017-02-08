@@ -8,15 +8,15 @@ class BansManagerTests(TestCase):
     def setUp(self):
         Ban.objects.bulk_create([
             Ban(
-                check_type=Ban.BAN_USERNAME,
+                check_type=Ban.USERNAME,
                 banned_value='bob'
             ),
             Ban(
-                check_type=Ban.BAN_EMAIL,
+                check_type=Ban.EMAIL,
                 banned_value='bob@test.com'
             ),
             Ban(
-                check_type=Ban.BAN_IP,
+                check_type=Ban.IP,
                 banned_value='127.0.0.1'
             ),
         ])

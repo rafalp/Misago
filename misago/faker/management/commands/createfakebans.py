@@ -69,11 +69,11 @@ def fake_ip_ban(fake):
 
 
 def create_fake_test(fake, test_type):
-    if test_type == Ban.BAN_USERNAME:
+    if test_type == Ban.USERNAME:
         return fake_username_ban(fake)
-    elif test_type == Ban.BAN_EMAIL:
+    elif test_type == Ban.EMAIL:
         return fake_email_ban(fake)
-    elif test_type == Ban.BAN_IP:
+    elif test_type == Ban.IP:
         return fake_ip_ban(fake)
 
 
@@ -99,7 +99,7 @@ class Command(BaseCommand):
         created_count = 0
         show_progress(self, created_count, fake_bans_to_create)
         for i in range(fake_bans_to_create):
-            ban = Ban(check_type=random.randint(Ban.BAN_USERNAME, Ban.BAN_IP))
+            ban = Ban(check_type=random.randint(Ban.USERNAME, Ban.IP))
             ban.banned_value = create_fake_test(fake, ban.check_type)
 
             if random.randint(0, 10) == 0:

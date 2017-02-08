@@ -29,7 +29,7 @@ class UnbannedOnlyTests(UserTestCase):
     def test_api_blocks_banned(self):
         """policy blocked banned ip"""
         Ban.objects.create(
-            check_type=Ban.BAN_IP,
+            check_type=Ban.IP,
             banned_value='127.*',
             user_message='Ya got banned!'
         )
@@ -69,7 +69,7 @@ class UnbannedAnonOnlyTests(UserTestCase):
     def test_api_blocks_banned(self):
         """policy blocked banned ip"""
         Ban.objects.create(
-            check_type=Ban.BAN_IP,
+            check_type=Ban.IP,
             banned_value='127.*',
             user_message='Ya got banned!'
         )

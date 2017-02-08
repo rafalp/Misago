@@ -33,7 +33,7 @@ class BanMessageSerializer(serializers.ModelSerializer):
     def get_message(self, obj):
         if obj.user_message:
             message = obj.user_message
-        elif obj.check_type == Ban.BAN_IP:
+        elif obj.check_type == Ban.IP:
             message = _("Your IP address is banned.")
         else:
             message = _("You are banned.")

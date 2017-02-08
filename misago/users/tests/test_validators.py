@@ -40,7 +40,7 @@ class ValidateEmailAvailableTests(TestCase):
 class ValidateEmailBannedTests(TestCase):
     def setUp(self):
         Ban.objects.create(
-            check_type=Ban.BAN_EMAIL,
+            check_type=Ban.EMAIL,
             banned_value="ban@test.com"
         )
 
@@ -91,7 +91,7 @@ class ValidateUsernameAvailableTests(TestCase):
 class ValidateUsernameBannedTests(TestCase):
     def setUp(self):
         Ban.objects.create(
-            check_type=Ban.BAN_USERNAME,
+            check_type=Ban.USERNAME,
             banned_value="Bob"
         )
 

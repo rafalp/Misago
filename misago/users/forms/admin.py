@@ -489,7 +489,7 @@ class BanForm(forms.ModelForm):
     check_type = forms.TypedChoiceField(
         label=_("Check type"),
         coerce=int,
-        choices=Ban.BANS_CHOICES
+        choices=Ban.CHOICES
     )
     banned_value = forms.CharField(
         label=_("Banned value"),
@@ -552,7 +552,7 @@ class BanForm(forms.ModelForm):
 
 
 class SearchBansForm(forms.Form):
-    SARCH_BANS_CHOICES = (
+    SARCH_CHOICES = (
         ('', _('All bans')),
         ('names', _('Usernames')),
         ('emails', _('E-mails')),
@@ -562,7 +562,7 @@ class SearchBansForm(forms.Form):
     check_type = forms.ChoiceField(
         label=_("Type"),
         required=False,
-        choices=SARCH_BANS_CHOICES
+        choices=SARCH_CHOICES
     )
     value = forms.CharField(
         label=_("Banned value begins with"),

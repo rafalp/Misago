@@ -20,7 +20,7 @@ class UnbannedOnly(BasePermission):
         ban = get_request_ip_ban(request)
         if ban:
             hydrated_ban = Ban(
-                check_type=Ban.BAN_IP,
+                check_type=Ban.IP,
                 user_message=ban['message'],
                 expires_on=ban['expires_on'])
             raise Banned(hydrated_ban)

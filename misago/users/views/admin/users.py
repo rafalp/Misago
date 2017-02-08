@@ -144,25 +144,25 @@ class UsersList(UserAdmin, generic.ListView):
                 for user in users:
                     for ban in cleaned_data['ban_type']:
                         if ban == 'usernames':
-                            check_type = Ban.BAN_USERNAME
+                            check_type = Ban.USERNAME
                             banned_value = user.username.lower()
 
                         if ban == 'emails':
-                            check_type = Ban.BAN_EMAIL
+                            check_type = Ban.EMAIL
                             banned_value = user.email.lower()
 
                         if ban == 'domains':
-                            check_type = Ban.BAN_EMAIL
+                            check_type = Ban.EMAIL
                             banned_value = user.email.lower()
                             at_pos = banned_value.find('@')
                             banned_value = '*%s' % banned_value[at_pos:]
 
                         if ban == 'ip':
-                            check_type = Ban.BAN_IP
+                            check_type = Ban.IP
                             banned_value = user.joined_from_ip
 
                         if ban in ('ip_first', 'ip_two'):
-                            check_type = Ban.BAN_IP
+                            check_type = Ban.IP
 
                             if ':' in user.joined_from_ip:
                                 ip_separator = ':'
