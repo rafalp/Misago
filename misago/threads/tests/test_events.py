@@ -13,6 +13,9 @@ from ..models import Post, Thread
 from ..testutils import reply_thread
 
 
+UserModel = get_user_model()
+
+
 class MockRequest(object):
     def __init__(self, user):
         self.user = user
@@ -21,8 +24,8 @@ class MockRequest(object):
 
 class EventsAPITests(TestCase):
     def setUp(self):
-        User = get_user_model()
-        self.user = User.objects.create_user("Bob", "bob@bob.com", "Pass.123")
+        self.user = UserModel.objects.create_user(
+            "Bob", "bob@bob.com", "Pass.123")
 
         datetime = timezone.now()
 

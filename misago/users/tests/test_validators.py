@@ -19,12 +19,13 @@ from ..validators import (
 )
 
 
+UserModel = get_user_model()
+
+
 class ValidateEmailAvailableTests(TestCase):
     def setUp(self):
-        User = get_user_model()
-        self.test_user = User.objects.create_user('EricTheFish',
-                                                  'eric@test.com',
-                                                  'pass123')
+        self.test_user = UserModel.objects.create_user(
+            'EricTheFish', 'eric@test.com', 'pass123')
 
     def test_valid_email(self):
         """validate_email_available allows available emails"""
@@ -72,8 +73,7 @@ class ValidateUsernameTests(TestCase):
 
 class ValidateUsernameAvailableTests(TestCase):
     def setUp(self):
-        User = get_user_model()
-        self.test_user = User.objects.create_user(
+        self.test_user = UserModel.objects.create_user(
             'EricTheFish', 'eric@test.com', 'pass123')
 
     def test_valid_name(self):

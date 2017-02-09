@@ -8,6 +8,9 @@ from ..models import Online
 from ..testutils import UserTestCase
 
 
+UserModel = get_user_model()
+
+
 class UserCreateTests(UserTestCase):
     """
     tests for new user registration (POST to /api/users/)
@@ -80,10 +83,9 @@ class UserCreateTests(UserTestCase):
         self.assertContains(response, 'Bob')
         self.assertContains(response, 'bob@bob.com')
 
-        User = get_user_model()
-        User.objects.get_by_username('Bob')
+        UserModel.objects.get_by_username('Bob')
 
-        test_user = User.objects.get_by_email('bob@bob.com')
+        test_user = UserModel.objects.get_by_email('bob@bob.com')
         self.assertEqual(Online.objects.filter(user=test_user).count(), 1)
 
         response = self.client.get(reverse('misago:index'))
@@ -105,9 +107,8 @@ class UserCreateTests(UserTestCase):
         self.assertContains(response, 'Bob')
         self.assertContains(response, 'bob@bob.com')
 
-        User = get_user_model()
-        User.objects.get_by_username('Bob')
-        User.objects.get_by_email('bob@bob.com')
+        UserModel.objects.get_by_username('Bob')
+        UserModel.objects.get_by_email('bob@bob.com')
 
         self.assertIn('Welcome', mail.outbox[0].subject)
 
@@ -125,8 +126,7 @@ class UserCreateTests(UserTestCase):
         self.assertContains(response, 'Bob')
         self.assertContains(response, 'bob@bob.com')
 
-        User = get_user_model()
-        User.objects.get_by_username('Bob')
-        User.objects.get_by_email('bob@bob.com')
+        UserModel.objects.get_by_username('Bob')
+        UserModel.objects.get_by_email('bob@bob.com')
 
         self.assertIn('Welcome', mail.outbox[0].subject)

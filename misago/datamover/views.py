@@ -7,6 +7,9 @@ from misago.threads.viewmodels import (
 from .models import OldIdRedirect
 
 
+UserModel = get_user_model()
+
+
 def category_redirect(request, **kwargs):
     category_pk = get_new_id_or_404(OldIdRedirect.CATEGORY, kwargs['forum'])
     category = ThreadsCategory(request, pk=category_pk)
@@ -39,8 +42,6 @@ def private_thread_redirect(request, **kwargs):
 
 def user_redirect(request, **kwargs):
     user_pk = get_new_id_or_404(OldIdRedirect.USER, kwargs['user'])
-
-    UserModel = get_user_model()
     user = get_object_or_404(UserModel, pk=user_pk)
 
     return redirect(user.get_absolute_url(), permanent=True)

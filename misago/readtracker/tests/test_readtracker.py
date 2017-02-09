@@ -12,13 +12,16 @@ from misago.users.models import AnonymousUser
 from .. import categoriestracker, threadstracker
 
 
+UserModel = get_user_model()
+
+
 class ReadTrackerTests(TestCase):
     def setUp(self):
         self.categories = list(Category.objects.all_categories()[:1])
         self.category = self.categories[0]
 
-        User = get_user_model()
-        self.user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        self.user = UserModel.objects.create_user(
+            "Bob", "bob@test.com", "Pass.123")
         self.anon = AnonymousUser()
 
     def post_thread(self, datetime):

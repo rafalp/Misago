@@ -4,6 +4,9 @@ from django.test import TestCase
 from .. import credentialchange
 
 
+UserModel = get_user_model()
+
+
 class MockRequest(object):
     def __init__(self, user):
         self.session = {}
@@ -12,8 +15,7 @@ class MockRequest(object):
 
 class CredentialChangeTests(TestCase):
     def setUp(self):
-        User = get_user_model()
-        self.user = User.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        self.user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
 
     def test_valid_token_generation(self):
         """credentialchange module allows for store and read of change token"""

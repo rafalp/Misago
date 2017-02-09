@@ -4,6 +4,9 @@ from django.core import mail
 from ..testutils import AuthenticatedUserTestCase
 
 
+UserModel = get_user_model()
+
+
 class UserChangeEmailTests(AuthenticatedUserTestCase):
     """
     tests for user change email RPC (/api/users/1/change-email/)
@@ -57,8 +60,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
 
     def test_email_taken(self):
         """api validates email usage"""
-        User = get_user_model()
-        User.objects.create_user('BobBoberson', 'new@email.com', 'Pass.123')
+        UserModel.objects.create_user('BobBoberson', 'new@email.com', 'Pass.123')
 
         response = self.client.post(self.link, data={
             'new_email': 'new@email.com',

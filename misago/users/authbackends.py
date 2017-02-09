@@ -2,10 +2,11 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 
 
+UserModel = get_user_model()
+
+
 class MisagoBackend(ModelBackend):
     def authenticate(self, username=None, password=None, **kwargs):
-        UserModel = get_user_model()
-
         if username is None:
             username = kwargs.get(UserModel.USERNAME_FIELD)
 
@@ -20,7 +21,6 @@ class MisagoBackend(ModelBackend):
                 return user
 
     def get_user(self, pk):
-        UserModel = get_user_model()
         try:
             manager = UserModel._default_manager
             relations = ('rank', 'online_tracker', 'ban_cache')

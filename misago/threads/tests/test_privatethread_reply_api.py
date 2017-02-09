@@ -7,6 +7,9 @@ from ..models import ThreadParticipant
 from .test_privatethreads import PrivateThreadsTestCase
 
 
+UserModel = get_user_model()
+
+
 class PrivateThreadReplyApiTestCase(PrivateThreadsTestCase):
     def setUp(self):
         super(PrivateThreadReplyApiTestCase, self).setUp()
@@ -14,8 +17,7 @@ class PrivateThreadReplyApiTestCase(PrivateThreadsTestCase):
         self.thread = testutils.post_thread(self.category, poster=self.user)
         self.api_link = self.thread.get_posts_api_url()
 
-        User = get_user_model()
-        self.other_user = User.objects.create_user(
+        self.other_user = UserModel.objects.create_user(
             'BobBoberson', 'bob@boberson.com', 'pass123')
 
     def test_reply_private_thread(self):
@@ -34,6 +36,5 @@ class PrivateThreadReplyApiTestCase(PrivateThreadsTestCase):
         self.assertEqual(self.user.posts, 0)
 
         # valid user was flagged to sync
-        User = get_user_model()
-        self.assertFalse(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
-        self.assertTrue(User.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
+        self.assertFalse(UserModel.objects.get(pk=self.user.pk).sync_unread_private_threads)
+        self.assertTrue(UserModel.objects.get(pk=self.other_user.pk).sync_unread_private_threads)

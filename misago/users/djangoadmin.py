@@ -18,7 +18,7 @@ from django.utils.translation import ugettext as _
 
 
 # Misago user model
-User = get_user_model()
+UserModel = get_user_model()
 
 
 class UserAdminForm(forms.ModelForm):
@@ -68,18 +68,17 @@ class UserAdminForm(forms.ModelForm):
         return link_html
 
     class Meta:
-        model = User
+        model = UserModel
         fields = ['edit_from_misago_link']
 
 
-class UserAdminModel(admin.ModelAdmin):
+class UserAdmin(admin.ModelAdmin):
     """
     Redeclare most of the model fields like read-only.
     Prevents new/delete actions (users should use misago admin panel for
     that).
     Replaces default form with custom `UserAdminForm`.
     """
-
     list_display = (
         'username',
         'email',

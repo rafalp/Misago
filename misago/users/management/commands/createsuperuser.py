@@ -16,6 +16,9 @@ from django.utils.six.moves import input
 from ...validators import validate_email, validate_username
 
 
+UserModel = get_user_model()
+
+
 class NotRunningInTTYException(Exception):
     pass
 
@@ -108,12 +111,10 @@ class Command(BaseCommand):
                     except ValidationError as e:
                         self.stderr.write(e.messages[0])
 
-                User = get_user_model()
-
                 while not password:
                     try:
                         raw_value = getpass("Enter password: ").strip()
-                        validate_password(raw_value, user=User(
+                        validate_password(raw_value, user=UserModel(
                             username=username,
                             email=email
                         ))
@@ -141,9 +142,8 @@ class Command(BaseCommand):
 
     def create_superuser(self, username, email, password, verbosity):
         try:
-            User = get_user_model()
-            user = User.objects.create_superuser(username, email, password,
-                                                 set_default_avatar=True)
+            user = UserModel.objects.create_superuser(
+                username, email, password, set_default_avatar=True)
 
             if verbosity >= 1:
                 message = "Superuser #%(pk)s has been created successfully."

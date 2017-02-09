@@ -26,12 +26,13 @@ from ..serializers.usernamechange import UsernameChangeSerializer
 from ..viewmodels import UserPosts, UserThreads
 
 
+UserModel = get_user_model()
+
+
 def profile_view(f):
     def decorator(request, *args, **kwargs):
-        User = get_user_model()
-
         relations = ('rank', 'online_tracker', 'ban_cache')
-        queryset = User.objects.select_related(*relations)
+        queryset = UserModel.objects.select_related(*relations)
 
         profile = get_object_or_404(queryset, pk=kwargs.pop('pk'))
 

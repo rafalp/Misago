@@ -9,6 +9,9 @@ from ..activepostersranking import build_active_posters_ranking, get_active_post
 from ..testutils import AuthenticatedUserTestCase
 
 
+UserModel = get_user_model()
+
+
 class TestActivePostersRanking(AuthenticatedUserTestCase):
     def setUp(self):
         super(TestActivePostersRanking, self).setUp()
@@ -33,8 +36,7 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         self.assertEqual(empty_ranking['users_count'], 0)
 
         # other user
-        User = get_user_model()
-        other_user = User.objects.create_user(
+        other_user = UserModel.objects.create_user(
             "OtherUser", "other@user.com", "pass123")
 
         other_user.posts = 1
@@ -65,7 +67,7 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         self.assertEqual(ranking['users'][1].score, 1)
 
         # disabled users are not ranked
-        disabled = User.objects.create_user(
+        disabled = UserModel.objects.create_user(
             "DisabledUser", "disabled@user.com", "pass123")
 
         disabled.is_active = False

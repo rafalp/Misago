@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.contrib import admin as djadmin
 from django.utils.translation import ugettext_lazy as _
 
-from .djangoadmin import User, UserAdminModel
+from .djangoadmin import UserModel, UserAdmin
 from .views.admin.bans import BansList, DeleteBan, EditBan, NewBan
 from .views.admin.ranks import (
     DefaultRank, DeleteRank, EditRank, MoveDownRank, MoveUpRank, NewRank,
@@ -12,7 +12,7 @@ from .views.admin.users import (
 
 
 # register misago user model in django admin panel
-djadmin.site.register(model_or_iterable=User, admin_class=UserAdminModel)
+djadmin.site.register(model_or_iterable=UserModel, admin_class=UserAdmin)
 
 
 class MisagoAdminExtension(object):

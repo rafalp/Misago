@@ -7,13 +7,14 @@ from django.utils import formats
 from misago.admin.testutils import AdminTestCase
 
 
+UserModel = get_user_model()
+
+
 @override_settings(ROOT_URLCONF='misago.core.testproject.urls')
 class TestDjangoAdminUserForm(AdminTestCase):
     def test_edit_page_content(self):
         """assert that edit-view of `test_user` contains expected content."""
-        User = get_user_model()
-
-        test_user = User.objects.create_user(
+        test_user = UserModel.objects.create_user(
             username='Bob',
             email='bob@test.com',
             password='Pass.123',

@@ -10,6 +10,9 @@ from misago.conf import settings
 from .models import ActivityRanking
 
 
+UserModel = get_user_model()
+
+
 def get_active_posters_ranking():
     users = []
 
@@ -34,7 +37,7 @@ def build_active_posters_ranking():
     for category in Category.objects.all_categories():
         ranked_categories.append(category.pk)
 
-    queryset = get_user_model().objects.filter(
+    queryset = UserModel.objects.filter(
         is_active=True,
         posts__gt=0
     ).filter(

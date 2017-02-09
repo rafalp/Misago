@@ -13,6 +13,9 @@ from misago.users.testutils import AuthenticatedUserTestCase
 from .. import testutils
 
 
+UserModel = get_user_model()
+
+
 class PostMentionsTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(PostMentionsTests, self).setUp()
@@ -77,9 +80,8 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         """endpoint mentions limits mentions to 24 users"""
         users = []
 
-        User = get_user_model()
         for i in range(MENTIONS_LIMIT + 5):
-            users.append(User.objects.create_user(
+            users.append(UserModel.objects.create_user(
                 'Mention{}'.format(i),
                 'mention{}@bob.com'.format(i),
                 'pass123'
@@ -98,9 +100,8 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
     def test_mention_update(self):
         """edit post endpoint updates mentions"""
-        User = get_user_model()
-        user_a = User.objects.create_user('Mention', 'mention@test.com', 'pass123')
-        user_b = User.objects.create_user('MentionB', 'mentionb@test.com', 'pass123')
+        user_a = UserModel.objects.create_user('Mention', 'mention@test.com', 'pass123')
+        user_b = UserModel.objects.create_user('MentionB', 'mentionb@test.com', 'pass123')
 
         response = self.client.post(self.post_link, data={
             'post': "This is test response, @{}!".format(user_a)
@@ -149,9 +150,8 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
     def test_mentions_merge(self):
         """posts merge sums mentions"""
-        User = get_user_model()
-        user_a = User.objects.create_user('Mention', 'mention@test.com', 'pass123')
-        user_b = User.objects.create_user('MentionB', 'mentionb@test.com', 'pass123')
+        user_a = UserModel.objects.create_user('Mention', 'mention@test.com', 'pass123')
+        user_b = UserModel.objects.create_user('MentionB', 'mentionb@test.com', 'pass123')
 
         response = self.client.post(self.post_link, data={
             'post': "This is test response, @{}!".format(user_a)

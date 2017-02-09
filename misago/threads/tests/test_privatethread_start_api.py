@@ -15,6 +15,9 @@ from misago.users.testutils import AuthenticatedUserTestCase
 from ..models import Thread, ThreadParticipant
 
 
+UserModel = get_user_model()
+
+
 class StartPrivateThreadTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(StartPrivateThreadTests, self).setUp()
@@ -22,8 +25,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         self.category = Category.objects.private_threads()
         self.api_link = reverse('misago:api:private-thread-list')
 
-        User = get_user_model()
-        self.other_user = get_user_model().objects.create_user(
+        self.other_user = UserModel.objects.create_user(
             'BobBoberson', 'bob@boberson.com', 'pass123')
 
     def test_cant_start_thread_as_guest(self):
@@ -193,9 +195,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
 
     def test_cant_invite_followers_only(self):
         """api validates that you cant invite followers-only user to thread"""
-        User = get_user_model()
-
-        user_constant = User.LIMIT_INVITES_TO_FOLLOWED
+        user_constant = UserModel.LIMIT_INVITES_TO_FOLLOWED
         self.other_user.limits_private_thread_invites_to = user_constant
         self.other_user.save()
 
@@ -247,9 +247,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
 
     def test_cant_invite_anyone(self):
         """api validates that you cant invite nobody user to thread"""
-        User = get_user_model()
-
-        user_constant = User.LIMIT_INVITES_TO_NOBODY
+        user_constant = UserModel.LIMIT_INVITES_TO_NOBODY
         self.other_user.limits_private_thread_invites_to = user_constant
         self.other_user.save()
 
@@ -339,8 +337,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         )
 
         # other user has sync_unread_private_threads flag
-        User = get_user_model()
-        user_to_sync = User.objects.get(sync_unread_private_threads=True)
+        user_to_sync = UserModel.objects.get(sync_unread_private_threads=True)
         self.assertEqual(user_to_sync, self.other_user)
 
         # notification about new private thread was sent to other user

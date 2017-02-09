@@ -15,10 +15,11 @@ from .models import Model
 from .serializers import MockSerializer
 
 
-def test_mail_user(request):
-    User = get_user_model()
+UserModel = get_user_model()
 
-    test_user = User.objects.all().first()
+
+def test_mail_user(request):
+    test_user = UserModel.objects.all().first()
     mail.mail_user(request,
                    test_user,
                    "Misago Test Mail",
@@ -28,10 +29,8 @@ def test_mail_user(request):
 
 
 def test_mail_users(request):
-    User = get_user_model()
-
     mail.mail_users(request,
-                    User.objects.iterator(),
+                    UserModel.objects.iterator(),
                     "Misago Test Spam",
                     "misago/emails/base")
 

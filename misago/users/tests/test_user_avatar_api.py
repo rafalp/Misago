@@ -18,6 +18,8 @@ from ..testutils import AuthenticatedUserTestCase
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testfiles')
 TEST_AVATAR_PATH = os.path.join(TESTFILES_DIR, 'avatar.png')
 
+UserModel = get_user_model()
+
 
 class UserAvatarTests(AuthenticatedUserTestCase):
     """
@@ -28,7 +30,6 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.link = '/api/users/%s/avatar/' % self.user.pk
 
     def get_current_user(self):
-        UserModel = get_user_model()
         return UserModel.objects.get(pk=self.user.pk)
 
     def test_avatars_off(self):
@@ -85,8 +86,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertContains(response, "You have to sign in", status_code=403)
 
-        User = get_user_model()
-        self.login_user(User.objects.create_user(
+        self.login_user(UserModel.objects.create_user(
             "BobUser", "bob@bob.com", self.USER_PASSWORD))
 
         response = self.client.get(self.link)
@@ -278,8 +278,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserAvatarModerationTests, self).setUp()
 
-        User = get_user_model()
-        self.other_user = User.objects.create_user(
+        self.other_user = UserModel.objects.create_user(
             "OtherUser", "other@user.com", "pass123")
 
         self.link = '/api/users/%s/moderate-avatar/' % self.other_user.pk
@@ -329,8 +328,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
-        User = get_user_model()
-        other_user = User.objects.get(pk=self.other_user.pk)
+        other_user = UserModel.objects.get(pk=self.other_user.pk)
 
         options = response.json()
         self.assertEqual(other_user.is_avatar_locked, True)
@@ -360,7 +358,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
-        other_user = User.objects.get(pk=self.other_user.pk)
+        other_user = UserModel.objects.get(pk=self.other_user.pk)
 
         options = response.json()
         self.assertEqual(

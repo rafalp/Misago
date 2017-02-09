@@ -10,6 +10,9 @@ from ..models import Ban
 from ..testutils import AuthenticatedUserTestCase
 
 
+UserModel = get_user_model()
+
+
 class UserProfileViewsTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserProfileViewsTests, self).setUp()
@@ -33,8 +36,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.user.is_staff = False
         self.user.save()
 
-        User = get_user_model()
-        test_user = User.objects.create_user('Tyrael', 't123@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Tyrael', 't123@test.com', 'pass123')
 
         test_user.is_active = False
         test_user.save()
@@ -98,8 +100,6 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
     def test_user_followers(self):
         """user profile followers list has no showstoppers"""
-        User = get_user_model()
-
         response = self.client.get(reverse('misago:user-followers',
                                            kwargs=self.link_kwargs))
 
@@ -109,7 +109,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         followers = []
         for i in range(10):
             user_data = ("Follower%s" % i, "foll%s@test.com" % i, "Pass.123")
-            followers.append(User.objects.create_user(*user_data))
+            followers.append(UserModel.objects.create_user(*user_data))
             self.user.followed_by.add(followers[-1])
 
         response = self.client.get(reverse('misago:user-followers',
@@ -120,8 +120,6 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
     def test_user_follows(self):
         """user profile follows list has no showstoppers"""
-        User = get_user_model()
-
         response = self.client.get(reverse('misago:user-follows',
                                            kwargs=self.link_kwargs))
 
@@ -131,7 +129,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         followers = []
         for i in range(10):
             user_data = ("Follower%s" % i, "foll%s@test.com" % i, "Pass.123")
-            followers.append(User.objects.create_user(*user_data))
+            followers.append(UserModel.objects.create_user(*user_data))
             followers[-1].followed_by.add(self.user)
 
         response = self.client.get(reverse('misago:user-follows',
@@ -152,8 +150,9 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.user.set_username('TestUser')
         self.user.save()
 
-        response = self.client.get(reverse('misago:username-history',
-                                           kwargs=self.link_kwargs))
+        response = self.client.get(
+            reverse('misago:username-history', kwargs=self.link_kwargs))
+
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "TestUser")
         self.assertContains(response, "RenamedAdmin")
@@ -164,8 +163,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
             'can_see_ban_details': 0,
         })
 
-        User = get_user_model()
-        test_user = User.objects.create_user("Bob", "bob@bob.com", 'pass.123')
+        test_user = UserModel.objects.create_user("Bob", "bob@bob.com", 'pass.123')
         link_kwargs = {'slug': test_user.slug, 'pk': test_user.pk}
 
         response = self.client.get(reverse('misago:user-ban',
@@ -185,13 +183,16 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         })
         test_user.ban_cache.delete()
 
-        Ban.objects.create(banned_value=test_user.username,
-                           user_message="User m3ss4ge.",
-                           staff_message="Staff m3ss4ge.",
-                           is_checked=True)
+        Ban.objects.create(
+            banned_value=test_user.username,
+            user_message="User m3ss4ge.",
+            staff_message="Staff m3ss4ge.",
+            is_checked=True
+        )
 
-        response = self.client.get(reverse('misago:user-ban',
-                                           kwargs=link_kwargs))
+        response = self.client.get(
+            reverse('misago:user-ban', kwargs=link_kwargs))
+
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'User m3ss4ge')
         self.assertContains(response, 'Staff m3ss4ge')

@@ -10,6 +10,9 @@ from ..bans import (
 from ..models import Ban
 
 
+UserModel = get_user_model()
+
+
 class GetBanTests(TestCase):
     def test_get_username_ban(self):
         """get_username_ban returns valid ban"""
@@ -99,10 +102,8 @@ class GetBanTests(TestCase):
 
 class UserBansTests(TestCase):
     def setUp(self):
-        User = get_user_model()
-        self.user = User.objects.create_user('Bob',
-                                             'bob@boberson.com',
-                                             'pass123')
+        self.user = UserModel.objects.create_user(
+            'Bob', 'bob@boberson.com', 'pass123')
 
     def test_no_ban(self):
         """user is not caught by ban"""
@@ -224,8 +225,8 @@ class RequestIPBansTests(TestCase):
 class BanUserTests(TestCase):
     def test_ban_user(self):
         """ban_user utility bans user"""
-        User = get_user_model()
-        user = User.objects.create_user('Bob', 'bob@boberson.com', 'pass123')
+        user = UserModel.objects.create_user(
+            'Bob', 'bob@boberson.com', 'pass123')
 
         ban = ban_user(user, 'User reason', 'Staff reason')
         self.assertEqual(ban.user_message, 'User reason')

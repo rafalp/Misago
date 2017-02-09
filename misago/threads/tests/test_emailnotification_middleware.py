@@ -17,6 +17,9 @@ from misago.users.testutils import AuthenticatedUserTestCase
 from .. import testutils
 
 
+UserModel = get_user_model()
+
+
 class EmailNotificationTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(EmailNotificationTests, self).setUp()
@@ -32,7 +35,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             'thread_pk': self.thread.pk
         })
 
-        self.other_user = get_user_model().objects.create_user(
+        self.other_user = UserModel.objects.create_user(
             'Bob', 'bob@boberson.com', 'pass123')
 
     def override_acl(self):

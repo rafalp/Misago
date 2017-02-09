@@ -8,6 +8,9 @@ from ..models import Ban
 from ..tokens import make_activation_token
 
 
+UserModel = get_user_model()
+
+
 class ActivationViewsTests(TestCase):
     def test_request_view_returns_200(self):
         """request new activation link view returns 200"""
@@ -16,9 +19,8 @@ class ActivationViewsTests(TestCase):
 
     def test_view_activate_banned(self):
         """activate banned user shows error"""
-        User = get_user_model()
-        test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123',
-                                             requires_activation=1)
+        test_user = UserModel.objects.create_user(
+            'Bob', 'bob@test.com', 'Pass.123', requires_activation=1)
         Ban.objects.create(
             check_type=Ban.USERNAME,
             banned_value='bob',
@@ -34,14 +36,13 @@ class ActivationViewsTests(TestCase):
         self.assertContains(
             response, encode_json_html("<p>Nope!</p>"), status_code=403)
 
-        test_user = User.objects.get(pk=test_user.pk)
+        test_user = UserModel.objects.get(pk=test_user.pk)
         self.assertEqual(test_user.requires_activation, 1)
 
     def test_view_activate_invalid_token(self):
         """activate with invalid token shows error"""
-        User = get_user_model()
-        test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123',
-                                             requires_activation=1)
+        test_user = UserModel.objects.create_user(
+            'Bob', 'bob@test.com', 'Pass.123', requires_activation=1)
 
         activation_token = make_activation_token(test_user)
 
@@ -51,13 +52,12 @@ class ActivationViewsTests(TestCase):
         }))
         self.assertEqual(response.status_code, 400)
 
-        test_user = User.objects.get(pk=test_user.pk)
+        test_user = UserModel.objects.get(pk=test_user.pk)
         self.assertEqual(test_user.requires_activation, 1)
 
     def test_view_activate_disabled(self):
         """activate disabled user shows error"""
-        User = get_user_model()
-        test_user = User.objects.create_user(
+        test_user = UserModel.objects.create_user(
             'Bob', 'bob@test.com', 'Pass.123', is_active=False)
 
         activation_token = make_activation_token(test_user)
@@ -70,8 +70,8 @@ class ActivationViewsTests(TestCase):
 
     def test_view_activate_active(self):
         """activate active user shows error"""
-        User = get_user_model()
-        test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+        test_user = UserModel.objects.create_user(
+            'Bob', 'bob@test.com', 'Pass.123')
 
         activation_token = make_activation_token(test_user)
 
@@ -81,14 +81,13 @@ class ActivationViewsTests(TestCase):
         }))
         self.assertEqual(response.status_code, 200)
 
-        test_user = User.objects.get(pk=test_user.pk)
+        test_user = UserModel.objects.get(pk=test_user.pk)
         self.assertEqual(test_user.requires_activation, 0)
 
     def test_view_activate_inactive(self):
         """activate inactive user passess"""
-        User = get_user_model()
-        test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123',
-                                             requires_activation=1)
+        test_user = UserModel.objects.create_user(
+            'Bob', 'bob@test.com', 'Pass.123', requires_activation=1)
 
         activation_token = make_activation_token(test_user)
 
@@ -99,5 +98,5 @@ class ActivationViewsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "your account has been activated!")
 
-        test_user = User.objects.get(pk=test_user.pk)
+        test_user = UserModel.objects.get(pk=test_user.pk)
         self.assertEqual(test_user.requires_activation, 0)

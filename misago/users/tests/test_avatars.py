@@ -13,17 +13,20 @@ from ..avatars import (
 from ..models import Avatar, AvatarGallery
 
 
+UserModel = get_user_model()
+
+
 class AvatarsStoreTests(TestCase):
     def test_store(self):
         """store successfully stores and deletes avatar"""
-        User = get_user_model()
-        user = User.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        user = UserModel.objects.create_user(
+            'Bob', 'bob@bob.com', 'pass123')
 
         test_image = Image.new("RGBA", (100, 100), 0)
         store.store_new_avatar(user, test_image)
 
         # reload user
-        test_user = User.objects.get(pk=user.pk)
+        test_user = UserModel.objects.get(pk=user.pk)
 
         # assert that avatars were stored in media
         avatars_dict = {}
@@ -84,8 +87,7 @@ class AvatarsStoreTests(TestCase):
 
 class AvatarSetterTests(TestCase):
     def setUp(self):
-        User = get_user_model()
-        self.user = User.objects.create_user(
+        self.user = UserModel.objects.create_user(
             'Bob', 'kontakt@rpiton.com', 'pass123')
 
         self.user.avatars = None
@@ -95,8 +97,7 @@ class AvatarSetterTests(TestCase):
         store.delete_avatar(self.user)
 
     def get_current_user(self):
-        User = get_user_model()
-        return User.objects.get(pk=self.user.pk)
+        return UserModel.objects.get(pk=self.user.pk)
 
     def assertNoAvatarIsSet(self):
         user = self.get_current_user()

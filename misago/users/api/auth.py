@@ -18,6 +18,9 @@ from ..tokens import is_password_change_token_valid, make_activation_token, make
 from .rest_permissions import UnbannedAnonOnly, UnbannedOnly
 
 
+UserModel = auth.get_user_model()
+
+
 def gateway(request):
     if request.method == 'POST':
         return login(request)
@@ -158,15 +161,13 @@ class PasswordChangeFailed(Exception):
 @permission_classes((UnbannedOnly,))
 @csrf_protect
 def change_forgotten_password(request, pk, token):
-    User = auth.get_user_model()
-
     invalid_message = _("Form link is invalid. Please try again.")
     expired_message = _("Your link has expired. Please request new one.")
 
     try:
         try:
-            user = User.objects.get(pk=pk, is_active=True)
-        except User.DoesNotExist:
+            user = UserModel.objects.get(pk=pk, is_active=True)
+        except UserModel.DoesNotExist:
             raise PasswordChangeFailed(invalid_message)
 
         if request.user.is_authenticated and request.user.id != user.id:

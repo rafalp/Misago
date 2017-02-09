@@ -18,6 +18,9 @@ from ...online.utils import make_users_status_aware
 from ...serializers import ScoredUserSerializer, UserSerializer
 
 
+UserModel = get_user_model()
+
+
 def active(request):
     ranking = get_active_posters_ranking()
     make_users_status_aware(request.user, ranking['users'], fetch_state=True)
@@ -35,7 +38,7 @@ def generic(request):
         page = 0 # api allows explicit first page
 
     allow_name_search = True
-    queryset = get_user_model().objects
+    queryset = UserModel.objects
 
     if not request.user.is_staff:
         queryset = queryset.filter(is_active=True)

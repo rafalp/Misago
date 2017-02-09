@@ -10,6 +10,8 @@ from .serializers import UserSerializer
 HEAD_RESULTS = 8
 TAIL_RESULTS = 8
 
+UserModel = get_user_model()
+
 
 class SearchUsers(SearchProvider):
     name = ugettext_lazy("Users")
@@ -36,8 +38,7 @@ class SearchUsers(SearchProvider):
 
 
 def search_users(**filters):
-    User = get_user_model()
-    queryset = User.objects.order_by('slug').select_related(
+    queryset = UserModel.objects.order_by('slug').select_related(
         'rank', 'ban_cache', 'online_tracker')
 
     if not filters.get('search_disabled', False):

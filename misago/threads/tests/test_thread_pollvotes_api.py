@@ -8,6 +8,9 @@ from ..models import Poll
 from .test_thread_poll_api import ThreadPollApiTestCase
 
 
+UserModel = get_user_model()
+
+
 class ThreadGetVotesTests(ThreadPollApiTestCase):
     def setUp(self):
         super(ThreadGetVotesTests, self).setUp()
@@ -105,8 +108,7 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
 
         self.assertEqual([[v['username'] for v in c['voters']] for c in response_json][0][0], 'bob')
 
-        User = get_user_model()
-        user =  User.objects.get(slug='bob')
+        user = UserModel.objects.get(slug='bob')
 
         self.assertEqual(
             [[v['url'] for v in c['voters']] for c in response_json][0][0], user.get_absolute_url())
@@ -132,8 +134,7 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
 
         self.assertEqual([[v['username'] for v in c['voters']] for c in response_json][0][0], 'bob')
 
-        User = get_user_model()
-        user =  User.objects.get(slug='bob')
+        user = UserModel.objects.get(slug='bob')
 
         self.assertEqual(
             [[v['url'] for v in c['voters']] for c in response_json][0][0], user.get_absolute_url())

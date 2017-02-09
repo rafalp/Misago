@@ -5,6 +5,9 @@ from django.contrib.auth.password_validation import validate_password
 from .. import validators
 
 
+UserModel = get_user_model()
+
+
 class RegisterForm(forms.Form):
     username = forms.CharField(validators=[validators.validate_username])
     email = forms.CharField(validators=[validators.validate_email])
@@ -19,7 +22,6 @@ class RegisterForm(forms.Form):
 
     def full_clean_password(self, cleaned_data):
         if cleaned_data.get('password'):
-            UserModel = get_user_model()
             validate_password(
                 cleaned_data['password'],
                 user=UserModel(

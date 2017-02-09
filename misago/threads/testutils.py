@@ -9,6 +9,9 @@ from .checksums import update_post_checksum
 from .models import Poll, Post, Thread
 
 
+UserModel = get_user_model()
+
+
 def post_thread(category, title='Test thread', poster='Tester',
                 is_global=False, is_pinned=False, is_unapproved=False,
                 is_hidden=False, is_closed=False, started_on=None):
@@ -134,11 +137,11 @@ def post_poll(thread, poster):
     )
 
     # one user voted for Alpha choice
-    User = get_user_model()
     try:
-        user = User.objects.get(slug='bob')
-    except User.DoesNotExist:
-        user = User.objects.create_user('bob', 'bob@test.com', 'Pass.123')
+        user = UserModel.objects.get(slug='bob')
+    except UserModel.DoesNotExist:
+        user = UserModel.objects.create_user(
+            'bob', 'bob@test.com', 'Pass.123')
 
     poll.pollvote_set.create(
         category=thread.category,

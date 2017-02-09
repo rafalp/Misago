@@ -8,11 +8,14 @@ from misago.core.management.progressbar import show_progress
 from misago.core.pgutils import batch_update
 
 
+UserModel = get_user_model()
+
+
 class Command(BaseCommand):
     help = "Synchronizes users"
 
     def handle(self, *args, **options):
-        users_to_sync = get_user_model().objects.count()
+        users_to_sync = UserModel.objects.count()
 
         if not users_to_sync:
             self.stdout.write("\n\nNo users were found")
@@ -28,7 +31,7 @@ class Command(BaseCommand):
         synchronized_count = 0
         show_progress(self, synchronized_count, users_to_sync)
         start_time = time.time()
-        for user in batch_update(get_user_model().objects.all()):
+        for user in batch_update(UserModel.objects.all()):
             user.threads = user.thread_set.filter(
                 category__in=categories,
                 is_hidden=False,

@@ -21,6 +21,10 @@ from ...englishcorpus import EnglishCorpus
 
 PLACEKITTEN_URL = 'https://placekitten.com/g/%s/%s'
 
+
+UserModel = get_user_model()
+
+
 corpus = EnglishCorpus()
 corpus_short = EnglishCorpus(max_length=150)
 
@@ -44,8 +48,7 @@ class Command(BaseCommand):
 
         fake = Factory.create()
 
-        User = get_user_model()
-        total_users = User.objects.count()
+        total_users = UserModel.objects.count()
 
         self.stdout.write('Creating fake threads...\n')
 
@@ -59,7 +62,7 @@ class Command(BaseCommand):
             with atomic():
                 datetime = timezone.now()
                 category = random.choice(categories)
-                user = User.objects.order_by('?')[:1][0]
+                user = UserModel.objects.order_by('?')[:1][0]
 
                 thread_is_unapproved = random.randint(0, 100) > 90
                 thread_is_hidden = random.randint(0, 100) > 90
@@ -115,7 +118,7 @@ class Command(BaseCommand):
 
                 for x in range(thread_replies):
                     datetime = timezone.now()
-                    user = User.objects.order_by('?')[:1][0]
+                    user = UserModel.objects.order_by('?')[:1][0]
 
                     original, parsed = self.fake_post_content()
 
@@ -143,7 +146,7 @@ class Command(BaseCommand):
                         post.is_hidden = True
 
                         if random.randint(0, 100) < 80:
-                            user = User.objects.order_by('?')[:1][0]
+                            user = UserModel.objects.order_by('?')[:1][0]
                             post.hidden_by = user
                             post.hidden_by_name = user.username
                             post.hidden_by_slug = user.username

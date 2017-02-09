@@ -6,6 +6,9 @@ from ..models import Ban
 from ..tokens import make_password_change_token
 
 
+UserModel = get_user_model()
+
+
 class GatewayTests(TestCase):
     def test_api_invalid_credentials(self):
         """login api returns 400 on invalid POST"""
@@ -23,8 +26,7 @@ class GatewayTests(TestCase):
 
     def test_login(self):
         """api signs user in"""
-        User = get_user_model()
-        user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+        user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
         response = self.client.post('/api/auth/', data={
             'username': 'Bob',
@@ -47,8 +49,7 @@ class GatewayTests(TestCase):
 
     def test_login_banned(self):
         """login api fails to sign banned user in"""
-        User = get_user_model()
-        User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+        UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
         ban = Ban.objects.create(
             check_type=Ban.USERNAME,
@@ -77,8 +78,7 @@ class GatewayTests(TestCase):
 
     def test_login_banned_staff(self):
         """login api signs banned staff member in"""
-        User = get_user_model()
-        user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+        user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
         user.is_staff = True
         user.save()
@@ -104,8 +104,7 @@ class GatewayTests(TestCase):
 
     def test_login_inactive_admin(self):
         """login api fails to sign admin-activated user in"""
-        User = get_user_model()
-        User.objects.create_user(
+        UserModel.objects.create_user(
             'Bob', 'bob@test.com', 'Pass.123', requires_activation=1)
 
         response = self.client.post('/api/auth/', data={
@@ -125,8 +124,7 @@ class GatewayTests(TestCase):
 
     def test_login_inactive_user(self):
         """login api fails to sign user-activated user in"""
-        User = get_user_model()
-        User.objects.create_user(
+        UserModel.objects.create_user(
             'Bob', 'bob@test.com', 'Pass.123', requires_activation=2)
 
         response = self.client.post('/api/auth/', data={
@@ -146,8 +144,7 @@ class GatewayTests(TestCase):
 
     def test_login_disabled_user(self):
         """its impossible to sign in to disabled account"""
-        User = get_user_model()
-        user = User.objects.create_user(
+        user = UserModel.objects.create_user(
             'Bob', 'bob@test.com', 'Pass.123', is_active=False)
 
         user.is_staff = True
@@ -175,8 +172,7 @@ class UserCredentialsTests(TestCase):
 
 class SendActivationAPITests(TestCase):
     def setUp(self):
-        User = get_user_model()
-        self.user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+        self.user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
         self.user.requires_activation = 1
         self.user.save()
 
@@ -256,8 +252,7 @@ class SendActivationAPITests(TestCase):
 
 class SendPasswordFormAPITests(TestCase):
     def setUp(self):
-        User = get_user_model()
-        self.user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+        self.user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
         self.link = '/api/auth/send-password-form/'
 
@@ -324,8 +319,7 @@ class SendPasswordFormAPITests(TestCase):
 
 class ChangePasswordAPITests(TestCase):
     def setUp(self):
-        User = get_user_model()
-        self.user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+        self.user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
         self.link = '/api/auth/change-password/%s/%s/'
 
@@ -337,7 +331,7 @@ class ChangePasswordAPITests(TestCase):
         ), data={'password': 'n3wp4ss!'})
         self.assertEqual(response.status_code, 200)
 
-        user = get_user_model().objects.get(id=self.user.pk)
+        user = UserModel.objects.get(id=self.user.pk)
         self.assertTrue(user.check_password('n3wp4ss!'))
 
     def test_invalid_token_link(self):

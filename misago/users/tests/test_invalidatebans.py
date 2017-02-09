@@ -12,6 +12,9 @@ from ..management.commands import invalidatebans
 from ..models import Ban, BanCache
 
 
+UserModel = get_user_model()
+
+
 class InvalidateBansTests(TestCase):
     def test_expired_bans_handling(self):
         """expired bans are flagged as such"""
@@ -35,9 +38,7 @@ class InvalidateBansTests(TestCase):
 
     def test_bans_caches_updates(self):
         """ban caches are updated"""
-        # create user
-        User = get_user_model()
-        user = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
+        user = UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
 
         # ban user
         Ban.objects.create(banned_value="bob")
@@ -70,5 +71,5 @@ class InvalidateBansTests(TestCase):
         self.assertEqual(Ban.objects.filter(is_checked=True).count(), 0)
 
         # see if user is banned anymore
-        user = User.objects.get(id=user.id)
+        user = UserModel.objects.get(id=user.id)
         self.assertIsNone(bans.get_user_ban(user))

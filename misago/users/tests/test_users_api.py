@@ -18,6 +18,9 @@ from ..models import Ban, Rank
 from ..testutils import AuthenticatedUserTestCase
 
 
+UserModel = get_user_model()
+
+
 class ActivePostersListTests(AuthenticatedUserTestCase):
     """
     tests for active posters list (GET /users/?list=active)
@@ -86,8 +89,7 @@ class FollowersListTests(AuthenticatedUserTestCase):
 
     def test_filled_list(self):
         """user with followers returns 200"""
-        User = get_user_model()
-        test_follower = User.objects.create_user(
+        test_follower = UserModel.objects.create_user(
             "TestFollower", "test@follower.com", self.USER_PASSWORD)
         self.user.followed_by.add(test_follower)
 
@@ -116,8 +118,7 @@ class FollowsListTests(AuthenticatedUserTestCase):
 
     def test_filled_list(self):
         """user with follows returns 200"""
-        User = get_user_model()
-        test_follower = User.objects.create_user(
+        test_follower = UserModel.objects.create_user(
             "TestFollower", "test@follower.com", self.USER_PASSWORD)
         self.user.follows.add(test_follower)
 
@@ -127,8 +128,7 @@ class FollowsListTests(AuthenticatedUserTestCase):
 
     def test_filled_list_search(self):
         """follows list is searchable"""
-        User = get_user_model()
-        test_follower = User.objects.create_user(
+        test_follower = UserModel.objects.create_user(
             "TestFollower", "test@follower.com", self.USER_PASSWORD)
         self.user.follows.add(test_follower)
 
@@ -195,8 +195,7 @@ class RankListTests(AuthenticatedUserTestCase):
             is_tab=True
         )
 
-        User = get_user_model()
-        test_user = User.objects.create_user(
+        test_user = UserModel.objects.create_user(
             'Visible', 'visible@te.com', 'Pass.123',
             rank=test_rank, is_active=False
         )
@@ -235,8 +234,7 @@ class UserRetrieveTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserRetrieveTests, self).setUp()
 
-        User = get_user_model()
-        self.test_user = User.objects.create_user('Tyrael', 't123@test.com', 'pass123')
+        self.test_user = UserModel.objects.create_user('Tyrael', 't123@test.com', 'pass123')
         self.link = reverse('misago:api:user-detail', kwargs={
             'pk': self.test_user.pk
         })
@@ -339,8 +337,7 @@ class UserFollowTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserFollowTests, self).setUp()
 
-        User = get_user_model()
-        self.other_user = User.objects.create_user(
+        self.other_user = UserModel.objects.create_user(
             "OtherUser", "other@user.com", "pass123")
 
         self.link = '/api/users/%s/follow/' % self.other_user.pk
@@ -371,15 +368,14 @@ class UserFollowTests(AuthenticatedUserTestCase):
         response = self.client.post(self.link)
         self.assertEqual(response.status_code, 200)
 
-        User = get_user_model()
 
-        user = User.objects.get(pk=self.user.pk)
+        user = UserModel.objects.get(pk=self.user.pk)
         self.assertEqual(user.followers, 0)
         self.assertEqual(user.following, 1)
         self.assertEqual(user.follows.count(), 1)
         self.assertEqual(user.followed_by.count(), 0)
 
-        followed = User.objects.get(pk=self.other_user.pk)
+        followed = UserModel.objects.get(pk=self.other_user.pk)
         self.assertEqual(followed.followers, 1)
         self.assertEqual(followed.following, 0)
         self.assertEqual(followed.follows.count(), 0)
@@ -388,13 +384,13 @@ class UserFollowTests(AuthenticatedUserTestCase):
         response = self.client.post(self.link)
         self.assertEqual(response.status_code, 200)
 
-        user = User.objects.get(pk=self.user.pk)
+        user = UserModel.objects.get(pk=self.user.pk)
         self.assertEqual(user.followers, 0)
         self.assertEqual(user.following, 0)
         self.assertEqual(user.follows.count(), 0)
         self.assertEqual(user.followed_by.count(), 0)
 
-        followed = User.objects.get(pk=self.other_user.pk)
+        followed = UserModel.objects.get(pk=self.other_user.pk)
         self.assertEqual(followed.followers, 0)
         self.assertEqual(followed.following, 0)
         self.assertEqual(followed.follows.count(), 0)
@@ -408,8 +404,7 @@ class UserBanTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserBanTests, self).setUp()
 
-        User = get_user_model()
-        self.other_user = User.objects.create_user(
+        self.other_user = UserModel.objects.create_user(
             "OtherUser", "other@user.com", "pass123")
 
         self.link = '/api/users/%s/ban/' % self.other_user.pk
@@ -460,8 +455,7 @@ class UserDeleteTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserDeleteTests, self).setUp()
 
-        User = get_user_model()
-        self.other_user = User.objects.create_user(
+        self.other_user = UserModel.objects.create_user(
             "OtherUser", "other@user.com", "pass123")
 
         self.link = '/api/users/%s/delete/' % self.other_user.pk
@@ -579,9 +573,8 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
-        User = get_user_model()
-        with self.assertRaises(User.DoesNotExist):
-            User.objects.get(pk=self.other_user.pk)
+        with self.assertRaises(UserModel.DoesNotExist):
+            UserModel.objects.get(pk=self.other_user.pk)
 
         self.assertEqual(Thread.objects.count(), self.threads)
         self.assertEqual(Post.objects.count(), self.posts)
@@ -598,9 +591,8 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
-        User = get_user_model()
-        with self.assertRaises(User.DoesNotExist):
-            User.objects.get(pk=self.other_user.pk)
+        with self.assertRaises(UserModel.DoesNotExist):
+            UserModel.objects.get(pk=self.other_user.pk)
 
         self.assertEqual(Thread.objects.count(), self.threads + 1)
         self.assertEqual(Post.objects.count(), self.posts + 2)

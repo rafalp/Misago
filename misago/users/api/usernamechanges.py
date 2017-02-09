@@ -14,6 +14,9 @@ from ..serializers.usernamechange import UsernameChangeSerializer
 from .rest_permissions import BasePermission
 
 
+UserModel = get_user_model()
+
+
 class UsernameChangesViewSetPermission(BasePermission):
     def has_permission(self, request, view):
         try:
@@ -39,7 +42,7 @@ class UsernameChangesViewSet(viewsets.GenericViewSet):
         if self.request.query_params.get('user'):
             user_pk = get_int_or_404(self.request.query_params.get('user'))
             queryset = get_object_or_404(
-                get_user_model().objects, pk=user_pk).namechanges
+                UserModel.objects, pk=user_pk).namechanges
 
         if self.request.query_params.get('search'):
             search_phrase = self.request.query_params.get('search').strip()

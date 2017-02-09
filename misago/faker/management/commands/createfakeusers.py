@@ -15,6 +15,9 @@ from misago.users.avatars import dynamic, gallery
 from misago.users.models import Rank
 
 
+UserModel = get_user_model()
+
+
 class Command(BaseCommand):
     help = "Creates fake users for dev and testing purposes."
 
@@ -31,7 +34,6 @@ class Command(BaseCommand):
         items_to_create = options['users']
 
         fake = Factory.create()
-        User = get_user_model()
 
         ranks = [r for r in Rank.objects.all()]
 
@@ -50,7 +52,7 @@ class Command(BaseCommand):
                     'rank': random.choice(ranks),
                 }
 
-                user = User.objects.create_user(
+                user = UserModel.objects.create_user(
                     fake.first_name(), fake.email(), 'pass123',
                     set_default_avatar=False, **kwargs)
 

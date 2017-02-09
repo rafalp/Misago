@@ -1,7 +1,9 @@
+from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.test import TestCase
 
-from ..models import User
+
+UserModel = get_user_model()
 
 
 class CreateSuperUserTests(TestCase):
@@ -17,7 +19,7 @@ class CreateSuperUserTests(TestCase):
 
         call_command('createsuperuser', **opts)
 
-        user = User.objects.get(username=opts['username'])
+        user = UserModel.objects.get(username=opts['username'])
         self.assertEqual(user.username, opts['username'])
         self.assertEqual(user.email, opts['email'])
         self.assertTrue(user.check_password(opts['password']))

@@ -1,9 +1,11 @@
 from django.contrib.auth import get_user_model
-from django.urls import reverse
 
 from misago.core.testutils import MisagoTestCase
 
 from .models import AnonymousUser, Online
+
+
+UserModel = get_user_model()
 
 
 class UserTestCase(MisagoTestCase):
@@ -20,13 +22,11 @@ class UserTestCase(MisagoTestCase):
         return AnonymousUser()
 
     def get_authenticated_user(self):
-        User = get_user_model()
-        return User.objects.create_user(
+        return UserModel.objects.create_user(
             "TestUser", "test@user.com", self.USER_PASSWORD)
 
     def get_superuser(self):
-        User = get_user_model()
-        return User.objects.create_superuser(
+        return UserModel.objects.create_superuser(
             "TestSuperUser", "test@superuser.com", self.USER_PASSWORD)
 
     def login_user(self, user, password=None):
@@ -44,8 +44,7 @@ class AuthenticatedUserTestCase(UserTestCase):
         self.login_user(self.user)
 
     def reload_user(self):
-        User = get_user_model()
-        self.user = User.objects.get(id=self.user.id)
+        self.user = UserModel.objects.get(id=self.user.id)
 
 
 class SuperUserTestCase(AuthenticatedUserTestCase):

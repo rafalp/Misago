@@ -37,6 +37,9 @@ from .userendpoints.signature import signature_endpoint
 from .userendpoints.username import moderate_username_endpoint, username_endpoint
 
 
+UserModel = get_user_model()
+
+
 class UserViewSetPermission(BasePermission):
     def has_permission(self, request, view):
         if view.action == 'create':
@@ -56,7 +59,7 @@ def allow_self_only(user, pk, message):
 class UserViewSet(viewsets.GenericViewSet):
     permission_classes = (UserViewSetPermission,)
     parser_classes=(FormParser, JSONParser, MultiPartParser)
-    queryset = get_user_model().objects
+    queryset = UserModel.objects
 
     def get_queryset(self):
         relations = ('rank', 'online_tracker', 'ban_cache')

@@ -8,6 +8,9 @@ from .events import record_event
 from .models import ThreadParticipant
 
 
+UserModel = get_user_model()
+
+
 def has_participants(thread):
     return thread.threadparticipant_set.exists()
 
@@ -62,8 +65,7 @@ def set_users_unread_private_threads_sync(
     if not users_ids:
         return
 
-    User = get_user_model()
-    User.objects.filter(id__in=set(users_ids)).update(
+    UserModel.objects.filter(id__in=set(users_ids)).update(
         sync_unread_private_threads=True
     )
 

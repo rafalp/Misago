@@ -11,6 +11,9 @@ from ..models import Rank
 from ..testutils import AuthenticatedUserTestCase
 
 
+UserModel = get_user_model()
+
+
 class UsersListTestCase(AuthenticatedUserTestCase):
     def setUp(self):
         super(UsersListTestCase, self).setUp()
@@ -54,9 +57,8 @@ class ActivePostersTests(UsersListTestCase):
         self.assertEqual(response.status_code, 200)
 
         # Create 50 test users and see if errors appeared
-        User = get_user_model()
         for i in range(50):
-            user = User.objects.create_user(
+            user = UserModel.objects.create_user(
                 'Bob%s' % i, 'm%s@te.com' % i, 'Pass.123', posts=12345)
             post_thread(category, poster=user)
 
@@ -69,8 +71,7 @@ class ActivePostersTests(UsersListTestCase):
 class UsersRankTests(UsersListTestCase):
     def test_ranks(self):
         """ranks lists are handled correctly"""
-        User = get_user_model()
-        rank_user = User.objects.create_user(
+        rank_user = UserModel.objects.create_user(
             'Visible', 'visible@te.com', 'Pass.123')
 
         for rank in Rank.objects.iterator():
@@ -88,8 +89,7 @@ class UsersRankTests(UsersListTestCase):
 
     def test_disabled_users(self):
         """ranks lists excludes disabled accounts"""
-        User = get_user_model()
-        rank_user = User.objects.create_user(
+        rank_user = UserModel.objects.create_user(
             'Visible', 'visible@te.com', 'Pass.123', is_active=False)
 
         for rank in Rank.objects.iterator():
@@ -110,8 +110,7 @@ class UsersRankTests(UsersListTestCase):
         self.user.is_staff = True
         self.user.save()
 
-        User = get_user_model()
-        rank_user = User.objects.create_user(
+        rank_user = UserModel.objects.create_user(
             'Visible', 'visible@te.com', 'Pass.123', is_active=False)
 
         for rank in Rank.objects.iterator():

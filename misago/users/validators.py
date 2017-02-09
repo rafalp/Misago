@@ -18,17 +18,18 @@ from .bans import get_email_ban, get_username_ban
 
 USERNAME_RE = re.compile(r'^[0-9a-z]+$', re.IGNORECASE)
 
+UserModel = get_user_model()
+
 
 """
 Email validators
 """
 def validate_email_available(value, exclude=None):
-    User = get_user_model()
     try:
-        user = User.objects.get_by_email(value)
+        user = UserModel.objects.get_by_email(value)
         if not exclude or user.pk != exclude.pk:
             raise ValidationError(_("This e-mail address is not available."))
-    except User.DoesNotExist:
+    except UserModel.DoesNotExist:
         pass
 
 
@@ -53,12 +54,11 @@ def validate_email(value, exclude=None):
 Username validators
 """
 def validate_username_available(value, exclude=None):
-    User = get_user_model()
     try:
-        user = User.objects.get_by_username(value)
+        user = UserModel.objects.get_by_username(value)
         if not exclude or user.pk != exclude.pk:
             raise ValidationError(_("This username is not available."))
-    except User.DoesNotExist:
+    except UserModel.DoesNotExist:
         pass
 
 

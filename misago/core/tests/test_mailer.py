@@ -4,12 +4,14 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 
 
+UserModel = get_user_model()
+
+
 @override_settings(ROOT_URLCONF='misago.core.testproject.urls')
 class MisagoMailerTests(TestCase):
     def test_mail_user(self):
         """mail_user sets message in backend"""
-        User = get_user_model()
-        user = User.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
 
         response = self.client.get(reverse('test-mail-user'))
         self.assertEqual(response.status_code, 200)
@@ -27,13 +29,12 @@ class MisagoMailerTests(TestCase):
 
     def test_mail_users(self):
         """mail_users sets messages in backend"""
-        User = get_user_model()
         test_users = (
-            User.objects.create_user('Alpha', 'alpha@test.com', 'pass123'),
-            User.objects.create_user('Beta', 'beta@test.com', 'pass123'),
-            User.objects.create_user('Niner', 'niner@test.com', 'pass123'),
-            User.objects.create_user('Foxtrot', 'foxtrot@test.com', 'pass123'),
-            User.objects.create_user('Uniform', 'uniform@test.com', 'pass123'),
+            UserModel.objects.create_user('Alpha', 'alpha@test.com', 'pass123'),
+            UserModel.objects.create_user('Beta', 'beta@test.com', 'pass123'),
+            UserModel.objects.create_user('Niner', 'niner@test.com', 'pass123'),
+            UserModel.objects.create_user('Foxtrot', 'foxtrot@test.com', 'pass123'),
+            UserModel.objects.create_user('Uniform', 'uniform@test.com', 'pass123'),
         )
 
         response = self.client.get(reverse('test-mail-users'))

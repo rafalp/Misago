@@ -5,6 +5,9 @@ from misago.acl.testutils import override_acl
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
+UserModel = get_user_model()
+
+
 class SearchApiTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(SearchApiTests, self).setUp()
@@ -101,8 +104,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_search_disabled(self):
         """api respects disabled users visibility"""
-        User = get_user_model()
-        disabled_user = User.objects.create_user(
+        disabled_user = UserModel.objects.create_user(
             'DisabledUser', 'visible@te.com', 'Pass.123', is_active=False)
 
         response = self.client.get('%s?q=DisabledUser' % self.api_link)

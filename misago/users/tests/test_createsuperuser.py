@@ -4,6 +4,9 @@ from django.test import TestCase
 from django.utils.six import StringIO
 
 
+UserModel = get_user_model()
+
+
 class CreateSuperuserTests(TestCase):
     def test_create_superuser(self):
         """command creates superuser"""
@@ -17,7 +20,7 @@ class CreateSuperuserTests(TestCase):
             stdout=out
         )
 
-        new_user = get_user_model().objects.order_by('-id')[:1][0]
+        new_user = UserModel.objects.order_by('-id')[:1][0]
 
         self.assertEqual(
             out.getvalue().splitlines()[-1].strip(),

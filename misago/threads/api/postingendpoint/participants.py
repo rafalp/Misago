@@ -13,6 +13,9 @@ from ...participants import add_participants, set_owner
 from ...permissions import allow_message_user
 
 
+UserModel = get_user_model()
+
+
 class ParticipantsMiddleware(PostingMiddleware):
     def use_this_middleware(self):
         if self.mode == PostingEndpoint.START:
@@ -69,7 +72,7 @@ class ParticipantsSerializer(serializers.Serializer):
 
     def get_users(self, usernames):
         users = []
-        for user in get_user_model().objects.filter(slug__in=usernames):
+        for user in UserModel.objects.filter(slug__in=usernames):
             try:
                 allow_message_user(self.context['user'], user)
             except PermissionDenied as e:

@@ -8,6 +8,9 @@ from ..testutils import UserTestCase
 from ..tokens import make_password_change_token
 
 
+UserModel = get_user_model()
+
+
 class ForgottenPasswordViewsTests(UserTestCase):
     def test_guest_request_view_returns_200(self):
         """request new password view returns 200 for guests"""
@@ -23,8 +26,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
 
     def test_change_password_on_banned(self):
         """change banned user password errors"""
-        User = get_user_model()
-        test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
         Ban.objects.create(
             check_type=Ban.USERNAME,
@@ -44,8 +46,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
 
     def test_change_password_on_other_user(self):
         """change other user password errors"""
-        User = get_user_model()
-        test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
         password_token = make_password_change_token(test_user)
 
@@ -60,8 +61,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
 
     def test_change_password_invalid_token(self):
         """invalid form token errors"""
-        User = get_user_model()
-        test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
         password_token = make_password_change_token(test_user)
 
@@ -74,8 +74,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
 
     def test_change_password_form(self):
         """change user password form displays for valid token"""
-        User = get_user_model()
-        test_user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
         password_token = make_password_change_token(test_user)
 

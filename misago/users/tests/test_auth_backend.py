@@ -4,13 +4,13 @@ from django.test import TestCase
 from ..authbackends import MisagoBackend
 
 
+UserModel = get_user_model()
+
 backend = MisagoBackend()
 
 
 class MisagoBackendTests(TestCase):
     def setUp(self):
-        UserModel = get_user_model()
-
         self.password = 'Pass.123'
         self.user = UserModel.objects.create_user(
             'BobBoberson', 'bob@test.com', self.password)

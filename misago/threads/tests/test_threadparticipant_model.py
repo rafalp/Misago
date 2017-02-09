@@ -7,6 +7,9 @@ from misago.categories.models import Category
 from ..models import Post, Thread, ThreadParticipant
 
 
+UserModel = get_user_model()
+
+
 class ThreadParticipantTests(TestCase):
     def setUp(self):
         datetime = timezone.now()
@@ -43,9 +46,8 @@ class ThreadParticipantTests(TestCase):
 
     def test_set_owner(self):
         """set_owner makes user thread owner"""
-        User = get_user_model()
-        user = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
-        other_user = User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123")
+        user = UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
+        other_user = UserModel.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123")
 
         ThreadParticipant.objects.set_owner(self.thread, user)
         self.assertEqual(self.thread.participants.count(), 1)
@@ -65,10 +67,9 @@ class ThreadParticipantTests(TestCase):
 
     def test_add_participants(self):
         """add_participant adds participant to thread"""
-        User = get_user_model()
         users = [
-            User.objects.create_user("Bob", "bob@boberson.com", "Pass.123"),
-            User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123"),
+            UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123"),
+            UserModel.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123"),
         ]
 
         ThreadParticipant.objects.add_participants(self.thread, users)
@@ -80,9 +81,8 @@ class ThreadParticipantTests(TestCase):
 
     def test_remove_participant(self):
         """remove_participant deletes participant from thread"""
-        User = get_user_model()
-        user = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
-        other_user = User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123")
+        user = UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
+        other_user = UserModel.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123")
 
         ThreadParticipant.objects.add_participants(self.thread, [user])
         ThreadParticipant.objects.add_participants(self.thread, [other_user])

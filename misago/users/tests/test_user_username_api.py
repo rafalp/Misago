@@ -10,6 +10,9 @@ from misago.conf import settings
 from ..testutils import AuthenticatedUserTestCase
 
 
+UserModel = get_user_model()
+
+
 class UserUsernameTests(AuthenticatedUserTestCase):
     """
     tests for user change name RPC (POST to /api/users/1/username/)
@@ -106,8 +109,7 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserUsernameModerationTests, self).setUp()
 
-        User = get_user_model()
-        self.other_user = User.objects.create_user(
+        self.other_user = UserModel.objects.create_user(
             "OtherUser", "other@user.com", "pass123")
 
         self.link = '/api/users/%s/moderate-username/' % self.other_user.pk
@@ -192,8 +194,7 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        User = get_user_model()
-        other_user = User.objects.get(pk=self.other_user.pk)
+        other_user = UserModel.objects.get(pk=self.other_user.pk)
 
         self.assertEqual('BobBoberson', other_user.username)
         self.assertEqual('bobboberson', other_user.slug)

@@ -23,6 +23,8 @@ from ...utils import add_categories_to_items
 from ...validators import validate_title
 
 
+UserModel = get_user_model()
+
 thread_patch_dispatcher = ApiPatch()
 
 
@@ -203,14 +205,13 @@ thread_patch_dispatcher.replace('subscription', patch_subscription)
 def patch_add_participant(request, thread, value):
     allow_add_participants(request.user, thread)
 
-    User = get_user_model()
     try:
         username = six.text_type(value).strip().lower()
         if not username:
             raise PermissionDenied(
                 _("You have to enter new participant's username."))
-        participant = User.objects.get(slug=username)
-    except User.DoesNotExist:
+        participant = UserModel.objects.get(slug=username)
+    except UserModel.DoesNotExist:
         raise PermissionDenied(_("No user with such name exists."))
 
     if participant in [p.user for p in thread.participants_list]:

@@ -5,12 +5,14 @@ from ..models import ThreadParticipant
 from .test_privatethreads import PrivateThreadsTestCase
 
 
+UserModel = get_user_model()
+
+
 class SyncUnreadPrivateThreadsTestCase(PrivateThreadsTestCase):
     def setUp(self):
         super(SyncUnreadPrivateThreadsTestCase, self).setUp()
 
-        User = get_user_model()
-        self.other_user = User.objects.create_user(
+        self.other_user = UserModel.objects.create_user(
             'BobBoberson', 'bob@boberson.com', 'pass123')
 
         self.thread = testutils.post_thread(self.category, poster=self.user)
