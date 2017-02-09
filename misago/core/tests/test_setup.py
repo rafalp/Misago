@@ -3,7 +3,7 @@ import os
 from django.test import TestCase
 from django.utils.encoding import smart_str
 
-from .. import setup
+from misago.core import setup
 
 
 class MockParser(object):

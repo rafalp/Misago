@@ -9,7 +9,7 @@ from misago.categories.models import Category
 from misago.threads import testutils
 from misago.users.models import AnonymousUser
 
-from .. import categoriestracker, threadstracker
+from misago.readtracker import categoriestracker, threadstracker
 
 
 UserModel = get_user_model()

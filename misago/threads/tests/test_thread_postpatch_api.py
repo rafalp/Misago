@@ -11,8 +11,8 @@ from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from .. import testutils
-from ..models import Post, Thread
+from misago.threads import testutils
+from misago.threads.models import Post, Thread
 
 
 class ThreadPostPatchApiTestCase(AuthenticatedUserTestCase):

@@ -3,7 +3,7 @@ from django.test import TestCase
 
 from misago.conf import settings
 
-from ..validators import validate_post, validate_title
+from misago.threads.validators import validate_post, validate_title
 
 
 class ValidatePostTests(TestCase):

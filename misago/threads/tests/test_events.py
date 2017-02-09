@@ -8,9 +8,9 @@ from django.utils import timezone
 from misago.acl import add_acl
 from misago.categories.models import Category
 
-from ..events import record_event
-from ..models import Post, Thread
-from ..testutils import reply_thread
+from misago.threads.events import record_event
+from misago.threads.models import Post, Thread
+from misago.threads.testutils import reply_thread
 
 
 UserModel = get_user_model()

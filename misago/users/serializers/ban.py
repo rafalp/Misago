@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from misago.core.utils import format_plaintext_for_html
 
-from ..models import Ban
+from misago.users.models import Ban
 
 
 __all__ = [

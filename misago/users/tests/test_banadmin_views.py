@@ -5,7 +5,7 @@ from django.utils.six.moves import range
 
 from misago.admin.testutils import AdminTestCase
 
-from ..models import Ban
+from misago.users.models import Ban
 
 
 class BanAdminViewsTests(AdminTestCase):

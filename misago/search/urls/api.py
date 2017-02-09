@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from .. import api
+from misago.search import api
 
 
 urlpatterns = [

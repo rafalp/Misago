@@ -1,5 +1,5 @@
-from ... import attachments, markup, polls, threads
-from ..base import BaseCommand
+from misago.datamover import attachments, markup, polls, threads
+from misago.datamover.management.base import BaseCommand
 
 
 class Command(BaseCommand):

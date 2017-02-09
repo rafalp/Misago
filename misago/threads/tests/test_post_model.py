@@ -6,8 +6,8 @@ from django.utils import timezone
 
 from misago.categories.models import Category
 
-from ..checksums import update_post_checksum
-from ..models import Post, Thread
+from misago.threads.checksums import update_post_checksum
+from misago.threads.models import Post, Thread
 
 
 UserModel = get_user_model()

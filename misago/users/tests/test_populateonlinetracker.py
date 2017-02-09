@@ -3,8 +3,8 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.utils.six import StringIO
 
-from ..management.commands import populateonlinetracker
-from ..models import Online
+from misago.users.management.commands import populateonlinetracker
+from misago.users.models import Online
 
 
 UserModel = get_user_model()

@@ -3,11 +3,11 @@ from misago.categories.models import Category
 from misago.conf import settings
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from .. import testutils
-from ..events import record_event
-from ..models import Post, Thread
-from ..moderation import threads as threads_moderation
-from ..moderation.posts import hide_post
+from misago.threads import testutils
+from misago.threads.events import record_event
+from misago.threads.models import Post, Thread
+from misago.threads.moderation import threads as threads_moderation
+from misago.threads.moderation.posts import hide_post
 
 
 class MockRequest(object):

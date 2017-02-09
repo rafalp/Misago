@@ -6,7 +6,7 @@ from misago.conf import settings
 from misago.readtracker.threadstracker import make_thread_read_aware, read_thread
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from .. import testutils
+from misago.threads import testutils
 
 
 GOTO_URL = '%s#post-%s'

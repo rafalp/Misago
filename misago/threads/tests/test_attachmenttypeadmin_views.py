@@ -3,7 +3,7 @@ from django.urls import reverse
 from misago.acl.models import Role
 from misago.admin.testutils import AdminTestCase
 
-from ..models import AttachmentType
+from misago.threads.models import AttachmentType
 
 
 class AttachmentTypeAdminViewsTests(AdminTestCase):

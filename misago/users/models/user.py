@@ -17,9 +17,9 @@ from misago.acl.models import Role
 from misago.conf import settings
 from misago.core.utils import slugify
 
-from .. import avatars
-from ..signatures import is_user_signature_valid, make_signature_checksum
-from ..utils import hash_email
+from misago.users import avatars
+from misago.users.signatures import is_user_signature_valid, make_signature_checksum
+from misago.users.utils import hash_email
 from .rank import Rank
 
 
@@ -34,7 +34,7 @@ __all__ = [
 class UserManager(BaseUserManager):
     @transaction.atomic
     def create_user(self, username, email, password=None, set_default_avatar=False, **extra_fields):
-        from ..validators import validate_email, validate_username
+        from misago.users.validators import validate_email, validate_username
 
         email = self.normalize_email(email)
         username = self.model.normalize_username(username)
@@ -289,7 +289,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return super(User, self).delete(*args, **kwargs)
 
     def delete_content(self):
-        from ..signals import delete_user_content
+        from misago.users.signals import delete_user_content
         delete_user_content.send(sender=self)
 
     @property
@@ -369,7 +369,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 self.record_name_change(
                     changed_by, new_username, old_username)
 
-                from ..signals import username_changed
+                from misago.users.signals import username_changed
                 username_changed.send(sender=self)
 
     def record_name_change(self, changed_by, new_username, old_username):

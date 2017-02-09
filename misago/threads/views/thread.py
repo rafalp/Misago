@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import View
 
-from ..viewmodels import ForumThread, PrivateThread, ThreadPosts
+from misago.threads.viewmodels import ForumThread, PrivateThread, ThreadPosts
 
 
 class ThreadBase(View):

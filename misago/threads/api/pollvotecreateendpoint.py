@@ -9,8 +9,8 @@ from rest_framework.response import Response
 
 from misago.acl import add_acl
 
-from ..permissions.polls import allow_vote_poll
-from ..serializers import PollSerializer
+from misago.threads.permissions.polls import allow_vote_poll
+from misago.threads.serializers import PollSerializer
 
 
 def poll_vote_create(request, thread, poll):

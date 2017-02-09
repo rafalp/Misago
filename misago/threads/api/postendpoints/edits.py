@@ -11,8 +11,8 @@ from misago.core.shortcuts import get_int_or_404, get_object_or_404
 from misago.markup import common_flavour
 from misago.users.online.utils import make_users_status_aware
 
-from ...checksums import update_post_checksum
-from ...serializers import PostEditSerializer, PostSerializer
+from misago.threads.checksums import update_post_checksum
+from misago.threads.serializers import PostEditSerializer, PostSerializer
 
 
 def get_edit_endpoint(request, post):

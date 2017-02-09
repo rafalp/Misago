@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from ..parser import parse
+from misago.markup.parser import parse
 
 
 UserModel = get_user_model()

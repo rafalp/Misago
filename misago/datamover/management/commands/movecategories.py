@@ -1,5 +1,5 @@
-from ... import categories
-from ..base import BaseCommand
+from misago.datamover import categories
+from misago.datamover.management.base import BaseCommand
 
 
 class Command(BaseCommand):

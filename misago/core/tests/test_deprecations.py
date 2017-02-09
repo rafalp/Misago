@@ -3,7 +3,7 @@ import warnings
 from django.test import TestCase, override_settings
 from django.utils import six
 
-from ..deprecations import RemovedInMisagoWarning, warn
+from misago.core.deprecations import RemovedInMisagoWarning, warn
 
 
 class DeprecationsTests(TestCase):

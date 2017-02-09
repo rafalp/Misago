@@ -8,7 +8,7 @@ from misago.conf import settings
 from misago.core.management.progressbar import show_progress
 from misago.core.pgutils import batch_update
 
-from ...models import Attachment
+from misago.threads.models import Attachment
 
 
 class Command(BaseCommand):

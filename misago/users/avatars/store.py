@@ -29,7 +29,7 @@ def delete_avatar(user):
 
 
 def store_avatar(user, image):
-    from ..models import Avatar
+    from misago.users.models import Avatar
     image = normalize_image(image)
 
     avatars = []

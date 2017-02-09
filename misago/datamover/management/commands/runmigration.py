@@ -1,6 +1,6 @@
 from django.core.management import call_command
 
-from ..base import BaseCommand
+from misago.datamover.management.base import BaseCommand
 
 
 MOVE_COMMANDS = (

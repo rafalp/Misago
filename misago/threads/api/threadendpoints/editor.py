@@ -7,8 +7,8 @@ from misago.acl import add_acl
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
 
-from ...permissions.threads import can_start_thread
-from ...threadtypes import trees_map
+from misago.threads.permissions.threads import can_start_thread
+from misago.threads.threadtypes import trees_map
 
 
 def thread_start_editor(request):

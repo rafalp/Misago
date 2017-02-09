@@ -12,12 +12,12 @@ from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
 from misago.readtracker import threadstracker
 
-from ..models import Thread
-from ..participants import make_participants_aware
-from ..permissions import exclude_invisible_threads
-from ..serializers import ThreadsListSerializer
-from ..subscriptions import make_subscription_aware
-from ..utils import add_categories_to_items
+from misago.threads.models import Thread
+from misago.threads.participants import make_participants_aware
+from misago.threads.permissions import exclude_invisible_threads
+from misago.threads.serializers import ThreadsListSerializer
+from misago.threads.subscriptions import make_subscription_aware
+from misago.threads.utils import add_categories_to_items
 
 
 __all__ = ['ForumThreads', 'PrivateThreads', 'filter_read_threads_queryset']

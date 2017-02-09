@@ -5,9 +5,9 @@ from django.urls import reverse
 from django.utils import six
 from django.utils.translation import ugettext as _
 
-from ..credentialchange import read_new_credential
-from ..decorators import deny_guests
-from ..pages import usercp
+from misago.users.credentialchange import read_new_credential
+from misago.users.decorators import deny_guests
+from misago.users.pages import usercp
 
 
 @deny_guests

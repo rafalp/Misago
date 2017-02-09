@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 
 from misago.core.management.progressbar import show_progress
 
-from ...activepostersranking import build_active_posters_ranking
+from misago.users.activepostersranking import build_active_posters_ranking
 
 
 class Command(BaseCommand):

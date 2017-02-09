@@ -13,12 +13,12 @@ from misago.core.mail import mail_users
 from misago.core.pgutils import batch_update
 from misago.threads.models import Thread
 
-from ...avatars.dynamic import set_avatar as set_dynamic_avatar
-from ...forms.admin import (
+from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
+from misago.users.forms.admin import (
     BanUsersForm, NewUserForm, SearchUsersForm,
     EditUserForm, EditUserFormFactory)
-from ...models import Ban, User
-from ...signatures import set_user_signature
+from misago.users.models import Ban, User
+from misago.users.signatures import set_user_signature
 
 
 UserModel = get_user_model()

@@ -13,9 +13,9 @@ from misago.core.cache import cache
 from misago.threads.models import Post, Thread
 from misago.threads.testutils import post_thread
 
-from ..activepostersranking import build_active_posters_ranking
-from ..models import Ban, Rank
-from ..testutils import AuthenticatedUserTestCase
+from misago.users.activepostersranking import build_active_posters_ranking
+from misago.users.models import Ban, Rank
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 UserModel = get_user_model()

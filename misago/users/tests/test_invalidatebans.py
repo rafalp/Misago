@@ -7,9 +7,9 @@ from django.utils import timezone
 from django.utils.six import StringIO
 from django.utils.six.moves import range
 
-from .. import bans
-from ..management.commands import invalidatebans
-from ..models import Ban, BanCache
+from misago.users import bans
+from misago.users.management.commands import invalidatebans
+from misago.users.models import Ban, BanCache
 
 
 UserModel = get_user_model()

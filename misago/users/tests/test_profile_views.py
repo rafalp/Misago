@@ -6,8 +6,8 @@ from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.threads import testutils
 
-from ..models import Ban
-from ..testutils import AuthenticatedUserTestCase
+from misago.users.models import Ban
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 UserModel = get_user_model()

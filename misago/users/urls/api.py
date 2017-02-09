@@ -2,10 +2,10 @@ from django.conf.urls import url
 
 from misago.core.apirouter import MisagoApiRouter
 
-from ..api import auth, captcha
-from ..api.ranks import RanksViewSet
-from ..api.usernamechanges import UsernameChangesViewSet
-from ..api.users import UserViewSet
+from misago.users.api import auth, captcha
+from misago.users.api.ranks import RanksViewSet
+from misago.users.api.usernamechanges import UsernameChangesViewSet
+from misago.users.api.users import UserViewSet
 
 
 urlpatterns = [

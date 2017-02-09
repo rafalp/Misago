@@ -12,7 +12,7 @@ from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from ..models import Thread, ThreadParticipant
+from misago.threads.models import Thread, ThreadParticipant
 
 
 UserModel = get_user_model()

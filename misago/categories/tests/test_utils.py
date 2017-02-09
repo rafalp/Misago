@@ -2,8 +2,8 @@ from misago.acl.testutils import override_acl
 from misago.core import threadstore
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from ..models import Category
-from ..utils import get_categories_tree, get_category_path
+from misago.categories.models import Category
+from misago.categories.utils import get_categories_tree, get_category_path
 
 
 class CategoriesUtilsTests(AuthenticatedUserTestCase):

@@ -8,8 +8,8 @@ from django.utils.six.moves import range
 
 from misago.threads import testutils
 
-from ..management.commands import prunecategories
-from ..models import Category
+from misago.categories.management.commands import prunecategories
+from misago.categories.models import Category
 
 
 class PruneCategoriesTests(TestCase):

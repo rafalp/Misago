@@ -5,7 +5,7 @@ from django.utils.translation import ungettext
 
 from rest_framework import serializers
 
-from ..models import Poll
+from misago.threads.models import Poll
 
 
 MAX_POLL_OPTIONS = 16

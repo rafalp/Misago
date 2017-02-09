@@ -7,11 +7,11 @@ from rest_framework.response import Response
 
 from misago.conf import settings
 
-from ...events import record_event
-from ...models import Thread
-from ...moderation import threads as moderation
-from ...permissions.threads import exclude_invisible_posts
-from ...serializers import NewThreadSerializer
+from misago.threads.events import record_event
+from misago.threads.models import Thread
+from misago.threads.moderation import threads as moderation
+from misago.threads.permissions.threads import exclude_invisible_posts
+from misago.threads.serializers import NewThreadSerializer
 
 
 SPLIT_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL

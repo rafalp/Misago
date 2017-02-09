@@ -83,7 +83,7 @@ class Ban(models.Model):
         return super(Ban, self).save(*args, **kwargs)
 
     def get_serialized_message(self):
-        from ..serializers import BanMessageSerializer
+        from misago.users.serializers import BanMessageSerializer
         return BanMessageSerializer(self).data
 
     @property
@@ -127,7 +127,7 @@ class BanCache(models.Model):
             pass # first come is first serve with ban cache
 
     def get_serialized_message(self):
-        from ..serializers import BanMessageSerializer
+        from misago.users.serializers import BanMessageSerializer
         temp_ban = Ban(
             id=1,
             check_type=Ban.USERNAME,

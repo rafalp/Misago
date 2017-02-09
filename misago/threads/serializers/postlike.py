@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from rest_framework import serializers
 
-from ..models import PostLike
+from misago.threads.models import PostLike
 
 
 __all__ = [

@@ -6,8 +6,8 @@ from rest_framework.response import Response
 
 from misago.conf import settings
 
-from ...forms.rename import ChangeUsernameForm
-from ...namechanges import UsernameChanges
+from misago.users.forms.rename import ChangeUsernameForm
+from misago.users.namechanges import UsernameChanges
 
 
 def username_endpoint(request):

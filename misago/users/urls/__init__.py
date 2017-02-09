@@ -2,7 +2,7 @@ from django.conf.urls import include, url
 
 from misago.core.views import home_redirect
 
-from ..views import activation, auth, avatarserver, forgottenpassword, lists, options, profile
+from misago.users.views import activation, auth, avatarserver, forgottenpassword, lists, options, profile
 
 
 urlpatterns = [

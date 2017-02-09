@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from rest_framework import serializers
 
-from ..models import PostEdit
+from misago.threads.models import PostEdit
 
 
 __all__ = [

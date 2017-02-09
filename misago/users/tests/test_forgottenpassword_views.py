@@ -3,9 +3,9 @@ from django.urls import reverse
 
 from misago.core.utils import encode_json_html
 
-from ..models import Ban
-from ..testutils import UserTestCase
-from ..tokens import make_password_change_token
+from misago.users.models import Ban
+from misago.users.testutils import UserTestCase
+from misago.users.tokens import make_password_change_token
 
 
 UserModel = get_user_model()

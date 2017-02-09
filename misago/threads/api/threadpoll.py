@@ -10,17 +10,17 @@ from rest_framework.response import Response
 from misago.acl import add_acl
 from misago.core.shortcuts import get_int_or_404
 
-from ..models import Poll
-from ..permissions.polls import (
+from misago.threads.models import Poll
+from misago.threads.permissions.polls import (
     allow_delete_poll,
     allow_edit_poll,
     allow_see_poll_votes,
     allow_start_poll,
     can_start_poll
 )
-from ..serializers import (
+from misago.threads.serializers import (
     EditPollSerializer, NewPollSerializer, PollSerializer, PollVoteSerializer)
-from ..viewmodels import ForumThread
+from misago.threads.viewmodels import ForumThread
 from .pollvotecreateendpoint import poll_vote_create
 
 

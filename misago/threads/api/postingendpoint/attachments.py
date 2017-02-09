@@ -7,7 +7,7 @@ from misago.acl import add_acl
 from misago.conf import settings
 
 from . import PostingEndpoint, PostingInterrupt, PostingMiddleware
-from ...serializers import AttachmentSerializer
+from misago.threads.serializers import AttachmentSerializer
 
 
 class AttachmentsMiddleware(PostingMiddleware):

@@ -15,7 +15,7 @@ from misago.readtracker import categoriestracker, threadstracker
 from misago.users.models import AnonymousUser
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from .. import testutils
+from misago.threads import testutils
 
 
 LISTS_URLS = (

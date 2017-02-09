@@ -5,8 +5,8 @@ from django.test import TestCase
 
 from misago.conf import settings
 
-from ..models import Ban
-from ..validators import (
+from misago.users.models import Ban
+from misago.users.validators import (
     validate_email,
     validate_email_available,
     validate_email_banned,

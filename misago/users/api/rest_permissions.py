@@ -5,8 +5,8 @@ from rest_framework.permissions import BasePermission
 
 from misago.core.exceptions import Banned
 
-from ..bans import get_request_ip_ban
-from ..models import Ban
+from misago.users.bans import get_request_ip_ban
+from misago.users.models import Ban
 
 
 __all__ = [

@@ -10,8 +10,8 @@ from misago.categories.models import Category
 from misago.categories.permissions import can_browse_category, can_see_category
 
 from . import PostingEndpoint, PostingMiddleware
-from ...permissions.threads import allow_start_thread
-from ...threadtypes import trees_map
+from misago.threads.permissions.threads import allow_start_thread
+from misago.threads.threadtypes import trees_map
 
 
 class CategoryMiddleware(PostingMiddleware):

@@ -20,7 +20,7 @@ def get_available_galleries(include_default=False):
     Only jpgs, gifs and pngs are supported avatar images.
     Galleries are
     """
-    from ..models import AvatarGallery
+    from misago.users.models import AvatarGallery
 
     galleries = []
     galleries_dicts = {}
@@ -43,12 +43,12 @@ def get_available_galleries(include_default=False):
 
 
 def galleries_exist():
-    from ..models import AvatarGallery
+    from misago.users.models import AvatarGallery
     return AvatarGallery.objects.exists()
 
 
 def load_avatar_galleries():
-    from ..models import AvatarGallery
+    from misago.users.models import AvatarGallery
 
     galleries = []
     for directory in Path(settings.MISAGO_AVATAR_GALLERY).dirs():

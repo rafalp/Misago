@@ -1,6 +1,6 @@
 from django.views.generic import View
 
-from .. import render
+from misago.admin.views import render
 
 
 class AdminView(View):

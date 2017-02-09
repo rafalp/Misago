@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.test import TestCase
 
-from ..finalise import finalise_markup
+from misago.markup.finalise import finalise_markup
 
 
 class QuoteTests(TestCase):

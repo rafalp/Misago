@@ -5,7 +5,7 @@ from django.urls import reverse
 
 from misago.users.models import AnonymousUser
 
-from ..middleware.exceptionhandler import ExceptionHandlerMiddleware
+from misago.core.middleware.exceptionhandler import ExceptionHandlerMiddleware
 
 
 class ExceptionHandlerMiddlewareTests(TestCase):

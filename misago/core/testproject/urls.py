@@ -4,7 +4,7 @@ from django.contrib import admin
 
 from misago.users.forms.auth import AdminAuthenticationForm
 
-from ..views import javascript_catalog
+from misago.core.views import javascript_catalog
 from . import views
 
 

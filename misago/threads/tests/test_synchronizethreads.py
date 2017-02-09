@@ -5,8 +5,8 @@ from django.utils.six.moves import range
 
 from misago.categories.models import Category
 
-from .. import testutils
-from ..management.commands import synchronizethreads
+from misago.threads import testutils
+from misago.threads.management.commands import synchronizethreads
 
 
 class SynchronizeThreadsTests(TestCase):

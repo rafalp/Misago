@@ -5,9 +5,9 @@ from rest_framework import serializers
 
 from misago.acl import add_acl
 
-from ..models import Thread
-from ..permissions import can_start_thread
-from ..validators import validate_category, validate_title
+from misago.threads.models import Thread
+from misago.threads.permissions import can_start_thread
+from misago.threads.validators import validate_category, validate_title
 
 
 __all__ = [

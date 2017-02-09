@@ -5,7 +5,7 @@ from django.test.client import RequestFactory
 from django.urls import reverse
 from django.utils import six, timezone
 
-from ..utils import (
+from misago.core.utils import (
     clean_return_path,
     format_plaintext_for_html,
     is_referer_local,

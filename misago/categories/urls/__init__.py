@@ -3,7 +3,7 @@ from django.conf.urls import url
 from misago.conf import settings
 from misago.core.views import home_redirect
 
-from ..views.categorieslist import categories
+from misago.categories.views.categorieslist import categories
 
 
 if settings.MISAGO_THREADS_ON_INDEX:

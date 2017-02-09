@@ -9,8 +9,8 @@ from rest_framework import serializers
 from misago.categories import PRIVATE_THREADS_ROOT_NAME
 
 from . import PostingEndpoint, PostingMiddleware
-from ...participants import add_participants, set_owner
-from ...permissions import allow_message_user
+from misago.threads.participants import add_participants, set_owner
+from misago.threads.permissions import allow_message_user
 
 
 UserModel = get_user_model()

@@ -5,10 +5,10 @@ from misago.categories.models import Category
 from misago.conf import settings
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from .. import testutils
-from ..api.postingendpoint import PostingEndpoint
-from ..api.postingendpoint.attachments import AttachmentsMiddleware, validate_attachments_count
-from ..models import Attachment, AttachmentType
+from misago.threads import testutils
+from misago.threads.api.postingendpoint import PostingEndpoint
+from misago.threads.api.postingendpoint.attachments import AttachmentsMiddleware, validate_attachments_count
+from misago.threads.models import Attachment, AttachmentType
 
 
 class RequestMock(object):

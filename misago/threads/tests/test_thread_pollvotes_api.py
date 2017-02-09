@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
 
-from ..models import Poll
+from misago.threads.models import Poll
 from .test_thread_poll_api import ThreadPollApiTestCase
 
 

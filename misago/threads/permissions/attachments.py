@@ -5,7 +5,7 @@ from misago.acl import algebra
 from misago.acl.models import Role
 from misago.core.forms import YesNoSwitch
 
-from ..models import Attachment
+from misago.threads.models import Attachment
 
 
 """

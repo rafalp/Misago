@@ -3,7 +3,7 @@ import json
 from django.urls import reverse
 from django.utils.encoding import smart_str
 
-from ..testutils import AuthenticatedUserTestCase, SuperUserTestCase, UserTestCase
+from misago.users.testutils import AuthenticatedUserTestCase, SuperUserTestCase, UserTestCase
 
 
 class UserTestCaseTests(UserTestCase):

@@ -13,7 +13,7 @@ from misago.categories.models import Category, CategoryRole, RoleCategoryACL
 from misago.categories.permissions import get_categories_roles
 from misago.core.forms import YesNoSwitch
 
-from ..models import Post, Thread
+from misago.threads.models import Post, Thread
 
 
 """

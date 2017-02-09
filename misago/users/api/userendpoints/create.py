@@ -9,10 +9,10 @@ from rest_framework.response import Response
 from misago.conf import settings
 from misago.core.mail import mail_user
 
-from ... import captcha
-from ...forms.register import RegisterForm
-from ...serializers import AuthenticatedUserSerializer
-from ...tokens import make_activation_token
+from misago.users import captcha
+from misago.users.forms.register import RegisterForm
+from misago.users.serializers import AuthenticatedUserSerializer
+from misago.users.tokens import make_activation_token
 
 
 UserModel = get_user_model()

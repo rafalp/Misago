@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from .. import credentialchange
+from misago.users import credentialchange
 
 
 UserModel = get_user_model()

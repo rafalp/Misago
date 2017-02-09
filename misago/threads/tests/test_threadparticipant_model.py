@@ -4,7 +4,7 @@ from django.utils import timezone
 
 from misago.categories.models import Category
 
-from ..models import Post, Thread, ThreadParticipant
+from misago.threads.models import Post, Thread, ThreadParticipant
 
 
 UserModel = get_user_model()

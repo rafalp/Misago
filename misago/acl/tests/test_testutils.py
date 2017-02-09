@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from ..models import Role
-from ..testutils import fake_post_data
+from misago.acl.models import Role
+from misago.acl.testutils import fake_post_data
 
 
 class FakeTestDataTests(TestCase):

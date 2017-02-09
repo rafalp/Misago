@@ -6,9 +6,9 @@ from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.threads.testutils import post_thread
 
-from ..activepostersranking import build_active_posters_ranking
-from ..models import Rank
-from ..testutils import AuthenticatedUserTestCase
+from misago.users.activepostersranking import build_active_posters_ranking
+from misago.users.models import Rank
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 UserModel = get_user_model()

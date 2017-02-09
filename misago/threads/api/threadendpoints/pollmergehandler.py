@@ -1,6 +1,6 @@
 from django.utils.translation import gettext as _
 
-from ...models import Poll
+from misago.threads.models import Poll
 
 
 class PollMergeHandler(object):

@@ -1,6 +1,6 @@
 from misago.core.apirouter import MisagoApiRouter
 
-from ..api import CategoryViewSet
+from misago.categories.api import CategoryViewSet
 
 
 router = MisagoApiRouter()

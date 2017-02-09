@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.urls import reverse
 from django.utils import timezone
 
-from ..models import Poll, PollVote, Thread
+from misago.threads.models import Poll, PollVote, Thread
 from .test_thread_poll_api import ThreadPollApiTestCase
 
 

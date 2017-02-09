@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from ..namechanges import UsernameChanges
+from misago.users.namechanges import UsernameChanges
 
 
 UserModel = get_user_model()

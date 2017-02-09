@@ -4,7 +4,7 @@ import re
 
 from misago.threads.models import Attachment
 
-from .. import fetch_assoc, movedids
+from misago.datamover import fetch_assoc, movedids
 
 
 ATTACHMENT_RE = re.compile(r'/attachment/(?P<hash>[a-z0-9]+)/')

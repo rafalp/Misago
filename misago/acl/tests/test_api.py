@@ -3,7 +3,7 @@ from django.test import TestCase
 
 from misago.users.models import AnonymousUser
 
-from ..api import get_user_acl
+from misago.acl.api import get_user_acl
 
 
 UserModel = get_user_model()

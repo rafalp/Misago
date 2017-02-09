@@ -13,9 +13,9 @@ from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from .. import testutils
-from ..api.postendpoints.merge import MERGE_LIMIT
-from ..models import Post, Thread
+from misago.threads import testutils
+from misago.threads.api.postendpoints.merge import MERGE_LIMIT
+from misago.threads.models import Post, Thread
 
 
 class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):

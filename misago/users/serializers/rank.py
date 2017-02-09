@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from misago.core.utils import format_plaintext_for_html
 
-from ..models import Rank
+from misago.users.models import Rank
 
 
 __all__ = ['RankSerializer']

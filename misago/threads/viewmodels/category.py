@@ -7,7 +7,7 @@ from misago.categories.serializers import BasicCategorySerializer
 from misago.core.shortcuts import validate_slug
 from misago.core.viewmodel import ViewModel as BaseViewModel
 
-from ..permissions import allow_use_private_threads
+from misago.threads.permissions import allow_use_private_threads
 
 
 __all__ = ['ThreadsRootCategory', 'ThreadsCategory', 'PrivateThreadsCategory']

@@ -4,7 +4,7 @@ from misago.admin.testutils import AdminTestCase
 from misago.threads import testutils
 from misago.threads.models import Thread
 
-from ..models import Category
+from misago.categories.models import Category
 
 
 class CategoryAdminTestCate(AdminTestCase):

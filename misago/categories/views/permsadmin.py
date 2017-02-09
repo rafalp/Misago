@@ -8,8 +8,8 @@ from misago.acl.models import Role
 from misago.acl.views import RoleAdmin, RolesList
 from misago.admin.views import generic
 
-from ..forms import CategoryRoleForm, CategoryRolesACLFormFactory, RoleCategoryACLFormFactory
-from ..models import Category, CategoryRole, RoleCategoryACL
+from misago.categories.forms import CategoryRoleForm, CategoryRolesACLFormFactory, RoleCategoryACLFormFactory
+from misago.categories.models import Category, CategoryRole, RoleCategoryACL
 from .categoriesadmin import CategoriesList, CategoryAdmin
 
 

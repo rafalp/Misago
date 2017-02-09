@@ -12,7 +12,7 @@ from misago.admin.testutils import AdminTestCase
 from misago.categories.models import Category
 from misago.threads.testutils import post_thread, reply_thread
 
-from ..models import Ban, Rank
+from misago.users.models import Ban, Rank
 
 
 UserModel = get_user_model()

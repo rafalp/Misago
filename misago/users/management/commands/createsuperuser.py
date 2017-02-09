@@ -13,7 +13,7 @@ from django.db import DEFAULT_DB_ALIAS, IntegrityError
 from django.utils.encoding import force_str
 from django.utils.six.moves import input
 
-from ...validators import validate_email, validate_username
+from misago.users.validators import validate_email, validate_username
 
 
 UserModel = get_user_model()

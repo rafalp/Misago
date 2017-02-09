@@ -10,9 +10,9 @@ from django.utils.encoding import smart_str
 from misago.acl.testutils import override_acl
 from misago.conf import settings
 
-from ..avatars import gallery, store
-from ..models import AvatarGallery
-from ..testutils import AuthenticatedUserTestCase
+from misago.users.avatars import gallery, store
+from misago.users.models import AvatarGallery
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testfiles')

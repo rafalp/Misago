@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 
 from misago.core.management.progressbar import show_progress
 
-from ...models import Category
+from misago.categories.models import Category
 
 
 class Command(BaseCommand):

@@ -4,7 +4,7 @@ from django.utils import six
 from misago.acl.testutils import override_acl
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from ..searchproviders import searchproviders
+from misago.search.searchproviders import searchproviders
 
 
 class SearchApiTests(AuthenticatedUserTestCase):

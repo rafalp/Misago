@@ -10,9 +10,9 @@ from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from .. import testutils
-from ..api.postendpoints.move import MOVE_LIMIT
-from ..models import Thread
+from misago.threads import testutils
+from misago.threads.api.postendpoints.move import MOVE_LIMIT
+from misago.threads.models import Thread
 
 
 class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):

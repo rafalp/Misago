@@ -10,17 +10,17 @@ from misago.categories.serializers import CategorySerializer
 from misago.core.apipatch import ApiPatch
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
 
-from ...models import ThreadParticipant
-from ...moderation import threads as moderation
-from ...participants import (
+from misago.threads.models import ThreadParticipant
+from misago.threads.moderation import threads as moderation
+from misago.threads.participants import (
     add_participant, change_owner, make_participants_aware, remove_participant)
-from ...permissions import (
+from misago.threads.permissions import (
     allow_add_participants, allow_add_participant,
     allow_change_owner, allow_edit_thread,
     allow_remove_participant, allow_start_thread)
-from ...serializers import ThreadParticipantSerializer
-from ...utils import add_categories_to_items
-from ...validators import validate_title
+from misago.threads.serializers import ThreadParticipantSerializer
+from misago.threads.utils import add_categories_to_items
+from misago.threads.validators import validate_title
 
 
 UserModel = get_user_model()

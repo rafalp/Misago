@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ..paginator import PostsPaginator
+from misago.threads.paginator import PostsPaginator
 
 
 class PostsPaginatorTests(TestCase):

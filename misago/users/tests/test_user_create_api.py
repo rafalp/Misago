@@ -4,8 +4,8 @@ from django.urls import reverse
 
 from misago.conf import settings
 
-from ..models import Online
-from ..testutils import UserTestCase
+from misago.users.models import Online
+from misago.users.testutils import UserTestCase
 
 
 UserModel = get_user_model()

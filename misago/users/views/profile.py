@@ -16,14 +16,14 @@ from misago.core.shortcuts import get_object_or_404, paginate, pagination_dict, 
 from misago.core.utils import clean_return_path
 from misago.threads.permissions import allow_message_user
 
-from ..bans import get_user_ban
-from ..decorators import deny_guests
-from ..online.utils import get_user_status
-from ..pages import user_profile
-from ..permissions.profiles import allow_block_user, allow_follow_user
-from ..serializers import BanDetailsSerializer, UserProfileSerializer, UserSerializer
-from ..serializers.usernamechange import UsernameChangeSerializer
-from ..viewmodels import UserPosts, UserThreads
+from misago.users.bans import get_user_ban
+from misago.users.decorators import deny_guests
+from misago.users.online.utils import get_user_status
+from misago.users.pages import user_profile
+from misago.users.permissions.profiles import allow_block_user, allow_follow_user
+from misago.users.serializers import BanDetailsSerializer, UserProfileSerializer, UserSerializer
+from misago.users.serializers.usernamechange import UsernameChangeSerializer
+from misago.users.viewmodels import UserPosts, UserThreads
 
 
 UserModel = get_user_model()

@@ -7,7 +7,7 @@ from django.utils.translation import ungettext
 from misago.conf import settings
 from misago.core.forms import YesNoSwitch
 
-from ..validators import validate_email
+from misago.users.validators import validate_email
 
 
 UserModel = get_user_model()

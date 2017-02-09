@@ -7,7 +7,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 
 from misago.users.forms.auth import AdminAuthenticationForm
 
-from .. import auth
+from misago.admin import auth
 
 
 @sensitive_post_parameters()

@@ -3,7 +3,7 @@ from django.urls import reverse
 from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from .. import testutils
+from misago.threads import testutils
 
 
 class SearchApiTests(AuthenticatedUserTestCase):

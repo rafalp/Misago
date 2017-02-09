@@ -14,8 +14,8 @@ from misago.conf import settings
 from misago.core.utils import parse_iso8601_string
 from misago.markup import finalise_markup
 
-from .. import threadtypes
-from ..checksums import is_post_valid, update_post_checksum
+from misago.threads import threadtypes
+from misago.threads.checksums import is_post_valid, update_post_checksum
 
 
 @python_2_unicode_compatible
@@ -95,7 +95,7 @@ class Post(models.Model):
         return '%s...' % self.original[10:].strip()
 
     def delete(self, *args, **kwargs):
-        from ..signals import delete_post
+        from misago.threads.signals import delete_post
         delete_post.send(sender=self)
 
         super(Post, self).delete(*args, **kwargs)
@@ -114,11 +114,11 @@ class Post(models.Model):
         other_post.parsed = six.text_type('\n').join((other_post.parsed, self.parsed))
         update_post_checksum(other_post)
 
-        from ..signals import merge_post
+        from misago.threads.signals import merge_post
         merge_post.send(sender=self, other_post=other_post)
 
     def move(self, new_thread):
-        from ..signals import move_post
+        from misago.threads.signals import move_post
 
         self.category = new_thread.category
         self.thread = new_thread

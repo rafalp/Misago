@@ -1,7 +1,7 @@
 from rest_framework import mixins, viewsets
 
-from ..models import Rank
-from ..serializers import RankSerializer
+from misago.users.models import Rank
+from misago.users.serializers import RankSerializer
 
 
 class RanksViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):

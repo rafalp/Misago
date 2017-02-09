@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import UsernameChange
+from misago.users.models import UsernameChange
 from .user import BasicUserSerializer
 
 

@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 
-from ...serializers import PostLikeSerializer
+from misago.threads.serializers import PostLikeSerializer
 
 
 def likes_list_endpoint(request, post):

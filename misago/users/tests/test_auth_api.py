@@ -2,8 +2,8 @@ from django.contrib.auth import get_user_model
 from django.core import mail
 from django.test import TestCase
 
-from ..models import Ban
-from ..tokens import make_password_change_token
+from misago.users.models import Ban
+from misago.users.tokens import make_password_change_token
 
 
 UserModel = get_user_model()

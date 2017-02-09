@@ -7,8 +7,8 @@ from rest_framework.response import Response
 from misago.conf import settings
 from misago.core.utils import format_plaintext_for_html
 
-from ...forms.options import EditSignatureForm
-from ...signatures import is_user_signature_valid, set_user_signature
+from misago.users.forms.options import EditSignatureForm
+from misago.users.signatures import is_user_signature_valid, set_user_signature
 
 
 def signature_endpoint(request):

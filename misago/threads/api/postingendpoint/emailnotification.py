@@ -3,7 +3,7 @@ from django.utils.translation import ugettext as _
 from misago.core.mail import build_mail, send_messages
 
 from . import PostingEndpoint, PostingMiddleware
-from ...permissions.threads import can_see_post, can_see_thread
+from misago.threads.permissions.threads import can_see_post, can_see_thread
 
 
 class EmailNotificationMiddleware(PostingMiddleware):

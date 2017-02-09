@@ -2,8 +2,8 @@ from django.contrib.auth import get_user_model
 
 from misago.acl.testutils import override_acl
 
-from .. import testutils
-from ..models import ThreadParticipant
+from misago.threads import testutils
+from misago.threads.models import ThreadParticipant
 from .test_privatethreads import PrivateThreadsTestCase
 
 

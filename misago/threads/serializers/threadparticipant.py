@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ..models import ThreadParticipant
+from misago.threads.models import ThreadParticipant
 
 
 __all__ = ['ThreadParticipantSerializer']

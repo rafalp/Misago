@@ -6,7 +6,7 @@ from django.utils import six
 
 from misago.conf import settings
 
-from ..providers import PermissionProviders
+from misago.acl.providers import PermissionProviders
 
 
 class TestType(object):

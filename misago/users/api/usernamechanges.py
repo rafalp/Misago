@@ -9,8 +9,8 @@ from rest_framework.response import Response
 from misago.core.shortcuts import (
     get_int_or_404, get_object_or_404, paginate, pagination_dict)
 
-from ..models import UsernameChange
-from ..serializers.usernamechange import UsernameChangeSerializer
+from misago.users.models import UsernameChange
+from misago.users.serializers.usernamechange import UsernameChangeSerializer
 from .rest_permissions import BasePermission
 
 

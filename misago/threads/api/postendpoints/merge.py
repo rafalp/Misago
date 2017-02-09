@@ -7,8 +7,8 @@ from rest_framework.response import Response
 from misago.acl import add_acl
 from misago.conf import settings
 
-from ...permissions.threads import exclude_invisible_posts
-from ...serializers import PostSerializer
+from misago.threads.permissions.threads import exclude_invisible_posts
+from misago.threads.serializers import PostSerializer
 
 
 MERGE_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL

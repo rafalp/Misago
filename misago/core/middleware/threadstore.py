@@ -1,6 +1,6 @@
 from django.utils.deprecation import MiddlewareMixin
 
-from .. import threadstore
+from misago.core import threadstore
 
 
 class ThreadStoreMiddleware(MiddlewareMixin):

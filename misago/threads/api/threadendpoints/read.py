@@ -4,7 +4,7 @@ from misago.categories.permissions import allow_browse_category, allow_see_categ
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
 from misago.readtracker.categoriestracker import read_category
 
-from ...threadtypes import trees_map
+from misago.threads.threadtypes import trees_map
 
 
 def read_threads(user, pk):

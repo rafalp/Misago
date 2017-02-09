@@ -2,12 +2,12 @@ from django.conf.urls import url
 
 from misago.conf import settings
 
-from ..views.attachment import attachment_server
-from ..views.goto import (
+from misago.threads.views.attachment import attachment_server
+from misago.threads.views.goto import (
     ThreadGotoPostView, ThreadGotoLastView, ThreadGotoNewView, ThreadGotoUnapprovedView,
     PrivateThreadGotoPostView, PrivateThreadGotoLastView, PrivateThreadGotoNewView)
-from ..views.list import ForumThreads, CategoryThreads, PrivateThreads
-from ..views.thread import Thread, PrivateThread
+from misago.threads.views.list import ForumThreads, CategoryThreads, PrivateThreads
+from misago.threads.views.thread import Thread, PrivateThread
 
 
 LISTS_TYPES = (

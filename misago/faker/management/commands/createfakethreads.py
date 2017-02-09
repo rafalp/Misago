@@ -16,7 +16,7 @@ from misago.core.management.progressbar import show_progress
 from misago.threads.checksums import update_post_checksum
 from misago.threads.models import Post, Thread
 
-from ...englishcorpus import EnglishCorpus
+from misago.faker.englishcorpus import EnglishCorpus
 
 
 PLACEKITTEN_URL = 'https://placekitten.com/g/%s/%s'

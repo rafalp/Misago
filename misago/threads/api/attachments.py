@@ -7,8 +7,8 @@ from rest_framework.response import Response
 
 from misago.acl import add_acl
 
-from ..models import Attachment, AttachmentType
-from ..serializers import AttachmentSerializer
+from misago.threads.models import Attachment, AttachmentType
+from misago.threads.serializers import AttachmentSerializer
 
 
 IMAGE_EXTENSIONS = ('jpg', 'jpeg', 'png', 'gif')

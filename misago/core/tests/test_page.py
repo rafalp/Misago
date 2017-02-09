@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ..page import Page
+from misago.core.page import Page
 
 
 class SiteTests(TestCase):

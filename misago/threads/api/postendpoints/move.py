@@ -7,8 +7,8 @@ from rest_framework.response import Response
 
 from misago.conf import settings
 
-from ...permissions.threads import allow_move_post, exclude_invisible_posts
-from ...utils import get_thread_id_from_url
+from misago.threads.permissions.threads import allow_move_post, exclude_invisible_posts
+from misago.threads.utils import get_thread_id_from_url
 
 
 MOVE_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL

@@ -8,13 +8,13 @@ from misago.core.shortcuts import validate_slug
 from misago.core.viewmodel import ViewModel as BaseViewModel
 from misago.readtracker.threadstracker import make_read_aware
 
-from ..models import Poll, Thread
-from ..participants import make_participants_aware
-from ..permissions.privatethreads import allow_use_private_threads, allow_see_private_thread
-from ..permissions.threads import allow_see_thread
-from ..serializers import PrivateThreadSerializer, ThreadSerializer
-from ..subscriptions import make_subscription_aware
-from ..threadtypes import trees_map
+from misago.threads.models import Poll, Thread
+from misago.threads.participants import make_participants_aware
+from misago.threads.permissions.privatethreads import allow_use_private_threads, allow_see_private_thread
+from misago.threads.permissions.threads import allow_see_thread
+from misago.threads.serializers import PrivateThreadSerializer, ThreadSerializer
+from misago.threads.subscriptions import make_subscription_aware
+from misago.threads.threadtypes import trees_map
 
 
 __all__ = ['ForumThread', 'PrivateThread']

@@ -7,9 +7,9 @@ from misago.conf import settings
 from misago.core.exceptions import Banned
 from misago.core.mail import mail_user
 
-from ..bans import get_user_ban
-from ..decorators import deny_authenticated, deny_banned_ips
-from ..tokens import is_activation_token_valid
+from misago.users.bans import get_user_ban
+from misago.users.decorators import deny_authenticated, deny_banned_ips
+from misago.users.tokens import is_activation_token_valid
 
 
 UserModel = get_user_model()

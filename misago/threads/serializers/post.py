@@ -6,7 +6,7 @@ from misago.categories.models import Category
 from misago.categories.serializers import BasicCategorySerializer
 from misago.users.serializers import BasicUserSerializer, UserSerializer
 
-from ..models import Post
+from misago.threads.models import Post
 
 
 __all__ = [

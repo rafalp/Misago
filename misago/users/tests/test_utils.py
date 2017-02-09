@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ..utils import hash_email
+from misago.users.utils import hash_email
 
 
 class UserModelTests(TestCase):

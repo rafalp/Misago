@@ -5,9 +5,9 @@ from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from .. import testutils
-from ..models import Thread
-from ..threadtypes import trees_map
+from misago.threads import testutils
+from misago.threads.models import Thread
+from misago.threads.threadtypes import trees_map
 
 
 class ThreadsApiTestCase(AuthenticatedUserTestCase):

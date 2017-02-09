@@ -5,10 +5,10 @@ from django.test import TestCase, override_settings
 from misago.core import threadstore
 from misago.core.cache import cache
 
-from .. import defaults
-from ..dbsettings import db_settings
-from ..gateway import settings as gateway
-from ..migrationutils import migrate_settings_group
+from misago.conf import defaults
+from misago.conf.dbsettings import db_settings
+from misago.conf.gateway import settings as gateway
+from misago.conf.migrationutils import migrate_settings_group
 
 
 class DBSettingsTests(TestCase):

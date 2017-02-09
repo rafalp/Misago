@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ..models import Setting
+from misago.conf.models import Setting
 
 
 class SettingModelTests(TestCase):

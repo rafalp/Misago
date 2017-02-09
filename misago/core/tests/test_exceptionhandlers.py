@@ -5,8 +5,8 @@ from django.test import TestCase
 
 from misago.users.models import Ban
 
-from .. import exceptionhandler
-from ..exceptions import Banned
+from misago.core import exceptionhandler
+from misago.core.exceptions import Banned
 
 
 INVALID_EXCEPTIONS = (

@@ -5,9 +5,9 @@ from django.utils.translation import ugettext as _
 
 from misago.core.exceptions import Banned
 
-from ..bans import get_user_ban
-from ..decorators import deny_banned_ips
-from ..tokens import is_password_change_token_valid
+from misago.users.bans import get_user_ban
+from misago.users.decorators import deny_banned_ips
+from misago.users.tokens import is_password_change_token_valid
 
 
 def reset_view(f):

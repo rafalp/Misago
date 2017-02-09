@@ -2,7 +2,7 @@ import warnings
 
 from django.test import TestCase
 
-from .. import SUPPORTED_ENGINES, check_db_engine
+from misago.core import SUPPORTED_ENGINES, check_db_engine
 
 
 INVALID_ENGINES = (

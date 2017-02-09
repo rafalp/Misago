@@ -3,7 +3,7 @@ import json
 from django import template
 from django.utils.safestring import mark_safe
 
-from ..utils import encode_json_html
+from misago.core.utils import encode_json_html
 
 register = template.Library()
 

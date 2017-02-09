@@ -12,7 +12,7 @@ from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
 from misago.core.forms import YesNoSwitch
 
-from ..bans import get_user_ban
+from misago.users.bans import get_user_ban
 
 
 """

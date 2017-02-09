@@ -7,7 +7,7 @@ from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from .. import testutils
+from misago.threads import testutils
 
 
 class PostMentionsTests(AuthenticatedUserTestCase):

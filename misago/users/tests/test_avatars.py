@@ -8,9 +8,9 @@ from django.utils.crypto import get_random_string
 
 from misago.conf import settings
 
-from ..avatars import (
+from misago.users.avatars import (
     set_default_avatar, dynamic, gallery, gravatar, store, uploaded)
-from ..models import Avatar, AvatarGallery
+from misago.users.models import Avatar, AvatarGallery
 
 
 UserModel = get_user_model()

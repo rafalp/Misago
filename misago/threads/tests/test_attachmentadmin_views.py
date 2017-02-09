@@ -3,8 +3,8 @@ from django.urls import reverse
 from misago.admin.testutils import AdminTestCase
 from misago.categories.models import Category
 
-from .. import testutils
-from ..models import Attachment, AttachmentType
+from misago.threads import testutils
+from misago.threads.models import Attachment, AttachmentType
 
 
 class AttachmentAdminViewsTests(AdminTestCase):

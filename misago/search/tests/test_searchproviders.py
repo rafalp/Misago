@@ -3,8 +3,8 @@ from django.test import TestCase
 
 from misago.conf import settings
 
-from ..searchprovider import SearchProvider
-from ..searchproviders import SearchProviders
+from misago.search.searchprovider import SearchProvider
+from misago.search.searchproviders import SearchProviders
 
 
 class MockProvider(SearchProvider):

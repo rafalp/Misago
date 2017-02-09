@@ -2,8 +2,8 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
 
-from .. import threadstore
-from ..middleware.threadstore import ThreadStoreMiddleware
+from misago.core import threadstore
+from misago.core.middleware.threadstore import ThreadStoreMiddleware
 
 
 class ThreadStoreTests(TestCase):

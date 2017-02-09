@@ -7,8 +7,8 @@ from misago.conf import settings
 from misago.markup import common_flavour
 
 from . import PostingEndpoint, PostingMiddleware
-from ...checksums import update_post_checksum
-from ...validators import validate_post, validate_title
+from misago.threads.checksums import update_post_checksum
+from misago.threads.validators import validate_post, validate_title
 
 
 class ReplyMiddleware(PostingMiddleware):

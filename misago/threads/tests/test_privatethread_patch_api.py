@@ -5,8 +5,8 @@ from django.core import mail
 
 from misago.acl.testutils import override_acl
 
-from .. import testutils
-from ..models import Thread, ThreadParticipant
+from misago.threads import testutils
+from misago.threads.models import Thread, ThreadParticipant
 from .test_privatethreads import PrivateThreadsTestCase
 
 

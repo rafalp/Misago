@@ -5,8 +5,8 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-from ..testutils import AdminTestCase
-from ..views import get_protected_namespace
+from misago.admin.testutils import AdminTestCase
+from misago.admin.views import get_protected_namespace
 
 
 UserModel = get_user_model()

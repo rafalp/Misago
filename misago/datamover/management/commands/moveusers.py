@@ -1,5 +1,5 @@
-from ... import avatars, bans, users
-from ..base import BaseCommand
+from misago.datamover import avatars, bans, users
+from misago.datamover.management.base import BaseCommand
 
 
 class Command(BaseCommand):

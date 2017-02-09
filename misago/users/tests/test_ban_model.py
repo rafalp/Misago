@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from django.test import TestCase
 
-from ..models import Ban
+from misago.users.models import Ban
 
 
 class BansManagerTests(TestCase):

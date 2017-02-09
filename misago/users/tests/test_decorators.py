@@ -2,8 +2,8 @@ from django.urls import reverse
 
 from misago.core.utils import encode_json_html
 
-from ..models import Ban
-from ..testutils import UserTestCase
+from misago.users.models import Ban
+from misago.users.testutils import UserTestCase
 
 
 class DenyAuthenticatedTests(UserTestCase):

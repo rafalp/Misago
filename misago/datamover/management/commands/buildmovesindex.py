@@ -1,7 +1,7 @@
 from misago.core.pgutils import batch_update
 
-from ...models import MovedId, OldIdRedirect
-from ..base import BaseCommand
+from misago.datamover.models import MovedId, OldIdRedirect
+from misago.datamover.management.base import BaseCommand
 
 
 MAPPINGS = {

@@ -6,8 +6,8 @@ from rest_framework.response import Response
 from misago.conf import settings
 from misago.core.mail import mail_user
 
-from ...credentialchange import store_new_credential
-from ...forms.options import ChangeEmailForm
+from misago.users.credentialchange import store_new_credential
+from misago.users.forms.options import ChangeEmailForm
 
 
 def change_email_endpoint(request, pk=None):

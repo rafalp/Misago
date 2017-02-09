@@ -9,7 +9,7 @@ from django.utils.translation import ungettext
 from misago.conf import settings
 from misago.core.forms import YesNoSwitch
 
-from ..bans import ban_user
+from misago.users.bans import ban_user
 
 
 class ModerateAvatarForm(forms.ModelForm):

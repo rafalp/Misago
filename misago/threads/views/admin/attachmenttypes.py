@@ -6,8 +6,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from misago.admin.views import generic
 
-from ...forms import AttachmentTypeForm
-from ...models import AttachmentType
+from misago.threads.forms import AttachmentTypeForm
+from misago.threads.models import AttachmentType
 
 
 class AttachmentTypeAdmin(generic.AdminBaseMixin):

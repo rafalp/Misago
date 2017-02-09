@@ -3,7 +3,7 @@ import time
 from django.conf import settings
 from django.core.management import base
 
-from .. import OLD_FORUM
+from misago.datamover import OLD_FORUM
 
 
 CommandError = base.CommandError

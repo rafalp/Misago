@@ -8,8 +8,8 @@ from misago.categories.models import Category
 from misago.conf import settings
 from misago.users.testutils import AuthenticatedUserTestCase
 
-from .. import testutils
-from ..models import Attachment, AttachmentType
+from misago.threads import testutils
+from misago.threads.models import Attachment, AttachmentType
 
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testfiles')

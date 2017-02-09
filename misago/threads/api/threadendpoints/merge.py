@@ -9,13 +9,13 @@ from misago.acl import add_acl
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
 
-from ...events import record_event
-from ...models import Thread
-from ...moderation import threads as moderation
-from ...permissions import can_reply_thread, can_see_thread
-from ...serializers import NewThreadSerializer, ThreadsListSerializer
-from ...threadtypes import trees_map
-from ...utils import add_categories_to_items, get_thread_id_from_url
+from misago.threads.events import record_event
+from misago.threads.models import Thread
+from misago.threads.moderation import threads as moderation
+from misago.threads.permissions import can_reply_thread, can_see_thread
+from misago.threads.serializers import NewThreadSerializer, ThreadsListSerializer
+from misago.threads.threadtypes import trees_map
+from misago.threads.utils import add_categories_to_items, get_thread_id_from_url
 from .pollmergehandler import PollMergeHandler
 
 

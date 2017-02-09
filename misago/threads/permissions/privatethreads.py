@@ -12,7 +12,7 @@ from misago.categories import PRIVATE_THREADS_ROOT_NAME
 from misago.categories.models import Category
 from misago.core.forms import YesNoSwitch
 
-from ..models import Thread
+from misago.threads.models import Thread
 
 
 """
