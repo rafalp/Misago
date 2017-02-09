@@ -185,23 +185,23 @@ class ListView(AdminView):
     """
     Filter list items
     """
-    SearchForm = None
+    search_form = None
 
     def get_search_form(self, request):
-        return self.SearchForm
+        return self.search_form
 
     @property
     def filters_session_key(self):
         return 'misago_admin_%s_filters' % self.root_link
 
-    def get_filters_from_GET(self, SearchForm, request):
-        form = SearchForm(request.GET)
+    def get_filters_from_GET(self, search_form, request):
+        form = search_form(request.GET)
         form.is_valid()
         return self.clean_filtering_data(form.cleaned_data)
 
-    def get_filters_from_session(self, SearchForm, request):
+    def get_filters_from_session(self, search_form, request):
         session_filters = request.session.get(self.filters_session_key, {})
-        form = SearchForm(session_filters)
+        form = search_form(session_filters)
         form.is_valid()
         return self.clean_filtering_data(form.cleaned_data)
 
@@ -230,9 +230,9 @@ class ListView(AdminView):
         else:
             return {}
 
-    def apply_filtering_on_context(self, context, active_filters, SearchForm):
+    def apply_filtering_on_context(self, context, active_filters, search_form):
         context['active_filters'] = active_filters
-        context['search_form'] = SearchForm(initial=context['active_filters'])
+        context['search_form'] = search_form(initial=context['active_filters'])
 
         if context['active_filters']:
             context['items'] = context['search_form'].filter_queryset(

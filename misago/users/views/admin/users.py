@@ -27,7 +27,7 @@ UserModel = get_user_model()
 class UserAdmin(generic.AdminBaseMixin):
     root_link = 'misago:admin:users:accounts:index'
     templates_dir = 'misago/admin/users'
-    Model = UserModel
+    model = UserModel
 
     def create_form_type(self, request, target):
         add_is_active_fields = False
@@ -43,7 +43,7 @@ class UserAdmin(generic.AdminBaseMixin):
             add_admin_fields = request.user.pk != target.pk
 
         return EditUserFormFactory(
-            self.Form, target,
+            self.form, target,
             add_is_active_fields=add_is_active_fields,
             add_admin_fields=add_admin_fields,
         )
@@ -233,7 +233,7 @@ class UsersList(UserAdmin, generic.ListView):
 
 
 class NewUser(UserAdmin, generic.ModelFormView):
-    Form = NewUserForm
+    form = NewUserForm
     template = 'new.html'
     message_submit = _('New user "%(user)s" has been registered.')
 
@@ -263,7 +263,7 @@ class NewUser(UserAdmin, generic.ModelFormView):
 
 
 class EditUser(UserAdmin, generic.ModelFormView):
-    Form = EditUserForm
+    form = EditUserForm
     template = 'edit.html'
     message_submit = _('User "%(user)s" has been edited.')
 

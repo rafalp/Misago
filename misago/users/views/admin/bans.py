@@ -9,8 +9,8 @@ from ...models import Ban
 
 class BanAdmin(generic.AdminBaseMixin):
     root_link = 'misago:admin:users:bans:index'
-    Model = Ban
-    Form = BanForm
+    model = Ban
+    form = BanForm
     templates_dir = 'misago/admin/bans'
     message_404 = _("Requested ban does not exist.")
 
@@ -27,7 +27,7 @@ class BansList(BanAdmin, generic.ListView):
         ('banned_value', _("A to z")),
         ('-banned_value', _("Z to a")),
     )
-    SearchForm = SearchBansForm
+    search_form = SearchBansForm
     selection_label = _('With bans: 0')
     empty_selection_label = _('Select bans')
     mass_actions = (

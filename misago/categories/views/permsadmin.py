@@ -15,7 +15,7 @@ from .categoriesadmin import CategoriesList, CategoryAdmin
 
 class CategoryRoleAdmin(generic.AdminBaseMixin):
     root_link = 'misago:admin:permissions:categories:index'
-    Model = CategoryRole
+    model = CategoryRole
     templates_dir = 'misago/admin/categoryroles'
     message_404 = _("Requested role does not exist.")
 

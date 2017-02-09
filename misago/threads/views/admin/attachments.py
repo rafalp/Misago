@@ -13,7 +13,7 @@ from ...models import Attachment, Post
 
 class AttachmentAdmin(generic.AdminBaseMixin):
     root_link = 'misago:admin:system:attachments:index'
-    Model = Attachment
+    model = Attachment
     templates_dir = 'misago/admin/attachments'
     message_404 = _("Requested attachment could not be found.")
 

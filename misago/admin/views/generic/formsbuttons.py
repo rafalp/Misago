@@ -54,17 +54,17 @@ class TargetedView(AdminView):
 
 
 class FormView(TargetedView):
-    Form = None
+    form = None
     template = 'form.html'
 
     def create_form_type(self, request):
-        return self.Form
+        return self.form
 
-    def initialize_form(self, FormType, request):
+    def initialize_form(self, form, request):
         if request.method == 'POST':
-            return FormType(request.POST, request.FILES)
+            return form(request.POST, request.FILES)
         else:
-            return FormType()
+            return form()
 
     def handle_form(self, form, request):
         raise NotImplementedError(
@@ -92,13 +92,13 @@ class ModelFormView(FormView):
     message_submit = None
 
     def create_form_type(self, request, target):
-        return self.Form
+        return self.form
 
-    def initialize_form(self, FormType, request, target):
+    def initialize_form(self, form, request, target):
         if request.method == 'POST':
-            return FormType(request.POST, request.FILES, instance=target)
+            return form(request.POST, request.FILES, instance=target)
         else:
-            return FormType(instance=target)
+            return form(instance=target)
 
     def handle_form(self, form, request, target):
         form.instance.save()

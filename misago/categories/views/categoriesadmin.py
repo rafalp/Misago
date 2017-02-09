@@ -13,7 +13,7 @@ from misago.categories.models import Category, RoleCategoryACL
 
 class CategoryAdmin(generic.AdminBaseMixin):
     root_link = 'misago:admin:categories:nodes:index'
-    Model = Category
+    model = Category
     templates_dir = 'misago/admin/categories'
     message_404 = _("Requested category does not exist.")
 

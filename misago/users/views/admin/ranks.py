@@ -11,8 +11,8 @@ from ...models import Rank
 
 class RankAdmin(generic.AdminBaseMixin):
     root_link = 'misago:admin:users:ranks:index'
-    Model = Rank
-    Form = RankForm
+    model = Rank
+    form = RankForm
     templates_dir = 'misago/admin/ranks'
     message_404 = _("Requested rank does not exist.")
 

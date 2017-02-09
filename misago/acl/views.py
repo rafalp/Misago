@@ -11,7 +11,7 @@ from .models import Role
 
 class RoleAdmin(generic.AdminBaseMixin):
     root_link = 'misago:admin:permissions:users:index'
-    Model = Role
+    model = Role
     templates_dir = 'misago/admin/roles'
     message_404 = _("Requested role does not exist.")
 
