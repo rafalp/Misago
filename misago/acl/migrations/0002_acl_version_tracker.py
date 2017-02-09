@@ -4,9 +4,8 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 
-from misago.core.migrationutils import cachebuster_register_cache
-
 from misago.acl.constants import ACL_CACHEBUSTER
+from misago.core.migrationutils import cachebuster_register_cache
 
 
 def register_acl_version_tracker(apps, schema_editor):

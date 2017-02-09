@@ -1,10 +1,10 @@
+from rest_framework.views import exception_handler as rest_exception_handler
+
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponsePermanentRedirect, JsonResponse
 from django.urls import reverse
 from django.utils import six
 from django.utils.translation import gettext as _
-
-from rest_framework.views import exception_handler as rest_exception_handler
 
 from . import errorpages
 from .exceptions import AjaxError, Banned, ExplicitFirstPage, OutdatedSlug

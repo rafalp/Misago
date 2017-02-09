@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand
 
 from misago.conf import settings
-
 from misago.users.avatars.gallery import load_avatar_galleries
 from misago.users.models import AvatarGallery
 

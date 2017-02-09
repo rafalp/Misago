@@ -11,7 +11,6 @@ from misago.acl.models import Role
 from misago.categories import PRIVATE_THREADS_ROOT_NAME
 from misago.categories.models import Category
 from misago.core.forms import YesNoSwitch
-
 from misago.threads.models import Thread
 
 

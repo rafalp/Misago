@@ -1,12 +1,11 @@
+from rest_framework import serializers
+from rest_framework.response import Response
+
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
-from rest_framework import serializers
-from rest_framework.response import Response
-
 from misago.conf import settings
-
 from misago.threads.events import record_event
 from misago.threads.models import Thread
 from misago.threads.moderation import threads as moderation

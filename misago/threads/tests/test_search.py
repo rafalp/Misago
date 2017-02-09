@@ -1,9 +1,8 @@
 from django.urls import reverse
 
 from misago.categories.models import Category
-from misago.users.testutils import AuthenticatedUserTestCase
-
 from misago.threads import testutils
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 class SearchApiTests(AuthenticatedUserTestCase):

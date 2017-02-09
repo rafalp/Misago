@@ -1,11 +1,10 @@
-from django.utils.translation import ugettext as _
-
 from rest_framework import status
 from rest_framework.response import Response
 
+from django.utils.translation import ugettext as _
+
 from misago.conf import settings
 from misago.core.mail import mail_user
-
 from misago.users.credentialchange import store_new_credential
 from misago.users.forms.options import ChangeEmailForm
 

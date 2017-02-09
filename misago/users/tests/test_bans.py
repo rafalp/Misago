@@ -5,8 +5,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from misago.users.bans import (
-    ban_ip, ban_user, get_email_ban, get_ip_ban,
-    get_request_ip_ban, get_user_ban, get_username_ban)
+    ban_ip, ban_user, get_email_ban, get_ip_ban, get_request_ip_ban, get_user_ban, get_username_ban)
 from misago.users.models import Ban
 
 

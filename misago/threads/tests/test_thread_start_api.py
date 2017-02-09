@@ -6,10 +6,9 @@ from django.urls import reverse
 from misago.acl.testutils import override_acl
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
-from misago.users.testutils import AuthenticatedUserTestCase
-
 from misago.threads.models import Thread
 from misago.threads.threadtypes import trees_map
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 class StartThreadTests(AuthenticatedUserTestCase):

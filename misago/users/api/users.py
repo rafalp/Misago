@@ -1,3 +1,8 @@
+from rest_framework import mixins, status, viewsets
+from rest_framework.decorators import detail_route, list_route
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
+from rest_framework.response import Response
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
@@ -6,11 +11,6 @@ from django.db.models import F
 from django.http import Http404
 from django.utils.translation import ugettext as _
 
-from rest_framework import mixins, status, viewsets
-from rest_framework.decorators import detail_route, list_route
-from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
-from rest_framework.response import Response
-
 from misago.acl import add_acl
 from misago.categories.models import Category
 from misago.core.cache import cache
@@ -18,15 +18,16 @@ from misago.core.rest_permissions import IsAuthenticatedOrReadOnly
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
 from misago.threads.moderation.posts import hide_post
 from misago.threads.moderation.threads import hide_thread
-
 from misago.users.bans import get_user_ban
 from misago.users.forms.options import ForumOptionsForm
 from misago.users.online.utils import get_user_status
 from misago.users.permissions.delete import allow_delete_user
 from misago.users.permissions.moderation import allow_moderate_avatar, allow_rename_user
-from misago.users.permissions.profiles import allow_browse_users_list, allow_follow_user, allow_see_ban_details
+from misago.users.permissions.profiles import (
+    allow_browse_users_list, allow_follow_user, allow_see_ban_details)
 from misago.users.serializers import BanDetailsSerializer, UserProfileSerializer, UserSerializer
 from misago.users.viewmodels import UserPosts, UserThreads
+
 from .rest_permissions import BasePermission, UnbannedAnonOnly
 from .userendpoints.avatar import avatar_endpoint, moderate_avatar_endpoint
 from .userendpoints.changeemail import change_email_endpoint

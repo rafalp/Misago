@@ -2,12 +2,11 @@ from misago.acl import add_acl
 from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
 from misago.readtracker.threadstracker import make_posts_read_aware
-from misago.users.online.utils import make_users_status_aware
-
 from misago.threads.paginator import PostsPaginator
 from misago.threads.permissions.threads import exclude_invisible_posts
 from misago.threads.serializers import PostSerializer
 from misago.threads.utils import add_likes_to_posts
+from misago.users.online.utils import make_users_status_aware
 
 
 __all__ = ['ThreadPosts']

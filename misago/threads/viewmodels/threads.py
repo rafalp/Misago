@@ -11,7 +11,6 @@ from misago.acl import add_acl
 from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
 from misago.readtracker import threadstracker
-
 from misago.threads.models import Thread
 from misago.threads.participants import make_participants_aware
 from misago.threads.permissions import exclude_invisible_threads

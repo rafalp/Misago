@@ -6,11 +6,11 @@ import bleach
 import markdown
 from bs4 import BeautifulSoup
 from htmlmin.minify import html_minify
+from markdown.extensions.fenced_code import FencedCodeExtension
 
 from django.http import Http404
 from django.urls import resolve
 from django.utils import six
-from markdown.extensions.fenced_code import FencedCodeExtension
 
 from .bbcode import blocks, inline
 from .md.shortimgs import ShortImagesExtension

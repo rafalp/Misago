@@ -1,5 +1,6 @@
 from django import forms
-from django.utils.translation import ugettext as _, ungettext
+from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 
 from misago.core.forms import YesNoSwitch
 

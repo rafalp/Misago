@@ -13,7 +13,6 @@ from django.utils.encoding import python_2_unicode_compatible
 from misago.conf import settings
 from misago.core.utils import parse_iso8601_string
 from misago.markup import finalise_markup
-
 from misago.threads import threadtypes
 from misago.threads.checksums import is_post_valid, update_post_checksum
 

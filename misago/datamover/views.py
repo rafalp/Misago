@@ -1,8 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, redirect
 
-from misago.threads.viewmodels import (
-    ForumThread, PrivateThread, ThreadPost, ThreadsCategory)
+from misago.threads.viewmodels import ForumThread, PrivateThread, ThreadPost, ThreadsCategory
 
 from .models import OldIdRedirect
 

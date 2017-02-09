@@ -8,8 +8,8 @@ from misago.search import SearchProvider
 from .models import Post, Thread
 from .permissions import exclude_invisible_threads
 from .serializers import PostFeedSerializer
-from .viewmodels import ThreadsRootCategory
 from .utils import add_categories_to_items
+from .viewmodels import ThreadsRootCategory
 
 
 class SearchThreads(SearchProvider):

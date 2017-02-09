@@ -10,9 +10,8 @@ from django.utils.encoding import smart_str
 from misago.acl.models import Role
 from misago.acl.testutils import override_acl
 from misago.conf import settings
-from misago.users.testutils import AuthenticatedUserTestCase
-
 from misago.threads.models import Attachment, AttachmentType
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testfiles')

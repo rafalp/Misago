@@ -2,21 +2,10 @@ from django.conf.urls import url
 from django.utils.translation import ugettext_lazy as _
 
 from .views.categoriesadmin import (
-    CategoriesList,
-    DeleteCategory,
-    EditCategory,
-    MoveDownCategory,
-    MoveUpCategory,
-    NewCategory
-)
+    CategoriesList, DeleteCategory, EditCategory, MoveDownCategory, MoveUpCategory, NewCategory)
 from .views.permsadmin import (
-    CategoryPermissions,
-    CategoryRolesList,
-    DeleteCategoryRole,
-    EditCategoryRole,
-    NewCategoryRole,
-    RoleCategoriesACL
-)
+    CategoryPermissions, CategoryRolesList, DeleteCategoryRole, EditCategoryRole, NewCategoryRole,
+    RoleCategoriesACL)
 
 
 class MisagoAdminExtension(object):

@@ -1,5 +1,5 @@
-from misago.datamover.settings import move_settings
 from misago.datamover.management.base import BaseCommand
+from misago.datamover.settings import move_settings
 
 
 class Command(BaseCommand):

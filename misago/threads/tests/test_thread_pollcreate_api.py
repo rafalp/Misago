@@ -2,6 +2,7 @@ from django.urls import reverse
 
 from misago.threads.models import Poll, Thread
 from misago.threads.serializers.poll import MAX_POLL_OPTIONS
+
 from .test_thread_poll_api import ThreadPollApiTestCase
 
 

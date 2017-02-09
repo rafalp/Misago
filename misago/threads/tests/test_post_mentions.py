@@ -8,9 +8,8 @@ from django.urls import reverse
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.markup.mentions import MENTIONS_LIMIT
-from misago.users.testutils import AuthenticatedUserTestCase
-
 from misago.threads import testutils
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 UserModel = get_user_model()

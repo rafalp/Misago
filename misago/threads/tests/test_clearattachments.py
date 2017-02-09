@@ -7,7 +7,6 @@ from django.utils.six import StringIO
 
 from misago.categories.models import Category
 from misago.conf import settings
-
 from misago.threads import testutils
 from misago.threads.management.commands import clearattachments
 from misago.threads.models import Attachment, AttachmentType

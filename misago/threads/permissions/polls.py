@@ -8,7 +8,6 @@ from misago.acl import algebra
 from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
 from misago.core.forms import YesNoSwitch
-
 from misago.threads.models import Poll, Thread
 
 

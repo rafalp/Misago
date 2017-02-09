@@ -1,16 +1,16 @@
+from rest_framework import serializers
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.utils import six
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
-from rest_framework import serializers
-
 from misago.categories import PRIVATE_THREADS_ROOT_NAME
-
-from . import PostingEndpoint, PostingMiddleware
 from misago.threads.participants import add_participants, set_owner
 from misago.threads.permissions import allow_message_user
+
+from . import PostingEndpoint, PostingMiddleware
 
 
 UserModel = get_user_model()

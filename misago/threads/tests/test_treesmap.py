@@ -2,7 +2,6 @@ from django.test import TestCase
 from django.utils import six
 
 from misago.categories.models import Category
-
 from misago.threads.threadtypes.treesmap import TreesMap
 
 

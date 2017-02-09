@@ -1,12 +1,11 @@
-from django.urls import reverse
-
 from rest_framework import serializers
+
+from django.urls import reverse
 
 from misago.categories.models import Category
 from misago.categories.serializers import BasicCategorySerializer
-from misago.users.serializers import BasicUserSerializer, UserSerializer
-
 from misago.threads.models import Post
+from misago.users.serializers import BasicUserSerializer, UserSerializer
 
 
 __all__ = [

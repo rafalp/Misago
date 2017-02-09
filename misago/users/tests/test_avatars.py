@@ -7,9 +7,7 @@ from django.test import TestCase, override_settings
 from django.utils.crypto import get_random_string
 
 from misago.conf import settings
-
-from misago.users.avatars import (
-    set_default_avatar, dynamic, gallery, gravatar, store, uploaded)
+from misago.users.avatars import dynamic, gallery, gravatar, set_default_avatar, store, uploaded
 from misago.users.models import Avatar, AvatarGallery
 
 

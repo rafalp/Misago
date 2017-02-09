@@ -1,9 +1,9 @@
-import six
+from rest_framework.response import Response
 
 from django.http import Http404
 from django.shortcuts import *  # noqa
 
-from rest_framework.response import Response
+import six
 
 
 def paginate(object_list, page, per_page, orphans=0,

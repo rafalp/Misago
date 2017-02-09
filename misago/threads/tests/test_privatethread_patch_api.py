@@ -4,9 +4,9 @@ from django.contrib.auth import get_user_model
 from django.core import mail
 
 from misago.acl.testutils import override_acl
-
 from misago.threads import testutils
 from misago.threads.models import Thread, ThreadParticipant
+
 from .test_privatethreads import PrivateThreadsTestCase
 
 

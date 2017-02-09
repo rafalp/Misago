@@ -9,10 +9,9 @@ from django.utils import timezone
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
-from misago.users.testutils import AuthenticatedUserTestCase
-
 from misago.threads import testutils
 from misago.threads.models import Post, Thread
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 class ThreadPostPatchApiTestCase(AuthenticatedUserTestCase):

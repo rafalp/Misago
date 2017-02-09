@@ -5,7 +5,6 @@ from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
 from misago.conf import settings
-
 from misago.users.testutils import AuthenticatedUserTestCase
 
 

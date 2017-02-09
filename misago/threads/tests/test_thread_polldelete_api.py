@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from misago.threads.models import Poll, PollVote, Thread
+
 from .test_thread_poll_api import ThreadPollApiTestCase
 
 

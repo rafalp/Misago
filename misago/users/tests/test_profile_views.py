@@ -5,7 +5,6 @@ from django.utils.six.moves import range
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.threads import testutils
-
 from misago.users.models import Ban
 from misago.users.testutils import AuthenticatedUserTestCase
 

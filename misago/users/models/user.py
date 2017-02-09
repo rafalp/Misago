@@ -1,8 +1,8 @@
 from hashlib import md5
 
 from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.models import UserManager as BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.postgres.fields import JSONField
 from django.core.mail import send_mail
@@ -16,10 +16,10 @@ from misago.acl import get_user_acl
 from misago.acl.models import Role
 from misago.conf import settings
 from misago.core.utils import slugify
-
 from misago.users import avatars
 from misago.users.signatures import is_user_signature_valid, make_signature_checksum
 from misago.users.utils import hash_email
+
 from .rank import Rank
 
 

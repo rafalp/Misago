@@ -1,6 +1,6 @@
 from misago.categories import PRIVATE_THREADS_ROOT_NAME
-
 from misago.threads.participants import set_users_unread_private_threads_sync
+
 from . import PostingEndpoint, PostingMiddleware
 
 

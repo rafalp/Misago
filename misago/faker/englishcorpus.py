@@ -1,6 +1,6 @@
 import codecs
-import random
 import os
+import random
 
 
 PHRASES_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'phrases.txt')

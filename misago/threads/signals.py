@@ -8,8 +8,7 @@ from misago.categories.signals import delete_category_content, move_category_con
 from misago.core.pgutils import batch_delete, batch_update
 from misago.users.signals import delete_user_content, username_changed
 
-from .models import (
-    Attachment, Poll, PollVote, Post, PostEdit, PostLike, Thread)
+from .models import Attachment, Poll, PollVote, Post, PostEdit, PostLike, Thread
 
 
 delete_post = Signal()

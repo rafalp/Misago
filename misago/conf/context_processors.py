@@ -4,7 +4,8 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.urls import reverse
 from django.utils.translation import get_language
 
-from .gateway import db_settings, settings as misago_settings  # noqa
+from .gateway import settings as misago_settings  # noqa
+from .gateway import db_settings
 
 
 BLANK_AVATAR_URL = static(misago_settings.MISAGO_BLANK_AVATAR)

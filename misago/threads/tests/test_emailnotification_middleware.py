@@ -12,9 +12,8 @@ from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
-from misago.users.testutils import AuthenticatedUserTestCase
-
 from misago.threads import testutils
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 UserModel = get_user_model()

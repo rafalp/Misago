@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.utils.translation import ugettext as _
 
 from misago.core.exceptions import Banned
-
 from misago.users.bans import get_user_ban
 from misago.users.decorators import deny_banned_ips
 from misago.users.tokens import is_password_change_token_valid

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
-from misago.conf.migrationutils import migrate_settings_group, delete_settings_cache
+from misago.conf.migrationutils import delete_settings_cache, migrate_settings_group
 
 
 _ = lambda x: x

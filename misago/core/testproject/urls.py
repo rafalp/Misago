@@ -2,9 +2,9 @@ from django.conf.urls import include, url
 # Setup Django admin to work with Misago auth
 from django.contrib import admin
 
+from misago.core.views import javascript_catalog
 from misago.users.forms.auth import AdminAuthenticationForm
 
-from misago.core.views import javascript_catalog
 from . import views
 
 

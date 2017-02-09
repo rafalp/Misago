@@ -1,14 +1,13 @@
 import json
 
-from django.core.exceptions import PermissionDenied, ValidationError
-from django.utils.translation import ugettext as _
-
 from rest_framework import status
 from rest_framework.response import Response
 
+from django.core.exceptions import PermissionDenied, ValidationError
+from django.utils.translation import ugettext as _
+
 from misago.conf import settings
 from misago.core.utils import format_plaintext_for_html
-
 from misago.users import avatars
 from misago.users.forms.moderation import ModerateAvatarForm
 from misago.users.models import AvatarGallery

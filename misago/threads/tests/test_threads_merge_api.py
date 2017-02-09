@@ -6,11 +6,11 @@ from django.utils.six.moves import range
 from misago.acl import add_acl
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
-
 from misago.threads import testutils
 from misago.threads.api.threadendpoints.merge import MERGE_LIMIT
 from misago.threads.models import Poll, PollVote, Post, Thread
 from misago.threads.serializers import ThreadsListSerializer
+
 from .test_threads_api import ThreadsApiTestCase
 
 

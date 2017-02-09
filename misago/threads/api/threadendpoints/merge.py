@@ -1,14 +1,13 @@
+from rest_framework.response import Response
+
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
 from django.utils.translation import gettext as _
 from django.utils.translation import ungettext
 
-from rest_framework.response import Response
-
 from misago.acl import add_acl
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
-
 from misago.threads.events import record_event
 from misago.threads.models import Thread
 from misago.threads.moderation import threads as moderation
@@ -16,6 +15,7 @@ from misago.threads.permissions import can_reply_thread, can_see_thread
 from misago.threads.serializers import NewThreadSerializer, ThreadsListSerializer
 from misago.threads.threadtypes import trees_map
 from misago.threads.utils import add_categories_to_items, get_thread_id_from_url
+
 from .pollmergehandler import PollMergeHandler
 
 

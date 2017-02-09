@@ -5,8 +5,8 @@ from django.urls import reverse
 from django.views.generic import View
 
 from misago.core.shortcuts import get_int_or_404
-
-from misago.threads.viewmodels import ForumThreads, PrivateThreads, PrivateThreadsCategory, ThreadsCategory, ThreadsRootCategory
+from misago.threads.viewmodels import (
+    ForumThreads, PrivateThreads, PrivateThreadsCategory, ThreadsCategory, ThreadsRootCategory)
 
 
 class ListBase(View):

@@ -1,10 +1,10 @@
-from django.urls import reverse
-
 from rest_framework import serializers
 
-from misago.categories.serializers import BasicCategorySerializer
+from django.urls import reverse
 
+from misago.categories.serializers import BasicCategorySerializer
 from misago.threads.models import Thread
+
 from .poll import PollSerializer
 from .threadparticipant import ThreadParticipantSerializer
 

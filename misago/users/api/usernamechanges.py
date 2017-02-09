@@ -1,16 +1,15 @@
+from rest_framework import mixins, status, viewsets
+from rest_framework.response import Response
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.utils.translation import ugettext as _
 
-from rest_framework import mixins, status, viewsets
-from rest_framework.response import Response
-
-from misago.core.shortcuts import (
-    get_int_or_404, get_object_or_404, paginate, pagination_dict)
-
+from misago.core.shortcuts import get_int_or_404, get_object_or_404, paginate, pagination_dict
 from misago.users.models import UsernameChange
 from misago.users.serializers.usernamechange import UsernameChangeSerializer
+
 from .rest_permissions import BasePermission
 
 

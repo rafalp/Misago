@@ -1,9 +1,8 @@
-from django.urls import reverse
-
 from rest_framework import serializers
 
-from misago.core.utils import format_plaintext_for_html
+from django.urls import reverse
 
+from misago.core.utils import format_plaintext_for_html
 from misago.threads.models import Attachment
 
 

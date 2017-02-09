@@ -6,7 +6,6 @@ from misago.categories.permissions import allow_browse_category, allow_see_categ
 from misago.categories.serializers import BasicCategorySerializer
 from misago.core.shortcuts import validate_slug
 from misago.core.viewmodel import ViewModel as BaseViewModel
-
 from misago.threads.permissions import allow_use_private_threads
 
 

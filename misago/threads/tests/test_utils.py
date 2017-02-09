@@ -1,6 +1,5 @@
 from misago.categories.models import Category
 from misago.core.testutils import MisagoTestCase
-
 from misago.threads import testutils
 from misago.threads.utils import add_categories_to_items, get_thread_id_from_url
 

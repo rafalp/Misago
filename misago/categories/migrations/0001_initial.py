@@ -3,9 +3,9 @@ from __future__ import unicode_literals
 
 import mptt.fields
 
+import django.db.models.deletion
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
-import django.db.models.deletion
 from django.db import migrations, models
 
 from misago.acl.models import permissions_default

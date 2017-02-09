@@ -6,7 +6,6 @@ from django.utils.six.moves import range
 
 from misago.acl.testutils import override_acl
 from misago.conf import settings
-
 from misago.users.testutils import AuthenticatedUserTestCase
 
 

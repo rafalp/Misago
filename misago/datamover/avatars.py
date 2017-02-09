@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
 from misago.conf import settings
-from misago.users.avatars import store, gravatar, dynamic, gallery, uploaded
+from misago.users.avatars import dynamic, gallery, gravatar, store, uploaded
 
 from . import OLD_FORUM, fetch_assoc, movedids
 

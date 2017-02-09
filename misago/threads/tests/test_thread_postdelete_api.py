@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from misago.threads import testutils
 from misago.threads.models import Post, Thread
+
 from .test_threads_api import ThreadsApiTestCase
 
 

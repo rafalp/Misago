@@ -3,7 +3,6 @@ from django.test import TestCase
 from django.urls import reverse
 
 from misago.core.utils import encode_json_html
-
 from misago.users.models import Ban
 from misago.users.tokens import make_activation_token
 

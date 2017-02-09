@@ -5,9 +5,8 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 
-from misago.users.forms.auth import AdminAuthenticationForm
-
 from misago.admin import auth
+from misago.users.forms.auth import AdminAuthenticationForm
 
 
 @sensitive_post_parameters()

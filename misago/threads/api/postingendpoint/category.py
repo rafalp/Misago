@@ -1,17 +1,17 @@
+from rest_framework import serializers
+
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
-
-from rest_framework import serializers
 
 from misago.acl import add_acl
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
 from misago.categories.permissions import can_browse_category, can_see_category
-
-from . import PostingEndpoint, PostingMiddleware
 from misago.threads.permissions.threads import allow_start_thread
 from misago.threads.threadtypes import trees_map
+
+from . import PostingEndpoint, PostingMiddleware
 
 
 class CategoryMiddleware(PostingMiddleware):

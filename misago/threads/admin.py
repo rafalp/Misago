@@ -3,11 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from .views.admin.attachments import AttachmentsList, DeleteAttachment
 from .views.admin.attachmenttypes import (
-    AttachmentTypesList,
-    DeleteAttachmentType,
-    EditAttachmentType,
-    NewAttachmentType
-)
+    AttachmentTypesList, DeleteAttachmentType, EditAttachmentType, NewAttachmentType)
 
 
 class MisagoAdminExtension(object):

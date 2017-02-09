@@ -1,6 +1,5 @@
-from misago.users.testutils import AuthenticatedUserTestCase
-
 from misago.markup.mentions import add_mentions
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 class MockRequest(object):

@@ -1,11 +1,10 @@
-from django.db import IntegrityError
-from django.utils.translation import ugettext as _
-
 from rest_framework import status
 from rest_framework.response import Response
 
-from misago.conf import settings
+from django.db import IntegrityError
+from django.utils.translation import ugettext as _
 
+from misago.conf import settings
 from misago.users.forms.rename import ChangeUsernameForm
 from misago.users.namechanges import UsernameChanges
 

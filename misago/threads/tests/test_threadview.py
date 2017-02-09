@@ -1,13 +1,12 @@
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.conf import settings
-from misago.users.testutils import AuthenticatedUserTestCase
-
 from misago.threads import testutils
 from misago.threads.events import record_event
 from misago.threads.models import Post, Thread
 from misago.threads.moderation import threads as threads_moderation
 from misago.threads.moderation.posts import hide_post
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 class MockRequest(object):

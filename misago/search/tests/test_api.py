@@ -2,9 +2,8 @@ from django.urls import reverse
 from django.utils import six
 
 from misago.acl.testutils import override_acl
-from misago.users.testutils import AuthenticatedUserTestCase
-
 from misago.search.searchproviders import searchproviders
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 class SearchApiTests(AuthenticatedUserTestCase):

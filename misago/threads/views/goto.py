@@ -6,7 +6,6 @@ from django.utils.translation import ugettext as _
 from django.views.generic import View
 
 from misago.conf import settings
-
 from misago.threads.permissions.threads import exclude_invisible_posts
 from misago.threads.viewmodels import ForumThread, PrivateThread
 

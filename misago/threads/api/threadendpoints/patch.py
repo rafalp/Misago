@@ -9,14 +9,12 @@ from misago.categories.permissions import allow_browse_category, allow_see_categ
 from misago.categories.serializers import CategorySerializer
 from misago.core.apipatch import ApiPatch
 from misago.core.shortcuts import get_int_or_404, get_object_or_404
-
 from misago.threads.models import ThreadParticipant
 from misago.threads.moderation import threads as moderation
 from misago.threads.participants import (
     add_participant, change_owner, make_participants_aware, remove_participant)
 from misago.threads.permissions import (
-    allow_add_participants, allow_add_participant,
-    allow_change_owner, allow_edit_thread,
+    allow_add_participant, allow_add_participants, allow_change_owner, allow_edit_thread,
     allow_remove_participant, allow_start_thread)
 from misago.threads.serializers import ThreadParticipantSerializer
 from misago.threads.utils import add_categories_to_items

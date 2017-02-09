@@ -5,10 +5,10 @@ import os
 from django.contrib.auth import get_user_model
 from django.core.files import File
 
-from misago.threads.models import Attachment, AttachmentType, Thread, Post
+from misago.threads.models import Attachment, AttachmentType, Post, Thread
 from misago.threads.serializers import AttachmentSerializer
 
-from . import OLD_FORUM, fetch_assoc, movedids, localise_datetime
+from . import OLD_FORUM, fetch_assoc, localise_datetime, movedids
 
 
 UserModel = get_user_model()

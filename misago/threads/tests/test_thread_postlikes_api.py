@@ -2,6 +2,7 @@ from django.urls import reverse
 
 from misago.threads import testutils
 from misago.threads.serializers import PostLikeSerializer
+
 from .test_threads_api import ThreadsApiTestCase
 
 

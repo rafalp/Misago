@@ -8,7 +8,6 @@ from django.utils.translation import ungettext
 
 from misago.conf import settings
 from misago.core.forms import YesNoSwitch
-
 from misago.users.bans import ban_user
 
 

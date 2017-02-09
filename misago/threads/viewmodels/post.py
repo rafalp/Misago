@@ -2,7 +2,6 @@ from django.shortcuts import get_object_or_404
 
 from misago.acl import add_acl
 from misago.core.viewmodel import ViewModel as BaseViewModel
-
 from misago.threads.permissions.threads import exclude_invisible_posts
 
 

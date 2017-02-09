@@ -6,7 +6,6 @@ from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from misago.admin.views import generic
-
 from misago.threads.forms import SearchAttachmentsForm
 from misago.threads.models import Attachment, Post
 

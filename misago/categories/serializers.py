@@ -1,6 +1,6 @@
-from django.urls import reverse
-
 from rest_framework import serializers
+
+from django.urls import reverse
 
 from misago.core.utils import format_plaintext_for_html
 

@@ -2,11 +2,10 @@ from django.conf.urls import url
 from django.contrib import admin as djadmin
 from django.utils.translation import ugettext_lazy as _
 
-from .djangoadmin import UserModel, UserAdmin
+from .djangoadmin import UserAdmin, UserModel
 from .views.admin.bans import BansList, DeleteBan, EditBan, NewBan
 from .views.admin.ranks import (
-    DefaultRank, DeleteRank, EditRank, MoveDownRank, MoveUpRank, NewRank,
-    RanksList, RankUsers)
+    DefaultRank, DeleteRank, EditRank, MoveDownRank, MoveUpRank, NewRank, RanksList, RankUsers)
 from .views.admin.users import (
     DeleteAccountStep, DeletePostsStep, DeleteThreadsStep, EditUser, NewUser, UsersList)
 

@@ -3,14 +3,9 @@ from django.test import TestCase
 from django.utils import timezone
 
 from misago.categories.models import Category
-
 from misago.threads.models import Post, Thread, ThreadParticipant
 from misago.threads.participants import (
-    has_participants,
-    make_participants_aware,
-    set_owner,
-    set_users_unread_private_threads_sync
-)
+    has_participants, make_participants_aware, set_owner, set_users_unread_private_threads_sync)
 
 
 UserModel = get_user_model()

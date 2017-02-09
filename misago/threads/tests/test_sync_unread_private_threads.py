@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 
 from misago.threads import testutils
 from misago.threads.models import ThreadParticipant
+
 from .test_privatethreads import PrivateThreadsTestCase
 
 

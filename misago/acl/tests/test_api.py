@@ -1,9 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from misago.users.models import AnonymousUser
-
 from misago.acl.api import get_user_acl
+from misago.users.models import AnonymousUser
 
 
 UserModel = get_user_model()

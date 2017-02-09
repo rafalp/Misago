@@ -5,9 +5,9 @@ from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
-
 from misago.threads import testutils
 from misago.threads.models import Poll, PollVote, Thread
+
 from .test_threads_api import ThreadsApiTestCase
 
 

@@ -1,16 +1,16 @@
+from rest_framework.decorators import api_view
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponse
-
-from rest_framework.decorators import api_view
-
-from misago.users.models import Ban
 
 from misago.core import errorpages, mail
 from misago.core.decorators import require_POST
 from misago.core.exceptions import Banned
 from misago.core.shortcuts import paginate, paginated_response, validate_slug
 from misago.core.views import home_redirect
+from misago.users.models import Ban
+
 from .models import Model
 from .serializers import MockSerializer
 

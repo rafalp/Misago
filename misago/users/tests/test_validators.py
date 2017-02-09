@@ -4,19 +4,11 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from misago.conf import settings
-
 from misago.users.models import Ban
 from misago.users.validators import (
-    validate_email,
-    validate_email_available,
-    validate_email_banned,
-    validate_gmail_email,
-    validate_username,
-    validate_username_available,
-    validate_username_banned,
-    validate_username_content,
-    validate_username_length
-)
+    validate_email, validate_email_available, validate_email_banned, validate_gmail_email,
+    validate_username, validate_username_available, validate_username_banned,
+    validate_username_content, validate_username_length)
 
 
 UserModel = get_user_model()

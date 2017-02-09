@@ -5,7 +5,6 @@ from django.test import TestCase
 from django.utils import timezone
 
 from misago.categories.models import Category
-
 from misago.threads.checksums import update_post_checksum
 from misago.threads.models import Post, Thread
 

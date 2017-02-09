@@ -1,12 +1,11 @@
+from rest_framework.response import Response
+
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
-from rest_framework.response import Response
-
 from misago.acl import add_acl
 from misago.conf import settings
-
 from misago.threads.permissions.threads import exclude_invisible_posts
 from misago.threads.serializers import PostSerializer
 

@@ -3,6 +3,7 @@ from django.utils import timezone
 
 from misago.threads import testutils
 from misago.threads.models import Post, Thread
+
 from .test_threads_api import ThreadsApiTestCase
 
 
@@ -61,4 +62,3 @@ class PostReadApiTests(ThreadsApiTestCase):
 
         subscription = self.thread.subscription_set.order_by('id').last()
         self.assertEqual(subscription.last_read_on, self.post.posted_on)
-

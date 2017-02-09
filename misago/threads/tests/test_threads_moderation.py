@@ -1,8 +1,7 @@
 from misago.categories.models import Category
-from misago.users.testutils import AuthenticatedUserTestCase
-
 from misago.threads import moderation, testutils
 from misago.threads.models import Post, Thread
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 class MockRequest(object):

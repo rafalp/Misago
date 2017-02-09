@@ -1,8 +1,8 @@
-import pytz
-
 from django.contrib.auth import logout
 from django.contrib.auth.models import AnonymousUser as DjAnonymousUser
 from django.utils.deprecation import MiddlewareMixin
+
+import pytz
 
 from .bans import get_request_ip_ban, get_user_ban
 from .models import AnonymousUser, Online

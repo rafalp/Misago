@@ -3,12 +3,12 @@ from rest_framework import serializers
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.conf import settings
-from misago.users.testutils import AuthenticatedUserTestCase
-
 from misago.threads import testutils
 from misago.threads.api.postingendpoint import PostingEndpoint
-from misago.threads.api.postingendpoint.attachments import AttachmentsMiddleware, validate_attachments_count
+from misago.threads.api.postingendpoint.attachments import (
+    AttachmentsMiddleware, validate_attachments_count)
 from misago.threads.models import Attachment, AttachmentType
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 class RequestMock(object):

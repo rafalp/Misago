@@ -2,7 +2,6 @@ from django.core.exceptions import PermissionDenied
 from django.test import TestCase
 
 from misago.conf import settings
-
 from misago.search.searchprovider import SearchProvider
 from misago.search.searchproviders import SearchProviders
 

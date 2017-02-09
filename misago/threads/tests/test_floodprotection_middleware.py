@@ -3,10 +3,10 @@ from datetime import timedelta
 from django.utils import timezone
 
 from misago.acl.testutils import override_acl
-from misago.users.testutils import AuthenticatedUserTestCase
-
 from misago.threads.api.postingendpoint import PostingInterrupt
-from misago.threads.api.postingendpoint.floodprotection import MIN_POSTING_PAUSE, FloodProtectionMiddleware
+from misago.threads.api.postingendpoint.floodprotection import (
+    MIN_POSTING_PAUSE, FloodProtectionMiddleware)
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 class FloodProtectionMiddlewareTests(AuthenticatedUserTestCase):

@@ -1,12 +1,11 @@
-from django.core.exceptions import PermissionDenied
-from django.utils.translation import ugettext as _
-
 from rest_framework import status
 from rest_framework.response import Response
 
+from django.core.exceptions import PermissionDenied
+from django.utils.translation import ugettext as _
+
 from misago.conf import settings
 from misago.core.utils import format_plaintext_for_html
-
 from misago.users.forms.options import EditSignatureForm
 from misago.users.signatures import is_user_signature_valid, set_user_signature
 

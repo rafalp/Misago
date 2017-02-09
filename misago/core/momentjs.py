@@ -27,4 +27,3 @@ def clean_language_name(language):
 
     # nothing was found
     return None
-

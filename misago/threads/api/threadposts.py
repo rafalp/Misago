@@ -1,20 +1,21 @@
-from django.core.exceptions import PermissionDenied
-from django.db import transaction
-from django.utils.translation import ugettext as _
-
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 
+from django.core.exceptions import PermissionDenied
+from django.db import transaction
+from django.utils.translation import ugettext as _
+
 from misago.acl import add_acl
 from misago.core.shortcuts import get_int_or_404
-from misago.users.online.utils import make_users_status_aware
-
 from misago.threads.models import Post
 from misago.threads.moderation import posts as moderation
-from misago.threads.permissions.threads import allow_delete_event, allow_delete_post, allow_edit_post, allow_reply_thread
+from misago.threads.permissions.threads import (
+    allow_delete_event, allow_delete_post, allow_edit_post, allow_reply_thread)
 from misago.threads.serializers import AttachmentSerializer, PostSerializer
 from misago.threads.viewmodels import ForumThread, PrivateThread, ThreadPost, ThreadPosts
+from misago.users.online.utils import make_users_status_aware
+
 from .postendpoints.edits import get_edit_endpoint, revert_post_endpoint
 from .postendpoints.likes import likes_list_endpoint
 from .postendpoints.merge import posts_merge_endpoint

@@ -5,7 +5,6 @@ from django.utils.six.moves import range
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.threads.testutils import post_thread
-
 from misago.users.activepostersranking import build_active_posters_ranking
 from misago.users.models import Rank
 from misago.users.testutils import AuthenticatedUserTestCase

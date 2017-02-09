@@ -1,9 +1,9 @@
 from django.urls import reverse
 
 from misago.acl.testutils import override_acl
-
 from misago.threads import testutils
 from misago.threads.models import Thread, ThreadParticipant
+
 from .test_privatethreads import PrivateThreadsTestCase
 
 

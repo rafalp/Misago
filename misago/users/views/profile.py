@@ -15,7 +15,6 @@ from misago.core.decorators import require_POST
 from misago.core.shortcuts import get_object_or_404, paginate, pagination_dict, validate_slug
 from misago.core.utils import clean_return_path
 from misago.threads.permissions import allow_message_user
-
 from misago.users.bans import get_user_ban
 from misago.users.decorators import deny_guests
 from misago.users.online.utils import get_user_status

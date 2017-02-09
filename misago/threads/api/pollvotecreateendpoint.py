@@ -1,14 +1,13 @@
 from copy import deepcopy
 
+from rest_framework.response import Response
+
 from django.core.exceptions import ValidationError
 from django.utils import six
 from django.utils.translation import gettext as _
 from django.utils.translation import ungettext
 
-from rest_framework.response import Response
-
 from misago.acl import add_acl
-
 from misago.threads.permissions.polls import allow_vote_poll
 from misago.threads.serializers import PollSerializer
 

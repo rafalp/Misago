@@ -3,9 +3,8 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
 
-from misago.users.models import AnonymousUser
-
 from misago.core.middleware.exceptionhandler import ExceptionHandlerMiddleware
+from misago.users.models import AnonymousUser
 
 
 class ExceptionHandlerMiddlewareTests(TestCase):

@@ -11,7 +11,6 @@ from misago.acl.models import Role
 from misago.admin.testutils import AdminTestCase
 from misago.categories.models import Category
 from misago.threads.testutils import post_thread, reply_thread
-
 from misago.users.models import Ban, Rank
 
 

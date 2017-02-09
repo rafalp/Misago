@@ -1,7 +1,6 @@
 from django.urls import reverse
 
 from misago.admin.testutils import AdminTestCase
-
 from misago.conf.models import SettingsGroup
 
 

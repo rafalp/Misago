@@ -14,6 +14,7 @@ from misago.threads.models import Post, Thread
 
 from . import render
 
+
 VERSION_CHECK_CACHE_KEY = "misago_version_check"
 
 UserModel = get_user_model()

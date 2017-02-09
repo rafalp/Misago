@@ -7,10 +7,10 @@ from misago.categories.models import Category
 from misago.core.shortcuts import validate_slug
 from misago.core.viewmodel import ViewModel as BaseViewModel
 from misago.readtracker.threadstracker import make_read_aware
-
 from misago.threads.models import Poll, Thread
 from misago.threads.participants import make_participants_aware
-from misago.threads.permissions.privatethreads import allow_use_private_threads, allow_see_private_thread
+from misago.threads.permissions.privatethreads import (
+    allow_see_private_thread, allow_use_private_threads)
 from misago.threads.permissions.threads import allow_see_thread
 from misago.threads.serializers import PrivateThreadSerializer, ThreadSerializer
 from misago.threads.subscriptions import make_subscription_aware

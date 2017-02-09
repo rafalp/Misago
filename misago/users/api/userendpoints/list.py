@@ -1,17 +1,15 @@
 from datetime import timedelta
 
+from rest_framework.response import Response
+
 from django.contrib.auth import get_user_model
 from django.db.models import Count
 from django.http import Http404
 from django.utils import timezone
 
-from rest_framework.response import Response
-
 from misago.conf import settings
 from misago.core.cache import cache
-from misago.core.shortcuts import (
-    get_int_or_404, get_object_or_404, paginate, paginated_response)
-
+from misago.core.shortcuts import get_int_or_404, get_object_or_404, paginate, paginated_response
 from misago.users.activepostersranking import get_active_posters_ranking
 from misago.users.models import Rank
 from misago.users.online.utils import make_users_status_aware

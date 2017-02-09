@@ -6,7 +6,6 @@ from django.utils.translation import ugettext as _
 from misago.conf import settings
 from misago.core.exceptions import Banned
 from misago.core.mail import mail_user
-
 from misago.users.bans import get_user_ban
 from misago.users.decorators import deny_authenticated, deny_banned_ips
 from misago.users.tokens import is_activation_token_valid

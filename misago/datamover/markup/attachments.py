@@ -2,9 +2,8 @@ from __future__ import unicode_literals
 
 import re
 
-from misago.threads.models import Attachment
-
 from misago.datamover import fetch_assoc, movedids
+from misago.threads.models import Attachment
 
 
 ATTACHMENT_RE = re.compile(r'/attachment/(?P<hash>[a-z0-9]+)/')

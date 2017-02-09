@@ -4,9 +4,8 @@ from types import ModuleType
 from django.test import TestCase
 from django.utils import six
 
-from misago.conf import settings
-
 from misago.acl.providers import PermissionProviders
+from misago.conf import settings
 
 
 class TestType(object):

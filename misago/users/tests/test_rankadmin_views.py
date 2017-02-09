@@ -2,7 +2,6 @@ from django.urls import reverse
 
 from misago.acl.models import Role
 from misago.admin.testutils import AdminTestCase
-
 from misago.users.models import Rank
 
 

@@ -6,10 +6,9 @@ from django.utils import timezone
 from django.utils.six.moves import range
 
 from misago.categories.models import Category
-from misago.users.models import AnonymousUser
-
 from misago.threads import testutils
 from misago.threads.subscriptions import make_subscription_aware
+from misago.users.models import AnonymousUser
 
 
 UserModel = get_user_model()

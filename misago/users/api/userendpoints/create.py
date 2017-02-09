@@ -1,14 +1,13 @@
+from rest_framework import status
+from rest_framework.response import Response
+
 from django.contrib.auth import authenticate, get_user_model, login
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 
-from rest_framework import status
-from rest_framework.response import Response
-
 from misago.conf import settings
 from misago.core.mail import mail_user
-
 from misago.users import captcha
 from misago.users.forms.register import RegisterForm
 from misago.users.serializers import AuthenticatedUserSerializer

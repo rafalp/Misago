@@ -12,10 +12,9 @@ from misago.conf import settings
 from misago.core import threadstore
 from misago.core.cache import cache
 from misago.readtracker import categoriestracker, threadstracker
+from misago.threads import testutils
 from misago.users.models import AnonymousUser
 from misago.users.testutils import AuthenticatedUserTestCase
-
-from misago.threads import testutils
 
 
 LISTS_URLS = (

@@ -1,6 +1,7 @@
-from . import PostingEndpoint, PostingMiddleware
 from misago.threads import moderation
 from misago.threads.models import Thread
+
+from . import PostingEndpoint, PostingMiddleware
 
 
 class PinMiddleware(PostingMiddleware):

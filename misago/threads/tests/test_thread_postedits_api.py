@@ -8,9 +8,9 @@ from django.urls import reverse
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
-
 from misago.threads import testutils
 from misago.threads.models import Post
+
 from .test_threads_api import ThreadsApiTestCase
 
 

@@ -1,14 +1,14 @@
+from rest_framework import serializers
+
 from django.db.models import F
 from django.utils.translation import ugettext_lazy
 
-from rest_framework import serializers
-
 from misago.conf import settings
 from misago.markup import common_flavour
-
-from . import PostingEndpoint, PostingMiddleware
 from misago.threads.checksums import update_post_checksum
 from misago.threads.validators import validate_post, validate_title
+
+from . import PostingEndpoint, PostingMiddleware
 
 
 class ReplyMiddleware(PostingMiddleware):

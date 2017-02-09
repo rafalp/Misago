@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.utils.crypto import get_random_string
 
-from misago.threads.models import Thread, Poll, PollVote
+from misago.threads.models import Poll, PollVote, Thread
 
-from . import fetch_assoc, movedids, localise_datetime
+from . import fetch_assoc, localise_datetime, movedids
 
 
 UserModel = get_user_model()

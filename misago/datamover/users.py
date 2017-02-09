@@ -7,7 +7,7 @@ from django.utils.crypto import get_random_string
 from misago.users.models import UsernameChange
 from misago.users.signatures import make_signature_checksum
 
-from . import fetch_assoc, movedids, localise_datetime
+from . import fetch_assoc, localise_datetime, movedids
 
 
 UserModel = get_user_model()

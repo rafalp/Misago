@@ -3,10 +3,9 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.test import TestCase
 
-from misago.users.models import Ban
-
 from misago.core import exceptionhandler
 from misago.core.exceptions import Banned
+from misago.users.models import Ban
 
 
 INVALID_EXCEPTIONS = (
