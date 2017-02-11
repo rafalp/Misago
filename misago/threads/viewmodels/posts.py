@@ -30,6 +30,10 @@ class ViewModel(object):
         posts = list(list_page.object_list)
         posters = []
 
+        next_page_post = None
+        if list_page.has_next():
+            next_page_post, posts = posts[-1], next_page_post[:-1]
+
         for post in posts:
             post.category = thread.category
             post.thread = thread_model
@@ -44,16 +48,9 @@ class ViewModel(object):
 
         # add events to posts
         if thread_model.has_events:
-            first_post = None
-            if list_page.has_previous():
-                first_post = posts[0]
-            last_post = None
-            if list_page.has_next():
-                last_post = posts[-1]
-
             events_limit = settings.MISAGO_EVENTS_PER_PAGE
             posts += self.get_events_queryset(
-                request, thread_model, events_limit, first_post, last_post)
+                request, thread_model, events_limit, posts[0], next_page_post)
 
             # sort both by pk
             posts.sort(key=lambda p: p.pk)
