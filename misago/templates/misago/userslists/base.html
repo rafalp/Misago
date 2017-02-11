@@ -14,7 +14,7 @@
     </div>
     <div class="page-tabs">
       <div class="container">
-        <ul class="nav nav-pills">
+        <ul class="nav nav-pills" role="nav" itemscope itemtype="http://schema.org/SiteNavigationElement">
           {% for page in pages %}
             <li{% if page.is_active %} class="active"{% endif %}>
               <a href="{{ page.reversed_link }}">

@@ -1,5 +1,5 @@
 {% load i18n %}
-<nav class="misago-pagination">
+<nav class="misago-pagination" role="nav" itemscope itemtype="http://schema.org/SiteNavigationElement">
   {% if paginator.pages > 1 %}
   <ul class="pagination">
     {% if paginator.first %}
@@ -10,20 +10,24 @@
       </li>
       {% if paginator.previous > 1 %}
         <li>
-          <a href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.previous %}" title="{% trans 'Go to previous page' %}">
+          <a href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.previous %}" rel="prev" title="{% trans 'Go to previous page' %}">
+            <span class="material-icon">chevron_left</span>
+          </a>
+        </li>
+      {% else %}
+        <li>
+          <a href="{% url url_name slug=thread.slug pk=thread.pk %}" rel="prev" title="{% trans 'Go to previous page' %}">
             <span class="material-icon">chevron_left</span>
           </a>
         </li>
       {% endif %}
     {% endif %}
     {% if paginator.last %}
-      {% if paginator.next < paginator.last %}
-        <li>
-          <a href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.next %}" title="{% trans 'Go to next page' %}">
-            <span class="material-icon">chevron_right</span>
-          </a>
-        </li>
-      {% endif %}
+      <li>
+        <a href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.next %}" rel="next" title="{% trans 'Go to next page' %}">
+          <span class="material-icon">chevron_right</span>
+        </a>
+      </li>
       <li>
         <a href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.last %}" title="{% trans 'Go to last page' %}">
           <span class="material-icon">last_page</span>

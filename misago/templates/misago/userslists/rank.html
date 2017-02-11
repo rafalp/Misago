@@ -32,22 +32,22 @@
   <div class="container">
 
     {% if rank.description %}
-      <div class="rank-description">
+      <section class="rank-description">
         <div class="page-lead {{ rank.description|escape|linebreaks|isdescriptionshort|iftrue:"lead" }}">
           {{ rank.description|escape|urlize|linebreaks|safe }}
         </div>
-      </div>
+      </section>
     {% endif %}
 
     {% if paginator.count %}
-      <div>
-        <div class="users-cards-list ui-ready">
+      <section>
+        <div class="users-cards-list ui-ready" itemscope itemtype="http://schema.org/ItemList">
           {% for row in users|batch:3 %}
             <div class="row">
               {% for user in row %}
                 <div class="col-md-4">
 
-                  <div class="user-card {% if rank.css_class %} user-card-{{ rank.css_class }}{% endif %}">
+                  <div class="user-card {% if rank.css_class %} user-card-{{ rank.css_class }}{% endif %}" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
                     <div class="user-card-bg-image">
                       <img src="{{ user|avatar:400 }}" alt="" class="bg-image">
 
@@ -61,8 +61,8 @@
                           </div>
 
                           <h4 class="user-name">
-                            <a href="{{ user.get_absolute_url }}" class="item-title">
-                              {{ user.username }}
+                            <a href="{{ user.get_absolute_url }}" class="item-title" itemprop="url">
+                              <span itemprop="name">{{ user.username }}</span>
                             </a>
                           </h4>
 
@@ -107,21 +107,25 @@
 
                       </div>
                     </div>
+
+                    <meta itemprop="position" content="{{ paginator.before|add:forloop.counter }}" />
                   </div>
 
                 </div>
               {% endfor %}
             </div>
           {% endfor %}
+          <meta itemprop="numberOfItems" content="{{ paginator.count }}">
+          <meta itemprop="itemListOrder" content="http://schema.org/ItemListOrderAscending">
         </div>
 
         {% if paginator.pages > 1 %}
           <div class="pager-undercontent">
-            <nav>
+            <nav role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
               <ul class="pager">
                 {% if paginator.previous > 1 %}
                 <li class="previous">
-                  <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.previous %}">
+                  <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.previous %}" rel="prev" title="{% trans 'Go to previous page' %}">
                     <span aria-hidden="true" class="material-icon">
                       arrow_back
                     </span>
@@ -129,7 +133,7 @@
                 </li>
                 {% elif paginator.first %}
                 <li class="previous">
-                  <a href="{% url 'misago:users-rank' slug=rank.slug %}">
+                  <a href="{% url 'misago:users-rank' slug=rank.slug %}" rel="prev" title="{% trans 'Go to previous page' %}">
                     <span aria-hidden="true" class="material-icon">
                       arrow_back
                     </span>
@@ -138,7 +142,7 @@
                 {% endif %}
                 {% if paginator.next %}
                 <li class="next">
-                  <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.next %}">
+                  <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.next %}" rel="next" title="{% trans 'Go to next page' %}">
                     <span aria-hidden="true" class="material-icon">
                       arrow_forward
                     </span>
@@ -149,7 +153,7 @@
             </nav>
           </div>
         {% endif %}
-      </div>
+      </section>
     {% else %}
       <p class="lead">
         {% trans "There are no users with this rank at the moment." %}

@@ -34,10 +34,10 @@
       </p>
 
       <div class="active-posters ui-ready">
-        <ul class="list-group">
+        <ul class="list-group" itemscope itemtype="http://schema.org/ItemList">
           {% for ranked in users %}
-            {% url USER_PROFILE_URL slug=ranked.slug pk=ranked.pk as user_url %}
-            <li class="list-group-item{% if ranked.rank.css_class %} list-group-rank-{{ ranked.rank.css_class }}{% endif %}">
+            {% url 'misago:user' slug=ranked.slug pk=ranked.pk as user_url %}
+            <li class="list-group-item{% if ranked.rank.css_class %} list-group-rank-{{ ranked.rank.css_class }}{% endif %}" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
               <div class="rank-user-avatar">
                 <a href="{{ user_url }}">
                   <img src="{{ ranked|avatar:50 }}" alt="{% trans "Avatar" %}" class="avatar">
@@ -46,7 +46,9 @@
 
               <div class="rank-user">
                 <div class="user-name">
-                  <a href="{{ user_url }}" class="item-title">{{ ranked }}</a>
+                  <a href="{{ user_url }}" class="item-title" itemprop="url">
+                    <span itemprop="name">{{ ranked }}</span>
+                  </a>
                 </div>
                 <div class="user-details">
                   {% if ranked.rank.is_tab %}
@@ -80,8 +82,12 @@
                 <strong>{{ ranked.posts }}</strong>
                 <small>{% trans "Total posts" %}</small>
               </div>
+
+              <meta itemprop="position" content="{{ forloop.counter }}" />
             </li>
           {% endfor %}
+          <meta itemprop="numberOfItems" content="{{ users|length }}">
+          <meta itemprop="itemListOrder" content="http://schema.org/ItemListOrderDescending">
         </ul>
       </div>
     {% else %}

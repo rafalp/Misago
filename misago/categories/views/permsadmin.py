@@ -201,8 +201,7 @@ class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
 
             acl_version.invalidate()
 
-            message = _("Category permissions for role "
-                        "%(name)s have been changed.")
+            message = _("Category permissions for role %(name)s have been changed.")
             messages.success(request, message % {'name': target.name})
             if 'stay' in request.POST:
                 return redirect(request.path)

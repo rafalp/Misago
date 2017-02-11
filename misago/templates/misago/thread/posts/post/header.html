@@ -2,10 +2,10 @@
 <div class="panel-heading post-heading">
   {% if post.poster %}
     <a class="item-title" href="{{ post.poster.get_absolute_url }}">
-      {{ post.poster.username }}
+      <span itemprop="author">{{ post.poster.username }}</span>
     </a>
   {% else %}
-    <strong class="item-title">{{ post.poster_name }}</strong>
+    <strong class="item-title" itemprop="author">{{ post.poster_name }}</strong>
   {% endif %}
 
   {% if post.poster %}
@@ -27,9 +27,11 @@
   {% endif %}
 
   <a href="{{ post.get_absolute_url }}" class="posted-on">
-    {% blocktrans trimmed with posted_on=post.posted_on|date:'DATETIME_FORMAT' %}
-      posted on {{ posted_on }}
-    {% endblocktrans %}
+    <time itemprop="datePublished" datetime="{{ post.posted_on|date:'c' }}">
+      {% blocktrans trimmed with posted_on=post.posted_on|date:'DATETIME_FORMAT' %}
+        posted on {{ posted_on }}
+      {% endblocktrans %}
+    </time>
   </a>
 
   {% if not post.is_read %}

@@ -1,5 +1,5 @@
 {% load i18n misago_capture %}
-<li class="list-group-item thread-{{ thread.is_read|yesno:'read,new' }}">
+<li class="list-group-item thread-{{ thread.is_read|yesno:'read,new' }}" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
   <div class="thread-icon">
     {% if thread.is_read %}
     <a href="{{ thread.get_last_post_url }}" class="read-status item-read" title="{% trans "This thread has no new posts." %}">
@@ -58,8 +58,8 @@
     </div>
   </div>
   <div class="thread-main">
-    <a href="{{ thread.get_absolute_url }}" class="item-title thread-title">
-      {{ thread.title }}
+    <a href="{{ thread.get_absolute_url }}" class="item-title thread-title" itemprop="url">
+      <span itemprop="name">{{ thread.title }}</span>
     </a>
     <ul class="thread-details-full list-inline">
       {% if not thread.is_read %}
@@ -213,4 +213,5 @@
     </ul>
   </div>
   <div class="clearfix"></div>
+  <meta itemprop="position" content="{{ paginator.before|add:forloop.counter }}">
 </li>

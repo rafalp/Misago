@@ -1,12 +1,12 @@
 {% load i18n %}
 {% if post.is_valid %}
-  <div class="panel-body">
+  <div class="panel-body" itemprop="articleBody">
     <article class="misago-markup">
       {{ post.content|safe }}
     </article>
   </div>
 {% else %}
-  <div class="panel-body panel-body-invalid">
+  <div class="panel-body panel-body-invalid" itemprop="articleBody">
     <p class="lead">{% trans "This post's contents cannot be displayed." %}</p>
     <p class="text-muted">{% trans "This error is caused by invalid post content manipulation." %}</p>
   </div>

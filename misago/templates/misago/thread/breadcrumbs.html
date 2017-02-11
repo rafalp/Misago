@@ -1,9 +1,12 @@
 <div class="page-breadcrumbs">
   <div class="container">
-    <ol class="breadcrumb">
+    <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
       {% for node in breadcrumbs %}
-        <li>
-          <a href="{{ node.get_absolute_url }}">{{ node.name }}</a>
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a href="{{ node.get_absolute_url }}" itemscope itemtype="http://schema.org/Thing" itemprop="item">
+            <span itemprop="name">{{ node.name }}</span>
+          </a>
+          <meta itemprop="position" content="{{ forloop.counter }}" />
         </li>
       {% endfor %}
     </ol>
