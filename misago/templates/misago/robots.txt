@@ -6,6 +6,9 @@ Disallow: {% url 'misago:blank-avatar' %}
 Disallow: {% url 'misago:banned' %}
 Disallow: {% url 'misago:forgotten-password' %}
 Disallow: {% url 'misago:login' %}
+Disallow: {% url 'misago:options' %}
+Disallow: {% url 'misago:index' %}p/
+Disallow: {% url 'misago:private-threads' %}
 Disallow: {% url 'misago:request-activation' %}
 Disallow: {% url 'misago:search' %}
 Disallow: {% url 'misago:index' %}u/
