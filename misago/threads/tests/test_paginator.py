@@ -1,3 +1,5 @@
+from itertools import product
+
 from django.test import TestCase
 
 from misago.threads.paginator import PostsPaginator
@@ -73,24 +75,18 @@ class PostsPaginatorTests(TestCase):
         num_items = 16
         items = [i + 1 for i in range(num_items)]
 
-        per_page = 2
-        while per_page < num_items:
-            orphans = 0
-            while orphans + per_page <= num_items:
-                paginator = PostsPaginator(items, per_page, orphans)
-                pages = self.get_paginator_items_list(paginator)
-                for p, page in enumerate(pages):
-                    for c, compared in enumerate(pages):
-                        if p == c:
-                            continue
-                        common_part = set(page) & set(compared)
-                        self.assertTrue(
-                            len(common_part) < 2, "invalid overlap (page %s and %s): %s" % (
-                                p + 1, c + 1, sorted(list(common_part))
-                            ))
-
-                orphans += 1
-            per_page += 1
+        for per_page, orphans in product(range(num_items), range(num_items)):
+            paginator = PostsPaginator(items, per_page + 2, orphans)
+            pages = self.get_paginator_items_list(paginator)
+            for p, page in enumerate(pages):
+                for c, compared in enumerate(pages):
+                    if p == c:
+                        continue
+                    common_part = set(page) & set(compared)
+                    self.assertTrue(
+                        len(common_part) < 2, "invalid overlap (page %s and %s): %s" % (
+                            p + 1, c + 1, sorted(list(common_part))
+                        ))
 
     def get_paginator_items_list(self, paginator):
         items_list = []
