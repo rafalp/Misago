@@ -8,16 +8,6 @@ from misago.acl import serialize_acl
 from . import RankSerializer
 
 
-__all__ = [
-    'AuthenticatedUserSerializer',
-    'AnonymousUserSerializer',
-    'BasicUserSerializer',
-    'UserSerializer',
-    'ScoredUserSerializer',
-    'UserProfileSerializer',
-]
-
-
 class StatusSerializer(serializers.Serializer):
     is_offline = serializers.BooleanField()
     is_online = serializers.BooleanField()
@@ -30,102 +20,22 @@ class StatusSerializer(serializers.Serializer):
     banned_until = serializers.DateTimeField()
 
 
-class AuthenticatedUserSerializer(serializers.ModelSerializer):
-    acl = serializers.SerializerMethodField()
+class UserSerializer(serializers.ModelSerializer):
+    email = serializers.SerializerMethodField()
     rank = RankSerializer(many=False, read_only=True)
-
-    absolute_url = serializers.SerializerMethodField()
-    api_url = serializers.SerializerMethodField()
-
-    class Meta:
-        model = get_user_model()
-        fields = (
-            'id',
-            'username',
-            'slug',
-            'email',
-            'joined_on',
-            'is_hiding_presence',
-            'title',
-            'full_title',
-            'short_title',
-            'rank',
-            'avatars',
-            'limits_private_thread_invites_to',
-            'unread_private_threads',
-            'subscribe_to_started_threads',
-            'subscribe_to_replied_threads',
-            'threads',
-            'posts',
-            'followers',
-            'following',
-            'acl',
-            'absolute_url',
-            'api_url'
-        )
-
-    def get_acl(self, obj):
-        return serialize_acl(obj)
-
-    def get_absolute_url(self, obj):
-        return obj.get_absolute_url()
-
-    def get_api_url(self, obj):
-        return {
-            'avatar': reverse(
-                'misago:api:user-avatar', kwargs={'pk': obj.pk}),
-            'options': reverse(
-                'misago:api:user-forum-options', kwargs={'pk': obj.pk}),
-            'username': reverse(
-                'misago:api:user-username', kwargs={'pk': obj.pk}),
-            'change_email': reverse(
-                'misago:api:user-change-email', kwargs={'pk': obj.pk}),
-            'change_password': reverse(
-                'misago:api:user-change-password', kwargs={'pk': obj.pk}),
-        }
-
-
-class AnonymousUserSerializer(serializers.Serializer):
-    id = serializers.ReadOnlyField()
-    acl = serializers.SerializerMethodField()
-
-    def get_acl(self, obj):
-        if hasattr(obj, 'acl'):
-            return serialize_acl(obj)
-        else:
-            return {}
-
-
-class BaseSerializer(serializers.ModelSerializer):
-    absolute_url = serializers.SerializerMethodField()
-
-    def get_absolute_url(self, obj):
-        return obj.get_absolute_url()
-
-    def get_short_title(self, obj):
-        return obj.short_title
-
-
-class BasicUserSerializer(BaseSerializer):
-    class Meta:
-        model = get_user_model()
-        fields = (
-            'id',
-            'username',
-            'slug',
-            'avatars',
-            'absolute_url',
-        )
-
-
-class UserSerializer(BaseSerializer):
-    rank = RankSerializer(many=False, read_only=True)
+    is_followed = serializers.SerializerMethodField()
+    is_blocked = serializers.SerializerMethodField()
     short_title = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
     signature = serializers.SerializerMethodField()
+    meta = serializers.SerializerMethodField()
+    acl = serializers.SerializerMethodField()
+    api_url = serializers.SerializerMethodField()
+
+    absolute_url = serializers.SerializerMethodField()
 
     class Meta:
-        model = get_user_model()
+        model = UserModel
         fields = (
             'id',
             'username',
@@ -142,79 +52,6 @@ class UserSerializer(BaseSerializer):
             'following',
             'status',
             'absolute_url',
-        )
-
-    def get_status(self, obj):
-        try:
-            return StatusSerializer(obj.status).data
-        except AttributeError:
-            return None
-
-    def get_signature(self, obj):
-        if obj.has_valid_signature:
-            return obj.signature_parsed
-        else:
-            return None
-
-
-class ScoredUserSerializer(UserSerializer):
-    meta = serializers.SerializerMethodField()
-
-    class Meta:
-        model = get_user_model()
-        fields = (
-            'id',
-            'username',
-            'slug',
-            'joined_on',
-            'avatars',
-            'title',
-            'rank',
-            'signature',
-            'threads',
-            'posts',
-            'followers',
-            'following',
-            'meta',
-            'status',
-            'absolute_url',
-        )
-
-    def get_meta(self, obj):
-        return {'score': obj.score}
-
-
-class UserProfileSerializer(UserSerializer):
-    email = serializers.SerializerMethodField()
-    is_followed = serializers.SerializerMethodField()
-    is_blocked = serializers.SerializerMethodField()
-    acl = serializers.SerializerMethodField()
-    api_url = serializers.SerializerMethodField()
-
-    class Meta:
-        model = get_user_model()
-        fields = (
-            'id',
-            'username',
-            'slug',
-            'email',
-            'joined_on',
-            'is_avatar_locked',
-            'avatars',
-            'title',
-            'rank',
-            'signature',
-            'is_signature_locked',
-            'threads',
-            'posts',
-            'followers',
-            'following',
-            'is_followed',
-            'is_blocked',
-            'status',
-            'acl',
-            'absolute_url',
-            'api_url',
         )
 
     def get_email(self, obj):
@@ -223,9 +60,6 @@ class UserProfileSerializer(UserSerializer):
             return obj.email
         else:
             return None
-
-    def get_acl(self, obj):
-        return obj.acl_
 
     def get_is_followed(self, obj):
         if obj.acl_['can_follow']:
@@ -239,15 +73,36 @@ class UserProfileSerializer(UserSerializer):
         else:
             return False
 
+    def get_meta(self, obj):
+        return {'score': obj.score}
+
+    def get_short_title(self, obj):
+        return obj.short_title
+
+    def get_signature(self, obj):
+        if obj.has_valid_signature:
+            return obj.signature_parsed
+        else:
+            return None
+
+    def get_status(self, obj):
+        try:
+            return StatusSerializer(obj.status).data
+        except AttributeError:
+            return None
+
+    def get_absolute_url(self, obj):
+        return obj.get_absolute_url()
+
     def get_api_url(self, obj):
         return {
             'root': reverse('misago:api:user-detail', kwargs={'pk': obj.pk}),
             'follow': reverse('misago:api:user-follow', kwargs={'pk': obj.pk}),
             'ban': reverse('misago:api:user-ban', kwargs={'pk': obj.pk}),
             'moderate_avatar': reverse(
-                'misago:api:user-moderate-avatar',kwargs={'pk': obj.pk}),
+                'misago:api:user-moderate-avatar', kwargs={'pk': obj.pk}),
             'moderate_username': reverse(
-                'misago:api:user-moderate-username',kwargs={'pk': obj.pk}),
+                'misago:api:user-moderate-username', kwargs={'pk': obj.pk}),
             'delete': reverse('misago:api:user-delete', kwargs={'pk': obj.pk}),
             'threads': reverse('misago:api:user-threads', kwargs={'pk': obj.pk}),
             'posts': reverse('misago:api:user-posts', kwargs={'pk': obj.pk}),
