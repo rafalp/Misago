@@ -2,6 +2,7 @@ from .moderation import *
 from .threadparticipant import *
 from .thread import *
 from .post import *
+from .feed import *
 from .postedit import *
 from .postlike import *
 from .attachment import *

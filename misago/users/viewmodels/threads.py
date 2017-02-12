@@ -3,7 +3,7 @@ from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
 from misago.readtracker import threadstracker
 from misago.threads.permissions import exclude_invisible_threads
-from misago.threads.serializers import PostFeedSerializer
+from misago.threads.serializers import FeedSerializer
 from misago.threads.utils import add_categories_to_items, add_likes_to_posts
 from misago.threads.viewmodels import ThreadsRootCategory
 
@@ -62,7 +62,7 @@ class UserThreads(object):
 
     def get_frontend_context(self):
         context = {
-            'results': PostFeedSerializer(
+            'results': UserFeedSerializer(
                 self.posts, many=True, context={'user': self._user}).data
         }
 
@@ -75,3 +75,6 @@ class UserThreads(object):
             'posts': self.posts,
             'paginator': self.paginator
         }
+
+
+UserFeedSerializer = FeedSerializer.subset_exclude('poster')

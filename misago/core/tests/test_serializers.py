@@ -55,6 +55,28 @@ class SubsettableSerializerTests(TestCase):
         self.assertFalse(TestSerializer.Meta.fields == serializer.Meta.fields)
 
 
+class TestRelatedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = (
+            'id',
+            'title',
+            'replies',
+            'has_unapproved_posts',
+            'started_on',
+            'last_post_on',
+            'last_post_is_event',
+            'last_post',
+            'last_poster_name',
+            'is_unapproved',
+            'is_hidden',
+            'is_closed',
+            'weight',
+
+            'url',
+        )
+
+
 class TestSerializer(serializers.ModelSerializer, Subsettable):
     url = serializers.SerializerMethodField()
 

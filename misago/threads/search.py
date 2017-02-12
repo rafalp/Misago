@@ -7,7 +7,7 @@ from misago.search import SearchProvider
 
 from .models import Post, Thread
 from .permissions import exclude_invisible_threads
-from .serializers import PostFeedSerializer
+from .serializers import FeedSerializer
 from .utils import add_categories_to_items
 from .viewmodels import ThreadsRootCategory
 
@@ -42,7 +42,7 @@ class SearchThreads(SearchProvider):
             root_category.unwrap(), threads_categories, posts + threads)
 
         results = {
-            'results': PostFeedSerializer(
+            'results': FeedSerializer(
                 posts, many=True, context={'user': self.request.user}).data
         }
         results.update(paginator)
