@@ -3,6 +3,7 @@ from rest_framework import serializers
 from django.urls import reverse
 
 from misago.categories.serializers import CategorySerializer
+from misago.core.serializers import Subsettable
 from misago.threads.models import Thread
 
 from .poll import PollSerializer
@@ -21,7 +22,7 @@ BasicCategorySerializer = CategorySerializer.subset(
     'absolute_url', 'api_url', 'level', 'lft', 'rght', 'is_read')
 
 
-class ThreadSerializer(serializers.ModelSerializer):
+class ThreadSerializer(serializers.ModelSerializer, Subsettable):
     category = BasicCategorySerializer(many=False, read_only=True)
 
     acl = serializers.SerializerMethodField()
@@ -87,6 +88,9 @@ class ThreadSerializer(serializers.ModelSerializer):
         except AttributeError:
             return None
 
+    def get_participants(self, obj):
+        return ThreadParticipantSerializer(obj.participants_list, many=True).data
+
     def get_subscription(self, obj):
         try:
             return obj.subscription.send_email
@@ -131,36 +135,9 @@ class PrivateThreadSerializer(ThreadSerializer):
 
     class Meta:
         model = Thread
-        fields = (
-            'id',
-            'category',
-            'title',
-            'replies',
-            'has_unapproved_posts',
-            'started_on',
-            'last_post_on',
-            'last_post_is_event',
-            'last_post',
-            'last_poster_name',
-            'is_unapproved',
-            'is_hidden',
-            'is_closed',
-            'weight',
-
-            'acl',
-            'is_new',
-            'is_read',
+        fields = ThreadSerializer.Meta.fields + (
             'participants',
-            'path',
-            'poll',
-            'subscription',
-
-            'api',
-            'url',
         )
-
-    def get_participants(self, obj):
-        return ThreadParticipantSerializer(obj.participants_list, many=True).data
 
 
 class ThreadsListSerializer(ThreadSerializer):
@@ -171,29 +148,7 @@ class ThreadsListSerializer(ThreadSerializer):
 
     class Meta:
         model = Thread
-        fields = (
-            'id',
-            'category',
-            'title',
-            'replies',
-            'has_poll',
-            'has_unapproved_posts',
-            'started_on',
-            'last_post_on',
-            'last_post_is_event',
-            'last_post',
-            'last_poster_name',
-            'weight',
-            'is_unapproved',
-            'is_hidden',
-            'is_closed',
-
-            'acl',
-            'is_new',
-            'is_read',
-            'subscription',
-            'top_category',
-
-            'api',
-            'url',
+        fields = ThreadSerializer.Meta.fields + (
+            'has_poll', 'top_category'
         )
+ThreadsListSerializer = ThreadsListSerializer.subset_exclude('path', 'poll')
