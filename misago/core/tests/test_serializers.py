@@ -31,7 +31,28 @@ class SubsettableSerializerTests(TestCase):
             'last_poster_name': thread.last_poster_name,
         })
 
-        self.assertFalse(TestSerializer.Meta.fields == fields)
+        self.assertFalse(TestSerializer.Meta.fields == serializer.Meta.fields)
+
+    def test_create_subset_serializer_exclude(self):
+        """classmethod exclude creates new serializer"""
+        category = Category.objects.get(slug='first-category')
+        thread = testutils.post_thread(category=category)
+
+        kept_fields = ('id', 'title', 'weight')
+        removed_fields = tuple(set(TestSerializer.Meta.fields) - set(kept_fields))
+
+        serializer = TestSerializer.subset_exclude(*removed_fields)
+        self.assertEqual(serializer.__name__, 'TestSerializerIdTitleWeightSubset')
+        self.assertEqual(serializer.Meta.fields, kept_fields)
+
+        serialized_thread = serializer(thread).data
+        self.assertEqual(serialized_thread, {
+            'id': thread.id,
+            'title': thread.title,
+            'weight': thread.weight,
+        })
+
+        self.assertFalse(TestSerializer.Meta.fields == serializer.Meta.fields)
 
 
 class TestSerializer(serializers.ModelSerializer, Subsettable):
