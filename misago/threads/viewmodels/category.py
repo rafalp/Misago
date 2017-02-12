@@ -3,7 +3,7 @@ from django.http import Http404
 from misago.acl import add_acl
 from misago.categories.models import Category
 from misago.categories.permissions import allow_browse_category, allow_see_category
-from misago.categories.serializers import BasicCategorySerializer
+from misago.categories.serializers import CategorySerializer
 from misago.core.shortcuts import validate_slug
 from misago.core.viewmodel import ViewModel as BaseViewModel
 from misago.threads.permissions import allow_use_private_threads
@@ -88,3 +88,8 @@ class PrivateThreadsCategory(ViewModel):
         allow_use_private_threads(request.user)
 
         return categories[0]
+
+
+BasicCategorySerializer = CategorySerializer.subset(
+    'id', 'parent', 'name', 'description', 'is_closed', 'css_class',
+    'absolute_url', 'api_url', 'level', 'lft', 'rght', 'is_read')

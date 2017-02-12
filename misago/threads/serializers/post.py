@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.urls import reverse
 
 from misago.categories.models import Category
-from misago.categories.serializers import BasicCategorySerializer
+from misago.categories.serializers import CategorySerializer
 from misago.threads.models import Post
 from misago.users.serializers import BasicUserSerializer, UserSerializer
 
@@ -168,14 +168,8 @@ class PostSerializer(serializers.ModelSerializer):
             return None
 
 
-class CategoryFeedSerializer(BasicCategorySerializer):
-    class Meta:
-        model = Category
-        fields = (
-            'name',
-            'css_class',
-            'absolute_url',
-        )
+CategoryFeedSerializer = CategorySerializer.subset(
+    'name', 'css_class', 'absolute_url')
 
 
 class PostFeedSerializer(PostSerializer):

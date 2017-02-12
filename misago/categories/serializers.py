@@ -2,16 +2,13 @@ from rest_framework import serializers
 
 from django.urls import reverse
 
+from misago.core.serializers import Subsettable
 from misago.core.utils import format_plaintext_for_html
 
 from .models import Category
 
 
-__all__ = [
-    'BasicCategorySerializer',
-    'IndexCategorySerializer',
-    'CategorySerializer',
-]
+__all__ = ['CategorySerializer']
 
 
 def last_activity_detail(f):
@@ -32,7 +29,7 @@ def last_activity_detail(f):
     return decorator
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer, Subsettable):
     parent = serializers.PrimaryKeyRelatedField(read_only=True)
     description = serializers.SerializerMethodField()
     is_read = serializers.SerializerMethodField()
@@ -123,22 +120,3 @@ class CategorySerializer(serializers.ModelSerializer):
         return {
             'read': obj.get_read_api_url(),
         }
-
-
-class BasicCategorySerializer(CategorySerializer):
-    class Meta:
-        model = Category
-        fields = (
-            'id',
-            'parent',
-            'name',
-            'description',
-            'is_closed',
-            'css_class',
-            'absolute_url',
-            'api_url',
-            'level',
-            'lft',
-            'rght',
-            'is_read',
-        )

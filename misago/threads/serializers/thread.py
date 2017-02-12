@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from django.urls import reverse
 
-from misago.categories.serializers import BasicCategorySerializer
+from misago.categories.serializers import CategorySerializer
 from misago.threads.models import Thread
 
 from .poll import PollSerializer
@@ -14,6 +14,11 @@ __all__ = [
     'PrivateThreadSerializer',
     'ThreadsListSerializer',
 ]
+
+
+BasicCategorySerializer = CategorySerializer.subset(
+    'id', 'parent', 'name', 'description', 'is_closed', 'css_class',
+    'absolute_url', 'api_url', 'level', 'lft', 'rght', 'is_read')
 
 
 class ThreadSerializer(serializers.ModelSerializer):
