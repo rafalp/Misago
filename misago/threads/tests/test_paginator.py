@@ -82,11 +82,11 @@ class PostsPaginatorTests(TestCase):
                 for c, compared in enumerate(pages):
                     if p == c:
                         continue
+
                     common_part = set(page) & set(compared)
-                    self.assertTrue(
-                        len(common_part) < 2, "invalid overlap (page %s and %s): %s" % (
-                            p + 1, c + 1, sorted(list(common_part))
-                        ))
+                    self.assertTrue(len(common_part) < 2, "invalid page %s: %s" % (
+                        max(p, c) + 1, sorted(list(common_part))
+                    ))
 
     def get_paginator_items_list(self, paginator):
         items_list = []
