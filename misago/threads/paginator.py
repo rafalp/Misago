@@ -23,7 +23,9 @@ class PostsPaginator(Paginator):
         """
         number = self.validate_number(number)
         bottom = (number - 1) * self.per_page
-        top = bottom + self.per_page + 1
+        top = bottom + self.per_page
         if top + self.orphans >= self.count:
             top = self.count
+        if top < self.count:
+            top += 1
         return self._get_page(self.object_list[bottom:top], number, self)

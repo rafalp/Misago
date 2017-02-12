@@ -68,21 +68,29 @@ class PostsPaginatorTests(TestCase):
         paginator = PostsPaginator(items, 10, 6)
         self.assertEqual(self.get_paginator_items_list(paginator), [items])
 
-        # regression test for #732
-        items = [i + 1 for i in range(24)]
+    def test_paginator_overlap(self):
+        """test for #732 - assert that page contants don't overlap too much"""
+        num_items = 16
+        items = [i + 1 for i in range(num_items)]
 
-        paginator = PostsPaginator(items, 18, 6)
-        self.assertEqual(paginator.num_pages, 1)
-        self.assertEqual(self.get_paginator_items_list(paginator), [items])
+        per_page = 2
+        while per_page < num_items:
+            orphans = 0
+            while orphans + per_page <= num_items:
+                paginator = PostsPaginator(items, per_page, orphans)
+                pages = self.get_paginator_items_list(paginator)
+                for p, page in enumerate(pages):
+                    for c, compared in enumerate(pages):
+                        if p == c:
+                            continue
+                        common_part = set(page) & set(compared)
+                        self.assertTrue(
+                            len(common_part) < 2, "invalid overlap (page %s and %s): %s" % (
+                                p + 1, c + 1, sorted(list(common_part))
+                            ))
 
-        # extra tests for catching issues in excessively long datasets
-        paginator = PostsPaginator([i + 1 for i in range(144)], 14, 6)
-        last_page = self.get_paginator_items_list(paginator)[-1]
-        self.assertEqual(last_page[-4:], [141, 142, 143, 144])
-
-        paginator = PostsPaginator([i + 1 for i in range(321)], 14, 6)
-        last_page = self.get_paginator_items_list(paginator)[-1]
-        self.assertEqual(last_page[-4:], [318, 319, 320, 321])
+                orphans += 1
+            per_page += 1
 
     def get_paginator_items_list(self, paginator):
         items_list = []
