@@ -1,32 +1,51 @@
-class Subsettable(object):
+class MutableFields(object):
     @classmethod
-    def subset(cls, *fields):
+    def subset_fields(cls, *fields):
         fields_in_name = [f.title().replace('_', '') for f in fields]
         name = '{}{}Subset'.format(cls.__name__, ''.join(fields_in_name)[:100])
 
         class Meta(cls.Meta):
             pass
 
-        Meta.fields = fields
+        Meta.fields = tuple(fields)
 
         return type(name, (cls,), {
             'Meta': Meta
         })
 
     @classmethod
-    def subset_exclude(cls, *fields):
-        clean_fields = []
+    def exclude_fields(cls, *fields):
+        final_fields = []
         for field in cls.Meta.fields:
             if field not in fields:
-                clean_fields.append(field)
+                final_fields.append(field)
 
-        fields_in_name = [f.title().replace('_', '') for f in clean_fields]
+        fields_in_name = [f.title().replace('_', '') for f in final_fields]
         name = '{}{}Subset'.format(cls.__name__, ''.join(fields_in_name)[:100])
 
         class Meta(cls.Meta):
             pass
 
-        Meta.fields = tuple(clean_fields)
+        Meta.fields = tuple(final_fields)
+
+        return type(name, (cls,), {
+            'Meta': Meta
+        })
+
+    @classmethod
+    def extend_fields(cls, *fields):
+        final_fields = list(cls.Meta.fields)
+        for field in fields:
+            if field not in final_fields:
+                final_fields.append(field)
+
+        fields_in_name = [f.title().replace('_', '') for f in final_fields]
+        name = '{}{}Subset'.format(cls.__name__, ''.join(fields_in_name)[:100])
+
+        class Meta(cls.Meta):
+            pass
+
+        Meta.fields = tuple(final_fields)
 
         return type(name, (cls,), {
             'Meta': Meta

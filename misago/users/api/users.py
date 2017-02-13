@@ -25,7 +25,7 @@ from misago.users.permissions.delete import allow_delete_user
 from misago.users.permissions.moderation import allow_moderate_avatar, allow_rename_user
 from misago.users.permissions.profiles import (
     allow_browse_users_list, allow_follow_user, allow_see_ban_details)
-from misago.users.serializers import BanDetailsSerializer, UserProfileSerializer, UserSerializer
+from misago.users.serializers import BanDetailsSerializer, UserSerializer
 from misago.users.viewmodels import UserPosts, UserThreads
 
 from .rest_permissions import BasePermission, UnbannedAnonOnly
@@ -256,3 +256,10 @@ class UserViewSet(viewsets.GenericViewSet):
         feed = UserPosts(request, profile, page)
 
         return Response(feed.get_frontend_context())
+
+
+UserProfileSerializer = UserSerializer.subset_fields(
+    'id', 'username', 'slug', 'email', 'joined_on', 'rank', 'title', 'avatars',
+    'is_avatar_locked', 'signature', 'is_signature_locked', 'followers', 'following',
+    'threads', 'posts', 'acl', 'is_followed', 'is_blocked', 'status', 'absolute_url',
+    'api_url')

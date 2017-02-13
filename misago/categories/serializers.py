@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from django.urls import reverse
 
-from misago.core.serializers import Subsettable
+from misago.core.serializers import MutableFields
 from misago.core.utils import format_plaintext_for_html
 
 from .models import Category
@@ -29,7 +29,7 @@ def last_activity_detail(f):
     return decorator
 
 
-class CategorySerializer(serializers.ModelSerializer, Subsettable):
+class CategorySerializer(serializers.ModelSerializer, MutableFields):
     parent = serializers.PrimaryKeyRelatedField(read_only=True)
     description = serializers.SerializerMethodField()
     is_read = serializers.SerializerMethodField()

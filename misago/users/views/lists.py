@@ -11,7 +11,7 @@ from misago.users.activepostersranking import get_active_posters_ranking
 from misago.users.models import Rank
 from misago.users.pages import users_list
 from misago.users.permissions.profiles import allow_browse_users_list
-from misago.users.serializers import ScoredUserSerializer, UserSerializer
+from misago.users.serializers import UserCardSerializer
 
 
 def render(request, template, context):
@@ -104,7 +104,7 @@ def rank(request, slug, page=0):
 
     data = pagination_dict(page)
     data.update({
-        'results': UserSerializer(page.object_list, many=True).data
+        'results': UserCardSerializer(page.object_list, many=True).data
     })
 
     request.frontend_context['USERS'] = data
@@ -124,3 +124,6 @@ def rank(request, slug, page=0):
 
         'paginator': data
     })
+
+
+ScoredUserSerializer = UserCardSerializer.extend_fields('meta')

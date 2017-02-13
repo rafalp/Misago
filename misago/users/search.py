@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy
 
 from misago.search import SearchProvider
 
-from .serializers import UserSerializer
+from .serializers import UserCardSerializer
 
 
 HEAD_RESULTS = 8
@@ -33,7 +33,7 @@ class SearchUsers(SearchProvider):
             results = []
 
         return {
-            'results': UserSerializer(results, many=True).data,
+            'results': UserCardSerializer(results, many=True).data,
             'count': len(results)
         }
 

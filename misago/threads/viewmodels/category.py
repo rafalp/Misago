@@ -90,6 +90,6 @@ class PrivateThreadsCategory(ViewModel):
         return categories[0]
 
 
-BasicCategorySerializer = CategorySerializer.subset(
+BasicCategorySerializer = CategorySerializer.subset_fields(
     'id', 'parent', 'name', 'description', 'is_closed', 'css_class',
     'absolute_url', 'api_url', 'level', 'lft', 'rght', 'is_read')

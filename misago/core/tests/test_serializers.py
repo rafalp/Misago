@@ -3,20 +3,20 @@ from rest_framework import serializers
 from django.test import TestCase
 
 from misago.categories.models import Category
-from misago.core.serializers import Subsettable
+from misago.core.serializers import MutableFields
 from misago.threads import testutils
 from misago.threads.models import Thread
 
 
-class SubsettableSerializerTests(TestCase):
-    def test_create_subset_serializer(self):
-        """classmethod subset creates new serializer"""
+class MutableFieldsSerializerTests(TestCase):
+    def test_subset_fields(self):
+        """classmethod subset_fields creates new serializer"""
         category = Category.objects.get(slug='first-category')
         thread = testutils.post_thread(category=category)
 
         fields = ('id', 'title', 'replies', 'last_poster_name')
 
-        serializer = TestSerializer.subset(*fields)
+        serializer = TestSerializer.subset_fields(*fields)
         self.assertEqual(
             serializer.__name__,
             'TestSerializerIdTitleRepliesLastPosterNameSubset'
@@ -33,15 +33,15 @@ class SubsettableSerializerTests(TestCase):
 
         self.assertFalse(TestSerializer.Meta.fields == serializer.Meta.fields)
 
-    def test_create_subset_serializer_exclude(self):
-        """classmethod exclude creates new serializer"""
+    def test_exclude_fields(self):
+        """classmethod exclude_fields creates new serializer"""
         category = Category.objects.get(slug='first-category')
         thread = testutils.post_thread(category=category)
 
         kept_fields = ('id', 'title', 'weight')
         removed_fields = tuple(set(TestSerializer.Meta.fields) - set(kept_fields))
 
-        serializer = TestSerializer.subset_exclude(*removed_fields)
+        serializer = TestSerializer.exclude_fields(*removed_fields)
         self.assertEqual(serializer.__name__, 'TestSerializerIdTitleWeightSubset')
         self.assertEqual(serializer.Meta.fields, kept_fields)
 
@@ -54,30 +54,20 @@ class SubsettableSerializerTests(TestCase):
 
         self.assertFalse(TestSerializer.Meta.fields == serializer.Meta.fields)
 
+    def test_extend_fields(self):
+        """classmethod extend_fields creates new serializer"""
+        category = Category.objects.get(slug='first-category')
+        thread = testutils.post_thread(category=category)
 
-class TestRelatedSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = (
-            'id',
-            'title',
-            'replies',
-            'has_unapproved_posts',
-            'started_on',
-            'last_post_on',
-            'last_post_is_event',
-            'last_post',
-            'last_poster_name',
-            'is_unapproved',
-            'is_hidden',
-            'is_closed',
-            'weight',
+        added_fields = ('category',)
 
-            'url',
-        )
+        serializer = TestSerializer.extend_fields(*added_fields)
+
+        serialized_thread = serializer(thread).data
+        self.assertEqual(serialized_thread['category'], category.pk)
 
 
-class TestSerializer(serializers.ModelSerializer, Subsettable):
+class TestSerializer(serializers.ModelSerializer, MutableFields):
     url = serializers.SerializerMethodField()
 
     class Meta:
@@ -96,15 +86,4 @@ class TestSerializer(serializers.ModelSerializer, Subsettable):
             'is_hidden',
             'is_closed',
             'weight',
-
-            'url',
         )
-
-    def get_url(self, obj):
-        return {
-            'index': obj.get_absolute_url(),
-            'new_post': obj.get_new_post_url(),
-            'last_post': obj.get_last_post_url(),
-            'unapproved_post': obj.get_unapproved_post_url(),
-            'last_poster': self.get_last_poster_url(obj),
-        }

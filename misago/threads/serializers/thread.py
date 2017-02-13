@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.urls import reverse
 
 from misago.categories.serializers import CategorySerializer
-from misago.core.serializers import Subsettable
+from misago.core.serializers import MutableFields
 from misago.threads.models import Thread
 
 from .poll import PollSerializer
@@ -17,12 +17,12 @@ __all__ = [
 ]
 
 
-BasicCategorySerializer = CategorySerializer.subset(
+BasicCategorySerializer = CategorySerializer.subset_fields(
     'id', 'parent', 'name', 'description', 'is_closed', 'css_class',
     'absolute_url', 'api_url', 'level', 'lft', 'rght', 'is_read')
 
 
-class ThreadSerializer(serializers.ModelSerializer, Subsettable):
+class ThreadSerializer(serializers.ModelSerializer, MutableFields):
     category = BasicCategorySerializer(many=False, read_only=True)
 
     acl = serializers.SerializerMethodField()
@@ -151,4 +151,4 @@ class ThreadsListSerializer(ThreadSerializer):
         fields = ThreadSerializer.Meta.fields + (
             'has_poll', 'top_category'
         )
-ThreadsListSerializer = ThreadsListSerializer.subset_exclude('path', 'poll')
+ThreadsListSerializer = ThreadsListSerializer.exclude_fields('path', 'poll')

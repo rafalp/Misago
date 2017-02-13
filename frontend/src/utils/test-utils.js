@@ -38,7 +38,6 @@ export function mockUser(overrides) {
     },
     avatar_hash: "5c6a04b4",
     email: "test@example.com",
-    full_title: "Forum team",
     is_hiding_presence: false,
     joined_on: "2015-05-09T16:13:33.973603Z",
     limits_private_thread_invites_to: 0,
