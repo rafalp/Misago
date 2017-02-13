@@ -5,7 +5,7 @@ from django.urls import reverse
 from misago.categories.serializers import CategorySerializer
 from misago.core.serializers import Subsettable
 from misago.threads.models import Post
-from misago.users.serializers import BasicUserSerializer
+from misago.users.serializers import UserSerializer
 
 from .post import PostSerializer
 
@@ -15,13 +15,18 @@ __all__ = [
 ]
 
 
-CategoryFeedSerializer = CategorySerializer.subset(
+
+FeedUserSerializer = UserSerializer.subset(
+    'id', 'username', 'avatars', 'absolute_url')
+
+
+FeedCategorySerializer = CategorySerializer.subset(
     'name', 'css_class', 'absolute_url')
 
 
 class FeedSerializer(PostSerializer, Subsettable):
-    poster = BasicUserSerializer(many=False, read_only=True)
-    category = CategoryFeedSerializer(many=False, read_only=True)
+    poster = FeedUserSerializer(many=False, read_only=True)
+    category = FeedCategorySerializer(many=False, read_only=True)
 
     thread = serializers.SerializerMethodField()
     top_category = serializers.SerializerMethodField()
@@ -43,6 +48,6 @@ class FeedSerializer(PostSerializer, Subsettable):
 
     def get_top_category(self, obj):
         try:
-            return CategoryFeedSerializer(obj.top_category).data
+            return FeedCategorySerializer(obj.top_category).data
         except AttributeError:
             return None

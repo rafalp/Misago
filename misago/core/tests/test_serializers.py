@@ -54,27 +54,17 @@ class SubsettableSerializerTests(TestCase):
 
         self.assertFalse(TestSerializer.Meta.fields == serializer.Meta.fields)
 
+    def test_create_subset_serializer_extend(self):
+        """classmethod extend creates new serializer"""
+        category = Category.objects.get(slug='first-category')
+        thread = testutils.post_thread(category=category)
 
-class TestRelatedSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = (
-            'id',
-            'title',
-            'replies',
-            'has_unapproved_posts',
-            'started_on',
-            'last_post_on',
-            'last_post_is_event',
-            'last_post',
-            'last_poster_name',
-            'is_unapproved',
-            'is_hidden',
-            'is_closed',
-            'weight',
+        added_fields = ('category',)
 
-            'url',
-        )
+        serializer = TestSerializer.subset_extend(*added_fields)
+
+        serialized_thread = serializer(thread).data
+        self.assertEqual(serialized_thread['category'], category.pk)
 
 
 class TestSerializer(serializers.ModelSerializer, Subsettable):
@@ -96,15 +86,4 @@ class TestSerializer(serializers.ModelSerializer, Subsettable):
             'is_hidden',
             'is_closed',
             'weight',
-
-            'url',
         )
-
-    def get_url(self, obj):
-        return {
-            'index': obj.get_absolute_url(),
-            'new_post': obj.get_new_post_url(),
-            'last_post': obj.get_last_post_url(),
-            'unapproved_post': obj.get_unapproved_post_url(),
-            'last_poster': self.get_last_poster_url(obj),
-        }

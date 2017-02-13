@@ -305,10 +305,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         raise TypeError('Cannot make User instances ACL aware')
 
     @property
-    def full_title(self):
-        return self.title or self.rank.name
-
-    @property
     def short_title(self):
         return self.title or self.rank.title or self.rank.name
 

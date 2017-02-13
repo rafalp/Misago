@@ -20,7 +20,7 @@ from misago.users.decorators import deny_guests
 from misago.users.online.utils import get_user_status
 from misago.users.pages import user_profile
 from misago.users.permissions.profiles import allow_block_user, allow_follow_user
-from misago.users.serializers import BanDetailsSerializer, UserProfileSerializer, UserSerializer
+from misago.users.serializers import BanDetailsSerializer, UserSerializer, UserCardSerializer
 from misago.users.serializers.usernamechange import UsernameChangeSerializer
 from misago.users.viewmodels import UserPosts, UserThreads
 
@@ -142,7 +142,7 @@ def followers(request, profile):
     paginator = pagination_dict(page)
 
     request.frontend_context['PROFILE_FOLLOWERS'] = dict(
-        results=UserSerializer(page.object_list, many=True).data,
+        results=UserCardSerializer(page.object_list, many=True).data,
         **paginator
     )
 
@@ -161,7 +161,7 @@ def follows(request, profile):
     paginator = pagination_dict(page)
 
     request.frontend_context['PROFILE_FOLLOWS'] = dict(
-        results=UserSerializer(page.object_list, many=True).data,
+        results=UserCardSerializer(page.object_list, many=True).data,
         **paginator
     )
 
@@ -203,3 +203,10 @@ def user_ban(request, profile):
         'profile': profile,
         'ban': ban,
     })
+
+
+UserProfileSerializer = UserSerializer.subset(
+    'id', 'username', 'slug', 'email', 'joined_on', 'rank', 'title', 'avatars',
+    'is_avatar_locked', 'signature', 'is_signature_locked', 'followers', 'following',
+    'threads', 'posts', 'acl', 'is_followed', 'is_blocked', 'status', 'absolute_url',
+    'api_url')

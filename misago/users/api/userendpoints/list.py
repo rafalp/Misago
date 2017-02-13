@@ -13,7 +13,7 @@ from misago.core.shortcuts import get_int_or_404, get_object_or_404, paginate, p
 from misago.users.activepostersranking import get_active_posters_ranking
 from misago.users.models import Rank
 from misago.users.online.utils import make_users_status_aware
-from misago.users.serializers import ScoredUserSerializer, UserSerializer
+from misago.users.serializers import UserCardSerializer
 
 
 UserModel = get_user_model()
@@ -69,7 +69,7 @@ def generic(request):
 
     make_users_status_aware(request.user, list_page.object_list)
 
-    return paginated_response(list_page, serializer=UserSerializer)
+    return paginated_response(list_page, serializer=UserCardSerializer)
 
 
 LISTS = {
@@ -85,3 +85,6 @@ def list_endpoint(request):
         return list_handler(request)
     else:
         return generic(request)
+
+
+ScoredUserSerializer = UserCardSerializer.subset_extend('meta')

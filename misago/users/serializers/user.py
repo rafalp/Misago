@@ -4,8 +4,14 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from misago.acl import serialize_acl
+from misago.core.serializers import Subsettable
 
 from . import RankSerializer
+
+
+UserModel = get_user_model()
+
+__all__ = ['StatusSerializer', 'UserSerializer', 'UserCardSerializer']
 
 
 class StatusSerializer(serializers.Serializer):
@@ -20,19 +26,19 @@ class StatusSerializer(serializers.Serializer):
     banned_until = serializers.DateTimeField()
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer, Subsettable):
     email = serializers.SerializerMethodField()
     rank = RankSerializer(many=False, read_only=True)
+    signature = serializers.SerializerMethodField()
+
+    acl = serializers.SerializerMethodField()
     is_followed = serializers.SerializerMethodField()
     is_blocked = serializers.SerializerMethodField()
-    short_title = serializers.SerializerMethodField()
-    status = serializers.SerializerMethodField()
-    signature = serializers.SerializerMethodField()
     meta = serializers.SerializerMethodField()
-    acl = serializers.SerializerMethodField()
-    api_url = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
 
     absolute_url = serializers.SerializerMethodField()
+    api_url = serializers.SerializerMethodField()
 
     class Meta:
         model = UserModel
@@ -40,19 +46,32 @@ class UserSerializer(serializers.ModelSerializer):
             'id',
             'username',
             'slug',
+            'email',
             'joined_on',
-            'avatars',
+            'rank',
             'title',
             'short_title',
-            'rank',
+            'avatars',
+            'is_avatar_locked',
             'signature',
-            'threads',
-            'posts',
+            'is_signature_locked',
             'followers',
             'following',
+            'threads',
+            'posts',
+
+            'acl',
+            'is_followed',
+            'is_blocked',
+            'meta',
             'status',
+
             'absolute_url',
+            'api_url',
         )
+
+    def get_acl(self, obj):
+        return obj.acl_
 
     def get_email(self, obj):
         if (obj == self.context['user'] or
@@ -107,3 +126,8 @@ class UserSerializer(serializers.ModelSerializer):
             'threads': reverse('misago:api:user-threads', kwargs={'pk': obj.pk}),
             'posts': reverse('misago:api:user-posts', kwargs={'pk': obj.pk}),
         }
+
+
+UserCardSerializer = UserSerializer.subset(
+    'id', 'username', 'joined_on', 'rank', 'title', 'avatars', 'followers',
+    'threads', 'posts', 'status', 'absolute_url')
