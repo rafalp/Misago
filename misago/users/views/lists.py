@@ -126,4 +126,4 @@ def rank(request, slug, page=0):
     })
 
 
-ScoredUserSerializer = UserCardSerializer.subset_extend('meta')
+ScoredUserSerializer = UserCardSerializer.extend_fields('meta')

@@ -77,4 +77,4 @@ class UserThreads(object):
         }
 
 
-UserFeedSerializer = FeedSerializer.subset_exclude('poster')
+UserFeedSerializer = FeedSerializer.exclude_fields('poster')

@@ -11,7 +11,7 @@ from misago.users.serializers import UserSerializer as BaseUserSerializer
 __all__ = ['PostSerializer']
 
 
-UserSerializer = BaseUserSerializer.subset(
+UserSerializer = BaseUserSerializer.subset_fields(
     'id', 'username', 'rank', 'avatars', 'signature', 'short_title', 'status', 'absolute_url')
 
 

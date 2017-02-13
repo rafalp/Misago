@@ -128,6 +128,6 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
         }
 
 
-UserCardSerializer = UserSerializer.subset(
+UserCardSerializer = UserSerializer.subset_fields(
     'id', 'username', 'joined_on', 'rank', 'title', 'avatars', 'followers',
     'threads', 'posts', 'status', 'absolute_url')

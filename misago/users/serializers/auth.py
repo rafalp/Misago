@@ -53,7 +53,7 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
                 'misago:api:user-change-password', kwargs={'pk': obj.pk}),
         }
 
-AuthenticatedUserSerializer = AuthenticatedUserSerializer.subset_exclude(
+AuthenticatedUserSerializer = AuthenticatedUserSerializer.exclude_fields(
     'is_avatar_locked', 'is_blocked', 'is_followed', 'is_signature_locked',
     'meta', 'signature', 'status',
 )

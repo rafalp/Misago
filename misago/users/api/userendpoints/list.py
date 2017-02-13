@@ -87,4 +87,4 @@ def list_endpoint(request):
         return generic(request)
 
 
-ScoredUserSerializer = UserCardSerializer.subset_extend('meta')
+ScoredUserSerializer = UserCardSerializer.extend_fields('meta')

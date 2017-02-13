@@ -17,7 +17,7 @@ __all__ = [
 ]
 
 
-BasicCategorySerializer = CategorySerializer.subset(
+BasicCategorySerializer = CategorySerializer.subset_fields(
     'id', 'parent', 'name', 'description', 'is_closed', 'css_class',
     'absolute_url', 'api_url', 'level', 'lft', 'rght', 'is_read')
 
@@ -151,4 +151,4 @@ class ThreadsListSerializer(ThreadSerializer):
         fields = ThreadSerializer.Meta.fields + (
             'has_poll', 'top_category'
         )
-ThreadsListSerializer = ThreadsListSerializer.subset_exclude('path', 'poll')
+ThreadsListSerializer = ThreadsListSerializer.exclude_fields('path', 'poll')

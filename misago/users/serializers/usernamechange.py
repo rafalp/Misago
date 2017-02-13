@@ -8,7 +8,7 @@ from .user import UserSerializer as BaseUserSerializer
 __all__ = ['UsernameChangeSerializer']
 
 
-UserSerializer = BaseUserSerializer.subset(
+UserSerializer = BaseUserSerializer.subset_fields(
     'id', 'username', 'avatars', 'absolute_url')
 
 

@@ -1,6 +1,6 @@
 class MutableFields(object):
     @classmethod
-    def subset(cls, *fields):
+    def subset_fields(cls, *fields):
         fields_in_name = [f.title().replace('_', '') for f in fields]
         name = '{}{}Subset'.format(cls.__name__, ''.join(fields_in_name)[:100])
 
@@ -14,7 +14,7 @@ class MutableFields(object):
         })
 
     @classmethod
-    def subset_exclude(cls, *fields):
+    def exclude_fields(cls, *fields):
         final_fields = []
         for field in cls.Meta.fields:
             if field not in fields:
@@ -33,7 +33,7 @@ class MutableFields(object):
         })
 
     @classmethod
-    def subset_extend(cls, *fields):
+    def extend_fields(cls, *fields):
         final_fields = list(cls.Meta.fields)
         for field in fields:
             if field not in final_fields:
