@@ -3,12 +3,12 @@ from rest_framework import serializers
 from django.test import TestCase
 
 from misago.categories.models import Category
-from misago.core.serializers import Subsettable
+from misago.core.serializers import MutableFields
 from misago.threads import testutils
 from misago.threads.models import Thread
 
 
-class SubsettableSerializerTests(TestCase):
+class MutableFieldsSerializerTests(TestCase):
     def test_create_subset_serializer(self):
         """classmethod subset creates new serializer"""
         category = Category.objects.get(slug='first-category')
@@ -67,7 +67,7 @@ class SubsettableSerializerTests(TestCase):
         self.assertEqual(serialized_thread['category'], category.pk)
 
 
-class TestSerializer(serializers.ModelSerializer, Subsettable):
+class TestSerializer(serializers.ModelSerializer, MutableFields):
     url = serializers.SerializerMethodField()
 
     class Meta:

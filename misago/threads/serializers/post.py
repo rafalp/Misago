@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.urls import reverse
 
 from misago.categories.serializers import CategorySerializer
-from misago.core.serializers import Subsettable
+from misago.core.serializers import MutableFields
 from misago.threads.models import Post
 from misago.users.serializers import UserSerializer as BaseUserSerializer
 
@@ -15,7 +15,7 @@ UserSerializer = BaseUserSerializer.subset(
     'id', 'username', 'rank', 'avatars', 'signature', 'short_title', 'status', 'absolute_url')
 
 
-class PostSerializer(serializers.ModelSerializer, Subsettable):
+class PostSerializer(serializers.ModelSerializer, MutableFields):
     poster = UserSerializer(many=False, read_only=True)
     poster_ip = serializers.SerializerMethodField()
     content = serializers.SerializerMethodField()

@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.urls import reverse
 
 from misago.categories.serializers import CategorySerializer
-from misago.core.serializers import Subsettable
+from misago.core.serializers import MutableFields
 from misago.threads.models import Post
 from misago.users.serializers import UserSerializer
 
@@ -24,7 +24,7 @@ FeedCategorySerializer = CategorySerializer.subset(
     'name', 'css_class', 'absolute_url')
 
 
-class FeedSerializer(PostSerializer, Subsettable):
+class FeedSerializer(PostSerializer, MutableFields):
     poster = FeedUserSerializer(many=False, read_only=True)
     category = FeedCategorySerializer(many=False, read_only=True)
 

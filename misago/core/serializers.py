@@ -1,4 +1,4 @@
-class Subsettable(object):
+class MutableFields(object):
     @classmethod
     def subset(cls, *fields):
         fields_in_name = [f.title().replace('_', '') for f in fields]

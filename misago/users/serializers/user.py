@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from misago.acl import serialize_acl
-from misago.core.serializers import Subsettable
+from misago.core.serializers import MutableFields
 
 from . import RankSerializer
 
@@ -26,7 +26,7 @@ class StatusSerializer(serializers.Serializer):
     banned_until = serializers.DateTimeField()
 
 
-class UserSerializer(serializers.ModelSerializer, Subsettable):
+class UserSerializer(serializers.ModelSerializer, MutableFields):
     email = serializers.SerializerMethodField()
     rank = RankSerializer(many=False, read_only=True)
     signature = serializers.SerializerMethodField()
