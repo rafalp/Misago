@@ -10,6 +10,7 @@ from misago.threads.models import Poll
 
 __all__ = [
     'PollSerializer',
+    'EditPollSerializer',
     'NewPollSerializer',
     'PollChoiceSerializer',
 ]
