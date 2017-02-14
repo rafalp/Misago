@@ -8,12 +8,6 @@ from misago.users.bans import get_request_ip_ban
 from misago.users.models import Ban
 
 
-__all__ = [
-    'UnbannedOnly',
-    'UnbannedAnonOnly'
-]
-
-
 class UnbannedOnly(BasePermission):
     def is_request_banned(self, request):
         ban = get_request_ip_ban(request)
