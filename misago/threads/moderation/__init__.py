@@ -1,4 +1,3 @@
-# flake8: noqa
-from .exceptions import *
+from .exceptions import ModerationError
 from .threads import *
 from .posts import *

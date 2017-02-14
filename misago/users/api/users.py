@@ -17,8 +17,7 @@ from misago.categories.models import Category
 from misago.core.cache import cache
 from misago.core.rest_permissions import IsAuthenticatedOrReadOnly
 from misago.core.shortcuts import get_int_or_404
-from misago.threads.moderation.posts import hide_post
-from misago.threads.moderation.threads import hide_thread
+from misago.threads.moderation import hide_post, hide_thread
 from misago.users.bans import get_user_ban
 from misago.users.forms.options import ForumOptionsForm
 from misago.users.online.utils import get_user_status
