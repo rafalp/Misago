@@ -1,4 +1,4 @@
-from mptt.forms import *  # noqa
+from mptt.forms import TreeNodeChoiceField, TreeNodeMultipleChoiceField
 
 from django import forms
 from django.db import models
