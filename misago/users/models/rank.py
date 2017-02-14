@@ -6,9 +6,6 @@ from misago.acl import version as acl_version
 from misago.core.utils import slugify
 
 
-__all__ = ['Rank']
-
-
 class RankManager(models.Manager):
     def get_default(self):
         return self.get(is_default=True)

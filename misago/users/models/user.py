@@ -23,14 +23,6 @@ from misago.users.utils import hash_email
 from .rank import Rank
 
 
-__all__ = [
-    'AnonymousUser',
-    'User',
-    'UsernameChange',
-    'Online',
-]
-
-
 class UserManager(BaseUserManager):
     @transaction.atomic
     def create_user(self, username, email, password=None, set_default_avatar=False, **extra_fields):
