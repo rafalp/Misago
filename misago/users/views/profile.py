@@ -18,7 +18,7 @@ from misago.users.bans import get_user_ban
 from misago.users.decorators import deny_guests
 from misago.users.online.utils import get_user_status
 from misago.users.pages import user_profile
-from misago.users.permissions.profiles import allow_block_user, allow_follow_user
+from misago.users.permissions import allow_block_user, allow_follow_user
 from misago.users.serializers import (
     BanDetailsSerializer, UserSerializer, UserCardSerializer, UsernameChangeSerializer)
 from misago.users.viewmodels import UserPosts, UserThreads

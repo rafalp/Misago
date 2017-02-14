@@ -11,6 +11,18 @@ from misago.core.forms import YesNoSwitch
 from .decorators import authenticated_only
 
 
+__all__ = [
+    'allow_browse_users_list',
+    'can_browse_users_list',
+    'allow_follow_user',
+    'can_follow_user',
+    'allow_block_user',
+    'can_block_user',
+    'allow_see_ban_details',
+    'can_see_ban_details',
+]
+
+
 """
 Admin Permissions Form
 """

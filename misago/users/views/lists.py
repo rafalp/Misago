@@ -9,7 +9,7 @@ from misago.core.utils import format_plaintext_for_html
 from misago.users.activepostersranking import get_active_posters_ranking
 from misago.users.models import Rank
 from misago.users.pages import users_list
-from misago.users.permissions.profiles import allow_browse_users_list
+from misago.users.permissions import allow_browse_users_list
 from misago.users.serializers import UserCardSerializer
 
 

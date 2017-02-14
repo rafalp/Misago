@@ -21,10 +21,9 @@ from misago.threads.moderation import hide_post, hide_thread
 from misago.users.bans import get_user_ban
 from misago.users.forms.options import ForumOptionsForm
 from misago.users.online.utils import get_user_status
-from misago.users.permissions.delete import allow_delete_user
-from misago.users.permissions.moderation import allow_moderate_avatar, allow_rename_user
-from misago.users.permissions.profiles import (
-    allow_browse_users_list, allow_follow_user, allow_see_ban_details)
+from misago.users.permissions import (
+    allow_browse_users_list, allow_delete_user, allow_follow_user, allow_moderate_avatar,
+    allow_rename_user, allow_see_ban_details)
 from misago.users.serializers import BanDetailsSerializer, UserSerializer
 from misago.users.viewmodels import UserPosts, UserThreads
 

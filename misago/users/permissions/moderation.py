@@ -14,6 +14,20 @@ from misago.core.forms import YesNoSwitch
 from misago.users.bans import get_user_ban
 
 
+__all__ = [
+    'allow_rename_user',
+    'can_rename_user',
+    'allow_moderate_avatar',
+    'can_moderate_avatar',
+    'allow_moderate_signature',
+    'can_moderate_signature',
+    'allow_ban_user',
+    'can_ban_user',
+    'allow_lift_ban',
+    'can_lift_ban',
+]
+
+
 """
 Admin Permissions Form
 """
