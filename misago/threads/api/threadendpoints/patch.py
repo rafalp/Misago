@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.shortcuts import get_object_or_404
 from django.utils import six
 from django.utils.translation import gettext as _
 
@@ -8,7 +9,7 @@ from misago.categories.models import Category
 from misago.categories.permissions import allow_browse_category, allow_see_category
 from misago.categories.serializers import CategorySerializer
 from misago.core.apipatch import ApiPatch
-from misago.core.shortcuts import get_int_or_404, get_object_or_404
+from misago.core.shortcuts import get_int_or_404
 from misago.threads.models import ThreadParticipant
 from misago.threads.moderation import threads as moderation
 from misago.threads.participants import (

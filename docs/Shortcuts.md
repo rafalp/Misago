@@ -3,7 +3,7 @@ Shortcut functions
 
 Just like [Django](https://docs.djangoproject.com/en/{{ book.django_version }}/topics/http/shortcuts/), Misago defines shortcuts module that reduce some procedures to single functions.
 
-This module lives in `misago.views.shortcuts` and in addition to Misago-native shortcut functions, it imports whole of `django.shortcuts`, so you don't have to import it separately in your views.
+This module lives in `misago.views.shortcuts`.
 
 
 ## `paginate(object_list, page, per_page, orphans=0, allow_empty_first_page=True)`

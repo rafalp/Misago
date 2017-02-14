@@ -3,8 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db.transaction import atomic
 from django.http import Http404, JsonResponse
-from django.shortcuts import render as django_render
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect, render as django_render
 from django.urls import reverse
 from django.utils import six
 from django.utils.translation import ugettext as _
@@ -12,7 +11,7 @@ from django.utils.translation import ugettext as _
 from misago.acl import add_acl
 from misago.conf import settings
 from misago.core.decorators import require_POST
-from misago.core.shortcuts import get_object_or_404, paginate, pagination_dict, validate_slug
+from misago.core.shortcuts import paginate, pagination_dict, validate_slug
 from misago.core.utils import clean_return_path
 from misago.threads.permissions import allow_message_user
 from misago.users.bans import get_user_ban

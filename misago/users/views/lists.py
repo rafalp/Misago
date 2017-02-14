@@ -1,11 +1,10 @@
 from django.contrib.auth import get_user_model
-from django.shortcuts import render as django_render
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect, render as django_render
 from django.urls import reverse
+from django.utils import six
 
-import six
 from misago.conf import settings
-from misago.core.shortcuts import get_object_or_404, paginate, pagination_dict
+from misago.core.shortcuts import paginate, pagination_dict
 from misago.core.utils import format_plaintext_for_html
 from misago.users.activepostersranking import get_active_posters_ranking
 from misago.users.models import Rank

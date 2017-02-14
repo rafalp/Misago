@@ -1,7 +1,6 @@
 from rest_framework.response import Response
 
 from django.http import Http404
-from django.shortcuts import *  # noqa
 
 import six
 
