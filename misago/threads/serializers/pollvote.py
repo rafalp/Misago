@@ -3,6 +3,9 @@ from rest_framework import serializers
 from django.urls import reverse
 
 
+__all__ = ['PollVoteSerializer']
+
+
 class PollVoteSerializer(serializers.Serializer):
     voted_on = serializers.DateTimeField()
     username = serializers.SerializerMethodField()

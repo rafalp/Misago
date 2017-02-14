@@ -8,6 +8,12 @@ from django.utils.translation import ungettext
 from misago.threads.models import Poll
 
 
+__all__ = [
+    'PollSerializer',
+    'NewPollSerializer',
+    'PollChoiceSerializer',
+]
+
 MAX_POLL_OPTIONS = 16
 
 
