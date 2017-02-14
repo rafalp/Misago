@@ -3,7 +3,8 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db.transaction import atomic
 from django.http import Http404, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render as django_render
+from django.shortcuts import render as django_render
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import six
 from django.utils.translation import ugettext as _
@@ -20,7 +21,7 @@ from misago.users.online.utils import get_user_status
 from misago.users.pages import user_profile
 from misago.users.permissions import allow_block_user, allow_follow_user
 from misago.users.serializers import (
-    BanDetailsSerializer, UserSerializer, UserCardSerializer, UsernameChangeSerializer)
+    BanDetailsSerializer, UserCardSerializer, UsernameChangeSerializer, UserSerializer)
 from misago.users.viewmodels import UserPosts, UserThreads
 
 

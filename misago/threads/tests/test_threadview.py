@@ -4,7 +4,8 @@ from misago.conf import settings
 from misago.threads import testutils
 from misago.threads.events import record_event
 from misago.threads.models import Post, Thread
-from misago.threads.moderation import hide_post, threads as threads_moderation
+from misago.threads.moderation import threads as threads_moderation
+from misago.threads.moderation import hide_post
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
