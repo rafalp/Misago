@@ -9,7 +9,7 @@ from django.utils.translation import ugettext as _
 
 from misago.core.shortcuts import get_int_or_404, paginate, pagination_dict
 from misago.users.models import UsernameChange
-from misago.users.serializers.usernamechange import UsernameChangeSerializer
+from misago.users.serializers import UsernameChangeSerializer
 
 from .rest_permissions import BasePermission
 

@@ -10,7 +10,10 @@ from .user import UserSerializer
 
 UserModel = get_user_model()
 
-__all__ = ['AuthenticatedUserSerializer', 'AnonymousUserSerializer',]
+__all__ = [
+    'AuthenticatedUserSerializer',
+    'AnonymousUserSerializer',
+]
 
 
 class AuthFlags(object):
