@@ -8,7 +8,7 @@ from misago.acl import add_acl
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
 from misago.categories.permissions import can_browse_category, can_see_category
-from misago.threads.permissions.threads import allow_start_thread
+from misago.threads.permissions import allow_start_thread
 from misago.threads.threadtypes import trees_map
 
 from . import PostingEndpoint, PostingMiddleware

@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 from misago.acl import add_acl
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
-from misago.threads.permissions.threads import can_start_thread
+from misago.threads.permissions import can_start_thread
 from misago.threads.threadtypes import trees_map
 
 

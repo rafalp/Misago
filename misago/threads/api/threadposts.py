@@ -10,7 +10,7 @@ from misago.acl import add_acl
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.models import Post
 from misago.threads.moderation import posts as moderation
-from misago.threads.permissions.threads import (
+from misago.threads.permissions import (
     allow_delete_event, allow_delete_post, allow_edit_post, allow_reply_thread)
 from misago.threads.serializers import AttachmentSerializer, PostSerializer
 from misago.threads.viewmodels import ForumThread, PrivateThread, ThreadPost, ThreadPosts

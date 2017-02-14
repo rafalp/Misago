@@ -14,6 +14,24 @@ from misago.core.forms import YesNoSwitch
 from misago.threads.models import Thread
 
 
+__all__ = [
+    'allow_use_private_threads',
+    'can_use_private_threads',
+    'allow_see_private_thread',
+    'can_see_private_thread',
+    'allow_change_owner',
+    'can_change_owner',
+    'allow_add_participants',
+    'can_add_participants',
+    'allow_remove_participant',
+    'can_remove_participant',
+    'allow_add_participant',
+    'can_add_participant',
+    'allow_message_user',
+    'can_message_user',
+]
+
+
 """
 Admin Permissions Form
 """

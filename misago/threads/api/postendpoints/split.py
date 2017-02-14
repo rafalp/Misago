@@ -9,7 +9,7 @@ from misago.conf import settings
 from misago.threads.events import record_event
 from misago.threads.models import Thread
 from misago.threads.moderation import threads as moderation
-from misago.threads.permissions.threads import exclude_invisible_posts
+from misago.threads.permissions import exclude_invisible_posts
 from misago.threads.serializers import NewThreadSerializer
 
 

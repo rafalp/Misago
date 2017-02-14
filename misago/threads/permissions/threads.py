@@ -15,6 +15,38 @@ from misago.core.forms import YesNoSwitch
 from misago.threads.models import Post, Thread
 
 
+__all__ = [
+    'allow_see_thread',
+    'can_see_thread',
+    'allow_start_thread',
+    'can_start_thread',
+    'allow_reply_thread',
+    'can_reply_thread',
+    'allow_edit_thread',
+    'can_edit_thread',
+    'allow_see_post',
+    'can_see_post',
+    'allow_edit_post',
+    'can_edit_post',
+    'allow_unhide_post',
+    'can_unhide_post',
+    'allow_hide_post',
+    'can_hide_post',
+    'allow_delete_post',
+    'can_delete_post',
+    'allow_protect_post',
+    'can_protect_post',
+    'allow_approve_post',
+    'can_approve_post',
+    'allow_move_post',
+    'can_move_post',
+    'allow_delete_event',
+    'can_delete_event',
+    'exclude_invisible_threads',
+    'exclude_invisible_posts',
+]
+
+
 """
 Admin Permissions Forms
 """

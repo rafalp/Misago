@@ -11,6 +11,20 @@ from misago.core.forms import YesNoSwitch
 from misago.threads.models import Poll, Thread
 
 
+__all__ = [
+    'allow_start_poll',
+    'can_start_poll',
+    'allow_edit_poll',
+    'can_edit_poll',
+    'allow_delete_poll',
+    'can_delete_poll',
+    'allow_vote_poll',
+    'can_vote_poll',
+    'allow_see_poll_votes',
+    'can_see_poll_votes',
+]
+
+
 """
 Admin Permissions Forms
 """
