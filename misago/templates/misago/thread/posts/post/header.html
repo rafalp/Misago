@@ -12,11 +12,11 @@
     {% if not post.poster.rank.is_default %}
       {% if post.poster.rank.is_tab %}
         <a href="{% url 'misago:users-rank' slug=post.poster.rank.slug %}" class="label label-{{ post.poster.rank.css_class|default:'default' }}">
-          {{ post.poster.short_title }}
+          {{ post.poster.get_any_title }}
         </a>
       {% else %}
         <span class="label label-{{ post.poster.rank.css_class|default:'default' }}">
-          {{ post.poster.short_title }}
+          {{ post.poster.get_any_title }}
         </span>
       {% endif %}
     {% endif %}

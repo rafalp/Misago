@@ -53,7 +53,6 @@ export function mockUser(overrides) {
       slug: "forum-team",
       title: "Team"
     },
-    short_title: "Team",
     slug: "loremipsum",
     subscribe_to_replied_threads: 2,
     subscribe_to_started_threads: 1,

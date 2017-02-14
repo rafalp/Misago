@@ -50,7 +50,6 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
             'joined_on',
             'rank',
             'title',
-            'short_title',
             'avatars',
             'is_avatar_locked',
             'signature',
@@ -94,9 +93,6 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
 
     def get_meta(self, obj):
         return {'score': obj.score}
-
-    def get_short_title(self, obj):
-        return obj.short_title
 
     def get_signature(self, obj):
         if obj.has_valid_signature:

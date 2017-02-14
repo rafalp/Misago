@@ -12,7 +12,7 @@ __all__ = ['PostSerializer']
 
 
 UserSerializer = BaseUserSerializer.subset_fields(
-    'id', 'username', 'rank', 'avatars', 'signature', 'short_title', 'status', 'absolute_url')
+    'id', 'username', 'rank', 'avatars', 'signature', 'title', 'status', 'absolute_url')
 
 
 class PostSerializer(serializers.ModelSerializer, MutableFields):

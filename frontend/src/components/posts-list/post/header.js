@@ -56,16 +56,19 @@ export function Poster(props) {
 
 export function PosterRank(props) {
   if (props.post.poster) {
-    if (!props.post.poster.rank.is_default) {
-      const rankClass = 'label-' + (props.post.poster.rank.css_class || 'default');
+    const { poster }  = props.post;
+    const { rank } = poster;
 
-      if (props.post.poster.rank.is_tab) {
-        return <a href={props.post.poster.rank.absolute_url} className={'label ' + rankClass}>
-          {props.post.poster.short_title}
+    if (!rank.is_default) {
+      const rankClass = 'label-' + (rank.css_class || 'default');
+
+      if (rank.is_tab) {
+        return <a href={rank.absolute_url} className={'label ' + rankClass}>
+          {poster.title || rank.title || rank.name}
         </a>;
       } else {
         return <span className={'label ' + rankClass}>
-          {props.post.poster.short_title}
+          {poster.title || rank.title || rank.name}
         </span>;
       }
     } else {

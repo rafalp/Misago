@@ -305,10 +305,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         raise TypeError('Cannot make User instances ACL aware')
 
     @property
-    def short_title(self):
-        return self.title or self.rank.title or self.rank.name
-
-    @property
     def requires_activation_by_admin(self):
         return self.requires_activation == self.ACTIVATION_ADMIN
 
@@ -379,6 +375,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def set_email(self, new_email):
         self.email = UserManager.normalize_email(new_email)
         self.email_hash = hash_email(new_email)
+
+    def get_any_title(self):
+        return self.title or self.rank.title or self.rank.name
 
     def get_roles(self):
         roles_pks = []
