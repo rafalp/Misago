@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
@@ -49,6 +50,17 @@ class UserManagerTests(TestCase):
 
         db_user = User.objects.get_by_username_or_email(user.email)
         self.assertEqual(user.pk, db_user.pk)
+
+    def test_getters_unicode_handling(self):
+        """get_by_ methods handle unicode"""
+        with self.assertRaises(User.DoesNotExist):
+            User.objects.get_by_username(u'łóć')
+
+        with self.assertRaises(User.DoesNotExist):
+            User.objects.get_by_email(u'łóć@polskimail.pl')
+
+        with self.assertRaises(User.DoesNotExist):
+            User.objects.get_by_username_or_email(u'łóć@polskimail.pl')
 
 
 class UserModelTests(TestCase):
