@@ -85,7 +85,7 @@ def active_posters(request):
 
 
 @allow_see_list
-def rank(request, slug, page=0):
+def rank_users(request, slug, page=0):
     rank = get_object_or_404(Rank.objects.filter(is_tab=True), slug=slug)
     users = RankUsers(request, rank, page)
 

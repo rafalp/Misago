@@ -36,8 +36,8 @@ urlpatterns += [
     url(r'^users/', include([
         url(r'^$', lists.landing, name='users'),
         url(r'^active-posters/$', lists.active_posters, name='users-active-posters'),
-        url(r'^(?P<slug>[-a-zA-Z0-9]+)/$', lists.rank, name='users-rank'),
-        url(r'^(?P<slug>[-a-zA-Z0-9]+)/(?P<page>\d+)/$', lists.rank, name='users-rank'),
+        url(r'^(?P<slug>[-a-zA-Z0-9]+)/$', lists.rank_users, name='users-rank'),
+        url(r'^(?P<slug>[-a-zA-Z0-9]+)/(?P<page>\d+)/$', lists.rank_users, name='users-rank'),
     ]))
 ]
 
