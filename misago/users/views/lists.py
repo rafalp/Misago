@@ -11,7 +11,7 @@ from misago.users.models import Rank
 from misago.users.pages import users_list
 from misago.users.permissions import allow_browse_users_list
 from misago.users.serializers import UserCardSerializer
-from misago.users.viewmodels import ActivePosters
+from misago.users.viewmodels import ActivePosters, RankUsers
 
 
 def render(request, template, context):
@@ -87,35 +87,16 @@ def active_posters(request):
 @allow_see_list
 def rank(request, slug, page=0):
     rank = get_object_or_404(Rank.objects.filter(is_tab=True), slug=slug)
-    queryset = rank.user_set.select_related('rank').order_by('slug')
+    users = RankUsers(request, rank, page)
 
-    if not request.user.is_staff:
-        queryset = queryset.filter(is_active=True)
+    request.frontend_context['USERS'] = users.get_frontend_context()
 
-    page = paginate(queryset, page, settings.MISAGO_USERS_PER_PAGE, 4)
-
-    data = pagination_dict(page)
-    data.update({
-        'results': UserCardSerializer(page.object_list, many=True).data
-    })
-
-    request.frontend_context['USERS'] = data
-
-    if rank.description:
-        description = {
-            'plain': rank.description,
-            'html': format_plaintext_for_html(rank.description)
-        }
-    else:
-        description = None
-
-    template = "misago/userslists/rank.html"
-    return render(request, template, {
+    context = {
         'rank': rank,
-        'users': page.object_list,
+    }
+    context.update(users.get_template_context())
 
-        'paginator': data
-    })
+    return render(request, "misago/userslists/rank.html", context)
 
 
 ScoredUserSerializer = UserCardSerializer.extend_fields('meta')
