@@ -25,7 +25,7 @@ from misago.users.permissions import (
     allow_browse_users_list, allow_delete_user, allow_follow_user, allow_moderate_avatar,
     allow_rename_user, allow_see_ban_details)
 from misago.users.serializers import BanDetailsSerializer, UserSerializer
-from misago.users.viewmodels import UserPosts, UserThreads
+from misago.users.viewmodels import Followers, Follows, UserPosts, UserThreads
 
 from .rest_permissions import BasePermission, UnbannedAnonOnly
 from .userendpoints.avatar import avatar_endpoint, moderate_avatar_endpoint
@@ -231,6 +231,34 @@ class UserViewSet(viewsets.GenericViewSet):
                 profile.delete()
 
         return Response({'detail': 'ok'})
+
+    @detail_route(methods=['get'])
+    def followers(self, request, pk=None):
+        profile = self.get_user(request, pk)
+
+        page = get_int_or_404(request.query_params.get('page', 0))
+        if page == 1:
+            page = 0 # api allows explicit first page
+
+        search = request.query_params.get('search')
+
+        users = Followers(request, profile, page, search)
+
+        return Response(users.get_frontend_context())
+
+    @detail_route(methods=['get'])
+    def follows(self, request, pk=None):
+        profile = self.get_user(request, pk)
+
+        page = get_int_or_404(request.query_params.get('page', 0))
+        if page == 1:
+            page = 0 # api allows explicit first page
+
+        search = request.query_params.get('search')
+
+        users = Follows(request, profile, page, search)
+
+        return Response(users.get_frontend_context())
 
     @detail_route(methods=['get'])
     def threads(self, request, pk=None):

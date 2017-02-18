@@ -74,7 +74,7 @@ class FollowersListTests(AuthenticatedUserTestCase):
     """
     def setUp(self):
         super(FollowersListTests, self).setUp()
-        self.link = '/api/users/?&followers=%s'
+        self.link = '/api/users/%s/followers/'
 
     def test_nonexistent_user(self):
         """list for non-existing user returns 404"""
@@ -96,6 +96,18 @@ class FollowersListTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, test_follower.username)
 
+    def test_filled_list_search(self):
+        """followers list is searchable"""
+        test_follower = UserModel.objects.create_user(
+            "TestFollower", "test@follower.com", self.USER_PASSWORD)
+        self.user.followed_by.add(test_follower)
+
+        api_link = self.link % self.user.pk
+
+        response = self.client.get('%s?search=%s' % (api_link, 'test'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, test_follower.username)
+
 
 class FollowsListTests(AuthenticatedUserTestCase):
     """
@@ -103,7 +115,7 @@ class FollowsListTests(AuthenticatedUserTestCase):
     """
     def setUp(self):
         super(FollowsListTests, self).setUp()
-        self.link = '/api/users/?&follows=%s'
+        self.link = '/api/users/%s/follows/'
 
     def test_nonexistent_user(self):
         """list for non-existing user returns 404"""
@@ -133,7 +145,7 @@ class FollowsListTests(AuthenticatedUserTestCase):
 
         api_link = self.link % self.user.pk
 
-        response = self.client.get('%s&name=%s' % (api_link, 'test'))
+        response = self.client.get('%s?search=%s' % (api_link, 'test'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, test_follower.username)
 

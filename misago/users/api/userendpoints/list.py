@@ -36,13 +36,7 @@ def generic(request):
     if not request.user.is_staff:
         queryset = queryset.filter(is_active=True)
 
-    if request.query_params.get('followers'):
-        user_pk = get_int_or_404(request.query_params.get('followers'))
-        queryset = get_object_or_404(queryset, pk=user_pk).followed_by
-    elif request.query_params.get('follows'):
-        user_pk = get_int_or_404(request.query_params.get('follows'))
-        queryset = get_object_or_404(queryset, pk=user_pk).follows
-    elif request.query_params.get('rank'):
+    if request.query_params.get('rank'):
         rank_pk = get_int_or_404(request.query_params.get('rank'))
         rank = get_object_or_404(Rank.objects, pk=rank_pk, is_tab=True)
         queryset = queryset.filter(rank=rank)

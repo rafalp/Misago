@@ -119,6 +119,8 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
             'moderate_username': reverse(
                 'misago:api:user-moderate-username', kwargs={'pk': obj.pk}),
             'delete': reverse('misago:api:user-delete', kwargs={'pk': obj.pk}),
+            'followers': reverse('misago:api:user-followers', kwargs={'pk': obj.pk}),
+            'follows': reverse('misago:api:user-follows', kwargs={'pk': obj.pk}),
             'threads': reverse('misago:api:user-threads', kwargs={'pk': obj.pk}),
             'posts': reverse('misago:api:user-posts', kwargs={'pk': obj.pk}),
         }

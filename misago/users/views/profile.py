@@ -22,7 +22,7 @@ from misago.users.pages import user_profile
 from misago.users.permissions import allow_block_user, allow_follow_user
 from misago.users.serializers import (
     BanDetailsSerializer, UserCardSerializer, UsernameChangeSerializer, UserSerializer)
-from misago.users.viewmodels import UserPosts, UserThreads
+from misago.users.viewmodels import Followers, Follows, UserPosts, UserThreads
 
 
 UserModel = get_user_model()
