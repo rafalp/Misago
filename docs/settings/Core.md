@@ -229,7 +229,7 @@ List of clasess defining thread types.
 
 ## `MISAGO_USE_STOP_FORUM_SPAM`
 
-This settings allows you to decide wheter of not [Stop Forum Spam](http://www.stopforumspam.com/)database should be used to validate IPs and emails during new users registrations.
+This settings allows you to decide wheter of not [Stop Forum Spam](http://www.stopforumspam.com/) database should be used to validate IPs and emails during new users registrations.
 
 
 ## `MISAGO_USERS_PER_PAGE`
