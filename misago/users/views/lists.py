@@ -7,11 +7,11 @@ from django.utils import six
 from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
 from misago.core.utils import format_plaintext_for_html
-from misago.users.activepostersranking import get_active_posters_ranking
 from misago.users.models import Rank
 from misago.users.pages import users_list
 from misago.users.permissions import allow_browse_users_list
 from misago.users.serializers import UserCardSerializer
+from misago.users.viewmodels import ActivePosters
 
 
 def render(request, template, context):
@@ -76,20 +76,12 @@ def landing(request):
 
 @allow_see_list
 def active_posters(request):
-    ranking = get_active_posters_ranking()
+    model = ActivePosters(request)
 
-    request.frontend_context['USERS'] = {
-        'tracked_period': settings.MISAGO_RANKING_LENGTH,
-        'results': ScoredUserSerializer(ranking['users'], many=True).data,
-        'count': ranking['users_count']
-    }
+    request.frontend_context['USERS'] = model.get_frontend_context()
 
     template = "misago/userslists/active_posters.html"
-    return render(request, template, {
-        'tracked_period': settings.MISAGO_RANKING_LENGTH,
-        'users': ranking['users'],
-        'users_count': ranking['users_count']
-    })
+    return render(request, template, model.get_template_context())
 
 
 @allow_see_list

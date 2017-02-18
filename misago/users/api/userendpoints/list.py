@@ -11,24 +11,18 @@ from django.utils import timezone
 from misago.conf import settings
 from misago.core.cache import cache
 from misago.core.shortcuts import get_int_or_404, paginate, paginated_response
-from misago.users.activepostersranking import get_active_posters_ranking
 from misago.users.models import Rank
 from misago.users.online.utils import make_users_status_aware
 from misago.users.serializers import UserCardSerializer
+from misago.users.viewmodels import ActivePosters
 
 
 UserModel = get_user_model()
 
 
 def active(request):
-    ranking = get_active_posters_ranking()
-    make_users_status_aware(request.user, ranking['users'], fetch_state=True)
-
-    return Response({
-        'tracked_period': settings.MISAGO_RANKING_LENGTH,
-        'results': ScoredUserSerializer(ranking['users'], many=True).data,
-        'count': ranking['users_count']
-    })
+    model = ActivePosters(request)
+    return Response(model.get_frontend_context())
 
 
 def generic(request):
