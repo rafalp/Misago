@@ -15,6 +15,7 @@ Before you start make sure your hosting provider grants you:
 
 - SSH access to the server
 - Python 2.7, 3.4, 3.5 or 3.6
+- SetupTools >= 8.0
 - PostgreSQL >= 9.4
 - At least 128 megabytes of free memory for Misago's processes
 - HTTP server that supports WSGI applications (like NGINX with UWSGI or Apache2 with mod_wsgi)
@@ -23,6 +24,11 @@ Before you start make sure your hosting provider grants you:
 This isn't an issue on VPS or dedicated servers, but availability of shared servers that meet those requirements differs wildly depending on your location.
 
 Speaking of shared servers, ability to download, compile and run software from internet may be needed, but different ISP's have different approach to this. Some options come with all dependencies preinstalled, others let you install them yourself and others require you to mail them every time you need something installed. Generally you should avoid offers coming from last group because this turns running Python apps into a hore.
+
+
+##### About `'install_requires' must be a string or list of strings containing valid project/version requirement specifiers` error during installation
+
+This error is caused by Misago being installed using setuptools older than 8.0 release, which was first to introduce support for [PEP 440](https://www.python.org/dev/peps/pep-0440/), which defines version requirments used in Misago's requirements.txt.
 
 
 ### Setup
