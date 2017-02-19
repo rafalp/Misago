@@ -44,13 +44,13 @@ urlpatterns += [
 
 urlpatterns += [
     url(r'^u/(?P<slug>[a-zA-Z0-9]+)/(?P<pk>\d+)/', include([
-        url(r'^$', profile.landing, name='user'),
-        url(r'^posts/$', profile.posts, name='user-posts'),
-        url(r'^threads/$', profile.threads, name='user-threads'),
-        url(r'^followers/$', profile.followers, name='user-followers'),
-        url(r'^follows/$', profile.follows, name='user-follows'),
-        url(r'^username-history/$', profile.username_history, name='username-history'),
-        url(r'^ban-details/$', profile.user_ban, name='user-ban'),
+        url(r'^$', profile.LandingView.as_view(), name='user'),
+        url(r'^posts/$', profile.UserPostsView.as_view(), name='user-posts'),
+        url(r'^threads/$', profile.UserThreadsView.as_view(), name='user-threads'),
+        url(r'^followers/$', profile.UserFollowersView.as_view(), name='user-followers'),
+        url(r'^follows/$', profile.UserFollowsView.as_view(), name='user-follows'),
+        url(r'^username-history/$', profile.UserUsernameHistoryView.as_view(), name='username-history'),
+        url(r'^ban-details/$', profile.UserBanView.as_view(), name='user-ban'),
     ]))
 ]
 
