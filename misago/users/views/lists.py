@@ -56,7 +56,7 @@ class ListView(View):
                 'component': 'rank',
             })
 
-        active_section = filter(lambda x: x['is_active'], sections)[0]
+        active_section = list(filter(lambda x: x['is_active'], sections))[0]
         context_data['active_section'] = active_section
 
         return render(request, self.template_name, context_data)
