@@ -51,8 +51,8 @@ def reset_password_form(request, pk, token):
             raise Banned(ban)
     except ResetError as e:
         return render(request, 'misago/forgottenpassword/error.html', {
-                'message': e.args[0],
-            }, status=400)
+            'message': e.args[0],
+        }, status=400)
 
     api_url = reverse('misago:api:change-forgotten-password', kwargs={
         'pk': pk,

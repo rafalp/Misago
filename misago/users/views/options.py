@@ -22,7 +22,7 @@ def index(request, *args, **kwargs):
 
     request.frontend_context.update({
         'USER_OPTIONS': user_options
-    });
+    })
 
     return render(request, 'misago/options/noscript.html')
 

@@ -19,12 +19,11 @@ from misago.core.rest_permissions import IsAuthenticatedOrReadOnly
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.moderation import hide_post, hide_thread
 from misago.users.bans import get_user_ban
-from misago.users.forms.options import ForumOptionsForm
 from misago.users.online.utils import get_user_status
 from misago.users.permissions import (
     allow_browse_users_list, allow_delete_user, allow_follow_user, allow_moderate_avatar,
     allow_rename_user, allow_see_ban_details)
-from misago.users.serializers import BanDetailsSerializer, UserSerializer
+from misago.users.serializers import BanDetailsSerializer, ForumOptionsSerializer, UserSerializer
 from misago.users.viewmodels import Followers, Follows, UserPosts, UserThreads
 
 from .rest_permissions import BasePermission, UnbannedAnonOnly
@@ -104,14 +103,14 @@ class UserViewSet(viewsets.GenericViewSet):
         get_int_or_404(pk)
         allow_self_only(request.user, pk, _("You can't change other users options."))
 
-        form = ForumOptionsForm(request.data, instance=request.user)
-        if form.is_valid():
-            form.save()
+        serializer = ForumOptionsSerializer(request.user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
             return Response({
                 'detail': _("Your forum options have been changed.")
             })
         else:
-            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @detail_route(methods=['get', 'post'])
     def username(self, request, pk=None):

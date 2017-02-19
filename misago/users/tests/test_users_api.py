@@ -273,27 +273,51 @@ class UserRetrieveTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class UserCategoriesOptionsTests(AuthenticatedUserTestCase):
+class UserForumOptionsTests(AuthenticatedUserTestCase):
     """
     tests for user forum options RPC (POST to /api/users/1/forum-options/)
     """
     def setUp(self):
-        super(UserCategoriesOptionsTests, self).setUp()
+        super(UserForumOptionsTests, self).setUp()
         self.link = '/api/users/%s/forum-options/' % self.user.pk
 
     def test_empty_request(self):
         """empty request is handled"""
         response = self.client.post(self.link)
+
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'limits_private_thread_invites_to': [
+                'This field is required.',
+            ],
+            'subscribe_to_started_threads': [
+                'This field is required.',
+            ],
+            'subscribe_to_replied_threads': [
+                'This field is required.',
+            ],
+        })
 
-        fields = (
-            'limits_private_thread_invites_to',
-            'subscribe_to_started_threads',
-            'subscribe_to_replied_threads'
-        )
+    def test_change_forum_invalid_ranges(self):
+        """api validates ranges for fields"""
+        response = self.client.post(self.link, data={
+            'limits_private_thread_invites_to': 541,
+            'subscribe_to_started_threads': 44,
+            'subscribe_to_replied_threads': 321
+        })
 
-        for field in fields:
-            self.assertContains(response, '"%s"' % field, status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'limits_private_thread_invites_to': [
+                '"541" is not a valid choice.',
+            ],
+            'subscribe_to_started_threads': [
+                '"44" is not a valid choice.',
+            ],
+            'subscribe_to_replied_threads': [
+                '"321" is not a valid choice.',
+            ],
+        })
 
     def test_change_forum_options(self):
         """forum options are changed"""
@@ -312,7 +336,7 @@ class UserCategoriesOptionsTests(AuthenticatedUserTestCase):
         self.assertEqual(self.user.subscribe_to_replied_threads, 1)
 
         response = self.client.post(self.link, data={
-            'is_hiding_presence': 'true',
+            'is_hiding_presence': True,
             'limits_private_thread_invites_to': 1,
             'subscribe_to_started_threads': 2,
             'subscribe_to_replied_threads': 1
@@ -327,7 +351,7 @@ class UserCategoriesOptionsTests(AuthenticatedUserTestCase):
         self.assertEqual(self.user.subscribe_to_replied_threads, 1)
 
         response = self.client.post(self.link, data={
-            'is_hiding_presence': 'false',
+            'is_hiding_presence': False,
             'limits_private_thread_invites_to': 1,
             'subscribe_to_started_threads': 2,
             'subscribe_to_replied_threads': 1
@@ -340,6 +364,7 @@ class UserCategoriesOptionsTests(AuthenticatedUserTestCase):
         self.assertEqual(self.user.limits_private_thread_invites_to, 1)
         self.assertEqual(self.user.subscribe_to_started_threads, 2)
         self.assertEqual(self.user.subscribe_to_replied_threads, 1)
+
 
 class UserFollowTests(AuthenticatedUserTestCase):
     """
