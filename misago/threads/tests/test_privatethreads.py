@@ -15,7 +15,7 @@ class PrivateThreadsTestCase(AuthenticatedUserTestCase):
         self.override_acl()
 
     def override_acl(self, acl=None):
-        final_acl = self.user.acl['categories'][self.category.pk]
+        final_acl = self.user.acl_cache['categories'][self.category.pk]
         final_acl.update({
             'can_see': 1,
             'can_browse': 1,

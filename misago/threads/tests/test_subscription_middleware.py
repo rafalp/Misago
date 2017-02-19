@@ -20,7 +20,7 @@ class SubscriptionMiddlewareTestCase(AuthenticatedUserTestCase):
         self.override_acl()
 
     def override_acl(self):
-        new_acl = self.user.acl
+        new_acl = self.user.acl_cache
         new_acl['can_omit_flood_protection'] = True
         new_acl['categories'][self.category.pk].update({
             'can_see': 1,

@@ -177,13 +177,13 @@ ACL tests
 def allow_use_private_threads(user):
     if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to use private threads."))
-    if not user.acl['can_use_private_threads']:
+    if not user.acl_cache['can_use_private_threads']:
         raise PermissionDenied(_("You can't use private threads."))
 can_use_private_threads = return_boolean(allow_use_private_threads)
 
 
 def allow_see_private_thread(user, target):
-    if user.acl['can_moderate_private_threads']:
+    if user.acl_cache['can_moderate_private_threads']:
         can_see_reported = target.has_reported_posts
     else:
         can_see_reported = False
@@ -196,7 +196,7 @@ can_see_private_thread = return_boolean(allow_see_private_thread)
 
 
 def allow_change_owner(user, target):
-    is_moderator = user.acl['can_moderate_private_threads']
+    is_moderator = user.acl_cache['can_moderate_private_threads']
     is_owner = target.participant and target.participant.is_owner
 
     if not (is_owner or is_moderator):
@@ -210,7 +210,7 @@ can_change_owner = return_boolean(allow_change_owner)
 
 
 def allow_add_participants(user, target):
-    is_moderator = user.acl['can_moderate_private_threads']
+    is_moderator = user.acl_cache['can_moderate_private_threads']
 
     if not is_moderator:
         if not target.participant or not target.participant.is_owner:
@@ -221,7 +221,7 @@ def allow_add_participants(user, target):
             raise PermissionDenied(
                 _("Only moderators can add participants to closed threads."))
 
-    max_participants = user.acl['max_private_thread_participants']
+    max_participants = user.acl_cache['max_private_thread_participants']
     current_participants = len(target.participants_list) - 1
 
     if current_participants >= max_participants:
@@ -231,7 +231,7 @@ can_add_participants = return_boolean(allow_add_participants)
 
 
 def allow_remove_participant(user, thread, target):
-    if user.acl['can_moderate_private_threads']:
+    if user.acl_cache['can_moderate_private_threads']:
         return
 
     if user == target:
@@ -254,10 +254,10 @@ def allow_add_participant(user, target):
         raise PermissionDenied(
             _("%(user)s can't participate in private threads.") % message_format)
 
-    if user.acl['can_add_everyone_to_private_threads']:
+    if user.acl_cache['can_add_everyone_to_private_threads']:
         return
 
-    if user.acl['can_be_blocked'] and target.is_blocking(user):
+    if user.acl_cache['can_be_blocked'] and target.is_blocking(user):
         raise PermissionDenied(_("%(user)s is blocking you.") % message_format)
 
     if target.can_be_messaged_by_nobody:

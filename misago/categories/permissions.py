@@ -127,13 +127,13 @@ def allow_see_category(user, target):
     except AttributeError:
         category_id = int(target)
 
-    if not category_id in user.acl['visible_categories']:
+    if not category_id in user.acl_cache['visible_categories']:
         raise Http404()
 can_see_category = return_boolean(allow_see_category)
 
 
 def allow_browse_category(user, target):
-    target_acl = user.acl['categories'].get(target.id, {'can_browse': False})
+    target_acl = user.acl_cache['categories'].get(target.id, {'can_browse': False})
     if not target_acl['can_browse']:
         message = _('You don\'t have permission to browse "%(category)s" contents.')
         raise PermissionDenied(message % {'category': target.name})

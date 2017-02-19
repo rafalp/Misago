@@ -39,7 +39,7 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         self.override_acl()
 
     def override_acl(self, allow_download=True):
-        acl = self.user.acl.copy()
+        acl = self.user.acl_cache.copy()
         acl.update({
             'max_attachment_size': 1000,
             'can_download_other_users_attachments': allow_download

@@ -43,7 +43,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         self.thread = Thread.objects.get(pk=self.thread.pk)
 
     def override_acl(self, extra_acl=None):
-        new_acl = self.user.acl
+        new_acl = self.user.acl_cache
         new_acl['categories'][self.category.pk].update({
             'can_see': 1,
             'can_browse': 1,
@@ -60,7 +60,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         override_acl(self.user, new_acl)
 
     def override_other_acl(self, acl=None):
-        other_category_acl = self.user.acl['categories'][self.category.pk].copy()
+        other_category_acl = self.user.acl_cache['categories'][self.category.pk].copy()
         other_category_acl.update({
             'can_see': 1,
             'can_browse': 1,
@@ -74,7 +74,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         if acl:
             other_category_acl.update(acl)
 
-        categories_acl = self.user.acl['categories']
+        categories_acl = self.user.acl_cache['categories']
         categories_acl[self.category_b.pk] = other_category_acl
 
         visible_categories = [self.category.pk]

@@ -67,8 +67,9 @@ def add_acl_to_attachment(user, attachment):
             'can_delete': True,
         })
     else:
+        user_can_delete = user.acl_cache['can_delete_other_users_attachments']
         attachment.acl.update({
-            'can_delete': user.is_authenticated and user.acl['can_delete_other_users_attachments'],
+            'can_delete': user.is_authenticated and user_can_delete,
         })
 
 

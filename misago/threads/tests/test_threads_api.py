@@ -22,7 +22,7 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
         self.api_link = self.thread.get_api_url()
 
     def override_acl(self, acl=None):
-        final_acl = self.user.acl['categories'][self.category.pk]
+        final_acl = self.user.acl_cache['categories'][self.category.pk]
         final_acl.update({
             'can_see': 1,
             'can_browse': 1,
@@ -39,8 +39,8 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
         if acl:
             final_acl.update(acl)
 
-        visible_categories = self.user.acl['visible_categories']
-        browseable_categories = self.user.acl['browseable_categories']
+        visible_categories = self.user.acl_cache['visible_categories']
+        browseable_categories = self.user.acl_cache['browseable_categories']
 
         if not final_acl['can_see'] and self.category.pk in visible_categories:
             visible_categories.remove(self.category.pk)

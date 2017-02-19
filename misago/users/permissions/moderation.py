@@ -90,14 +90,12 @@ def build_acl(acl, roles, key_name):
 ACL's for targets
 """
 def add_acl_to_user(user, target):
-    target_acl = target.acl_
-
-    target_acl['can_rename'] = can_rename_user(user, target)
-    target_acl['can_moderate_avatar'] = can_moderate_avatar(user, target)
-    target_acl['can_moderate_signature'] = can_moderate_signature(user, target)
-    target_acl['can_ban'] = can_ban_user(user, target)
-    target_acl['max_ban_length'] = user.acl['max_ban_length']
-    target_acl['can_lift_ban'] = can_lift_ban(user, target)
+    target.acl['can_rename'] = can_rename_user(user, target)
+    target.acl['can_moderate_avatar'] = can_moderate_avatar(user, target)
+    target.acl['can_moderate_signature'] = can_moderate_signature(user, target)
+    target.acl['can_ban'] = can_ban_user(user, target)
+    target.acl['max_ban_length'] = user.acl_cache['max_ban_length']
+    target.acl['can_lift_ban'] = can_lift_ban(user, target)
 
     mod_permissions = (
         'can_rename',
@@ -107,8 +105,8 @@ def add_acl_to_user(user, target):
     )
 
     for permission in mod_permissions:
-        if target_acl[permission]:
-            target_acl['can_moderate'] = True
+        if target.acl[permission]:
+            target.acl['can_moderate'] = True
             break
 
 
@@ -120,7 +118,7 @@ def register_with(registry):
 ACL tests
 """
 def allow_rename_user(user, target):
-    if not user.acl['can_rename_users']:
+    if not user.acl_cache['can_rename_users']:
         raise PermissionDenied(_("You can't rename users."))
     if not user.is_superuser and (target.is_staff or target.is_superuser):
         raise PermissionDenied(_("You can't rename administrators."))
@@ -128,7 +126,7 @@ can_rename_user = return_boolean(allow_rename_user)
 
 
 def allow_moderate_avatar(user, target):
-    if not user.acl['can_moderate_avatars']:
+    if not user.acl_cache['can_moderate_avatars']:
         raise PermissionDenied(_("You can't moderate avatars."))
     if not user.is_superuser and (target.is_staff or target.is_superuser):
         raise PermissionDenied(_("You can't moderate administrators avatars."))
@@ -136,7 +134,7 @@ can_moderate_avatar = return_boolean(allow_moderate_avatar)
 
 
 def allow_moderate_signature(user, target):
-    if not user.acl['can_moderate_signatures']:
+    if not user.acl_cache['can_moderate_signatures']:
         raise PermissionDenied(_("You can't moderate signatures."))
     if not user.is_superuser and (target.is_staff or target.is_superuser):
         message = _("You can't moderate administrators signatures.")
@@ -145,7 +143,7 @@ can_moderate_signature = return_boolean(allow_moderate_signature)
 
 
 def allow_ban_user(user, target):
-    if not user.acl['can_ban_users']:
+    if not user.acl_cache['can_ban_users']:
         raise PermissionDenied(_("You can't ban users."))
     if target.is_staff or target.is_superuser:
         raise PermissionDenied(_("You can't ban administrators."))
@@ -153,13 +151,13 @@ can_ban_user = return_boolean(allow_ban_user)
 
 
 def allow_lift_ban(user, target):
-    if not user.acl['can_lift_bans']:
+    if not user.acl_cache['can_lift_bans']:
         raise PermissionDenied(_("You can't lift bans."))
     ban = get_user_ban(target)
     if not ban:
         raise PermissionDenied(_("This user is not banned."))
-    if user.acl['max_lifted_ban_length']:
-        expiration_limit = timedelta(days=user.acl['max_lifted_ban_length'])
+    if user.acl_cache['max_lifted_ban_length']:
+        expiration_limit = timedelta(days=user.acl_cache['max_lifted_ban_length'])
         lift_cutoff = (timezone.now() + expiration_limit).date()
         if not ban.valid_until:
             raise PermissionDenied(_("You can't lift permanent bans."))

@@ -20,7 +20,7 @@ if user.acl['forums'].get(forum.pk, {}).get('can_see'):
 Above snippet is edge example of checking forum permission, and luckily we have few alternatives:
 
 ```python
-if forum.pk in userl.acl['visible_forums']:
+if forum.pk in userl.acl_cache['visible_forums']:
     # Not really shorter, but simpler to remember and works in django templates!
 
 from misago.acl import add_acl
@@ -108,13 +108,6 @@ Annotators are functions called when object is being made ACL aware. It always r
 
 * `user` - user asking to make target aware of its ACL's
 * `target` - target instance, guaranteed to be an single object, not list or other iterable (like queryset)
-
-`target` has `acl` attribute which is dict with incomplete ACL that function should update with new keys.
-
-
-##### Note
-
-This will not work for instances of User model, that already reserves `acl` attribute for user's entire acl. `add_acl_to_target` for User instances will add acl's to `acl_` attribute instead.
 
 
 ### Serializers

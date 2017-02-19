@@ -56,7 +56,7 @@ class ThreadsRootCategory(ViewModel):
     def get_categories(self, request):
         return [Category.objects.root_category()] + list(
             Category.objects.all_categories().filter(
-                id__in=request.user.acl['browseable_categories']
+                id__in=request.user.acl_cache['browseable_categories']
             ).select_related('parent'))
 
 

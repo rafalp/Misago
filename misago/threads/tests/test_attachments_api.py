@@ -32,7 +32,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
     def override_acl(self, new_acl=None):
         if new_acl:
-            acl = self.user.acl.copy()
+            acl = self.user.acl_cache.copy()
             acl.update(new_acl)
             override_acl(self.user, acl)
 

@@ -10,7 +10,7 @@ from .searchproviders import searchproviders
 
 def landing(request):
     allowed_providers = searchproviders.get_allowed_providers(request)
-    if not request.user.acl['can_search'] or not allowed_providers:
+    if not request.user.acl_cache['can_search'] or not allowed_providers:
         raise PermissionDenied(_("You don't have permission to search site."))
 
     default_provider = allowed_providers[0]
@@ -19,7 +19,7 @@ def landing(request):
 
 def search(request, search_provider):
     all_providers = searchproviders.get_providers(request)
-    if not request.user.acl['can_search'] or not all_providers:
+    if not request.user.acl_cache['can_search'] or not all_providers:
         raise PermissionDenied(_("You don't have permission to search site."))
 
     for provider in all_providers:

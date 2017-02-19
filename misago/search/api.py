@@ -16,7 +16,7 @@ from .searchproviders import searchproviders
 @api_view()
 def search(request, search_provider=None):
     allowed_providers = searchproviders.get_allowed_providers(request)
-    if not request.user.acl['can_search'] or not allowed_providers:
+    if not request.user.acl_cache['can_search'] or not allowed_providers:
         raise PermissionDenied(_("You don't have permission to search site."))
 
     search_query = get_search_query(request)

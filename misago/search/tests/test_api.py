@@ -39,7 +39,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
             self.assertEqual(provider['results']['results'], [])
             self.assertEqual(int(provider['time']), 0)
 
-    def test_empty_(self):
+    def test_empty_search(self):
         """api handles empty search query"""
         response = self.client.get('%s?q=' % self.test_link)
         self.assertEqual(response.status_code, 200)

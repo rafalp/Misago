@@ -24,7 +24,7 @@ class EditorApiTestCase(AuthenticatedUserTestCase):
         self.category = Category.objects.get(slug='first-category')
 
     def override_acl(self, acl=None):
-        final_acl = self.user.acl['categories'][self.category.pk]
+        final_acl = self.user.acl_cache['categories'][self.category.pk]
         final_acl.update({
             'can_see': 1,
             'can_browse': 1,

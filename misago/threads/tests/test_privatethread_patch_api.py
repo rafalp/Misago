@@ -101,7 +101,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         """can't add user that is already participant"""
         ThreadParticipant.objects.set_owner(self.thread, self.user)
 
-        for i in range(self.user.acl['max_private_thread_participants']):
+        for i in range(self.user.acl_cache['max_private_thread_participants']):
             user = UserModel.objects.create_user(
                 'User{}'.format(i), 'user{}@example.com'.format(i), 'Pass.123')
             ThreadParticipant.objects.add_participants(self.thread, [user])

@@ -32,8 +32,8 @@ def limited(request, text):
 
 def signature(request, owner, text):
     result = parse(text, request, owner, allow_mentions=False,
-                   allow_blocks=owner.acl['allow_signature_blocks'],
-                   allow_links=owner.acl['allow_signature_links'],
-                   allow_images=owner.acl['allow_signature_images'])
+                   allow_blocks=owner.acl_cache['allow_signature_blocks'],
+                   allow_links=owner.acl_cache['allow_signature_links'],
+                   allow_images=owner.acl_cache['allow_signature_images'])
 
     return result['parsed_text']

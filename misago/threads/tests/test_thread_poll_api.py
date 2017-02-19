@@ -27,7 +27,7 @@ class ThreadPollApiTestCase(AuthenticatedUserTestCase):
         return self.client.put(url, json.dumps(data or {}), content_type='application/json')
 
     def override_acl(self, user=None, category=None):
-        new_acl = self.user.acl
+        new_acl = self.user.acl_cache
         new_acl['categories'][self.category.pk].update({
             'can_see': 1,
             'can_browse': 1,

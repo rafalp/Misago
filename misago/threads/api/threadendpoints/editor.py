@@ -19,7 +19,7 @@ def thread_start_editor(request):
     categories = []
 
     queryset = Category.objects.filter(
-        pk__in=request.user.acl['browseable_categories'],
+        pk__in=request.user.acl_cache['browseable_categories'],
         tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
     ).order_by('-lft')
 

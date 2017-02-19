@@ -17,11 +17,11 @@ class GetUserACLTests(TestCase):
         acl = get_user_acl(test_user)
 
         self.assertTrue(acl)
-        self.assertEqual(acl, test_user.acl)
+        self.assertEqual(acl, test_user.acl_cache)
 
     def test_get_anonymous_acl(self):
         """get ACL for unauthenticated user"""
         acl = get_user_acl(AnonymousUser())
 
         self.assertTrue(acl)
-        self.assertEqual(acl, AnonymousUser().acl)
+        self.assertEqual(acl, AnonymousUser().acl_cache)

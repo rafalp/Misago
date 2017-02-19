@@ -50,7 +50,7 @@ class AttachmentSerializer(serializers.ModelSerializer):
         return obj.filetype.name
 
     def get_uploader_ip(self, obj):
-        if 'user' in self.context and self.context['user'].acl['can_see_users_ips']:
+        if 'user' in self.context and self.context['user'].acl_cache['can_see_users_ips']:
             return obj.uploader_ip
         else:
             return None

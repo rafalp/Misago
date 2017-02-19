@@ -119,8 +119,9 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
         }
 
         # copy first category's acl to other categories to make base for overrides
+        first_category_acl = self.user.acl_cache['categories'][self.first_category.pk].copy()
         for category in Category.objects.all_categories():
-            categories_acl['categories'][category.pk] = self.user.acl['categories'][self.first_category.pk].copy()
+            categories_acl['categories'][category.pk] = first_category_acl
 
         if base_acl:
             categories_acl.update(base_acl)
@@ -1602,13 +1603,13 @@ class OwnerOnlyThreadsVisibilityTests(AuthenticatedUserTestCase):
         self.category = Category.objects.get(slug='first-category')
 
     def override_acl(self, user):
-        category_acl = user.acl['categories'][self.category.pk].copy()
+        category_acl = user.acl_cache['categories'][self.category.pk].copy()
         category_acl.update({
             'can_see_all_threads': 0
         })
-        user.acl['categories'][self.category.pk] = category_acl
+        user.acl_cache['categories'][self.category.pk] = category_acl
 
-        override_acl(user, user.acl)
+        override_acl(user, user.acl_cache)
 
     def test_owned_threads_visibility(self):
         """only user-posted threads are visible in category"""

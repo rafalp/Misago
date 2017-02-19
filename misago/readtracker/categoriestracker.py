@@ -96,8 +96,9 @@ def sync_record(user, category):
 def read_category(user, category):
     categories = [category.pk]
     if not category.is_leaf_node():
-        queryset = category.get_descendants().filter(id__in=user.acl['visible_categories'])
-        categories += queryset.values_list('id', flat=True)
+        categories += category.get_descendants().filter(
+            id__in=user.acl_cache['visible_categories']
+        ).values_list('id', flat=True)
 
     user.categoryread_set.filter(category_id__in=categories).delete()
     user.threadread_set.filter(category_id__in=categories).delete()

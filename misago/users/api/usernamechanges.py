@@ -26,9 +26,9 @@ class UsernameChangesViewSetPermission(BasePermission):
 
         if user_pk == request.user.pk:
             return True
-        elif not request.user.acl.get('can_see_users_name_history'):
-            raise PermissionDenied(_("You don't have permission to "
-                                     "see other users name history."))
+        elif not request.user.acl_cache.get('can_see_users_name_history'):
+            raise PermissionDenied(
+                _("You don't have permission to see other users name history."))
         return True
 
 

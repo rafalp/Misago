@@ -3,7 +3,6 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from misago.acl import serialize_acl
 from misago.core.serializers import MutableFields
 
 from . import RankSerializer
@@ -70,23 +69,23 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
         )
 
     def get_acl(self, obj):
-        return obj.acl_
+        return obj.acl
 
     def get_email(self, obj):
         if (obj == self.context['user'] or
-                self.context['user'].acl['can_see_users_emails']):
+                self.context['user'].acl_cache['can_see_users_emails']):
             return obj.email
         else:
             return None
 
     def get_is_followed(self, obj):
-        if obj.acl_['can_follow']:
+        if obj.acl['can_follow']:
             return self.context['user'].is_following(obj)
         else:
             return False
 
     def get_is_blocked(self, obj):
-        if obj.acl_['can_block']:
+        if obj.acl['can_block']:
             return self.context['user'].is_blocking(obj)
         else:
             return False

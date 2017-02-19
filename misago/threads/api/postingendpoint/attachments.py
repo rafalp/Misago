@@ -12,7 +12,7 @@ from . import PostingEndpoint, PostingInterrupt, PostingMiddleware
 
 class AttachmentsMiddleware(PostingMiddleware):
     def use_this_middleware(self):
-        return bool(self.user.acl['max_attachment_size'])
+        return bool(self.user.acl_cache['max_attachment_size'])
 
     def get_serializer(self):
         return AttachmentsSerializer(data=self.request.data, context={

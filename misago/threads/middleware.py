@@ -12,7 +12,7 @@ class UnreadThreadsCountMiddleware(MiddlewareMixin):
         if request.user.is_anonymous:
             return
 
-        if not request.user.acl['can_use_private_threads']:
+        if not request.user.acl_cache['can_use_private_threads']:
             return
 
         if not request.user.sync_unread_private_threads:

@@ -13,7 +13,7 @@ from misago.users.signatures import is_user_signature_valid, set_user_signature
 def signature_endpoint(request):
     user = request.user
 
-    if not user.acl['can_have_signature']:
+    if not user.acl_cache['can_have_signature']:
         raise PermissionDenied(
             _("You don't have permission to change signature."))
 

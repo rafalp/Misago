@@ -55,7 +55,7 @@ def allow_file_download(request, attachment):
     if not is_authenticated or request.user.id != attachment.uploader_id:
         if not attachment.post_id:
             raise Http404()
-        if not request.user.acl['can_download_other_users_attachments']:
+        if not request.user.acl_cache['can_download_other_users_attachments']:
             raise PermissionDenied()
 
     allowed_roles = set(r.pk for r in attachment.filetype.limit_downloads_to.all())

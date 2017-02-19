@@ -71,7 +71,7 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
         ]
 
     def get_poster_ip(self, obj):
-        if self.context['user'].acl['can_see_users_ips']:
+        if self.context['user'].acl_cache['can_see_users_ips']:
             return obj.poster_ip
         else:
             return None

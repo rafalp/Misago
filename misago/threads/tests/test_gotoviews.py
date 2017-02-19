@@ -178,8 +178,8 @@ class GotoNewTests(GotoViewTestCase):
 
 class GotoUnapprovedTests(GotoViewTestCase):
     def grant_permission(self):
-        self.user.acl['categories'][self.category.pk]['can_approve_content'] = 1
-        override_acl(self.user, self.user.acl)
+        self.user.acl_cache['categories'][self.category.pk]['can_approve_content'] = 1
+        override_acl(self.user, self.user.acl_cache)
 
     def test_view_validates_permission(self):
         """view validates permission to see unapproved posts"""

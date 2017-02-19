@@ -87,8 +87,10 @@ class ViewModel(object):
             if list_type in LIST_DENIED_MESSAGES:
                 raise PermissionDenied(LIST_DENIED_MESSAGES[list_type])
         else:
-            if list_type == 'unapproved' and not request.user.acl['can_see_unapproved_content_lists']:
-                raise PermissionDenied(_("You don't have permission to see unapproved content lists."))
+            has_permission = request.user.acl_cache['can_see_unapproved_content_lists']
+            if list_type == 'unapproved' and not has_permission:
+                raise PermissionDenied(
+                    _("You don't have permission to see unapproved content lists."))
 
     def get_list_name(self, list_type):
         return LISTS_NAMES[list_type]
@@ -156,7 +158,7 @@ class PrivateThreads(ViewModel):
         # limit queryset to threads we are participant of
         participated_threads = request.user.threadparticipant_set.values('thread_id')
 
-        if request.user.acl['can_moderate_private_threads']:
+        if request.user.acl_cache['can_moderate_private_threads']:
             queryset = queryset.filter(
                 Q(id__in=participated_threads) | Q(has_reported_posts=True))
         else:

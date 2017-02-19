@@ -15,7 +15,7 @@ IMAGE_EXTENSIONS = ('jpg', 'jpeg', 'png', 'gif')
 
 class AttachmentViewSet(viewsets.ViewSet):
     def create(self, request):
-        if not request.user.acl['max_attachment_size']:
+        if not request.user.acl_cache['max_attachment_size']:
             raise PermissionDenied(_("You don't have permission to upload new files."))
 
         try:
@@ -32,7 +32,7 @@ class AttachmentViewSet(viewsets.ViewSet):
 
         user_roles = set(r.pk for r in request.user.get_roles())
         filetype = validate_filetype(upload, user_roles)
-        validate_filesize(upload, filetype, request.user.acl['max_attachment_size'])
+        validate_filesize(upload, filetype, request.user.acl_cache['max_attachment_size'])
 
         attachment = Attachment(
             secret=Attachment.generate_new_secret(),

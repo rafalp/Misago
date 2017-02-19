@@ -57,10 +57,7 @@ def _add_acl_to_target(user, target):
     """
     Add valid ACL to single target, helper for add_acl function
     """
-    if isinstance(target, get_user_model()):
-        target.acl_ = {}
-    else:
-        target.acl = {}
+    target.acl = {}
 
     for annotator in providers.get_type_annotators(target):
         annotator(user, target)
@@ -68,12 +65,9 @@ def _add_acl_to_target(user, target):
 
 def serialize_acl(target):
     """
-    Serialize single target's ACL
-
-    Serializers shouldn't really serialize ACL's, only prepare acl dict
-    for json serialization
+    Serialize authenticated user's ACL
     """
-    serialized_acl = copy.deepcopy(target.acl)
+    serialized_acl = copy.deepcopy(target.acl_cache)
 
     for serializer in providers.get_type_serializers(target):
         serializer(serialized_acl)

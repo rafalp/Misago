@@ -92,7 +92,7 @@ class ProfileView(View):
             })
 
             if not context['show_email']:
-                context['show_email'] = request.user.acl['can_see_users_emails']
+                context['show_email'] = request.user.acl_cache['can_see_users_emails']
         else:
             context.update({
                 'is_authenticated_user': False,

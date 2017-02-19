@@ -224,7 +224,7 @@ def merge_threads(request, validated_data, threads, poll):
     # add top category to thread
     if validated_data.get('top_category'):
         categories = list(Category.objects.all_categories().filter(
-            id__in=request.user.acl['visible_categories']
+            id__in=request.user.acl_cache['visible_categories']
         ))
         add_categories_to_items(validated_data['top_category'], categories, [new_thread])
     else:

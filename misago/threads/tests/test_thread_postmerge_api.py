@@ -35,7 +35,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         self.thread = Thread.objects.get(pk=self.thread.pk)
 
     def override_acl(self, extra_acl=None):
-        new_acl = self.user.acl
+        new_acl = self.user.acl_cache
         new_acl['categories'][self.category.pk].update({
             'can_see': 1,
             'can_browse': 1,

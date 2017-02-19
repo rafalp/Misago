@@ -65,9 +65,9 @@ def build_acl(acl, roles, key_name):
 ACL's for targets
 """
 def add_acl_to_user(user, target):
-    target.acl_['can_delete'] = can_delete_user(user, target)
-    if target.acl_['can_delete']:
-        target.acl_['can_moderate'] = True
+    target.acl['can_delete'] = can_delete_user(user, target)
+    if target.acl['can_delete']:
+        target.acl['can_moderate'] = True
 
 
 def register_with(registry):
@@ -78,8 +78,8 @@ def register_with(registry):
 ACL tests
 """
 def allow_delete_user(user, target):
-    newer_than = user.acl['can_delete_users_newer_than']
-    less_posts_than = user.acl['can_delete_users_with_less_posts_than']
+    newer_than = user.acl_cache['can_delete_users_newer_than']
+    less_posts_than = user.acl_cache['can_delete_users_with_less_posts_than']
     if not newer_than and not less_posts_than:
         raise PermissionDenied(_("You can't delete users."))
 

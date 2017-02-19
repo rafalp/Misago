@@ -26,7 +26,7 @@ class MisagoACLPanel(Panel):
             misago_user = None
 
         try:
-            misago_acl = misago_user.acl
+            misago_acl = misago_user.acl_cache
         except AttributeError:
             misago_acl = {}
 

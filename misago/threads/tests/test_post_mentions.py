@@ -28,7 +28,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         })
 
     def override_acl(self):
-        new_acl = self.user.acl
+        new_acl = self.user.acl_cache
         new_acl['categories'][self.category.pk].update({
             'can_see': 1,
             'can_browse': 1,

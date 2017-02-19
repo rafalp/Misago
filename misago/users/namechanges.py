@@ -13,12 +13,12 @@ class UsernameChanges(object):
         self.left = 0
         self.next_on = None
 
-        if user.acl['name_changes_allowed']:
+        if user.acl_cache['name_changes_allowed']:
             self.count_namechanges(user)
 
     def count_namechanges(self, user):
-        name_changes_allowed = user.acl['name_changes_allowed']
-        name_changes_expire = user.acl['name_changes_expire']
+        name_changes_allowed = user.acl_cache['name_changes_allowed']
+        name_changes_expire = user.acl_cache['name_changes_expire']
 
         valid_changes_qs = user.namechanges.filter(changed_by=user)
         if name_changes_expire:

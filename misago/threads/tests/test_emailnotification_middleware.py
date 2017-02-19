@@ -38,7 +38,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             'Bob', 'bob@boberson.com', 'pass123')
 
     def override_acl(self):
-        new_acl = deepcopy(self.user.acl)
+        new_acl = deepcopy(self.user.acl_cache)
         new_acl['categories'][self.category.pk].update({
             'can_see': 1,
             'can_browse': 1,
@@ -50,7 +50,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         override_acl(self.user, new_acl)
 
     def override_other_user_acl(self, hide=False):
-        new_acl = deepcopy(self.other_user.acl)
+        new_acl = deepcopy(self.other_user.acl_cache)
         new_acl['categories'][self.category.pk].update({
             'can_see': 1,
             'can_browse': 1,

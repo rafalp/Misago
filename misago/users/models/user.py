@@ -285,16 +285,20 @@ class User(AbstractBaseUser, PermissionsMixin):
         delete_user_content.send(sender=self)
 
     @property
-    def acl(self):
+    def acl_cache(self):
         try:
             return self._acl_cache
         except AttributeError:
             self._acl_cache = get_user_acl(self)
             return self._acl_cache
 
-    @acl.setter
-    def acl(self, value):
-        raise TypeError('Cannot make User instances ACL aware')
+    @acl_cache.setter
+    def acl_cache(self, value):
+        raise TypeError("acl_cache can't be assigned")
+
+    @property
+    def acl_(self):
+        raise NotImplementedError('user.acl_ property was renamed to user.acl')
 
     @property
     def requires_activation_by_admin(self):
@@ -461,16 +465,16 @@ class AnonymousUser(DjangoAnonymousUser):
     acl_key = 'anonymous'
 
     @property
-    def acl(self):
+    def acl_cache(self):
         try:
             return self._acl_cache
         except AttributeError:
             self._acl_cache = get_user_acl(self)
             return self._acl_cache
 
-    @acl.setter
-    def acl(self, value):
-        raise TypeError('Cannot make AnonymousUser instances ACL aware')
+    @acl_cache.setter
+    def acl_cache(self, value):
+        raise TypeError("AnonymousUser instances can't be made ACL aware")
 
     def get_roles(self):
         try:

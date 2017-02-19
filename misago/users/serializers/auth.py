@@ -69,7 +69,7 @@ class AnonymousUserSerializer(serializers.Serializer, AuthFlags):
     is_anonymous = serializers.SerializerMethodField()
 
     def get_acl(self, obj):
-        if hasattr(obj, 'acl'):
+        if hasattr(obj, 'acl_cache'):
             return serialize_acl(obj)
         else:
             return {}

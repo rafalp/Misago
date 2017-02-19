@@ -40,7 +40,7 @@
           {% trans "Users" %}
         </a>
       </li>
-      {% if user.acl.can_search %}
+      {% if user.acl_cache.can_search %}
       <li>
         <a href="{% url 'misago:search' %}">
           {% trans "Search" %}
@@ -100,7 +100,7 @@
         <i class="material-icon">group</i>
       </a>
     </li>
-    {% if user.acl.can_search %}
+    {% if user.acl_cache.can_search %}
       <li>
         <a href="{% url 'misago:search' %}">
           <i class="material-icon">search</i>
