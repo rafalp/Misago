@@ -17,10 +17,12 @@ class ListView(View):
 
         context_data = self.get_context_data(request, *args, **kwargs)
 
-        context_data['pages'] = users_list.get_sections(request)
+        sections = users_list.get_sections(request)
+
+        context_data['pages'] = sections
 
         request.frontend_context['USERS_LISTS'] = []
-        for page in context_data['pages']:
+        for page in sections:
             page['reversed_link'] = reverse(page['link'])
             request.frontend_context['USERS_LISTS'].append({
                 'name': six.text_type(page['name']),
@@ -54,10 +56,8 @@ class ListView(View):
                 'component': 'rank',
             })
 
-        for page in context_data['pages']:
-            if page['is_active']:
-                context_data['active_page'] = page
-                break
+        active_section = filter(lambda x: x['is_active'], sections)[0]
+        context_data['active_section'] = active_section
 
         return render(request, self.template_name, context_data)
 
