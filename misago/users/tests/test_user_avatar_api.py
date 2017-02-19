@@ -291,13 +291,6 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertContains(response, "can't moderate avatars", status_code=403)
 
-        override_acl(self.user, {
-            'can_moderate_avatars': 0,
-        })
-
-        response = self.client.post(self.link)
-        self.assertContains(response, "can't moderate avatars", status_code=403)
-
     def test_moderate_avatar(self):
         """moderate avatar"""
         override_acl(self.user, {
@@ -358,6 +351,61 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
         other_user = UserModel.objects.get(pk=self.other_user.pk)
+        self.assertFalse(other_user.is_avatar_locked)
+        self.assertIsNone(other_user.avatar_lock_user_message)
+        self.assertIsNone(other_user.avatar_lock_staff_message)
+
+        options = response.json()
+        self.assertEqual(
+            options['avatars'], other_user.avatars)
+        self.assertEqual(
+            options['is_avatar_locked'], other_user.is_avatar_locked)
+        self.assertEqual(
+            options['avatar_lock_user_message'], other_user.avatar_lock_user_message)
+        self.assertEqual(
+            options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message)
+
+        override_acl(self.user, {
+            'can_moderate_avatars': 1,
+        })
+
+        response = self.client.post(self.link, json.dumps({
+            'is_avatar_locked': True,
+            'avatar_lock_user_message': '',
+            'avatar_lock_staff_message': '',
+        }),
+        content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+        other_user = UserModel.objects.get(pk=self.other_user.pk)
+        self.assertTrue(other_user.is_avatar_locked)
+        self.assertEqual(other_user.avatar_lock_user_message, '')
+        self.assertEqual(other_user.avatar_lock_staff_message, '')
+
+        options = response.json()
+        self.assertEqual(
+            options['avatars'], other_user.avatars)
+        self.assertEqual(
+            options['is_avatar_locked'], other_user.is_avatar_locked)
+        self.assertEqual(
+            options['avatar_lock_user_message'], other_user.avatar_lock_user_message)
+        self.assertEqual(
+            options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message)
+
+        override_acl(self.user, {
+            'can_moderate_avatars': 1,
+        })
+
+        response = self.client.post(self.link, json.dumps({
+            'is_avatar_locked': False,
+        }),
+        content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+        other_user = UserModel.objects.get(pk=self.other_user.pk)
+        self.assertFalse(other_user.is_avatar_locked)
+        self.assertEqual(other_user.avatar_lock_user_message, '')
+        self.assertEqual(other_user.avatar_lock_staff_message, '')
 
         options = response.json()
         self.assertEqual(

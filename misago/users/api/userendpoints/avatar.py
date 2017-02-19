@@ -9,8 +9,8 @@ from django.utils.translation import ugettext as _
 from misago.conf import settings
 from misago.core.utils import format_plaintext_for_html
 from misago.users import avatars
-from misago.users.forms.moderation import ModerateAvatarForm
 from misago.users.models import AvatarGallery
+from misago.users.serializers import ModerateAvatarSerializer
 
 
 def avatar_endpoint(request, pk=None):
@@ -203,11 +203,11 @@ AVATAR_TYPES = {
 def moderate_avatar_endpoint(request, profile):
     if request.method == "POST":
         is_avatar_locked = profile.is_avatar_locked
-        form = ModerateAvatarForm(request.data, instance=profile)
-        if form.is_valid():
-            if form.cleaned_data['is_avatar_locked'] and not is_avatar_locked:
+        serializer = ModerateAvatarSerializer(profile, data=request.data)
+        if serializer.is_valid():
+            if serializer.validated_data['is_avatar_locked'] and not is_avatar_locked:
                 avatars.dynamic.set_avatar(profile)
-            form.save()
+            serializer.save()
 
             return Response({
                 'avatars': profile.avatars,
@@ -216,7 +216,7 @@ def moderate_avatar_endpoint(request, profile):
                 'avatar_lock_staff_message': profile.avatar_lock_staff_message,
             })
         else:
-            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({
             'is_avatar_locked': int(profile.is_avatar_locked),

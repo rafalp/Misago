@@ -6,8 +6,8 @@ from django.utils.translation import ugettext as _
 
 from misago.conf import settings
 from misago.core.utils import format_plaintext_for_html
-from misago.users.forms.options import EditSignatureForm
 from misago.users.signatures import is_user_signature_valid, set_user_signature
+from misago.users.serializers import EditSignatureSerializer
 
 
 def signature_endpoint(request):
@@ -55,14 +55,15 @@ def get_signature_options(user):
 
 
 def edit_signature(request, user):
-    form = EditSignatureForm(request.data, instance=user)
-    if form.is_valid():
+    serializer = EditSignatureSerializer(user, data=request.data)
+    if serializer.is_valid():
         set_user_signature(
-                request, user, form.cleaned_data['signature'])
+                request, user, serializer.validated_data['signature'])
         user.save(update_fields=[
             'signature', 'signature_parsed', 'signature_checksum'
         ])
         return get_signature_options(user)
     else:
-        return Response({'detail': form.non_field_errors()[0]},
-                        status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            'detail': serializer.errors['non_field_errors'][0]
+        }, status=status.HTTP_400_BAD_REQUEST)
