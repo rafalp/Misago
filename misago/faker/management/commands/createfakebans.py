@@ -98,7 +98,7 @@ class Command(BaseCommand):
 
         created_count = 0
         show_progress(self, created_count, fake_bans_to_create)
-        for i in range(fake_bans_to_create):
+        for _ in range(fake_bans_to_create):
             ban = Ban(check_type=random.randint(Ban.USERNAME, Ban.IP))
             ban.banned_value = create_fake_test(fake, ban.check_type)
 

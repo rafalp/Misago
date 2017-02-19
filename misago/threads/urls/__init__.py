@@ -6,8 +6,8 @@ from misago.threads.views.attachment import attachment_server
 from misago.threads.views.goto import (
     ThreadGotoPostView, ThreadGotoLastView, ThreadGotoNewView, ThreadGotoUnapprovedView,
     PrivateThreadGotoPostView, PrivateThreadGotoLastView, PrivateThreadGotoNewView)
-from misago.threads.views.list import ForumThreads, CategoryThreads, PrivateThreads
-from misago.threads.views.thread import Thread, PrivateThread
+from misago.threads.views.list import ForumThreadsList, CategoryThreadsList, PrivateThreadsList
+from misago.threads.views.thread import ThreadView, PrivateThreadView
 
 
 LISTS_TYPES = (
@@ -38,7 +38,7 @@ def threads_list_patterns(prefix, view, patterns):
 
 
 if settings.MISAGO_THREADS_ON_INDEX:
-    urlpatterns = threads_list_patterns('threads', ForumThreads, (
+    urlpatterns = threads_list_patterns('threads', ForumThreadsList, (
         r'^$',
         r'^my/$',
         r'^new/$',
@@ -47,7 +47,7 @@ if settings.MISAGO_THREADS_ON_INDEX:
         r'^unapproved/$',
     ))
 else:
-    urlpatterns = threads_list_patterns('threads', ForumThreads, (
+    urlpatterns = threads_list_patterns('threads', ForumThreadsList, (
         r'^threads/$',
         r'^threads/my/$',
         r'^threads/new/$',
@@ -57,7 +57,7 @@ else:
     ))
 
 
-urlpatterns += threads_list_patterns('category', CategoryThreads, (
+urlpatterns += threads_list_patterns('category', CategoryThreadsList, (
     r'^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/$',
     r'^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/my/$',
     r'^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/new/$',
@@ -67,7 +67,7 @@ urlpatterns += threads_list_patterns('category', CategoryThreads, (
 ))
 
 
-urlpatterns += threads_list_patterns('private-threads', PrivateThreads, (
+urlpatterns += threads_list_patterns('private-threads', PrivateThreadsList, (
     r'^private-threads/$',
     r'^private-threads/my/$',
     r'^private-threads/new/$',
@@ -84,8 +84,8 @@ def thread_view_patterns(prefix, view):
     return urls
 
 
-urlpatterns += thread_view_patterns('thread', Thread)
-urlpatterns += thread_view_patterns('private-thread', PrivateThread)
+urlpatterns += thread_view_patterns('thread', ThreadView)
+urlpatterns += thread_view_patterns('private-thread', PrivateThreadView)
 
 
 def goto_patterns(prefix, **views):

@@ -39,8 +39,8 @@ coverage.xml
 report.txt
 flake8.txt
 
-# Translations
-*.mo
+# Pylint report
+pylint.txt
 
 # Mr Developer
 .mr.developer.cfg

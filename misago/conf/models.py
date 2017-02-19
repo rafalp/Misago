@@ -1,7 +1,7 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
-from . import hydrators, utils
+from . import utils
 
 
 class SettingsGroupsManager(models.Manager):

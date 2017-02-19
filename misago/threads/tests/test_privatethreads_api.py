@@ -40,8 +40,10 @@ class PrivateThreadsListApiTests(PrivateThreadsTestCase):
     def test_thread_visibility(self):
         """only participated threads are returned by private threads api"""
         visible = testutils.post_thread(category=self.category, poster=self.user)
-        hidden = testutils.post_thread(category=self.category, poster=self.user)
         reported = testutils.post_thread(category=self.category, poster=self.user)
+
+        # hidden thread
+        testutils.post_thread(category=self.category, poster=self.user)
 
         ThreadParticipant.objects.add_participants(visible, [self.user])
 

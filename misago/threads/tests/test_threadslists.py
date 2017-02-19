@@ -9,9 +9,7 @@ from django.utils.six.moves import range
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.conf import settings
-from misago.core import threadstore
-from misago.core.cache import cache
-from misago.readtracker import categoriestracker, threadstracker
+from misago.readtracker import threadstracker
 from misago.threads import testutils
 from misago.users.models import AnonymousUser
 from misago.users.testutils import AuthenticatedUserTestCase
@@ -374,7 +372,7 @@ class AllThreadsListTests(ThreadsListTestCase):
     def test_noscript_pagination(self):
         """threads list is paginated for users with js disabled"""
         threads = []
-        for i in range(settings.MISAGO_THREADS_PER_PAGE * 3):
+        for _ in range(settings.MISAGO_THREADS_PER_PAGE * 3):
             threads.append(testutils.post_thread(
                 category=self.first_category
             ))
@@ -592,8 +590,8 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
             name='Hidden Category',
             slug='hidden-category',
         ).insert_at(self.root, position='last-child', save=True)
-        test_category = Category.objects.get(slug='hidden-category')
 
+        test_category = Category.objects.get(slug='hidden-category')
         test_thread = testutils.post_thread(
             category=test_category
         )
@@ -601,6 +599,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "empty-message")
+        self.assertNotContains(response, test_thread.get_absolute_url())
 
     def test_api_hides_hidden_thread(self):
         """api returns empty due to no permission to see thread"""
@@ -608,9 +607,10 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
             name='Hidden Category',
             slug='hidden-category',
         ).insert_at(self.root, position='last-child', save=True)
+
         test_category = Category.objects.get(slug='hidden-category')
 
-        test_thread = testutils.post_thread(
+        testutils.post_thread(
             category=test_category,
         )
 

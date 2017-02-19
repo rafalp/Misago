@@ -62,8 +62,6 @@ class ForgottenPasswordViewsTests(UserTestCase):
         """invalid form token errors"""
         test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
-        password_token = make_password_change_token(test_user)
-
         response = self.client.get(
             reverse('misago:forgotten-password-change-form', kwargs={
                 'pk': test_user.pk,

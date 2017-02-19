@@ -1,0 +1,5 @@
+#!/bin/bash
+
+isort -rc misago
+yapf -ir misago
+pylint misago

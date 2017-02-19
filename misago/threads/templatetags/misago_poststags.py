@@ -4,8 +4,6 @@ from django import template
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
-from misago.conf import settings
-
 
 register = template.Library()
 

@@ -1,8 +1,7 @@
-import math
 import os
 from importlib import import_module
 
-from PIL import Image, ImageColor, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageColor, ImageDraw, ImageFont
 
 from misago.conf import settings
 

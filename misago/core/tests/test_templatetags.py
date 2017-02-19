@@ -2,9 +2,7 @@ from django import forms
 from django.template import Context, Template, TemplateSyntaxError
 from django.test import TestCase
 
-from misago.core.shortcuts import paginate
 from misago.core.templatetags import misago_batch
-from misago.core.utils import encode_json_html
 
 
 class CaptureTests(TestCase):

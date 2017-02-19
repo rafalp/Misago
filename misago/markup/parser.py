@@ -150,7 +150,6 @@ def linkify_paragraphs(result):
 
 def clean_links(request, result, force_shva=False):
     host = request.get_host()
-    site_address = '%s://%s' % (request.scheme, request.get_host())
 
     soup = BeautifulSoup(result['parsed_text'], 'html5lib')
     for link in soup.find_all('a'):

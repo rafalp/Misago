@@ -1,5 +1,4 @@
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 
 from misago.core.exceptions import Banned

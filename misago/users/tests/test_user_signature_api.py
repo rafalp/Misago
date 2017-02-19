@@ -1,10 +1,4 @@
-import json
-
-from django.contrib.auth import get_user_model
-from django.utils.encoding import smart_str
-
 from misago.acl.testutils import override_acl
-from misago.conf import settings
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -50,8 +44,7 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
-        self.assertFalse(response_json['signature'])
+        self.assertFalse(response.json()['signature'])
 
     def test_post_empty_signature(self):
         """empty POST empties user signature"""
@@ -65,8 +58,7 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         response = self.client.post(self.link, data={'signature': ''})
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
-        self.assertFalse(response_json['signature'])
+        self.assertFalse(response.json()['signature'])
 
     def test_post_too_long_signature(self):
         """too long new signature errors"""
@@ -96,10 +88,9 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         })
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
-        self.assertEqual(response_json['signature']['html'],
+        self.assertEqual(response.json()['signature']['html'],
                          '<p>Hello, <strong>bros</strong>!</p>')
-        self.assertEqual(response_json['signature']['plain'],
+        self.assertEqual(response.json()['signature']['plain'],
                          'Hello, **bros**!')
 
         self.reload_user()

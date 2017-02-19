@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 from django.urls import reverse
 
-from misago.categories.serializers import CategorySerializer
 from misago.core.serializers import MutableFields
 from misago.threads.models import Post
 from misago.users.serializers import UserSerializer as BaseUserSerializer

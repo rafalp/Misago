@@ -1,5 +1,3 @@
-import json
-
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.urls import reverse
 from django.utils.translation import get_language

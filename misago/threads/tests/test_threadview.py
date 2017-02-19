@@ -3,7 +3,6 @@ from misago.categories.models import Category
 from misago.conf import settings
 from misago.threads import testutils
 from misago.threads.events import record_event
-from misago.threads.models import Post, Thread
 from misago.threads.moderation import threads as threads_moderation
 from misago.threads.moderation import hide_post
 from misago.users.testutils import AuthenticatedUserTestCase
@@ -317,7 +316,7 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
         events_limit = settings.MISAGO_EVENTS_PER_PAGE
         events = []
 
-        for i in range(events_limit + 5):
+        for _ in range(events_limit + 5):
             event = record_event(MockRequest(self.user), self.thread, 'closed')
             events.append(event)
 
@@ -335,12 +334,12 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
         events_limit = settings.MISAGO_EVENTS_PER_PAGE
         events = []
 
-        for i in range(events_limit + 5):
+        for _ in range(events_limit + 5):
             event = record_event(MockRequest(self.user), self.thread, 'closed')
             events.append(event)
 
         posts = []
-        for i in range(posts_limit - 1):
+        for _ in range(posts_limit - 1):
             post = testutils.reply_thread(self.thread)
             posts.append(post)
 
@@ -353,9 +352,9 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
             self.assertContains(response, post.get_absolute_url())
 
         # add second page to thread with more events
-        for i in range(posts_limit):
+        for _ in range(posts_limit):
             post = testutils.reply_thread(self.thread)
-        for i in range(events_limit):
+        for _ in range(events_limit):
             event = record_event(MockRequest(self.user), self.thread, 'closed')
             events.append(event)
 

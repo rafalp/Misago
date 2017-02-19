@@ -10,8 +10,6 @@ properties defined by ACL providers within their "add_acl_to_target"
 """
 import copy
 
-from django.contrib.auth import get_user_model
-
 from misago.core import threadstore
 from misago.core.cache import cache
 

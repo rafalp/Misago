@@ -56,7 +56,7 @@ class ThreadBase(View):
         return context
 
 
-class Thread(ThreadBase):
+class ThreadView(ThreadBase):
     thread = ForumThread
     template_name = 'misago/thread/thread.html'
 
@@ -66,6 +66,6 @@ class Thread(ThreadBase):
         }
 
 
-class PrivateThread(ThreadBase):
+class PrivateThreadView(ThreadBase):
     thread = PrivateThread
     template_name = 'misago/thread/private_thread.html'

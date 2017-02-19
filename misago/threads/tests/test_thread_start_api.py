@@ -4,18 +4,13 @@ from __future__ import unicode_literals
 from django.urls import reverse
 
 from misago.acl.testutils import override_acl
-from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
-from misago.threads.models import Thread
-from misago.threads.threadtypes import trees_map
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
 class StartThreadTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(StartThreadTests, self).setUp()
-
-        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
 
         self.category = Category.objects.get(slug='first-category')
         self.api_link = reverse('misago:api:thread-list')

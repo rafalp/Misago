@@ -1,9 +1,7 @@
 from rest_framework import serializers
 
-from django.db.models import F
 from django.utils.translation import ugettext_lazy
 
-from misago.conf import settings
 from misago.markup import common_flavour
 from misago.threads.checksums import update_post_checksum
 from misago.threads.validators import validate_post, validate_title

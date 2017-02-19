@@ -15,7 +15,7 @@ from misago.threads.models import Thread
 from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
 from misago.users.forms.admin import (
     BanUsersForm, EditUserForm, EditUserFormFactory, NewUserForm, SearchUsersForm)
-from misago.users.models import Ban, User
+from misago.users.models import Ban
 from misago.users.signatures import set_user_signature
 
 
@@ -212,11 +212,6 @@ class UsersList(UserAdmin, generic.ListView):
         messages.success(request, message)
 
     def action_delete_all(self, request, users):
-        return self.render(
-            request, template='misago/admin/users/delete.html', context={
-                'users': users,
-            })
-
         for user in users:
             if user.is_staff or user.is_superuser:
                 message = _("%(user)s is admin and can't be deleted.")
@@ -228,6 +223,14 @@ class UsersList(UserAdmin, generic.ListView):
 
         message = _("Selected users and their content has been deleted.")
         messages.success(request, message)
+
+        return self.render(
+            request,
+            template='misago/admin/users/delete.html',
+            context={
+                'users': users,
+            }
+        )
 
 
 class NewUser(UserAdmin, generic.ModelFormView):

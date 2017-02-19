@@ -10,7 +10,6 @@ from misago.categories.permissions import allow_browse_category, allow_see_categ
 from misago.categories.serializers import CategorySerializer
 from misago.core.apipatch import ApiPatch
 from misago.core.shortcuts import get_int_or_404
-from misago.threads.models import ThreadParticipant
 from misago.threads.moderation import threads as moderation
 from misago.threads.participants import (
     add_participant, change_owner, make_participants_aware, remove_participant)
@@ -122,7 +121,7 @@ def patch_flatten_categories(request, thread, value):
             'category': thread.category_id,
             'top_category': thread.top_category.pk,
         }
-    except AttributeError as e:
+    except AttributeError:
         return {
             'category': thread.category_id,
             'top_category': None
@@ -299,7 +298,7 @@ def thread_patch_endpoint(request, thread):
     unapproved_changed = old_is_unapproved != thread.is_unapproved
     category_changed = old_category != thread.category
 
-    title_changed = old_is_hidden != thread.is_hidden
+    title_changed = old_title != thread.title
     if thread.category.last_thread_id != thread.pk:
         title_changed = False # don't trigger resync on simple title change
 

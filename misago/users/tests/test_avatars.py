@@ -3,7 +3,7 @@ from PIL import Image
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.test import TestCase, override_settings
+from django.test import TestCase
 from django.utils.crypto import get_random_string
 
 from misago.conf import settings
@@ -24,7 +24,7 @@ class AvatarsStoreTests(TestCase):
         store.store_new_avatar(user, test_image)
 
         # reload user
-        test_user = UserModel.objects.get(pk=user.pk)
+        UserModel.objects.get(pk=user.pk)
 
         # assert that avatars were stored in media
         avatars_dict = {}

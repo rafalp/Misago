@@ -23,9 +23,9 @@ class SynchronizeThreadsTests(TestCase):
         """command synchronizes threads"""
         category = Category.objects.all_categories()[:1][0]
 
-        threads = [testutils.post_thread(category) for t in range(10)]
+        threads = [testutils.post_thread(category) for _ in range(10)]
         for i, thread in enumerate(threads):
-            [testutils.reply_thread(thread) for r in range(i)]
+            [testutils.reply_thread(thread) for _ in range(i)]
             thread.replies = 0
             thread.save()
 

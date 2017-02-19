@@ -10,7 +10,6 @@ from django.utils.encoding import smart_str
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.threads import testutils
-from misago.threads.models import Thread
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -197,8 +196,6 @@ class EditReplyTests(AuthenticatedUserTestCase):
         })
         self.assertEqual(response.status_code, 200)
 
-        thread = Thread.objects.get(pk=self.thread.pk)
-
         self.override_acl()
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, self.post.parsed)
@@ -221,8 +218,6 @@ class EditReplyTests(AuthenticatedUserTestCase):
             'post': "This is test edit!"
         })
         self.assertEqual(response.status_code, 200)
-
-        thread = Thread.objects.get(pk=self.thread.pk)
 
         self.override_acl()
         response = self.client.get(self.thread.get_absolute_url())
@@ -262,7 +257,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
             'pk': self.thread.first_post.pk
         })
 
-        response = self.put(self.api_link, data={
+        response = self.put(api_link, data={
             'post': "This is test edit!"
         })
         self.assertEqual(response.status_code, 200)

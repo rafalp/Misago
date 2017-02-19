@@ -9,7 +9,7 @@ from django.contrib.postgres.search import SearchVectorField
 from django.db import migrations, models
 
 import misago.threads.models.attachment
-from misago.core.pgutils import CreatePartialCompositeIndex, CreatePartialIndex
+from misago.core.pgutils import CreatePartialIndex
 
 
 class Migration(migrations.Migration):

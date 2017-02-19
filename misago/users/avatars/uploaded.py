@@ -1,6 +1,3 @@
-from hashlib import sha256
-from math import floor
-
 from path import Path
 from PIL import Image
 

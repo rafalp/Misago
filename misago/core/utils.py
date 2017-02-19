@@ -6,17 +6,9 @@ from django.http import Http404
 from django.urls import resolve, reverse
 from django.utils import html, timezone
 from django.utils.encoding import force_text
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext_lazy
 
 
 MISAGO_SLUGIFY = getattr(settings, 'MISAGO_SLUGIFY', 'misago.core.slugify.default')
-
-
-def slugify(string):
-    string = six.text_type(string)
-    string = unidecode(string)
-    return django_slugify(string.replace('_', ' ').strip())
 
 
 def resolve_slugify(path):

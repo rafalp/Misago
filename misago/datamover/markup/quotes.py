@@ -11,7 +11,7 @@ def convert_quotes_to_bbcode(post):
     quote_author = None
     quote = []
 
-    for i, line in enumerate(post.splitlines() + ['']):
+    for line in post.splitlines() + ['']:
         if in_quote:
             if line.startswith('>'):
                 quote.append(line[1:].lstrip())

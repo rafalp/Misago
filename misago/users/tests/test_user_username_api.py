@@ -83,7 +83,7 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         changes_left = json.loads(smart_str(response.content))['changes_left']
 
-        username = self.user.username
+        old_username = self.user.username
         new_username = 'NewUsernamu'
 
         response = self.client.post(self.link, data={
@@ -96,6 +96,7 @@ class UserUsernameTests(AuthenticatedUserTestCase):
 
         self.reload_user()
         self.assertEqual(self.user.username, new_username)
+        self.assertTrue(self.user.username != old_username)
 
         self.assertEqual(self.user.namechanges.last().new_username,
                          new_username)

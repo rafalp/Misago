@@ -1,5 +1,3 @@
-from django.utils import timezone
-
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
 from misago.core.testutils import MisagoTestCase
@@ -54,11 +52,7 @@ class CategoryModelTests(MisagoTestCase):
         self.category = Category.objects.all_categories()[:1][0]
 
     def create_thread(self):
-        datetime = timezone.now()
-
-        thread = testutils.post_thread(self.category)
-
-        return thread
+        return testutils.post_thread(self.category)
 
     def assertCategoryIsEmpty(self):
         self.assertIsNone(self.category.last_post_on)
@@ -114,7 +108,7 @@ class CategoryModelTests(MisagoTestCase):
 
     def test_delete_content(self):
         """delete_content empties category"""
-        for i in range(10):
+        for _ in range(10):
             self.create_thread()
 
         self.category.synchronize()
@@ -131,7 +125,7 @@ class CategoryModelTests(MisagoTestCase):
 
     def test_move_content(self):
         """move_content moves category threads and posts to other category"""
-        for i in range(10):
+        for _ in range(10):
             self.create_thread()
         self.category.synchronize()
 

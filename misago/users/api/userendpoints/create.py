@@ -10,7 +10,6 @@ from misago.conf import settings
 from misago.core.mail import mail_user
 from misago.users import captcha
 from misago.users.forms.register import RegisterForm
-from misago.users.serializers import AuthenticatedUserSerializer
 from misago.users.tokens import make_activation_token
 
 

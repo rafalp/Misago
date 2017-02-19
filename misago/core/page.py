@@ -42,7 +42,7 @@ class Page(object):
     def _insert_section(self, inserted_section, after=None, before=None):
         if after:
             new_sorted_list = []
-            for index, section in enumerate(self._sorted_list):
+            for section in self._sorted_list:
                 new_sorted_list.append(section)
                 if section['link'] == after:
                     new_sorted_list.append(inserted_section)
@@ -52,7 +52,7 @@ class Page(object):
                 return False
         elif before:
             new_sorted_list = []
-            for index, section in enumerate(self._sorted_list):
+            for section in self._sorted_list:
                 if section['link'] == before:
                     new_sorted_list.append(inserted_section)
                     new_sorted_list.append(section)

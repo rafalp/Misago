@@ -1,9 +1,8 @@
-from rest_framework import mixins, status, viewsets
-from rest_framework.decorators import detail_route, list_route
+from rest_framework import status, viewsets
+from rest_framework.decorators import detail_route
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
@@ -14,7 +13,6 @@ from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
 from misago.categories.models import Category
-from misago.core.cache import cache
 from misago.core.rest_permissions import IsAuthenticatedOrReadOnly
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.moderation import hide_post, hide_thread

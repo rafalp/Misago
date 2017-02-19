@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
+from django.db import migrations
 from django.utils.translation import ugettext as _
 
 from misago.core.utils import slugify
@@ -32,7 +32,7 @@ def create_default_categories_tree(apps, schema_editor):
 
     category_name = _("First category")
 
-    category = Category.objects.create(
+    Category.objects.create(
         parent=root,
         lft=4,
         rght=5,

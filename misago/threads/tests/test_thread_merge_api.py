@@ -1,7 +1,4 @@
-import json
-
 from django.urls import reverse
-from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
@@ -284,8 +281,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         })
 
         other_thread = testutils.post_thread(self.category_b)
-        poll = testutils.post_poll(self.thread, self.user)
-        other_poll = testutils.post_poll(other_thread, self.user)
+
+        testutils.post_poll(self.thread, self.user)
+        testutils.post_poll(other_thread, self.user)
 
         response = self.client.post(self.api_link, {
             'thread_url': other_thread.get_absolute_url(),
@@ -311,8 +309,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         })
 
         other_thread = testutils.post_thread(self.category_b)
-        poll = testutils.post_poll(self.thread, self.user)
-        other_poll = testutils.post_poll(other_thread, self.user)
+        testutils.post_poll(self.thread, self.user)
+        testutils.post_poll(other_thread, self.user)
 
         response = self.client.post(self.api_link, {
             'thread_url': other_thread.get_absolute_url(),

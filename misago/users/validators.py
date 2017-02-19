@@ -149,9 +149,9 @@ def validate_gmail_email(request, form, cleaned_data):
 """
 Registration validation
 """
-def load_registration_validators(validators_list):
+def load_registration_validators(validators):
     loaded_validators = []
-    for path in validators_list:
+    for path in validators:
         module = import_module('.'.join(path.split('.')[:-1]))
         loaded_validators.append(getattr(module, path.split('.')[-1]))
     return loaded_validators

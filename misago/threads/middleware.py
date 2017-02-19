@@ -3,7 +3,6 @@ from django.utils.deprecation import MiddlewareMixin
 from misago.categories.models import Category
 
 from .models import Thread
-from .permissions import exclude_invisible_threads
 from .viewmodels import filter_read_threads_queryset
 
 

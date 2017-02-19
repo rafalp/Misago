@@ -83,7 +83,7 @@ class GatewayTests(TestCase):
         user.is_staff = True
         user.save()
 
-        ban = Ban.objects.create(
+        Ban.objects.create(
             check_type=Ban.USERNAME,
             banned_value='bob',
             user_message='You are tragically banned.',

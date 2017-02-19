@@ -3,7 +3,7 @@ import json
 from rest_framework import status
 from rest_framework.response import Response
 
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
 from misago.conf import settings

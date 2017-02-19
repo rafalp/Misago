@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.utils.translation import gettext as _
 from django.utils.translation import ungettext

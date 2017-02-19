@@ -4,11 +4,8 @@ import os
 from path import Path
 
 from django.contrib.auth import get_user_model
-from django.urls import reverse
-from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
-from misago.conf import settings
 from misago.users.avatars import gallery, store
 from misago.users.models import AvatarGallery
 from misago.users.testutils import AuthenticatedUserTestCase
@@ -184,7 +181,6 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.assertContains(response, "Avatar was re-cropped.")
 
         # delete user avatars, test if it deletes src and tmp
-        user = self.get_current_user()
         store.delete_avatar(self.get_current_user())
 
         self.assertTrue(self.get_current_user().avatar_src.path)

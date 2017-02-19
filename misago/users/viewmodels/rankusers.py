@@ -1,6 +1,5 @@
 from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
-from django.http import Http404
 from misago.users.online.utils import make_users_status_aware
 from misago.users.serializers import UserCardSerializer
 

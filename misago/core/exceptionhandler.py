@@ -4,7 +4,6 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponsePermanentRedirect, JsonResponse
 from django.urls import reverse
 from django.utils import six
-from django.utils.translation import gettext as _
 
 from . import errorpages
 from .exceptions import AjaxError, Banned, ExplicitFirstPage, OutdatedSlug
@@ -46,7 +45,6 @@ def handle_outdated_slug_exception(request, exception):
     view_name = request.resolver_match.view_name
 
     model = exception.args[0]
-    model_name = model.__class__.__name__.lower()
     url_kwargs = request.resolver_match.kwargs
     url_kwargs['slug'] = model.slug
 

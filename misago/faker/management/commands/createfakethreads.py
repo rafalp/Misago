@@ -47,8 +47,6 @@ class Command(BaseCommand):
 
         fake = Factory.create()
 
-        total_users = UserModel.objects.count()
-
         self.stdout.write('Creating fake threads...\n')
 
         message = '\nSuccessfully created %s fake threads in %s'
@@ -115,7 +113,7 @@ class Command(BaseCommand):
                 else:
                     thread_replies = random.randint(0, 10)
 
-                for x in range(thread_replies):
+                for _ in range(thread_replies):
                     datetime = timezone.now()
                     user = UserModel.objects.order_by('?')[:1][0]
 
@@ -168,7 +166,7 @@ class Command(BaseCommand):
 
         pinned_threads = random.randint(0, int(created_threads * 0.025)) or 1
         self.stdout.write('\nPinning %s threads...' % pinned_threads)
-        for i in range(0, pinned_threads):
+        for _ in range(0, pinned_threads):
             thread = Thread.objects.order_by('?')[:1][0]
             if random.randint(0, 100) > 75:
                 thread.weight = 2
@@ -193,7 +191,7 @@ class Command(BaseCommand):
         else:
             paragraphs_to_make = random.randint(1, 5)
 
-        for i in range(paragraphs_to_make):
+        for _ in range(paragraphs_to_make):
             if random.randint(0, 100) > 95:
                 cat_width = random.randint(1, 16) * random.choice([100, 90, 80])
                 cat_height = random.randint(1, 12) * random.choice([100, 90, 80])

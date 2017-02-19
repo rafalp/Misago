@@ -37,7 +37,7 @@ class SubscriptionsTests(TestCase):
     def test_anon_threads_subscription(self):
         """make multiple threads list sub aware for anon"""
         threads = []
-        for i in range(10):
+        for _ in range(10):
             threads.append(
                 self.post_thread(timezone.now() - timedelta(days=10)))
 
@@ -50,18 +50,6 @@ class SubscriptionsTests(TestCase):
         """make thread sub aware for authenticated"""
         make_subscription_aware(self.user, self.thread)
         self.assertIsNone(self.thread.subscription)
-
-    def test_threads_no_subscription(self):
-        """make mulitple threads sub aware for authenticated"""
-        threads = []
-        for i in range(10):
-            threads.append(
-                self.post_thread(timezone.now() - timedelta(days=10)))
-
-        make_subscription_aware(self.user, threads)
-
-        for thread in threads:
-            self.assertIsNone(thread.subscription)
 
     def test_subscribed_thread(self):
         """make thread sub aware for authenticated"""

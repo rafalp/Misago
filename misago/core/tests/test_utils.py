@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
-from django.utils import six, timezone
+from django.utils import six
 
 from misago.core.utils import (
     clean_return_path, format_plaintext_for_html, is_referer_local, is_request_to_misago,

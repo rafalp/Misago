@@ -10,16 +10,13 @@ class MisagoUsersConfig(AppConfig):
     verbose_name = "Misago Auth"
 
     def ready(self):
-        from . import signals
+        from . import signals as _
 
         self.register_default_usercp_pages()
         self.register_default_users_list_pages()
         self.register_default_user_profile_pages()
 
     def register_default_usercp_pages(self):
-        def show_signature_cp(request):
-            return request.user.acl_cache['can_have_signature']
-
         usercp.add_section(
             link='misago:usercp-change-forum-options',
             name=_('Forum options'),

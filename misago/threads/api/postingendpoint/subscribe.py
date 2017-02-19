@@ -37,8 +37,7 @@ class SubscribeMiddleware(PostingMiddleware):
             return
 
         try:
-            subscription = self.user.subscription_set.get(thread=self.thread)
-            return
+            return self.user.subscription_set.get(thread=self.thread)
         except Subscription.DoesNotExist:
             pass
 

@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from misago.categories.models import Category
-from misago.threads.checksums import update_post_checksum
 from misago.threads.models import Post, PostEdit, PostLike, Thread, ThreadParticipant
 
 from . import fetch_assoc, localise_datetime, markup, movedids

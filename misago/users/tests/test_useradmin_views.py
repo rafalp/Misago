@@ -484,48 +484,6 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertTrue(updated_user.is_active)
         self.assertFalse(updated_user.is_active_staff_message)
 
-    def test_edit_superuser_disable_admin(self):
-        """edit user view allows superuser to disable admin"""
-        self.user.is_superuser = True
-        self.user.save()
-
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
-
-        test_user.is_staff = True
-        test_user.save()
-
-        test_link = reverse('misago:admin:users:accounts:edit',
-                            kwargs={'pk': test_user.pk})
-
-        response = self.client.get(test_link)
-        self.assertContains(response, 'id="id_is_active_1"')
-        self.assertContains(response, 'id="id_is_active_staff_message"')
-
-        response = self.client.post(test_link, data={
-            'username': 'Bawww',
-            'rank': six.text_type(test_user.rank_id),
-            'roles': six.text_type(test_user.roles.all()[0].pk),
-            'email': 'reg@stered.com',
-            'new_password': 'pass123',
-            'is_staff': '1',
-            'is_superuser': '0',
-            'signature': 'Hello world!',
-            'is_signature_locked': '1',
-            'is_hiding_presence': '0',
-            'limits_private_thread_invites_to': '0',
-            'signature_lock_staff_message': 'Staff message',
-            'signature_lock_user_message': 'User message',
-            'subscribe_to_started_threads': '2',
-            'subscribe_to_replied_threads': '2',
-            'is_active': '0',
-            'is_active_staff_message': "Disabled in test!"
-        })
-        self.assertEqual(response.status_code, 302)
-
-        updated_user = UserModel.objects.get(pk=test_user.pk)
-        self.assertFalse(updated_user.is_active)
-        self.assertEqual(updated_user.is_active_staff_message, "Disabled in test!")
-
     def test_delete_threads_view(self):
         """delete user threads view deletes threads"""
         test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
@@ -533,7 +491,7 @@ class UserAdminViewsTests(AdminTestCase):
                             kwargs={'pk': test_user.pk})
 
         category = Category.objects.all_categories()[:1][0]
-        [post_thread(category, poster=test_user) for i in range(10)]
+        [post_thread(category, poster=test_user) for _ in range(10)]
 
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
@@ -557,7 +515,7 @@ class UserAdminViewsTests(AdminTestCase):
 
         category = Category.objects.all_categories()[:1][0]
         thread = post_thread(category)
-        [reply_thread(thread, poster=test_user) for i in range(10)]
+        [reply_thread(thread, poster=test_user) for _ in range(10)]
 
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)

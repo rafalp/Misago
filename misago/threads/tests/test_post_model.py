@@ -70,6 +70,21 @@ class PostModelTests(TestCase):
             last_poster_slug='tester'
         )
 
+        # can't merge with other users posts
+        with self.assertRaises(ValueError):
+            self.post.merge(Post.objects.create(
+                category=self.category,
+                thread=self.thread,
+                poster=other_user,
+                poster_name=other_user.username,
+                poster_ip='127.0.0.1',
+                original="Hello! I am test message!",
+                parsed="<p>Hello! I am test message!</p>",
+                checksum="nope",
+                posted_on=timezone.now() + timedelta(minutes=5),
+                updated_on=timezone.now() + timedelta(minutes=5),
+            ))
+
         # can't merge across threads
         with self.assertRaises(ValueError):
             self.post.merge(Post.objects.create(
@@ -82,7 +97,7 @@ class PostModelTests(TestCase):
                 parsed="<p>Hello! I am test message!</p>",
                 checksum="nope",
                 posted_on=timezone.now() + timedelta(minutes=5),
-                updated_on=timezone.now() + timedelta(minutes=5)
+                updated_on=timezone.now() + timedelta(minutes=5),
             ))
 
         # can't merge with events
@@ -98,7 +113,7 @@ class PostModelTests(TestCase):
                 checksum="nope",
                 posted_on=timezone.now() + timedelta(minutes=5),
                 updated_on=timezone.now() + timedelta(minutes=5),
-                is_event=True
+                is_event=True,
             ))
 
     def test_merge(self):

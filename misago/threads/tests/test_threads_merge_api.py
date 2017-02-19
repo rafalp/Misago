@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.utils.six.moves import range
 
 from misago.acl import add_acl
-from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.threads import testutils
 from misago.threads.api.threadendpoints.merge import MERGE_LIMIT
@@ -83,7 +82,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
 
     def test_merge_with_nonexisting_thread(self):
         """api validates if we are trying to merge with invalid thread"""
-        unaccesible_thread = testutils.post_thread(category=self.category_b)
+        testutils.post_thread(category=self.category_b)
 
         response = self.client.post(self.api_link, json.dumps({
             'threads': [self.thread.id, self.thread.id + 1000]
@@ -139,7 +138,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
     def test_merge_too_many_threads(self):
         """api rejects too many threads to merge"""
         threads = []
-        for i in range(MERGE_LIMIT + 1):
+        for _ in range(MERGE_LIMIT + 1):
             threads.append(testutils.post_thread(category=self.category).pk)
 
         self.override_acl({
@@ -699,8 +698,9 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         })
 
         other_thread = testutils.post_thread(self.category)
-        poll = testutils.post_poll(self.thread, self.user)
-        other_poll = testutils.post_poll(other_thread, self.user)
+
+        testutils.post_poll(self.thread, self.user)
+        testutils.post_poll(other_thread, self.user)
 
         response = self.client.post(self.api_link, json.dumps({
             'threads': [self.thread.id, other_thread.id],
@@ -725,8 +725,9 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         })
 
         other_thread = testutils.post_thread(self.category)
-        poll = testutils.post_poll(self.thread, self.user)
-        other_poll = testutils.post_poll(other_thread, self.user)
+
+        testutils.post_poll(self.thread, self.user)
+        testutils.post_poll(other_thread, self.user)
 
         response = self.client.post(self.api_link, json.dumps({
             'threads': [self.thread.id, other_thread.id],

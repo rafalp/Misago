@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
+from django.db import migrations
 
 from misago.core.migrationutils import cachebuster_register_cache
 from misago.users.constants import BANS_CACHEBUSTER

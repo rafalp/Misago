@@ -262,7 +262,7 @@ class ListView(AdminView):
         return self.clean_ordering(new_ordering)
 
     def clean_ordering(self, new_ordering):
-        for order_by, name in self.ordering:
+        for order_by, _ in self.ordering:
             if order_by == new_ordering:
                 return order_by
         else:

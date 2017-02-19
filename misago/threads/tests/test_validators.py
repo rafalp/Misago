@@ -10,7 +10,7 @@ class ValidatePostTests(TestCase):
         """valid post passes validation"""
         validate_post("Lorem ipsum dolor met sit amet elit.")
 
-    def test_too_short_post(self):
+    def test_empty_post(self):
         """empty post is rejected"""
         with self.assertRaises(ValidationError):
             validate_post("")

@@ -1,6 +1,6 @@
 from misago.categories.models import Category
 from misago.threads import moderation, testutils
-from misago.threads.models import Post, Thread
+from misago.threads.models import Thread
 from misago.users.testutils import AuthenticatedUserTestCase
 
 

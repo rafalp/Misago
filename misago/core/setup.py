@@ -36,7 +36,7 @@ def get_misago_project_template():
 
 def start_misago_project():
     parser = OptionParser(usage="usage: %prog project_name")
-    (options, args) = parser.parse_args()
+    _, args = parser.parse_args()
 
     if len(args) != 1:
         parser.error("project_name must be specified")

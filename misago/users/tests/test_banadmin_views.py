@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 
 from django.urls import reverse
 from django.utils.six.moves import range

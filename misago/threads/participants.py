@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext as _
 
-from misago.core import deprecations
 from misago.core.mail import build_mail, send_messages
 
 from .events import record_event

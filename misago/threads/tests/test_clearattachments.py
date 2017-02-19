@@ -31,7 +31,7 @@ class ClearAttachmentsTests(TestCase):
         cutoff = timezone.now() - timedelta(minutes=settings.MISAGO_ATTACHMENT_ORPHANED_EXPIRE)
         cutoff -= timedelta(minutes=5)
 
-        for i in range(5):
+        for _ in range(5):
             Attachment.objects.create(
                 secret=Attachment.generate_new_secret(),
                 filetype=filetype,
@@ -47,7 +47,7 @@ class ClearAttachmentsTests(TestCase):
         category = Category.objects.get(slug='first-category')
         post = testutils.post_thread(category).first_post
 
-        for i in range(5):
+        for _ in range(5):
             Attachment.objects.create(
                 secret=Attachment.generate_new_secret(),
                 filetype=filetype,
@@ -61,7 +61,7 @@ class ClearAttachmentsTests(TestCase):
             )
 
         # create 5 fresh orphaned attachments
-        for i in range(5):
+        for _ in range(5):
             Attachment.objects.create(
                 secret=Attachment.generate_new_secret(),
                 filetype=filetype,

@@ -2,11 +2,8 @@
 from __future__ import unicode_literals
 
 import json
-from datetime import timedelta
 
 from django.urls import reverse
-from django.utils import timezone
-from django.utils.encoding import smart_str
 from django.utils.six.moves import range
 
 from misago.acl.testutils import override_acl
@@ -223,8 +220,8 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
 
     def test_merge_posts(self):
         """api merges two posts"""
-        post_a = testutils.reply_thread(self.thread, poster="Bob", message="Battęry")
-        post_b = testutils.reply_thread(self.thread, poster="Bob", message="Hórse")
+        post_a = testutils.reply_thread(self.thread, poster=self.user, message="Battęry")
+        post_b = testutils.reply_thread(self.thread, poster=self.user, message="Hórse")
 
         thread_replies = self.thread.replies
 
@@ -250,8 +247,8 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, json.dumps({
             'posts': [
-                testutils.reply_thread(self.thread, poster="Bob", is_hidden=True).pk,
-                testutils.reply_thread(self.thread, poster="Bob", is_hidden=True).pk
+                testutils.reply_thread(self.thread, poster=self.user, is_hidden=True).pk,
+                testutils.reply_thread(self.thread, poster=self.user, is_hidden=True).pk
             ]
         }), content_type="application/json")
         self.assertEqual(response.status_code, 200)
@@ -264,8 +261,8 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, json.dumps({
             'posts': [
-                testutils.reply_thread(self.thread, poster="Bob", is_unapproved=True).pk,
-                testutils.reply_thread(self.thread, poster="Bob", is_unapproved=True).pk
+                testutils.reply_thread(self.thread, poster=self.user, is_unapproved=True).pk,
+                testutils.reply_thread(self.thread, poster=self.user, is_unapproved=True).pk
             ]
         }), content_type="application/json")
         self.assertEqual(response.status_code, 200)

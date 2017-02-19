@@ -59,7 +59,6 @@ def change_username(request):
         except IntegrityError:
             return Response({
                 'detail': _("Error changing username. Please try again."),
-                'options': options
             },
             status=status.HTTP_400_BAD_REQUEST)
     else:
@@ -87,7 +86,6 @@ def moderate_username_endpoint(request, profile):
             except IntegrityError:
                 return Response({
                     'detail': _("Error changing username. Please try again."),
-                    'options': options
                 }, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({

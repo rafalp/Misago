@@ -7,7 +7,6 @@ from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
-from misago.conf import settings
 from misago.core import threadstore
 from misago.core.cache import cache
 from misago.threads.models import Post, Thread
@@ -512,20 +511,6 @@ class UserDeleteTests(AuthenticatedUserTestCase):
             'can_delete_users_newer_than': 0,
             'can_delete_users_with_less_posts_than': 0,
         })
-
-        response = self.client.post(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertContains(response, "can't delete users", status_code=403)
-
-    def test_delete_too_many_posts(self):
-        """raises 403 error when user has too many posts"""
-        override_acl(self.user, {
-            'can_delete_users_newer_than': 0,
-            'can_delete_users_with_less_posts_than': 5,
-        })
-
-        self.other_user.posts = 6
-        self.other_user.save()
 
         response = self.client.post(self.link)
         self.assertEqual(response.status_code, 403)

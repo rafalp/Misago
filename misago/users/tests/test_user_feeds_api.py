@@ -102,7 +102,7 @@ class UserPostsApiTests(ThreadsApiTestCase):
 
     def test_user_hidden_post(self):
         """hidden posts don't show in feeds at all"""
-        post = testutils.reply_thread(self.thread, poster=self.user, is_hidden=True)
+        testutils.reply_thread(self.thread, poster=self.user, is_hidden=True)
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -110,7 +110,7 @@ class UserPostsApiTests(ThreadsApiTestCase):
 
     def test_user_unapproved_post(self):
         """unapproved posts don't show in feeds at all"""
-        post = testutils.reply_thread(self.thread, poster=self.user, is_unapproved=True)
+        testutils.reply_thread(self.thread, poster=self.user, is_unapproved=True)
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)

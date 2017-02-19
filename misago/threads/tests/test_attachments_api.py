@@ -104,7 +104,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
     def test_type_is_locked(self):
         """new uploads for this filetype are locked"""
-        attachment_type = AttachmentType.objects.create(
+        AttachmentType.objects.create(
             name="Test extension",
             extensions='png',
             mimetypes='application/pdf',
@@ -119,7 +119,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
     def test_type_is_disabled(self):
         """new uploads for this filetype are disabled"""
-        attachment_type = AttachmentType.objects.create(
+        AttachmentType.objects.create(
             name="Test extension",
             extensions='png',
             mimetypes='application/pdf',
@@ -168,7 +168,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
     def test_corrupted_image_upload(self):
         """corrupted image upload is handled"""
-        attachment_type = AttachmentType.objects.create(
+        AttachmentType.objects.create(
             name="Test extension",
             extensions='gif'
         )
@@ -181,7 +181,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
     def test_document_upload(self):
         """successful upload creates orphan attachment"""
-        attachment_type = AttachmentType.objects.create(
+        AttachmentType.objects.create(
             name="Test extension",
             extensions='pdf',
             mimetypes='application/pdf'
@@ -220,7 +220,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
     def test_small_image_upload(self):
         """successful small image upload creates orphan attachment without thumbnail"""
-        attachment_type = AttachmentType.objects.create(
+        AttachmentType.objects.create(
             name="Test extension",
             extensions='jpeg,jpg',
             mimetypes='image/jpeg'
@@ -257,7 +257,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
             'max_attachment_size': 10 * 1024
         })
 
-        attachment_type = AttachmentType.objects.create(
+        AttachmentType.objects.create(
             name="Test extension",
             extensions='png',
             mimetypes='image/png'
@@ -308,7 +308,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
     def test_animated_image_upload(self):
         """successful gif upload creates orphan attachment with thumbnail"""
-        attachment_type = AttachmentType.objects.create(
+        AttachmentType.objects.create(
             name="Test extension",
             extensions='gif',
             mimetypes='image/gif'

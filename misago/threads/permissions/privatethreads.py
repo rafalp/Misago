@@ -1,11 +1,9 @@
 from django import forms
-from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 
-from misago.acl import add_acl, algebra
+from misago.acl import algebra
 from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
 from misago.categories import PRIVATE_THREADS_ROOT_NAME

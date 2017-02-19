@@ -39,7 +39,7 @@ class CategoriesList(CategoryAdmin, generic.ListView):
 
         children_lists = {}
 
-        for i, item in enumerate(context['items']):
+        for item in context['items']:
             item.level_range = range(item.level - 1)
             item.first = False
             item.last = False

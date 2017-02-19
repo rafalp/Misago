@@ -1,5 +1,4 @@
 from misago.acl import add_acl
-from misago.core import threadstore
 from misago.readtracker import categoriestracker
 
 from .models import Category
@@ -73,8 +72,6 @@ def get_categories_tree(user, parent=None):
 def get_category_path(category):
     if category.special_role:
         return [category]
-
-    categories_dict = Category.objects.get_cached_categories_dict()
 
     category_path = []
     while category and category.level > 0:

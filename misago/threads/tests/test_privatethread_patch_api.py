@@ -131,7 +131,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         """adding user to thread add user to thread as participant, sets event and emails him"""
         ThreadParticipant.objects.set_owner(self.thread, self.user)
 
-        response = self.patch(self.api_link, [
+        self.patch(self.api_link, [
             {'op': 'add', 'path': 'participants', 'value': self.other_user.username}
         ])
 
@@ -158,7 +158,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
             'can_moderate_private_threads': 1
         })
 
-        response = self.patch(self.api_link, [
+        self.patch(self.api_link, [
             {'op': 'add', 'path': 'participants', 'value': self.user.username}
         ])
 
@@ -181,7 +181,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
             'can_moderate_private_threads': 1
         })
 
-        response = self.patch(self.api_link, [
+        self.patch(self.api_link, [
             {'op': 'add', 'path': 'participants', 'value': self.other_user.username}
         ])
 

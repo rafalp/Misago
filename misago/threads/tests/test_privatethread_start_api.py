@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import json
-
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.urls import reverse
@@ -10,7 +8,7 @@ from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
-from misago.threads.models import Thread, ThreadParticipant
+from misago.threads.models import ThreadParticipant
 from misago.users.testutils import AuthenticatedUserTestCase
 
 

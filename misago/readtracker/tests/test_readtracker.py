@@ -93,7 +93,8 @@ class CategoriesTrackerTests(ReadTrackerTests):
         categoriestracker.make_read_aware(self.user, self.categories)
         self.assertTrue(self.category.is_read)
 
-        thread = self.post_thread(self.user.joined_on + timedelta(days=1))
+        self.post_thread(self.user.joined_on + timedelta(days=1))
+
         categoriestracker.sync_record(self.user, self.category)
         categoriestracker.make_read_aware(self.user, self.categories)
         self.assertFalse(self.category.is_read)

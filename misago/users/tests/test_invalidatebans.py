@@ -19,7 +19,7 @@ class InvalidateBansTests(TestCase):
     def test_expired_bans_handling(self):
         """expired bans are flagged as such"""
         # create 5 bans then update their valid date to past one
-        for i in range(5):
+        for _ in range(5):
             Ban.objects.create(banned_value="abcd")
         expired_date = (timezone.now() - timedelta(days=10))
         Ban.objects.all().update(expires_on=expired_date, is_checked=True)

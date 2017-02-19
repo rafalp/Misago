@@ -392,7 +392,7 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCate):
 
     def test_delete_category_move_contents(self):
         """category was deleted and its contents were moved"""
-        for i in range(10):
+        for _ in range(10):
             testutils.post_thread(self.category_b)
         self.assertEqual(Thread.objects.count(), 10)
 
@@ -426,7 +426,7 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCate):
 
     def test_delete_category_and_contents(self):
         """category and its contents were deleted"""
-        for i in range(10):
+        for _ in range(10):
             testutils.post_thread(self.category_b)
 
         response = self.client.get(
@@ -458,7 +458,7 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCate):
 
     def test_delete_leaf_category(self):
         """category was deleted and its contents were moved"""
-        for i in range(10):
+        for _ in range(10):
             testutils.post_thread(self.category_d)
         self.assertEqual(Thread.objects.count(), 10)
 

@@ -1,7 +1,6 @@
 from django.contrib.auth import update_session_auth_hash
 from django.db import IntegrityError
 from django.shortcuts import render
-from django.urls import reverse
 from django.utils import six
 from django.utils.translation import ugettext as _
 
@@ -36,7 +35,7 @@ def confirm_change_view(f):
     def decorator(request, token):
         try:
             return f(request, token)
-        except ChangeError as e:
+        except ChangeError:
             return render(request, 'misago/options/credentials_error.html',
                 status=400)
     return decorator

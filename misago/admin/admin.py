@@ -1,4 +1,3 @@
-from django.conf.urls import url
 from django.utils.deprecation import MiddlewareMixin
 from django.utils.translation import ugettext_lazy as _
 
