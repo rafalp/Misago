@@ -1,4 +1,3 @@
-# flake8: noqa
 from .mixin import AdminBaseMixin
 from .base import AdminView
 from .list import ListView, MassActionError

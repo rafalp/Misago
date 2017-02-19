@@ -1,4 +1,3 @@
-# pylint: disable=protected-access
 from types import ModuleType
 
 from django.test import TestCase

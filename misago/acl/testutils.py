@@ -1,4 +1,3 @@
-# pylint: disable=protected-access
 from copy import deepcopy
 from hashlib import md5
 
