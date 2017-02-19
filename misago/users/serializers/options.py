@@ -2,11 +2,10 @@ from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 
 from misago.conf import settings
-from misago.core.forms import YesNoSwitch
-from misago.users.validators import validate_email
+from misago.users.validators import validate_email, validate_username
 
 
 UserModel = get_user_model()
@@ -14,6 +13,7 @@ UserModel = get_user_model()
 __all__ = [
     'ForumOptionsSerializer',
     'EditSignatureSerializer',
+    'ChangeUsernameSerializer',
     'ChangePasswordSerializer',
     'ChangeEmailSerializer',
 ]
@@ -53,21 +53,40 @@ class EditSignatureSerializer(serializers.ModelSerializer):
         return data
 
 
+class ChangeUsernameSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=200, required=False, allow_blank=True)
+
+    def validate(self, data):
+        username = data.get('username')
+
+        if not username:
+            raise serializers.ValidationError(_("Enter new username."))
+
+        if username == self.context['user'].username:
+            raise serializers.ValidationError(
+                _("New username is same as current one."))
+
+        validate_username(username)
+
+        return data
+
+    def change_username(self, changed_by):
+        self.context['user'].set_username(
+            self.validated_data['username'], changed_by=changed_by)
+        self.context['user'].save(update_fields=['username', 'slug'])
+
+
 class ChangePasswordSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=200)
     new_password = serializers.CharField(max_length=200)
 
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user', None)
-        super(ChangePasswordSerializer, self).__init__(*args, **kwargs)
-
     def validate_password(self, value):
-        if not self.user.check_password(value):
+        if not self.context['user'].check_password(value):
             raise serializers.ValidationError(_("Entered password is invalid."))
         return value
 
     def validate_new_password(self, value):
-        validate_password(value, user=self.user)
+        validate_password(value, user=self.context['user'])
         return value
 
 
@@ -75,12 +94,8 @@ class ChangeEmailSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=200)
     new_email = serializers.CharField(max_length=200)
 
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user', None)
-        super(ChangeEmailSerializer, self).__init__(*args, **kwargs)
-
     def validate_password(self, value):
-        if not self.user.check_password(value):
+        if not self.context['user'].check_password(value):
             raise serializers.ValidationError(_("Entered password is invalid."))
         return value
 
@@ -88,7 +103,7 @@ class ChangeEmailSerializer(serializers.Serializer):
         if not value:
             raise serializers.ValidationError(_("You have to enter new e-mail address."))
 
-        if value.lower() == self.user.email.lower():
+        if value.lower() == self.context['user'].email.lower():
             raise serializers.ValidationError(_("New e-mail is same as current one."))
 
         validate_email(value)

@@ -10,7 +10,13 @@ from misago.users.serializers import ChangeEmailSerializer
 
 
 def change_email_endpoint(request, pk=None):
-    serializer = ChangeEmailSerializer(data=request.data, user=request.user)
+    serializer = ChangeEmailSerializer(
+        data=request.data,
+        context={
+            'user': request.user
+        }
+    )
+
     if serializer.is_valid():
         token = store_new_credential(
             request, 'email', serializer.validated_data['new_email'])

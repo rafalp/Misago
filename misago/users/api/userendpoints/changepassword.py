@@ -10,7 +10,13 @@ from misago.users.serializers import ChangePasswordSerializer
 
 
 def change_password_endpoint(request, pk=None):
-    serializer = ChangePasswordSerializer(data=request.data, user=request.user)
+    serializer = ChangePasswordSerializer(
+        data=request.data,
+        context={
+            'user': request.user
+        }
+    )
+
     if serializer.is_valid():
         token = store_new_credential(
             request, 'password', serializer.validated_data['new_password'])

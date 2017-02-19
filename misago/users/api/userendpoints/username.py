@@ -5,7 +5,7 @@ from django.db import IntegrityError
 from django.utils.translation import ugettext as _
 
 from misago.conf import settings
-from misago.users.forms.rename import ChangeUsernameForm
+from misago.users.serializers import ChangeUsernameSerializer
 from misago.users.namechanges import UsernameChanges
 
 
@@ -41,10 +41,16 @@ def change_username(request):
         },
         status=status.HTTP_400_BAD_REQUEST)
 
-    form = ChangeUsernameForm(request.data, user=request.user)
-    if form.is_valid():
+    serializer = ChangeUsernameSerializer(
+        data=request.data,
+        context={
+            'user': request.user
+        }
+    )
+
+    if serializer.is_valid():
         try:
-            form.change_username(changed_by=request.user)
+            serializer.change_username(changed_by=request.user)
             return Response({
                 'username': request.user.username,
                 'slug': request.user.slug,
@@ -57,16 +63,23 @@ def change_username(request):
             },
             status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response({'detail': form.non_field_errors()[0]},
-                        status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            'detail': serializer.errors['non_field_errors'][0]
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 def moderate_username_endpoint(request, profile):
     if request.method == 'POST':
-        form = ChangeUsernameForm(request.data, user=profile)
-        if form.is_valid():
+        serializer = ChangeUsernameSerializer(
+            data=request.data,
+            context={
+                'user': profile
+            }
+        )
+
+        if serializer.is_valid():
             try:
-                form.change_username(changed_by=request.user)
+                serializer.change_username(changed_by=request.user)
                 return Response({
                     'username': profile.username,
                     'slug': profile.slug,
@@ -75,11 +88,11 @@ def moderate_username_endpoint(request, profile):
                 return Response({
                     'detail': _("Error changing username. Please try again."),
                     'options': options
-                },
-                status=status.HTTP_400_BAD_REQUEST)
+                }, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'detail': form.non_field_errors()[0]},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                'detail': serializer.errors['non_field_errors'][0]
+            }, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({
             'length_min': settings.username_length_min,
