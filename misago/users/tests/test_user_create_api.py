@@ -36,6 +36,40 @@ class UserCreateTests(UserTestCase):
         response = self.client.post(self.api_link)
         self.assertContains(response, 'closed', status_code=403)
 
+    def test_registration_validates_username(self):
+        """api validates usernames"""
+        user = self.get_authenticated_user()
+
+        response = self.client.post(self.api_link, data={
+            'username': user.username,
+            'email': 'loremipsum@dolor.met',
+            'password': 'LoremP4ssword'
+        })
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'username': [
+                "This username is not available."
+            ]
+        })
+
+    def test_registration_validates_email(self):
+        """api validates usernames"""
+        user = self.get_authenticated_user()
+
+        response = self.client.post(self.api_link, data={
+            'username': 'totallyNew',
+            'email': user.email,
+            'password': 'LoremP4ssword'
+        })
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'email': [
+                "This e-mail address is not available."
+            ]
+        })
+
     def test_registration_validates_password(self):
         """api uses django's validate_password to validate registrations"""
         response = self.client.post(self.api_link, data={
