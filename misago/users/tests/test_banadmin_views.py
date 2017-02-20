@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 
 from django.urls import reverse
-from django.utils.six.moves import range
 
 from misago.admin.testutils import AdminTestCase
 from misago.users.models import Ban

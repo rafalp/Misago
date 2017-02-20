@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import json
 
 from django.urls import reverse
-from django.utils.six.moves import range
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category

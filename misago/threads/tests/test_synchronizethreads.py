@@ -1,7 +1,6 @@
 from django.core.management import call_command
 from django.test import TestCase
 from django.utils.six import StringIO
-from django.utils.six.moves import range
 
 from misago.categories.models import Category
 from misago.threads import testutils

@@ -5,7 +5,6 @@ from requests.exceptions import RequestException
 
 from django.contrib.auth import get_user_model
 from django.http import Http404, JsonResponse
-from django.utils.six.moves import range
 from django.utils.translation import ugettext as _
 
 from misago import __version__

@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from django.utils.six.moves import range
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category

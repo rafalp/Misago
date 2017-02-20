@@ -9,7 +9,6 @@ from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.db.transaction import atomic
 from django.utils import timezone
-from django.utils.six.moves import range
 
 from misago.categories.models import Category
 from misago.core.management.progressbar import show_progress

@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.core import mail
 from django.urls import reverse
 from django.utils import six
-from django.utils.six.moves import range
 
 from misago.acl.models import Role
 from misago.admin.testutils import AdminTestCase

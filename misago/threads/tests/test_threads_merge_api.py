@@ -1,7 +1,6 @@
 import json
 
 from django.urls import reverse
-from django.utils.six.moves import range
 
 from misago.acl import add_acl
 from misago.categories.models import Category
