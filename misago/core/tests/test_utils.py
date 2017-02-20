@@ -35,7 +35,8 @@ class IsRequestToMisagoTests(TestCase):
             request = RequestFactory().get('/')
             request.path_info = path
             self.assertFalse(
-                is_request_to_misago(request), '"%s" is overlapped by "%s"' % (path, misago_prefix)
+                is_request_to_misago(request),
+                '"%s" is overlapped by "%s"' % (path, misago_prefix)
             )
 
 
@@ -220,8 +221,9 @@ class IsRefererLocalTests(TestCase):
     def test_foreign_referers(self):
         """non-local referers return false"""
         bad_request = MockRequest(
-            'GET', {'HTTP_REFERER': 'http://else-project.org/',
-                    'HTTP_HOST': 'misago-project.org/'}
+            'GET',
+            {'HTTP_REFERER': 'http://else-project.org/',
+             'HTTP_HOST': 'misago-project.org/'}
         )
         self.assertFalse(is_referer_local(bad_request))
 

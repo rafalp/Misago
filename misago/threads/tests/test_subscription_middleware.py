@@ -105,7 +105,9 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
     def setUp(self):
         super(SubscribeRepliedThreadTests, self).setUp()
         self.thread = testutils.post_thread(self.category)
-        self.api_link = reverse('misago:api:thread-post-list', kwargs={'thread_pk': self.thread.pk})
+        self.api_link = reverse(
+            'misago:api:thread-post-list', kwargs={'thread_pk': self.thread.pk}
+        )
 
     def test_dont_subscribe(self):
         """middleware makes no subscription to thread"""

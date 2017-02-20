@@ -85,7 +85,8 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
         mentions = ['@{}'.format(u) for u in users]
         response = self.client.post(
-            self.post_link, data={'post': "This is test response, {}!".format(', '.join(mentions))}
+            self.post_link,
+            data={'post': "This is test response, {}!".format(', '.join(mentions))}
         )
         self.assertEqual(response.status_code, 200)
 

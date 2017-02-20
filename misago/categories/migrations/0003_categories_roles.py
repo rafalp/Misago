@@ -172,7 +172,9 @@ def create_default_categories_roles(apps, schema_editor):
     )
 
     RoleCategoryACL.objects.create(
-        role=Role.objects.get(special_role='anonymous'), category=category, category_role=read_only
+        role=Role.objects.get(special_role='anonymous'),
+        category=category,
+        category_role=read_only
     )
 
 

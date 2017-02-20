@@ -84,7 +84,9 @@ class AdminAuthenticationForm(AuthenticationForm):
     required_css_class = 'required'
 
     def __init__(self, *args, **kwargs):
-        self.error_messages.update({'not_staff': _("Your account does not have admin privileges.")})
+        self.error_messages.update({
+            'not_staff': _("Your account does not have admin privileges.")
+        })
 
         super(AdminAuthenticationForm, self).__init__(*args, **kwargs)
 

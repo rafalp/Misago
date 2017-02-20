@@ -95,6 +95,6 @@ DROP INDEX %(index_name)s
         schema_editor.execute(statement)
 
     def describe(self):
-        message = ("Create PostgreSQL partial composite " "index on fields %s in %s for %s")
+        message = ("Create PostgreSQL partial composite index on fields %s in %s for %s")
         formats = (', '.join(self.fields), self.model_name, self.values)
         return message % formats

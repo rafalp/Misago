@@ -27,7 +27,9 @@ def make_threads_participants_aware(user, threads):
         thread.participant = None
         threads_dict[thread.pk] = thread
 
-    participants_qs = ThreadParticipant.objects.filter(user=user, thread_id__in=threads_dict.keys())
+    participants_qs = ThreadParticipant.objects.filter(
+        user=user, thread_id__in=threads_dict.keys()
+    )
 
     for participant in participants_qs:
         participant.user = user

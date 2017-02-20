@@ -51,7 +51,7 @@ class ThreadVisibilityTests(ThreadViewTestCase):
         self.assertContains(response, self.thread.title)
 
     def test_view_shows_owner_thread(self):
-        """view handles "owned threads only" """
+        """view handles "owned threads" only"""
         self.override_acl({'can_see_all_threads': 0})
 
         response = self.client.get(self.thread.get_absolute_url())

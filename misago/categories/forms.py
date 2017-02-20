@@ -187,7 +187,7 @@ class DeleteCategoryFormBase(forms.ModelForm):
 
         if data.get('move_threads_to'):
             if data['move_threads_to'].pk == self.instance.pk:
-                message = _("You are trying to move this category threads to " "itself.")
+                message = _("You are trying to move this category threads to itself.")
                 raise forms.ValidationError(message)
 
             moving_to_child = self.instance.has_child(data['move_threads_to'])

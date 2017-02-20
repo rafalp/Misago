@@ -100,8 +100,7 @@ class AdminHierarchyBuilder(object):
             iterations += 1
             if iterations > 512:
                 message = (
-                    "Misago Admin hierarchy is invalid or too complex "
-                    "to resolve. Nodes left: %s"
+                    "Misago Admin hierarchy is invalid or too complex to resolve. Nodes left: %s"
                 )
                 raise ValueError(message % self.nodes_record)
 

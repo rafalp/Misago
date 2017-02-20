@@ -42,16 +42,14 @@ def activate_by_token(request, pk, token):
     try:
         if not inactive_user.requires_activation:
             message = _("%(user)s, your account is already active.")
-            message = message % {'user': inactive_user.username}
-            raise ActivationStopped(message)
+            raise ActivationStopped(message % {'user': inactive_user.username})
 
         if not is_activation_token_valid(inactive_user, token):
             message = _(
                 "%(user)s, your activation link is invalid. "
                 "Try again or request new activation link."
             )
-            message = message % {'user': inactive_user.username}
-            raise ActivationError(message)
+            raise ActivationError(message % {'user': inactive_user.username})
 
         ban = get_user_ban(inactive_user)
         if ban:

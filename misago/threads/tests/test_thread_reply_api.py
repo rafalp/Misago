@@ -17,7 +17,9 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(category=self.category)
 
-        self.api_link = reverse('misago:api:thread-post-list', kwargs={'thread_pk': self.thread.pk})
+        self.api_link = reverse(
+            'misago:api:thread-post-list', kwargs={'thread_pk': self.thread.pk}
+        )
 
     def override_acl(self, extra_acl=None):
         new_acl = self.user.acl_cache
@@ -72,7 +74,9 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link)
         self.assertContains(
-            response, "This category is closed. You can't reply to threads in it.", status_code=403
+            response,
+            "This category is closed. You can't reply to threads in it.",
+            status_code=403
         )
 
         # allow to post in closed category

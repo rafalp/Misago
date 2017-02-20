@@ -174,8 +174,8 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         self.assertEqual(self.post.attachment_set.count(), 2)
 
         attachments_filenames = list(reversed([a.filename for a in attachments]))
-        self.assertEqual([a['filename'] for a in self.post.attachments_cache], attachments_filenames
-                         )
+        self.assertEqual([a['filename'] for a in self.post.attachments_cache],
+                         attachments_filenames)
 
     def test_remove_attachments(self):
         """middleware removes attachment from post and db"""
@@ -204,8 +204,8 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         self.assertEqual(Attachment.objects.count(), 1)
 
         attachments_filenames = [attachments[0].filename]
-        self.assertEqual([a['filename'] for a in self.post.attachments_cache], attachments_filenames
-                         )
+        self.assertEqual([a['filename'] for a in self.post.attachments_cache],
+                         attachments_filenames)
 
     def test_steal_attachments(self):
         """middleware validates if attachments are already assigned to other posts"""
@@ -262,8 +262,8 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         self.assertEqual(self.post.attachment_set.count(), 2)
 
         attachments_filenames = [attachments[2].filename, attachments[0].filename]
-        self.assertEqual([a['filename'] for a in self.post.attachments_cache], attachments_filenames
-                         )
+        self.assertEqual([a['filename'] for a in self.post.attachments_cache],
+                         attachments_filenames)
 
 
 class ValidateAttachmentsCountTests(AuthenticatedUserTestCase):

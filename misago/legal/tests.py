@@ -117,7 +117,9 @@ class TermsOfServiceTests(TestCase):
         settings.override_setting('terms_of_service', 'Lorem ipsum')
         context_dict = legal_links(MockRequest())
 
-        self.assertEqual(context_dict, {'TERMS_OF_SERVICE_URL': reverse('misago:terms-of-service')})
+        self.assertEqual(
+            context_dict, {'TERMS_OF_SERVICE_URL': reverse('misago:terms-of-service')}
+        )
 
     def test_context_processor_remote_tos(self):
         """context processor has TOS link to remote url"""

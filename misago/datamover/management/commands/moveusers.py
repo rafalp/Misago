@@ -3,7 +3,7 @@ from misago.datamover.management.base import BaseCommand
 
 
 class Command(BaseCommand):
-    help = ("Moves users, avatars, followers, blocks " "and bans from Misago 0.5")
+    help = ("Moves users, avatars, followers, blocks and bans from Misago 0.5")
 
     def handle(self, *args, **options):
         self.stdout.write("Moving users from Misago 0.5:")

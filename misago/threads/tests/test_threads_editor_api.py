@@ -328,7 +328,9 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertContains(
-            response, "This category is closed. You can't reply to threads in it.", status_code=403
+            response,
+            "This category is closed. You can't reply to threads in it.",
+            status_code=403
         )
 
         # allow to post in closed category
@@ -500,7 +502,9 @@ class EditReplyEditorApiTests(EditorApiTestCase):
         self.post.save()
 
         response = self.client.get(self.api_link)
-        self.assertContains(response, "This post is protected. You can't edit it.", status_code=403)
+        self.assertContains(
+            response, "This post is protected. You can't edit it.", status_code=403
+        )
 
         # allow to post in closed thread
         self.override_acl({'can_edit_posts': 1, 'can_protect_posts': 1})

@@ -73,5 +73,7 @@ class NewThreadSerializer(serializers.Serializer):
             return is_closed  # don't validate closed further if category failed
 
         if is_closed and not self.category.acl.get('can_close_threads'):
-            raise ValidationError(_("You don't have permission to close threads in this category."))
+            raise ValidationError(
+                _("You don't have permission to close threads in this category.")
+            )
         return is_closed

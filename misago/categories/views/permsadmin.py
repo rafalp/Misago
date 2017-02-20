@@ -57,11 +57,13 @@ class RoleFormMixin(object):
             elif form.is_valid() and len(perms_forms) != valid_forms:
                 form.add_error(None, _("Form contains errors."))
 
-        return self.render(request, {
-            'form': form,
-            'target': target,
-            'perms_forms': perms_forms,
-        })
+        return self.render(
+            request, {
+                'form': form,
+                'target': target,
+                'perms_forms': perms_forms,
+            }
+        )
 
 
 class NewCategoryRole(RoleFormMixin, CategoryRoleAdmin, generic.ModelFormView):
@@ -75,7 +77,7 @@ class EditCategoryRole(RoleFormMixin, CategoryRoleAdmin, generic.ModelFormView):
 class DeleteCategoryRole(CategoryRoleAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         if target.special_role:
-            message = _('Role "%(name)s" is special ' 'role and can\'t be deleted.')
+            message = _('Role "%(name)s" is special role and can\'t be deleted.')
             return message % {'name': target.name}
 
     def button_action(self, request, target):

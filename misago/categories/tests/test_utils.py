@@ -93,7 +93,9 @@ class CategoriesUtilsTests(AuthenticatedUserTestCase):
 
     def test_root_categories_tree_with_leaf(self):
         """get_categories_tree returns all children of given node"""
-        categories_tree = get_categories_tree(self.user, Category.objects.get(slug='subcategory-f'))
+        categories_tree = get_categories_tree(
+            self.user, Category.objects.get(slug='subcategory-f')
+        )
         self.assertEqual(len(categories_tree), 0)
 
     def test_get_category_path(self):

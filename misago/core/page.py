@@ -71,7 +71,7 @@ class Page(object):
             self, link, after=None, before=None, visible_if=None, get_metadata=None, **kwargs
     ):
         if self._finalized:
-            message = ("%s page was initialized already and no longer " "accepts new sections")
+            message = ("%s page was initialized already and no longer accepts new sections")
             raise RuntimeError(message % self.name)
 
         if after and before:

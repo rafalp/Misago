@@ -35,17 +35,12 @@ def reset_password_form(request, pk, token):
 
     try:
         if (request.user.is_authenticated and request.user.id != requesting_user.id):
-            message = _(
-                "%(user)s, your link has expired. "
-                "Please request new link and try again."
-            )
-            message = message % {'user': requesting_user.username}
-            raise ResetError(message)
+            message = _("%(user)s, your link has expired. Please request new link and try again.")
+            raise ResetError(message % {'user': requesting_user.username})
 
         if not is_password_change_token_valid(requesting_user, token):
-            message = _("%(user)s, your link is invalid. " "Please try again or request new link.")
-            message = message % {'user': requesting_user.username}
-            raise ResetError(message)
+            message = _("%(user)s, your link is invalid. Please try again or request new link.")
+            raise ResetError(message % {'user': requesting_user.username})
 
         ban = get_user_ban(requesting_user)
         if ban:

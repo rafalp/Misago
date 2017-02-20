@@ -14,7 +14,8 @@ class CategoryAdminTestCate(AdminTestCase):
         current_tree = []
         for category in queryset:
             current_tree.append((
-                category, category.level, category.lft - root.lft + 1, category.rght - root.lft + 1,
+                category, category.level, category.lft - root.lft + 1,
+                category.rght - root.lft + 1,
             ))
 
         if len(expected_tree) != len(current_tree):

@@ -84,7 +84,9 @@ def sync_record(user, category):
             last_read_on = timezone.now()
         else:
             last_read_on = cutoff_date
-        category_record = user.categoryread_set.create(category=category, last_read_on=last_read_on)
+        category_record = user.categoryread_set.create(
+            category=category, last_read_on=last_read_on
+        )
 
 
 def read_category(user, category):

@@ -34,7 +34,10 @@ class Command(BaseCommand):
             help='Specifies the username for the superuser.'
         )
         parser.add_argument(
-            '--email', dest='email', default=None, help='Specifies the username for the superuser.'
+            '--email',
+            dest='email',
+            default=None,
+            help='Specifies the username for the superuser.'
         )
         parser.add_argument(
             '--password',
@@ -133,7 +136,9 @@ class Command(BaseCommand):
                 while not password:
                     try:
                         raw_value = getpass("Enter password: ").strip()
-                        validate_password(raw_value, user=UserModel(username=username, email=email))
+                        validate_password(
+                            raw_value, user=UserModel(username=username, email=email)
+                        )
 
                         repeat_raw_value = getpass("Repeat password: ").strip()
                         if raw_value != repeat_raw_value:

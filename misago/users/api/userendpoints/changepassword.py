@@ -13,7 +13,9 @@ def change_password_endpoint(request, pk=None):
     serializer = ChangePasswordSerializer(data=request.data, context={'user': request.user})
 
     if serializer.is_valid():
-        token = store_new_credential(request, 'password', serializer.validated_data['new_password'])
+        token = store_new_credential(
+            request, 'password', serializer.validated_data['new_password']
+        )
 
         mail_subject = _("Confirm password change on %(forum_name)s forums")
         mail_subject = mail_subject % {'forum_name': settings.forum_name}

@@ -118,7 +118,9 @@ def update_usernames(sender, **kwargs):
         editor_name=sender.username, editor_slug=sender.slug
     )
 
-    PostLike.objects.filter(liker=sender).update(liker_name=sender.username, liker_slug=sender.slug)
+    PostLike.objects.filter(liker=sender).update(
+        liker_name=sender.username, liker_slug=sender.slug
+    )
 
     Attachment.objects.filter(uploader=sender).update(
         uploader_name=sender.username, uploader_slug=sender.slug
@@ -126,7 +128,9 @@ def update_usernames(sender, **kwargs):
 
     Poll.objects.filter(poster=sender).update(poster_name=sender.username, poster_slug=sender.slug)
 
-    PollVote.objects.filter(voter=sender).update(voter_name=sender.username, voter_slug=sender.slug)
+    PollVote.objects.filter(voter=sender).update(
+        voter_name=sender.username, voter_slug=sender.slug
+    )
 
 
 @receiver(pre_delete, sender=get_user_model())

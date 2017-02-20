@@ -47,7 +47,8 @@ else:
 
 urlpatterns += threads_list_patterns(
     'category', CategoryThreadsList, (
-        r'^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/$', r'^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/my/$',
+        r'^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/$',
+        r'^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/my/$',
         r'^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/new/$',
         r'^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/unread/$',
         r'^c/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/subscribed/$',

@@ -102,8 +102,10 @@ class CategoryPermissionsForm(forms.Form):
     )
     can_hide_own_threads = forms.TypedChoiceField(
         label=_("Can hide own threads"),
-        help_text=_("Only threads started within time limit and "
-                    "with no replies can be hidden."),
+        help_text=_(
+            "Only threads started within time limit and "
+            "with no replies can be hidden."
+        ),
         coerce=int,
         initial=0,
         choices=((0, _("No")), (1, _("Hide threads")), (2, _("Delete threads")))
@@ -542,7 +544,9 @@ def allow_edit_thread(user, target):
     if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to edit threads."))
 
-    category_acl = user.acl_cache['categories'].get(target.category_id, {'can_edit_threads': False})
+    category_acl = user.acl_cache['categories'].get(
+        target.category_id, {'can_edit_threads': False}
+    )
 
     if not category_acl['can_edit_threads']:
         raise PermissionDenied(_("You can't edit threads in this category."))

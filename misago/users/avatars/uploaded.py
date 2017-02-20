@@ -38,7 +38,7 @@ def validate_dimensions(uploaded_file):
 
     min_size = max(settings.MISAGO_AVATARS_SIZES)
     if min(image.size) < min_size:
-        message = _("Uploaded image should be at " "least %(size)s pixels tall and wide.")
+        message = _("Uploaded image should be at least %(size)s pixels tall and wide.")
         raise ValidationError(message % {'size': min_size})
 
     if image.size[0] * image.size[1] > 2000 * 3000:

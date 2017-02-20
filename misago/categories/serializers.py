@@ -44,8 +44,8 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
         fields = (
             'id', 'parent', 'name', 'description', 'is_closed', 'threads', 'posts', 'last_post_on',
             'last_thread_title', 'last_poster_name', 'css_class', 'is_read', 'subcategories',
-            'absolute_url', 'last_thread_url', 'last_post_url', 'last_poster_url', 'acl', 'api_url',
-            'level', 'lft', 'rght',
+            'absolute_url', 'last_thread_url', 'last_post_url', 'last_poster_url', 'acl',
+            'api_url', 'level', 'lft', 'rght',
         )
 
     def get_description(self, obj):

@@ -133,9 +133,11 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
     def test_invalid_posts_ids(self):
         """api handles invalid post id"""
         response = self.client.post(
-            self.api_link, json.dumps({
+            self.api_link,
+            json.dumps({
                 'posts': [1, 2, 'string']
-            }), content_type="application/json"
+            }),
+            content_type="application/json"
         )
         self.assertContains(
             response, "One or more post ids received were invalid.", status_code=400

@@ -127,7 +127,9 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.post.save()
 
         response = self.put(self.api_link)
-        self.assertContains(response, "This post is protected. You can't edit it.", status_code=403)
+        self.assertContains(
+            response, "This post is protected. You can't edit it.", status_code=403
+        )
 
         # allow to post in closed thread
         self.override_acl({'can_protect_posts': 1})

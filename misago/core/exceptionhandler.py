@@ -9,7 +9,9 @@ from . import errorpages
 from .exceptions import AjaxError, Banned, ExplicitFirstPage, OutdatedSlug
 
 
-HANDLED_EXCEPTIONS = (AjaxError, Banned, ExplicitFirstPage, Http404, OutdatedSlug, PermissionDenied)
+HANDLED_EXCEPTIONS = (
+    AjaxError, Banned, ExplicitFirstPage, Http404, OutdatedSlug, PermissionDenied
+)
 
 
 def is_misago_exception(exception):

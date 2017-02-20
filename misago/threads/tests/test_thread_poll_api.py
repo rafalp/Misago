@@ -16,7 +16,9 @@ class ThreadPollApiTestCase(AuthenticatedUserTestCase):
         self.thread = testutils.post_thread(self.category, poster=self.user)
         self.override_acl()
 
-        self.api_link = reverse('misago:api:thread-poll-list', kwargs={'thread_pk': self.thread.pk})
+        self.api_link = reverse(
+            'misago:api:thread-poll-list', kwargs={'thread_pk': self.thread.pk}
+        )
 
     def post(self, url, data=None):
         return self.client.post(url, json.dumps(data or {}), content_type='application/json')

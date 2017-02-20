@@ -169,7 +169,9 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         # Check that roles were assigned
         category_role_set = test_category.category_role_set
         self.assertEqual(category_role_set.get(role=test_role_a).category_role_id, role_full.pk)
-        self.assertEqual(category_role_set.get(role=test_role_b).category_role_id, role_comments.pk)
+        self.assertEqual(
+            category_role_set.get(role=test_role_b).category_role_id, role_comments.pk
+        )
 
     def test_change_role_categories_permissions_view(self):
         """change role categories perms view works"""

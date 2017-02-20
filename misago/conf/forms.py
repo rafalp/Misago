@@ -21,16 +21,14 @@ class ValidateChoicesNum(object):
                 'You have to select at least %(choices)d option.',
                 'You have to select at least %(choices)d options.', self.min_choices
             )
-            message = message % {'choices': self.min_choices}
-            raise forms.ValidationError(message)
+            raise forms.ValidationError(message % {'choices': self.min_choices})
 
         if self.max_choices and self.max_choices < data_len:
             message = ungettext(
                 'You cannot select more than %(choices)d option.',
                 'You cannot select more than %(choices)d options.', self.max_choices
             )
-            message = message % {'choices': self.max_choices}
-            raise forms.ValidationError(message)
+            raise forms.ValidationError(message % {'choices': self.max_choices})
 
         return data
 

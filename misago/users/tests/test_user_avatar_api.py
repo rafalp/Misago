@@ -83,7 +83,9 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertContains(response, "You have to sign in", status_code=403)
 
-        self.login_user(UserModel.objects.create_user("BobUser", "bob@bob.com", self.USER_PASSWORD))
+        self.login_user(
+            UserModel.objects.create_user("BobUser", "bob@bob.com", self.USER_PASSWORD)
+        )
 
         response = self.client.get(self.link)
         self.assertContains(response, "can't change other users avatars", status_code=403)
@@ -227,7 +229,10 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.assertContains(response, "Incorrect image.", status_code=400)
 
         # invalid id is handled
-        response = self.client.post(self.link, data={'avatar': 'galleries', 'image': 'asdsadsadsa'})
+        response = self.client.post(
+            self.link, data={'avatar': 'galleries',
+                             'image': 'asdsadsadsa'}
+        )
         self.assertContains(response, "Incorrect image.", status_code=400)
 
         # nonexistant image is handled
@@ -330,7 +335,9 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(options['avatars'], other_user.avatars)
         self.assertEqual(options['is_avatar_locked'], other_user.is_avatar_locked)
         self.assertEqual(options['avatar_lock_user_message'], other_user.avatar_lock_user_message)
-        self.assertEqual(options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message)
+        self.assertEqual(
+            options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message
+        )
 
         override_acl(self.user, {
             'can_moderate_avatars': 1,
@@ -356,7 +363,9 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(options['avatars'], other_user.avatars)
         self.assertEqual(options['is_avatar_locked'], other_user.is_avatar_locked)
         self.assertEqual(options['avatar_lock_user_message'], other_user.avatar_lock_user_message)
-        self.assertEqual(options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message)
+        self.assertEqual(
+            options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message
+        )
 
         override_acl(self.user, {
             'can_moderate_avatars': 1,
@@ -382,7 +391,9 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(options['avatars'], other_user.avatars)
         self.assertEqual(options['is_avatar_locked'], other_user.is_avatar_locked)
         self.assertEqual(options['avatar_lock_user_message'], other_user.avatar_lock_user_message)
-        self.assertEqual(options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message)
+        self.assertEqual(
+            options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message
+        )
 
         override_acl(self.user, {
             'can_moderate_avatars': 1,
@@ -404,7 +415,9 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(options['avatars'], other_user.avatars)
         self.assertEqual(options['is_avatar_locked'], other_user.is_avatar_locked)
         self.assertEqual(options['avatar_lock_user_message'], other_user.avatar_lock_user_message)
-        self.assertEqual(options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message)
+        self.assertEqual(
+            options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message
+        )
 
     def test_moderate_own_avatar(self):
         """moderate own avatar"""

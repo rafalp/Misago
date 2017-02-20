@@ -70,7 +70,11 @@ class Category(MPTTModel):
     posts = models.PositiveIntegerField(default=0)
     last_post_on = models.DateTimeField(null=True, blank=True)
     last_thread = models.ForeignKey(
-        'misago_threads.Thread', related_name='+', null=True, blank=True, on_delete=models.SET_NULL
+        'misago_threads.Thread',
+        related_name='+',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
     )
     last_thread_title = models.CharField(max_length=255, null=True, blank=True)
     last_thread_slug = models.CharField(max_length=255, null=True, blank=True)

@@ -29,7 +29,9 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         )
         self.override_acl()
 
-        self.api_link = reverse('misago:api:thread-post-list', kwargs={'thread_pk': self.thread.pk})
+        self.api_link = reverse(
+            'misago:api:thread-post-list', kwargs={'thread_pk': self.thread.pk}
+        )
 
         self.other_user = UserModel.objects.create_user('Bob', 'bob@boberson.com', 'pass123')
 

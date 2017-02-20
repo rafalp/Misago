@@ -59,7 +59,9 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 403)
 
         response_json = response.json()
-        self.assertEqual(response_json, {'detail': "One or more thread ids received were invalid."})
+        self.assertEqual(
+            response_json, {'detail': "One or more thread ids received were invalid."}
+        )
 
         response = self.client.post(
             self.api_link,
@@ -71,7 +73,9 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 403)
 
         response_json = response.json()
-        self.assertEqual(response_json, {'detail': "One or more thread ids received were invalid."})
+        self.assertEqual(
+            response_json, {'detail': "One or more thread ids received were invalid."}
+        )
 
     def test_merge_single_thread(self):
         """api validates if we are trying to merge single thread"""

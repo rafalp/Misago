@@ -98,7 +98,9 @@ class PostingEndpoint(object):
     def save(self):
         """save new state to backend"""
         if not self._is_validated or self.errors:
-            raise RuntimeError("You need to validate posting data successfully before calling save")
+            raise RuntimeError(
+                "You need to validate posting data successfully before calling save"
+            )
 
         try:
             for middleware, obj in self.middlewares:

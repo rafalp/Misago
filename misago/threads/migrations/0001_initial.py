@@ -66,8 +66,9 @@ class Migration(migrations.Migration):
                     )
                 ),
                 (
-                    'mentions',
-                    models.ManyToManyField(related_name='mention_set', to=settings.AUTH_USER_MODEL)
+                    'mentions', models.ManyToManyField(
+                        related_name='mention_set', to=settings.AUTH_USER_MODEL
+                    )
                 ),
                 (
                     'poster', models.ForeignKey(

@@ -13,8 +13,9 @@ class PostReadApiTests(ThreadsApiTestCase):
         self.post = testutils.reply_thread(self.thread, poster=self.user, posted_on=timezone.now())
 
         self.api_link = reverse(
-            'misago:api:thread-post-read', kwargs={'thread_pk': self.thread.pk,
-                                                   'pk': self.post.pk}
+            'misago:api:thread-post-read',
+            kwargs={'thread_pk': self.thread.pk,
+                    'pk': self.post.pk}
         )
 
     def test_read_anonymous(self):

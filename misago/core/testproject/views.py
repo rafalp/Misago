@@ -26,7 +26,9 @@ def test_mail_user(request):
 
 
 def test_mail_users(request):
-    mail.mail_users(request, UserModel.objects.iterator(), "Misago Test Spam", "misago/emails/base")
+    mail.mail_users(
+        request, UserModel.objects.iterator(), "Misago Test Spam", "misago/emails/base"
+    )
 
     return HttpResponse("Mailed users!")
 

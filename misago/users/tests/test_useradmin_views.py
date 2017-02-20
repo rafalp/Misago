@@ -515,7 +515,9 @@ class UserAdminViewsTests(AdminTestCase):
     def test_delete_posts_view(self):
         """delete user posts view deletes posts"""
         test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
-        test_link = reverse('misago:admin:users:accounts:delete-posts', kwargs={'pk': test_user.pk})
+        test_link = reverse(
+            'misago:admin:users:accounts:delete-posts', kwargs={'pk': test_user.pk}
+        )
 
         category = Category.objects.all_categories()[:1][0]
         thread = post_thread(category)

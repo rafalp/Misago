@@ -440,7 +440,9 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
-        self.assertEqual(response_json['detail'][0], "This post is protected. You can't reveal it.")
+        self.assertEqual(
+            response_json['detail'][0], "This post is protected. You can't reveal it."
+        )
 
         self.refresh_post()
         self.assertTrue(self.post.is_hidden)
@@ -689,19 +691,37 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
         """api validates user's permission to see posts likes"""
         self.override_acl({'can_see_posts_likes': 0})
 
-        response = self.patch(self.api_link, [{'op': 'replace', 'path': 'is-liked', 'value': True}])
+        response = self.patch(
+            self.api_link, [{
+                'op': 'replace',
+                'path': 'is-liked',
+                'value': True
+            }]
+        )
         self.assertContains(response, "You can't like posts in this category.", status_code=400)
 
     def test_like_no_like_permission(self):
         """api validates user's permission to see posts likes"""
         self.override_acl({'can_like_posts': False})
 
-        response = self.patch(self.api_link, [{'op': 'replace', 'path': 'is-liked', 'value': True}])
+        response = self.patch(
+            self.api_link, [{
+                'op': 'replace',
+                'path': 'is-liked',
+                'value': True
+            }]
+        )
         self.assertContains(response, "You can't like posts in this category.", status_code=400)
 
     def test_like_post(self):
         """api adds user like to post"""
-        response = self.patch(self.api_link, [{'op': 'replace', 'path': 'is-liked', 'value': True}])
+        response = self.patch(
+            self.api_link, [{
+                'op': 'replace',
+                'path': 'is-liked',
+                'value': True
+            }]
+        )
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -725,7 +745,13 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
         testutils.like_post(self.post, username='Bob')
         testutils.like_post(self.post, username='Miku')
 
-        response = self.patch(self.api_link, [{'op': 'replace', 'path': 'is-liked', 'value': True}])
+        response = self.patch(
+            self.api_link, [{
+                'op': 'replace',
+                'path': 'is-liked',
+                'value': True
+            }]
+        )
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -777,7 +803,13 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
         """api does no state change if we are linking liked post"""
         testutils.like_post(self.post, self.user)
 
-        response = self.patch(self.api_link, [{'op': 'replace', 'path': 'is-liked', 'value': True}])
+        response = self.patch(
+            self.api_link, [{
+                'op': 'replace',
+                'path': 'is-liked',
+                'value': True
+            }]
+        )
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()

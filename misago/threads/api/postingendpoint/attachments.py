@@ -60,7 +60,9 @@ class AttachmentsSerializer(serializers.Serializer):
                     message = _(
                         "You don't have permission to remove \"%(attachment)s\" attachment."
                     )
-                    raise serializers.ValidationError(message % {'attachment': attachment.filename})
+                    raise serializers.ValidationError(
+                        message % {'attachment': attachment.filename}
+                    )
 
         if new_attachments:
             self.update_attachments = True

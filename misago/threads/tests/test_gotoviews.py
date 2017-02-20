@@ -26,8 +26,8 @@ class GotoPostTests(GotoViewTestCase):
         response = self.client.get(self.thread.first_post.get_absolute_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'], GOTO_URL %
-            (self.thread.get_absolute_url(), self.thread.first_post_id)
+            response['location'],
+            GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id)
         )
 
         response = self.client.get(response['location'])
@@ -40,7 +40,9 @@ class GotoPostTests(GotoViewTestCase):
 
         response = self.client.get(post.get_absolute_url())
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], GOTO_URL % (self.thread.get_absolute_url(), post.pk))
+        self.assertEqual(
+            response['location'], GOTO_URL % (self.thread.get_absolute_url(), post.pk)
+        )
 
         response = self.client.get(response['location'])
         self.assertContains(response, post.get_absolute_url())
@@ -108,8 +110,8 @@ class GotoLastTests(GotoViewTestCase):
         response = self.client.get(self.thread.get_last_post_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'], GOTO_URL %
-            (self.thread.get_absolute_url(), self.thread.first_post_id)
+            response['location'],
+            GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id)
         )
 
         response = self.client.get(response['location'])
@@ -122,7 +124,9 @@ class GotoLastTests(GotoViewTestCase):
 
         response = self.client.get(self.thread.get_last_post_url())
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], GOTO_URL % (self.thread.get_absolute_url(), post.pk))
+        self.assertEqual(
+            response['location'], GOTO_URL % (self.thread.get_absolute_url(), post.pk)
+        )
 
         response = self.client.get(response['location'])
         self.assertContains(response, post.get_absolute_url())
@@ -134,8 +138,8 @@ class GotoNewTests(GotoViewTestCase):
         response = self.client.get(self.thread.get_new_post_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'], GOTO_URL %
-            (self.thread.get_absolute_url(), self.thread.first_post_id)
+            response['location'],
+            GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id)
         )
 
     def test_goto_first_new_post(self):
@@ -149,7 +153,9 @@ class GotoNewTests(GotoViewTestCase):
 
         response = self.client.get(self.thread.get_new_post_url())
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], GOTO_URL % (self.thread.get_absolute_url(), post.pk))
+        self.assertEqual(
+            response['location'], GOTO_URL % (self.thread.get_absolute_url(), post.pk)
+        )
 
     def test_goto_first_new_post_on_next_page(self):
         """first unread post redirect url in already read multipage thread is valid"""
@@ -219,8 +225,8 @@ class GotoUnapprovedTests(GotoViewTestCase):
         response = self.client.get(self.thread.get_unapproved_post_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'], GOTO_URL %
-            (self.thread.get_absolute_url(), self.thread.first_post_id)
+            response['location'],
+            GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id)
         )
 
     def test_vie_handles_unapproved_posts(self):

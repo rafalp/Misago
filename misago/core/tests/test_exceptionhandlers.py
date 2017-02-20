@@ -9,8 +9,8 @@ from misago.users.models import Ban
 
 
 INVALID_EXCEPTIONS = (
-    django_exceptions.ObjectDoesNotExist, django_exceptions.ViewDoesNotExist, TypeError, ValueError,
-    KeyError,
+    django_exceptions.ObjectDoesNotExist, django_exceptions.ViewDoesNotExist, TypeError,
+    ValueError, KeyError,
 )
 
 

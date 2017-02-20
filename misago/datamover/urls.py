@@ -43,11 +43,16 @@ urlpatterns += [
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/watch/email/$', views.thread_redirect),
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/unwatch/$', views.thread_redirect),
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/unwatch/email/$', views.thread_redirect),
-    url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/upvote/$', views.thread_redirect),
     url(
-        r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/downvote/$', views.thread_redirect
+        r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/upvote/$', views.thread_redirect
     ),
-    url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/report/$', views.thread_redirect),
+    url(
+        r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/downvote/$',
+        views.thread_redirect
+    ),
+    url(
+        r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/report/$', views.thread_redirect
+    ),
     url(
         r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/show-report/$',
         views.thread_redirect
@@ -55,7 +60,9 @@ urlpatterns += [
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/delete/$', views.thread_redirect),
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/hide/$', views.thread_redirect),
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/show/$', views.thread_redirect),
-    url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/delete/$', views.thread_redirect),
+    url(
+        r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/delete/$', views.thread_redirect
+    ),
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/hide/$', views.thread_redirect),
     url(r'^thread/(?P<slug>(\w|-)+)-(?P<thread>\d+)/(?P<post>\d+)/show/$', views.thread_redirect),
     url(
@@ -91,7 +98,8 @@ urlpatterns += [
         r'^private-threads/(?P<slug>(\w|-)+)-(?P<thread>\d+)/edit/$', views.private_thread_redirect
     ),
     url(
-        r'^private-threads/(?P<slug>(\w|-)+)-(?P<thread>\d+)/reply/$', views.private_thread_redirect
+        r'^private-threads/(?P<slug>(\w|-)+)-(?P<thread>\d+)/reply/$',
+        views.private_thread_redirect
     ),
     url(
         r'^private-threads/(?P<slug>(\w|-)+)-(?P<thread>\d+)/vote/$', views.private_thread_redirect
@@ -119,7 +127,9 @@ urlpatterns += [
         r'^private-threads/(?P<slug>(\w|-)+)-(?P<thread>\d+)/find-(?P<post>\d+)/$',
         views.private_thread_redirect
     ),
-    url(r'^private-threads/(?P<slug>(\w|-)+)-(?P<thread>\d+)/new/$', views.private_thread_redirect),
+    url(
+        r'^private-threads/(?P<slug>(\w|-)+)-(?P<thread>\d+)/new/$', views.private_thread_redirect
+    ),
     url(
         r'^private-threads/(?P<slug>(\w|-)+)-(?P<thread>\d+)/moderated/$',
         views.private_thread_redirect
@@ -133,7 +143,8 @@ urlpatterns += [
         views.private_thread_redirect
     ),
     url(
-        r'^private-threads/(?P<slug>(\w|-)+)-(?P<thread>\d+)/watch/$', views.private_thread_redirect
+        r'^private-threads/(?P<slug>(\w|-)+)-(?P<thread>\d+)/watch/$',
+        views.private_thread_redirect
     ),
     url(
         r'^private-threads/(?P<slug>(\w|-)+)-(?P<thread>\d+)/watch/email/$',

@@ -86,8 +86,7 @@ def validate_username_length(value):
             "Username must be at least %(limit_value)s characters long.",
             settings.username_length_min
         )
-        message = message % {'limit_value': settings.username_length_min}
-        raise ValidationError(message)
+        raise ValidationError(message % {'limit_value': settings.username_length_min})
 
     if len(value) > settings.username_length_max:
         message = ungettext(
@@ -95,8 +94,7 @@ def validate_username_length(value):
             "Username cannot be longer than %(limit_value)s characters.",
             settings.username_length_max
         )
-        message = message % {'limit_value': settings.username_length_max}
-        raise ValidationError(message)
+        raise ValidationError(message % {'limit_value': settings.username_length_max})
 
 
 def validate_username(value, exclude=None):

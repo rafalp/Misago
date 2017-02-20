@@ -11,7 +11,8 @@ class PostsPaginator(Paginator):
         per_page = int(per_page) - 1
         if orphans:
             orphans += 1
-        super(PostsPaginator, self).__init__(object_list, per_page, orphans, allow_empty_first_page)
+        super(PostsPaginator,
+              self).__init__(object_list, per_page, orphans, allow_empty_first_page)
 
     def page(self, number):
         """

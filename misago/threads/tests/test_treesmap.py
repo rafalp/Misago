@@ -72,7 +72,8 @@ class TreesMapTests(TestCase):
         thread_type = trees_map.get_type_for_tree_id(tree_id)
 
         self.assertEqual(
-            thread_type.root_name, 'root_category', "returned invalid thread type for given tree id"
+            thread_type.root_name, 'root_category',
+            "returned invalid thread type for given tree id"
         )
 
         try:

@@ -110,7 +110,8 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
         self.assertEqual([c['votes'] for c in response_json], [1, 0, 2, 1])
         self.assertEqual([len(c['voters']) for c in response_json], [1, 0, 2, 1])
 
-        self.assertEqual([[v['username'] for v in c['voters']] for c in response_json][0][0], 'bob')
+        self.assertEqual([[v['username'] for v in c['voters']] for c in response_json][0][0],
+                         'bob')
 
         user = UserModel.objects.get(slug='bob')
 
@@ -134,7 +135,8 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
         self.assertEqual([c['votes'] for c in response_json], [1, 0, 2, 1])
         self.assertEqual([len(c['voters']) for c in response_json], [1, 0, 2, 1])
 
-        self.assertEqual([[v['username'] for v in c['voters']] for c in response_json][0][0], 'bob')
+        self.assertEqual([[v['username'] for v in c['voters']] for c in response_json][0][0],
+                         'bob')
 
         user = UserModel.objects.get(slug='bob')
 

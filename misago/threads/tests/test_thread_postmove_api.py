@@ -20,7 +20,9 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(category=self.category)
 
-        self.api_link = reverse('misago:api:thread-post-move', kwargs={'thread_pk': self.thread.pk})
+        self.api_link = reverse(
+            'misago:api:thread-post-move', kwargs={'thread_pk': self.thread.pk}
+        )
 
         Category(
             name='Category B',

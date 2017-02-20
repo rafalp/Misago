@@ -263,7 +263,9 @@ def allow_add_participant(user, target):
     message_format = {'user': target.username}
 
     if not can_use_private_threads(target):
-        raise PermissionDenied(_("%(user)s can't participate in private threads.") % message_format)
+        raise PermissionDenied(
+            _("%(user)s can't participate in private threads.") % message_format
+        )
 
     if user.acl_cache['can_add_everyone_to_private_threads']:
         return
