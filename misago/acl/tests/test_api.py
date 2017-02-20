@@ -11,8 +11,7 @@ UserModel = get_user_model()
 class GetUserACLTests(TestCase):
     def test_get_authenticated_acl(self):
         """get ACL for authenticated user"""
-        test_user = UserModel.objects.create_user(
-            'Bob', 'bob@bob.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
 
         acl = get_user_acl(test_user)
 

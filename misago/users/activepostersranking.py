@@ -38,15 +38,10 @@ def build_active_posters_ranking():
         ranked_categories.append(category.pk)
 
     queryset = UserModel.objects.filter(
-        is_active=True,
-        posts__gt=0
+        is_active=True, posts__gt=0
     ).filter(
-        post__posted_on__gte=tracked_since,
-        post__category__in=ranked_categories
+        post__posted_on__gte=tracked_since, post__category__in=ranked_categories
     ).annotate(score=Count('post'))
 
     for ranking in queryset[:settings.MISAGO_RANKING_SIZE].iterator():
-        ActivityRanking.objects.create(
-            user=ranking,
-            score=ranking.score
-        )
+        ActivityRanking.objects.create(user=ranking, score=ranking.score)

@@ -59,13 +59,13 @@ class CategoryFormMixin(object):
     def handle_form(self, form, request, target):
         if form.instance.pk:
             if form.instance.parent_id != form.cleaned_data['new_parent'].pk:
-                form.instance.move_to(
-                    form.cleaned_data['new_parent'], position='last-child')
+                form.instance.move_to(form.cleaned_data['new_parent'], position='last-child')
             form.instance.save()
             if form.instance.parent_id != form.cleaned_data['new_parent'].pk:
                 Category.objects.clear_cache()
         else:
-            form.instance.insert_at(form.cleaned_data['new_parent'],
+            form.instance.insert_at(
+                form.cleaned_data['new_parent'],
                 position='last-child',
                 save=True,
             )
@@ -77,11 +77,13 @@ class CategoryFormMixin(object):
 
             copied_acls = []
             for acl in copy_from.category_role_set.all():
-                copied_acls.append(RoleCategoryACL(
-                    role_id=acl.role_id,
-                    category=form.instance,
-                    category_role_id=acl.category_role_id,
-                ))
+                copied_acls.append(
+                    RoleCategoryACL(
+                        role_id=acl.role_id,
+                        category=form.instance,
+                        category_role_id=acl.category_role_id,
+                    )
+                )
 
             if copied_acls:
                 RoleCategoryACL.objects.bulk_create(copied_acls)

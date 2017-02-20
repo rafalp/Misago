@@ -22,9 +22,7 @@ class PrivateThreadsListTests(PrivateThreadsTestCase):
 
     def test_no_permission(self):
         """view requires user to have permission to be able to access it"""
-        override_acl(self.user, {
-            'can_use_private_threads': 0
-        })
+        override_acl(self.user, {'can_use_private_threads': 0})
 
         response = self.client.get(self.test_link)
         self.assertContains(response, "use private threads", status_code=403)
@@ -53,9 +51,7 @@ class PrivateThreadsListTests(PrivateThreadsTestCase):
         self.assertContains(response, visible.get_absolute_url())
 
         # threads with reported posts will also show to moderators
-        override_acl(self.user, {
-            'can_moderate_private_threads': 1
-        })
+        override_acl(self.user, {'can_moderate_private_threads': 1})
 
         response = self.client.get(self.test_link)
         self.assertEqual(response.status_code, 200)

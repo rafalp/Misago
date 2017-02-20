@@ -14,10 +14,10 @@ urlpatterns = [
     url(r'^', include('misago.search.urls')),
 
     # default robots.txt
-    url(r'^robots.txt$', TemplateView.as_view(
-        content_type='text/plain',
-        template_name='misago/robots.txt'
-    )),
+    url(
+        r'^robots.txt$',
+        TemplateView.as_view(content_type='text/plain', template_name='misago/robots.txt')
+    ),
 
     # "misago:index" link symbolises "root" of Misago links space
     # any request with path that falls below this one is assumed to be directed
@@ -25,7 +25,6 @@ urlpatterns = [
     # results in Http404 or PermissionDenied exception
     url(r'^$', forum_index, name='index'),
 ]
-
 
 # Register API
 apipatterns = [
@@ -40,7 +39,6 @@ urlpatterns += [
     url(r'^api/', include(apipatterns, namespace='api')),
 ]
 
-
 # Register Misago ACP
 if settings.MISAGO_ADMIN_PATH:
     # Admin patterns recognised by Misago
@@ -52,7 +50,6 @@ if settings.MISAGO_ADMIN_PATH:
     urlpatterns += [
         url(admin_prefix, include(adminpatterns, namespace='admin')),
     ]
-
 
 # Make error pages accessible casually in DEBUG
 if settings.DEBUG:

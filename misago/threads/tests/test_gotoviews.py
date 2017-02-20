@@ -25,7 +25,10 @@ class GotoPostTests(GotoViewTestCase):
         """first post redirect url is valid"""
         response = self.client.get(self.thread.first_post.get_absolute_url())
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id))
+        self.assertEqual(
+            response['location'], GOTO_URL %
+            (self.thread.get_absolute_url(), self.thread.first_post_id)
+        )
 
         response = self.client.get(response['location'])
         self.assertContains(response, self.thread.first_post.get_absolute_url())
@@ -49,7 +52,9 @@ class GotoPostTests(GotoViewTestCase):
 
         response = self.client.get(post.get_absolute_url())
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk))
+        self.assertEqual(
+            response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk)
+        )
 
         response = self.client.get(response['location'])
         self.assertContains(response, post.get_absolute_url())
@@ -65,7 +70,9 @@ class GotoPostTests(GotoViewTestCase):
 
         response = self.client.get(post.get_absolute_url())
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 3, post.pk))
+        self.assertEqual(
+            response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 3, post.pk)
+        )
 
         response = self.client.get(response['location'])
         self.assertContains(response, post.get_absolute_url())
@@ -87,7 +94,9 @@ class GotoPostTests(GotoViewTestCase):
 
         response = self.client.get(post.get_absolute_url())
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 3, post.pk))
+        self.assertEqual(
+            response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 3, post.pk)
+        )
 
         response = self.client.get(response['location'])
         self.assertContains(response, post.get_absolute_url())
@@ -98,7 +107,10 @@ class GotoLastTests(GotoViewTestCase):
         """first post redirect url is valid"""
         response = self.client.get(self.thread.get_last_post_url())
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id))
+        self.assertEqual(
+            response['location'], GOTO_URL %
+            (self.thread.get_absolute_url(), self.thread.first_post_id)
+        )
 
         response = self.client.get(response['location'])
         self.assertContains(response, self.thread.last_post.get_absolute_url())
@@ -121,7 +133,10 @@ class GotoNewTests(GotoViewTestCase):
         """first unread post redirect url is valid"""
         response = self.client.get(self.thread.get_new_post_url())
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id))
+        self.assertEqual(
+            response['location'], GOTO_URL %
+            (self.thread.get_absolute_url(), self.thread.first_post_id)
+        )
 
     def test_goto_first_new_post(self):
         """first unread post redirect url in already read thread is valid"""
@@ -150,7 +165,9 @@ class GotoNewTests(GotoViewTestCase):
 
         response = self.client.get(self.thread.get_new_post_url())
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk))
+        self.assertEqual(
+            response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk)
+        )
 
     def test_goto_first_new_post_in_read_thread(self):
         """goto new in read thread points to last post"""
@@ -162,7 +179,9 @@ class GotoNewTests(GotoViewTestCase):
 
         response = self.client.get(self.thread.get_new_post_url())
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk))
+        self.assertEqual(
+            response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk)
+        )
 
     def test_guest_goto_first_new_post_in_thread(self):
         """guest goto new in read thread points to last post"""
@@ -173,7 +192,9 @@ class GotoNewTests(GotoViewTestCase):
 
         response = self.client.get(self.thread.get_new_post_url())
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk))
+        self.assertEqual(
+            response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk)
+        )
 
 
 class GotoUnapprovedTests(GotoViewTestCase):
@@ -197,7 +218,10 @@ class GotoUnapprovedTests(GotoViewTestCase):
 
         response = self.client.get(self.thread.get_unapproved_post_url())
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id))
+        self.assertEqual(
+            response['location'], GOTO_URL %
+            (self.thread.get_absolute_url(), self.thread.first_post_id)
+        )
 
     def test_vie_handles_unapproved_posts(self):
         """if thread has unapproved posts, redirect to first of them"""
@@ -215,4 +239,6 @@ class GotoUnapprovedTests(GotoViewTestCase):
 
         response = self.client.get(self.thread.get_new_post_url())
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk))
+        self.assertEqual(
+            response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk)
+        )

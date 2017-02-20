@@ -7,18 +7,9 @@ from misago.users.models import Ban
 class BansManagerTests(TestCase):
     def setUp(self):
         Ban.objects.bulk_create([
-            Ban(
-                check_type=Ban.USERNAME,
-                banned_value='bob'
-            ),
-            Ban(
-                check_type=Ban.EMAIL,
-                banned_value='bob@test.com'
-            ),
-            Ban(
-                check_type=Ban.IP,
-                banned_value='127.0.0.1'
-            ),
+            Ban(check_type=Ban.USERNAME, banned_value='bob'),
+            Ban(check_type=Ban.EMAIL, banned_value='bob@test.com'),
+            Ban(check_type=Ban.IP, banned_value='127.0.0.1'),
         ])
 
     def test_get_ban_for_banned_name(self):

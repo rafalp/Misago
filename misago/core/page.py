@@ -5,6 +5,7 @@ class Page(object):
     Allows for adding custom views to "sectioned" pages like
     User Control Panel, Users List or Threads Lists
     """
+
     def __init__(self, name):
         self._finalized = False
         self.name = name
@@ -21,17 +22,17 @@ class Page(object):
         while self._unsorted_list:
             iterations += 1
             if iterations > 512:
-                message = ("%s page hierarchy is invalid or too complex  to "
-                           "resolve. Sections left: %s" % self._unsorted_list)
+                message = (
+                    "%s page hierarchy is invalid or too complex  to "
+                    "resolve. Sections left: %s" % self._unsorted_list
+                )
                 raise ValueError(message)
 
             for index, section in enumerate(self._unsorted_list):
                 if section['after']:
-                    section_added = self._insert_section(
-                        section, after=section['after'])
+                    section_added = self._insert_section(section, after=section['after'])
                 elif section['before']:
-                    section_added = self._insert_section(
-                        section, before=section['before'])
+                    section_added = self._insert_section(section, before=section['before'])
                 else:
                     section_added = self._insert_section(section)
 
@@ -66,11 +67,11 @@ class Page(object):
             self._sorted_list.append(inserted_section)
             return True
 
-    def add_section(self, link, after=None, before=None,
-                visible_if=None, get_metadata=None, **kwargs):
+    def add_section(
+            self, link, after=None, before=None, visible_if=None, get_metadata=None, **kwargs
+    ):
         if self._finalized:
-            message = ("%s page was initialized already and no longer "
-                       "accepts new sections")
+            message = ("%s page was initialized already and no longer " "accepts new sections")
             raise RuntimeError(message % self.name)
 
         if after and before:
@@ -110,8 +111,7 @@ class Page(object):
 
             if is_visible:
                 if section['get_metadata']:
-                    section['metadata'] = section['get_metadata'](
-                        request, *args)
+                    section['metadata'] = section['get_metadata'](request, *args)
                 section['is_active'] = active_link.startswith(section['link'])
                 visible_sections.append(section)
         return visible_sections

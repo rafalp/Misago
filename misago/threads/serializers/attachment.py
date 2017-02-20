@@ -21,19 +21,8 @@ class AttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attachment
         fields = (
-            'id',
-            'filetype',
-            'post',
-            'uploaded_on',
-            'uploader_name',
-            'uploader_ip',
-            'filename',
-            'size',
-
-            'acl',
-            'is_image',
-
-            'url',
+            'id', 'filetype', 'post', 'uploaded_on', 'uploader_name', 'uploader_ip', 'filename',
+            'size', 'acl', 'is_image', 'url',
         )
 
     def get_acl(self, obj):
@@ -63,9 +52,11 @@ class AttachmentSerializer(serializers.ModelSerializer):
 
     def get_uploader_url(self, obj):
         if obj.uploader_id:
-            return reverse('misago:user', kwargs={
-                'slug': obj.uploader_slug,
-                'pk': obj.uploader_id,
-            })
+            return reverse(
+                'misago:user', kwargs={
+                    'slug': obj.uploader_slug,
+                    'pk': obj.uploader_id,
+                }
+            )
         else:
             return None

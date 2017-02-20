@@ -10,10 +10,12 @@ class SimpleBBCodePattern(SimpleTagPattern):
     """
     Case insensitive simple BBCode
     """
+
     def __init__(self, bbcode, tag=None):
         self.pattern = r'(\[%s\](.*?)\[/%s\])' % (bbcode, bbcode)
-        self.compiled_re = re.compile("^(.*?)%s(.*?)$" % self.pattern,
-                                      re.DOTALL | re.UNICODE | re.IGNORECASE)
+        self.compiled_re = re.compile(
+            "^(.*?)%s(.*?)$" % self.pattern, re.DOTALL | re.UNICODE | re.IGNORECASE
+        )
 
         # Api for Markdown to pass safe_mode into instance
         self.safe_mode = False

@@ -17,8 +17,7 @@ UserModel = get_user_model()
 class AvatarsStoreTests(TestCase):
     def test_store(self):
         """store successfully stores and deletes avatar"""
-        user = UserModel.objects.create_user(
-            'Bob', 'bob@bob.com', 'pass123')
+        user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
 
         test_image = Image.new("RGBA", (100, 100), 0)
         store.store_new_avatar(user, test_image)
@@ -85,8 +84,7 @@ class AvatarsStoreTests(TestCase):
 
 class AvatarSetterTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user(
-            'Bob', 'kontakt@rpiton.com', 'pass123')
+        self.user = UserModel.objects.create_user('Bob', 'kontakt@rpiton.com', 'pass123')
 
         self.user.avatars = None
         self.user.save()
@@ -158,7 +156,8 @@ class AvatarSetterTests(TestCase):
     def test_default_avatar_gravatar_fallback_dynamic(self):
         """default gravatar fails but fallback dynamic works"""
         gibberish_email = '%s@%s.%s' % (
-            get_random_string(6), get_random_string(6), get_random_string(3))
+            get_random_string(6), get_random_string(6), get_random_string(3)
+        )
         self.user.set_email(gibberish_email)
         self.user.save()
 
@@ -169,7 +168,8 @@ class AvatarSetterTests(TestCase):
     def test_default_avatar_gravatar_fallback_empty_gallery(self):
         """default both gravatar and fallback fail set"""
         gibberish_email = '%s@%s.%s' % (
-            get_random_string(6), get_random_string(6), get_random_string(3))
+            get_random_string(6), get_random_string(6), get_random_string(3)
+        )
         self.user.set_email(gibberish_email)
         self.user.save()
 
@@ -198,22 +198,18 @@ class UploadedAvatarTests(TestCase):
             uploaded.clean_crop(image, {'offset': {'x': 'ugabuga'}})
 
         with self.assertRaises(ValidationError):
-            uploaded.clean_crop(image, {
-                    'offset': {
-                        'x': 0,
-                        'y': 0,
-                    },
-                    'zoom': -2
-                })
+            uploaded.clean_crop(image, {'offset': {
+                'x': 0,
+                'y': 0,
+            },
+                                        'zoom': -2})
 
         with self.assertRaises(ValidationError):
-            uploaded.clean_crop(image, {
-                    'offset': {
-                        'x': 0,
-                        'y': 0,
-                    },
-                    'zoom': 2
-                })
+            uploaded.clean_crop(image, {'offset': {
+                'x': 0,
+                'y': 0,
+            },
+                                        'zoom': 2})
 
     def test_uploaded_image_size_validation(self):
         """uploaded image size is validated"""

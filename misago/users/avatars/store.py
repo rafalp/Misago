@@ -39,11 +39,10 @@ def store_avatar(user, image):
         image = image.resize((size, size), Image.ANTIALIAS)
         image.save(image_stream, "PNG")
 
-        avatars.append(Avatar.objects.create(
-            user=user,
-            size=size,
-            image=ContentFile(image_stream.getvalue(), 'avatar')
-        ))
+        avatars.append(
+            Avatar.objects.
+            create(user=user, size=size, image=ContentFile(image_stream.getvalue(), 'avatar'))
+        )
 
     user.avatars = [{'size': a.size, 'url': a.url} for a in avatars]
     user.save(update_fields=['avatars'])
@@ -80,5 +79,4 @@ def upload_to(instance, filename):
     secret = get_random_string(32)
     filename_clean = '%s.png' % get_random_string(32)
 
-    return os.path.join(
-        'avatars', spread_path[:2], spread_path[2:4], secret, filename_clean)
+    return os.path.join('avatars', spread_path[:2], spread_path[2:4], secret, filename_clean)

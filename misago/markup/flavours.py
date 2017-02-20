@@ -24,16 +24,28 @@ def limited(request, text):
 
     Returns parsed text
     """
-    result = parse(text, request, request.user, allow_mentions=False,
-                   allow_links=True, allow_images=False, allow_blocks=False)
+    result = parse(
+        text,
+        request,
+        request.user,
+        allow_mentions=False,
+        allow_links=True,
+        allow_images=False,
+        allow_blocks=False
+    )
 
     return result['parsed_text']
 
 
 def signature(request, owner, text):
-    result = parse(text, request, owner, allow_mentions=False,
-                   allow_blocks=owner.acl_cache['allow_signature_blocks'],
-                   allow_links=owner.acl_cache['allow_signature_links'],
-                   allow_images=owner.acl_cache['allow_signature_images'])
+    result = parse(
+        text,
+        request,
+        owner,
+        allow_mentions=False,
+        allow_blocks=owner.acl_cache['allow_signature_blocks'],
+        allow_links=owner.acl_cache['allow_signature_links'],
+        allow_images=owner.acl_cache['allow_signature_images']
+    )
 
     return result['parsed_text']

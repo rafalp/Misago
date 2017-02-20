@@ -9,16 +9,12 @@ def user_links(request):
         request.frontend_context.update({
             'REQUEST_ACTIVATION_URL': reverse('misago:request-activation'),
             'FORGOTTEN_PASSWORD_URL': reverse('misago:forgotten-password'),
-
             'BANNED_URL': reverse('misago:banned'),
-
             'USERCP_URL': reverse('misago:options'),
             'USERS_LIST_URL': reverse('misago:users'),
-
             'AUTH_API': reverse('misago:api:auth'),
             'AUTH_CRITERIA_API': reverse('misago:api:auth-criteria'),
             'USERS_API': reverse('misago:api:user-list'),
-
             'CAPTCHA_API': reverse('misago:api:captcha-question'),
             'USERNAME_CHANGES_API': reverse('misago:api:usernamechange-list'),
         })
@@ -39,12 +35,8 @@ def preload_user_json(request):
     })
 
     if request.user.is_authenticated:
-        request.frontend_context.update({
-            'user': AuthenticatedUserSerializer(request.user).data
-        })
+        request.frontend_context.update({'user': AuthenticatedUserSerializer(request.user).data})
     else:
-        request.frontend_context.update({
-            'user': AnonymousUserSerializer(request.user).data
-        })
+        request.frontend_context.update({'user': AnonymousUserSerializer(request.user).data})
 
     return {}

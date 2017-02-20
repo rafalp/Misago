@@ -22,14 +22,19 @@ class SearchThreads(SearchProvider):
 
         if len(query) > 2:
             visible_threads = exclude_invisible_threads(
-                self.request.user, threads_categories, Thread.objects)
+                self.request.user, threads_categories, Thread.objects
+            )
             results = search_threads(self.request, query, visible_threads)
         else:
             results = []
 
         list_page = paginate(
-            results, page, settings.MISAGO_POSTS_PER_PAGE, settings.MISAGO_POSTS_TAIL,
-            allow_explicit_first_page=True)
+            results,
+            page,
+            settings.MISAGO_POSTS_PER_PAGE,
+            settings.MISAGO_POSTS_TAIL,
+            allow_explicit_first_page=True
+        )
         paginator = pagination_dict(list_page)
 
         posts = list(list_page.object_list)
@@ -38,12 +43,10 @@ class SearchThreads(SearchProvider):
         for post in posts:
             threads.append(post.thread)
 
-        add_categories_to_items(
-            root_category.unwrap(), threads_categories, posts + threads)
+        add_categories_to_items(root_category.unwrap(), threads_categories, posts + threads)
 
         results = {
-            'results': FeedSerializer(
-                posts, many=True, context={'user': self.request.user}).data
+            'results': FeedSerializer(posts, many=True, context={'user': self.request.user}).data
         }
         results.update(paginator)
 

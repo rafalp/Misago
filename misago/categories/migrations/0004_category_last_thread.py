@@ -16,7 +16,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='category',
             name='last_thread',
-            field=models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='misago_threads.Thread', null=True),
+            field=models.ForeignKey(
+                related_name='+',
+                on_delete=django.db.models.deletion.SET_NULL,
+                blank=True,
+                to='misago_threads.Thread',
+                null=True
+            ),
             preserve_default=True,
         ),
     ]

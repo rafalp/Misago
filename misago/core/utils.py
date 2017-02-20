@@ -37,10 +37,8 @@ def encode_json_html(string):
 """
 Turn ISO 8601 string into datetime object
 """
-ISO8601_FORMATS = (
-    "%Y-%m-%dT%H:%M:%S",
-    "%Y-%m-%dT%H:%M:%S.%f",
-)
+ISO8601_FORMATS = ("%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M:%S.%f", )
+
 
 def parse_iso8601_string(value):
     value = force_text(value, strings_only=True).rstrip('Z')
@@ -76,6 +74,8 @@ Mark request as having sensitive parameters
 We can't use decorator because of DRF uses custom HttpRequest
 that is incompatibile with Django's decorator
 """
+
+
 def hide_post_parameters(request):
     request.sensitive_post_parameters = '__ALL__'
 
@@ -83,6 +83,8 @@ def hide_post_parameters(request):
 """
 Return path utility
 """
+
+
 def clean_return_path(request):
     if request.method == 'POST' and 'return_path' in request.POST:
         return _get_return_path_from_post(request)
@@ -125,6 +127,8 @@ def _get_return_path_from_referer(request):
 """
 Utils for resolving requests destination
 """
+
+
 def _is_request_path_under_misago(request):
     # We are assuming that forum_index link is root of all Misago links
     forum_index = reverse('misago:index')

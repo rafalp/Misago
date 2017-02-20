@@ -1,5 +1,5 @@
 #!/bin/bash
 
+yapf -ir misago -e '*/project_template/**/*.py'
 isort -rc misago
-yapf -ir misago
 pylint misago

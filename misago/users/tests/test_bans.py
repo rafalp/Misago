@@ -18,25 +18,18 @@ class GetBanTests(TestCase):
         nonexistent_ban = get_username_ban('nonexistent')
         self.assertIsNone(nonexistent_ban)
 
-        Ban.objects.create(
-            banned_value='expired',
-            expires_on=timezone.now() - timedelta(days=7)
-        )
+        Ban.objects.create(banned_value='expired', expires_on=timezone.now() - timedelta(days=7))
 
         expired_ban = get_username_ban('expired')
         self.assertIsNone(expired_ban)
 
-        Ban.objects.create(
-            banned_value='wrongtype',
-            check_type=Ban.EMAIL
-        )
+        Ban.objects.create(banned_value='wrongtype', check_type=Ban.EMAIL)
 
         wrong_type_ban = get_username_ban('wrongtype')
         self.assertIsNone(wrong_type_ban)
 
         valid_ban = Ban.objects.create(
-            banned_value='admi*',
-            expires_on=timezone.now() + timedelta(days=7)
+            banned_value='admi*', expires_on=timezone.now() + timedelta(days=7)
         )
         self.assertEqual(get_username_ban('admiral').pk, valid_ban.pk)
 
@@ -54,10 +47,7 @@ class GetBanTests(TestCase):
         expired_ban = get_email_ban('ex@pired.com')
         self.assertIsNone(expired_ban)
 
-        Ban.objects.create(
-            banned_value='wrong@type.com',
-            check_type=Ban.IP
-        )
+        Ban.objects.create(banned_value='wrong@type.com', check_type=Ban.IP)
 
         wrong_type_ban = get_email_ban('wrong@type.com')
         self.assertIsNone(wrong_type_ban)
@@ -83,10 +73,7 @@ class GetBanTests(TestCase):
         expired_ban = get_ip_ban('124.0.0.1')
         self.assertIsNone(expired_ban)
 
-        Ban.objects.create(
-            banned_value='wrongtype',
-            check_type=Ban.EMAIL
-        )
+        Ban.objects.create(banned_value='wrongtype', check_type=Ban.EMAIL)
 
         wrong_type_ban = get_ip_ban('wrongtype')
         self.assertIsNone(wrong_type_ban)
@@ -101,8 +88,7 @@ class GetBanTests(TestCase):
 
 class UserBansTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user(
-            'Bob', 'bob@boberson.com', 'pass123')
+        self.user = UserModel.objects.create_user('Bob', 'bob@boberson.com', 'pass123')
 
     def test_no_ban(self):
         """user is not caught by ban"""
@@ -112,9 +98,7 @@ class UserBansTests(TestCase):
     def test_permanent_ban(self):
         """user is caught by permanent ban"""
         Ban.objects.create(
-            banned_value='bob',
-            user_message='User reason',
-            staff_message='Staff reason'
+            banned_value='bob', user_message='User reason', staff_message='Staff reason'
         )
 
         user_ban = get_user_ban(self.user)
@@ -140,20 +124,14 @@ class UserBansTests(TestCase):
 
     def test_expired_ban(self):
         """user is not caught by expired ban"""
-        Ban.objects.create(
-            banned_value='bo*',
-            expires_on=timezone.now() - timedelta(days=7)
-        )
+        Ban.objects.create(banned_value='bo*', expires_on=timezone.now() - timedelta(days=7))
 
         self.assertIsNone(get_user_ban(self.user))
         self.assertFalse(self.user.ban_cache.is_banned)
 
     def test_expired_non_flagged_ban(self):
         """user is not caught by expired but checked ban"""
-        Ban.objects.create(
-            banned_value='bo*',
-            expires_on=timezone.now() - timedelta(days=7)
-        )
+        Ban.objects.create(banned_value='bo*', expires_on=timezone.now() - timedelta(days=7))
         Ban.objects.update(is_checked=True)
 
         self.assertIsNone(get_user_ban(self.user))
@@ -174,11 +152,7 @@ class RequestIPBansTests(TestCase):
 
     def test_permanent_ban(self):
         """ip is caught by permanent ban"""
-        Ban.objects.create(
-            check_type=Ban.IP,
-            banned_value='127.0.0.1',
-            user_message='User reason'
-        )
+        Ban.objects.create(check_type=Ban.IP, banned_value='127.0.0.1', user_message='User reason')
 
         ip_ban = get_request_ip_ban(FakeRequest())
         self.assertTrue(ip_ban['is_banned'])
@@ -224,8 +198,7 @@ class RequestIPBansTests(TestCase):
 class BanUserTests(TestCase):
     def test_ban_user(self):
         """ban_user utility bans user"""
-        user = UserModel.objects.create_user(
-            'Bob', 'bob@boberson.com', 'pass123')
+        user = UserModel.objects.create_user('Bob', 'bob@boberson.com', 'pass123')
 
         ban = ban_user(user, 'User reason', 'Staff reason')
         self.assertEqual(ban.user_message, 'User reason')

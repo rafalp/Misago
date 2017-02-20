@@ -43,11 +43,14 @@ class SubscribeStartedThreadTests(SubscriptionMiddlewareTestCase):
         self.user.subscribe_to_replied_threads = UserModel.SUBSCRIBE_NOTIFY
         self.user.save()
 
-        response = self.client.post(self.api_link, data={
-            'category': self.category.id,
-            'title': "This is an test thread!",
-            'post': "This is test response!"
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.id,
+                'title': "This is an test thread!",
+                'post': "This is test response!"
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         # user has no subscriptions
@@ -58,11 +61,14 @@ class SubscribeStartedThreadTests(SubscriptionMiddlewareTestCase):
         self.user.subscribe_to_started_threads = UserModel.SUBSCRIBE_NOTIFY
         self.user.save()
 
-        response = self.client.post(self.api_link, data={
-            'category': self.category.id,
-            'title': "This is an test thread!",
-            'post': "This is test response!"
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.id,
+                'title': "This is an test thread!",
+                'post': "This is test response!"
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         # user has subscribed to thread
@@ -77,11 +83,14 @@ class SubscribeStartedThreadTests(SubscriptionMiddlewareTestCase):
         self.user.subscribe_to_started_threads = UserModel.SUBSCRIBE_ALL
         self.user.save()
 
-        response = self.client.post(self.api_link, data={
-            'category': self.category.id,
-            'title': "This is an test thread!",
-            'post': "This is test response!"
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.id,
+                'title': "This is an test thread!",
+                'post': "This is test response!"
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         # user has subscribed to thread
@@ -96,9 +105,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
     def setUp(self):
         super(SubscribeRepliedThreadTests, self).setUp()
         self.thread = testutils.post_thread(self.category)
-        self.api_link = reverse('misago:api:thread-post-list', kwargs={
-            'thread_pk': self.thread.pk
-        })
+        self.api_link = reverse('misago:api:thread-post-list', kwargs={'thread_pk': self.thread.pk})
 
     def test_dont_subscribe(self):
         """middleware makes no subscription to thread"""
@@ -106,9 +113,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
         self.user.subscribe_to_replied_threads = UserModel.SUBSCRIBE_NONE
         self.user.save()
 
-        response = self.client.post(self.api_link, data={
-            'post': "This is test response!"
-        })
+        response = self.client.post(self.api_link, data={'post': "This is test response!"})
         self.assertEqual(response.status_code, 200)
 
         # user has no subscriptions
@@ -119,9 +124,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
         self.user.subscribe_to_replied_threads = UserModel.SUBSCRIBE_NOTIFY
         self.user.save()
 
-        response = self.client.post(self.api_link, data={
-            'post': "This is test response!"
-        })
+        response = self.client.post(self.api_link, data={'post': "This is test response!"})
         self.assertEqual(response.status_code, 200)
 
         # user has subscribed to thread
@@ -135,9 +138,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
         self.user.subscribe_to_replied_threads = UserModel.SUBSCRIBE_ALL
         self.user.save()
 
-        response = self.client.post(self.api_link, data={
-            'post': "This is test response!"
-        })
+        response = self.client.post(self.api_link, data={'post': "This is test response!"})
         self.assertEqual(response.status_code, 200)
 
         # user has subscribed to thread
@@ -151,17 +152,13 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
         self.user.subscribe_to_replied_threads = UserModel.SUBSCRIBE_ALL
         self.user.save()
 
-        response = self.client.post(self.api_link, data={
-            'post': "This is test response!"
-        })
+        response = self.client.post(self.api_link, data={'post': "This is test response!"})
         self.assertEqual(response.status_code, 200)
 
         # clear subscription
         self.user.subscription_set.all().delete()
         # reply again
-        response = self.client.post(self.api_link, data={
-            'post': "This is test response!"
-        })
+        response = self.client.post(self.api_link, data={'post': "This is test response!"})
         self.assertEqual(response.status_code, 200)
 
         # user has no subscriptions

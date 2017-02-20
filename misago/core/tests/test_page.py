@@ -9,19 +9,13 @@ class SiteTests(TestCase):
 
     def test_pages(self):
         """add_section adds section to page"""
-        self.page.add_section(
-            link='misago:user-posts',
-            name='Posts',
-            after='misago:user-threads')
+        self.page.add_section(link='misago:user-posts', name='Posts', after='misago:user-threads')
+
+        self.page.add_section(link='misago:user-threads', name='Threads')
 
         self.page.add_section(
-            link='misago:user-threads',
-            name='Threads')
-
-        self.page.add_section(
-            link='misago:user-follows',
-            name='Follows',
-            before='misago:user-posts')
+            link='misago:user-follows', name='Follows', before='misago:user-posts'
+        )
 
         self.page.assert_is_finalized()
 

@@ -25,16 +25,15 @@ def add_categories_to_items(root_category, categories, items):
         elif root_category.has_child(item.category):
             # item in subcategory resolution
             for category in categories:
-                if (category.parent_id == root_category.pk and
-                        category.has_child(item.category)):
+                if (category.parent_id == root_category.pk and category.has_child(item.category)):
                     top_categories_map[item.category_id] = category
                     item.top_category = category
         else:
             # item from other category's scope
             for category in categories:
                 if category.level == 1 and (
-                        category == item.category or
-                        category.has_child(item.category)):
+                        category == item.category or category.has_child(item.category)
+                ):
                     top_categories_map[item.category_id] = category
                     item.top_category = category
 
@@ -48,8 +47,7 @@ def add_likes_to_posts(user, posts):
         posts_map[post.id] = post
         post.is_liked = False
 
-    queryset = PostLike.objects.filter(
-        liker=user, post_id__in=posts_map.keys())
+    queryset = PostLike.objects.filter(liker=user, post_id__in=posts_map.keys())
 
     for like in queryset.values('post_id'):
         posts_map[like['post_id']].is_liked = True

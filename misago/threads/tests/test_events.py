@@ -20,8 +20,7 @@ class MockRequest(object):
 
 class EventsAPITests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user(
-            "Bob", "bob@bob.com", "Pass.123")
+        self.user = UserModel.objects.create_user("Bob", "bob@bob.com", "Pass.123")
 
         datetime = timezone.now()
 

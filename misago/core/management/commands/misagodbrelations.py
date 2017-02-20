@@ -32,12 +32,12 @@ class Command(BaseCommand):
 
                         # Finally list model relations
                         for field in model_relations:
-                            self.stdout.write(field_pattern % (
-                                field.name,
-                                field.__class__.__name__,
-                                field.related_model.__name__,
-                                field.rel.on_delete.__name__,
-                            ))
+                            self.stdout.write(
+                                field_pattern % (
+                                    field.name, field.__class__.__name__,
+                                    field.related_model.__name__, field.rel.on_delete.__name__,
+                                )
+                            )
 
     def print_app_header(self, app):
         # Fancy title

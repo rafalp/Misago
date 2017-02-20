@@ -9,7 +9,6 @@ class AddCategoriesToItemsTests(MisagoTestCase):
         super(AddCategoriesToItemsTests, self).setUp()
 
         self.root = Category.objects.root_category()
-
         """
         Create categories tree for test cases:
 
@@ -27,12 +26,16 @@ class AddCategoriesToItemsTests(MisagoTestCase):
             name='Category A',
             slug='category-a',
             css_class='showing-category-a',
-        ).insert_at(self.root, position='last-child', save=True)
+        ).insert_at(
+            self.root, position='last-child', save=True
+        )
         Category(
             name='Category E',
             slug='category-e',
             css_class='showing-category-e',
-        ).insert_at(self.root, position='last-child', save=True)
+        ).insert_at(
+            self.root, position='last-child', save=True
+        )
 
         self.root = Category.objects.root_category()
 
@@ -41,19 +44,25 @@ class AddCategoriesToItemsTests(MisagoTestCase):
             name='Category B',
             slug='category-b',
             css_class='showing-category-b',
-        ).insert_at(self.category_a, position='last-child', save=True)
+        ).insert_at(
+            self.category_a, position='last-child', save=True
+        )
 
         self.category_b = Category.objects.get(slug='category-b')
         Category(
             name='Category C',
             slug='category-c',
             css_class='showing-category-c',
-        ).insert_at(self.category_b, position='last-child', save=True)
+        ).insert_at(
+            self.category_b, position='last-child', save=True
+        )
         Category(
             name='Category D',
             slug='category-d',
             css_class='showing-category-d',
-        ).insert_at(self.category_b, position='last-child', save=True)
+        ).insert_at(
+            self.category_b, position='last-child', save=True
+        )
 
         self.category_c = Category.objects.get(slug='category-c')
         self.category_d = Category.objects.get(slug='category-d')
@@ -63,7 +72,9 @@ class AddCategoriesToItemsTests(MisagoTestCase):
             name='Category F',
             slug='category-f',
             css_class='showing-category-f',
-        ).insert_at(self.category_e, position='last-child', save=True)
+        ).insert_at(
+            self.category_e, position='last-child', save=True
+        )
 
         self.clear_state()
 
@@ -77,8 +88,7 @@ class AddCategoriesToItemsTests(MisagoTestCase):
         self.category_e = Category.objects.get(slug='category-e')
         self.category_f = Category.objects.get(slug='category-f')
 
-        self.categories = list(Category.objects.all_categories(
-            include_root=True))
+        self.categories = list(Category.objects.all_categories(include_root=True))
 
     def test_root_thread_from_root(self):
         """thread in root category is handled"""
@@ -230,7 +240,9 @@ class GetThreadIdFromUrlTests(MisagoTestCase):
         for case in TEST_CASES:
             pk = get_thread_id_from_url(case['request'], case['url'])
             self.assertEqual(
-                pk, case['pk'], 'get_thread_id_from_url for {} should return {}'.format(case['url'], case['pk']))
+                pk, case['pk'],
+                'get_thread_id_from_url for {} should return {}'.format(case['url'], case['pk'])
+            )
 
     def test_get_thread_id_from_invalid_urls(self):
         TEST_CASES = (

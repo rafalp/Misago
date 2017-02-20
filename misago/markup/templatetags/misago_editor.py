@@ -15,9 +15,13 @@ def _render_editor_template(context, editor, tpl):
 
 def editor_body(context, editor):
     return _render_editor_template(context, editor, editor.body_template)
+
+
 register.simple_tag(takes_context=True)(editor_body)
 
 
 def editor_js(context, editor):
     return _render_editor_template(context, editor, editor.js_template)
+
+
 register.simple_tag(takes_context=True)(editor_js)

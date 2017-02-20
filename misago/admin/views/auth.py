@@ -28,8 +28,7 @@ def login(request):
             auth.login(request, form.user_cache)
             return redirect('%s:index' % request.admin_namespace)
 
-    return render(request, 'misago/admin/login.html',
-                  {'form': form, 'target': target})
+    return render(request, 'misago/admin/login.html', {'form': form, 'target': target})
 
 
 @csrf_protect
@@ -37,8 +36,7 @@ def login(request):
 def logout(request):
     if request.method == 'POST':
         auth.close_admin_session(request)
-        messages.info(request,
-                      _("Your admin session has been closed."))
+        messages.info(request, _("Your admin session has been closed."))
         return redirect('misago:index')
     else:
         return redirect('misago:admin:index')

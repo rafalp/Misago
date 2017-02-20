@@ -27,10 +27,7 @@ def make_threads_participants_aware(user, threads):
         thread.participant = None
         threads_dict[thread.pk] = thread
 
-    participants_qs = ThreadParticipant.objects.filter(
-        user=user,
-        thread_id__in=threads_dict.keys()
-    )
+    participants_qs = ThreadParticipant.objects.filter(user=user, thread_id__in=threads_dict.keys())
 
     for participant in participants_qs:
         participant.user = user
@@ -51,8 +48,7 @@ def make_thread_participants_aware(user, thread):
     return thread.participants_list
 
 
-def set_users_unread_private_threads_sync(
-        users=None, participants=None, exclude_user=None):
+def set_users_unread_private_threads_sync(users=None, participants=None, exclude_user=None):
     users_ids = []
     if users:
         users_ids += [u.pk for u in users]
@@ -64,9 +60,7 @@ def set_users_unread_private_threads_sync(
     if not users_ids:
         return
 
-    UserModel.objects.filter(id__in=set(users_ids)).update(
-        sync_unread_private_threads=True
-    )
+    UserModel.objects.filter(id__in=set(users_ids)).update(sync_unread_private_threads=True)
 
 
 def set_owner(thread, user):
@@ -82,17 +76,17 @@ def change_owner(request, thread, user):
     """
     ThreadParticipant.objects.set_owner(thread, user)
     set_users_unread_private_threads_sync(
-        participants=thread.participants_list,
-        exclude_user=request.user
+        participants=thread.participants_list, exclude_user=request.user
     )
 
     if thread.participant and thread.participant.is_owner:
-        record_event(request, thread, 'changed_owner', {
-            'user': {
+        record_event(
+            request, thread, 'changed_owner',
+            {'user': {
                 'username': user.username,
                 'url': user.get_absolute_url(),
-            }
-        })
+            }}
+        )
     else:
         record_event(request, thread, 'tookover')
 
@@ -106,12 +100,13 @@ def add_participant(request, thread, user):
     if request.user == user:
         record_event(request, thread, 'entered_thread')
     else:
-        record_event(request, thread, 'added_participant', {
-            'user': {
+        record_event(
+            request, thread, 'added_participant',
+            {'user': {
                 'username': user.username,
                 'url': user.get_absolute_url(),
-            }
-        })
+            }}
+        )
 
 
 def add_participants(request, thread, users):
@@ -127,9 +122,7 @@ def add_participants(request, thread, users):
         thread_participants = []
 
     set_users_unread_private_threads_sync(
-        users=users,
-        participants=thread_participants,
-        exclude_user=request.user
+        users=users, participants=thread_participants, exclude_user=request.user
     )
 
     emails = []
@@ -142,19 +135,11 @@ def add_participants(request, thread, users):
 
 def build_noticiation_email(request, thread, user):
     subject = _('%(user)s has invited you to participate in private thread "%(thread)s"')
-    subject_formats = {
-        'thread': thread.title,
-        'user': request.user.username
-    }
+    subject_formats = {'thread': thread.title, 'user': request.user.username}
 
     return build_mail(
-        request,
-        user,
-        subject % subject_formats,
-        'misago/emails/privatethread/added',
-        {
-            'thread': thread
-        }
+        request, user, subject % subject_formats, 'misago/emails/privatethread/added',
+        {'thread': thread}
     )
 
 
@@ -180,7 +165,7 @@ def remove_participant(request, thread, user):
         thread.subscription_set.filter(user=user).delete()
 
         if removed_owner:
-            thread.is_closed = True # flag thread to close
+            thread.is_closed = True  # flag thread to close
 
             if request.user == user:
                 event_type = 'owner_left'
@@ -192,9 +177,10 @@ def remove_participant(request, thread, user):
             else:
                 event_type = 'removed_participant'
 
-        record_event(request, thread, event_type, {
-            'user': {
+        record_event(
+            request, thread, event_type,
+            {'user': {
                 'username': user.username,
                 'url': user.get_absolute_url(),
-            }
-        })
+            }}
+        )

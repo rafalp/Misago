@@ -10,13 +10,18 @@ _ = lambda x: x
 
 
 def create_basic_settings_group(apps, schema_editor):
-    migrate_settings_group(apps, {
-        'key': 'basic',
-        'name': _("Basic forum settings"),
-        'description': _("Those settings control most basic properties "
-                         "of your forum like its name or description."),
-        'settings': (
-            {
+    migrate_settings_group(
+        apps, {
+            'key':
+                'basic',
+            'name':
+                _("Basic forum settings"),
+            'description':
+                _(
+                    "Those settings control most basic properties "
+                    "of your forum like its name or description."
+                ),
+            'settings': ({
                 'setting': 'forum_name',
                 'name': _("Forum name"),
                 'legend': _("General"),
@@ -26,8 +31,7 @@ def create_basic_settings_group(apps, schema_editor):
                     'max_length': 255
                 },
                 'is_public': True,
-            },
-            {
+            }, {
                 'setting': 'forum_index_title',
                 'name': _("Index title"),
                 'description': _("You may set custon title on "
@@ -37,8 +41,7 @@ def create_basic_settings_group(apps, schema_editor):
                     'max_length': 255
                 },
                 'is_public': True,
-            },
-            {
+            }, {
                 'setting': 'forum_index_meta_description',
                 'name': _("Meta Description"),
                 'description': _("Short description of your forum "
@@ -46,8 +49,7 @@ def create_basic_settings_group(apps, schema_editor):
                 'field_extra': {
                     'max_length': 255
                 },
-            },
-            {
+            }, {
                 'setting': 'forum_branding_display',
                 'name': _("Display branding"),
                 'description': _("Switch branding in forum's navbar."),
@@ -56,8 +58,7 @@ def create_basic_settings_group(apps, schema_editor):
                 'python_type': 'bool',
                 'form_field': 'yesno',
                 'is_public': True,
-            },
-            {
+            }, {
                 'setting': 'forum_branding_text',
                 'name': _("Branding text"),
                 'description': _("Optional text displayed besides "
@@ -67,20 +68,23 @@ def create_basic_settings_group(apps, schema_editor):
                     'max_length': 255
                 },
                 'is_public': True,
-            },
-            {
-                'setting': 'email_footer',
-                'name': _("E-mails footer"),
-                'description': _("Optional short message included "
-                                 "at the end of e-mails sent by "
-                                 "forum"),
-                'legend': _("Forum e-mails"),
+            }, {
+                'setting':
+                    'email_footer',
+                'name':
+                    _("E-mails footer"),
+                'description':
+                    _("Optional short message included "
+                      "at the end of e-mails sent by "
+                      "forum"),
+                'legend':
+                    _("Forum e-mails"),
                 'field_extra': {
                     'max_length': 255
                 },
-            },
-        )
-    })
+            }, )
+        }
+    )
 
 
 class Migration(migrations.Migration):

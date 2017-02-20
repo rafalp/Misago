@@ -88,8 +88,7 @@ def make_thread_read_aware(user, thread):
         thread.is_new = True
 
         try:
-            category_record = user.categoryread_set.get(
-                category_id=thread.category_id)
+            category_record = user.categoryread_set.get(category_id=thread.category_id)
             thread.last_read_on = category_record.last_read_on
 
             if thread.last_post_on > category_record.last_read_on:
@@ -113,8 +112,10 @@ def make_posts_read_aware(user, thread, posts):
     try:
         is_thread_read = thread.is_read
     except AttributeError:
-        raise ValueError("thread passed make_posts_read_aware should be "
-                         "made read aware via make_thread_read_aware")
+        raise ValueError(
+            "thread passed make_posts_read_aware should be "
+            "made read aware via make_thread_read_aware"
+        )
 
     if is_thread_read:
         for post in posts:
@@ -144,9 +145,7 @@ def sync_record(user, thread, last_read_reply):
         thread.read_record.save(update_fields=['last_read_on'])
     else:
         user.threadread_set.create(
-            category=thread.category,
-            thread=thread,
-            last_read_on=last_read_reply.posted_on
+            category=thread.category, thread=thread, last_read_on=last_read_reply.posted_on
         )
         signals.thread_tracked.send(sender=user, thread=thread)
         notification_triggers.append('see_thread_%s' % thread.pk)

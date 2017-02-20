@@ -7,6 +7,7 @@ def ajax_only(f):
             return not_allowed(request)
         else:
             return f(request, *args, **kwargs)
+
     return decorator
 
 
@@ -16,4 +17,5 @@ def require_POST(f):
             return not_allowed(request)
         else:
             return f(request, *args, **kwargs)
+
     return decorator

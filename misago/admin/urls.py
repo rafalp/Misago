@@ -14,7 +14,6 @@ urlpatterns = [
     url(r'^logout/$', auth.logout, name='logout'),
 ]
 
-
 # Discover admin and register patterns
 admin.discover_misago_admin()
 urlpatterns += admin.urlpatterns()

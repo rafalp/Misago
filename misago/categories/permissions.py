@@ -15,6 +15,8 @@ from .models import Category, CategoryRole, RoleCategoryACL
 """
 Admin Permissions Form
 """
+
+
 class PermissionsForm(forms.Form):
     legend = _("Category access")
 
@@ -32,6 +34,8 @@ def change_permissions_form(role):
 """
 ACL Builder
 """
+
+
 def build_acl(acl, roles, key_name):
     new_acl = {
         'visible_categories': [],
@@ -75,7 +79,10 @@ def build_category_acl(acl, category, categories_roles, key_name):
         'can_browse': 0,
     }
 
-    algebra.sum_acls(final_acl, roles=category_roles, key=key_name,
+    algebra.sum_acls(
+        final_acl,
+        roles=category_roles,
+        key=key_name,
         can_see=algebra.greater,
         can_browse=algebra.greater
     )
@@ -91,6 +98,8 @@ def build_category_acl(acl, category, categories_roles, key_name):
 """
 ACL's for targets
 """
+
+
 def add_acl_to_category(user, target):
     target.acl['can_see'] = can_see_category(user, target)
     target.acl['can_browse'] = can_browse_category(user, target)
@@ -121,6 +130,8 @@ def register_with(registry):
 """
 ACL tests
 """
+
+
 def allow_see_category(user, target):
     try:
         category_id = target.pk
@@ -129,6 +140,8 @@ def allow_see_category(user, target):
 
     if not category_id in user.acl_cache['visible_categories']:
         raise Http404()
+
+
 can_see_category = return_boolean(allow_see_category)
 
 
@@ -137,4 +150,6 @@ def allow_browse_category(user, target):
     if not target_acl['can_browse']:
         message = _('You don\'t have permission to browse "%(category)s" contents.')
         raise PermissionDenied(message % {'category': target.name})
+
+
 can_browse_category = return_boolean(allow_browse_category)

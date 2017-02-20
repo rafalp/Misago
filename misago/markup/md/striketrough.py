@@ -9,4 +9,5 @@ class StriketroughExtension(markdown.Extension):
     def extendMarkdown(self, md):
         md.registerExtension(self)
         md.inlinePatterns.add(
-            'misago_striketrough', SimpleTagPattern(STRIKETROUGH_RE, 'del'), '_end')
+            'misago_striketrough', SimpleTagPattern(STRIKETROUGH_RE, 'del'), '_end'
+        )

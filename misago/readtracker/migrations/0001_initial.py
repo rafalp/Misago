@@ -16,26 +16,32 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CategoryRead',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                (
+                    'id', models.AutoField(
+                        verbose_name='ID', serialize=False, auto_created=True, primary_key=True
+                    )
+                ),
                 ('last_read_on', models.DateTimeField()),
                 ('category', models.ForeignKey(to='misago_categories.Category')),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
-            options={
-            },
-            bases=(models.Model,),
+            options={},
+            bases=(models.Model, ),
         ),
         migrations.CreateModel(
             name='ThreadRead',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                (
+                    'id', models.AutoField(
+                        verbose_name='ID', serialize=False, auto_created=True, primary_key=True
+                    )
+                ),
                 ('last_read_on', models.DateTimeField()),
                 ('category', models.ForeignKey(to='misago_categories.Category')),
                 ('thread', models.ForeignKey(to='misago_threads.Thread')),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
-            options={
-            },
-            bases=(models.Model,),
+            options={},
+            bases=(models.Model, ),
         ),
     ]

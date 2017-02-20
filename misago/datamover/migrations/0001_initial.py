@@ -9,14 +9,17 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
             name='MovedId',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id', models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID'
+                    )
+                ),
                 ('model', models.CharField(max_length=255)),
                 ('old_id', models.CharField(max_length=255)),
                 ('new_id', models.CharField(max_length=255)),
@@ -25,7 +28,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='OldIdRedirect',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id', models.AutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name='ID'
+                    )
+                ),
                 ('model', models.PositiveIntegerField()),
                 ('old_id', models.PositiveIntegerField()),
                 ('new_id', models.PositiveIntegerField()),

@@ -25,7 +25,7 @@ class AttachmentTypeAdmin(generic.AdminBaseMixin):
 
 
 class AttachmentTypesList(AttachmentTypeAdmin, generic.ListView):
-    ordering = (('name', None),)
+    ordering = (('name', None), )
 
     def get_queryset(self):
         queryset = super(AttachmentTypesList, self).get_queryset()
@@ -43,7 +43,9 @@ class EditAttachmentType(AttachmentTypeAdmin, generic.ModelFormView):
 class DeleteAttachmentType(AttachmentTypeAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         if target.attachment_set.exists():
-            message = _('Attachment type "%(name)s" has associated attachments and can\'t be deleted.')
+            message = _(
+                'Attachment type "%(name)s" has associated attachments and can\'t be deleted.'
+            )
             return message % {'name': target.name}
 
     def button_action(self, request, target):

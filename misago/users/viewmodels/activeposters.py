@@ -27,4 +27,5 @@ class ActivePosters(object):
             'users_count': self.count
         }
 
+
 ScoredUserSerializer = UserCardSerializer.extend_fields('meta')

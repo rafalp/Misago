@@ -19,11 +19,11 @@ from .bans import get_email_ban, get_username_ban
 USERNAME_RE = re.compile(r'^[0-9a-z]+$', re.IGNORECASE)
 
 UserModel = get_user_model()
-
-
 """
 Email validators
 """
+
+
 def validate_email_available(value, exclude=None):
     try:
         user = UserModel.objects.get_by_email(value)
@@ -53,6 +53,8 @@ def validate_email(value, exclude=None):
 """
 Username validators
 """
+
+
 def validate_username_available(value, exclude=None):
     try:
         user = UserModel.objects.get_by_username(value)
@@ -74,8 +76,7 @@ def validate_username_banned(value):
 
 def validate_username_content(value):
     if not USERNAME_RE.match(value):
-        raise ValidationError(
-            _("Username can only contain latin alphabet letters and digits."))
+        raise ValidationError(_("Username can only contain latin alphabet letters and digits."))
 
 
 def validate_username_length(value):
@@ -83,7 +84,8 @@ def validate_username_length(value):
         message = ungettext(
             "Username must be at least %(limit_value)s character long.",
             "Username must be at least %(limit_value)s characters long.",
-            settings.username_length_min)
+            settings.username_length_min
+        )
         message = message % {'limit_value': settings.username_length_min}
         raise ValidationError(message)
 
@@ -91,7 +93,8 @@ def validate_username_length(value):
         message = ungettext(
             "Username cannot be longer than %(limit_value)s characters.",
             "Username cannot be longer than %(limit_value)s characters.",
-            settings.username_length_max)
+            settings.username_length_max
+        )
         message = message % {'limit_value': settings.username_length_max}
         raise ValidationError(message)
 
@@ -117,10 +120,7 @@ def validate_with_sfs(request, form, cleaned_data):
 
 def _real_validate_with_sfs(ip, email):
     try:
-        r = requests.get(SFS_API_URL % {
-            'email': email,
-            'ip': ip
-        }, timeout=5)
+        r = requests.get(SFS_API_URL % {'email': email, 'ip': ip}, timeout=5)
 
         r.raise_for_status()
 
@@ -133,7 +133,7 @@ def _real_validate_with_sfs(ip, email):
         if api_score > settings.MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE:
             raise ValidationError(_("Data entered was found in spammers database."))
     except requests.exceptions.RequestException:
-        pass # todo: log those somewhere
+        pass  # todo: log those somewhere
 
 
 def validate_gmail_email(request, form, cleaned_data):
@@ -149,6 +149,8 @@ def validate_gmail_email(request, form, cleaned_data):
 """
 Registration validation
 """
+
+
 def load_registration_validators(validators):
     loaded_validators = []
     for path in validators:

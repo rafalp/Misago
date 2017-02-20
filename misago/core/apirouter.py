@@ -9,10 +9,8 @@ class MisagoApiRouter(DefaultRouter):
         # List route.
         Route(
             url=r'^{prefix}{trailing_slash}$',
-            mapping={
-                'get': 'list',
-                'post': 'create'
-            },
+            mapping={'get': 'list',
+                     'post': 'create'},
             name='{basename}-list',
             initkwargs={'suffix': 'List'}
         ),

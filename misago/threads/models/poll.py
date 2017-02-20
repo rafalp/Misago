@@ -37,10 +37,7 @@ class Poll(models.Model):
             self.category_id = thread.category_id
             self.save()
 
-            self.pollvote_set.update(
-                thread=self.thread,
-                category_id=self.category_id
-            )
+            self.pollvote_set.update(thread=self.thread, category_id=self.category_id)
 
     @property
     def ends_on(self):

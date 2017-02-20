@@ -53,6 +53,8 @@ def thread_start_editor(request):
             cleaned_categories.append(category)
 
     if not cleaned_categories:
-        raise PermissionDenied(_("No categories that allow new threads are available to you at the moment."))
+        raise PermissionDenied(
+            _("No categories that allow new threads are available to you at the moment.")
+        )
 
     return Response(cleaned_categories)

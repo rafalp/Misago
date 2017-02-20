@@ -19,7 +19,7 @@ from misago.threads.utils import add_categories_to_items, get_thread_id_from_url
 from .pollmergehandler import PollMergeHandler
 
 
-MERGE_LIMIT = 20 # no more than 20 threads can be merged in single action
+MERGE_LIMIT = 20  # no more than 20 threads can be merged in single action
 
 
 class MergeError(Exception):
@@ -42,15 +42,19 @@ def thread_merge_endpoint(request, thread, viewmodel):
         if not can_reply_thread(request.user, other_thread):
             raise PermissionDenied(_("You can't merge this thread into thread you can't reply."))
         if not other_thread.acl['can_merge']:
-            raise PermissionDenied(_("You don't have permission to merge this thread with current one."))
+            raise PermissionDenied(
+                _("You don't have permission to merge this thread with current one.")
+            )
     except PermissionDenied as e:
-        return Response({
-            'detail': e.args[0]
-        }, status=400)
+        return Response({'detail': e.args[0]}, status=400)
     except Http404:
         return Response({
-            'detail': _("The thread you have entered link to doesn't exist or you don't have permission to see it.")
-        }, status=400)
+            'detail':
+                _(
+                    "The thread you have entered link to doesn't exist or you don't have permission to see it."
+                )
+        },
+                        status=400)
 
     polls_handler = PollMergeHandler([thread, other_thread])
     if len(polls_handler.polls) == 1:
@@ -67,13 +71,9 @@ def thread_merge_endpoint(request, thread, viewmodel):
                 elif not poll:
                     other_thread.poll.delete()
             else:
-                return Response({
-                    'detail': _("Invalid choice.")
-                }, status=400)
+                return Response({'detail': _("Invalid choice.")}, status=400)
         else:
-            return Response({
-                'polls': polls_handler.get_available_resolutions()
-            }, status=400)
+            return Response({'polls': polls_handler.get_available_resolutions()}, status=400)
 
     moderation.merge_thread(request, other_thread, thread)
 
@@ -106,9 +106,7 @@ def threads_merge_endpoint(request):
             invalid_threads.append({
                 'id': thread.pk,
                 'title': thread.title,
-                'errors': [
-                    _("You don't have permission to merge this thread with others.")
-                ]
+                'errors': [_("You don't have permission to merge this thread with others.")]
             })
 
     if invalid_threads:
@@ -125,13 +123,9 @@ def threads_merge_endpoint(request):
                 if polls_handler.is_valid():
                     poll = polls_handler.get_resolution()
                 else:
-                    return Response({
-                        'detail': _("Invalid choice.")
-                    }, status=400)
+                    return Response({'detail': _("Invalid choice.")}, status=400)
             else:
-                return Response({
-                    'polls': polls_handler.get_available_resolutions()
-                }, status=400)
+                return Response({'polls': polls_handler.get_available_resolutions()}, status=400)
         else:
             poll = None
 
@@ -152,8 +146,8 @@ def clean_threads_for_merge(request):
     elif len(threads_ids) > MERGE_LIMIT:
         message = ungettext(
             "No more than %(limit)s thread can be merged at single time.",
-            "No more than %(limit)s threads can be merged at single time.",
-            MERGE_LIMIT)
+            "No more than %(limit)s threads can be merged at single time.", MERGE_LIMIT
+        )
         raise MergeError(message % {'limit': MERGE_LIMIT})
 
     threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
@@ -194,9 +188,11 @@ def merge_threads(request, validated_data, threads, poll):
         new_thread.merge(thread)
         thread.delete()
 
-        record_event(request, new_thread, 'merged', {
-            'merged_thread': thread.title,
-        }, commit=False)
+        record_event(
+            request, new_thread, 'merged', {
+                'merged_thread': thread.title,
+            }, commit=False
+        )
 
     new_thread.synchronize()
     new_thread.save()
@@ -223,9 +219,10 @@ def merge_threads(request, validated_data, threads, poll):
 
     # add top category to thread
     if validated_data.get('top_category'):
-        categories = list(Category.objects.all_categories().filter(
-            id__in=request.user.acl_cache['visible_categories']
-        ))
+        categories = list(
+            Category.objects.all_categories()
+            .filter(id__in=request.user.acl_cache['visible_categories'])
+        )
         add_categories_to_items(validated_data['top_category'], categories, [new_thread])
     else:
         new_thread.top_category = None

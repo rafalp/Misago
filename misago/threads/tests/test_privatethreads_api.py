@@ -22,9 +22,7 @@ class PrivateThreadsListApiTests(PrivateThreadsTestCase):
 
     def test_no_permission(self):
         """api requires user to have permission to be able to access it"""
-        override_acl(self.user, {
-            'can_use_private_threads': 0
-        })
+        override_acl(self.user, {'can_use_private_threads': 0})
 
         response = self.client.get(self.api_link)
         self.assertContains(response, "can't use private threads", status_code=403)
@@ -58,9 +56,7 @@ class PrivateThreadsListApiTests(PrivateThreadsTestCase):
         self.assertEqual(response_json['results'][0]['id'], visible.id)
 
         # threads with reported posts will also show to moderators
-        override_acl(self.user, {
-            'can_moderate_private_threads': 1
-        })
+        override_acl(self.user, {'can_moderate_private_threads': 1})
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -87,9 +83,7 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
 
     def test_no_permission(self):
         """user needs to have permission to see private thread"""
-        override_acl(self.user, {
-            'can_use_private_threads': 0
-        })
+        override_acl(self.user, {'can_use_private_threads': 0})
 
         response = self.client.get(self.api_link)
         self.assertContains(response, "t use private threads", status_code=403)
@@ -101,9 +95,7 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
 
     def test_mod_not_reported(self):
         """moderator can't see private thread that has no reports"""
-        override_acl(self.user, {
-            'can_moderate_private_threads': 1
-        })
+        override_acl(self.user, {'can_moderate_private_threads': 1})
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
@@ -125,15 +117,15 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
 
         response_json = response.json()
         self.assertEqual(response_json['title'], self.thread.title)
-        self.assertEqual(response_json['participants'], [
-            {
+        self.assertEqual(
+            response_json['participants'], [{
                 'id': self.user.id,
                 'username': self.user.username,
                 'avatars': self.user.avatars,
                 'url': self.user.get_absolute_url(),
                 'is_owner': True
-            }
-        ])
+            }]
+        )
 
     def test_can_see_participant(self):
         """user can see thread he is participant of"""
@@ -144,21 +136,19 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
 
         response_json = response.json()
         self.assertEqual(response_json['title'], self.thread.title)
-        self.assertEqual(response_json['participants'], [
-            {
+        self.assertEqual(
+            response_json['participants'], [{
                 'id': self.user.id,
                 'username': self.user.username,
                 'avatars': self.user.avatars,
                 'url': self.user.get_absolute_url(),
                 'is_owner': False
-            }
-        ])
+            }]
+        )
 
     def test_mod_can_see_reported(self):
         """moderator can see private thread that has reports"""
-        override_acl(self.user, {
-            'can_moderate_private_threads': 1
-        })
+        override_acl(self.user, {'can_moderate_private_threads': 1})
 
         self.thread.has_reported_posts = True
         self.thread.save()
@@ -178,9 +168,7 @@ class PrivateThreadsReadApiTests(PrivateThreadsTestCase):
 
     def test_read_threads_no_permission(self):
         """api validates permission to use private threads"""
-        override_acl(self.user, {
-            'can_use_private_threads': 0
-        })
+        override_acl(self.user, {'can_use_private_threads': 0})
 
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
@@ -212,29 +200,24 @@ class PrivateThreadDeleteApiTests(PrivateThreadsTestCase):
 
     def test_delete_thread_no_permission(self):
         """DELETE to API link with no permission to delete fails"""
-        self.override_acl({
-            'can_hide_threads': 1
-        })
+        self.override_acl({'can_hide_threads': 1})
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
 
-        self.override_acl({
-            'can_hide_threads': 0
-        })
+        self.override_acl({'can_hide_threads': 0})
 
         response_json = response.json()
-        self.assertEqual(response_json['detail'],
-            "You don't have permission to delete this thread.")
+        self.assertEqual(
+            response_json['detail'], "You don't have permission to delete this thread."
+        )
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
 
     def test_delete_thread(self):
         """DELETE to API link with permission deletes thread"""
-        self.override_acl({
-            'can_hide_threads': 2
-        })
+        self.override_acl({'can_hide_threads': 2})
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 200)

@@ -26,8 +26,9 @@ class RoleAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
 
         response = self.client.post(
-            reverse('misago:admin:permissions:users:new'),
-            data=fake_data({'name': 'Test Role'})
+            reverse('misago:admin:permissions:users:new'), data=fake_data({
+                'name': 'Test Role'
+            })
         )
         self.assertEqual(response.status_code, 302)
 
@@ -39,19 +40,24 @@ class RoleAdminViewsTests(AdminTestCase):
     def test_edit_view(self):
         """edit role view has no showstoppers"""
         self.client.post(
-            reverse('misago:admin:permissions:users:new'),
-            data=fake_data({'name': 'Test Role'})
+            reverse('misago:admin:permissions:users:new'), data=fake_data({
+                'name': 'Test Role'
+            })
         )
 
         test_role = Role.objects.get(name='Test Role')
 
-        response = self.client.get(reverse('misago:admin:permissions:users:edit', kwargs={'pk': test_role.pk}))
+        response = self.client.get(
+            reverse('misago:admin:permissions:users:edit', kwargs={'pk': test_role.pk})
+        )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test Role')
 
         response = self.client.post(
             reverse('misago:admin:permissions:users:edit', kwargs={'pk': test_role.pk}),
-            data=fake_data({'name': 'Top Lel'})
+            data=fake_data({
+                'name': 'Top Lel'
+            })
         )
         self.assertEqual(response.status_code, 302)
 
@@ -63,23 +69,29 @@ class RoleAdminViewsTests(AdminTestCase):
     def test_users_view(self):
         """users with this role view has no showstoppers"""
         response = self.client.post(
-            reverse('misago:admin:permissions:users:new'),
-            data=fake_data({'name': 'Test Role'})
+            reverse('misago:admin:permissions:users:new'), data=fake_data({
+                'name': 'Test Role'
+            })
         )
         test_role = Role.objects.get(name='Test Role')
 
-        response = self.client.get(reverse('misago:admin:permissions:users:users', kwargs={'pk': test_role.pk}))
+        response = self.client.get(
+            reverse('misago:admin:permissions:users:users', kwargs={'pk': test_role.pk})
+        )
         self.assertEqual(response.status_code, 302)
 
     def test_delete_view(self):
         """delete role view has no showstoppers"""
         self.client.post(
-            reverse('misago:admin:permissions:users:new'),
-            data=fake_data({'name': 'Test Role'})
+            reverse('misago:admin:permissions:users:new'), data=fake_data({
+                'name': 'Test Role'
+            })
         )
 
         test_role = Role.objects.get(name='Test Role')
-        response = self.client.post(reverse('misago:admin:permissions:users:delete', kwargs={'pk': test_role.pk}))
+        response = self.client.post(
+            reverse('misago:admin:permissions:users:delete', kwargs={'pk': test_role.pk})
+        )
         self.assertEqual(response.status_code, 302)
 
         # Get the page twice so no alert is renderered on second request

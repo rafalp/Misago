@@ -24,22 +24,16 @@ from .threadendpoints.read import read_private_threads, read_threads
 class ViewSet(viewsets.ViewSet):
     thread = None
 
-    def get_thread(self, request, pk, read_aware=True, subscription_aware=True, select_for_update=False):
+    def get_thread(
+            self, request, pk, read_aware=True, subscription_aware=True, select_for_update=False
+    ):
         return self.thread(
-            request,
-            get_int_or_404(pk),
-            None,
-            read_aware,
-            subscription_aware,
-            select_for_update
+            request, get_int_or_404(pk), None, read_aware, subscription_aware, select_for_update
         )
 
     def get_thread_for_update(self, request, pk):
         return self.get_thread(
-            request, pk,
-            read_aware=False,
-            subscription_aware=False,
-            select_for_update=True
+            request, pk, read_aware=False, subscription_aware=False, select_for_update=True
         )
 
     def retrieve(self, request, pk):
@@ -76,11 +70,7 @@ class ThreadViewSet(ViewSet):
 
         # Put them through posting pipeline
         posting = PostingEndpoint(
-            request,
-            PostingEndpoint.START,
-            tree_name=THREADS_ROOT_NAME,
-            thread=thread,
-            post=post
+            request, PostingEndpoint.START, tree_name=THREADS_ROOT_NAME, thread=thread, post=post
         )
 
         if posting.is_valid():

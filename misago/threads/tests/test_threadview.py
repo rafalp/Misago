@@ -41,11 +41,7 @@ class ThreadViewTestCase(AuthenticatedUserTestCase):
         if acl:
             category_acl.update(acl)
 
-        override_acl(self.user, {
-            'categories': {
-                self.category.pk: category_acl
-            }
-        })
+        override_acl(self.user, {'categories': {self.category.pk: category_acl}})
 
 
 class ThreadVisibilityTests(ThreadViewTestCase):
@@ -56,9 +52,7 @@ class ThreadVisibilityTests(ThreadViewTestCase):
 
     def test_view_shows_owner_thread(self):
         """view handles "owned threads only" """
-        self.override_acl({
-            'can_see_all_threads': 0
-        })
+        self.override_acl({'can_see_all_threads': 0})
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertEqual(response.status_code, 404)
@@ -66,34 +60,26 @@ class ThreadVisibilityTests(ThreadViewTestCase):
         self.thread.starter = self.user
         self.thread.save()
 
-        self.override_acl({
-            'can_see_all_threads': 0
-        })
+        self.override_acl({'can_see_all_threads': 0})
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, self.thread.title)
 
     def test_view_validates_category_permissions(self):
         """view validates category visiblity"""
-        self.override_acl({
-            'can_see': 0
-        })
+        self.override_acl({'can_see': 0})
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertEqual(response.status_code, 404)
 
-        self.override_acl({
-            'can_browse': 0
-        })
+        self.override_acl({'can_browse': 0})
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertEqual(response.status_code, 404)
 
     def test_view_shows_unapproved_thread(self):
         """view handles unapproved thread"""
-        self.override_acl({
-            'can_approve_content': 0
-        })
+        self.override_acl({'can_approve_content': 0})
 
         self.thread.is_unapproved = True
         self.thread.save()
@@ -102,9 +88,7 @@ class ThreadVisibilityTests(ThreadViewTestCase):
         self.assertEqual(response.status_code, 404)
 
         # grant permission to see unapproved content
-        self.override_acl({
-            'can_approve_content': 1
-        })
+        self.override_acl({'can_approve_content': 1})
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, self.thread.title)
@@ -114,18 +98,14 @@ class ThreadVisibilityTests(ThreadViewTestCase):
         self.thread.starter = self.user
         self.thread.save()
 
-        self.override_acl({
-            'can_approve_content': 0
-        })
+        self.override_acl({'can_approve_content': 0})
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, self.thread.title)
 
     def test_view_shows_hidden_thread(self):
         """view handles hidden thread"""
-        self.override_acl({
-            'can_hide_threads': 0
-        })
+        self.override_acl({'can_hide_threads': 0})
 
         self.thread.is_hidden = True
         self.thread.save()
@@ -141,9 +121,7 @@ class ThreadVisibilityTests(ThreadViewTestCase):
         self.assertEqual(response.status_code, 404)
 
         # grant permission to see hidden content
-        self.override_acl({
-            'can_hide_threads': 1
-        })
+        self.override_acl({'can_hide_threads': 1})
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, self.thread.title)
@@ -189,9 +167,7 @@ class ThreadPostsVisibilityTests(ThreadViewTestCase):
         self.assertNotContains(response, post.parsed)
 
         # permission to hide own posts isn't enought to see post content
-        self.override_acl({
-            'can_hide_own_posts': 1
-        })
+        self.override_acl({'can_hide_own_posts': 1})
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, post.get_absolute_url())
@@ -199,13 +175,13 @@ class ThreadPostsVisibilityTests(ThreadViewTestCase):
         self.assertNotContains(response, post.parsed)
 
         # post's content is displayed after permission to see posts is granted
-        self.override_acl({
-            'can_hide_posts': 1
-        })
+        self.override_acl({'can_hide_posts': 1})
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, post.get_absolute_url())
-        self.assertContains(response, "This post is hidden. Only users with permission may see its contents.")
+        self.assertContains(
+            response, "This post is hidden. Only users with permission may see its contents."
+        )
         self.assertNotContains(response, "This post is hidden. You cannot not see its contents.")
         self.assertContains(response, post.parsed)
 
@@ -218,9 +194,7 @@ class ThreadPostsVisibilityTests(ThreadViewTestCase):
         self.assertNotContains(response, post.get_absolute_url())
 
         # post displays because we have permission to approve unapproved content
-        self.override_acl({
-            'can_approve_content': 1
-        })
+        self.override_acl({'can_approve_content': 1})
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, post.get_absolute_url())
@@ -231,9 +205,7 @@ class ThreadPostsVisibilityTests(ThreadViewTestCase):
         post.poster = self.user
         post.save()
 
-        self.override_acl({
-            'can_approve_content': 0
-        })
+        self.override_acl({'can_approve_content': 0})
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, post.get_absolute_url())
@@ -375,7 +347,9 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
 
     def test_changed_thread_title_event_renders(self):
         """changed thread title event renders"""
-        threads_moderation.change_thread_title(MockRequest(self.user), self.thread, "Lorem renamed ipsum!")
+        threads_moderation.change_thread_title(
+            MockRequest(self.user), self.thread, "Lorem renamed ipsum!"
+        )
 
         event = self.thread.post_set.filter(is_event=True)[0]
         self.assertEqual(event.event_type, 'changed_title')
@@ -442,8 +416,7 @@ class ThreadAttachmentsViewTests(ThreadViewTestCase):
                     'uploader': '/user/bobboberson-123/'
                 },
                 'filename': 'Archiwum-1.zip',
-            }),
-            self.mock_attachment_cache({
+            }), self.mock_attachment_cache({
                 'url': {
                     'index': '/attachment/loremipsum-223/',
                     'thumb': '/attachment/thumb/loremipsum-223/',
@@ -451,8 +424,7 @@ class ThreadAttachmentsViewTests(ThreadViewTestCase):
                 },
                 'is_image': True,
                 'filename': 'Archiwum-2.zip'
-            }),
-            self.mock_attachment_cache({
+            }), self.mock_attachment_cache({
                 'url': {
                     'index': '/attachment/loremipsum-323/',
                     'thumb': None,
@@ -521,9 +493,7 @@ class ThreadLikedPostsViewTests(ThreadViewTestCase):
         """
         testutils.like_post(self.thread.first_post, self.user)
 
-        self.override_acl({
-            'can_see_posts_likes': 0
-        })
+        self.override_acl({'can_see_posts_likes': 0})
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertNotContains(response, '"is_liked": true')

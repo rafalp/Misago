@@ -82,8 +82,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
     def test_hidden_post(self):
         """hidden posts are extempt from search"""
         thread = testutils.post_thread(self.category)
-        post = testutils.reply_thread(
-            thread, message="Lorem ipsum dolor.", is_hidden=True)
+        post = testutils.reply_thread(thread, message="Lorem ipsum dolor.", is_hidden=True)
         self.index_post(post)
 
         response = self.client.get('%s?q=ipsum' % self.api_link)
@@ -99,8 +98,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
     def test_unapproved_post(self):
         """unapproves posts are extempt from search"""
         thread = testutils.post_thread(self.category)
-        post = testutils.reply_thread(
-            thread, message="Lorem ipsum dolor.", is_unapproved=True)
+        post = testutils.reply_thread(thread, message="Lorem ipsum dolor.", is_unapproved=True)
         self.index_post(post)
 
         response = self.client.get('%s?q=ipsum' % self.api_link)
@@ -174,6 +172,4 @@ class SearchProviderApiTests(SearchApiTests):
     def setUp(self):
         super(SearchProviderApiTests, self).setUp()
 
-        self.api_link = reverse('misago:api:search', kwargs={
-            'search_provider': 'threads'
-        })
+        self.api_link = reverse('misago:api:search', kwargs={'search_provider': 'threads'})

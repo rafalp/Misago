@@ -27,10 +27,8 @@ class GatewaySettingsTests(TestCase):
     def test_get_existing_setting(self):
         """forum_name is defined"""
         self.assertEqual(gateway.forum_name, db_settings.forum_name)
-        self.assertEqual(gateway.INSTALLED_APPS,
-                         dj_settings.INSTALLED_APPS)
-        self.assertEqual(gateway.MISAGO_THREADS_PER_PAGE,
-                         defaults.MISAGO_THREADS_PER_PAGE)
+        self.assertEqual(gateway.INSTALLED_APPS, dj_settings.INSTALLED_APPS)
+        self.assertEqual(gateway.MISAGO_THREADS_PER_PAGE, defaults.MISAGO_THREADS_PER_PAGE)
 
         with self.assertRaises(AttributeError):
             gateway.LoremIpsum
@@ -43,31 +41,31 @@ class GatewaySettingsTests(TestCase):
     def test_setting_public(self):
         """get_public_settings returns public settings"""
         test_group = {
-            'key': 'test_group',
-            'name': "Test settings",
-            'description': "Those are test settings.",
-            'settings': (
-                {
-                    'setting': 'fish_name',
-                    'name': "Fish's name",
-                    'value': "Public Eric",
-                    'field_extra': {
-                            'min_length': 2,
-                            'max_length': 255
-                        },
-                    'is_public': True
+            'key':
+                'test_group',
+            'name':
+                "Test settings",
+            'description':
+                "Those are test settings.",
+            'settings': ({
+                'setting': 'fish_name',
+                'name': "Fish's name",
+                'value': "Public Eric",
+                'field_extra': {
+                    'min_length': 2,
+                    'max_length': 255
                 },
-                {
-                    'setting': 'private_fish_name',
-                    'name': "Fish's name",
-                    'value': "Private Eric",
-                    'field_extra': {
-                            'min_length': 2,
-                            'max_length': 255
-                        },
-                    'is_public': False
+                'is_public': True
+            }, {
+                'setting': 'private_fish_name',
+                'name': "Fish's name",
+                'value': "Private Eric",
+                'field_extra': {
+                    'min_length': 2,
+                    'max_length': 255
                 },
-            )
+                'is_public': False
+            }, )
         }
 
         migrate_settings_group(apps, test_group)
@@ -79,44 +77,42 @@ class GatewaySettingsTests(TestCase):
         self.assertIn('fish_name', public_settings)
         self.assertNotIn('private_fish_name', public_settings)
 
-
     def test_setting_lazy(self):
         """lazy settings work"""
         test_group = {
-            'key': 'test_group',
-            'name': "Test settings",
-            'description': "Those are test settings.",
-            'settings': (
-                {
-                    'setting': 'fish_name',
-                    'name': "Fish's name",
-                    'value': "Greedy Eric",
-                    'field_extra': {
-                            'min_length': 2,
-                            'max_length': 255
-                        },
-                    'is_lazy': False
+            'key':
+                'test_group',
+            'name':
+                "Test settings",
+            'description':
+                "Those are test settings.",
+            'settings': ({
+                'setting': 'fish_name',
+                'name': "Fish's name",
+                'value': "Greedy Eric",
+                'field_extra': {
+                    'min_length': 2,
+                    'max_length': 255
                 },
-                {
-                    'setting': 'lazy_fish_name',
-                    'name': "Fish's name",
-                    'value': "Lazy Eric",
-                    'field_extra': {
-                            'min_length': 2,
-                            'max_length': 255
-                        },
-                    'is_lazy': True
+                'is_lazy': False
+            }, {
+                'setting': 'lazy_fish_name',
+                'name': "Fish's name",
+                'value': "Lazy Eric",
+                'field_extra': {
+                    'min_length': 2,
+                    'max_length': 255
                 },
-                {
-                    'setting': 'lazy_empty_setting',
-                    'name': "Fish's name",
-                    'field_extra': {
-                            'min_length': 2,
-                            'max_length': 255
-                        },
-                    'is_lazy': True
+                'is_lazy': True
+            }, {
+                'setting': 'lazy_empty_setting',
+                'name': "Fish's name",
+                'field_extra': {
+                    'min_length': 2,
+                    'max_length': 255
                 },
-            )
+                'is_lazy': True
+            }, )
         }
 
         migrate_settings_group(apps, test_group)
@@ -125,11 +121,9 @@ class GatewaySettingsTests(TestCase):
         self.assertTrue(db_settings.lazy_fish_name)
 
         self.assertTrue(gateway.lazy_fish_name)
-        self.assertEqual(
-            gateway.get_lazy_setting('lazy_fish_name'), 'Lazy Eric')
+        self.assertEqual(gateway.get_lazy_setting('lazy_fish_name'), 'Lazy Eric')
         self.assertTrue(db_settings.lazy_fish_name)
-        self.assertEqual(
-            db_settings.get_lazy_setting('lazy_fish_name'), 'Lazy Eric')
+        self.assertEqual(db_settings.get_lazy_setting('lazy_fish_name'), 'Lazy Eric')
 
         self.assertTrue(gateway.lazy_empty_setting is None)
         self.assertTrue(db_settings.lazy_empty_setting is None)

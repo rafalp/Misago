@@ -11,28 +11,30 @@ _ = lambda x: x
 
 
 def update_users_settings(apps, schema_editor):
-    migrate_settings_group(apps,{
-        'key': 'users',
-        'name': _("Users"),
-        'description': _("Those settings control user accounts default behaviour and features availability."),
-        'settings': (
-            {
+    migrate_settings_group(
+        apps, {
+            'key':
+                'users',
+            'name':
+                _("Users"),
+            'description':
+                _(
+                    "Those settings control user accounts default behaviour and features availability."
+                ),
+            'settings': ({
                 'setting': 'account_activation',
                 'name': _("New accounts activation"),
                 'legend': _("New accounts"),
                 'value': 'none',
                 'form_field': 'select',
                 'field_extra': {
-                    'choices': (
-                        ('none', _("No activation required")),
-                        ('user', _("Activation token sent to User")),
-                        ('admin', _("Activation by administrator")),
-                        ('closed', _("Don't allow new registrations"))
-                    )
+                    'choices': (('none', _("No activation required")),
+                                ('user', _("Activation token sent to User")),
+                                ('admin', _("Activation by administrator")),
+                                ('closed', _("Don't allow new registrations")))
                 },
                 'is_public': True,
-            },
-            {
+            }, {
                 'setting': 'username_length_min',
                 'name': _("Minimum length"),
                 'description': _("Minimum allowed username length."),
@@ -43,8 +45,7 @@ def update_users_settings(apps, schema_editor):
                     'min_value': 2,
                     'max_value': 20,
                 },
-            },
-            {
+            }, {
                 'setting': 'username_length_max',
                 'name': _("Maximum length"),
                 'description': _("Maximum allowed username length."),
@@ -54,48 +55,55 @@ def update_users_settings(apps, schema_editor):
                     'min_value': 2,
                     'max_value': 20,
                 },
-            },
-            {
-                'setting': 'allow_custom_avatars',
-                'name': _("Allow custom avatars"),
-                'legend': _("Avatars"),
-                'description': _("Turning this option off will forbid "
-                                 "forum users from using avatars from "
-                                 "outside forums. Good for forums "
-                                 "adressed at young users."),
-                'python_type': 'bool',
-                'value': True,
-                'form_field': 'yesno',
-            },
-            {
+            }, {
+                'setting':
+                    'allow_custom_avatars',
+                'name':
+                    _("Allow custom avatars"),
+                'legend':
+                    _("Avatars"),
+                'description':
+                    _(
+                        "Turning this option off will forbid "
+                        "forum users from using avatars from "
+                        "outside forums. Good for forums "
+                        "adressed at young users."
+                    ),
+                'python_type':
+                    'bool',
+                'value':
+                    True,
+                'form_field':
+                    'yesno',
+            }, {
                 'setting': 'default_avatar',
                 'name': _("Default avatar"),
                 'value': 'gravatar',
                 'form_field': 'select',
                 'field_extra': {
-                    'choices': (
-                        ('dynamic', _("Individual")),
-                        ('gravatar', _("Gravatar")),
-                        ('gallery', _("Random avatar from gallery")),
-                    ),
+                    'choices': (('dynamic', _("Individual")), ('gravatar', _("Gravatar")),
+                                ('gallery', _("Random avatar from gallery")), ),
                 },
-            },
-            {
-                'setting': 'default_gravatar_fallback',
-                'name': _("Fallback for default gravatar"),
-                'description': _("Select which avatar to use when user "
-                                 "has no gravatar associated with his "
-                                 "e-mail address."),
-                'value': 'dynamic',
-                'form_field': 'select',
+            }, {
+                'setting':
+                    'default_gravatar_fallback',
+                'name':
+                    _("Fallback for default gravatar"),
+                'description':
+                    _(
+                        "Select which avatar to use when user "
+                        "has no gravatar associated with his "
+                        "e-mail address."
+                    ),
+                'value':
+                    'dynamic',
+                'form_field':
+                    'select',
                 'field_extra': {
-                    'choices': (
-                        ('dynamic', _("Individual")),
-                        ('gallery', _("Random avatar from gallery")),
-                    ),
+                    'choices': (('dynamic', _("Individual")),
+                                ('gallery', _("Random avatar from gallery")), ),
                 },
-            },
-            {
+            }, {
                 'setting': 'avatar_upload_limit',
                 'name': _("Maximum size of uploaded avatar"),
                 'description': _("Enter maximum allowed file size "
@@ -106,8 +114,7 @@ def update_users_settings(apps, schema_editor):
                     'min_value': 0,
                 },
                 'is_public': True,
-            },
-            {
+            }, {
                 'setting': 'signature_length_max',
                 'name': _("Maximum length"),
                 'legend': _("Signatures"),
@@ -119,40 +126,40 @@ def update_users_settings(apps, schema_editor):
                     'max_value': 5000,
                 },
                 'is_public': True,
-            },
-            {
+            }, {
                 'setting': 'subscribe_start',
                 'name': _("Started threads"),
                 'legend': _("Default subscriptions settings"),
                 'value': 'watch_email',
                 'form_field': 'select',
                 'field_extra': {
-                    'choices': (
-                        ('no', _("Don't watch")),
-                        ('watch', _("Put on watched threads list")),
-                        ('watch_email', _("Put on watched threads "
-                                          "list and e-mail user when "
-                                          "somebody replies")),
-                    ),
+                    'choices': (('no', _("Don't watch")),
+                                ('watch', _("Put on watched threads list")), (
+                                    'watch_email', _(
+                                        "Put on watched threads "
+                                        "list and e-mail user when "
+                                        "somebody replies"
+                                    )
+                                ), ),
                 },
-            },
-            {
+            }, {
                 'setting': 'subscribe_reply',
                 'name': _("Replied threads"),
                 'value': 'watch_email',
                 'form_field': 'select',
                 'field_extra': {
-                    'choices': (
-                        ('no', _("Don't watch")),
-                        ('watch', _("Put on watched threads list")),
-                        ('watch_email', _("Put on watched threads "
-                                          "list and e-mail user when "
-                                          "somebody replies")),
-                    ),
+                    'choices': (('no', _("Don't watch")),
+                                ('watch', _("Put on watched threads list")), (
+                                    'watch_email', _(
+                                        "Put on watched threads "
+                                        "list and e-mail user when "
+                                        "somebody replies"
+                                    )
+                                ), ),
                 },
-            },
-        )
-    })
+            }, )
+        }
+    )
 
     delete_settings_cache()
 

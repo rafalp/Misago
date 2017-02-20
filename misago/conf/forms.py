@@ -19,16 +19,16 @@ class ValidateChoicesNum(object):
         if self.min_choices and self.min_choices > data_len:
             message = ungettext(
                 'You have to select at least %(choices)d option.',
-                'You have to select at least %(choices)d options.',
-                self.min_choices)
+                'You have to select at least %(choices)d options.', self.min_choices
+            )
             message = message % {'choices': self.min_choices}
             raise forms.ValidationError(message)
 
         if self.max_choices and self.max_choices < data_len:
             message = ungettext(
                 'You cannot select more than %(choices)d option.',
-                'You cannot select more than %(choices)d options.',
-                self.max_choices)
+                'You cannot select more than %(choices)d options.', self.max_choices
+            )
             message = message % {'choices': self.max_choices}
             raise forms.ValidationError(message)
 
@@ -69,9 +69,7 @@ def create_checkbox(setting, kwargs, extra):
     kwargs['choices'] = localise_choices(extra)
 
     if extra.get('min') or extra.get('max'):
-        kwargs['validators'] = [
-            ValidateChoicesNum(extra.pop('min', 0), extra.pop('max', 0))
-        ]
+        kwargs['validators'] = [ValidateChoicesNum(extra.pop('min', 0), extra.pop('max', 0))]
 
     if setting.python_type == 'int':
         return forms.TypedMultipleChoiceField(coerce='int', **kwargs)
@@ -130,12 +128,9 @@ def setting_field(FormType, setting):
     field_factory = FIELD_STYPES[setting.form_field]
     field_extra = setting.field_extra
 
-    form_field = field_factory(
-        setting, basic_kwargs(setting, field_extra), field_extra)
+    form_field = field_factory(setting, basic_kwargs(setting, field_extra), field_extra)
 
-    FormType = type('FormType%s' % setting.pk, (FormType,), {
-        setting.setting: form_field
-    })
+    FormType = type('FormType%s' % setting.pk, (FormType, ), {setting.setting: form_field})
 
     return FormType
 
@@ -144,6 +139,7 @@ def ChangeSettingsForm(data=None, group=None):
     """
     Factory method that builds valid form for settings group
     """
+
     class FormType(forms.Form):
         pass
 
@@ -155,10 +151,7 @@ def ChangeSettingsForm(data=None, group=None):
     for setting in group.setting_set.order_by('order'):
         if setting.legend and setting.legend != fieldset_legend:
             if fieldset_fields:
-                fieldsets.append({
-                    'legend': fieldset_legend,
-                    'form': fieldset_form(data)
-                })
+                fieldsets.append({'legend': fieldset_legend, 'form': fieldset_form(data)})
             fieldset_legend = setting.legend
             fieldset_form = FormType
             fieldset_fields = False
@@ -166,9 +159,6 @@ def ChangeSettingsForm(data=None, group=None):
         fieldset_form = setting_field(fieldset_form, setting)
 
     if fieldset_fields:
-        fieldsets.append({
-            'legend': fieldset_legend,
-            'form': fieldset_form(data)
-        })
+        fieldsets.append({'legend': fieldset_legend, 'form': fieldset_form(data)})
 
     return fieldsets

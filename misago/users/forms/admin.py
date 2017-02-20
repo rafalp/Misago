@@ -14,11 +14,11 @@ from misago.users.validators import validate_email, validate_username
 
 
 UserModel = get_user_model()
-
-
 """
 Users
 """
+
+
 class UserBaseForm(forms.ModelForm):
     username = forms.CharField(label=_("Username"))
     title = forms.CharField(label=_("Custom title"), required=False)
@@ -58,10 +58,7 @@ class UserBaseForm(forms.ModelForm):
 
 
 class NewUserForm(UserBaseForm):
-    new_password = forms.CharField(
-        label=_("Password"),
-        widget=forms.PasswordInput
-    )
+    new_password = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
 
     class Meta:
         model = UserModel
@@ -90,16 +87,14 @@ class EditUserForm(UserBaseForm):
         "Turning this off is non-destructible way to remove user accounts."
     )
 
-    IS_ACTIVE_STAFF_MESSAGE_LABEL=_("Staff message")
-    IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT=_(
+    IS_ACTIVE_STAFF_MESSAGE_LABEL = _("Staff message")
+    IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT = _(
         "Optional message for forum team members explaining "
         "why user's account has been disabled."
     )
 
     new_password = forms.CharField(
-        label=_("Change password to"),
-        widget=forms.PasswordInput,
-        required=False
+        label=_("Change password to"), widget=forms.PasswordInput, required=False
     )
 
     is_avatar_locked = YesNoSwitch(
@@ -130,9 +125,7 @@ class EditUserForm(UserBaseForm):
     )
 
     signature = forms.CharField(
-        label=_("Signature contents"),
-        widget=forms.Textarea(attrs={'rows': 3}),
-        required=False
+        label=_("Signature contents"), widget=forms.Textarea(attrs={'rows': 3}), required=False
     )
     is_signature_locked = YesNoSwitch(
         label=_("Lock signature"),
@@ -143,17 +136,13 @@ class EditUserForm(UserBaseForm):
     )
     signature_lock_user_message = forms.CharField(
         label=_("User message"),
-        help_text=_(
-            "Optional message to user explaining why his/hers signature is locked."
-        ),
+        help_text=_("Optional message to user explaining why his/hers signature is locked."),
         widget=forms.Textarea(attrs={'rows': 3}),
         required=False
     )
     signature_lock_staff_message = forms.CharField(
         label=_("Staff message"),
-        help_text=_(
-            "Optional message to team members explaining why user signature is locked."
-        ),
+        help_text=_("Optional message to team members explaining why user signature is locked."),
         widget=forms.Textarea(attrs={'rows': 3}),
         required=False
     )
@@ -167,14 +156,10 @@ class EditUserForm(UserBaseForm):
     )
 
     subscribe_to_started_threads = forms.TypedChoiceField(
-        label=_("Started threads"),
-        coerce=int,
-        choices=UserModel.SUBSCRIBE_CHOICES
+        label=_("Started threads"), coerce=int, choices=UserModel.SUBSCRIBE_CHOICES
     )
     subscribe_to_replied_threads = forms.TypedChoiceField(
-        label=_("Replid threads"),
-        coerce=int,
-        choices=UserModel.SUBSCRIBE_CHOICES
+        label=_("Replid threads"), coerce=int, choices=UserModel.SUBSCRIBE_CHOICES
     )
 
     class Meta:
@@ -201,11 +186,12 @@ class EditUserForm(UserBaseForm):
 
         length_limit = settings.signature_length_max
         if len(data) > length_limit:
-            raise forms.ValidationError(ungettext(
-                "Signature can't be longer than %(limit)s character.",
-                "Signature can't be longer than %(limit)s characters.",
-                length_limit
-            ) % {'limit': length_limit})
+            raise forms.ValidationError(
+                ungettext(
+                    "Signature can't be longer than %(limit)s character.",
+                    "Signature can't be longer than %(limit)s characters.", length_limit
+                ) % {'limit': length_limit}
+            )
 
         return data
 
@@ -227,55 +213,56 @@ def UserFormFactory(FormType, instance):
 
     extra_fields['roles'] = forms.ModelMultipleChoiceField(
         label=_("Roles"),
-        help_text=_(
-            'Individual roles of this user. All users must have "member" role.'
-        ),
+        help_text=_('Individual roles of this user. All users must have "member" role.'),
         queryset=roles,
         initial=instance.roles.all() if instance.pk else None,
         widget=forms.CheckboxSelectMultiple
     )
 
-    return type('UserFormFinal', (FormType,), extra_fields)
+    return type('UserFormFinal', (FormType, ), extra_fields)
 
 
 def StaffFlagUserFormFactory(FormType, instance):
     staff_fields = {
-        'is_staff': YesNoSwitch(
-            label=EditUserForm.IS_STAFF_LABEL,
-            help_text=EditUserForm.IS_STAFF_HELP_TEXT,
-            initial=instance.is_staff
-        ),
-        'is_superuser': YesNoSwitch(
-            label=EditUserForm.IS_SUPERUSER_LABEL,
-            help_text=EditUserForm.IS_SUPERUSER_HELP_TEXT,
-            initial=instance.is_superuser
-        ),
+        'is_staff':
+            YesNoSwitch(
+                label=EditUserForm.IS_STAFF_LABEL,
+                help_text=EditUserForm.IS_STAFF_HELP_TEXT,
+                initial=instance.is_staff
+            ),
+        'is_superuser':
+            YesNoSwitch(
+                label=EditUserForm.IS_SUPERUSER_LABEL,
+                help_text=EditUserForm.IS_SUPERUSER_HELP_TEXT,
+                initial=instance.is_superuser
+            ),
     }
 
-    return type('StaffUserForm', (FormType,), staff_fields)
+    return type('StaffUserForm', (FormType, ), staff_fields)
 
 
 def UserIsActiveFormFactory(FormType, instance):
     is_active_fields = {
-        'is_active': YesNoSwitch(
-            label=EditUserForm.IS_ACTIVE_LABEL,
-            help_text=EditUserForm.IS_ACTIVE_HELP_TEXT,
-            initial=instance.is_active
-        ),
-        'is_active_staff_message': forms.CharField(
-            label=EditUserForm.IS_ACTIVE_STAFF_MESSAGE_LABEL,
-            help_text=EditUserForm.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT,
-            initial=instance.is_active_staff_message,
-            widget=forms.Textarea(attrs={'rows': 3}),
-            required=False
-        ),
+        'is_active':
+            YesNoSwitch(
+                label=EditUserForm.IS_ACTIVE_LABEL,
+                help_text=EditUserForm.IS_ACTIVE_HELP_TEXT,
+                initial=instance.is_active
+            ),
+        'is_active_staff_message':
+            forms.CharField(
+                label=EditUserForm.IS_ACTIVE_STAFF_MESSAGE_LABEL,
+                help_text=EditUserForm.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT,
+                initial=instance.is_active_staff_message,
+                widget=forms.Textarea(attrs={'rows': 3}),
+                required=False
+            ),
     }
 
-    return type('UserIsActiveForm', (FormType,), is_active_fields)
+    return type('UserIsActiveForm', (FormType, ), is_active_fields)
 
 
-def EditUserFormFactory(FormType, instance,
-        add_is_active_fields=False, add_admin_fields=False):
+def EditUserFormFactory(FormType, instance, add_is_active_fields=False, add_admin_fields=False):
     FormType = UserFormFactory(FormType, instance)
 
     if add_is_active_fields:
@@ -296,12 +283,10 @@ class SearchUsersFormBase(forms.Form):
 
     def filter_queryset(self, criteria, queryset):
         if criteria.get('username'):
-            queryset = queryset.filter(
-                slug__startswith=criteria.get('username').lower())
+            queryset = queryset.filter(slug__startswith=criteria.get('username').lower())
 
         if criteria.get('email'):
-            queryset = queryset.filter(
-                email__istartswith=criteria.get('email'))
+            queryset = queryset.filter(email__istartswith=criteria.get('email'))
 
         if criteria.get('rank'):
             queryset = queryset.filter(rank_id=criteria.get('rank'))
@@ -342,28 +327,25 @@ def SearchUsersForm(*args, **kwargs):
         threadstore.set('misago_admin_roles_choices', roles_choices)
 
     extra_fields = {
-        'rank': forms.TypedChoiceField(
-            label=_("Has rank"),
-            coerce=int,
-            required=False,
-            choices=ranks_choices
-        ),
-        'role': forms.TypedChoiceField(
-            label=_("Has role"),
-            coerce=int,
-            required=False,
-            choices=roles_choices
-        )
+        'rank':
+            forms.TypedChoiceField(
+                label=_("Has rank"), coerce=int, required=False, choices=ranks_choices
+            ),
+        'role':
+            forms.TypedChoiceField(
+                label=_("Has role"), coerce=int, required=False, choices=roles_choices
+            )
     }
 
-    FinalForm = type(
-        'SearchUsersFormFinal', (SearchUsersFormBase,), extra_fields)
+    FinalForm = type('SearchUsersFormFinal', (SearchUsersFormBase, ), extra_fields)
     return FinalForm(*args, **kwargs)
 
 
 """
 Ranks
 """
+
+
 class RankForm(forms.ModelForm):
     name = forms.CharField(
         label=_("Name"),
@@ -401,9 +383,7 @@ class RankForm(forms.ModelForm):
     css_class = forms.CharField(
         label=_("CSS class"),
         required=False,
-        help_text=_(
-            "Optional css class added to content belonging to this rank owner."
-        )
+        help_text=_("Optional css class added to content belonging to this rank owner.")
     )
     is_tab = forms.BooleanField(
         label=_("Give rank dedicated tab on users list"),
@@ -435,8 +415,7 @@ class RankForm(forms.ModelForm):
             unique_qs = unique_qs.exclude(pk=self.instance.pk)
 
         if unique_qs.exists():
-            raise forms.ValidationError(
-                _("This name collides with other rank."))
+            raise forms.ValidationError(_("This name collides with other rank."))
 
         return data
 
@@ -444,18 +423,16 @@ class RankForm(forms.ModelForm):
 """
 Bans
 """
+
+
 class BanUsersForm(forms.Form):
     ban_type = forms.MultipleChoiceField(
         label=_("Values to ban"),
         widget=forms.CheckboxSelectMultiple,
-        choices=(
-            ('usernames', _('Usernames')),
-            ('emails', _('E-mails')),
-            ('domains', _('E-mail domains')),
-            ('ip', _('IP addresses')),
-            ('ip_first', _('First segment of IP addresses')),
-            ('ip_two', _('First two segments of IP addresses'))
-        )
+        choices=(('usernames', _('Usernames')), ('emails', _('E-mails')),
+                 ('domains', _('E-mail domains')), ('ip', _('IP addresses')),
+                 ('ip_first', _('First segment of IP addresses')),
+                 ('ip_two', _('First two segments of IP addresses')))
     )
     user_message = forms.CharField(
         label=_("User message"),
@@ -463,9 +440,7 @@ class BanUsersForm(forms.Form):
         max_length=1000,
         help_text=_("Optional message displayed to users instead of default one."),
         widget=forms.Textarea(attrs={'rows': 3}),
-        error_messages={
-            'max_length': _("Message can't be longer than 1000 characters.")
-        }
+        error_messages={'max_length': _("Message can't be longer than 1000 characters.")}
     )
     staff_message = forms.CharField(
         label=_("Team message"),
@@ -473,9 +448,7 @@ class BanUsersForm(forms.Form):
         max_length=1000,
         help_text=_("Optional ban message for moderators and administrators."),
         widget=forms.Textarea(attrs={'rows': 3}),
-        error_messages={
-            'max_length': _("Message can't be longer than 1000 characters.")
-        }
+        error_messages={'max_length': _("Message can't be longer than 1000 characters.")}
     )
     expires_on = IsoDateTimeField(
         label=_("Expires on"),
@@ -485,11 +458,7 @@ class BanUsersForm(forms.Form):
 
 
 class BanForm(forms.ModelForm):
-    check_type = forms.TypedChoiceField(
-        label=_("Check type"),
-        coerce=int,
-        choices=Ban.CHOICES
-    )
+    check_type = forms.TypedChoiceField(label=_("Check type"), coerce=int, choices=Ban.CHOICES)
     banned_value = forms.CharField(
         label=_("Banned value"),
         max_length=250,
@@ -498,10 +467,8 @@ class BanForm(forms.ModelForm):
             'for rought matches. For example, making IP ban for value '
             '"83.*" will ban all IP addresses beginning with "83.".'
         ),
-        error_messages={
-            'max_length': _("Banned value can't be longer "
-                            "than 250 characters.")
-        }
+        error_messages={'max_length': _("Banned value can't be longer "
+                                        "than 250 characters.")}
     )
     user_message = forms.CharField(
         label=_("User message"),
@@ -509,9 +476,7 @@ class BanForm(forms.ModelForm):
         max_length=1000,
         help_text=_("Optional message displayed to user instead of default one."),
         widget=forms.Textarea(attrs={'rows': 3}),
-        error_messages={
-            'max_length': _("Message can't be longer than 1000 characters.")
-        }
+        error_messages={'max_length': _("Message can't be longer than 1000 characters.")}
     )
     staff_message = forms.CharField(
         label=_("Team message"),
@@ -519,9 +484,7 @@ class BanForm(forms.ModelForm):
         max_length=1000,
         help_text=_("Optional ban message for moderators and administrators."),
         widget=forms.Textarea(attrs={'rows': 3}),
-        error_messages={
-            'max_length': _("Message can't be longer than 1000 characters.")
-        }
+        error_messages={'max_length': _("Message can't be longer than 1000 characters.")}
     )
     expires_on = IsoDateTimeField(
         label=_("Expires on"),
@@ -551,30 +514,15 @@ class BanForm(forms.ModelForm):
 
 
 class SearchBansForm(forms.Form):
-    SARCH_CHOICES = (
-        ('', _('All bans')),
-        ('names', _('Usernames')),
-        ('emails', _('E-mails')),
-        ('ips', _('IPs')),
-    )
+    SARCH_CHOICES = (('', _('All bans')), ('names', _('Usernames')), ('emails', _('E-mails')),
+                     ('ips', _('IPs')), )
 
-    check_type = forms.ChoiceField(
-        label=_("Type"),
-        required=False,
-        choices=SARCH_CHOICES
-    )
-    value = forms.CharField(
-        label=_("Banned value begins with"),
-        required=False
-    )
+    check_type = forms.ChoiceField(label=_("Type"), required=False, choices=SARCH_CHOICES)
+    value = forms.CharField(label=_("Banned value begins with"), required=False)
     state = forms.ChoiceField(
         label=_("State"),
         required=False,
-        choices=(
-            ('', _('Any')),
-            ('used', _('Active')),
-            ('unused', _('Expired')),
-        )
+        choices=(('', _('Any')), ('used', _('Active')), ('unused', _('Expired')), )
     )
 
     def filter_queryset(self, search_criteria, queryset):
@@ -589,8 +537,7 @@ class SearchBansForm(forms.Form):
             queryset = queryset.filter(check_type=2)
 
         if criteria.get('value'):
-            queryset = queryset.filter(
-                banned_value__startswith=criteria.get('value').lower())
+            queryset = queryset.filter(banned_value__startswith=criteria.get('value').lower())
 
         if criteria.get('state') == 'used':
             queryset = queryset.filter(is_checked=True)

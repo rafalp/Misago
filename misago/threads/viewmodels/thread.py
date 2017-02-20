@@ -18,20 +18,22 @@ from misago.threads.threadtypes import trees_map
 
 __all__ = ['ForumThread', 'PrivateThread']
 
-
 BASE_RELATIONS = (
-    'category',
-    'poll',
-    'starter',
-    'starter__rank',
-    'starter__ban_cache',
-    'starter__online_tracker'
+    'category', 'poll', 'starter', 'starter__rank', 'starter__ban_cache', 'starter__online_tracker'
 )
 
 
 class ViewModel(BaseViewModel):
-    def __init__(self, request, pk, slug=None, read_aware=False,
-            subscription_aware=False, poll_votes_aware=False, select_for_update=False):
+    def __init__(
+            self,
+            request,
+            pk,
+            slug=None,
+            read_aware=False,
+            subscription_aware=False,
+            poll_votes_aware=False,
+            select_for_update=False
+    ):
         model = self.get_thread(request, pk, slug, select_for_update)
 
         model.path = self.get_thread_path(model.category)
@@ -60,16 +62,16 @@ class ViewModel(BaseViewModel):
         return self._poll
 
     def get_thread(self, request, pk, slug=None, select_for_update=False):
-        raise NotImplementedError('Thread view model has to implement get_thread(request, pk, slug=None)')
+        raise NotImplementedError(
+            'Thread view model has to implement get_thread(request, pk, slug=None)'
+        )
 
     def get_thread_path(self, category):
         thread_path = []
 
         if category.level:
             categories = Category.objects.filter(
-                tree_id=category.tree_id,
-                lft__lte=category.lft,
-                rght__gte=category.rght
+                tree_id=category.tree_id, lft__lte=category.lft, rght__gte=category.rght
             ).order_by('level')
             thread_path = list(categories)
         else:
@@ -101,9 +103,7 @@ class ForumThread(ViewModel):
             queryset = Thread.objects.select_related(*BASE_RELATIONS)
 
         thread = get_object_or_404(
-            queryset,
-            pk=pk,
-            category__tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
+            queryset, pk=pk, category__tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
         )
 
         allow_see_thread(request.user, thread)

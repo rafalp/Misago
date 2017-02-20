@@ -162,9 +162,7 @@ def create_default_categories_roles(apps, schema_editor):
     category = Category.objects.get(tree_id=1, level=1)
 
     RoleCategoryACL.objects.create(
-        role=Role.objects.get(name=_('Moderator')),
-        category=category,
-        category_role=moderator
+        role=Role.objects.get(name=_('Moderator')), category=category, category_role=moderator
     )
 
     RoleCategoryACL.objects.create(
@@ -174,9 +172,7 @@ def create_default_categories_roles(apps, schema_editor):
     )
 
     RoleCategoryACL.objects.create(
-        role=Role.objects.get(special_role='anonymous'),
-        category=category,
-        category_role=read_only
+        role=Role.objects.get(special_role='anonymous'), category=category, category_role=read_only
     )
 
 

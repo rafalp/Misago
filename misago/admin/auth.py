@@ -67,9 +67,13 @@ def django_login_handler(sender, **kwargs):
         admin_namespace = False
     if admin_namespace and user.is_staff:
         start_admin_session(request, user)
+
+
 dj_auth.signals.user_logged_in.connect(django_login_handler)
 
 
 def django_logout_handler(sender, **kwargs):
     close_admin_session(kwargs['request'])
+
+
 dj_auth.signals.user_logged_out.connect(django_logout_handler)

@@ -21,9 +21,7 @@ def make_threads_subscription_aware(user, threads):
             thread.subscription = None
             threads_dict[thread.pk] = thread
 
-        subscriptions_queryset = user.subscription_set.filter(
-            thread_id__in=threads_dict.keys()
-        )
+        subscriptions_queryset = user.subscription_set.filter(thread_id__in=threads_dict.keys())
 
         for subscription in subscriptions_queryset.iterator():
             threads_dict[subscription.thread_id].subscription = subscription

@@ -21,22 +21,12 @@ __all__ = [
     'allow_see_ban_details',
     'can_see_ban_details',
 ]
-
-
 """
 Admin Permissions Form
 """
-CAN_BROWSE_USERS_LIST = YesNoSwitch(
-    label=_("Can browse users list"),
-    initial=1
-)
-CAN_SEARCH_USERS = YesNoSwitch(
-    label=_("Can search user profiles"),
-    initial=1
-)
-CAN_SEE_USER_NAME_HISTORY = YesNoSwitch(
-    label=_("Can see other members name history")
-)
+CAN_BROWSE_USERS_LIST = YesNoSwitch(label=_("Can browse users list"), initial=1)
+CAN_SEARCH_USERS = YesNoSwitch(label=_("Can search user profiles"), initial=1)
+CAN_SEE_USER_NAME_HISTORY = YesNoSwitch(label=_("Can see other members name history"))
 CAN_SEE_DETAILS = YesNoSwitch(
     label=_("Can see members bans details"),
     help_text=_("Allows users with this permission to see user and staff ban messages.")
@@ -55,25 +45,13 @@ class LimitedPermissionsForm(forms.Form):
 class PermissionsForm(LimitedPermissionsForm):
     can_browse_users_list = CAN_BROWSE_USERS_LIST
     can_search_users = CAN_SEARCH_USERS
-    can_follow_users = YesNoSwitch(
-        label=_("Can follow other users"),
-        initial=1
-    )
-    can_be_blocked = YesNoSwitch(
-        label=_("Can be blocked by other users"),
-        initial=0
-    )
+    can_follow_users = YesNoSwitch(label=_("Can follow other users"), initial=1)
+    can_be_blocked = YesNoSwitch(label=_("Can be blocked by other users"), initial=0)
     can_see_users_name_history = CAN_SEE_USER_NAME_HISTORY
     can_see_ban_details = CAN_SEE_DETAILS
-    can_see_users_emails = YesNoSwitch(
-        label=_("Can see members e-mails")
-    )
-    can_see_users_ips = YesNoSwitch(
-        label=_("Can see members IPs")
-    )
-    can_see_hidden_users = YesNoSwitch(
-        label=_("Can see members that hide their presence")
-    )
+    can_see_users_emails = YesNoSwitch(label=_("Can see members e-mails"))
+    can_see_users_ips = YesNoSwitch(label=_("Can see members IPs"))
+    can_see_hidden_users = YesNoSwitch(label=_("Can see members that hide their presence"))
 
 
 def change_permissions_form(role):
@@ -89,6 +67,8 @@ def change_permissions_form(role):
 """
 ACL Builder
 """
+
+
 def build_acl(acl, roles, key_name):
     new_acl = {
         'can_browse_users_list': 0,
@@ -103,7 +83,10 @@ def build_acl(acl, roles, key_name):
     }
     new_acl.update(acl)
 
-    return algebra.sum_acls(new_acl, roles=roles, key=key_name,
+    return algebra.sum_acls(
+        new_acl,
+        roles=roles,
+        key=key_name,
         can_browse_users_list=algebra.greater,
         can_search_users=algebra.greater,
         can_follow_users=algebra.greater,
@@ -119,16 +102,14 @@ def build_acl(acl, roles, key_name):
 """
 ACL's for targets
 """
+
+
 def add_acl_to_user(user, target):
     target.acl['can_have_attitude'] = False
     target.acl['can_follow'] = can_follow_user(user, target)
     target.acl['can_block'] = can_block_user(user, target)
 
-    mod_permissions = (
-        'can_have_attitude',
-        'can_follow',
-        'can_block',
-    )
+    mod_permissions = ('can_have_attitude', 'can_follow', 'can_block', )
 
     for permission in mod_permissions:
         if target.acl[permission]:
@@ -143,9 +124,13 @@ def register_with(registry):
 """
 ACL tests
 """
+
+
 def allow_browse_users_list(user):
     if not user.acl_cache['can_browse_users_list']:
         raise PermissionDenied(_("You can't browse users list."))
+
+
 can_browse_users_list = return_boolean(allow_browse_users_list)
 
 
@@ -155,6 +140,8 @@ def allow_follow_user(user, target):
         raise PermissionDenied(_("You can't follow other users."))
     if user.pk == target.pk:
         raise PermissionDenied(_("You can't add yourself to followed."))
+
+
 can_follow_user = return_boolean(allow_follow_user)
 
 
@@ -167,6 +154,8 @@ def allow_block_user(user, target):
     if not target.acl_cache['can_be_blocked'] or target.is_superuser:
         message = _("%(user)s can't be blocked.") % {'user': target.username}
         raise PermissionDenied(message)
+
+
 can_block_user = return_boolean(allow_block_user)
 
 
@@ -174,4 +163,6 @@ can_block_user = return_boolean(allow_block_user)
 def allow_see_ban_details(user, target):
     if not user.acl_cache['can_see_ban_details']:
         raise PermissionDenied(_("You can't see users bans details."))
+
+
 can_see_ban_details = return_boolean(allow_see_ban_details)

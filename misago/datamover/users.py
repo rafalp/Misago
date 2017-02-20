@@ -12,13 +12,7 @@ from . import fetch_assoc, localise_datetime, movedids
 
 UserModel = get_user_model()
 
-
-PRIVATE_THREAD_INVITES = {
-    0: 0,
-    1: 0,
-    2: 1,
-    3: 2
-}
+PRIVATE_THREAD_INVITES = {0: 0, 1: 0, 2: 1, 3: 2}
 
 
 def move_users(stdout, style):
@@ -31,15 +25,14 @@ def move_users(stdout, style):
         else:
             try:
                 new_user = UserModel.objects.create_user(
-                    user['username'], user['email'], 'Pass.123')
+                    user['username'], user['email'], 'Pass.123'
+                )
             except ValidationError:
                 new_name = ''.join([user['username'][:10], get_random_string(4)])
-                new_user = UserModel.objects.create_user(
-                    new_name, user['email'], 'Pass.123')
+                new_user = UserModel.objects.create_user(new_name, user['email'], 'Pass.123')
 
                 formats = (user['username'], new_name)
-                stdout.write(style.ERROR(
-                    '"%s" has been registered as "%s"' % formats))
+                stdout.write(style.ERROR('"%s" has been registered as "%s"' % formats))
 
             new_user.password = user['password']
 
@@ -64,7 +57,8 @@ def move_users(stdout, style):
             new_user.signature = user['signature']
             new_user.signature_parsed = user['signature_preparsed']
             new_user.signature_checksum = make_signature_checksum(
-                user['signature_preparsed'], new_user)
+                user['signature_preparsed'], new_user
+            )
 
         new_user.is_signature_locked = user['signature_ban']
         new_user.signature_lock_user_message = user['signature_ban_reason_user'] or None
@@ -125,13 +119,15 @@ def move_users_namehistory(user, old_id):
         if username_history:
             username_history[-1].new_username = namechange['old_username']
 
-        username_history.append(UsernameChange(
-            user=user,
-            changed_by=user,
-            changed_by_username=user.username,
-            changed_on=localise_datetime(namechange['date']),
-            new_username=user.username,
-            old_username=namechange['old_username']
-        ))
+        username_history.append(
+            UsernameChange(
+                user=user,
+                changed_by=user,
+                changed_by_username=user.username,
+                changed_on=localise_datetime(namechange['date']),
+                new_username=user.username,
+                old_username=namechange['old_username']
+            )
+        )
 
     UsernameChange.objects.bulk_create(username_history)

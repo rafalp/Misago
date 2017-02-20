@@ -21,9 +21,7 @@ class PrivateThreadViewTests(PrivateThreadsTestCase):
 
     def test_no_permission(self):
         """user needs to have permission to see private thread"""
-        override_acl(self.user, {
-            'can_use_private_threads': 0
-        })
+        override_acl(self.user, {'can_use_private_threads': 0})
 
         response = self.client.get(self.test_link)
         self.assertContains(response, "t use private threads", status_code=403)
@@ -35,9 +33,7 @@ class PrivateThreadViewTests(PrivateThreadsTestCase):
 
     def test_mod_not_reported(self):
         """moderator can't see private thread that has no reports"""
-        override_acl(self.user, {
-            'can_moderate_private_threads': 1
-        })
+        override_acl(self.user, {'can_moderate_private_threads': 1})
 
         response = self.client.get(self.test_link)
         self.assertEqual(response.status_code, 404)
@@ -66,9 +62,7 @@ class PrivateThreadViewTests(PrivateThreadsTestCase):
 
     def test_mod_can_see_reported(self):
         """moderator can see private thread that has reports"""
-        override_acl(self.user, {
-            'can_moderate_private_threads': 1
-        })
+        override_acl(self.user, {'can_moderate_private_threads': 1})
 
         self.thread.has_reported_posts = True
         self.thread.save()

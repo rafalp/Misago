@@ -22,11 +22,7 @@ class AdminProtectedNamespaceTests(TestCase):
     def test_valid_cases(self):
         """get_protected_namespace returns true for protected links"""
         links_prefix = reverse('misago:admin:index')
-        TEST_CASES = (
-            '',
-            'somewhere/',
-            'ejksajdlksajldjskajdlksajlkdas',
-        )
+        TEST_CASES = ('', 'somewhere/', 'ejksajdlksajldjskajdlksajlkdas', )
 
         for case in TEST_CASES:
             request = FakeRequest(links_prefix + case)
@@ -34,11 +30,7 @@ class AdminProtectedNamespaceTests(TestCase):
 
     def test_invalid_cases(self):
         """get_protected_namespace returns none for other links"""
-        TEST_CASES = (
-            '/',
-            '/somewhere/',
-            '/ejksajdlksajldjskajdlksajlkdas',
-        )
+        TEST_CASES = ('/', '/somewhere/', '/ejksajdlksajldjskajdlksajlkdas', )
 
         for case in TEST_CASES:
             request = FakeRequest(case)
@@ -57,8 +49,9 @@ class AdminLoginViewTests(TestCase):
     def test_login_returns_200_on_invalid_post(self):
         """form handles invalid data gracefully"""
         response = self.client.post(
-            reverse('misago:admin:index'),
-            data={'username': 'Nope', 'password': 'Nope'})
+            reverse('misago:admin:index'), data={'username': 'Nope',
+                                                 'password': 'Nope'}
+        )
 
         self.assertContains(response, "Login or password is incorrect.")
         self.assertContains(response, "Sign in")
@@ -74,8 +67,9 @@ class AdminLoginViewTests(TestCase):
         user.save()
 
         response = self.client.post(
-            reverse('misago:admin:index'),
-            data={'username': 'Bob', 'password': 'Pass.123'})
+            reverse('misago:admin:index'), data={'username': 'Bob',
+                                                 'password': 'Pass.123'}
+        )
 
         self.assertContains(response, "Your account does not have admin privileges.")
 
@@ -88,8 +82,9 @@ class AdminLoginViewTests(TestCase):
         user.save()
 
         response = self.client.post(
-            reverse('misago:admin:index'),
-            data={'username': 'Bob', 'password': 'Pass.123'})
+            reverse('misago:admin:index'), data={'username': 'Bob',
+                                                 'password': 'Pass.123'}
+        )
 
         self.assertContains(response, "Your account does not have admin privileges.")
 
@@ -102,8 +97,9 @@ class AdminLoginViewTests(TestCase):
         user.save()
 
         response = self.client.post(
-            reverse('misago:admin:index'),
-            data={'username': 'Bob', 'password': 'Pass.123'})
+            reverse('misago:admin:index'), data={'username': 'Bob',
+                                                 'password': 'Pass.123'}
+        )
 
         self.assertEqual(response.status_code, 302)
 
@@ -116,8 +112,9 @@ class AdminLoginViewTests(TestCase):
         user.save()
 
         response = self.client.post(
-            reverse('misago:admin:index'),
-            data={'username': 'Bob', 'password': 'Pass.123'})
+            reverse('misago:admin:index'), data={'username': 'Bob',
+                                                 'password': 'Pass.123'}
+        )
 
         self.assertEqual(response.status_code, 302)
 
@@ -199,8 +196,7 @@ class Admin404ErrorTests(AdminTestCase):
 
         response = self.client.get(test_link)
 
-        self.assertContains(
-            response, "Requested page could not be found.", status_code=404)
+        self.assertContains(response, "Requested page could not be found.", status_code=404)
 
 
 class AdminGenericViewsTests(AdminTestCase):
@@ -214,13 +210,11 @@ class AdminGenericViewsTests(AdminTestCase):
         self.assertIn('redirected=1', response['location'])
 
         # request with flag muted redirect
-        response = self.client.get(
-            '%s?redirected=1&username=lorem' % test_link)
+        response = self.client.get('%s?redirected=1&username=lorem' % test_link)
         self.assertEqual(response.status_code, 200)
 
     def test_list_search_unicode_handling(self):
         """querystring creation handles unicode strings"""
         test_link = reverse('misago:admin:users:accounts:index')
-        response = self.client.get(
-            '%s?redirected=1&username=%s' % (test_link, 'łut'))
+        response = self.client.get('%s?redirected=1&username=%s' % (test_link, 'łut'))
         self.assertEqual(response.status_code, 200)

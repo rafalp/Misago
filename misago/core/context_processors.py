@@ -32,17 +32,13 @@ def current_link(request):
     else:
         link_name = url_name
 
-    request.frontend_context.update({
-        'CURRENT_LINK': link_name
-    })
+    request.frontend_context.update({'CURRENT_LINK': link_name})
 
     return {}
 
 
 def momentjs_locale(request):
-    return {
-        'MOMENTJS_LOCALE_URL': get_locale_url(get_language())
-    }
+    return {'MOMENTJS_LOCALE_URL': get_locale_url(get_language())}
 
 
 def frontend_context(request):

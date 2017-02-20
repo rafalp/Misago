@@ -9,9 +9,9 @@ from misago.users.serializers import UserSerializer as BaseUserSerializer
 
 __all__ = ['PostSerializer']
 
-
 UserSerializer = BaseUserSerializer.subset_fields(
-    'id', 'username', 'rank', 'avatars', 'signature', 'title', 'status', 'absolute_url')
+    'id', 'username', 'rank', 'avatars', 'signature', 'title', 'status', 'absolute_url'
+)
 
 
 class PostSerializer(serializers.ModelSerializer, MutableFields):
@@ -57,14 +57,12 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
             'is_event',
             'event_type',
             'event_context',
-
             'acl',
             'is_liked',
             'is_new',
             'is_read',
             'last_likes',
             'likes',
-
             'api',
             'url',
         ]
@@ -151,18 +149,18 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
 
     def get_last_editor_url(self, obj):
         if obj.last_editor_id:
-            return reverse('misago:user', kwargs={
-                'pk': obj.last_editor_id,
-                'slug': obj.last_editor_slug
-            })
+            return reverse(
+                'misago:user', kwargs={'pk': obj.last_editor_id,
+                                       'slug': obj.last_editor_slug}
+            )
         else:
             return None
 
     def get_hidden_by_url(self, obj):
         if obj.hidden_by_id:
-            return reverse('misago:user', kwargs={
-                'pk': obj.hidden_by_id,
-                'slug': obj.hidden_by_slug
-            })
+            return reverse(
+                'misago:user', kwargs={'pk': obj.hidden_by_id,
+                                       'slug': obj.hidden_by_slug}
+            )
         else:
             return None

@@ -54,8 +54,8 @@ def allow_self_only(user, pk, message):
 
 
 class UserViewSet(viewsets.GenericViewSet):
-    permission_classes = (UserViewSetPermission,)
-    parser_classes=(FormParser, JSONParser, MultiPartParser)
+    permission_classes = (UserViewSetPermission, )
+    parser_classes = (FormParser, JSONParser, MultiPartParser)
     queryset = UserModel.objects
 
     def get_queryset(self):
@@ -104,9 +104,7 @@ class UserViewSet(viewsets.GenericViewSet):
         serializer = ForumOptionsSerializer(request.user, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({
-                'detail': _("Your forum options have been changed.")
-            })
+            return Response({'detail': _("Your forum options have been changed.")})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -164,10 +162,7 @@ class UserViewSet(viewsets.GenericViewSet):
             profile.save(update_fields=['followers'])
             request.user.save(update_fields=['following'])
 
-            return Response({
-                'is_followed': followed,
-                'followers': profile_followers
-            })
+            return Response({'is_followed': followed, 'followers': profile_followers})
 
     @detail_route()
     def ban(self, request, pk=None):
@@ -213,7 +208,9 @@ class UserViewSet(viewsets.GenericViewSet):
                         categories_to_sync.add(thread.category_id)
                         hide_thread(request, thread)
 
-                    posts = profile.post_set.select_related('category', 'thread', 'thread__category')
+                    posts = profile.post_set.select_related(
+                        'category', 'thread', 'thread__category'
+                    )
                     for post in posts.filter(is_hidden=False).iterator():
                         categories_to_sync.add(post.category_id)
                         hide_post(request.user, post)
@@ -235,7 +232,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
         page = get_int_or_404(request.query_params.get('page', 0))
         if page == 1:
-            page = 0 # api allows explicit first page
+            page = 0  # api allows explicit first page
 
         search = request.query_params.get('search')
 
@@ -249,7 +246,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
         page = get_int_or_404(request.query_params.get('page', 0))
         if page == 1:
-            page = 0 # api allows explicit first page
+            page = 0  # api allows explicit first page
 
         search = request.query_params.get('search')
 
@@ -263,7 +260,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
         page = get_int_or_404(request.query_params.get('page', 0))
         if page == 1:
-            page = 0 # api allows explicit first page
+            page = 0  # api allows explicit first page
 
         feed = UserThreads(request, profile, page)
 
@@ -275,7 +272,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
         page = get_int_or_404(request.query_params.get('page', 0))
         if page == 1:
-            page = 0 # api allows explicit first page
+            page = 0  # api allows explicit first page
 
         feed = UserPosts(request, profile, page)
 
@@ -283,7 +280,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
 
 UserProfileSerializer = UserSerializer.subset_fields(
-    'id', 'username', 'slug', 'email', 'joined_on', 'rank', 'title', 'avatars',
-    'is_avatar_locked', 'signature', 'is_signature_locked', 'followers', 'following',
-    'threads', 'posts', 'acl', 'is_followed', 'is_blocked', 'status', 'absolute_url',
-    'api_url')
+    'id', 'username', 'slug', 'email', 'joined_on', 'rank', 'title', 'avatars', 'is_avatar_locked',
+    'signature', 'is_signature_locked', 'followers', 'following', 'threads', 'posts', 'acl',
+    'is_followed', 'is_blocked', 'status', 'absolute_url', 'api_url'
+)

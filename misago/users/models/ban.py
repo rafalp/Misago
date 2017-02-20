@@ -43,11 +43,9 @@ class BansManager(models.Manager):
         for ban in queryset.order_by('-id').iterator():
             if ban.is_expired:
                 continue
-            elif (ban.check_type == self.model.USERNAME and username and
-                    ban.check_value(username)):
+            elif (ban.check_type == self.model.USERNAME and username and ban.check_value(username)):
                 return ban
-            elif (ban.check_type == self.model.EMAIL and email and
-                    ban.check_value(email)):
+            elif (ban.check_type == self.model.EMAIL and email and ban.check_value(email)):
                 return ban
             elif ban.check_type == self.model.IP and ip and ban.check_value(ip):
                 return ban
@@ -60,11 +58,7 @@ class Ban(models.Model):
     EMAIL = 1
     IP = 2
 
-    CHOICES = (
-        (USERNAME, _('Username')),
-        (EMAIL, _('E-mail address')),
-        (IP, _('IP address')),
-    )
+    CHOICES = ((USERNAME, _('Username')), (EMAIL, _('E-mail address')), (IP, _('IP address')), )
 
     check_type = models.PositiveIntegerField(default=USERNAME, db_index=True)
     banned_value = models.CharField(max_length=255, db_index=True)
@@ -112,7 +106,9 @@ class Ban(models.Model):
 
 
 class BanCache(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, primary_key=True, related_name='ban_cache')
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, primary_key=True, related_name='ban_cache'
+    )
     ban = models.ForeignKey(Ban, null=True, blank=True, on_delete=models.SET_NULL)
     bans_version = models.PositiveIntegerField(default=0)
     user_message = models.TextField(null=True, blank=True)
@@ -123,7 +119,7 @@ class BanCache(models.Model):
         try:
             super(BanCache, self).save(*args, **kwargs)
         except IntegrityError:
-            pass # first come is first serve with ban cache
+            pass  # first come is first serve with ban cache
 
     def get_serialized_message(self):
         from misago.users.serializers import BanMessageSerializer

@@ -47,8 +47,8 @@ def clean_posts_for_split(request, thread):
     elif len(posts_ids) > SPLIT_LIMIT:
         message = ungettext(
             "No more than %(limit)s post can be split at single time.",
-            "No more than %(limit)s posts can be split at single time.",
-            SPLIT_LIMIT)
+            "No more than %(limit)s posts can be split at single time.", SPLIT_LIMIT
+        )
         raise SplitError(message % {'limit': SPLIT_LIMIT})
 
     posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)

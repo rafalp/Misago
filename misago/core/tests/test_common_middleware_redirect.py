@@ -10,5 +10,4 @@ class CommonMiddlewareRedirectTests(AuthenticatedUserTestCase):
         """
         response = self.client.get(self.user.get_absolute_url()[:-1])
         self.assertEqual(response.status_code, 301)
-        self.assertTrue(
-            response['location'].endswith(self.user.get_absolute_url()))
+        self.assertTrue(response['location'].endswith(self.user.get_absolute_url()))

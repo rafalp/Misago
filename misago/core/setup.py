@@ -22,9 +22,11 @@ def validate_project_name(parser, project_name):
     except ImportError:
         pass
     else:
-        parser.error("'%s' conflicts with the name of an existing "
-                     "Python module and cannot be used as a project "
-                     "name. Please try another name." % project_name)
+        parser.error(
+            "'%s' conflicts with the name of an existing "
+            "Python module and cannot be used as a project "
+            "name. Please try another name." % project_name
+        )
 
     return project_name
 
@@ -43,7 +45,9 @@ def start_misago_project():
 
     project_name = validate_project_name(parser, args[0])
 
-    argv = ['start-misago.py', 'startproject', project_name,
-            '--template=%s' % get_misago_project_template()]
+    argv = [
+        'start-misago.py', 'startproject', project_name,
+        '--template=%s' % get_misago_project_template()
+    ]
 
     management.execute_from_command_line(argv)

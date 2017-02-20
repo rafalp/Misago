@@ -6,7 +6,7 @@ def set_user_signature(request, user, signature):
 
     if signature:
         user.signature_parsed = signature_flavour(request, user, signature)
-        user.signature_checksum = make_signature_checksum( user.signature_parsed, user)
+        user.signature_checksum = make_signature_checksum(user.signature_parsed, user)
     else:
         user.signature_parsed = ''
         user.signature_checksum = ''

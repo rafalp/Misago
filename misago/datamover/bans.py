@@ -5,11 +5,7 @@ from misago.users.models import Ban
 from . import fetch_assoc, localise_datetime
 
 
-CHECK_MAPPING = {
-  1: 0,
-  2: 1,
-  3: 2
-}
+CHECK_MAPPING = {1: 0, 2: 1, 3: 2}
 
 
 def move_bans():

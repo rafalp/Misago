@@ -20,19 +20,13 @@ UserModel = get_user_model()
 
 def test_mail_user(request):
     test_user = UserModel.objects.all().first()
-    mail.mail_user(request,
-                   test_user,
-                   "Misago Test Mail",
-                   "misago/emails/base")
+    mail.mail_user(request, test_user, "Misago Test Mail", "misago/emails/base")
 
     return HttpResponse("Mailed user!")
 
 
 def test_mail_users(request):
-    mail.mail_users(request,
-                    UserModel.objects.iterator(),
-                    "Misago Test Spam",
-                    "misago/emails/base")
+    mail.mail_users(request, UserModel.objects.iterator(), "Misago Test Spam", "misago/emails/base")
 
     return HttpResponse("Mailed users!")
 
@@ -72,11 +66,7 @@ def test_paginated_response_data_serializer(request):
     data = [0, 1, 2, 3]
     page = paginate(data, 0, 10)
 
-    return paginated_response(
-        page,
-        data=['a', 'b', 'c', 'd'],
-        serializer=MockSerializer
-    )
+    return paginated_response(page, data=['a', 'b', 'c', 'd'], serializer=MockSerializer)
 
 
 @api_view()
@@ -85,12 +75,8 @@ def test_paginated_response_data_extra(request):
     page = paginate(data, 0, 10)
 
     return paginated_response(
-        page,
-        data=['a', 'b', 'c', 'd'],
-        extra={
-            'next': 'EXTRA',
-            'lorem': 'ipsum'
-        }
+        page, data=['a', 'b', 'c', 'd'], extra={'next': 'EXTRA',
+                                                'lorem': 'ipsum'}
     )
 
 

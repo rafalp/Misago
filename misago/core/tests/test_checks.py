@@ -6,9 +6,7 @@ from misago.core import SUPPORTED_ENGINES, check_db_engine
 
 
 INVALID_ENGINES = (
-    'django.db.backends.sqlite3',
-    'django.db.backends.mysql',
-    'django.db.backends.oracle',
+    'django.db.backends.sqlite3', 'django.db.backends.mysql', 'django.db.backends.oracle',
 )
 
 

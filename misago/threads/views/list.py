@@ -75,7 +75,7 @@ class CategoryThreadsList(ForumThreadsList):
     def get_category(self, request, **kwargs):
         category = super(CategoryThreadsList, self).get_category(request, **kwargs)
         if not category.level:
-            raise Http404() # disallow root category access
+            raise Http404()  # disallow root category access
         return category
 
 

@@ -11,5 +11,4 @@ class Command(BaseCommand):
         self.start_timer()
         move_settings(self.stdout)
 
-        self.stdout.write(
-            self.style.SUCCESS("Moved settings in %s" % self.stop_timer()))
+        self.stdout.write(self.style.SUCCESS("Moved settings in %s" % self.stop_timer()))

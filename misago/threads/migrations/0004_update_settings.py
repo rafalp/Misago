@@ -10,12 +10,15 @@ _ = lambda x: x
 
 
 def update_threads_settings(apps, schema_editor):
-    migrate_settings_group(apps, {
-        'key': 'threads',
-        'name': _("Threads"),
-        'description': _("Those settings control threads and posts."),
-        'settings': (
-            {
+    migrate_settings_group(
+        apps, {
+            'key':
+                'threads',
+            'name':
+                _("Threads"),
+            'description':
+                _("Those settings control threads and posts."),
+            'settings': ({
                 'setting': 'thread_title_length_min',
                 'name': _("Minimum length"),
                 'description': _("Minimum allowed thread title length."),
@@ -27,8 +30,7 @@ def update_threads_settings(apps, schema_editor):
                     'max_value': 255,
                 },
                 'is_public': True,
-            },
-            {
+            }, {
                 'setting': 'thread_title_length_max',
                 'name': _("Maximum length"),
                 'description': _("Maximum allowed thread length."),
@@ -39,8 +41,7 @@ def update_threads_settings(apps, schema_editor):
                     'max_value': 255,
                 },
                 'is_public': True,
-            },
-            {
+            }, {
                 'setting': 'post_length_min',
                 'name': _("Minimum length"),
                 'description': _("Minimum allowed user post length."),
@@ -51,23 +52,28 @@ def update_threads_settings(apps, schema_editor):
                     'min_value': 1,
                 },
                 'is_public': True,
-            },
-            {
-                'setting': 'post_length_max',
-                'name': _("Maximum length"),
-                'description': _(
-                    "Maximum allowed user post length. Enter zero to disable. "
-                    "Longer posts are more costful to parse and index."
-                ),
-                'python_type': 'int',
-                'default_value': 60000,
+            }, {
+                'setting':
+                    'post_length_max',
+                'name':
+                    _("Maximum length"),
+                'description':
+                    _(
+                        "Maximum allowed user post length. Enter zero to disable. "
+                        "Longer posts are more costful to parse and index."
+                    ),
+                'python_type':
+                    'int',
+                'default_value':
+                    60000,
                 'field_extra': {
                     'min_value': 0,
                 },
-                'is_public': True,
-            },
-        )
-    })
+                'is_public':
+                    True,
+            }, )
+        }
+    )
 
     delete_settings_cache()
 

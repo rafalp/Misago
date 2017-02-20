@@ -61,14 +61,12 @@ def handle_permission_denied_exception(request, exception):
     return errorpages.permission_denied(request, error_message)
 
 
-EXCEPTION_HANDLERS = (
-    (AjaxError, handle_ajax_error),
-    (Banned, handle_banned_exception),
-    (Http404, handle_http404_exception),
-    (ExplicitFirstPage, handle_explicit_first_page_exception),
-    (OutdatedSlug, handle_outdated_slug_exception),
-    (PermissionDenied, handle_permission_denied_exception),
-)
+EXCEPTION_HANDLERS = ((AjaxError, handle_ajax_error),
+                      (Banned, handle_banned_exception),
+                      (Http404, handle_http404_exception),
+                      (ExplicitFirstPage, handle_explicit_first_page_exception),
+                      (OutdatedSlug, handle_outdated_slug_exception),
+                      (PermissionDenied, handle_permission_denied_exception), )
 
 
 def get_exception_handler(exception):
@@ -76,8 +74,7 @@ def get_exception_handler(exception):
         if isinstance(exception, exception_type):
             return handler
     else:
-        raise ValueError(
-            "%s is not Misago exception" % exception.__class__.__name__)
+        raise ValueError("%s is not Misago exception" % exception.__class__.__name__)
 
 
 def handle_misago_exception(request, exception):

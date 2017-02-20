@@ -16,8 +16,7 @@ UserModel = get_user_model()
 
 class ValidateEmailAvailableTests(TestCase):
     def setUp(self):
-        self.test_user = UserModel.objects.create_user(
-            'EricTheFish', 'eric@test.com', 'pass123')
+        self.test_user = UserModel.objects.create_user('EricTheFish', 'eric@test.com', 'pass123')
 
     def test_valid_email(self):
         """validate_email_available allows available emails"""
@@ -32,10 +31,7 @@ class ValidateEmailAvailableTests(TestCase):
 
 class ValidateEmailBannedTests(TestCase):
     def setUp(self):
-        Ban.objects.create(
-            check_type=Ban.EMAIL,
-            banned_value="ban@test.com"
-        )
+        Ban.objects.create(check_type=Ban.EMAIL, banned_value="ban@test.com")
 
     def test_unbanned_name(self):
         """unbanned email passes validation"""
@@ -65,14 +61,12 @@ class ValidateUsernameTests(TestCase):
 
 class ValidateUsernameAvailableTests(TestCase):
     def setUp(self):
-        self.test_user = UserModel.objects.create_user(
-            'EricTheFish', 'eric@test.com', 'pass123')
+        self.test_user = UserModel.objects.create_user('EricTheFish', 'eric@test.com', 'pass123')
 
     def test_valid_name(self):
         """validate_username_available allows available names"""
         validate_username_available('BobBoberson')
-        validate_username_available(
-            self.test_user.username, exclude=self.test_user)
+        validate_username_available(self.test_user.username, exclude=self.test_user)
 
     def test_invalid_name(self):
         """validate_username_available disallows unvailable names"""
@@ -82,10 +76,7 @@ class ValidateUsernameAvailableTests(TestCase):
 
 class ValidateUsernameBannedTests(TestCase):
     def setUp(self):
-        Ban.objects.create(
-            check_type=Ban.USERNAME,
-            banned_value="Bob"
-        )
+        Ban.objects.create(check_type=Ban.USERNAME, banned_value="Bob")
 
     def test_unbanned_name(self):
         """unbanned name passes validation"""

@@ -14,10 +14,11 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
 
         self.post = testutils.reply_thread(self.thread, poster=self.user)
 
-        self.api_link = reverse('misago:api:thread-post-edits', kwargs={
-            'thread_pk': self.thread.pk,
-            'pk': self.post.pk
-        })
+        self.api_link = reverse(
+            'misago:api:thread-post-edits',
+            kwargs={'thread_pk': self.thread.pk,
+                    'pk': self.post.pk}
+        )
 
         self.override_acl()
 
@@ -32,8 +33,7 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
                 editor_ip='127.0.0.1',
                 edited_from="Original body",
                 edited_to="First Edit"
-            ),
-            self.post.edits_record.create(
+            ), self.post.edits_record.create(
                 category=self.category,
                 thread=self.thread,
                 editor_name='Deleted',
@@ -41,8 +41,7 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
                 editor_ip='127.0.0.1',
                 edited_from="First Edit",
                 edited_to="Second Edit"
-            ),
-            self.post.edits_record.create(
+            ), self.post.edits_record.create(
                 category=self.category,
                 thread=self.thread,
                 editor=self.user,
@@ -132,9 +131,7 @@ class ThreadPostPostEditTests(ThreadPostEditsApiTestCase):
         super(ThreadPostPostEditTests, self).setUp()
         self.edits = self.mock_edit_record()
 
-        self.override_acl({
-            'can_edit_posts': 2
-        })
+        self.override_acl({'can_edit_posts': 2})
 
     def test_empty_edit_id(self):
         """api handles empty edit in querystring"""
@@ -160,9 +157,7 @@ class ThreadPostPostEditTests(ThreadPostEditsApiTestCase):
 
     def test_no_permission(self):
         """api validates permission to revert post"""
-        self.override_acl({
-            'can_edit_posts': 0
-        })
+        self.override_acl({'can_edit_posts': 0})
 
         response = self.client.post('{}?edit=1321'.format(self.api_link))
         self.assertEqual(response.status_code, 403)

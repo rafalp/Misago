@@ -24,7 +24,7 @@ class Command(BaseCommand):
             'Test Message',
             ("This message was sent to test if your "
              "site e-mail is configured correctly."),
-            settings.DEFAULT_FROM_EMAIL,
-            [email],
-            fail_silently=False)
+            settings.DEFAULT_FROM_EMAIL, [email],
+            fail_silently=False
+        )
         self.stdout.write("Test message was sent to %s" % email)

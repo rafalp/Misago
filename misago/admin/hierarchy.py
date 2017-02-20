@@ -81,8 +81,7 @@ class Node(object):
         try:
             return self._children_dict[namespace]
         except KeyError:
-            raise ValueError(
-                "Node %s is not a child of node %s" % (namespace, self.name))
+            raise ValueError("Node %s is not a child of node %s" % (namespace, self.name))
 
     def is_root(self):
         return False
@@ -100,25 +99,21 @@ class AdminHierarchyBuilder(object):
         while self.nodes_record:
             iterations += 1
             if iterations > 512:
-                message = ("Misago Admin hierarchy is invalid or too complex "
-                           "to resolve. Nodes left: %s")
+                message = (
+                    "Misago Admin hierarchy is invalid or too complex "
+                    "to resolve. Nodes left: %s"
+                )
                 raise ValueError(message % self.nodes_record)
 
             for index, node in enumerate(self.nodes_record):
                 if node['parent'] in nodes_dict:
-                    node_obj = Node(
-                        name=node['name'],
-                        icon=node['icon'],
-                        link=node['link']
-                    )
+                    node_obj = Node(name=node['name'], icon=node['icon'], link=node['link'])
 
                     parent = nodes_dict[node['parent']]
                     if node['after']:
-                        node_added = parent.add_node(
-                            node_obj, after=node['after'])
+                        node_added = parent.add_node(node_obj, after=node['after'])
                     elif node['before']:
-                        node_added = parent.add_node(
-                            node_obj, before=node['before'])
+                        node_added = parent.add_node(node_obj, before=node['before'])
                     else:
                         node_added = parent.add_node(node_obj)
 
@@ -133,11 +128,21 @@ class AdminHierarchyBuilder(object):
 
         return nodes_dict
 
-    def add_node(self, name=None, icon=None, parent='misago:admin', after=None,
-                 before=None, namespace=None, link=None):
+    def add_node(
+            self,
+            name=None,
+            icon=None,
+            parent='misago:admin',
+            after=None,
+            before=None,
+            namespace=None,
+            link=None
+    ):
         if self.nodes_dict:
-            raise RuntimeError("Misago admin site has already been "
-                               "initialized. You can't add new nodes to it.")
+            raise RuntimeError(
+                "Misago admin site has already been "
+                "initialized. You can't add new nodes to it."
+            )
 
         if after and before:
             raise ValueError("after and before arguments are exclusive")

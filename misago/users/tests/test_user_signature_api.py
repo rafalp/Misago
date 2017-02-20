@@ -6,6 +6,7 @@ class UserSignatureTests(AuthenticatedUserTestCase):
     """
     tests for user signature RPC (POST to /api/users/1/signature/)
     """
+
     def setUp(self):
         super(UserSignatureTests, self).setUp()
         self.link = '/api/users/%s/signature/' % self.user.pk
@@ -69,9 +70,7 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         self.user.is_signature_locked = False
         self.user.save()
 
-        response = self.client.post(self.link, data={
-            'signature': 'abcd' * 1000
-        })
+        response = self.client.post(self.link, data={'signature': 'abcd' * 1000})
         self.assertContains(response, 'too long', status_code=400)
 
     def test_post_good_signature(self):
@@ -83,17 +82,14 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         self.user.is_signature_locked = False
         self.user.save()
 
-        response = self.client.post(self.link, data={
-            'signature': 'Hello, **bros**!'
-        })
+        response = self.client.post(self.link, data={'signature': 'Hello, **bros**!'})
         self.assertEqual(response.status_code, 200)
 
-        self.assertEqual(response.json()['signature']['html'],
-                         '<p>Hello, <strong>bros</strong>!</p>')
-        self.assertEqual(response.json()['signature']['plain'],
-                         'Hello, **bros**!')
+        self.assertEqual(
+            response.json()['signature']['html'], '<p>Hello, <strong>bros</strong>!</p>'
+        )
+        self.assertEqual(response.json()['signature']['plain'], 'Hello, **bros**!')
 
         self.reload_user()
 
-        self.assertEqual(self.user.signature_parsed,
-                         '<p>Hello, <strong>bros</strong>!</p>')
+        self.assertEqual(self.user.signature_parsed, '<p>Hello, <strong>bros</strong>!</p>')

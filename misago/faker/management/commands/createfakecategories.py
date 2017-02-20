@@ -15,19 +15,11 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'categories',
-            help="number of categories to create",
-            nargs='?',
-            type=int,
-            default=5
+            'categories', help="number of categories to create", nargs='?', type=int, default=5
         )
 
         parser.add_argument(
-            'minlevel',
-            help="min. level of created categories",
-            nargs='?',
-            type=int,
-            default=0
+            'minlevel', help="min. level of created categories", nargs='?', type=int, default=0
         )
 
     def handle(self, *args, **options):
@@ -65,25 +57,27 @@ class Command(BaseCommand):
                 else:
                     new_category.description = fake.paragraph()
 
-            new_category.insert_at(parent,
+            new_category.insert_at(
+                parent,
                 position='last-child',
                 save=True,
             )
 
             copied_acls = []
             for acl in copy_acl_from.category_role_set.all():
-                copied_acls.append(RoleCategoryACL(
-                    role_id=acl.role_id,
-                    category=new_category,
-                    category_role_id=acl.category_role_id,
-                ))
+                copied_acls.append(
+                    RoleCategoryACL(
+                        role_id=acl.role_id,
+                        category=new_category,
+                        category_role_id=acl.category_role_id,
+                    )
+                )
 
             if copied_acls:
                 RoleCategoryACL.objects.bulk_create(copied_acls)
 
             created_count += 1
-            show_progress(
-                self, created_count, items_to_create, start_time)
+            show_progress(self, created_count, items_to_create, start_time)
 
         acl_version.invalidate()
 

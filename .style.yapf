@@ -5,7 +5,6 @@ dedent_closing_brackets = true
 each_dict_entry_on_separate_line = true
 indent_dictionary_value = true
 join_multiple_lines = false
-spaces_before_comment = 4
 split_arguments_when_comma_terminated = true
 split_before_first_argument = true
 split_before_logical_operator = true

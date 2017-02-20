@@ -17,13 +17,9 @@ def parse_markup(request):
     try:
         validate_post(post)
     except ValidationError as e:
-        return Response({
-            'detail': e.args[0]
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'detail': e.args[0]}, status=status.HTTP_400_BAD_REQUEST)
 
     parsed = common_flavour(request, request.user, post, force_shva=True)['parsed_text']
     finalised = finalise_markup(parsed)
 
-    return Response({
-        'parsed': finalised
-    })
+    return Response({'parsed': finalised})

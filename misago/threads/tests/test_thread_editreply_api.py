@@ -18,10 +18,11 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.thread = testutils.post_thread(category=self.category)
         self.post = testutils.reply_thread(self.thread, poster=self.user)
 
-        self.api_link = reverse('misago:api:thread-post-detail', kwargs={
-            'thread_pk': self.thread.pk,
-            'pk': self.post.pk
-        })
+        self.api_link = reverse(
+            'misago:api:thread-post-detail',
+            kwargs={'thread_pk': self.thread.pk,
+                    'pk': self.post.pk}
+        )
 
     def override_acl(self, extra_acl=None):
         new_acl = self.user.acl_cache
@@ -65,70 +66,62 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
     def test_cant_edit_reply(self):
         """permission to edit reply is validated"""
-        self.override_acl({
-            'can_edit_posts': 0
-        })
+        self.override_acl({'can_edit_posts': 0})
 
         response = self.put(self.api_link)
         self.assertContains(response, "You can't edit posts in this category.", status_code=403)
 
     def test_cant_edit_other_user_reply(self):
         """permission to edit reply by other users is validated"""
-        self.override_acl({
-            'can_edit_posts': 1
-        })
+        self.override_acl({'can_edit_posts': 1})
 
         self.post.poster = None
         self.post.save()
 
         response = self.put(self.api_link)
-        self.assertContains(response, "You can't edit other users posts in this category.", status_code=403)
+        self.assertContains(
+            response, "You can't edit other users posts in this category.", status_code=403
+        )
 
     def test_closed_category(self):
         """permssion to edit reply in closed category is validated"""
-        self.override_acl({
-            'can_close_threads': 0
-        })
+        self.override_acl({'can_close_threads': 0})
 
         self.category.is_closed = True
         self.category.save()
 
         response = self.put(self.api_link)
-        self.assertContains(response, "This category is closed. You can't edit posts in it.", status_code=403)
+        self.assertContains(
+            response, "This category is closed. You can't edit posts in it.", status_code=403
+        )
 
         # allow to post in closed category
-        self.override_acl({
-            'can_close_threads': 1
-        })
+        self.override_acl({'can_close_threads': 1})
 
         response = self.put(self.api_link)
         self.assertEqual(response.status_code, 400)
 
     def test_closed_thread(self):
         """permssion to edit reply in closed thread is validated"""
-        self.override_acl({
-            'can_close_threads': 0
-        })
+        self.override_acl({'can_close_threads': 0})
 
         self.thread.is_closed = True
         self.thread.save()
 
         response = self.put(self.api_link)
-        self.assertContains(response, "This thread is closed. You can't edit posts in it.", status_code=403)
+        self.assertContains(
+            response, "This thread is closed. You can't edit posts in it.", status_code=403
+        )
 
         # allow to post in closed thread
-        self.override_acl({
-            'can_close_threads': 1
-        })
+        self.override_acl({'can_close_threads': 1})
 
         response = self.put(self.api_link)
         self.assertEqual(response.status_code, 400)
 
     def test_protected_post(self):
         """permssion to edit protected post is validated"""
-        self.override_acl({
-            'can_protect_posts': 0
-        })
+        self.override_acl({'can_protect_posts': 0})
 
         self.post.is_protected = True
         self.post.save()
@@ -137,9 +130,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.assertContains(response, "This post is protected. You can't edit it.", status_code=403)
 
         # allow to post in closed thread
-        self.override_acl({
-            'can_protect_posts': 1
-        })
+        self.override_acl({'can_protect_posts': 1})
 
         response = self.put(self.api_link)
         self.assertEqual(response.status_code, 400)
@@ -151,11 +142,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         response = self.put(self.api_link, data={})
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'post': [
-                "You have to enter a message."
-            ]
-        })
+        self.assertEqual(response.json(), {'post': ["You have to enter a message."]})
 
     def test_edit_event(self):
         """events can't be edited"""
@@ -172,25 +159,24 @@ class EditReplyTests(AuthenticatedUserTestCase):
         """post is validated"""
         self.override_acl()
 
-        response = self.put(self.api_link, data={
-            'post': "a",
-        })
+        response = self.put(
+            self.api_link, data={
+                'post': "a",
+            }
+        )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'post': [
-                "Posted message should be at least 5 characters long (it has 1)."
-            ]
-        })
+        self.assertEqual(
+            response.json(),
+            {'post': ["Posted message should be at least 5 characters long (it has 1)."]}
+        )
 
     def test_edit_reply_no_change(self):
         """endpoint isn't bumping edits count if no change was made to post's body"""
         self.override_acl()
         self.assertEqual(self.post.edits_record.count(), 0)
 
-        response = self.put(self.api_link, data={
-            'post': self.post.original
-        })
+        response = self.put(self.api_link, data={'post': self.post.original})
         self.assertEqual(response.status_code, 200)
 
         self.override_acl()
@@ -211,9 +197,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.override_acl()
         self.assertEqual(self.post.edits_record.count(), 0)
 
-        response = self.put(self.api_link, data={
-            'post': "This is test edit!"
-        })
+        response = self.put(self.api_link, data={'post': "This is test edit!"})
         self.assertEqual(response.status_code, 200)
 
         self.override_acl()
@@ -239,36 +223,27 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
     def test_edit_first_post_hidden(self):
         """endpoint updates hidden thread's first post"""
-        self.override_acl({
-            'can_hide_threads': 1,
-            'can_edit_posts': 2
-        })
+        self.override_acl({'can_hide_threads': 1, 'can_edit_posts': 2})
 
         self.thread.is_hidden = True
         self.thread.save()
         self.thread.first_post.is_hidden = True
         self.thread.first_post.save()
 
-        api_link = reverse('misago:api:thread-post-detail', kwargs={
-            'thread_pk': self.thread.pk,
-            'pk': self.thread.first_post.pk
-        })
+        api_link = reverse(
+            'misago:api:thread-post-detail',
+            kwargs={'thread_pk': self.thread.pk,
+                    'pk': self.thread.first_post.pk}
+        )
 
-        response = self.put(api_link, data={
-            'post': "This is test edit!"
-        })
+        response = self.put(api_link, data={'post': "This is test edit!"})
         self.assertEqual(response.status_code, 200)
 
     def test_protect_post(self):
         """can protect post"""
-        self.override_acl({
-            'can_protect_posts': 1
-        })
+        self.override_acl({'can_protect_posts': 1})
 
-        response = self.put(self.api_link, data={
-            'post': "Lorem ipsum dolor met!",
-            'protect': 1
-        })
+        response = self.put(self.api_link, data={'post': "Lorem ipsum dolor met!", 'protect': 1})
         self.assertEqual(response.status_code, 200)
 
         post = self.user.post_set.order_by('id').last()
@@ -276,14 +251,9 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
     def test_protect_post_no_permission(self):
         """cant protect post without permission"""
-        self.override_acl({
-            'can_protect_posts': 0
-        })
+        self.override_acl({'can_protect_posts': 0})
 
-        response = self.put(self.api_link, data={
-            'post': "Lorem ipsum dolor met!",
-            'protect': 1
-        })
+        response = self.put(self.api_link, data={'post': "Lorem ipsum dolor met!", 'protect': 1})
         self.assertEqual(response.status_code, 200)
 
         post = self.user.post_set.order_by('id').last()
@@ -293,7 +263,5 @@ class EditReplyTests(AuthenticatedUserTestCase):
         """unicode characters can be posted"""
         self.override_acl()
 
-        response = self.put(self.api_link, data={
-            'post': "Chrzążczyżewoszyce, powiat Łękółody."
-        })
+        response = self.put(self.api_link, data={'post': "Chrzążczyżewoszyce, powiat Łękółody."})
         self.assertEqual(response.status_code, 200)

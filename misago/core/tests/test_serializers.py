@@ -17,19 +17,18 @@ class MutableFieldsSerializerTests(TestCase):
         fields = ('id', 'title', 'replies', 'last_poster_name')
 
         serializer = TestSerializer.subset_fields(*fields)
-        self.assertEqual(
-            serializer.__name__,
-            'TestSerializerIdTitleRepliesLastPosterNameSubset'
-        )
+        self.assertEqual(serializer.__name__, 'TestSerializerIdTitleRepliesLastPosterNameSubset')
         self.assertEqual(serializer.Meta.fields, fields)
 
         serialized_thread = serializer(thread).data
-        self.assertEqual(serialized_thread, {
-            'id': thread.id,
-            'title': thread.title,
-            'replies': thread.replies,
-            'last_poster_name': thread.last_poster_name,
-        })
+        self.assertEqual(
+            serialized_thread, {
+                'id': thread.id,
+                'title': thread.title,
+                'replies': thread.replies,
+                'last_poster_name': thread.last_poster_name,
+            }
+        )
 
         self.assertFalse(TestSerializer.Meta.fields == serializer.Meta.fields)
 
@@ -46,11 +45,13 @@ class MutableFieldsSerializerTests(TestCase):
         self.assertEqual(serializer.Meta.fields, kept_fields)
 
         serialized_thread = serializer(thread).data
-        self.assertEqual(serialized_thread, {
-            'id': thread.id,
-            'title': thread.title,
-            'weight': thread.weight,
-        })
+        self.assertEqual(
+            serialized_thread, {
+                'id': thread.id,
+                'title': thread.title,
+                'weight': thread.weight,
+            }
+        )
 
         self.assertFalse(TestSerializer.Meta.fields == serializer.Meta.fields)
 
@@ -59,7 +60,7 @@ class MutableFieldsSerializerTests(TestCase):
         category = Category.objects.get(slug='first-category')
         thread = testutils.post_thread(category=category)
 
-        added_fields = ('category',)
+        added_fields = ('category', )
 
         serializer = TestSerializer.extend_fields(*added_fields)
 
@@ -73,17 +74,7 @@ class TestSerializer(serializers.ModelSerializer, MutableFields):
     class Meta:
         model = Thread
         fields = (
-            'id',
-            'title',
-            'replies',
-            'has_unapproved_posts',
-            'started_on',
-            'last_post_on',
-            'last_post_is_event',
-            'last_post',
-            'last_poster_name',
-            'is_unapproved',
-            'is_hidden',
-            'is_closed',
-            'weight',
+            'id', 'title', 'replies', 'has_unapproved_posts', 'started_on', 'last_post_on',
+            'last_post_is_event', 'last_post', 'last_poster_name', 'is_unapproved', 'is_hidden',
+            'is_closed', 'weight',
         )

@@ -33,13 +33,9 @@ def create_endpoint(request):
 
     activation_kwargs = {}
     if settings.account_activation == 'user':
-        activation_kwargs = {
-            'requires_activation': UserModel.ACTIVATION_USER
-        }
+        activation_kwargs = {'requires_activation': UserModel.ACTIVATION_USER}
     elif settings.account_activation == 'admin':
-        activation_kwargs = {
-            'requires_activation': UserModel.ACTIVATION_ADMIN
-        }
+        activation_kwargs = {'requires_activation': UserModel.ACTIVATION_ADMIN}
 
     new_user = UserModel.objects.create_user(
         form.cleaned_data['username'],
@@ -55,12 +51,11 @@ def create_endpoint(request):
 
     if settings.account_activation == 'none':
         authenticated_user = authenticate(
-            username=new_user.email,
-            password=form.cleaned_data['password'])
+            username=new_user.email, password=form.cleaned_data['password']
+        )
         login(request, authenticated_user)
 
-        mail_user(request, new_user, mail_subject,
-                  'misago/emails/register/complete')
+        mail_user(request, new_user, mail_subject, 'misago/emails/register/complete')
 
         return Response({
             'activation': 'active',
@@ -74,13 +69,12 @@ def create_endpoint(request):
         activation_by_user = new_user.requires_activation_by_user
 
         mail_user(
-            request, new_user, mail_subject,
-            'misago/emails/register/inactive',
-            {
+            request, new_user, mail_subject, 'misago/emails/register/inactive', {
                 'activation_token': activation_token,
                 'activation_by_admin': activation_by_admin,
                 'activation_by_user': activation_by_user,
-            })
+            }
+        )
 
         if activation_by_admin:
             activation_method = 'admin'

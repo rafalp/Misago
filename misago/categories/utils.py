@@ -13,9 +13,7 @@ def get_categories_tree(user, parent=None):
     else:
         queryset = Category.objects.all_categories()
 
-    queryset_with_acl = queryset.filter(
-        id__in=user.acl_cache['visible_categories']
-    )
+    queryset_with_acl = queryset.filter(id__in=user.acl_cache['visible_categories'])
 
     visible_categories = list(queryset_with_acl)
 

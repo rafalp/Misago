@@ -43,20 +43,24 @@ class NewThreadSerializer(serializers.Serializer):
         try:
             add_acl(self.context, self.category)
         except AttributeError:
-            return weight # don't validate weight further if category failed
+            return weight  # don't validate weight further if category failed
 
         if weight > self.category.acl.get('can_pin_threads', 0):
             if weight == 2:
-                raise ValidationError(_("You don't have permission to pin threads globally in this category."))
+                raise ValidationError(
+                    _("You don't have permission to pin threads globally in this category.")
+                )
             else:
-                raise ValidationError(_("You don't have permission to pin threads in this category."))
+                raise ValidationError(
+                    _("You don't have permission to pin threads in this category.")
+                )
         return weight
 
     def validate_is_hidden(self, is_hidden):
         try:
             add_acl(self.context, self.category)
         except AttributeError:
-            return is_hidden # don't validate hidden further if category failed
+            return is_hidden  # don't validate hidden further if category failed
 
         if is_hidden and not self.category.acl.get('can_hide_threads'):
             raise ValidationError(_("You don't have permission to hide threads in this category."))
@@ -66,7 +70,7 @@ class NewThreadSerializer(serializers.Serializer):
         try:
             add_acl(self.context, self.category)
         except AttributeError:
-            return is_closed # don't validate closed further if category failed
+            return is_closed  # don't validate closed further if category failed
 
         if is_closed and not self.category.acl.get('can_close_threads'):
             raise ValidationError(_("You don't have permission to close threads in this category."))

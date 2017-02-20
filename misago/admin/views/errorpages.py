@@ -11,9 +11,7 @@ def _error_page(request, code, message=None):
     if is_admin_session(request):
         template_pattern = 'misago/admin/errorpages/%s.html' % code
 
-        response = render(request, template_pattern, {
-            'message': message
-        }, error_page=True)
+        response = render(request, template_pattern, {'message': message}, error_page=True)
         response.status_code = code
         return response
     else:
@@ -27,6 +25,7 @@ def admin_error_page(f):
             return _error_page(request, *args, **kwargs)
         else:
             return f(request, *args, **kwargs)
+
     return decorator
 
 
@@ -35,8 +34,8 @@ def _csrf_failure(request, reason=""):
     if is_admin_session(request):
         update_admin_session(request)
         response = render(
-            request, 'misago/admin/errorpages/csrf_failure_authenticated.html',
-            error_page=True)
+            request, 'misago/admin/errorpages/csrf_failure_authenticated.html', error_page=True
+        )
     else:
         response = render(request, 'misago/admin/errorpages/csrf_failure.html')
 
@@ -50,4 +49,5 @@ def admin_csrf_failure(f):
             return _csrf_failure(request, *args, **kwargs)
         else:
             return f(request, *args, **kwargs)
+
     return decorator

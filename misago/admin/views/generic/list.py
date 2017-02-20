@@ -68,6 +68,7 @@ class ListView(AdminView):
     """
     Dispatch response
     """
+
     def dispatch(self, request, *args, **kwargs):
         mass_actions_list = self.mass_actions or []
         extra_actions_list = self.extra_actions or []
@@ -76,25 +77,19 @@ class ListView(AdminView):
 
         context = {
             'items': self.get_queryset(),
-
             'paginator': None,
             'page': None,
-
             'order_by': [],
             'order': None,
-
             'search_form': None,
             'active_filters': {},
-
             'querystring': '',
             'query_order': {},
             'query_filters': {},
-
             'selected_items': [],
             'selection_label': self.selection_label,
             'empty_selection_label': self.empty_selection_label,
             'mass_actions': mass_actions_list,
-
             'extra_actions': extra_actions_list,
             'extra_actions_len': len(extra_actions_list),
         }
@@ -114,8 +109,7 @@ class ListView(AdminView):
             used_method = self.get_ordering_method_to_use(ordering_methods)
             self.set_ordering_in_context(context, used_method)
 
-            if (ordering_methods['GET'] and
-                    ordering_methods['GET'] != ordering_methods['session']):
+            if (ordering_methods['GET'] and ordering_methods['GET'] != ordering_methods['session']):
                 # Store GET ordering in session for future requests
                 session_key = self.ordering_session_key
                 request.session[session_key] = ordering_methods['GET']
@@ -128,14 +122,12 @@ class ListView(AdminView):
         SearchForm = self.get_search_form(request)
         if SearchForm:
             filtering_methods = self.get_filtering_methods(request)
-            active_filters = self.get_filtering_method_to_use(
-                filtering_methods)
+            active_filters = self.get_filtering_method_to_use(filtering_methods)
             if request.GET.get('clear_filters'):
                 # Clear filters from querystring
                 request.session.pop(self.filters_session_key, None)
                 active_filters = {}
-            self.apply_filtering_on_context(
-                context, active_filters, SearchForm)
+            self.apply_filtering_on_context(context, active_filters, SearchForm)
 
             if (filtering_methods['GET'] and
                     filtering_methods['GET'] != filtering_methods['session']):
@@ -159,8 +151,7 @@ class ListView(AdminView):
             try:
                 self.paginate_items(context, kwargs.get('page', 0))
             except EmptyPage:
-                return redirect(
-                    '%s%s' % (reverse(self.root_link), context['querystring']))
+                return redirect('%s%s' % (reverse(self.root_link), context['querystring']))
 
         if refresh_querystring and not request.GET.get('redirected'):
             return redirect('%s%s' % (request.path_info, context['querystring']))
@@ -178,7 +169,8 @@ class ListView(AdminView):
             page = 1
 
         context['paginator'] = Paginator(
-            context['items'], self.items_per_page, allow_empty_first_page=True)
+            context['items'], self.items_per_page, allow_empty_first_page=True
+        )
         context['page'] = context['paginator'].page(page)
         context['items'] = context['page'].object_list
 
@@ -236,11 +228,13 @@ class ListView(AdminView):
 
         if context['active_filters']:
             context['items'] = context['search_form'].filter_queryset(
-                active_filters, context['items'])
+                active_filters, context['items']
+            )
 
     """
     Order list items
     """
+
     @property
     def ordering_session_key(self):
         return 'misago_admin_%s_order_by' % self.root_link
@@ -290,8 +284,7 @@ class ListView(AdminView):
 
             if order_by == method:
                 context['order'] = order_as_dict
-                context['items'] = context['items'].order_by(
-                    order_as_dict['order_by'])
+                context['items'] = context['items'].order_by(order_as_dict['order_by'])
             elif order_as_dict['name']:
                 if order_as_dict['type'] == 'desc':
                     order_as_dict['order_by'] = order_as_dict['order_by'][1:]
@@ -300,6 +293,7 @@ class ListView(AdminView):
     """
     Mass actions
     """
+
     def handle_mass_action(self, request, context):
         limit = self.items_per_page or 64
         action = self.select_mass_action(request.POST.get('action'))
@@ -332,6 +326,7 @@ class ListView(AdminView):
     """
     Querystring builder
     """
+
     def make_querystring(self, context):
         values = {}
         filter_values = {}

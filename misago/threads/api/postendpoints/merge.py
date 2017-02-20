@@ -67,8 +67,8 @@ def clean_posts_for_merge(request, thread):
     elif len(posts_ids) > MERGE_LIMIT:
         message = ungettext(
             "No more than %(limit)s post can be merged at single time.",
-            "No more than %(limit)s posts can be merged at single time.",
-            MERGE_LIMIT)
+            "No more than %(limit)s posts can be merged at single time.", MERGE_LIMIT
+        )
         raise MergeError(message % {'limit': MERGE_LIMIT})
 
     posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)
@@ -78,7 +78,9 @@ def clean_posts_for_merge(request, thread):
     for post in posts_queryset:
         if post.is_event:
             raise MergeError(_("Events can't be merged."))
-        if post.is_hidden and not (post.pk == thread.first_post_id or thread.category.acl['can_hide_posts']):
+        if post.is_hidden and not (
+                post.pk == thread.first_post_id or thread.category.acl['can_hide_posts']
+        ):
             raise MergeError(_("You can't merge posts the content you can't see."))
 
         if not posts:
@@ -93,7 +95,9 @@ def clean_posts_for_merge(request, thread):
                     raise MergeError(authorship_error)
 
             if posts[0].pk != thread.first_post_id:
-                if posts[0].is_hidden != post.is_hidden or posts[0].is_unapproved != post.is_unapproved:
+                if posts[0].is_hidden != post.is_hidden or posts[
+                        0
+                ].is_unapproved != post.is_unapproved:
                     raise MergeError(_("Posts with different visibility can't be merged."))
 
             posts.append(post)

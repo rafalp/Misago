@@ -25,8 +25,7 @@ def get_permissions_forms(role, data=None):
             module.change_permissions_form
         except AttributeError:
             message = "'%s' object has no attribute '%s'"
-            raise AttributeError(
-                message % (extension, 'change_permissions_form'))
+            raise AttributeError(message % (extension, 'change_permissions_form'))
 
         FormType = module.change_permissions_form(role)
 
@@ -34,9 +33,8 @@ def get_permissions_forms(role, data=None):
             if data:
                 perms_forms.append(FormType(data, prefix=extension))
             else:
-                perms_forms.append(FormType(
-                    initial=role_permissions.get(extension),
-                    prefix=extension
-                ))
+                perms_forms.append(
+                    FormType(initial=role_permissions.get(extension), prefix=extension)
+                )
 
     return perms_forms

@@ -13,13 +13,9 @@ def _ajax_error(code=406, message=None):
 
 @admin_error_page
 def _error_page(request, code, message=None):
-    request.frontend_context.update({
-        'CURRENT_LINK': 'misago:error-%s' % code
-    })
+    request.frontend_context.update({'CURRENT_LINK': 'misago:error-%s' % code})
 
-    return render(request, 'misago/errorpages/%s.html' % code, {
-        'message': message
-    }, status=code)
+    return render(request, 'misago/errorpages/%s.html' % code, {'message': message}, status=code)
 
 
 def banned(request, ban):
@@ -28,9 +24,7 @@ def banned(request, ban):
         'CURRENT_LINK': 'misago:error-banned'
     })
 
-    return render(request, 'misago/errorpages/banned.html', {
-        'ban': ban
-    }, status=403)
+    return render(request, 'misago/errorpages/banned.html', {'ban': ban}, status=403)
 
 
 def permission_denied(request, message=None):
@@ -68,6 +62,7 @@ def shared_403_exception_handler(f):
             return permission_denied(request)
         else:
             return f(request, *args, **kwargs)
+
     return page_decorator
 
 
@@ -77,4 +72,5 @@ def shared_404_exception_handler(f):
             return page_not_found(request)
         else:
             return f(request, *args, **kwargs)
+
     return page_decorator

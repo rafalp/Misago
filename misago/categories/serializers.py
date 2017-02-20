@@ -13,19 +13,17 @@ __all__ = ['CategorySerializer']
 
 def last_activity_detail(f):
     """util for serializing last activity details"""
+
     def decorator(self, obj):
         if not obj.last_thread_id:
             return None
 
         acl = self.get_acl(obj)
-        if not all((
-                    acl.get('can_see'),
-                    acl.get('can_browse'),
-                    acl.get('can_see_all_threads')
-                )):
+        if not all((acl.get('can_see'), acl.get('can_browse'), acl.get('can_see_all_threads'))):
             return None
 
         return f(self, obj)
+
     return decorator
 
 
@@ -44,28 +42,10 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
     class Meta:
         model = Category
         fields = (
-            'id',
-            'parent',
-            'name',
-            'description',
-            'is_closed',
-            'threads',
-            'posts',
-            'last_post_on',
-            'last_thread_title',
-            'last_poster_name',
-            'css_class',
-            'is_read',
-            'subcategories',
-            'absolute_url',
-            'last_thread_url',
-            'last_post_url',
-            'last_poster_url',
-            'acl',
-            'api_url',
-            'level',
-            'lft',
-            'rght',
+            'id', 'parent', 'name', 'description', 'is_closed', 'threads', 'posts', 'last_post_on',
+            'last_thread_title', 'last_poster_name', 'css_class', 'is_read', 'subcategories',
+            'absolute_url', 'last_thread_url', 'last_post_url', 'last_poster_url', 'acl', 'api_url',
+            'level', 'lft', 'rght',
         )
 
     def get_description(self, obj):
@@ -103,10 +83,12 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
     @last_activity_detail
     def get_last_poster_url(self, obj):
         if obj.last_poster_id:
-            return reverse('misago:user', kwargs={
-                'slug': obj.last_poster_slug,
-                'pk': obj.last_poster_id,
-            })
+            return reverse(
+                'misago:user', kwargs={
+                    'slug': obj.last_poster_slug,
+                    'pk': obj.last_poster_id,
+                }
+            )
         else:
             return None
 

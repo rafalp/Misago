@@ -23,7 +23,7 @@ def rank_users(request):
 
     page = get_int_or_404(request.GET.get('page', 0))
     if page == 1:
-        page = 0 # api allows explicit first page
+        page = 0  # api allows explicit first page
 
     users = RankUsers(request, rank, page)
     return Response(users.get_frontend_context())

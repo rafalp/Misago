@@ -24,7 +24,8 @@ class CreateSuperuserTests(TestCase):
 
         self.assertEqual(
             out.getvalue().splitlines()[-1].strip(),
-            'Superuser #%s has been created successfully.' % new_user.pk)
+            'Superuser #%s has been created successfully.' % new_user.pk
+        )
 
         self.assertEqual(new_user.username, 'joe')
         self.assertEqual(new_user.email, 'joe@somewhere.org')

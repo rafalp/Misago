@@ -21,11 +21,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'users',
-            help="number of users to create",
-            nargs='?',
-            type=int,
-            default=5
+            'users', help="number of users to create", nargs='?', type=int, default=5
         )
 
     def handle(self, *args, **options):
@@ -51,8 +47,8 @@ class Command(BaseCommand):
                 }
 
                 user = UserModel.objects.create_user(
-                    fake.first_name(), fake.email(), 'pass123',
-                    set_default_avatar=False, **kwargs)
+                    fake.first_name(), fake.email(), 'pass123', set_default_avatar=False, **kwargs
+                )
 
                 if random.randint(0, 100) > 90:
                     dynamic.set_avatar(user)
@@ -63,8 +59,7 @@ class Command(BaseCommand):
                 pass
             else:
                 created_count += 1
-                show_progress(
-                    self, created_count, items_to_create, start_time)
+                show_progress(self, created_count, items_to_create, start_time)
 
         total_time = time.time() - start_time
         total_humanized = time.strftime('%H:%M:%S', time.gmtime(total_time))

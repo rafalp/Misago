@@ -17,9 +17,9 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         self.thread = testutils.post_thread(category=self.category)
         self.override_acl()
 
-        self.post_link = reverse('misago:api:thread-post-list', kwargs={
-            'thread_pk': self.thread.pk
-        })
+        self.post_link = reverse(
+            'misago:api:thread-post-list', kwargs={'thread_pk': self.thread.pk}
+        )
 
     def override_acl(self):
         new_acl = self.user.acl_cache
@@ -34,12 +34,10 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
     def test_flood_has_no_showstoppers(self):
         """endpoint handles posting interruption"""
-        response = self.client.post(self.post_link, data={
-            'post': "This is test response!"
-        })
+        response = self.client.post(self.post_link, data={'post': "This is test response!"})
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.post(self.post_link, data={
-            'post': "This is test response!"
-        })
-        self.assertContains(response, "You can't post message so quickly after previous one.", status_code=403)
+        response = self.client.post(self.post_link, data={'post': "This is test response!"})
+        self.assertContains(
+            response, "You can't post message so quickly after previous one.", status_code=403
+        )

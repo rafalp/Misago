@@ -19,15 +19,11 @@ class ReadTrackerTests(TestCase):
         self.categories = list(Category.objects.all_categories()[:1])
         self.category = self.categories[0]
 
-        self.user = UserModel.objects.create_user(
-            "Bob", "bob@test.com", "Pass.123")
+        self.user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
         self.anon = AnonymousUser()
 
     def post_thread(self, datetime):
-        return testutils.post_thread(
-            category=self.category,
-            started_on=datetime
-        )
+        return testutils.post_thread(category=self.category, started_on=datetime)
 
 
 class CategoriesTrackerTests(ReadTrackerTests):

@@ -21,13 +21,9 @@ class RecordEditMiddleware(PostingMiddleware):
         self.post.last_editor_name = self.user.username
         self.post.last_editor_slug = self.user.slug
 
-        self.post.update_fields.extend((
-            'updated_on',
-            'edits',
-            'last_editor',
-            'last_editor_name',
-            'last_editor_slug',
-        ))
+        self.post.update_fields.extend(
+            ('updated_on', 'edits', 'last_editor', 'last_editor_name', 'last_editor_slug', )
+        )
 
         self.post.edits_record.create(
             category=self.post.category,

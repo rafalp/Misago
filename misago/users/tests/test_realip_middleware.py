@@ -24,5 +24,4 @@ class RealIPMiddlewareTests(TestCase):
         request = MockRequest('127.0.0.1', '83.42.13.77')
         RealIPMiddleware().process_request(request)
 
-        self.assertEqual(request.user_ip,
-                         request.META['HTTP_X_FORWARDED_FOR'])
+        self.assertEqual(request.user_ip, request.META['HTTP_X_FORWARDED_FOR'])

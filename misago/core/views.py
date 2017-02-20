@@ -6,7 +6,7 @@ from django.views.decorators.http import last_modified
 
 
 def forum_index(request):
-    return # blow up as this view is normally non-reachable!
+    return  # blow up as this view is normally non-reachable!
 
 
 def home_redirect(*args, **kwargs):

@@ -4,24 +4,14 @@ from misago.datamover.management.base import BaseCommand
 
 
 MOVE_COMMANDS = (
-    'movesettings',
-    'moveusers',
-    'movecategories',
-    'movethreads',
-    'buildmovesindex',
-    'synchronizethreads',
-    'synchronizecategories',
-    'rebuildpostssearch',
-    'invalidatebans',
-    'populateonlinetracker',
-    'synchronizeusers',
+    'movesettings', 'moveusers', 'movecategories', 'movethreads', 'buildmovesindex',
+    'synchronizethreads', 'synchronizecategories', 'rebuildpostssearch', 'invalidatebans',
+    'populateonlinetracker', 'synchronizeusers',
 )
 
 
 class Command(BaseCommand):
-    help = (
-        "Executes complete migration from Misago 0.5 together with cleanups."
-    )
+    help = ("Executes complete migration from Misago 0.5 together with cleanups.")
 
     def handle(self, *args, **options):
         self.stdout.write("Running complete migration...")

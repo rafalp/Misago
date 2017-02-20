@@ -16,6 +16,8 @@ Token is base encoded string containing three values:
 - hash unique for current state of user model
 - token checksum for discovering manipulations
 """
+
+
 def make(user, token_type):
     user_hash = _make_hash(user, token_type)
     creation_day = _days_since_epoch()
@@ -46,16 +48,11 @@ def is_valid(user, token_type, token):
 
 def _make_hash(user, token_type):
     seeds = (
-        user.pk,
-        user.email,
-        user.password,
-        user.last_login.replace(microsecond=0, tzinfo=None),
-        token_type,
-        settings.SECRET_KEY,
+        user.pk, user.email, user.password, user.last_login.replace(microsecond=0, tzinfo=None),
+        token_type, settings.SECRET_KEY,
     )
 
-    return sha256(force_bytes(
-        '+'.join([six.text_type(s) for s in seeds]))).hexdigest()[:8]
+    return sha256(force_bytes('+'.join([six.text_type(s) for s in seeds]))).hexdigest()[:8]
 
 
 def _days_since_epoch():
@@ -63,8 +60,7 @@ def _days_since_epoch():
 
 
 def _make_checksum(obfuscated):
-    return sha256(force_bytes(
-        '%s:%s' % (settings.SECRET_KEY, obfuscated))).hexdigest()[:8]
+    return sha256(force_bytes('%s:%s' % (settings.SECRET_KEY, obfuscated))).hexdigest()[:8]
 
 
 """

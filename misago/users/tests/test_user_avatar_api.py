@@ -21,6 +21,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
     """
     tests for user avatar RPC (/api/users/1/avatar/)
     """
+
     def setUp(self):
         super(UserAvatarTests, self).setUp()
         self.link = '/api/users/%s/avatar/' % self.user.pk
@@ -77,13 +78,12 @@ class UserAvatarTests(AuthenticatedUserTestCase):
 
     def test_other_user_avatar(self):
         """requests to api error if user tries to access other user"""
-        self.logout_user();
+        self.logout_user()
 
         response = self.client.get(self.link)
         self.assertContains(response, "You have to sign in", status_code=403)
 
-        self.login_user(UserModel.objects.create_user(
-            "BobUser", "bob@bob.com", self.USER_PASSWORD))
+        self.login_user(UserModel.objects.create_user("BobUser", "bob@bob.com", self.USER_PASSWORD))
 
         response = self.client.get(self.link)
         self.assertContains(response, "can't change other users avatars", status_code=403)
@@ -123,30 +123,33 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.assertContains(response, "No file was sent.", status_code=400)
 
         with open(TEST_AVATAR_PATH, 'rb') as avatar:
-            response = self.client.post(self.link, data={
-                'avatar': 'upload',
-                'image': avatar
-            })
+            response = self.client.post(self.link, data={'avatar': 'upload', 'image': avatar})
             self.assertEqual(response.status_code, 200)
 
             response_json = response.json()
             self.assertTrue(response_json['crop_tmp'])
             self.assertEqual(
-                self.get_current_user().avatar_tmp.url, response_json['crop_tmp']['url'])
+                self.get_current_user().avatar_tmp.url, response_json['crop_tmp']['url']
+            )
 
         avatar = Path(self.get_current_user().avatar_tmp.path)
         self.assertTrue(avatar.exists())
         self.assertTrue(avatar.isfile())
 
-        response = self.client.post(self.link, json.dumps({
-            'avatar': 'crop_tmp',
-            'crop': {
-                'offset': {
-                    'x': 0, 'y': 0
-                },
-                'zoom': 1
-            }
-        }), content_type="application/json")
+        response = self.client.post(
+            self.link,
+            json.dumps({
+                'avatar': 'crop_tmp',
+                'crop': {
+                    'offset': {
+                        'x': 0,
+                        'y': 0
+                    },
+                    'zoom': 1
+                }
+            }),
+            content_type="application/json"
+        )
 
         response_json = response.json()
         self.assertEqual(response.status_code, 200)
@@ -158,26 +161,36 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.assertTrue(avatar.exists())
         self.assertTrue(avatar.isfile())
 
-        response = self.client.post(self.link, json.dumps({
-            'avatar': 'crop_tmp',
-            'crop': {
-                'offset': {
-                    'x': 0, 'y': 0
-                },
-                'zoom': 1
-            }
-        }), content_type="application/json")
+        response = self.client.post(
+            self.link,
+            json.dumps({
+                'avatar': 'crop_tmp',
+                'crop': {
+                    'offset': {
+                        'x': 0,
+                        'y': 0
+                    },
+                    'zoom': 1
+                }
+            }),
+            content_type="application/json"
+        )
         self.assertContains(response, "This avatar type is not allowed.", status_code=400)
 
-        response = self.client.post(self.link, json.dumps({
-            'avatar': 'crop_src',
-            'crop': {
-                'offset': {
-                    'x': 0, 'y': 0
-                },
-                'zoom': 1
-            }
-        }), content_type="application/json")
+        response = self.client.post(
+            self.link,
+            json.dumps({
+                'avatar': 'crop_src',
+                'crop': {
+                    'offset': {
+                        'x': 0,
+                        'y': 0
+                    },
+                    'zoom': 1
+                }
+            }),
+            content_type="application/json"
+        )
         self.assertContains(response, "Avatar was re-cropped.")
 
         # delete user avatars, test if it deletes src and tmp
@@ -194,13 +207,9 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
-        response = self.client.post(self.link, data={
-            'avatar': 'galleries',
-            'image': 123
-        })
+        response = self.client.post(self.link, data={'avatar': 'galleries', 'image': 123})
 
-        self.assertContains(
-            response, "This avatar type is not allowed.", status_code=400)
+        self.assertContains(response, "This avatar type is not allowed.", status_code=400)
 
     def test_gallery_image_validation(self):
         """gallery validates image to set"""
@@ -210,16 +219,15 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
         # no image id is handled
-        response = self.client.post(self.link, data={
-            'avatar': 'galleries',
-        })
+        response = self.client.post(
+            self.link, data={
+                'avatar': 'galleries',
+            }
+        )
         self.assertContains(response, "Incorrect image.", status_code=400)
 
         # invalid id is handled
-        response = self.client.post(self.link, data={
-            'avatar': 'galleries',
-            'image': 'asdsadsadsa'
-        })
+        response = self.client.post(self.link, data={'avatar': 'galleries', 'image': 'asdsadsadsa'})
         self.assertContains(response, "Incorrect image.", status_code=400)
 
         # nonexistant image is handled
@@ -230,21 +238,16 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.assertTrue(options['galleries'])
 
         test_avatar = options['galleries'][0]['images'][0]['id']
-        response = self.client.post(self.link, data={
-            'avatar': 'galleries',
-            'image': test_avatar + 5000
-        })
+        response = self.client.post(
+            self.link, data={'avatar': 'galleries',
+                             'image': test_avatar + 5000}
+        )
         self.assertContains(response, "Incorrect image.", status_code=400)
 
         # default gallery image is handled
-        AvatarGallery.objects.filter(pk=test_avatar).update(
-            gallery=gallery.DEFAULT_GALLERY
-        )
+        AvatarGallery.objects.filter(pk=test_avatar).update(gallery=gallery.DEFAULT_GALLERY)
 
-        response = self.client.post(self.link, data={
-            'avatar': 'galleries',
-            'image': test_avatar
-        })
+        response = self.client.post(self.link, data={'avatar': 'galleries', 'image': test_avatar})
         self.assertContains(response, "Incorrect image.", status_code=400)
 
     def test_gallery_set_valid_avatar(self):
@@ -258,10 +261,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.assertTrue(options['galleries'])
 
         test_avatar = options['galleries'][0]['images'][0]['id']
-        response = self.client.post(self.link, data={
-            'avatar': 'galleries',
-            'image': test_avatar
-        })
+        response = self.client.post(self.link, data={'avatar': 'galleries', 'image': test_avatar})
 
         self.assertContains(response, "Avatar from gallery was set.")
 
@@ -270,11 +270,11 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
     """
     tests for moderate user avatar RPC (/api/users/1/moderate-avatar/)
     """
+
     def setUp(self):
         super(UserAvatarModerationTests, self).setUp()
 
-        self.other_user = UserModel.objects.create_user(
-            "OtherUser", "other@user.com", "pass123")
+        self.other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "pass123")
 
         self.link = '/api/users/%s/moderate-avatar/' % self.other_user.pk
 
@@ -297,53 +297,54 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
         options = response.json()
+        self.assertEqual(options['is_avatar_locked'], self.other_user.is_avatar_locked)
         self.assertEqual(
-            options['is_avatar_locked'], self.other_user.is_avatar_locked)
+            options['avatar_lock_user_message'], self.other_user.avatar_lock_user_message
+        )
         self.assertEqual(
-            options['avatar_lock_user_message'], self.other_user.avatar_lock_user_message)
-        self.assertEqual(
-            options['avatar_lock_staff_message'], self.other_user.avatar_lock_staff_message)
+            options['avatar_lock_staff_message'], self.other_user.avatar_lock_staff_message
+        )
 
         override_acl(self.user, {
             'can_moderate_avatars': 1,
         })
 
-        response = self.client.post(self.link, json.dumps({
-            'is_avatar_locked': True,
-            'avatar_lock_user_message': "Test user message.",
-            'avatar_lock_staff_message': "Test staff message.",
-        }),
-        content_type="application/json")
+        response = self.client.post(
+            self.link,
+            json.dumps({
+                'is_avatar_locked': True,
+                'avatar_lock_user_message': "Test user message.",
+                'avatar_lock_staff_message': "Test staff message.",
+            }),
+            content_type="application/json"
+        )
         self.assertEqual(response.status_code, 200)
 
         other_user = UserModel.objects.get(pk=self.other_user.pk)
 
         options = response.json()
         self.assertEqual(other_user.is_avatar_locked, True)
-        self.assertEqual(
-            other_user.avatar_lock_user_message, "Test user message.")
-        self.assertEqual(
-            other_user.avatar_lock_staff_message, "Test staff message.")
+        self.assertEqual(other_user.avatar_lock_user_message, "Test user message.")
+        self.assertEqual(other_user.avatar_lock_staff_message, "Test staff message.")
 
-        self.assertEqual(
-            options['avatars'], other_user.avatars)
-        self.assertEqual(
-            options['is_avatar_locked'], other_user.is_avatar_locked)
-        self.assertEqual(
-            options['avatar_lock_user_message'], other_user.avatar_lock_user_message)
-        self.assertEqual(
-            options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message)
+        self.assertEqual(options['avatars'], other_user.avatars)
+        self.assertEqual(options['is_avatar_locked'], other_user.is_avatar_locked)
+        self.assertEqual(options['avatar_lock_user_message'], other_user.avatar_lock_user_message)
+        self.assertEqual(options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message)
 
         override_acl(self.user, {
             'can_moderate_avatars': 1,
         })
 
-        response = self.client.post(self.link, json.dumps({
-            'is_avatar_locked': False,
-            'avatar_lock_user_message': None,
-            'avatar_lock_staff_message': None,
-        }),
-        content_type="application/json")
+        response = self.client.post(
+            self.link,
+            json.dumps({
+                'is_avatar_locked': False,
+                'avatar_lock_user_message': None,
+                'avatar_lock_staff_message': None,
+            }),
+            content_type="application/json"
+        )
         self.assertEqual(response.status_code, 200)
 
         other_user = UserModel.objects.get(pk=self.other_user.pk)
@@ -352,25 +353,24 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         self.assertIsNone(other_user.avatar_lock_staff_message)
 
         options = response.json()
-        self.assertEqual(
-            options['avatars'], other_user.avatars)
-        self.assertEqual(
-            options['is_avatar_locked'], other_user.is_avatar_locked)
-        self.assertEqual(
-            options['avatar_lock_user_message'], other_user.avatar_lock_user_message)
-        self.assertEqual(
-            options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message)
+        self.assertEqual(options['avatars'], other_user.avatars)
+        self.assertEqual(options['is_avatar_locked'], other_user.is_avatar_locked)
+        self.assertEqual(options['avatar_lock_user_message'], other_user.avatar_lock_user_message)
+        self.assertEqual(options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message)
 
         override_acl(self.user, {
             'can_moderate_avatars': 1,
         })
 
-        response = self.client.post(self.link, json.dumps({
-            'is_avatar_locked': True,
-            'avatar_lock_user_message': '',
-            'avatar_lock_staff_message': '',
-        }),
-        content_type="application/json")
+        response = self.client.post(
+            self.link,
+            json.dumps({
+                'is_avatar_locked': True,
+                'avatar_lock_user_message': '',
+                'avatar_lock_staff_message': '',
+            }),
+            content_type="application/json"
+        )
         self.assertEqual(response.status_code, 200)
 
         other_user = UserModel.objects.get(pk=self.other_user.pk)
@@ -379,23 +379,20 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(other_user.avatar_lock_staff_message, '')
 
         options = response.json()
-        self.assertEqual(
-            options['avatars'], other_user.avatars)
-        self.assertEqual(
-            options['is_avatar_locked'], other_user.is_avatar_locked)
-        self.assertEqual(
-            options['avatar_lock_user_message'], other_user.avatar_lock_user_message)
-        self.assertEqual(
-            options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message)
+        self.assertEqual(options['avatars'], other_user.avatars)
+        self.assertEqual(options['is_avatar_locked'], other_user.is_avatar_locked)
+        self.assertEqual(options['avatar_lock_user_message'], other_user.avatar_lock_user_message)
+        self.assertEqual(options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message)
 
         override_acl(self.user, {
             'can_moderate_avatars': 1,
         })
 
-        response = self.client.post(self.link, json.dumps({
-            'is_avatar_locked': False,
-        }),
-        content_type="application/json")
+        response = self.client.post(
+            self.link, json.dumps({
+                'is_avatar_locked': False,
+            }), content_type="application/json"
+        )
         self.assertEqual(response.status_code, 200)
 
         other_user = UserModel.objects.get(pk=self.other_user.pk)
@@ -404,14 +401,10 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(other_user.avatar_lock_staff_message, '')
 
         options = response.json()
-        self.assertEqual(
-            options['avatars'], other_user.avatars)
-        self.assertEqual(
-            options['is_avatar_locked'], other_user.is_avatar_locked)
-        self.assertEqual(
-            options['avatar_lock_user_message'], other_user.avatar_lock_user_message)
-        self.assertEqual(
-            options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message)
+        self.assertEqual(options['avatars'], other_user.avatars)
+        self.assertEqual(options['is_avatar_locked'], other_user.is_avatar_locked)
+        self.assertEqual(options['avatar_lock_user_message'], other_user.avatar_lock_user_message)
+        self.assertEqual(options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message)
 
     def test_moderate_own_avatar(self):
         """moderate own avatar"""
@@ -419,5 +412,5 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
             'can_moderate_avatars': 1,
         })
 
-        response = self.client.get( '/api/users/%s/moderate-avatar/' % self.user.pk)
+        response = self.client.get('/api/users/%s/moderate-avatar/' % self.user.pk)
         self.assertEqual(response.status_code, 200)

@@ -8,6 +8,7 @@ class MisagoTestCase(TestCase):
     """
     TestCase class that empties global state before and after each test
     """
+
     def clear_state(self):
         cache.clear()
         threadstore.clear()

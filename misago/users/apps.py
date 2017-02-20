@@ -40,7 +40,8 @@ class MisagoUsersConfig(AppConfig):
         users_list.add_section(
             link='misago:users-active-posters',
             component='active-posters',
-            name=_('Active posters'))
+            name=_('Active posters')
+        )
 
     def register_default_user_profile_pages(self):
         def can_see_names_history(request, profile):

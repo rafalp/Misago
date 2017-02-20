@@ -13,11 +13,9 @@ class Thread(models.Model):
     WEIGHT_PINNED = 1
     WEIGHT_GLOBAL = 2
 
-    WEIGHT_CHOICES = (
-        (WEIGHT_DEFAULT, _("Don't pin thread")),
-        (WEIGHT_PINNED, _("Pin thread within category")),
-        (WEIGHT_GLOBAL, _("Pin thread globally"))
-    )
+    WEIGHT_CHOICES = ((WEIGHT_DEFAULT, _("Don't pin thread")),
+                      (WEIGHT_PINNED, _("Pin thread within category")),
+                      (WEIGHT_GLOBAL, _("Pin thread globally")))
 
     category = models.ForeignKey('misago_categories.Category')
     title = models.CharField(max_length=255)
@@ -35,27 +33,16 @@ class Thread(models.Model):
     last_post_on = models.DateTimeField(db_index=True)
 
     first_post = models.ForeignKey(
-        'misago_threads.Post',
-        related_name='+',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL
+        'misago_threads.Post', related_name='+', null=True, blank=True, on_delete=models.SET_NULL
     )
     starter = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL
+        settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL
     )
     starter_name = models.CharField(max_length=255)
     starter_slug = models.CharField(max_length=255)
 
     last_post = models.ForeignKey(
-        'misago_threads.Post',
-        related_name='+',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL
+        'misago_threads.Post', related_name='+', null=True, blank=True, on_delete=models.SET_NULL
     )
     last_post_is_event = models.BooleanField(default=False)
     last_poster = models.ForeignKey(
@@ -119,10 +106,7 @@ class Thread(models.Model):
         except ObjectDoesNotExist:
             self.has_poll = False
 
-        self.replies = self.post_set.filter(
-            is_event=False,
-            is_unapproved=False
-        ).count()
+        self.replies = self.post_set.filter(is_event=False, is_unapproved=False).count()
 
         if self.replies > 0:
             self.replies -= 1

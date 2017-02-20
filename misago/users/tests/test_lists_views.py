@@ -34,8 +34,7 @@ class UsersListLanderTests(UsersListTestCase):
         """lander returns redirect to valid page if user has permission"""
         response = self.client.get(reverse('misago:users'))
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response['location'].endswith(
-                        reverse('misago:users-active-posters')))
+        self.assertTrue(response['location'].endswith(reverse('misago:users-active-posters')))
 
 
 class ActivePostersTests(UsersListTestCase):
@@ -57,7 +56,8 @@ class ActivePostersTests(UsersListTestCase):
         # Create 50 test users and see if errors appeared
         for i in range(50):
             user = UserModel.objects.create_user(
-                'Bob%s' % i, 'm%s@te.com' % i, 'Pass.123', posts=12345)
+                'Bob%s' % i, 'm%s@te.com' % i, 'Pass.123', posts=12345
+            )
             post_thread(category, poster=user)
 
         build_active_posters_ranking()
@@ -69,8 +69,7 @@ class ActivePostersTests(UsersListTestCase):
 class UsersRankTests(UsersListTestCase):
     def test_ranks(self):
         """ranks lists are handled correctly"""
-        rank_user = UserModel.objects.create_user(
-            'Visible', 'visible@te.com', 'Pass.123')
+        rank_user = UserModel.objects.create_user('Visible', 'visible@te.com', 'Pass.123')
 
         for rank in Rank.objects.iterator():
             rank_user.rank = rank
@@ -88,7 +87,8 @@ class UsersRankTests(UsersListTestCase):
     def test_disabled_users(self):
         """ranks lists excludes disabled accounts"""
         rank_user = UserModel.objects.create_user(
-            'Visible', 'visible@te.com', 'Pass.123', is_active=False)
+            'Visible', 'visible@te.com', 'Pass.123', is_active=False
+        )
 
         for rank in Rank.objects.iterator():
             rank_user.rank = rank
@@ -109,7 +109,8 @@ class UsersRankTests(UsersListTestCase):
         self.user.save()
 
         rank_user = UserModel.objects.create_user(
-            'Visible', 'visible@te.com', 'Pass.123', is_active=False)
+            'Visible', 'visible@te.com', 'Pass.123', is_active=False
+        )
 
         for rank in Rank.objects.iterator():
             rank_user.rank = rank

@@ -41,9 +41,7 @@ class FloodProtectionMiddlewareTests(AuthenticatedUserTestCase):
 
     def test_flood_permission(self):
         """middleware is respects permission to flood for team members"""
-        override_acl(self.user, {
-            'can_omit_flood_protection': True
-        })
+        override_acl(self.user, {'can_omit_flood_protection': True})
 
         middleware = FloodProtectionMiddleware(user=self.user)
         self.assertFalse(middleware.use_this_middleware())

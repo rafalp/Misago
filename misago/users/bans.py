@@ -1,4 +1,3 @@
-
 """
 API for checking values for bans
 
@@ -67,10 +66,7 @@ def _set_user_ban_cache(user):
     ban_cache.bans_version = cachebuster.get_version(VERSION_KEY)
 
     try:
-        user_ban = Ban.objects.get_ban(
-            username=user.username,
-            email=user.email
-        )
+        user_ban = Ban.objects.get_ban(username=user.username, email=user.email)
 
         ban_cache.ban = user_ban
         ban_cache.expires_on = user_ban.expires_on
@@ -92,6 +88,8 @@ Utility for checking if request came from banned IP
 This check may be performed frequently, which is why there is extra
 boilerplate that caches ban check result in session
 """
+
+
 def get_request_ip_ban(request):
     session_ban_cache = _get_session_bancache(request)
     if session_ban_cache:
@@ -113,10 +111,7 @@ def get_request_ip_ban(request):
         else:
             ban_cache['expires_on'] = None
 
-        ban_cache.update({
-                'is_banned': True,
-                'message': found_ban.user_message
-            })
+        ban_cache.update({'is_banned': True, 'message': found_ban.user_message})
         request.session[CACHE_SESSION_KEY] = ban_cache
         return _hydrate_session_cache(request.session[CACHE_SESSION_KEY])
     else:
@@ -156,8 +151,9 @@ def _hydrate_session_cache(ban_cache):
 """
 Utilities for front-end based bans
 """
-def ban_user(user, user_message=None, staff_message=None, length=None,
-             expires_on=None):
+
+
+def ban_user(user, user_message=None, staff_message=None, length=None, expires_on=None):
     if not expires_on and length:
         expires_on = timezone.now() + timedelta(**length)
 
@@ -171,8 +167,7 @@ def ban_user(user, user_message=None, staff_message=None, length=None,
     return ban
 
 
-def ban_ip(ip, user_message=None, staff_message=None, length=None,
-           expires_on=None):
+def ban_ip(ip, user_message=None, staff_message=None, length=None, expires_on=None):
     if not expires_on and length:
         expires_on = timezone.now() + timedelta(**length)
 

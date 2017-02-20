@@ -26,11 +26,11 @@ __all__ = [
     'allow_lift_ban',
     'can_lift_ban',
 ]
-
-
 """
 Admin Permissions Form
 """
+
+
 class PermissionsForm(forms.Form):
     legend = _("Users moderation")
 
@@ -63,6 +63,8 @@ def change_permissions_form(role):
 """
 ACL Builder
 """
+
+
 def build_acl(acl, roles, key_name):
     new_acl = {
         'can_rename_users': 0,
@@ -75,7 +77,10 @@ def build_acl(acl, roles, key_name):
     }
     new_acl.update(acl)
 
-    return algebra.sum_acls(new_acl, roles=roles, key=key_name,
+    return algebra.sum_acls(
+        new_acl,
+        roles=roles,
+        key=key_name,
         can_rename_users=algebra.greater,
         can_moderate_avatars=algebra.greater,
         can_moderate_signatures=algebra.greater,
@@ -89,6 +94,8 @@ def build_acl(acl, roles, key_name):
 """
 ACL's for targets
 """
+
+
 def add_acl_to_user(user, target):
     target.acl['can_rename'] = can_rename_user(user, target)
     target.acl['can_moderate_avatar'] = can_moderate_avatar(user, target)
@@ -97,12 +104,7 @@ def add_acl_to_user(user, target):
     target.acl['max_ban_length'] = user.acl_cache['max_ban_length']
     target.acl['can_lift_ban'] = can_lift_ban(user, target)
 
-    mod_permissions = (
-        'can_rename',
-        'can_moderate_avatar',
-        'can_moderate_signature',
-        'can_ban',
-    )
+    mod_permissions = ('can_rename', 'can_moderate_avatar', 'can_moderate_signature', 'can_ban', )
 
     for permission in mod_permissions:
         if target.acl[permission]:
@@ -117,11 +119,15 @@ def register_with(registry):
 """
 ACL tests
 """
+
+
 def allow_rename_user(user, target):
     if not user.acl_cache['can_rename_users']:
         raise PermissionDenied(_("You can't rename users."))
     if not user.is_superuser and (target.is_staff or target.is_superuser):
         raise PermissionDenied(_("You can't rename administrators."))
+
+
 can_rename_user = return_boolean(allow_rename_user)
 
 
@@ -130,6 +136,8 @@ def allow_moderate_avatar(user, target):
         raise PermissionDenied(_("You can't moderate avatars."))
     if not user.is_superuser and (target.is_staff or target.is_superuser):
         raise PermissionDenied(_("You can't moderate administrators avatars."))
+
+
 can_moderate_avatar = return_boolean(allow_moderate_avatar)
 
 
@@ -139,6 +147,8 @@ def allow_moderate_signature(user, target):
     if not user.is_superuser and (target.is_staff or target.is_superuser):
         message = _("You can't moderate administrators signatures.")
         raise PermissionDenied(message)
+
+
 can_moderate_signature = return_boolean(allow_moderate_signature)
 
 
@@ -147,6 +157,8 @@ def allow_ban_user(user, target):
         raise PermissionDenied(_("You can't ban users."))
     if target.is_staff or target.is_superuser:
         raise PermissionDenied(_("You can't ban administrators."))
+
+
 can_ban_user = return_boolean(allow_ban_user)
 
 
@@ -162,8 +174,9 @@ def allow_lift_ban(user, target):
         if not ban.valid_until:
             raise PermissionDenied(_("You can't lift permanent bans."))
         elif ban.valid_until > lift_cutoff:
-            message = _("You can't lift bans that "
-                        "expire after %(expiration)s.")
+            message = _("You can't lift bans that " "expire after %(expiration)s.")
             message = message % {'expiration': format_date(lift_cutoff)}
             raise PermissionDenied(message)
+
+
 can_lift_ban = return_boolean(allow_lift_ban)

@@ -17,10 +17,13 @@ class DjangoAdminAuthTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
 
         # form handles login
-        response = self.client.post(reverse('admin:index'), data={
-            'username': self.user.email,
-            'password': self.USER_PASSWORD,
-        })
+        response = self.client.post(
+            reverse('admin:index'),
+            data={
+                'username': self.user.email,
+                'password': self.USER_PASSWORD,
+            }
+        )
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('admin:index'))

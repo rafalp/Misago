@@ -13,14 +13,11 @@ class LandingTests(AuthenticatedUserTestCase):
 
     def test_no_permission(self):
         """view validates permission to search forum"""
-        override_acl(self.user, {
-            'can_search': 0
-        })
+        override_acl(self.user, {'can_search': 0})
 
         response = self.client.get(self.test_link)
 
-        self.assertContains(
-            response, "have permission to search site", status_code=403)
+        self.assertContains(response, "have permission to search site", status_code=403)
 
     def test_redirect_to_provider(self):
         """view validates permission to search forum"""
@@ -33,38 +30,28 @@ class LandingTests(AuthenticatedUserTestCase):
 class SearchTests(AuthenticatedUserTestCase):
     def test_no_permission(self):
         """view validates permission to search forum"""
-        override_acl(self.user, {
-            'can_search': 0
-        })
+        override_acl(self.user, {'can_search': 0})
 
-        response = self.client.get(
-            reverse('misago:search', kwargs={'search_provider': 'users'}))
+        response = self.client.get(reverse('misago:search', kwargs={'search_provider': 'users'}))
 
-        self.assertContains(
-            response, "have permission to search site", status_code=403)
+        self.assertContains(response, "have permission to search site", status_code=403)
 
     def test_not_found(self):
         """view raises 404 for not found provider"""
-        response = self.client.get(
-            reverse('misago:search', kwargs={'search_provider': 'nada'}))
+        response = self.client.get(reverse('misago:search', kwargs={'search_provider': 'nada'}))
 
         self.assertEqual(response.status_code, 404)
 
     def test_provider_no_permission(self):
         """provider raises 403 without permission"""
-        override_acl(self.user, {
-            'can_search_users': 0
-        })
+        override_acl(self.user, {'can_search_users': 0})
 
-        response = self.client.get(
-            reverse('misago:search', kwargs={'search_provider': 'users'}))
+        response = self.client.get(reverse('misago:search', kwargs={'search_provider': 'users'}))
 
-        self.assertContains(
-            response, "have permission to search users", status_code=403)
+        self.assertContains(response, "have permission to search users", status_code=403)
 
     def test_provider(self):
         """provider displays no script page"""
-        response = self.client.get(
-            reverse('misago:search', kwargs={'search_provider': 'threads'}))
+        response = self.client.get(reverse('misago:search', kwargs={'search_provider': 'threads'}))
 
         self.assertContains(response, "Loading search...")

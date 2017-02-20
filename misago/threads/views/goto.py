@@ -12,7 +12,7 @@ from misago.threads.viewmodels import ForumThread, PrivateThread
 
 class GotoView(View):
     thread = None
-    read_aware=False
+    read_aware = False
 
     def get(self, request, pk, slug, **kwargs):
         thread = self.get_thread(request, pk, slug).unwrap()
@@ -40,7 +40,7 @@ class GotoView(View):
 
         thread_len = posts_queryset.count()
         if thread_len <= settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL:
-            return 1 # no chance for post to be on other page than only page
+            return 1  # no chance for post to be on other page than only page
 
         # compute total count of thread pages
         hits = max(1, thread_len - settings.MISAGO_POSTS_TAIL)
@@ -100,7 +100,10 @@ class ThreadGotoUnapprovedView(GotoView):
     def test_permissions(self, request, thread):
         if not thread.acl['can_approve']:
             raise PermissionDenied(
-                _("You need permission to approve content to be able to go to first unapproved post."))
+                _(
+                    "You need permission to approve content to be able to go to first unapproved post."
+                )
+            )
 
     def get_target_post(self, thread, posts_queryset, **kwargs):
         unapproved_post = posts_queryset.filter(is_unapproved=True).order_by('id').first()

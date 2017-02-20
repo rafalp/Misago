@@ -46,7 +46,8 @@ def validate_votes(poll, votes):
             message = ungettext(
                 "This poll disallows voting for more than %(choices)s choice.",
                 "This poll disallows voting for more than %(choices)s choices.",
-                poll.allowed_choices)
+                poll.allowed_choices
+            )
             raise ValidationError(message % {'choices': poll.allowed_choices})
     except TypeError:
         raise ValidationError(_("One or more of poll choices were invalid."))
