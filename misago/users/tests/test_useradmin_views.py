@@ -1,10 +1,7 @@
-import json
-
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.urls import reverse
 from django.utils import six
-from django.utils.encoding import smart_str
 from django.utils.six.moves import range
 
 from misago.acl.models import Role
@@ -496,14 +493,14 @@ class UserAdminViewsTests(AdminTestCase):
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
 
-        response_dict = json.loads(smart_str(response.content))
+        response_dict = response.json()
         self.assertEqual(response_dict['deleted_count'], 10)
         self.assertFalse(response_dict['is_completed'])
 
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
 
-        response_dict = json.loads(smart_str(response.content))
+        response_dict = response.json()
         self.assertEqual(response_dict['deleted_count'], 0)
         self.assertTrue(response_dict['is_completed'])
 
@@ -520,14 +517,14 @@ class UserAdminViewsTests(AdminTestCase):
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
 
-        response_dict = json.loads(smart_str(response.content))
+        response_dict = response.json()
         self.assertEqual(response_dict['deleted_count'], 10)
         self.assertFalse(response_dict['is_completed'])
 
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
 
-        response_dict = json.loads(smart_str(response.content))
+        response_dict = response.json()
         self.assertEqual(response_dict['deleted_count'], 0)
         self.assertTrue(response_dict['is_completed'])
 
@@ -540,5 +537,5 @@ class UserAdminViewsTests(AdminTestCase):
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
 
-        response_dict = json.loads(smart_str(response.content))
+        response_dict = response.json()
         self.assertTrue(response_dict['is_completed'])

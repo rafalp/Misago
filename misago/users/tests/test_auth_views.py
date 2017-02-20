@@ -1,8 +1,5 @@
-import json
-
 from django.test import TestCase
 from django.urls import reverse
-from django.utils.encoding import smart_str
 
 
 class AuthViewsTests(TestCase):
@@ -48,7 +45,7 @@ class AuthViewsTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(smart_str(response.content))
+        user_json = response.json()
         self.assertIsNone(user_json['id'])
 
         response = self.client.post(reverse('misago:logout'))
@@ -57,5 +54,5 @@ class AuthViewsTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(smart_str(response.content))
+        user_json = response.json()
         self.assertIsNone(user_json['id'])

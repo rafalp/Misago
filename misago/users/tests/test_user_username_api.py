@@ -1,7 +1,6 @@
 import json
 
 from django.contrib.auth import get_user_model
-from django.utils.encoding import smart_str
 from django.utils.six.moves import range
 
 from misago.acl.testutils import override_acl
@@ -25,7 +24,7 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
 
         self.assertIsNotNone(response_json['changes_left'])
         self.assertEqual(response_json['length_min'],
@@ -40,7 +39,7 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['changes_left'], 0)
         self.assertIsNotNone(response_json['next_on'])
 
@@ -49,12 +48,12 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         for i in range(response_json['changes_left']):
             self.user.set_username('NewName%s' % i, self.user)
 
         response = self.client.get(self.link)
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['changes_left'], 0)
 
         response = self.client.post(self.link, data={
@@ -81,7 +80,7 @@ class UserUsernameTests(AuthenticatedUserTestCase):
     def test_change_username(self):
         """api changes username and records change"""
         response = self.client.get(self.link)
-        changes_left = json.loads(smart_str(response.content))['changes_left']
+        changes_left = response.json()['changes_left']
 
         old_username = self.user.username
         new_username = 'NewUsernamu'
@@ -91,7 +90,7 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         })
 
         self.assertEqual(response.status_code, 200)
-        options = json.loads(smart_str(response.content))['options']
+        options = response.json()['options']
         self.assertEqual(changes_left, options['changes_left'] + 1)
 
         self.reload_user()
@@ -139,7 +138,7 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
-        options = json.loads(smart_str(response.content))
+        options = response.json()
         self.assertEqual(options['length_min'],
                          settings.username_length_min)
         self.assertEqual(options['length_max'],
@@ -199,7 +198,7 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         self.assertEqual('BobBoberson', other_user.username)
         self.assertEqual('bobboberson', other_user.slug)
 
-        options = json.loads(smart_str(response.content))
+        options = response.json()
         self.assertEqual(options['username'], other_user.username)
         self.assertEqual(options['slug'], other_user.slug)
 

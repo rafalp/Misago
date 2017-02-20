@@ -1,7 +1,4 @@
-import json
-
 from django.urls import reverse
-from django.utils.encoding import smart_str
 
 from misago.users.testutils import AuthenticatedUserTestCase, SuperUserTestCase, UserTestCase
 
@@ -37,7 +34,7 @@ class UserTestCaseTests(UserTestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(smart_str(response.content))
+        user_json = response.json()
         self.assertEqual(user_json['id'], user.id)
 
     def test_login_superuser(self):
@@ -48,7 +45,7 @@ class UserTestCaseTests(UserTestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(smart_str(response.content))
+        user_json = response.json()
         self.assertEqual(user_json['id'], user.id)
 
     def test_logout_user(self):
@@ -60,7 +57,7 @@ class UserTestCaseTests(UserTestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(smart_str(response.content))
+        user_json = response.json()
         self.assertIsNone(user_json['id'])
 
     def test_logout_superuser(self):
@@ -72,7 +69,7 @@ class UserTestCaseTests(UserTestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(smart_str(response.content))
+        user_json = response.json()
         self.assertIsNone(user_json['id'])
 
 
@@ -99,5 +96,5 @@ class SuperUserTestCaseTests(SuperUserTestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = json.loads(smart_str(response.content))
+        user_json = response.json()
         self.assertEqual(user_json['id'], self.user.id)

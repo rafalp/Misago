@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import json
-
 from django.urls import reverse
-from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
@@ -114,7 +111,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(json.loads(smart_str(response.content)), {
+        self.assertEqual(response.json(), {
             'post': [
                 "You have to enter a message."
             ]
@@ -129,7 +126,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         })
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(json.loads(smart_str(response.content)), {
+        self.assertEqual(response.json(), {
             'post': [
                 "Posted message should be at least 5 characters long (it has 1)."
             ]

@@ -1,8 +1,6 @@
-import json
 import os
 
 from django.urls import reverse
-from django.utils.encoding import smart_str
 
 from misago.acl import add_acl
 from misago.acl.testutils import override_acl
@@ -124,7 +122,7 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json[0], {
             'id': self.category.pk,
             'name': self.category.name,
@@ -145,7 +143,7 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json[0], {
             'id': self.category.pk,
             'name': self.category.name,
@@ -167,7 +165,7 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json[0], {
             'id': self.category.pk,
             'name': self.category.name,
@@ -189,7 +187,7 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json[0], {
             'id': self.category.pk,
             'name': self.category.name,
@@ -211,7 +209,7 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json[0], {
             'id': self.category.pk,
             'name': self.category.name,
@@ -233,7 +231,7 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json[0], {
             'id': self.category.pk,
             'name': self.category.name,
@@ -253,7 +251,7 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json[0], {
             'id': self.category.pk,
             'name': self.category.name,
@@ -411,7 +409,7 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
         response = self.client.get('{}?reply={}'.format(self.api_link, reply_to.pk))
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(smart_str(response.content)), {
+        self.assertEqual(response.json(), {
             'id': reply_to.pk,
             'post': reply_to.original,
             'poster': reply_to.poster_name
@@ -654,7 +652,7 @@ class EditReplyEditorApiTests(EditorApiTestCase):
             add_acl(self.user, attachment)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(smart_str(response.content)), {
+        self.assertEqual(response.json(), {
             'id': self.post.pk,
             'api': self.post.get_api_url(),
             'post': self.post.original,

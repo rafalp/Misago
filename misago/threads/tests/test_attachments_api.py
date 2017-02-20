@@ -1,11 +1,9 @@
-import json
 import os
 
 from PIL import Image
 
 from django.urls import reverse
 from django.utils import six
-from django.utils.encoding import smart_str
 
 from misago.acl.models import Role
 from misago.acl.testutils import override_acl
@@ -193,7 +191,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
             })
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         attachment = Attachment.objects.get(id=response_json['id'])
 
         self.assertEqual(attachment.filename, 'document.pdf')
@@ -232,7 +230,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
             })
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         attachment = Attachment.objects.get(id=response_json['id'])
 
         self.assertEqual(attachment.filename, 'small.jpg')
@@ -269,7 +267,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
             })
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         attachment = Attachment.objects.get(id=response_json['id'])
 
         self.assertEqual(attachment.filename, 'large.png')
@@ -320,7 +318,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
             })
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         attachment = Attachment.objects.get(id=response_json['id'])
 
         self.assertEqual(attachment.filename, 'animated.gif')

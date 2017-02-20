@@ -478,7 +478,7 @@ class UserBanTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
-        ban_json = json.loads(smart_str(response.content))
+        ban_json = response.json()
         self.assertEqual(ban_json['user_message']['plain'], 'Nope!')
         self.assertEqual(ban_json['user_message']['html'], '<p>Nope!</p>')
 

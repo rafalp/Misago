@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import json
 
 from django.urls import reverse
-from django.utils.encoding import smart_str
 from django.utils.six.moves import range
 
 from misago.acl.testutils import override_acl
@@ -189,7 +188,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json, {
             'title': ['This field is required.'],
             'category': ['This field is required.'],
@@ -204,7 +203,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json, {
             'title': ["Thread title should be at least 5 characters long (it has 3)."]
         })
@@ -222,7 +221,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json, {
             'category': ["Requested category could not be found."]
         })
@@ -240,7 +239,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json, {
             'category': [
                 "You can't create new threads in selected category."
@@ -257,7 +256,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json, {
             'weight': ["Ensure this value is less than or equal to 2."]
         })
@@ -272,7 +271,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json, {
             'weight': [
                 "You don't have permission to pin threads globally in this category."
@@ -289,7 +288,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json, {
             'weight': [
                 "You don't have permission to pin threads in this category."
@@ -310,7 +309,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json, {
             'title': ["Thread title should be at least 5 characters long (it has 3)."]
         })
@@ -329,7 +328,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json, {
             'title': ["Thread title should be at least 5 characters long (it has 3)."]
         })
@@ -344,7 +343,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json, {
             'is_closed': [
                 "You don't have permission to close threads in this category."
@@ -366,7 +365,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json, {
             'title': ["Thread title should be at least 5 characters long (it has 3)."]
         })
@@ -381,7 +380,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json, {
             'is_hidden': [
                 "You don't have permission to hide threads in this category."
@@ -403,7 +402,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         }), content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json, {
             'title': ["Thread title should be at least 5 characters long (it has 3)."]
         })
