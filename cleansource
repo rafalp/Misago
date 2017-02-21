@@ -1,5 +1,5 @@
 #!/bin/bash
 
-yapf -ir misago -e '*/project_template/**/*.py'
+yapf -ir misago -e '*/project_template/**/*.py' -e '*/conf/defaults.py'
 isort -rc misago
 pylint misago
