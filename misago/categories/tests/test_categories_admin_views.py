@@ -79,7 +79,7 @@ class CategoryAdminViewsTests(CategoryAdminTestCate):
                 'new_parent': root.pk,
                 'prune_started_after': 0,
                 'prune_replied_after': 0,
-            }
+            },
         )
         self.assertEqual(response.status_code, 302)
 
@@ -102,7 +102,7 @@ class CategoryAdminViewsTests(CategoryAdminTestCate):
                 'new_parent': root.pk,
                 'prune_started_after': 0,
                 'prune_replied_after': 0,
-            }
+            },
         )
         self.assertEqual(response.status_code, 302)
 
@@ -123,7 +123,7 @@ class CategoryAdminViewsTests(CategoryAdminTestCate):
                 'copy_permissions': test_category.pk,
                 'prune_started_after': 0,
                 'prune_replied_after': 0,
-            }
+            },
         )
         self.assertEqual(response.status_code, 302)
 
@@ -147,12 +147,16 @@ class CategoryAdminViewsTests(CategoryAdminTestCate):
         first_category = Category.objects.get(slug='first-category')
 
         response = self.client.get(
-            reverse('misago:admin:categories:nodes:edit', kwargs={'pk': private_threads.pk})
+            reverse('misago:admin:categories:nodes:edit', kwargs={
+                'pk': private_threads.pk,
+            })
         )
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(
-            reverse('misago:admin:categories:nodes:edit', kwargs={'pk': root.pk})
+            reverse('misago:admin:categories:nodes:edit', kwargs={
+                'pk': root.pk,
+            })
         )
         self.assertEqual(response.status_code, 302)
 
@@ -164,27 +168,31 @@ class CategoryAdminViewsTests(CategoryAdminTestCate):
                 'new_parent': root.pk,
                 'prune_started_after': 0,
                 'prune_replied_after': 0,
-            }
+            },
         )
         self.assertEqual(response.status_code, 302)
 
         test_category = Category.objects.get(slug='test-category')
 
         response = self.client.get(
-            reverse('misago:admin:categories:nodes:edit', kwargs={'pk': test_category.pk})
+            reverse('misago:admin:categories:nodes:edit', kwargs={
+                'pk': test_category.pk,
+            })
         )
 
         self.assertContains(response, 'Test Category')
 
         response = self.client.post(
-            reverse('misago:admin:categories:nodes:edit', kwargs={'pk': test_category.pk}),
+            reverse('misago:admin:categories:nodes:edit', kwargs={
+                'pk': test_category.pk,
+            }),
             data={
                 'name': 'Test Category Edited',
                 'new_parent': root.pk,
                 'role': 'category',
                 'prune_started_after': 0,
                 'prune_replied_after': 0,
-            }
+            },
         )
         self.assertEqual(response.status_code, 302)
 
@@ -198,14 +206,16 @@ class CategoryAdminViewsTests(CategoryAdminTestCate):
         self.assertContains(response, 'Test Category Edited')
 
         response = self.client.post(
-            reverse('misago:admin:categories:nodes:edit', kwargs={'pk': test_category.pk}),
+            reverse('misago:admin:categories:nodes:edit', kwargs={
+                'pk': test_category.pk,
+            }),
             data={
                 'name': 'Test Category Edited',
                 'new_parent': first_category.pk,
                 'role': 'category',
                 'prune_started_after': 0,
                 'prune_replied_after': 0,
-            }
+            },
         )
         self.assertEqual(response.status_code, 302)
 
@@ -230,7 +240,7 @@ class CategoryAdminViewsTests(CategoryAdminTestCate):
                 'new_parent': root.pk,
                 'prune_started_after': 0,
                 'prune_replied_after': 0,
-            }
+            },
         )
         category_a = Category.objects.get(slug='category-a')
 
@@ -241,12 +251,14 @@ class CategoryAdminViewsTests(CategoryAdminTestCate):
                 'new_parent': root.pk,
                 'prune_started_after': 0,
                 'prune_replied_after': 0,
-            }
+            },
         )
         category_b = Category.objects.get(slug='category-b')
 
         response = self.client.post(
-            reverse('misago:admin:categories:nodes:up', kwargs={'pk': category_b.pk})
+            reverse('misago:admin:categories:nodes:up', kwargs={
+                'pk': category_b.pk,
+            })
         )
         self.assertEqual(response.status_code, 302)
 
@@ -258,7 +270,9 @@ class CategoryAdminViewsTests(CategoryAdminTestCate):
         ])
 
         response = self.client.post(
-            reverse('misago:admin:categories:nodes:up', kwargs={'pk': category_b.pk})
+            reverse('misago:admin:categories:nodes:up', kwargs={
+                'pk': category_b.pk,
+            })
         )
         self.assertEqual(response.status_code, 302)
 
@@ -270,7 +284,9 @@ class CategoryAdminViewsTests(CategoryAdminTestCate):
         ])
 
         response = self.client.post(
-            reverse('misago:admin:categories:nodes:down', kwargs={'pk': category_b.pk})
+            reverse('misago:admin:categories:nodes:down', kwargs={
+                'pk': category_b.pk,
+            })
         )
         self.assertEqual(response.status_code, 302)
 
@@ -282,7 +298,9 @@ class CategoryAdminViewsTests(CategoryAdminTestCate):
         ])
 
         response = self.client.post(
-            reverse('misago:admin:categories:nodes:down', kwargs={'pk': category_b.pk})
+            reverse('misago:admin:categories:nodes:down', kwargs={
+                'pk': category_b.pk,
+            })
         )
         self.assertEqual(response.status_code, 302)
 
@@ -294,7 +312,9 @@ class CategoryAdminViewsTests(CategoryAdminTestCate):
         ])
 
         response = self.client.post(
-            reverse('misago:admin:categories:nodes:down', kwargs={'pk': category_b.pk})
+            reverse('misago:admin:categories:nodes:down', kwargs={
+                'pk': category_b.pk,
+            })
         )
         self.assertEqual(response.status_code, 302)
 
@@ -331,7 +351,7 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCate):
                 'new_parent': self.root.pk,
                 'prune_started_after': 0,
                 'prune_replied_after': 0,
-            }
+            },
         )
 
         self.client.post(
@@ -341,7 +361,7 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCate):
                 'new_parent': self.root.pk,
                 'prune_started_after': 0,
                 'prune_replied_after': 0,
-            }
+            },
         )
 
         self.category_a = Category.objects.get(slug='category-a')
@@ -354,7 +374,7 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCate):
                 'new_parent': self.category_a.pk,
                 'prune_started_after': 0,
                 'prune_replied_after': 0,
-            }
+            },
         )
         self.category_b = Category.objects.get(slug='category-b')
 
@@ -365,7 +385,7 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCate):
                 'new_parent': self.category_b.pk,
                 'prune_started_after': 0,
                 'prune_replied_after': 0,
-            }
+            },
         )
         self.category_c = Category.objects.get(slug='subcategory-c')
 
@@ -376,7 +396,7 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCate):
                 'new_parent': self.category_b.pk,
                 'prune_started_after': 0,
                 'prune_replied_after': 0,
-            }
+            },
         )
         self.category_d = Category.objects.get(slug='subcategory-d')
 
@@ -387,7 +407,7 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCate):
                 'new_parent': self.category_e.pk,
                 'prune_started_after': 0,
                 'prune_replied_after': 0,
-            }
+            },
         )
         self.category_f = Category.objects.get(slug='category-f')
 
@@ -398,16 +418,20 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCate):
         self.assertEqual(Thread.objects.count(), 10)
 
         response = self.client.get(
-            reverse('misago:admin:categories:nodes:delete', kwargs={'pk': self.category_b.pk})
+            reverse('misago:admin:categories:nodes:delete', kwargs={
+                'pk': self.category_b.pk,
+            })
         )
         self.assertEqual(response.status_code, 200)
 
         response = self.client.post(
-            reverse('misago:admin:categories:nodes:delete', kwargs={'pk': self.category_b.pk}),
+            reverse('misago:admin:categories:nodes:delete', kwargs={
+                'pk': self.category_b.pk,
+            }),
             data={
                 'move_children_to': self.category_e.pk,
                 'move_threads_to': self.category_d.pk,
-            }
+            },
         )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Category.objects.all_categories().count(), 6)
@@ -429,14 +453,20 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCate):
             testutils.post_thread(self.category_b)
 
         response = self.client.get(
-            reverse('misago:admin:categories:nodes:delete', kwargs={'pk': self.category_b.pk})
+            reverse('misago:admin:categories:nodes:delete', kwargs={
+                'pk': self.category_b.pk,
+            })
         )
         self.assertEqual(response.status_code, 200)
 
         response = self.client.post(
-            reverse('misago:admin:categories:nodes:delete', kwargs={'pk': self.category_b.pk}),
-            data={'move_children_to': '',
-                  'move_threads_to': ''}
+            reverse('misago:admin:categories:nodes:delete', kwargs={
+                'pk': self.category_b.pk,
+            }),
+            data={
+                'move_children_to': '',
+                'move_threads_to': '',
+            }
         )
         self.assertEqual(response.status_code, 302)
 
@@ -458,12 +488,16 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCate):
         self.assertEqual(Thread.objects.count(), 10)
 
         response = self.client.get(
-            reverse('misago:admin:categories:nodes:delete', kwargs={'pk': self.category_d.pk})
+            reverse('misago:admin:categories:nodes:delete', kwargs={
+                'pk': self.category_d.pk,
+            })
         )
         self.assertEqual(response.status_code, 200)
 
         response = self.client.post(
-            reverse('misago:admin:categories:nodes:delete', kwargs={'pk': self.category_d.pk}),
+            reverse('misago:admin:categories:nodes:delete', kwargs={
+                'pk': self.category_d.pk,
+            }),
             data={
                 'move_children_to': '',
                 'move_threads_to': '',

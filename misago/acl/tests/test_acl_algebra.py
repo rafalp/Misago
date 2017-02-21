@@ -78,7 +78,7 @@ class SumACLTests(TestCase):
             can_hear=algebra.greater,
             max_speed=algebra.greater,
             min_age=algebra.lower,
-            speed_limit=algebra.greater_or_zero
+            speed_limit=algebra.greater_or_zero,
         )
 
         self.assertEqual(acl['can_see'], 1)

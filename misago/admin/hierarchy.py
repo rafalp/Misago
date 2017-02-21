@@ -139,8 +139,7 @@ class AdminHierarchyBuilder(object):
     ):
         if self.nodes_dict:
             raise RuntimeError(
-                "Misago admin site has already been "
-                "initialized. You can't add new nodes to it."
+                "Misago admin site has already been initialized. You can't add new nodes to it."
             )
 
         if after and before:

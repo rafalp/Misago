@@ -60,47 +60,42 @@ class CategoryFormBase(forms.ModelForm):
         max_length=2048,
         required=False,
         widget=forms.Textarea(attrs={'rows': 3}),
-        help_text=_("Optional description explaining category intented purpose.")
+        help_text=_("Optional description explaining category intented purpose."),
     )
     css_class = forms.CharField(
         label=_("CSS class"),
         required=False,
         help_text=_(
-            "Optional CSS class used to customize this category "
-            "appearance from templates."
-        )
+            "Optional CSS class used to customize this category appearance from templates."
+        ),
     )
     is_closed = YesNoSwitch(
         label=_("Closed category"),
         required=False,
-        help_text=_("Only members with valid permissions can post in "
-                    "closed categories.")
+        help_text=_("Only members with valid permissions can post in closed categories."),
     )
     css_class = forms.CharField(
         label=_("CSS class"),
         required=False,
         help_text=_(
-            "Optional CSS class used to customize this category "
-            "appearance from templates."
-        )
+            "Optional CSS class used to customize this category appearance from templates."
+        ),
     )
     prune_started_after = forms.IntegerField(
         label=_("Thread age"),
         min_value=0,
         help_text=_(
-            "Prune thread if number of days since its creation is "
-            "greater than specified. Enter 0 to disable this "
-            "pruning criteria."
-        )
+            "Prune thread if number of days since its creation is greater than specified. "
+            "Enter 0 to disable this pruning criteria."
+        ),
     )
     prune_replied_after = forms.IntegerField(
         label=_("Last reply"),
         min_value=0,
         help_text=_(
-            "Prune thread if number of days since last reply is "
-            "greater than specified. Enter 0 to disable this "
-            "pruning criteria."
-        )
+            "Prune thread if number of days since last reply is greater than specified. "
+            "Enter 0 to disable this pruning criteria."
+        ),
     )
 
     class Meta:
@@ -149,7 +144,7 @@ def CategoryFormFactory(instance):
                     label=_("Parent category"),
                     queryset=parent_queryset,
                     initial=instance.parent,
-                    empty_label=None
+                    empty_label=None,
                 ),
             'copy_permissions':
                 AdminCategoryChoiceField(
@@ -160,7 +155,7 @@ def CategoryFormFactory(instance):
                     ),
                     queryset=Category.objects.all_categories(),
                     empty_label=_("Don't copy permissions"),
-                    required=False
+                    required=False,
                 ),
             'archive_pruned_in':
                 AdminCategoryChoiceField(
@@ -171,7 +166,7 @@ def CategoryFormFactory(instance):
                     ),
                     queryset=Category.objects.all_categories(),
                     empty_label=_("Don't archive pruned threads"),
-                    required=False
+                    required=False,
                 ),
         }
     )
@@ -211,7 +206,7 @@ def DeleteFormFactory(instance):
                 queryset=content_queryset,
                 initial=instance.parent,
                 empty_label=_('Delete with category'),
-                required=False
+                required=False,
             )
     }
 
@@ -225,7 +220,7 @@ def DeleteFormFactory(instance):
             label=_("Move child categories to"),
             queryset=children_queryset,
             empty_label=_('Delete with category'),
-            required=False
+            required=False,
         )
 
     return type('DeleteCategoryFormFinal', (DeleteCategoryFormBase, ), fields)
@@ -249,7 +244,7 @@ def RoleCategoryACLFormFactory(category, category_roles, selected_role):
                 required=False,
                 queryset=category_roles,
                 initial=selected_role,
-                empty_label=_("No access")
+                empty_label=_("No access"),
             )
     }
 
@@ -266,7 +261,7 @@ def CategoryRolesACLFormFactory(role, category_roles, selected_role):
                 required=False,
                 queryset=category_roles,
                 initial=selected_role,
-                empty_label=_("No access")
+                empty_label=_("No access"),
             )
     }
 

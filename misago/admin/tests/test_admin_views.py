@@ -49,8 +49,11 @@ class AdminLoginViewTests(TestCase):
     def test_login_returns_200_on_invalid_post(self):
         """form handles invalid data gracefully"""
         response = self.client.post(
-            reverse('misago:admin:index'), data={'username': 'Nope',
-                                                 'password': 'Nope'}
+            reverse('misago:admin:index'),
+            data={
+                'username': 'Nope',
+                'password': 'Nope',
+            },
         )
 
         self.assertContains(response, "Login or password is incorrect.")
@@ -67,8 +70,11 @@ class AdminLoginViewTests(TestCase):
         user.save()
 
         response = self.client.post(
-            reverse('misago:admin:index'), data={'username': 'Bob',
-                                                 'password': 'Pass.123'}
+            reverse('misago:admin:index'),
+            data={
+                'username': 'Bob',
+                'password': 'Pass.123',
+            },
         )
 
         self.assertContains(response, "Your account does not have admin privileges.")
@@ -82,8 +88,11 @@ class AdminLoginViewTests(TestCase):
         user.save()
 
         response = self.client.post(
-            reverse('misago:admin:index'), data={'username': 'Bob',
-                                                 'password': 'Pass.123'}
+            reverse('misago:admin:index'),
+            data={
+                'username': 'Bob',
+                'password': 'Pass.123',
+            },
         )
 
         self.assertContains(response, "Your account does not have admin privileges.")
@@ -97,8 +106,11 @@ class AdminLoginViewTests(TestCase):
         user.save()
 
         response = self.client.post(
-            reverse('misago:admin:index'), data={'username': 'Bob',
-                                                 'password': 'Pass.123'}
+            reverse('misago:admin:index'),
+            data={
+                'username': 'Bob',
+                'password': 'Pass.123',
+            },
         )
 
         self.assertEqual(response.status_code, 302)
@@ -112,8 +124,11 @@ class AdminLoginViewTests(TestCase):
         user.save()
 
         response = self.client.post(
-            reverse('misago:admin:index'), data={'username': 'Bob',
-                                                 'password': 'Pass.123'}
+            reverse('misago:admin:index'),
+            data={
+                'username': 'Bob',
+                'password': 'Pass.123',
+            },
         )
 
         self.assertEqual(response.status_code, 302)

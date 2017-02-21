@@ -58,11 +58,12 @@ class RoleFormMixin(object):
                 form.add_error(None, _("Form contains errors."))
 
         return self.render(
-            request, {
+            request,
+            {
                 'form': form,
                 'target': target,
                 'perms_forms': perms_forms,
-            }
+            },
         )
 
 
@@ -86,13 +87,10 @@ class DeleteCategoryRole(CategoryRoleAdmin, generic.ButtonView):
         messages.success(request, message % {'name': target.name})
 
 
-"""
-Create category roles view for assinging roles to category,
-add link to it in categories list
-"""
-
-
 class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
+    """
+    Category roles view for assinging roles to category, add link to it in categories list
+    """
     templates_dir = 'misago/admin/categoryroles'
     template = 'categoryroles.html'
 
@@ -126,7 +124,7 @@ class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
                         RoleCategoryACL(
                             role=form.role,
                             category=target,
-                            category_role=form.cleaned_data['category_role']
+                            category_role=form.cleaned_data['category_role'],
                         )
                     )
             if new_permissions:
@@ -151,15 +149,14 @@ CategoriesList.add_item_action(
     name=_("Category permissions"),
     icon='fa fa-adjust',
     link='misago:admin:categories:nodes:permissions',
-    style='success'
+    style='success',
 )
-"""
-Create role categories view for assinging categories to role,
-add link to it in user roles list
-"""
 
 
 class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
+    """
+    Role categories view for assinging categories to role, add link to it in user roles list
+    """
     templates_dir = 'misago/admin/categoryroles'
     template = 'rolecategories.html'
 
@@ -197,7 +194,7 @@ class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
                         RoleCategoryACL(
                             role=target,
                             category=form.category,
-                            category_role=form.cleaned_data['role']
+                            category_role=form.cleaned_data['role'],
                         )
                     )
             if new_permissions:
@@ -222,5 +219,5 @@ RolesList.add_item_action(
     name=_("Categories permissions"),
     icon='fa fa-comments-o',
     link='misago:admin:permissions:users:categories',
-    style='success'
+    style='success',
 )

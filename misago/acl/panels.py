@@ -7,7 +7,7 @@ class MisagoACLPanel(Panel):
     """
     Panel that displays current user's ACL
     """
-    title = _('Misago User ACL')
+    title = _("Misago User ACL")
     template = 'misago/acl_debug.html'
 
     @property

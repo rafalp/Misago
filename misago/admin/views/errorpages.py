@@ -34,7 +34,9 @@ def _csrf_failure(request, reason=""):
     if is_admin_session(request):
         update_admin_session(request)
         response = render(
-            request, 'misago/admin/errorpages/csrf_failure_authenticated.html', error_page=True
+            request,
+            'misago/admin/errorpages/csrf_failure_authenticated.html',
+            error_page=True,
         )
     else:
         response = render(request, 'misago/admin/errorpages/csrf_failure.html')

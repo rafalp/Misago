@@ -49,14 +49,14 @@ class MisagoAdminExtension(object):
             parent='misago:admin',
             before='misago:admin:permissions:users:index',
             namespace='misago:admin:categories',
-            link='misago:admin:categories:nodes:index'
+            link='misago:admin:categories:nodes:index',
         )
         site.add_node(
             name=_("Categories hierarchy"),
             icon='fa fa-sitemap',
             parent='misago:admin:categories',
             namespace='misago:admin:categories:nodes',
-            link='misago:admin:categories:nodes:index'
+            link='misago:admin:categories:nodes:index',
         )
         site.add_node(
             name=_("Category roles"),
@@ -64,5 +64,5 @@ class MisagoAdminExtension(object):
             parent='misago:admin:permissions',
             after='misago:admin:permissions:users:index',
             namespace='misago:admin:permissions:categories',
-            link='misago:admin:permissions:categories:index'
+            link='misago:admin:permissions:categories:index',
         )

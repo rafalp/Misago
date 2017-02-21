@@ -84,7 +84,7 @@ def build_category_acl(acl, category, categories_roles, key_name):
         roles=category_roles,
         key=key_name,
         can_see=algebra.greater,
-        can_browse=algebra.greater
+        can_browse=algebra.greater,
     )
 
     if final_acl['can_see']:
@@ -115,7 +115,7 @@ def serialize_categories_alcs(serialized_acl):
                 'can_reply_threads': acl.get('can_reply_threads', False),
                 'can_pin_threads': acl.get('can_pin_threads', 0),
                 'can_hide_threads': acl.get('can_hide_threads', 0),
-                'can_close_threads': acl.get('can_close_threads', False)
+                'can_close_threads': acl.get('can_close_threads', False),
             })
     serialized_acl['categories'] = categories_acl
 

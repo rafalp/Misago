@@ -29,13 +29,17 @@ class CategoriesUtilsTests(AuthenticatedUserTestCase):
             name='Category A',
             slug='category-a',
         ).insert_at(
-            self.root, position='last-child', save=True
+            self.root,
+            position='last-child',
+            save=True,
         )
         Category(
             name='Category E',
             slug='category-e',
         ).insert_at(
-            self.root, position='last-child', save=True
+            self.root,
+            position='last-child',
+            save=True,
         )
 
         self.category_a = Category.objects.get(slug='category-a')
@@ -44,7 +48,9 @@ class CategoriesUtilsTests(AuthenticatedUserTestCase):
             name='Category B',
             slug='category-b',
         ).insert_at(
-            self.category_a, position='last-child', save=True
+            self.category_a,
+            position='last-child',
+            save=True,
         )
 
         self.category_b = Category.objects.get(slug='category-b')
@@ -53,13 +59,17 @@ class CategoriesUtilsTests(AuthenticatedUserTestCase):
             name='Subcategory C',
             slug='subcategory-c',
         ).insert_at(
-            self.category_b, position='last-child', save=True
+            self.category_b,
+            position='last-child',
+            save=True,
         )
         Category(
             name='Subcategory D',
             slug='subcategory-d',
         ).insert_at(
-            self.category_b, position='last-child', save=True
+            self.category_b,
+            position='last-child',
+            save=True,
         )
 
         self.category_e = Category.objects.get(slug='category-e')
@@ -67,7 +77,9 @@ class CategoriesUtilsTests(AuthenticatedUserTestCase):
             name='Subcategory F',
             slug='subcategory-f',
         ).insert_at(
-            self.category_e, position='last-child', save=True
+            self.category_e,
+            position='last-child',
+            save=True,
         )
 
         categories_acl = {'categories': {}, 'visible_categories': []}
