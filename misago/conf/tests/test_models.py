@@ -6,13 +6,22 @@ from misago.conf.models import Setting
 class SettingModelTests(TestCase):
     def test_real_value(self):
         """setting returns real value correctyly"""
-        setting_model = Setting(python_type='list', dry_value='')
+        setting_model = Setting(
+            python_type='list',
+            dry_value='',
+        )
         self.assertEqual(setting_model.value, [])
 
-        setting_model = Setting(python_type='list', dry_value='Arthur,Lancelot,Patsy')
+        setting_model = Setting(
+            python_type='list',
+            dry_value='Arthur,Lancelot,Patsy',
+        )
         self.assertEqual(setting_model.value, ['Arthur', 'Lancelot', 'Patsy'])
 
-        setting_model = Setting(python_type='list', default_value='Arthur,Patsy')
+        setting_model = Setting(
+            python_type='list',
+            default_value='Arthur,Patsy',
+        )
         self.assertEqual(setting_model.value, ['Arthur', 'Patsy'])
 
         setting_model = Setting(
@@ -22,7 +31,11 @@ class SettingModelTests(TestCase):
 
     def test_set_value(self):
         """setting sets value correctyly"""
-        setting_model = Setting(python_type='int', dry_value='42', default_value='9001')
+        setting_model = Setting(
+            python_type='int',
+            dry_value='42',
+            default_value='9001',
+        )
 
         setting_model.value = 3000
         self.assertEqual(setting_model.value, 3000)

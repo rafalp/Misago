@@ -70,16 +70,16 @@ class DBConfMigrationUtilsTests(TestCase):
                 'value': "Eric",
                 'field_extra': {
                     'min_length': 2,
-                    'max_length': 255
+                    'max_length': 255,
                 },
             }, {
                 'setting': 'fish_new_license_no',
                 'name': "Fish's changed license number",
                 'default_value': '123-456',
                 'field_extra': {
-                    'max_length': 255
+                    'max_length': 255,
                 },
-            }, )
+            }, ),
         }
 
         migrationutils.migrate_settings_group(

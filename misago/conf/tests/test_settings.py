@@ -53,19 +53,19 @@ class GatewaySettingsTests(TestCase):
                 'value': "Public Eric",
                 'field_extra': {
                     'min_length': 2,
-                    'max_length': 255
+                    'max_length': 255,
                 },
-                'is_public': True
+                'is_public': True,
             }, {
                 'setting': 'private_fish_name',
                 'name': "Fish's name",
                 'value': "Private Eric",
                 'field_extra': {
                     'min_length': 2,
-                    'max_length': 255
+                    'max_length': 255,
                 },
-                'is_public': False
-            }, )
+                'is_public': False,
+            }, ),
         }
 
         migrate_settings_group(apps, test_group)

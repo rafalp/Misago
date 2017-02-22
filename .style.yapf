@@ -9,5 +9,3 @@ split_arguments_when_comma_terminated = true
 split_before_first_argument = true
 split_before_logical_operator = true
 split_before_named_assigns = true
-split_penalty_after_opening_bracket = 200
-split_penalty_excess_character = 200

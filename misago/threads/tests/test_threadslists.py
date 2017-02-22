@@ -362,7 +362,8 @@ class AllThreadsListTests(ThreadsListTestCase):
 
         for thread in threads[:settings.MISAGO_THREADS_PER_PAGE]:
             self.assertNotContains(response, thread.get_absolute_url())
-        for thread in threads[settings.MISAGO_THREADS_PER_PAGE:settings.MISAGO_THREADS_PER_PAGE * 2]:
+        for thread in threads[settings.MISAGO_THREADS_PER_PAGE:settings.MISAGO_THREADS_PER_PAGE * 2
+                              ]:
             self.assertContains(response, thread.get_absolute_url())
         for thread in threads[settings.MISAGO_THREADS_PER_PAGE * 2:]:
             self.assertNotContains(response, thread.get_absolute_url())
