@@ -36,14 +36,22 @@ class DenyGuestsTests(UserTestCase):
 class DenyBannedIPTests(UserTestCase):
     def test_success(self):
         """deny_banned_ips decorator allowed unbanned request"""
-        Ban.objects.create(check_type=Ban.IP, banned_value='83.*', user_message="Ya got banned!")
+        Ban.objects.create(
+            check_type=Ban.IP,
+            banned_value='83.*',
+            user_message="Ya got banned!",
+        )
 
         response = self.client.post(reverse('misago:request-activation'))
         self.assertEqual(response.status_code, 200)
 
     def test_fail(self):
         """deny_banned_ips decorator denied banned request"""
-        Ban.objects.create(check_type=Ban.IP, banned_value='127.*', user_message="Ya got banned!")
+        Ban.objects.create(
+            check_type=Ban.IP,
+            banned_value='127.*',
+            user_message="Ya got banned!",
+        )
 
         response = self.client.post(reverse('misago:request-activation'))
         self.assertContains(response, encode_json_html("<p>Ya got banned!</p>"), status_code=403)

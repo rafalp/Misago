@@ -42,14 +42,14 @@ class PermissionsForm(forms.Form):
         label=_("Max length, in days, of imposed ban"),
         help_text=_("Enter zero to let moderators impose permanent bans."),
         min_value=0,
-        initial=0
+        initial=0,
     )
     can_lift_bans = YesNoSwitch(label=_("Can lift bans"))
     max_lifted_ban_length = forms.IntegerField(
         label=_("Max length, in days, of lifted ban"),
         help_text=_("Enter zero to let moderators lift permanent bans."),
         min_value=0,
-        initial=0
+        initial=0,
     )
 
 
@@ -87,7 +87,7 @@ def build_acl(acl, roles, key_name):
         can_ban_users=algebra.greater,
         max_ban_length=algebra.greater_or_zero,
         can_lift_bans=algebra.greater,
-        max_lifted_ban_length=algebra.greater_or_zero
+        max_lifted_ban_length=algebra.greater_or_zero,
     )
 
 

@@ -56,7 +56,8 @@ def clean_thread_for_move(request, thread, viewmodel):
     except Http404:
         raise PermissionDenied(
             _(
-                "The thread you have entered link to doesn't exist or you don't have permission to see it."
+                "The thread you have entered link to doesn't "
+                "exist or you don't have permission to see it."
             )
         )
 
@@ -77,7 +78,8 @@ def clean_posts_for_move(request, thread):
     elif len(posts_ids) > MOVE_LIMIT:
         message = ungettext(
             "No more than %(limit)s post can be moved at single time.",
-            "No more than %(limit)s posts can be moved at single time.", MOVE_LIMIT
+            "No more than %(limit)s posts can be moved at single time.",
+            MOVE_LIMIT,
         )
         raise PermissionDenied(message % {'limit': MOVE_LIMIT})
 

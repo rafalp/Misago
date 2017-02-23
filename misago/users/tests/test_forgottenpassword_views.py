@@ -41,7 +41,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
                 kwargs={
                     'pk': test_user.pk,
                     'token': password_token,
-                }
+                },
             )
         )
         self.assertContains(response, encode_json_html("<p>Nope!</p>"), status_code=403)
@@ -60,7 +60,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
                 kwargs={
                     'pk': test_user.pk,
                     'token': password_token,
-                }
+                },
             )
         )
         self.assertContains(response, 'your link has expired', status_code=400)
@@ -75,7 +75,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
                 kwargs={
                     'pk': test_user.pk,
                     'token': 'abcdfghqsads',
-                }
+                },
             )
         )
         self.assertContains(response, 'your link is invalid', status_code=400)
@@ -92,7 +92,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
                 kwargs={
                     'pk': test_user.pk,
                     'token': password_token,
-                }
+                },
             )
         )
         self.assertContains(response, password_token)

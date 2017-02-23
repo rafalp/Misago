@@ -25,7 +25,9 @@ class SettingModelTests(TestCase):
         self.assertEqual(setting_model.value, ['Arthur', 'Patsy'])
 
         setting_model = Setting(
-            python_type='list', dry_value='Arthur,Robin,Patsy', default_value='Arthur,Patsy'
+            python_type='list',
+            dry_value='Arthur,Robin,Patsy',
+            default_value='Arthur,Patsy',
         )
         self.assertEqual(setting_model.value, ['Arthur', 'Robin', 'Patsy'])
 
@@ -40,6 +42,7 @@ class SettingModelTests(TestCase):
         setting_model.value = 3000
         self.assertEqual(setting_model.value, 3000)
         self.assertEqual(setting_model.dry_value, '3000')
+
         setting_model.value = None
         self.assertEqual(setting_model.value, 9001)
         self.assertEqual(setting_model.dry_value, None)

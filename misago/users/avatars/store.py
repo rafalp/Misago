@@ -40,8 +40,11 @@ def store_avatar(user, image):
         image.save(image_stream, "PNG")
 
         avatars.append(
-            Avatar.objects.
-            create(user=user, size=size, image=ContentFile(image_stream.getvalue(), 'avatar'))
+            Avatar.objects.create(
+                user=user,
+                size=size,
+                image=ContentFile(image_stream.getvalue(), 'avatar'),
+            )
         )
 
     user.avatars = [{'size': a.size, 'url': a.url} for a in avatars]

@@ -90,7 +90,9 @@ class FollowersListTests(AuthenticatedUserTestCase):
     def test_filled_list(self):
         """user with followers returns 200"""
         test_follower = UserModel.objects.create_user(
-            "TestFollower", "test@follower.com", self.USER_PASSWORD
+            "TestFollower",
+            "test@follower.com",
+            self.USER_PASSWORD,
         )
         self.user.followed_by.add(test_follower)
 
@@ -101,7 +103,9 @@ class FollowersListTests(AuthenticatedUserTestCase):
     def test_filled_list_search(self):
         """followers list is searchable"""
         test_follower = UserModel.objects.create_user(
-            "TestFollower", "test@follower.com", self.USER_PASSWORD
+            "TestFollower",
+            "test@follower.com",
+            self.USER_PASSWORD,
         )
         self.user.followed_by.add(test_follower)
 
@@ -134,7 +138,9 @@ class FollowsListTests(AuthenticatedUserTestCase):
     def test_filled_list(self):
         """user with follows returns 200"""
         test_follower = UserModel.objects.create_user(
-            "TestFollower", "test@follower.com", self.USER_PASSWORD
+            "TestFollower",
+            "test@follower.com",
+            self.USER_PASSWORD,
         )
         self.user.follows.add(test_follower)
 
@@ -145,7 +151,9 @@ class FollowsListTests(AuthenticatedUserTestCase):
     def test_filled_list_search(self):
         """follows list is searchable"""
         test_follower = UserModel.objects.create_user(
-            "TestFollower", "test@follower.com", self.USER_PASSWORD
+            "TestFollower",
+            "test@follower.com",
+            self.USER_PASSWORD,
         )
         self.user.follows.add(test_follower)
 
@@ -172,7 +180,11 @@ class RankListTests(AuthenticatedUserTestCase):
 
     def test_empty_list(self):
         """tab rank without members returns 200"""
-        test_rank = Rank.objects.create(name="Test rank", slug="test-rank", is_tab=True)
+        test_rank = Rank.objects.create(
+            name="Test rank",
+            slug="test-rank",
+            is_tab=True,
+        )
 
         response = self.client.get(self.link % test_rank.pk)
         self.assertEqual(response.status_code, 200)
@@ -203,10 +215,18 @@ class RankListTests(AuthenticatedUserTestCase):
 
     def test_disabled_users(self):
         """api follows disabled users visibility"""
-        test_rank = Rank.objects.create(name="Test rank", slug="test-rank", is_tab=True)
+        test_rank = Rank.objects.create(
+            name="Test rank",
+            slug="test-rank",
+            is_tab=True,
+        )
 
         test_user = UserModel.objects.create_user(
-            'Visible', 'visible@te.com', 'Pass.123', rank=test_rank, is_active=False
+            'Visible',
+            'visible@te.com',
+            'Pass.123',
+            rank=test_rank,
+            is_active=False,
         )
 
         response = self.client.get(self.link % test_rank.pk)
@@ -245,7 +265,11 @@ class UserRetrieveTests(AuthenticatedUserTestCase):
         super(UserRetrieveTests, self).setUp()
 
         self.test_user = UserModel.objects.create_user('Tyrael', 't123@test.com', 'pass123')
-        self.link = reverse('misago:api:user-detail', kwargs={'pk': self.test_user.pk})
+        self.link = reverse(
+            'misago:api:user-detail', kwargs={
+                'pk': self.test_user.pk,
+            }
+        )
 
     def test_get_user(self):
         """api user retrieve endpoint has no showstoppers"""
@@ -305,7 +329,7 @@ class UserForumOptionsTests(AuthenticatedUserTestCase):
             data={
                 'limits_private_thread_invites_to': 541,
                 'subscribe_to_started_threads': 44,
-                'subscribe_to_replied_threads': 321
+                'subscribe_to_replied_threads': 321,
             }
         )
 
@@ -331,7 +355,7 @@ class UserForumOptionsTests(AuthenticatedUserTestCase):
             data={
                 'limits_private_thread_invites_to': 1,
                 'subscribe_to_started_threads': 2,
-                'subscribe_to_replied_threads': 1
+                'subscribe_to_replied_threads': 1,
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -349,7 +373,7 @@ class UserForumOptionsTests(AuthenticatedUserTestCase):
                 'is_hiding_presence': True,
                 'limits_private_thread_invites_to': 1,
                 'subscribe_to_started_threads': 2,
-                'subscribe_to_replied_threads': 1
+                'subscribe_to_replied_threads': 1,
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -367,7 +391,7 @@ class UserForumOptionsTests(AuthenticatedUserTestCase):
                 'is_hiding_presence': False,
                 'limits_private_thread_invites_to': 1,
                 'subscribe_to_started_threads': 2,
-                'subscribe_to_replied_threads': 1
+                'subscribe_to_replied_threads': 1,
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -478,7 +502,9 @@ class UserBanTests(AuthenticatedUserTestCase):
         override_acl(self.user, {'can_see_ban_details': 1})
 
         Ban.objects.create(
-            check_type=Ban.USERNAME, banned_value=self.other_user.username, user_message='Nope!'
+            check_type=Ban.USERNAME,
+            banned_value=self.other_user.username,
+            user_message='Nope!',
         )
 
         response = self.client.get(self.link)
@@ -610,9 +636,11 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         )
 
         response = self.client.post(
-            self.link, json.dumps({
+            self.link,
+            json.dumps({
                 'with_content': True
-            }), content_type="application/json"
+            }),
+            content_type='application/json',
         )
         self.assertEqual(response.status_code, 200)
 
@@ -632,9 +660,11 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         )
 
         response = self.client.post(
-            self.link, json.dumps({
+            self.link,
+            json.dumps({
                 'with_content': False
-            }), content_type="application/json"
+            }),
+            content_type='application/json',
         )
         self.assertEqual(response.status_code, 200)
 

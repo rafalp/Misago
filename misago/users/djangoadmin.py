@@ -47,15 +47,9 @@ class UserAdminForm(forms.ModelForm):
         field.label = ''
         field.widget.render = self.render_edit_from_misago_link
 
-    # noinspection PyUnusedLocal
     def render_edit_from_misago_link(self, *args, **kwargs):
         """
         Composes an html hyperlink for the pseudo-field render.
-
-        `*args` and `**kwargs` arguments need to mimic widget `render()`
-        signature.
-
-        :rtype: str
         """
         text = _('Edit this user in Misago admin panel')
         link_html_template = ('<a href="{}" target="blank">' + text + '</a>')

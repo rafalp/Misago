@@ -58,7 +58,10 @@ class InvalidateBansTests(TestCase):
 
         # expire bans
         expired_date = (timezone.now() - timedelta(days=10))
-        Ban.objects.all().update(expires_on=expired_date, is_checked=True)
+        Ban.objects.all().update(
+            expires_on=expired_date,
+            is_checked=True,
+        )
         BanCache.objects.all().update(expires_on=expired_date)
 
         # invalidate expired ban cache

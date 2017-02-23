@@ -67,7 +67,8 @@ def clean_posts_for_merge(request, thread):
     elif len(posts_ids) > MERGE_LIMIT:
         message = ungettext(
             "No more than %(limit)s post can be merged at single time.",
-            "No more than %(limit)s posts can be merged at single time.", MERGE_LIMIT
+            "No more than %(limit)s posts can be merged at single time.",
+            MERGE_LIMIT,
         )
         raise MergeError(message % {'limit': MERGE_LIMIT})
 

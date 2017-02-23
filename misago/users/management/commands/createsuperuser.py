@@ -31,19 +31,19 @@ class Command(BaseCommand):
             '--username',
             dest='username',
             default=None,
-            help='Specifies the username for the superuser.'
+            help="Specifies the username for the superuser.",
         )
         parser.add_argument(
             '--email',
             dest='email',
             default=None,
-            help='Specifies the username for the superuser.'
+            help="Specifies the username for the superuser.",
         )
         parser.add_argument(
             '--password',
             dest='password',
             default=None,
-            help='Specifies the username for the superuser.'
+            help="Specifies the username for the superuser.",
         )
         parser.add_argument(
             '--noinput',
@@ -51,21 +51,20 @@ class Command(BaseCommand):
             dest='interactive',
             default=True,
             help=(
-                'Tells Misago to NOT prompt the user for input '
-                'of any kind. You must use --username with '
-                '--noinput, along with an option for any other '
-                'required field. Superusers created with '
-                '--noinput will  not be able to log in until '
-                'they\'re given a valid password.'
-            )
+                "Tells Misago to NOT prompt the user for input "
+                "of any kind. You must use --username with "
+                "--noinput, along with an option for any other "
+                "required field. Superusers created with "
+                "--noinput will  not be able to log in until "
+                "they're given a valid password."
+            ),
         )
         parser.add_argument(
             '--database',
             action='store',
             dest='database',
             default=DEFAULT_DB_ALIAS,
-            help=('Specifies the database to use. '
-                  'Default is "default".')
+            help=('Specifies the database to use. Default is "default".'),
         )
 
     def execute(self, *args, **options):

@@ -85,7 +85,7 @@ class AdminAuthenticationForm(AuthenticationForm):
 
     def __init__(self, *args, **kwargs):
         self.error_messages.update({
-            'not_staff': _("Your account does not have admin privileges.")
+            'not_staff': _("Your account does not have admin privileges."),
         })
 
         super(AdminAuthenticationForm, self).__init__(*args, **kwargs)

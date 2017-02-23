@@ -103,7 +103,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
     def test_search_disabled(self):
         """api respects disabled users visibility"""
         disabled_user = UserModel.objects.create_user(
-            'DisabledUser', 'visible@te.com', 'Pass.123', is_active=False
+            'DisabledUser',
+            'visible@te.com',
+            'Pass.123',
+            is_active=False,
         )
 
         response = self.client.get('%s?q=DisabledUser' % self.api_link)
@@ -137,4 +140,8 @@ class SearchProviderApiTests(SearchApiTests):
     def setUp(self):
         super(SearchProviderApiTests, self).setUp()
 
-        self.api_link = reverse('misago:api:search', kwargs={'search_provider': 'users'})
+        self.api_link = reverse(
+            'misago:api:search', kwargs={
+                'search_provider': 'users',
+            }
+        )

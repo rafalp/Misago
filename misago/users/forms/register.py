@@ -27,7 +27,7 @@ class RegisterForm(forms.Form):
                 user=UserModel(
                     username=cleaned_data.get('username'),
                     email=cleaned_data.get('email'),
-                )
+                ),
             )
 
     def clean(self):

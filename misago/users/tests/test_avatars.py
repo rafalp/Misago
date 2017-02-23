@@ -84,7 +84,7 @@ class AvatarsStoreTests(TestCase):
 
 class AvatarSetterTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user('Bob', 'kontakt@rpiton.com', 'pass123')
+        self.user = UserModel.objects.create_user('Bob', 'kontakt@example.com', 'pass123')
 
         self.user.avatars = None
         self.user.save()
@@ -158,6 +158,7 @@ class AvatarSetterTests(TestCase):
         gibberish_email = '%s@%s.%s' % (
             get_random_string(6), get_random_string(6), get_random_string(3)
         )
+
         self.user.set_email(gibberish_email)
         self.user.save()
 

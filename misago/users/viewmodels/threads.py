@@ -16,7 +16,9 @@ class UserThreads(object):
         threads_queryset = self.get_threads_queryset(request, threads_categories, profile)
 
         posts_queryset = self.get_posts_queryset(request.user, profile, threads_queryset).filter(
-            is_event=False, is_hidden=False, is_unapproved=False
+            is_event=False,
+            is_hidden=False,
+            is_unapproved=False,
         ).order_by('-id')
 
         list_page = paginate(
@@ -51,7 +53,7 @@ class UserThreads(object):
 
     def get_posts_queryset(self, user, profile, threads_queryset):
         return profile.post_set.select_related('thread', 'poster').filter(
-            id__in=threads_queryset.values('first_post_id')
+            id__in=threads_queryset.values('first_post_id'),
         )
 
     def get_frontend_context(self):
@@ -64,7 +66,10 @@ class UserThreads(object):
         return context
 
     def get_template_context(self):
-        return {'posts': self.posts, 'paginator': self.paginator}
+        return {
+            'posts': self.posts,
+            'paginator': self.paginator,
+        }
 
 
 UserFeedSerializer = FeedSerializer.exclude_fields('poster')

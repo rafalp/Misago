@@ -19,11 +19,9 @@ from .bans import get_email_ban, get_username_ban
 USERNAME_RE = re.compile(r'^[0-9a-z]+$', re.IGNORECASE)
 
 UserModel = get_user_model()
-"""
-Email validators
-"""
 
 
+# E-mail validators
 def validate_email_available(value, exclude=None):
     try:
         user = UserModel.objects.get_by_email(value)
@@ -50,11 +48,7 @@ def validate_email(value, exclude=None):
     validate_email_banned(value)
 
 
-"""
-Username validators
-"""
-
-
+# Username validators
 def validate_username_available(value, exclude=None):
     try:
         user = UserModel.objects.get_by_username(value)
@@ -105,9 +99,7 @@ def validate_username(value, exclude=None):
     validate_username_banned(value)
 
 
-"""
-New account validators
-"""
+# New account validators
 SFS_API_URL = u'http://api.stopforumspam.org/api?email=%(email)s&ip=%(ip)s&f=json&confidence'  # noqa
 
 
@@ -144,11 +136,7 @@ def validate_gmail_email(request, form, cleaned_data):
         form.add_error('email', ValidationError(_("This email is not allowed.")))
 
 
-"""
-Registration validation
-"""
-
-
+# Registration validation
 def load_registration_validators(validators):
     loaded_validators = []
     for path in validators:

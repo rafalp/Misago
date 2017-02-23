@@ -31,7 +31,10 @@ class ValidateEmailAvailableTests(TestCase):
 
 class ValidateEmailBannedTests(TestCase):
     def setUp(self):
-        Ban.objects.create(check_type=Ban.EMAIL, banned_value="ban@test.com")
+        Ban.objects.create(
+            check_type=Ban.EMAIL,
+            banned_value="ban@test.com",
+        )
 
     def test_unbanned_name(self):
         """unbanned email passes validation"""
@@ -76,7 +79,10 @@ class ValidateUsernameAvailableTests(TestCase):
 
 class ValidateUsernameBannedTests(TestCase):
     def setUp(self):
-        Ban.objects.create(check_type=Ban.USERNAME, banned_value="Bob")
+        Ban.objects.create(
+            check_type=Ban.USERNAME,
+            banned_value="Bob",
+        )
 
     def test_unbanned_name(self):
         """unbanned name passes validation"""

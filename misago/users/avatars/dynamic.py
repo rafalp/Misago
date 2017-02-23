@@ -37,7 +37,7 @@ def draw_default(user):
 COLOR_WHEEL = (
     '#d32f2f', '#c2185b', '#7b1fa2', '#512da8', '#303f9f', '#1976d2', '#0288D1', '#0288d1',
     '#0097a7', '#00796b', '#388e3c', '#689f38', '#afb42b', '#fbc02d', '#ffa000', '#f57c00',
-    '#e64a19'
+    '#e64a19',
 )
 COLOR_WHEEL_LEN = len(COLOR_WHEEL)
 
@@ -68,7 +68,7 @@ def draw_avatar_flavour(user, image):
     font = ImageFont.truetype(FONT_FILE, size=size)
 
     text_size = font.getsize(string)
-    text_pos = ((image_size - text_size[0]) / 2, (image_size - text_size[1]) / 2)
+    text_pos = ((image_size - text_size[0]) / 2, (image_size - text_size[1]) / 2, )
 
     writer = ImageDraw.Draw(image)
     writer.text(text_pos, string, font=font)

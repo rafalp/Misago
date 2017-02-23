@@ -22,7 +22,7 @@ class DjangoAdminAuthTests(AdminTestCase):
             data={
                 'username': self.user.email,
                 'password': self.USER_PASSWORD,
-            }
+            },
         )
         self.assertEqual(response.status_code, 302)
 

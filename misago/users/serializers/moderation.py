@@ -28,8 +28,10 @@ class ModerateSignatureSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = [
-            'signature', 'is_signature_locked', 'signature_lock_user_message',
-            'signature_lock_staff_message'
+            'signature',
+            'is_signature_locked',
+            'signature_lock_user_message',
+            'signature_lock_staff_message',
         ]
 
     def validate_signature(self, value):
@@ -38,7 +40,8 @@ class ModerateSignatureSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 ungettext(
                     "Signature can't be longer than %(limit)s character.",
-                    "Signature can't be longer than %(limit)s characters.", length_limit
+                    "Signature can't be longer than %(limit)s characters.",
+                    length_limit,
                 ) % {'limit': length_limit}
             )
 

@@ -1,12 +1,3 @@
-import base64
-from hashlib import sha256
-from time import time
-
-from django.conf import settings
-from django.utils import six
-from django.utils.encoding import force_bytes
-
-
 """
 Token creation
 
@@ -16,6 +7,13 @@ Token is base encoded string containing three values:
 - hash unique for current state of user model
 - token checksum for discovering manipulations
 """
+import base64
+from hashlib import sha256
+from time import time
+
+from django.conf import settings
+from django.utils import six
+from django.utils.encoding import force_bytes
 
 
 def make(user, token_type):
@@ -63,9 +61,7 @@ def _make_checksum(obfuscated):
     return sha256(force_bytes('%s:%s' % (settings.SECRET_KEY, obfuscated))).hexdigest()[:8]
 
 
-"""
-Convenience functions for activation token
-"""
+# Convenience functions for activation token
 ACTIVATION_TOKEN = 'activation'
 
 
@@ -77,9 +73,7 @@ def is_activation_token_valid(user, token):
     return is_valid(user, ACTIVATION_TOKEN, token)
 
 
-"""
-Convenience functions for password change token
-"""
+# Convenience functions for password change token
 PASSWORD_CHANGE_TOKEN = 'change_password'
 
 

@@ -63,6 +63,8 @@ class UsernameChangesViewSet(viewsets.GenericViewSet):
         list_page = paginate(queryset, page, 12, 4)
 
         data = pagination_dict(list_page)
-        data.update({'results': UsernameChangeSerializer(list_page.object_list, many=True).data})
+        data.update({
+            'results': UsernameChangeSerializer(list_page.object_list, many=True).data,
+        })
 
         return Response(data)

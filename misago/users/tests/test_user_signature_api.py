@@ -56,7 +56,12 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         self.user.is_signature_locked = False
         self.user.save()
 
-        response = self.client.post(self.link, data={'signature': ''})
+        response = self.client.post(
+            self.link,
+            data={
+                'signature': '',
+            },
+        )
         self.assertEqual(response.status_code, 200)
 
         self.assertFalse(response.json()['signature'])
@@ -70,7 +75,12 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         self.user.is_signature_locked = False
         self.user.save()
 
-        response = self.client.post(self.link, data={'signature': 'abcd' * 1000})
+        response = self.client.post(
+            self.link,
+            data={
+                'signature': 'abcd' * 1000,
+            },
+        )
         self.assertContains(response, 'too long', status_code=400)
 
     def test_post_good_signature(self):
@@ -82,7 +92,12 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         self.user.is_signature_locked = False
         self.user.save()
 
-        response = self.client.post(self.link, data={'signature': 'Hello, **bros**!'})
+        response = self.client.post(
+            self.link,
+            data={
+                'signature': 'Hello, **bros**!',
+            },
+        )
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(

@@ -82,15 +82,13 @@ def _set_user_ban_cache(user):
     return ban_cache
 
 
-"""
-Utility for checking if request came from banned IP
-
-This check may be performed frequently, which is why there is extra
-boilerplate that caches ban check result in session
-"""
-
-
 def get_request_ip_ban(request):
+    """
+    Utility for checking if request came from banned IP
+
+    This check may be performed frequently, which is why there is extra
+    boilerplate that caches ban check result in session
+    """
     session_ban_cache = _get_session_bancache(request)
     if session_ban_cache:
         if session_ban_cache['is_banned']:
@@ -148,11 +146,7 @@ def _hydrate_session_cache(ban_cache):
     return hydrated
 
 
-"""
-Utilities for front-end based bans
-"""
-
-
+# Utilities for front-end based bans
 def ban_user(user, user_message=None, staff_message=None, length=None, expires_on=None):
     if not expires_on and length:
         expires_on = timezone.now() + timedelta(**length)

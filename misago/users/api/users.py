@@ -280,7 +280,25 @@ class UserViewSet(viewsets.GenericViewSet):
 
 
 UserProfileSerializer = UserSerializer.subset_fields(
-    'id', 'username', 'slug', 'email', 'joined_on', 'rank', 'title', 'avatars', 'is_avatar_locked',
-    'signature', 'is_signature_locked', 'followers', 'following', 'threads', 'posts', 'acl',
-    'is_followed', 'is_blocked', 'status', 'absolute_url', 'api_url'
+    'id',
+    'username',
+    'slug',
+    'email',
+    'joined_on',
+    'rank',
+    'title',
+    'avatars',
+    'is_avatar_locked',
+    'signature',
+    'is_signature_locked',
+    'followers',
+    'following',
+    'threads',
+    'posts',
+    'acl',
+    'is_followed',
+    'is_blocked',
+    'status',
+    'absolute_url',
+    'api_url',
 )

@@ -111,8 +111,7 @@ class UsersList(UserAdmin, generic.ListView):
 
             mail_users(request, inactive_users, mail_subject, 'misago/emails/activation/by_admin')
 
-            message = _("Selected users accounts have been activated.")
-            messages.success(request, message)
+            messages.success(request, _("Selected users accounts have been activated."))
 
     def action_ban(self, request, users):
         users = users.order_by('slug')
@@ -132,7 +131,7 @@ class UsersList(UserAdmin, generic.ListView):
                 ban_kwargs = {
                     'user_message': cleaned_data.get('user_message'),
                     'staff_message': cleaned_data.get('staff_message'),
-                    'expires_on': cleaned_data.get('expires_on')
+                    'expires_on': cleaned_data.get('expires_on'),
                 }
 
                 for user in users:
@@ -179,8 +178,7 @@ class UsersList(UserAdmin, generic.ListView):
                             banned_values.append(banned_value)
 
                 Ban.objects.invalidate_cache()
-                message = _("Selected users have been banned.")
-                messages.success(request, message)
+                messages.success(request, _("Selected users have been banned."))
                 return None
 
         return self.render(
@@ -195,9 +193,8 @@ class UsersList(UserAdmin, generic.ListView):
     def action_delete_accounts(self, request, users):
         for user in users:
             if user.is_staff or user.is_superuser:
-                message = _("%(user)s is admin and can't be deleted.")
-                mesage = message % {'user': user.username}
-                raise generic.MassActionError(mesage)
+                message = _("%(user)s is admin and can't be deleted.") % {'user': user.username}
+                raise generic.MassActionError(message)
 
         for user in users:
             user.delete()
@@ -208,15 +205,13 @@ class UsersList(UserAdmin, generic.ListView):
     def action_delete_all(self, request, users):
         for user in users:
             if user.is_staff or user.is_superuser:
-                message = _("%(user)s is admin and can't be deleted.")
-                mesage = message % {'user': user.username}
-                raise generic.MassActionError(mesage)
+                message = _("%(user)s is admin and can't be deleted.") % {'user': user.username}
+                raise generic.MassActionError(message)
 
         for user in users:
             user.delete(delete_content=True)
 
-        message = _("Selected users and their content has been deleted.")
-        messages.success(request, message)
+        messages.success(request, _("Selected users and their content has been deleted."))
 
         return self.render(
             request, template='misago/admin/users/delete.html', context={
@@ -318,7 +313,8 @@ class DeletionStep(UserAdmin, generic.ButtonView):
 
     def execute_step(self, user):
         raise NotImplementedError(
-            "execute_step method should return dict with number of deleted_count and is_completed keys"
+            "execute_step method should return dict with "
+            "number of deleted_count and is_completed keys"
         )
 
     def button_action(self, request, target):
@@ -345,7 +341,10 @@ class DeleteThreadsStep(DeletionStep):
         else:
             is_completed = True
 
-        return {'deleted_count': deleted_threads, 'is_completed': is_completed}
+        return {
+            'deleted_count': deleted_threads,
+            'is_completed': is_completed,
+        }
 
 
 class DeletePostsStep(DeletionStep):
@@ -375,7 +374,10 @@ class DeletePostsStep(DeletionStep):
         else:
             is_completed = True
 
-        return {'deleted_count': deleted_posts, 'is_completed': is_completed}
+        return {
+            'deleted_count': deleted_posts,
+            'is_completed': is_completed,
+        }
 
 
 class DeleteAccountStep(DeletionStep):

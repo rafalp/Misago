@@ -56,7 +56,10 @@ class ActivePostersTests(UsersListTestCase):
         # Create 50 test users and see if errors appeared
         for i in range(50):
             user = UserModel.objects.create_user(
-                'Bob%s' % i, 'm%s@te.com' % i, 'Pass.123', posts=12345
+                'Bob%s' % i,
+                'm%s@te.com' % i,
+                'Pass.123',
+                posts=12345,
             )
             post_thread(category, poster=user)
 
@@ -75,7 +78,12 @@ class UsersRankTests(UsersListTestCase):
             rank_user.rank = rank
             rank_user.save()
 
-            rank_link = reverse('misago:users-rank', kwargs={'slug': rank.slug})
+            rank_link = reverse(
+                'misago:users-rank',
+                kwargs={
+                    'slug': rank.slug,
+                },
+            )
             response = self.client.get(rank_link)
 
             if rank.is_tab:
@@ -87,14 +95,22 @@ class UsersRankTests(UsersListTestCase):
     def test_disabled_users(self):
         """ranks lists excludes disabled accounts"""
         rank_user = UserModel.objects.create_user(
-            'Visible', 'visible@te.com', 'Pass.123', is_active=False
+            'Visible',
+            'visible@te.com',
+            'Pass.123',
+            is_active=False,
         )
 
         for rank in Rank.objects.iterator():
             rank_user.rank = rank
             rank_user.save()
 
-            rank_link = reverse('misago:users-rank', kwargs={'slug': rank.slug})
+            rank_link = reverse(
+                'misago:users-rank',
+                kwargs={
+                    'slug': rank.slug,
+                },
+            )
             response = self.client.get(rank_link)
 
             if rank.is_tab:
@@ -109,14 +125,22 @@ class UsersRankTests(UsersListTestCase):
         self.user.save()
 
         rank_user = UserModel.objects.create_user(
-            'Visible', 'visible@te.com', 'Pass.123', is_active=False
+            'Visible',
+            'visible@te.com',
+            'Pass.123',
+            is_active=False,
         )
 
         for rank in Rank.objects.iterator():
             rank_user.rank = rank
             rank_user.save()
 
-            rank_link = reverse('misago:users-rank', kwargs={'slug': rank.slug})
+            rank_link = reverse(
+                'misago:users-rank',
+                kwargs={
+                    'slug': rank.slug,
+                },
+            )
             response = self.client.get(rank_link)
 
             if rank.is_tab:

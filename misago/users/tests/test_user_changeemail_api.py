@@ -37,16 +37,22 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
     def test_invalid_password(self):
         """api errors correctly for invalid password"""
         response = self.client.post(
-            self.link, data={'new_email': 'new@email.com',
-                             'password': 'Lor3mIpsum'}
+            self.link,
+            data={
+                'new_email': 'new@email.com',
+                'password': 'Lor3mIpsum',
+            },
         )
         self.assertContains(response, 'password is invalid', status_code=400)
 
     def test_invalid_input(self):
         """api errors correctly for invalid input"""
         response = self.client.post(
-            self.link, data={'new_email': '',
-                             'password': self.USER_PASSWORD}
+            self.link,
+            data={
+                'new_email': '',
+                'password': self.USER_PASSWORD,
+            },
         )
 
         self.assertEqual(response.status_code, 400)
@@ -55,8 +61,11 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
         })
 
         response = self.client.post(
-            self.link, data={'new_email': 'newmail',
-                             'password': self.USER_PASSWORD}
+            self.link,
+            data={
+                'new_email': 'newmail',
+                'password': self.USER_PASSWORD,
+            },
         )
 
         self.assertEqual(response.status_code, 400)
@@ -69,8 +78,11 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
         UserModel.objects.create_user('BobBoberson', 'new@email.com', 'Pass.123')
 
         response = self.client.post(
-            self.link, data={'new_email': 'new@email.com',
-                             'password': self.USER_PASSWORD}
+            self.link,
+            data={
+                'new_email': 'new@email.com',
+                'password': self.USER_PASSWORD,
+            },
         )
         self.assertContains(response, 'not available', status_code=400)
 
@@ -79,8 +91,11 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
         new_email = 'new@email.com'
 
         response = self.client.post(
-            self.link, data={'new_email': new_email,
-                             'password': self.USER_PASSWORD}
+            self.link,
+            data={
+                'new_email': new_email,
+                'password': self.USER_PASSWORD,
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -93,7 +108,12 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
             self.fail("E-mail sent didn't contain confirmation url")
 
         response = self.client.get(
-            reverse('misago:options-confirm-email-change', kwargs={'token': token})
+            reverse(
+                'misago:options-confirm-email-change',
+                kwargs={
+                    'token': token,
+                },
+            )
         )
 
         self.assertEqual(response.status_code, 200)

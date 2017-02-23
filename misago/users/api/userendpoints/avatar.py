@@ -20,11 +20,13 @@ def avatar_endpoint(request, pk=None):
         else:
             reason = None
 
-        return Response({
-            'detail': _("Your avatar is locked. You can't change it."),
-            'reason': reason
-        },
-                        status=status.HTTP_403_FORBIDDEN)
+        return Response(
+            {
+                'detail': _("Your avatar is locked. You can't change it."),
+                'reason': reason,
+            },
+            status=status.HTTP_403_FORBIDDEN,
+        )
 
     avatar_options = get_avatar_options(request.user)
     if request.method == 'POST':
@@ -41,7 +43,7 @@ def get_avatar_options(user):
         'crop_src': False,
         'crop_tmp': False,
         'upload': False,
-        'galleries': False
+        'galleries': False,
     }
 
     # Allow existing galleries
@@ -50,8 +52,14 @@ def get_avatar_options(user):
         for gallery in avatars.gallery.get_available_galleries():
             gallery_images = []
             for image in gallery['images']:
-                gallery_images.append({'id': image.id, 'url': image.url})
-            options['galleries'].append({'name': gallery['name'], 'images': gallery_images})
+                gallery_images.append({
+                    'id': image.id,
+                    'url': image.url,
+                })
+            options['galleries'].append({
+                'name': gallery['name'],
+                'images': gallery_images,
+            })
 
     # Can't have custom avatar?
     if not settings.allow_custom_avatars:
@@ -66,7 +74,7 @@ def get_avatar_options(user):
             options['crop_src'] = {
                 'url': user.avatar_src.url,
                 'crop': json.loads(user.avatar_crop),
-                'size': max(settings.MISAGO_AVATARS_SIZES)
+                'size': max(settings.MISAGO_AVATARS_SIZES),
             }
         except (TypeError, ValueError):
             pass
@@ -75,7 +83,7 @@ def get_avatar_options(user):
     if avatars.uploaded.has_temporary_avatar(user):
         options['crop_tmp'] = {
             'url': user.avatar_tmp.url,
-            'size': max(settings.MISAGO_AVATARS_SIZES)
+            'size': max(settings.MISAGO_AVATARS_SIZES),
         }
 
     # Allow upload conditions
@@ -96,19 +104,31 @@ def avatar_post(options, user, data):
     try:
         type_options = options[data.get('avatar', 'nope')]
         if not type_options:
-            return Response({
-                'detail': _("This avatar type is not allowed.")
-            },
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    'detail': _("This avatar type is not allowed."),
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         rpc_handler = AVATAR_TYPES[data.get('avatar', 'nope')]
     except KeyError:
-        return Response({'detail': _("Unknown avatar type.")}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {
+                'detail': _("Unknown avatar type."),
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     try:
         response_dict = {'detail': rpc_handler(user, data)}
     except AvatarError as e:
-        return Response({'detail': e.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {
+                'detail': e.args[0],
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     user.save()
 
@@ -206,7 +226,10 @@ def moderate_avatar_endpoint(request, profile):
                 'avatar_lock_staff_message': profile.avatar_lock_staff_message,
             })
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
     else:
         return Response({
             'is_avatar_locked': int(profile.is_avatar_locked),

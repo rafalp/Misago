@@ -42,9 +42,14 @@ def login(request):
     form = AuthenticationForm(request, data=request.data)
     if form.is_valid():
         auth.login(request, form.user_cache)
-        return Response(AuthenticatedUserSerializer(form.user_cache).data)
+        return Response(
+            AuthenticatedUserSerializer(form.user_cache).data,
+        )
     else:
-        return Response(form.get_errors_dict(), status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            form.get_errors_dict(),
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 """
@@ -101,21 +106,30 @@ def send_activation(request):
     if form.is_valid():
         requesting_user = form.user_cache
 
-        mail_subject = _("Activate %(user)s account on %(forum_name)s forums")
-        subject_formats = {
+        mail_subject = _("Activate %(user)s account on %(forum_name)s forums") % {
             'user': requesting_user.username,
             'forum_name': settings.forum_name,
         }
-        mail_subject = mail_subject % subject_formats
 
         mail_user(
-            request, requesting_user, mail_subject, 'misago/emails/activation/by_user',
-            {'activation_token': make_activation_token(requesting_user)}
+            request,
+            requesting_user,
+            mail_subject,
+            'misago/emails/activation/by_user',
+            {
+                'activation_token': make_activation_token(requesting_user),
+            },
         )
 
-        return Response({'username': form.user_cache.username, 'email': form.user_cache.email})
+        return Response({
+            'username': form.user_cache.username,
+            'email': form.user_cache.email,
+        })
     else:
-        return Response(form.get_errors_dict(), status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            form.get_errors_dict(),
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 """
@@ -132,23 +146,32 @@ def send_password_form(request):
     if form.is_valid():
         requesting_user = form.user_cache
 
-        mail_subject = _("Change %(user)s password on %(forum_name)s forums")
-        subject_formats = {
+        mail_subject = _("Change %(user)s password on %(forum_name)s forums") % {
             'user': requesting_user.username,
             'forum_name': settings.forum_name,
         }
-        mail_subject = mail_subject % subject_formats
 
         confirmation_token = make_password_change_token(requesting_user)
 
         mail_user(
-            request, requesting_user, mail_subject, 'misago/emails/change_password_form_link',
-            {'confirmation_token': confirmation_token}
+            request,
+            requesting_user,
+            mail_subject,
+            'misago/emails/change_password_form_link',
+            {
+                'confirmation_token': confirmation_token,
+            },
         )
 
-        return Response({'username': form.user_cache.username, 'email': form.user_cache.email})
+        return Response({
+            'username': form.user_cache.username,
+            'email': form.user_cache.email,
+        })
     else:
-        return Response(form.get_errors_dict(), status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            form.get_errors_dict(),
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 """
@@ -184,7 +207,12 @@ def change_forgotten_password(request, pk, token):
         if get_user_ban(user):
             raise PasswordChangeFailed(expired_message)
     except PasswordChangeFailed as e:
-        return Response({'detail': e.args[0]}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {
+                'detail': e.args[0],
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     try:
         new_password = request.data.get('password', '').strip()
@@ -192,6 +220,11 @@ def change_forgotten_password(request, pk, token):
         user.set_password(new_password)
         user.save()
     except ValidationError as e:
-        return Response({'detail': e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {
+                'detail': e.messages[0],
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     return Response({'username': user.username})

@@ -14,7 +14,10 @@ __all__ = [
 
 def serialize_message(message):
     if message:
-        return {'plain': message, 'html': format_plaintext_for_html(message)}
+        return {
+            'plain': message,
+            'html': format_plaintext_for_html(message),
+        }
     else:
         return None
 

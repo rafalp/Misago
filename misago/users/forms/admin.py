@@ -189,7 +189,8 @@ class EditUserForm(UserBaseForm):
             raise forms.ValidationError(
                 ungettext(
                     "Signature can't be longer than %(limit)s character.",
-                    "Signature can't be longer than %(limit)s characters.", length_limit
+                    "Signature can't be longer than %(limit)s characters.",
+                    length_limit,
                 ) % {'limit': length_limit}
             )
 

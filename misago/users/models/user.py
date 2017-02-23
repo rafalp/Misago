@@ -196,10 +196,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active_staff_message = models.TextField(null=True, blank=True)
 
     avatar_tmp = models.ImageField(
-        max_length=255, upload_to=avatars.store.upload_to, null=True, blank=True
+        max_length=255,
+        upload_to=avatars.store.upload_to,
+        null=True,
+        blank=True,
     )
     avatar_src = models.ImageField(
-        max_length=255, upload_to=avatars.store.upload_to, null=True, blank=True
+        max_length=255,
+        upload_to=avatars.store.upload_to,
+        null=True,
+        blank=True,
     )
     avatar_crop = models.CharField(max_length=255, null=True, blank=True)
     avatars = JSONField(null=True, blank=True)
@@ -236,10 +242,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     sync_unread_private_threads = models.BooleanField(default=False)
 
     subscribe_to_started_threads = models.PositiveIntegerField(
-        default=SUBSCRIBE_NONE, choices=SUBSCRIBE_CHOICES
+        default=SUBSCRIBE_NONE,
+        choices=SUBSCRIBE_CHOICES,
     )
     subscribe_to_replied_threads = models.PositiveIntegerField(
-        default=SUBSCRIBE_NONE, choices=SUBSCRIBE_CHOICES
+        default=SUBSCRIBE_NONE,
+        choices=SUBSCRIBE_CHOICES,
     )
 
     threads = models.PositiveIntegerField(default=0)

@@ -51,7 +51,8 @@ def thread_merge_endpoint(request, thread, viewmodel):
         return Response({
             'detail':
                 _(
-                    "The thread you have entered link to doesn't exist or you don't have permission to see it."
+                    "The thread you have entered link to doesn't "
+                    "exist or you don't have permission to see it."
                 )
         },
                         status=400)
@@ -146,7 +147,8 @@ def clean_threads_for_merge(request):
     elif len(threads_ids) > MERGE_LIMIT:
         message = ungettext(
             "No more than %(limit)s thread can be merged at single time.",
-            "No more than %(limit)s threads can be merged at single time.", MERGE_LIMIT
+            "No more than %(limit)s threads can be merged at single time.",
+            MERGE_LIMIT,
         )
         raise MergeError(message % {'limit': MERGE_LIMIT})
 

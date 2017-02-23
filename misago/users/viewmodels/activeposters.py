@@ -17,14 +17,14 @@ class ActivePosters(object):
         return {
             'tracked_period': self.tracked_period,
             'results': ScoredUserSerializer(self.users, many=True).data,
-            'count': self.count
+            'count': self.count,
         }
 
     def get_template_context(self):
         return {
             'tracked_period': self.tracked_period,
             'users': self.users,
-            'users_count': self.count
+            'users_count': self.count,
         }
 
 

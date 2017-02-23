@@ -19,14 +19,16 @@ class ValidateChoicesNum(object):
         if self.min_choices and self.min_choices > data_len:
             message = ungettext(
                 'You have to select at least %(choices)d option.',
-                'You have to select at least %(choices)d options.', self.min_choices
+                'You have to select at least %(choices)d options.',
+                self.min_choices,
             )
             raise forms.ValidationError(message % {'choices': self.min_choices})
 
         if self.max_choices and self.max_choices < data_len:
             message = ungettext(
                 'You cannot select more than %(choices)d option.',
-                'You cannot select more than %(choices)d options.', self.max_choices
+                'You cannot select more than %(choices)d options.',
+                self.max_choices,
             )
             raise forms.ValidationError(message % {'choices': self.max_choices})
 
@@ -149,7 +151,10 @@ def ChangeSettingsForm(data=None, group=None):
     for setting in group.setting_set.order_by('order'):
         if setting.legend and setting.legend != fieldset_legend:
             if fieldset_fields:
-                fieldsets.append({'legend': fieldset_legend, 'form': fieldset_form(data)})
+                fieldsets.append({
+                    'legend': fieldset_legend,
+                    'form': fieldset_form(data),
+                })
             fieldset_legend = setting.legend
             fieldset_form = FormType
             fieldset_fields = False
@@ -157,6 +162,9 @@ def ChangeSettingsForm(data=None, group=None):
         fieldset_form = setting_field(fieldset_form, setting)
 
     if fieldset_fields:
-        fieldsets.append({'legend': fieldset_legend, 'form': fieldset_form(data)})
+        fieldsets.append({
+            'legend': fieldset_legend,
+            'form': fieldset_form(data),
+        })
 
     return fieldsets

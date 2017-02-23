@@ -23,7 +23,9 @@ def activation_view(f):
 
 @activation_view
 def request_activation(request):
-    request.frontend_context.update({'SEND_ACTIVATION_API': reverse('misago:api:send-activation')})
+    request.frontend_context.update({
+        'SEND_ACTIVATION_API': reverse('misago:api:send-activation'),
+    })
     return render(request, 'misago/activation/request.html')
 
 
@@ -73,7 +75,7 @@ def activate_by_token(request, pk, token):
     return render(
         request, 'misago/activation/done.html', {
             'message': message % {
-                'user': inactive_user.username
+                'user': inactive_user.username,
             },
         }
     )

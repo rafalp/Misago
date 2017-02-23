@@ -147,10 +147,10 @@ class UserAvatarTests(AuthenticatedUserTestCase):
                         'x': 0,
                         'y': 0
                     },
-                    'zoom': 1
-                }
+                    'zoom': 1,
+                },
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
 
         response_json = response.json()
@@ -172,10 +172,10 @@ class UserAvatarTests(AuthenticatedUserTestCase):
                         'x': 0,
                         'y': 0
                     },
-                    'zoom': 1
-                }
+                    'zoom': 1,
+                },
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(response, "This avatar type is not allowed.", status_code=400)
 
@@ -188,10 +188,10 @@ class UserAvatarTests(AuthenticatedUserTestCase):
                         'x': 0,
                         'y': 0
                     },
-                    'zoom': 1
-                }
+                    'zoom': 1,
+                },
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(response, "Avatar was re-cropped.")
 
@@ -222,16 +222,20 @@ class UserAvatarTests(AuthenticatedUserTestCase):
 
         # no image id is handled
         response = self.client.post(
-            self.link, data={
+            self.link,
+            data={
                 'avatar': 'galleries',
-            }
+            },
         )
         self.assertContains(response, "Incorrect image.", status_code=400)
 
         # invalid id is handled
         response = self.client.post(
-            self.link, data={'avatar': 'galleries',
-                             'image': 'asdsadsadsa'}
+            self.link,
+            data={
+                'avatar': 'galleries',
+                'image': 'asdsadsadsa',
+            },
         )
         self.assertContains(response, "Incorrect image.", status_code=400)
 
@@ -244,8 +248,11 @@ class UserAvatarTests(AuthenticatedUserTestCase):
 
         test_avatar = options['galleries'][0]['images'][0]['id']
         response = self.client.post(
-            self.link, data={'avatar': 'galleries',
-                             'image': test_avatar + 5000}
+            self.link,
+            data={
+                'avatar': 'galleries',
+                'image': test_avatar + 5000,
+            },
         )
         self.assertContains(response, "Incorrect image.", status_code=400)
 
@@ -266,7 +273,13 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.assertTrue(options['galleries'])
 
         test_avatar = options['galleries'][0]['images'][0]['id']
-        response = self.client.post(self.link, data={'avatar': 'galleries', 'image': test_avatar})
+        response = self.client.post(
+            self.link,
+            data={
+                'avatar': 'galleries',
+                'image': test_avatar,
+            },
+        )
 
         self.assertContains(response, "Avatar from gallery was set.")
 
@@ -321,7 +334,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
                 'avatar_lock_user_message': "Test user message.",
                 'avatar_lock_staff_message': "Test staff message.",
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 200)
 
@@ -350,7 +363,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
                 'avatar_lock_user_message': None,
                 'avatar_lock_staff_message': None,
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 200)
 
@@ -378,7 +391,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
                 'avatar_lock_user_message': '',
                 'avatar_lock_staff_message': '',
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 200)
 
@@ -400,9 +413,11 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         })
 
         response = self.client.post(
-            self.link, json.dumps({
+            self.link,
+            json.dumps({
                 'is_avatar_locked': False,
-            }), content_type="application/json"
+            }),
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 200)
 

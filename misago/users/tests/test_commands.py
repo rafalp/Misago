@@ -9,12 +9,11 @@ UserModel = get_user_model()
 class CreateSuperUserTests(TestCase):
     def test_createsuperuser(self):
         """createsuperuser creates user account in perfect conditions"""
-
         opts = {
             'username': 'Boberson',
             'email': 'bob@test.com',
             'password': 'Pass.123',
-            'verbosity': 0
+            'verbosity': 0,
         }
 
         call_command('createsuperuser', **opts)

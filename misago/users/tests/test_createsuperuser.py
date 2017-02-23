@@ -11,20 +11,21 @@ class CreateSuperuserTests(TestCase):
     def test_create_superuser(self):
         """command creates superuser"""
         out = StringIO()
+
         call_command(
             "createsuperuser",
             interactive=False,
             username="joe",
             email="joe@somewhere.org",
             password="Pass.123",
-            stdout=out
+            stdout=out,
         )
 
         new_user = UserModel.objects.order_by('-id')[:1][0]
 
         self.assertEqual(
             out.getvalue().splitlines()[-1].strip(),
-            'Superuser #%s has been created successfully.' % new_user.pk
+            'Superuser #%s has been created successfully.' % new_user.pk,
         )
 
         self.assertEqual(new_user.username, 'joe')

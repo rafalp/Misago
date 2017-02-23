@@ -35,7 +35,7 @@ class BanAdminViewsTests(AdminTestCase):
                     'user_message': 'Lorem ipsum dolor met',
                     'staff_message': 'Sit amet elit',
                     'expires_on': test_date.isoformat(),
-                }
+                },
             )
             self.assertEqual(response.status_code, 302)
 
@@ -47,8 +47,10 @@ class BanAdminViewsTests(AdminTestCase):
 
         response = self.client.post(
             reverse('misago:admin:users:bans:index'),
-            data={'action': 'delete',
-                  'selected_items': bans_pks}
+            data={
+                'action': 'delete',
+                'selected_items': bans_pks,
+            },
         )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Ban.objects.count(), 0)
@@ -68,7 +70,7 @@ class BanAdminViewsTests(AdminTestCase):
                 'user_message': 'Lorem ipsum dolor met',
                 'staff_message': 'Sit amet elit',
                 'expires_on': test_date.isoformat(),
-            }
+            },
         )
         self.assertEqual(response.status_code, 302)
 
@@ -84,11 +86,16 @@ class BanAdminViewsTests(AdminTestCase):
             data={
                 'check_type': '0',
                 'banned_value': 'Admin',
-            }
+            },
         )
 
         test_ban = Ban.objects.get(banned_value='admin')
-        form_link = reverse('misago:admin:users:bans:edit', kwargs={'pk': test_ban.pk})
+        form_link = reverse(
+            'misago:admin:users:bans:edit',
+            kwargs={
+                'pk': test_ban.pk,
+            },
+        )
 
         response = self.client.post(
             form_link,
@@ -98,7 +105,7 @@ class BanAdminViewsTests(AdminTestCase):
                 'user_message': 'Lorem ipsum dolor met',
                 'staff_message': 'Sit amet elit',
                 'expires_on': '',
-            }
+            },
         )
         self.assertEqual(response.status_code, 302)
 
@@ -114,13 +121,18 @@ class BanAdminViewsTests(AdminTestCase):
             data={
                 'check_type': '0',
                 'banned_value': 'TestBan',
-            }
+            },
         )
 
         test_ban = Ban.objects.get(banned_value='testban')
 
         response = self.client.post(
-            reverse('misago:admin:users:bans:delete', kwargs={'pk': test_ban.pk})
+            reverse(
+                'misago:admin:users:bans:delete',
+                kwargs={
+                    'pk': test_ban.pk,
+                },
+            )
         )
         self.assertEqual(response.status_code, 302)
 

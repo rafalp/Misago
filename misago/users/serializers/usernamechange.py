@@ -18,5 +18,5 @@ class UsernameChangeSerializer(serializers.ModelSerializer):
         model = UsernameChange
         fields = (
             'id', 'user', 'changed_by', 'changed_by_username', 'changed_on', 'new_username',
-            'old_username'
+            'old_username',
         )

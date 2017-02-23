@@ -15,15 +15,15 @@ class AvatarServerTests(TestCase):
         self.user.avatars = [
             {
                 'size': 200,
-                'url': '/media/avatars/avatar-200.png'
+                'url': '/media/avatars/avatar-200.png',
             },
             {
                 'size': 100,
-                'url': '/media/avatars/avatar-100.png'
+                'url': '/media/avatars/avatar-100.png',
             },
             {
                 'size': 50,
-                'url': '/media/avatars/avatar-50.png'
+                'url': '/media/avatars/avatar-50.png',
             },
         ]
 
@@ -32,10 +32,11 @@ class AvatarServerTests(TestCase):
     def test_get_user_avatar_exact_size(self):
         """avatar server resolved valid avatar url for user"""
         avatar_url = reverse(
-            'misago:user-avatar', kwargs={
+            'misago:user-avatar',
+            kwargs={
                 'pk': self.user.pk,
                 'size': 100,
-            }
+            },
         )
 
         response = self.client.get(avatar_url)
@@ -46,10 +47,11 @@ class AvatarServerTests(TestCase):
     def test_get_user_avatar_inexact_size(self):
         """avatar server resolved valid avatar fallback for user"""
         avatar_url = reverse(
-            'misago:user-avatar', kwargs={
+            'misago:user-avatar',
+            kwargs={
                 'pk': self.user.pk,
                 'size': 150,
-            }
+            },
         )
 
         response = self.client.get(avatar_url)
@@ -60,10 +62,11 @@ class AvatarServerTests(TestCase):
     def test_get_notfound_user_avatar(self):
         """avatar server handles deleted user avatar requests"""
         avatar_url = reverse(
-            'misago:user-avatar', kwargs={
+            'misago:user-avatar',
+            kwargs={
                 'pk': self.user.pk + 1,
                 'size': 150,
-            }
+            },
         )
         response = self.client.get(avatar_url)
 

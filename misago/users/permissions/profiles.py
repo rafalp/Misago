@@ -95,7 +95,7 @@ def build_acl(acl, roles, key_name):
         can_see_ban_details=algebra.greater,
         can_see_users_emails=algebra.greater,
         can_see_users_ips=algebra.greater,
-        can_see_hidden_users=algebra.greater
+        can_see_hidden_users=algebra.greater,
     )
 
 

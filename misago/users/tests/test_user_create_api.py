@@ -46,12 +46,14 @@ class UserCreateTests(UserTestCase):
             data={
                 'username': user.username,
                 'email': 'loremipsum@dolor.met',
-                'password': 'LoremP4ssword'
-            }
+                'password': 'LoremP4ssword',
+            },
         )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {'username': ["This username is not available."]})
+        self.assertEqual(response.json(), {
+            'username': ["This username is not available."],
+        })
 
     def test_registration_validates_email(self):
         """api validates usernames"""
@@ -59,21 +61,27 @@ class UserCreateTests(UserTestCase):
 
         response = self.client.post(
             self.api_link,
-            data={'username': 'totallyNew',
-                  'email': user.email,
-                  'password': 'LoremP4ssword'}
+            data={
+                'username': 'totallyNew',
+                'email': user.email,
+                'password': 'LoremP4ssword',
+            },
         )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {'email': ["This e-mail address is not available."]})
+        self.assertEqual(response.json(), {
+            'email': ["This e-mail address is not available."],
+        })
 
     def test_registration_validates_password(self):
         """api uses django's validate_password to validate registrations"""
         response = self.client.post(
             self.api_link,
-            data={'username': 'Bob',
-                  'email': 'l.o.r.e.m.i.p.s.u.m@gmail.com',
-                  'password': '123'}
+            data={
+                'username': 'Bob',
+                'email': 'l.o.r.e.m.i.p.s.u.m@gmail.com',
+                'password': '123',
+            },
         )
 
         self.assertContains(response, "password is too short", status_code=400)
@@ -87,8 +95,8 @@ class UserCreateTests(UserTestCase):
             data={
                 'username': 'BobBoberson',
                 'email': 'l.o.r.e.m.i.p.s.u.m@gmail.com',
-                'password': 'BobBoberson'
-            }
+                'password': 'BobBoberson',
+            },
         )
 
         self.assertContains(response, "password is too similar to the username", status_code=400)
@@ -100,8 +108,8 @@ class UserCreateTests(UserTestCase):
             data={
                 'username': 'Bob',
                 'email': 'l.o.r.e.m.i.p.s.u.m@gmail.com',
-                'password': 'pas123'
-            }
+                'password': 'pas123',
+            },
         )
 
         self.assertContains(response, "email is not allowed", status_code=400)
@@ -111,9 +119,12 @@ class UserCreateTests(UserTestCase):
         settings.override_setting('account_activation', 'none')
 
         response = self.client.post(
-            self.api_link, data={'username': 'Bob',
-                                 'email': 'bob@bob.com',
-                                 'password': 'pass123'}
+            self.api_link,
+            data={
+                'username': 'Bob',
+                'email': 'bob@bob.com',
+                'password': 'pass123',
+            },
         )
 
         self.assertContains(response, 'active')
@@ -135,9 +146,12 @@ class UserCreateTests(UserTestCase):
         settings.override_setting('account_activation', 'user')
 
         response = self.client.post(
-            self.api_link, data={'username': 'Bob',
-                                 'email': 'bob@bob.com',
-                                 'password': 'pass123'}
+            self.api_link,
+            data={
+                'username': 'Bob',
+                'email': 'bob@bob.com',
+                'password': 'pass123',
+            },
         )
 
         self.assertContains(response, 'user')
@@ -154,9 +168,12 @@ class UserCreateTests(UserTestCase):
         settings.override_setting('account_activation', 'admin')
 
         response = self.client.post(
-            self.api_link, data={'username': 'Bob',
-                                 'email': 'bob@bob.com',
-                                 'password': 'pass123'}
+            self.api_link,
+            data={
+                'username': 'Bob',
+                'email': 'bob@bob.com',
+                'password': 'pass123',
+            },
         )
 
         self.assertContains(response, 'admin')

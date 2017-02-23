@@ -77,18 +77,26 @@ class UserAdminViewsTests(AdminTestCase):
         user_pks = []
         for i in range(10):
             test_user = UserModel.objects.create_user(
-                'Bob%s' % i, 'bob%s@test.com' % i, 'pass123', requires_activation=1
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+                requires_activation=1,
             )
             user_pks.append(test_user.pk)
 
         response = self.client.post(
             reverse('misago:admin:users:accounts:index'),
-            data={'action': 'activate',
-                  'selected_items': user_pks}
+            data={
+                'action': 'activate',
+                'selected_items': user_pks,
+            }
         )
         self.assertEqual(response.status_code, 302)
 
-        inactive_qs = UserModel.objects.filter(id__in=user_pks, requires_activation=1)
+        inactive_qs = UserModel.objects.filter(
+            id__in=user_pks,
+            requires_activation=1,
+        )
         self.assertEqual(inactive_qs.count(), 0)
         self.assertIn("has been activated", mail.outbox[0].subject)
 
@@ -97,14 +105,19 @@ class UserAdminViewsTests(AdminTestCase):
         user_pks = []
         for i in range(10):
             test_user = UserModel.objects.create_user(
-                'Bob%s' % i, 'bob%s@test.com' % i, 'pass123', requires_activation=1
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+                requires_activation=1,
             )
             user_pks.append(test_user.pk)
 
         response = self.client.post(
             reverse('misago:admin:users:accounts:index'),
-            data={'action': 'ban',
-                  'selected_items': user_pks}
+            data={
+                'action': 'ban',
+                'selected_items': user_pks,
+            }
         )
         self.assertEqual(response.status_code, 200)
 
@@ -114,8 +127,8 @@ class UserAdminViewsTests(AdminTestCase):
                 'action': 'ban',
                 'selected_items': user_pks,
                 'ban_type': ['usernames', 'emails', 'domains', 'ip', 'ip_first', 'ip_two'],
-                'finalize': ''
-            }
+                'finalize': '',
+            },
         )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Ban.objects.count(), 24)
@@ -125,14 +138,19 @@ class UserAdminViewsTests(AdminTestCase):
         user_pks = []
         for i in range(10):
             test_user = UserModel.objects.create_user(
-                'Bob%s' % i, 'bob%s@test.com' % i, 'pass123', requires_activation=1
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+                requires_activation=1,
             )
             user_pks.append(test_user.pk)
 
         response = self.client.post(
             reverse('misago:admin:users:accounts:index'),
-            data={'action': 'delete_accounts',
-                  'selected_items': user_pks}
+            data={
+                'action': 'delete_accounts',
+                'selected_items': user_pks,
+            }
         )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(UserModel.objects.count(), 1)
@@ -142,14 +160,19 @@ class UserAdminViewsTests(AdminTestCase):
         user_pks = []
         for i in range(10):
             test_user = UserModel.objects.create_user(
-                'Bob%s' % i, 'bob%s@test.com' % i, 'pass123', requires_activation=1
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+                requires_activation=1,
             )
             user_pks.append(test_user.pk)
 
         response = self.client.post(
             reverse('misago:admin:users:accounts:index'),
-            data={'action': 'delete_accounts',
-                  'selected_items': user_pks}
+            data={
+                'action': 'delete_accounts',
+                'selected_items': user_pks,
+            }
         )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(UserModel.objects.count(), 1)
@@ -170,7 +193,7 @@ class UserAdminViewsTests(AdminTestCase):
                 'roles': six.text_type(authenticated_role.pk),
                 'email': 'reg@stered.com',
                 'new_password': 'pass123',
-                'staff_level': '0'
+                'staff_level': '0',
             }
         )
         self.assertEqual(response.status_code, 302)
@@ -181,7 +204,11 @@ class UserAdminViewsTests(AdminTestCase):
     def test_edit_view(self):
         """edit user view changes account"""
         test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
-        test_link = reverse('misago:admin:users:accounts:edit', kwargs={'pk': test_user.pk})
+        test_link = reverse(
+            'misago:admin:users:accounts:edit', kwargs={
+                'pk': test_user.pk,
+            }
+        )
 
         response = self.client.get(test_link)
         self.assertEqual(response.status_code, 200)
@@ -222,7 +249,11 @@ class UserAdminViewsTests(AdminTestCase):
         This is regression test for issue #640
         """
         test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
-        test_link = reverse('misago:admin:users:accounts:edit', kwargs={'pk': test_user.pk})
+        test_link = reverse(
+            'misago:admin:users:accounts:edit', kwargs={
+                'pk': test_user.pk,
+            }
+        )
 
         response = self.client.get(test_link)
         self.assertEqual(response.status_code, 200)
@@ -255,7 +286,11 @@ class UserAdminViewsTests(AdminTestCase):
     def test_edit_make_admin(self):
         """edit user view allows super admin to make other user admin"""
         test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
-        test_link = reverse('misago:admin:users:accounts:edit', kwargs={'pk': test_user.pk})
+        test_link = reverse(
+            'misago:admin:users:accounts:edit', kwargs={
+                'pk': test_user.pk,
+            }
+        )
 
         response = self.client.get(test_link)
         self.assertContains(response, 'id="id_is_staff_1"')
@@ -290,7 +325,11 @@ class UserAdminViewsTests(AdminTestCase):
     def test_edit_make_superadmin_admin(self):
         """edit user view allows super admin to make other user super admin"""
         test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
-        test_link = reverse('misago:admin:users:accounts:edit', kwargs={'pk': test_user.pk})
+        test_link = reverse(
+            'misago:admin:users:accounts:edit', kwargs={
+                'pk': test_user.pk,
+            }
+        )
 
         response = self.client.get(test_link)
         self.assertContains(response, 'id="id_is_staff_1"')
@@ -328,7 +367,11 @@ class UserAdminViewsTests(AdminTestCase):
         self.user.save()
 
         test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
-        test_link = reverse('misago:admin:users:accounts:edit', kwargs={'pk': test_user.pk})
+        test_link = reverse(
+            'misago:admin:users:accounts:edit', kwargs={
+                'pk': test_user.pk,
+            }
+        )
 
         response = self.client.get(test_link)
         self.assertNotContains(response, 'id="id_is_staff_1"')
@@ -366,7 +409,11 @@ class UserAdminViewsTests(AdminTestCase):
         self.user.save()
 
         test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
-        test_link = reverse('misago:admin:users:accounts:edit', kwargs={'pk': test_user.pk})
+        test_link = reverse(
+            'misago:admin:users:accounts:edit', kwargs={
+                'pk': test_user.pk,
+            }
+        )
 
         response = self.client.get(test_link)
         self.assertContains(response, 'id="id_is_active_1"')
@@ -410,7 +457,11 @@ class UserAdminViewsTests(AdminTestCase):
         test_user.is_staff = True
         test_user.save()
 
-        test_link = reverse('misago:admin:users:accounts:edit', kwargs={'pk': test_user.pk})
+        test_link = reverse(
+            'misago:admin:users:accounts:edit', kwargs={
+                'pk': test_user.pk,
+            }
+        )
 
         response = self.client.get(test_link)
         self.assertContains(response, 'id="id_is_active_1"')
@@ -454,7 +505,11 @@ class UserAdminViewsTests(AdminTestCase):
         test_user.is_staff = True
         test_user.save()
 
-        test_link = reverse('misago:admin:users:accounts:edit', kwargs={'pk': test_user.pk})
+        test_link = reverse(
+            'misago:admin:users:accounts:edit', kwargs={
+                'pk': test_user.pk,
+            }
+        )
 
         response = self.client.get(test_link)
         self.assertNotContains(response, 'id="id_is_active_1"')
@@ -492,7 +547,9 @@ class UserAdminViewsTests(AdminTestCase):
         """delete user threads view deletes threads"""
         test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
         test_link = reverse(
-            'misago:admin:users:accounts:delete-threads', kwargs={'pk': test_user.pk}
+            'misago:admin:users:accounts:delete-threads', kwargs={
+                'pk': test_user.pk,
+            }
         )
 
         category = Category.objects.all_categories()[:1][0]
@@ -516,7 +573,9 @@ class UserAdminViewsTests(AdminTestCase):
         """delete user posts view deletes posts"""
         test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
         test_link = reverse(
-            'misago:admin:users:accounts:delete-posts', kwargs={'pk': test_user.pk}
+            'misago:admin:users:accounts:delete-posts', kwargs={
+                'pk': test_user.pk,
+            }
         )
 
         category = Category.objects.all_categories()[:1][0]
@@ -541,7 +600,9 @@ class UserAdminViewsTests(AdminTestCase):
         """delete user account view deletes user account"""
         test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
         test_link = reverse(
-            'misago:admin:users:accounts:delete-account', kwargs={'pk': test_user.pk}
+            'misago:admin:users:accounts:delete-account', kwargs={
+                'pk': test_user.pk,
+            }
         )
 
         response = self.client.post(test_link, **self.AJAX_HEADER)

@@ -6,8 +6,11 @@ from misago.users.serializers import UserCardSerializer
 
 class RankUsers(object):
     def __init__(self, request, rank, page=0):
-        queryset = rank.user_set.select_related('rank', 'ban_cache',
-                                                'online_tracker').order_by('slug')
+        queryset = rank.user_set.select_related(
+            'rank',
+            'ban_cache',
+            'online_tracker',
+        ).order_by('slug')
 
         if not request.user.is_staff:
             queryset = queryset.filter(is_active=True)

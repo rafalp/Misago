@@ -54,7 +54,12 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         response_json = response.json()
         self.assertEqual(response_json['changes_left'], 0)
 
-        response = self.client.post(self.link, data={'username': 'Pointless'})
+        response = self.client.post(
+            self.link,
+            data={
+                'username': 'Pointless',
+            },
+        )
 
         self.assertContains(response, 'change your username now', status_code=400)
         self.assertTrue(self.user.username != 'Pointless')
@@ -67,7 +72,12 @@ class UserUsernameTests(AuthenticatedUserTestCase):
 
     def test_change_username_invalid_name(self):
         """api returns error 400 if new username is wrong"""
-        response = self.client.post(self.link, data={'username': '####'})
+        response = self.client.post(
+            self.link,
+            data={
+                'username': '####',
+            },
+        )
 
         self.assertContains(response, 'can only contain latin', status_code=400)
 
@@ -79,7 +89,12 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         old_username = self.user.username
         new_username = 'NewUsernamu'
 
-        response = self.client.post(self.link, data={'username': new_username})
+        response = self.client.post(
+            self.link,
+            data={
+                'username': new_username,
+            },
+        )
 
         self.assertEqual(response.status_code, 200)
         options = response.json()['options']
@@ -138,9 +153,11 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         })
 
         response = self.client.post(
-            self.link, json.dumps({
+            self.link,
+            json.dumps({
                 'username': '',
-            }), content_type="application/json"
+            }),
+            content_type='application/json',
         )
 
         self.assertContains(response, "Enter new username", status_code=400)
@@ -150,9 +167,11 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         })
 
         response = self.client.post(
-            self.link, json.dumps({
+            self.link,
+            json.dumps({
                 'username': '$$$',
-            }), content_type="application/json"
+            }),
+            content_type='application/json',
         )
 
         self.assertContains(
@@ -166,9 +185,11 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         })
 
         response = self.client.post(
-            self.link, json.dumps({
+            self.link,
+            json.dumps({
                 'username': 'a',
-            }), content_type="application/json"
+            }),
+            content_type='application/json',
         )
 
         self.assertEqual(response.status_code, 400)
@@ -181,9 +202,11 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         })
 
         response = self.client.post(
-            self.link, json.dumps({
+            self.link,
+            json.dumps({
                 'username': 'BobBoberson',
-            }), content_type="application/json"
+            }),
+            content_type='application/json',
         )
 
         self.assertEqual(response.status_code, 200)

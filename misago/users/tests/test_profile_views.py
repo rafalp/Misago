@@ -19,9 +19,13 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.category = Category.objects.get(slug='first-category')
 
     def test_outdated_slugs(self):
-        """user profile view redirects to valid slig"""
-        invalid_kwargs = {'slug': 'baww', 'pk': self.user.pk}
-        response = self.client.get(reverse('misago:user-posts', kwargs=invalid_kwargs))
+        """user profile view redirects to valid slug"""
+        response = self.client.get(
+            reverse('misago:user-posts', kwargs={
+                'slug': 'baww',
+                'pk': self.user.pk,
+            })
+        )
 
         self.assertEqual(response.status_code, 301)
 
@@ -56,7 +60,10 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "You have posted no messages")
 
-        thread = testutils.post_thread(category=self.category, poster=self.user)
+        thread = testutils.post_thread(
+            category=self.category,
+            poster=self.user,
+        )
 
         response = self.client.get(link)
         self.assertEqual(response.status_code, 200)
@@ -78,7 +85,10 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "You have no started threads.")
 
-        thread = testutils.post_thread(category=self.category, poster=self.user)
+        thread = testutils.post_thread(
+            category=self.category,
+            poster=self.user,
+        )
 
         response = self.client.get(link)
         self.assertEqual(response.status_code, 200)
@@ -94,7 +104,10 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
     def test_user_followers(self):
         """user profile followers list has no showstoppers"""
-        response = self.client.get(reverse('misago:user-followers', kwargs=self.link_kwargs))
+        response = self.client.get(reverse(
+            'misago:user-followers',
+            kwargs=self.link_kwargs,
+        ))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'You have no followers.')
@@ -105,14 +118,20 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
             followers.append(UserModel.objects.create_user(*user_data))
             self.user.followed_by.add(followers[-1])
 
-        response = self.client.get(reverse('misago:user-followers', kwargs=self.link_kwargs))
+        response = self.client.get(reverse(
+            'misago:user-followers',
+            kwargs=self.link_kwargs,
+        ))
         self.assertEqual(response.status_code, 200)
         for i in range(10):
             self.assertContains(response, "Follower%s" % i)
 
     def test_user_follows(self):
         """user profile follows list has no showstoppers"""
-        response = self.client.get(reverse('misago:user-follows', kwargs=self.link_kwargs))
+        response = self.client.get(reverse(
+            'misago:user-follows',
+            kwargs=self.link_kwargs,
+        ))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'You are not following any users.')
@@ -123,14 +142,20 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
             followers.append(UserModel.objects.create_user(*user_data))
             followers[-1].followed_by.add(self.user)
 
-        response = self.client.get(reverse('misago:user-follows', kwargs=self.link_kwargs))
+        response = self.client.get(reverse(
+            'misago:user-follows',
+            kwargs=self.link_kwargs,
+        ))
         self.assertEqual(response.status_code, 200)
         for i in range(10):
             self.assertContains(response, "Follower%s" % i)
 
     def test_username_history_list(self):
         """user name changes history list has no showstoppers"""
-        response = self.client.get(reverse('misago:username-history', kwargs=self.link_kwargs))
+        response = self.client.get(reverse(
+            'misago:username-history',
+            kwargs=self.link_kwargs,
+        ))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Your username was never changed.')
 
@@ -139,7 +164,10 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.user.set_username('TestUser')
         self.user.save()
 
-        response = self.client.get(reverse('misago:username-history', kwargs=self.link_kwargs))
+        response = self.client.get(reverse(
+            'misago:username-history',
+            kwargs=self.link_kwargs,
+        ))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "TestUser")
@@ -154,14 +182,20 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         test_user = UserModel.objects.create_user("Bob", "bob@bob.com", 'pass.123')
         link_kwargs = {'slug': test_user.slug, 'pk': test_user.pk}
 
-        response = self.client.get(reverse('misago:user-ban', kwargs=link_kwargs))
+        response = self.client.get(reverse(
+            'misago:user-ban',
+            kwargs=link_kwargs,
+        ))
         self.assertEqual(response.status_code, 404)
 
         override_acl(self.user, {
             'can_see_ban_details': 1,
         })
 
-        response = self.client.get(reverse('misago:user-ban', kwargs=link_kwargs))
+        response = self.client.get(reverse(
+            'misago:user-ban',
+            kwargs=link_kwargs,
+        ))
         self.assertEqual(response.status_code, 404)
 
         override_acl(self.user, {
@@ -173,10 +207,13 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
             banned_value=test_user.username,
             user_message="User m3ss4ge.",
             staff_message="Staff m3ss4ge.",
-            is_checked=True
+            is_checked=True,
         )
 
-        response = self.client.get(reverse('misago:user-ban', kwargs=link_kwargs))
+        response = self.client.get(reverse(
+            'misago:user-ban',
+            kwargs=link_kwargs,
+        ))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'User m3ss4ge')

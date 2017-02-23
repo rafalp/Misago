@@ -85,6 +85,7 @@ class DBConfMigrationUtilsTests(TestCase):
         migrationutils.migrate_settings_group(
             apps, new_group, old_group_key=self.test_group['key']
         )
+
         db_group = migrationutils.get_group(
             apps.get_model('misago_conf', 'SettingsGroup'), new_group['key']
         )

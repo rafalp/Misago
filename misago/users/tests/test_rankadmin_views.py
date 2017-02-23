@@ -38,7 +38,7 @@ class RankAdminViewsTests(AdminTestCase):
                 'style': 'test',
                 'is_tab': '1',
                 'roles': [test_role_a.pk, test_role_c.pk],
-            }
+            },
         )
         self.assertEqual(response.status_code, 302)
 
@@ -67,24 +67,34 @@ class RankAdminViewsTests(AdminTestCase):
                 'style': 'test',
                 'is_tab': '1',
                 'roles': [test_role_a.pk, test_role_c.pk],
-            }
+            },
         )
 
         test_rank = Rank.objects.get(slug='test-rank')
 
         response = self.client.get(
-            reverse('misago:admin:users:ranks:edit', kwargs={'pk': test_rank.pk})
+            reverse(
+                'misago:admin:users:ranks:edit',
+                kwargs={
+                    'pk': test_rank.pk,
+                },
+            )
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, test_rank.name)
         self.assertContains(response, test_rank.title)
 
         response = self.client.post(
-            reverse('misago:admin:users:ranks:edit', kwargs={'pk': test_rank.pk}),
+            reverse(
+                'misago:admin:users:ranks:edit',
+                kwargs={
+                    'pk': test_rank.pk,
+                },
+            ),
             data={
                 'name': 'Top Lel',
                 'roles': [test_role_b.pk],
-            }
+            },
         )
         self.assertEqual(response.status_code, 302)
 
@@ -109,13 +119,18 @@ class RankAdminViewsTests(AdminTestCase):
                 'title': 'Test Title',
                 'style': 'test',
                 'is_tab': '1',
-            }
+            },
         )
 
         test_rank = Rank.objects.get(slug='test-rank')
 
         response = self.client.post(
-            reverse('misago:admin:users:ranks:default', kwargs={'pk': test_rank.pk})
+            reverse(
+                'misago:admin:users:ranks:default',
+                kwargs={
+                    'pk': test_rank.pk,
+                },
+            )
         )
         self.assertEqual(response.status_code, 302)
 
@@ -132,13 +147,18 @@ class RankAdminViewsTests(AdminTestCase):
                 'title': 'Test Title',
                 'style': 'test',
                 'is_tab': '1',
-            }
+            },
         )
 
         test_rank = Rank.objects.get(slug='test-rank')
 
         response = self.client.post(
-            reverse('misago:admin:users:ranks:up', kwargs={'pk': test_rank.pk})
+            reverse(
+                'misago:admin:users:ranks:up',
+                kwargs={
+                    'pk': test_rank.pk,
+                },
+            )
         )
         self.assertEqual(response.status_code, 302)
 
@@ -155,18 +175,28 @@ class RankAdminViewsTests(AdminTestCase):
                 'title': 'Test Title',
                 'style': 'test',
                 'is_tab': '1',
-            }
+            },
         )
 
         test_rank = Rank.objects.get(slug='test-rank')
 
         # Move rank up
         response = self.client.post(
-            reverse('misago:admin:users:ranks:up', kwargs={'pk': test_rank.pk})
+            reverse(
+                'misago:admin:users:ranks:up',
+                kwargs={
+                    'pk': test_rank.pk,
+                },
+            )
         )
 
         response = self.client.post(
-            reverse('misago:admin:users:ranks:down', kwargs={'pk': test_rank.pk})
+            reverse(
+                'misago:admin:users:ranks:down',
+                kwargs={
+                    'pk': test_rank.pk,
+                },
+            )
         )
         self.assertEqual(response.status_code, 302)
 
@@ -184,13 +214,18 @@ class RankAdminViewsTests(AdminTestCase):
                 'title': 'Test Title',
                 'style': 'test',
                 'is_tab': '1',
-            }
+            },
         )
 
         test_rank = Rank.objects.get(slug='test-rank')
 
         response = self.client.get(
-            reverse('misago:admin:users:ranks:users', kwargs={'pk': test_rank.pk})
+            reverse(
+                'misago:admin:users:ranks:users',
+                kwargs={
+                    'pk': test_rank.pk,
+                },
+            )
         )
         self.assertEqual(response.status_code, 302)
 
@@ -204,13 +239,18 @@ class RankAdminViewsTests(AdminTestCase):
                 'title': 'Test Title',
                 'style': 'test',
                 'is_tab': '1',
-            }
+            },
         )
 
         test_rank = Rank.objects.get(slug='test-rank')
 
         response = self.client.post(
-            reverse('misago:admin:users:ranks:delete', kwargs={'pk': test_rank.pk})
+            reverse(
+                'misago:admin:users:ranks:delete',
+                kwargs={
+                    'pk': test_rank.pk,
+                },
+            )
         )
         self.assertEqual(response.status_code, 302)
 
@@ -255,11 +295,16 @@ class RankAdminViewsTests(AdminTestCase):
         test_rank = Rank.objects.get(slug='test-rank')
 
         response = self.client.post(
-            reverse('misago:admin:users:ranks:edit', kwargs={'pk': test_rank.pk}),
+            reverse(
+                'misago:admin:users:ranks:edit',
+                kwargs={
+                    'pk': test_rank.pk,
+                },
+            ),
             data={
                 'name': 'Members',
                 'roles': [test_role_a.pk],
-            }
+            },
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "This name collides with other rank.")
