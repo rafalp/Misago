@@ -84,7 +84,7 @@ class AvatarsStoreTests(TestCase):
 
 class AvatarSetterTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user('Bob', 'kontakt@example.com', 'pass123')
+        self.user = UserModel.objects.create_user('Bob', 'kontakt@rpiton.com', 'pass123')
 
         self.user.avatars = None
         self.user.save()
