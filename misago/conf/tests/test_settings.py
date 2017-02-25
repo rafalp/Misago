@@ -47,25 +47,28 @@ class GatewaySettingsTests(TestCase):
                 "Test settings",
             'description':
                 "Those are test settings.",
-            'settings': ({
-                'setting': 'fish_name',
-                'name': "Fish's name",
-                'value': "Public Eric",
-                'field_extra': {
-                    'min_length': 2,
-                    'max_length': 255,
+            'settings': [
+                {
+                    'setting': 'fish_name',
+                    'name': "Fish's name",
+                    'value': "Public Eric",
+                    'field_extra': {
+                        'min_length': 2,
+                        'max_length': 255,
+                    },
+                    'is_public': True,
                 },
-                'is_public': True,
-            }, {
-                'setting': 'private_fish_name',
-                'name': "Fish's name",
-                'value': "Private Eric",
-                'field_extra': {
-                    'min_length': 2,
-                    'max_length': 255,
+                {
+                    'setting': 'private_fish_name',
+                    'name': "Fish's name",
+                    'value': "Private Eric",
+                    'field_extra': {
+                        'min_length': 2,
+                        'max_length': 255,
+                    },
+                    'is_public': False,
                 },
-                'is_public': False,
-            }, ),
+            ],
         }
 
         migrate_settings_group(apps, test_group)
@@ -86,33 +89,37 @@ class GatewaySettingsTests(TestCase):
                 "Test settings",
             'description':
                 "Those are test settings.",
-            'settings': ({
-                'setting': 'fish_name',
-                'name': "Fish's name",
-                'value': "Greedy Eric",
-                'field_extra': {
-                    'min_length': 2,
-                    'max_length': 255
+            'settings': [
+                {
+                    'setting': 'fish_name',
+                    'name': "Fish's name",
+                    'value': "Greedy Eric",
+                    'field_extra': {
+                        'min_length': 2,
+                        'max_length': 255,
+                    },
+                    'is_lazy': False,
                 },
-                'is_lazy': False
-            }, {
-                'setting': 'lazy_fish_name',
-                'name': "Fish's name",
-                'value': "Lazy Eric",
-                'field_extra': {
-                    'min_length': 2,
-                    'max_length': 255
+                {
+                    'setting': 'lazy_fish_name',
+                    'name': "Fish's name",
+                    'value': "Lazy Eric",
+                    'field_extra': {
+                        'min_length': 2,
+                        'max_length': 255,
+                    },
+                    'is_lazy': True,
                 },
-                'is_lazy': True
-            }, {
-                'setting': 'lazy_empty_setting',
-                'name': "Fish's name",
-                'field_extra': {
-                    'min_length': 2,
-                    'max_length': 255
+                {
+                    'setting': 'lazy_empty_setting',
+                    'name': "Fish's name",
+                    'field_extra': {
+                        'min_length': 2,
+                        'max_length': 255,
+                    },
+                    'is_lazy': True,
                 },
-                'is_lazy': True
-            }, )
+            ],
         }
 
         migrate_settings_group(apps, test_group)

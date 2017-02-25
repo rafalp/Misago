@@ -65,7 +65,7 @@ def migrate_setting(Setting, group, setting_fixture, order, old_value):
     if setting_fixture.get('description'):
         setting_fixture['description'] = setting_fixture.get('description')
 
-    if (setting_fixture.get('field_extra') and setting_fixture.get('field_extra').get('choices')):
+    if setting_fixture.get('field_extra') and setting_fixture.get('field_extra').get('choices'):
         untranslated_choices = setting_fixture['field_extra']['choices']
         translated_choices = []
         for val, name in untranslated_choices:
