@@ -17,8 +17,10 @@ class PostDeleteApiTests(ThreadsApiTestCase):
 
         self.api_link = reverse(
             'misago:api:thread-post-detail',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': self.post.pk}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.post.pk,
+            }
         )
 
     def test_delete_anonymous(self):
@@ -37,7 +39,11 @@ class PostDeleteApiTests(ThreadsApiTestCase):
 
     def test_delete_other_user_post_no_permission(self):
         """api valdiates if user can delete other users posts"""
-        self.override_acl({'post_edit_time': 0, 'can_hide_own_posts': 2, 'can_hide_posts': 0})
+        self.override_acl({
+            'post_edit_time': 0,
+            'can_hide_own_posts': 2,
+            'can_hide_posts': 0,
+        })
 
         self.post.poster = None
         self.post.save()
@@ -117,8 +123,10 @@ class PostDeleteApiTests(ThreadsApiTestCase):
 
         api_link = reverse(
             'misago:api:thread-post-detail',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': self.thread.first_post_id}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.thread.first_post_id,
+            }
         )
 
         response = self.client.delete(api_link)
@@ -126,7 +134,11 @@ class PostDeleteApiTests(ThreadsApiTestCase):
 
     def test_delete_event(self):
         """api differs posts from events"""
-        self.override_acl({'can_hide_own_posts': 2, 'can_hide_posts': 2, 'can_hide_events': 0})
+        self.override_acl({
+            'can_hide_own_posts': 2,
+            'can_hide_posts': 2,
+            'can_hide_events': 0,
+        })
 
         self.post.is_event = True
         self.post.save()
@@ -136,7 +148,11 @@ class PostDeleteApiTests(ThreadsApiTestCase):
 
     def test_delete_owned_post(self):
         """api deletes owned thread post"""
-        self.override_acl({'post_edit_time': 0, 'can_hide_own_posts': 2, 'can_hide_posts': 0})
+        self.override_acl({
+            'post_edit_time': 0,
+            'can_hide_own_posts': 2,
+            'can_hide_posts': 0,
+        })
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -169,8 +185,10 @@ class EventDeleteApiTests(ThreadsApiTestCase):
 
         self.api_link = reverse(
             'misago:api:thread-post-detail',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': self.event.pk}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.event.pk,
+            }
         )
 
     def test_delete_anonymous(self):
@@ -182,14 +200,22 @@ class EventDeleteApiTests(ThreadsApiTestCase):
 
     def test_no_permission(self):
         """api validates permission to delete event"""
-        self.override_acl({'can_hide_own_posts': 2, 'can_hide_posts': 2, 'can_hide_events': 0})
+        self.override_acl({
+            'can_hide_own_posts': 2,
+            'can_hide_posts': 2,
+            'can_hide_events': 0,
+        })
 
         response = self.client.delete(self.api_link)
         self.assertContains(response, "You can't delete events in this category.", status_code=403)
 
     def test_delete_event(self):
         """api differs posts from events"""
-        self.override_acl({'can_hide_own_posts': 0, 'can_hide_posts': 0, 'can_hide_events': 2})
+        self.override_acl({
+            'can_hide_own_posts': 0,
+            'can_hide_posts': 0,
+            'can_hide_events': 2,
+        })
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 200)

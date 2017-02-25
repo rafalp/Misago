@@ -25,8 +25,10 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
         """api validates that thread id is integer"""
         api_link = reverse(
             'misago:api:thread-poll-detail',
-            kwargs={'thread_pk': 'kjha6dsa687sa',
-                    'pk': self.poll.pk}
+            kwargs={
+                'thread_pk': 'kjha6dsa687sa',
+                'pk': self.poll.pk,
+            }
         )
 
         response = self.client.delete(api_link)
@@ -36,8 +38,10 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
         """api validates that thread exists"""
         api_link = reverse(
             'misago:api:thread-poll-detail',
-            kwargs={'thread_pk': self.thread.pk + 1,
-                    'pk': self.poll.pk}
+            kwargs={
+                'thread_pk': self.thread.pk + 1,
+                'pk': self.poll.pk,
+            }
         )
 
         response = self.client.delete(api_link)
@@ -47,8 +51,10 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
         """api validates that poll id is integer"""
         api_link = reverse(
             'misago:api:thread-poll-detail',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': 'sad98as7d97sa98'}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': 'sad98as7d97sa98',
+            }
         )
 
         response = self.client.delete(api_link)
@@ -58,8 +64,10 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
         """api validates that poll exists"""
         api_link = reverse(
             'misago:api:thread-poll-detail',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': self.poll.pk + 123}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.poll.pk + 123,
+            }
         )
 
         response = self.client.delete(api_link)

@@ -72,7 +72,9 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
         self.assertEqual(test_type.name, 'Test type')
 
         form_link = reverse(
-            'misago:admin:system:attachment-types:edit', kwargs={'pk': test_type.pk}
+            'misago:admin:system:attachment-types:edit', kwargs={
+                'pk': test_type.pk,
+            }
         )
 
         response = self.client.get(form_link)
@@ -166,7 +168,9 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
         self.assertEqual(test_type.name, 'Test type')
 
         action_link = reverse(
-            'misago:admin:system:attachment-types:delete', kwargs={'pk': test_type.pk}
+            'misago:admin:system:attachment-types:delete', kwargs={
+                'pk': test_type.pk,
+            }
         )
 
         response = self.client.post(action_link)
@@ -205,7 +209,9 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
         )
 
         action_link = reverse(
-            'misago:admin:system:attachment-types:delete', kwargs={'pk': test_type.pk}
+            'misago:admin:system:attachment-types:delete', kwargs={
+                'pk': test_type.pk,
+            }
         )
 
         response = self.client.post(action_link)

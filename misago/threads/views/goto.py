@@ -89,7 +89,9 @@ class ThreadGotoNewView(GotoView):
 
     def get_target_post(self, thread, posts_queryset, **kwargs):
         if thread.is_new:
-            return posts_queryset.filter(posted_on__gt=thread.last_read_on).order_by('id').first()
+            return posts_queryset.filter(
+                posted_on__gt=thread.last_read_on,
+            ).order_by('id').first()
         else:
             return posts_queryset.order_by('id').last()
 
@@ -101,12 +103,15 @@ class ThreadGotoUnapprovedView(GotoView):
         if not thread.acl['can_approve']:
             raise PermissionDenied(
                 _(
-                    "You need permission to approve content to be able to go to first unapproved post."
+                    "You need permission to approve content to "
+                    "be able to go to first unapproved post."
                 )
             )
 
     def get_target_post(self, thread, posts_queryset, **kwargs):
-        unapproved_post = posts_queryset.filter(is_unapproved=True).order_by('id').first()
+        unapproved_post = posts_queryset.filter(
+            is_unapproved=True,
+        ).order_by('id').first()
         if unapproved_post:
             return unapproved_post
         else:
@@ -133,6 +138,8 @@ class PrivateThreadGotoNewView(GotoView):
 
     def get_target_post(self, thread, posts_queryset, **kwargs):
         if thread.is_new:
-            return posts_queryset.filter(posted_on__gt=thread.last_read_on).order_by('id').first()
+            return posts_queryset.filter(
+                posted_on__gt=thread.last_read_on,
+            ).order_by('id').first()
         else:
             return posts_queryset.order_by('id').last()

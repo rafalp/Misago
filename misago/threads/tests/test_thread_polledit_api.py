@@ -25,8 +25,10 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         """api validates that thread id is integer"""
         api_link = reverse(
             'misago:api:thread-poll-detail',
-            kwargs={'thread_pk': 'kjha6dsa687sa',
-                    'pk': self.poll.pk}
+            kwargs={
+                'thread_pk': 'kjha6dsa687sa',
+                'pk': self.poll.pk,
+            }
         )
 
         response = self.put(api_link)
@@ -36,8 +38,10 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         """api validates that thread exists"""
         api_link = reverse(
             'misago:api:thread-poll-detail',
-            kwargs={'thread_pk': self.thread.pk + 1,
-                    'pk': self.poll.pk}
+            kwargs={
+                'thread_pk': self.thread.pk + 1,
+                'pk': self.poll.pk,
+            }
         )
 
         response = self.put(api_link)
@@ -47,8 +51,10 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         """api validates that poll id is integer"""
         api_link = reverse(
             'misago:api:thread-poll-detail',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': 'sad98as7d97sa98'}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': 'sad98as7d97sa98',
+            }
         )
 
         response = self.put(api_link)
@@ -58,8 +64,10 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         """api validates that poll exists"""
         api_link = reverse(
             'misago:api:thread-poll-detail',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': self.poll.pk + 123}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.poll.pk + 123,
+            }
         )
 
         response = self.put(api_link)
@@ -145,7 +153,11 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
 
     def test_length_validation(self):
         """api validates poll's length"""
-        response = self.put(self.api_link, data={'length': -1})
+        response = self.put(
+            self.api_link, data={
+                'length': -1,
+            }
+        )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
@@ -174,10 +186,14 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
     def test_validate_choice_length(self):
         """api validates single choice length"""
         response = self.put(
-            self.api_link, data={'choices': [{
-                'hash': 'qwertyuiopas',
-                'label': ''
-            }]}
+            self.api_link, data={
+                'choices': [
+                    {
+                        'hash': 'qwertyuiopas',
+                        'label': '',
+                    },
+                ],
+            }
         )
         self.assertEqual(response.status_code, 400)
 
@@ -185,10 +201,15 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         self.assertEqual(response_json['choices'], ["One or more poll choices are invalid."])
 
         response = self.put(
-            self.api_link, data={'choices': [{
-                'hash': 'qwertyuiopas',
-                'label': 'abcd' * 255
-            }]}
+            self.api_link,
+            data={
+                'choices': [
+                    {
+                        'hash': 'qwertyuiopas',
+                        'label': 'abcd' * 255,
+                    },
+                ],
+            }
         )
         self.assertEqual(response.status_code, 400)
 
@@ -197,7 +218,15 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
 
     def test_validate_two_choices(self):
         """api validates that there are at least two choices in poll"""
-        response = self.put(self.api_link, data={'choices': [{'label': 'Choice'}]})
+        response = self.put(
+            self.api_link, data={
+                'choices': [
+                    {
+                        'label': 'Choice',
+                    },
+                ],
+            }
+        )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
@@ -208,9 +237,13 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
     def test_validate_max_choices(self):
         """api validates that there are no more choices in poll than allowed number"""
         response = self.put(
-            self.api_link, data={'choices': [{
-                'label': 'Choice'
-            }] * (MAX_POLL_OPTIONS + 1)}
+            self.api_link, data={
+                'choices': [
+                    {
+                        'label': 'Choice',
+                    },
+                ] * (MAX_POLL_OPTIONS + 1),
+            }
         )
         self.assertEqual(response.status_code, 400)
 
@@ -238,11 +271,14 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
                 'length': 0,
                 'question': "Lorem ipsum",
                 'allowed_choices': 3,
-                'choices': [{
-                    'label': 'Choice'
-                }, {
-                    'label': 'Choice'
-                }]
+                'choices': [
+                    {
+                        'label': 'Choice',
+                    },
+                    {
+                        'label': 'Choice',
+                    },
+                ],
             }
         )
         self.assertEqual(response.status_code, 400)
@@ -263,13 +299,17 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
                 'allowed_choices': 2,
                 'allow_revotes': True,
                 'is_public': True,
-                'choices': [{
-                    'label': '\nRed  '
-                }, {
-                    'label': 'Green'
-                }, {
-                    'label': 'Blue'
-                }]
+                'choices': [
+                    {
+                        'label': '\nRed  ',
+                    },
+                    {
+                        'label': 'Green',
+                    },
+                    {
+                        'label': 'Blue',
+                    },
+                ],
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -311,23 +351,28 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
                     True,
                 'is_public':
                     True,
-                'choices': [{
-                    'hash': 'aaaaaaaaaaaa',
-                    'label': '\nFirst  ',
-                    'votes': 5555
-                }, {
-                    'hash': 'bbbbbbbbbbbb',
-                    'label': 'Second',
-                    'votes': 5555
-                }, {
-                    'hash': 'gggggggggggg',
-                    'label': 'Third',
-                    'votes': 5555
-                }, {
-                    'hash': 'dddddddddddd',
-                    'label': 'Fourth',
-                    'votes': 5555
-                }]
+                'choices': [
+                    {
+                        'hash': 'aaaaaaaaaaaa',
+                        'label': '\nFirst  ',
+                        'votes': 5555,
+                    },
+                    {
+                        'hash': 'bbbbbbbbbbbb',
+                        'label': 'Second',
+                        'votes': 5555,
+                    },
+                    {
+                        'hash': 'gggggggggggg',
+                        'label': 'Third',
+                        'votes': 5555,
+                    },
+                    {
+                        'hash': 'dddddddddddd',
+                        'label': 'Fourth',
+                        'votes': 5555,
+                    },
+                ],
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -346,27 +391,33 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         # choices were updated
         self.assertEqual(len(response_json['choices']), 4)
         self.assertEqual(
-            response_json['choices'], [{
-                'hash': 'aaaaaaaaaaaa',
-                'label': 'First',
-                'votes': 1,
-                'selected': False
-            }, {
-                'hash': 'bbbbbbbbbbbb',
-                'label': 'Second',
-                'votes': 0,
-                'selected': False
-            }, {
-                'hash': 'gggggggggggg',
-                'label': 'Third',
-                'votes': 2,
-                'selected': True
-            }, {
-                'hash': 'dddddddddddd',
-                'label': 'Fourth',
-                'votes': 1,
-                'selected': True
-            }]
+            response_json['choices'],
+            [
+                {
+                    'hash': 'aaaaaaaaaaaa',
+                    'label': 'First',
+                    'votes': 1,
+                    'selected': False,
+                },
+                {
+                    'hash': 'bbbbbbbbbbbb',
+                    'label': 'Second',
+                    'votes': 0,
+                    'selected': False,
+                },
+                {
+                    'hash': 'gggggggggggg',
+                    'label': 'Third',
+                    'votes': 2,
+                    'selected': True,
+                },
+                {
+                    'hash': 'dddddddddddd',
+                    'label': 'Fourth',
+                    'votes': 1,
+                    'selected': True,
+                },
+            ],
         )
 
         # no votes were removed
@@ -388,19 +439,23 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
                     True,
                 'is_public':
                     True,
-                'choices': [{
-                    'hash': 'aaaaaaaaaaaa',
-                    'label': '\nFirst ',
-                    'votes': 5555
-                }, {
-                    'hash': 'bbbbbbbbbbbb',
-                    'label': 'Second',
-                    'votes': 5555
-                }, {
-                    'hash': 'dsadsadsa788',
-                    'label': 'New Option',
-                    'votes': 5555
-                }]
+                'choices': [
+                    {
+                        'hash': 'aaaaaaaaaaaa',
+                        'label': '\nFirst ',
+                        'votes': 5555,
+                    },
+                    {
+                        'hash': 'bbbbbbbbbbbb',
+                        'label': 'Second',
+                        'votes': 5555,
+                    },
+                    {
+                        'hash': 'dsadsadsa788',
+                        'label': 'New Option',
+                        'votes': 5555,
+                    },
+                ],
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -419,22 +474,27 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         # choices were updated
         self.assertEqual(len(response_json['choices']), 3)
         self.assertEqual(
-            response_json['choices'], [{
-                'hash': 'aaaaaaaaaaaa',
-                'label': 'First',
-                'votes': 1,
-                'selected': False
-            }, {
-                'hash': 'bbbbbbbbbbbb',
-                'label': 'Second',
-                'votes': 0,
-                'selected': False
-            }, {
-                'hash': response_json['choices'][2]['hash'],
-                'label': 'New Option',
-                'votes': 0,
-                'selected': False
-            }]
+            response_json['choices'],
+            [
+                {
+                    'hash': 'aaaaaaaaaaaa',
+                    'label': 'First',
+                    'votes': 1,
+                    'selected': False,
+                },
+                {
+                    'hash': 'bbbbbbbbbbbb',
+                    'label': 'Second',
+                    'votes': 0,
+                    'selected': False,
+                },
+                {
+                    'hash': response_json['choices'][2]['hash'],
+                    'label': 'New Option',
+                    'votes': 0,
+                    'selected': False,
+                },
+            ],
         )
 
         # no votes were removed
@@ -458,13 +518,17 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
                 'allowed_choices': 2,
                 'allow_revotes': True,
                 'is_public': True,
-                'choices': [{
-                    'label': '\nRed  '
-                }, {
-                    'label': 'Green'
-                }, {
-                    'label': 'Blue'
-                }]
+                'choices': [
+                    {
+                        'label': '\nRed  ',
+                    },
+                    {
+                        'label': 'Green',
+                    },
+                    {
+                        'label': 'Blue',
+                    },
+                ],
             }
         )
         self.assertEqual(response.status_code, 200)

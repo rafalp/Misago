@@ -24,8 +24,10 @@ class ThreadPostPatchApiTestCase(AuthenticatedUserTestCase):
 
         self.api_link = reverse(
             'misago:api:thread-post-detail',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': self.post.pk}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.post.pk,
+            }
         )
 
     def patch(self, api_link, ops):
@@ -41,7 +43,7 @@ class ThreadPostPatchApiTestCase(AuthenticatedUserTestCase):
             'can_browse': 1,
             'can_start_threads': 0,
             'can_reply_threads': 0,
-            'can_edit_posts': 1
+            'can_edit_posts': 1,
         })
 
         if extra_acl:
@@ -53,7 +55,13 @@ class ThreadPostPatchApiTestCase(AuthenticatedUserTestCase):
 class PostAddAclApiTests(ThreadPostPatchApiTestCase):
     def test_add_acl_true(self):
         """api adds current event's acl to response"""
-        response = self.patch(self.api_link, [{'op': 'add', 'path': 'acl', 'value': True}])
+        response = self.patch(self.api_link, [
+            {
+                'op': 'add',
+                'path': 'acl',
+                'value': True,
+            },
+        ])
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -61,13 +69,25 @@ class PostAddAclApiTests(ThreadPostPatchApiTestCase):
 
     def test_add_acl_false(self):
         """if value is false, api won't add acl to the response, but will set empty key"""
-        response = self.patch(self.api_link, [{'op': 'add', 'path': 'acl', 'value': False}])
+        response = self.patch(self.api_link, [
+            {
+                'op': 'add',
+                'path': 'acl',
+                'value': False,
+            },
+        ])
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
         self.assertIsNone(response_json['acl'])
 
-        response = self.patch(self.api_link, [{'op': 'add', 'path': 'acl', 'value': True}])
+        response = self.patch(self.api_link, [
+            {
+                'op': 'add',
+                'path': 'acl',
+                'value': True,
+            },
+        ])
         self.assertEqual(response.status_code, 200)
 
 
@@ -77,11 +97,13 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_protect_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-protected',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-protected',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -96,11 +118,13 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_protect_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-protected',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-protected',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -112,11 +136,13 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_protect_posts': 0})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-protected',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-protected',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -134,11 +160,13 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_protect_posts': 0})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-protected',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-protected',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -153,11 +181,13 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_edit_posts': 0, 'can_protect_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-protected',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-protected',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -177,11 +207,13 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_approve_content': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-unapproved',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-unapproved',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -193,11 +225,13 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_approve_content': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-unapproved',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-unapproved',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -212,11 +246,13 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_approve_content': 0})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-unapproved',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-unapproved',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -237,11 +273,13 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_approve_content': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-unapproved',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-unapproved',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -260,11 +298,13 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_approve_content': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-unapproved',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-unapproved',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -283,11 +323,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_hide_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -305,11 +347,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_hide_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -321,11 +365,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_hide_own_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -343,11 +389,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_hide_own_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -359,11 +407,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_hide_posts': 0})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -384,11 +434,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_hide_posts': 0})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -406,11 +458,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_protect_posts': 0, 'can_hide_own_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -431,11 +485,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.post.save()
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -455,11 +511,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_hide_own_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -480,11 +538,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_hide_own_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -504,11 +564,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'post_edit_time': 1, 'can_hide_own_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -529,11 +591,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'post_edit_time': 1, 'can_hide_own_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -553,11 +617,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_hide_own_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -580,11 +646,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_hide_own_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -604,11 +672,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_hide_own_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -631,11 +701,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_hide_own_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -655,11 +727,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_hide_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -674,11 +748,13 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_hide_posts': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -692,11 +768,13 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_see_posts_likes': 0})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-liked',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-liked',
+                    'value': True,
+                },
+            ]
         )
         self.assertContains(response, "You can't like posts in this category.", status_code=400)
 
@@ -705,22 +783,26 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
         self.override_acl({'can_like_posts': False})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-liked',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-liked',
+                    'value': True,
+                },
+            ]
         )
         self.assertContains(response, "You can't like posts in this category.", status_code=400)
 
     def test_like_post(self):
         """api adds user like to post"""
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-liked',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-liked',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -728,10 +810,12 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
         self.assertEqual(response_json['likes'], 1)
         self.assertEqual(response_json['is_liked'], True)
         self.assertEqual(
-            response_json['last_likes'], [{
-                'id': self.user.id,
-                'username': self.user.username
-            }]
+            response_json['last_likes'], [
+                {
+                    'id': self.user.id,
+                    'username': self.user.username,
+                },
+            ]
         )
 
         post = Post.objects.get(pk=self.post.pk)
@@ -746,11 +830,13 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
         testutils.like_post(self.post, username='Miku')
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-liked',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-liked',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -758,19 +844,24 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
         self.assertEqual(response_json['likes'], 5)
         self.assertEqual(response_json['is_liked'], True)
         self.assertEqual(
-            response_json['last_likes'], [{
-                'id': self.user.id,
-                'username': self.user.username
-            }, {
-                'id': None,
-                'username': 'Miku'
-            }, {
-                'id': None,
-                'username': 'Bob'
-            }, {
-                'id': None,
-                'username': 'Mugi'
-            }]
+            response_json['last_likes'], [
+                {
+                    'id': self.user.id,
+                    'username': self.user.username
+                },
+                {
+                    'id': None,
+                    'username': 'Miku',
+                },
+                {
+                    'id': None,
+                    'username': 'Bob',
+                },
+                {
+                    'id': None,
+                    'username': 'Mugi',
+                },
+            ]
         )
 
         post = Post.objects.get(pk=self.post.pk)
@@ -782,11 +873,13 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
         testutils.like_post(self.post, self.user)
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-liked',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-liked',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -804,11 +897,13 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
         testutils.like_post(self.post, self.user)
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-liked',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-liked',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -816,10 +911,12 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
         self.assertEqual(response_json['likes'], 1)
         self.assertEqual(response_json['is_liked'], True)
         self.assertEqual(
-            response_json['last_likes'], [{
-                'id': self.user.id,
-                'username': self.user.username
-            }]
+            response_json['last_likes'], [
+                {
+                    'id': self.user.id,
+                    'username': self.user.username,
+                },
+            ]
         )
 
         post = Post.objects.get(pk=self.post.pk)
@@ -829,11 +926,13 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
     def test_unlike_post_no_change(self):
         """api does no state change if we are unlinking unliked post"""
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-liked',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-liked',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -851,8 +950,10 @@ class ThreadEventPatchApiTestCase(ThreadPostPatchApiTestCase):
 
         self.api_link = reverse(
             'misago:api:thread-post-detail',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': self.event.pk}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.event.pk,
+            }
         )
 
     def refresh_event(self):
@@ -864,14 +965,26 @@ class EventAnonPatchApiTests(ThreadEventPatchApiTestCase):
         """anonymous users can't change event state"""
         self.logout_user()
 
-        response = self.patch(self.api_link, [{'op': 'add', 'path': 'acl', 'value': True}])
+        response = self.patch(self.api_link, [
+            {
+                'op': 'add',
+                'path': 'acl',
+                'value': True,
+            },
+        ])
         self.assertEqual(response.status_code, 403)
 
 
 class EventAddAclApiTests(ThreadEventPatchApiTestCase):
     def test_add_acl_true(self):
         """api adds current event's acl to response"""
-        response = self.patch(self.api_link, [{'op': 'add', 'path': 'acl', 'value': True}])
+        response = self.patch(self.api_link, [
+            {
+                'op': 'add',
+                'path': 'acl',
+                'value': True,
+            },
+        ])
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -879,13 +992,25 @@ class EventAddAclApiTests(ThreadEventPatchApiTestCase):
 
     def test_add_acl_false(self):
         """if value is false, api won't add acl to the response, but will set empty key"""
-        response = self.patch(self.api_link, [{'op': 'add', 'path': 'acl', 'value': False}])
+        response = self.patch(self.api_link, [
+            {
+                'op': 'add',
+                'path': 'acl',
+                'value': False,
+            },
+        ])
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
         self.assertIsNone(response_json['acl'])
 
-        response = self.patch(self.api_link, [{'op': 'add', 'path': 'acl', 'value': True}])
+        response = self.patch(self.api_link, [
+            {
+                'op': 'add',
+                'path': 'acl',
+                'value': True,
+            },
+        ])
         self.assertEqual(response.status_code, 200)
 
 
@@ -895,11 +1020,13 @@ class EventHideApiTests(ThreadEventPatchApiTestCase):
         self.override_acl({'can_hide_events': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -917,11 +1044,13 @@ class EventHideApiTests(ThreadEventPatchApiTestCase):
         self.override_acl({'can_hide_events': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -933,11 +1062,13 @@ class EventHideApiTests(ThreadEventPatchApiTestCase):
         self.override_acl({'can_hide_events': 0})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -960,10 +1091,12 @@ class EventHideApiTests(ThreadEventPatchApiTestCase):
         self.override_acl({'can_hide_events': 0})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 404)

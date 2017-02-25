@@ -112,7 +112,9 @@ class ViewSet(viewsets.ViewSet):
         thread.has_poll = False
         thread.save()
 
-        return Response({'can_start_poll': can_start_poll(request.user, thread)})
+        return Response({
+            'can_start_poll': can_start_poll(request.user, thread),
+        })
 
     @detail_route(methods=['get', 'post'])
     def votes(self, request, thread_pk, pk):

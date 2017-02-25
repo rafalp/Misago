@@ -33,7 +33,9 @@ def change_thread_title(request, thread, new_title):
         thread.first_post.update_search_vector()
         thread.first_post.save(update_fields=['search_vector'])
 
-        record_event(request, thread, 'changed_title', {'old_title': old_title})
+        record_event(request, thread, 'changed_title', {
+            'old_title': old_title,
+        })
         return True
     else:
         return False
@@ -80,7 +82,7 @@ def move_thread(request, thread, new_category):
                 'from_category': {
                     'name': from_category.name,
                     'url': from_category.get_absolute_url(),
-                }
+                },
             }
         )
         return True

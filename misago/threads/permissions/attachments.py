@@ -63,7 +63,7 @@ def build_acl(acl, roles, key_name):
         key=key_name,
         max_attachment_size=algebra.greater,
         can_download_other_users_attachments=algebra.greater,
-        can_delete_other_users_attachments=algebra.greater
+        can_delete_other_users_attachments=algebra.greater,
     )
 
 

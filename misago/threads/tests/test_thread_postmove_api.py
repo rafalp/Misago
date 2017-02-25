@@ -21,14 +21,18 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         self.thread = testutils.post_thread(category=self.category)
 
         self.api_link = reverse(
-            'misago:api:thread-post-move', kwargs={'thread_pk': self.thread.pk}
+            'misago:api:thread-post-move', kwargs={
+                'thread_pk': self.thread.pk,
+            }
         )
 
         Category(
             name='Category B',
             slug='category-b',
         ).insert_at(
-            self.category, position='last-child', save=True
+            self.category,
+            position='last-child',
+            save=True,
         )
         self.category_b = Category.objects.get(slug='category-b')
 
@@ -47,7 +51,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             'can_reply_threads': 1,
             'can_edit_posts': 1,
             'can_approve_content': 0,
-            'can_move_posts': 1
+            'can_move_posts': 1,
         })
 
         if extra_acl:
@@ -64,7 +68,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             'can_reply_threads': 0,
             'can_edit_posts': 1,
             'can_approve_content': 0,
-            'can_move_posts': 1
+            'can_move_posts': 1,
         })
 
         if acl:
@@ -105,12 +109,18 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
 
     def test_invalid_url(self):
         """api validates thread url"""
-        response = self.client.post(self.api_link, {'thread_url': self.user.get_absolute_url()})
+        response = self.client.post(self.api_link, {
+            'thread_url': self.user.get_absolute_url(),
+        })
         self.assertContains(response, "This is not a valid thread link.", status_code=400)
 
     def test_current_thread_url(self):
         """api validates if thread url given is to current thread"""
-        response = self.client.post(self.api_link, {'thread_url': self.thread.get_absolute_url()})
+        response = self.client.post(
+            self.api_link, {
+                'thread_url': self.thread.get_absolute_url(),
+            }
+        )
         self.assertContains(
             response, "Thread to move posts to is same as current one.", status_code=400
         )
@@ -123,7 +133,9 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         other_thread_url = other_thread.get_absolute_url()
         other_thread.delete()
 
-        response = self.client.post(self.api_link, {'thread_url': other_thread_url})
+        response = self.client.post(self.api_link, {
+            'thread_url': other_thread_url,
+        })
         self.assertContains(
             response, "The thread you have entered link to doesn't exist", status_code=400
         )
@@ -134,7 +146,11 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
 
         other_thread = testutils.post_thread(self.category_b)
 
-        response = self.client.post(self.api_link, {'thread_url': other_thread.get_absolute_url()})
+        response = self.client.post(
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+            }
+        )
         self.assertContains(
             response, "The thread you have entered link to doesn't exist", status_code=400
         )
@@ -145,7 +161,11 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
 
         other_thread = testutils.post_thread(self.category_b)
 
-        response = self.client.post(self.api_link, {'thread_url': other_thread.get_absolute_url()})
+        response = self.client.post(
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+            }
+        )
         self.assertContains(
             response, "You can't move posts to threads you can't reply.", status_code=400
         )
@@ -154,7 +174,11 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         """api handles empty data"""
         other_thread = testutils.post_thread(self.category)
 
-        response = self.client.post(self.api_link, {'thread_url': other_thread.get_absolute_url()})
+        response = self.client.post(
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+            }
+        )
         self.assertContains(
             response, "You have to specify at least one post to move.", status_code=400
         )
@@ -167,9 +191,9 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             self.api_link,
             json.dumps({
                 'thread_url': other_thread.get_absolute_url(),
-                'posts': []
+                'posts': [],
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(
             response, "You have to specify at least one post to move.", status_code=400
@@ -183,9 +207,9 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             self.api_link,
             json.dumps({
                 'thread_url': other_thread.get_absolute_url(),
-                'posts': 'string'
+                'posts': 'string',
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(
             response, "One or more post ids received were invalid.", status_code=400
@@ -199,9 +223,9 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             self.api_link,
             json.dumps({
                 'thread_url': other_thread.get_absolute_url(),
-                'posts': [1, 2, 'string']
+                'posts': [1, 2, 'string'],
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(
             response, "One or more post ids received were invalid.", status_code=400
@@ -215,9 +239,9 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             self.api_link,
             json.dumps({
                 'thread_url': other_thread.get_absolute_url(),
-                'posts': list(range(MOVE_LIMIT + 1))
+                'posts': list(range(MOVE_LIMIT + 1)),
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(
             response, "No more than {} posts can be moved".format(MOVE_LIMIT), status_code=400
@@ -231,9 +255,9 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             self.api_link,
             json.dumps({
                 'thread_url': other_thread.get_absolute_url(),
-                'posts': [testutils.reply_thread(self.thread, is_unapproved=True).pk]
+                'posts': [testutils.reply_thread(self.thread, is_unapproved=True).pk],
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(
             response, "One or more posts to move could not be found.", status_code=400
@@ -247,9 +271,9 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             self.api_link,
             json.dumps({
                 'thread_url': other_thread.get_absolute_url(),
-                'posts': [testutils.reply_thread(other_thread, is_hidden=True).pk]
+                'posts': [testutils.reply_thread(other_thread, is_hidden=True).pk],
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(
             response, "One or more posts to move could not be found.", status_code=400
@@ -263,9 +287,9 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             self.api_link,
             json.dumps({
                 'thread_url': other_thread.get_absolute_url(),
-                'posts': [testutils.reply_thread(self.thread, is_event=True).pk]
+                'posts': [testutils.reply_thread(self.thread, is_event=True).pk],
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(response, "Events can't be moved.", status_code=400)
 
@@ -277,9 +301,9 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             self.api_link,
             json.dumps({
                 'thread_url': other_thread.get_absolute_url(),
-                'posts': [self.thread.first_post_id]
+                'posts': [self.thread.first_post_id],
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(response, "You can't move thread's first post.", status_code=400)
 
@@ -291,9 +315,9 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             self.api_link,
             json.dumps({
                 'thread_url': other_thread.get_absolute_url(),
-                'posts': [testutils.reply_thread(self.thread, is_hidden=True).pk]
+                'posts': [testutils.reply_thread(self.thread, is_hidden=True).pk],
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(
             response, "You can't move posts the content you can't see.", status_code=400
@@ -317,9 +341,9 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             self.api_link,
             json.dumps({
                 'thread_url': other_thread.get_absolute_url(),
-                'posts': posts
+                'posts': posts,
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 200)
 

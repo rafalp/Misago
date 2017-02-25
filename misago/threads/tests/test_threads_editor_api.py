@@ -63,8 +63,8 @@ class EditorApiTestCase(AuthenticatedUserTestCase):
             self.user, {
                 'browseable_categories': browseable_categories,
                 'categories': {
-                    self.category.pk: final_acl
-                }
+                    self.category.pk: final_acl,
+                },
             }
         )
 
@@ -91,19 +91,14 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
 
     def test_category_disallowing_new_threads(self):
         """endpoint omits category disallowing starting threads"""
-        self.override_acl({
-            'can_start_threads': 0,
-        })
+        self.override_acl({'can_start_threads': 0})
 
         response = self.client.get(self.api_link)
         self.assertContains(response, "No categories that allow new threads", status_code=403)
 
     def test_category_closed_disallowing_new_threads(self):
         """endpoint omits closed category"""
-        self.override_acl({
-            'can_start_threads': 2,
-            'can_close_threads': 0,
-        })
+        self.override_acl({'can_start_threads': 2, 'can_close_threads': 0})
 
         self.category.is_closed = True
         self.category.save()
@@ -113,10 +108,7 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
 
     def test_category_closed_allowing_new_threads(self):
         """endpoint adds closed category that allows new threads"""
-        self.override_acl({
-            'can_start_threads': 2,
-            'can_close_threads': 1,
-        })
+        self.override_acl({'can_start_threads': 2, 'can_close_threads': 1})
 
         self.category.is_closed = True
         self.category.save()
@@ -133,16 +125,14 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
                 'post': {
                     'close': True,
                     'hide': False,
-                    'pin': 0
-                }
+                    'pin': 0,
+                },
             }
         )
 
     def test_category_allowing_new_threads(self):
         """endpoint adds category that allows new threads"""
-        self.override_acl({
-            'can_start_threads': 2,
-        })
+        self.override_acl({'can_start_threads': 2})
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -156,17 +146,14 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
                 'post': {
                     'close': False,
                     'hide': False,
-                    'pin': 0
-                }
+                    'pin': 0,
+                },
             }
         )
 
     def test_category_allowing_closing_threads(self):
         """endpoint adds category that allows new closed threads"""
-        self.override_acl({
-            'can_start_threads': 2,
-            'can_close_threads': 1,
-        })
+        self.override_acl({'can_start_threads': 2, 'can_close_threads': 1})
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -180,17 +167,14 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
                 'post': {
                     'close': True,
                     'hide': False,
-                    'pin': 0
-                }
+                    'pin': 0,
+                },
             }
         )
 
     def test_category_allowing_locally_pinned_threads(self):
         """endpoint adds category that allows locally pinned threads"""
-        self.override_acl({
-            'can_start_threads': 2,
-            'can_pin_threads': 1,
-        })
+        self.override_acl({'can_start_threads': 2, 'can_pin_threads': 1})
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -204,17 +188,14 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
                 'post': {
                     'close': False,
                     'hide': False,
-                    'pin': 1
-                }
+                    'pin': 1,
+                },
             }
         )
 
     def test_category_allowing_globally_pinned_threads(self):
         """endpoint adds category that allows globally pinned threads"""
-        self.override_acl({
-            'can_start_threads': 2,
-            'can_pin_threads': 2,
-        })
+        self.override_acl({'can_start_threads': 2, 'can_pin_threads': 2})
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -228,17 +209,14 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
                 'post': {
                     'close': False,
                     'hide': False,
-                    'pin': 2
-                }
+                    'pin': 2,
+                },
             }
         )
 
     def test_category_allowing_hidden_threads(self):
         """endpoint adds category that allows globally pinned threads"""
-        self.override_acl({
-            'can_start_threads': 2,
-            'can_hide_threads': 1,
-        })
+        self.override_acl({'can_start_threads': 2, 'can_hide_threads': 1})
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -252,15 +230,12 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
                 'post': {
                     'close': 0,
                     'hide': 1,
-                    'pin': 0
-                }
+                    'pin': 0,
+                },
             }
         )
 
-        self.override_acl({
-            'can_start_threads': 2,
-            'can_hide_threads': 2,
-        })
+        self.override_acl({'can_start_threads': 2, 'can_hide_threads': 2})
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -274,8 +249,8 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
                 'post': {
                     'close': False,
                     'hide': True,
-                    'pin': 0
-                }
+                    'pin': 0,
+                },
             }
         )
 
@@ -286,7 +261,9 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
 
         self.thread = testutils.post_thread(category=self.category)
         self.api_link = reverse(
-            'misago:api:thread-post-editor', kwargs={'thread_pk': self.thread.pk}
+            'misago:api:thread-post-editor', kwargs={
+                'thread_pk': self.thread.pk,
+            }
         )
 
     def test_anonymous_user_request(self):
@@ -369,7 +346,10 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
         self.override_acl({'can_reply_threads': 1})
 
         # unapproved reply can't be replied to
-        unapproved_reply = testutils.reply_thread(self.thread, is_unapproved=True)
+        unapproved_reply = testutils.reply_thread(
+            self.thread,
+            is_unapproved=True,
+        )
 
         response = self.client.get('{}?reply={}'.format(self.api_link, unapproved_reply.pk))
         self.assertEqual(response.status_code, 404)
@@ -410,10 +390,11 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
-            response.json(),
-            {'id': reply_to.pk,
-             'post': reply_to.original,
-             'poster': reply_to.poster_name}
+            response.json(), {
+                'id': reply_to.pk,
+                'post': reply_to.original,
+                'poster': reply_to.poster_name,
+            }
         )
 
 
@@ -426,8 +407,10 @@ class EditReplyEditorApiTests(EditorApiTestCase):
 
         self.api_link = reverse(
             'misago:api:thread-post-editor',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': self.post.pk}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.post.pk,
+            }
         )
 
     def test_anonymous_user_request(self):
@@ -560,9 +543,7 @@ class EditReplyEditorApiTests(EditorApiTestCase):
 
     def test_other_user_post(self):
         """api validates if other user's post can be edited"""
-        self.override_acl({
-            'can_edit_posts': 1,
-        })
+        self.override_acl({'can_edit_posts': 1})
 
         self.post.poster = None
         self.post.save()
@@ -573,9 +554,7 @@ class EditReplyEditorApiTests(EditorApiTestCase):
         )
 
         # allow other users post edition
-        self.override_acl({
-            'can_edit_posts': 2,
-        })
+        self.override_acl({'can_edit_posts': 2})
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -591,8 +570,10 @@ class EditReplyEditorApiTests(EditorApiTestCase):
 
         api_link = reverse(
             'misago:api:thread-post-editor',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': self.thread.first_post.pk}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.thread.first_post.pk,
+            }
         )
 
         response = self.client.get(api_link)
@@ -601,13 +582,13 @@ class EditReplyEditorApiTests(EditorApiTestCase):
     def test_edit(self):
         """endpoint returns valid configuration for editor"""
         for _ in range(3):
-            self.override_acl({
-                'max_attachment_size': 1000,
-            })
+            self.override_acl({'max_attachment_size': 1000})
 
             with open(TEST_DOCUMENT_PATH, 'rb') as upload:
                 response = self.client.post(
-                    reverse('misago:api:attachment-list'), data={'upload': upload}
+                    reverse('misago:api:attachment-list'), data={
+                        'upload': upload,
+                    }
                 )
             self.assertEqual(response.status_code, 200)
 
@@ -620,9 +601,7 @@ class EditReplyEditorApiTests(EditorApiTestCase):
             attachment.post = self.post
             attachment.save()
 
-        self.override_acl({
-            'can_edit_posts': 1,
-        })
+        self.override_acl({'can_edit_posts': 1})
         response = self.client.get(self.api_link)
 
         for attachment in attachments:
@@ -646,6 +625,6 @@ class EditReplyEditorApiTests(EditorApiTestCase):
                 'attachments': [
                     AttachmentSerializer(attachments[1], context={'user': self.user}).data,
                     AttachmentSerializer(attachments[0], context={'user': self.user}).data,
-                ]
+                ],
             }
         )

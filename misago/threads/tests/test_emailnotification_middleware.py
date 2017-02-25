@@ -25,12 +25,15 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
 
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(
-            category=self.category, started_on=timezone.now() - timedelta(seconds=5)
+            category=self.category,
+            started_on=timezone.now() - timedelta(seconds=5),
         )
         self.override_acl()
 
         self.api_link = reverse(
-            'misago:api:thread-post-list', kwargs={'thread_pk': self.thread.pk}
+            'misago:api:thread-post-list', kwargs={
+                'thread_pk': self.thread.pk,
+            }
         )
 
         self.other_user = UserModel.objects.create_user('Bob', 'bob@boberson.com', 'pass123')
@@ -42,7 +45,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             'can_browse': 1,
             'can_start_threads': 1,
             'can_reply_threads': 1,
-            'can_edit_posts': 1
+            'can_edit_posts': 1,
         })
 
         override_acl(self.user, new_acl)
@@ -54,17 +57,23 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             'can_browse': 1,
             'can_start_threads': 1,
             'can_reply_threads': 1,
-            'can_edit_posts': 1
+            'can_edit_posts': 1,
         })
 
         if hide:
-            new_acl['categories'][self.category.pk].update({'can_browse': False})
+            new_acl['categories'][self.category.pk].update({
+                'can_browse': False,
+            })
 
         override_acl(self.other_user, new_acl)
 
     def test_no_subscriptions(self):
         """no emails are sent because noone subscibes to thread"""
-        response = self.client.post(self.api_link, data={'post': 'This is test response!'})
+        response = self.client.post(
+            self.api_link, data={
+                'post': 'This is test response!',
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 0)
@@ -75,10 +84,14 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             thread=self.thread,
             category=self.category,
             last_read_on=timezone.now(),
-            send_email=True
+            send_email=True,
         )
 
-        response = self.client.post(self.api_link, data={'post': 'This is test response!'})
+        response = self.client.post(
+            self.api_link, data={
+                'post': 'This is test response!',
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 0)
@@ -89,10 +102,14 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             thread=self.thread,
             category=self.category,
             last_read_on=timezone.now(),
-            send_email=False
+            send_email=False,
         )
 
-        response = self.client.post(self.api_link, data={'post': 'This is test response!'})
+        response = self.client.post(
+            self.api_link, data={
+                'post': 'This is test response!',
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 0)
@@ -103,11 +120,15 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             thread=self.thread,
             category=self.category,
             last_read_on=timezone.now(),
-            send_email=True
+            send_email=True,
         )
         self.override_other_user_acl(hide=True)
 
-        response = self.client.post(self.api_link, data={'post': 'This is test response!'})
+        response = self.client.post(
+            self.api_link, data={
+                'post': 'This is test response!',
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 0)
@@ -118,13 +139,17 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             thread=self.thread,
             category=self.category,
             last_read_on=timezone.now(),
-            send_email=True
+            send_email=True,
         )
         self.override_other_user_acl()
 
         testutils.reply_thread(self.thread, posted_on=timezone.now())
 
-        response = self.client.post(self.api_link, data={'post': 'This is test response!'})
+        response = self.client.post(
+            self.api_link, data={
+                'post': 'This is test response!',
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 0)
@@ -135,11 +160,15 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             thread=self.thread,
             category=self.category,
             last_read_on=timezone.now(),
-            send_email=True
+            send_email=True,
         )
         self.override_other_user_acl()
 
-        response = self.client.post(self.api_link, data={'post': 'This is test response!'})
+        response = self.client.post(
+            self.api_link, data={
+                'post': 'This is test response!',
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 1)
@@ -163,11 +192,15 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             thread=self.thread,
             category=self.category,
             last_read_on=self.thread.last_post_on,
-            send_email=True
+            send_email=True,
         )
         self.override_other_user_acl()
 
-        response = self.client.post(self.api_link, data={'post': 'This is test response!'})
+        response = self.client.post(
+            self.api_link, data={
+                'post': 'This is test response!',
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 1)

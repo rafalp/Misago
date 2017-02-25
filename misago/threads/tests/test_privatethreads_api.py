@@ -118,13 +118,15 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
         response_json = response.json()
         self.assertEqual(response_json['title'], self.thread.title)
         self.assertEqual(
-            response_json['participants'], [{
-                'id': self.user.id,
-                'username': self.user.username,
-                'avatars': self.user.avatars,
-                'url': self.user.get_absolute_url(),
-                'is_owner': True
-            }]
+            response_json['participants'], [
+                {
+                    'id': self.user.id,
+                    'username': self.user.username,
+                    'avatars': self.user.avatars,
+                    'url': self.user.get_absolute_url(),
+                    'is_owner': True,
+                },
+            ]
         )
 
     def test_can_see_participant(self):
@@ -137,13 +139,15 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
         response_json = response.json()
         self.assertEqual(response_json['title'], self.thread.title)
         self.assertEqual(
-            response_json['participants'], [{
-                'id': self.user.id,
-                'username': self.user.username,
-                'avatars': self.user.avatars,
-                'url': self.user.get_absolute_url(),
-                'is_owner': False
-            }]
+            response_json['participants'], [
+                {
+                    'id': self.user.id,
+                    'username': self.user.username,
+                    'avatars': self.user.avatars,
+                    'url': self.user.get_absolute_url(),
+                    'is_owner': False,
+                },
+            ]
         )
 
     def test_mod_can_see_reported(self):

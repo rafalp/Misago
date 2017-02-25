@@ -33,12 +33,12 @@ class MisagoAdminExtension(object):
             icon='fa fa-cubes',
             parent='misago:admin:system',
             after='misago:admin:system:settings:index',
-            link='misago:admin:system:attachments:index'
+            link='misago:admin:system:attachments:index',
         )
         site.add_node(
             name=_("Attachment types"),
             icon='fa fa-cube',
             parent='misago:admin:system',
             after='misago:admin:system:attachments:index',
-            link='misago:admin:system:attachment-types:index'
+            link='misago:admin:system:attachment-types:index',
         )

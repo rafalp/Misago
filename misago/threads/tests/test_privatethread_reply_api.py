@@ -25,7 +25,11 @@ class PrivateThreadReplyApiTestCase(PrivateThreadsTestCase):
         ThreadParticipant.objects.set_owner(self.thread, self.user)
         ThreadParticipant.objects.add_participants(self.thread, [self.other_user])
 
-        response = self.client.post(self.api_link, data={'post': "This is test response!"})
+        response = self.client.post(
+            self.api_link, data={
+                'post': "This is test response!",
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         # don't count private thread replies

@@ -14,8 +14,10 @@ class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
 
         self.api_link = reverse(
             'misago:api:thread-post-likes',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': self.post.pk}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.post.pk,
+            }
         )
 
     def test_no_permission(self):

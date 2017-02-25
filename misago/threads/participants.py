@@ -28,7 +28,8 @@ def make_threads_participants_aware(user, threads):
         threads_dict[thread.pk] = thread
 
     participants_qs = ThreadParticipant.objects.filter(
-        user=user, thread_id__in=threads_dict.keys()
+        user=user,
+        thread_id__in=threads_dict.keys(),
     )
 
     for participant in participants_qs:
@@ -78,16 +79,21 @@ def change_owner(request, thread, user):
     """
     ThreadParticipant.objects.set_owner(thread, user)
     set_users_unread_private_threads_sync(
-        participants=thread.participants_list, exclude_user=request.user
+        participants=thread.participants_list,
+        exclude_user=request.user,
     )
 
     if thread.participant and thread.participant.is_owner:
         record_event(
-            request, thread, 'changed_owner',
-            {'user': {
-                'username': user.username,
-                'url': user.get_absolute_url(),
-            }}
+            request,
+            thread,
+            'changed_owner',
+            {
+                'user': {
+                    'username': user.username,
+                    'url': user.get_absolute_url(),
+                },
+            },
         )
     else:
         record_event(request, thread, 'tookover')
@@ -103,11 +109,15 @@ def add_participant(request, thread, user):
         record_event(request, thread, 'entered_thread')
     else:
         record_event(
-            request, thread, 'added_participant',
-            {'user': {
-                'username': user.username,
-                'url': user.get_absolute_url(),
-            }}
+            request,
+            thread,
+            'added_participant',
+            {
+                'user': {
+                    'username': user.username,
+                    'url': user.get_absolute_url(),
+                },
+            },
         )
 
 
@@ -124,7 +134,9 @@ def add_participants(request, thread, users):
         thread_participants = []
 
     set_users_unread_private_threads_sync(
-        users=users, participants=thread_participants, exclude_user=request.user
+        users=users,
+        participants=thread_participants,
+        exclude_user=request.user,
     )
 
     emails = []
@@ -137,11 +149,15 @@ def add_participants(request, thread, users):
 
 def build_noticiation_email(request, thread, user):
     subject = _('%(user)s has invited you to participate in private thread "%(thread)s"')
-    subject_formats = {'thread': thread.title, 'user': request.user.username}
+    subject_formats = {
+        'thread': thread.title,
+        'user': request.user.username,
+    }
 
     return build_mail(
-        request, user, subject % subject_formats, 'misago/emails/privatethread/added',
-        {'thread': thread}
+        request, user, subject % subject_formats, 'misago/emails/privatethread/added', {
+            'thread': thread,
+        }
     )
 
 
@@ -180,9 +196,13 @@ def remove_participant(request, thread, user):
                 event_type = 'removed_participant'
 
         record_event(
-            request, thread, event_type,
-            {'user': {
-                'username': user.username,
-                'url': user.get_absolute_url(),
-            }}
+            request,
+            thread,
+            event_type,
+            {
+                'user': {
+                    'username': user.username,
+                    'url': user.get_absolute_url(),
+                },
+            },
         )

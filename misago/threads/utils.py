@@ -31,9 +31,8 @@ def add_categories_to_items(root_category, categories, items):
         else:
             # item from other category's scope
             for category in categories:
-                if category.level == 1 and (
-                        category == item.category or category.has_child(item.category)
-                ):
+                category_is_parent = category.has_child(item.category)
+                if category.level == 1 and (category == item.category or category_is_parent):
                     top_categories_map[item.category_id] = category
                     item.top_category = category
 

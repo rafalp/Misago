@@ -29,7 +29,10 @@ class FeedSerializer(PostSerializer, MutableFields):
         fields = PostSerializer.Meta.fields + ['category', 'thread', 'top_category']
 
     def get_thread(self, obj):
-        return {'title': obj.thread.title, 'url': obj.thread.get_absolute_url()}
+        return {
+            'title': obj.thread.title,
+            'url': obj.thread.get_absolute_url(),
+        }
 
     def get_top_category(self, obj):
         try:

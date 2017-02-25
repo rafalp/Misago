@@ -33,7 +33,7 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
             'can_edit_posts': 0,
             'can_hide_posts': 0,
             'can_hide_own_posts': 0,
-            'can_merge_threads': 0
+            'can_merge_threads': 0,
         })
 
         if acl:
@@ -54,8 +54,8 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
                 'visible_categories': visible_categories,
                 'browseable_categories': browseable_categories,
                 'categories': {
-                    self.category.pk: final_acl
-                }
+                    self.category.pk: final_acl,
+                },
             }
         )
 
@@ -129,7 +129,9 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
         self.override_acl({'can_hide_posts': 0})
 
         hidden_post = testutils.reply_thread(
-            self.thread, is_hidden=True, message="I'am hidden test message!"
+            self.thread,
+            is_hidden=True,
+            message="I'am hidden test message!",
         )
 
         response = self.client.get(self.tested_links[1])
@@ -146,7 +148,10 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
         self.override_acl({'can_approve_content': 0})
 
         # unapproved posts shouldn't show at all
-        unapproved_post = testutils.reply_thread(self.thread, is_unapproved=True)
+        unapproved_post = testutils.reply_thread(
+            self.thread,
+            is_unapproved=True,
+        )
 
         response = self.client.get(self.tested_links[1])
         self.assertNotContains(response, unapproved_post.get_absolute_url())

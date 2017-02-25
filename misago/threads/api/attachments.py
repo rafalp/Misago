@@ -87,7 +87,7 @@ def validate_filesize(upload, filetype, hard_limit):
         raise ValidationError(
             message % {
                 'upload': filesizeformat(upload.size).rstrip('.0'),
-                'limit': filesizeformat(hard_limit * 1024).rstrip('.0')
+                'limit': filesizeformat(hard_limit * 1024).rstrip('.0'),
             }
         )
 
@@ -98,7 +98,7 @@ def validate_filesize(upload, filetype, hard_limit):
         raise ValidationError(
             message % {
                 'upload': filesizeformat(upload.size).rstrip('.0'),
-                'limit': filesizeformat(filetype.size_limit * 1024).rstrip('.0')
+                'limit': filesizeformat(filetype.size_limit * 1024).rstrip('.0'),
             }
         )
 

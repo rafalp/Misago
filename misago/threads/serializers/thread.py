@@ -87,8 +87,8 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
                 'index': obj.get_posts_api_url(),
                 'merge': obj.get_post_merge_api_url(),
                 'move': obj.get_post_move_api_url(),
-                'split': obj.get_post_split_api_url()
-            }
+                'split': obj.get_post_split_api_url(),
+            },
         }
 
     def get_url(self, obj):

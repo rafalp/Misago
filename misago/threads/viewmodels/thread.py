@@ -91,7 +91,7 @@ class ViewModel(BaseViewModel):
             'thread': self._model,
             'poll': self._poll,
             'category': self._model.category,
-            'breadcrumbs': self._model.path
+            'breadcrumbs': self._model.path,
         }
 
 
@@ -103,7 +103,9 @@ class ForumThread(ViewModel):
             queryset = Thread.objects.select_related(*BASE_RELATIONS)
 
         thread = get_object_or_404(
-            queryset, pk=pk, category__tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
+            queryset,
+            pk=pk,
+            category__tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT_NAME),
         )
 
         allow_see_thread(request.user, thread)
@@ -130,7 +132,7 @@ class PrivateThread(ViewModel):
         thread = get_object_or_404(
             queryset,
             pk=pk,
-            category__tree_id=trees_map.get_tree_id_for_root(PRIVATE_THREADS_ROOT_NAME)
+            category__tree_id=trees_map.get_tree_id_for_root(PRIVATE_THREADS_ROOT_NAME),
         )
 
         make_participants_aware(request.user, thread)

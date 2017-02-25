@@ -55,33 +55,53 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
     def test_invalid_extension(self):
         """uploaded file's extension is rejected as invalid"""
-        AttachmentType.objects.create(name="Test extension", extensions='jpg,jpeg', mimetypes=None)
+        AttachmentType.objects.create(
+            name="Test extension",
+            extensions='jpg,jpeg',
+            mimetypes=None,
+        )
 
         with open(TEST_DOCUMENT_PATH, 'rb') as upload:
-            response = self.client.post(self.api_link, data={'upload': upload})
+            response = self.client.post(
+                self.api_link, data={
+                    'upload': upload,
+                }
+            )
         self.assertContains(response, "You can't upload files of this type.", status_code=400)
 
     def test_invalid_mime(self):
         """uploaded file's mimetype is rejected as invalid"""
         AttachmentType.objects.create(
-            name="Test extension", extensions='png', mimetypes='loremipsum'
+            name="Test extension",
+            extensions='png',
+            mimetypes='loremipsum',
         )
 
         with open(TEST_DOCUMENT_PATH, 'rb') as upload:
-            response = self.client.post(self.api_link, data={'upload': upload})
+            response = self.client.post(
+                self.api_link, data={
+                    'upload': upload,
+                }
+            )
         self.assertContains(response, "You can't upload files of this type.", status_code=400)
 
     def test_no_perm_to_type(self):
         """user needs permission to upload files of this type"""
         attachment_type = AttachmentType.objects.create(
-            name="Test extension", extensions='png', mimetypes='application/pdf'
+            name="Test extension",
+            extensions='png',
+            mimetypes='application/pdf',
         )
 
         user_roles = (r.pk for r in self.user.get_roles())
         attachment_type.limit_uploads_to.set(Role.objects.exclude(id__in=user_roles))
 
         with open(TEST_DOCUMENT_PATH, 'rb') as upload:
-            response = self.client.post(self.api_link, data={'upload': upload})
+            response = self.client.post(
+                self.api_link, data={
+                    'upload': upload,
+                }
+            )
         self.assertContains(response, "You can't upload files of this type.", status_code=400)
 
     def test_type_is_locked(self):
@@ -90,11 +110,15 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
             name="Test extension",
             extensions='png',
             mimetypes='application/pdf',
-            status=AttachmentType.LOCKED
+            status=AttachmentType.LOCKED,
         )
 
         with open(TEST_DOCUMENT_PATH, 'rb') as upload:
-            response = self.client.post(self.api_link, data={'upload': upload})
+            response = self.client.post(
+                self.api_link, data={
+                    'upload': upload,
+                }
+            )
         self.assertContains(response, "You can't upload files of this type.", status_code=400)
 
     def test_type_is_disabled(self):
@@ -103,21 +127,32 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
             name="Test extension",
             extensions='png',
             mimetypes='application/pdf',
-            status=AttachmentType.DISABLED
+            status=AttachmentType.DISABLED,
         )
 
         with open(TEST_DOCUMENT_PATH, 'rb') as upload:
-            response = self.client.post(self.api_link, data={'upload': upload})
+            response = self.client.post(
+                self.api_link, data={
+                    'upload': upload,
+                }
+            )
         self.assertContains(response, "You can't upload files of this type.", status_code=400)
 
     def test_upload_too_big_for_type(self):
         """too big uploads are rejected"""
         AttachmentType.objects.create(
-            name="Test extension", extensions='png', mimetypes='image/png', size_limit=100
+            name="Test extension",
+            extensions='png',
+            mimetypes='image/png',
+            size_limit=100,
         )
 
         with open(TEST_LARGEPNG_PATH, 'rb') as upload:
-            response = self.client.post(self.api_link, data={'upload': upload})
+            response = self.client.post(
+                self.api_link, data={
+                    'upload': upload,
+                }
+            )
 
         self.assertContains(
             response, "can't upload files of this type larger than", status_code=400
@@ -128,29 +163,48 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         self.override_acl({'max_attachment_size': 100})
 
         AttachmentType.objects.create(
-            name="Test extension", extensions='png', mimetypes='image/png'
+            name="Test extension",
+            extensions='png',
+            mimetypes='image/png',
         )
 
         with open(TEST_LARGEPNG_PATH, 'rb') as upload:
-            response = self.client.post(self.api_link, data={'upload': upload})
+            response = self.client.post(
+                self.api_link, data={
+                    'upload': upload,
+                }
+            )
         self.assertContains(response, "can't upload files larger than", status_code=400)
 
     def test_corrupted_image_upload(self):
         """corrupted image upload is handled"""
-        AttachmentType.objects.create(name="Test extension", extensions='gif')
+        AttachmentType.objects.create(
+            name="Test extension",
+            extensions='gif',
+        )
 
         with open(TEST_CORRUPTEDIMG_PATH, 'rb') as upload:
-            response = self.client.post(self.api_link, data={'upload': upload})
+            response = self.client.post(
+                self.api_link, data={
+                    'upload': upload,
+                }
+            )
         self.assertContains(response, "Uploaded image was corrupted or invalid.", status_code=400)
 
     def test_document_upload(self):
         """successful upload creates orphan attachment"""
         AttachmentType.objects.create(
-            name="Test extension", extensions='pdf', mimetypes='application/pdf'
+            name="Test extension",
+            extensions='pdf',
+            mimetypes='application/pdf',
         )
 
         with open(TEST_DOCUMENT_PATH, 'rb') as upload:
-            response = self.client.post(self.api_link, data={'upload': upload})
+            response = self.client.post(
+                self.api_link, data={
+                    'upload': upload,
+                }
+            )
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -181,11 +235,17 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
     def test_small_image_upload(self):
         """successful small image upload creates orphan attachment without thumbnail"""
         AttachmentType.objects.create(
-            name="Test extension", extensions='jpeg,jpg', mimetypes='image/jpeg'
+            name="Test extension",
+            extensions='jpeg,jpg',
+            mimetypes='image/jpeg',
         )
 
         with open(TEST_SMALLJPG_PATH, 'rb') as upload:
-            response = self.client.post(self.api_link, data={'upload': upload})
+            response = self.client.post(
+                self.api_link, data={
+                    'upload': upload,
+                }
+            )
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -212,11 +272,17 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         self.override_acl({'max_attachment_size': 10 * 1024})
 
         AttachmentType.objects.create(
-            name="Test extension", extensions='png', mimetypes='image/png'
+            name="Test extension",
+            extensions='png',
+            mimetypes='image/png',
         )
 
         with open(TEST_LARGEPNG_PATH, 'rb') as upload:
-            response = self.client.post(self.api_link, data={'upload': upload})
+            response = self.client.post(
+                self.api_link, data={
+                    'upload': upload,
+                }
+            )
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -259,11 +325,17 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
     def test_animated_image_upload(self):
         """successful gif upload creates orphan attachment with thumbnail"""
         AttachmentType.objects.create(
-            name="Test extension", extensions='gif', mimetypes='image/gif'
+            name="Test extension",
+            extensions='gif',
+            mimetypes='image/gif',
         )
 
         with open(TEST_ANIMATEDGIF_PATH, 'rb') as upload:
-            response = self.client.post(self.api_link, data={'upload': upload})
+            response = self.client.post(
+                self.api_link, data={
+                    'upload': upload,
+                }
+            )
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()

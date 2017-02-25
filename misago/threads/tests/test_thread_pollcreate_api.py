@@ -16,14 +16,22 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
 
     def test_invalid_thread_id(self):
         """api validates that thread id is integer"""
-        api_link = reverse('misago:api:thread-poll-list', kwargs={'thread_pk': 'kjha6dsa687sa'})
+        api_link = reverse(
+            'misago:api:thread-poll-list', kwargs={
+                'thread_pk': 'kjha6dsa687sa',
+            }
+        )
 
         response = self.post(api_link)
         self.assertEqual(response.status_code, 404)
 
     def test_nonexistant_thread_id(self):
         """api validates that thread exists"""
-        api_link = reverse('misago:api:thread-poll-list', kwargs={'thread_pk': self.thread.pk + 1})
+        api_link = reverse(
+            'misago:api:thread-poll-list', kwargs={
+                'thread_pk': self.thread.pk + 1,
+            }
+        )
 
         response = self.post(api_link)
         self.assertEqual(response.status_code, 404)
@@ -90,10 +98,12 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
             poster_ip='127.0.0.1',
             length=30,
             question='Test',
-            choices=[{
-                'hash': 't3st'
-            }],
-            allowed_choices=1
+            choices=[
+                {
+                    'hash': 't3st'
+                },
+            ],
+            allowed_choices=1,
         )
 
         response = self.post(self.api_link)
@@ -109,7 +119,11 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
 
     def test_length_validation(self):
         """api validates poll's length"""
-        response = self.post(self.api_link, data={'length': -1})
+        response = self.post(
+            self.api_link, data={
+                'length': -1,
+            }
+        )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
@@ -117,7 +131,11 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
             response_json['length'], ["Ensure this value is greater than or equal to 0."]
         )
 
-        response = self.post(self.api_link, data={'length': 200})
+        response = self.post(
+            self.api_link, data={
+                'length': 200,
+            }
+        )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
@@ -127,7 +145,11 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
 
     def test_question_validation(self):
         """api validates question length"""
-        response = self.post(self.api_link, data={'question': 'abcd' * 255})
+        response = self.post(
+            self.api_link, data={
+                'question': 'abcd' * 255,
+            }
+        )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
@@ -138,10 +160,14 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
     def test_validate_choice_length(self):
         """api validates single choice length"""
         response = self.post(
-            self.api_link, data={'choices': [{
-                'hash': 'qwertyuiopas',
-                'label': ''
-            }]}
+            self.api_link, data={
+                'choices': [
+                    {
+                        'hash': 'qwertyuiopas',
+                        'label': '',
+                    },
+                ],
+            }
         )
         self.assertEqual(response.status_code, 400)
 
@@ -149,10 +175,15 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         self.assertEqual(response_json['choices'], ["One or more poll choices are invalid."])
 
         response = self.post(
-            self.api_link, data={'choices': [{
-                'hash': 'qwertyuiopas',
-                'label': 'abcd' * 255
-            }]}
+            self.api_link,
+            data={
+                'choices': [
+                    {
+                        'hash': 'qwertyuiopas',
+                        'label': 'abcd' * 255,
+                    },
+                ],
+            }
         )
         self.assertEqual(response.status_code, 400)
 
@@ -172,9 +203,13 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
     def test_validate_max_choices(self):
         """api validates that there are no more choices in poll than allowed number"""
         response = self.post(
-            self.api_link, data={'choices': [{
-                'label': 'Choice'
-            }] * (MAX_POLL_OPTIONS + 1)}
+            self.api_link, data={
+                'choices': [
+                    {
+                        'label': 'Choice',
+                    },
+                ] * (MAX_POLL_OPTIONS + 1),
+            }
         )
         self.assertEqual(response.status_code, 400)
 
@@ -202,11 +237,14 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
                 'length': 0,
                 'question': "Lorem ipsum",
                 'allowed_choices': 3,
-                'choices': [{
-                    'label': 'Choice'
-                }, {
-                    'label': 'Choice'
-                }]
+                'choices': [
+                    {
+                        'label': 'Choice',
+                    },
+                    {
+                        'label': 'Choice',
+                    },
+                ],
             }
         )
         self.assertEqual(response.status_code, 400)
@@ -227,13 +265,17 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
                 'allowed_choices': 2,
                 'allow_revotes': True,
                 'is_public': True,
-                'choices': [{
-                    'label': '\nRed '
-                }, {
-                    'label': 'Green'
-                }, {
-                    'label': 'Blue'
-                }]
+                'choices': [
+                    {
+                        'label': '\nRed ',
+                    },
+                    {
+                        'label': 'Green',
+                    },
+                    {
+                        'label': 'Blue',
+                    },
+                ],
             }
         )
         self.assertEqual(response.status_code, 200)

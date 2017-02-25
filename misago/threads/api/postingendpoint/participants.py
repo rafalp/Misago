@@ -58,11 +58,13 @@ class ParticipantsSerializer(serializers.Serializer):
             message = ungettext(
                 "You can't add more than %(users)s user to private thread (you've added %(added)s).",
                 "You can't add more than %(users)s users to private thread (you've added %(added)s).",
-                max_participants
+                max_participants,
             )
             raise serializers.ValidationError(
-                message % {'users': max_participants,
-                           'added': len(clean_usernames)}
+                message % {
+                    'users': max_participants,
+                    'added': len(clean_usernames),
+                }
             )
 
         return list(set(clean_usernames))

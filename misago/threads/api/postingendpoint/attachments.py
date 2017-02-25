@@ -82,7 +82,8 @@ class AttachmentsSerializer(serializers.Serializer):
             return []
 
         queryset = user.attachment_set.select_related('filetype').filter(
-            post__isnull=True, id__in=ids
+            post__isnull=True,
+            id__in=ids,
         )
 
         return list(queryset)
@@ -126,11 +127,11 @@ def validate_attachments_count(data):
         message = ungettext(
             "You can't attach more than %(limit_value)s file to single post (added %(show_value)s).",
             "You can't attach more than %(limit_value)s flies to single post (added %(show_value)s).",
-            settings.MISAGO_POST_ATTACHMENTS_LIMIT
+            settings.MISAGO_POST_ATTACHMENTS_LIMIT,
         )
         raise serializers.ValidationError(
             message % {
                 'limit_value': settings.MISAGO_POST_ATTACHMENTS_LIMIT,
-                'show_value': total_attachments
+                'show_value': total_attachments,
             }
         )

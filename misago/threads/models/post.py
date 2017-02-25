@@ -84,7 +84,7 @@ class Post(models.Model):
         index_together = [
             ('thread', 'id'),  # speed up threadview for team members
             ('is_event', 'is_hidden'),
-            ('poster', 'posted_on')
+            ('poster', 'posted_on'),
         ]
 
     def __str__(self):

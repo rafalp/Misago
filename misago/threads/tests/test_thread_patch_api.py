@@ -17,7 +17,13 @@ class ThreadPatchApiTestCase(ThreadsApiTestCase):
 class ThreadAddAclApiTests(ThreadPatchApiTestCase):
     def test_add_acl_true(self):
         """api adds current thread's acl to response"""
-        response = self.patch(self.api_link, [{'op': 'add', 'path': 'acl', 'value': True}])
+        response = self.patch(self.api_link, [
+            {
+                'op': 'add',
+                'path': 'acl',
+                'value': True,
+            },
+        ])
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -25,7 +31,13 @@ class ThreadAddAclApiTests(ThreadPatchApiTestCase):
 
     def test_add_acl_false(self):
         """if value is false, api won't add acl to the response, but will set empty key"""
-        response = self.patch(self.api_link, [{'op': 'add', 'path': 'acl', 'value': False}])
+        response = self.patch(self.api_link, [
+            {
+                'op': 'add',
+                'path': 'acl',
+                'value': False,
+            },
+        ])
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -38,11 +50,13 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
         self.override_acl({'can_edit_threads': 2})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'title',
-                'value': "Lorem ipsum change!"
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'title',
+                    'value': "Lorem ipsum change!",
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -54,11 +68,13 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
         self.override_acl({'can_edit_threads': 0})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'title',
-                'value': "Lorem ipsum change!"
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'title',
+                    'value': "Lorem ipsum change!",
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -74,11 +90,13 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
         self.thread.save()
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'title',
-                'value': "Lorem ipsum change!"
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'title',
+                    'value': "Lorem ipsum change!",
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -91,7 +109,15 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
         """api cleans, validates and rejects too short title"""
         self.override_acl({'can_edit_threads': 2})
 
-        response = self.patch(self.api_link, [{'op': 'replace', 'path': 'title', 'value': 12}])
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'title',
+                    'value': 12,
+                },
+            ]
+        )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
@@ -106,7 +132,15 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
         """api makes it possible to pin globally thread"""
         self.override_acl({'can_pin_threads': 2})
 
-        response = self.patch(self.api_link, [{'op': 'replace', 'path': 'weight', 'value': 2}])
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'weight',
+                    'value': 2,
+                },
+            ]
+        )
         self.assertEqual(response.status_code, 200)
 
         thread_json = self.get_thread_json()
@@ -122,7 +156,15 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
 
         self.override_acl({'can_pin_threads': 2})
 
-        response = self.patch(self.api_link, [{'op': 'replace', 'path': 'weight', 'value': 0}])
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'weight',
+                    'value': 0,
+                },
+            ]
+        )
         self.assertEqual(response.status_code, 200)
 
         thread_json = self.get_thread_json()
@@ -132,7 +174,15 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
         """api pin thread globally with no permission fails"""
         self.override_acl({'can_pin_threads': 1})
 
-        response = self.patch(self.api_link, [{'op': 'replace', 'path': 'weight', 'value': 2}])
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'weight',
+                    'value': 2,
+                },
+            ]
+        )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
@@ -153,7 +203,15 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
 
         self.override_acl({'can_pin_threads': 1})
 
-        response = self.patch(self.api_link, [{'op': 'replace', 'path': 'weight', 'value': 1}])
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'weight',
+                    'value': 1,
+                },
+            ]
+        )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
@@ -170,7 +228,15 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
         """api makes it possible to pin locally thread"""
         self.override_acl({'can_pin_threads': 1})
 
-        response = self.patch(self.api_link, [{'op': 'replace', 'path': 'weight', 'value': 1}])
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'weight',
+                    'value': 1,
+                },
+            ]
+        )
         self.assertEqual(response.status_code, 200)
 
         thread_json = self.get_thread_json()
@@ -186,7 +252,15 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
 
         self.override_acl({'can_pin_threads': 1})
 
-        response = self.patch(self.api_link, [{'op': 'replace', 'path': 'weight', 'value': 0}])
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'weight',
+                    'value': 0,
+                },
+            ]
+        )
         self.assertEqual(response.status_code, 200)
 
         thread_json = self.get_thread_json()
@@ -196,7 +270,15 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
         """api pin thread locally with no permission fails"""
         self.override_acl({'can_pin_threads': 0})
 
-        response = self.patch(self.api_link, [{'op': 'replace', 'path': 'weight', 'value': 1}])
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'weight',
+                    'value': 1,
+                },
+            ]
+        )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
@@ -217,7 +299,15 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
 
         self.override_acl({'can_pin_threads': 0})
 
-        response = self.patch(self.api_link, [{'op': 'replace', 'path': 'weight', 'value': 0}])
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'weight',
+                    'value': 0,
+                },
+            ]
+        )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
@@ -237,7 +327,9 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
             name='Category B',
             slug='category-b',
         ).insert_at(
-            self.category, position='last-child', save=True
+            self.category,
+            position='last-child',
+            save=True,
         )
         self.category_b = Category.objects.get(slug='category-b')
 
@@ -277,17 +369,17 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
                 {
                     'op': 'replace',
                     'path': 'category',
-                    'value': self.category_b.pk
+                    'value': self.category_b.pk,
                 },
                 {
                     'op': 'add',
                     'path': 'top-category',
-                    'value': self.category_b.pk
+                    'value': self.category_b.pk,
                 },
                 {
                     'op': 'replace',
                     'path': 'flatten-categories',
-                    'value': None
+                    'value': None,
                 },
             ]
         )
@@ -312,7 +404,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
                 {
                     'op': 'replace',
                     'path': 'category',
-                    'value': self.category_b.pk
+                    'value': self.category_b.pk,
                 },
                 {
                     'op': 'add',
@@ -322,7 +414,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
                 {
                     'op': 'replace',
                     'path': 'flatten-categories',
-                    'value': None
+                    'value': None,
                 },
             ]
         )
@@ -343,11 +435,13 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         self.override_other_acl({})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'category',
-                'value': self.category_b.pk
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'category',
+                    'value': self.category_b.pk,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -367,11 +461,13 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         self.override_other_acl({'can_see': False})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'category',
-                'value': self.category_b.pk
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'category',
+                    'value': self.category_b.pk,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -389,11 +485,13 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         self.override_other_acl({'can_browse': False})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'category',
-                'value': self.category_b.pk
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'category',
+                    'value': self.category_b.pk,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -414,11 +512,13 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         self.override_other_acl({'can_start_threads': 2})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'category',
-                'value': self.thread.category_id
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'category',
+                    'value': self.thread.category_id,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -435,11 +535,13 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
     def test_thread_flatten_categories(self):
         """api flatten thread categories"""
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'flatten-categories',
-                'value': None
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'flatten-categories',
+                    'value': None,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -463,7 +565,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
                 {
                     'op': 'replace',
                     'path': 'flatten-categories',
-                    'value': None
+                    'value': None,
                 },
             ]
         )
@@ -480,11 +582,13 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
         self.override_acl({'can_close_threads': True})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-closed',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-closed',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -502,11 +606,13 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
         self.override_acl({'can_close_threads': True})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-closed',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-closed',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -518,11 +624,13 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
         self.override_acl({'can_close_threads': False})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-closed',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-closed',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -545,11 +653,13 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
         self.override_acl({'can_close_threads': False})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-closed',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-closed',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -571,11 +681,13 @@ class ThreadApproveApiTests(ThreadPatchApiTestCase):
         self.override_acl({'can_approve_content': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-unapproved',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-unapproved',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -587,11 +699,13 @@ class ThreadApproveApiTests(ThreadPatchApiTestCase):
         self.override_acl({'can_approve_content': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-unapproved',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-unapproved',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -605,11 +719,13 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
         self.override_acl({'can_hide_threads': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -631,11 +747,13 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
         self.override_acl({'can_hide_threads': 1})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 200)
 
@@ -649,11 +767,13 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
         self.override_acl({'can_hide_threads': 0})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': True
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 400)
 
@@ -678,11 +798,13 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
         self.override_acl({'can_hide_threads': 0})
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'is-hidden',
-                'value': False
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': False,
+                },
+            ]
         )
         self.assertEqual(response.status_code, 404)
 
@@ -691,11 +813,13 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
     def test_subscribe_thread(self):
         """api makes it possible to subscribe thread"""
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'subscription',
-                'value': 'notify'
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'subscription',
+                    'value': 'notify',
+                },
+            ]
         )
 
         self.assertEqual(response.status_code, 200)
@@ -709,11 +833,13 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
     def test_subscribe_thread_with_email(self):
         """api makes it possible to subscribe thread with emails"""
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'subscription',
-                'value': 'email'
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'subscription',
+                    'value': 'email',
+                },
+            ]
         )
 
         self.assertEqual(response.status_code, 200)
@@ -727,11 +853,13 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
     def test_unsubscribe_thread(self):
         """api makes it possible to unsubscribe thread"""
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'subscription',
-                'value': 'remove'
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'subscription',
+                    'value': 'remove',
+                },
+            ]
         )
 
         self.assertEqual(response.status_code, 200)
@@ -746,11 +874,13 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
         self.logout_user()
 
         response = self.patch(
-            self.api_link, [{
-                'op': 'replace',
-                'path': 'subscription',
-                'value': 'email'
-            }]
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'subscription',
+                    'value': 'email',
+                },
+            ]
         )
 
         self.assertEqual(response.status_code, 403)
@@ -762,11 +892,13 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
         )
 
         response = self.patch(
-            bad_api_link, [{
-                'op': 'replace',
-                'path': 'subscription',
-                'value': 'email'
-            }]
+            bad_api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'subscription',
+                    'value': 'email',
+                },
+            ]
         )
 
         self.assertEqual(response.status_code, 404)

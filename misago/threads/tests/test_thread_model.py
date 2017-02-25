@@ -23,7 +23,7 @@ class ThreadModelTests(TestCase):
             starter_slug='tester',
             last_post_on=datetime,
             last_poster_name='Tester',
-            last_poster_slug='tester'
+            last_poster_slug='tester',
         )
 
         self.thread.set_title("Test thread")
@@ -38,7 +38,7 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime
+            updated_on=datetime,
         )
 
         self.thread.first_post = post
@@ -62,7 +62,7 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime
+            updated_on=datetime,
         )
 
         # first sync call, updates last thread
@@ -90,7 +90,7 @@ class ThreadModelTests(TestCase):
             checksum="nope",
             posted_on=datetime + timedelta(5),
             updated_on=datetime + timedelta(5),
-            is_unapproved=True
+            is_unapproved=True,
         )
 
         self.thread.synchronize()
@@ -116,7 +116,7 @@ class ThreadModelTests(TestCase):
             checksum="nope",
             posted_on=datetime + timedelta(10),
             updated_on=datetime + timedelta(10),
-            is_hidden=True
+            is_hidden=True,
         )
 
         self.thread.synchronize()
@@ -174,7 +174,7 @@ class ThreadModelTests(TestCase):
             checksum="nope",
             posted_on=datetime + timedelta(10),
             updated_on=datetime + timedelta(10),
-            is_event=True
+            is_event=True,
         )
 
         self.thread.synchronize()
@@ -202,7 +202,7 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime
+            updated_on=datetime,
         )
 
         self.thread.synchronize()
@@ -225,7 +225,7 @@ class ThreadModelTests(TestCase):
             poster_name='test',
             poster_slug='test',
             poster_ip='127.0.0.1',
-            choices=[]
+            choices=[],
         )
 
         self.thread.synchronize()
@@ -247,7 +247,7 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime
+            updated_on=datetime,
         )
 
         self.thread.set_first_post(post)
@@ -273,7 +273,7 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime
+            updated_on=datetime,
         )
 
         self.thread.set_last_post(post)
@@ -291,7 +291,9 @@ class ThreadModelTests(TestCase):
             name='New Category',
             slug='new-category',
         ).insert_at(
-            root_category, position='last-child', save=True
+            root_category,
+            position='last-child',
+            save=True,
         )
         new_category = Category.objects.get(slug='new-category')
 
@@ -315,7 +317,7 @@ class ThreadModelTests(TestCase):
             starter_slug='tester',
             last_post_on=datetime,
             last_poster_name='Tester',
-            last_poster_slug='tester'
+            last_poster_slug='tester',
         )
 
         other_thread.set_title("Other thread")
@@ -330,7 +332,7 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am other message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime
+            updated_on=datetime,
         )
 
         other_thread.first_post = post

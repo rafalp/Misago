@@ -51,7 +51,7 @@ class ThreadsRootCategory(ViewModel):
     def get_categories(self, request):
         return [Category.objects.root_category()] + list(
             Category.objects.all_categories().filter(
-                id__in=request.user.acl_cache['browseable_categories']
+                id__in=request.user.acl_cache['browseable_categories'],
             ).select_related('parent')
         )
 
@@ -87,6 +87,16 @@ class PrivateThreadsCategory(ViewModel):
 
 
 BasicCategorySerializer = CategorySerializer.subset_fields(
-    'id', 'parent', 'name', 'description', 'is_closed', 'css_class', 'absolute_url', 'api_url',
-    'level', 'lft', 'rght', 'is_read'
+    'id',
+    'parent',
+    'name',
+    'description',
+    'is_closed',
+    'css_class',
+    'absolute_url',
+    'api_url',
+    'level',
+    'lft',
+    'rght',
+    'is_read',
 )

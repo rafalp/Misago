@@ -16,11 +16,17 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             name='Category B',
             slug='category-b',
         ).insert_at(
-            self.category, position='last-child', save=True
+            self.category,
+            position='last-child',
+            save=True,
         )
         self.category_b = Category.objects.get(slug='category-b')
 
-        self.api_link = reverse('misago:api:thread-merge', kwargs={'pk': self.thread.pk})
+        self.api_link = reverse(
+            'misago:api:thread-merge', kwargs={
+                'pk': self.thread.pk,
+            }
+        )
 
     def override_other_acl(self, acl=None):
         other_category_acl = self.user.acl_cache['categories'][self.category.pk].copy()
@@ -34,7 +40,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             'can_edit_posts': 0,
             'can_hide_posts': 0,
             'can_hide_own_posts': 0,
-            'can_merge_threads': 0
+            'can_merge_threads': 0,
         })
 
         if acl:
@@ -76,14 +82,20 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         """api validates thread url"""
         self.override_acl({'can_merge_threads': 1})
 
-        response = self.client.post(self.api_link, {'thread_url': self.user.get_absolute_url()})
+        response = self.client.post(self.api_link, {
+            'thread_url': self.user.get_absolute_url(),
+        })
         self.assertContains(response, "This is not a valid thread link.", status_code=400)
 
     def test_current_thread_url(self):
         """api validates if thread url given is to current thread"""
         self.override_acl({'can_merge_threads': 1})
 
-        response = self.client.post(self.api_link, {'thread_url': self.thread.get_absolute_url()})
+        response = self.client.post(
+            self.api_link, {
+                'thread_url': self.thread.get_absolute_url(),
+            }
+        )
         self.assertContains(response, "You can't merge thread with itself.", status_code=400)
 
     def test_other_thread_exists(self):
@@ -96,7 +108,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         other_thread_url = other_thread.get_absolute_url()
         other_thread.delete()
 
-        response = self.client.post(self.api_link, {'thread_url': other_thread_url})
+        response = self.client.post(self.api_link, {
+            'thread_url': other_thread_url,
+        })
         self.assertContains(
             response, "The thread you have entered link to doesn't exist", status_code=400
         )
@@ -109,7 +123,11 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
         other_thread = testutils.post_thread(self.category_b)
 
-        response = self.client.post(self.api_link, {'thread_url': other_thread.get_absolute_url()})
+        response = self.client.post(
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+            }
+        )
         self.assertContains(
             response, "The thread you have entered link to doesn't exist", status_code=400
         )
@@ -122,7 +140,11 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
         other_thread = testutils.post_thread(self.category_b)
 
-        response = self.client.post(self.api_link, {'thread_url': other_thread.get_absolute_url()})
+        response = self.client.post(
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+            }
+        )
         self.assertContains(
             response, "You don't have permission to merge this thread", status_code=400
         )
@@ -135,7 +157,11 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
         other_thread = testutils.post_thread(self.category_b)
 
-        response = self.client.post(self.api_link, {'thread_url': other_thread.get_absolute_url()})
+        response = self.client.post(
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+            }
+        )
         self.assertContains(
             response, "You can't merge this thread into thread you can't reply.", status_code=400
         )
@@ -148,7 +174,11 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
         other_thread = testutils.post_thread(self.category_b)
 
-        response = self.client.post(self.api_link, {'thread_url': other_thread.get_absolute_url()})
+        response = self.client.post(
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+            }
+        )
         self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
 
         # other thread has two posts now
@@ -167,7 +197,11 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         other_thread = testutils.post_thread(self.category_b)
         poll = testutils.post_poll(other_thread, self.user)
 
-        response = self.client.post(self.api_link, {'thread_url': other_thread.get_absolute_url()})
+        response = self.client.post(
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+            }
+        )
         self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
 
         # other thread has two posts now
@@ -190,7 +224,11 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         other_thread = testutils.post_thread(self.category_b)
         poll = testutils.post_poll(self.thread, self.user)
 
-        response = self.client.post(self.api_link, {'thread_url': other_thread.get_absolute_url()})
+        response = self.client.post(
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+            }
+        )
         self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
 
         # other thread has two posts now
@@ -214,13 +252,19 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         poll = testutils.post_poll(self.thread, self.user)
         other_poll = testutils.post_poll(other_thread, self.user)
 
-        response = self.client.post(self.api_link, {'thread_url': other_thread.get_absolute_url()})
+        response = self.client.post(
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+            }
+        )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(), {
-                'polls': [[0, "Delete all polls"],
-                          [poll.pk, poll.question],
-                          [other_poll.pk, other_poll.question]]
+                'polls': [
+                    [0, "Delete all polls"],
+                    [poll.pk, poll.question],
+                    [other_poll.pk, other_poll.question],
+                ]
             }
         )
 
@@ -240,8 +284,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         testutils.post_poll(other_thread, self.user)
 
         response = self.client.post(
-            self.api_link, {'thread_url': other_thread.get_absolute_url(),
-                            'poll': 'jhdkajshdsak'}
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+                'poll': 'jhdkajshdsak',
+            }
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {'detail': "Invalid choice."})
@@ -261,8 +307,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         testutils.post_poll(other_thread, self.user)
 
         response = self.client.post(
-            self.api_link, {'thread_url': other_thread.get_absolute_url(),
-                            'poll': 0}
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+                'poll': 0,
+            }
         )
         self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
 
@@ -288,8 +336,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         other_poll = testutils.post_poll(other_thread, self.user)
 
         response = self.client.post(
-            self.api_link, {'thread_url': other_thread.get_absolute_url(),
-                            'poll': poll.pk}
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+                'poll': poll.pk,
+            }
         )
         self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
 
@@ -322,8 +372,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         other_poll = testutils.post_poll(other_thread, self.user)
 
         response = self.client.post(
-            self.api_link, {'thread_url': other_thread.get_absolute_url(),
-                            'poll': other_poll.pk}
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+                'poll': other_poll.pk,
+            }
         )
         self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
 

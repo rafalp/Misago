@@ -41,7 +41,11 @@ class ThreadViewTestCase(AuthenticatedUserTestCase):
         if acl:
             category_acl.update(acl)
 
-        override_acl(self.user, {'categories': {self.category.pk: category_acl}})
+        override_acl(self.user, {
+            'categories': {
+                self.category.pk: category_acl,
+            },
+        })
 
 
 class ThreadVisibilityTests(ThreadViewTestCase):
@@ -231,10 +235,7 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
         self.thread.save()
 
         for action, message in TEST_ACTIONS:
-            self.override_acl({
-                'can_approve_content': 1,
-                'can_hide_threads': 1,
-            })
+            self.override_acl({'can_approve_content': 1, 'can_hide_threads': 1})
 
             self.thread.post_set.filter(is_event=True).delete()
             action(MockRequest(self.user), self.thread)
@@ -248,10 +249,7 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
 
             # hidden events don't render without permission
             hide_post(self.user, event)
-            self.override_acl({
-                'can_approve_content': 1,
-                'can_hide_threads': 1,
-            })
+            self.override_acl({'can_approve_content': 1, 'can_hide_threads': 1})
 
             response = self.client.get(self.thread.get_absolute_url())
             self.assertNotContains(response, event.get_absolute_url())
@@ -398,7 +396,7 @@ class ThreadAttachmentsViewTests(ThreadViewTestCase):
             'filetype': 'ZIP',
             'is_image': False,
             'uploaded_on': '2016-10-22T21:17:40.408710Z',
-            'uploader_name': 'BobBoberson'
+            'uploader_name': 'BobBoberson',
         }
 
         json.update(data)
@@ -413,25 +411,27 @@ class ThreadAttachmentsViewTests(ThreadViewTestCase):
                 'url': {
                     'index': '/attachment/loremipsum-123/',
                     'thumb': None,
-                    'uploader': '/user/bobboberson-123/'
+                    'uploader': '/user/bobboberson-123/',
                 },
                 'filename': 'Archiwum-1.zip',
-            }), self.mock_attachment_cache({
+            }),
+            self.mock_attachment_cache({
                 'url': {
                     'index': '/attachment/loremipsum-223/',
                     'thumb': '/attachment/thumb/loremipsum-223/',
-                    'uploader': '/user/bobboberson-223/'
+                    'uploader': '/user/bobboberson-223/',
                 },
                 'is_image': True,
-                'filename': 'Archiwum-2.zip'
-            }), self.mock_attachment_cache({
+                'filename': 'Archiwum-2.zip',
+            }),
+            self.mock_attachment_cache({
                 'url': {
                     'index': '/attachment/loremipsum-323/',
                     'thumb': None,
-                    'uploader': '/user/bobboberson-323/'
+                    'uploader': '/user/bobboberson-323/',
                 },
-                'filename': 'Archiwum-3.zip'
-            })
+                'filename': 'Archiwum-3.zip',
+            }),
         ]
         post.save()
 

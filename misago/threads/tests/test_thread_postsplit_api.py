@@ -24,14 +24,18 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         ]
 
         self.api_link = reverse(
-            'misago:api:thread-post-split', kwargs={'thread_pk': self.thread.pk}
+            'misago:api:thread-post-split', kwargs={
+                'thread_pk': self.thread.pk,
+            }
         )
 
         Category(
             name='Category B',
             slug='category-b',
         ).insert_at(
-            self.category, position='last-child', save=True
+            self.category,
+            position='last-child',
+            save=True,
         )
         self.category_b = Category.objects.get(slug='category-b')
 
@@ -50,7 +54,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             'can_reply_threads': 1,
             'can_edit_posts': 1,
             'can_approve_content': 0,
-            'can_move_posts': 1
+            'can_move_posts': 1,
         })
 
         if extra_acl:
@@ -67,7 +71,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             'can_reply_threads': 0,
             'can_edit_posts': 1,
             'can_approve_content': 0,
-            'can_move_posts': 1
+            'can_move_posts': 1,
         })
 
         if acl:
@@ -111,9 +115,11 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
     def test_no_posts_ids(self):
         """api rejects no posts ids"""
         response = self.client.post(
-            self.api_link, json.dumps({
-                'posts': []
-            }), content_type="application/json"
+            self.api_link,
+            json.dumps({
+                'posts': [],
+            }),
+            content_type="application/json",
         )
         self.assertContains(
             response, "You have to specify at least one post to split.", status_code=400
@@ -122,9 +128,11 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
     def test_invalid_posts_data(self):
         """api handles invalid data"""
         response = self.client.post(
-            self.api_link, json.dumps({
-                'posts': 'string'
-            }), content_type="application/json"
+            self.api_link,
+            json.dumps({
+                'posts': 'string',
+            }),
+            content_type="application/json",
         )
         self.assertContains(
             response, "One or more post ids received were invalid.", status_code=400
@@ -135,9 +143,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'posts': [1, 2, 'string']
+                'posts': [1, 2, 'string'],
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(
             response, "One or more post ids received were invalid.", status_code=400
@@ -148,9 +156,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'posts': list(range(SPLIT_LIMIT + 1))
+                'posts': list(range(SPLIT_LIMIT + 1)),
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(
             response, "No more than {} posts can be split".format(SPLIT_LIMIT), status_code=400
@@ -161,9 +169,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'posts': [testutils.reply_thread(self.thread, is_unapproved=True).pk]
+                'posts': [testutils.reply_thread(self.thread, is_unapproved=True).pk],
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(
             response, "One or more posts to split could not be found.", status_code=400
@@ -174,9 +182,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'posts': [testutils.reply_thread(self.thread, is_event=True).pk]
+                'posts': [testutils.reply_thread(self.thread, is_event=True).pk],
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(response, "Events can't be split.", status_code=400)
 
@@ -185,9 +193,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'posts': [self.thread.first_post_id]
+                'posts': [self.thread.first_post_id],
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(response, "You can't split thread's first post.", status_code=400)
 
@@ -196,9 +204,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'posts': [testutils.reply_thread(self.thread, is_hidden=True).pk]
+                'posts': [testutils.reply_thread(self.thread, is_hidden=True).pk],
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(
             response, "You can't split posts the content you can't see.", status_code=400
@@ -211,9 +219,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'posts': [testutils.reply_thread(other_thread, is_hidden=True).pk]
+                'posts': [testutils.reply_thread(other_thread, is_hidden=True).pk],
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertContains(
             response, "One or more posts to split could not be found.", status_code=400
@@ -222,9 +230,11 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
     def test_split_empty_new_thread_data(self):
         """api handles empty form data"""
         response = self.client.post(
-            self.api_link, json.dumps({
-                'posts': self.posts
-            }), content_type="application/json"
+            self.api_link,
+            json.dumps({
+                'posts': self.posts,
+            }),
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
 
@@ -243,16 +253,17 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             json.dumps({
                 'posts': self.posts,
                 'title': '$$$',
-                'category': self.category.id
+                'category': self.category.id,
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
         self.assertEqual(
-            response_json,
-            {'title': ["Thread title should be at least 5 characters long (it has 3)."]}
+            response_json, {
+                'title': ["Thread title should be at least 5 characters long (it has 3)."],
+            }
         )
 
     def test_split_invalid_category(self):
@@ -264,14 +275,18 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             json.dumps({
                 'posts': self.posts,
                 'title': 'Valid thread title',
-                'category': self.category_b.id
+                'category': self.category_b.id,
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
-        self.assertEqual(response_json, {'category': ["Requested category could not be found."]})
+        self.assertEqual(
+            response_json, {
+                'category': ["Requested category could not be found."],
+            }
+        )
 
     def test_split_unallowed_start_thread(self):
         """api rejects split because category isn't allowing starting threads"""
@@ -282,15 +297,17 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             json.dumps({
                 'posts': self.posts,
                 'title': 'Valid thread title',
-                'category': self.category.id
+                'category': self.category.id,
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
         self.assertEqual(
-            response_json, {'category': ["You can't create new threads in selected category."]}
+            response_json, {
+                'category': ["You can't create new threads in selected category."],
+            }
         )
 
     def test_split_invalid_weight(self):
@@ -303,13 +320,15 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
                 'category': self.category.id,
                 'weight': 4,
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
         self.assertEqual(
-            response_json, {'weight': ["Ensure this value is less than or equal to 2."]}
+            response_json, {
+                'weight': ["Ensure this value is less than or equal to 2."],
+            }
         )
 
     def test_split_unallowed_global_weight(self):
@@ -322,14 +341,15 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
                 'category': self.category.id,
                 'weight': 2,
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
         self.assertEqual(
-            response_json,
-            {'weight': ["You don't have permission to pin threads globally in this category."]}
+            response_json, {
+                'weight': ["You don't have permission to pin threads globally in this category."],
+            }
         )
 
     def test_split_unallowed_local_weight(self):
@@ -348,8 +368,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
 
         response_json = response.json()
         self.assertEqual(
-            response_json,
-            {'weight': ["You don't have permission to pin threads in this category."]}
+            response_json, {
+                'weight': ["You don't have permission to pin threads in this category."],
+            }
         )
 
     def test_split_allowed_local_weight(self):
@@ -364,14 +385,15 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
                 'category': self.category.id,
                 'weight': 1,
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
         self.assertEqual(
-            response_json,
-            {'title': ["Thread title should be at least 5 characters long (it has 3)."]}
+            response_json, {
+                'title': ["Thread title should be at least 5 characters long (it has 3)."],
+            }
         )
 
     def test_split_allowed_global_weight(self):
@@ -386,14 +408,15 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
                 'category': self.category.id,
                 'weight': 2,
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
         self.assertEqual(
-            response_json,
-            {'title': ["Thread title should be at least 5 characters long (it has 3)."]}
+            response_json, {
+                'title': ["Thread title should be at least 5 characters long (it has 3)."],
+            }
         )
 
     def test_split_unallowed_close(self):
@@ -406,14 +429,15 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
                 'category': self.category.id,
                 'is_closed': True,
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
         self.assertEqual(
-            response_json,
-            {'is_closed': ["You don't have permission to close threads in this category."]}
+            response_json, {
+                'is_closed': ["You don't have permission to close threads in this category."],
+            }
         )
 
     def test_split_with_close(self):
@@ -429,14 +453,15 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
                 'weight': 0,
                 'is_closed': True,
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
         self.assertEqual(
-            response_json,
-            {'title': ["Thread title should be at least 5 characters long (it has 3)."]}
+            response_json, {
+                'title': ["Thread title should be at least 5 characters long (it has 3)."],
+            }
         )
 
     def test_split_unallowed_hidden(self):
@@ -449,14 +474,15 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
                 'category': self.category.id,
                 'is_hidden': True,
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
         self.assertEqual(
-            response_json,
-            {'is_hidden': ["You don't have permission to hide threads in this category."]}
+            response_json, {
+                'is_hidden': ["You don't have permission to hide threads in this category."],
+            }
         )
 
     def test_split_with_hide(self):
@@ -472,14 +498,15 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
                 'weight': 0,
                 'is_hidden': True,
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
         self.assertEqual(
-            response_json,
-            {'title': ["Thread title should be at least 5 characters long (it has 3)."]}
+            response_json, {
+                'title': ["Thread title should be at least 5 characters long (it has 3)."],
+            }
         )
 
     def test_split(self):
@@ -492,9 +519,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             json.dumps({
                 'posts': self.posts,
                 'title': 'Split thread.',
-                'category': self.category.id
+                'category': self.category.id,
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 200)
 
@@ -518,7 +545,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             'can_start_threads': 2,
             'can_close_threads': True,
             'can_hide_threads': True,
-            'can_pin_threads': 2
+            'can_pin_threads': 2,
         })
 
         response = self.client.post(
@@ -529,9 +556,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
                 'category': self.category_b.id,
                 'weight': 2,
                 'is_closed': 1,
-                'is_hidden': 1
+                'is_hidden': 1,
             }),
-            content_type="application/json"
+            content_type="application/json",
         )
         self.assertEqual(response.status_code, 200)
 

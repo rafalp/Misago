@@ -32,7 +32,8 @@ def likes_label(post):
 
     return ngettext(
         "%(users)s and %(likes)s other user like this.",
-        "%(users)s and %(likes)s other users like this.", hidden_likes
+        "%(users)s and %(likes)s other users like this.",
+        hidden_likes,
     ) % formats
 
 

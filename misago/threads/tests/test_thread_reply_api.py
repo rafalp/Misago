@@ -18,7 +18,9 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.thread = testutils.post_thread(category=self.category)
 
         self.api_link = reverse(
-            'misago:api:thread-post-list', kwargs={'thread_pk': self.thread.pk}
+            'misago:api:thread-post-list', kwargs={
+                'thread_pk': self.thread.pk,
+            }
         )
 
     def override_acl(self, extra_acl=None):
@@ -27,7 +29,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
             'can_see': 1,
             'can_browse': 1,
             'can_start_threads': 0,
-            'can_reply_threads': 1
+            'can_reply_threads': 1,
         })
 
         if extra_acl:
@@ -109,7 +111,9 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {'post': ["You have to enter a message."]})
+        self.assertEqual(response.json(), {
+            'post': ["You have to enter a message."],
+        })
 
     def test_post_is_validated(self):
         """post is validated"""
@@ -123,14 +127,19 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(),
-            {'post': ["Posted message should be at least 5 characters long (it has 1)."]}
+            response.json(), {
+                'post': ["Posted message should be at least 5 characters long (it has 1)."],
+            }
         )
 
     def test_can_reply_thread(self):
         """endpoint creates new reply"""
         self.override_acl()
-        response = self.client.post(self.api_link, data={'post': "This is test response!"})
+        response = self.client.post(
+            self.api_link, data={
+                'post': "This is test response!",
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         thread = Thread.objects.get(pk=self.thread.pk)
@@ -169,6 +178,8 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.override_acl()
 
         response = self.client.post(
-            self.api_link, data={'post': "Chrzążczyżewoszyce, powiat Łękółody."}
+            self.api_link, data={
+                'post': "Chrzążczyżewoszyce, powiat Łękółody.",
+            }
         )
         self.assertEqual(response.status_code, 200)

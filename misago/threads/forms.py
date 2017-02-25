@@ -18,7 +18,7 @@ class SearchAttachmentsForm(forms.Form):
         coerce=int,
         choices=get_searchable_filetypes,
         empty_value=0,
-        required=False
+        required=False,
     )
     is_orphan = forms.ChoiceField(
         label=_("State"),

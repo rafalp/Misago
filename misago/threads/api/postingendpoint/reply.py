@@ -84,12 +84,16 @@ class ReplyMiddleware(PostingMiddleware):
 class ReplySerializer(serializers.Serializer):
     post = serializers.CharField(
         validators=[validate_post],
-        error_messages={'required': ugettext_lazy("You have to enter a message.")}
+        error_messages={
+            'required': ugettext_lazy("You have to enter a message."),
+        }
     )
 
 
 class ThreadSerializer(ReplySerializer):
     title = serializers.CharField(
         validators=[validate_title],
-        error_messages={'required': ugettext_lazy("You have to enter thread title.")}
+        error_messages={
+            'required': ugettext_lazy("You have to enter thread title."),
+        }
     )

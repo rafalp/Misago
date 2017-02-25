@@ -33,7 +33,7 @@ def post_thread(
         'last_post_on': started_on,
         'is_unapproved': is_unapproved,
         'is_hidden': is_hidden,
-        'is_closed': is_closed
+        'is_closed': is_closed,
     }
 
     if is_global:
@@ -101,7 +101,10 @@ def reply_thread(
     }
 
     try:
-        kwargs.update({'poster': poster, 'poster_name': poster.username})
+        kwargs.update({
+            'poster': poster,
+            'poster_name': poster.username,
+        })
     except AttributeError:
         kwargs.update({'poster_name': poster})
 
@@ -127,23 +130,28 @@ def post_poll(thread, poster):
         poster_slug=poster.slug,
         poster_ip='127.0.0.1',
         question="Lorem ipsum dolor met?",
-        choices=[{
-            'hash': 'aaaaaaaaaaaa',
-            'label': 'Alpha',
-            'votes': 1
-        }, {
-            'hash': 'bbbbbbbbbbbb',
-            'label': 'Beta',
-            'votes': 0
-        }, {
-            'hash': 'gggggggggggg',
-            'label': 'Gamma',
-            'votes': 2
-        }, {
-            'hash': 'dddddddddddd',
-            'label': 'Delta',
-            'votes': 1
-        }],
+        choices=[
+            {
+                'hash': 'aaaaaaaaaaaa',
+                'label': 'Alpha',
+                'votes': 1
+            },
+            {
+                'hash': 'bbbbbbbbbbbb',
+                'label': 'Beta',
+                'votes': 0
+            },
+            {
+                'hash': 'gggggggggggg',
+                'label': 'Gamma',
+                'votes': 2
+            },
+            {
+                'hash': 'dddddddddddd',
+                'label': 'Delta',
+                'votes': 1
+            },
+        ],
         allowed_choices=2,
         votes=4
     )
@@ -161,7 +169,7 @@ def post_poll(thread, poster):
         voter_name=user.username,
         voter_slug=user.slug,
         voter_ip='127.0.0.1',
-        choice_hash='aaaaaaaaaaaa'
+        choice_hash='aaaaaaaaaaaa',
     )
 
     # test user voted on third and last choices
@@ -172,7 +180,7 @@ def post_poll(thread, poster):
         voter_name=poster.username,
         voter_slug=poster.slug,
         voter_ip='127.0.0.1',
-        choice_hash='gggggggggggg'
+        choice_hash='gggggggggggg',
     )
     poll.pollvote_set.create(
         category=thread.category,
@@ -181,7 +189,7 @@ def post_poll(thread, poster):
         voter_name=poster.username,
         voter_slug=poster.slug,
         voter_ip='127.0.0.1',
-        choice_hash='dddddddddddd'
+        choice_hash='dddddddddddd',
     )
 
     # somebody else voted on third option before being deleted
@@ -191,7 +199,7 @@ def post_poll(thread, poster):
         voter_name='deleted',
         voter_slug='deleted',
         voter_ip='127.0.0.1',
-        choice_hash='gggggggggggg'
+        choice_hash='gggggggggggg',
     )
 
     return poll
@@ -208,20 +216,26 @@ def like_post(post, liker=None, username=None):
             liker=liker,
             liker_name=liker.username,
             liker_slug=liker.slug,
-            liker_ip='127.0.0.1'
+            liker_ip='127.0.0.1',
         )
 
-        post.last_likes = [{'id': liker.id, 'username': liker.username}] + post.last_likes
+        post.last_likes = [{
+            'id': liker.id,
+            'username': liker.username,
+        }] + post.last_likes
     else:
         like = post.postlike_set.create(
             category=post.category,
             thread=post.thread,
             liker_name=username,
             liker_slug=slugify(username),
-            liker_ip='127.0.0.1'
+            liker_ip='127.0.0.1',
         )
 
-        post.last_likes = [{'id': None, 'username': username}] + post.last_likes
+        post.last_likes = [{
+            'id': None,
+            'username': username,
+        }] + post.last_likes
 
     post.likes += 1
     post.save()

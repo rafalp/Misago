@@ -91,7 +91,10 @@ class EditPollSerializer(serializers.ModelSerializer):
                 choices_map[choice['hash']].update({'label': choice['label']})
                 final_choices.append(choices_map[choice['hash']])
             else:
-                choice.update({'hash': get_random_string(12), 'votes': 0})
+                choice.update({
+                    'hash': get_random_string(12),
+                    'votes': 0,
+                })
                 final_choices.append(choice)
 
         self.validate_choices_num(final_choices)
@@ -120,11 +123,13 @@ class EditPollSerializer(serializers.ModelSerializer):
             message = ungettext(
                 "You can't add more than %(limit_value)s option to a single poll (added %(show_value)s).",
                 "You can't add more than %(limit_value)s options to a single poll (added %(show_value)s).",
-                MAX_POLL_OPTIONS
+                MAX_POLL_OPTIONS,
             )
             raise serializers.ValidationError(
-                message % {'limit_value': MAX_POLL_OPTIONS,
-                           'show_value': total_choices}
+                message % {
+                    'limit_value': MAX_POLL_OPTIONS,
+                    'show_value': total_choices,
+                }
             )
 
     def validate(self, data):
@@ -166,7 +171,10 @@ class NewPollSerializer(EditPollSerializer):
         self.validate_choices_num(clean_choices)
 
         for choice in clean_choices:
-            choice.update({'hash': get_random_string(12), 'votes': 0})
+            choice.update({
+                'hash': get_random_string(12),
+                'votes': 0,
+            })
 
         return clean_choices
 

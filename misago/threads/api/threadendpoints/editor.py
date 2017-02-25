@@ -31,7 +31,7 @@ def thread_start_editor(request):
             post = {
                 'close': bool(category.acl['can_close_threads']),
                 'hide': bool(category.acl['can_hide_threads']),
-                'pin': category.acl['can_pin_threads']
+                'pin': category.acl['can_pin_threads'],
             }
 
             available.append(category.pk)
@@ -43,7 +43,7 @@ def thread_start_editor(request):
             'id': category.pk,
             'name': category.name,
             'level': category.level - 1,
-            'post': post
+            'post': post,
         })
 
     # list only categories that allow new threads, or contains subcategory that allows one

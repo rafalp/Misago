@@ -45,7 +45,7 @@ class CategorySerializer(serializers.Serializer):
     category = serializers.IntegerField(
         error_messages={
             'required': ugettext_lazy("You have to select category to post thread in."),
-            'invalid': ugettext_lazy("Selected category is invalid.")
+            'invalid': ugettext_lazy("Selected category is invalid."),
         }
     )
 

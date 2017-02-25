@@ -66,7 +66,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
                 request=RequestMock(test_input),
                 mode=PostingEndpoint.START,
                 user=self.user,
-                post=self.post
+                post=self.post,
             )
 
             serializer = middleware.get_serializer()
@@ -83,7 +83,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
                 }),
                 mode=PostingEndpoint.START,
                 user=self.user,
-                post=self.post
+                post=self.post,
             )
 
             serializer = middleware.get_serializer()
@@ -92,7 +92,10 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
     def test_get_initial_attachments(self):
         """get_initial_attachments returns list of attachments already existing on post"""
         middleware = AttachmentsMiddleware(
-            request=RequestMock(), mode=PostingEndpoint.EDIT, user=self.user, post=self.post
+            request=RequestMock(),
+            mode=PostingEndpoint.EDIT,
+            user=self.user,
+            post=self.post,
         )
 
         serializer = middleware.get_serializer()
@@ -111,7 +114,10 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
     def test_get_new_attachments(self):
         """get_initial_attachments returns list of attachments already existing on post"""
         middleware = AttachmentsMiddleware(
-            request=RequestMock(), mode=PostingEndpoint.EDIT, user=self.user, post=self.post
+            request=RequestMock(),
+            mode=PostingEndpoint.EDIT,
+            user=self.user,
+            post=self.post,
         )
 
         serializer = middleware.get_serializer()
@@ -132,7 +138,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         """middleware validates if we have permission to delete other users attachments"""
         self.override_acl({
             'max_attachment_size': 1024,
-            'can_delete_other_users_attachments': False
+            'can_delete_other_users_attachments': False,
         })
 
         attachment = self.mock_attachment(user=False, post=self.post)
@@ -144,7 +150,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             }),
             mode=PostingEndpoint.EDIT,
             user=self.user,
-            post=self.post
+            post=self.post,
         ).get_serializer()
 
         self.assertFalse(serializer.is_valid())
@@ -162,7 +168,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             }),
             mode=PostingEndpoint.EDIT,
             user=self.user,
-            post=self.post
+            post=self.post,
         )
 
         serializer = middleware.get_serializer()
@@ -190,7 +196,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             }),
             mode=PostingEndpoint.EDIT,
             user=self.user,
-            post=self.post
+            post=self.post,
         )
 
         serializer = middleware.get_serializer()
@@ -222,7 +228,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             }),
             mode=PostingEndpoint.EDIT,
             user=self.user,
-            post=self.post
+            post=self.post,
         )
 
         serializer = middleware.get_serializer()
@@ -250,7 +256,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             }),
             mode=PostingEndpoint.EDIT,
             user=self.user,
-            post=self.post
+            post=self.post,
         )
 
         serializer = middleware.get_serializer()

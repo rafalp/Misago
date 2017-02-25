@@ -142,7 +142,9 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
             name='New Category',
             slug='new-category',
         ).insert_at(
-            root_category, position='last-child', save=True
+            root_category,
+            position='last-child',
+            save=True,
         )
         new_category = Category.objects.get(slug='new-category')
 

@@ -17,7 +17,9 @@ class ThreadPollApiTestCase(AuthenticatedUserTestCase):
         self.override_acl()
 
         self.api_link = reverse(
-            'misago:api:thread-poll-list', kwargs={'thread_pk': self.thread.pk}
+            'misago:api:thread-poll-list', kwargs={
+                'thread_pk': self.thread.pk,
+            }
         )
 
     def post(self, url, data=None):
@@ -39,7 +41,7 @@ class ThreadPollApiTestCase(AuthenticatedUserTestCase):
             'can_edit_polls': 1,
             'can_delete_polls': 1,
             'poll_edit_time': 0,
-            'can_always_see_poll_voters': 0
+            'can_always_see_poll_voters': 0,
         })
 
         if user:
@@ -54,6 +56,8 @@ class ThreadPollApiTestCase(AuthenticatedUserTestCase):
 
         self.api_link = reverse(
             'misago:api:thread-poll-detail',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': self.poll.pk}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.poll.pk,
+            }
         )

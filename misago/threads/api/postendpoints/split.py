@@ -76,7 +76,7 @@ def split_posts_to_new_thread(request, thread, validated_data, posts):
     new_thread = Thread(
         category=validated_data['category'],
         started_on=thread.started_on,
-        last_post_on=thread.last_post_on
+        last_post_on=thread.last_post_on,
     )
 
     new_thread.set_title(validated_data['title'])

@@ -27,14 +27,18 @@ class AddCategoriesToItemsTests(MisagoTestCase):
             slug='category-a',
             css_class='showing-category-a',
         ).insert_at(
-            self.root, position='last-child', save=True
+            self.root,
+            position='last-child',
+            save=True,
         )
         Category(
             name='Category E',
             slug='category-e',
             css_class='showing-category-e',
         ).insert_at(
-            self.root, position='last-child', save=True
+            self.root,
+            position='last-child',
+            save=True,
         )
 
         self.root = Category.objects.root_category()
@@ -45,7 +49,9 @@ class AddCategoriesToItemsTests(MisagoTestCase):
             slug='category-b',
             css_class='showing-category-b',
         ).insert_at(
-            self.category_a, position='last-child', save=True
+            self.category_a,
+            position='last-child',
+            save=True,
         )
 
         self.category_b = Category.objects.get(slug='category-b')
@@ -54,14 +60,18 @@ class AddCategoriesToItemsTests(MisagoTestCase):
             slug='category-c',
             css_class='showing-category-c',
         ).insert_at(
-            self.category_b, position='last-child', save=True
+            self.category_b,
+            position='last-child',
+            save=True,
         )
         Category(
             name='Category D',
             slug='category-d',
             css_class='showing-category-d',
         ).insert_at(
-            self.category_b, position='last-child', save=True
+            self.category_b,
+            position='last-child',
+            save=True,
         )
 
         self.category_c = Category.objects.get(slug='category-c')
@@ -73,7 +83,9 @@ class AddCategoriesToItemsTests(MisagoTestCase):
             slug='category-f',
             css_class='showing-category-f',
         ).insert_at(
-            self.category_e, position='last-child', save=True
+            self.category_e,
+            position='last-child',
+            save=True,
         )
 
         self.clear_state()
@@ -178,62 +190,62 @@ class GetThreadIdFromUrlTests(MisagoTestCase):
                 # perfect match
                 'request': MockRequest('https', 'testforum.com', '/discuss/'),
                 'url': 'https://testforum.com/discuss/t/test-thread/123/',
-                'pk': 123
+                'pk': 123,
             },
             {
                 # we don't validate scheme in case site recently moved to https
                 # but user still has old url's saved somewhere
                 'request': MockRequest('http', 'testforum.com', '/discuss/'),
                 'url': 'http://testforum.com/discuss/t/test-thread/432/post/12321/',
-                'pk': 432
+                'pk': 432,
             },
             {
                 # extract thread id from other thread urls
                 'request': MockRequest('https', 'testforum.com', '/discuss/'),
                 'url': 'http://testforum.com/discuss/t/test-thread/432/post/12321/',
-                'pk': 432
+                'pk': 432,
             },
             {
                 # extract thread id from thread page url
                 'request': MockRequest('http', 'testforum.com', '/discuss/'),
                 'url': 'http://testforum.com/discuss/t/test-thread/432/123/',
-                'pk': 432
+                'pk': 432,
             },
             {
                 # extract thread id from thread last post url with relative schema
                 'request': MockRequest('http', 'testforum.com', '/discuss/'),
                 'url': '//testforum.com/discuss/t/test-thread/18/last/',
-                'pk': 18
+                'pk': 18,
             },
             {
                 # extract thread id from url that lacks scheme
                 'request': MockRequest('http', 'testforum.com', ''),
                 'url': 'testforum.com/t/test-thread/12/last/',
-                'pk': 12
+                'pk': 12,
             },
             {
                 # extract thread id from schemaless thread last post url
                 'request': MockRequest('http', 'testforum.com', '/discuss/'),
                 'url': 'testforum.com/discuss/t/test-thread/18/last/',
-                'pk': 18
+                'pk': 18,
             },
             {
                 # extract thread id from url that lacks scheme and hostname
                 'request': MockRequest('http', 'testforum.com', ''),
                 'url': '/t/test-thread/13/',
-                'pk': 13
+                'pk': 13,
             },
             {
                 # extract thread id from url that has port name
                 'request': MockRequest('http', '127.0.0.1:8000', ''),
                 'url': 'https://127.0.0.1:8000/t/test-thread/13/',
-                'pk': 13
+                'pk': 13,
             },
             {
                 # extract thread id from url that isn't trimmed
                 'request': MockRequest('http', '127.0.0.1:8000', ''),
                 'url': '   /t/test-thread/13/   ',
-                'pk': 13
+                'pk': 13,
             }
         )
 
@@ -249,27 +261,27 @@ class GetThreadIdFromUrlTests(MisagoTestCase):
             {
                 # invalid wsgi alias
                 'request': MockRequest('https', 'testforum.com'),
-                'url': 'http://testforum.com/discuss/t/test-thread-123/'
+                'url': 'http://testforum.com/discuss/t/test-thread-123/',
             },
             {
                 # invalid hostname
                 'request': MockRequest('http', 'misago-project.org', '/discuss/'),
-                'url': 'https://testforum.com/discuss/t/test-thread-432/post/12321/'
+                'url': 'https://testforum.com/discuss/t/test-thread-432/post/12321/',
             },
             {
                 # old thread url
                 'request': MockRequest('http', 'testforum.com'),
-                'url': 'https://testforum.com/thread/bobboberson-123/'
+                'url': 'https://testforum.com/thread/bobboberson-123/',
             },
             {
                 # dashed thread url
                 'request': MockRequest('http', 'testforum.com'),
-                'url': 'https://testforum.com/t/bobboberson-123/'
+                'url': 'https://testforum.com/t/bobboberson-123/',
             },
             {
                 # non-thread url
                 'request': MockRequest('http', 'testforum.com'),
-                'url': 'https://testforum.com/user/bobboberson-123/'
+                'url': 'https://testforum.com/user/bobboberson-123/',
             },
             {
                 # rubbish url

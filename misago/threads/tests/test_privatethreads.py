@@ -8,7 +8,11 @@ class PrivateThreadsTestCase(AuthenticatedUserTestCase):
         super(PrivateThreadsTestCase, self).setUp()
         self.category = Category.objects.private_threads()
 
-        override_acl(self.user, {'can_use_private_threads': 1, 'can_start_private_threads': 1})
+        override_acl(self.user, {
+            'can_use_private_threads': 1,
+            'can_start_private_threads': 1,
+        })
+
         self.override_acl()
 
     def override_acl(self, acl=None):
@@ -23,10 +27,14 @@ class PrivateThreadsTestCase(AuthenticatedUserTestCase):
             'can_edit_posts': 0,
             'can_hide_posts': 0,
             'can_hide_own_posts': 0,
-            'can_merge_threads': 0
+            'can_merge_threads': 0,
         })
 
         if acl:
             final_acl.update(acl)
 
-        override_acl(self.user, {'categories': {self.category.pk: final_acl}})
+        override_acl(self.user, {
+            'categories': {
+                self.category.pk: final_acl,
+            },
+        })

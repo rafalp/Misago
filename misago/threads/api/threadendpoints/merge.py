@@ -48,14 +48,16 @@ def thread_merge_endpoint(request, thread, viewmodel):
     except PermissionDenied as e:
         return Response({'detail': e.args[0]}, status=400)
     except Http404:
-        return Response({
-            'detail':
-                _(
-                    "The thread you have entered link to doesn't "
-                    "exist or you don't have permission to see it."
-                )
-        },
-                        status=400)
+        return Response(
+            {
+                'detail':
+                    _(
+                        "The thread you have entered link to doesn't "
+                        "exist or you don't have permission to see it."
+                    )
+            },
+            status=400,
+        )
 
     polls_handler = PollMergeHandler([thread, other_thread])
     if len(polls_handler.polls) == 1:
@@ -91,7 +93,7 @@ def thread_merge_endpoint(request, thread, viewmodel):
     return Response({
         'id': other_thread.pk,
         'title': other_thread.title,
-        'url': other_thread.get_absolute_url()
+        'url': other_thread.get_absolute_url(),
     })
 
 

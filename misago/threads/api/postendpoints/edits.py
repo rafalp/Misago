@@ -49,7 +49,7 @@ def revert_post_endpoint(request, post):
         editor_slug=request.user.slug,
         editor_ip=request.user_ip,
         edited_from=post.original,
-        edited_to=edit.edited_from
+        edited_to=edit.edited_from,
     )
 
     parsing_result = common_flavour(request, post.poster, edit.edited_from)

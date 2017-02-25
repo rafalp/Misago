@@ -262,7 +262,10 @@ def patch_remove_participant(request, thread, value):
         make_participants_aware(request.user, thread)
         participants = ThreadParticipantSerializer(thread.participants_list, many=True)
 
-        return {'deleted': False, 'participants': participants.data}
+        return {
+            'deleted': False,
+            'participants': participants.data,
+        }
 
 
 thread_patch_dispatcher.remove('participants', patch_remove_participant)

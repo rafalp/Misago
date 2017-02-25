@@ -24,7 +24,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
             'can_pin_threads': 0,
             'can_close_threads': 0,
             'can_hide_threads': 0,
-            'can_hide_own_threads': 0
+            'can_hide_own_threads': 0,
         })
 
         if extra_acl:
@@ -50,7 +50,9 @@ class StartThreadTests(AuthenticatedUserTestCase):
         """has no permission to see selected category"""
         self.override_acl({'can_see': 0})
 
-        response = self.client.post(self.api_link, {'category': self.category.pk})
+        response = self.client.post(self.api_link, {
+            'category': self.category.pk,
+        })
 
         self.assertContains(response, "Selected category is invalid.", status_code=400)
 
@@ -58,7 +60,9 @@ class StartThreadTests(AuthenticatedUserTestCase):
         """has no permission to browse selected category"""
         self.override_acl({'can_browse': 0})
 
-        response = self.client.post(self.api_link, {'category': self.category.pk})
+        response = self.client.post(self.api_link, {
+            'category': self.category.pk,
+        })
 
         self.assertContains(response, "Selected category is invalid.", status_code=400)
 
@@ -66,7 +70,9 @@ class StartThreadTests(AuthenticatedUserTestCase):
         """permission to start thread in category is validated"""
         self.override_acl({'can_start_threads': 0})
 
-        response = self.client.post(self.api_link, {'category': self.category.pk})
+        response = self.client.post(self.api_link, {
+            'category': self.category.pk,
+        })
 
         self.assertContains(
             response, "You don't have permission to start new threads", status_code=400
@@ -79,7 +85,9 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         self.override_acl({'can_close_threads': 0})
 
-        response = self.client.post(self.api_link, {'category': self.category.pk})
+        response = self.client.post(self.api_link, {
+            'category': self.category.pk,
+        })
 
         self.assertContains(response, "This category is closed.", status_code=400)
 
@@ -104,7 +112,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
             response.json(), {
                 'category': ["You have to select category to post thread in."],
                 'title': ["You have to enter thread title."],
-                'post': ["You have to enter a message."]
+                'post': ["You have to enter a message."],
             }
         )
 
@@ -123,7 +131,9 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {'title': ["Thread title should contain alpha-numeric characters."]}
+            response.json(), {
+                'title': ["Thread title should contain alpha-numeric characters."],
+            }
         )
 
     def test_post_is_validated(self):
@@ -141,8 +151,9 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(),
-            {'post': ["Posted message should be at least 5 characters long (it has 1)."]}
+            response.json(), {
+                'post': ["Posted message should be at least 5 characters long (it has 1)."],
+            }
         )
 
     def test_can_start_thread(self):
@@ -153,7 +164,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
             data={
                 'category': self.category.pk,
                 'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!"
+                'post': "Lorem ipsum dolor met!",
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -210,7 +221,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
                 'category': self.category.pk,
                 'title': "Hello, I am test thread!",
                 'post': "Lorem ipsum dolor met!",
-                'close': True
+                'close': True,
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -228,7 +239,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
                 'category': self.category.pk,
                 'title': "Hello, I am test thread!",
                 'post': "Lorem ipsum dolor met!",
-                'close': True
+                'close': True,
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -246,7 +257,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
                 'category': self.category.pk,
                 'title': "Hello, I am test thread!",
                 'post': "Lorem ipsum dolor met!",
-                'pin': 0
+                'pin': 0,
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -264,7 +275,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
                 'category': self.category.pk,
                 'title': "Hello, I am test thread!",
                 'post': "Lorem ipsum dolor met!",
-                'pin': 1
+                'pin': 1,
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -282,7 +293,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
                 'category': self.category.pk,
                 'title': "Hello, I am test thread!",
                 'post': "Lorem ipsum dolor met!",
-                'pin': 2
+                'pin': 2,
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -300,7 +311,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
                 'category': self.category.pk,
                 'title': "Hello, I am test thread!",
                 'post': "Lorem ipsum dolor met!",
-                'pin': 2
+                'pin': 2,
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -318,7 +329,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
                 'category': self.category.pk,
                 'title': "Hello, I am test thread!",
                 'post': "Lorem ipsum dolor met!",
-                'pin': 1
+                'pin': 1,
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -336,7 +347,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
                 'category': self.category.pk,
                 'title': "Hello, I am test thread!",
                 'post': "Lorem ipsum dolor met!",
-                'hide': 1
+                'hide': 1,
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -357,7 +368,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
                 'category': self.category.pk,
                 'title': "Hello, I am test thread!",
                 'post': "Lorem ipsum dolor met!",
-                'hide': 1
+                'hide': 1,
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -374,7 +385,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
             data={
                 'category': self.category.pk,
                 'title': "Brzęczyżczykiewicz",
-                'post': "Chrzążczyżewoszyce, powiat Łękółody."
+                'post': "Chrzążczyżewoszyce, powiat Łękółody.",
             }
         )
         self.assertEqual(response.status_code, 200)

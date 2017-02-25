@@ -28,12 +28,21 @@ class ViewSet(viewsets.ViewSet):
             self, request, pk, read_aware=True, subscription_aware=True, select_for_update=False
     ):
         return self.thread(
-            request, get_int_or_404(pk), None, read_aware, subscription_aware, select_for_update
+            request,
+            get_int_or_404(pk),
+            None,
+            read_aware,
+            subscription_aware,
+            select_for_update,
         )
 
     def get_thread_for_update(self, request, pk):
         return self.get_thread(
-            request, pk, read_aware=False, subscription_aware=False, select_for_update=True
+            request,
+            pk,
+            read_aware=False,
+            subscription_aware=False,
+            select_for_update=True,
         )
 
     def retrieve(self, request, pk):
@@ -70,7 +79,11 @@ class ThreadViewSet(ViewSet):
 
         # Put them through posting pipeline
         posting = PostingEndpoint(
-            request, PostingEndpoint.START, tree_name=THREADS_ROOT_NAME, thread=thread, post=post
+            request,
+            PostingEndpoint.START,
+            tree_name=THREADS_ROOT_NAME,
+            thread=thread,
+            post=post,
         )
 
         if posting.is_valid():
@@ -79,7 +92,7 @@ class ThreadViewSet(ViewSet):
             return Response({
                 'id': thread.pk,
                 'title': thread.title,
-                'url': thread.get_absolute_url()
+                'url': thread.get_absolute_url(),
             })
         else:
             return Response(posting.errors, status=400)
@@ -128,7 +141,7 @@ class PrivateThreadViewSet(ViewSet):
             PostingEndpoint.START,
             tree_name=PRIVATE_THREADS_ROOT_NAME,
             thread=thread,
-            post=post
+            post=post,
         )
 
         if posting.is_valid():
@@ -137,7 +150,7 @@ class PrivateThreadViewSet(ViewSet):
             return Response({
                 'id': thread.pk,
                 'title': thread.title,
-                'url': thread.get_absolute_url()
+                'url': thread.get_absolute_url(),
             })
         else:
             return Response(posting.errors, status=400)

@@ -42,25 +42,25 @@ class PermissionsForm(forms.Form):
         label=_("Max number of users invited to private thread"),
         help_text=_("Enter 0 to don't limit number of participants."),
         initial=3,
-        min_value=0
+        min_value=0,
     )
     can_add_everyone_to_private_threads = YesNoSwitch(
         label=_("Can add everyone to threads"),
-        help_text=_("Allows user to add users that are blocking him to private threads.")
+        help_text=_("Allows user to add users that are blocking him to private threads."),
     )
     can_report_private_threads = YesNoSwitch(
         label=_("Can report private threads"),
         help_text=_(
             "Allows user to report private threads they are "
             "participating in, making them accessible to moderators."
-        )
+        ),
     )
     can_moderate_private_threads = YesNoSwitch(
         label=_("Can moderate private threads"),
         help_text=_(
             "Allows user to read, reply, edit and delete content "
             "in reported private threads."
-        )
+        ),
     )
 
 

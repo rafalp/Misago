@@ -96,9 +96,8 @@ def clean_posts_for_merge(request, thread):
                     raise MergeError(authorship_error)
 
             if posts[0].pk != thread.first_post_id:
-                if posts[0].is_hidden != post.is_hidden or posts[
-                        0
-                ].is_unapproved != post.is_unapproved:
+                if (posts[0].is_hidden != post.is_hidden or
+                        posts[0].is_unapproved != post.is_unapproved):
                     raise MergeError(_("Posts with different visibility can't be merged."))
 
             posts.append(post)

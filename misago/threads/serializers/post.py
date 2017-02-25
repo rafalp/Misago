@@ -150,8 +150,10 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
     def get_last_editor_url(self, obj):
         if obj.last_editor_id:
             return reverse(
-                'misago:user', kwargs={'pk': obj.last_editor_id,
-                                       'slug': obj.last_editor_slug}
+                'misago:user', kwargs={
+                    'pk': obj.last_editor_id,
+                    'slug': obj.last_editor_slug,
+                }
             )
         else:
             return None
@@ -159,8 +161,10 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
     def get_hidden_by_url(self, obj):
         if obj.hidden_by_id:
             return reverse(
-                'misago:user', kwargs={'pk': obj.hidden_by_id,
-                                       'slug': obj.hidden_by_slug}
+                'misago:user', kwargs={
+                    'pk': obj.hidden_by_id,
+                    'slug': obj.hidden_by_slug,
+                }
             )
         else:
             return None

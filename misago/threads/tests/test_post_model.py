@@ -26,7 +26,7 @@ class PostModelTests(TestCase):
             starter_slug='tester',
             last_post_on=datetime,
             last_poster_name='Tester',
-            last_poster_slug='tester'
+            last_poster_slug='tester',
         )
 
         self.thread.set_title("Test thread")
@@ -42,7 +42,7 @@ class PostModelTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime
+            updated_on=datetime,
         )
 
         update_post_checksum(self.post)
@@ -67,7 +67,7 @@ class PostModelTests(TestCase):
             starter_slug='tester',
             last_post_on=timezone.now(),
             last_poster_name='Tester',
-            last_poster_slug='tester'
+            last_poster_slug='tester',
         )
 
         # can't merge with other users posts
@@ -134,7 +134,7 @@ class PostModelTests(TestCase):
             parsed="<p>I am other message!</p>",
             checksum="nope",
             posted_on=timezone.now() + timedelta(minutes=5),
-            updated_on=timezone.now() + timedelta(minutes=5)
+            updated_on=timezone.now() + timedelta(minutes=5),
         )
 
         other_post.merge(self.post)
@@ -152,7 +152,7 @@ class PostModelTests(TestCase):
             starter_slug='tester',
             last_post_on=timezone.now(),
             last_poster_name='Tester',
-            last_poster_slug='tester'
+            last_poster_slug='tester',
         )
 
         self.post.move(new_thread)

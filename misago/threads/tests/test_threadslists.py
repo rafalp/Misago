@@ -42,14 +42,18 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
             slug='category-a',
             css_class='showing-category-a',
         ).insert_at(
-            self.root, position='last-child', save=True
+            self.root,
+            position='last-child',
+            save=True,
         )
         Category(
             name='Category E',
             slug='category-e',
             css_class='showing-category-e',
         ).insert_at(
-            self.root, position='last-child', save=True
+            self.root,
+            position='last-child',
+            save=True,
         )
 
         self.root = Category.objects.root_category()
@@ -61,7 +65,9 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
             slug='category-b',
             css_class='showing-category-b',
         ).insert_at(
-            self.category_a, position='last-child', save=True
+            self.category_a,
+            position='last-child',
+            save=True,
         )
 
         self.category_b = Category.objects.get(slug='category-b')
@@ -71,14 +77,18 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
             slug='category-c',
             css_class='showing-category-c',
         ).insert_at(
-            self.category_b, position='last-child', save=True
+            self.category_b,
+            position='last-child',
+            save=True,
         )
         Category(
             name='Category D',
             slug='category-d',
             css_class='showing-category-d',
         ).insert_at(
-            self.category_b, position='last-child', save=True
+            self.category_b,
+            position='last-child',
+            save=True,
         )
 
         self.category_c = Category.objects.get(slug='category-c')
@@ -90,7 +100,9 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
             slug='category-f',
             css_class='showing-category-f',
         ).insert_at(
-            self.category_e, position='last-child', save=True
+            self.category_e,
+            position='last-child',
+            save=True,
         )
 
         self.category_f = Category.objects.get(slug='category-f')
@@ -116,7 +128,7 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
             'categories': {},
             'visible_categories': [],
             'browseable_categories': [],
-            'can_approve_content': []
+            'can_approve_content': [],
         }
 
         # copy first category's acl to other categories to make base for overrides
@@ -136,7 +148,7 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
                 'can_see_all_threads': 1,
                 'can_see_own_threads': 0,
                 'can_hide_threads': 0,
-                'can_approve_content': 0
+                'can_approve_content': 0,
             })
 
             if category_acl:
@@ -238,7 +250,9 @@ class AllThreadsListTests(ThreadsListTestCase):
             name='Hidden Category',
             slug='hidden-category',
         ).insert_at(
-            self.root, position='last-child', save=True
+            self.root,
+            position='last-child',
+            save=True,
         )
         test_category = Category.objects.get(slug='hidden-category')
 
@@ -352,6 +366,8 @@ class AllThreadsListTests(ThreadsListTestCase):
 
     def test_noscript_pagination(self):
         """threads list is paginated for users with js disabled"""
+        threads_per_page = settings.MISAGO_THREADS_PER_PAGE
+
         threads = []
         for _ in range(settings.MISAGO_THREADS_PER_PAGE * 3):
             threads.append(testutils.post_thread(category=self.first_category))
@@ -360,12 +376,11 @@ class AllThreadsListTests(ThreadsListTestCase):
         response = self.client.get('/?page=2')
         self.assertEqual(response.status_code, 200)
 
-        for thread in threads[:settings.MISAGO_THREADS_PER_PAGE]:
+        for thread in threads[:threads_per_page]:
             self.assertNotContains(response, thread.get_absolute_url())
-        for thread in threads[settings.MISAGO_THREADS_PER_PAGE:settings.MISAGO_THREADS_PER_PAGE * 2
-                              ]:
+        for thread in threads[threads_per_page:threads_per_page * 2]:
             self.assertContains(response, thread.get_absolute_url())
-        for thread in threads[settings.MISAGO_THREADS_PER_PAGE * 2:]:
+        for thread in threads[threads_per_page * 2:]:
             self.assertNotContains(response, thread.get_absolute_url())
 
         self.assertNotContains(response, '/?page=1')
@@ -375,9 +390,9 @@ class AllThreadsListTests(ThreadsListTestCase):
         response = self.client.get('/?page=3')
         self.assertEqual(response.status_code, 200)
 
-        for thread in threads[settings.MISAGO_THREADS_PER_PAGE:]:
+        for thread in threads[threads_per_page:]:
             self.assertNotContains(response, thread.get_absolute_url())
-        for thread in threads[:settings.MISAGO_THREADS_PER_PAGE]:
+        for thread in threads[:threads_per_page]:
             self.assertContains(response, thread.get_absolute_url())
 
         self.assertContains(response, '/?page=2')
@@ -395,7 +410,9 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             name='Hidden Category',
             slug='hidden-category',
         ).insert_at(
-            self.root, position='last-child', save=True
+            self.root,
+            position='last-child',
+            save=True,
         )
         test_category = Category.objects.get(slug='hidden-category')
 
@@ -412,7 +429,9 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             name='Hidden Category',
             slug='hidden-category',
         ).insert_at(
-            self.root, position='last-child', save=True
+            self.root,
+            position='last-child',
+            save=True,
         )
         test_category = Category.objects.get(slug='hidden-category')
 
@@ -425,8 +444,8 @@ class CategoryThreadsListTests(ThreadsListTestCase):
                         test_category.pk: {
                             'can_see': 1,
                             'can_browse': 0,
-                        }
-                    }
+                        },
+                    },
                 }
             )
 
@@ -441,8 +460,8 @@ class CategoryThreadsListTests(ThreadsListTestCase):
                         test_category.pk: {
                             'can_see': 1,
                             'can_browse': 0,
-                        }
-                    }
+                        },
+                    },
                 }
             )
 
@@ -568,7 +587,9 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
             name='Hidden Category',
             slug='hidden-category',
         ).insert_at(
-            self.root, position='last-child', save=True
+            self.root,
+            position='last-child',
+            save=True,
         )
 
         test_category = Category.objects.get(slug='hidden-category')
@@ -585,7 +606,9 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
             name='Hidden Category',
             slug='hidden-category',
         ).insert_at(
-            self.root, position='last-child', save=True
+            self.root,
+            position='last-child',
+            save=True,
         )
 
         test_category = Category.objects.get(slug='hidden-category')
@@ -786,9 +809,7 @@ class MyThreadsListTests(ThreadsListTestCase):
             poster=self.user,
         )
 
-        other_thread = testutils.post_thread(
-            category=self.category_a,
-        )
+        other_thread = testutils.post_thread(category=self.category_a)
 
         self.access_all_categories()
 
@@ -853,9 +874,7 @@ class NewThreadsListTests(ThreadsListTestCase):
 
     def test_list_renders_new_thread(self):
         """list renders new thread"""
-        test_thread = testutils.post_thread(
-            category=self.category_a,
-        )
+        test_thread = testutils.post_thread(category=self.category_a)
 
         self.access_all_categories()
 
@@ -892,10 +911,14 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.user.save()
 
         test_thread = testutils.post_thread(
-            category=self.category_a, started_on=self.user.joined_on - timedelta(days=2)
+            category=self.category_a,
+            started_on=self.user.joined_on - timedelta(days=2),
         )
 
-        testutils.reply_thread(test_thread, posted_on=self.user.joined_on + timedelta(days=4))
+        testutils.reply_thread(
+            test_thread,
+            posted_on=self.user.joined_on + timedelta(days=4),
+        )
 
         self.access_all_categories()
 
@@ -933,7 +956,7 @@ class NewThreadsListTests(ThreadsListTestCase):
 
         test_thread = testutils.post_thread(
             category=self.category_a,
-            started_on=timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF + 1)
+            started_on=timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF + 1),
         )
 
         self.access_all_categories()
@@ -969,7 +992,8 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.user.save()
 
         test_thread = testutils.post_thread(
-            category=self.category_a, started_on=self.user.joined_on - timedelta(minutes=1)
+            category=self.category_a,
+            started_on=self.user.joined_on - timedelta(minutes=1),
         )
 
         self.access_all_categories()
@@ -1233,7 +1257,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
 
         test_thread = testutils.post_thread(
             category=self.category_a,
-            started_on=timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF + 5)
+            started_on=timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF + 5),
         )
 
         threadstracker.make_thread_read_aware(self.user, test_thread)
@@ -1276,13 +1300,17 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.user.save()
 
         test_thread = testutils.post_thread(
-            category=self.category_a, started_on=self.user.joined_on - timedelta(days=2)
+            category=self.category_a,
+            started_on=self.user.joined_on - timedelta(days=2),
         )
 
         threadstracker.make_thread_read_aware(self.user, test_thread)
         threadstracker.read_thread(self.user, test_thread, test_thread.last_post)
 
-        testutils.reply_thread(test_thread, posted_on=test_thread.started_on + timedelta(days=1))
+        testutils.reply_thread(
+            test_thread,
+            posted_on=test_thread.started_on + timedelta(days=1),
+        )
 
         self.access_all_categories()
 
@@ -1319,7 +1347,8 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.user.save()
 
         test_thread = testutils.post_thread(
-            category=self.category_a, started_on=self.user.joined_on - timedelta(days=2)
+            category=self.category_a,
+            started_on=self.user.joined_on - timedelta(days=2),
         )
 
         threadstracker.make_thread_read_aware(self.user, test_thread)
@@ -1462,7 +1491,9 @@ class UnapprovedListTests(ThreadsListTestCase):
 
         # approval perm has no influence on visibility
         for test_url in TEST_URLS:
-            self.access_all_categories(base_acl={'can_see_unapproved_content_lists': True})
+            self.access_all_categories(base_acl={
+                'can_see_unapproved_content_lists': True,
+            })
 
             self.access_all_categories()
             response = self.client.get(test_url)
@@ -1481,8 +1512,11 @@ class UnapprovedListTests(ThreadsListTestCase):
         )
 
         self.access_all_categories({
-            'can_approve_content': True
-        }, {'can_see_unapproved_content_lists': True})
+            'can_approve_content': True,
+        }, {
+            'can_see_unapproved_content_lists': True,
+        })
+
         response = self.client.get('/unapproved/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, visible_thread.get_absolute_url())
@@ -1490,7 +1524,10 @@ class UnapprovedListTests(ThreadsListTestCase):
 
         self.access_all_categories({
             'can_approve_content': True
-        }, {'can_see_unapproved_content_lists': True})
+        }, {
+            'can_see_unapproved_content_lists': True,
+        })
+
         response = self.client.get(self.category_a.get_absolute_url() + 'unapproved/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, visible_thread.get_absolute_url())
@@ -1499,7 +1536,10 @@ class UnapprovedListTests(ThreadsListTestCase):
         # test api
         self.access_all_categories({
             'can_approve_content': True
-        }, {'can_see_unapproved_content_lists': True})
+        }, {
+            'can_see_unapproved_content_lists': True,
+        })
+
         response = self.client.get('%s?list=unapproved' % self.api_link)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, visible_thread.get_absolute_url())
@@ -1520,20 +1560,26 @@ class UnapprovedListTests(ThreadsListTestCase):
             is_unapproved=True,
         )
 
-        self.access_all_categories(base_acl={'can_see_unapproved_content_lists': True})
+        self.access_all_categories(base_acl={
+            'can_see_unapproved_content_lists': True,
+        })
         response = self.client.get('/unapproved/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, visible_thread.get_absolute_url())
         self.assertNotContains(response, hidden_thread.get_absolute_url())
 
-        self.access_all_categories(base_acl={'can_see_unapproved_content_lists': True})
+        self.access_all_categories(base_acl={
+            'can_see_unapproved_content_lists': True,
+        })
         response = self.client.get(self.category_a.get_absolute_url() + 'unapproved/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, visible_thread.get_absolute_url())
         self.assertNotContains(response, hidden_thread.get_absolute_url())
 
         # test api
-        self.access_all_categories(base_acl={'can_see_unapproved_content_lists': True})
+        self.access_all_categories(base_acl={
+            'can_see_unapproved_content_lists': True,
+        })
         response = self.client.get('%s?list=unapproved' % self.api_link)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, visible_thread.get_absolute_url())

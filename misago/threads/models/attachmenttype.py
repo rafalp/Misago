@@ -17,8 +17,11 @@ class AttachmentType(models.Model):
     size_limit = models.PositiveIntegerField(default=1024)
     status = models.PositiveIntegerField(
         default=ENABLED,
-        choices=((ENABLED, _("Allow uploads and downloads")), (LOCKED, _("Allow downloads only")),
-                 (DISABLED, _("Disallow both uploading and downloading")), )
+        choices=[
+            (ENABLED, _("Allow uploads and downloads")),
+            (LOCKED, _("Allow downloads only")),
+            (DISABLED, _("Disallow both uploading and downloading")),
+        ],
     )
 
     limit_uploads_to = models.ManyToManyField('misago_acl.Role', related_name='+', blank=True)

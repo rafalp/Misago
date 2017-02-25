@@ -16,5 +16,6 @@ class SyncPrivateThreadsMiddleware(PostingMiddleware):
 
     def post_save(self, serializer):
         set_users_unread_private_threads_sync(
-            participants=self.thread.participants_list, exclude_user=self.user
+            participants=self.thread.participants_list,
+            exclude_user=self.user,
         )

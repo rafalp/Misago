@@ -32,16 +32,18 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
                 editor_slug=self.user.slug,
                 editor_ip='127.0.0.1',
                 edited_from="Original body",
-                edited_to="First Edit"
-            ), self.post.edits_record.create(
+                edited_to="First Edit",
+            ),
+            self.post.edits_record.create(
                 category=self.category,
                 thread=self.thread,
                 editor_name='Deleted',
                 editor_slug='deleted',
                 editor_ip='127.0.0.1',
                 edited_from="First Edit",
-                edited_to="Second Edit"
-            ), self.post.edits_record.create(
+                edited_to="Second Edit",
+            ),
+            self.post.edits_record.create(
                 category=self.category,
                 thread=self.thread,
                 editor=self.user,
@@ -49,8 +51,8 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
                 editor_slug=self.user.slug,
                 editor_ip='127.0.0.1',
                 edited_from="Second Edit",
-                edited_to="Last Edit"
-            )
+                edited_to="Last Edit",
+            ),
         ]
 
         self.post.original = 'Last Edit'

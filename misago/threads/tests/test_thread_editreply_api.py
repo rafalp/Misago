@@ -20,8 +20,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
         self.api_link = reverse(
             'misago:api:thread-post-detail',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': self.post.pk}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.post.pk,
+            }
         )
 
     def override_acl(self, extra_acl=None):
@@ -31,7 +33,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
             'can_browse': 1,
             'can_start_threads': 0,
             'can_reply_threads': 0,
-            'can_edit_posts': 1
+            'can_edit_posts': 1,
         })
 
         if extra_acl:
@@ -144,7 +146,9 @@ class EditReplyTests(AuthenticatedUserTestCase):
         response = self.put(self.api_link, data={})
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {'post': ["You have to enter a message."]})
+        self.assertEqual(response.json(), {
+            'post': ["You have to enter a message."],
+        })
 
     def test_edit_event(self):
         """events can't be edited"""
@@ -169,8 +173,9 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(),
-            {'post': ["Posted message should be at least 5 characters long (it has 1)."]}
+            response.json(), {
+                'post': ["Posted message should be at least 5 characters long (it has 1)."],
+            }
         )
 
     def test_edit_reply_no_change(self):
@@ -234,8 +239,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
         api_link = reverse(
             'misago:api:thread-post-detail',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': self.thread.first_post.pk}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.thread.first_post.pk,
+            }
         )
 
         response = self.put(api_link, data={'post': "This is test edit!"})
@@ -245,7 +252,12 @@ class EditReplyTests(AuthenticatedUserTestCase):
         """can protect post"""
         self.override_acl({'can_protect_posts': 1})
 
-        response = self.put(self.api_link, data={'post': "Lorem ipsum dolor met!", 'protect': 1})
+        response = self.put(
+            self.api_link, data={
+                'post': "Lorem ipsum dolor met!",
+                'protect': 1,
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         post = self.user.post_set.order_by('id').last()
@@ -255,7 +267,12 @@ class EditReplyTests(AuthenticatedUserTestCase):
         """cant protect post without permission"""
         self.override_acl({'can_protect_posts': 0})
 
-        response = self.put(self.api_link, data={'post': "Lorem ipsum dolor met!", 'protect': 1})
+        response = self.put(
+            self.api_link, data={
+                'post': "Lorem ipsum dolor met!",
+                'protect': 1,
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         post = self.user.post_set.order_by('id').last()
@@ -265,5 +282,9 @@ class EditReplyTests(AuthenticatedUserTestCase):
         """unicode characters can be posted"""
         self.override_acl()
 
-        response = self.put(self.api_link, data={'post': "Chrzążczyżewoszyce, powiat Łękółody."})
+        response = self.put(
+            self.api_link, data={
+                'post': "Chrzążczyżewoszyce, powiat Łękółody.",
+            }
+        )
         self.assertEqual(response.status_code, 200)

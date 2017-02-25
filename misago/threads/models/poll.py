@@ -93,6 +93,6 @@ class Poll(models.Model):
                 'label': choice['label'],
                 'votes': choice['votes'],
                 'selected': choice['selected'],
-                'proc': proc
+                'proc': proc,
             })
         return view_choices

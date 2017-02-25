@@ -39,7 +39,10 @@ class Attachment(models.Model):
     uploaded_on = models.DateTimeField(default=timezone.now, db_index=True)
 
     uploader = models.ForeignKey(
-        settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
     )
     uploader_name = models.CharField(max_length=255)
     uploader_slug = models.CharField(max_length=255, db_index=True)

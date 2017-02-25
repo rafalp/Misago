@@ -71,7 +71,10 @@ class ViewModel(object):
 
     def get_posts_queryset(self, request, thread):
         queryset = thread.post_set.select_related(
-            'poster', 'poster__rank', 'poster__ban_cache', 'poster__online_tracker'
+            'poster',
+            'poster__rank',
+            'poster__ban_cache',
+            'poster__online_tracker',
         ).filter(is_event=False).order_by('id')
         return exclude_invisible_posts(request.user, thread.category, queryset)
 
@@ -96,7 +99,10 @@ class ViewModel(object):
         return context
 
     def get_template_context(self):
-        return {'posts': self.posts, 'paginator': self.paginator}
+        return {
+            'posts': self.posts,
+            'paginator': self.paginator,
+        }
 
 
 class ThreadPosts(ViewModel):

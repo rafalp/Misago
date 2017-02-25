@@ -45,7 +45,9 @@ class ThreadBase(View):
     def get_template_context(self, request, thread, posts):
         context = {
             'url_name':
-                ':'.join(request.resolver_match.namespaces + [request.resolver_match.url_name])
+                ':'.join(request.resolver_match.namespaces + [
+                    request.resolver_match.url_name,
+                ])
         }
 
         context.update(thread.get_template_context())
@@ -59,7 +61,9 @@ class ThreadView(ThreadBase):
     template_name = 'misago/thread/thread.html'
 
     def get_default_frontend_context(self):
-        return {'THREADS_API': reverse('misago:api:thread-list')}
+        return {
+            'THREADS_API': reverse('misago:api:thread-list'),
+        }
 
 
 class PrivateThreadView(ThreadBase):

@@ -35,29 +35,29 @@ class RolePermissionsForm(forms.Form):
         label=_("Can start polls"),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads")))
+        choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads")), ),
     )
     can_edit_polls = forms.TypedChoiceField(
         label=_("Can edit polls"),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Own polls")), (2, _("All polls")))
+        choices=((0, _("No")), (1, _("Own polls")), (2, _("All polls")), ),
     )
     can_delete_polls = forms.TypedChoiceField(
         label=_("Can delete polls"),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Own polls")), (2, _("All polls")))
+        choices=((0, _("No")), (1, _("Own polls")), (2, _("All polls")), ),
     )
     poll_edit_time = forms.IntegerField(
         label=_("Time limit for own polls edits, in minutes"),
         help_text=_("Enter 0 to don't limit time for editing own polls."),
         initial=0,
-        min_value=0
+        min_value=0,
     )
     can_always_see_poll_voters = YesNoSwitch(
         label=_("Can always see polls voters"),
-        help_text=_("Allows users to see who voted in poll even if poll votes are secret.")
+        help_text=_("Allows users to see who voted in poll even if poll votes are secret."),
     )
 
 
@@ -79,7 +79,7 @@ def build_acl(acl, roles, key_name):
         'can_edit_polls': 0,
         'can_delete_polls': 0,
         'poll_edit_time': 0,
-        'can_always_see_poll_voters': 0
+        'can_always_see_poll_voters': 0,
     })
 
     return algebra.sum_acls(
@@ -109,7 +109,9 @@ def add_acl_to_poll(user, poll):
 
 
 def add_acl_to_thread(user, thread):
-    thread.acl.update({'can_start_poll': can_start_poll(user, thread)})
+    thread.acl.update({
+        'can_start_poll': can_start_poll(user, thread),
+    })
 
 
 def register_with(registry):

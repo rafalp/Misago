@@ -25,13 +25,15 @@ class AttachmentsList(AttachmentAdmin, generic.ListView):
                 ('-size', _("Largest files")), )
     selection_label = _('With attachments: 0')
     empty_selection_label = _('Select attachments')
-    mass_actions = [{
-        'action': 'delete',
-        'name': _("Delete attachments"),
-        'icon': 'fa fa-times-circle',
-        'confirmation': _("Are you sure you want to delete selected attachments?"),
-        'is_atomic': False
-    }]
+    mass_actions = [
+        {
+            'action': 'delete',
+            'name': _("Delete attachments"),
+            'icon': 'fa fa-times-circle',
+            'confirmation': _("Are you sure you want to delete selected attachments?"),
+            'is_atomic': False,
+        },
+    ]
 
     def get_search_form(self, request):
         return SearchAttachmentsForm

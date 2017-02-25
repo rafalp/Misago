@@ -13,9 +13,11 @@ class Thread(models.Model):
     WEIGHT_PINNED = 1
     WEIGHT_GLOBAL = 2
 
-    WEIGHT_CHOICES = ((WEIGHT_DEFAULT, _("Don't pin thread")),
-                      (WEIGHT_PINNED, _("Pin thread within category")),
-                      (WEIGHT_GLOBAL, _("Pin thread globally")))
+    WEIGHT_CHOICES = [
+        (WEIGHT_DEFAULT, _("Don't pin thread")),
+        (WEIGHT_PINNED, _("Pin thread within category")),
+        (WEIGHT_GLOBAL, _("Pin thread globally")),
+    ]
 
     category = models.ForeignKey('misago_categories.Category')
     title = models.CharField(max_length=255)
@@ -33,16 +35,27 @@ class Thread(models.Model):
     last_post_on = models.DateTimeField(db_index=True)
 
     first_post = models.ForeignKey(
-        'misago_threads.Post', related_name='+', null=True, blank=True, on_delete=models.SET_NULL
+        'misago_threads.Post',
+        related_name='+',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
     )
     starter = models.ForeignKey(
-        settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
     )
     starter_name = models.CharField(max_length=255)
     starter_slug = models.CharField(max_length=255)
 
     last_post = models.ForeignKey(
-        'misago_threads.Post', related_name='+', null=True, blank=True, on_delete=models.SET_NULL
+        'misago_threads.Post',
+        related_name='+',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
     )
     last_post_is_event = models.BooleanField(default=False)
     last_poster = models.ForeignKey(
@@ -50,7 +63,7 @@ class Thread(models.Model):
         related_name='last_poster_set',
         null=True,
         blank=True,
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
     )
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
     last_poster_slug = models.CharField(max_length=255, null=True, blank=True)
@@ -65,7 +78,7 @@ class Thread(models.Model):
         settings.AUTH_USER_MODEL,
         related_name='privatethread_set',
         through='ThreadParticipant',
-        through_fields=('thread', 'user')
+        through_fields=('thread', 'user'),
     )
 
     class Meta:

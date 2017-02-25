@@ -123,7 +123,7 @@ class ViewModel(object):
         context = {
             'THREADS': {
                 'results': ThreadsListSerializer(self.threads, many=True).data,
-                'subcategories': [c.pk for c in self.category.children]
+                'subcategories': [c.pk for c in self.category.children],
             },
         }
 
@@ -135,7 +135,7 @@ class ViewModel(object):
             'list_name': self.get_list_name(self.list_type),
             'list_type': self.list_type,
             'threads': self.threads,
-            'paginator': self.paginator
+            'paginator': self.paginator,
         }
 
 
@@ -244,7 +244,7 @@ def filter_read_threads_queryset(user, categories, list_type, queryset):
         read_threads = user.threadread_set.filter(
             category__in=categories,
             thread__last_post_on__gt=cutoff_date,
-            last_read_on__lt=F('thread__last_post_on')
+            last_read_on__lt=F('thread__last_post_on'),
         ).values('thread_id')
 
         queryset = queryset.filter(id__in=read_threads)
