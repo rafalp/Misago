@@ -68,7 +68,11 @@ def test_paginated_response_data_serializer(request):
     data = [0, 1, 2, 3]
     page = paginate(data, 0, 10)
 
-    return paginated_response(page, data=['a', 'b', 'c', 'd'], serializer=MockSerializer)
+    return paginated_response(
+        page,
+        data=['a', 'b', 'c', 'd'],
+        serializer=MockSerializer,
+    )
 
 
 @api_view()
@@ -77,8 +81,12 @@ def test_paginated_response_data_extra(request):
     page = paginate(data, 0, 10)
 
     return paginated_response(
-        page, data=['a', 'b', 'c', 'd'], extra={'next': 'EXTRA',
-                                                'lorem': 'ipsum'}
+        page,
+        data=['a', 'b', 'c', 'd'],
+        extra={
+            'next': 'EXTRA',
+            'lorem': 'ipsum',
+        },
     )
 
 

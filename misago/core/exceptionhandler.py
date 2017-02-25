@@ -19,7 +19,10 @@ def is_misago_exception(exception):
 
 
 def handle_ajax_error(request, exception):
-    json = {'is_error': 1, 'message': six.text_type(exception.message)}
+    json = {
+        'is_error': 1,
+        'message': six.text_type(exception.message),
+    }
     return JsonResponse(json, status=exception.code)
 
 
@@ -63,12 +66,14 @@ def handle_permission_denied_exception(request, exception):
     return errorpages.permission_denied(request, error_message)
 
 
-EXCEPTION_HANDLERS = ((AjaxError, handle_ajax_error),
-                      (Banned, handle_banned_exception),
-                      (Http404, handle_http404_exception),
-                      (ExplicitFirstPage, handle_explicit_first_page_exception),
-                      (OutdatedSlug, handle_outdated_slug_exception),
-                      (PermissionDenied, handle_permission_denied_exception), )
+EXCEPTION_HANDLERS = [
+    (AjaxError, handle_ajax_error),
+    (Banned, handle_banned_exception),
+    (Http404, handle_http404_exception),
+    (ExplicitFirstPage, handle_explicit_first_page_exception),
+    (OutdatedSlug, handle_outdated_slug_exception),
+    (PermissionDenied, handle_permission_denied_exception),
+]
 
 
 def get_exception_handler(exception):

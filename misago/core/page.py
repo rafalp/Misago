@@ -23,10 +23,9 @@ class Page(object):
             iterations += 1
             if iterations > 512:
                 message = (
-                    "%s page hierarchy is invalid or too complex  to "
-                    "resolve. Sections left: %s" % self._unsorted_list
+                    "%s page hierarchy is invalid or too complex  to resolve. Sections left: %s"
                 )
-                raise ValueError(message)
+                raise ValueError(message % self._unsorted_list)
 
             for index, section in enumerate(self._unsorted_list):
                 if section['after']:
@@ -71,7 +70,7 @@ class Page(object):
             self, link, after=None, before=None, visible_if=None, get_metadata=None, **kwargs
     ):
         if self._finalized:
-            message = ("%s page was initialized already and no longer accepts new sections")
+            message = "%s page was initialized already and no longer accepts new sections"
             raise RuntimeError(message % self.name)
 
         if after and before:

@@ -8,10 +8,13 @@ from misago.core.exceptions import Banned
 from misago.users.models import Ban
 
 
-INVALID_EXCEPTIONS = (
-    django_exceptions.ObjectDoesNotExist, django_exceptions.ViewDoesNotExist, TypeError,
-    ValueError, KeyError,
-)
+INVALID_EXCEPTIONS = [
+    django_exceptions.ObjectDoesNotExist,
+    django_exceptions.ViewDoesNotExist,
+    TypeError,
+    ValueError,
+    KeyError,
+]
 
 
 class IsMisagoExceptionTests(TestCase):

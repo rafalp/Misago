@@ -63,19 +63,23 @@ class ApiPatchTests(TestCase):
         """validate_action method validates action dict"""
         patch = ApiPatch()
 
-        VALID_ACTIONS = ({
-            'op': 'add',
-            'path': 'test',
-            'value': 42
-        }, {
-            'op': 'remove',
-            'path': 'other-test',
-            'value': 'Lorem'
-        }, {
-            'op': 'replace',
-            'path': 'false-test',
-            'value': None
-        }, )
+        VALID_ACTIONS = [
+            {
+                'op': 'add',
+                'path': 'test',
+                'value': 42
+            },
+            {
+                'op': 'remove',
+                'path': 'other-test',
+                'value': 'Lorem'
+            },
+            {
+                'op': 'replace',
+                'path': 'false-test',
+                'value': None
+            },
+        ]
 
         for action in VALID_ACTIONS:
             patch.validate_action(action)
@@ -103,13 +107,20 @@ class ApiPatchTests(TestCase):
 
         # op lacking value
         try:
-            patch.validate_action({'op': 'add', 'path': 'yolo'})
+            patch.validate_action({
+                'op': 'add',
+                'path': 'yolo',
+            })
         except InvalidAction as e:
             self.assertEqual(e.args[0], u'"add" op has to specify value')
 
         # empty value is allowed
         try:
-            patch.validate_action({'op': 'add', 'path': 'yolo', 'value': ''})
+            patch.validate_action({
+                'op': 'add',
+                'path': 'yolo',
+                'value': '',
+            })
         except InvalidAction as e:
             self.assertEqual(e.args[0], u'"add" op has to specify value')
 
@@ -184,17 +195,17 @@ class ApiPatchTests(TestCase):
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 2
+                    'value': 2,
                 },
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 6
+                    'value': 6,
                 },
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 7
+                    'value': 7,
                 },
             ]), MockObject(13)
         )
@@ -214,20 +225,20 @@ class ApiPatchTests(TestCase):
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 2
+                    'value': 2,
                 },
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 6
+                    'value': 6,
                 },
                 {
-                    'op': 'replace'
+                    'op': 'replace',
                 },
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 7
+                    'value': 7,
                 },
             ]), MockObject(13)
         )
@@ -247,22 +258,22 @@ class ApiPatchTests(TestCase):
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 2
+                    'value': 2,
                 },
                 {
                     'op': 'replace',
                     'path': 'error',
-                    'value': '404'
+                    'value': '404',
                 },
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 6
+                    'value': 6,
                 },
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 7
+                    'value': 7,
                 },
             ]), MockObject(13)
         )
@@ -281,22 +292,22 @@ class ApiPatchTests(TestCase):
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 2
+                    'value': 2,
                 },
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 6
+                    'value': 6,
                 },
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 9
+                    'value': 9,
                 },
                 {
                     'op': 'replace',
                     'path': 'error',
-                    'value': 'perm'
+                    'value': 'perm',
                 },
             ]), MockObject(13)
         )

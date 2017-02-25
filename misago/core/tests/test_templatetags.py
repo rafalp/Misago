@@ -240,7 +240,7 @@ class PageTitleTests(TestCase):
         self.assertEqual(
             tpl.render(Context({
                 'item': 'Lorem Ipsum',
-                'parent': 'Some Thread'
+                'parent': 'Some Thread',
             })).strip(), 'Lorem Ipsum | Some Thread'
         )
 
@@ -255,7 +255,7 @@ class PageTitleTests(TestCase):
         tpl = Template(tpl_content)
         self.assertEqual(
             tpl.render(Context({
-                'item': 'Lorem Ipsum'
+                'item': 'Lorem Ipsum',
             })).strip(), 'Lorem Ipsum (page: 3)'
         )
 
@@ -271,6 +271,6 @@ class PageTitleTests(TestCase):
         self.assertEqual(
             tpl.render(Context({
                 'item': 'Lorem Ipsum',
-                'parent': 'Some Thread'
+                'parent': 'Some Thread',
             })).strip(), 'Lorem Ipsum (page: 3) | Some Thread'
         )

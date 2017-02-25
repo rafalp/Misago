@@ -22,11 +22,11 @@ def validate_project_name(parser, project_name):
     except ImportError:
         pass
     else:
-        parser.error(
+        parser.error((
             "'%s' conflicts with the name of an existing "
             "Python module and cannot be used as a project "
-            "name. Please try another name." % project_name
-        )
+            "name. Please try another name."
+        ) % project_name)
 
     return project_name
 

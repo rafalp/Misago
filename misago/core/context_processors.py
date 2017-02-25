@@ -38,11 +38,15 @@ def current_link(request):
 
 
 def momentjs_locale(request):
-    return {'MOMENTJS_LOCALE_URL': get_locale_url(get_language())}
+    return {
+        'MOMENTJS_LOCALE_URL': get_locale_url(get_language()),
+    }
 
 
 def frontend_context(request):
     if request.include_frontend_context:
-        return {'frontend_context': request.frontend_context}
+        return {
+            'frontend_context': request.frontend_context,
+        }
     else:
         return {}

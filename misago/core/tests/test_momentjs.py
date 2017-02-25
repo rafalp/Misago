@@ -6,9 +6,14 @@ from misago.core.momentjs import clean_language_name, get_locale_url
 class MomentJSTests(TestCase):
     def test_clean_language_name(self):
         """clean_language_name returns valid name"""
-        TEST_CASES = (('AF', 'af'), ('ar-SA', 'ar-sa'), ('de', 'de'), ('de-NO', 'de'),
-                      ('pl-pl', 'pl'),
-                      ('zz', None), )
+        TEST_CASES = [
+            ('AF', 'af'),
+            ('ar-SA', 'ar-sa'),
+            ('de', 'de'),
+            ('de-NO', 'de'),
+            ('pl-pl', 'pl'),
+            ('zz', None),
+        ]
 
         for dirty, clean in TEST_CASES:
             self.assertEqual(clean_language_name(dirty), clean)

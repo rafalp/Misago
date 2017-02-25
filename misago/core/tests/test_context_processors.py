@@ -89,10 +89,11 @@ class FrontendContextTests(TestCase):
         mock_request.frontend_context = {'someValue': 'Something'}
 
         self.assertEqual(
-            context_processors.frontend_context(mock_request),
-            {'frontend_context': {
-                'someValue': 'Something'
-            }}
+            context_processors.frontend_context(mock_request), {
+                'frontend_context': {
+                    'someValue': 'Something',
+                },
+            }
         )
 
         mock_request.include_frontend_context = False
