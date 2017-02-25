@@ -39,7 +39,7 @@ def search(request, search_provider):
             'url': reverse('misago:search', kwargs={'search_provider': provider.url}),
             'api': reverse('misago:api:search', kwargs={'search_provider': provider.url}),
             'results': None,
-            'time': None
+            'time': None,
         })
 
     return render(request, 'misago/search.html')

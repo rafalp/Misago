@@ -145,7 +145,9 @@ def sync_record(user, thread, last_read_reply):
         thread.read_record.save(update_fields=['last_read_on'])
     else:
         user.threadread_set.create(
-            category=thread.category, thread=thread, last_read_on=last_read_reply.posted_on
+            category=thread.category,
+            thread=thread,
+            last_read_on=last_read_reply.posted_on,
         )
         signals.thread_tracked.send(sender=user, thread=thread)
         notification_triggers.append('see_thread_%s' % thread.pk)

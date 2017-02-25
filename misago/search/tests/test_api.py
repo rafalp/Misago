@@ -28,7 +28,9 @@ class SearchApiTests(AuthenticatedUserTestCase):
         providers = searchproviders.get_providers(True)
         for i, provider in enumerate(response.json()):
             provider_api = reverse(
-                'misago:api:search', kwargs={'search_provider': providers[i].url}
+                'misago:api:search', kwargs={
+                    'search_provider': providers[i].url,
+                }
             )
             self.assertEqual(provider_api, provider['api'])
 
@@ -44,7 +46,8 @@ class SearchApiTests(AuthenticatedUserTestCase):
         providers = searchproviders.get_providers(True)
         for i, provider in enumerate(response.json()):
             provider_api = reverse(
-                'misago:api:search', kwargs={'search_provider': providers[i].url}
+                'misago:api:search',
+                kwargs={'search_provider': providers[i].url},
             )
             self.assertEqual(provider_api, provider['api'])
 

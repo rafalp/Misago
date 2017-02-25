@@ -65,7 +65,7 @@ def sync_record(user, category):
         category=category,
         thread__in=all_threads,
         last_read_on__gt=cutoff_date,
-        thread__last_post_on__lte=F("last_read_on")
+        thread__last_post_on__lte=F("last_read_on"),
     ).count()
 
     category_is_read = read_threads_count == all_threads_count
@@ -93,9 +93,10 @@ def read_category(user, category):
     categories = [category.pk]
     if not category.is_leaf_node():
         categories += category.get_descendants().filter(
-            id__in=user.acl_cache['visible_categories']
+            id__in=user.acl_cache['visible_categories'],
         ).values_list(
-            'id', flat=True
+            'id',
+            flat=True,
         )
 
     user.categoryread_set.filter(category_id__in=categories).delete()
