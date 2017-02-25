@@ -21,7 +21,11 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'users', help="number of users to create", nargs='?', type=int, default=5
+            'users',
+            help="number of users to create",
+            nargs='?',
+            type=int,
+            default=5,
         )
 
     def handle(self, *args, **options):
@@ -42,12 +46,12 @@ class Command(BaseCommand):
 
         while created_count < items_to_create:
             try:
-                kwargs = {
-                    'rank': random.choice(ranks),
-                }
-
                 user = UserModel.objects.create_user(
-                    fake.first_name(), fake.email(), 'pass123', set_default_avatar=False, **kwargs
+                    fake.first_name(),
+                    fake.email(),
+                    'pass123',
+                    set_default_avatar=False,
+                    rank=random.choice(ranks),
                 )
 
                 if random.randint(0, 100) > 90:

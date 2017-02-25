@@ -17,13 +17,7 @@ IMAGE_TYPES = ('image/gif', 'image/jpeg', 'image/png', )
 
 
 def move_attachments(stdout, style):
-    query = '''
-        SELECT *
-        FROM
-            misago_attachment
-        ORDER BY
-            id
-    '''
+    query = 'SELECT * FROM misago_attachment ORDER BY id'
 
     posts = []
 

@@ -64,5 +64,5 @@ def convert_crop(image, user):
             'x': x * zoom * -1,
             'y': y * zoom * -1,
         },
-        'zoom': zoom
+        'zoom': zoom,
     }

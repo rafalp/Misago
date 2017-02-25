@@ -12,7 +12,12 @@ from . import fetch_assoc, localise_datetime, movedids
 
 UserModel = get_user_model()
 
-PRIVATE_THREAD_INVITES = {0: 0, 1: 0, 2: 1, 3: 2}
+PRIVATE_THREAD_INVITES = {
+    0: 0,
+    1: 0,
+    2: 1,
+    3: 2,
+}
 
 
 def move_users(stdout, style):

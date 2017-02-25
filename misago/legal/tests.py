@@ -56,20 +56,26 @@ class PrivacyPolicyTests(TestCase):
         settings.override_setting('privacy_policy', 'Lorem ipsum')
         context_dict = legal_links(MockRequest())
 
-        self.assertEqual(context_dict, {'PRIVACY_POLICY_URL': reverse('misago:privacy-policy')})
+        self.assertEqual(context_dict, {
+            'PRIVACY_POLICY_URL': reverse('misago:privacy-policy'),
+        })
 
     def test_context_processor_remote_policy(self):
         """context processor has TOS link to remote url"""
         settings.override_setting('privacy_policy_link', 'http://test.com')
         context_dict = legal_links(MockRequest())
 
-        self.assertEqual(context_dict, {'PRIVACY_POLICY_URL': 'http://test.com'})
+        self.assertEqual(context_dict, {
+            'PRIVACY_POLICY_URL': 'http://test.com',
+        })
 
         # set misago view too
         settings.override_setting('privacy_policy', 'Lorem ipsum')
         context_dict = legal_links(MockRequest())
 
-        self.assertEqual(context_dict, {'PRIVACY_POLICY_URL': 'http://test.com'})
+        self.assertEqual(context_dict, {
+            'PRIVACY_POLICY_URL': 'http://test.com',
+        })
 
 
 class TermsOfServiceTests(TestCase):
@@ -118,7 +124,9 @@ class TermsOfServiceTests(TestCase):
         context_dict = legal_links(MockRequest())
 
         self.assertEqual(
-            context_dict, {'TERMS_OF_SERVICE_URL': reverse('misago:terms-of-service')}
+            context_dict, {
+                'TERMS_OF_SERVICE_URL': reverse('misago:terms-of-service'),
+            }
         )
 
     def test_context_processor_remote_tos(self):
@@ -126,10 +134,14 @@ class TermsOfServiceTests(TestCase):
         settings.override_setting('terms_of_service_link', 'http://test.com')
         context_dict = legal_links(MockRequest())
 
-        self.assertEqual(context_dict, {'TERMS_OF_SERVICE_URL': 'http://test.com'})
+        self.assertEqual(context_dict, {
+            'TERMS_OF_SERVICE_URL': 'http://test.com',
+        })
 
         # set misago view too
         settings.override_setting('terms_of_service', 'Lorem ipsum')
         context_dict = legal_links(MockRequest())
 
-        self.assertEqual(context_dict, {'TERMS_OF_SERVICE_URL': 'http://test.com'})
+        self.assertEqual(context_dict, {
+            'TERMS_OF_SERVICE_URL': 'http://test.com',
+        })

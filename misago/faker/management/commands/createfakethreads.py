@@ -30,7 +30,11 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'threads', help="number of threads to create", nargs='?', type=int, default=5
+            'threads',
+            help="number of threads to create",
+            nargs='?',
+            type=int,
+            default=5,
         )
 
     def handle(self, *args, **options):
@@ -69,7 +73,7 @@ class Command(BaseCommand):
                     replies=0,
                     is_unapproved=thread_is_unapproved,
                     is_hidden=thread_is_hidden,
-                    is_closed=thread_is_closed
+                    is_closed=thread_is_closed,
                 )
                 thread.set_title(corpus_short.random_choice())
                 thread.save()
@@ -85,7 +89,7 @@ class Command(BaseCommand):
                     original=original,
                     parsed=parsed,
                     posted_on=datetime,
-                    updated_on=datetime
+                    updated_on=datetime,
                 )
                 update_post_checksum(post)
                 post.save(update_fields=['checksum'])
@@ -124,7 +128,7 @@ class Command(BaseCommand):
                         parsed=parsed,
                         is_unapproved=is_unapproved,
                         posted_on=datetime,
-                        updated_on=datetime
+                        updated_on=datetime,
                     )
 
                     if not is_unapproved:

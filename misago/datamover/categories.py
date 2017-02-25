@@ -38,7 +38,7 @@ def move_categories(stdout, style):
                 prune_replied_after=forum['prune_last'],
             ),
             parent,
-            save=True
+            save=True,
         )
 
         movedids.set('category', forum['id'], category.pk)
@@ -52,7 +52,7 @@ def move_categories(stdout, style):
         new_archive_pk = movedids.get('category', forum['pruned_archive_id'])
 
         Category.objects.filter(pk=new_category_pk).update(
-            archive_pruned_in=Category.objects.get(pk=new_archive_pk)
+            archive_pruned_in=Category.objects.get(pk=new_archive_pk),
         )
 
 
@@ -77,7 +77,9 @@ def move_labels():
                 Category(
                     name=label['name'],
                     slug=label['slug'],
-                ), parent, save=True
+                ),
+                parent,
+                save=True,
             )
 
             label_id = '%s-%s' % (label['id'], parent_row['forum_id'])

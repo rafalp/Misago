@@ -16,7 +16,7 @@ def move_bans():
                 banned_value=ban['ban'],
                 user_message=ban['reason_user'],
                 staff_message=ban['reason_admin'],
-                expires_on=localise_datetime(ban['expires'])
+                expires_on=localise_datetime(ban['expires']),
             )
         else:
             Ban.objects.create(
@@ -24,7 +24,7 @@ def move_bans():
                 banned_value=ban['ban'],
                 user_message=ban['reason_user'],
                 staff_message=ban['reason_admin'],
-                expires_on=localise_datetime(ban['expires'])
+                expires_on=localise_datetime(ban['expires']),
             )
 
             Ban.objects.create(
@@ -32,7 +32,7 @@ def move_bans():
                 banned_value=ban['ban'],
                 user_message=ban['reason_user'],
                 staff_message=ban['reason_admin'],
-                expires_on=localise_datetime(ban['expires'])
+                expires_on=localise_datetime(ban['expires']),
             )
 
     Ban.objects.invalidate_cache()

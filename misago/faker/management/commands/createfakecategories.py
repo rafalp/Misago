@@ -15,11 +15,19 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'categories', help="number of categories to create", nargs='?', type=int, default=5
+            'categories',
+            help="number of categories to create",
+            nargs='?',
+            type=int,
+            default=5,
         )
 
         parser.add_argument(
-            'minlevel', help="min. level of created categories", nargs='?', type=int, default=0
+            'minlevel',
+            help="min. level of created categories",
+            nargs='?',
+            type=int,
+            default=0,
         )
 
     def handle(self, *args, **options):

@@ -56,7 +56,7 @@ def parse(
         'mentions': [],
         'images': [],
         'outgoing_links': [],
-        'inside_links': []
+        'inside_links': [],
     }
 
     # Parse text
