@@ -13,7 +13,11 @@ class PollVoteSerializer(serializers.Serializer):
     url = serializers.SerializerMethodField()
 
     class Meta:
-        fields = ('voted_on', 'username', 'url', )
+        fields = [
+            'voted_on',
+            'username',
+            'url',
+        ]
 
     def get_username(self, obj):
         return obj['voter_name']

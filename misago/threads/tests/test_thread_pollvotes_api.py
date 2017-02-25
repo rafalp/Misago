@@ -23,8 +23,10 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
 
         self.api_link = reverse(
             'misago:api:thread-poll-votes',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': self.poll.pk}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.poll.pk,
+            }
         )
 
     def test_anonymous(self):

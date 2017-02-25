@@ -35,19 +35,31 @@ class RolePermissionsForm(forms.Form):
         label=_("Can start polls"),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads")), ),
+        choices=[
+            (0, _("No")),
+            (1, _("Own threads")),
+            (2, _("All threads")),
+        ],
     )
     can_edit_polls = forms.TypedChoiceField(
         label=_("Can edit polls"),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Own polls")), (2, _("All polls")), ),
+        choices=[
+            (0, _("No")),
+            (1, _("Own polls")),
+            (2, _("All polls")),
+        ],
     )
     can_delete_polls = forms.TypedChoiceField(
         label=_("Can delete polls"),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Own polls")), (2, _("All polls")), ),
+        choices=[
+            (0, _("No")),
+            (1, _("Own polls")),
+            (2, _("All polls")),
+        ],
     )
     poll_edit_time = forms.IntegerField(
         label=_("Time limit for own polls edits, in minutes"),

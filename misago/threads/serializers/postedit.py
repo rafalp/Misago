@@ -17,7 +17,14 @@ class PostEditSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PostEdit
-        fields = ('id', 'edited_on', 'editor_name', 'editor_slug', 'diff', 'url', )
+        fields = [
+            'id',
+            'edited_on',
+            'editor_name',
+            'editor_slug',
+            'diff',
+            'url',
+        ]
 
     def get_diff(self, obj):
         return obj.get_diff()

@@ -20,10 +20,19 @@ class AttachmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Attachment
-        fields = (
-            'id', 'filetype', 'post', 'uploaded_on', 'uploader_name', 'uploader_ip', 'filename',
-            'size', 'acl', 'is_image', 'url',
-        )
+        fields = [
+            'id',
+            'filetype',
+            'post',
+            'uploaded_on',
+            'uploader_name',
+            'uploader_ip',
+            'filename',
+            'size',
+            'acl',
+            'is_image',
+            'url',
+        ]
 
     def get_acl(self, obj):
         try:

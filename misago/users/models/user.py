@@ -139,16 +139,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     SUBSCRIBE_NOTIFY = 1
     SUBSCRIBE_ALL = 2
 
-    SUBSCRIBE_CHOICES = ((SUBSCRIBE_NONE, _("No")), (SUBSCRIBE_NOTIFY, _("Notify")),
-                         (SUBSCRIBE_ALL, _("Notify with e-mail")))
+    SUBSCRIBE_CHOICES = [
+        (SUBSCRIBE_NONE, _("No")),
+        (SUBSCRIBE_NOTIFY, _("Notify")),
+        (SUBSCRIBE_ALL, _("Notify with e-mail")),
+    ]
 
     LIMIT_INVITES_TO_NONE = 0
     LIMIT_INVITES_TO_FOLLOWED = 1
     LIMIT_INVITES_TO_NOBODY = 2
 
-    LIMIT_INVITES_TO_CHOICES = ((LIMIT_INVITES_TO_NONE, _("Everybody")),
-                                (LIMIT_INVITES_TO_FOLLOWED, _("Users I follow")),
-                                (LIMIT_INVITES_TO_NOBODY, _("Nobody")), )
+    LIMIT_INVITES_TO_CHOICES = [
+        (LIMIT_INVITES_TO_NONE, _("Everybody")),
+        (LIMIT_INVITES_TO_FOLLOWED, _("Users I follow")),
+        (LIMIT_INVITES_TO_NOBODY, _("Nobody")),
+    ]
     """
     Note that "username" field is purely for shows.
     When searching users by their names, always use lowercased string

@@ -18,7 +18,13 @@ class PostLikeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PostLike
-        fields = ('id', 'liked_on', 'liker_id', 'username', 'url', )
+        fields = [
+            'id',
+            'liked_on',
+            'liker_id',
+            'username',
+            'url',
+        ]
 
     def get_liker_id(self, obj):
         return obj['liker_id']

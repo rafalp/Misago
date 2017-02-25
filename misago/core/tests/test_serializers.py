@@ -73,8 +73,18 @@ class TestSerializer(serializers.ModelSerializer, MutableFields):
 
     class Meta:
         model = Thread
-        fields = (
-            'id', 'title', 'replies', 'has_unapproved_posts', 'started_on', 'last_post_on',
-            'last_post_is_event', 'last_post', 'last_poster_name', 'is_unapproved', 'is_hidden',
-            'is_closed', 'weight',
-        )
+        fields = [
+            'id',
+            'title',
+            'replies',
+            'has_unapproved_posts',
+            'started_on',
+            'last_post_on',
+            'last_post_is_event',
+            'last_post',
+            'last_poster_name',
+            'is_unapproved',
+            'is_hidden',
+            'is_closed',
+            'weight',
+        ]

@@ -7,7 +7,7 @@ class MutableFields(object):
         class Meta(cls.Meta):
             pass
 
-        Meta.fields = tuple(fields)
+        Meta.fields = list(fields)
 
         return type(name, (cls, ), {'Meta': Meta})
 
@@ -24,7 +24,7 @@ class MutableFields(object):
         class Meta(cls.Meta):
             pass
 
-        Meta.fields = tuple(final_fields)
+        Meta.fields = list(final_fields)
 
         return type(name, (cls, ), {'Meta': Meta})
 
@@ -41,6 +41,6 @@ class MutableFields(object):
         class Meta(cls.Meta):
             pass
 
-        Meta.fields = tuple(final_fields)
+        Meta.fields = list(final_fields)
 
         return type(name, (cls, ), {'Meta': Meta})

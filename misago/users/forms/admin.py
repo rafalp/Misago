@@ -430,10 +430,14 @@ class BanUsersForm(forms.Form):
     ban_type = forms.MultipleChoiceField(
         label=_("Values to ban"),
         widget=forms.CheckboxSelectMultiple,
-        choices=(('usernames', _('Usernames')), ('emails', _('E-mails')),
-                 ('domains', _('E-mail domains')), ('ip', _('IP addresses')),
-                 ('ip_first', _('First segment of IP addresses')),
-                 ('ip_two', _('First two segments of IP addresses')))
+        choices=[
+            ('usernames', _('Usernames')),
+            ('emails', _('E-mails')),
+            ('domains', _('E-mail domains')),
+            ('ip', _('IP addresses')),
+            ('ip_first', _('First segment of IP addresses')),
+            ('ip_two', _('First two segments of IP addresses')),
+        ]
     )
     user_message = forms.CharField(
         label=_("User message"),
@@ -515,15 +519,23 @@ class BanForm(forms.ModelForm):
 
 
 class SearchBansForm(forms.Form):
-    SARCH_CHOICES = (('', _('All bans')), ('names', _('Usernames')), ('emails', _('E-mails')),
-                     ('ips', _('IPs')), )
+    SARCH_CHOICES = [
+        ('', _('All bans')),
+        ('names', _('Usernames')),
+        ('emails', _('E-mails')),
+        ('ips', _('IPs')),
+    ]
 
     check_type = forms.ChoiceField(label=_("Type"), required=False, choices=SARCH_CHOICES)
     value = forms.CharField(label=_("Banned value begins with"), required=False)
     state = forms.ChoiceField(
         label=_("State"),
         required=False,
-        choices=(('', _('Any')), ('used', _('Active')), ('unused', _('Expired')), )
+        choices=[
+            ('', _('Any')),
+            ('used', _('Active')),
+            ('unused', _('Expired')),
+        ]
     )
 
     def filter_queryset(self, search_criteria, queryset):

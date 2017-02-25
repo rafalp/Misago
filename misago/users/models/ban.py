@@ -58,7 +58,11 @@ class Ban(models.Model):
     EMAIL = 1
     IP = 2
 
-    CHOICES = ((USERNAME, _('Username')), (EMAIL, _('E-mail address')), (IP, _('IP address')), )
+    CHOICES = [
+        (USERNAME, _('Username')),
+        (EMAIL, _('E-mail address')),
+        (IP, _('IP address')),
+    ]
 
     check_type = models.PositiveIntegerField(default=USERNAME, db_index=True)
     banned_value = models.CharField(max_length=255, db_index=True)

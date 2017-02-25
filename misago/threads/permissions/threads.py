@@ -88,7 +88,10 @@ class CategoryPermissionsForm(forms.Form):
         label=_("Can see threads"),
         coerce=int,
         initial=0,
-        choices=((0, _("Started threads")), (1, _("All threads")), ),
+        choices=[
+            (0, _("Started threads")),
+            (1, _("All threads")),
+        ],
     )
 
     can_start_threads = YesNoSwitch(label=_("Can start threads"))
@@ -98,7 +101,11 @@ class CategoryPermissionsForm(forms.Form):
         label=_("Can edit threads"),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Own threads")), (2, _("All threads")), ),
+        choices=[
+            (0, _("No")),
+            (1, _("Own threads")),
+            (2, _("All threads")),
+        ],
     )
     can_hide_own_threads = forms.TypedChoiceField(
         label=_("Can hide own threads"),
@@ -108,7 +115,11 @@ class CategoryPermissionsForm(forms.Form):
         ),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Hide threads")), (2, _("Delete threads")), ),
+        choices=[
+            (0, _("No")),
+            (1, _("Hide threads")),
+            (2, _("Delete threads")),
+        ],
     )
     thread_edit_time = forms.IntegerField(
         label=_("Time limit for own threads edits, in minutes"),
@@ -120,14 +131,22 @@ class CategoryPermissionsForm(forms.Form):
         label=_("Can hide all threads"),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Hide threads")), (2, _("Delete threads")), ),
+        choices=[
+            (0, _("No")),
+            (1, _("Hide threads")),
+            (2, _("Delete threads")),
+        ],
     )
 
     can_pin_threads = forms.TypedChoiceField(
         label=_("Can pin threads"),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Locally")), (2, _("Globally")), ),
+        choices=[
+            (0, _("No")),
+            (1, _("Locally")),
+            (2, _("Globally")),
+        ],
     )
     can_close_threads = YesNoSwitch(label=_("Can close threads"))
     can_move_threads = YesNoSwitch(label=_("Can move threads"))
@@ -137,14 +156,22 @@ class CategoryPermissionsForm(forms.Form):
         label=_("Can edit posts"),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Own posts")), (2, _("All posts")), ),
+        choices=[
+            (0, _("No")),
+            (1, _("Own posts")),
+            (2, _("All posts")),
+        ],
     )
     can_hide_own_posts = forms.TypedChoiceField(
         label=_("Can hide own posts"),
         help_text=_("Only last posts to thread made within edit time limit can be hidden."),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Hide posts")), (2, _("Delete posts")), ),
+        choices=[
+            (0, _("No")),
+            (1, _("Hide posts")),
+            (2, _("Delete posts")),
+        ],
     )
     post_edit_time = forms.IntegerField(
         label=_("Time limit for own post edits, in minutes"),
@@ -156,14 +183,22 @@ class CategoryPermissionsForm(forms.Form):
         label=_("Can hide all posts"),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Hide posts")), (2, _("Delete posts")), ),
+        choices=[
+            (0, _("No")),
+            (1, _("Hide posts")),
+            (2, _("Delete posts")),
+        ],
     )
 
     can_see_posts_likes = forms.TypedChoiceField(
         label=_("Can see posts likes"),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Number only")), (2, _("Number and list of likers")), ),
+        choices=[
+            (0, _("No")),
+            (1, _("Number only")),
+            (2, _("Number and list of likers")),
+        ],
     )
     can_like_posts = YesNoSwitch(
         label=_("Can like posts"),
@@ -189,7 +224,11 @@ class CategoryPermissionsForm(forms.Form):
         label=_("Can hide events"),
         coerce=int,
         initial=0,
-        choices=((0, _("No")), (1, _("Hide events")), (2, _("Delete events")), ),
+        choices=[
+            (0, _("No")),
+            (1, _("Hide events")),
+            (2, _("Delete events")),
+        ],
     )
 
 

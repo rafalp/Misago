@@ -16,7 +16,12 @@ class UsernameChangeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UsernameChange
-        fields = (
-            'id', 'user', 'changed_by', 'changed_by_username', 'changed_on', 'new_username',
+        fields = [
+            'id',
+            'user',
+            'changed_by',
+            'changed_by_username',
+            'changed_on',
+            'new_username',
             'old_username',
-        )
+        ]

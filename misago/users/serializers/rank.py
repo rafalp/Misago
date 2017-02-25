@@ -13,10 +13,17 @@ class RankSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Rank
-        fields = (
-            'id', 'name', 'slug', 'description', 'title', 'css_class', 'is_default', 'is_tab',
+        fields = [
+            'id',
+            'name',
+            'slug',
+            'description',
+            'title',
+            'css_class',
+            'is_default',
+            'is_tab',
             'absolute_url',
-        )
+        ]
 
     def get_description(self, obj):
         if obj.description:

@@ -27,7 +27,10 @@ class BanMessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ban
-        fields = ('message', 'expires_on')
+        fields = [
+            'message',
+            'expires_on',
+        ]
 
     def get_message(self, obj):
         if obj.user_message:
@@ -46,7 +49,11 @@ class BanDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ban
-        fields = ('user_message', 'staff_message', 'expires_on')
+        fields = [
+            'user_message',
+            'staff_message',
+            'expires_on',
+        ]
 
     def get_user_message(self, obj):
         return serialize_message(obj.user_message)

@@ -16,8 +16,10 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
 
         self.api_link = reverse(
             'misago:api:thread-post-edits',
-            kwargs={'thread_pk': self.thread.pk,
-                    'pk': self.post.pk}
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.post.pk,
+            }
         )
 
         self.override_acl()

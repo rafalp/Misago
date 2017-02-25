@@ -23,7 +23,11 @@ class SearchAttachmentsForm(forms.Form):
     is_orphan = forms.ChoiceField(
         label=_("State"),
         required=False,
-        choices=(('', _("All")), ('yes', _("Only orphaned")), ('no', _("Not orphaned")), ),
+        choices=[
+            ('', _("All")),
+            ('yes', _("Only orphaned")),
+            ('no', _("Not orphaned")),
+        ],
     )
 
     def filter_queryset(self, criteria, queryset):

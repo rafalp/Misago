@@ -27,10 +27,21 @@ class PollSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Poll
-        fields = (
-            'id', 'poster_name', 'posted_on', 'length', 'question', 'allowed_choices',
-            'allow_revotes', 'votes', 'is_public', 'acl', 'choices', 'api', 'url',
-        )
+        fields = [
+            'id',
+            'poster_name',
+            'posted_on',
+            'length',
+            'question',
+            'allowed_choices',
+            'allow_revotes',
+            'votes',
+            'is_public',
+            'acl',
+            'choices',
+            'api',
+            'url',
+        ]
 
     def get_api(self, obj):
         return {
@@ -75,7 +86,13 @@ class EditPollSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Poll
-        fields = ('length', 'question', 'allowed_choices', 'allow_revotes', 'choices', )
+        fields = [
+            'length',
+            'question',
+            'allowed_choices',
+            'allow_revotes',
+            'choices',
+        ]
 
     def validate_choices(self, choices):
         clean_choices = list(map(self.clean_choice, choices))
@@ -161,9 +178,14 @@ class EditPollSerializer(serializers.ModelSerializer):
 class NewPollSerializer(EditPollSerializer):
     class Meta:
         model = Poll
-        fields = (
-            'length', 'question', 'allowed_choices', 'allow_revotes', 'is_public', 'choices',
-        )
+        fields = [
+            'length',
+            'question',
+            'allowed_choices',
+            'allow_revotes',
+            'is_public',
+            'choices',
+        ]
 
     def validate_choices(self, choices):
         clean_choices = list(map(self.clean_choice, choices))
