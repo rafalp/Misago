@@ -192,7 +192,10 @@ def merge_threads(request, validated_data, threads, poll):
         thread.delete()
 
         record_event(
-            request, new_thread, 'merged', {
+            request,
+            new_thread,
+            'merged',
+            {
                 'merged_thread': thread.title,
             },
             commit=False,

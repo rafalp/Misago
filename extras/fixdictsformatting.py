@@ -83,6 +83,13 @@ def walk_dedent_tree_node(node, children, force_split_next=False):
     if six.text_type(node).startswith("\n"):
         if isinstance(node, Leaf):
             prev = node.prev_sibling
+            next = node.next_sibling
+
+            if next and six.text_type(next).strip() == ':':
+                return # excape hatch for misidentification of single nested dict item
+            if six.text_type(node).strip() == '}':
+                return # generally yapf does good job positioning closing curlybraces
+
             is_followup = prev and prev.type == token.STRING and node.type == token.STRING
             if is_followup:
                 new_value = node.value

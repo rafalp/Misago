@@ -62,7 +62,9 @@ def activate_by_token(request, pk, token):
         })
     except ActivationError as e:
         return render(
-            request, 'misago/activation/error.html', {
+            request,
+            'misago/activation/error.html',
+            {
                 'message': e.args[0],
             },
             status=400,

@@ -55,8 +55,8 @@ def confirm_email_change(request, token):
     return render(
         request, 'misago/options/credentials_changed.html', {
             'message': message % {
-            'user': request.user.username,
-        },
+                'user': request.user.username,
+            },
         }
     )
 
