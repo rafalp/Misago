@@ -78,20 +78,15 @@ class UsersList(UserAdmin, generic.ListView):
             'confirmation': _("Are you sure you want to delete selected users?"),
         },
         {
-            'action':
-                'delete_all',
-            'name':
-                _("Delete all"),
-            'icon':
-                'fa fa-eraser',
-            'confirmation':
-                _(
-                    "Are you sure you want to delete selected "
-                    "users? This will also delete all content "
-                    "associated with their accounts."
-                ),
-            'is_atomic':
-                False,
+            'action': 'delete_all',
+            'name': _("Delete all"),
+            'icon': 'fa fa-eraser',
+            'confirmation': _(
+                "Are you sure you want to delete selected "
+                "users? This will also delete all content "
+                "associated with their accounts."
+            ),
+            'is_atomic': False,
         },
     ]
 

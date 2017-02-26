@@ -75,7 +75,7 @@ def activate_by_token(request, pk, token):
     return render(
         request, 'misago/activation/done.html', {
             'message': message % {
-                'user': inactive_user.username,
-            },
+            'user': inactive_user.username,
+        },
         }
     )

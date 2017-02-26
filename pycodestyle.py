@@ -2,6 +2,7 @@
 Code style cleanups done after yapf
 """
 import argparse
+import codecs
 import os
 
 from extras import fixdictsformatting
@@ -15,21 +16,18 @@ CLEANUPS = [
 def walk_directory(root, dirs, files):
     for filename in files:
         if filename.lower().endswith('.py'):
-            with open(os.path.join(root, filename), 'r') as f:
+            with codecs.open(os.path.join(root, filename), 'r', 'utf-8') as f:
                 filesource = f.read()
 
             org_source = filesource
-            if 'migrate_settings_group' not in filesource:
-                continue
 
             for cleanup in CLEANUPS:
                 filesource = cleanup.fix_formatting(filesource)
 
             if org_source != filesource:
-                print '====' * 8
-                print os.path.join(root, filename)
-                print ''
-                print filesource
+                print 'afterclean: %s' % os.path.join(root, filename)
+                with codecs.open(os.path.join(root, filename), 'w', 'utf-8') as f:
+                    f.write(filesource)
 
 
 if __name__ == '__main__':

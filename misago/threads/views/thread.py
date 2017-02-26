@@ -44,10 +44,9 @@ class ThreadBase(View):
 
     def get_template_context(self, request, thread, posts):
         context = {
-            'url_name':
-                ':'.join(request.resolver_match.namespaces + [
-                    request.resolver_match.url_name,
-                ])
+            'url_name': ':'.join(request.resolver_match.namespaces + [
+                request.resolver_match.url_name,
+            ])
         }
 
         context.update(thread.get_template_context())

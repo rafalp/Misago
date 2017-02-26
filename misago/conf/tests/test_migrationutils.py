@@ -9,12 +9,9 @@ from misago.core import threadstore
 class DBConfMigrationUtilsTests(TestCase):
     def setUp(self):
         self.test_group = {
-            'key':
-                'test_group',
-            'name':
-                "Test settings",
-            'description':
-                "Those are test settings.",
+            'key': 'test_group',
+            'name': "Test settings",
+            'description': "Those are test settings.",
             'settings': [
                 {
                     'setting': 'fish_name',
@@ -61,12 +58,9 @@ class DBConfMigrationUtilsTests(TestCase):
         """migrate_settings_group changed group key"""
 
         new_group = {
-            'key':
-                'new_test_group',
-            'name':
-                "New test settings",
-            'description':
-                "Those are updated test settings.",
+            'key': 'new_test_group',
+            'name': "New test settings",
+            'description': "Those are updated test settings.",
             'settings': [
                 {
                     'setting': 'fish_new_name',

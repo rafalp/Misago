@@ -222,18 +222,16 @@ def UserFormFactory(FormType, instance):
 
 def StaffFlagUserFormFactory(FormType, instance):
     staff_fields = {
-        'is_staff':
-            YesNoSwitch(
-                label=EditUserForm.IS_STAFF_LABEL,
-                help_text=EditUserForm.IS_STAFF_HELP_TEXT,
-                initial=instance.is_staff
-            ),
-        'is_superuser':
-            YesNoSwitch(
-                label=EditUserForm.IS_SUPERUSER_LABEL,
-                help_text=EditUserForm.IS_SUPERUSER_HELP_TEXT,
-                initial=instance.is_superuser
-            ),
+        'is_staff': YesNoSwitch(
+            label=EditUserForm.IS_STAFF_LABEL,
+            help_text=EditUserForm.IS_STAFF_HELP_TEXT,
+            initial=instance.is_staff
+        ),
+        'is_superuser': YesNoSwitch(
+            label=EditUserForm.IS_SUPERUSER_LABEL,
+            help_text=EditUserForm.IS_SUPERUSER_HELP_TEXT,
+            initial=instance.is_superuser
+        ),
     }
 
     return type('StaffUserForm', (FormType, ), staff_fields)
@@ -241,20 +239,18 @@ def StaffFlagUserFormFactory(FormType, instance):
 
 def UserIsActiveFormFactory(FormType, instance):
     is_active_fields = {
-        'is_active':
-            YesNoSwitch(
-                label=EditUserForm.IS_ACTIVE_LABEL,
-                help_text=EditUserForm.IS_ACTIVE_HELP_TEXT,
-                initial=instance.is_active
-            ),
-        'is_active_staff_message':
-            forms.CharField(
-                label=EditUserForm.IS_ACTIVE_STAFF_MESSAGE_LABEL,
-                help_text=EditUserForm.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT,
-                initial=instance.is_active_staff_message,
-                widget=forms.Textarea(attrs={'rows': 3}),
-                required=False
-            ),
+        'is_active': YesNoSwitch(
+            label=EditUserForm.IS_ACTIVE_LABEL,
+            help_text=EditUserForm.IS_ACTIVE_HELP_TEXT,
+            initial=instance.is_active
+        ),
+        'is_active_staff_message': forms.CharField(
+            label=EditUserForm.IS_ACTIVE_STAFF_MESSAGE_LABEL,
+            help_text=EditUserForm.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT,
+            initial=instance.is_active_staff_message,
+            widget=forms.Textarea(attrs={'rows': 3}),
+            required=False
+        ),
     }
 
     return type('UserIsActiveForm', (FormType, ), is_active_fields)
@@ -325,20 +321,18 @@ def SearchUsersForm(*args, **kwargs):
         threadstore.set('misago_admin_roles_choices', roles_choices)
 
     extra_fields = {
-        'rank':
-            forms.TypedChoiceField(
-                label=_("Has rank"),
-                coerce=int,
-                required=False,
-                choices=ranks_choices,
-            ),
-        'role':
-            forms.TypedChoiceField(
-                label=_("Has role"),
-                coerce=int,
-                required=False,
-                choices=roles_choices,
-            )
+        'rank': forms.TypedChoiceField(
+            label=_("Has rank"),
+            coerce=int,
+            required=False,
+            choices=ranks_choices,
+        ),
+        'role': forms.TypedChoiceField(
+            label=_("Has role"),
+            coerce=int,
+            required=False,
+            choices=roles_choices,
+        )
     }
 
     FinalForm = type('SearchUsersFormFinal', (SearchUsersFormBase, ), extra_fields)

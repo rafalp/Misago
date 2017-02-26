@@ -25,13 +25,10 @@ ATTACHMENTS = [
         'size_limit': 3 * 1024
     },
     {
-        'name':
-            'PDF',
+        'name': 'PDF',
         'extensions': ('pdf', ),
-        'mimetypes':
-            ('application/pdf', 'application/x-pdf', 'application/x-bzpdf', 'application/x-gzpdf'),
-        'size_limit':
-            4 * 1024
+        'mimetypes': ('application/pdf', 'application/x-pdf', 'application/x-bzpdf', 'application/x-gzpdf'),
+        'size_limit': 4 * 1024
     },
     {
         'name': 'Text',

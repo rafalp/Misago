@@ -41,12 +41,9 @@ class GatewaySettingsTests(TestCase):
     def test_setting_public(self):
         """get_public_settings returns public settings"""
         test_group = {
-            'key':
-                'test_group',
-            'name':
-                "Test settings",
-            'description':
-                "Those are test settings.",
+            'key': 'test_group',
+            'name': "Test settings",
+            'description': "Those are test settings.",
             'settings': [
                 {
                     'setting': 'fish_name',
@@ -83,12 +80,9 @@ class GatewaySettingsTests(TestCase):
     def test_setting_lazy(self):
         """lazy settings work"""
         test_group = {
-            'key':
-                'test_group',
-            'name':
-                "Test settings",
-            'description':
-                "Those are test settings.",
+            'key': 'test_group',
+            'name': "Test settings",
+            'description': "Those are test settings.",
             'settings': [
                 {
                     'setting': 'fish_name',

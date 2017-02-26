@@ -610,18 +610,12 @@ class EditReplyEditorApiTests(EditorApiTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.json(), {
-                'id':
-                    self.post.pk,
-                'api':
-                    self.post.get_api_url(),
-                'post':
-                    self.post.original,
-                'can_protect':
-                    False,
-                'is_protected':
-                    self.post.is_protected,
-                'poster':
-                    self.post.poster_name,
+                'id': self.post.pk,
+                'api': self.post.get_api_url(),
+                'post': self.post.original,
+                'can_protect': False,
+                'is_protected': self.post.is_protected,
+                'poster': self.post.poster_name,
                 'attachments': [
                     AttachmentSerializer(attachments[1], context={'user': self.user}).data,
                     AttachmentSerializer(attachments[0], context={'user': self.user}).data,

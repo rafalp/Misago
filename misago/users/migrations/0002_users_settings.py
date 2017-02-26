@@ -12,14 +12,11 @@ _ = lambda x: x
 def create_users_settings_group(apps, schema_editor):
     migrate_settings_group(
         apps, {
-            'key':
-                'users',
-            'name':
-                _("Users"),
-            'description':
-                _(
-                    "Those settings control user accounts default behaviour and features availability."
-                ),
+            'key': 'users',
+            'name': _("Users"),
+            'description': _(
+                "Those settings control user accounts default behaviour and features availability."
+            ),
             'settings': [
                 {
                     'setting': 'account_activation',
@@ -76,25 +73,18 @@ def create_users_settings_group(apps, schema_editor):
                     'is_public': True,
                 },
                 {
-                    'setting':
-                        'allow_custom_avatars',
-                    'name':
-                        _("Allow custom avatars"),
-                    'legend':
-                        _("Avatars"),
-                    'description':
-                        _(
-                            "Turning this option off will forbid "
-                            "forum users from using avatars from "
-                            "outside forums. Good for forums "
-                            "adressed at young users."
-                        ),
-                    'python_type':
-                        'bool',
-                    'value':
-                        True,
-                    'form_field':
-                        'yesno',
+                    'setting': 'allow_custom_avatars',
+                    'name': _("Allow custom avatars"),
+                    'legend': _("Avatars"),
+                    'description': _(
+                        "Turning this option off will forbid "
+                        "forum users from using avatars from "
+                        "outside forums. Good for forums "
+                        "adressed at young users."
+                    ),
+                    'python_type': 'bool',
+                    'value': True,
+                    'form_field': 'yesno',
                 },
                 {
                     'setting': 'default_avatar',
@@ -110,20 +100,15 @@ def create_users_settings_group(apps, schema_editor):
                     },
                 },
                 {
-                    'setting':
-                        'default_gravatar_fallback',
-                    'name':
-                        _("Fallback for default gravatar"),
-                    'description':
-                        _(
-                            "Select which avatar to use when user "
-                            "has no gravatar associated with his "
-                            "e-mail address."
-                        ),
-                    'value':
-                        'dynamic',
-                    'form_field':
-                        'select',
+                    'setting': 'default_gravatar_fallback',
+                    'name': _("Fallback for default gravatar"),
+                    'description': _(
+                        "Select which avatar to use when user "
+                        "has no gravatar associated with his "
+                        "e-mail address."
+                    ),
+                    'value': 'dynamic',
+                    'form_field': 'select',
                     'field_extra': {
                         'choices': [
                             ('dynamic', _("Individual")),
@@ -132,22 +117,18 @@ def create_users_settings_group(apps, schema_editor):
                     },
                 },
                 {
-                    'setting':
-                        'avatar_upload_limit',
-                    'name':
-                        _("Maximum size of uploaded avatar"),
-                    'description':
-                        _("Enter maximum allowed file size "
-                          "(in KB) for avatar uploads"),
-                    'python_type':
-                        'int',
-                    'value':
-                        1536,
+                    'setting': 'avatar_upload_limit',
+                    'name': _("Maximum size of uploaded avatar"),
+                    'description': _(
+    "Enter maximum allowed file size "
+    "(in KB) for avatar uploads"
+),
+                    'python_type': 'int',
+                    'value': 1536,
                     'field_extra': {
                         'min_value': 0,
                     },
-                    'is_public':
-                        True,
+                    'is_public': True,
                 },
                 {
                     'setting': 'signature_length_max',
@@ -207,13 +188,12 @@ def create_users_settings_group(apps, schema_editor):
 
     migrate_settings_group(
         apps, {
-            'key':
-                'captcha',
-            'name':
-                _("CAPTCHA"),
-            'description':
-                _("Those settings allow you to combat automatic "
-                  "registrations on your forum."),
+            'key': 'captcha',
+            'name': _("CAPTCHA"),
+            'description': _(
+    "Those settings allow you to combat automatic "
+    "registrations on your forum."
+),
             'settings': [
                 {
                     'setting': 'captcha_type',
@@ -270,17 +250,14 @@ def create_users_settings_group(apps, schema_editor):
                     },
                 },
                 {
-                    'setting':
-                        'qa_answers',
-                    'name':
-                        _("Valid answers"),
-                    'description':
-                        _("Enter each answer in new line. "
-                          "Answers are case-insensitive."),
-                    'value':
-                        '',
-                    'form_field':
-                        'textarea',
+                    'setting': 'qa_answers',
+                    'name': _("Valid answers"),
+                    'description': _(
+    "Enter each answer in new line. "
+    "Answers are case-insensitive."
+),
+                    'value': '',
+                    'form_field': 'textarea',
                     'field_extra': {
                         'rows': 4,
                         'required': False,

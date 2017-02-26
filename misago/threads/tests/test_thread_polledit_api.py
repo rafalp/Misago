@@ -341,16 +341,11 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         response = self.put(
             self.api_link,
             data={
-                'length':
-                    40,
-                'question':
-                    "Select two best colors",
-                'allowed_choices':
-                    2,
-                'allow_revotes':
-                    True,
-                'is_public':
-                    True,
+                'length': 40,
+                'question': "Select two best colors",
+                'allowed_choices': 2,
+                'allow_revotes': True,
+                'is_public': True,
                 'choices': [
                     {
                         'hash': 'aaaaaaaaaaaa',
@@ -429,16 +424,11 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         response = self.put(
             self.api_link,
             data={
-                'length':
-                    40,
-                'question':
-                    "Select two best colors",
-                'allowed_choices':
-                    2,
-                'allow_revotes':
-                    True,
-                'is_public':
-                    True,
+                'length': 40,
+                'question': "Select two best colors",
+                'allowed_choices': 2,
+                'allow_revotes': True,
+                'is_public': True,
                 'choices': [
                     {
                         'hash': 'aaaaaaaaaaaa',

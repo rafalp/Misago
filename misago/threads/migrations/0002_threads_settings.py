@@ -12,12 +12,9 @@ _ = lambda x: x
 def create_threads_settings_group(apps, schema_editor):
     migrate_settings_group(
         apps, {
-            'key':
-                'threads',
-            'name':
-                _("Threads"),
-            'description':
-                _("Those settings control threads and posts."),
+            'key': 'threads',
+            'name': _("Threads"),
+            'description': _("Those settings control threads and posts."),
             'settings': [
                 {
                     'setting': 'thread_title_length_min',
@@ -57,24 +54,18 @@ def create_threads_settings_group(apps, schema_editor):
                     'is_public': True,
                 },
                 {
-                    'setting':
-                        'post_length_max',
-                    'name':
-                        _("Maximum length"),
-                    'description':
-                        _(
-                            "Maximum allowed user post length. Enter zero to disable. "
-                            "Longer posts are more costful to parse and index."
-                        ),
-                    'python_type':
-                        'int',
-                    'value':
-                        60000,
+                    'setting': 'post_length_max',
+                    'name': _("Maximum length"),
+                    'description': _(
+                        "Maximum allowed user post length. Enter zero to disable. "
+                        "Longer posts are more costful to parse and index."
+                    ),
+                    'python_type': 'int',
+                    'value': 60000,
                     'field_extra': {
                         'min_value': 0,
                     },
-                    'is_public':
-                        True,
+                    'is_public': True,
                 },
             ],
         }

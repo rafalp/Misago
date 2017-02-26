@@ -12,15 +12,12 @@ _ = lambda x: x
 def create_basic_settings_group(apps, schema_editor):
     migrate_settings_group(
         apps, {
-            'key':
-                'basic',
-            'name':
-                _("Basic forum settings"),
-            'description':
-                _(
-                    "Those settings control most basic properties "
-                    "of your forum like its name or description."
-                ),
+            'key': 'basic',
+            'name': _("Basic forum settings"),
+            'description': _(
+                "Those settings control most basic properties "
+                "of your forum like its name or description."
+            ),
             'settings': [
                 {
                     'setting': 'forum_name',
@@ -34,26 +31,22 @@ def create_basic_settings_group(apps, schema_editor):
                     'is_public': True,
                 },
                 {
-                    'setting':
-                        'forum_index_title',
-                    'name':
-                        _("Index title"),
-                    'description':
-                        _("You may set custon title on "
-                          "forum index by typing it here."),
-                    'legend':
-                        _("Forum index"),
+                    'setting': 'forum_index_title',
+                    'name': _("Index title"),
+                    'description': _(
+    "You may set custon title on "
+    "forum index by typing it here."
+),
+                    'legend': _("Forum index"),
                     'field_extra': {
                         'max_length': 255
                     },
-                    'is_public':
-                        True,
+                    'is_public': True,
                 },
                 {
                     'setting': 'forum_index_meta_description',
                     'name': _("Meta Description"),
-                    'description': _("Short description of your forum "
-                                     "for internet crawlers."),
+                    'description': _("Short description of your forum for internet crawlers."),
                     'field_extra': {
                         'max_length': 255
                     },
@@ -71,8 +64,7 @@ def create_basic_settings_group(apps, schema_editor):
                 {
                     'setting': 'forum_branding_text',
                     'name': _("Branding text"),
-                    'description': _("Optional text displayed besides "
-                                     "brand image in navbar."),
+                    'description': _("Optional text displayed besides brand image in navbar."),
                     'value': "Misago",
                     'field_extra': {
                         'max_length': 255
@@ -80,18 +72,13 @@ def create_basic_settings_group(apps, schema_editor):
                     'is_public': True,
                 },
                 {
-                    'setting':
-                        'email_footer',
-                    'name':
-                        _("E-mails footer"),
-                    'description':
-                        _(
-                            "Optional short message included "
-                            "at the end of e-mails sent by "
-                            "forum"
-                        ),
-                    'legend':
-                        _("Forum e-mails"),
+                    'setting': 'email_footer',
+                    'name': _("E-mails footer"),
+                    'description': _(
+                        "Optional short message included at "
+                        "the end of e-mails sent by forum."
+                    ),
+                    'legend': _("Forum e-mails"),
                     'field_extra': {
                         'max_length': 255
                     },

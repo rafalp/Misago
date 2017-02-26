@@ -129,35 +129,32 @@ def CategoryFormFactory(instance):
 
     return type(
         'CategoryFormFinal', (CategoryFormBase, ), {
-            'new_parent':
-                AdminCategoryChoiceField(
-                    label=_("Parent category"),
-                    queryset=parent_queryset,
-                    initial=instance.parent,
-                    empty_label=None,
+            'new_parent': AdminCategoryChoiceField(
+                label=_("Parent category"),
+                queryset=parent_queryset,
+                initial=instance.parent,
+                empty_label=None,
+            ),
+            'copy_permissions': AdminCategoryChoiceField(
+                label=_("Copy permissions"),
+                help_text=_(
+                    "You can replace this category permissions with "
+                    "permissions copied from category selected here."
                 ),
-            'copy_permissions':
-                AdminCategoryChoiceField(
-                    label=_("Copy permissions"),
-                    help_text=_(
-                        "You can replace this category permissions with "
-                        "permissions copied from category selected here."
-                    ),
-                    queryset=Category.objects.all_categories(),
-                    empty_label=_("Don't copy permissions"),
-                    required=False,
+                queryset=Category.objects.all_categories(),
+                empty_label=_("Don't copy permissions"),
+                required=False,
+            ),
+            'archive_pruned_in': AdminCategoryChoiceField(
+                label=_("Archive"),
+                help_text=_(
+                    "Instead of being deleted, pruned threads can be "
+                    "moved to designated category."
                 ),
-            'archive_pruned_in':
-                AdminCategoryChoiceField(
-                    label=_("Archive"),
-                    help_text=_(
-                        "Instead of being deleted, pruned threads can be "
-                        "moved to designated category."
-                    ),
-                    queryset=Category.objects.all_categories(),
-                    empty_label=_("Don't archive pruned threads"),
-                    required=False,
-                ),
+                queryset=Category.objects.all_categories(),
+                empty_label=_("Don't archive pruned threads"),
+                required=False,
+            ),
         }
     )
 
@@ -190,14 +187,13 @@ class DeleteCategoryFormBase(forms.ModelForm):
 def DeleteFormFactory(instance):
     content_queryset = Category.objects.all_categories().order_by('lft')
     fields = {
-        'move_threads_to':
-            AdminCategoryChoiceField(
-                label=_("Move category threads to"),
-                queryset=content_queryset,
-                initial=instance.parent,
-                empty_label=_('Delete with category'),
-                required=False,
-            )
+        'move_threads_to': AdminCategoryChoiceField(
+            label=_("Move category threads to"),
+            queryset=content_queryset,
+            initial=instance.parent,
+            empty_label=_('Delete with category'),
+            required=False,
+        )
     }
 
     not_siblings = models.Q(lft__lt=instance.lft)
@@ -226,16 +222,14 @@ class CategoryRoleForm(forms.ModelForm):
 
 def RoleCategoryACLFormFactory(category, category_roles, selected_role):
     attrs = {
-        'category':
-            category,
-        'role':
-            forms.ModelChoiceField(
-                label=_("Role"),
-                required=False,
-                queryset=category_roles,
-                initial=selected_role,
-                empty_label=_("No access"),
-            )
+        'category': category,
+        'role': forms.ModelChoiceField(
+            label=_("Role"),
+            required=False,
+            queryset=category_roles,
+            initial=selected_role,
+            empty_label=_("No access"),
+        )
     }
 
     return type('RoleCategoryACLForm', (forms.Form, ), attrs)
@@ -243,16 +237,14 @@ def RoleCategoryACLFormFactory(category, category_roles, selected_role):
 
 def CategoryRolesACLFormFactory(role, category_roles, selected_role):
     attrs = {
-        'role':
-            role,
-        'category_role':
-            forms.ModelChoiceField(
-                label=_("Role"),
-                required=False,
-                queryset=category_roles,
-                initial=selected_role,
-                empty_label=_("No access"),
-            )
+        'role': role,
+        'category_role': forms.ModelChoiceField(
+            label=_("Role"),
+            required=False,
+            queryset=category_roles,
+            initial=selected_role,
+            empty_label=_("No access"),
+        )
     }
 
     return type('CategoryRolesACLForm', (forms.Form, ), attrs)
