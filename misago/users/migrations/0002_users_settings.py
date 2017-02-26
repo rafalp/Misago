@@ -103,9 +103,8 @@ def create_users_settings_group(apps, schema_editor):
                     'setting': 'default_gravatar_fallback',
                     'name': _("Fallback for default gravatar"),
                     'description': _(
-                        "Select which avatar to use when user "
-                        "has no gravatar associated with his "
-                        "e-mail address."
+                        "Select which avatar to use when user has no "
+                        "gravatar associated with his e-mail address."
                     ),
                     'value': 'dynamic',
                     'form_field': 'select',
@@ -120,9 +119,8 @@ def create_users_settings_group(apps, schema_editor):
                     'setting': 'avatar_upload_limit',
                     'name': _("Maximum size of uploaded avatar"),
                     'description': _(
-    "Enter maximum allowed file size "
-    "(in KB) for avatar uploads"
-),
+                        "Enter maximum allowed file size (in KB) for avatar uploads."
+                    ),
                     'python_type': 'int',
                     'value': 1536,
                     'field_extra': {
@@ -191,9 +189,8 @@ def create_users_settings_group(apps, schema_editor):
             'key': 'captcha',
             'name': _("CAPTCHA"),
             'description': _(
-    "Those settings allow you to combat automatic "
-    "registrations on your forum."
-),
+                "Those settings allow you to combat automatic registrations on your forum."
+            ),
             'settings': [
                 {
                     'setting': 'captcha_type',
@@ -253,9 +250,8 @@ def create_users_settings_group(apps, schema_editor):
                     'setting': 'qa_answers',
                     'name': _("Valid answers"),
                     'description': _(
-    "Enter each answer in new line. "
-    "Answers are case-insensitive."
-),
+                        "Enter each answer in new line. Answers are case-insensitive."
+                    ),
                     'value': '',
                     'form_field': 'textarea',
                     'field_extra': {

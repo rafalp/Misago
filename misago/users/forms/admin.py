@@ -91,7 +91,9 @@ class EditUserForm(UserBaseForm):
     )
 
     new_password = forms.CharField(
-        label=_("Change password to"), widget=forms.PasswordInput, required=False
+        label=_("Change password to"),
+        widget=forms.PasswordInput,
+        required=False,
     )
 
     is_avatar_locked = YesNoSwitch(
@@ -122,7 +124,9 @@ class EditUserForm(UserBaseForm):
     )
 
     signature = forms.CharField(
-        label=_("Signature contents"), widget=forms.Textarea(attrs={'rows': 3}), required=False
+        label=_("Signature contents"),
+        widget=forms.Textarea(attrs={'rows': 3}),
+        required=False,
     )
     is_signature_locked = YesNoSwitch(
         label=_("Lock signature"),
@@ -382,9 +386,8 @@ class RankForm(forms.ModelForm):
         label=_("Give rank dedicated tab on users list"),
         required=False,
         help_text=_(
-            "Selecting this option will make users with this rank "
-            "easily discoverable by others trough dedicated page on "
-            "forum users list."
+            "Selecting this option will make users with this rank easily discoverable "
+            "by others through dedicated page on forum users list."
         )
     )
 

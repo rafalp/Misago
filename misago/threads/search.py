@@ -47,8 +47,8 @@ class SearchThreads(SearchProvider):
 
         results = {
             'results': FeedSerializer(posts, many=True, context={
-            'user': self.request.user,
-        }).data
+                'user': self.request.user,
+            }).data
         }
         results.update(paginator)
 

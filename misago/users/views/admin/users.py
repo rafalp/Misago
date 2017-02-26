@@ -82,9 +82,8 @@ class UsersList(UserAdmin, generic.ListView):
             'name': _("Delete all"),
             'icon': 'fa fa-eraser',
             'confirmation': _(
-                "Are you sure you want to delete selected "
-                "users? This will also delete all content "
-                "associated with their accounts."
+                "Are you sure you want to delete selected users? "
+                "This will also delete all content associated with their accounts."
             ),
             'is_atomic': False,
         },
@@ -177,7 +176,7 @@ class UsersList(UserAdmin, generic.ListView):
                         if banned_value not in banned_values:
                             ban_kwargs.update({
                                 'check_type': check_type,
-                                'banned_value': banned_value
+                                'banned_value': banned_value,
                             })
                             Ban.objects.create(**ban_kwargs)
                             banned_values.append(banned_value)

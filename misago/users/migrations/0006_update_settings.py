@@ -89,9 +89,8 @@ def update_users_settings(apps, schema_editor):
                     'setting': 'default_gravatar_fallback',
                     'name': _("Fallback for default gravatar"),
                     'description': _(
-                        "Select which avatar to use when user "
-                        "has no gravatar associated with his "
-                        "e-mail address."
+                        "Select which avatar to use when user has no "
+                        "gravatar associated with his e-mail address."
                     ),
                     'value': 'dynamic',
                     'form_field': 'select',
@@ -106,9 +105,8 @@ def update_users_settings(apps, schema_editor):
                     'setting': 'avatar_upload_limit',
                     'name': _("Maximum size of uploaded avatar"),
                     'description': _(
-    "Enter maximum allowed file size "
-    "(in KB) for avatar uploads"
-),
+                        "Enter maximum allowed file size (in KB) for avatar uploads."
+                    ),
                     'python_type': 'int',
                     'default_value': 1536,
                     'field_extra': {

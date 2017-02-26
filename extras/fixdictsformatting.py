@@ -112,7 +112,11 @@ def walk_dedent_tree_node(node, children, force_split_next=False):
         if node.type == token.STRING:
             strings_tuple = node.parent.parent
 
-            container = strings_tuple.parent.children[0]
+            # compute indent
+            if force_split_next:
+                container = strings_tuple.parent.children[0]
+            else:
+                container = strings_tuple.parent.parent.children[0]
             while isinstance(container, Node):
                 container = container.children[0]
             indent = container.column + 4

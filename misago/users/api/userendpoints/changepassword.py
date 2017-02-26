@@ -25,10 +25,7 @@ def change_password_endpoint(request, pk=None):
         )
 
         return Response({
-            'detail': _(
-                          "Password change confirmation link "
-                        "was sent to your address."
-                    )
+            'detail': _("Password change confirmation link was sent to your address.")
         })
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

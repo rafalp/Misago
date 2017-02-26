@@ -176,7 +176,7 @@ def merge_threads(request, validated_data, threads, poll):
     new_thread = Thread(
         category=validated_data['category'],
         started_on=threads[0].started_on,
-        last_post_on=threads[0].last_post_on
+        last_post_on=threads[0].last_post_on,
     )
 
     new_thread.set_title(validated_data['title'])
@@ -194,7 +194,8 @@ def merge_threads(request, validated_data, threads, poll):
         record_event(
             request, new_thread, 'merged', {
                 'merged_thread': thread.title,
-            }, commit=False
+            },
+            commit=False,
         )
 
     new_thread.synchronize()
@@ -223,8 +224,9 @@ def merge_threads(request, validated_data, threads, poll):
     # add top category to thread
     if validated_data.get('top_category'):
         categories = list(
-            Category.objects.all_categories()
-            .filter(id__in=request.user.acl_cache['visible_categories'])
+            Category.objects.all_categories().filter(
+                id__in=request.user.acl_cache['visible_categories'],
+            )
         )
         add_categories_to_items(validated_data['top_category'], categories, [new_thread])
     else:

@@ -82,7 +82,7 @@ class UserAdmin(admin.ModelAdmin):
             {
                 'fields': (
                     'username', 'email', 'rank', 'last_login', 'joined_on', 'is_staff',
-                'is_superuser', 'edit_from_misago_link',
+                    'is_superuser', 'edit_from_misago_link',
                 )
             },
         ],

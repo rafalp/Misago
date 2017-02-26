@@ -64,7 +64,8 @@ def activate_by_token(request, pk, token):
         return render(
             request, 'misago/activation/error.html', {
                 'message': e.args[0],
-            }, status=400
+            },
+            status=400,
         )
 
     inactive_user.requires_activation = UserModel.ACTIVATION_NONE
@@ -75,7 +76,7 @@ def activate_by_token(request, pk, token):
     return render(
         request, 'misago/activation/done.html', {
             'message': message % {
-            'user': inactive_user.username,
-        },
+                'user': inactive_user.username,
+            },
         }
     )

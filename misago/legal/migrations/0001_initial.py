@@ -15,9 +15,8 @@ def create_legal_settings_group(apps, schema_editor):
             'key': 'legal',
             'name': _("Legal information"),
             'description': _(
-    "Those settings allow you to set forum terms of "
-    "service and privacy policy"
-),
+                "Those settings allow you to set forum terms of service and privacy policy."
+            ),
             'settings': [
                 {
                     'setting': 'terms_of_service_title',
@@ -35,8 +34,7 @@ def create_legal_settings_group(apps, schema_editor):
                     'setting': 'terms_of_service_link',
                     'name': _("Terms link"),
                     'description': _(
-                        "If terms of service are located "
-                        "on other page, enter there its link."
+                        "If terms of service are located on other page, enter there its link."
                     ),
                     'value': "",
                     'field_extra': {
@@ -80,9 +78,8 @@ def create_legal_settings_group(apps, schema_editor):
                     'setting': 'privacy_policy_link',
                     'name': _("Policy link"),
                     'description': _(
-    "If privacy policy is located on "
-    "other page, enter there its link."
-),
+                        "If privacy policy is located on other page, enter there its link."
+                    ),
                     'value': "",
                     'field_extra': {
                         'max_length': 255,
