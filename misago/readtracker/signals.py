@@ -9,9 +9,6 @@ all_read = Signal()
 category_read = Signal(providing_args=["category"])
 thread_tracked = Signal(providing_args=["thread"])
 thread_read = Signal(providing_args=["thread"])
-"""
-Signal handlers
-"""
 
 
 @receiver(delete_category_content)

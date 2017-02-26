@@ -3,9 +3,6 @@ from django.dispatch import Signal, receiver
 
 delete_user_content = Signal()
 username_changed = Signal()
-"""
-Signal handlers
-"""
 
 
 @receiver(username_changed)

@@ -7,9 +7,6 @@ from .models import Category
 
 delete_category_content = Signal()
 move_category_content = Signal(providing_args=["new_category"])
-"""
-Signal handlers
-"""
 
 
 @receiver(username_changed)
