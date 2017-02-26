@@ -28,14 +28,18 @@ def move_categories(stdout, style):
             new_parent_id = movedids.get('category', forum['parent_id'])
             parent = Category.objects.get(pk=new_parent_id)
 
-        category = Category.objects.insert_node(Category(
-            name=forum['name'],
-            slug=forum['slug'],
-            description=forum['description'],
-            is_closed=forum['closed'],
-            prune_started_after=forum['prune_start'],
-            prune_replied_after=forum['prune_last'],
-        ), parent, save=True)
+        category = Category.objects.insert_node(
+            Category(
+                name=forum['name'],
+                slug=forum['slug'],
+                description=forum['description'],
+                is_closed=forum['closed'],
+                prune_started_after=forum['prune_start'],
+                prune_replied_after=forum['prune_last'],
+            ),
+            parent,
+            save=True,
+        )
 
         movedids.set('category', forum['id'], category.pk)
 
@@ -48,7 +52,7 @@ def move_categories(stdout, style):
         new_archive_pk = movedids.get('category', forum['pruned_archive_id'])
 
         Category.objects.filter(pk=new_category_pk).update(
-            archive_pruned_in=Category.objects.get(pk=new_archive_pk)
+            archive_pruned_in=Category.objects.get(pk=new_archive_pk),
         )
 
 
@@ -69,10 +73,14 @@ def move_labels():
             parent_id = movedids.get('category', parent_row['forum_id'])
             parent = Category.objects.get(pk=parent_id)
 
-            category = Category.objects.insert_node(Category(
-                name=label['name'],
-                slug=label['slug'],
-            ), parent, save=True)
+            category = Category.objects.insert_node(
+                Category(
+                    name=label['name'],
+                    slug=label['slug'],
+                ),
+                parent,
+                save=True,
+            )
 
             label_id = '%s-%s' % (label['id'], parent_row['forum_id'])
             movedids.set('label', label_id, category.pk)

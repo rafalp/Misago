@@ -27,7 +27,7 @@ class PollSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Poll
-        fields = (
+        fields = [
             'id',
             'poster_name',
             'posted_on',
@@ -37,13 +37,11 @@ class PollSerializer(serializers.ModelSerializer):
             'allow_revotes',
             'votes',
             'is_public',
-
             'acl',
             'choices',
-
             'api',
             'url',
-        )
+        ]
 
     def get_api(self, obj):
         return {
@@ -58,10 +56,12 @@ class PollSerializer(serializers.ModelSerializer):
 
     def get_poster_url(self, obj):
         if obj.poster_id:
-            return reverse('misago:user', kwargs={
-                'slug': obj.poster_slug,
-                'pk': obj.poster_id,
-            })
+            return reverse(
+                'misago:user', kwargs={
+                    'slug': obj.poster_slug,
+                    'pk': obj.poster_id,
+                }
+            )
         else:
             return None
 
@@ -80,19 +80,19 @@ class EditPollSerializer(serializers.ModelSerializer):
     question = serializers.CharField(required=True, max_length=255)
     allowed_choices = serializers.IntegerField(required=True, min_value=1)
     choices = serializers.ListField(
-       allow_empty=False,
-       child=serializers.DictField(),
+        allow_empty=False,
+        child=serializers.DictField(),
     )
 
     class Meta:
         model = Poll
-        fields = (
+        fields = [
             'length',
             'question',
             'allowed_choices',
             'allow_revotes',
             'choices',
-        )
+        ]
 
     def validate_choices(self, choices):
         clean_choices = list(map(self.clean_choice, choices))
@@ -105,14 +105,12 @@ class EditPollSerializer(serializers.ModelSerializer):
         final_choices = []
         for choice in clean_choices:
             if choice['hash'] in choices_map:
-                choices_map[choice['hash']].update({
-                    'label': choice['label']
-                })
+                choices_map[choice['hash']].update({'label': choice['label']})
                 final_choices.append(choices_map[choice['hash']])
             else:
                 choice.update({
                     'hash': get_random_string(12),
-                    'votes': 0
+                    'votes': 0,
                 })
                 final_choices.append(choice)
 
@@ -142,16 +140,20 @@ class EditPollSerializer(serializers.ModelSerializer):
             message = ungettext(
                 "You can't add more than %(limit_value)s option to a single poll (added %(show_value)s).",
                 "You can't add more than %(limit_value)s options to a single poll (added %(show_value)s).",
-                MAX_POLL_OPTIONS)
-            raise serializers.ValidationError(message % {
-                'limit_value': MAX_POLL_OPTIONS,
-                'show_value': total_choices
-            })
+                MAX_POLL_OPTIONS,
+            )
+            raise serializers.ValidationError(
+                message % {
+                    'limit_value': MAX_POLL_OPTIONS,
+                    'show_value': total_choices,
+                }
+            )
 
     def validate(self, data):
         if data['allowed_choices'] > len(data['choices']):
             raise serializers.ValidationError(
-                _("Number of allowed choices can't be greater than number of all choices."))
+                _("Number of allowed choices can't be greater than number of all choices.")
+            )
         return data
 
     def update(self, instance, validated_data):
@@ -176,14 +178,14 @@ class EditPollSerializer(serializers.ModelSerializer):
 class NewPollSerializer(EditPollSerializer):
     class Meta:
         model = Poll
-        fields = (
+        fields = [
             'length',
             'question',
             'allowed_choices',
             'allow_revotes',
             'is_public',
             'choices',
-        )
+        ]
 
     def validate_choices(self, choices):
         clean_choices = list(map(self.clean_choice, choices))
@@ -193,7 +195,7 @@ class NewPollSerializer(EditPollSerializer):
         for choice in clean_choices:
             choice.update({
                 'hash': get_random_string(12),
-                'votes': 0
+                'votes': 0,
             })
 
         return clean_choices

@@ -30,33 +30,21 @@ class UserAdminForm(forms.ModelForm):
     it is kind of overkill - overwrite the whole template just to add one
     button - isn't it?
     """
-    #: pseudo-field
     edit_from_misago_link = forms.Field()
 
     def __init__(self, *args, **kwargs):
-        # noinspection PyArgumentList
         super(UserAdminForm, self).__init__(*args, **kwargs)
         self.init_edit_from_misago_link_field()
 
     def init_edit_from_misago_link_field(self):
-        """
-        Init for the pseudo-field, and replace it's widget `render`.
-        """
+        """init for the pseudo-field, and replace it's widget `render`"""
         field = self.fields['edit_from_misago_link']
         field.required = False
         field.label = ''
         field.widget.render = self.render_edit_from_misago_link
 
-    # noinspection PyUnusedLocal
     def render_edit_from_misago_link(self, *args, **kwargs):
-        """
-        Composes an html hyperlink for the pseudo-field render.
-
-        `*args` and `**kwargs` arguments need to mimic widget `render()`
-        signature.
-
-        :rtype: str
-        """
+        """composes an html hyperlink for the pseudo-field render"""
         text = _('Edit this user in Misago admin panel')
         link_html_template = ('<a href="{}" target="blank">' + text + '</a>')
         link_url = reverse(
@@ -79,48 +67,32 @@ class UserAdmin(admin.ModelAdmin):
     that).
     Replaces default form with custom `UserAdminForm`.
     """
-    list_display = (
-        'username',
-        'email',
-        'is_staff',
-        'is_superuser',
-    )
-    search_fields = ('username', 'email')
-    list_filter = ('groups', 'is_staff', 'is_superuser')
+    list_display = ['username', 'email', 'is_staff', 'is_superuser']
+    search_fields = ['username', 'email']
+    list_filter = ['groups', 'is_staff', 'is_superuser']
 
     form = UserAdminForm
     actions = None
-    readonly_fields = (
-        'username',
-        'email',
-        'rank',
-        'last_login',
-        'joined_on',
-        'is_staff',
-        'is_superuser',
-    )
-    fieldsets = (
-        (
+    readonly_fields = [
+        'username', 'email', 'rank', 'last_login', 'joined_on', 'is_staff', 'is_superuser'
+    ]
+    fieldsets = [
+        [
             _('Misago user data'),
-            {'fields': (
-                'username',
-                'email',
-                'rank',
-                'last_login',
-                'joined_on',
-                'is_staff',
-                'is_superuser',
-                'edit_from_misago_link',
-            )},
-        ),
-        (
+            {
+                'fields': (
+                    'username', 'email', 'rank', 'last_login', 'joined_on', 'is_staff',
+                    'is_superuser', 'edit_from_misago_link',
+                )
+            },
+        ],
+        [
             _('Edit permissions and groups'),
-            {'fields': (
-                'groups',
-                'user_permissions',
-            )},
-        ),
-    )
+            {
+                'fields': ('groups', 'user_permissions', )
+            },
+        ],
+    ]
 
     def has_add_permission(self, request):
         return False

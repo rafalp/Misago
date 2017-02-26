@@ -4,11 +4,9 @@ from django.views import i18n
 from django.views.decorators.cache import cache_page
 from django.views.decorators.http import last_modified
 
-from . import momentjs
-
 
 def forum_index(request):
-    return # blow up as this view is normally non-reachable!
+    return  # blow up as this view is normally non-reachable!
 
 
 def home_redirect(*args, **kwargs):

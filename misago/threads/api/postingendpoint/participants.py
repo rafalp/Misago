@@ -23,9 +23,7 @@ class ParticipantsMiddleware(PostingMiddleware):
         return False
 
     def get_serializer(self):
-        return ParticipantsSerializer(data=self.request.data, context={
-            'user': self.user
-        })
+        return ParticipantsSerializer(data=self.request.data, context={'user': self.user})
 
     def save(self, serializer):
         set_owner(self.thread, self.user)
@@ -33,10 +31,7 @@ class ParticipantsMiddleware(PostingMiddleware):
 
 
 class ParticipantsSerializer(serializers.Serializer):
-    to = serializers.ListField(
-       child=serializers.CharField(),
-       required=True
-    )
+    to = serializers.ListField(child=serializers.CharField(), required=True)
 
     def validate_to(self, usernames):
         clean_usernames = self.clean_usernames(usernames)
@@ -49,7 +44,8 @@ class ParticipantsSerializer(serializers.Serializer):
 
             if clean_name == self.context['user'].slug:
                 raise serializers.ValidationError(
-                    _("You can't include yourself on the list of users to invite to new thread."))
+                    _("You can't include yourself on the list of users to invite to new thread.")
+                )
 
             if clean_name and clean_name not in clean_usernames:
                 clean_usernames.append(clean_name)
@@ -62,11 +58,14 @@ class ParticipantsSerializer(serializers.Serializer):
             message = ungettext(
                 "You can't add more than %(users)s user to private thread (you've added %(added)s).",
                 "You can't add more than %(users)s users to private thread (you've added %(added)s).",
-                max_participants)
-            raise serializers.ValidationError(message % {
-                'users': max_participants,
-                'added': len(clean_usernames)
-            })
+                max_participants,
+            )
+            raise serializers.ValidationError(
+                message % {
+                    'users': max_participants,
+                    'added': len(clean_usernames),
+                }
+            )
 
         return list(set(clean_usernames))
 
@@ -84,7 +83,6 @@ class ParticipantsSerializer(serializers.Serializer):
             sorted_usernames = sorted(invalid_usernames)
 
             message = _("One or more users could not be found: %(usernames)s")
-            raise serializers.ValidationError(
-                message % {'usernames': ', '.join(sorted_usernames)})
+            raise serializers.ValidationError(message % {'usernames': ', '.join(sorted_usernames)})
 
         return users

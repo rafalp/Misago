@@ -12,9 +12,6 @@ from misago.users.models import AnonymousUser
 from .models import Category, CategoryRole, RoleCategoryACL
 
 
-"""
-Admin Permissions Form
-"""
 class PermissionsForm(forms.Form):
     legend = _("Category access")
 
@@ -29,9 +26,6 @@ def change_permissions_form(role):
         return None
 
 
-"""
-ACL Builder
-"""
 def build_acl(acl, roles, key_name):
     new_acl = {
         'visible_categories': [],
@@ -75,9 +69,12 @@ def build_category_acl(acl, category, categories_roles, key_name):
         'can_browse': 0,
     }
 
-    algebra.sum_acls(final_acl, roles=category_roles, key=key_name,
+    algebra.sum_acls(
+        final_acl,
+        roles=category_roles,
+        key=key_name,
         can_see=algebra.greater,
-        can_browse=algebra.greater
+        can_browse=algebra.greater,
     )
 
     if final_acl['can_see']:
@@ -88,9 +85,6 @@ def build_category_acl(acl, category, categories_roles, key_name):
             acl['browseable_categories'].append(category.pk)
 
 
-"""
-ACL's for targets
-"""
 def add_acl_to_category(user, target):
     target.acl['can_see'] = can_see_category(user, target)
     target.acl['can_browse'] = can_browse_category(user, target)
@@ -106,7 +100,7 @@ def serialize_categories_alcs(serialized_acl):
                 'can_reply_threads': acl.get('can_reply_threads', False),
                 'can_pin_threads': acl.get('can_pin_threads', 0),
                 'can_hide_threads': acl.get('can_hide_threads', 0),
-                'can_close_threads': acl.get('can_close_threads', False)
+                'can_close_threads': acl.get('can_close_threads', False),
             })
     serialized_acl['categories'] = categories_acl
 
@@ -118,9 +112,6 @@ def register_with(registry):
     registry.acl_serializer(AnonymousUser, serialize_categories_alcs)
 
 
-"""
-ACL tests
-"""
 def allow_see_category(user, target):
     try:
         category_id = target.pk
@@ -129,6 +120,8 @@ def allow_see_category(user, target):
 
     if not category_id in user.acl_cache['visible_categories']:
         raise Http404()
+
+
 can_see_category = return_boolean(allow_see_category)
 
 
@@ -137,4 +130,6 @@ def allow_browse_category(user, target):
     if not target_acl['can_browse']:
         message = _('You don\'t have permission to browse "%(category)s" contents.')
         raise PermissionDenied(message % {'category': target.name})
+
+
 can_browse_category = return_boolean(allow_browse_category)

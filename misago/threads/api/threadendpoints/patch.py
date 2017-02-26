@@ -10,7 +10,6 @@ from misago.categories.permissions import allow_browse_category, allow_see_categ
 from misago.categories.serializers import CategorySerializer
 from misago.core.apipatch import ApiPatch
 from misago.core.shortcuts import get_int_or_404
-from misago.threads.models import ThreadParticipant
 from misago.threads.moderation import threads as moderation
 from misago.threads.participants import (
     add_participant, change_owner, make_participants_aware, remove_participant)
@@ -34,6 +33,8 @@ def patch_acl(request, thread, value):
         return {'acl': thread.acl}
     else:
         return {'acl': None}
+
+
 thread_patch_dispatcher.add('acl', patch_acl)
 
 
@@ -52,6 +53,8 @@ def patch_title(request, thread, value):
 
     moderation.change_thread_title(request, thread, value_cleaned)
     return {'title': thread.title}
+
+
 thread_patch_dispatcher.replace('title', patch_title)
 
 
@@ -73,6 +76,8 @@ def patch_weight(request, thread, value):
         moderation.unpin_thread(request, thread)
 
     return {'weight': thread.weight}
+
+
 thread_patch_dispatcher.replace('weight', patch_weight)
 
 
@@ -82,8 +87,7 @@ def patch_move(request, thread, value):
 
     category_pk = get_int_or_404(value)
     new_category = get_object_or_404(
-        Category.objects.all_categories().select_related('parent'),
-        pk=category_pk
+        Category.objects.all_categories().select_related('parent'), pk=category_pk
     )
 
     add_acl(request.user, new_category)
@@ -98,21 +102,24 @@ def patch_move(request, thread, value):
 
     return {'category': CategorySerializer(new_category).data}
 
+
 thread_patch_dispatcher.replace('category', patch_move)
 
 
 def patch_top_category(request, thread, value):
     category_pk = get_int_or_404(value)
     root_category = get_object_or_404(
-        Category.objects.all_categories(include_root=True),
-        pk=category_pk
+        Category.objects.all_categories(include_root=True), pk=category_pk
     )
 
-    categories = list(Category.objects.all_categories().filter(
-        id__in=request.user.acl_cache['visible_categories']
-    ))
+    categories = list(
+        Category.objects.all_categories()
+        .filter(id__in=request.user.acl_cache['visible_categories'])
+    )
     add_categories_to_items(root_category, categories, [thread])
     return {'top_category': CategorySerializer(thread.top_category).data}
+
+
 thread_patch_dispatcher.add('top-category', patch_top_category)
 
 
@@ -122,11 +129,10 @@ def patch_flatten_categories(request, thread, value):
             'category': thread.category_id,
             'top_category': thread.top_category.pk,
         }
-    except AttributeError as e:
-        return {
-            'category': thread.category_id,
-            'top_category': None
-        }
+    except AttributeError:
+        return {'category': thread.category_id, 'top_category': None}
+
+
 thread_patch_dispatcher.replace('flatten-categories', patch_flatten_categories)
 
 
@@ -143,6 +149,8 @@ def patch_is_unapproved(request, thread, value):
         }
     else:
         raise PermissionDenied(_("You don't have permission to approve this thread."))
+
+
 thread_patch_dispatcher.replace('is-unapproved', patch_is_unapproved)
 
 
@@ -159,6 +167,8 @@ def patch_is_closed(request, thread, value):
             raise PermissionDenied(_("You don't have permission to close this thread."))
         else:
             raise PermissionDenied(_("You don't have permission to open this thread."))
+
+
 thread_patch_dispatcher.replace('is-closed', patch_is_closed)
 
 
@@ -172,6 +182,8 @@ def patch_is_hidden(request, thread, value):
         return {'is_hidden': thread.is_hidden}
     else:
         raise PermissionDenied(_("You don't have permission to hide this thread."))
+
+
 thread_patch_dispatcher.replace('is-hidden', patch_is_hidden)
 
 
@@ -198,6 +210,8 @@ def patch_subscription(request, thread, value):
         return {'subscription': True}
     else:
         return {'subscription': None}
+
+
 thread_patch_dispatcher.replace('subscription', patch_subscription)
 
 
@@ -207,8 +221,7 @@ def patch_add_participant(request, thread, value):
     try:
         username = six.text_type(value).strip().lower()
         if not username:
-            raise PermissionDenied(
-                _("You have to enter new participant's username."))
+            raise PermissionDenied(_("You have to enter new participant's username."))
         participant = UserModel.objects.get(slug=username)
     except UserModel.DoesNotExist:
         raise PermissionDenied(_("No user with such name exists."))
@@ -220,12 +233,11 @@ def patch_add_participant(request, thread, value):
     add_participant(request, thread, participant)
 
     make_participants_aware(request.user, thread)
-    participants = ThreadParticipantSerializer(
-        thread.participants_list, many=True)
+    participants = ThreadParticipantSerializer(thread.participants_list, many=True)
 
-    return {
-        'participants': participants.data
-    }
+    return {'participants': participants.data}
+
+
 thread_patch_dispatcher.add('participants', patch_add_participant)
 
 
@@ -245,18 +257,17 @@ def patch_remove_participant(request, thread, value):
     remove_participant(request, thread, participant.user)
 
     if len(thread.participants_list) == 1:
-        return {
-            'deleted': True
-        }
+        return {'deleted': True}
     else:
         make_participants_aware(request.user, thread)
-        participants = ThreadParticipantSerializer(
-            thread.participants_list, many=True)
+        participants = ThreadParticipantSerializer(thread.participants_list, many=True)
 
         return {
             'deleted': False,
-            'participants': participants.data
+            'participants': participants.data,
         }
+
+
 thread_patch_dispatcher.remove('participants', patch_remove_participant)
 
 
@@ -280,9 +291,9 @@ def patch_replace_owner(request, thread, value):
 
     make_participants_aware(request.user, thread)
     participants = ThreadParticipantSerializer(thread.participants_list, many=True)
-    return {
-        'participants': participants.data
-    }
+    return {'participants': participants.data}
+
+
 thread_patch_dispatcher.replace('owner', patch_replace_owner)
 
 
@@ -299,9 +310,9 @@ def thread_patch_endpoint(request, thread):
     unapproved_changed = old_is_unapproved != thread.is_unapproved
     category_changed = old_category != thread.category
 
-    title_changed = old_is_hidden != thread.is_hidden
+    title_changed = old_title != thread.title
     if thread.category.last_thread_id != thread.pk:
-        title_changed = False # don't trigger resync on simple title change
+        title_changed = False  # don't trigger resync on simple title change
 
     if hidden_changed or unapproved_changed or category_changed:
         thread.category.synchronize()

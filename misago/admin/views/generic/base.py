@@ -12,9 +12,7 @@ class AdminView(View):
         return '%s:%s' % (request.resolver_match.namespace, matched_url)
 
     def process_context(self, request, context):
-        """
-        Simple hook for extending and manipulating template context.
-        """
+        """simple hook for extending and manipulating template context."""
         return context
 
     def render(self, request, context=None, template=None):

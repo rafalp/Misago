@@ -10,7 +10,8 @@ class MisagoAdminExtension(object):
     def register_urlpatterns(self, urlpatterns):
         # Attachment
         urlpatterns.namespace(r'^attachments/', 'attachments', 'system')
-        urlpatterns.patterns('system:attachments',
+        urlpatterns.patterns(
+            'system:attachments',
             url(r'^$', AttachmentsList.as_view(), name='index'),
             url(r'^(?P<page>\d+)/$', AttachmentsList.as_view(), name='index'),
             url(r'^delete/(?P<pk>\d+)/$', DeleteAttachment.as_view(), name='delete'),
@@ -18,7 +19,8 @@ class MisagoAdminExtension(object):
 
         # AttachmentType
         urlpatterns.namespace(r'^attachment-types/', 'attachment-types', 'system')
-        urlpatterns.patterns('system:attachment-types',
+        urlpatterns.patterns(
+            'system:attachment-types',
             url(r'^$', AttachmentTypesList.as_view(), name='index'),
             url(r'^new/$', NewAttachmentType.as_view(), name='new'),
             url(r'^edit/(?P<pk>\d+)/$', EditAttachmentType.as_view(), name='edit'),
@@ -31,12 +33,12 @@ class MisagoAdminExtension(object):
             icon='fa fa-cubes',
             parent='misago:admin:system',
             after='misago:admin:system:settings:index',
-            link='misago:admin:system:attachments:index'
+            link='misago:admin:system:attachments:index',
         )
         site.add_node(
             name=_("Attachment types"),
             icon='fa fa-cube',
             parent='misago:admin:system',
             after='misago:admin:system:attachments:index',
-            link='misago:admin:system:attachment-types:index'
+            link='misago:admin:system:attachment-types:index',
         )

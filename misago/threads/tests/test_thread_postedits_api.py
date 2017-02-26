@@ -1,15 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import json
-from datetime import timedelta
-
 from django.urls import reverse
 
-from misago.acl.testutils import override_acl
-from misago.categories.models import Category
 from misago.threads import testutils
-from misago.threads.models import Post
 
 from .test_threads_api import ThreadsApiTestCase
 
@@ -20,10 +14,13 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
 
         self.post = testutils.reply_thread(self.thread, poster=self.user)
 
-        self.api_link = reverse('misago:api:thread-post-edits', kwargs={
-            'thread_pk': self.thread.pk,
-            'pk': self.post.pk
-        })
+        self.api_link = reverse(
+            'misago:api:thread-post-edits',
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.post.pk,
+            }
+        )
 
         self.override_acl()
 
@@ -37,7 +34,7 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
                 editor_slug=self.user.slug,
                 editor_ip='127.0.0.1',
                 edited_from="Original body",
-                edited_to="First Edit"
+                edited_to="First Edit",
             ),
             self.post.edits_record.create(
                 category=self.category,
@@ -46,7 +43,7 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
                 editor_slug='deleted',
                 editor_ip='127.0.0.1',
                 edited_from="First Edit",
-                edited_to="Second Edit"
+                edited_to="Second Edit",
             ),
             self.post.edits_record.create(
                 category=self.category,
@@ -56,8 +53,8 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
                 editor_slug=self.user.slug,
                 editor_ip='127.0.0.1',
                 edited_from="Second Edit",
-                edited_to="Last Edit"
-            )
+                edited_to="Last Edit",
+            ),
         ]
 
         self.post.original = 'Last Edit'
@@ -138,9 +135,7 @@ class ThreadPostPostEditTests(ThreadPostEditsApiTestCase):
         super(ThreadPostPostEditTests, self).setUp()
         self.edits = self.mock_edit_record()
 
-        self.override_acl({
-            'can_edit_posts': 2
-        })
+        self.override_acl({'can_edit_posts': 2})
 
     def test_empty_edit_id(self):
         """api handles empty edit in querystring"""
@@ -166,9 +161,7 @@ class ThreadPostPostEditTests(ThreadPostEditsApiTestCase):
 
     def test_no_permission(self):
         """api validates permission to revert post"""
-        self.override_acl({
-            'can_edit_posts': 0
-        })
+        self.override_acl({'can_edit_posts': 0})
 
         response = self.client.post('{}?edit=1321'.format(self.api_link))
         self.assertEqual(response.status_code, 403)

@@ -23,10 +23,8 @@ class ForumOptionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = [
-            'is_hiding_presence',
-            'limits_private_thread_invites_to',
-            'subscribe_to_started_threads',
-            'subscribe_to_replied_threads'
+            'is_hiding_presence', 'limits_private_thread_invites_to',
+            'subscribe_to_started_threads', 'subscribe_to_replied_threads'
         ]
         extra_kwargs = {
             'limits_private_thread_invites_to': {
@@ -63,16 +61,14 @@ class ChangeUsernameSerializer(serializers.Serializer):
             raise serializers.ValidationError(_("Enter new username."))
 
         if username == self.context['user'].username:
-            raise serializers.ValidationError(
-                _("New username is same as current one."))
+            raise serializers.ValidationError(_("New username is same as current one."))
 
         validate_username(username)
 
         return data
 
     def change_username(self, changed_by):
-        self.context['user'].set_username(
-            self.validated_data['username'], changed_by=changed_by)
+        self.context['user'].set_username(self.validated_data['username'], changed_by=changed_by)
         self.context['user'].save(update_fields=['username', 'slug'])
 
 

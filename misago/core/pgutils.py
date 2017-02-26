@@ -24,8 +24,7 @@ DROP INDEX %(index_name)s
     def state_forwards(self, app_label, state):
         pass
 
-    def database_forwards(self, app_label, schema_editor,
-                          from_state, to_state):
+    def database_forwards(self, app_label, schema_editor, from_state, to_state):
         model = from_state.apps.get_model(app_label, self.model)
 
         statement = self.CREATE_SQL % {
@@ -37,10 +36,8 @@ DROP INDEX %(index_name)s
 
         schema_editor.execute(statement)
 
-    def database_backwards(self, app_label, schema_editor,
-                           from_state, to_state):
-        schema_editor.execute(
-            self.REMOVE_SQL % {'index_name': self.index_name})
+    def database_backwards(self, app_label, schema_editor, from_state, to_state):
+        schema_editor.execute(self.REMOVE_SQL % {'index_name': self.index_name})
 
     def describe(self):
         message = "Create PostgreSQL partial index on field %s in %s for %s"
@@ -49,9 +46,7 @@ DROP INDEX %(index_name)s
 
 
 def batch_update(queryset, step=50):
-    """
-    Util because psycopg2 iterators aren't really memory effective
-    """
+    """util because psycopg2 iterators aren't memory effective in Dj<1.11"""
     paginator = Paginator(queryset.order_by('pk'), step)
     for page_number in paginator.page_range:
         for obj in paginator.page(page_number).object_list:
@@ -59,9 +54,7 @@ def batch_update(queryset, step=50):
 
 
 def batch_delete(queryset, step=50):
-    """
-    Another util cos paginator goes bobbins when you are deleting
-    """
+    """another util cos paginator goes bobbins when you are deleting"""
     queryset_exists = True
     while queryset_exists:
         for obj in queryset[:step]:
@@ -85,8 +78,7 @@ DROP INDEX %(index_name)s
         self.index_name = index_name
         self.condition = condition
 
-    def database_forwards(self, app_label, schema_editor,
-                          from_state, to_state):
+    def database_forwards(self, app_label, schema_editor, from_state, to_state):
         model = from_state.apps.get_model(app_label, self.model)
 
         statement = self.CREATE_SQL % {
@@ -99,7 +91,6 @@ DROP INDEX %(index_name)s
         schema_editor.execute(statement)
 
     def describe(self):
-        message = ("Create PostgreSQL partial composite "
-                   "index on fields %s in %s for %s")
+        message = ("Create PostgreSQL partial composite index on fields %s in %s for %s")
         formats = (', '.join(self.fields), self.model_name, self.values)
         return message % formats

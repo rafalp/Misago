@@ -3,7 +3,7 @@ import json
 from rest_framework import status
 from rest_framework.response import Response
 
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
 from misago.conf import settings
@@ -16,15 +16,17 @@ from misago.users.serializers import ModerateAvatarSerializer
 def avatar_endpoint(request, pk=None):
     if request.user.is_avatar_locked:
         if request.user.avatar_lock_user_message:
-            reason = format_plaintext_for_html(
-                request.user.avatar_lock_user_message)
+            reason = format_plaintext_for_html(request.user.avatar_lock_user_message)
         else:
             reason = None
 
-        return Response({
-            'detail': _("Your avatar is locked. You can't change it."),
-            'reason': reason
-        }, status=status.HTTP_403_FORBIDDEN)
+        return Response(
+            {
+                'detail': _("Your avatar is locked. You can't change it."),
+                'reason': reason,
+            },
+            status=status.HTTP_403_FORBIDDEN,
+        )
 
     avatar_options = get_avatar_options(request.user)
     if request.method == 'POST':
@@ -41,7 +43,7 @@ def get_avatar_options(user):
         'crop_src': False,
         'crop_tmp': False,
         'upload': False,
-        'galleries': False
+        'galleries': False,
     }
 
     # Allow existing galleries
@@ -52,11 +54,11 @@ def get_avatar_options(user):
             for image in gallery['images']:
                 gallery_images.append({
                     'id': image.id,
-                    'url': image.url
+                    'url': image.url,
                 })
             options['galleries'].append({
                 'name': gallery['name'],
-                'images': gallery_images
+                'images': gallery_images,
             })
 
     # Can't have custom avatar?
@@ -72,7 +74,7 @@ def get_avatar_options(user):
             options['crop_src'] = {
                 'url': user.avatar_src.url,
                 'crop': json.loads(user.avatar_crop),
-                'size': max(settings.MISAGO_AVATARS_SIZES)
+                'size': max(settings.MISAGO_AVATARS_SIZES),
             }
         except (TypeError, ValueError):
             pass
@@ -81,7 +83,7 @@ def get_avatar_options(user):
     if avatars.uploaded.has_temporary_avatar(user):
         options['crop_tmp'] = {
             'url': user.avatar_tmp.url,
-            'size': max(settings.MISAGO_AVATARS_SIZES)
+            'size': max(settings.MISAGO_AVATARS_SIZES),
         }
 
     # Allow upload conditions
@@ -102,22 +104,31 @@ def avatar_post(options, user, data):
     try:
         type_options = options[data.get('avatar', 'nope')]
         if not type_options:
-            return Response({
-                'detail': _("This avatar type is not allowed.")
-            }, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    'detail': _("This avatar type is not allowed."),
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         rpc_handler = AVATAR_TYPES[data.get('avatar', 'nope')]
     except KeyError:
-        return Response({
-            'detail': _("Unknown avatar type.")
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {
+                'detail': _("Unknown avatar type."),
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     try:
         response_dict = {'detail': rpc_handler(user, data)}
     except AvatarError as e:
-        return Response({
-            'detail': e.args[0]
-        }, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {
+                'detail': e.args[0],
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     user.save()
 
@@ -125,9 +136,6 @@ def avatar_post(options, user, data):
     return Response(response_dict)
 
 
-"""
-Avatar rpc handlers
-"""
 def avatar_generate(user, data):
     avatars.dynamic.set_avatar(user)
     return _("New avatar based on your account was set.")
@@ -138,8 +146,7 @@ def avatar_gravatar(user, data):
         avatars.gravatar.set_avatar(user)
         return _("Gravatar was downloaded and set as new avatar.")
     except avatars.gravatar.NoGravatarAvailable:
-        raise AvatarError(
-            _("No Gravatar is associated with your e-mail address."))
+        raise AvatarError(_("No Gravatar is associated with your e-mail address."))
     except avatars.gravatar.GravatarError:
         raise AvatarError(_("Failed to connect to Gravatar servers."))
 
@@ -182,8 +189,7 @@ def avatar_crop_tmp(user, data):
 
 def avatar_crop(user, data, suffix):
     try:
-        crop = avatars.uploaded.crop_source_image(
-            user, suffix, data.get('crop', {}))
+        crop = avatars.uploaded.crop_source_image(user, suffix, data.get('crop', {}))
         user.avatar_crop = json.dumps(crop)
     except ValidationError as e:
         raise AvatarError(e.args[0])
@@ -194,7 +200,6 @@ AVATAR_TYPES = {
     'gravatar': avatar_gravatar,
     'galleries': avatar_gallery,
     'upload': avatar_upload,
-
     'crop_src': avatar_crop_src,
     'crop_tmp': avatar_crop_tmp,
 }
@@ -216,7 +221,10 @@ def moderate_avatar_endpoint(request, profile):
                 'avatar_lock_staff_message': profile.avatar_lock_staff_message,
             })
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
     else:
         return Response({
             'is_avatar_locked': int(profile.is_avatar_locked),

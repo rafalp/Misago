@@ -2,7 +2,6 @@ from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
 from django.db.models import F
-from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.translation import ugettext as _
@@ -50,7 +49,7 @@ def revert_post_endpoint(request, post):
         editor_slug=request.user.slug,
         editor_ip=request.user_ip,
         edited_from=post.original,
-        edited_to=edit.edited_from
+        edited_to=edit.edited_from,
     )
 
     parsing_result = common_flavour(request, post.poster, edit.edited_from)

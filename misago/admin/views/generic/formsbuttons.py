@@ -18,7 +18,7 @@ class TargetedView(AdminView):
                 select_for_update = select_for_update.select_for_update()
             # Does not work on Python 3:
             # return select_for_update.get(pk=kwargs[kwargs.keys()[0]])
-            (pk,) = kwargs.values()
+            (pk, ) = kwargs.values()
             return select_for_update.get(pk=pk)
         else:
             return self.get_model()()
@@ -37,17 +37,17 @@ class TargetedView(AdminView):
             return self.wrapped_dispatch(request, *args, **kwargs)
 
     def wrapped_dispatch(self, request, *args, **kwargs):
-            target = self.get_target_or_none(request, kwargs)
-            if not target:
-                messages.error(request, self.message_404)
-                return redirect(self.root_link)
+        target = self.get_target_or_none(request, kwargs)
+        if not target:
+            messages.error(request, self.message_404)
+            return redirect(self.root_link)
 
-            error = self.check_permissions(request, target)
-            if error:
-                messages.error(request, error)
-                return redirect(self.root_link)
+        error = self.check_permissions(request, target)
+        if error:
+            messages.error(request, error)
+            return redirect(self.root_link)
 
-            return self.real_dispatch(request, target)
+        return self.real_dispatch(request, target)
 
     def real_dispatch(self, request, target):
         pass
@@ -68,8 +68,8 @@ class FormView(TargetedView):
 
     def handle_form(self, form, request):
         raise NotImplementedError(
-            "You have to define your own handle_form method to handle "
-            "form submissions.")
+            "You have to define your own handle_form method to handle form submissions."
+        )
 
     def real_dispatch(self, request, target):
         FormType = self.create_form_type(request)
@@ -103,8 +103,7 @@ class ModelFormView(FormView):
     def handle_form(self, form, request, target):
         form.instance.save()
         if self.message_submit:
-            format = {'name': target.name}
-            messages.success(request, self.message_submit % format)
+            messages.success(request, self.message_submit % {'name': target.name})
 
     def real_dispatch(self, request, target):
         FormType = self.create_form_type(request, target)

@@ -12,9 +12,7 @@ MAPPINGS = {
 
 
 class Command(BaseCommand):
-    help = (
-        "Builds moves index for redirects from old urls to new ones."
-    )
+    help = ("Builds moves index for redirects from old urls to new ones.")
 
     def handle(self, *args, **options):
         self.stdout.write("Building moves index...")

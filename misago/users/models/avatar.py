@@ -5,10 +5,7 @@ from misago.users.avatars import store
 
 
 class Avatar(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     size = models.PositiveIntegerField(default=0)
     image = models.ImageField(max_length=255, upload_to=store.upload_to)
 

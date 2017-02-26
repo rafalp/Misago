@@ -39,7 +39,7 @@ class DenyBannedIPTests(UserTestCase):
         Ban.objects.create(
             check_type=Ban.IP,
             banned_value='83.*',
-            user_message="Ya got banned!"
+            user_message="Ya got banned!",
         )
 
         response = self.client.post(reverse('misago:request-activation'))
@@ -50,9 +50,8 @@ class DenyBannedIPTests(UserTestCase):
         Ban.objects.create(
             check_type=Ban.IP,
             banned_value='127.*',
-            user_message="Ya got banned!"
+            user_message="Ya got banned!",
         )
 
         response = self.client.post(reverse('misago:request-activation'))
-        self.assertContains(
-            response, encode_json_html("<p>Ya got banned!</p>"), status_code=403)
+        self.assertContains(response, encode_json_html("<p>Ya got banned!</p>"), status_code=403)

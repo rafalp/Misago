@@ -8,7 +8,6 @@ from misago.admin.auth import is_admin_session, update_admin_session
 from .auth import login
 
 
-
 def get_protected_namespace(request):
     for namespace in settings.MISAGO_ADMIN_NAMESPACES:
         try:

@@ -1,7 +1,4 @@
 from django import template
-from django.urls import reverse
-
-from misago.conf import settings
 
 
 register = template.Library()

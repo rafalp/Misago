@@ -16,9 +16,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_no_permission(self):
         """api respects permission to search users"""
-        override_acl(self.user, {
-            'can_search_users': 0
-        })
+        override_acl(self.user, {'can_search_users': 0})
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -105,7 +103,11 @@ class SearchApiTests(AuthenticatedUserTestCase):
     def test_search_disabled(self):
         """api respects disabled users visibility"""
         disabled_user = UserModel.objects.create_user(
-            'DisabledUser', 'visible@te.com', 'Pass.123', is_active=False)
+            'DisabledUser',
+            'visible@te.com',
+            'Pass.123',
+            is_active=False,
+        )
 
         response = self.client.get('%s?q=DisabledUser' % self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -138,6 +140,8 @@ class SearchProviderApiTests(SearchApiTests):
     def setUp(self):
         super(SearchProviderApiTests, self).setUp()
 
-        self.api_link = reverse('misago:api:search', kwargs={
-            'search_provider': 'users'
-        })
+        self.api_link = reverse(
+            'misago:api:search', kwargs={
+                'search_provider': 'users',
+            }
+        )

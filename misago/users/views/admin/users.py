@@ -15,7 +15,7 @@ from misago.threads.models import Thread
 from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
 from misago.users.forms.admin import (
     BanUsersForm, EditUserForm, EditUserFormFactory, NewUserForm, SearchUsersForm)
-from misago.users.models import Ban, User
+from misago.users.models import Ban
 from misago.users.signatures import set_user_signature
 
 
@@ -41,7 +41,8 @@ class UserAdmin(generic.AdminBaseMixin):
             add_admin_fields = request.user.pk != target.pk
 
         return EditUserFormFactory(
-            self.form, target,
+            self.form,
+            target,
             add_is_active_fields=add_is_active_fields,
             add_admin_fields=add_admin_fields,
         )
@@ -49,14 +50,14 @@ class UserAdmin(generic.AdminBaseMixin):
 
 class UsersList(UserAdmin, generic.ListView):
     items_per_page = 24
-    ordering = (
+    ordering = [
         ('-id', _("From newest")),
         ('id', _("From oldest")),
         ('slug', _("A to z")),
         ('-slug', _("Z to a")),
         ('posts', _("Biggest posters")),
         ('-posts', _("Smallest posters")),
-    )
+    ]
     selection_label = _('With users: 0')
     empty_selection_label = _('Select users')
     mass_actions = [
@@ -80,11 +81,12 @@ class UsersList(UserAdmin, generic.ListView):
             'action': 'delete_all',
             'name': _("Delete all"),
             'icon': 'fa fa-eraser',
-            'confirmation': _("Are you sure you want to delete selected "
-                              "users? This will also delete all content "
-                              "associated with their accounts."),
+            'confirmation': _(
+                "Are you sure you want to delete selected users? "
+                "This will also delete all content associated with their accounts."
+            ),
             'is_atomic': False,
-        }
+        },
     ]
 
     def get_queryset(self):
@@ -109,15 +111,11 @@ class UsersList(UserAdmin, generic.ListView):
             queryset.update(requires_activation=UserModel.ACTIVATION_NONE)
 
             subject = _("Your account on %(forum_name)s forums has been activated")
-            mail_subject = subject % {
-                'forum_name': settings.forum_name
-            }
+            mail_subject = subject % {'forum_name': settings.forum_name}
 
-            mail_users(request, inactive_users, mail_subject,
-                       'misago/emails/activation/by_admin')
+            mail_users(request, inactive_users, mail_subject, 'misago/emails/activation/by_admin')
 
-            message = _("Selected users accounts have been activated.")
-            messages.success(request, message)
+            messages.success(request, _("Selected users accounts have been activated."))
 
     def action_ban(self, request, users):
         users = users.order_by('slug')
@@ -137,7 +135,7 @@ class UsersList(UserAdmin, generic.ListView):
                 ban_kwargs = {
                     'user_message': cleaned_data.get('user_message'),
                     'staff_message': cleaned_data.get('staff_message'),
-                    'expires_on': cleaned_data.get('expires_on')
+                    'expires_on': cleaned_data.get('expires_on'),
                 }
 
                 for user in users:
@@ -172,38 +170,35 @@ class UsersList(UserAdmin, generic.ListView):
                             if ban == 'ip_first':
                                 formats = (bits[0], ip_separator)
                             if ban == 'ip_two':
-                                formats = (
-                                    bits[0], ip_separator,
-                                    bits[1], ip_separator
-                                )
+                                formats = (bits[0], ip_separator, bits[1], ip_separator)
                             banned_value = '%s*' % (''.join(formats))
 
                         if banned_value not in banned_values:
                             ban_kwargs.update({
                                 'check_type': check_type,
-                                'banned_value': banned_value
+                                'banned_value': banned_value,
                             })
                             Ban.objects.create(**ban_kwargs)
                             banned_values.append(banned_value)
 
-
                 Ban.objects.invalidate_cache()
-                message = _("Selected users have been banned.")
-                messages.success(request, message)
+                messages.success(request, _("Selected users have been banned."))
                 return None
 
         return self.render(
-            request, template='misago/admin/users/ban.html', context={
+            request,
+            template='misago/admin/users/ban.html',
+            context={
                 'users': users,
                 'form': form,
-            })
+            }
+        )
 
     def action_delete_accounts(self, request, users):
         for user in users:
             if user.is_staff or user.is_superuser:
-                message = _("%(user)s is admin and can't be deleted.")
-                mesage = message % {'user': user.username}
-                raise generic.MassActionError(mesage)
+                message = _("%(user)s is admin and can't be deleted.") % {'user': user.username}
+                raise generic.MassActionError(message)
 
         for user in users:
             user.delete()
@@ -212,22 +207,21 @@ class UsersList(UserAdmin, generic.ListView):
         messages.success(request, message)
 
     def action_delete_all(self, request, users):
-        return self.render(
-            request, template='misago/admin/users/delete.html', context={
-                'users': users,
-            })
-
         for user in users:
             if user.is_staff or user.is_superuser:
-                message = _("%(user)s is admin and can't be deleted.")
-                mesage = message % {'user': user.username}
-                raise generic.MassActionError(mesage)
+                message = _("%(user)s is admin and can't be deleted.") % {'user': user.username}
+                raise generic.MassActionError(message)
 
         for user in users:
             user.delete(delete_content=True)
 
-        message = _("Selected users and their content has been deleted.")
-        messages.success(request, message)
+        messages.success(request, _("Selected users and their content has been deleted."))
+
+        return self.render(
+            request, template='misago/admin/users/delete.html', context={
+                'users': users,
+            }
+        )
 
 
 class NewUser(UserAdmin, generic.ModelFormView):
@@ -255,8 +249,7 @@ class NewUser(UserAdmin, generic.ModelFormView):
         new_user.update_acl_key()
         new_user.save()
 
-        messages.success(
-            request, self.message_submit % {'user': target.username})
+        messages.success(request, self.message_submit % {'user': target.username})
         return redirect('misago:admin:users:accounts:edit', pk=new_user.pk)
 
 
@@ -273,8 +266,7 @@ class EditUser(UserAdmin, generic.ModelFormView):
     def handle_form(self, form, request, target):
         target.username = target.old_username
         if target.username != form.cleaned_data.get('username'):
-            target.set_username(
-                form.cleaned_data.get('username'), changed_by=request.user)
+            target.set_username(form.cleaned_data.get('username'), changed_by=request.user)
 
         if form.cleaned_data.get('new_password'):
             target.set_password(form.cleaned_data['new_password'])
@@ -310,8 +302,7 @@ class EditUser(UserAdmin, generic.ModelFormView):
         target.update_acl_key()
         target.save()
 
-        messages.success(
-            request, self.message_submit % {'user': target.username})
+        messages.success(request, self.message_submit % {'user': target.username})
 
 
 class DeletionStep(UserAdmin, generic.ButtonView):
@@ -326,7 +317,9 @@ class DeletionStep(UserAdmin, generic.ButtonView):
 
     def execute_step(self, user):
         raise NotImplementedError(
-            "execute_step method should return dict with number of deleted_count and is_completed keys")
+            "execute_step method should return dict with "
+            "number of deleted_count and is_completed keys"
+        )
 
     def button_action(self, request, target):
         return JsonResponse(self.execute_step(target))
@@ -354,7 +347,7 @@ class DeleteThreadsStep(DeletionStep):
 
         return {
             'deleted_count': deleted_threads,
-            'is_completed': is_completed
+            'is_completed': is_completed,
         }
 
 
@@ -387,7 +380,7 @@ class DeletePostsStep(DeletionStep):
 
         return {
             'deleted_count': deleted_posts,
-            'is_completed': is_completed
+            'is_completed': is_completed,
         }
 
 

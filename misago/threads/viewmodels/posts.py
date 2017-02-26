@@ -23,8 +23,9 @@ class ViewModel(object):
 
         posts_limit = settings.MISAGO_POSTS_PER_PAGE
         posts_orphans = settings.MISAGO_POSTS_TAIL
-        list_page = paginate(posts_queryset, page, posts_limit, posts_orphans,
-                             paginator=PostsPaginator)
+        list_page = paginate(
+            posts_queryset, page, posts_limit, posts_orphans, paginator=PostsPaginator
+        )
         paginator = pagination_dict(list_page)
 
         posts = list(list_page.object_list)
@@ -53,7 +54,8 @@ class ViewModel(object):
 
             events_limit = settings.MISAGO_EVENTS_PER_PAGE
             posts += self.get_events_queryset(
-                request, thread_model, events_limit, first_post, last_post)
+                request, thread_model, events_limit, first_post, last_post
+            )
 
             # sort both by pk
             posts.sort(key=lambda p: p.pk)
@@ -72,7 +74,7 @@ class ViewModel(object):
             'poster',
             'poster__rank',
             'poster__ban_cache',
-            'poster__online_tracker'
+            'poster__online_tracker',
         ).filter(is_event=False).order_by('id')
         return exclude_invisible_posts(request.user, thread.category, queryset)
 
@@ -99,7 +101,7 @@ class ViewModel(object):
     def get_template_context(self):
         return {
             'posts': self.posts,
-            'paginator': self.paginator
+            'paginator': self.paginator,
         }
 
 

@@ -1,5 +1,4 @@
 import random
-import sys
 import time
 
 from faker import Factory
@@ -8,7 +7,6 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import IntegrityError
-from django.utils.six.moves import range
 
 from misago.core.management.progressbar import show_progress
 from misago.users.avatars import dynamic, gallery
@@ -27,7 +25,7 @@ class Command(BaseCommand):
             help="number of users to create",
             nargs='?',
             type=int,
-            default=5
+            default=5,
         )
 
     def handle(self, *args, **options):
@@ -48,13 +46,13 @@ class Command(BaseCommand):
 
         while created_count < items_to_create:
             try:
-                kwargs = {
-                    'rank': random.choice(ranks),
-                }
-
                 user = UserModel.objects.create_user(
-                    fake.first_name(), fake.email(), 'pass123',
-                    set_default_avatar=False, **kwargs)
+                    fake.first_name(),
+                    fake.email(),
+                    'pass123',
+                    set_default_avatar=False,
+                    rank=random.choice(ranks),
+                )
 
                 if random.randint(0, 100) > 90:
                     dynamic.set_avatar(user)
@@ -65,8 +63,7 @@ class Command(BaseCommand):
                 pass
             else:
                 created_count += 1
-                show_progress(
-                    self, created_count, items_to_create, start_time)
+                show_progress(self, created_count, items_to_create, start_time)
 
         total_time = time.time() - start_time
         total_humanized = time.strftime('%H:%M:%S', time.gmtime(total_time))

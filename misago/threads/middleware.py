@@ -3,7 +3,6 @@ from django.utils.deprecation import MiddlewareMixin
 from misago.categories.models import Category
 
 from .models import Thread
-from .permissions import exclude_invisible_threads
 from .viewmodels import filter_read_threads_queryset
 
 
@@ -21,10 +20,7 @@ class UnreadThreadsCountMiddleware(MiddlewareMixin):
         participated_threads = request.user.threadparticipant_set.values('thread_id')
 
         category = Category.objects.private_threads()
-        threads = Thread.objects.filter(
-            category=category,
-            id__in=participated_threads
-        )
+        threads = Thread.objects.filter(category=category, id__in=participated_threads)
 
         new_threads = filter_read_threads_queryset(request.user, [category], 'new', threads)
         unread_threads = filter_read_threads_queryset(request.user, [category], 'unread', threads)
@@ -32,7 +28,9 @@ class UnreadThreadsCountMiddleware(MiddlewareMixin):
         request.user.unread_private_threads = new_threads.count() + unread_threads.count()
         request.user.sync_unread_private_threads = False
 
-        request.user.save(update_fields=[
-            'unread_private_threads',
-            'sync_unread_private_threads',
-        ])
+        request.user.save(
+            update_fields=[
+                'unread_private_threads',
+                'sync_unread_private_threads',
+            ]
+        )

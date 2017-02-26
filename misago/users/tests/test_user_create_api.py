@@ -11,9 +11,8 @@ UserModel = get_user_model()
 
 
 class UserCreateTests(UserTestCase):
-    """
-    tests for new user registration (POST to /api/users/)
-    """
+    """tests for new user registration (POST to /api/users/)"""
+
     def setUp(self):
         super(UserCreateTests, self).setUp()
         self.api_link = '/api/users/'
@@ -40,43 +39,48 @@ class UserCreateTests(UserTestCase):
         """api validates usernames"""
         user = self.get_authenticated_user()
 
-        response = self.client.post(self.api_link, data={
-            'username': user.username,
-            'email': 'loremipsum@dolor.met',
-            'password': 'LoremP4ssword'
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': user.username,
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+            },
+        )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'username': [
-                "This username is not available."
-            ]
+            'username': ["This username is not available."],
         })
 
     def test_registration_validates_email(self):
         """api validates usernames"""
         user = self.get_authenticated_user()
 
-        response = self.client.post(self.api_link, data={
-            'username': 'totallyNew',
-            'email': user.email,
-            'password': 'LoremP4ssword'
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': user.email,
+                'password': 'LoremP4ssword',
+            },
+        )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'email': [
-                "This e-mail address is not available."
-            ]
+            'email': ["This e-mail address is not available."],
         })
 
     def test_registration_validates_password(self):
         """api uses django's validate_password to validate registrations"""
-        response = self.client.post(self.api_link, data={
-            'username': 'Bob',
-            'email': 'l.o.r.e.m.i.p.s.u.m@gmail.com',
-            'password': '123'
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'Bob',
+                'email': 'l.o.r.e.m.i.p.s.u.m@gmail.com',
+                'password': '123',
+            },
+        )
 
         self.assertContains(response, "password is too short", status_code=400)
         self.assertContains(response, "password is entirely numeric", status_code=400)
@@ -84,21 +88,27 @@ class UserCreateTests(UserTestCase):
 
     def test_registration_validates_password_similiarity(self):
         """api uses validate_password to validate registrations"""
-        response = self.client.post(self.api_link, data={
-            'username': 'BobBoberson',
-            'email': 'l.o.r.e.m.i.p.s.u.m@gmail.com',
-            'password': 'BobBoberson'
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'BobBoberson',
+                'email': 'l.o.r.e.m.i.p.s.u.m@gmail.com',
+                'password': 'BobBoberson',
+            },
+        )
 
         self.assertContains(response, "password is too similar to the username", status_code=400)
 
     def test_registration_calls_validate_new_registration(self):
         """api uses validate_new_registration to validate registrations"""
-        response = self.client.post(self.api_link, data={
-            'username': 'Bob',
-            'email': 'l.o.r.e.m.i.p.s.u.m@gmail.com',
-            'password': 'pas123'
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'Bob',
+                'email': 'l.o.r.e.m.i.p.s.u.m@gmail.com',
+                'password': 'pas123',
+            },
+        )
 
         self.assertContains(response, "email is not allowed", status_code=400)
 
@@ -106,11 +116,14 @@ class UserCreateTests(UserTestCase):
         """api creates active and signed in user on POST"""
         settings.override_setting('account_activation', 'none')
 
-        response = self.client.post(self.api_link, data={
-            'username': 'Bob',
-            'email': 'bob@bob.com',
-            'password': 'pass123'
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'Bob',
+                'email': 'bob@bob.com',
+                'password': 'pass123',
+            },
+        )
 
         self.assertContains(response, 'active')
         self.assertContains(response, 'Bob')
@@ -130,11 +143,14 @@ class UserCreateTests(UserTestCase):
         """api creates inactive user on POST"""
         settings.override_setting('account_activation', 'user')
 
-        response = self.client.post(self.api_link, data={
-            'username': 'Bob',
-            'email': 'bob@bob.com',
-            'password': 'pass123'
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'Bob',
+                'email': 'bob@bob.com',
+                'password': 'pass123',
+            },
+        )
 
         self.assertContains(response, 'user')
         self.assertContains(response, 'Bob')
@@ -149,11 +165,14 @@ class UserCreateTests(UserTestCase):
         """api creates admin activated user on POST"""
         settings.override_setting('account_activation', 'admin')
 
-        response = self.client.post(self.api_link, data={
-            'username': 'Bob',
-            'email': 'bob@bob.com',
-            'password': 'pass123'
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'Bob',
+                'email': 'bob@bob.com',
+                'password': 'pass123',
+            },
+        )
 
         self.assertContains(response, 'admin')
         self.assertContains(response, 'Bob')

@@ -20,11 +20,7 @@ class PostingEndpoint(object):
 
     def __init__(self, request, mode, **kwargs):
         self.kwargs = kwargs
-        self.kwargs.update({
-            'mode': mode,
-            'request': request,
-            'user': request.user
-        })
+        self.kwargs.update({'mode': mode, 'request': request, 'user': request.user})
 
         self.__dict__.update(kwargs)
 
@@ -102,13 +98,17 @@ class PostingEndpoint(object):
     def save(self):
         """save new state to backend"""
         if not self._is_validated or self.errors:
-            raise RuntimeError("You need to validate posting data successfully before calling save")
+            raise RuntimeError(
+                "You need to validate posting data successfully before calling save"
+            )
 
         try:
             for middleware, obj in self.middlewares:
                 obj.pre_save(self._serializers.get(middleware))
         except PostingInterrupt as e:
-            raise ValueError("Posting process can only be interrupted from within interrupt_posting method")
+            raise ValueError(
+                "Posting process can only be interrupted from within interrupt_posting method"
+            )
 
         try:
             for middleware, obj in self.middlewares:
@@ -122,13 +122,14 @@ class PostingEndpoint(object):
             for middleware, obj in self.middlewares:
                 obj.post_save(self._serializers.get(middleware))
         except PostingInterrupt as e:
-            raise ValueError("Posting process can only be interrupted from within interrupt_posting method")
+            raise ValueError(
+                "Posting process can only be interrupted from within interrupt_posting method"
+            )
 
 
 class PostingMiddleware(object):
-    """
-    Abstract middleware class
-    """
+    """abstract middleware class"""
+
     def __init__(self, **kwargs):
         self.kwargs = kwargs
         self.__dict__.update(kwargs)

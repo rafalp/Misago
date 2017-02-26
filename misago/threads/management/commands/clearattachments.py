@@ -17,7 +17,7 @@ class Command(BaseCommand):
         cutoff = timezone.now() - timedelta(minutes=settings.MISAGO_ATTACHMENT_ORPHANED_EXPIRE)
         queryset = Attachment.objects.filter(
             post__isnull=True,
-            uploaded_on__lt=cutoff
+            uploaded_on__lt=cutoff,
         )
 
         attachments_to_sync = queryset.count()

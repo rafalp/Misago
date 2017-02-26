@@ -11,11 +11,8 @@ class CSRFErrorViewTests(TestCase):
     def test_csrf_failure(self):
         """csrf_failure error page has no show-stoppers"""
         csrf_client = Client(enforce_csrf_checks=True)
-        response = csrf_client.post(reverse('misago:index'), data={
-            'eric': 'fish'
-        })
+        response = csrf_client.post(reverse('misago:index'), data={'eric': 'fish'})
         self.assertContains(response, "Request blocked", status_code=403)
-
 
 
 @override_settings(ROOT_URLCONF='misago.core.testproject.urls')
@@ -24,8 +21,7 @@ class ErrorPageViewsTests(TestCase):
         """banned error page has no show-stoppers"""
         response = self.client.get(reverse('raise-misago-banned'))
         self.assertContains(response, "misago:error-banned", status_code=403)
-        self.assertContains(
-            response, encode_json_html("<p>Banned for test!</p>"), status_code=403)
+        self.assertContains(response, encode_json_html("<p>Banned for test!</p>"), status_code=403)
 
     def test_permission_denied_returns_403(self):
         """permission_denied error page has no show-stoppers"""

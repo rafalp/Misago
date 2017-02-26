@@ -1,4 +1,4 @@
-from django.conf.urls import include, url
+from django.conf.urls import url
 
 from misago import admin
 
@@ -13,7 +13,6 @@ urlpatterns = [
     url(r'^resolve-version/$', index.check_version, name='check-version'),
     url(r'^logout/$', auth.logout, name='logout'),
 ]
-
 
 # Discover admin and register patterns
 admin.discover_misago_admin()

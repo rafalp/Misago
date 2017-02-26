@@ -16,10 +16,10 @@ __all__ = [
     'ThreadsListSerializer',
 ]
 
-
 BasicCategorySerializer = CategorySerializer.subset_fields(
-    'id', 'parent', 'name', 'description', 'is_closed', 'css_class',
-    'absolute_url', 'api_url', 'level', 'lft', 'rght', 'is_read')
+    'id', 'parent', 'name', 'description', 'is_closed', 'css_class', 'absolute_url', 'api_url',
+    'level', 'lft', 'rght', 'is_read'
+)
 
 
 class ThreadSerializer(serializers.ModelSerializer, MutableFields):
@@ -37,7 +37,7 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
 
     class Meta:
         model = Thread
-        fields = (
+        fields = [
             'id',
             'category',
             'title',
@@ -52,17 +52,15 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             'is_hidden',
             'is_closed',
             'weight',
-
             'acl',
             'is_new',
             'is_read',
             'path',
             'poll',
             'subscription',
-
             'api',
             'url',
-        )
+        ]
 
     def get_acl(self, obj):
         try:
@@ -107,8 +105,8 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
                 'index': obj.get_posts_api_url(),
                 'merge': obj.get_post_merge_api_url(),
                 'move': obj.get_post_move_api_url(),
-                'split': obj.get_post_split_api_url()
-            }
+                'split': obj.get_post_split_api_url(),
+            },
         }
 
     def get_url(self, obj):
@@ -122,10 +120,12 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
 
     def get_last_poster_url(self, obj):
         if obj.last_poster_id:
-            return reverse('misago:user', kwargs={
-                'slug': obj.last_poster_slug,
-                'pk': obj.last_poster_id,
-            })
+            return reverse(
+                'misago:user', kwargs={
+                    'slug': obj.last_poster_slug,
+                    'pk': obj.last_poster_id,
+                }
+            )
         else:
             return None
 
@@ -135,9 +135,9 @@ class PrivateThreadSerializer(ThreadSerializer):
 
     class Meta:
         model = Thread
-        fields = ThreadSerializer.Meta.fields + (
+        fields = ThreadSerializer.Meta.fields + [
             'participants',
-        )
+        ]
 
 
 class ThreadsListSerializer(ThreadSerializer):
@@ -148,7 +148,7 @@ class ThreadsListSerializer(ThreadSerializer):
 
     class Meta:
         model = Thread
-        fields = ThreadSerializer.Meta.fields + (
-            'has_poll', 'top_category'
-        )
+        fields = ThreadSerializer.Meta.fields + ['has_poll', 'top_category']
+
+
 ThreadsListSerializer = ThreadsListSerializer.exclude_fields('path', 'poll')

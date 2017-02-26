@@ -22,8 +22,17 @@ from .pipeline import pipeline
 MISAGO_ATTACHMENT_VIEWS = ('misago:attachment', 'misago:attachment-thumbnail')
 
 
-def parse(text, request, poster, allow_mentions=True, allow_links=True,
-          allow_images=True, allow_blocks=True, force_shva=False, minify=True):
+def parse(
+        text,
+        request,
+        poster,
+        allow_mentions=True,
+        allow_links=True,
+        allow_images=True,
+        allow_blocks=True,
+        force_shva=False,
+        minify=True
+):
     """
     Message parser
 
@@ -47,7 +56,7 @@ def parse(text, request, poster, allow_mentions=True, allow_links=True,
         'mentions': [],
         'images': [],
         'outgoing_links': [],
-        'inside_links': []
+        'inside_links': [],
     }
 
     # Parse text
@@ -73,9 +82,7 @@ def parse(text, request, poster, allow_mentions=True, allow_links=True,
 
 
 def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
-    """
-    Create and configure markdown object
-    """
+    """creates and configures markdown object"""
     md = markdown.Markdown(safe_mode='escape', extensions=['nl2br'])
 
     # Remove references
@@ -133,8 +140,7 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
 
 
 def linkify_paragraphs(result):
-    result['parsed_text'] = bleach.linkify(
-        result['parsed_text'], skip_pre=True, parse_email=True)
+    result['parsed_text'] = bleach.linkify(result['parsed_text'], skip_pre=True, parse_email=True)
 
     # dirty fix for
     if '<code>' in result['parsed_text'] and '<a' in result['parsed_text']:
@@ -150,7 +156,6 @@ def linkify_paragraphs(result):
 
 def clean_links(request, result, force_shva=False):
     host = request.get_host()
-    site_address = '%s://%s' % (request.scheme, request.get_host())
 
     soup = BeautifulSoup(result['parsed_text'], 'html5lib')
     for link in soup.find_all('a'):

@@ -27,24 +27,45 @@ class Command(BaseCommand):
     help = 'Used to create a superuser.'
 
     def add_arguments(self, parser):
-        parser.add_argument('--username', dest='username', default=None,
-                    help='Specifies the username for the superuser.')
-        parser.add_argument('--email', dest='email', default=None,
-                    help='Specifies the username for the superuser.')
-        parser.add_argument('--password', dest='password', default=None,
-                    help='Specifies the username for the superuser.')
-        parser.add_argument('--noinput', action='store_false', dest='interactive',
-                    default=True,
-                    help=('Tells Misago to NOT prompt the user for input '
-                          'of any kind. You must use --username with '
-                          '--noinput, along with an option for any other '
-                          'required field. Superusers created with '
-                          '--noinput will  not be able to log in until '
-                          'they\'re given a valid password.'))
-        parser.add_argument('--database', action='store', dest='database',
-                    default=DEFAULT_DB_ALIAS,
-                    help=('Specifies the database to use. '
-                          'Default is "default".'))
+        parser.add_argument(
+            '--username',
+            dest='username',
+            default=None,
+            help="Specifies the username for the superuser.",
+        )
+        parser.add_argument(
+            '--email',
+            dest='email',
+            default=None,
+            help="Specifies the username for the superuser.",
+        )
+        parser.add_argument(
+            '--password',
+            dest='password',
+            default=None,
+            help="Specifies the username for the superuser.",
+        )
+        parser.add_argument(
+            '--noinput',
+            action='store_false',
+            dest='interactive',
+            default=True,
+            help=(
+                "Tells Misago to NOT prompt the user for input "
+                "of any kind. You must use --username with "
+                "--noinput, along with an option for any other "
+                "required field. Superusers created with "
+                "--noinput will  not be able to log in until "
+                "they're given a valid password."
+            ),
+        )
+        parser.add_argument(
+            '--database',
+            action='store',
+            dest='database',
+            default=DEFAULT_DB_ALIAS,
+            help=('Specifies the database to use. Default is "default".'),
+        )
 
     def execute(self, *args, **options):
         self.stdin = options.get('stdin', sys.stdin)  # Used for testing
@@ -114,15 +135,13 @@ class Command(BaseCommand):
                 while not password:
                     try:
                         raw_value = getpass("Enter password: ").strip()
-                        validate_password(raw_value, user=UserModel(
-                            username=username,
-                            email=email
-                        ))
+                        validate_password(
+                            raw_value, user=UserModel(username=username, email=email)
+                        )
 
                         repeat_raw_value = getpass("Repeat password: ").strip()
                         if raw_value != repeat_raw_value:
-                            raise ValidationError(
-                                "Entered passwords are different.")
+                            raise ValidationError("Entered passwords are different.")
                         password = raw_value
                     except ValidationError as e:
                         self.stderr.write(e.messages[0])
@@ -143,7 +162,8 @@ class Command(BaseCommand):
     def create_superuser(self, username, email, password, verbosity):
         try:
             user = UserModel.objects.create_superuser(
-                username, email, password, set_default_avatar=True)
+                username, email, password, set_default_avatar=True
+            )
 
             if verbosity >= 1:
                 message = "Superuser #%(pk)s has been created successfully."

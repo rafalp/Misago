@@ -163,7 +163,6 @@ def create_default_roles(apps, schema_editor):
             'misago.users.permissions.profiles': {
                 'can_see_ban_details': 1,
             },
-
             'misago.users.permissions.moderation': {
                 'can_ban_users': 1,
                 'max_ban_length': 14,

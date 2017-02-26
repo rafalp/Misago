@@ -3,7 +3,6 @@ from datetime import timedelta
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
-from django.utils.six.moves import range
 
 from misago.categories.models import Category
 from misago.threads import testutils
@@ -19,14 +18,13 @@ class SubscriptionsTests(TestCase):
         self.category = list(Category.objects.all_categories()[:1])[0]
         self.thread = self.post_thread(timezone.now() - timedelta(days=10))
 
-        self.user = UserModel.objects.create_user(
-            "Bob", "bob@test.com", "Pass.123")
+        self.user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
         self.anon = AnonymousUser()
 
     def post_thread(self, datetime):
         return testutils.post_thread(
             category=self.category,
-            started_on=datetime
+            started_on=datetime,
         )
 
     def test_anon_subscription(self):
@@ -37,9 +35,8 @@ class SubscriptionsTests(TestCase):
     def test_anon_threads_subscription(self):
         """make multiple threads list sub aware for anon"""
         threads = []
-        for i in range(10):
-            threads.append(
-                self.post_thread(timezone.now() - timedelta(days=10)))
+        for _ in range(10):
+            threads.append(self.post_thread(timezone.now() - timedelta(days=10)))
 
         make_subscription_aware(self.anon, threads)
 
@@ -51,24 +48,11 @@ class SubscriptionsTests(TestCase):
         make_subscription_aware(self.user, self.thread)
         self.assertIsNone(self.thread.subscription)
 
-    def test_threads_no_subscription(self):
-        """make mulitple threads sub aware for authenticated"""
-        threads = []
-        for i in range(10):
-            threads.append(
-                self.post_thread(timezone.now() - timedelta(days=10)))
-
-        make_subscription_aware(self.user, threads)
-
-        for thread in threads:
-            self.assertIsNone(thread.subscription)
-
     def test_subscribed_thread(self):
         """make thread sub aware for authenticated"""
         self.user.subscription_set.create(
             thread=self.thread,
             category=self.category,
-
             last_read_on=timezone.now(),
             send_email=True,
         )
@@ -80,14 +64,12 @@ class SubscriptionsTests(TestCase):
         """make mulitple threads sub aware for authenticated"""
         threads = []
         for i in range(10):
-            threads.append(
-                self.post_thread(timezone.now() - timedelta(days=10)))
+            threads.append(self.post_thread(timezone.now() - timedelta(days=10)))
 
             if i % 3 == 0:
                 self.user.subscription_set.create(
                     thread=threads[-1],
                     category=self.category,
-
                     last_read_on=timezone.now(),
                     send_email=False,
                 )
@@ -95,7 +77,6 @@ class SubscriptionsTests(TestCase):
                 self.user.subscription_set.create(
                     thread=threads[-1],
                     category=self.category,
-
                     last_read_on=timezone.now(),
                     send_email=True,
                 )

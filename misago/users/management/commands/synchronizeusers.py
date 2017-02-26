@@ -35,15 +35,18 @@ class Command(BaseCommand):
             user.threads = user.thread_set.filter(
                 category__in=categories,
                 is_hidden=False,
-                is_unapproved=False
+                is_unapproved=False,
             ).count()
+
             user.posts = user.post_set.filter(
                 category__in=categories,
                 is_event=False,
-                is_unapproved=False
+                is_unapproved=False,
             ).count()
+
             user.followers = user.followed_by.count()
             user.following = user.follows.count()
+
             user.save()
 
             synchronized_count += 1

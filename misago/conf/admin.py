@@ -8,7 +8,8 @@ class MisagoAdminExtension(object):
     def register_urlpatterns(self, urlpatterns):
         urlpatterns.namespace(r'^settings/', 'settings', 'system')
 
-        urlpatterns.patterns('system:settings',
+        urlpatterns.patterns(
+            'system:settings',
             url(r'^$', views.index, name='index'),
             url(r'^(?P<key>(\w|-)+)/$', views.group, name='group'),
         )

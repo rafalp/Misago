@@ -5,9 +5,9 @@ class MockSerializer(serializers.Serializer):
     id = serializers.SerializerMethodField()
 
     class Meta:
-        fields = (
+        fields = [
             'id',
-        )
+        ]
 
     def get_id(self, obj):
         return obj * 2

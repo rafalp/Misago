@@ -10,10 +10,8 @@ class Command(BaseCommand):
 
         self.start_timer()
         categories.move_categories(self.stdout, self.style)
-        self.stdout.write(
-            self.style.SUCCESS("Moved categories in %s" % self.stop_timer()))
+        self.stdout.write(self.style.SUCCESS("Moved categories in %s" % self.stop_timer()))
 
         self.start_timer()
         categories.move_labels()
-        self.stdout.write(
-            self.style.SUCCESS("Moved labels in %s" % self.stop_timer()))
+        self.stdout.write(self.style.SUCCESS("Moved labels in %s" % self.stop_timer()))

@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.http import Http404
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import six
 from django.views import View
 
@@ -10,8 +9,7 @@ from misago.core.shortcuts import paginate, pagination_dict, validate_slug
 from misago.users.bans import get_user_ban
 from misago.users.online.utils import get_user_status
 from misago.users.pages import user_profile
-from misago.users.serializers import (
-    BanDetailsSerializer, UsernameChangeSerializer, UserSerializer)
+from misago.users.serializers import BanDetailsSerializer, UsernameChangeSerializer, UserSerializer
 from misago.users.viewmodels import Followers, Follows, UserPosts, UserThreads
 
 
@@ -38,8 +36,7 @@ class ProfileView(View):
         return render(request, self.template_name, context_data)
 
     def get_profile(self, request, pk, slug):
-        queryset = UserModel.objects.select_related(
-            'rank', 'online_tracker', 'ban_cache')
+        queryset = UserModel.objects.select_related('rank', 'online_tracker', 'ban_cache')
 
         profile = get_object_or_404(queryset, pk=pk)
 
@@ -70,7 +67,8 @@ class ProfileView(View):
             })
 
         request.frontend_context['PROFILE'] = UserProfileSerializer(
-            profile, context={'user': request.user}).data
+            profile, context={'user': request.user}
+        ).data
 
         if not profile.is_active:
             request.frontend_context['PROFILE']['is_active'] = False
@@ -104,11 +102,7 @@ class LandingView(ProfileView):
     def get(self, request, *args, **kwargs):
         profile = self.get_profile(request, kwargs.pop('pk'), kwargs.pop('slug'))
 
-        return redirect(
-            user_profile.get_default_link(),
-            slug=profile.slug,
-            pk=profile.pk
-        )
+        return redirect(user_profile.get_default_link(), slug=profile.slug, pk=profile.pk)
 
 
 class UserPostsView(ProfileView):
@@ -161,9 +155,7 @@ class UserUsernameHistoryView(ProfileView):
         page = paginate(queryset, None, 14, 4)
 
         data = pagination_dict(page)
-        data.update({
-            'results': UsernameChangeSerializer(page.object_list, many=True).data
-        })
+        data.update({'results': UsernameChangeSerializer(page.object_list, many=True).data})
 
         request.frontend_context['PROFILE_NAME_HISTORY'] = data
 
@@ -187,7 +179,7 @@ class UserBanView(ProfileView):
 
 
 UserProfileSerializer = UserSerializer.subset_fields(
-    'id', 'username', 'slug', 'email', 'joined_on', 'rank', 'title', 'avatars',
-    'is_avatar_locked', 'signature', 'is_signature_locked', 'followers', 'following',
-    'threads', 'posts', 'acl', 'is_followed', 'is_blocked', 'status', 'absolute_url',
-    'api_url')
+    'id', 'username', 'slug', 'email', 'joined_on', 'rank', 'title', 'avatars', 'is_avatar_locked',
+    'signature', 'is_signature_locked', 'followers', 'following', 'threads', 'posts', 'acl',
+    'is_followed', 'is_blocked', 'status', 'absolute_url', 'api_url'
+)

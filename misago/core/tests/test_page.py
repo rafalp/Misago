@@ -12,16 +12,19 @@ class SiteTests(TestCase):
         self.page.add_section(
             link='misago:user-posts',
             name='Posts',
-            after='misago:user-threads')
+            after='misago:user-threads',
+        )
 
         self.page.add_section(
             link='misago:user-threads',
-            name='Threads')
+            name='Threads',
+        )
 
         self.page.add_section(
             link='misago:user-follows',
             name='Follows',
-            before='misago:user-posts')
+            before='misago:user-posts',
+        )
 
         self.page.assert_is_finalized()
 

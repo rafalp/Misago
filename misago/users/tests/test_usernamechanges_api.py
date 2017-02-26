@@ -1,5 +1,3 @@
-from django.contrib.auth import get_user_model
-
 from misago.acl.testutils import override_acl
 from misago.users.testutils import AuthenticatedUserTestCase
 
@@ -43,14 +41,12 @@ class UsernameChangesApiTests(AuthenticatedUserTestCase):
 
         override_acl(self.user, {'can_see_users_name_history': False})
 
-        response = self.client.get(
-            '%s?user=%s&search=new' % (self.link, self.user.pk))
+        response = self.client.get('%s?user=%s&search=new' % (self.link, self.user.pk))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.user.username)
 
-        response = self.client.get(
-            '%s?user=%s&search=usernew' % (self.link, self.user.pk))
+        response = self.client.get('%s?user=%s&search=usernew' % (self.link, self.user.pk))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '[]')
@@ -59,8 +55,7 @@ class UsernameChangesApiTests(AuthenticatedUserTestCase):
         """list denies permission for other user (or all) if no access"""
         override_acl(self.user, {'can_see_users_name_history': False})
 
-        response = self.client.get(
-            '%s?user=%s' % (self.link, self.user.pk + 1))
+        response = self.client.get('%s?user=%s' % (self.link, self.user.pk + 1))
         self.assertContains(response, "don't have permission to", status_code=403)
 
         response = self.client.get(self.link)

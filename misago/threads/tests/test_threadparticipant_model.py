@@ -21,7 +21,7 @@ class ThreadParticipantTests(TestCase):
             starter_slug='tester',
             last_post_on=datetime,
             last_poster_name='Tester',
-            last_poster_slug='tester'
+            last_poster_slug='tester',
         )
 
         self.thread.set_title("Test thread")
@@ -36,7 +36,7 @@ class ThreadParticipantTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime
+            updated_on=datetime,
         )
 
         self.thread.first_post = post
@@ -91,5 +91,4 @@ class ThreadParticipantTests(TestCase):
         self.assertEqual(self.thread.participants.count(), 1)
 
         with self.assertRaises(ThreadParticipant.DoesNotExist):
-            participant = ThreadParticipant.objects.get(
-                thread=self.thread, user=user)
+            ThreadParticipant.objects.get(thread=self.thread, user=user)

@@ -7,11 +7,14 @@ from misago.conf import settings
 
 
 def recaptcha_test(request):
-    r = requests.post('https://www.google.com/recaptcha/api/siteverify', data={
-        'secret': settings.recaptcha_secret_key,
-        'response': request.data.get('captcha'),
-        'remoteip': request.user_ip
-    })
+    r = requests.post(
+        'https://www.google.com/recaptcha/api/siteverify',
+        data={
+            'secret': settings.recaptcha_secret_key,
+            'response': request.data.get('captcha'),
+            'remoteip': request.user_ip
+        }
+    )
 
     if r.status_code == 200:
         response_json = r.json()
@@ -32,7 +35,7 @@ def qacaptcha_test(request):
 
 
 def nocaptcha_test(request):
-    return # no captcha means no validation
+    return  # no captcha means no validation
 
 
 CAPTCHA_TESTS = {
@@ -40,6 +43,7 @@ CAPTCHA_TESTS = {
     'qa': qacaptcha_test,
     'no': nocaptcha_test,
 }
+
 
 def test_request(request):
     CAPTCHA_TESTS[settings.captcha_type](request)

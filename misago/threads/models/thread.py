@@ -1,5 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import models, transaction
+from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
@@ -13,11 +13,11 @@ class Thread(models.Model):
     WEIGHT_PINNED = 1
     WEIGHT_GLOBAL = 2
 
-    WEIGHT_CHOICES = (
+    WEIGHT_CHOICES = [
         (WEIGHT_DEFAULT, _("Don't pin thread")),
         (WEIGHT_PINNED, _("Pin thread within category")),
-        (WEIGHT_GLOBAL, _("Pin thread globally"))
-    )
+        (WEIGHT_GLOBAL, _("Pin thread globally")),
+    ]
 
     category = models.ForeignKey('misago_categories.Category')
     title = models.CharField(max_length=255)
@@ -39,13 +39,13 @@ class Thread(models.Model):
         related_name='+',
         null=True,
         blank=True,
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
     )
     starter = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,
         blank=True,
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
     )
     starter_name = models.CharField(max_length=255)
     starter_slug = models.CharField(max_length=255)
@@ -55,7 +55,7 @@ class Thread(models.Model):
         related_name='+',
         null=True,
         blank=True,
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
     )
     last_post_is_event = models.BooleanField(default=False)
     last_poster = models.ForeignKey(
@@ -63,7 +63,7 @@ class Thread(models.Model):
         related_name='last_poster_set',
         null=True,
         blank=True,
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
     )
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
     last_poster_slug = models.CharField(max_length=255, null=True, blank=True)
@@ -78,7 +78,7 @@ class Thread(models.Model):
         settings.AUTH_USER_MODEL,
         related_name='privatethread_set',
         through='ThreadParticipant',
-        through_fields=('thread', 'user')
+        through_fields=('thread', 'user'),
     )
 
     class Meta:
@@ -119,10 +119,7 @@ class Thread(models.Model):
         except ObjectDoesNotExist:
             self.has_poll = False
 
-        self.replies = self.post_set.filter(
-            is_event=False,
-            is_unapproved=False
-        ).count()
+        self.replies = self.post_set.filter(is_event=False, is_unapproved=False).count()
 
         if self.replies > 0:
             self.replies -= 1

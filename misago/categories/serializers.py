@@ -13,19 +13,19 @@ __all__ = ['CategorySerializer']
 
 def last_activity_detail(f):
     """util for serializing last activity details"""
+
     def decorator(self, obj):
         if not obj.last_thread_id:
             return None
 
         acl = self.get_acl(obj)
-        if not all((
-                    acl.get('can_see'),
-                    acl.get('can_browse'),
-                    acl.get('can_see_all_threads')
-                )):
+        tested_acls = (acl.get('can_see'), acl.get('can_browse'), acl.get('can_see_all_threads'), )
+
+        if not all(tested_acls):
             return None
 
         return f(self, obj)
+
     return decorator
 
 
@@ -43,7 +43,7 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
 
     class Meta:
         model = Category
-        fields = (
+        fields = [
             'id',
             'parent',
             'name',
@@ -66,7 +66,7 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
             'level',
             'lft',
             'rght',
-        )
+        ]
 
     def get_description(self, obj):
         if obj.description:
@@ -103,10 +103,12 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
     @last_activity_detail
     def get_last_poster_url(self, obj):
         if obj.last_poster_id:
-            return reverse('misago:user', kwargs={
-                'slug': obj.last_poster_slug,
-                'pk': obj.last_poster_id,
-            })
+            return reverse(
+                'misago:user', kwargs={
+                    'slug': obj.last_poster_slug,
+                    'pk': obj.last_poster_id,
+                }
+            )
         else:
             return None
 

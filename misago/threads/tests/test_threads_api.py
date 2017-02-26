@@ -33,7 +33,7 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
             'can_edit_posts': 0,
             'can_hide_posts': 0,
             'can_hide_own_posts': 0,
-            'can_merge_threads': 0
+            'can_merge_threads': 0,
         })
 
         if acl:
@@ -49,13 +49,15 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
         if not final_acl['can_browse'] and self.category.pk in browseable_categories:
             browseable_categories.remove(self.category.pk)
 
-        override_acl(self.user, {
-            'visible_categories': visible_categories,
-            'browseable_categories': browseable_categories,
-            'categories': {
-                self.category.pk: final_acl
+        override_acl(
+            self.user, {
+                'visible_categories': visible_categories,
+                'browseable_categories': browseable_categories,
+                'categories': {
+                    self.category.pk: final_acl,
+                },
             }
-        })
+        )
 
     def get_thread_json(self):
         response = self.client.get(self.thread.get_api_url())
@@ -92,9 +94,7 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
     def test_api_shows_owned_thread(self):
         """api handles "owned threads only"""
         for link in self.tested_links:
-            self.override_acl({
-                'can_see_all_threads': 0
-            })
+            self.override_acl({'can_see_all_threads': 0})
 
             response = self.client.get(link)
             self.assertEqual(response.status_code, 404)
@@ -103,9 +103,7 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
         self.thread.save()
 
         for link in self.tested_links:
-            self.override_acl({
-                'can_see_all_threads': 0
-            })
+            self.override_acl({'can_see_all_threads': 0})
 
             response = self.client.get(link)
             self.assertEqual(response.status_code, 200)
@@ -113,9 +111,7 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
     def test_api_validates_category_see_permission(self):
         """api validates category visiblity"""
         for link in self.tested_links:
-            self.override_acl({
-                'can_see': 0
-            })
+            self.override_acl({'can_see': 0})
 
             response = self.client.get(link)
             self.assertEqual(response.status_code, 404)
@@ -123,46 +119,45 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
     def test_api_validates_category_browse_permission(self):
         """api validates category browsability"""
         for link in self.tested_links:
-            self.override_acl({
-                'can_browse': 0
-            })
+            self.override_acl({'can_browse': 0})
 
             response = self.client.get(link)
             self.assertEqual(response.status_code, 404)
 
     def test_api_validates_posts_visibility(self):
         """api validates posts visiblity"""
-        self.override_acl({
-            'can_hide_posts': 0
-        })
+        self.override_acl({'can_hide_posts': 0})
 
-        hidden_post = testutils.reply_thread(self.thread, is_hidden=True, message="I'am hidden test message!")
+        hidden_post = testutils.reply_thread(
+            self.thread,
+            is_hidden=True,
+            message="I'am hidden test message!",
+        )
 
         response = self.client.get(self.tested_links[1])
-        self.assertNotContains(response, hidden_post.parsed) # post's body is hidden
+        self.assertNotContains(response, hidden_post.parsed)  # post's body is hidden
 
         # add permission to see hidden posts
-        self.override_acl({
-            'can_hide_posts': 1
-        })
+        self.override_acl({'can_hide_posts': 1})
 
         response = self.client.get(self.tested_links[1])
-        self.assertContains(response, hidden_post.parsed) # hidden post's body is visible with permission
+        self.assertContains(
+            response, hidden_post.parsed
+        )  # hidden post's body is visible with permission
 
-        self.override_acl({
-            'can_approve_content': 0
-        })
+        self.override_acl({'can_approve_content': 0})
 
         # unapproved posts shouldn't show at all
-        unapproved_post = testutils.reply_thread(self.thread, is_unapproved=True)
+        unapproved_post = testutils.reply_thread(
+            self.thread,
+            is_unapproved=True,
+        )
 
         response = self.client.get(self.tested_links[1])
         self.assertNotContains(response, unapproved_post.get_absolute_url())
 
         # add permission to see unapproved posts
-        self.override_acl({
-            'can_approve_content': 1
-        })
+        self.override_acl({'can_approve_content': 1})
 
         response = self.client.get(self.tested_links[1])
         self.assertContains(response, unapproved_post.get_absolute_url())
@@ -189,18 +184,14 @@ class ThreadsReadApiTests(ThreadsApiTestCase):
 
     def test_read_category_no_see(self):
         """api validates permission to see category"""
-        self.override_acl({
-            'can_see': 0
-        })
+        self.override_acl({'can_see': 0})
 
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 404)
 
     def test_read_category_no_browse(self):
         """api validates permission to browse category"""
-        self.override_acl({
-            'can_browse': 0
-        })
+        self.override_acl({'can_browse': 0})
 
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
@@ -229,29 +220,24 @@ class ThreadsReadApiTests(ThreadsApiTestCase):
 class ThreadDeleteApiTests(ThreadsApiTestCase):
     def test_delete_thread_no_permission(self):
         """DELETE to API link with no permission to delete fails"""
-        self.override_acl({
-            'can_hide_threads': 1
-        })
+        self.override_acl({'can_hide_threads': 1})
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
 
-        self.override_acl({
-            'can_hide_threads': 0
-        })
+        self.override_acl({'can_hide_threads': 0})
 
         response_json = response.json()
-        self.assertEqual(response_json['detail'],
-            "You don't have permission to delete this thread.")
+        self.assertEqual(
+            response_json['detail'], "You don't have permission to delete this thread."
+        )
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
 
     def test_delete_thread(self):
         """DELETE to API link with permission deletes thread"""
-        self.override_acl({
-            'can_hide_threads': 2
-        })
+        self.override_acl({'can_hide_threads': 2})
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 200)

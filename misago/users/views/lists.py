@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import six
 from django.views import View
@@ -33,9 +32,7 @@ class ListView(View):
         for rank in Rank.objects.filter(is_tab=True).order_by('order'):
             context_data['pages'].append({
                 'name': rank.name,
-                'reversed_link': reverse('misago:users-rank', kwargs={
-                    'slug': rank.slug
-                }),
+                'reversed_link': reverse('misago:users-rank', kwargs={'slug': rank.slug}),
                 'is_active': active_rank.pk == rank.pk if active_rank else None
             })
 

@@ -57,7 +57,7 @@ class PrivacyPolicyTests(TestCase):
         context_dict = legal_links(MockRequest())
 
         self.assertEqual(context_dict, {
-            'PRIVACY_POLICY_URL': reverse('misago:privacy-policy')
+            'PRIVACY_POLICY_URL': reverse('misago:privacy-policy'),
         })
 
     def test_context_processor_remote_policy(self):
@@ -66,7 +66,7 @@ class PrivacyPolicyTests(TestCase):
         context_dict = legal_links(MockRequest())
 
         self.assertEqual(context_dict, {
-            'PRIVACY_POLICY_URL': 'http://test.com'
+            'PRIVACY_POLICY_URL': 'http://test.com',
         })
 
         # set misago view too
@@ -74,7 +74,7 @@ class PrivacyPolicyTests(TestCase):
         context_dict = legal_links(MockRequest())
 
         self.assertEqual(context_dict, {
-            'PRIVACY_POLICY_URL': 'http://test.com'
+            'PRIVACY_POLICY_URL': 'http://test.com',
         })
 
 
@@ -123,9 +123,11 @@ class TermsOfServiceTests(TestCase):
         settings.override_setting('terms_of_service', 'Lorem ipsum')
         context_dict = legal_links(MockRequest())
 
-        self.assertEqual(context_dict, {
-            'TERMS_OF_SERVICE_URL': reverse('misago:terms-of-service')
-        })
+        self.assertEqual(
+            context_dict, {
+                'TERMS_OF_SERVICE_URL': reverse('misago:terms-of-service'),
+            }
+        )
 
     def test_context_processor_remote_tos(self):
         """context processor has TOS link to remote url"""
@@ -133,7 +135,7 @@ class TermsOfServiceTests(TestCase):
         context_dict = legal_links(MockRequest())
 
         self.assertEqual(context_dict, {
-            'TERMS_OF_SERVICE_URL': 'http://test.com'
+            'TERMS_OF_SERVICE_URL': 'http://test.com',
         })
 
         # set misago view too
@@ -141,5 +143,5 @@ class TermsOfServiceTests(TestCase):
         context_dict = legal_links(MockRequest())
 
         self.assertEqual(context_dict, {
-            'TERMS_OF_SERVICE_URL': 'http://test.com'
+            'TERMS_OF_SERVICE_URL': 'http://test.com',
         })

@@ -4,8 +4,6 @@ from django import template
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
-from misago.conf import settings
-
 
 register = template.Library()
 
@@ -30,22 +28,16 @@ def likes_label(post):
     if not hidden_likes:
         return _("%(users)s like this.") % {'users': usernames_string}
 
-    formats = {
-        'users': usernames_string,
-        'likes': hidden_likes
-    }
+    formats = {'users': usernames_string, 'likes': hidden_likes}
 
     return ngettext(
         "%(users)s and %(likes)s other user like this.",
         "%(users)s and %(likes)s other users like this.",
-        hidden_likes
+        hidden_likes,
     ) % formats
 
 
 def humanize_usernames_list(usernames):
-    formats = {
-        'users': ', '.join(usernames[:-1]),
-        'last_user': usernames[-1]
-    }
+    formats = {'users': ', '.join(usernames[:-1]), 'last_user': usernames[-1]}
 
     return _("%(users)s and %(last_user)s") % formats

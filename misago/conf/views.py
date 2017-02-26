@@ -34,8 +34,7 @@ def group(request, key):
     fieldsets = ChangeSettingsForm(group=active_group)
     if request.method == 'POST':
         fieldsets = ChangeSettingsForm(request.POST, group=active_group)
-        valid_fieldsets = len([True for fieldset in fieldsets if
-                               fieldset['form'].is_valid()])
+        valid_fieldsets = len([True for fieldset in fieldsets if fieldset['form'].is_valid()])
         if len(fieldsets) == valid_fieldsets:
             new_values = {}
             for fieldset in fieldsets:
@@ -47,15 +46,15 @@ def group(request, key):
 
             db_settings.flush_cache()
 
-            messages.success(
-                request, _("Changes in settings have been saved!"))
+            messages.success(request, _("Changes in settings have been saved!"))
             return redirect('misago:admin:system:settings:group', key=key)
 
-    use_single_form_template = (
-        len(fieldsets) == 1 and not fieldsets[0]['legend'])
+    use_single_form_template = (len(fieldsets) == 1 and not fieldsets[0]['legend'])
 
-    return render(request, 'misago/admin/conf/group.html',{
-        'active_group': active_group,
-        'fieldsets': fieldsets,
-        'use_single_form_template': use_single_form_template,
-    })
+    return render(
+        request, 'misago/admin/conf/group.html', {
+            'active_group': active_group,
+            'fieldsets': fieldsets,
+            'use_single_form_template': use_single_form_template,
+        }
+    )

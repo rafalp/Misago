@@ -5,9 +5,8 @@ from . import PostingEndpoint, PostingMiddleware
 
 
 class SyncPrivateThreadsMiddleware(PostingMiddleware):
-    """
-    Middleware that sets private thread participants to sync unread threads
-    """
+    """middleware that sets private thread participants to sync unread threads"""
+
     def use_this_middleware(self):
         if self.mode == PostingEndpoint.REPLY:
             return self.thread.thread_type.root_name == PRIVATE_THREADS_ROOT_NAME
@@ -16,5 +15,5 @@ class SyncPrivateThreadsMiddleware(PostingMiddleware):
     def post_save(self, serializer):
         set_users_unread_private_threads_sync(
             participants=self.thread.participants_list,
-            exclude_user=self.user
+            exclude_user=self.user,
         )

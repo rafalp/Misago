@@ -10,7 +10,7 @@ class ValidatePostTests(TestCase):
         """valid post passes validation"""
         validate_post("Lorem ipsum dolor met sit amet elit.")
 
-    def test_too_short_post(self):
+    def test_empty_post(self):
         """empty post is rejected"""
         with self.assertRaises(ValidationError):
             validate_post("")
@@ -31,11 +31,11 @@ class ValidatePostTests(TestCase):
 class ValidateTitleTests(TestCase):
     def test_valid_titles(self):
         """validate_title is ok with valid titles"""
-        VALID_TITLES = (
+        VALID_TITLES = [
             'Lorem ipsum dolor met',
             '123 456 789 112'
             'Ugabugagagagagaga',
-        )
+        ]
 
         for title in VALID_TITLES:
             validate_title(title)

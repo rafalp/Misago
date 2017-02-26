@@ -21,9 +21,7 @@ class AttachmentViewSet(viewsets.ViewSet):
         try:
             return self.create_attachment(request)
         except ValidationError as e:
-            return Response({
-                'detail': e.args[0]
-            }, status=400)
+            return Response({'detail': e.args[0]}, status=400)
 
     def create_attachment(self, request):
         upload = request.FILES.get('upload')
@@ -86,17 +84,23 @@ def validate_filetype(upload, user_roles):
 def validate_filesize(upload, filetype, hard_limit):
     if upload.size > hard_limit * 1024:
         message = _("You can't upload files larger than %(limit)s (your file has %(upload)s).")
-        raise ValidationError(message % {
-            'upload': filesizeformat(upload.size).rstrip('.0'),
-            'limit': filesizeformat(hard_limit * 1024).rstrip('.0')
-        })
+        raise ValidationError(
+            message % {
+                'upload': filesizeformat(upload.size).rstrip('.0'),
+                'limit': filesizeformat(hard_limit * 1024).rstrip('.0'),
+            }
+        )
 
     if filetype.size_limit and upload.size > filetype.size_limit * 1024:
-        message = _("You can't upload files of this type larger than %(limit)s (your file has %(upload)s).")
-        raise ValidationError(message % {
-            'upload': filesizeformat(upload.size).rstrip('.0'),
-            'limit': filesizeformat(filetype.size_limit * 1024).rstrip('.0')
-        })
+        message = _(
+            "You can't upload files of this type larger than %(limit)s (your file has %(upload)s)."
+        )
+        raise ValidationError(
+            message % {
+                'upload': filesizeformat(upload.size).rstrip('.0'),
+                'limit': filesizeformat(filetype.size_limit * 1024).rstrip('.0'),
+            }
+        )
 
 
 def is_upload_image(upload):

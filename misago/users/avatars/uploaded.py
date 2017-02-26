@@ -1,6 +1,3 @@
-from hashlib import sha256
-from math import floor
-
 from path import Path
 from PIL import Image
 
@@ -41,8 +38,7 @@ def validate_dimensions(uploaded_file):
 
     min_size = max(settings.MISAGO_AVATARS_SIZES)
     if min(image.size) < min_size:
-        message = _("Uploaded image should be at "
-                    "least %(size)s pixels tall and wide.")
+        message = _("Uploaded image should be at least %(size)s pixels tall and wide.")
         raise ValidationError(message % {'size': min_size})
 
     if image.size[0] * image.size[1] > 2000 * 3000:
@@ -85,7 +81,6 @@ def clean_crop(image, crop):
         crop_dict = {
             'x': float(crop['offset']['x']),
             'y': float(crop['offset']['y']),
-
             'zoom': float(crop['zoom']),
         }
     except (KeyError, TypeError, ValueError):
@@ -134,8 +129,7 @@ def crop_source_image(user, source, crop):
     else:
         upscale = 1.0 / crop['zoom']
         cropped_image = image.crop((
-            int(round(crop['x'] * upscale * -1, 0)),
-            int(round(crop['y'] * upscale * -1, 0)),
+            int(round(crop['x'] * upscale * -1, 0)), int(round(crop['y'] * upscale * -1, 0)),
             int(round((crop['x'] - min_size) * upscale * -1, 0)),
             int(round((crop['y'] - min_size) * upscale * -1, 0)),
         ))

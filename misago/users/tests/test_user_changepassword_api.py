@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.core import mail
 from django.urls import reverse
 
@@ -6,9 +5,8 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 
 class UserChangePasswordTests(AuthenticatedUserTestCase):
-    """
-    tests for user change password RPC (/api/users/1/change-password/)
-    """
+    """tests for user change password RPC (/api/users/1/change-password/)"""
+
     def setUp(self):
         super(UserChangePasswordTests, self).setUp()
         self.link = '/api/users/%s/change-password/' % self.user.pk
@@ -23,65 +21,72 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
         response = self.client.post(self.link, data={})
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'new_password': [
-                "This field is required."
-            ],
-            'password': [
-                "This field is required."
-            ],
-        })
+        self.assertEqual(
+            response.json(), {
+                'new_password': ["This field is required."],
+                'password': ["This field is required."],
+            }
+        )
 
     def test_invalid_password(self):
         """api errors correctly for invalid password"""
-        response = self.client.post(self.link, data={
-            'new_password': 'N3wP@55w0rd',
-            'password': 'Lor3mIpsum'
-        })
+        response = self.client.post(
+            self.link,
+            data={
+                'new_password': 'N3wP@55w0rd',
+                'password': 'Lor3mIpsum',
+            },
+        )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'password': [
-                "Entered password is invalid."
-            ],
+            'password': ["Entered password is invalid."],
         })
 
     def test_blank_input(self):
         """api errors correctly for blank input"""
-        response = self.client.post(self.link, data={
-            'new_password': '',
-            'password': self.USER_PASSWORD
-        })
+        response = self.client.post(
+            self.link,
+            data={
+                'new_password': '',
+                'password': self.USER_PASSWORD,
+            },
+        )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'new_password': [
-                "This field may not be blank."
-            ],
+            'new_password': ["This field may not be blank."],
         })
 
     def test_short_new_pasword(self):
         """api errors correctly for short new password"""
-        response = self.client.post(self.link, data={
-            'new_password': 'n',
-            'password': self.USER_PASSWORD
-        })
+        response = self.client.post(
+            self.link,
+            data={
+                'new_password': 'n',
+                'password': self.USER_PASSWORD,
+            },
+        )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'new_password': [
-                "This password is too short. It must contain at least 7 characters."
-            ],
-        })
+        self.assertEqual(
+            response.json(), {
+                'new_password':
+                    ["This password is too short. It must contain at least 7 characters."],
+            }
+        )
 
     def test_change_password(self):
         """api allows users to change their passwords"""
         new_password = 'N3wP@55w0rd'
 
-        response = self.client.post(self.link, data={
-            'new_password': new_password,
-            'password': self.USER_PASSWORD
-        })
+        response = self.client.post(
+            self.link,
+            data={
+                'new_password': new_password,
+                'password': self.USER_PASSWORD,
+            },
+        )
         self.assertEqual(response.status_code, 200)
 
         self.assertIn('Confirm password change', mail.outbox[0].subject)
@@ -92,9 +97,11 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
         else:
             self.fail("E-mail sent didn't contain confirmation url")
 
-        response = self.client.get(reverse('misago:options-confirm-password-change', kwargs={
-            'token': token
-        }))
+        response = self.client.get(
+            reverse('misago:options-confirm-password-change', kwargs={
+                'token': token,
+            })
+        )
 
         self.assertEqual(response.status_code, 200)
 

@@ -4,22 +4,16 @@ from __future__ import unicode_literals
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
-from django.utils import six, timezone
+from django.utils import six
 
 from misago.core.utils import (
     clean_return_path, format_plaintext_for_html, is_referer_local, is_request_to_misago,
     parse_iso8601_string, resolve_slugify, slugify)
 
 
-VALID_PATHS = (
-    "/",
-    "/threads/",
-)
+VALID_PATHS = ("/", "/threads/", )
 
-INVALID_PATHS = (
-    "",
-    "somewhere/",
-)
+INVALID_PATHS = ("", "somewhere/", )
 
 
 class IsRequestToMisagoTests(TestCase):
@@ -34,14 +28,16 @@ class IsRequestToMisagoTests(TestCase):
             request.path_info = path
             self.assertTrue(
                 is_request_to_misago(request),
-                '"%s" is not overlapped by "%s"' % (path, misago_prefix))
+                '"%s" is not overlapped by "%s"' % (path, misago_prefix)
+            )
 
         for path in INVALID_PATHS:
             request = RequestFactory().get('/')
             request.path_info = path
             self.assertFalse(
                 is_request_to_misago(request),
-                '"%s" is overlapped by "%s"' % (path, misago_prefix))
+                '"%s" is overlapped by "%s"' % (path, misago_prefix)
+            )
 
 
 class SlugifyTests(TestCase):
@@ -65,8 +61,7 @@ class SlugifyTests(TestCase):
             resolve_slugify('misago.threads.invalidname')
         except ImportError as e:
             error_message = six.text_type(e)
-            self.assertEqual(
-                error_message, 'name invalidname not found in misago.threads module')
+            self.assertEqual(error_message, 'name invalidname not found in misago.threads module')
 
     def test_resolve_valid_name(self):
         """resolve_slugify resolves valid paths"""
@@ -75,7 +70,7 @@ class SlugifyTests(TestCase):
 
     def test_valid_slugify_output(self):
         """Misago's slugify correctly slugifies string"""
-        test_cases = (
+        test_cases = [
             ('Bob', 'bob'),
             ('Eric The Fish', 'eric-the-fish'),
             ('John   Snow', 'john-snow'),
@@ -83,7 +78,7 @@ class SlugifyTests(TestCase):
             ('An###ne', 'anne'),
             ('S**t', 'st'),
             ('Łók', 'lok'),
-        )
+        ]
 
         for original, slug in test_cases:
             self.assertEqual(slugify(original), slug)
@@ -92,56 +87,41 @@ class SlugifyTests(TestCase):
 class ParseIso8601StringTests(TestCase):
     def test_valid_input(self):
         """util parses iso 8601 strings"""
-        INPUTS = (
+        INPUTS = [
             '2016-10-22T20:55:39.185085Z',
             '2016-10-22T20:55:39.185085-01:00',
             '2016-10-22T20:55:39-01:00',
             '2016-10-22T20:55:39.185085+01:00',
-        )
+        ]
 
         for test_input in INPUTS:
             self.assertTrue(parse_iso8601_string(test_input))
 
     def test_invalid_input(self):
         """util throws ValueError on invalid input"""
-        INPUTS = (
+        INPUTS = [
             '',
             '2016-10-22',
             '2016-10-22T30:55:39.185085+11:00',
             '2016-10-22T20:55:39.18SSSSS5085Z',
-        )
+        ]
 
         for test_input in INPUTS:
             with self.assertRaises(ValueError):
                 self.assertTrue(parse_iso8601_string(test_input))
 
 
-PLAINTEXT_FORMAT_CASES = (
-    (
-        'Lorem ipsum.',
-        '<p>Lorem ipsum.</p>'
-    ),
-    (
-        'Lorem <b>ipsum</b>.',
-        '<p>Lorem &lt;b&gt;ipsum&lt;/b&gt;.</p>'
-    ),
-    (
-        'Lorem "ipsum" dolor met.',
-        '<p>Lorem &quot;ipsum&quot; dolor met.</p>'
-    ),
-    (
-        'Lorem ipsum.\nDolor met.',
-        '<p>Lorem ipsum.<br />Dolor met.</p>'
-    ),
-    (
-        'Lorem ipsum.\n\nDolor met.',
-        '<p>Lorem ipsum.</p>\n\n<p>Dolor met.</p>'
-    ),
+PLAINTEXT_FORMAT_CASES = [
+    ('Lorem ipsum.', '<p>Lorem ipsum.</p>'),
+    ('Lorem <b>ipsum</b>.', '<p>Lorem &lt;b&gt;ipsum&lt;/b&gt;.</p>'),
+    ('Lorem "ipsum" dolor met.', '<p>Lorem &quot;ipsum&quot; dolor met.</p>'),
+    ('Lorem ipsum.\nDolor met.', '<p>Lorem ipsum.<br />Dolor met.</p>'),
+    ('Lorem ipsum.\n\nDolor met.', '<p>Lorem ipsum.</p>\n\n<p>Dolor met.</p>'),
     (
         'http://misago-project.org/login/',
         '<p><a href="http://misago-project.org/login/">http://misago-project.org/login/</a></p>'
     ),
-)
+]
 
 
 class FormatPlaintextForHtmlTests(TestCase):
@@ -171,88 +151,118 @@ class MockRequest(object):
 class CleanReturnPathTests(TestCase):
     def test_get_request(self):
         """clean_return_path works for GET requests"""
-        bad_request = MockRequest('GET', {
-            'HTTP_REFERER': 'http://cookies.com',
-            'HTTP_HOST': 'misago-project.org'
-        })
+        bad_request = MockRequest(
+            'GET', {
+                'HTTP_REFERER': 'http://cookies.com',
+                'HTTP_HOST': 'misago-project.org',
+            }
+        )
         self.assertIsNone(clean_return_path(bad_request))
 
-        bad_request = MockRequest('GET', {
-            'HTTP_REFERER': 'https://misago-project.org/',
-            'HTTP_HOST': 'misago-project.org/'
-        })
+        bad_request = MockRequest(
+            'GET', {
+                'HTTP_REFERER': 'https://misago-project.org/',
+                'HTTP_HOST': 'misago-project.org/',
+            }
+        )
         self.assertIsNone(clean_return_path(bad_request))
 
-        bad_request = MockRequest('GET', {
-            'HTTP_REFERER': 'https://misago-project.org/',
-            'HTTP_HOST': 'misago-project.org/assadsa/'
-        })
+        bad_request = MockRequest(
+            'GET', {
+                'HTTP_REFERER': 'https://misago-project.org/',
+                'HTTP_HOST': 'misago-project.org/assadsa/',
+            }
+        )
         self.assertIsNone(clean_return_path(bad_request))
 
-        ok_request = MockRequest('GET', {
-            'HTTP_REFERER': 'http://misago-project.org/',
-            'HTTP_HOST': 'misago-project.org/'
-        })
+        ok_request = MockRequest(
+            'GET', {
+                'HTTP_REFERER': 'http://misago-project.org/',
+                'HTTP_HOST': 'misago-project.org/',
+            }
+        )
         self.assertEqual(clean_return_path(ok_request), '/')
 
-        ok_request = MockRequest('GET', {
-            'HTTP_REFERER': 'http://misago-project.org/login/',
-            'HTTP_HOST': 'misago-project.org/'
-        })
+        ok_request = MockRequest(
+            'GET', {
+                'HTTP_REFERER': 'http://misago-project.org/login/',
+                'HTTP_HOST': 'misago-project.org/',
+            }
+        )
         self.assertEqual(clean_return_path(ok_request), '/login/')
 
     def test_post_request(self):
         """clean_return_path works for POST requests"""
-        bad_request = MockRequest('POST', {
-            'HTTP_REFERER': 'http://misago-project.org/',
-            'HTTP_HOST': 'misago-project.org/'
-        }, {'return_path': '/sdasdsa/'})
+        bad_request = MockRequest(
+            'POST', {
+                'HTTP_REFERER': 'http://misago-project.org/',
+                'HTTP_HOST': 'misago-project.org/',
+            }, {
+                'return_path': '/sdasdsa/',
+            }
+        )
         self.assertIsNone(clean_return_path(bad_request))
 
-        ok_request = MockRequest('POST', {
-            'HTTP_REFERER': 'http://misago-project.org/',
-            'HTTP_HOST': 'misago-project.org/'
-        }, {'return_path': '/login/'})
+        ok_request = MockRequest(
+            'POST', {
+                'HTTP_REFERER': 'http://misago-project.org/',
+                'HTTP_HOST': 'misago-project.org/',
+            }, {
+                'return_path': '/login/',
+            }
+        )
         self.assertEqual(clean_return_path(ok_request), '/login/')
 
 
 class IsRefererLocalTests(TestCase):
     def test_local_referers(self):
         """local referers return true"""
-        ok_request = MockRequest('GET', {
-            'HTTP_REFERER': 'http://misago-project.org/',
-            'HTTP_HOST': 'misago-project.org/'
-        })
+        ok_request = MockRequest(
+            'GET', {
+                'HTTP_REFERER': 'http://misago-project.org/',
+                'HTTP_HOST': 'misago-project.org/',
+            }
+        )
         self.assertTrue(is_referer_local(ok_request))
 
-        ok_request = MockRequest('GET', {
-            'HTTP_REFERER': 'http://misago-project.org/',
-            'HTTP_HOST': 'misago-project.org/'
-        })
+        ok_request = MockRequest(
+            'GET', {
+                'HTTP_REFERER': 'http://misago-project.org/',
+                'HTTP_HOST': 'misago-project.org/',
+            }
+        )
         self.assertTrue(is_referer_local(ok_request))
 
-        ok_request = MockRequest('GET', {
-            'HTTP_REFERER': 'http://misago-project.org/login/',
-            'HTTP_HOST': 'misago-project.org/'
-        })
+        ok_request = MockRequest(
+            'GET', {
+                'HTTP_REFERER': 'http://misago-project.org/login/',
+                'HTTP_HOST': 'misago-project.org/',
+            }
+        )
         self.assertTrue(is_referer_local(ok_request))
 
     def test_foreign_referers(self):
         """non-local referers return false"""
-        bad_request = MockRequest('GET', {
-            'HTTP_REFERER': 'http://else-project.org/',
-            'HTTP_HOST': 'misago-project.org/'
-        })
+        bad_request = MockRequest(
+            'GET', {
+                'HTTP_REFERER': 'http://else-project.org/',
+                'HTTP_HOST': 'misago-project.org/',
+            }
+        )
         self.assertFalse(is_referer_local(bad_request))
 
-        bad_request = MockRequest('GET', {
-            'HTTP_REFERER': 'https://misago-project.org/',
-            'HTTP_HOST': 'misago-project.org/'
-        })
+        bad_request = MockRequest(
+            'GET', {
+                'HTTP_REFERER': 'https://misago-project.org/',
+                'HTTP_HOST': 'misago-project.org/',
+            }
+        )
         self.assertFalse(is_referer_local(bad_request))
 
-        bad_request = MockRequest('GET', {
-            'HTTP_REFERER': 'http://misago-project.org/',
-            'HTTP_HOST': 'misago-project.org/assadsa/'
-        })
+        bad_request = MockRequest(
+            'GET', {
+                'HTTP_REFERER': 'http://misago-project.org/',
+                'HTTP_HOST': 'misago-project.org/assadsa/',
+            }
+        )
         self.assertFalse(is_referer_local(bad_request))

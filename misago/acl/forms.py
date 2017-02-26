@@ -14,9 +14,7 @@ class RoleForm(forms.ModelForm):
 
 
 def get_permissions_forms(role, data=None):
-    """
-    Utility function for building forms in admin
-    """
+    """utility function for building forms in admin"""
     role_permissions = role.permissions
 
     perms_forms = []
@@ -25,18 +23,22 @@ def get_permissions_forms(role, data=None):
             module.change_permissions_form
         except AttributeError:
             message = "'%s' object has no attribute '%s'"
-            raise AttributeError(
-                message % (extension, 'change_permissions_form'))
+            raise AttributeError(message % (extension, 'change_permissions_form'))
 
         FormType = module.change_permissions_form(role)
 
         if FormType:
             if data:
-                perms_forms.append(FormType(data, prefix=extension))
-            else:
                 perms_forms.append(FormType(
-                    initial=role_permissions.get(extension),
-                    prefix=extension
+                    data,
+                    prefix=extension,
                 ))
+            else:
+                perms_forms.append(
+                    FormType(
+                        initial=role_permissions.get(extension),
+                        prefix=extension,
+                    )
+                )
 
     return perms_forms

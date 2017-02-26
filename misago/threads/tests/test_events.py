@@ -1,6 +1,4 @@
 #-*- coding: utf-8 -*-
-import random
-
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
@@ -8,8 +6,7 @@ from django.utils import timezone
 from misago.acl import add_acl
 from misago.categories.models import Category
 from misago.threads.events import record_event
-from misago.threads.models import Post, Thread
-from misago.threads.testutils import reply_thread
+from misago.threads.models import Thread
 
 
 UserModel = get_user_model()
@@ -23,8 +20,7 @@ class MockRequest(object):
 
 class EventsAPITests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user(
-            "Bob", "bob@bob.com", "Pass.123")
+        self.user = UserModel.objects.create_user("Bob", "bob@bob.com", "Pass.123")
 
         datetime = timezone.now()
 
@@ -36,7 +32,7 @@ class EventsAPITests(TestCase):
             starter_slug='tester',
             last_post_on=datetime,
             last_poster_name='Tester',
-            last_poster_slug='tester'
+            last_poster_slug='tester',
         )
 
         self.thread.set_title("Test thread")

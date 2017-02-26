@@ -15,7 +15,8 @@ class UnbannedOnly(BasePermission):
             hydrated_ban = Ban(
                 check_type=Ban.IP,
                 user_message=ban['message'],
-                expires_on=ban['expires_on'])
+                expires_on=ban['expires_on'],
+            )
             raise Banned(hydrated_ban)
 
     def has_permission(self, request, view):

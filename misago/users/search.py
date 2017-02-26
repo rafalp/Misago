@@ -20,27 +20,21 @@ class SearchUsers(SearchProvider):
 
     def allow_search(self):
         if not self.request.user.acl_cache['can_search_users']:
-            raise PermissionDenied(
-                _("You don't have permission to search users."))
+            raise PermissionDenied(_("You don't have permission to search users."))
 
     def search(self, query, page=1):
         if query:
-            results = search_users(
-                search_disabled=self.request.user.is_staff,
-                username=query
-            )
+            results = search_users(search_disabled=self.request.user.is_staff, username=query)
         else:
             results = []
 
-        return {
-            'results': UserCardSerializer(results, many=True).data,
-            'count': len(results)
-        }
+        return {'results': UserCardSerializer(results, many=True).data, 'count': len(results)}
 
 
 def search_users(**filters):
     queryset = UserModel.objects.order_by('slug').select_related(
-        'rank', 'ban_cache', 'online_tracker')
+        'rank', 'ban_cache', 'online_tracker'
+    )
 
     if not filters.get('search_disabled', False):
         queryset = queryset.filter(is_active=True)
@@ -51,8 +45,9 @@ def search_users(**filters):
 
     # lets grab head and tail results:
     results += list(queryset.filter(slug__startswith=username)[:HEAD_RESULTS])
-    results += list(queryset.filter(
-        slug__contains=username
-    ).exclude(pk__in=[r.pk for r in results])[:TAIL_RESULTS])
+    results += list(
+        queryset.filter(slug__contains=username).exclude(pk__in=[r.pk
+                                                                 for r in results])[:TAIL_RESULTS]
+    )
 
     return results

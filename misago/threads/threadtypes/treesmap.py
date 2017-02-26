@@ -5,6 +5,7 @@ from misago.conf import settings
 
 class TreesMap(object):
     """Object that maps trees to strategies"""
+
     def __init__(self, types_modules):
         self.is_loaded = False
         self.types_modules = types_modules

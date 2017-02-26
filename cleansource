@@ -1,0 +1,6 @@
+#!/bin/bash
+
+yapf -ir ${1:-misago} -e '*/project_template/**/*.py' -e '*/conf/defaults.py'
+isort -rc ${1:-misago}
+pylint ${1:-misago}
+python pycodestyle.py ${1:-misago}

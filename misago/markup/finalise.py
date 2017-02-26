@@ -5,9 +5,11 @@ import re
 from django.utils.translation import gettext as _
 
 
-HEADER_RE = re.compile(r'''
+HEADER_RE = re.compile(
+    r'''
 <div class="quote-heading">(?P<title>.*?)</div>
-'''.strip(), re.IGNORECASE | re.MULTILINE | re.DOTALL);
+'''.strip(), re.IGNORECASE | re.MULTILINE | re.DOTALL
+)
 
 
 def finalise_markup(post):

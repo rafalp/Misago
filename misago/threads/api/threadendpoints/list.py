@@ -11,7 +11,7 @@ class ThreadsList(object):
     def __call__(self, request, **kwargs):
         page = get_int_or_404(request.query_params.get('page', 0))
         if page == 1:
-            page = 0 # api allows explicit first page
+            page = 0  # api allows explicit first page
 
         list_type = request.query_params.get('list', 'all')
 

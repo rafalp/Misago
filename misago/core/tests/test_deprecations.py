@@ -1,6 +1,6 @@
 import warnings
 
-from django.test import TestCase, override_settings
+from django.test import TestCase
 from django.utils import six
 
 from misago.core.deprecations import RemovedInMisagoWarning, warn

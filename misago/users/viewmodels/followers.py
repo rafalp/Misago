@@ -1,6 +1,7 @@
+from django.http import Http404
+
 from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
-from django.http import Http404
 from misago.users.online.utils import make_users_status_aware
 from misago.users.serializers import UserCardSerializer
 
@@ -29,9 +30,7 @@ class Followers(object):
         return profile.followed_by
 
     def get_frontend_context(self):
-        context = {
-            'results': UserCardSerializer(self.users, many=True).data
-        }
+        context = {'results': UserCardSerializer(self.users, many=True).data}
         context.update(self.paginator)
         return context
 

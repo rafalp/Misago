@@ -10,16 +10,13 @@ class MisagoUsersConfig(AppConfig):
     verbose_name = "Misago Auth"
 
     def ready(self):
-        from . import signals
+        from . import signals as _
 
         self.register_default_usercp_pages()
         self.register_default_users_list_pages()
         self.register_default_user_profile_pages()
 
     def register_default_usercp_pages(self):
-        def show_signature_cp(request):
-            return request.user.acl_cache['can_have_signature']
-
         usercp.add_section(
             link='misago:usercp-change-forum-options',
             name=_('Forum options'),
@@ -43,7 +40,8 @@ class MisagoUsersConfig(AppConfig):
         users_list.add_section(
             link='misago:users-active-posters',
             component='active-posters',
-            name=_('Active posters'))
+            name=_('Active posters')
+        )
 
     def register_default_user_profile_pages(self):
         def can_see_names_history(request, profile):

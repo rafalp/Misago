@@ -1,17 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import migrations, models
+from django.db import migrations
 from django.utils.translation import ugettext as _
 
 
 def create_default_categories_roles(apps, schema_editor):
-    """
-    Crete roles
-    """
     CategoryRole = apps.get_model('misago_categories', 'CategoryRole')
 
-    see_only = CategoryRole.objects.create(
+    CategoryRole.objects.create(
         name=_('See only'),
         permissions={
             # categories perms
@@ -41,7 +38,7 @@ def create_default_categories_roles(apps, schema_editor):
         }
     )
 
-    reply_only = CategoryRole.objects.create(
+    CategoryRole.objects.create(
         name=_('Reply to threads'),
         permissions={
             # categories perms
@@ -87,7 +84,7 @@ def create_default_categories_roles(apps, schema_editor):
         }
     )
 
-    standard_with_polls = CategoryRole.objects.create(
+    CategoryRole.objects.create(
         name=_('Start and reply threads, make polls'),
         permissions={
             # categories perms
@@ -162,9 +159,7 @@ def create_default_categories_roles(apps, schema_editor):
     category = Category.objects.get(tree_id=1, level=1)
 
     RoleCategoryACL.objects.create(
-        role=Role.objects.get(name=_('Moderator')),
-        category=category,
-        category_role=moderator
+        role=Role.objects.get(name=_('Moderator')), category=category, category_role=moderator
     )
 
     RoleCategoryACL.objects.create(

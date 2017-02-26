@@ -45,6 +45,10 @@ def YesNoSwitch(**kwargs):
 
     return YesNoSwitchBase(
         coerce=int,
-        choices=((1, yes_label), (0, no_label)),
+        choices=[
+            (1, yes_label),
+            (0, no_label),
+        ],
         widget=RadioSelect(attrs={'class': 'yesno-switch'}),
-        **kwargs)
+        **kwargs
+    )

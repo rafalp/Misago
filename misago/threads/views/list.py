@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.http import Http404
 from django.shortcuts import render
 from django.urls import reverse
@@ -9,7 +8,7 @@ from misago.threads.viewmodels import (
     ForumThreads, PrivateThreads, PrivateThreadsCategory, ThreadsCategory, ThreadsRootCategory)
 
 
-class ListBase(View):
+class ThreadsList(View):
     category = None
     threads = None
 
@@ -56,7 +55,7 @@ class ListBase(View):
         return {}
 
 
-class ForumThreads(ListBase):
+class ForumThreadsList(ThreadsList):
     category = ThreadsRootCategory
     threads = ForumThreads
 
@@ -68,19 +67,19 @@ class ForumThreads(ListBase):
         }
 
 
-class CategoryThreads(ForumThreads):
+class CategoryThreadsList(ForumThreadsList):
     category = ThreadsCategory
 
     template_name = 'misago/threadslist/category.html'
 
     def get_category(self, request, **kwargs):
-        category = super(CategoryThreads, self).get_category(request, **kwargs)
+        category = super(CategoryThreadsList, self).get_category(request, **kwargs)
         if not category.level:
-            raise Http404() # disallow root category access
+            raise Http404()  # disallow root category access
         return category
 
 
-class PrivateThreads(ListBase):
+class PrivateThreadsList(ThreadsList):
     category = PrivateThreadsCategory
     threads = PrivateThreads
 

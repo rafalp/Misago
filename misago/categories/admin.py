@@ -15,7 +15,8 @@ class MisagoAdminExtension(object):
 
         # Nodes
         urlpatterns.namespace(r'^nodes/', 'nodes', 'categories')
-        urlpatterns.patterns('categories:nodes',
+        urlpatterns.patterns(
+            'categories:nodes',
             url(r'^$', CategoriesList.as_view(), name='index'),
             url(r'^new/$', NewCategory.as_view(), name='new'),
             url(r'^edit/(?P<pk>\d+)/$', EditCategory.as_view(), name='edit'),
@@ -27,7 +28,8 @@ class MisagoAdminExtension(object):
 
         # Category Roles
         urlpatterns.namespace(r'^categories/', 'categories', 'permissions')
-        urlpatterns.patterns('permissions:categories',
+        urlpatterns.patterns(
+            'permissions:categories',
             url(r'^$', CategoryRolesList.as_view(), name='index'),
             url(r'^new/$', NewCategoryRole.as_view(), name='new'),
             url(r'^edit/(?P<pk>\d+)/$', EditCategoryRole.as_view(), name='edit'),
@@ -35,7 +37,8 @@ class MisagoAdminExtension(object):
         )
 
         # Change Role Category Permissions
-        urlpatterns.patterns('permissions:users',
+        urlpatterns.patterns(
+            'permissions:users',
             url(r'^categories/(?P<pk>\d+)/$', RoleCategoriesACL.as_view(), name='categories'),
         )
 
@@ -46,14 +49,14 @@ class MisagoAdminExtension(object):
             parent='misago:admin',
             before='misago:admin:permissions:users:index',
             namespace='misago:admin:categories',
-            link='misago:admin:categories:nodes:index'
+            link='misago:admin:categories:nodes:index',
         )
         site.add_node(
             name=_("Categories hierarchy"),
             icon='fa fa-sitemap',
             parent='misago:admin:categories',
             namespace='misago:admin:categories:nodes',
-            link='misago:admin:categories:nodes:index'
+            link='misago:admin:categories:nodes:index',
         )
         site.add_node(
             name=_("Category roles"),
@@ -61,5 +64,5 @@ class MisagoAdminExtension(object):
             parent='misago:admin:permissions',
             after='misago:admin:permissions:users:index',
             namespace='misago:admin:permissions:categories',
-            link='misago:admin:permissions:categories:index'
+            link='misago:admin:permissions:categories:index',
         )

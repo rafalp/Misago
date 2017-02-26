@@ -10,4 +10,5 @@ def return_boolean(f):
             return False
         else:
             return True
+
     return decorator

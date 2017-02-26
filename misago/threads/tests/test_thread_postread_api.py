@@ -2,7 +2,6 @@ from django.urls import reverse
 from django.utils import timezone
 
 from misago.threads import testutils
-from misago.threads.models import Post, Thread
 
 from .test_threads_api import ThreadsApiTestCase
 
@@ -14,13 +13,16 @@ class PostReadApiTests(ThreadsApiTestCase):
         self.post = testutils.reply_thread(
             self.thread,
             poster=self.user,
-            posted_on=timezone.now()
+            posted_on=timezone.now(),
         )
 
-        self.api_link = reverse('misago:api:thread-post-read', kwargs={
-            'thread_pk': self.thread.pk,
-            'pk': self.post.pk
-        })
+        self.api_link = reverse(
+            'misago:api:thread-post-read',
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.post.pk,
+            }
+        )
 
     def test_read_anonymous(self):
         """api validates if reading user is authenticated"""
@@ -47,7 +49,7 @@ class PostReadApiTests(ThreadsApiTestCase):
             user=self.user,
             thread=self.thread,
             category=self.thread.category,
-            last_read_on=self.thread.post_set.order_by('id').first().posted_on
+            last_read_on=self.thread.post_set.order_by('id').first().posted_on,
         )
 
         response = self.client.post(self.api_link)

@@ -11,9 +11,6 @@ thread_tracked = Signal(providing_args=["thread"])
 thread_read = Signal(providing_args=["thread"])
 
 
-"""
-Signal handlers
-"""
 @receiver(delete_category_content)
 def delete_category_threads(sender, **kwargs):
     sender.categoryread_set.all().delete()

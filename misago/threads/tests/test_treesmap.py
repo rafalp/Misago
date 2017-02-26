@@ -58,7 +58,9 @@ class TreesMapTests(TestCase):
         tree_id = Category.objects.get(special_role='root_category').tree_id
 
         self.assertIn('root_category', trees_map.types, "invalid thread type was loaded")
-        self.assertEqual(trees_map.trees[tree_id].root_name, 'root_category', "invalid tree was loaded")
+        self.assertEqual(
+            trees_map.trees[tree_id].root_name, 'root_category', "invalid tree was loaded"
+        )
         self.assertIn('root_category', trees_map.roots, "invalid root was loaded")
 
     def test_get_type_for_tree_id(self):
@@ -69,13 +71,19 @@ class TreesMapTests(TestCase):
         tree_id = Category.objects.get(special_role='root_category').tree_id
         thread_type = trees_map.get_type_for_tree_id(tree_id)
 
-        self.assertEqual(thread_type.root_name, 'root_category', "returned invalid thread type for given tree id")
+        self.assertEqual(
+            thread_type.root_name, 'root_category',
+            "returned invalid thread type for given tree id"
+        )
 
         try:
             trees_map.get_type_for_tree_id(tree_id + 1000)
             self.fail("invalid tree id should cause KeyError being raised")
         except KeyError as e:
-            self.assertIn("tree id has no type defined", six.text_type(e), "invalid exception message as given")
+            self.assertIn(
+                "tree id has no type defined",
+                six.text_type(e), "invalid exception message as given"
+            )
 
     def test_get_tree_id_for_root(self):
         """TreesMap().get_tree_id_for_root() returns tree id for valid type name"""
@@ -91,4 +99,7 @@ class TreesMapTests(TestCase):
             trees_map.get_tree_id_for_root('hurr_durr')
             self.fail("invalid root name should cause KeyError being raised")
         except KeyError as e:
-            self.assertIn('"hurr_durr" root has no tree defined', six.text_type(e), "invalid exception message as given")
+            self.assertIn(
+                '"hurr_durr" root has no tree defined',
+                six.text_type(e), "invalid exception message as given"
+            )

@@ -19,13 +19,13 @@ move_post = Signal()
 move_thread = Signal()
 
 
-"""
-Signal handlers
-"""
 @receiver(merge_thread)
 def merge_threads_posts(sender, **kwargs):
     other_thread = kwargs['other_thread']
-    other_thread.post_set.update(category=sender.category, thread=sender)
+    other_thread.post_set.update(
+        category=sender.category,
+        thread=sender,
+    )
 
 
 @receiver(merge_post)
@@ -102,44 +102,46 @@ def delete_user_threads(sender, **kwargs):
 def update_usernames(sender, **kwargs):
     Thread.objects.filter(starter=sender).update(
         starter_name=sender.username,
-        starter_slug=sender.slug
+        starter_slug=sender.slug,
     )
 
     Thread.objects.filter(last_poster=sender).update(
         last_poster_name=sender.username,
-        last_poster_slug=sender.slug
+        last_poster_slug=sender.slug,
     )
 
-    Post.objects.filter(poster=sender).update(poster_name=sender.username)
+    Post.objects.filter(poster=sender).update(
+        poster_name=sender.username,
+    )
 
     Post.objects.filter(last_editor=sender).update(
         last_editor_name=sender.username,
-        last_editor_slug=sender.slug
+        last_editor_slug=sender.slug,
     )
 
     PostEdit.objects.filter(editor=sender).update(
         editor_name=sender.username,
-        editor_slug=sender.slug
+        editor_slug=sender.slug,
     )
 
     PostLike.objects.filter(liker=sender).update(
         liker_name=sender.username,
-        liker_slug=sender.slug
+        liker_slug=sender.slug,
     )
 
     Attachment.objects.filter(uploader=sender).update(
         uploader_name=sender.username,
-        uploader_slug=sender.slug
+        uploader_slug=sender.slug,
     )
 
     Poll.objects.filter(poster=sender).update(
         poster_name=sender.username,
-        poster_slug=sender.slug
+        poster_slug=sender.slug,
     )
 
     PollVote.objects.filter(voter=sender).update(
         voter_name=sender.username,
-        voter_slug=sender.slug
+        voter_slug=sender.slug,
     )
 
 

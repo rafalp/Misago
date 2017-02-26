@@ -5,8 +5,8 @@ from django.db import IntegrityError
 from django.utils.translation import ugettext as _
 
 from misago.conf import settings
-from misago.users.serializers import ChangeUsernameSerializer
 from misago.users.namechanges import UsernameChanges
+from misago.users.serializers import ChangeUsernameSerializer
 
 
 def username_endpoint(request):
@@ -39,14 +39,9 @@ def change_username(request):
             'detail': _("You can't change your username now."),
             'options': options
         },
-        status=status.HTTP_400_BAD_REQUEST)
+                        status=status.HTTP_400_BAD_REQUEST)
 
-    serializer = ChangeUsernameSerializer(
-        data=request.data,
-        context={
-            'user': request.user
-        }
-    )
+    serializer = ChangeUsernameSerializer(data=request.data, context={'user': request.user})
 
     if serializer.is_valid():
         try:
@@ -59,23 +54,18 @@ def change_username(request):
         except IntegrityError:
             return Response({
                 'detail': _("Error changing username. Please try again."),
-                'options': options
             },
-            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({
             'detail': serializer.errors['non_field_errors'][0]
-        }, status=status.HTTP_400_BAD_REQUEST)
+        },
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 def moderate_username_endpoint(request, profile):
     if request.method == 'POST':
-        serializer = ChangeUsernameSerializer(
-            data=request.data,
-            context={
-                'user': profile
-            }
-        )
+        serializer = ChangeUsernameSerializer(data=request.data, context={'user': profile})
 
         if serializer.is_valid():
             try:
@@ -87,12 +77,13 @@ def moderate_username_endpoint(request, profile):
             except IntegrityError:
                 return Response({
                     'detail': _("Error changing username. Please try again."),
-                    'options': options
-                }, status=status.HTTP_400_BAD_REQUEST)
+                },
+                                status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({
                 'detail': serializer.errors['non_field_errors'][0]
-            }, status=status.HTTP_400_BAD_REQUEST)
+            },
+                            status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({
             'length_min': settings.username_length_min,

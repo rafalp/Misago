@@ -1,6 +1,5 @@
 from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
-from django.http import Http404
 from misago.users.online.utils import make_users_status_aware
 from misago.users.serializers import UserCardSerializer
 
@@ -8,7 +7,10 @@ from misago.users.serializers import UserCardSerializer
 class RankUsers(object):
     def __init__(self, request, rank, page=0):
         queryset = rank.user_set.select_related(
-            'rank', 'ban_cache', 'online_tracker').order_by('slug')
+            'rank',
+            'ban_cache',
+            'online_tracker',
+        ).order_by('slug')
 
         if not request.user.is_staff:
             queryset = queryset.filter(is_active=True)
@@ -20,9 +22,7 @@ class RankUsers(object):
         self.paginator = pagination_dict(list_page)
 
     def get_frontend_context(self):
-        context = {
-            'results': UserCardSerializer(self.users, many=True).data
-        }
+        context = {'results': UserCardSerializer(self.users, many=True).data}
         context.update(self.paginator)
         return context
 

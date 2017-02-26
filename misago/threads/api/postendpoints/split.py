@@ -1,4 +1,3 @@
-from rest_framework import serializers
 from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
@@ -6,7 +5,6 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
 from misago.conf import settings
-from misago.threads.events import record_event
 from misago.threads.models import Thread
 from misago.threads.moderation import threads as moderation
 from misago.threads.permissions import exclude_invisible_posts
@@ -50,7 +48,8 @@ def clean_posts_for_split(request, thread):
         message = ungettext(
             "No more than %(limit)s post can be split at single time.",
             "No more than %(limit)s posts can be split at single time.",
-            SPLIT_LIMIT)
+            SPLIT_LIMIT,
+        )
         raise SplitError(message % {'limit': SPLIT_LIMIT})
 
     posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)
@@ -77,7 +76,7 @@ def split_posts_to_new_thread(request, thread, validated_data, posts):
     new_thread = Thread(
         category=validated_data['category'],
         started_on=thread.started_on,
-        last_post_on=thread.last_post_on
+        last_post_on=thread.last_post_on,
     )
 
     new_thread.set_title(validated_data['title'])

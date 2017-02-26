@@ -32,22 +32,30 @@ class ViewSet(viewsets.ViewSet):
     posts = ThreadPosts
     post_ = ThreadPost
 
-    def get_thread(self, request, pk, read_aware=True, subscription_aware=True, select_for_update=False):
+    def get_thread(
+            self,
+            request,
+            pk,
+            read_aware=True,
+            subscription_aware=True,
+            select_for_update=False,
+    ):
         return self.thread(
             request,
             get_int_or_404(pk),
             None,
             read_aware,
             subscription_aware,
-            select_for_update
+            select_for_update,
         )
 
     def get_thread_for_update(self, request, pk):
         return self.get_thread(
-            request, pk,
+            request,
+            pk,
             read_aware=False,
             subscription_aware=False,
-            select_for_update=True
+            select_for_update=True,
         )
 
     def get_posts(self, request, thread, page):
@@ -62,7 +70,7 @@ class ViewSet(viewsets.ViewSet):
     def list(self, request, thread_pk):
         page = get_int_or_404(request.query_params.get('page', 0))
         if page == 1:
-            page = 0 # api allows explicit first page
+            page = 0  # api allows explicit first page
 
         thread = self.get_thread(request, thread_pk)
         posts = self.get_posts(request, thread, page)
@@ -95,14 +103,17 @@ class ViewSet(viewsets.ViewSet):
         thread = self.get_thread_for_update(request, thread_pk).unwrap()
         allow_reply_thread(request.user, thread)
 
-        post = Post(thread=thread, category=thread.category)
+        post = Post(
+            thread=thread,
+            category=thread.category,
+        )
 
         # Put them through posting pipeline
         posting = PostingEndpoint(
             request,
             PostingEndpoint.REPLY,
             thread=thread,
-            post=post
+            post=post,
         )
 
         if posting.is_valid():
@@ -132,7 +143,7 @@ class ViewSet(viewsets.ViewSet):
             request,
             PostingEndpoint.EDIT,
             thread=thread,
-            post=post
+            post=post,
         )
 
         if posting.is_valid():
@@ -197,7 +208,7 @@ class ViewSet(viewsets.ViewSet):
             request,
             thread_pk,
             read_aware=False,
-            subscription_aware=False
+            subscription_aware=False,
         )
         post = self.get_post(request, thread, pk).unwrap()
 
@@ -208,7 +219,8 @@ class ViewSet(viewsets.ViewSet):
             add_acl(request.user, attachment)
             attachments.append(attachment)
         attachments_json = AttachmentSerializer(
-            attachments, many=True, context={'user': request.user}).data
+            attachments, many=True, context={'user': request.user}
+        ).data
 
         return Response({
             'id': post.pk,
@@ -217,16 +229,13 @@ class ViewSet(viewsets.ViewSet):
             'attachments': attachments_json,
             'can_protect': bool(thread.category.acl['can_protect_posts']),
             'is_protected': post.is_protected,
-            'poster': post.poster_name
+            'poster': post.poster_name,
         })
 
     @list_route(methods=['get'], url_path='editor')
     def reply_editor(self, request, thread_pk):
         thread = self.get_thread(
-            request,
-            thread_pk,
-            read_aware=False,
-            subscription_aware=False
+            request, thread_pk, read_aware=False, subscription_aware=False
         ).unwrap()
         allow_reply_thread(request.user, thread)
 
@@ -241,7 +250,7 @@ class ViewSet(viewsets.ViewSet):
             return Response({
                 'id': reply_to.pk,
                 'post': reply_to.original,
-                'poster': reply_to.poster_name
+                'poster': reply_to.poster_name,
             })
         else:
             return Response({})

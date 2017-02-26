@@ -23,7 +23,7 @@ class ParticipantsTests(TestCase):
             starter_slug='tester',
             last_post_on=datetime,
             last_poster_name='Tester',
-            last_poster_slug='tester'
+            last_poster_slug='tester',
         )
 
         self.thread.set_title("Test thread")
@@ -38,7 +38,7 @@ class ParticipantsTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime
+            updated_on=datetime,
         )
 
         self.thread.first_post = post
@@ -137,7 +137,10 @@ class ParticipantsTests(TestCase):
 
         set_users_unread_private_threads_sync(users=users)
         for user in users:
-            UserModel.objects.get(pk=user.pk, sync_unread_private_threads=True)
+            UserModel.objects.get(
+                pk=user.pk,
+                sync_unread_private_threads=True,
+            )
 
     def test_set_participants_unread_private_threads_sync(self):
         """
@@ -153,7 +156,10 @@ class ParticipantsTests(TestCase):
 
         set_users_unread_private_threads_sync(participants=participants)
         for user in users:
-            UserModel.objects.get(pk=user.pk, sync_unread_private_threads=True)
+            UserModel.objects.get(
+                pk=user.pk,
+                sync_unread_private_threads=True,
+            )
 
     def test_set_participants_users_unread_private_threads_sync(self):
         """
@@ -168,9 +174,15 @@ class ParticipantsTests(TestCase):
 
         users.append(UserModel.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123"))
 
-        set_users_unread_private_threads_sync(users=users, participants=participants)
+        set_users_unread_private_threads_sync(
+            users=users,
+            participants=participants,
+        )
         for user in users:
-            UserModel.objects.get(pk=user.pk, sync_unread_private_threads=True)
+            UserModel.objects.get(
+                pk=user.pk,
+                sync_unread_private_threads=True,
+            )
 
     def test_set_users_unread_private_threads_sync_exclude_user(self):
         """exclude_user kwarg works"""
@@ -179,7 +191,10 @@ class ParticipantsTests(TestCase):
             UserModel.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123")
         ]
 
-        set_users_unread_private_threads_sync(users=users, exclude_user=users[0])
+        set_users_unread_private_threads_sync(
+            users=users,
+            exclude_user=users[0],
+        )
 
         self.assertFalse(UserModel.objects.get(pk=users[0].pk).sync_unread_private_threads)
         self.assertTrue(UserModel.objects.get(pk=users[1].pk).sync_unread_private_threads)
@@ -189,6 +204,9 @@ class ParticipantsTests(TestCase):
         user = UserModel.objects.create_user("Bob1", "bob1@boberson.com", "Pass.123")
 
         with self.assertNumQueries(0):
-            set_users_unread_private_threads_sync(users=[user], exclude_user=user)
+            set_users_unread_private_threads_sync(
+                users=[user],
+                exclude_user=user,
+            )
 
         self.assertFalse(UserModel.objects.get(pk=user.pk).sync_unread_private_threads)

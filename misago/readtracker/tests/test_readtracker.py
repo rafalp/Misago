@@ -19,14 +19,13 @@ class ReadTrackerTests(TestCase):
         self.categories = list(Category.objects.all_categories()[:1])
         self.category = self.categories[0]
 
-        self.user = UserModel.objects.create_user(
-            "Bob", "bob@test.com", "Pass.123")
+        self.user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
         self.anon = AnonymousUser()
 
     def post_thread(self, datetime):
         return testutils.post_thread(
             category=self.category,
-            started_on=datetime
+            started_on=datetime,
         )
 
 
@@ -93,7 +92,8 @@ class CategoriesTrackerTests(ReadTrackerTests):
         categoriestracker.make_read_aware(self.user, self.categories)
         self.assertTrue(self.category.is_read)
 
-        thread = self.post_thread(self.user.joined_on + timedelta(days=1))
+        self.post_thread(self.user.joined_on + timedelta(days=1))
+
         categoriestracker.sync_record(self.user, self.category)
         categoriestracker.make_read_aware(self.user, self.categories)
         self.assertFalse(self.category.is_read)
@@ -209,7 +209,7 @@ class ThreadsTrackerTests(ReadTrackerTests):
             thread=self.thread,
             is_hidden=is_hidden,
             is_unapproved=is_unapproved,
-            posted_on=timezone.now()
+            posted_on=timezone.now(),
         )
         return self.post
 

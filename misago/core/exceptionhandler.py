@@ -4,13 +4,19 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponsePermanentRedirect, JsonResponse
 from django.urls import reverse
 from django.utils import six
-from django.utils.translation import gettext as _
 
 from . import errorpages
 from .exceptions import AjaxError, Banned, ExplicitFirstPage, OutdatedSlug
 
 
-HANDLED_EXCEPTIONS = (AjaxError, Banned, ExplicitFirstPage, Http404, OutdatedSlug, PermissionDenied)
+HANDLED_EXCEPTIONS = [
+    AjaxError,
+    Banned,
+    ExplicitFirstPage,
+    Http404,
+    OutdatedSlug,
+    PermissionDenied,
+]
 
 
 def is_misago_exception(exception):
@@ -18,7 +24,10 @@ def is_misago_exception(exception):
 
 
 def handle_ajax_error(request, exception):
-    json = {'is_error': 1, 'message': six.text_type(exception.message)}
+    json = {
+        'is_error': 1,
+        'message': six.text_type(exception.message),
+    }
     return JsonResponse(json, status=exception.code)
 
 
@@ -46,7 +55,6 @@ def handle_outdated_slug_exception(request, exception):
     view_name = request.resolver_match.view_name
 
     model = exception.args[0]
-    model_name = model.__class__.__name__.lower()
     url_kwargs = request.resolver_match.kwargs
     url_kwargs['slug'] = model.slug
 
@@ -63,14 +71,14 @@ def handle_permission_denied_exception(request, exception):
     return errorpages.permission_denied(request, error_message)
 
 
-EXCEPTION_HANDLERS = (
+EXCEPTION_HANDLERS = [
     (AjaxError, handle_ajax_error),
     (Banned, handle_banned_exception),
     (Http404, handle_http404_exception),
     (ExplicitFirstPage, handle_explicit_first_page_exception),
     (OutdatedSlug, handle_outdated_slug_exception),
     (PermissionDenied, handle_permission_denied_exception),
-)
+]
 
 
 def get_exception_handler(exception):
@@ -78,8 +86,7 @@ def get_exception_handler(exception):
         if isinstance(exception, exception_type):
             return handler
     else:
-        raise ValueError(
-            "%s is not Misago exception" % exception.__class__.__name__)
+        raise ValueError("%s is not Misago exception" % exception.__class__.__name__)
 
 
 def handle_misago_exception(request, exception):

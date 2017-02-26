@@ -13,6 +13,4 @@ class Subscription(models.Model):
     send_email = models.BooleanField(default=False)
 
     class Meta:
-        index_together = [
-            ['send_email', 'last_read_on']
-        ]
+        index_together = [['send_email', 'last_read_on']]

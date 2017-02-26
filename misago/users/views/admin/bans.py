@@ -20,23 +20,21 @@ class BanAdmin(generic.AdminBaseMixin):
 
 class BansList(BanAdmin, generic.ListView):
     items_per_page = 30
-    ordering = (
+    ordering = [
         ('-id', _("From newest")),
         ('id', _("From oldest")),
         ('banned_value', _("A to z")),
         ('-banned_value', _("Z to a")),
-    )
+    ]
     search_form = SearchBansForm
     selection_label = _('With bans: 0')
     empty_selection_label = _('Select bans')
-    mass_actions = (
-        {
-            'action': 'delete',
-            'icon': 'fa fa-times',
-            'name': _('Remove bans'),
-            'confirmation': _('Are you sure you want to remove those bans?')
-        },
-    )
+    mass_actions = ({
+        'action': 'delete',
+        'icon': 'fa fa-times',
+        'name': _('Remove bans'),
+        'confirmation': _('Are you sure you want to remove those bans?')
+    }, )
 
     def action_delete(self, request, items):
         items.delete()

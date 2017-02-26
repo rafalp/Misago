@@ -1,8 +1,5 @@
-import json
-
 from django.test import TestCase
 from django.urls import reverse
-from django.utils.encoding import smart_str
 
 from misago.conf import settings
 
@@ -29,6 +26,6 @@ class AuthenticateAPITests(TestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = json.loads(smart_str(response.content))
+        response_json = response.json()
         self.assertEqual(response_json['question'], 'Do you like pies?')
         self.assertEqual(response_json['help_text'], 'Type in "yes".')

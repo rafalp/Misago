@@ -23,9 +23,11 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         self.thread = testutils.post_thread(category=self.category)
         self.override_acl()
 
-        self.post_link = reverse('misago:api:thread-post-list', kwargs={
-            'thread_pk': self.thread.pk
-        })
+        self.post_link = reverse(
+            'misago:api:thread-post-list', kwargs={
+                'thread_pk': self.thread.pk,
+            }
+        )
 
     def override_acl(self):
         new_acl = self.user.acl_cache
@@ -34,20 +36,26 @@ class PostMentionsTests(AuthenticatedUserTestCase):
             'can_browse': 1,
             'can_start_threads': 1,
             'can_reply_threads': 1,
-            'can_edit_posts': 1
+            'can_edit_posts': 1,
         })
 
         override_acl(self.user, new_acl)
 
-    def put(self, url, data=None):
+    def put(
+            self,
+            url,
+            data=None,
+    ):
         content = encode_multipart(BOUNDARY, data or {})
         return self.client.put(url, content, content_type=MULTIPART_CONTENT)
 
     def test_mention_noone(self):
         """endpoint handles no mentions in post"""
-        response = self.client.post(self.post_link, data={
-            'post': "This is test response!"
-        })
+        response = self.client.post(
+            self.post_link, data={
+                'post': "This is test response!",
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         post = self.user.post_set.order_by('id').last()
@@ -55,9 +63,11 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
     def test_mention_nonexistant(self):
         """endpoint handles nonexistant mention"""
-        response = self.client.post(self.post_link, data={
-            'post': "This is test response, @InvalidUser!"
-        })
+        response = self.client.post(
+            self.post_link, data={
+                'post': "This is test response, @InvalidUser!",
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         post = self.user.post_set.order_by('id').last()
@@ -65,9 +75,11 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
     def test_mention_self(self):
         """endpoint mentions author"""
-        response = self.client.post(self.post_link, data={
-            'post': "This is test response, @{}!".format(self.user)
-        })
+        response = self.client.post(
+            self.post_link, data={
+                'post': "This is test response, @{}!".format(self.user),
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         post = self.user.post_set.order_by('id').last()
@@ -80,16 +92,18 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         users = []
 
         for i in range(MENTIONS_LIMIT + 5):
-            users.append(UserModel.objects.create_user(
-                'Mention{}'.format(i),
-                'mention{}@bob.com'.format(i),
-                'pass123'
-            ))
+            users.append(
+                UserModel.objects.
+                create_user('Mention{}'.format(i), 'mention{}@bob.com'.format(i), 'pass123')
+            )
 
         mentions = ['@{}'.format(u) for u in users]
-        response = self.client.post(self.post_link, data={
-            'post': "This is test response, {}!".format(', '.join(mentions))
-        })
+        response = self.client.post(
+            self.post_link,
+            data={
+                'post': "This is test response, {}!".format(', '.join(mentions)),
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         post = self.user.post_set.order_by('id').last()
@@ -102,9 +116,11 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         user_a = UserModel.objects.create_user('Mention', 'mention@test.com', 'pass123')
         user_b = UserModel.objects.create_user('MentionB', 'mentionb@test.com', 'pass123')
 
-        response = self.client.post(self.post_link, data={
-            'post': "This is test response, @{}!".format(user_a)
-        })
+        response = self.client.post(
+            self.post_link, data={
+                'post': "This is test response, @{}!".format(user_a),
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         post = self.user.post_set.order_by('id').last()
@@ -113,15 +129,20 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         self.assertEqual(post.mentions.order_by('id')[0], user_a)
 
         # add mention to post
-        edit_link = reverse('misago:api:thread-post-detail', kwargs={
-            'thread_pk': self.thread.pk,
-            'pk': post.pk
-        })
+        edit_link = reverse(
+            'misago:api:thread-post-detail', kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': post.pk,
+            }
+        )
 
         self.override_acl()
-        response = self.put(edit_link, data={
-            'post': "This is test response, @{} and @{}!".format(user_a, user_b)
-        })
+        response = self.put(
+            edit_link,
+            data={
+                'post': "This is test response, @{} and @{}!".format(user_a, user_b),
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(post.mentions.count(), 2)
@@ -129,9 +150,11 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
         # remove first mention from post - should preserve mentions
         self.override_acl()
-        response = self.put(edit_link, data={
-            'post': "This is test response, @{}!".format(user_b)
-        })
+        response = self.put(
+            edit_link, data={
+                'post': "This is test response, @{}!".format(user_b),
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(post.mentions.count(), 2)
@@ -139,9 +162,11 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
         # remove mentions from post - should preserve mentions
         self.override_acl()
-        response = self.put(edit_link, data={
-            'post': "This is test response!"
-        })
+        response = self.put(
+            edit_link, data={
+                'post': "This is test response!",
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         self.assertEqual(post.mentions.count(), 2)
@@ -152,9 +177,11 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         user_a = UserModel.objects.create_user('Mention', 'mention@test.com', 'pass123')
         user_b = UserModel.objects.create_user('MentionB', 'mentionb@test.com', 'pass123')
 
-        response = self.client.post(self.post_link, data={
-            'post': "This is test response, @{}!".format(user_a)
-        })
+        response = self.client.post(
+            self.post_link, data={
+                'post': "This is test response, @{}!".format(user_a),
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         post_a = self.user.post_set.order_by('id').last()
@@ -166,9 +193,12 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         self.user.last_post_on = None
         self.user.save()
 
-        response = self.client.post(self.post_link, data={
-            'post': "This is test response, @{} and @{}!".format(user_a, user_b)
-        })
+        response = self.client.post(
+            self.post_link,
+            data={
+                'post': "This is test response, @{} and @{}!".format(user_a, user_b),
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         post_b = self.user.post_set.order_by('id').last()

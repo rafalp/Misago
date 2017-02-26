@@ -4,8 +4,7 @@ from django.utils import timezone
 
 from misago.acl.testutils import override_acl
 from misago.threads.api.postingendpoint import PostingInterrupt
-from misago.threads.api.postingendpoint.floodprotection import (
-    MIN_POSTING_PAUSE, FloodProtectionMiddleware)
+from misago.threads.api.postingendpoint.floodprotection import FloodProtectionMiddleware
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -42,9 +41,7 @@ class FloodProtectionMiddlewareTests(AuthenticatedUserTestCase):
 
     def test_flood_permission(self):
         """middleware is respects permission to flood for team members"""
-        override_acl(self.user, {
-            'can_omit_flood_protection': True
-        })
+        override_acl(self.user, {'can_omit_flood_protection': True})
 
         middleware = FloodProtectionMiddleware(user=self.user)
         self.assertFalse(middleware.use_this_middleware())

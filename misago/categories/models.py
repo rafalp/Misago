@@ -64,7 +64,7 @@ class Category(MPTTModel):
         'self',
         null=True,
         blank=True,
-        related_name='children'
+        related_name='children',
     )
     special_role = models.CharField(max_length=255, null=True, blank=True)
     name = models.CharField(max_length=255)
@@ -79,7 +79,7 @@ class Category(MPTTModel):
         related_name='+',
         null=True,
         blank=True,
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
     )
     last_thread_title = models.CharField(max_length=255, null=True, blank=True)
     last_thread_slug = models.CharField(max_length=255, null=True, blank=True)
@@ -88,7 +88,7 @@ class Category(MPTTModel):
         related_name='+',
         null=True,
         blank=True,
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
     )
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
     last_poster_slug = models.CharField(max_length=255, null=True, blank=True)
@@ -99,7 +99,7 @@ class Category(MPTTModel):
         related_name='pruned_archive',
         null=True,
         blank=True,
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
     )
     css_class = models.CharField(max_length=255, null=True, blank=True)
 

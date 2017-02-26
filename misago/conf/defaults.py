@@ -6,11 +6,6 @@ If you rely on any of those in your code, make sure you use `misago.conf.setting
 instead of Django's `django.conf.settings`.
 """
 
-# Default JS debug to false
-# This setting used exclusively by test runner and isn't part of public API
-
-_MISAGO_JS_DEBUG = False
-
 
 # Permissions system extensions
 # https://misago.readthedocs.io/en/latest/developers/acls.html#extending-permissions-system

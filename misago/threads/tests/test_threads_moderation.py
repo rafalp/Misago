@@ -1,6 +1,6 @@
 from misago.categories.models import Category
 from misago.threads import moderation, testutils
-from misago.threads.models import Post, Thread
+from misago.threads.models import Thread
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -26,7 +26,9 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
 
     def test_change_thread_title(self):
         """change_thread_title changes thread's title and slug"""
-        self.assertTrue(moderation.change_thread_title(self.request, self.thread, "New title is here!"))
+        self.assertTrue(
+            moderation.change_thread_title(self.request, self.thread, "New title is here!")
+        )
 
         self.reload_thread()
         self.assertEqual(self.thread.title, "New title is here!")
@@ -73,9 +75,7 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(event.event_type, 'pinned_locally')
 
     def test_pin_invalid_thread(self):
-        """
-        pin_thread_locally returns false for already locally pinned thread
-        """
+        """pin_thread_locally returns false for already locally pinned thread"""
         self.thread.weight = 1
 
         self.assertFalse(moderation.pin_thread_locally(self.request, self.thread))
@@ -139,12 +139,15 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
         Category(
             name='New Category',
             slug='new-category',
-        ).insert_at(root_category, position='last-child', save=True)
+        ).insert_at(
+            root_category,
+            position='last-child',
+            save=True,
+        )
         new_category = Category.objects.get(slug='new-category')
 
         self.assertEqual(self.thread.category, self.category)
-        self.assertTrue(
-            moderation.move_thread(self.request, self.thread, new_category))
+        self.assertTrue(moderation.move_thread(self.request, self.thread, new_category))
 
         self.reload_thread()
         self.assertEqual(self.thread.category, new_category)
@@ -157,8 +160,7 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
     def test_move_thread_to_same_category(self):
         """moves_thread does not move thread to same category it is in"""
         self.assertEqual(self.thread.category, self.category)
-        self.assertFalse(
-            moderation.move_thread(self.request, self.thread, self.category))
+        self.assertFalse(moderation.move_thread(self.request, self.thread, self.category))
 
         self.reload_thread()
         self.assertEqual(self.thread.category, self.category)

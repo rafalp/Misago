@@ -14,14 +14,11 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_no_permission(self):
         """api validates permission to search"""
-        override_acl(self.user, {
-            'can_search': 0
-        })
+        override_acl(self.user, {'can_search': 0})
 
         response = self.client.get(self.test_link)
 
-        self.assertContains(
-            response, "have permission to search site", status_code=403)
+        self.assertContains(response, "have permission to search site", status_code=403)
 
     def test_no_phrase(self):
         """api handles no search query"""
@@ -30,9 +27,11 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
         providers = searchproviders.get_providers(True)
         for i, provider in enumerate(response.json()):
-            provider_api = reverse('misago:api:search', kwargs={
-                'search_provider': providers[i].url
-            })
+            provider_api = reverse(
+                'misago:api:search', kwargs={
+                    'search_provider': providers[i].url,
+                }
+            )
             self.assertEqual(provider_api, provider['api'])
 
             self.assertEqual(six.text_type(providers[i].name), provider['name'])
@@ -46,9 +45,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
         providers = searchproviders.get_providers(True)
         for i, provider in enumerate(response.json()):
-            provider_api = reverse('misago:api:search', kwargs={
-                'search_provider': providers[i].url
-            })
+            provider_api = reverse(
+                'misago:api:search',
+                kwargs={'search_provider': providers[i].url},
+            )
             self.assertEqual(provider_api, provider['api'])
 
             self.assertEqual(six.text_type(providers[i].name), provider['name'])

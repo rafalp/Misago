@@ -5,6 +5,7 @@ def get(model, id):
     except MovedId.DoesNotExist:
         return None
 
+
 def set(model, old_id, new_id):
     from .models import MovedId
     MovedId.objects.create(

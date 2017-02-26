@@ -17,7 +17,6 @@ def get_user_status(viewer, user):
         'is_offline_hidden': False,
         'is_online': False,
         'is_offline': False,
-
         'banned_until': None,
         'last_click': user.last_login or user.joined_on,
     }

@@ -9,7 +9,6 @@ from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.db.transaction import atomic
 from django.utils import timezone
-from django.utils.six.moves import range
 
 from misago.categories.models import Category
 from misago.core.management.progressbar import show_progress
@@ -20,9 +19,7 @@ from misago.threads.models import Post, Thread
 
 PLACEKITTEN_URL = 'https://placekitten.com/g/%s/%s'
 
-
 UserModel = get_user_model()
-
 
 corpus = EnglishCorpus()
 corpus_short = EnglishCorpus(max_length=150)
@@ -37,7 +34,7 @@ class Command(BaseCommand):
             help="number of threads to create",
             nargs='?',
             type=int,
-            default=5
+            default=5,
         )
 
     def handle(self, *args, **options):
@@ -46,8 +43,6 @@ class Command(BaseCommand):
         categories = list(Category.objects.all_categories())
 
         fake = Factory.create()
-
-        total_users = UserModel.objects.count()
 
         self.stdout.write('Creating fake threads...\n')
 
@@ -78,7 +73,7 @@ class Command(BaseCommand):
                     replies=0,
                     is_unapproved=thread_is_unapproved,
                     is_hidden=thread_is_hidden,
-                    is_closed=thread_is_closed
+                    is_closed=thread_is_closed,
                 )
                 thread.set_title(corpus_short.random_choice())
                 thread.save()
@@ -94,7 +89,7 @@ class Command(BaseCommand):
                     original=original,
                     parsed=parsed,
                     posted_on=datetime,
-                    updated_on=datetime
+                    updated_on=datetime,
                 )
                 update_post_checksum(post)
                 post.save(update_fields=['checksum'])
@@ -115,7 +110,7 @@ class Command(BaseCommand):
                 else:
                     thread_replies = random.randint(0, 10)
 
-                for x in range(thread_replies):
+                for _ in range(thread_replies):
                     datetime = timezone.now()
                     user = UserModel.objects.order_by('?')[:1][0]
 
@@ -133,7 +128,7 @@ class Command(BaseCommand):
                         parsed=parsed,
                         is_unapproved=is_unapproved,
                         posted_on=datetime,
-                        updated_on=datetime
+                        updated_on=datetime,
                     )
 
                     if not is_unapproved:
@@ -163,12 +158,11 @@ class Command(BaseCommand):
                 thread.save()
 
                 created_threads += 1
-                show_progress(
-                    self, created_threads, items_to_create, start_time)
+                show_progress(self, created_threads, items_to_create, start_time)
 
         pinned_threads = random.randint(0, int(created_threads * 0.025)) or 1
         self.stdout.write('\nPinning %s threads...' % pinned_threads)
-        for i in range(0, pinned_threads):
+        for _ in range(0, pinned_threads):
             thread = Thread.objects.order_by('?')[:1][0]
             if random.randint(0, 100) > 75:
                 thread.weight = 2
@@ -193,7 +187,7 @@ class Command(BaseCommand):
         else:
             paragraphs_to_make = random.randint(1, 5)
 
-        for i in range(paragraphs_to_make):
+        for _ in range(paragraphs_to_make):
             if random.randint(0, 100) > 95:
                 cat_width = random.randint(1, 16) * random.choice([100, 90, 80])
                 cat_height = random.randint(1, 12) * random.choice([100, 90, 80])

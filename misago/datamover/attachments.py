@@ -5,7 +5,7 @@ import os
 from django.contrib.auth import get_user_model
 from django.core.files import File
 
-from misago.threads.models import Attachment, AttachmentType, Post, Thread
+from misago.threads.models import Attachment, AttachmentType, Post
 from misago.threads.serializers import AttachmentSerializer
 
 from . import OLD_FORUM, fetch_assoc, localise_datetime, movedids
@@ -13,21 +13,11 @@ from . import OLD_FORUM, fetch_assoc, localise_datetime, movedids
 
 UserModel = get_user_model()
 
-IMAGE_TYPES = (
-    'image/gif',
-    'image/jpeg',
-    'image/png',
-)
+IMAGE_TYPES = ('image/gif', 'image/jpeg', 'image/png', )
 
 
 def move_attachments(stdout, style):
-    query = '''
-        SELECT *
-        FROM
-            misago_attachment
-        ORDER BY
-            id
-    '''
+    query = 'SELECT * FROM misago_attachment ORDER BY id'
 
     posts = []
 
@@ -38,13 +28,13 @@ def move_attachments(stdout, style):
 
     for attachment in fetch_assoc(query):
         if attachment['content_type'] not in attachment_types:
-            stdout.write(style.WARNING(
-                "Skipping attachment: %s (invalid type)" % attachment['name']))
+            stdout.write(
+                style.WARNING("Skipping attachment: %s (invalid type)" % attachment['name'])
+            )
             continue
 
         if not attachment['post_id']:
-            stdout.write(style.WARNING(
-                "Skipping attachment: %s (orphaned)" % attachment['name']))
+            stdout.write(style.WARNING("Skipping attachment: %s (orphaned)" % attachment['name']))
             continue
 
         filetype = attachment_types[attachment['content_type']]

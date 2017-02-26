@@ -5,7 +5,6 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.six import StringIO
-from django.utils.six.moves import range
 
 from misago.users import bans
 from misago.users.management.commands import invalidatebans
@@ -19,9 +18,9 @@ class InvalidateBansTests(TestCase):
     def test_expired_bans_handling(self):
         """expired bans are flagged as such"""
         # create 5 bans then update their valid date to past one
-        for i in range(5):
+        for _ in range(5):
             Ban.objects.create(banned_value="abcd")
-        expired_date = (timezone.now() - timedelta(days=10))
+        expired_date = timezone.now() - timedelta(days=10)
         Ban.objects.all().update(expires_on=expired_date, is_checked=True)
 
         self.assertEqual(Ban.objects.filter(is_checked=True).count(), 5)
@@ -58,8 +57,11 @@ class InvalidateBansTests(TestCase):
         self.assertEqual(Ban.objects.filter(is_checked=True).count(), 1)
 
         # expire bans
-        expired_date = (timezone.now() - timedelta(days=10))
-        Ban.objects.all().update(expires_on=expired_date, is_checked=True)
+        expired_date = timezone.now() - timedelta(days=10)
+        Ban.objects.all().update(
+            expires_on=expired_date,
+            is_checked=True,
+        )
         BanCache.objects.all().update(expires_on=expired_date)
 
         # invalidate expired ban cache

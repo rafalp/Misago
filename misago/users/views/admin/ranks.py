@@ -26,7 +26,7 @@ class RankAdmin(generic.AdminBaseMixin):
 
 
 class RanksList(RankAdmin, generic.ListView):
-    ordering = (('order', None),)
+    ordering = (('order', None), )
 
 
 class NewRank(RankAdmin, generic.ModelFormView):

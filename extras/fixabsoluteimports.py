@@ -87,7 +87,7 @@ def clean_import(package, import_path):
 
 
 if __name__ == '__main__':
-    for args in os.walk('misago'):
+    for args in os.walk('../misago'):
         walk_directory(*args)
 
     print "\nDone! Don't forget to run isort to fix imports ordering!"

@@ -5,15 +5,12 @@ import copy
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import models
-from django.dispatch import receiver
-from django.urls import reverse
 from django.utils import six, timezone
 from django.utils.encoding import python_2_unicode_compatible
 
 from misago.conf import settings
 from misago.core.utils import parse_iso8601_string
 from misago.markup import finalise_markup
-from misago.threads import threadtypes
 from misago.threads.checksums import is_post_valid, update_post_checksum
 
 
@@ -85,9 +82,9 @@ class Post(models.Model):
 
     class Meta:
         index_together = [
-            ('thread', 'id'), # speed up threadview for team members
+            ('thread', 'id'),  # speed up threadview for team members
             ('is_event', 'is_hidden'),
-            ('poster', 'posted_on')
+            ('poster', 'posted_on'),
         ]
 
     def __str__(self):
@@ -100,6 +97,9 @@ class Post(models.Model):
         super(Post, self).delete(*args, **kwargs)
 
     def merge(self, other_post):
+        if not self.poster_id or self.poster_id != other_post.poster_id:
+            raise ValueError("post can't be merged with other user's post")
+
         if self.thread_id != other_post.thread_id:
             raise ValueError("only posts belonging to same thread can be merged")
 

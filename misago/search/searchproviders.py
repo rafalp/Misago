@@ -24,15 +24,13 @@ class SearchProviders(object):
             try:
                 module = import_module(module_path)
             except ImportError:
-                raise ImportError(
-                    'search module %s could not be imported' % modulename)
+                raise ImportError('search module %s could not be imported' % modulename)
 
             try:
                 classdef = getattr(module, classname)
                 self._providers.append(classdef)
             except AttributeError:
-                raise ImportError(
-                    'search module %s could not be imported' % modulename)
+                raise ImportError('search module %s could not be imported' % modulename)
 
     def get_providers(self, request):
         if not self._initialized:

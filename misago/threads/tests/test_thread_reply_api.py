@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import json
-
 from django.urls import reverse
-from django.utils.encoding import smart_str
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
@@ -20,9 +17,11 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(category=self.category)
 
-        self.api_link = reverse('misago:api:thread-post-list', kwargs={
-            'thread_pk': self.thread.pk
-        })
+        self.api_link = reverse(
+            'misago:api:thread-post-list', kwargs={
+                'thread_pk': self.thread.pk,
+            }
+        )
 
     def override_acl(self, extra_acl=None):
         new_acl = self.user.acl_cache
@@ -30,7 +29,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
             'can_see': 1,
             'can_browse': 1,
             'can_start_threads': 0,
-            'can_reply_threads': 1
+            'can_reply_threads': 1,
         })
 
         if extra_acl:
@@ -61,49 +60,47 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
 
     def test_cant_reply_thread(self):
         """permission to reply thread is validated"""
-        self.override_acl({
-            'can_reply_threads': 0
-        })
+        self.override_acl({'can_reply_threads': 0})
 
         response = self.client.post(self.api_link)
-        self.assertContains(response, "You can't reply to threads in this category.", status_code=403)
+        self.assertContains(
+            response, "You can't reply to threads in this category.", status_code=403
+        )
 
     def test_closed_category(self):
         """permssion to reply in closed category is validated"""
-        self.override_acl({
-            'can_close_threads': 0
-        })
+        self.override_acl({'can_close_threads': 0})
 
         self.category.is_closed = True
         self.category.save()
 
         response = self.client.post(self.api_link)
-        self.assertContains(response, "This category is closed. You can't reply to threads in it.", status_code=403)
+        self.assertContains(
+            response,
+            "This category is closed. You can't reply to threads in it.",
+            status_code=403
+        )
 
         # allow to post in closed category
-        self.override_acl({
-            'can_close_threads': 1
-        })
+        self.override_acl({'can_close_threads': 1})
 
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 400)
 
     def test_closed_thread(self):
         """permssion to reply in closed thread is validated"""
-        self.override_acl({
-            'can_close_threads': 0
-        })
+        self.override_acl({'can_close_threads': 0})
 
         self.thread.is_closed = True
         self.thread.save()
 
         response = self.client.post(self.api_link)
-        self.assertContains(response, "You can't reply to closed threads in this category.", status_code=403)
+        self.assertContains(
+            response, "You can't reply to closed threads in this category.", status_code=403
+        )
 
         # allow to post in closed thread
-        self.override_acl({
-            'can_close_threads': 1
-        })
+        self.override_acl({'can_close_threads': 1})
 
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 400)
@@ -114,33 +111,35 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(json.loads(smart_str(response.content)), {
-            'post': [
-                "You have to enter a message."
-            ]
+        self.assertEqual(response.json(), {
+            'post': ["You have to enter a message."],
         })
 
     def test_post_is_validated(self):
         """post is validated"""
         self.override_acl()
 
-        response = self.client.post(self.api_link, data={
-            'post': "a",
-        })
+        response = self.client.post(
+            self.api_link, data={
+                'post': "a",
+            }
+        )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(json.loads(smart_str(response.content)), {
-            'post': [
-                "Posted message should be at least 5 characters long (it has 1)."
-            ]
-        })
+        self.assertEqual(
+            response.json(), {
+                'post': ["Posted message should be at least 5 characters long (it has 1)."],
+            }
+        )
 
     def test_can_reply_thread(self):
         """endpoint creates new reply"""
         self.override_acl()
-        response = self.client.post(self.api_link, data={
-            'post': "This is test response!"
-        })
+        response = self.client.post(
+            self.api_link, data={
+                'post': "This is test response!",
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         thread = Thread.objects.get(pk=self.thread.pk)
@@ -178,7 +177,9 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         """unicode characters can be posted"""
         self.override_acl()
 
-        response = self.client.post(self.api_link, data={
-            'post': "Chrzążczyżewoszyce, powiat Łękółody."
-        })
+        response = self.client.post(
+            self.api_link, data={
+                'post': "Chrzążczyżewoszyce, powiat Łękółody.",
+            }
+        )
         self.assertEqual(response.status_code, 200)

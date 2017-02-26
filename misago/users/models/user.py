@@ -7,7 +7,6 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.postgres.fields import JSONField
 from django.core.mail import send_mail
 from django.db import IntegrityError, models, transaction
-from django.dispatch import receiver
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -17,7 +16,7 @@ from misago.acl.models import Role
 from misago.conf import settings
 from misago.core.utils import slugify
 from misago.users import avatars
-from misago.users.signatures import is_user_signature_valid, make_signature_checksum
+from misago.users.signatures import is_user_signature_valid
 from misago.users.utils import hash_email
 
 from .rank import Rank
@@ -25,7 +24,9 @@ from .rank import Rank
 
 class UserManager(BaseUserManager):
     @transaction.atomic
-    def create_user(self, username, email, password=None, set_default_avatar=False, **extra_fields):
+    def create_user(
+            self, username, email, password=None, set_default_avatar=False, **extra_fields
+    ):
         from misago.users.validators import validate_email, validate_username
 
         email = self.normalize_email(email)
@@ -40,9 +41,9 @@ class UserManager(BaseUserManager):
             extra_fields['joined_from_ip'] = '127.0.0.1'
 
         WATCH_DICT = {
-            'no':  self.model.SUBSCRIBE_NONE,
-            'watch':  self.model.SUBSCRIBE_NOTIFY,
-            'watch_email':  self.model.SUBSCRIBE_ALL,
+            'no': self.model.SUBSCRIBE_NONE,
+            'watch': self.model.SUBSCRIBE_NOTIFY,
+            'watch_email': self.model.SUBSCRIBE_ALL,
         }
 
         if not 'subscribe_to_started_threads' in extra_fields:
@@ -53,17 +54,10 @@ class UserManager(BaseUserManager):
             new_value = WATCH_DICT[settings.subscribe_reply]
             extra_fields['subscribe_to_replied_threads'] = new_value
 
-        extra_fields.update({
-            'is_staff': False,
-            'is_superuser': False
-        })
+        extra_fields.update({'is_staff': False, 'is_superuser': False})
 
         now = timezone.now()
-        user = self.model(
-            last_login=now,
-            joined_on=now,
-            **extra_fields
-        )
+        user = self.model(last_login=now, joined_on=now, **extra_fields)
 
         user.set_username(username)
         user.set_email(email)
@@ -79,8 +73,9 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
 
         if set_default_avatar:
-            avatars.set_default_avatar(user, settings.default_avatar,
-                                       settings.default_gravatar_fallback)
+            avatars.set_default_avatar(
+                user, settings.default_avatar, settings.default_gravatar_fallback
+            )
         else:
             # just for test purposes
             user.avatars = [{'size': 400, 'url': '/placekitten.com/400/400'}]
@@ -102,9 +97,10 @@ class UserManager(BaseUserManager):
         return user
 
     @transaction.atomic
-    def create_superuser(self, username, email, password,
-                         set_default_avatar=False):
-        user = self.create_user(username, email,
+    def create_superuser(self, username, email, password, set_default_avatar=False):
+        user = self.create_user(
+            username,
+            email,
             password=password,
             set_default_avatar=set_default_avatar,
         )
@@ -143,39 +139,36 @@ class User(AbstractBaseUser, PermissionsMixin):
     SUBSCRIBE_NOTIFY = 1
     SUBSCRIBE_ALL = 2
 
-    SUBSCRIBE_CHOICES = (
+    SUBSCRIBE_CHOICES = [
         (SUBSCRIBE_NONE, _("No")),
         (SUBSCRIBE_NOTIFY, _("Notify")),
-        (SUBSCRIBE_ALL, _("Notify with e-mail"))
-    )
+        (SUBSCRIBE_ALL, _("Notify with e-mail")),
+    ]
 
     LIMIT_INVITES_TO_NONE = 0
     LIMIT_INVITES_TO_FOLLOWED = 1
     LIMIT_INVITES_TO_NOBODY = 2
 
-    LIMIT_INVITES_TO_CHOICES = (
+    LIMIT_INVITES_TO_CHOICES = [
         (LIMIT_INVITES_TO_NONE, _("Everybody")),
         (LIMIT_INVITES_TO_FOLLOWED, _("Users I follow")),
         (LIMIT_INVITES_TO_NOBODY, _("Nobody")),
-    )
-
-    """
-    Note that "username" field is purely for shows.
-    When searching users by their names, always use lowercased string
-    and slug field instead that is normalized around DB engines
-    differences in case handling.
-    """
+    ]
+    # Note that "username" field is purely for shows.
+    # When searching users by their names, always use lowercased string
+    # and slug field instead that is normalized around DB engines
+    # differences in case handling.
     username = models.CharField(max_length=30)
     slug = models.CharField(max_length=30, unique=True)
-    """
-    Misago stores user email in two fields:
-    "email" holds normalized email address
-    "email_hash" is lowercase hash of email address used to identify account
-    as well as enforcing on database level that no more than one user can be
-    using one email address
-    """
+
+    # Misago stores user email in two fields:
+    # "email" holds normalized email address
+    # "email_hash" is lowercase hash of email address used to identify account
+    # as well as enforcing on database level that no more than one user can be
+    # using one email address
     email = models.EmailField(max_length=255, db_index=True)
     email_hash = models.CharField(max_length=32, unique=True)
+
     joined_on = models.DateTimeField(_('joined on'), default=timezone.now)
     joined_from_ip = models.GenericIPAddressField()
     last_ip = models.GenericIPAddressField(null=True, blank=True)
@@ -185,7 +178,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     title = models.CharField(max_length=255, null=True, blank=True)
     requires_activation = models.PositiveIntegerField(default=ACTIVATION_NONE)
 
-    is_staff = models.BooleanField(_('staff status'),
+    is_staff = models.BooleanField(
+        _('staff status'),
         default=False,
         help_text=_('Designates whether the user can log into admin sites.'),
     )
@@ -208,13 +202,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=255,
         upload_to=avatars.store.upload_to,
         null=True,
-        blank=True
+        blank=True,
     )
     avatar_src = models.ImageField(
         max_length=255,
         upload_to=avatars.store.upload_to,
         null=True,
-        blank=True
+        blank=True,
     )
     avatar_crop = models.CharField(max_length=255, null=True, blank=True)
     avatars = JSONField(null=True, blank=True)
@@ -232,11 +226,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     followers = models.PositiveIntegerField(default=0)
     following = models.PositiveIntegerField(default=0)
 
-    follows = models.ManyToManyField('self',
+    follows = models.ManyToManyField(
+        'self',
         related_name='followed_by',
         symmetrical=False,
     )
-    blocks = models.ManyToManyField('self',
+    blocks = models.ManyToManyField(
+        'self',
         related_name='blocked_by',
         symmetrical=False,
     )
@@ -250,11 +246,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     subscribe_to_started_threads = models.PositiveIntegerField(
         default=SUBSCRIBE_NONE,
-        choices=SUBSCRIBE_CHOICES
+        choices=SUBSCRIBE_CHOICES,
     )
     subscribe_to_replied_threads = models.PositiveIntegerField(
         default=SUBSCRIBE_NONE,
-        choices=SUBSCRIBE_CHOICES
+        choices=SUBSCRIBE_CHOICES,
     )
 
     threads = models.PositiveIntegerField(default=0)
@@ -272,7 +268,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.email = self.__class__.objects.normalize_email(self.email)
 
     def lock(self):
-        """Locks user in DB"""
+        """locks user in DB, shortcut for locking user model in views"""
         return User.objects.select_for_update().get(pk=self.pk)
 
     def delete(self, *args, **kwargs):
@@ -331,15 +327,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         return is_user_signature_valid(self)
 
     def get_absolute_url(self):
-        return reverse('misago:user', kwargs={
-            'slug': self.slug,
-            'pk': self.pk,
-        })
+        return reverse(
+            'misago:user', kwargs={
+                'slug': self.slug,
+                'pk': self.pk,
+            }
+        )
 
     def get_username(self):
-        """
-        Dirty hack: return real username instead of normalized slug
-        """
+        """dirty hack: return real username instead of normalized slug"""
         return self.username
 
     def get_full_name(self):
@@ -357,8 +353,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
             if self.pk:
                 changed_by = changed_by or self
-                self.record_name_change(
-                    changed_by, new_username, old_username)
+                self.record_name_change(changed_by, new_username, old_username)
 
                 from misago.users.signals import username_changed
                 username_changed.send(sender=self)
@@ -407,9 +402,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.acl_key = md5(','.join(roles_pks).encode()).hexdigest()[:12]
 
     def email_user(self, subject, message, from_email=None, **kwargs):
-        """
-        Sends an email to this User.
-        """
+        """sends an email to this user (for compat with Django)"""
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
     def is_following(self, user):
@@ -440,14 +433,15 @@ class Online(models.Model):
         try:
             super(Online, self).save(*args, **kwargs)
         except IntegrityError:
-            pass # first come is first serve in online tracker
+            pass  # first come is first serve in online tracker
 
 
 class UsernameChange(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-        related_name='namechanges')
-    changed_by = models.ForeignKey(settings.AUTH_USER_MODEL,
-        null=True, blank=True,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='namechanges')
+    changed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
         related_name='user_renames',
         on_delete=models.SET_NULL,
     )

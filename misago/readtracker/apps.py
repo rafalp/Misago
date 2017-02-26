@@ -7,4 +7,4 @@ class MisagoReadTrackerConfig(AppConfig):
     verbose_name = "Misago Read Tracker"
 
     def ready(self):
-        from . import signals
+        from . import signals as _

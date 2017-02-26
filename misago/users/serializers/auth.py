@@ -31,15 +31,14 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
 
     class Meta:
         model = UserModel
-        fields = UserSerializer.Meta.fields + (
+        fields = UserSerializer.Meta.fields + [
             'is_hiding_presence',
             'limits_private_thread_invites_to',
             'subscribe_to_started_threads',
             'subscribe_to_replied_threads',
-
             'is_authenticated',
             'is_anonymous',
-        )
+        ]
 
     def get_acl(self, obj):
         return serialize_acl(obj)
@@ -49,21 +48,22 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
 
     def get_api_url(self, obj):
         return {
-            'avatar': reverse(
-                'misago:api:user-avatar', kwargs={'pk': obj.pk}),
-            'options': reverse(
-                'misago:api:user-forum-options', kwargs={'pk': obj.pk}),
-            'username': reverse(
-                'misago:api:user-username', kwargs={'pk': obj.pk}),
-            'change_email': reverse(
-                'misago:api:user-change-email', kwargs={'pk': obj.pk}),
-            'change_password': reverse(
-                'misago:api:user-change-password', kwargs={'pk': obj.pk}),
+            'avatar': reverse('misago:api:user-avatar', kwargs={'pk': obj.pk}),
+            'options': reverse('misago:api:user-forum-options', kwargs={'pk': obj.pk}),
+            'username': reverse('misago:api:user-username', kwargs={'pk': obj.pk}),
+            'change_email': reverse('misago:api:user-change-email', kwargs={'pk': obj.pk}),
+            'change_password': reverse('misago:api:user-change-password', kwargs={'pk': obj.pk}),
         }
 
+
 AuthenticatedUserSerializer = AuthenticatedUserSerializer.exclude_fields(
-    'is_avatar_locked', 'is_blocked', 'is_followed', 'is_signature_locked',
-    'meta', 'signature', 'status',
+    'is_avatar_locked',
+    'is_blocked',
+    'is_followed',
+    'is_signature_locked',
+    'meta',
+    'signature',
+    'status',
 )
 
 

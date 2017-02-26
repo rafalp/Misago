@@ -40,12 +40,14 @@ def privacy_policy(request):
 
     parsed_content = get_parsed_content(request, 'privacy_policy')
 
-    return render(request, 'misago/privacy_policy.html', {
+    return render(
+        request, 'misago/privacy_policy.html', {
             'id': 'privacy-policy',
             'title': settings.privacy_policy_title or _("Privacy policy"),
             'link': settings.privacy_policy_link,
             'body': parsed_content,
-        })
+        }
+    )
 
 
 def terms_of_service(request):
@@ -57,9 +59,11 @@ def terms_of_service(request):
 
     parsed_content = get_parsed_content(request, 'terms_of_service')
 
-    return render(request, 'misago/terms_of_service.html', {
+    return render(
+        request, 'misago/terms_of_service.html', {
             'id': 'terms-of-service',
             'title': settings.terms_of_service_title or _("Terms of service"),
             'link': settings.terms_of_service_link,
             'body': parsed_content,
-        })
+        }
+    )

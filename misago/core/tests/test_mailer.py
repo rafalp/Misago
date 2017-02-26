@@ -20,10 +20,7 @@ class MisagoMailerTests(TestCase):
 
         # assert that url to user's avatar is valid
         html_body = mail.outbox[0].alternatives[0][0]
-        user_avatar_url = reverse('misago:user-avatar', kwargs={
-            'pk': user.pk,
-            'size': 32
-        })
+        user_avatar_url = reverse('misago:user-avatar', kwargs={'pk': user.pk, 'size': 32})
 
         self.assertIn(user_avatar_url, html_body)
 

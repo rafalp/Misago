@@ -2,9 +2,7 @@ from django.db import connections
 
 
 def fetch_assoc(query, *args):
-    """
-    Return all rows from a cursor as a dict
-    """
+    """return all rows from a cursor as a dict"""
     with connections['misago05'].cursor() as cursor:
         cursor.execute(query, *args)
 

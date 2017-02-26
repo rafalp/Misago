@@ -4,18 +4,13 @@ from __future__ import unicode_literals
 from django.urls import reverse
 
 from misago.acl.testutils import override_acl
-from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
-from misago.threads.models import Thread
-from misago.threads.threadtypes import trees_map
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
 class StartThreadTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(StartThreadTests, self).setUp()
-
-        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
 
         self.category = Category.objects.get(slug='first-category')
         self.api_link = reverse('misago:api:thread-list')
@@ -29,7 +24,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
             'can_pin_threads': 0,
             'can_close_threads': 0,
             'can_hide_threads': 0,
-            'can_hide_own_threads': 0
+            'can_hide_own_threads': 0,
         })
 
         if extra_acl:
@@ -56,7 +51,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
         self.override_acl({'can_see': 0})
 
         response = self.client.post(self.api_link, {
-            'category': self.category.pk
+            'category': self.category.pk,
         })
 
         self.assertContains(response, "Selected category is invalid.", status_code=400)
@@ -66,7 +61,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
         self.override_acl({'can_browse': 0})
 
         response = self.client.post(self.api_link, {
-            'category': self.category.pk
+            'category': self.category.pk,
         })
 
         self.assertContains(response, "Selected category is invalid.", status_code=400)
@@ -76,10 +71,12 @@ class StartThreadTests(AuthenticatedUserTestCase):
         self.override_acl({'can_start_threads': 0})
 
         response = self.client.post(self.api_link, {
-            'category': self.category.pk
+            'category': self.category.pk,
         })
 
-        self.assertContains(response, "You don't have permission to start new threads", status_code=400)
+        self.assertContains(
+            response, "You don't have permission to start new threads", status_code=400
+        )
 
     def test_cant_start_thread_in_locked_category(self):
         """can't post in closed category"""
@@ -89,7 +86,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
         self.override_acl({'can_close_threads': 0})
 
         response = self.client.post(self.api_link, {
-            'category': self.category.pk
+            'category': self.category.pk,
         })
 
         self.assertContains(response, "This category is closed.", status_code=400)
@@ -101,9 +98,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         self.override_acl({'can_close_threads': 0})
 
-        response = self.client.post(self.api_link, {
-            'category': self.category.pk * 100000
-        })
+        response = self.client.post(self.api_link, {'category': self.category.pk * 100000})
 
         self.assertContains(response, "Selected category doesn't exist", status_code=400)
 
@@ -113,60 +108,65 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, data={})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'category': [
-                "You have to select category to post thread in."
-            ],
-            'title':[
-                "You have to enter thread title."
-            ],
-            'post': [
-                "You have to enter a message."
-            ]
-        })
+        self.assertEqual(
+            response.json(), {
+                'category': ["You have to select category to post thread in."],
+                'title': ["You have to enter thread title."],
+                'post': ["You have to enter a message."],
+            }
+        )
 
     def test_title_is_validated(self):
         """title is validated"""
         self.override_acl()
 
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': "------",
-            'post': "Lorem ipsum dolor met, sit amet elit!",
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "------",
+                'post': "Lorem ipsum dolor met, sit amet elit!",
+            }
+        )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'title': [
-                "Thread title should contain alpha-numeric characters."
-            ]
-        })
+        self.assertEqual(
+            response.json(), {
+                'title': ["Thread title should contain alpha-numeric characters."],
+            }
+        )
 
     def test_post_is_validated(self):
         """post is validated"""
         self.override_acl()
 
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': "Lorem ipsum dolor met",
-            'post': "a",
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Lorem ipsum dolor met",
+                'post': "a",
+            }
+        )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'post': [
-                "Posted message should be at least 5 characters long (it has 1)."
-            ]
-        })
+        self.assertEqual(
+            response.json(), {
+                'post': ["Posted message should be at least 5 characters long (it has 1)."],
+            }
+        )
 
     def test_can_start_thread(self):
         """endpoint creates new thread"""
         self.override_acl()
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': "Hello, I am test thread!",
-            'post': "Lorem ipsum dolor met!"
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Hello, I am test thread!",
+                'post': "Lorem ipsum dolor met!",
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         thread = self.user.thread_set.all()[:1][0]
@@ -215,12 +215,15 @@ class StartThreadTests(AuthenticatedUserTestCase):
         """permission is checked before thread is closed"""
         self.override_acl({'can_close_threads': 0})
 
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': "Hello, I am test thread!",
-            'post': "Lorem ipsum dolor met!",
-            'close': True
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Hello, I am test thread!",
+                'post': "Lorem ipsum dolor met!",
+                'close': True,
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         thread = self.user.thread_set.all()[:1][0]
@@ -230,12 +233,15 @@ class StartThreadTests(AuthenticatedUserTestCase):
         """can post closed thread"""
         self.override_acl({'can_close_threads': 1})
 
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': "Hello, I am test thread!",
-            'post': "Lorem ipsum dolor met!",
-            'close': True
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Hello, I am test thread!",
+                'post': "Lorem ipsum dolor met!",
+                'close': True,
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         thread = self.user.thread_set.all()[:1][0]
@@ -245,12 +251,15 @@ class StartThreadTests(AuthenticatedUserTestCase):
         """can post unpinned thread"""
         self.override_acl({'can_pin_threads': 1})
 
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': "Hello, I am test thread!",
-            'post': "Lorem ipsum dolor met!",
-            'pin': 0
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Hello, I am test thread!",
+                'post': "Lorem ipsum dolor met!",
+                'pin': 0,
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         thread = self.user.thread_set.all()[:1][0]
@@ -260,12 +269,15 @@ class StartThreadTests(AuthenticatedUserTestCase):
         """can post locally pinned thread"""
         self.override_acl({'can_pin_threads': 1})
 
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': "Hello, I am test thread!",
-            'post': "Lorem ipsum dolor met!",
-            'pin': 1
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Hello, I am test thread!",
+                'post': "Lorem ipsum dolor met!",
+                'pin': 1,
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         thread = self.user.thread_set.all()[:1][0]
@@ -275,12 +287,15 @@ class StartThreadTests(AuthenticatedUserTestCase):
         """can post globally pinned thread"""
         self.override_acl({'can_pin_threads': 2})
 
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': "Hello, I am test thread!",
-            'post': "Lorem ipsum dolor met!",
-            'pin': 2
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Hello, I am test thread!",
+                'post': "Lorem ipsum dolor met!",
+                'pin': 2,
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         thread = self.user.thread_set.all()[:1][0]
@@ -290,12 +305,15 @@ class StartThreadTests(AuthenticatedUserTestCase):
         """cant post globally pinned thread without permission"""
         self.override_acl({'can_pin_threads': 1})
 
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': "Hello, I am test thread!",
-            'post': "Lorem ipsum dolor met!",
-            'pin': 2
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Hello, I am test thread!",
+                'post': "Lorem ipsum dolor met!",
+                'pin': 2,
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         thread = self.user.thread_set.all()[:1][0]
@@ -305,12 +323,15 @@ class StartThreadTests(AuthenticatedUserTestCase):
         """cant post locally pinned thread without permission"""
         self.override_acl({'can_pin_threads': 0})
 
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': "Hello, I am test thread!",
-            'post': "Lorem ipsum dolor met!",
-            'pin': 1
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Hello, I am test thread!",
+                'post': "Lorem ipsum dolor met!",
+                'pin': 1,
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         thread = self.user.thread_set.all()[:1][0]
@@ -320,12 +341,15 @@ class StartThreadTests(AuthenticatedUserTestCase):
         """can post hidden thread"""
         self.override_acl({'can_hide_threads': 1})
 
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': "Hello, I am test thread!",
-            'post': "Lorem ipsum dolor met!",
-            'hide': 1
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Hello, I am test thread!",
+                'post': "Lorem ipsum dolor met!",
+                'hide': 1,
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         thread = self.user.thread_set.all()[:1][0]
@@ -338,12 +362,15 @@ class StartThreadTests(AuthenticatedUserTestCase):
         """cant post hidden thread without permission"""
         self.override_acl({'can_hide_threads': 0})
 
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': "Hello, I am test thread!",
-            'post': "Lorem ipsum dolor met!",
-            'hide': 1
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Hello, I am test thread!",
+                'post': "Lorem ipsum dolor met!",
+                'hide': 1,
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         thread = self.user.thread_set.all()[:1][0]
@@ -353,9 +380,12 @@ class StartThreadTests(AuthenticatedUserTestCase):
         """unicode characters can be posted"""
         self.override_acl()
 
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': "Brzęczyżczykiewicz",
-            'post': "Chrzążczyżewoszyce, powiat Łękółody."
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Brzęczyżczykiewicz",
+                'post': "Chrzążczyżewoszyce, powiat Łękółody.",
+            }
+        )
         self.assertEqual(response.status_code, 200)

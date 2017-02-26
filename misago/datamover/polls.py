@@ -27,7 +27,7 @@ def move_polls():
             choices.append({
                 'hash': get_random_string(12),
                 'label': choice['name'],
-                'votes': choice['votes']
+                'votes': choice['votes'],
             })
 
             choices_map[choice['id']] = choices[-1]['hash']

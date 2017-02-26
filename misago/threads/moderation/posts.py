@@ -64,13 +64,15 @@ def hide_post(user, post):
         post.hidden_by_name = user.username
         post.hidden_by_slug = user.slug
         post.hidden_on = timezone.now()
-        post.save(update_fields=[
-            'is_hidden',
-            'hidden_by',
-            'hidden_by_name',
-            'hidden_by_slug',
-            'hidden_on',
-        ])
+        post.save(
+            update_fields=[
+                'is_hidden',
+                'hidden_by',
+                'hidden_by_name',
+                'hidden_by_slug',
+                'hidden_on',
+            ]
+        )
         return True
     else:
         return False

@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
 from misago.conf import settings
-from misago.users.avatars import dynamic, gallery, gravatar, store, uploaded
+from misago.users.avatars import dynamic, gravatar, store, uploaded
 
 from . import OLD_FORUM, fetch_assoc, movedids
 
@@ -26,15 +26,15 @@ def move_avatars(stdout, style):
                     gravatar.set_avatar(user)
                 except gravatar.GravatarError:
                     dynamic.set_avatar(user)
-                    print_warning(
-                        '%s: failed to download Gravatar' % user, stdout, style)
+                    print_warning('%s: failed to download Gravatar' % user, stdout, style)
             else:
                 try:
                     if not old_user['avatar_original'] or not old_user['avatar_crop']:
                         raise ValidationError("Invalid avatar upload data.")
 
                     image_path = os.path.join(
-                        OLD_FORUM['MEDIA'], 'avatars', old_user['avatar_original'])
+                        OLD_FORUM['MEDIA'], 'avatars', old_user['avatar_original']
+                    )
                     image = uploaded.validate_dimensions(image_path)
 
                     cleaned_crop = convert_crop(image, old_user)
@@ -64,5 +64,5 @@ def convert_crop(image, user):
             'x': x * zoom * -1,
             'y': y * zoom * -1,
         },
-        'zoom': zoom
+        'zoom': zoom,
     }

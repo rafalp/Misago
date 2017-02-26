@@ -12,9 +12,14 @@ class OptionsViewsTests(AuthenticatedUserTestCase):
 
     def test_form_view_returns_200(self):
         """/options/some-form has no show stoppers"""
-        response = self.client.get(reverse('misago:options-form', kwargs={
-            'form_name': 'some-fake-form'
-        }))
+        response = self.client.get(
+            reverse(
+                'misago:options-form',
+                kwargs={
+                    'form_name': 'some-fake-form',
+                },
+            )
+        )
         self.assertEqual(response.status_code, 200)
 
 
@@ -23,10 +28,10 @@ class ConfirmChangeEmailTests(AuthenticatedUserTestCase):
         super(ConfirmChangeEmailTests, self).setUp()
         link = '/api/users/%s/change-email/' % self.user.pk
 
-        response = self.client.post(link, data={
-            'new_email': 'n3w@email.com',
-            'password': self.USER_PASSWORD
-        })
+        response = self.client.post(
+            link, data={'new_email': 'n3w@email.com',
+                        'password': self.USER_PASSWORD}
+        )
         self.assertEqual(response.status_code, 200)
 
         for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
@@ -37,9 +42,13 @@ class ConfirmChangeEmailTests(AuthenticatedUserTestCase):
     def test_invalid_token(self):
         """invalid token is rejected"""
         response = self.client.get(
-            reverse('misago:options-confirm-email-change', kwargs={
-                'token': 'invalid'
-            }))
+            reverse(
+                'misago:options-confirm-email-change',
+                kwargs={
+                    'token': 'invalid',
+                },
+            )
+        )
 
         self.assertContains(response, "Change confirmation link is invalid.", status_code=400)
 
@@ -58,10 +67,13 @@ class ConfirmChangePasswordTests(AuthenticatedUserTestCase):
         super(ConfirmChangePasswordTests, self).setUp()
         link = '/api/users/%s/change-password/' % self.user.pk
 
-        response = self.client.post(link, data={
-            'new_password': 'n3wp4ssword',
-            'password': self.USER_PASSWORD
-        })
+        response = self.client.post(
+            link,
+            data={
+                'new_password': 'n3wp4ssword',
+                'password': self.USER_PASSWORD,
+            },
+        )
         self.assertEqual(response.status_code, 200)
 
         for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
@@ -72,9 +84,13 @@ class ConfirmChangePasswordTests(AuthenticatedUserTestCase):
     def test_invalid_token(self):
         """invalid token is rejected"""
         response = self.client.get(
-            reverse('misago:options-confirm-password-change', kwargs={
-                'token': 'invalid'
-            }))
+            reverse(
+                'misago:options-confirm-password-change',
+                kwargs={
+                    'token': 'invalid',
+                },
+            )
+        )
 
         self.assertContains(response, "Change confirmation link is invalid.", status_code=400)
 

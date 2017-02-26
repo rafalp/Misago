@@ -113,7 +113,7 @@ class ViewSet(viewsets.ViewSet):
         thread.save()
 
         return Response({
-            'can_start_poll': can_start_poll(request.user, thread)
+            'can_start_poll': can_start_poll(request.user, thread),
         })
 
     @detail_route(methods=['get', 'post'])
@@ -152,7 +152,8 @@ class ViewSet(viewsets.ViewSet):
             choices.append(choice)
 
         queryset = thread.poll.pollvote_set.values(
-            'voter_id', 'voter_name', 'voter_slug', 'voted_on', 'choice_hash')
+            'voter_id', 'voter_name', 'voter_slug', 'voted_on', 'choice_hash'
+        )
 
         for voter in queryset.order_by('voter_name').iterator():
             voters[voter['choice_hash']].append(PollVoteSerializer(voter).data)

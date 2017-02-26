@@ -11,9 +11,7 @@ class AttachmentAdminViewsTests(AdminTestCase):
         super(AttachmentAdminViewsTests, self).setUp()
 
         self.category = Category.objects.get(slug='first-category')
-        self.post = testutils.post_thread(
-            category=self.category
-        ).first_post
+        self.post = testutils.post_thread(category=self.category).first_post
 
         self.filetype = AttachmentType.objects.order_by('id').first()
 
@@ -32,7 +30,7 @@ class AttachmentAdminViewsTests(AdminTestCase):
             filename='testfile_{}.zip'.format(Attachment.objects.count() + 1),
             file=None,
             image=None,
-            thumbnail=None
+            thumbnail=None,
         )
 
     def test_link_registered(self):
@@ -50,14 +48,22 @@ class AttachmentAdminViewsTests(AdminTestCase):
         attachments = [
             self.mock_attachment(self.post, file='somefile.pdf'),
             self.mock_attachment(image='someimage.jpg'),
-            self.mock_attachment(self.post, image='somelargeimage.png', thumbnail='somethumb.png'),
+            self.mock_attachment(
+                self.post,
+                image='somelargeimage.png',
+                thumbnail='somethumb.png',
+            ),
         ]
 
         response = self.client.get(final_link)
         self.assertEqual(response.status_code, 200)
 
         for attachment in attachments:
-            delete_link = reverse('misago:admin:system:attachments:delete', kwargs={'pk': attachment.pk})
+            delete_link = reverse(
+                'misago:admin:system:attachments:delete', kwargs={
+                    'pk': attachment.pk,
+                }
+            )
             self.assertContains(response, attachment.filename)
             self.assertContains(response, delete_link)
             self.assertContains(response, attachment.get_absolute_url())
@@ -72,16 +78,23 @@ class AttachmentAdminViewsTests(AdminTestCase):
         attachments = [
             self.mock_attachment(self.post, file='somefile.pdf'),
             self.mock_attachment(image='someimage.jpg'),
-            self.mock_attachment(self.post, image='somelargeimage.png', thumbnail='somethumb.png'),
+            self.mock_attachment(
+                self.post,
+                image='somelargeimage.png',
+                thumbnail='somethumb.png',
+            ),
         ]
 
         self.post.attachments_cache = [{'id': attachments[-1].pk}]
         self.post.save()
 
-        response = self.client.post(self.admin_link, data={
-            'action': 'delete',
-            'selected_items': [a.pk for a in attachments]
-        })
+        response = self.client.post(
+            self.admin_link,
+            data={
+                'action': 'delete',
+                'selected_items': [a.pk for a in attachments],
+            }
+        )
         self.assertEqual(response.status_code, 302)
 
         self.assertEqual(Attachment.objects.count(), 0)
@@ -94,13 +107,23 @@ class AttachmentAdminViewsTests(AdminTestCase):
         """delete attachment view has no showstoppers"""
         attachment = self.mock_attachment(self.post)
         self.post.attachments_cache = [
-            {'id': attachment.pk + 1},
-            {'id': attachment.pk},
-            {'id': attachment.pk + 2}
+            {
+                'id': attachment.pk + 1
+            },
+            {
+                'id': attachment.pk
+            },
+            {
+                'id': attachment.pk + 2
+            },
         ]
         self.post.save()
 
-        action_link = reverse('misago:admin:system:attachments:delete', kwargs={'pk': attachment.pk})
+        action_link = reverse(
+            'misago:admin:system:attachments:delete', kwargs={
+                'pk': attachment.pk,
+            }
+        )
 
         response = self.client.post(action_link)
         self.assertEqual(response.status_code, 302)
@@ -114,7 +137,13 @@ class AttachmentAdminViewsTests(AdminTestCase):
 
         # assert it was removed from post's attachments cache
         attachments_cache = self.category.post_set.get(pk=self.post.pk).attachments_cache
-        self.assertEqual(attachments_cache, [
-            {'id': attachment.pk + 1},
-            {'id': attachment.pk + 2}
-        ])
+        self.assertEqual(
+            attachments_cache, [
+                {
+                    'id': attachment.pk + 1,
+                },
+                {
+                    'id': attachment.pk + 2,
+                },
+            ]
+        )

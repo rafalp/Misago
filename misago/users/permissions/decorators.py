@@ -15,6 +15,7 @@ def authenticated_only(f):
         else:
             messsage = _("You have to sig in to perform this action.")
             raise PermissionDenied(messsage)
+
     return perm_decorator
 
 
@@ -25,4 +26,5 @@ def anonymous_only(f):
         else:
             messsage = _("Only guests can perform this action.")
             raise PermissionDenied(messsage)
+
     return perm_decorator

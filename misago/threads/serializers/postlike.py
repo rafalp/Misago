@@ -18,15 +18,13 @@ class PostLikeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PostLike
-        fields = (
+        fields = [
             'id',
             'liked_on',
-
             'liker_id',
             'username',
-
             'url',
-        )
+        ]
 
     def get_liker_id(self, obj):
         return obj['liker_id']
@@ -36,9 +34,11 @@ class PostLikeSerializer(serializers.ModelSerializer):
 
     def get_url(self, obj):
         if obj['liker_id']:
-            return reverse('misago:user', kwargs={
-                'slug': obj['liker_slug'],
-                'pk': obj['liker_id'],
-            })
+            return reverse(
+                'misago:user', kwargs={
+                    'slug': obj['liker_slug'],
+                    'pk': obj['liker_id'],
+                }
+            )
         else:
             return None

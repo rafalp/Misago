@@ -1,11 +1,9 @@
 from django import forms
-from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 
-from misago.acl import add_acl, algebra
+from misago.acl import algebra
 from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
 from misago.categories import PRIVATE_THREADS_ROOT_NAME
@@ -32,9 +30,6 @@ __all__ = [
 ]
 
 
-"""
-Admin Permissions Form
-"""
 class PermissionsForm(forms.Form):
     legend = _("Private threads")
 
@@ -44,21 +39,25 @@ class PermissionsForm(forms.Form):
         label=_("Max number of users invited to private thread"),
         help_text=_("Enter 0 to don't limit number of participants."),
         initial=3,
-        min_value=0
+        min_value=0,
     )
     can_add_everyone_to_private_threads = YesNoSwitch(
         label=_("Can add everyone to threads"),
-        help_text=_("Allows user to add users that are blocking him to private threads.")
+        help_text=_("Allows user to add users that are blocking him to private threads."),
     )
     can_report_private_threads = YesNoSwitch(
         label=_("Can report private threads"),
-        help_text=_("Allows user to report private threads they are "
-                    "participating in, making them accessible to moderators.")
+        help_text=_(
+            "Allows user to report private threads they are "
+            "participating in, making them accessible to moderators."
+        ),
     )
     can_moderate_private_threads = YesNoSwitch(
         label=_("Can moderate private threads"),
-        help_text=_("Allows user to read, reply, edit and delete content "
-                    "in reported private threads.")
+        help_text=_(
+            "Allows user to read, reply, edit and delete content "
+            "in reported private threads."
+        ),
     )
 
 
@@ -69,9 +68,6 @@ def change_permissions_form(role):
         return None
 
 
-"""
-ACL Builder
-"""
 def build_acl(acl, roles, key_name):
     new_acl = {
         'can_use_private_threads': 0,
@@ -84,7 +80,10 @@ def build_acl(acl, roles, key_name):
 
     new_acl.update(acl)
 
-    algebra.sum_acls(new_acl, roles=roles, key=key_name,
+    algebra.sum_acls(
+        new_acl,
+        roles=roles,
+        key=key_name,
         can_use_private_threads=algebra.greater,
         can_start_private_threads=algebra.greater,
         max_private_thread_participants=algebra.greater_or_zero,
@@ -171,14 +170,13 @@ def register_with(registry):
     registry.acl_annotator(Thread, add_acl_to_thread)
 
 
-"""
-ACL tests
-"""
 def allow_use_private_threads(user):
     if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to use private threads."))
     if not user.acl_cache['can_use_private_threads']:
         raise PermissionDenied(_("You can't use private threads."))
+
+
 can_use_private_threads = return_boolean(allow_use_private_threads)
 
 
@@ -192,6 +190,8 @@ def allow_see_private_thread(user, target):
 
     if not (can_see_participating or can_see_reported):
         raise Http404()
+
+
 can_see_private_thread = return_boolean(allow_see_private_thread)
 
 
@@ -200,12 +200,12 @@ def allow_change_owner(user, target):
     is_owner = target.participant and target.participant.is_owner
 
     if not (is_owner or is_moderator):
-        raise PermissionDenied(
-            _("Only thread owner and moderators can change threads owners."))
+        raise PermissionDenied(_("Only thread owner and moderators can change threads owners."))
 
     if not is_moderator and target.is_closed:
-        raise PermissionDenied(
-            _("Only moderators can change closed threads owners."))
+        raise PermissionDenied(_("Only moderators can change closed threads owners."))
+
+
 can_change_owner = return_boolean(allow_change_owner)
 
 
@@ -214,19 +214,18 @@ def allow_add_participants(user, target):
 
     if not is_moderator:
         if not target.participant or not target.participant.is_owner:
-            raise PermissionDenied(
-                _("You have to be thread owner to add new participants to it."))
+            raise PermissionDenied(_("You have to be thread owner to add new participants to it."))
 
         if target.is_closed:
-            raise PermissionDenied(
-                _("Only moderators can add participants to closed threads."))
+            raise PermissionDenied(_("Only moderators can add participants to closed threads."))
 
     max_participants = user.acl_cache['max_private_thread_participants']
     current_participants = len(target.participants_list) - 1
 
     if current_participants >= max_participants:
-        raise PermissionDenied(
-            _("You can't add any more new users to this thread."))
+        raise PermissionDenied(_("You can't add any more new users to this thread."))
+
+
 can_add_participants = return_boolean(allow_add_participants)
 
 
@@ -235,15 +234,15 @@ def allow_remove_participant(user, thread, target):
         return
 
     if user == target:
-        return # we can always remove ourselves
+        return  # we can always remove ourselves
 
     if thread.is_closed:
-        raise PermissionDenied(
-            _("Only moderators can remove participants from closed threads."))
+        raise PermissionDenied(_("Only moderators can remove participants from closed threads."))
 
     if not thread.participant or not thread.participant.is_owner:
-        raise PermissionDenied(
-            _("You have to be thread owner to remove participants from it."))
+        raise PermissionDenied(_("You have to be thread owner to remove participants from it."))
+
+
 can_remove_participant = return_boolean(allow_remove_participant)
 
 
@@ -252,7 +251,8 @@ def allow_add_participant(user, target):
 
     if not can_use_private_threads(target):
         raise PermissionDenied(
-            _("%(user)s can't participate in private threads.") % message_format)
+            _("%(user)s can't participate in private threads.") % message_format
+        )
 
     if user.acl_cache['can_add_everyone_to_private_threads']:
         return
@@ -262,15 +262,20 @@ def allow_add_participant(user, target):
 
     if target.can_be_messaged_by_nobody:
         raise PermissionDenied(
-            _("%(user)s is not allowing invitations to private threads.") % message_format)
+            _("%(user)s is not allowing invitations to private threads.") % message_format
+        )
 
     if target.can_be_messaged_by_followed and not target.is_following(user):
         message = _("%(user)s limits invitations to private threads to followed users.")
         raise PermissionDenied(message % message_format)
+
+
 can_add_participant = return_boolean(allow_add_participant)
 
 
 def allow_message_user(user, target):
     allow_use_private_threads(user)
     allow_add_participant(user, target)
+
+
 can_message_user = return_boolean(allow_message_user)

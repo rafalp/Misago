@@ -27,17 +27,22 @@ class QuoteExtension(markdown.Extension):
         md.registerExtension(self)
 
         md.preprocessors.add('misago_bbcode_quote', QuotePreprocessor(md), '_end')
-        md.parser.blockprocessors.add('misago_bbcode_quote', QuoteBlockProcessor(md.parser), '>code')
+        md.parser.blockprocessors.add(
+            'misago_bbcode_quote', QuoteBlockProcessor(md.parser), '>code'
+        )
 
 
 class QuotePreprocessor(Preprocessor):
-    QUOTE_BLOCK_RE = re.compile(r'''
+    QUOTE_BLOCK_RE = re.compile(
+        r'''
 \[quote\](?P<text>.*?)\[/quote\]
-'''.strip(), re.IGNORECASE | re.MULTILINE | re.DOTALL);
-    QUOTE_BLOCK_TITLE_RE = re.compile(r'''
+'''.strip(), re.IGNORECASE | re.MULTILINE | re.DOTALL
+    )
+    QUOTE_BLOCK_TITLE_RE = re.compile(
+        r'''
 \[quote=("?)(?P<title>.*?)("?)](?P<text>.*?)\[/quote\]
-'''.strip(), re.IGNORECASE | re.MULTILINE | re.DOTALL);
-
+'''.strip(), re.IGNORECASE | re.MULTILINE | re.DOTALL
+    )
 
     def run(self, lines):
         text = '\n'.join(lines)
@@ -106,12 +111,14 @@ class CodeBlockExtension(markdown.Extension):
     def extendMarkdown(self, md):
         md.registerExtension(self)
 
-        md.preprocessors.add('misago_code_bbcode',
-                             CodeBlockPreprocessor(md),
-                             ">normalize_whitespace")
+        md.preprocessors.add(
+            'misago_code_bbcode', CodeBlockPreprocessor(md), ">normalize_whitespace"
+        )
 
 
 class CodeBlockPreprocessor(FencedBlockPreprocessor):
-        FENCED_BLOCK_RE = re.compile(r'''
+    FENCED_BLOCK_RE = re.compile(
+        r'''
 \[code(=("?)(?P<lang>.*?)("?))?](([ ]*\n)+)?(?P<code>.*?)((\s|\n)+)?\[/code\]
-''', re.IGNORECASE | re.MULTILINE | re.DOTALL | re.VERBOSE)
+''', re.IGNORECASE | re.MULTILINE | re.DOTALL | re.VERBOSE
+    )

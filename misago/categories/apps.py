@@ -7,4 +7,4 @@ class MisagoCategoriesConfig(AppConfig):
     verbose_name = "Misago Categories"
 
     def ready(self):
-        from . import signals
+        from . import signals as _

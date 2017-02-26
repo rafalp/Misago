@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from misago.categories.models import Category
-from misago.threads.checksums import update_post_checksum
 from misago.threads.models import Post, PostEdit, PostLike, Thread, ThreadParticipant
 
 from . import fetch_assoc, localise_datetime, markup, movedids
@@ -18,13 +17,11 @@ def move_threads(stdout, style):
 
     for thread in fetch_assoc('SELECT * FROM misago_thread ORDER BY id'):
         if special_categories.get(thread['forum_id']) == 'reports':
-            stdout.write(style.WARNING(
-                "Skipping report: %s" % thread['name']))
+            stdout.write(style.WARNING("Skipping report: %s" % thread['name']))
             continue
 
         if not thread['start_post_id']:
-            stdout.write(style.ERROR(
-                "Corrupted thread: %s" % thread['name']))
+            stdout.write(style.ERROR("Corrupted thread: %s" % thread['name']))
             continue
 
         if special_categories.get(thread['forum_id']) == 'private_threads':
@@ -78,9 +75,7 @@ def move_posts():
         deleter_name = None
         deleter_slug = None
         if post['deleted']:
-            deleter = UserModel.objects.filter(
-                is_staff=True
-            ).order_by('id').last()
+            deleter = UserModel.objects.filter(is_staff=True).order_by('id').last()
 
             if deleter:
                 deleter_name = deleter.username
@@ -161,18 +156,20 @@ def move_post_edits(post, old_id):
         if changelog:
             changelog[-1].edited_to = markup.clean_original(edit['post_content'])
 
-        changelog.append(PostEdit(
-            category=post.category,
-            thread=post.thread,
-            post=post,
-            edited_on=localise_datetime(edit['date']),
-            editor=editor,
-            editor_name=edit['user_name'],
-            editor_slug=edit['user_slug'],
-            editor_ip=edit['ip'],
-            edited_from=markup.clean_original(edit['post_content']),
-            edited_to=markup.clean_original(post.original),
-        ))
+        changelog.append(
+            PostEdit(
+                category=post.category,
+                thread=post.thread,
+                post=post,
+                edited_on=localise_datetime(edit['date']),
+                editor=editor,
+                editor_name=edit['user_name'],
+                editor_slug=edit['user_slug'],
+                editor_ip=edit['ip'],
+                edited_from=markup.clean_original(edit['post_content']),
+                edited_to=markup.clean_original(post.original),
+            )
+        )
 
     if changelog:
         PostEdit.objects.bulk_create(changelog)
@@ -216,10 +213,7 @@ def move_likes():
     for post in Post.objects.filter(id__in=posts).iterator():
         post.last_likes = []
         for like in post.postlike_set.all()[:4]:
-            post.last_likes.append({
-                'id': like.liker_id,
-                'username': like.liker_name
-            })
+            post.last_likes.append({'id': like.liker_id, 'username': like.liker_name})
         post.save(update_fields=['last_likes'])
 
 
@@ -233,19 +227,14 @@ def move_participants():
 
         starter = thread.post_set.order_by('id').first().poster
 
-        ThreadParticipant.objects.create(
-            thread=thread,
-            user=user,
-            is_owner=(user == starter)
-        )
+        ThreadParticipant.objects.create(thread=thread, user=user, is_owner=(user == starter))
 
 
 def clean_private_threads(stdout, style):
     category = Category.objects.private_threads()
 
     # prune threads without participants
-    participated_threads = ThreadParticipant.objects.values_list(
-        'thread_id', flat=True).distinct()
+    participated_threads = ThreadParticipant.objects.values_list('thread_id', flat=True).distinct()
     for thread in category.thread_set.exclude(pk__in=participated_threads):
         thread.delete()
 
@@ -257,8 +246,7 @@ def clean_private_threads(stdout, style):
             thread.save()
         elif participants_count == 0:
             thread.delete()
-            stdout.write(style.ERROR(
-                "Delete empty private thread: %s" % thread.title))
+            stdout.write(style.ERROR("Delete empty private thread: %s" % thread.title))
 
 
 def get_special_categories_dict():

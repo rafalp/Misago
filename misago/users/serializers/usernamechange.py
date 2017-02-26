@@ -7,9 +7,7 @@ from .user import UserSerializer as BaseUserSerializer
 
 __all__ = ['UsernameChangeSerializer']
 
-
-UserSerializer = BaseUserSerializer.subset_fields(
-    'id', 'username', 'avatars', 'absolute_url')
+UserSerializer = BaseUserSerializer.subset_fields('id', 'username', 'avatars', 'absolute_url')
 
 
 class UsernameChangeSerializer(serializers.ModelSerializer):
@@ -18,12 +16,12 @@ class UsernameChangeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UsernameChange
-        fields = (
+        fields = [
             'id',
             'user',
             'changed_by',
             'changed_by_username',
             'changed_on',
             'new_username',
-            'old_username'
-        )
+            'old_username',
+        ]

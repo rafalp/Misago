@@ -1,11 +1,10 @@
 from django.conf import settings
 from django.core.checks import register, Critical
 
-
-SUPPORTED_ENGINES = (
+SUPPORTED_ENGINES = [
     'django.db.backends.postgresql',
     'django.db.backends.postgresql_psycopg2',
-)
+]
 
 
 @register()
@@ -18,7 +17,7 @@ def check_db_engine(app_configs, **kwargs):
     except (AttributeError, KeyError, ValueError):
         errors.append(Critical(
             msg='Misago requires PostgreSQL database.',
-            id='misago.001'
+            id='misago.001',
         ))
 
     return errors

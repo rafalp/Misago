@@ -11,13 +11,13 @@ class URLPatterns(object):
             'path': path,
             'parent': parent,
             'namespace': namespace,
-            })
+        })
 
-    def patterns(self, namespace, *urlpatterns):
+    def patterns(self, namespace, *new_patterns):
         self._patterns.append({
             'namespace': namespace,
-            'urlpatterns': urlpatterns,
-            })
+            'urlpatterns': new_patterns,
+        })
 
     def get_child_patterns(self, parent):
         prefix = '%s:' % parent if parent else ''
@@ -26,8 +26,8 @@ class URLPatterns(object):
         for namespace in self._namespaces:
             if namespace['parent'] == parent:
                 prefixed_namespace = prefix + namespace['namespace']
-                urlpatterns = self.get_child_patterns(prefixed_namespace)
-                included_patterns = include(urlpatterns, namespace=namespace['namespace'])
+                child_patterns = self.get_child_patterns(prefixed_namespace)
+                included_patterns = include(child_patterns, namespace=namespace['namespace'])
                 namespace_urlpatterns.append(url(namespace['path'], included_patterns))
 
         return namespace_urlpatterns
@@ -36,8 +36,8 @@ class URLPatterns(object):
         all_patterns = {}
         for urls in self._patterns:
             namespace = urls['namespace']
-            urlpatterns = urls['urlpatterns']
-            all_patterns.setdefault(namespace, []).extend(urlpatterns)
+            added_patterns = urls['urlpatterns']
+            all_patterns.setdefault(namespace, []).extend(added_patterns)
 
         self.namespace_patterns = all_patterns
 
@@ -45,8 +45,8 @@ class URLPatterns(object):
         root_urlpatterns = []
         for namespace in self._namespaces:
             if not namespace['parent']:
-                urlpatterns = self.get_child_patterns(namespace['namespace'])
-                included_patterns = include(urlpatterns, namespace=namespace['namespace'])
+                child_patterns = self.get_child_patterns(namespace['namespace'])
+                included_patterns = include(child_patterns, namespace=namespace['namespace'])
                 root_urlpatterns.append(url(namespace['path'], included_patterns))
 
         return root_urlpatterns

@@ -41,7 +41,7 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
 
     class Meta:
         model = UserModel
-        fields = (
+        fields = [
             'id',
             'username',
             'slug',
@@ -57,23 +57,20 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
             'following',
             'threads',
             'posts',
-
             'acl',
             'is_followed',
             'is_blocked',
             'meta',
             'status',
-
             'absolute_url',
             'api_url',
-        )
+        ]
 
     def get_acl(self, obj):
         return obj.acl
 
     def get_email(self, obj):
-        if (obj == self.context['user'] or
-                self.context['user'].acl_cache['can_see_users_emails']):
+        if (obj == self.context['user'] or self.context['user'].acl_cache['can_see_users_emails']):
             return obj.email
         else:
             return None
@@ -113,10 +110,8 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
             'root': reverse('misago:api:user-detail', kwargs={'pk': obj.pk}),
             'follow': reverse('misago:api:user-follow', kwargs={'pk': obj.pk}),
             'ban': reverse('misago:api:user-ban', kwargs={'pk': obj.pk}),
-            'moderate_avatar': reverse(
-                'misago:api:user-moderate-avatar', kwargs={'pk': obj.pk}),
-            'moderate_username': reverse(
-                'misago:api:user-moderate-username', kwargs={'pk': obj.pk}),
+            'moderate_avatar': reverse('misago:api:user-moderate-avatar', kwargs={'pk': obj.pk}),
+            'moderate_username': reverse('misago:api:user-moderate-username', kwargs={'pk': obj.pk}),
             'delete': reverse('misago:api:user-delete', kwargs={'pk': obj.pk}),
             'followers': reverse('misago:api:user-followers', kwargs={'pk': obj.pk}),
             'follows': reverse('misago:api:user-follows', kwargs={'pk': obj.pk}),
@@ -126,5 +121,15 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
 
 
 UserCardSerializer = UserSerializer.subset_fields(
-    'id', 'username', 'joined_on', 'rank', 'title', 'avatars', 'followers',
-    'threads', 'posts', 'status', 'absolute_url')
+    'id',
+    'username',
+    'joined_on',
+    'rank',
+    'title',
+    'avatars',
+    'followers',
+    'threads',
+    'posts',
+    'status',
+    'absolute_url',
+)

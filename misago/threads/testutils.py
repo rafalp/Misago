@@ -12,9 +12,17 @@ from .models import Poll, Post, Thread
 UserModel = get_user_model()
 
 
-def post_thread(category, title='Test thread', poster='Tester',
-                is_global=False, is_pinned=False, is_unapproved=False,
-                is_hidden=False, is_closed=False, started_on=None):
+def post_thread(
+        category,
+        title='Test thread',
+        poster='Tester',
+        is_global=False,
+        is_pinned=False,
+        is_unapproved=False,
+        is_hidden=False,
+        is_closed=False,
+        started_on=None
+):
     started_on = started_on or timezone.now()
 
     kwargs = {
@@ -25,7 +33,7 @@ def post_thread(category, title='Test thread', poster='Tester',
         'last_post_on': started_on,
         'is_unapproved': is_unapproved,
         'is_hidden': is_hidden,
-        'is_closed': is_closed
+        'is_closed': is_closed,
     }
 
     if is_global:
@@ -41,7 +49,7 @@ def post_thread(category, title='Test thread', poster='Tester',
             'last_poster': poster,
             'last_poster_name': poster.username,
             'last_poster_slug': poster.slug,
-            })
+        })
     except AttributeError:
         kwargs.update({
             'starter_name': poster,
@@ -62,9 +70,18 @@ def post_thread(category, title='Test thread', poster='Tester',
     return thread
 
 
-def reply_thread(thread, poster="Tester", message="I am test message",
-                 is_unapproved=False, is_hidden=False, is_event=False,
-                 has_reports=False, has_open_reports=False, posted_on=None, poster_ip='127.0.0.1'):
+def reply_thread(
+        thread,
+        poster="Tester",
+        message="I am test message",
+        is_unapproved=False,
+        is_hidden=False,
+        is_event=False,
+        has_reports=False,
+        has_open_reports=False,
+        posted_on=None,
+        poster_ip='127.0.0.1'
+):
     posted_on = posted_on or thread.last_post_on + timedelta(minutes=5)
 
     kwargs = {
@@ -84,7 +101,10 @@ def reply_thread(thread, poster="Tester", message="I am test message",
     }
 
     try:
-        kwargs.update({'poster': poster, 'poster_name': poster.username})
+        kwargs.update({
+            'poster': poster,
+            'poster_name': poster.username,
+        })
     except AttributeError:
         kwargs.update({'poster_name': poster})
 
@@ -130,7 +150,7 @@ def post_poll(thread, poster):
                 'hash': 'dddddddddddd',
                 'label': 'Delta',
                 'votes': 1
-            }
+            },
         ],
         allowed_choices=2,
         votes=4
@@ -140,8 +160,7 @@ def post_poll(thread, poster):
     try:
         user = UserModel.objects.get(slug='bob')
     except UserModel.DoesNotExist:
-        user = UserModel.objects.create_user(
-            'bob', 'bob@test.com', 'Pass.123')
+        user = UserModel.objects.create_user('bob', 'bob@test.com', 'Pass.123')
 
     poll.pollvote_set.create(
         category=thread.category,
@@ -150,7 +169,7 @@ def post_poll(thread, poster):
         voter_name=user.username,
         voter_slug=user.slug,
         voter_ip='127.0.0.1',
-        choice_hash='aaaaaaaaaaaa'
+        choice_hash='aaaaaaaaaaaa',
     )
 
     # test user voted on third and last choices
@@ -161,7 +180,7 @@ def post_poll(thread, poster):
         voter_name=poster.username,
         voter_slug=poster.slug,
         voter_ip='127.0.0.1',
-        choice_hash='gggggggggggg'
+        choice_hash='gggggggggggg',
     )
     poll.pollvote_set.create(
         category=thread.category,
@@ -170,7 +189,7 @@ def post_poll(thread, poster):
         voter_name=poster.username,
         voter_slug=poster.slug,
         voter_ip='127.0.0.1',
-        choice_hash='dddddddddddd'
+        choice_hash='dddddddddddd',
     )
 
     # somebody else voted on third option before being deleted
@@ -180,7 +199,7 @@ def post_poll(thread, poster):
         voter_name='deleted',
         voter_slug='deleted',
         voter_ip='127.0.0.1',
-        choice_hash='gggggggggggg'
+        choice_hash='gggggggggggg',
     )
 
     return poll
@@ -197,30 +216,26 @@ def like_post(post, liker=None, username=None):
             liker=liker,
             liker_name=liker.username,
             liker_slug=liker.slug,
-            liker_ip='127.0.0.1'
+            liker_ip='127.0.0.1',
         )
 
-        post.last_likes = [
-            {
-                'id': liker.id,
-                'username': liker.username
-            }
-        ] + post.last_likes
+        post.last_likes = [{
+            'id': liker.id,
+            'username': liker.username,
+        }] + post.last_likes
     else:
         like = post.postlike_set.create(
             category=post.category,
             thread=post.thread,
             liker_name=username,
             liker_slug=slugify(username),
-            liker_ip='127.0.0.1'
+            liker_ip='127.0.0.1',
         )
 
-        post.last_likes = [
-            {
-                'id': None,
-                'username': username
-            }
-        ] + post.last_likes
+        post.last_likes = [{
+            'id': None,
+            'username': username,
+        }] + post.last_likes
 
     post.likes += 1
     post.save()

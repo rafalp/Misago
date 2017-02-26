@@ -21,7 +21,6 @@ from misago.threads.utils import add_categories_to_items
 
 __all__ = ['ForumThreads', 'PrivateThreads', 'filter_read_threads_queryset']
 
-
 LISTS_NAMES = {
     'all': None,
     'my': ugettext_lazy("Your threads"),
@@ -49,15 +48,21 @@ class ViewModel(object):
         base_queryset = self.get_base_queryset(request, category.categories, list_type)
         threads_categories = [category_model] + category.subcategories
 
-        threads_queryset = self.get_remaining_threads_queryset(base_queryset, category_model, threads_categories)
+        threads_queryset = self.get_remaining_threads_queryset(
+            base_queryset, category_model, threads_categories
+        )
 
-        list_page = paginate(threads_queryset, page, settings.MISAGO_THREADS_PER_PAGE, settings.MISAGO_THREADS_TAIL)
+        list_page = paginate(
+            threads_queryset, page, settings.MISAGO_THREADS_PER_PAGE, settings.MISAGO_THREADS_TAIL
+        )
         paginator = pagination_dict(list_page)
 
         if list_page.number > 1:
             threads = list(list_page.object_list)
         else:
-            pinned_threads = list(self.get_pinned_threads(base_queryset, category_model, threads_categories))
+            pinned_threads = list(
+                self.get_pinned_threads(base_queryset, category_model, threads_categories)
+            )
             threads = list(pinned_threads) + list(list_page.object_list)
 
         if list_type in ('new', 'unread'):
@@ -90,13 +95,15 @@ class ViewModel(object):
             has_permission = request.user.acl_cache['can_see_unapproved_content_lists']
             if list_type == 'unapproved' and not has_permission:
                 raise PermissionDenied(
-                    _("You don't have permission to see unapproved content lists."))
+                    _("You don't have permission to see unapproved content lists.")
+                )
 
     def get_list_name(self, list_type):
         return LISTS_NAMES[list_type]
 
     def get_base_queryset(self, request, threads_categories, list_type):
-        return get_threads_queryset(request.user, threads_categories, list_type).order_by('-last_post_id')
+        return get_threads_queryset(request.user, threads_categories,
+                                    list_type).order_by('-last_post_id')
 
     def get_pinned_threads(self, queryset, category, threads_categories):
         return []
@@ -105,13 +112,13 @@ class ViewModel(object):
         return []
 
     def filter_threads(self, request, threads):
-        pass # hook for custom thread types to add features to extend threads
+        pass  # hook for custom thread types to add features to extend threads
 
     def get_frontend_context(self):
         context = {
             'THREADS': {
                 'results': ThreadsListSerializer(self.threads, many=True).data,
-                'subcategories': [c.pk for c in self.category.children]
+                'subcategories': [c.pk for c in self.category.children],
             },
         }
 
@@ -122,19 +129,16 @@ class ViewModel(object):
         return {
             'list_name': self.get_list_name(self.list_type),
             'list_type': self.list_type,
-
             'threads': self.threads,
-            'paginator': self.paginator
+            'paginator': self.paginator,
         }
 
 
 class ForumThreads(ViewModel):
     def get_pinned_threads(self, queryset, category, threads_categories):
         if category.level:
-            return list(queryset.filter(weight=2)) + list(queryset.filter(
-                weight=1,
-                category__in=threads_categories
-            ))
+            return list(queryset.filter(weight=2)
+                        ) + list(queryset.filter(weight=1, category__in=threads_categories))
         else:
             return queryset.filter(weight=2)
 
@@ -153,14 +157,14 @@ class ForumThreads(ViewModel):
 
 class PrivateThreads(ViewModel):
     def get_base_queryset(self, request, threads_categories, list_type):
-        queryset = super(PrivateThreads, self).get_base_queryset(request, threads_categories, list_type)
+        queryset = super(PrivateThreads,
+                         self).get_base_queryset(request, threads_categories, list_type)
 
         # limit queryset to threads we are participant of
         participated_threads = request.user.threadparticipant_set.values('thread_id')
 
         if request.user.acl_cache['can_moderate_private_threads']:
-            queryset = queryset.filter(
-                Q(id__in=participated_threads) | Q(has_reported_posts=True))
+            queryset = queryset.filter(Q(id__in=participated_threads) | Q(has_reported_posts=True))
         else:
             queryset = queryset.filter(id__in=participated_threads)
 
@@ -173,9 +177,6 @@ class PrivateThreads(ViewModel):
         make_participants_aware(request.user, threads)
 
 
-"""
-Thread queryset utils
-"""
 def get_threads_queryset(user, categories, list_type):
     queryset = exclude_invisible_threads(user, categories, Thread.objects)
 
@@ -214,9 +215,7 @@ def filter_read_threads_queryset(user, categories, list_type, queryset):
     if list_type == 'new':
         # new threads have no entry in reads table
         # AND were started after cutoff date
-        read_threads = user.threadread_set.filter(
-            category__in=categories
-        ).values('thread_id')
+        read_threads = user.threadread_set.filter(category__in=categories).values('thread_id')
 
         condition = Q(last_post_on__lte=cutoff_date)
         condition = condition | Q(id__in=read_threads)
@@ -235,7 +234,7 @@ def filter_read_threads_queryset(user, categories, list_type, queryset):
         read_threads = user.threadread_set.filter(
             category__in=categories,
             thread__last_post_on__gt=cutoff_date,
-            last_read_on__lt=F('thread__last_post_on')
+            last_read_on__lt=F('thread__last_post_on'),
         ).values('thread_id')
 
         queryset = queryset.filter(id__in=read_threads)

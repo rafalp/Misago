@@ -7,25 +7,25 @@ from django.template.loader import render_to_string
 register = template.Library()
 
 
-"""
-Form row: renders single row in form
-
-Syntax:
-{% form_row form.field %} # renders vertical field
-{% form_row form.field "col-md-3" "col-md-9" %} # renders horizontal field
-"""
 @register.tag
 def form_row(parser, token):
+    """
+    Form row: renders single row in form
+
+    Syntax:
+    {% form_row form.field %} # renders vertical field
+    {% form_row form.field "col-md-3" "col-md-9" %} # renders horizontal field
+    """
     args = token.split_contents()
 
     if len(args) < 2:
-        raise template.TemplateSyntaxError(
-            "form_row tag requires at least one argument")
+        raise template.TemplateSyntaxError("form_row tag requires at least one argument")
 
     if len(args) == 3 or len(args) > 4:
         raise template.TemplateSyntaxError(
             "form_row tag supports either one argument (form field) or "
-            "four arguments (form field, label class, field class)")
+            "four arguments (form field, label class, field class)"
+        )
 
     form_field = args[1]
 
@@ -61,18 +61,18 @@ class FormRowNode(template.Node):
             field_class = None
 
         template_pack = crispy_forms_filters.TEMPLATE_PACK
-        return render_to_string('%s/field.html' % template_pack, {
-            'field': field,
-            'form_show_errors': True,
-            'form_show_labels': True,
-            'label_class': label_class or '',
-            'field_class': field_class or ''
-        })
+        return render_to_string(
+            '%s/field.html' % template_pack, {
+                'field': field,
+                'form_show_errors': True,
+                'form_show_labels': True,
+                'label_class': label_class or '',
+                'field_class': field_class or '',
+            }
+        )
 
 
-"""
-Form input: renders given field input
-"""
 @register.tag
 def form_input(parser, token):
+    """form input: renders given field input"""
     return crispy_forms_field.crispy_field(parser, token)

@@ -26,7 +26,7 @@ class SubscribeMiddleware(PostingMiddleware):
         self.user.subscription_set.create(
             category=self.thread.category,
             thread=self.thread,
-            send_email=self.user.subscribe_to_started_threads == UserModel.SUBSCRIBE_ALL
+            send_email=self.user.subscribe_to_started_threads == UserModel.SUBSCRIBE_ALL,
         )
 
     def subscribe_replied_thread(self):
@@ -37,8 +37,7 @@ class SubscribeMiddleware(PostingMiddleware):
             return
 
         try:
-            subscription = self.user.subscription_set.get(thread=self.thread)
-            return
+            return self.user.subscription_set.get(thread=self.thread)
         except Subscription.DoesNotExist:
             pass
 
@@ -49,5 +48,5 @@ class SubscribeMiddleware(PostingMiddleware):
         self.user.subscription_set.create(
             category=self.thread.category,
             thread=self.thread,
-            send_email=self.user.subscribe_to_replied_threads == UserModel.SUBSCRIBE_ALL
+            send_email=self.user.subscribe_to_replied_threads == UserModel.SUBSCRIBE_ALL,
         )

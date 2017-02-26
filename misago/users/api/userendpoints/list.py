@@ -1,18 +1,10 @@
-from datetime import timedelta
-
 from rest_framework.response import Response
 
 from django.contrib.auth import get_user_model
-from django.db.models import Count
-from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
 
-from misago.conf import settings
-from misago.core.cache import cache
-from misago.core.shortcuts import get_int_or_404, paginate
+from misago.core.shortcuts import get_int_or_404
 from misago.users.models import Rank
-from misago.users.online.utils import make_users_status_aware
 from misago.users.serializers import UserCardSerializer
 from misago.users.viewmodels import ActivePosters, RankUsers
 
@@ -31,7 +23,7 @@ def rank_users(request):
 
     page = get_int_or_404(request.GET.get('page', 0))
     if page == 1:
-        page = 0 # api allows explicit first page
+        page = 0  # api allows explicit first page
 
     users = RankUsers(request, rank, page)
     return Response(users.get_frontend_context())

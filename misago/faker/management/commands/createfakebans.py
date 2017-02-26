@@ -6,7 +6,6 @@ from faker import Factory
 
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from django.utils.six.moves import range
 
 from misago.core.management.progressbar import show_progress
 from misago.users.models import Ban
@@ -98,7 +97,7 @@ class Command(BaseCommand):
 
         created_count = 0
         show_progress(self, created_count, fake_bans_to_create)
-        for i in range(fake_bans_to_create):
+        for _ in range(fake_bans_to_create):
             ban = Ban(check_type=random.randint(Ban.USERNAME, Ban.IP))
             ban.banned_value = create_fake_test(fake, ban.check_type)
 

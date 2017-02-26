@@ -11,7 +11,7 @@ class MisagoApiRouter(DefaultRouter):
             url=r'^{prefix}{trailing_slash}$',
             mapping={
                 'get': 'list',
-                'post': 'create'
+                'post': 'create',
             },
             name='{basename}-list',
             initkwargs={'suffix': 'List'}
@@ -31,7 +31,7 @@ class MisagoApiRouter(DefaultRouter):
                 'get': 'retrieve',
                 'put': 'update',
                 'patch': 'partial_update',
-                'delete': 'destroy'
+                'delete': 'destroy',
             },
             name='{basename}-detail',
             initkwargs={'suffix': 'Instance'}

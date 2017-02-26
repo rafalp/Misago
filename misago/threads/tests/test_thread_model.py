@@ -23,7 +23,7 @@ class ThreadModelTests(TestCase):
             starter_slug='tester',
             last_post_on=datetime,
             last_poster_name='Tester',
-            last_poster_slug='tester'
+            last_poster_slug='tester',
         )
 
         self.thread.set_title("Test thread")
@@ -38,7 +38,7 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime
+            updated_on=datetime,
         )
 
         self.thread.first_post = post
@@ -47,8 +47,7 @@ class ThreadModelTests(TestCase):
 
     def test_synchronize(self):
         """synchronize method updates thread data to reflect its contents"""
-        user = UserModel.objects.create_user(
-            "Bob", "bob@boberson.com", "Pass.123")
+        user = UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
 
         self.assertEqual(self.thread.replies, 0)
 
@@ -63,7 +62,7 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime
+            updated_on=datetime,
         )
 
         # first sync call, updates last thread
@@ -91,7 +90,7 @@ class ThreadModelTests(TestCase):
             checksum="nope",
             posted_on=datetime + timedelta(5),
             updated_on=datetime + timedelta(5),
-            is_unapproved=True
+            is_unapproved=True,
         )
 
         self.thread.synchronize()
@@ -117,7 +116,7 @@ class ThreadModelTests(TestCase):
             checksum="nope",
             posted_on=datetime + timedelta(10),
             updated_on=datetime + timedelta(10),
-            is_hidden=True
+            is_hidden=True,
         )
 
         self.thread.synchronize()
@@ -163,7 +162,7 @@ class ThreadModelTests(TestCase):
         self.assertFalse(self.thread.has_hidden_posts)
         self.assertEqual(self.thread.replies, 3)
 
-         # add event post
+        # add event post
         event = Post.objects.create(
             category=self.category,
             thread=self.thread,
@@ -175,7 +174,7 @@ class ThreadModelTests(TestCase):
             checksum="nope",
             posted_on=datetime + timedelta(10),
             updated_on=datetime + timedelta(10),
-            is_event=True
+            is_event=True,
         )
 
         self.thread.synchronize()
@@ -203,7 +202,7 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime
+            updated_on=datetime,
         )
 
         self.thread.synchronize()
@@ -226,7 +225,7 @@ class ThreadModelTests(TestCase):
             poster_name='test',
             poster_slug='test',
             poster_ip='127.0.0.1',
-            choices=[]
+            choices=[],
         )
 
         self.thread.synchronize()
@@ -234,8 +233,7 @@ class ThreadModelTests(TestCase):
 
     def test_set_first_post(self):
         """set_first_post sets first post and poster data on thread"""
-        user = UserModel.objects.create_user(
-            "Bob", "bob@boberson.com", "Pass.123")
+        user = UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
 
         datetime = timezone.now() + timedelta(5)
 
@@ -249,7 +247,7 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime
+            updated_on=datetime,
         )
 
         self.thread.set_first_post(post)
@@ -261,8 +259,7 @@ class ThreadModelTests(TestCase):
 
     def test_set_last_post(self):
         """set_last_post sets first post and poster data on thread"""
-        user = UserModel.objects.create_user(
-            "Bob", "bob@boberson.com", "Pass.123")
+        user = UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
 
         datetime = timezone.now() + timedelta(5)
 
@@ -276,7 +273,7 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime
+            updated_on=datetime,
         )
 
         self.thread.set_last_post(post)
@@ -293,7 +290,11 @@ class ThreadModelTests(TestCase):
         Category(
             name='New Category',
             slug='new-category',
-        ).insert_at(root_category, position='last-child', save=True)
+        ).insert_at(
+            root_category,
+            position='last-child',
+            save=True,
+        )
         new_category = Category.objects.get(slug='new-category')
 
         self.thread.move(new_category)
@@ -316,7 +317,7 @@ class ThreadModelTests(TestCase):
             starter_slug='tester',
             last_post_on=datetime,
             last_poster_name='Tester',
-            last_poster_slug='tester'
+            last_poster_slug='tester',
         )
 
         other_thread.set_title("Other thread")
@@ -331,7 +332,7 @@ class ThreadModelTests(TestCase):
             parsed="<p>Hello! I am other message!</p>",
             checksum="nope",
             posted_on=datetime,
-            updated_on=datetime
+            updated_on=datetime,
         )
 
         other_thread.first_post = post
@@ -352,10 +353,8 @@ class ThreadModelTests(TestCase):
         private thread gets deleted automatically
         when there are no participants left in it
         """
-        user_a = UserModel.objects.create_user(
-            "Bob", "bob@boberson.com", "Pass.123")
-        user_b = UserModel.objects.create_user(
-            "Weebl", "weebl@weeblson.com", "Pass.123")
+        user_a = UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
+        user_b = UserModel.objects.create_user("Weebl", "weebl@weeblson.com", "Pass.123")
 
         ThreadParticipant.objects.add_participants(self.thread, [user_a, user_b])
         self.assertEqual(self.thread.participants.count(), 2)

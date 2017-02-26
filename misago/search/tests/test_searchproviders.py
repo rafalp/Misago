@@ -23,8 +23,7 @@ class SearchProvidersTests(TestCase):
 
         self.assertTrue(searchproviders._initialized)
 
-        self.assertEqual(
-            len(searchproviders._providers), len(settings.MISAGO_SEARCH_EXTENSIONS))
+        self.assertEqual(len(searchproviders._providers), len(settings.MISAGO_SEARCH_EXTENSIONS))
 
         for i, provider in enumerate(searchproviders._providers):
             classname = settings.MISAGO_SEARCH_EXTENSIONS[i].split('.')[-1]
@@ -37,9 +36,8 @@ class SearchProvidersTests(TestCase):
         searchproviders._initialized = True
         searchproviders._providers = [MockProvider, MockProvider, MockProvider]
 
-        self.assertEqual(
-            [m.__class__ for m in searchproviders.get_providers(True)],
-            searchproviders._providers)
+        self.assertEqual([m.__class__ for m in searchproviders.get_providers(True)],
+                         searchproviders._providers)
 
     def test_providers_are_init_with_request(self):
         """providers constructor is provided with request"""
@@ -48,18 +46,14 @@ class SearchProvidersTests(TestCase):
         searchproviders._initialized = True
         searchproviders._providers = [MockProvider]
 
-        self.assertEqual(
-            searchproviders.get_providers('REQUEST')[0].request, 'REQUEST')
+        self.assertEqual(searchproviders.get_providers('REQUEST')[0].request, 'REQUEST')
 
     def test_get_allowed_providers(self):
-        """
-        get_allowed_providers returns only providers that didn't raise in allow_search
-        """
+        """get_allowed_providers returns only providers that didn't raise in allow_search"""
         searchproviders = SearchProviders([])
 
         searchproviders._initialized = True
         searchproviders._providers = [MockProvider, DisallowedProvider, MockProvider]
 
-        self.assertEqual(
-            [m.__class__ for m in searchproviders.get_allowed_providers(True)],
-            [MockProvider, MockProvider])
+        self.assertEqual([m.__class__ for m in searchproviders.get_allowed_providers(True)],
+                         [MockProvider, MockProvider])

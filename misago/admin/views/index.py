@@ -5,7 +5,6 @@ from requests.exceptions import RequestException
 
 from django.contrib.auth import get_user_model
 from django.http import Http404, JsonResponse
-from django.utils.six.moves import range
 from django.utils.translation import ugettext as _
 
 from misago import __version__
@@ -21,25 +20,31 @@ UserModel = get_user_model()
 
 
 def admin_index(request):
+    inactive_users_queryset = UserModel.objects.exclude(
+        requires_activation=UserModel.ACTIVATION_NONE,
+    )
+
     db_stats = {
         'threads': Thread.objects.count(),
         'posts': Post.objects.count(),
         'users': UserModel.objects.count(),
-        'inactive_users': UserModel.objects.exclude(
-            requires_activation=UserModel.ACTIVATION_NONE
-        ).count()
+        'inactive_users': inactive_users_queryset.count()
     }
 
-    return render(request, 'misago/admin/index.html', {
-        'db_stats': db_stats,
-        'version_check': cache.get(VERSION_CHECK_CACHE_KEY)
-    })
+    return render(
+        request, 'misago/admin/index.html', {
+            'db_stats': db_stats,
+            'version_check': cache.get(VERSION_CHECK_CACHE_KEY),
+        }
+    )
 
 
 def check_version(request):
     if request.method != "POST":
         raise Http404()
+
     version = cache.get(VERSION_CHECK_CACHE_KEY, 'nada')
+
     if version == 'nada':
         try:
             api_url = 'https://api.github.com/repos/rafalp/Misago/releases'
@@ -57,16 +62,18 @@ def check_version(request):
                     message = _("Outdated: %(current)s < %(latest)s")
                     formats = {
                         'latest': latest_version,
-                        'current': __version__
+                        'current': __version__,
                     }
 
                     version = {
                         'is_error': True,
-                        'message': message % formats
+                        'message': message % formats,
                     }
                     break
             else:
-                formats = {'current': __version__}
+                formats = {
+                    'current': __version__,
+                }
                 version = {
                     'is_error': False,
                     'message': _("Up to date! (%(current)s)") % formats,
@@ -77,6 +84,7 @@ def check_version(request):
             message = _("Failed to connect to GitHub API. Try again later.")
             version = {
                 'is_error': True,
-                'message': message
+                'message': message,
             }
+
     return JsonResponse(version)

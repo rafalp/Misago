@@ -25,8 +25,7 @@ class SignaturesTests(TestCase):
         self.assertEqual(test_user.signature_parsed, '')
         self.assertEqual(test_user.signature_checksum, '')
 
-        signatures.set_user_signature(
-            MockRequest(), test_user, 'Hello, world!')
+        signatures.set_user_signature(MockRequest(), test_user, 'Hello, world!')
 
         self.assertEqual(test_user.signature, 'Hello, world!')
         self.assertEqual(test_user.signature_parsed, '<p>Hello, world!</p>')
