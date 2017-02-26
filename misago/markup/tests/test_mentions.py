@@ -35,11 +35,12 @@ class MentionsTests(AuthenticatedUserTestCase):
 
     def test_invalid_mentions(self):
         """markup extension leaves invalid mentions alone"""
-        TEST_CASES = (
-            '<p>Hello, Bob!</p>', '<p>Hello, @Bob!</p>',
+        TEST_CASES = [
+            '<p>Hello, Bob!</p>',
+            '<p>Hello, @Bob!</p>',
             '<p>Hello, <a href="/">@{}</a>!</p>'.format(self.user.username),
             '<p>Hello, <a href="/"><b>@{}</b></a>!</p>'.format(self.user.username),
-        )
+        ]
 
         for markup in TEST_CASES:
             result = {'parsed_text': markup, 'mentions': []}

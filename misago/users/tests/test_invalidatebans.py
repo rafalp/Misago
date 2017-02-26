@@ -20,7 +20,7 @@ class InvalidateBansTests(TestCase):
         # create 5 bans then update their valid date to past one
         for _ in range(5):
             Ban.objects.create(banned_value="abcd")
-        expired_date = (timezone.now() - timedelta(days=10))
+        expired_date = timezone.now() - timedelta(days=10)
         Ban.objects.all().update(expires_on=expired_date, is_checked=True)
 
         self.assertEqual(Ban.objects.filter(is_checked=True).count(), 5)
@@ -57,7 +57,7 @@ class InvalidateBansTests(TestCase):
         self.assertEqual(Ban.objects.filter(is_checked=True).count(), 1)
 
         # expire bans
-        expired_date = (timezone.now() - timedelta(days=10))
+        expired_date = timezone.now() - timedelta(days=10)
         Ban.objects.all().update(
             expires_on=expired_date,
             is_checked=True,

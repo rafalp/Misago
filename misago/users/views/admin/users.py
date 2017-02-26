@@ -50,40 +50,50 @@ class UserAdmin(generic.AdminBaseMixin):
 
 class UsersList(UserAdmin, generic.ListView):
     items_per_page = 24
-    ordering = (('-id', _("From newest")), ('id', _("From oldest")), ('slug', _("A to z")),
-                ('-slug', _("Z to a")), ('posts', _("Biggest posters")),
-                ('-posts', _("Smallest posters")), )
+    ordering = [
+        ('-id', _("From newest")),
+        ('id', _("From oldest")),
+        ('slug', _("A to z")),
+        ('-slug', _("Z to a")),
+        ('posts', _("Biggest posters")),
+        ('-posts', _("Smallest posters")),
+    ]
     selection_label = _('With users: 0')
     empty_selection_label = _('Select users')
-    mass_actions = [{
-        'action': 'activate',
-        'name': _("Activate accounts"),
-        'icon': 'fa fa-check-square-o',
-    }, {
-        'action': 'ban',
-        'name': _("Ban users"),
-        'icon': 'fa fa-lock',
-    }, {
-        'action': 'delete_accounts',
-        'name': _("Delete accounts"),
-        'icon': 'fa fa-times-circle',
-        'confirmation': _("Are you sure you want to delete selected users?"),
-    }, {
-        'action':
-            'delete_all',
-        'name':
-            _("Delete all"),
-        'icon':
-            'fa fa-eraser',
-        'confirmation':
-            _(
-                "Are you sure you want to delete selected "
-                "users? This will also delete all content "
-                "associated with their accounts."
-            ),
-        'is_atomic':
-            False,
-    }]
+    mass_actions = [
+        {
+            'action': 'activate',
+            'name': _("Activate accounts"),
+            'icon': 'fa fa-check-square-o',
+        },
+        {
+            'action': 'ban',
+            'name': _("Ban users"),
+            'icon': 'fa fa-lock',
+        },
+        {
+            'action': 'delete_accounts',
+            'name': _("Delete accounts"),
+            'icon': 'fa fa-times-circle',
+            'confirmation': _("Are you sure you want to delete selected users?"),
+        },
+        {
+            'action':
+                'delete_all',
+            'name':
+                _("Delete all"),
+            'icon':
+                'fa fa-eraser',
+            'confirmation':
+                _(
+                    "Are you sure you want to delete selected "
+                    "users? This will also delete all content "
+                    "associated with their accounts."
+                ),
+            'is_atomic':
+                False,
+        },
+    ]
 
     def get_queryset(self):
         qs = super(UsersList, self).get_queryset()

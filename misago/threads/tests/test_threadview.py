@@ -220,7 +220,7 @@ class ThreadPostsVisibilityTests(ThreadViewTestCase):
 class ThreadEventVisibilityTests(ThreadViewTestCase):
     def test_thread_events_render(self):
         """different thread events render"""
-        TEST_ACTIONS = (
+        TEST_ACTIONS = [
             (threads_moderation.pin_thread_globally, "Thread has been pinned globally."),
             (threads_moderation.pin_thread_locally, "Thread has been pinned locally."),
             (threads_moderation.unpin_thread, "Thread has been unpinned."),
@@ -229,7 +229,7 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
             (threads_moderation.open_thread, "Thread has been opened."),
             (threads_moderation.hide_thread, "Thread has been made hidden."),
             (threads_moderation.unhide_thread, "Thread has been revealed."),
-        )
+        ]
 
         self.thread.is_unapproved = True
         self.thread.save()

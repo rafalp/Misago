@@ -45,7 +45,12 @@ class BatchTests(TestCase):
     def test_batch(self):
         """standard batch yields valid results"""
         batch = 'loremipsum'
-        yields = (['l', 'o', 'r'], ['e', 'm', 'i'], ['p', 's', 'u'], ['m'], )
+        yields = [
+            ['l', 'o', 'r'],
+            ['e', 'm', 'i'],
+            ['p', 's', 'u'],
+            ['m'],
+        ]
 
         for i, test_yield in enumerate(misago_batch.batch(batch, 3)):
             self.assertEqual(test_yield, yields[i])
@@ -53,7 +58,12 @@ class BatchTests(TestCase):
     def test_batchnonefilled(self):
         """none-filled batch yields valid results"""
         batch = 'loremipsum'
-        yields = (['l', 'o', 'r'], ['e', 'm', 'i'], ['p', 's', 'u'], ['m', None, None], )
+        yields = [
+            ['l', 'o', 'r'],
+            ['e', 'm', 'i'],
+            ['p', 's', 'u'],
+            ['m', None, None],
+        ]
 
         for i, test_yield in enumerate(misago_batch.batchnonefilled(batch, 3)):
             self.assertEqual(test_yield, yields[i])

@@ -3,11 +3,19 @@ from django.core.management import call_command
 from misago.datamover.management.base import BaseCommand
 
 
-MOVE_COMMANDS = (
-    'movesettings', 'moveusers', 'movecategories', 'movethreads', 'buildmovesindex',
-    'synchronizethreads', 'synchronizecategories', 'rebuildpostssearch', 'invalidatebans',
-    'populateonlinetracker', 'synchronizeusers',
-)
+MOVE_COMMANDS = [
+    'movesettings',
+    'moveusers',
+    'movecategories',
+    'movethreads',
+    'buildmovesindex',
+    'synchronizethreads',
+    'synchronizecategories',
+    'rebuildpostssearch',
+    'invalidatebans',
+    'populateonlinetracker',
+    'synchronizeusers',
+]
 
 
 class Command(BaseCommand):

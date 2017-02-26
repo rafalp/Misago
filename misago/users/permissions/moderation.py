@@ -104,7 +104,12 @@ def add_acl_to_user(user, target):
     target.acl['max_ban_length'] = user.acl_cache['max_ban_length']
     target.acl['can_lift_ban'] = can_lift_ban(user, target)
 
-    mod_permissions = ('can_rename', 'can_moderate_avatar', 'can_moderate_signature', 'can_ban', )
+    mod_permissions = [
+        'can_rename',
+        'can_moderate_avatar',
+        'can_moderate_signature',
+        'can_ban',
+    ]
 
     for permission in mod_permissions:
         if target.acl[permission]:

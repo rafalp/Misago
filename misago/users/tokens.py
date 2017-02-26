@@ -45,10 +45,14 @@ def is_valid(user, token_type, token):
 
 
 def _make_hash(user, token_type):
-    seeds = (
-        user.pk, user.email, user.password, user.last_login.replace(microsecond=0, tzinfo=None),
-        token_type, settings.SECRET_KEY,
-    )
+    seeds = [
+        user.pk,
+        user.email,
+        user.password,
+        user.last_login.replace(microsecond=0, tzinfo=None),
+        token_type,
+        settings.SECRET_KEY,
+    ]
 
     return sha256(force_bytes('+'.join([six.text_type(s) for s in seeds]))).hexdigest()[:8]
 
@@ -61,7 +65,9 @@ def _make_checksum(obfuscated):
     return sha256(force_bytes('%s:%s' % (settings.SECRET_KEY, obfuscated))).hexdigest()[:8]
 
 
-# Convenience functions for activation token
+"""
+Convenience functions for activation token
+"""
 ACTIVATION_TOKEN = 'activation'
 
 
@@ -73,7 +79,9 @@ def is_activation_token_valid(user, token):
     return is_valid(user, ACTIVATION_TOKEN, token)
 
 
-# Convenience functions for password change token
+"""
+Convenience functions for password change token
+"""
 PASSWORD_CHANGE_TOKEN = 'change_password'
 
 

@@ -20,9 +20,14 @@ class AttachmentAdmin(generic.AdminBaseMixin):
 
 class AttachmentsList(AttachmentAdmin, generic.ListView):
     items_per_page = 20
-    ordering = (('-id', _("From newest")), ('id', _("From oldest")), ('filename', _("A to z")),
-                ('-filename', _("Z to a")), ('size', _("Smallest files")),
-                ('-size', _("Largest files")), )
+    ordering = [
+        ('-id', _("From newest")),
+        ('id', _("From oldest")),
+        ('filename', _("A to z")),
+        ('-filename', _("Z to a")),
+        ('size', _("Smallest files")),
+        ('-size', _("Largest files")),
+    ]
     selection_label = _('With attachments: 0')
     empty_selection_label = _('Select attachments')
     mass_actions = [

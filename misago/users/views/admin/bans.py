@@ -20,8 +20,12 @@ class BanAdmin(generic.AdminBaseMixin):
 
 class BansList(BanAdmin, generic.ListView):
     items_per_page = 30
-    ordering = (('-id', _("From newest")), ('id', _("From oldest")), ('banned_value', _("A to z")),
-                ('-banned_value', _("Z to a")), )
+    ordering = [
+        ('-id', _("From newest")),
+        ('id', _("From oldest")),
+        ('banned_value', _("A to z")),
+        ('-banned_value', _("Z to a")),
+    ]
     search_form = SearchBansForm
     selection_label = _('With bans: 0')
     empty_selection_label = _('Select bans')

@@ -59,7 +59,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
     def test_middleware_is_optional(self):
         """middleware is optional"""
-        INPUTS = ({}, {'attachments': []})
+        INPUTS = [{}, {'attachments': []}]
 
         for test_input in INPUTS:
             middleware = AttachmentsMiddleware(
@@ -74,7 +74,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
     def test_middleware_validates_ids(self):
         """middleware validates attachments ids"""
-        INPUTS = ('none', ['a', 'b', 123], range(settings.MISAGO_POST_ATTACHMENTS_LIMIT + 1))
+        INPUTS = ['none', ['a', 'b', 123], range(settings.MISAGO_POST_ATTACHMENTS_LIMIT + 1)]
 
         for test_input in INPUTS:
             middleware = AttachmentsMiddleware(

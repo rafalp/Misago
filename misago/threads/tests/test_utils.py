@@ -185,7 +185,7 @@ class MockRequest(object):
 class GetThreadIdFromUrlTests(MisagoTestCase):
     def test_get_thread_id_from_valid_urls(self):
         """get_thread_id_from_url extracts thread pk from valid urls"""
-        TEST_CASES = (
+        TEST_CASES = [
             {
                 # perfect match
                 'request': MockRequest('https', 'testforum.com', '/discuss/'),
@@ -247,7 +247,7 @@ class GetThreadIdFromUrlTests(MisagoTestCase):
                 'url': '   /t/test-thread/13/   ',
                 'pk': 13,
             }
-        )
+        ]
 
         for case in TEST_CASES:
             pk = get_thread_id_from_url(case['request'], case['url'])
@@ -257,7 +257,7 @@ class GetThreadIdFromUrlTests(MisagoTestCase):
             )
 
     def test_get_thread_id_from_invalid_urls(self):
-        TEST_CASES = (
+        TEST_CASES = [
             {
                 # invalid wsgi alias
                 'request': MockRequest('https', 'testforum.com'),
@@ -298,7 +298,7 @@ class GetThreadIdFromUrlTests(MisagoTestCase):
                 'request': MockRequest('http', 'testforum.com'),
                 'url': ''
             }
-        )
+        ]
 
         for case in TEST_CASES:
             pk = get_thread_id_from_url(case['request'], case['url'])

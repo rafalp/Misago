@@ -7,9 +7,11 @@ from .models import Category
 
 delete_category_content = Signal()
 move_category_content = Signal(providing_args=["new_category"])
+"""
+Signal handlers
+"""
 
 
-# Signal handlers
 @receiver(username_changed)
 def update_usernames(sender, **kwargs):
     Category.objects.filter(last_poster=sender).update(

@@ -31,7 +31,11 @@ class ValidatePostTests(TestCase):
 class ValidateTitleTests(TestCase):
     def test_valid_titles(self):
         """validate_title is ok with valid titles"""
-        VALID_TITLES = ('Lorem ipsum dolor met', '123 456 789 112' 'Ugabugagagagagaga', )
+        VALID_TITLES = [
+            'Lorem ipsum dolor met',
+            '123 456 789 112'
+            'Ugabugagagagagaga',
+        ]
 
         for title in VALID_TITLES:
             validate_title(title)

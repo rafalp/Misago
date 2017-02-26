@@ -18,9 +18,14 @@ from misago.threads.threadtypes import trees_map
 
 __all__ = ['ForumThread', 'PrivateThread']
 
-BASE_RELATIONS = (
-    'category', 'poll', 'starter', 'starter__rank', 'starter__ban_cache', 'starter__online_tracker'
-)
+BASE_RELATIONS = [
+    'category',
+    'poll',
+    'starter',
+    'starter__rank',
+    'starter__ban_cache',
+    'starter__online_tracker',
+]
 
 
 class ViewModel(BaseViewModel):

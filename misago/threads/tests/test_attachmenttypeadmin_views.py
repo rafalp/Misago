@@ -132,10 +132,16 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
 
     def test_clean_params_view(self):
         """admin form nicely cleans lists of extensions/mimetypes"""
-        TEST_CASES = (('test', ['test']), ('.test', ['test']), ('.tar.gz', ['tar.gz']),
-                      ('. test', ['test']), ('test, test', ['test']), ('test, tEst', ['test']),
-                      ('test, other, tEst', ['test', 'other']),
-                      ('test, other, tEst,OTher', ['test', 'other']), )
+        TEST_CASES = [
+            ('test', ['test']),
+            ('.test', ['test']),
+            ('.tar.gz', ['tar.gz']),
+            ('. test', ['test']),
+            ('test, test', ['test']),
+            ('test, tEst', ['test']),
+            ('test, other, tEst', ['test', 'other']),
+            ('test, other, tEst,OTher', ['test', 'other']),
+        ]
 
         for raw, final in TEST_CASES:
             response = self.client.post(

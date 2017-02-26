@@ -104,11 +104,10 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
     def get_last_poster_url(self, obj):
         if obj.last_poster_id:
             return reverse(
-                'misago:user',
-                kwargs={
+                'misago:user', kwargs={
                     'slug': obj.last_poster_slug,
                     'pk': obj.last_poster_id,
-                },
+                }
             )
         else:
             return None
