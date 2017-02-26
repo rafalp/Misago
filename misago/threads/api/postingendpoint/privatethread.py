@@ -6,9 +6,7 @@ from . import PostingEndpoint, PostingMiddleware
 
 
 class PrivateThreadMiddleware(PostingMiddleware):
-    """
-    Middleware that sets private threads category for thread and post
-    """
+    """middleware that sets private threads category for thread and post"""
 
     def use_this_middleware(self):
         if self.mode == PostingEndpoint.START:

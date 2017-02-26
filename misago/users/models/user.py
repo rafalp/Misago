@@ -154,23 +154,21 @@ class User(AbstractBaseUser, PermissionsMixin):
         (LIMIT_INVITES_TO_FOLLOWED, _("Users I follow")),
         (LIMIT_INVITES_TO_NOBODY, _("Nobody")),
     ]
-    """
-    Note that "username" field is purely for shows.
-    When searching users by their names, always use lowercased string
-    and slug field instead that is normalized around DB engines
-    differences in case handling.
-    """
+    # Note that "username" field is purely for shows.
+    # When searching users by their names, always use lowercased string
+    # and slug field instead that is normalized around DB engines
+    # differences in case handling.
     username = models.CharField(max_length=30)
     slug = models.CharField(max_length=30, unique=True)
-    """
-    Misago stores user email in two fields:
-    "email" holds normalized email address
-    "email_hash" is lowercase hash of email address used to identify account
-    as well as enforcing on database level that no more than one user can be
-    using one email address
-    """
+
+    # Misago stores user email in two fields:
+    # "email" holds normalized email address
+    # "email_hash" is lowercase hash of email address used to identify account
+    # as well as enforcing on database level that no more than one user can be
+    # using one email address
     email = models.EmailField(max_length=255, db_index=True)
     email_hash = models.CharField(max_length=32, unique=True)
+
     joined_on = models.DateTimeField(_('joined on'), default=timezone.now)
     joined_from_ip = models.GenericIPAddressField()
     last_ip = models.GenericIPAddressField(null=True, blank=True)
@@ -270,7 +268,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.email = self.__class__.objects.normalize_email(self.email)
 
     def lock(self):
-        """Locks user in DB"""
+        """locks user in DB, shortcut for locking user model in views"""
         return User.objects.select_for_update().get(pk=self.pk)
 
     def delete(self, *args, **kwargs):
@@ -337,9 +335,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         )
 
     def get_username(self):
-        """
-        Dirty hack: return real username instead of normalized slug
-        """
+        """dirty hack: return real username instead of normalized slug"""
         return self.username
 
     def get_full_name(self):
@@ -406,9 +402,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.acl_key = md5(','.join(roles_pks).encode()).hexdigest()[:12]
 
     def email_user(self, subject, message, from_email=None, **kwargs):
-        """
-        Sends an email to this User.
-        """
+        """sends an email to this user (for compat with Django)"""
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
     def is_following(self, user):

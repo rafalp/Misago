@@ -21,9 +21,8 @@ __all__ = [
     'allow_see_ban_details',
     'can_see_ban_details',
 ]
-"""
-Admin Permissions Form
-"""
+
+
 CAN_BROWSE_USERS_LIST = YesNoSwitch(label=_("Can browse users list"), initial=1)
 CAN_SEARCH_USERS = YesNoSwitch(label=_("Can search user profiles"), initial=1)
 CAN_SEE_USER_NAME_HISTORY = YesNoSwitch(label=_("Can see other members name history"))
@@ -64,11 +63,6 @@ def change_permissions_form(role):
         return None
 
 
-"""
-ACL Builder
-"""
-
-
 def build_acl(acl, roles, key_name):
     new_acl = {
         'can_browse_users_list': 0,
@@ -99,11 +93,6 @@ def build_acl(acl, roles, key_name):
     )
 
 
-"""
-ACL's for targets
-"""
-
-
 def add_acl_to_user(user, target):
     target.acl['can_have_attitude'] = False
     target.acl['can_follow'] = can_follow_user(user, target)
@@ -119,11 +108,6 @@ def add_acl_to_user(user, target):
 
 def register_with(registry):
     registry.acl_annotator(get_user_model(), add_acl_to_user)
-
-
-"""
-ACL tests
-"""
 
 
 def allow_browse_users_list(user):

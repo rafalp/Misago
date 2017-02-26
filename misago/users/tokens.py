@@ -65,9 +65,6 @@ def _make_checksum(obfuscated):
     return sha256(force_bytes('%s:%s' % (settings.SECRET_KEY, obfuscated))).hexdigest()[:8]
 
 
-"""
-Convenience functions for activation token
-"""
 ACTIVATION_TOKEN = 'activation'
 
 
@@ -79,9 +76,6 @@ def is_activation_token_valid(user, token):
     return is_valid(user, ACTIVATION_TOKEN, token)
 
 
-"""
-Convenience functions for password change token
-"""
 PASSWORD_CHANGE_TOKEN = 'change_password'
 
 

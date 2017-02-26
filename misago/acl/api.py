@@ -19,9 +19,7 @@ from .providers import providers
 
 
 def get_user_acl(user):
-    """
-    Get ACL for User
-    """
+    """get ACL for User"""
     acl_key = 'acl_%s' % user.acl_key
 
     acl_cache = threadstore.get(acl_key)
@@ -41,9 +39,7 @@ def get_user_acl(user):
 
 
 def add_acl(user, target):
-    """
-    Add valid ACL to target (iterable of objects or single object)
-    """
+    """add valid ACL to target (iterable of objects or single object)"""
     if hasattr(target, '__iter__'):
         for item in target:
             _add_acl_to_target(user, item)
@@ -52,9 +48,7 @@ def add_acl(user, target):
 
 
 def _add_acl_to_target(user, target):
-    """
-    Add valid ACL to single target, helper for add_acl function
-    """
+    """add valid ACL to single target, helper for add_acl function"""
     target.acl = {}
 
     for annotator in providers.get_type_annotators(target):
@@ -62,9 +56,7 @@ def _add_acl_to_target(user, target):
 
 
 def serialize_acl(target):
-    """
-    Serialize authenticated user's ACL
-    """
+    """serialize authenticated user's ACL"""
     serialized_acl = copy.deepcopy(target.acl_cache)
 
     for serializer in providers.get_type_serializers(target):

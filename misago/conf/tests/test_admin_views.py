@@ -26,9 +26,7 @@ class AdminSettingsViewsTests(AdminTestCase):
             self.assertContains(response, group_link)
 
     def test_invalid_group_handling(self):
-        """
-        invalid group results in redirect to settings list
-        """
+        """invalid group results in redirect to settings list"""
         group_link = reverse(
             'misago:admin:system:settings:group', kwargs={
                 'key': 'invalid-group',
@@ -39,9 +37,7 @@ class AdminSettingsViewsTests(AdminTestCase):
         self.assertTrue(reverse('misago:admin:system:settings:index') in response['location'])
 
     def test_groups_views(self):
-        """
-        each settings group view returns 200 and contains all settings in group
-        """
+        """each settings group view returns 200 and contains all settings in group"""
         for group in SettingsGroup.objects.all():
             group_link = reverse(
                 'misago:admin:system:settings:group', kwargs={

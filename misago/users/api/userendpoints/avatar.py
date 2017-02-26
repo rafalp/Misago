@@ -136,11 +136,6 @@ def avatar_post(options, user, data):
     return Response(response_dict)
 
 
-"""
-Avatar rpc handlers
-"""
-
-
 def avatar_generate(user, data):
     avatars.dynamic.set_avatar(user)
     return _("New avatar based on your account was set.")

@@ -7,11 +7,7 @@ from misago.core.forms import YesNoSwitch
 from misago.threads.models import Attachment
 
 
-"""
-Admin Permissions Form
-"""
-
-
+# Admin Permissions Forms
 class PermissionsForm(forms.Form):
     legend = _("Attachments")
 
@@ -44,11 +40,6 @@ def change_permissions_form(role):
         return None
 
 
-"""
-ACL Builder
-"""
-
-
 def build_acl(acl, roles, key_name):
     new_acl = {
         'max_attachment_size': 0,
@@ -65,11 +56,6 @@ def build_acl(acl, roles, key_name):
         can_download_other_users_attachments=algebra.greater,
         can_delete_other_users_attachments=algebra.greater,
     )
-
-
-"""
-ACL's for targets
-"""
 
 
 def add_acl_to_attachment(user, attachment):

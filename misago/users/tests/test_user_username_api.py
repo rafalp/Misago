@@ -11,9 +11,7 @@ UserModel = get_user_model()
 
 
 class UserUsernameTests(AuthenticatedUserTestCase):
-    """
-    tests for user change name RPC (POST to /api/users/1/username/)
-    """
+    """tests for user change name RPC (POST to /api/users/1/username/)"""
 
     def setUp(self):
         super(UserUsernameTests, self).setUp()
@@ -108,9 +106,7 @@ class UserUsernameTests(AuthenticatedUserTestCase):
 
 
 class UserUsernameModerationTests(AuthenticatedUserTestCase):
-    """
-    tests for moderate username RPC (/api/users/1/moderate-username/)
-    """
+    """tests for moderate username RPC (/api/users/1/moderate-username/)"""
 
     def setUp(self):
         super(UserUsernameModerationTests, self).setUp()

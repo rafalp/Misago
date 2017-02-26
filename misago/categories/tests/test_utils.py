@@ -7,11 +7,6 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class CategoriesUtilsTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(CategoriesUtilsTests, self).setUp()
-        threadstore.clear()
-
-        self.root = Category.objects.root_category()
-        self.first_category = Category.objects.get(slug='first-category')
         """
         Create categories tree for test cases:
 
@@ -25,6 +20,13 @@ class CategoriesUtilsTests(AuthenticatedUserTestCase):
         Category E
           + Subcategory F
         """
+
+        super(CategoriesUtilsTests, self).setUp()
+        threadstore.clear()
+
+        self.root = Category.objects.root_category()
+        self.first_category = Category.objects.get(slug='first-category')
+
         Category(
             name='Category A',
             slug='category-a',

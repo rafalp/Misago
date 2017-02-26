@@ -82,9 +82,7 @@ def parse(
 
 
 def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
-    """
-    Create and configure markdown object
-    """
+    """creates and configures markdown object"""
     md = markdown.Markdown(safe_mode='escape', extensions=['nl2br'])
 
     # Remove references

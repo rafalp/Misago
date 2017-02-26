@@ -46,9 +46,7 @@ DROP INDEX %(index_name)s
 
 
 def batch_update(queryset, step=50):
-    """
-    Util because psycopg2 iterators aren't really memory effective
-    """
+    """util because psycopg2 iterators aren't memory effective in Dj<1.11"""
     paginator = Paginator(queryset.order_by('pk'), step)
     for page_number in paginator.page_range:
         for obj in paginator.page(page_number).object_list:
@@ -56,9 +54,7 @@ def batch_update(queryset, step=50):
 
 
 def batch_delete(queryset, step=50):
-    """
-    Another util cos paginator goes bobbins when you are deleting
-    """
+    """another util cos paginator goes bobbins when you are deleting"""
     queryset_exists = True
     while queryset_exists:
         for obj in queryset[:step]:

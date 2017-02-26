@@ -67,16 +67,10 @@ def set_users_unread_private_threads_sync(users=None, participants=None, exclude
 
 
 def set_owner(thread, user):
-    """
-    Set user as thread's owner
-    """
     ThreadParticipant.objects.set_owner(thread, user)
 
 
 def change_owner(request, thread, user):
-    """
-    Replace thread's owner with other
-    """
     ThreadParticipant.objects.set_owner(thread, user)
     set_users_unread_private_threads_sync(
         participants=thread.participants_list,
@@ -100,9 +94,7 @@ def change_owner(request, thread, user):
 
 
 def add_participant(request, thread, user):
-    """
-    Adds single participant to thread, registers this on the event
-    """
+    """adds single participant to thread, registers this on the event"""
     add_participants(request, thread, [user])
 
     if request.user == user:
@@ -124,7 +116,7 @@ def add_participant(request, thread, user):
 def add_participants(request, thread, users):
     """
     Add multiple participants to thread, set "recound private threads" flag on them
-    notify them about being added to thread
+    notify them about being added to thread.
     """
     ThreadParticipant.objects.add_participants(thread, users)
 
@@ -162,9 +154,7 @@ def build_noticiation_email(request, thread, user):
 
 
 def remove_participant(request, thread, user):
-    """
-    Remove thread participant, set "recound private threads" flag on user
-    """
+    """remove thread participant, set "recound private threads" flag on user"""
     removed_owner = False
     remaining_participants = []
 

@@ -75,9 +75,7 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(event.event_type, 'pinned_locally')
 
     def test_pin_invalid_thread(self):
-        """
-        pin_thread_locally returns false for already locally pinned thread
-        """
+        """pin_thread_locally returns false for already locally pinned thread"""
         self.thread.weight = 1
 
         self.assertFalse(moderation.pin_thread_locally(self.request, self.thread))

@@ -6,9 +6,6 @@ from django.utils.translation import ugettext as _
 
 
 def create_default_categories_roles(apps, schema_editor):
-    """
-    Crete roles
-    """
     CategoryRole = apps.get_model('misago_categories', 'CategoryRole')
 
     CategoryRole.objects.create(

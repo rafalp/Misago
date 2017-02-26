@@ -328,9 +328,6 @@ class CategoryAdminViewsTests(CategoryAdminTestCate):
 
 class CategoryAdminDeleteViewTests(CategoryAdminTestCate):
     def setUp(self):
-        super(CategoryAdminDeleteViewTests, self).setUp()
-        self.root = Category.objects.root_category()
-        self.first_category = Category.objects.get(slug='first-category')
         """
         Create categories tree for test cases:
 
@@ -344,6 +341,12 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCate):
         Category E
           + Category F
         """
+
+        super(CategoryAdminDeleteViewTests, self).setUp()
+
+        self.root = Category.objects.root_category()
+        self.first_category = Category.objects.get(slug='first-category')
+
         self.client.post(
             reverse('misago:admin:categories:nodes:new'),
             data={

@@ -128,9 +128,7 @@ class PostingEndpoint(object):
 
 
 class PostingMiddleware(object):
-    """
-    Abstract middleware class
-    """
+    """abstract middleware class"""
 
     def __init__(self, **kwargs):
         self.kwargs = kwargs

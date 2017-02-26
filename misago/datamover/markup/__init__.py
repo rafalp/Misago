@@ -29,11 +29,6 @@ def clean_original(post):
     return post
 
 
-"""
-Fake request and user for parser
-"""
-
-
 class FakeUser(object):
     slug = get_random_string(40)
 

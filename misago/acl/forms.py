@@ -14,9 +14,7 @@ class RoleForm(forms.ModelForm):
 
 
 def get_permissions_forms(role, data=None):
-    """
-    Utility function for building forms in admin
-    """
+    """utility function for building forms in admin"""
     role_permissions = role.permissions
 
     perms_forms = []

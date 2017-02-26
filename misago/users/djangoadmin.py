@@ -30,27 +30,21 @@ class UserAdminForm(forms.ModelForm):
     it is kind of overkill - overwrite the whole template just to add one
     button - isn't it?
     """
-    #: pseudo-field
     edit_from_misago_link = forms.Field()
 
     def __init__(self, *args, **kwargs):
-        # noinspection PyArgumentList
         super(UserAdminForm, self).__init__(*args, **kwargs)
         self.init_edit_from_misago_link_field()
 
     def init_edit_from_misago_link_field(self):
-        """
-        Init for the pseudo-field, and replace it's widget `render`.
-        """
+        """init for the pseudo-field, and replace it's widget `render`"""
         field = self.fields['edit_from_misago_link']
         field.required = False
         field.label = ''
         field.widget.render = self.render_edit_from_misago_link
 
     def render_edit_from_misago_link(self, *args, **kwargs):
-        """
-        Composes an html hyperlink for the pseudo-field render.
-        """
+        """composes an html hyperlink for the pseudo-field render"""
         text = _('Edit this user in Misago admin panel')
         link_html_template = ('<a href="{}" target="blank">' + text + '</a>')
         link_url = reverse(

@@ -5,9 +5,7 @@ from . import PostingEndpoint, PostingMiddleware
 
 
 class SyncPrivateThreadsMiddleware(PostingMiddleware):
-    """
-    Middleware that sets private thread participants to sync unread threads
-    """
+    """middleware that sets private thread participants to sync unread threads"""
 
     def use_this_middleware(self):
         if self.mode == PostingEndpoint.REPLY:

@@ -19,17 +19,12 @@ INVALID_EXCEPTIONS = [
 
 class IsMisagoExceptionTests(TestCase):
     def test_is_misago_exception_true_for_handled_exceptions(self):
-        """
-        exceptionhandler.is_misago_exception recognizes handled exceptions
-        """
+        """exceptionhandler.is_misago_exception recognizes handled exceptions"""
         for exception in exceptionhandler.HANDLED_EXCEPTIONS:
             self.assertTrue(exceptionhandler.is_misago_exception(exception()))
 
     def test_is_misago_exception_false_for_not_handled_exceptions(self):
-        """
-        exceptionhandler.is_misago_exception fails to recognize other
-        exceptions
-        """
+        """exceptionhandler.is_misago_exception fails to recognize other exceptions"""
         for exception in INVALID_EXCEPTIONS:
             self.assertFalse(exceptionhandler.is_misago_exception(exception()))
 

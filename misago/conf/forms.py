@@ -136,9 +136,7 @@ def setting_field(FormType, setting):
 
 
 def ChangeSettingsForm(data=None, group=None):
-    """
-    Factory method that builds valid form for settings group
-    """
+    """factory method that builds valid form for settings group"""
 
     class FormType(forms.Form):
         pass

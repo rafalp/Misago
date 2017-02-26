@@ -26,9 +26,6 @@ __all__ = [
     'allow_lift_ban',
     'can_lift_ban',
 ]
-"""
-Admin Permissions Form
-"""
 
 
 class PermissionsForm(forms.Form):
@@ -60,11 +57,6 @@ def change_permissions_form(role):
         return None
 
 
-"""
-ACL Builder
-"""
-
-
 def build_acl(acl, roles, key_name):
     new_acl = {
         'can_rename_users': 0,
@@ -91,11 +83,6 @@ def build_acl(acl, roles, key_name):
     )
 
 
-"""
-ACL's for targets
-"""
-
-
 def add_acl_to_user(user, target):
     target.acl['can_rename'] = can_rename_user(user, target)
     target.acl['can_moderate_avatar'] = can_moderate_avatar(user, target)
@@ -119,11 +106,6 @@ def add_acl_to_user(user, target):
 
 def register_with(registry):
     registry.acl_annotator(get_user_model(), add_acl_to_user)
-
-
-"""
-ACL tests
-"""
 
 
 def allow_rename_user(user, target):

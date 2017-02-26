@@ -18,12 +18,6 @@ LISTS_URLS = ('', 'my/', 'new/', 'unread/', 'subscribed/', )
 
 class ThreadsListTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ThreadsListTestCase, self).setUp()
-
-        self.api_link = reverse('misago:api:thread-list')
-
-        self.root = Category.objects.root_category()
-        self.first_category = Category.objects.get(slug='first-category')
         """
         Create categories tree for test cases:
 
@@ -37,6 +31,13 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
         Category E
           + Subcategory F
         """
+        super(ThreadsListTestCase, self).setUp()
+
+        self.api_link = reverse('misago:api:thread-list')
+
+        self.root = Category.objects.root_category()
+        self.first_category = Category.objects.get(slug='first-category')
+
         Category(
             name='Category A',
             slug='category-a',
@@ -725,9 +726,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
     def test_list_user_can_see_hidden_thread(self):
-        """
-        list shows hidden thread that belongs to other user due to permission
-        """
+        """list shows hidden thread that belongs to other user due to permission"""
         test_thread = testutils.post_thread(
             category=self.category_a,
             is_hidden=True,
@@ -749,9 +748,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         self.assertEqual(response_json['results'][0]['id'], test_thread.pk)
 
     def test_list_user_can_see_unapproved_thread(self):
-        """
-        list shows hidden thread that belongs to other user due to permission
-        """
+        """list shows hidden thread that belongs to other user due to permission"""
         test_thread = testutils.post_thread(
             category=self.category_a,
             is_unapproved=True,
@@ -1546,9 +1543,7 @@ class UnapprovedListTests(ThreadsListTestCase):
         self.assertNotContains(response, hidden_thread.get_absolute_url())
 
     def test_list_shows_owned_threads_for_unapproving_user(self):
-        """
-        list shows owned threads with unapproved posts for user without perm
-        """
+        """list shows owned threads with unapproved posts for user without perm"""
         visible_thread = testutils.post_thread(
             poster=self.user,
             category=self.category_b,

@@ -4,9 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class MisagoACLPanel(Panel):
-    """
-    Panel that displays current user's ACL
-    """
+    """panel that displays current user's ACL"""
     title = _("Misago User ACL")
     template = 'misago/acl_debug.html'
 

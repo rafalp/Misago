@@ -49,9 +49,7 @@ class SearchProvidersTests(TestCase):
         self.assertEqual(searchproviders.get_providers('REQUEST')[0].request, 'REQUEST')
 
     def test_get_allowed_providers(self):
-        """
-        get_allowed_providers returns only providers that didn't raise in allow_search
-        """
+        """get_allowed_providers returns only providers that didn't raise in allow_search"""
         searchproviders = SearchProviders([])
 
         searchproviders._initialized = True

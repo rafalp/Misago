@@ -24,9 +24,6 @@ class SimpleBBCodePattern(SimpleTagPattern):
         self.tag = tag or bbcode.lower()
 
 
-"""
-Register basic BBCodes
-"""
 bold = SimpleBBCodePattern('b')
 italics = SimpleBBCodePattern('i')
 underline = SimpleBBCodePattern('u')

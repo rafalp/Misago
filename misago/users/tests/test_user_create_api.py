@@ -11,9 +11,7 @@ UserModel = get_user_model()
 
 
 class UserCreateTests(UserTestCase):
-    """
-    tests for new user registration (POST to /api/users/)
-    """
+    """tests for new user registration (POST to /api/users/)"""
 
     def setUp(self):
         super(UserCreateTests, self).setUp()

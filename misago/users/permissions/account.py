@@ -6,11 +6,6 @@ from misago.acl.models import Role
 from misago.core.forms import YesNoSwitch
 
 
-"""
-Admin Permissions Form
-"""
-
-
 class PermissionsForm(forms.Form):
     legend = _("Account settings")
 
@@ -44,11 +39,6 @@ def change_permissions_form(role):
         return PermissionsForm
     else:
         return None
-
-
-"""
-ACL Builder
-"""
 
 
 def build_acl(acl, roles, key_name):

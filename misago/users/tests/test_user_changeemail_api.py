@@ -9,9 +9,7 @@ UserModel = get_user_model()
 
 
 class UserChangeEmailTests(AuthenticatedUserTestCase):
-    """
-    tests for user change email RPC (/api/users/1/change-email/)
-    """
+    """tests for user change email RPC (/api/users/1/change-email/)"""
 
     def setUp(self):
         super(UserChangeEmailTests, self).setUp()

@@ -18,9 +18,7 @@ UserModel = get_user_model()
 
 
 class UserAvatarTests(AuthenticatedUserTestCase):
-    """
-    tests for user avatar RPC (/api/users/1/avatar/)
-    """
+    """tests for user avatar RPC (/api/users/1/avatar/)"""
 
     def setUp(self):
         super(UserAvatarTests, self).setUp()
@@ -285,9 +283,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
 
 
 class UserAvatarModerationTests(AuthenticatedUserTestCase):
-    """
-    tests for moderate user avatar RPC (/api/users/1/moderate-avatar/)
-    """
+    """tests for moderate user avatar RPC (/api/users/1/moderate-avatar/)"""
 
     def setUp(self):
         super(UserAvatarModerationTests, self).setUp()

@@ -15,9 +15,7 @@ from . import PostingEndpoint, PostingMiddleware
 
 
 class CategoryMiddleware(PostingMiddleware):
-    """
-    Middleware that validates category id and sets category on thread and post instances
-    """
+    """middleware that validates category id and sets category on thread and post instances"""
 
     def use_this_middleware(self):
         if self.mode == PostingEndpoint.START:

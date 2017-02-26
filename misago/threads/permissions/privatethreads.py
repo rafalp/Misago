@@ -28,9 +28,6 @@ __all__ = [
     'allow_message_user',
     'can_message_user',
 ]
-"""
-Admin Permissions Form
-"""
 
 
 class PermissionsForm(forms.Form):
@@ -69,11 +66,6 @@ def change_permissions_form(role):
         return PermissionsForm
     else:
         return None
-
-
-"""
-ACL Builder
-"""
 
 
 def build_acl(acl, roles, key_name):
@@ -176,11 +168,6 @@ def add_acl_to_thread(user, thread):
 
 def register_with(registry):
     registry.acl_annotator(Thread, add_acl_to_thread)
-
-
-"""
-ACL tests
-"""
 
 
 def allow_use_private_threads(user):

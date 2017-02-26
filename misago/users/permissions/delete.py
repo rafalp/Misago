@@ -16,9 +16,6 @@ __all__ = [
     'allow_delete_user',
     'can_delete_user',
 ]
-"""
-Admin Permissions Form
-"""
 
 
 class PermissionsForm(forms.Form):
@@ -45,11 +42,6 @@ def change_permissions_form(role):
         return None
 
 
-"""
-ACL Builder
-"""
-
-
 def build_acl(acl, roles, key_name):
     new_acl = {
         'can_delete_users_newer_than': 0,
@@ -66,11 +58,6 @@ def build_acl(acl, roles, key_name):
     )
 
 
-"""
-ACL's for targets
-"""
-
-
 def add_acl_to_user(user, target):
     target.acl['can_delete'] = can_delete_user(user, target)
     if target.acl['can_delete']:
@@ -79,11 +66,6 @@ def add_acl_to_user(user, target):
 
 def register_with(registry):
     registry.acl_annotator(get_user_model(), add_acl_to_user)
-
-
-"""
-ACL tests
-"""
 
 
 def allow_delete_user(user, target):

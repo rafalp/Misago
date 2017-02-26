@@ -5,17 +5,17 @@ from django.template.loader import render_to_string
 
 
 register = template.Library()
-"""
-Form row: renders single row in form
-
-Syntax:
-{% form_row form.field %} # renders vertical field
-{% form_row form.field "col-md-3" "col-md-9" %} # renders horizontal field
-"""
 
 
 @register.tag
 def form_row(parser, token):
+    """
+    Form row: renders single row in form
+
+    Syntax:
+    {% form_row form.field %} # renders vertical field
+    {% form_row form.field "col-md-3" "col-md-9" %} # renders horizontal field
+    """
     args = token.split_contents()
 
     if len(args) < 2:
@@ -72,11 +72,7 @@ class FormRowNode(template.Node):
         )
 
 
-"""
-Form input: renders given field input
-"""
-
-
 @register.tag
 def form_input(parser, token):
+    """form input: renders given field input"""
     return crispy_forms_field.crispy_field(parser, token)

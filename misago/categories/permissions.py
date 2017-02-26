@@ -12,11 +12,6 @@ from misago.users.models import AnonymousUser
 from .models import Category, CategoryRole, RoleCategoryACL
 
 
-"""
-Admin Permissions Form
-"""
-
-
 class PermissionsForm(forms.Form):
     legend = _("Category access")
 
@@ -29,11 +24,6 @@ def change_permissions_form(role):
         return PermissionsForm
     else:
         return None
-
-
-"""
-ACL Builder
-"""
 
 
 def build_acl(acl, roles, key_name):
@@ -95,11 +85,6 @@ def build_category_acl(acl, category, categories_roles, key_name):
             acl['browseable_categories'].append(category.pk)
 
 
-"""
-ACL's for targets
-"""
-
-
 def add_acl_to_category(user, target):
     target.acl['can_see'] = can_see_category(user, target)
     target.acl['can_browse'] = can_browse_category(user, target)
@@ -125,11 +110,6 @@ def register_with(registry):
 
     registry.acl_serializer(get_user_model(), serialize_categories_alcs)
     registry.acl_serializer(AnonymousUser, serialize_categories_alcs)
-
-
-"""
-ACL tests
-"""
 
 
 def allow_see_category(user, target):

@@ -3,9 +3,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 
 class UserSignatureTests(AuthenticatedUserTestCase):
-    """
-    tests for user signature RPC (POST to /api/users/1/signature/)
-    """
+    """tests for user signature RPC (POST to /api/users/1/signature/)"""
 
     def setUp(self):
         super(UserSignatureTests, self).setUp()

@@ -23,9 +23,6 @@ __all__ = [
     'allow_see_poll_votes',
     'can_see_poll_votes',
 ]
-"""
-Admin Permissions Forms
-"""
 
 
 class RolePermissionsForm(forms.Form):
@@ -80,11 +77,6 @@ def change_permissions_form(role):
         return None
 
 
-"""
-ACL Builder
-"""
-
-
 def build_acl(acl, roles, key_name):
     acl.update({
         'can_start_polls': 0,
@@ -106,11 +98,6 @@ def build_acl(acl, roles, key_name):
     )
 
 
-"""
-ACL's for targets
-"""
-
-
 def add_acl_to_poll(user, poll):
     poll.acl.update({
         'can_vote': can_vote_poll(user, poll),
@@ -129,11 +116,6 @@ def add_acl_to_thread(user, thread):
 def register_with(registry):
     registry.acl_annotator(Poll, add_acl_to_poll)
     registry.acl_annotator(Thread, add_acl_to_thread)
-
-
-"""
-ACL tests
-"""
 
 
 def allow_start_poll(user, target):

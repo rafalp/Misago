@@ -29,16 +29,14 @@ def gateway(request):
         return session_user(request)
 
 
-"""
-POST /auth/ with CSRF, username and password
-will attempt to authenticate new user
-"""
-
-
 @api_view(['POST'])
 @permission_classes((UnbannedAnonOnly, ))
 @csrf_protect
 def login(request):
+    """
+    POST /auth/ with CSRF, username and password
+    will attempt to authenticate new user
+    """
     form = AuthenticationForm(request, data=request.data)
     if form.is_valid():
         auth.login(request, form.user_cache)
@@ -52,13 +50,10 @@ def login(request):
         )
 
 
-"""
-GET /auth/ will return current auth user, either User or AnonymousUser
-"""
-
 
 @api_view()
 def session_user(request):
+    """GET /auth/ will return current auth user, either User or AnonymousUser"""
     if request.user.is_authenticated:
         UserSerializer = AuthenticatedUserSerializer
     else:
@@ -67,13 +62,9 @@ def session_user(request):
     return Response(UserSerializer(request.user).data)
 
 
-"""
-GET /auth/criteria/ will return password and username criteria for accounts
-"""
-
-
 @api_view(['GET'])
 def get_criteria(request):
+    """GET /auth/criteria/ will return password and username criteria for accounts"""
     criteria = {
         'username': {
             'min_length': settings.username_length_min,
@@ -92,16 +83,14 @@ def get_criteria(request):
     return Response(criteria)
 
 
-"""
-POST /auth/send-activation/ with CSRF token and email
-will mail account activation link to requester
-"""
-
-
 @api_view(['POST'])
 @permission_classes((UnbannedAnonOnly, ))
 @csrf_protect
 def send_activation(request):
+    """
+    POST /auth/send-activation/ with CSRF token and email
+    will mail account activation link to requester
+    """
     form = ResendActivationForm(request.data)
     if form.is_valid():
         requesting_user = form.user_cache
@@ -132,16 +121,14 @@ def send_activation(request):
         )
 
 
-"""
-POST /auth/send-password-form/ with CSRF token and email
-will mail change password form link to requester
-"""
-
-
 @api_view(['POST'])
 @permission_classes((UnbannedOnly, ))
 @csrf_protect
 def send_password_form(request):
+    """
+    POST /auth/send-password-form/ with CSRF token and email
+    will mail change password form link to requester
+    """
     form = ResetPasswordForm(request.data)
     if form.is_valid():
         requesting_user = form.user_cache
@@ -174,12 +161,6 @@ def send_password_form(request):
         )
 
 
-"""
-POST /auth/change-password/user/token/ with CSRF and new password
-will change forgotten password
-"""
-
-
 class PasswordChangeFailed(Exception):
     pass
 
@@ -188,6 +169,10 @@ class PasswordChangeFailed(Exception):
 @permission_classes((UnbannedOnly, ))
 @csrf_protect
 def change_forgotten_password(request, pk, token):
+    """
+    POST /auth/change-password/user/token/ with CSRF and new password
+    will change forgotten password
+    """
     invalid_message = _("Form link is invalid. Please try again.")
     expired_message = _("Your link has expired. Please request new one.")
 

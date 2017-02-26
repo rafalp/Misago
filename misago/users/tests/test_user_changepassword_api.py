@@ -5,9 +5,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 
 class UserChangePasswordTests(AuthenticatedUserTestCase):
-    """
-    tests for user change password RPC (/api/users/1/change-password/)
-    """
+    """tests for user change password RPC (/api/users/1/change-password/)"""
 
     def setUp(self):
         super(UserChangePasswordTests, self).setUp()

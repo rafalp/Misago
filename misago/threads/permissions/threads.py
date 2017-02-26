@@ -45,9 +45,6 @@ __all__ = [
     'exclude_invisible_threads',
     'exclude_invisible_posts',
 ]
-"""
-Admin Permissions Forms
-"""
 
 
 class RolePermissionsForm(forms.Form):
@@ -241,11 +238,6 @@ def change_permissions_form(role):
         return None
 
 
-"""
-ACL Builder
-"""
-
-
 def build_acl(acl, roles, key_name):
     acl.update({
         'can_see_unapproved_content_lists': False,
@@ -344,11 +336,6 @@ def build_category_acl(acl, category, categories_roles, key_name):
     )
 
     return final_acl
-
-
-"""
-ACL's for targets
-"""
 
 
 def add_acl_to_category(user, category):
@@ -506,11 +493,6 @@ def register_with(registry):
     registry.acl_annotator(Category, add_acl_to_category)
     registry.acl_annotator(Thread, add_acl_to_thread)
     registry.acl_annotator(Post, add_acl_to_post)
-
-
-"""
-ACL tests
-"""
 
 
 def allow_see_thread(user, target):
@@ -872,9 +854,6 @@ def allow_delete_event(user, target):
 
 
 can_delete_event = return_boolean(allow_delete_event)
-"""
-Permission check helpers
-"""
 
 
 def can_change_owned_thread(user, target):
@@ -907,11 +886,6 @@ def has_time_to_edit_post(user, target):
         return diff_minutes < edit_time
     else:
         return True
-
-
-"""
-Queryset helpers
-"""
 
 
 def exclude_invisible_threads(user, categories, queryset):

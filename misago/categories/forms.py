@@ -13,11 +13,6 @@ from . import THREADS_ROOT_NAME
 from .models import Category, CategoryRole
 
 
-"""
-Fields
-"""
-
-
 class AdminCategoryFieldMixin(object):
     def __init__(self, *args, **kwargs):
         self.base_level = kwargs.pop('base_level', 1)
@@ -46,11 +41,6 @@ class AdminCategoryChoiceField(AdminCategoryFieldMixin, TreeNodeChoiceField):
 
 class AdminCategoryMultipleChoiceField(AdminCategoryFieldMixin, TreeNodeMultipleChoiceField):
     pass
-
-
-"""
-Forms
-"""
 
 
 class CategoryFormBase(forms.ModelForm):

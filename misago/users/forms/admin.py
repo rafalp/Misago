@@ -14,9 +14,6 @@ from misago.users.validators import validate_email, validate_username
 
 
 UserModel = get_user_model()
-"""
-Users
-"""
 
 
 class UserBaseForm(forms.ModelForm):
@@ -330,21 +327,16 @@ def SearchUsersForm(*args, **kwargs):
     extra_fields = {
         'rank':
             forms.TypedChoiceField(
-                label=_("Has rank"), coerce=int, required=False, choices=ranks_choices
+                label=_("Has rank"), coerce=int, required=False, choices=ranks_choices,
             ),
         'role':
             forms.TypedChoiceField(
-                label=_("Has role"), coerce=int, required=False, choices=roles_choices
+                label=_("Has role"), coerce=int, required=False, choices=roles_choices,
             )
     }
 
     FinalForm = type('SearchUsersFormFinal', (SearchUsersFormBase, ), extra_fields)
     return FinalForm(*args, **kwargs)
-
-
-"""
-Ranks
-"""
 
 
 class RankForm(forms.ModelForm):
@@ -421,11 +413,6 @@ class RankForm(forms.ModelForm):
         return data
 
 
-"""
-Bans
-"""
-
-
 class BanUsersForm(forms.Form):
     ban_type = forms.MultipleChoiceField(
         label=_("Values to ban"),
@@ -445,7 +432,7 @@ class BanUsersForm(forms.Form):
         max_length=1000,
         help_text=_("Optional message displayed to users instead of default one."),
         widget=forms.Textarea(attrs={'rows': 3}),
-        error_messages={'max_length': _("Message can't be longer than 1000 characters.")}
+        error_messages={'max_length': _("Message can't be longer than 1000 characters."),}
     )
     staff_message = forms.CharField(
         label=_("Team message"),
@@ -453,7 +440,7 @@ class BanUsersForm(forms.Form):
         max_length=1000,
         help_text=_("Optional ban message for moderators and administrators."),
         widget=forms.Textarea(attrs={'rows': 3}),
-        error_messages={'max_length': _("Message can't be longer than 1000 characters.")}
+        error_messages={'max_length': _("Message can't be longer than 1000 characters."),}
     )
     expires_on = IsoDateTimeField(
         label=_("Expires on"),
@@ -472,8 +459,7 @@ class BanForm(forms.ModelForm):
             'for rought matches. For example, making IP ban for value '
             '"83.*" will ban all IP addresses beginning with "83.".'
         ),
-        error_messages={'max_length': _("Banned value can't be longer "
-                                        "than 250 characters.")}
+        error_messages={'max_length': _("Banned value can't be longer than 250 characters."),}
     )
     user_message = forms.CharField(
         label=_("User message"),
@@ -481,7 +467,7 @@ class BanForm(forms.ModelForm):
         max_length=1000,
         help_text=_("Optional message displayed to user instead of default one."),
         widget=forms.Textarea(attrs={'rows': 3}),
-        error_messages={'max_length': _("Message can't be longer than 1000 characters.")}
+        error_messages={'max_length': _("Message can't be longer than 1000 characters."),}
     )
     staff_message = forms.CharField(
         label=_("Team message"),
@@ -489,7 +475,7 @@ class BanForm(forms.ModelForm):
         max_length=1000,
         help_text=_("Optional ban message for moderators and administrators."),
         widget=forms.Textarea(attrs={'rows': 3}),
-        error_messages={'max_length': _("Message can't be longer than 1000 characters.")}
+        error_messages={'max_length': _("Message can't be longer than 1000 characters."),}
     )
     expires_on = IsoDateTimeField(
         label=_("Expires on"),

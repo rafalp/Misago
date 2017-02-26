@@ -15,7 +15,5 @@ class AdminBaseMixin(object):
     message_404 = None
 
     def get_model(self):
-        """
-        Basic method for retrieving Model, used in cases such as User model.
-        """
+        """basic method for retrieving Model, used in cases such as User model."""
         return self.model

@@ -2,9 +2,7 @@ from .providers import providers
 
 
 def build_acl(roles):
-    """
-    Build ACL for given roles
-    """
+    """build ACL for given roles"""
     acl = {}
 
     for extension, module in providers.list():

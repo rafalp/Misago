@@ -8,9 +8,7 @@ from misago.conf import settings
 
 
 class MarkupPipeline(object):
-    """
-    Small framework for extending parser
-    """
+    """small framework for extending parser"""
 
     def extend_markdown(self, md):
         for extension in settings.MISAGO_MARKUP_EXTENSIONS:

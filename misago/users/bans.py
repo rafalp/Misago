@@ -127,9 +127,6 @@ def _get_session_bancache(request):
         if not cachebuster.is_valid(VERSION_KEY, ban_cache['version']):
             return None
         if ban_cache.get('expires_on'):
-            """
-            Hydrate ban date
-            """
             if ban_cache['expires_on'] < timezone.today():
                 return None
         return ban_cache

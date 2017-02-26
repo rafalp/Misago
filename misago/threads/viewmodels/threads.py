@@ -182,11 +182,6 @@ class PrivateThreads(ViewModel):
         make_participants_aware(request.user, threads)
 
 
-"""
-Thread queryset utils
-"""
-
-
 def get_threads_queryset(user, categories, list_type):
     queryset = exclude_invisible_threads(user, categories, Thread.objects)
 

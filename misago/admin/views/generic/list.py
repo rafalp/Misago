@@ -65,10 +65,6 @@ class ListView(AdminView):
     def get_queryset(self):
         return self.get_model().objects.all()
 
-    """
-    Dispatch response
-    """
-
     def dispatch(self, request, *args, **kwargs):
         mass_actions_list = self.mass_actions or []
         extra_actions_list = self.extra_actions or []
@@ -174,9 +170,7 @@ class ListView(AdminView):
         context['page'] = context['paginator'].page(page)
         context['items'] = context['page'].object_list
 
-    """
-    Filter list items
-    """
+    # Filter list items
     search_form = None
 
     def get_search_form(self, request):
@@ -231,10 +225,7 @@ class ListView(AdminView):
                 active_filters, context['items']
             )
 
-    """
-    Order list items
-    """
-
+    # Order list items
     @property
     def ordering_session_key(self):
         return 'misago_admin_%s_order_by' % self.root_link
@@ -290,10 +281,7 @@ class ListView(AdminView):
                     order_as_dict['order_by'] = order_as_dict['order_by'][1:]
                 context['order_by'].append(order_as_dict)
 
-    """
-    Mass actions
-    """
-
+    # Mass actions
     def handle_mass_action(self, request, context):
         limit = self.items_per_page or 64
         action = self.select_mass_action(request.POST.get('action'))
@@ -323,10 +311,7 @@ class ListView(AdminView):
         else:
             raise MassActionError(_("Action is not allowed."))
 
-    """
-    Querystring builder
-    """
-
+    # Querystring builder
     def make_querystring(self, context):
         values = {}
         filter_values = {}

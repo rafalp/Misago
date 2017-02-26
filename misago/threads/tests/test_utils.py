@@ -6,9 +6,6 @@ from misago.threads.utils import add_categories_to_items, get_thread_id_from_url
 
 class AddCategoriesToItemsTests(MisagoTestCase):
     def setUp(self):
-        super(AddCategoriesToItemsTests, self).setUp()
-
-        self.root = Category.objects.root_category()
         """
         Create categories tree for test cases:
 
@@ -22,6 +19,11 @@ class AddCategoriesToItemsTests(MisagoTestCase):
         Category E
           + Subcategory F
         """
+
+        super(AddCategoriesToItemsTests, self).setUp()
+
+        self.root = Category.objects.root_category()
+
         Category(
             name='Category A',
             slug='category-a',
