@@ -186,9 +186,7 @@ def create_users_settings_group(apps, schema_editor):
         apps, {
             'key': 'captcha',
             'name': _("CAPTCHA"),
-            'description': _(
-                "Those settings allow you to combat automatic registrations on your forum."
-            ),
+            'description': _("Those settings allow you to combat automatic registrations on your forum."),
             'settings': [
                 {
                     'setting': 'captcha_type',
@@ -247,9 +245,7 @@ def create_users_settings_group(apps, schema_editor):
                 {
                     'setting': 'qa_answers',
                     'name': _("Valid answers"),
-                    'description': _(
-                        "Enter each answer in new line. Answers are case-insensitive."
-                    ),
+                    'description': _("Enter each answer in new line. Answers are case-insensitive."),
                     'value': '',
                     'form_field': 'textarea',
                     'field_extra': {

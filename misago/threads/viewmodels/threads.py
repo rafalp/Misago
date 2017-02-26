@@ -35,9 +35,7 @@ LIST_DENIED_MESSAGES = {
     'new': ugettext_lazy("You have to sign in to see list of threads you haven't read."),
     'unread': ugettext_lazy("You have to sign in to see list of threads with new replies."),
     'subscribed': ugettext_lazy("You have to sign in to see list of threads you are subscribing."),
-    'unapproved': ugettext_lazy(
-        "You have to sign in to see list of threads with unapproved posts."
-    ),
+    'unapproved': ugettext_lazy("You have to sign in to see list of threads with unapproved posts."),
 }
 
 

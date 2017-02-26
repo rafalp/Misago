@@ -58,9 +58,7 @@ class AttachmentTypeForm(forms.ModelForm):
             'limit_downloads_to': _("Limit downloads to"),
         }
         help_texts = {
-            'extensions': _(
-                "List of comma separated file extensions associated with this attachment type."
-            ),
+            'extensions': _("List of comma separated file extensions associated with this attachment type."),
             'mimetypes': _(
                 "Optional list of comma separated mime types associated with this attachment type."
             ),
