@@ -5,6 +5,7 @@ from misago.conf import settings
 
 class PermissionProviders(object):
     """manager for permission providers"""
+
     def __init__(self):
         self._initialized = False
         self._providers = []

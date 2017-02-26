@@ -32,8 +32,11 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
     class Meta:
         model = UserModel
         fields = UserSerializer.Meta.fields + [
-            'is_hiding_presence', 'limits_private_thread_invites_to',
-            'subscribe_to_started_threads', 'subscribe_to_replied_threads', 'is_authenticated',
+            'is_hiding_presence',
+            'limits_private_thread_invites_to',
+            'subscribe_to_started_threads',
+            'subscribe_to_replied_threads',
+            'is_authenticated',
             'is_anonymous',
         ]
 

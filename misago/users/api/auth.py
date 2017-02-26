@@ -50,7 +50,6 @@ def login(request):
         )
 
 
-
 @api_view()
 def session_user(request):
     """GET /auth/ will return current auth user, either User or AnonymousUser"""

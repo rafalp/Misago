@@ -107,16 +107,26 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
 
     def get_api_url(self, obj):
         return {
-            'root': reverse('misago:api:user-detail', kwargs={'pk': obj.pk}),
-            'follow': reverse('misago:api:user-follow', kwargs={'pk': obj.pk}),
-            'ban': reverse('misago:api:user-ban', kwargs={'pk': obj.pk}),
-            'moderate_avatar': reverse('misago:api:user-moderate-avatar', kwargs={'pk': obj.pk}),
-            'moderate_username': reverse('misago:api:user-moderate-username', kwargs={'pk': obj.pk}),
-            'delete': reverse('misago:api:user-delete', kwargs={'pk': obj.pk}),
-            'followers': reverse('misago:api:user-followers', kwargs={'pk': obj.pk}),
-            'follows': reverse('misago:api:user-follows', kwargs={'pk': obj.pk}),
-            'threads': reverse('misago:api:user-threads', kwargs={'pk': obj.pk}),
-            'posts':  reverse('misago:api:user-posts', kwargs={'pk': obj.pk}),
+            'root':
+                reverse('misago:api:user-detail', kwargs={'pk': obj.pk}),
+            'follow':
+                reverse('misago:api:user-follow', kwargs={'pk': obj.pk}),
+            'ban':
+                reverse('misago:api:user-ban', kwargs={'pk': obj.pk}),
+            'moderate_avatar':
+                reverse('misago:api:user-moderate-avatar', kwargs={'pk': obj.pk}),
+            'moderate_username':
+                reverse('misago:api:user-moderate-username', kwargs={'pk': obj.pk}),
+            'delete':
+                reverse('misago:api:user-delete', kwargs={'pk': obj.pk}),
+            'followers':
+                reverse('misago:api:user-followers', kwargs={'pk': obj.pk}),
+            'follows':
+                reverse('misago:api:user-follows', kwargs={'pk': obj.pk}),
+            'threads':
+                reverse('misago:api:user-threads', kwargs={'pk': obj.pk}),
+            'posts':
+                reverse('misago:api:user-posts', kwargs={'pk': obj.pk}),
         }
 
 

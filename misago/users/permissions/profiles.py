@@ -22,7 +22,6 @@ __all__ = [
     'can_see_ban_details',
 ]
 
-
 CAN_BROWSE_USERS_LIST = YesNoSwitch(label=_("Can browse users list"), initial=1)
 CAN_SEARCH_USERS = YesNoSwitch(label=_("Can search user profiles"), initial=1)
 CAN_SEE_USER_NAME_HISTORY = YesNoSwitch(label=_("Can see other members name history"))
