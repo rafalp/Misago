@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
 
 from misago.acl.testutils import override_acl
-from misago.users.testutils import AuthenticatedUserTestCase
 from misago.users.online.utils import get_user_status
+from misago.users.testutils import AuthenticatedUserTestCase
 
 
 UserModel = get_user_model()
@@ -26,7 +26,7 @@ class GetUserStatusTests(AuthenticatedUserTestCase):
         self.other_user.save()
 
         override_acl(self.user, {
-            'can_see_hidden_users': True
+            'can_see_hidden_users': True,
         })
 
         get_user_status(self.user, self.other_user)
