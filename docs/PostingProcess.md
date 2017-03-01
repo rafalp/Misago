@@ -89,3 +89,17 @@ Do not make assumptions or "piggyback" on other middlewares save orders. Introsp
 Middlewares can always interrupt (and rollback) posting process during `interrupt_posting` phrase by raising `misago.threads.posting.PostingInterrupt` exception with error message as its only argument.
 
 All `PostingInterrupt`s raised outside that phase will be escalated to `ValueError` that will result in 500 error response from Misago. However as this will happen inside database transaction, there is chance that no data loss has occured in the process.
+
+
+## Performing custom validation
+
+Misago defines custom validation framework for posts very much alike one used for [validating new registrations](./ValidatingRegistrations.md).
+
+This framework works by passing user post, title, its parsing result as well as posting middleware's context trough list of callables imported from paths specified in the `MISAGO_POST_VALIDATORS` settings.
+
+Each serializer is expected to be callable accepting two arguments:
+
+* `data` dict with cleaned data. This will `post` containing raw input entered by user into editor, `parsing_result`, an dict defining `parsed_text` key containing parsed message, `mentions` with list of mentions, `images` list of urls to images and two lists: `outgoing_links` and `internal_links`. In case of user posting new thread, this dict will also contain `title` key containing cleaned title.
+* `context` dict with context that was passed to posting middleware.
+
+Your validator should raise `from rest_framework.serializers.ValidationError` on error. If validation passes it may return nothing, or updated `data` dict, which allows validators to perform last-minute cleanups on user input.

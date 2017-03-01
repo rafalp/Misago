@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from django.core.exceptions import ValidationError
 from django.utils import six
 
-from misago.threads.validators import validate_post
+from misago.threads.validators import validate_post_length
 
 from . import common_flavour, finalise_markup
 
@@ -15,7 +15,7 @@ def parse_markup(request):
     post = six.text_type(request.data.get('post', '')).strip()
 
     try:
-        validate_post(post)
+        validate_post_length(post)
     except ValidationError as e:
         return Response({'detail': e.args[0]}, status=status.HTTP_400_BAD_REQUEST)
 

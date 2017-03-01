@@ -2,30 +2,30 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from misago.conf import settings
-from misago.threads.validators import validate_post, validate_title
+from misago.threads.validators import validate_post_length, validate_title
 
 
-class ValidatePostTests(TestCase):
-    def test_valid_posts(self):
+class ValidatePostLengthTests(TestCase):
+    def test_valid_post(self):
         """valid post passes validation"""
-        validate_post("Lorem ipsum dolor met sit amet elit.")
+        validate_post_length("Lorem ipsum dolor met sit amet elit.")
 
     def test_empty_post(self):
         """empty post is rejected"""
         with self.assertRaises(ValidationError):
-            validate_post("")
+            validate_post_length("")
 
     def test_too_short_post(self):
         """too short post is rejected"""
         with self.assertRaises(ValidationError):
             post = 'a' * settings.post_length_min
-            validate_post(post[1:])
+            validate_post_length(post[1:])
 
     def test_too_long_post(self):
         """too long post is rejected"""
         with self.assertRaises(ValidationError):
             post = 'a' * settings.post_length_max
-            validate_post(post * 2)
+            validate_post_length(post * 2)
 
 
 class ValidateTitleTests(TestCase):

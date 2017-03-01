@@ -56,7 +56,7 @@ def parse(
         'mentions': [],
         'images': [],
         'outgoing_links': [],
-        'inside_links': [],
+        'internal_links': [],
     }
 
     # Parse text
@@ -161,7 +161,7 @@ def clean_links(request, result, force_shva=False):
     for link in soup.find_all('a'):
         if is_internal_link(link['href'], host):
             link['href'] = clean_internal_link(link['href'], host)
-            result['inside_links'].append(link['href'])
+            result['internal_links'].append(link['href'])
             link['href'] = clean_attachment_link(link['href'], force_shva)
         else:
             result['outgoing_links'].append(link['href'])

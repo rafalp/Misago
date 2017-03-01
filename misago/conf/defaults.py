@@ -29,6 +29,11 @@ MISAGO_ACL_EXTENSIONS = [
 MISAGO_MARKUP_EXTENSIONS = []
 
 
+# Custom post validators
+
+MISAGO_POST_VALIDATORS = []
+
+
 # Posting middlewares
 # https://misago.readthedocs.io/en/latest/developers/posting_process.html
 

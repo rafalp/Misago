@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy
 
 from misago.markup import common_flavour
 from misago.threads.checksums import update_post_checksum
-from misago.threads.validators import validate_post, validate_title
+from misago.threads.validators import validate_post, validate_post_length, validate_title
 
 from . import PostingEndpoint, PostingMiddleware
 
@@ -12,15 +12,15 @@ from . import PostingEndpoint, PostingMiddleware
 class ReplyMiddleware(PostingMiddleware):
     def get_serializer(self):
         if self.mode == PostingEndpoint.START:
-            return ThreadSerializer(data=self.request.data)
+            return ThreadSerializer(data=self.request.data, context=self.kwargs)
         else:
-            return ReplySerializer(data=self.request.data)
+            return ReplySerializer(data=self.request.data, context=self.kwargs)
 
     def save(self, serializer):
         if self.mode == PostingEndpoint.START:
             self.new_thread(serializer.validated_data)
 
-        parsing_result = self.parse_post(serializer.validated_data['post'])
+        parsing_result = serializer.validated_data['parsing_result']
 
         if self.mode == PostingEndpoint.EDIT:
             self.edit_post(serializer.validated_data, parsing_result)
@@ -74,20 +74,27 @@ class ReplyMiddleware(PostingMiddleware):
         self.post.original = parsing_result['original_text']
         self.post.parsed = parsing_result['parsed_text']
 
-    def parse_post(self, post):
-        if self.mode == PostingEndpoint.START:
-            return common_flavour(self.request, self.user, post)
-        else:
-            return common_flavour(self.request, self.post.poster, post)
-
 
 class ReplySerializer(serializers.Serializer):
     post = serializers.CharField(
-        validators=[validate_post],
+        validators=[validate_post_length],
         error_messages={
             'required': ugettext_lazy("You have to enter a message."),
         }
     )
+
+    def validate(self, data):
+        if data.get('post'):
+            data['parsing_result'] = self.parse_post(data['post'])
+            data = validate_post(self.context, data)
+
+        return data
+
+    def parse_post(self, post):
+        if self.context['mode'] == PostingEndpoint.START:
+            return common_flavour(self.context['request'], self.context['user'], post)
+        else:
+            return common_flavour(self.context['request'], self.context['post'].poster, post)
 
 
 class ThreadSerializer(ReplySerializer):

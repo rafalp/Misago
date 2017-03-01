@@ -33,39 +33,6 @@ def validate_category(user, category_id, allow_root=False):
     return category
 
 
-def validate_post(post):
-    post_len = len(post)
-
-    if not post_len:
-        raise ValidationError(_("You have to enter a message."))
-
-    if post_len < settings.post_length_min:
-        message = ungettext(
-            "Posted message should be at least %(limit_value)s character long (it has %(show_value)s).",
-            "Posted message should be at least %(limit_value)s characters long (it has %(show_value)s).",
-            settings.post_length_min,
-        )
-        raise ValidationError(
-            message % {
-                'limit_value': settings.post_length_min,
-                'show_value': post_len,
-            }
-        )
-
-    if settings.post_length_max and post_len > settings.post_length_max:
-        message = ungettext(
-            "Posted message cannot be longer than %(limit_value)s character (it has %(show_value)s).",
-            "Posted message cannot be longer than %(limit_value)s characters (it has %(show_value)s).",
-            settings.post_length_max,
-        )
-        raise ValidationError(
-            message % {
-                'limit_value': settings.post_length_max,
-                'show_value': post_len,
-            }
-        )
-
-
 def validate_title(title):
     title_len = len(title)
 
@@ -103,3 +70,58 @@ def validate_title(title):
     validate_sluggable(error_not_sluggable, error_slug_too_long)(title)
 
     return title
+
+
+def validate_post_length(post):
+    post_len = len(post)
+
+    if not post_len:
+        raise ValidationError(_("You have to enter a message."))
+
+    if post_len < settings.post_length_min:
+        message = ungettext(
+            "Posted message should be at least %(limit_value)s character long (it has %(show_value)s).",
+            "Posted message should be at least %(limit_value)s characters long (it has %(show_value)s).",
+            settings.post_length_min,
+        )
+        raise ValidationError(
+            message % {
+                'limit_value': settings.post_length_min,
+                'show_value': post_len,
+            }
+        )
+
+    if settings.post_length_max and post_len > settings.post_length_max:
+        message = ungettext(
+            "Posted message cannot be longer than %(limit_value)s character (it has %(show_value)s).",
+            "Posted message cannot be longer than %(limit_value)s characters (it has %(show_value)s).",
+            settings.post_length_max,
+        )
+        raise ValidationError(
+            message % {
+                'limit_value': settings.post_length_max,
+                'show_value': post_len,
+            }
+        )
+
+
+# Post validation framework
+def load_post_validators(validators):
+    loaded_validators = []
+    for path in validators:
+        module = import_module('.'.join(path.split('.')[:-1]))
+        loaded_validators.append(getattr(module, path.split('.')[-1]))
+    return loaded_validators
+
+
+validators_list = settings.MISAGO_POST_VALIDATORS
+POST_VALIDATORS = load_post_validators(validators_list)
+
+
+def validate_post(context, data, validators=None):
+    validators = validators or POST_VALIDATORS
+
+    for validator in validators:
+        data = validator(context, data) or data
+
+    return data
