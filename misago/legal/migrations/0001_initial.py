@@ -43,11 +43,11 @@ def create_legal_settings_group(apps, schema_editor):
                     'setting': 'terms_of_service',
                     'name': _("Terms contents"),
                     'description': _(
-                    "Your forums can have custom terms of "
-                    "service page. To create it, write or "
-                    "paste here its contents. Full Misago "
-                    "markup is available for formatting."
-                ),
+                        "Your forums can have custom terms of "
+                        "service page. To create it, write or "
+                        "paste here its contents. Full Misago "
+                        "markup is available for formatting."
+                    ),
                     'value': "",
                     'form_field': 'textarea',
                     'field_extra': {
@@ -85,11 +85,11 @@ def create_legal_settings_group(apps, schema_editor):
                     'setting': 'privacy_policy',
                     'name': _("Policy contents"),
                     'description': _(
-                    "Your forums can have custom privacy "
-                    "policy page. To create it, write or "
-                    "paste here its contents. Full Misago "
-                    "markup is available for formatting."
-                ),
+                        "Your forums can have custom privacy "
+                        "policy page. To create it, write or "
+                        "paste here its contents. Full Misago "
+                        "markup is available for formatting."
+                    ),
                     'value': "",
                     'form_field': 'textarea',
                     'field_extra': {

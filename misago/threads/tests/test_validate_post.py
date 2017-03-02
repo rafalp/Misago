@@ -16,48 +16,64 @@ class ValidatePostTests(AuthenticatedUserTestCase):
 
     def test_title_validation(self):
         """validate_post tests title"""
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': 'Check our l33t CaSiNo!',
-            'post': 'Lorem ipsum dolor met!',
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': 'Check our l33t CaSiNo!',
+                'post': 'Lorem ipsum dolor met!',
+            }
+        )
         self.assertContains(response, "Don't discuss gambling!", status_code=400)
 
         # clean title passes validation
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': 'Check our l33t place!',
-            'post': 'Lorem ipsum dolor met!',
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': 'Check our l33t place!',
+                'post': 'Lorem ipsum dolor met!',
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
     def test_post_validation(self):
         """validate_post tests post content"""
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': 'Lorem ipsum dolor met!',
-            'post': 'Check our l33t CaSiNo!',
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': 'Lorem ipsum dolor met!',
+                'post': 'Check our l33t CaSiNo!',
+            }
+        )
         self.assertContains(response, "Don't discuss gambling!", status_code=400)
 
         # clean post passes validation
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': 'Lorem ipsum dolor met!',
-            'post': 'Check our l33t place!',
-        })
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': 'Lorem ipsum dolor met!',
+                'post': 'Check our l33t place!',
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
     def test_empty_input(self):
         """validate_post handles empty input"""
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-        })
+        response = self.client.post(
+            self.api_link, data={
+                'category': self.category.pk,
+            }
+        )
         self.assertEqual(response.status_code, 400)
 
-        response = self.client.post(self.api_link, data={
-            'category': self.category.pk,
-            'title': '',
-            'post': '',
-        })
+        response = self.client.post(
+            self.api_link, data={
+                'category': self.category.pk,
+                'title': '',
+                'post': '',
+            }
+        )
         self.assertEqual(response.status_code, 400)

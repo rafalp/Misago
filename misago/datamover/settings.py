@@ -47,13 +47,13 @@ SETTING_CONVERTER = {
     'thread_name_max': copy_value('thread_title_length_max'),
     'post_length_min': copy_value('post_length_min'),
     'account_activation': map_value(
-    'account_activation', {
-        'none': 'none',
-        'user': 'user',
-        'admin': 'admin',
-        'block': 'closed',
-    }
-),
+        'account_activation', {
+            'none': 'none',
+            'user': 'user',
+            'admin': 'admin',
+            'block': 'closed',
+        }
+    ),
     'username_length_min': copy_value('username_length_min'),
     'username_length_max': copy_value('username_length_max'),
     'password_length': copy_value('password_length_min'),
@@ -61,20 +61,20 @@ SETTING_CONVERTER = {
     'default_avatar': copy_value('default_avatar'),
     'upload_limit': copy_value('avatar_upload_limit'),
     'subscribe_start': map_value('subscribe_start', {
-    '0': 'no',
-    '1': 'watch',
-    '2': 'watch_email',
-}),
+        '0': 'no',
+        '1': 'watch',
+        '2': 'watch_email',
+    }),
     'subscribe_reply': map_value('subscribe_reply', {
-    '0': 'no',
-    '1': 'watch',
-    '2': 'watch_email',
-}),
+        '0': 'no',
+        '1': 'watch',
+        '2': 'watch_email',
+    }),
     'bots_registration': map_value('captcha_type', {
-    'no': 'no',
-    'recaptcha': 're',
-    'qa': 'qa',
-}),
+        'no': 'no',
+        'recaptcha': 're',
+        'qa': 'qa',
+    }),
     'recaptcha_public': copy_value('recaptcha_site_key'),
     'recaptcha_private': copy_value('recaptcha_secret_key'),
     'qa_test': copy_value('qa_question'),

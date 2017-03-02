@@ -16,8 +16,8 @@ def update_users_settings(apps, schema_editor):
             'key': 'users',
             'name': _("Users"),
             'description': _(
-            "Those settings control user accounts default behaviour and features availability."
-        ),
+                "Those settings control user accounts default behaviour and features availability."
+            ),
             'settings': [
                 {
                     'setting': 'account_activation',
@@ -63,11 +63,11 @@ def update_users_settings(apps, schema_editor):
                     'name': _("Allow custom avatars"),
                     'legend': _("Avatars"),
                     'description': _(
-                    "Turning this option off will forbid "
-                    "forum users from using avatars from "
-                    "outside forums. Good for forums "
-                    "adressed at young users."
-                ),
+                        "Turning this option off will forbid "
+                        "forum users from using avatars from "
+                        "outside forums. Good for forums "
+                        "adressed at young users."
+                    ),
                     'python_type': 'bool',
                     'value': True,
                     'form_field': 'yesno',
@@ -89,9 +89,9 @@ def update_users_settings(apps, schema_editor):
                     'setting': 'default_gravatar_fallback',
                     'name': _("Fallback for default gravatar"),
                     'description': _(
-                    "Select which avatar to use when user has no "
-                    "gravatar associated with his e-mail address."
-                ),
+                        "Select which avatar to use when user has no "
+                        "gravatar associated with his e-mail address."
+                    ),
                     'value': 'dynamic',
                     'form_field': 'select',
                     'field_extra': {

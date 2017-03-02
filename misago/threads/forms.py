@@ -60,25 +60,25 @@ class AttachmentTypeForm(forms.ModelForm):
         help_texts = {
             'extensions': _("List of comma separated file extensions associated with this attachment type."),
             'mimetypes': _(
-            "Optional list of comma separated mime types associated with this attachment type."
-        ),
+                "Optional list of comma separated mime types associated with this attachment type."
+            ),
             'size_limit': _(
-            "Maximum allowed uploaded file size for this type, in kb. "
-            "May be overriden via user permission."
-        ),
+                "Maximum allowed uploaded file size for this type, in kb. "
+                "May be overriden via user permission."
+            ),
             'status': _("Controls this attachment type availability on your site."),
             'limit_uploads_to': _(
-            "If you wish to limit option to upload files of this type to users with specific "
-            "roles, select them on this list. Otherwhise don't select any roles to allow all "
-            "users with permission to upload attachments to be able to upload attachments of "
-            "this type."
-        ),
+                "If you wish to limit option to upload files of this type to users with specific "
+                "roles, select them on this list. Otherwhise don't select any roles to allow all "
+                "users with permission to upload attachments to be able to upload attachments of "
+                "this type."
+            ),
             'limit_downloads_to': _(
-            "If you wish to limit option to download files of this type to users with "
-            "specific roles, select them on this list. Otherwhise don't select any roles to "
-            "allow all users with permission to download attachments to be able to download "
-            "attachments of this type."
-        ),
+                "If you wish to limit option to download files of this type to users with "
+                "specific roles, select them on this list. Otherwhise don't select any roles to "
+                "allow all users with permission to download attachments to be able to download "
+                "attachments of this type."
+            ),
         }
         widgets = {
             'limit_uploads_to': forms.CheckboxSelectMultiple,
