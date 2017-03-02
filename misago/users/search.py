@@ -28,7 +28,10 @@ class SearchUsers(SearchProvider):
         else:
             results = []
 
-        return {'results': UserCardSerializer(results, many=True).data, 'count': len(results)}
+        return {
+            'results': UserCardSerializer(results, many=True).data,
+            'count': len(results),
+        }
 
 
 def search_users(**filters):
@@ -46,8 +49,9 @@ def search_users(**filters):
     # lets grab head and tail results:
     results += list(queryset.filter(slug__startswith=username)[:HEAD_RESULTS])
     results += list(
-        queryset.filter(slug__contains=username).exclude(pk__in=[r.pk
-                                                                 for r in results])[:TAIL_RESULTS]
+        queryset.filter(slug__contains=username).exclude(
+            pk__in=[r.pk for r in results],
+        )[:TAIL_RESULTS]
     )
 
     return results
