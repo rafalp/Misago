@@ -15,9 +15,9 @@ def create_basic_settings_group(apps, schema_editor):
             'key': 'basic',
             'name': _("Basic forum settings"),
             'description': _(
-                "Those settings control most basic properties "
-                "of your forum like its name or description."
-            ),
+            "Those settings control most basic properties "
+            "of your forum like its name or description."
+        ),
             'settings': [
                 {
                     'setting': 'forum_name',

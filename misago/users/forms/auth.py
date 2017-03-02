@@ -17,8 +17,8 @@ class MisagoAuthMixin(object):
         'invalid_login': _("Login or password is incorrect."),
         'inactive_user': _("You have to activate your account before you will be able to sign in."),
         'inactive_admin': _(
-            "Your account has to be activated by Administrator before you will be able to sign in."
-        ),
+        "Your account has to be activated by Administrator before you will be able to sign in."
+    ),
     }
 
     def confirm_user_active(self, user):
@@ -135,13 +135,13 @@ class ResendActivationForm(GetUserForm):
 class ResetPasswordForm(GetUserForm):
     error_messages = {
         'inactive_user': _(
-            "You have to activate your account before "
-            "you will be able to request new password."
-        ),
+        "You have to activate your account before "
+        "you will be able to request new password."
+    ),
         'inactive_admin': _(
-            "Administrator has to activate your account before "
-            "you will be able to request new password."
-        ),
+        "Administrator has to activate your account before "
+        "you will be able to request new password."
+    ),
     }
 
     def confirm_allowed(self, user):

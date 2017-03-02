@@ -1,8 +1,38 @@
+from rest_framework import serializers
+
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from misago.conf import settings
-from misago.threads.validators import validate_post_length, validate_title
+from misago.core.testproject.validators import test_post_validator
+from misago.threads.validators import (
+    load_post_validators, validate_post, validate_post_length, validate_title)
+
+
+class LoadPostValidatorsTests(TestCase):
+    def test_empty_list(self):
+        """empty validator list returns no validators"""
+        self.assertEqual(load_post_validators([]), [])
+
+    def test_load_validator(self):
+        """function loads validator from list"""
+        validators = load_post_validators([
+            'misago.core.testproject.validators.test_post_validator',
+        ])
+
+        self.assertEqual(validators, [test_post_validator])
+
+    def test_load_nonexistant_validator(self):
+        """nonexistant validator raises"""
+        with self.assertRaises(ImportError):
+            validators = load_post_validators([
+                'misago.core.yaddayadda.yaddayadda',
+            ])
+
+        with self.assertRaises(AttributeError):
+            validators = load_post_validators([
+                'misago.core.yaddayadda',
+            ])
 
 
 class ValidatePostLengthTests(TestCase):

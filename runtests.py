@@ -83,6 +83,12 @@ PASSWORD_HASHERS = (
 
 # Use english search config
 MISAGO_SEARCH_CONFIG = 'english'
+
+
+# Register test post validator
+MISAGO_POST_VALIDATORS = [
+    'misago.core.testproject.validators.test_post_validator',
+]
 """
 
     if os.environ.get('TRAVIS'):

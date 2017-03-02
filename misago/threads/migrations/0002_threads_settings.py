@@ -57,9 +57,9 @@ def create_threads_settings_group(apps, schema_editor):
                     'setting': 'post_length_max',
                     'name': _("Maximum length"),
                     'description': _(
-                        "Maximum allowed user post length. Enter zero to disable. "
-                        "Longer posts are more costful to parse and index."
-                    ),
+                    "Maximum allowed user post length. Enter zero to disable. "
+                    "Longer posts are more costful to parse and index."
+                ),
                     'python_type': 'int',
                     'value': 60000,
                     'field_extra': {

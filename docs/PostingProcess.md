@@ -99,7 +99,7 @@ This framework works by passing user post, title, its parsing result as well as 
 
 Each serializer is expected to be callable accepting two arguments:
 
-* `data` dict with cleaned data. This will `post` containing raw input entered by user into editor, `parsing_result`, an dict defining `parsed_text` key containing parsed message, `mentions` with list of mentions, `images` list of urls to images and two lists: `outgoing_links` and `internal_links`. In case of user posting new thread, this dict will also contain `title` key containing cleaned title.
-* `context` dict with context that was passed to posting middleware.
+* `context` dict with context that was passed to the posting middleware.
+* `data` dict with cleaned data: `post` containing raw input entered by user and `parsing_result`, an dict defining `parsed_text` key containing parsed message, `mentions` with list of mentions, `images` list of urls to images and two lists: `outgoing_links` and `internal_links`. In case of user posting new thread, this dict will also contain `title` key containing cleaned title.
 
 Your validator should raise `from rest_framework.serializers.ValidationError` on error. If validation passes it may return nothing, or updated `data` dict, which allows validators to perform last-minute cleanups on user input.

@@ -126,13 +126,12 @@ export default class extends Form {
 
   handleError(rejection) {
     if (rejection.status === 400) {
-      if (rejection.category) {
-        snackbar.error(rejection.category[0]);
-      } else if (rejection.title) {
-        snackbar.error(rejection.title[0]);
-      } else if (rejection.post) {
-        snackbar.error(rejection.post[0]);
-      }
+      const errors = [].concat(
+        rejection.non_field_errors || [],
+        rejection.post || []
+      );
+
+      snackbar.error(errors[0]);
     } else {
       snackbar.apiError(rejection);
     }

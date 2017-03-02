@@ -51,9 +51,9 @@ def thread_merge_endpoint(request, thread, viewmodel):
         return Response(
             {
                 'detail': _(
-                    "The thread you have entered link to doesn't "
-                    "exist or you don't have permission to see it."
-                )
+                "The thread you have entered link to doesn't "
+                "exist or you don't have permission to see it."
+            )
             },
             status=400,
         )
