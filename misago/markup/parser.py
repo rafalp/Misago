@@ -55,8 +55,8 @@ def parse(
         'markdown': md,
         'mentions': [],
         'images': [],
-        'outgoing_links': [],
         'internal_links': [],
+        'outgoing_links': [],
     }
 
     # Parse text
@@ -176,7 +176,7 @@ def clean_links(request, result, force_shva=False):
             result['images'].append(img['src'])
             img['src'] = clean_attachment_link(img['src'], force_shva)
         else:
-            result['images'].append(img['src'])
+            result['images'].append(clean_link_prefix(img['src']))
 
     # [6:-7] trims <body></body> wrap
     result['parsed_text'] = six.text_type(soup.body)[6:-7]

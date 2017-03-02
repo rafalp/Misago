@@ -138,6 +138,9 @@ Lorem ipsum: http://test.com
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
         self.assertEqual(expected_result, result['parsed_text'])
+        self.assertEqual(result['internal_links'], ['/'])
+        self.assertEqual(result['images'], [])
+        self.assertEqual(result['outgoing_links'], [])
 
     def test_clean_schemaless_link(self):
         """clean_links step cleans test.com"""
@@ -151,6 +154,9 @@ Lorem ipsum: test.com
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
         self.assertEqual(expected_result, result['parsed_text'])
+        self.assertEqual(result['internal_links'], ['/'])
+        self.assertEqual(result['images'], [])
+        self.assertEqual(result['outgoing_links'], [])
 
     def test_trim_current_path(self):
         """clean_links step leaves http://test.com path"""
@@ -164,6 +170,9 @@ Lorem ipsum: http://test.com/somewhere-something/
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
         self.assertEqual(expected_result, result['parsed_text'])
+        self.assertEqual(result['internal_links'], ['/somewhere-something/'])
+        self.assertEqual(result['images'], [])
+        self.assertEqual(result['outgoing_links'], [])
 
     def test_clean_outgoing_link_domain(self):
         """clean_links step leaves outgoing domain link"""
@@ -177,6 +186,9 @@ Lorem ipsum: http://somewhere.com
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
         self.assertEqual(expected_result, result['parsed_text'])
+        self.assertEqual(result['outgoing_links'], ['http://somewhere.com'])
+        self.assertEqual(result['images'], [])
+        self.assertEqual(result['internal_links'], [])
 
     def test_trim_outgoing_path(self):
         """clean_links step leaves outgoing link domain and path"""
@@ -190,6 +202,9 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
         self.assertEqual(expected_result, result['parsed_text'])
+        self.assertEqual(result['outgoing_links'], ['http://somewhere.com/somewhere-something/'])
+        self.assertEqual(result['images'], [])
+        self.assertEqual(result['internal_links'], [])
 
     def test_clean_local_image_src(self):
         """clean_links step cleans local image src"""
@@ -203,6 +218,9 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
         self.assertEqual(expected_result, result['parsed_text'])
+        self.assertEqual(result['images'], ['/image.jpg'])
+        self.assertEqual(result['internal_links'], [])
+        self.assertEqual(result['outgoing_links'], [])
 
     def test_clean_remote_image_src(self):
         """clean_links step cleans remote image src"""
@@ -216,6 +234,9 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
         self.assertEqual(expected_result, result['parsed_text'])
+        self.assertEqual(result['images'], ['somewhere.com/image.jpg'])
+        self.assertEqual(result['internal_links'], [])
+        self.assertEqual(result['outgoing_links'], [])
 
     def test_clean_linked_image(self):
         """parser handles image element nested in link"""
@@ -229,6 +250,9 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
         self.assertEqual(expected_result, result['parsed_text'])
+        self.assertEqual(result['images'], ['/a/thumb/test/43/'])
+        self.assertEqual(result['internal_links'], ['/a/test/43/'])
+        self.assertEqual(result['outgoing_links'], [])
 
     def test_force_shva(self):
         """parser appends ?shva=1 bit to attachment links if flag is present"""
@@ -242,6 +266,9 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True, force_shva=True)
         self.assertEqual(expected_result, result['parsed_text'])
+        self.assertEqual(result['images'], ['/a/thumb/test/43/'])
+        self.assertEqual(result['internal_links'], [])
+        self.assertEqual(result['outgoing_links'], [])
 
     def test_remove_shva(self):
         """parser removes ?shva=1 bit from attachment links if flag is absent"""
@@ -255,6 +282,9 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
         self.assertEqual(expected_result, result['parsed_text'])
+        self.assertEqual(result['images'], ['/a/thumb/test/43/?shva=1'])
+        self.assertEqual(result['internal_links'], [])
+        self.assertEqual(result['outgoing_links'], [])
 
 
 class LinkifyTests(TestCase):
@@ -270,6 +300,9 @@ Lorem ipsum: `<http://test.com>`
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
         self.assertEqual(expected_result, result['parsed_text'])
+        self.assertEqual(result['internal_links'], [])
+        self.assertEqual(result['images'], [])
+        self.assertEqual(result['outgoing_links'], [])
 
 
 class StriketroughTests(TestCase):
