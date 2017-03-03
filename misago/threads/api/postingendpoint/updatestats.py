@@ -26,6 +26,8 @@ class UpdateStatsMiddleware(PostingMiddleware):
     def update_thread(self, thread, post):
         if post.is_unapproved:
             thread.has_unapproved_posts = True
+            if self.post.id == self.thread.first_post_id:
+                thread.is_unapproved = True
         else:
             if self.mode != PostingEndpoint.EDIT:
                 thread.set_last_post(post)

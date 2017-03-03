@@ -389,3 +389,146 @@ class StartThreadTests(AuthenticatedUserTestCase):
             }
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_category_moderation_queue(self):
+        """start unapproved thread in category that requires approval"""
+        self.category.require_threads_approval = True
+        self.category.save()
+
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Hello, I am test thread!",
+                'post': "Lorem ipsum dolor met!",
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+        thread = self.user.thread_set.all()[:1][0]
+        self.assertTrue(thread.is_unapproved)
+        self.assertTrue(thread.has_unapproved_posts)
+
+        post = self.user.post_set.all()[:1][0]
+        self.assertTrue(post.is_unapproved)
+
+        category = Category.objects.get(slug='first-category')
+        self.assertEqual(category.threads, self.category.threads)
+        self.assertEqual(category.posts, self.category.posts)
+        self.assertFalse(category.last_thread_id == thread.id)
+
+    def test_category_moderation_queue_bypass(self):
+        """bypass moderation queue due to user's acl"""
+        override_acl(self.user, {'can_approve_content': 1})
+
+        self.category.require_threads_approval = True
+        self.category.save()
+
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Hello, I am test thread!",
+                'post': "Lorem ipsum dolor met!",
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+        thread = self.user.thread_set.all()[:1][0]
+        self.assertFalse(thread.is_unapproved)
+        self.assertFalse(thread.has_unapproved_posts)
+
+        post = self.user.post_set.all()[:1][0]
+        self.assertFalse(post.is_unapproved)
+
+        category = Category.objects.get(slug='first-category')
+        self.assertEqual(category.threads, self.category.threads + 1)
+        self.assertEqual(category.posts, self.category.posts + 1)
+        self.assertEqual(category.last_thread_id, thread.id)
+
+    def test_user_moderation_queue(self):
+        """start unapproved thread in category that requires approval"""
+        self.override_acl({'require_threads_approval': 1})
+
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Hello, I am test thread!",
+                'post': "Lorem ipsum dolor met!",
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+        thread = self.user.thread_set.all()[:1][0]
+        self.assertTrue(thread.is_unapproved)
+        self.assertTrue(thread.has_unapproved_posts)
+
+        post = self.user.post_set.all()[:1][0]
+        self.assertTrue(post.is_unapproved)
+
+        category = Category.objects.get(slug='first-category')
+        self.assertEqual(category.threads, self.category.threads)
+        self.assertEqual(category.posts, self.category.posts)
+        self.assertFalse(category.last_thread_id == thread.id)
+
+    def test_user_moderation_queue_bypass(self):
+        """bypass moderation queue due to user's acl"""
+        override_acl(self.user, {'can_approve_content': 1})
+
+        self.override_acl({'require_threads_approval': 1})
+
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Hello, I am test thread!",
+                'post': "Lorem ipsum dolor met!",
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+        thread = self.user.thread_set.all()[:1][0]
+        self.assertFalse(thread.is_unapproved)
+        self.assertFalse(thread.has_unapproved_posts)
+
+        post = self.user.post_set.all()[:1][0]
+        self.assertFalse(post.is_unapproved)
+
+        category = Category.objects.get(slug='first-category')
+        self.assertEqual(category.threads, self.category.threads + 1)
+        self.assertEqual(category.posts, self.category.posts + 1)
+        self.assertEqual(category.last_thread_id, thread.id)
+
+    def test_omit_other_moderation_queues(self):
+        """other queues are omitted"""
+        self.category.require_replies_approval = True
+        self.category.require_edits_approval = True
+        self.category.save()
+
+        self.override_acl({
+            'require_replies_approval': 1,
+            'require_edits_approval': 1,
+        })
+
+        response = self.client.post(
+            self.api_link,
+            data={
+                'category': self.category.pk,
+                'title': "Hello, I am test thread!",
+                'post': "Lorem ipsum dolor met!",
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+        thread = self.user.thread_set.all()[:1][0]
+        self.assertFalse(thread.is_unapproved)
+        self.assertFalse(thread.has_unapproved_posts)
+
+        post = self.user.post_set.all()[:1][0]
+        self.assertFalse(post.is_unapproved)
+
+        category = Category.objects.get(slug='first-category')
+        self.assertEqual(category.threads, self.category.threads + 1)
+        self.assertEqual(category.posts, self.category.posts + 1)
+        self.assertEqual(category.last_thread_id, thread.id)

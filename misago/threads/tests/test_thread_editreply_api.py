@@ -7,6 +7,7 @@ from django.urls import reverse
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.threads import testutils
+from misago.threads.models import Post, Thread
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -288,3 +289,223 @@ class EditReplyTests(AuthenticatedUserTestCase):
             }
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_reply_category_moderation_queue(self):
+        """edit sends reply to queue due to category setup"""
+        self.category.require_edits_approval = True
+        self.category.save()
+
+        response = self.put(
+            self.api_link,
+            data={
+                'post': "Lorem ipsum dolor met!",
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+        post = self.user.post_set.all()[:1][0]
+        self.assertTrue(post.is_unapproved)
+
+    def test_reply_category_moderation_queue_bypass(self):
+        """bypass moderation queue due to user's acl"""
+        override_acl(self.user, {'can_approve_content': 1})
+
+        self.category.require_edits_approval = True
+        self.category.save()
+
+        response = self.put(
+            self.api_link,
+            data={
+                'post': "Lorem ipsum dolor met!",
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+        post = self.user.post_set.all()[:1][0]
+        self.assertFalse(post.is_unapproved)
+
+    def test_reply_user_moderation_queue(self):
+        """edit sends reply to queue due to user acl"""
+        self.override_acl({'require_edits_approval': 1})
+
+        response = self.put(
+            self.api_link,
+            data={
+                'post': "Lorem ipsum dolor met!",
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+        post = self.user.post_set.all()[:1][0]
+        self.assertTrue(post.is_unapproved)
+
+    def test_reply_user_moderation_queue_bypass(self):
+        """bypass moderation queue due to user's acl"""
+        override_acl(self.user, {'can_approve_content': 1})
+
+        self.override_acl({'require_edits_approval': 1})
+
+        response = self.put(
+            self.api_link,
+            data={
+                'post': "Lorem ipsum dolor met!",
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+        post = self.user.post_set.all()[:1][0]
+        self.assertFalse(post.is_unapproved)
+
+    def test_reply_omit_other_moderation_queues(self):
+        """other queues are omitted"""
+        self.category.require_threads_approval = True
+        self.category.require_replies_approval = True
+        self.category.save()
+
+        self.override_acl({
+            'require_threads_approval': 1,
+            'require_replies_approval': 1,
+        })
+
+        response = self.put(
+            self.api_link,
+            data={
+                'post': "Lorem ipsum dolor met!",
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+        post = self.user.post_set.all()[:1][0]
+        self.assertFalse(post.is_unapproved)
+
+    def setUpFirstReplyTest(self):
+        self.post = self.thread.first_post
+
+        self.post.poster = self.user
+        self.post.save()
+
+        self.api_link = reverse(
+            'misago:api:thread-post-detail',
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.post.pk,
+            }
+        )
+
+    def test_first_reply_category_moderation_queue(self):
+        """edit sends thread to queue due to category setup"""
+        self.setUpFirstReplyTest()
+
+        self.category.require_edits_approval = True
+        self.category.save()
+
+        response = self.put(
+            self.api_link,
+            data={
+                'post': "Lorem ipsum dolor met!",
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertTrue(thread.is_unapproved)
+        self.assertTrue(thread.has_unapproved_posts)
+
+        post = Post.objects.get(pk=self.post.pk)
+        self.assertTrue(post.is_unapproved)
+
+    def test_first_reply_category_moderation_queue_bypass(self):
+        """bypass moderation queue due to user's acl"""
+        self.setUpFirstReplyTest()
+
+        override_acl(self.user, {'can_approve_content': 1})
+
+        self.category.require_edits_approval = True
+        self.category.save()
+
+        response = self.put(
+            self.api_link,
+            data={
+                'post': "Lorem ipsum dolor met!",
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertFalse(thread.is_unapproved)
+        self.assertFalse(thread.has_unapproved_posts)
+
+        post = Post.objects.get(pk=self.post.pk)
+        self.assertFalse(post.is_unapproved)
+
+    def test_first_reply_user_moderation_queue(self):
+        """edit sends thread to queue due to user acl"""
+        self.setUpFirstReplyTest()
+
+        self.override_acl({'require_edits_approval': 1})
+
+        response = self.put(
+            self.api_link,
+            data={
+                'post': "Lorem ipsum dolor met!",
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertTrue(thread.is_unapproved)
+        self.assertTrue(thread.has_unapproved_posts)
+
+        post = Post.objects.get(pk=self.post.pk)
+        self.assertTrue(post.is_unapproved)
+
+    def test_first_reply_user_moderation_queue_bypass(self):
+        """bypass moderation queue due to user's acl"""
+        self.setUpFirstReplyTest()
+
+        override_acl(self.user, {'can_approve_content': 1})
+
+        self.override_acl({'require_edits_approval': 1})
+
+        response = self.put(
+            self.api_link,
+            data={
+                'post': "Lorem ipsum dolor met!",
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertFalse(thread.is_unapproved)
+        self.assertFalse(thread.has_unapproved_posts)
+
+        post = Post.objects.get(pk=self.post.pk)
+        self.assertFalse(post.is_unapproved)
+
+    def test_first_reply_omit_other_moderation_queues(self):
+        """other queues are omitted"""
+        self.setUpFirstReplyTest()
+
+        self.category.require_threads_approval = True
+        self.category.require_replies_approval = True
+        self.category.save()
+
+        self.override_acl({
+            'require_threads_approval': 1,
+            'require_replies_approval': 1,
+        })
+
+        response = self.put(
+            self.api_link,
+            data={
+                'post': "Lorem ipsum dolor met!",
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertFalse(thread.is_unapproved)
+        self.assertFalse(thread.has_unapproved_posts)
+
+        post = Post.objects.get(pk=self.post.pk)
+        self.assertFalse(post.is_unapproved)
