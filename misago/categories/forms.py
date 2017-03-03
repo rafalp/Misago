@@ -71,6 +71,23 @@ class CategoryFormBase(forms.ModelForm):
             "Optional CSS class used to customize this category appearance from templates."
         ),
     )
+    require_threads_approval = YesNoSwitch(
+        label=_("Threads"),
+        required=False,
+        help_text=_("All threads started in this category will require moderator approval."),
+    )
+    require_replies_approval = YesNoSwitch(
+        label=_("Replies"),
+        required=False,
+        help_text=_("All replies posted in this category will require moderator approval."),
+    )
+    require_edits_approval = YesNoSwitch(
+        label=_("Edits"),
+        required=False,
+        help_text=_(
+            "Will make all edited replies return to unapproved state for moderator to review."
+        ),
+    )
     prune_started_after = forms.IntegerField(
         label=_("Thread age"),
         min_value=0,
@@ -95,6 +112,9 @@ class CategoryFormBase(forms.ModelForm):
             'description',
             'css_class',
             'is_closed',
+            'require_threads_approval',
+            'require_replies_approval',
+            'require_edits_approval',
             'prune_started_after',
             'prune_replied_after',
             'archive_pruned_in',

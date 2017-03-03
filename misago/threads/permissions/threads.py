@@ -228,6 +228,10 @@ class CategoryPermissionsForm(forms.Form):
         ],
     )
 
+    require_threads_approval = YesNoSwitch(label=_("Require threads approval"))
+    require_replies_approval = YesNoSwitch(label=_("Require replies approval"))
+    require_edits_approval = YesNoSwitch(label=_("Require edits approval"))
+
 
 def change_permissions_form(role):
     if isinstance(role, Role) and role.special_role != 'anonymous':
@@ -296,11 +300,14 @@ def build_category_acl(acl, category, categories_roles, key_name):
         'can_close_threads': 0,
         'can_move_threads': 0,
         'can_merge_threads': 0,
-        'can_approve_content': 0,
         'can_report_content': 0,
         'can_see_reports': 0,
         'can_see_posts_likes': 0,
         'can_like_posts': 0,
+        'can_approve_content': 0,
+        'require_threads_approval': 0,
+        'require_replies_approval': 0,
+        'require_edits_approval': 0,
         'can_hide_events': 0,
     }
     final_acl.update(acl)
@@ -327,11 +334,14 @@ def build_category_acl(acl, category, categories_roles, key_name):
         can_close_threads=algebra.greater,
         can_move_threads=algebra.greater,
         can_merge_threads=algebra.greater,
-        can_approve_content=algebra.greater,
         can_report_content=algebra.greater,
         can_see_reports=algebra.greater,
         can_see_posts_likes=algebra.greater,
         can_like_posts=algebra.greater,
+        can_approve_content=algebra.greater,
+        require_threads_approval=algebra.greater,
+        require_replies_approval=algebra.greater,
+        require_edits_approval=algebra.greater,
         can_hide_events=algebra.greater,
     )
 
@@ -361,11 +371,14 @@ def add_acl_to_category(user, category):
         'can_close_threads': 0,
         'can_move_threads': 0,
         'can_merge_threads': 0,
-        'can_approve_content': 0,
         'can_report_content': 0,
         'can_see_reports': 0,
         'can_see_posts_likes': 0,
         'can_like_posts': 0,
+        'can_approve_content': 0,
+        'require_threads_approval': category.require_threads_approval,
+        'require_replies_approval': category.require_replies_approval,
+        'require_edits_approval': category.require_edits_approval,
         'can_hide_events': 0,
     })
 
@@ -397,12 +410,22 @@ def add_acl_to_category(user, category):
             can_close_threads=algebra.greater,
             can_move_threads=algebra.greater,
             can_merge_threads=algebra.greater,
-            can_approve_content=algebra.greater,
             can_report_content=algebra.greater,
             can_see_reports=algebra.greater,
             can_like_posts=algebra.greater,
+            can_approve_content=algebra.greater,
+            require_threads_approval=algebra.greater,
+            require_replies_approval=algebra.greater,
+            require_edits_approval=algebra.greater,
             can_hide_events=algebra.greater,
         )
+
+    if user.acl_cache['can_approve_content']:
+        category.acl.update({
+            'require_threads_approval': 0,
+            'require_replies_approval': 0,
+            'require_edits_approval': 0,
+        })
 
     category.acl['can_see_own_threads'] = not category.acl['can_see_all_threads']
 

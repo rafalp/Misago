@@ -44,6 +44,7 @@ MISAGO_POSTING_MIDDLEWARES = [
     'misago.threads.api.postingendpoint.category.CategoryMiddleware',
     'misago.threads.api.postingendpoint.privatethread.PrivateThreadMiddleware',
     'misago.threads.api.postingendpoint.reply.ReplyMiddleware',
+    'misago.threads.api.postingendpoint.moderationqueue.ModerationQueueMiddleware',
     'misago.threads.api.postingendpoint.attachments.AttachmentsMiddleware',
     'misago.threads.api.postingendpoint.participants.ParticipantsMiddleware',
     'misago.threads.api.postingendpoint.pin.PinMiddleware',

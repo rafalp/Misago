@@ -42,7 +42,6 @@ class ReplyMiddleware(PostingMiddleware):
 
         if self.mode == PostingEndpoint.START:
             self.thread.set_first_post(self.post)
-        if self.mode != PostingEndpoint.EDIT:
             self.thread.set_last_post(self.post)
 
         self.thread.save()

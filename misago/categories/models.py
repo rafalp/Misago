@@ -92,6 +92,9 @@ class Category(MPTTModel):
     )
     last_poster_name = models.CharField(max_length=255, null=True, blank=True)
     last_poster_slug = models.CharField(max_length=255, null=True, blank=True)
+    require_threads_approval = models.BooleanField(default=False)
+    require_replies_approval = models.BooleanField(default=False)
+    require_edits_approval = models.BooleanField(default=False)
     prune_started_after = models.PositiveIntegerField(default=0)
     prune_replied_after = models.PositiveIntegerField(default=0)
     archive_pruned_in = models.ForeignKey(
