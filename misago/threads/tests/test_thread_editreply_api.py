@@ -296,8 +296,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.category.save()
 
         response = self.put(
-            self.api_link,
-            data={
+            self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
             }
         )
@@ -314,8 +313,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.category.save()
 
         response = self.put(
-            self.api_link,
-            data={
+            self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
             }
         )
@@ -329,8 +327,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.override_acl({'require_edits_approval': 1})
 
         response = self.put(
-            self.api_link,
-            data={
+            self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
             }
         )
@@ -346,8 +343,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.override_acl({'require_edits_approval': 1})
 
         response = self.put(
-            self.api_link,
-            data={
+            self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
             }
         )
@@ -368,8 +364,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         })
 
         response = self.put(
-            self.api_link,
-            data={
+            self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
             }
         )
@@ -400,8 +395,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.category.save()
 
         response = self.put(
-            self.api_link,
-            data={
+            self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
             }
         )
@@ -424,8 +418,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.category.save()
 
         response = self.put(
-            self.api_link,
-            data={
+            self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
             }
         )
@@ -445,8 +438,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.override_acl({'require_edits_approval': 1})
 
         response = self.put(
-            self.api_link,
-            data={
+            self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
             }
         )
@@ -468,8 +460,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.override_acl({'require_edits_approval': 1})
 
         response = self.put(
-            self.api_link,
-            data={
+            self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
             }
         )
@@ -496,8 +487,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         })
 
         response = self.put(
-            self.api_link,
-            data={
+            self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
             }
         )

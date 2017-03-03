@@ -13,7 +13,7 @@ class UpdateStatsMiddleware(PostingMiddleware):
 
     def update_category(self, category, thread, post):
         if post.is_unapproved:
-            return # don't update category on moderated post
+            return  # don't update category on moderated post
 
         if self.mode == PostingEndpoint.START:
             category.threads = F('threads') + 1
@@ -39,7 +39,7 @@ class UpdateStatsMiddleware(PostingMiddleware):
 
     def update_user(self, user, post):
         if post.is_unapproved:
-            return # don't update user on moderated post
+            return  # don't update user on moderated post
 
         if self.thread.thread_type.root_name == THREADS_ROOT_NAME:
             if self.mode == PostingEndpoint.START:

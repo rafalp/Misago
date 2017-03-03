@@ -190,8 +190,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.category.save()
 
         response = self.client.post(
-            self.api_link,
-            data={
+            self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
             }
         )
@@ -217,8 +216,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.category.save()
 
         response = self.client.post(
-            self.api_link,
-            data={
+            self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
             }
         )
@@ -241,8 +239,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.override_acl({'require_replies_approval': 1})
 
         response = self.client.post(
-            self.api_link,
-            data={
+            self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
             }
         )
@@ -267,8 +264,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.override_acl({'require_replies_approval': 1})
 
         response = self.client.post(
-            self.api_link,
-            data={
+            self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
             }
         )
@@ -298,8 +294,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         })
 
         response = self.client.post(
-            self.api_link,
-            data={
+            self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
             }
         )
