@@ -45,7 +45,7 @@ class BansManager(models.Manager):
 
         queryset = self.filter(
             is_checked=True,
-            registration_only=registration_only
+            registration_only=registration_only,
         )
 
         if len(checks) == 1:

@@ -20,6 +20,10 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='ban',
             name='check_type',
-            field=models.PositiveIntegerField(choices=[(0, 'Username'), (1, 'E-mail address'), (2, 'IP address')], db_index=True, default=0),
+            field=models.PositiveIntegerField(
+                choices=[(0, 'Username'), (1, 'E-mail address'), (2, 'IP address')],
+                db_index=True,
+                default=0
+            ),
         ),
     ]

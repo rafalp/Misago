@@ -457,7 +457,11 @@ class BanUsersForm(forms.Form):
 
 
 class BanForm(forms.ModelForm):
-    check_type = forms.TypedChoiceField(label=_("Check type"), coerce=int, choices=Ban.CHOICES,)
+    check_type = forms.TypedChoiceField(
+        label=_("Check type"),
+        coerce=int,
+        choices=Ban.CHOICES,
+    )
     registration_only = YesNoSwitch(
         label=_("Restrict this ban to registrations"),
         help_text=_(
@@ -527,12 +531,16 @@ class BanForm(forms.ModelForm):
 
 
 class SearchBansForm(forms.Form):
-    check_type = forms.ChoiceField(label=_("Type"), required=False, choices=[
-        ('', _('All bans')),
-        ('names', _('Usernames')),
-        ('emails', _('E-mails')),
-        ('ips', _('IPs')),
-    ],)
+    check_type = forms.ChoiceField(
+        label=_("Type"),
+        required=False,
+        choices=[
+            ('', _('All bans')),
+            ('names', _('Usernames')),
+            ('emails', _('E-mails')),
+            ('ips', _('IPs')),
+        ],
+    )
     value = forms.CharField(label=_("Banned value begins with"), required=False)
     registration_only = forms.ChoiceField(
         label=_("Registration only"),

@@ -73,9 +73,11 @@ class UserCreateTests(UserTestCase):
         )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            '__all__': ["You can't register account like this."],
-        })
+        self.assertEqual(
+            response.json(), {
+                '__all__': ["You can't register account like this."],
+            }
+        )
 
     def test_registration_validates_username(self):
         """api validates usernames"""
@@ -112,9 +114,11 @@ class UserCreateTests(UserTestCase):
         )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'username': ["You can't register account like this."],
-        })
+        self.assertEqual(
+            response.json(), {
+                'username': ["You can't register account like this."],
+            }
+        )
 
     def test_registration_validates_username_registration_ban(self):
         """api validates username registration-only ban"""
@@ -134,9 +138,11 @@ class UserCreateTests(UserTestCase):
         )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'username': ["You can't register account like this."],
-        })
+        self.assertEqual(
+            response.json(), {
+                'username': ["You can't register account like this."],
+            }
+        )
 
     def test_registration_validates_email(self):
         """api validates usernames"""
