@@ -4,7 +4,7 @@ Supported inline BBCodes: b, u, i
 import re
 
 from markdown.inlinepatterns import (
-    IMAGE_LINK_RE, ImagePattern, LinkPattern, SimpleTagPattern, dequote, util)
+    ImagePattern, LinkPattern, SimpleTagPattern, dequote, handleAttributes, util)
 
 
 class SimpleBBCodePattern(SimpleTagPattern):
@@ -34,7 +34,8 @@ class BBcodePattern(object):
     def __init__(self, pattern, markdown_instance=None):
         self.pattern = pattern
         self.compiled_re = re.compile(
-            "^(.*?)%s(.*)$" % pattern, re.DOTALL | re.UNICODE  | re.IGNORECASE)
+            "^(.*?)%s(.*)$" % pattern, re.DOTALL | re.UNICODE | re.IGNORECASE
+        )
 
         self.safe_mode = False
         if markdown_instance:
@@ -77,11 +78,9 @@ class BBCodeUrlPattern(BBcodePattern, LinkPattern):
 
         if m.group(8):
             el.text = m.group(8).strip()
-            title = m.group(8).strip()
             href = m.group(5)
         else:
             el.text = m.group(3)
-            title = m.group(3)
             href = m.group(3)
 
         if href:
