@@ -96,6 +96,25 @@ Lorem ipsum !(https://placekitten.com/g/1200/500)
         result = parse(test_text, MockRequest(), MockPoster(), minify=False)
         self.assertEqual(expected_result, result['parsed_text'])
 
+    def test_url(self):
+        """url bbcode is correctly parsed"""
+        test_text = """
+Lorem ipsum [url]https://placekitten.com/g/600/600[/url]
+
+Lorem ipsum [uRL=https://placekitten.com/g/400/400"]Label text![/UrL]
+
+Lorem ipsum [Lorem ipsum](https://placekitten.com/g/1200/500)
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum <a href="" rel="nofollow">placekitten.com/g/600/600</a></p>
+<p>Lorem ipsum <a href="https://placekitten.com/g/400/400" rel="nofollow">Label text!</a></p>
+<p>Lorem ipsum <a href="https://placekitten.com/g/1200/500" rel="nofollow">Lorem ipsum</a></p>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
 
 class MinifyTests(TestCase):
     def test_minified_text(self):

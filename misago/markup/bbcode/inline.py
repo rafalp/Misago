@@ -3,7 +3,8 @@ Supported inline BBCodes: b, u, i
 """
 import re
 
-from markdown.inlinepatterns import IMAGE_LINK_RE, ImagePattern, SimpleTagPattern, util
+from markdown.inlinepatterns import (
+    IMAGE_LINK_RE, ImagePattern, LinkPattern, SimpleTagPattern, dequote, util)
 
 
 class SimpleBBCodePattern(SimpleTagPattern):
@@ -70,6 +71,30 @@ def image(md):
     return BBCodeImagePattern(IMAGE_PATTERN, md)
 
 
-# todo: URL
-# note: can't just replace url's bbcode with md cos:
-# [url=http://onet.pl][1][/url] => [[1]](http://onet.pl)
+class BBCodeUrlPattern(BBcodePattern, LinkPattern):
+    def handleMatch(self, m):
+        el = util.etree.Element("a")
+
+        if m.group(8):
+            el.text = m.group(8).strip()
+            title = m.group(8).strip()
+            href = m.group(5)
+        else:
+            el.text = m.group(3)
+            title = m.group(3)
+            href = m.group(3)
+
+        if href:
+            if href[0] == "<":
+                href = href[1:-1]
+            el.set("href", self.sanitize_url(self.unescape(href.strip())))
+        else:
+            el.set("href", "")
+        return el
+
+
+URL_PATTERN = r'((\[url=("?)(.*?)("?)\])|(\[url\]))(.*?)\[/url\]'
+
+
+def url(md):
+    return BBCodeUrlPattern(URL_PATTERN, md)

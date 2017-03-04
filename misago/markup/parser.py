@@ -100,7 +100,10 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
     striketrough_md = StriketroughExtension()
     striketrough_md.extendMarkdown(md)
 
-    if not allow_links:
+    if allow_links:
+        # Add [url]
+        md.inlinePatterns.add('bb_url', inline.url(md), '<link')
+    else:
         # Remove links
         del md.inlinePatterns['link']
         del md.inlinePatterns['autolink']
