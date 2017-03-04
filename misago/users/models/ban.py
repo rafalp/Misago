@@ -10,19 +10,28 @@ from misago.users.constants import BANS_CACHEBUSTER
 
 
 class BansManager(models.Manager):
-    def get_ip_ban(self, ip):
-        return self.get_ban(ip=ip)
+    def get_ip_ban(self, ip, registration_only=False):
+        return self.get_ban(
+            ip=ip,
+            registration_only=registration_only,
+        )
 
-    def get_username_ban(self, username):
-        return self.get_ban(username=username)
+    def get_username_ban(self, username, registration_only=False):
+        return self.get_ban(
+            username=username,
+            registration_only=registration_only,
+        )
 
-    def get_email_ban(self, email):
-        return self.get_ban(email=email)
+    def get_email_ban(self, email, registration_only=False):
+        return self.get_ban(
+            email=email,
+            registration_only=registration_only,
+        )
 
     def invalidate_cache(self):
         cachebuster.invalidate(BANS_CACHEBUSTER)
 
-    def get_ban(self, username=None, email=None, ip=None):
+    def get_ban(self, username=None, email=None, ip=None, registration_only=False):
         checks = []
 
         if username:
@@ -34,7 +43,11 @@ class BansManager(models.Manager):
         if ip:
             checks.append(self.model.IP)
 
-        queryset = self.filter(is_checked=True)
+        queryset = self.filter(
+            is_checked=True,
+            registration_only=registration_only
+        )
+
         if len(checks) == 1:
             queryset = queryset.filter(check_type=checks[0])
         elif checks:
@@ -64,7 +77,8 @@ class Ban(models.Model):
         (IP, _('IP address')),
     ]
 
-    check_type = models.PositiveIntegerField(default=USERNAME, db_index=True)
+    check_type = models.PositiveIntegerField(default=USERNAME, choices=CHOICES, db_index=True)
+    registration_only = models.BooleanField(default=False, db_index=True)
     banned_value = models.CharField(max_length=255, db_index=True)
     user_message = models.TextField(null=True, blank=True)
     staff_message = models.TextField(null=True, blank=True)
@@ -82,10 +96,6 @@ class Ban(models.Model):
     def get_serialized_message(self):
         from misago.users.serializers import BanMessageSerializer
         return BanMessageSerializer(self).data
-
-    @property
-    def check_name(self):
-        return self.CHOICES[self.check_type][1]
 
     @property
     def name(self):

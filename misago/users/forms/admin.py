@@ -457,7 +457,15 @@ class BanUsersForm(forms.Form):
 
 
 class BanForm(forms.ModelForm):
-    check_type = forms.TypedChoiceField(label=_("Check type"), coerce=int, choices=Ban.CHOICES)
+    check_type = forms.TypedChoiceField(label=_("Check type"), coerce=int, choices=Ban.CHOICES,)
+    registration_only = YesNoSwitch(
+        label=_("Restrict this ban to registrations"),
+        help_text=_(
+            "Changing this to yes will make this ban check be only performed on registration "
+            "step. This is good if you want to block certain registrations like ones from "
+            "recently comprimised e-mail providers, without harming existing users."
+        ),
+    )
     banned_value = forms.CharField(
         label=_("Banned value"),
         max_length=250,
@@ -500,6 +508,7 @@ class BanForm(forms.ModelForm):
         model = Ban
         fields = [
             'check_type',
+            'registration_only',
             'banned_value',
             'user_message',
             'staff_message',
@@ -518,15 +527,22 @@ class BanForm(forms.ModelForm):
 
 
 class SearchBansForm(forms.Form):
-    SARCH_CHOICES = [
+    check_type = forms.ChoiceField(label=_("Type"), required=False, choices=[
         ('', _('All bans')),
         ('names', _('Usernames')),
         ('emails', _('E-mails')),
         ('ips', _('IPs')),
-    ]
-
-    check_type = forms.ChoiceField(label=_("Type"), required=False, choices=SARCH_CHOICES)
+    ],)
     value = forms.CharField(label=_("Banned value begins with"), required=False)
+    registration_only = forms.ChoiceField(
+        label=_("Registration only"),
+        required=False,
+        choices=[
+            ('', _('Any')),
+            ('only', _('Yes')),
+            ('exclude', _('No')),
+        ]
+    )
     state = forms.ChoiceField(
         label=_("State"),
         required=False,
@@ -556,5 +572,11 @@ class SearchBansForm(forms.Form):
 
         if criteria.get('state') == 'unused':
             queryset = queryset.filter(is_checked=False)
+
+        if criteria.get('registration_only') == 'only':
+            queryset = queryset.filter(registration_only=True)
+
+        if criteria.get('registration_only') == 'exclude':
+            queryset = queryset.filter(registration_only=False)
 
         return queryset

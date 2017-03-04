@@ -18,23 +18,23 @@ CACHE_SESSION_KEY = 'misago_ip_check'
 VERSION_KEY = 'misago_bans'
 
 
-def get_username_ban(username):
+def get_username_ban(username, registration_only=False):
     try:
-        return Ban.objects.get_username_ban(username)
+        return Ban.objects.get_username_ban(username, registration_only)
     except Ban.DoesNotExist:
         return None
 
 
-def get_email_ban(email):
+def get_email_ban(email, registration_only=False):
     try:
-        return Ban.objects.get_email_ban(email)
+        return Ban.objects.get_email_ban(email, registration_only)
     except Ban.DoesNotExist:
         return None
 
 
-def get_ip_ban(ip):
+def get_ip_ban(ip, registration_only=False):
     try:
-        return Ban.objects.get_ip_ban(ip)
+        return Ban.objects.get_ip_ban(ip, registration_only)
     except Ban.DoesNotExist:
         return None
 

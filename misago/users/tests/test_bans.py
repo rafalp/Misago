@@ -40,6 +40,14 @@ class GetBanTests(TestCase):
         )
         self.assertEqual(get_username_ban('admiral').pk, valid_ban.pk)
 
+        regitration_ban = Ban.objects.create(
+            banned_value='bob*',
+            expires_on=timezone.now() + timedelta(days=7),
+            registration_only=True
+        )
+        self.assertIsNone(get_username_ban('boberson'))
+        self.assertEqual(get_username_ban('boberson', True).pk, regitration_ban.pk)
+
     def test_get_email_ban(self):
         """get_email_ban returns valid ban"""
         nonexistent_ban = get_email_ban('non@existent.com')
@@ -69,6 +77,15 @@ class GetBanTests(TestCase):
         )
         self.assertEqual(get_email_ban('banned@mail.ru').pk, valid_ban.pk)
 
+        regitration_ban = Ban.objects.create(
+            banned_value='*.ua',
+            check_type=Ban.EMAIL,
+            expires_on=timezone.now() + timedelta(days=7),
+            registration_only=True
+        )
+        self.assertIsNone(get_email_ban('banned@mail.ua'))
+        self.assertEqual(get_email_ban('banned@mail.ua', True).pk, regitration_ban.pk)
+
     def test_get_ip_ban(self):
         """get_ip_ban returns valid ban"""
         nonexistent_ban = get_ip_ban('123.0.0.1')
@@ -97,6 +114,15 @@ class GetBanTests(TestCase):
             expires_on=timezone.now() + timedelta(days=7),
         )
         self.assertEqual(get_ip_ban('125.0.0.1').pk, valid_ban.pk)
+
+        regitration_ban = Ban.objects.create(
+            banned_value='188.*',
+            check_type=Ban.IP,
+            expires_on=timezone.now() + timedelta(days=7),
+            registration_only=True
+        )
+        self.assertIsNone(get_ip_ban('188.12.12.41'))
+        self.assertEqual(get_ip_ban('188.12.12.41', True).pk, regitration_ban.pk)
 
 
 class UserBansTests(TestCase):

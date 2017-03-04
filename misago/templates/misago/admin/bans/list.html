@@ -13,8 +13,8 @@
 
 
 {% block table-header %}
-<th style="width: 25%;">{% trans "Ban" %}</th>
-<th style="width: 160px;">{% trans "Type" %}</th>
+<th style="width: 30%;">{% trans "Ban" %}</th>
+<th style="width: 30%;">{% trans "Type" %}</th>
 <th>{% trans "Expires on" %}</th>
 {% for action in extra_actions %}
 <th style="width: 1%;">&nbsp;</th>
@@ -29,7 +29,13 @@
   {{ item.banned_value }}
 </td>
 <td>
-  {{ item.test_name }}
+  {% if item.registration_only %}
+    {% blocktrans trimmed with check_type=item.get_check_type_display %}
+      {{ check_type }}, registration only
+    {% endblocktrans %}
+  {% else %}
+    {{ item.get_check_type_display }}
+  {% endif %}
 </td>
 <td{% if item.is_expired %} class="text-muted"{% endif %}>
   {% if item.expires_on %}
@@ -100,7 +106,10 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-6">
+    {% form_row search_form.registration_only %}
+  </div>
+  <div class="col-md-6">
     {% form_row search_form.state %}
   </div>
 </div>

@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 
 from misago.users import validators
+from misago.users.bans import get_email_ban, get_username_ban
 
 
 UserModel = get_user_model()
@@ -20,6 +21,28 @@ class RegisterForm(forms.Form):
         self.request = kwargs.pop('request')
         super(RegisterForm, self).__init__(*args, **kwargs)
 
+    def clean_username(self):
+        data = self.cleaned_data['username']
+
+        ban = get_username_ban(data, registration_only=True)
+        if ban:
+            if ban.user_message:
+                raise ValidationError(ban.user_message)
+            else:
+                raise ValidationError(_("This usernane is not allowed."))
+        return data
+
+    def clean_email(self):
+        data = self.cleaned_data['email']
+
+        ban = get_email_ban(data, registration_only=True)
+        if ban:
+            if ban.user_message:
+                raise ValidationError(ban.user_message)
+            else:
+                raise ValidationError(_("This e-mail address is not allowed."))
+        return data
+
     def full_clean_password(self, cleaned_data):
         if cleaned_data.get('password'):
             validate_password(
@@ -32,6 +55,13 @@ class RegisterForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(RegisterForm, self).clean()
+
+        ban = get_ip_ban(self.request.user_ip, registration_only=True)
+        if ban:
+            if ban.user_message:
+                raise ValidationError(ban.user_message)
+            else:
+                raise ValidationError(_("New registrations from this IP address are not allowed."))
 
         try:
             self.full_clean_password(cleaned_data)
