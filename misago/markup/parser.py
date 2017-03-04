@@ -108,6 +108,7 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
 
     if allow_images:
         # Add [img]
+        md.inlinePatterns.add('bb_img', inline.image(md), '<image_link')
         short_images_md = ShortImagesExtension()
         short_images_md.extendMarkdown(md)
     else:

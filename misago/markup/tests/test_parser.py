@@ -77,6 +77,25 @@ Dolor met.
         result = parse(test_text, MockRequest(), MockPoster(), minify=False)
         self.assertEqual(expected_result, result['parsed_text'])
 
+    def test_img(self):
+        """img bbcode is correctly parsed"""
+        test_text = """
+Lorem ipsum [img]https://placekitten.com/g/1200/500[/img]
+
+Lorem ipsum [iMg]https://placekitten.com/g/1200/500[/ImG]
+
+Lorem ipsum !(https://placekitten.com/g/1200/500)
+""".strip()
+
+        expected_result = """
+<p>Lorem ipsum <img alt="placekitten.com/g/1200/500" src="https://placekitten.com/g/1200/500"/></p>
+<p>Lorem ipsum <img alt="placekitten.com/g/1200/500" src="https://placekitten.com/g/1200/500"/></p>
+<p>Lorem ipsum <img alt="placekitten.com/g/1200/500" src="https://placekitten.com/g/1200/500"/></p>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=False)
+        self.assertEqual(expected_result, result['parsed_text'])
+
 
 class MinifyTests(TestCase):
     def test_minified_text(self):
