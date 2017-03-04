@@ -44,7 +44,7 @@ class ClearReadTrackerTests(TestCase):
         deleted = CategoryRead.objects.create(
             user=self.user_b,
             category=self.category,
-            last_read_on=timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF * 1.25)
+            last_read_on=timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF * 2)
         )
 
         command = clearreadtracker.Command()
@@ -74,7 +74,7 @@ class ClearReadTrackerTests(TestCase):
             user=self.user_b,
             category=self.category,
             thread=thread,
-            last_read_on=timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF * 1.25)
+            last_read_on=timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF * 2)
         )
 
         command = clearreadtracker.Command()
