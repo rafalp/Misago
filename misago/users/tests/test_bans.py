@@ -43,7 +43,7 @@ class GetBanTests(TestCase):
         regitration_ban = Ban.objects.create(
             banned_value='bob*',
             expires_on=timezone.now() + timedelta(days=7),
-            registration_only=True
+            registration_only=True,
         )
         self.assertIsNone(get_username_ban('boberson'))
         self.assertEqual(get_username_ban('boberson', True).pk, regitration_ban.pk)
@@ -81,7 +81,7 @@ class GetBanTests(TestCase):
             banned_value='*.ua',
             check_type=Ban.EMAIL,
             expires_on=timezone.now() + timedelta(days=7),
-            registration_only=True
+            registration_only=True,
         )
         self.assertIsNone(get_email_ban('banned@mail.ua'))
         self.assertEqual(get_email_ban('banned@mail.ua', True).pk, regitration_ban.pk)
@@ -119,7 +119,7 @@ class GetBanTests(TestCase):
             banned_value='188.*',
             check_type=Ban.IP,
             expires_on=timezone.now() + timedelta(days=7),
-            registration_only=True
+            registration_only=True,
         )
         self.assertIsNone(get_ip_ban('188.12.12.41'))
         self.assertEqual(get_ip_ban('188.12.12.41', True).pk, regitration_ban.pk)

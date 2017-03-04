@@ -3,7 +3,7 @@ from django.core import mail
 from django.urls import reverse
 
 from misago.conf import settings
-from misago.users.models import Online
+from misago.users.models import Ban, Online
 from misago.users.testutils import UserTestCase
 
 
@@ -35,6 +35,48 @@ class UserCreateTests(UserTestCase):
         response = self.client.post(self.api_link)
         self.assertContains(response, 'closed', status_code=403)
 
+    def test_registration_validates_ip_ban(self):
+        """api validates ip ban"""
+        Ban.objects.create(
+            check_type=Ban.IP,
+            banned_value='127.*',
+            user_message="You can't register account like this.",
+        )
+
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+            },
+        )
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_registration_validates_ip_registration_ban(self):
+        """api validates ip registration-only ban"""
+        Ban.objects.create(
+            check_type=Ban.IP,
+            banned_value='127.*',
+            user_message="You can't register account like this.",
+            registration_only=True,
+        )
+
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+            },
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            '__all__': ["You can't register account like this."],
+        })
+
     def test_registration_validates_username(self):
         """api validates usernames"""
         user = self.get_authenticated_user()
@@ -53,6 +95,49 @@ class UserCreateTests(UserTestCase):
             'username': ["This username is not available."],
         })
 
+    def test_registration_validates_username_ban(self):
+        """api validates username ban"""
+        Ban.objects.create(
+            banned_value='totally*',
+            user_message="You can't register account like this.",
+        )
+
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+            },
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'username': ["You can't register account like this."],
+        })
+
+    def test_registration_validates_username_registration_ban(self):
+        """api validates username registration-only ban"""
+        Ban.objects.create(
+            banned_value='totally*',
+            user_message="You can't register account like this.",
+            registration_only=True,
+        )
+
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+            },
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'username': ["You can't register account like this."],
+        })
+
     def test_registration_validates_email(self):
         """api validates usernames"""
         user = self.get_authenticated_user()
@@ -69,6 +154,51 @@ class UserCreateTests(UserTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
             'email': ["This e-mail address is not available."],
+        })
+
+    def test_registration_validates_email_ban(self):
+        """api validates email ban"""
+        Ban.objects.create(
+            check_type=Ban.EMAIL,
+            banned_value='lorem*',
+            user_message="You can't register account like this.",
+        )
+
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+            },
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'email': ["You can't register account like this."],
+        })
+
+    def test_registration_validates_email_registration_ban(self):
+        """api validates email registration-only ban"""
+        Ban.objects.create(
+            check_type=Ban.EMAIL,
+            banned_value='lorem*',
+            user_message="You can't register account like this.",
+            registration_only=True,
+        )
+
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+            },
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'email': ["You can't register account like this."],
         })
 
     def test_registration_validates_password(self):
