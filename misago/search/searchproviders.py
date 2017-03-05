@@ -16,7 +16,7 @@ class SearchProviders(object):
             return
         self._initialized = True
 
-        self._providers = map(import_string, self.providers)
+        self._providers = list(map(import_string, self.providers))
 
     def get_providers(self, request):
         if not self._initialized:

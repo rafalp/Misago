@@ -108,7 +108,7 @@ def validate_post_length(post):
 
 # Post validation framework
 validators_list = settings.MISAGO_POST_VALIDATORS
-POST_VALIDATORS = map(import_string, validators_list)
+POST_VALIDATORS = list(map(import_string, validators_list))
 
 
 def validate_post(context, data, validators=None):

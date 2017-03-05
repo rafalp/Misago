@@ -138,7 +138,7 @@ def validate_gmail_email(request, form, cleaned_data):
 
 # Registration validation
 validators_list = settings.MISAGO_NEW_REGISTRATIONS_VALIDATORS
-REGISTRATION_VALIDATORS = map(import_string, validators_list)
+REGISTRATION_VALIDATORS = list(map(import_string, validators_list))
 
 
 def validate_new_registration(request, form, cleaned_data, validators=None):
