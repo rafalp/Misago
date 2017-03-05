@@ -10,7 +10,6 @@ from django.utils.module_loading import import_string
 
 MISAGO_SLUGIFY = getattr(settings, 'MISAGO_SLUGIFY', 'misago.core.slugify.default')
 
-
 slugify = import_string(MISAGO_SLUGIFY)
 
 
