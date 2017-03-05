@@ -6,22 +6,24 @@ import modal from 'misago/services/modal';
 import posting from 'misago/services/posting';
 
 export default function(props) {
-  if (isVisible(props.post)) {
-    return (
-      <div className="panel-footer post-footer">
-        <Like {...props} />
-        <Likes
-          lastLikes={props.post.last_likes}
-          likes={props.post.likes}
-          {...props}
-        />
-        <Reply {...props} />
-        <Edit {...props} />
-      </div>
-    );
-  } else {
-    return null;
-  }
+  if (!isVisible(props.post)) return null;
+
+  return (
+    <div className="panel-footer post-footer">
+      <Like {...props} />
+      <Likes
+        lastLikes={props.post.last_likes}
+        likes={props.post.likes}
+        {...props}
+      />
+      <LikesCompact
+        likes={props.post.likes}
+        {...props}
+      />
+      <Reply {...props} />
+      <Edit {...props} />
+    </div>
+  );
 }
 
 export function isVisible(post) {
@@ -74,7 +76,7 @@ export class Likes extends React.Component {
     if (this.props.post.acl.can_see_likes === 2) {
       return (
         <button
-          className="btn btn-link pull-left"
+          className="btn btn-link pull-left hidden-xs"
           onClick={this.onClick}
           type="button"
         >
@@ -84,8 +86,39 @@ export class Likes extends React.Component {
     }
 
     return (
-      <p className="pull-left">
+      <p className="pull-left hidden-xs">
         {getLikesMessage(this.props.likes, this.props.lastLikes)}
+      </p>
+    );
+  }
+}
+
+export class LikesCompact extends Likes {
+  render() {
+    const hasLikes = (this.props.post.last_likes || []).length > 0;
+    if (!this.props.post.acl.can_see_likes || !hasLikes) return null;
+
+    if (this.props.post.acl.can_see_likes === 2) {
+      return (
+        <button
+          className="btn btn-link likes-compact pull-left visible-xs-block"
+          onClick={this.onClick}
+          type="button"
+        >
+          <span className="material-icon">
+            favorite
+          </span>
+          {this.props.likes}
+        </button>
+      );
+    }
+
+    return (
+      <p className="likes-compact pull-left visible-xs-block">
+        <span className="material-icon">
+          favorite
+        </span>
+        {this.props.likes}
       </p>
     );
   }

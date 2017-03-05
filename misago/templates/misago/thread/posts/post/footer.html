@@ -11,8 +11,14 @@
       </button>
     {% endif %}
     {% if post.acl.can_see_likes and post.last_likes %}
-      <p class="pull-left">
+      <p class="pull-left hidden-xs">
         {% likes_label post %}
+      </p>
+      <p class="likes-compact pull-left visible-xs-block">
+        <span class="material-icon">
+          favorite
+        </span>
+        {{ post.likes }}
       </p>
     {% endif %}
     {% if post.acl.can_reply %}

@@ -188,7 +188,7 @@
 
 
 // Mobile tweaks
-@media screen and (max-width: @screen-sm-max) {
+@media screen and (max-width: @screen-xs-max) {
   .post-heading .post-heading-container {
     margin-left: 46px;
     height: 34px;
@@ -233,6 +233,18 @@
     img {
       width: 35px;
       height: 35px;
+    }
+  }
+
+  .post-footer {
+    .btn, p {
+      font-size: @font-size-small;
+    }
+
+    p .material-icon {
+      margin-right: 3px;
+      position: relative;
+      bottom: 1px;
     }
   }
 }
