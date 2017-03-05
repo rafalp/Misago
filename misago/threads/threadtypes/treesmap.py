@@ -1,4 +1,4 @@
-from importlib import import_module
+from django.utils.module_loading import import_string
 
 from misago.conf import settings
 
@@ -19,8 +19,7 @@ class TreesMap(object):
     def load_types(self, types_modules):
         loaded_types = {}
         for path in types_modules:
-            module = import_module('.'.join(path.split('.')[:-1]))
-            type_cls = getattr(module, path.split('.')[-1])
+            type_cls = import_string(path)
             loaded_types[type_cls.root_name] = type_cls()
         return loaded_types
 

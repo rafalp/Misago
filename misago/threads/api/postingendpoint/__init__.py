@@ -1,7 +1,6 @@
-from importlib import import_module
-
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
+from django.utils.module_loading import import_string
 
 from misago.conf import settings
 
@@ -56,11 +55,7 @@ class PostingEndpoint(object):
 
         middlewares = []
         for middleware in settings.MISAGO_POSTING_MIDDLEWARES:
-            module_name = '.'.join(middleware.split('.')[:-1])
-            class_name = middleware.split('.')[-1]
-
-            middleware_module = import_module(module_name)
-            middleware_class = getattr(middleware_module, class_name)
+            middleware_class = import_string(middleware)
 
             try:
                 middleware_obj = middleware_class(prefix=middleware, **kwargs)

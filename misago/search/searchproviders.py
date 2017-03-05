@@ -1,6 +1,5 @@
-from importlib import import_module
-
 from django.core.exceptions import PermissionDenied
+from django.utils.module_loading import import_string
 
 from misago.conf import settings
 
@@ -17,20 +16,7 @@ class SearchProviders(object):
             return
         self._initialized = True
 
-        for modulename in self.providers:
-            classname = modulename.split('.')[-1]
-            module_path = '.'.join(modulename.split('.')[:-1])
-
-            try:
-                module = import_module(module_path)
-            except ImportError:
-                raise ImportError('search module %s could not be imported' % modulename)
-
-            try:
-                classdef = getattr(module, classname)
-                self._providers.append(classdef)
-            except AttributeError:
-                raise ImportError('search module %s could not be imported' % modulename)
+        self._providers = map(import_string, self.providers)
 
     def get_providers(self, request):
         if not self._initialized:

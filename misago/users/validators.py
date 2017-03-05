@@ -1,6 +1,5 @@
 import json
 import re
-from importlib import import_module
 
 import requests
 
@@ -8,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email as validate_email_content
 from django.utils.encoding import force_str
+from django.utils.module_loading import import_string
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext
 
@@ -137,16 +137,8 @@ def validate_gmail_email(request, form, cleaned_data):
 
 
 # Registration validation
-def load_registration_validators(validators):
-    loaded_validators = []
-    for path in validators:
-        module = import_module('.'.join(path.split('.')[:-1]))
-        loaded_validators.append(getattr(module, path.split('.')[-1]))
-    return loaded_validators
-
-
 validators_list = settings.MISAGO_NEW_REGISTRATIONS_VALIDATORS
-REGISTRATION_VALIDATORS = load_registration_validators(validators_list)
+REGISTRATION_VALIDATORS = map(import_string, validators_list)
 
 
 def validate_new_registration(request, form, cleaned_data, validators=None):

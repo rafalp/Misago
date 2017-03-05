@@ -1,6 +1,5 @@
-from importlib import import_module
-
 from django.core.exceptions import ValidationError
+from django.utils.module_loading import import_string
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
@@ -108,16 +107,8 @@ def validate_post_length(post):
 
 
 # Post validation framework
-def load_post_validators(validators):
-    loaded_validators = []
-    for path in validators:
-        module = import_module('.'.join(path.split('.')[:-1]))
-        loaded_validators.append(getattr(module, path.split('.')[-1]))
-    return loaded_validators
-
-
 validators_list = settings.MISAGO_POST_VALIDATORS
-POST_VALIDATORS = load_post_validators(validators_list)
+POST_VALIDATORS = map(import_string, validators_list)
 
 
 def validate_post(context, data, validators=None):

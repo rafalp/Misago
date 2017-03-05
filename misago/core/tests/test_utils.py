@@ -8,7 +8,7 @@ from django.utils import six
 
 from misago.core.utils import (
     clean_return_path, format_plaintext_for_html, is_referer_local, is_request_to_misago,
-    parse_iso8601_string, resolve_slugify, slugify)
+    parse_iso8601_string, slugify)
 
 
 VALID_PATHS = ("/", "/threads/", )
@@ -41,33 +41,6 @@ class IsRequestToMisagoTests(TestCase):
 
 
 class SlugifyTests(TestCase):
-    def test_resolve_invalid_module(self):
-        """resolve_slugify raises import error for invalid module"""
-        with self.assertRaises(ImportError):
-            resolve_slugify('some.invalid.path')
-
-        try:
-            resolve_slugify('some.invalid.path')
-        except ImportError as e:
-            error_message = six.text_type(e)
-            self.assertEqual(error_message, 'module some.invalid does not exist')
-
-    def test_resolve_nonexistant_name(self):
-        """resolve_slugify raises import error for invalid name"""
-        with self.assertRaises(ImportError):
-            resolve_slugify('misago.threads.invalidname')
-
-        try:
-            resolve_slugify('misago.threads.invalidname')
-        except ImportError as e:
-            error_message = six.text_type(e)
-            self.assertEqual(error_message, 'name invalidname not found in misago.threads module')
-
-    def test_resolve_valid_name(self):
-        """resolve_slugify resolves valid paths"""
-        resolved_slugify = resolve_slugify('misago.core.slugify.default')
-        self.assertEqual(resolved_slugify, slugify)
-
     def test_valid_slugify_output(self):
         """Misago's slugify correctly slugifies string"""
         test_cases = [

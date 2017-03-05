@@ -1,29 +1,17 @@
 from datetime import datetime, timedelta
-from importlib import import_module
 
 from django.conf import settings
 from django.http import Http404
 from django.urls import resolve, reverse
 from django.utils import html, timezone
 from django.utils.encoding import force_text
+from django.utils.module_loading import import_string
 
 
 MISAGO_SLUGIFY = getattr(settings, 'MISAGO_SLUGIFY', 'misago.core.slugify.default')
 
 
-def resolve_slugify(path):
-    path_bits = path.split('.')
-    module, name = '.'.join(path_bits[:-1]), path_bits[-1]
-
-    try:
-        return getattr(import_module(module), name)
-    except AttributeError:
-        raise ImportError("name {} not found in {} module".format(name, module))
-    except ImportError:
-        raise ImportError("module {} does not exist".format(module))
-
-
-slugify = resolve_slugify(MISAGO_SLUGIFY)
+slugify = import_string(MISAGO_SLUGIFY)
 
 
 def format_plaintext_for_html(string):

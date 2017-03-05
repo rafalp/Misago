@@ -1,7 +1,8 @@
 import os
-from importlib import import_module
 
 from PIL import Image, ImageColor, ImageDraw, ImageFont
+
+from django.utils.module_loading import import_string
 
 from misago.conf import settings
 
@@ -18,11 +19,7 @@ FONT_FILE = os.path.join(os.path.dirname(__file__), 'font.ttf')
 
 
 def set_avatar(user):
-    name_bits = settings.MISAGO_DYNAMIC_AVATAR_DRAWER.split('.')
-
-    drawer_module = '.'.join(name_bits[:-1])
-    drawer_module = import_module(drawer_module)
-    drawer_function = getattr(drawer_module, name_bits[-1])
+    drawer_function = import_string(settings.MISAGO_DYNAMIC_AVATAR_DRAWER)
 
     image = drawer_function(user)
     store.store_new_avatar(user, image)
