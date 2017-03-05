@@ -11,3 +11,9 @@
     <p>{% trans "This post is unapproved. Only users with permission to approve posts and its author may see its contents." %}</p>
   </div>
 {% endif %}
+{% if post.is_protected %}
+  <div class="post-status-message post-status-protected visible-xs-block">
+    <span class="material-icon">lock_outline</span>
+    <p>{% trans "This post is protected. Only moderators may change it." %}</p>
+  </div>
+{% endif %}

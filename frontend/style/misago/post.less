@@ -10,9 +10,9 @@
 
 
 // Post header
-.post-heading {
+.post-heading-container {
   overflow: visible;
-  height: 42px;
+  height: 22px;
 
   &>* {
     float: left;
@@ -82,6 +82,12 @@
 
 .post-status-unapproved {
   background-color: @brand-primary;
+  color: #fff;
+}
+
+
+.post-status-protected {
+  background-color: @gray;
   color: #fff;
 }
 
@@ -177,5 +183,56 @@
   .post-heading .ui-preview-text {
     position: relative;
     top: 0px;
+  }
+}
+
+
+// Mobile tweaks
+@media screen and (max-width: @screen-sm-max) {
+  .post-heading .post-heading-container {
+    margin-left: 46px;
+    height: 34px;
+
+    position: relative;
+    bottom: 2px;
+
+    .pull-right {
+      margin-top: -31px;
+    }
+  }
+
+  .post-heading .user-status {
+    margin-right: 3px;
+  }
+
+  .post-heading {
+    .posted-on-compact, .edited-compact, .unread-compact {
+      margin-top: -14px;
+
+      font-size: @font-size-small;
+    }
+  }
+
+  .post-heading .unread-compact {
+    color: @brand-warning;
+  }
+
+  .post-heading .posted-on-compact {
+    clear: left;
+  }
+
+  .post-heading .btn-icon {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding: 1px 4px;
+  }
+
+  .post-heading .post-avatar-sm {
+    float: left;
+
+    img {
+      width: 35px;
+      height: 35px;
+    }
   }
 }

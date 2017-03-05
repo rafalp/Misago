@@ -3,11 +3,14 @@ import React from 'react';
 import modal from 'misago/services/modal';
 import * as moderation from './actions';
 import MoveModal from './move';
+import PostChangelog from 'misago/components/post-changelog';
 import SplitModal from './split';
 
 export default function(props) {
   return (
     <ul className="dropdown-menu dropdown-menu-right">
+      <Permalink {...props} />
+      <PostEdits {...props} />
       <Approve {...props} />
       <Move {...props} />
       <Split {...props} />
@@ -18,6 +21,48 @@ export default function(props) {
       <Delete {...props} />
     </ul>
   );
+}
+
+export function Permalink(props) {
+  return (
+    <li>
+      <a href={props.post.url.index}>
+        {gettext("Link")}
+      </a>
+    </li>
+  );
+}
+
+export class PostEdits extends React.Component {
+  onClick = () => {
+    modal.show(
+      <PostChangelog post={this.props.post} />
+    )
+  };
+
+  render() {
+    const isHidden = this.props.post.is_hidden && !this.props.post.acl.can_see_hidden;
+    const isUnedited = this.props.post.edits === 0;
+    if (isHidden || isUnedited) return null;
+
+    const message = ngettext(
+      "This post was edited %(edits)s time.",
+      "This post was edited %(edits)s times.",
+      this.props.post.edits
+    );
+
+    const title = interpolate(message, {
+      'edits': this.props.post.edits
+    }, true);
+
+    return (
+      <li>
+        <button type="button" className="btn btn-link" onClick={this.onClick}>
+          {gettext("Changes history")}
+        </button>
+      </li>
+    )
+  }
 }
 
 export class Approve extends React.Component {

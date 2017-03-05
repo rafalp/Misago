@@ -1,42 +1,67 @@
-{% load i18n %}
+{% load i18n misago_avatars %}
 <div class="panel-heading post-heading">
-  {% if post.poster %}
-    <a class="item-title" href="{{ post.poster.get_absolute_url }}">
-      <span itemprop="author">{{ post.poster.username }}</span>
-    </a>
-  {% else %}
-    <strong class="item-title" itemprop="author">{{ post.poster_name }}</strong>
-  {% endif %}
-
-  {% if post.poster %}
-    {% if not post.poster.rank.is_default %}
-      {% if post.poster.rank.is_tab %}
-        <a href="{% url 'misago:users-rank' slug=post.poster.rank.slug %}" class="label label-{{ post.poster.rank.css_class|default:'default' }}">
-          {{ post.poster.get_any_title }}
-        </a>
-      {% else %}
-        <span class="label label-{{ post.poster.rank.css_class|default:'default' }}">
-          {{ post.poster.get_any_title }}
-        </span>
-      {% endif %}
+  <div class="post-avatar-sm visible-xs-block">
+    {% if post.poster %}
+      <a href="{{ post.poster.get_absolute_url }}">
+        <img class="user-avatar" src="{{ post.poster|avatar:50 }}" width="35" height="35" alt="">
+      </a>
+    {% else %}
+      <img class="user-avatar" src="{{ BLANK_AVATAR_URL }}" width="35" height="35" alt="">
     {% endif %}
-  {% else %}
-    <span class="rank-name item-title">
-      {% trans "Unregistered" %}
-    </span>
-  {% endif %}
+  </div>
+  <div class="post-heading-container">
+    {% if post.poster %}
+      <a class="item-title" href="{{ post.poster.get_absolute_url }}">
+        <span itemprop="author">{{ post.poster.username }}</span>
+      </a>
+    {% else %}
+      <strong class="item-title" itemprop="author">{{ post.poster_name }}</strong>
+    {% endif %}
+    {% if post.poster %}
+      {% if not post.poster.rank.is_default %}
+        {% if post.poster.rank.is_tab %}
+          <a href="{% url 'misago:users-rank' slug=post.poster.rank.slug %}" class="label label-{{ post.poster.rank.css_class|default:'default' }}">
+            {{ post.poster.get_any_title }}
+          </a>
+        {% else %}
+          <span class="label label-{{ post.poster.rank.css_class|default:'default' }}">
+            {{ post.poster.get_any_title }}
+          </span>
+        {% endif %}
+      {% endif %}
+    {% else %}
+      <span class="rank-name item-title">
+        {% trans "Unregistered" %}
+      </span>
+    {% endif %}
 
-  <a href="{{ post.get_absolute_url }}" class="posted-on">
-    <time itemprop="datePublished" datetime="{{ post.posted_on|date:'c' }}">
-      {% blocktrans trimmed with posted_on=post.posted_on|date:'DATETIME_FORMAT' %}
-        posted on {{ posted_on }}
-      {% endblocktrans %}
-    </time>
-  </a>
+    <a href="{{ post.get_absolute_url }}" class="posted-on hidden-xs">
+      <time itemprop="datePublished" datetime="{{ post.posted_on|date:'c' }}">
+        {% blocktrans trimmed with posted_on=post.posted_on|date:'DATETIME_FORMAT' %}
+          posted on {{ posted_on }}
+        {% endblocktrans %}
+      </time>
+    </a>
 
-  {% if not post.is_read %}
-    <span class="label label-warning pull-right">
-      {% trans "New" %}
+    <span class="posted-on-compact visible-xs-inline-block">
+      {{ post.posted_on|date:'DATETIME_FORMAT' }}
     </span>
-  {% endif %}
+
+    {% if not post.is_read %}
+      <span class="unread-compact text-warning visible-xs-inline-block">
+        {% trans "new" %}
+      </span>
+      <span class="label label-warning pull-right hidden-xs">
+        {% trans "New" %}
+      </span>
+    {% endif %}
+
+    <div class="pull-right">
+      <a href="{{ post.get_absolute_url }}" title="{% trans 'Post link' %}" class="btn btn-default btn-icon dropdown-toggle">
+        <span class="material-icon">
+          link
+        </span>
+      </a>
+    </div>
+  </div>
 </div>

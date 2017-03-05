@@ -4,20 +4,32 @@ import Controls from './controls';
 import Select from './select';
 import {StatusIcon, getStatusClassName, getStatusDescription} from 'misago/components/user-status';
 import PostChangelog from 'misago/components/post-changelog';
+import PosterAvatar from './poster-avatar';
 import modal from 'misago/services/modal';
 
 export default function(props) {
   return (
     <div className="panel-heading post-heading">
-      <PosterStatus {...props} />
-      <Poster {...props} />
-      <PosterRank {...props} />
-      <PostedOn {...props} />
-      <Select {...props} />
-      <Controls {...props} />
-      <PostEdits {...props} />
-      <ProtectedLabel {...props} />
-      <UnreadLabel {...props} />
+      <div className="post-avatar-sm visible-xs-block">
+        <PosterAvatar
+          post={props.post}
+          size={50}
+        />
+      </div>
+      <div className="post-heading-container">
+        <PosterStatus {...props} />
+        <Poster {...props} />
+        <PosterRank {...props} />
+        <PostedOn {...props} />
+        <PostedOnCompact {...props} />
+        <EditedCompact {...props} />
+        <UnreadCompact {...props} />
+        <Select {...props} />
+        <Controls {...props} />
+        <PostEdits {...props} />
+        <ProtectedLabel {...props} />
+        <UnreadLabel {...props} />
+      </div>
     </div>
   );
 }
@@ -90,9 +102,45 @@ export function PostedOn(props) {
     'posted_on': props.post.posted_on.fromNow()
   }, true);
 
-  return <a href={props.post.url.index} className="posted-on" title={tooltip}>
-    {message}
-  </a>;
+  return (
+    <a
+      href={props.post.url.index}
+      className="posted-on hidden-xs"
+      title={tooltip}
+    >
+      {message}
+    </a>
+  );
+}
+
+export function PostedOnCompact(props) {
+  return (
+    <span className="posted-on-compact visible-xs-inline-block">
+      {props.post.posted_on.fromNow()}
+    </span>
+  );
+}
+
+export function EditedCompact(props) {
+  const isHidden = props.post.is_hidden && !props.post.acl.can_see_hidden;
+  const isUnedited = props.post.edits === 0;
+  if (isHidden || isUnedited) return null;
+
+  return (
+    <span className="edited-compact visible-xs-inline-block">
+      {gettext("edited")}
+    </span>
+  );
+}
+
+export function UnreadCompact(props) {
+  if (props.post.is_read) return null;
+
+  return (
+    <span className="unread-compact text-warning visible-xs-inline-block">
+      {gettext("new")}
+    </span>
+  );
 }
 
 export class PostEdits extends React.Component {
@@ -119,7 +167,7 @@ export class PostEdits extends React.Component {
 
     return (
       <button
-        className="btn btn-default btn-sm pull-right"
+        className="btn btn-default btn-sm pull-right hidden-xs"
         onClick={this.onClick}
         title={title}
         type="button"
@@ -134,13 +182,13 @@ export class PostEdits extends React.Component {
 }
 
 export function UnreadLabel(props) {
-  if (!props.post.is_read) {
-    return <span className="label label-warning pull-right">
+  if (props.post.is_read) return null;
+
+  return (
+    <span className="label label-warning pull-right hidden-xs">
       {gettext("New")}
-    </span>;
-  } else {
-    return null;
-  }
+    </span>
+  );
 }
 
 export function ProtectedLabel(props) {
@@ -154,7 +202,7 @@ export function ProtectedLabel(props) {
 
   return (
     <span
-      className="label label-default pull-right"
+      className="label label-default pull-right hidden-xs"
       title={gettext("This post is protected and may not be edited.")}
     >
       {gettext("Protected")}
