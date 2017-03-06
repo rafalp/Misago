@@ -99,6 +99,8 @@ Lorem ipsum !(https://placekitten.com/g/1200/500)
     def test_url(self):
         """url bbcode is correctly parsed"""
         test_text = """
+Lorem ipsum [url]placekitten.com/g/300/300[/url]
+
 Lorem ipsum [url]https://placekitten.com/g/600/600[/url]
 
 Lorem ipsum [uRL=https://placekitten.com/g/400/400"]Label text![/UrL]
@@ -107,7 +109,8 @@ Lorem ipsum [Lorem ipsum](https://placekitten.com/g/1200/500)
 """.strip()
 
         expected_result = """
-<p>Lorem ipsum <a href="" rel="nofollow">placekitten.com/g/600/600</a></p>
+<p>Lorem ipsum <a href="http://placekitten.com/g/300/300" rel="nofollow">placekitten.com/g/300/300</a></p>
+<p>Lorem ipsum <a href="https://placekitten.com/g/600/600" rel="nofollow">placekitten.com/g/600/600</a></p>
 <p>Lorem ipsum <a href="https://placekitten.com/g/400/400" rel="nofollow">Label text!</a></p>
 <p>Lorem ipsum <a href="https://placekitten.com/g/1200/500" rel="nofollow">Lorem ipsum</a></p>
 """.strip()
@@ -224,7 +227,7 @@ Lorem ipsum: http://somewhere.com
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
         self.assertEqual(expected_result, result['parsed_text'])
-        self.assertEqual(result['outgoing_links'], ['http://somewhere.com'])
+        self.assertEqual(result['outgoing_links'], ['somewhere.com'])
         self.assertEqual(result['images'], [])
         self.assertEqual(result['internal_links'], [])
 
@@ -240,7 +243,7 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
         self.assertEqual(expected_result, result['parsed_text'])
-        self.assertEqual(result['outgoing_links'], ['http://somewhere.com/somewhere-something/'])
+        self.assertEqual(result['outgoing_links'], ['somewhere.com/somewhere-something/'])
         self.assertEqual(result['images'], [])
         self.assertEqual(result['internal_links'], [])
 

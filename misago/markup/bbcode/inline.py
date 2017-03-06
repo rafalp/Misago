@@ -76,16 +76,14 @@ class BBCodeUrlPattern(BBcodePattern, LinkPattern):
     def handleMatch(self, m):
         el = util.etree.Element("a")
 
-        if m.group(8):
-            el.text = m.group(8).strip()
+        if m.group(6):
+            el.text = m.group(8)
             href = m.group(5)
         else:
-            el.text = m.group(3)
-            href = m.group(3)
+            el.text = m.group(8).strip()
+            href = m.group(8)
 
         if href:
-            if href[0] == "<":
-                href = href[1:-1]
             el.set("href", self.sanitize_url(self.unescape(href.strip())))
         else:
             el.set("href", "")

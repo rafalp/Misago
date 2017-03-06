@@ -168,7 +168,8 @@ def clean_links(request, result, force_shva=False):
             result['internal_links'].append(link['href'])
             link['href'] = clean_attachment_link(link['href'], force_shva)
         else:
-            result['outgoing_links'].append(link['href'])
+            result['outgoing_links'].append(clean_link_prefix(link['href']))
+            link['href'] = assert_link_prefix(link['href'])
 
         if link.string:
             link.string = clean_link_prefix(link.string)
@@ -181,6 +182,7 @@ def clean_links(request, result, force_shva=False):
             img['src'] = clean_attachment_link(img['src'], force_shva)
         else:
             result['images'].append(clean_link_prefix(img['src']))
+            img['src'] = assert_link_prefix(img['src'])
 
     # [6:-7] trims <body></body> wrap
     result['parsed_text'] = six.text_type(soup.body)[6:-7]
@@ -202,6 +204,17 @@ def clean_link_prefix(link):
     if link.startswith('//'):
         link = link[2:]
     return link
+
+
+def assert_link_prefix(link):
+    if link.lower().startswith('https:'):
+        return link
+    if link.lower().startswith('http:'):
+        return link
+    if link.startswith('//'):
+        return 'http:{}'.format(link)
+
+    return 'http://{}'.format(link)
 
 
 def clean_internal_link(link, host):
