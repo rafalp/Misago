@@ -5,7 +5,7 @@
 
 // Event style
 .posts-list .event {
-  margin-bottom: @line-height-computed / 4;
+  margin-bottom: @line-height-computed;
 
   color: @text-muted;
 }
@@ -52,5 +52,39 @@
     padding: 0px;
 
     font-size: @font-size-small;
+  }
+}
+
+
+// Mobile tweaks
+@media screen and (max-width: @screen-xs-max) {
+  .posts-list .event .post-avatar {
+    width: @event-icon-size;
+  }
+
+  .posts-list .event .post-body {
+    margin-left: @event-icon-size * 1.2;
+  }
+
+  .posts-list .event .event-message {
+    color: @text-color;
+    font-size: @font-size-base * 1.2;
+  }
+
+  .posts-list .event .event-info {
+    margin-top: @line-height-computed / 4;
+
+    font-size: @font-size-base;
+  }
+
+  .posts-list .event .event-controls {
+    clear: both;
+    margin-top: @line-height-computed / 4;
+
+    .btn {
+      margin-right: @line-height-computed;
+
+      font-size: @font-size-base;
+    }
   }
 }
