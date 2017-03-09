@@ -1,26 +1,10 @@
-{% load i18n %}
+{% load i18n misago_capture %}
 <ul class="posts-list ui-ready">
   {% for post in posts %}
     <li id="post-{{ post.pk }}" class="post post-infeed {% if post.is_new %}post-new{% endif %}">
       <div class="post-border">
         <div class="post-body">
           <div class="panel panel-default panel-post">
-
-            <div class="panel-heading post-heading">
-              <a href="{{ post.thread.get_absolute_url }}" class="item-title">
-                {{ post.thread.title }}
-              </a>
-              <a href="{{ post.get_absolute_url }}" class="posted-on">
-                {% blocktrans trimmed with posted_on=post.posted_on|date:'DATETIME_FORMAT' %}
-                  posted on {{ posted_on }}
-                {% endblocktrans %}
-              </a>
-              <div class="pull-right">
-                <a href="{{ post.get_absolute_url }}" class="btn btn-default btn-sm">
-                  {% trans "Go to post" %}
-                </a>
-              </div>
-            </div>
 
             {% if post.is_valid %}
               <div class="panel-body">
@@ -35,6 +19,19 @@
               </div>
             {% endif %}
 
+            <div class="panel-footer post-infeed-footer">
+              {% capture trimmed as category %}
+                <span class="category-name">{{ post.category }}</span>
+              {% endcapture %}
+              {% capture trimmed as thread %}
+                <span class="item-title">{{ post.thread }}</span>
+              {% endcapture %}
+              <a href="{{ post.get_absolute_url }}">
+                {% blocktrans trimmed with posted_on=post.posted_on|date:'DATETIME_FORMAT' thread=thread|safe category=category|safe %}
+                  {{ posted_on }}, in {{ thread }}, {{ category }}
+                {% endblocktrans %}
+              </a>
+            </div>
           </div>
         </div>
       </div>
