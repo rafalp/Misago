@@ -1,5 +1,6 @@
 // jshint ignore:start
 import React from 'react';
+import Post from './post';
 import Button from 'misago/components/button';
 import MisagoMarkup from 'misago/components/misago-markup';
 import { update as updatePosts, append as appendPosts } from 'misago/reducers/posts';
@@ -11,92 +12,20 @@ import store from 'misago/services/store';
 export default function(props) {
   return (
     <div>
-      <ul className="list-group">
+      <ul className="posts-list ui-ready">
         {props.results.map((post) => {
           return (
             <Post
               key={post.id}
-              {...post}
+              category={post.category}
+              post={post}
+              thread={post.thread}
             />
           );
         })}
       </ul>
       <LoadMore {...props} />
     </div>
-  );
-}
-
-export function Post(props) {
-  return (
-    <li className="list-group-item">
-      <h4>
-        <a href={props.url.index} className="item-title">
-          {props.thread.title}
-        </a>
-      </h4>
-
-      <PostContent content={props.content} />
-
-      <ul className="list-inline list-unstyled">
-        <Poster {...props} />
-        <Timestamp {...props} />
-        <Category {...props.category} />
-      </ul>
-    </li>
-  );
-}
-
-export function PostContent(props) {
-  if (!props.content) return null;
-
-  return (
-    <MisagoMarkup markup={props.content} />
-  );
-}
-
-export function Category(props) {
-  return (
-    <li>
-      <a href={props.absolute_url}>
-        {props.name}
-      </a>
-    </li>
-  );
-}
-
-export function Poster(props) {
-  if (!props.poster) {
-    return (
-      <li>
-        {props.poster_namer}
-      </li>
-    );
-  }
-
-  return (
-    <li>
-      <a href={props.poster.url} className="item-title">
-        {props.poster.username}
-      </a>
-    </li>
-  );
-}
-
-export function Timestamp(props) {
-  const tooltip = interpolate(gettext("posted %(posted_on)s"), {
-    'posted_on': props.posted_on.format('LL, LT')
-  }, true);
-
-  const message = interpolate(gettext("posted %(posted_on)s"), {
-    'posted_on': props.posted_on.fromNow()
-  }, true);
-
-  return (
-    <li>
-      <abbr title={tooltip}>
-        {message}
-      </abbr>
-    </li>
   );
 }
 
