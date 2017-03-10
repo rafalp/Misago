@@ -57,10 +57,10 @@ As of now Misago implements all features considered "must have" on live internet
 * Rich polls  system, allowing polls with public and private voters, single and multiple choices as well as ones that allow vote change or limit voting tp limited period of time.
 * Post attachments complete thumbnailing and gif's animation removal.
 * Posts edits log allowing you to see how user messages used to look in past as well as revert function protecting you from malignant users emptying their posts contents.
+* Moderation queue for users and categories allowing you to moderate content before it becomes visible to other members of the community.
 
 Even more features will follow in future releases:
 
-* moderation queue
 * content reporting
 * warning system
 * notifications
