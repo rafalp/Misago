@@ -11,22 +11,23 @@ export default function(props) {
 
 export function Pager(props) {
   if (props.posts.pages < 2) return null;
-    return (
-      <div className="row row-paginator">
-        <div className="col-xs-3">
-          <FirstPage {...props} />
-        </div>
-        <div className="col-xs-3">
-          <PreviousPage {...props} />
-        </div>
-        <div className="col-xs-3">
-          <NextPage {...props} />
-        </div>
-        <div className="col-xs-3">
-          <LastPage {...props} />
-        </div>
+
+  return (
+    <div className="row row-paginator">
+      <div className="col-xs-3">
+        <FirstPage {...props} />
       </div>
-    );
+      <div className="col-xs-3">
+        <PreviousPage {...props} />
+      </div>
+      <div className="col-xs-3">
+        <NextPage {...props} />
+      </div>
+      <div className="col-xs-3">
+        <LastPage {...props} />
+      </div>
+    </div>
+  );
 }
 
 export function FirstPage(props) {
