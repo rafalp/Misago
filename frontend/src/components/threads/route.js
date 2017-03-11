@@ -2,7 +2,6 @@ import React from 'react'; // jshint ignore:line
 import Button from 'misago/components/button'; // jshint ignore:line
 import { compareGlobalWeight, compareWeight } from 'misago/components/threads/compare'; // jshint ignore:line
 import Container from 'misago/components/threads/container'; // jshint ignore:line
-import { CompactNav } from 'misago/components/threads/navs'; // jshint ignore:line
 import Header from 'misago/components/threads/header'; // jshint ignore:line
 import { diffThreads, getModerationActions, getPageTitle, getTitle } from 'misago/components/threads/utils'; // jshint ignore:line
 import ThreadsList from 'misago/components/threads-list/root'; // jshint ignore:line
@@ -239,21 +238,6 @@ export default class extends WithDropdown {
   };
   /* jshint ignore:end */
 
-  getCompactNav() {
-    if (this.props.route.lists.length > 1) {
-      /* jshint ignore:start */
-      return <div className={this.getCompactNavClassName()}>
-        <CompactNav baseUrl={this.props.route.category.absolute_url}
-                    list={this.props.route.list}
-                    lists={this.props.route.lists}
-                    hideNav={this.hideNav} />
-      </div>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
-  }
-
   getMoreButton() {
     if (this.state.more) {
       /* jshint ignore:start */
@@ -271,7 +255,7 @@ export default class extends WithDropdown {
 
   getClassName() {
     let className = 'page page-threads';
-    className += ' page-threads-' + this.props.route.list;
+    className += ' page-threads-' + this.props.route.list.type;
     if (this.props.route.category.css_class) {
       className += ' page-' + this.props.route.category.css_class;
     }
@@ -292,8 +276,6 @@ export default class extends WithDropdown {
           route={this.props.route}
           user={this.props.user}
         />
-
-        {this.getCompactNav()}
 
         <Container
           route={this.props.route}

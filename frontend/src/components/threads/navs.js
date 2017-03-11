@@ -3,7 +3,7 @@ import { Link } from 'react-router'; // jshint ignore:line
 import Li from 'misago/components/li'; //jshint ignore:line
 
 // jshint ignore:start
-let navLinks = function(baseUrl, active, lists, hideNav) {
+const navLinks = function(baseUrl, active, lists, hideNav) {
     return lists.map(function(list) {
       return <Li isControlled={true}
                  isActive={list.path === active.path}
@@ -20,23 +20,40 @@ let navLinks = function(baseUrl, active, lists, hideNav) {
 export class TabsNav extends React.Component {
   render() {
     // jshint ignore:start
-    return <div className="page-tabs hidden-xs hidden-sm">
-      <div className="container">
-        <ul className="nav nav-pills">
-          {navLinks(this.props.baseUrl, this.props.list, this.props.lists, this.props.hideNav)}
-        </ul>
+    return (
+      <div className="page-tabs hidden-xs hidden-sm">
+        <div className="container">
+          <ul className="nav nav-pills">
+            {navLinks(this.props.baseUrl, this.props.list, this.props.lists, this.props.hideNav)}
+          </ul>
+        </div>
       </div>
-    </div>;
+    );
     // jshint ignore:end
   }
 }
 
-export class CompactNav extends React.Component {
-  render() {
-    // jshint ignore:start
-    return <ul className="dropdown-menu" role="menu">
-      {navLinks(this.props.baseUrl, this.props.list, this.props.lists, this.props.hideNav)}
-    </ul>;
-    // jshint ignore:end
-  }
+// jshint ignore:start
+export function CompactNav(props) {
+  return (
+    <div className="menu-compact dropdown hidden-md hidden-lg">
+      <button
+        aria-expanded="true"
+        aria-haspopup="true"
+        className="btn dropdown-toggle btn-block"
+        data-toggle="dropdown"
+        type="button"
+      >
+        <span className="material-icon">
+          more_vert
+        </span>
+        {props.list.longName}
+      </button>
+      <ul className="dropdown-menu">
+        {navLinks(props.baseUrl, props.list, props.lists, props.hideNav)}
+      </ul>
+    </div>
+  );
+
 }
+// jshint ignore:end

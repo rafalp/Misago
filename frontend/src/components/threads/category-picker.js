@@ -24,16 +24,16 @@ export class Subcategory extends React.Component {
 export default class extends React.Component {
   render() {
     /* jshint ignore:start */
-    return <div className="btn-group category-picker">
+    return <div className="dropdown category-picker">
       <button type="button"
-              className="btn btn-default dropdown-toggle"
+              className="btn btn-default btn-icon dropdown-toggle btn-block"
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false">
         <span className="material-icon">
-          more_vert
+          expand_more
         </span>
-        {gettext("Go to")}
+        <span className="hidden-xs">{' ' + gettext("Go to")}</span>
       </button>
       <ul className="dropdown-menu categories-menu">
         {this.props.choices.map((id) => {

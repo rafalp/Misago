@@ -24,11 +24,15 @@
   }
 
   @media screen and (min-width: @screen-md-min) {
-    .row {
+    .container>.row {
       margin-top: @line-height-computed * 1.25;
 
       h1 {
         margin-top: -3px;
+      }
+
+      .row {
+        margin-top: @padding-small-vertical;
       }
     }
   }
@@ -143,12 +147,9 @@
     padding: 0px;
     width: 100%;
 
-    .nav-pills {
-      li {
-        display: block;
-        float: inherit;
-        width: auto;
-      }
+    ul li {
+      display: block;
+      float: none;
     }
   }
 }
@@ -156,6 +157,61 @@
 @media screen and (min-width: @screen-md-min) {
   .page-header.tabbed {
     padding-bottom: 0px;
+  }
+}
+
+
+// Compact menu
+.menu-compact {
+  margin-top: @line-height-computed;
+  margin-bottom: @padding-large-vertical * -1 + 1px;
+
+  position: static;
+  height: auto;
+}
+
+.menu-compact .dropdown-toggle {
+  background: transparent;
+  border: 0px;
+  border-top: 1px solid @gray-lighter;
+  border-radius: 0px;
+
+  margin-bottom: 0px;
+  padding-top: @padding-large-vertical;
+  padding-bottom: @padding-large-vertical;
+}
+
+.menu-compact.open .dropdown-toggle {
+  border-top: 1px solid @gray-lighter;
+}
+
+.menu-compact.open .dropdown-menu {
+  border-radius: 0px;
+  border: none;
+
+  .box-shadow(0px 0px 16px @gray-light);
+
+  clear: both;
+  top: auto;
+  width: 100%;
+
+  position: fixed;
+  bottom: 0px;
+
+  margin: 0px;
+  padding: 0px;
+
+  li {
+    float: none;
+
+    margin: 0px;
+
+    clear: both;
+
+    a {
+      padding-top: @padding-large-vertical;
+      padding-bottom: @padding-large-vertical;
+    }
   }
 }
 

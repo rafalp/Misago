@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router'; // jshint ignore:line
 import Button from 'misago/components/button'; // jshint ignore:line
 import DropdownToggle from 'misago/components/dropdown-toggle'; // jshint ignore:line
-import { TabsNav } from 'misago/components/threads/navs'; // jshint ignore:line
+import { CompactNav, TabsNav } from 'misago/components/threads/navs'; // jshint ignore:line
 import { read } from 'misago/reducers/threads'; // jshint ignore:line
 import ajax from 'misago/services/ajax'; // jshint ignore:line
 import posting from 'misago/services/posting'; // jshint ignore:line
@@ -72,57 +72,74 @@ export default class extends React.Component {
   }
 
   getStartThreadButton() {
-    if (this.props.user.id) {
-      /* jshint ignore:start */
-      return <Button className="btn btn-success btn-aligned hidden-xs hidden-sm"
-                     onClick={this.startThread}
-                     disabled={this.props.disabled}>
-        <span className="material-icon">
-          chat
-        </span>
-        {gettext("Start thread")}
-      </Button>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+    if (!this.props.user.id) return null;
+
+    /* jshint ignore:start */
+    return (
+      <div className="col-xs-6">
+        <Button
+          className="btn btn-success btn-block"
+          onClick={this.startThread}
+          disabled={this.props.disabled}
+        >
+          <span className="material-icon">
+            chat
+          </span>
+          {gettext("Start thread")}
+        </Button>
+      </div>
+    );
+    /* jshint ignore:end */
   }
 
   getMarkAsReadButton() {
-    if (this.props.user.id) {
-      /* jshint ignore:start */
-      return <Button className="btn btn-default btn-aligned hidden-xs hidden-sm"
-                     onClick={this.markAsRead}
-                     loading={this.state.isBusy}
-                     disabled={this.props.disabled}>
-        <span className="material-icon">
-          playlist_add_check
-        </span>
-        {gettext("Mark as read")}
-      </Button>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
-  }
+    if (!this.props.user.id) return null;
 
-  getCompactNavToggle() {
-    if (this.props.route.lists.length > 1) {
-      /* jshint ignore:start */
-      return <DropdownToggle toggleNav={this.props.toggleNav}
-                             dropdown={this.props.dropdown} />;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+    /* jshint ignore:start */
+    return (
+      <div className="col-xs-6">
+        <Button
+          className="btn btn-default btn-block"
+          onClick={this.markAsRead}
+          loading={this.state.isBusy}
+          disabled={this.props.disabled}
+        >
+          <span className="material-icon">
+            playlist_add_check
+          </span>
+          {gettext("Mark as read")}
+        </Button>
+      </div>
+    );
+    /* jshint ignore:end */
   }
 
   getTabsNav() {
     if (this.props.route.lists.length > 1) {
       /* jshint ignore:start */
-      return <TabsNav baseUrl={this.props.route.category.absolute_url}
-                      list={this.props.route.list}
-                      lists={this.props.route.lists} />;
+      return (
+        <TabsNav
+          baseUrl={this.props.route.category.absolute_url}
+          list={this.props.route.list}
+          lists={this.props.route.lists}
+        />
+      );
+      /* jshint ignore:end */
+    } else {
+      return null;
+    }
+  }
+
+  getCompactNav() {
+    if (this.props.route.lists.length > 1) {
+      /* jshint ignore:start */
+      return (
+        <CompactNav
+          baseUrl={this.props.route.category.absolute_url}
+          list={this.props.route.list}
+          lists={this.props.route.lists}
+        />
+      );
       /* jshint ignore:end */
     } else {
       return null;
@@ -141,15 +158,22 @@ export default class extends React.Component {
     /* jshint ignore:start */
     return <div className={this.getClassName()}>
       <div className="container">
-        {this.getGoBackButton()}
-        <h1 className="pull-left">{this.props.title}</h1>
-
-        {this.getStartThreadButton()}
-        {this.getMarkAsReadButton()}
-        {this.getCompactNavToggle()}
+        <div className="row">
+          <div className="col-md-8">
+            {this.getGoBackButton()}
+            <h1 className="pull-left">{this.props.title}</h1>
+          </div>
+          <div className="col-md-4">
+            <div className="row">
+              {this.getMarkAsReadButton()}
+              {this.getStartThreadButton()}
+            </div>
+          </div>
+        </div>
       </div>
 
       {this.getTabsNav()}
+      {this.getCompactNav()}
 
     </div>;
     /* jshint ignore:end */
