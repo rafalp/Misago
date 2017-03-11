@@ -56,3 +56,18 @@
     }
   }
 }
+
+
+// Toolbar spacer
+@media screen and (max-width: @screen-xs-max) {
+  .row-toolbar .clearfix {
+    margin-top: @line-height-computed / 2;
+  }
+}
+
+// even some paddings in row with buttons
+@media screen and (min-width: @screen-md-min) {
+  .row-toolbar>div>p {
+    padding-top: @padding-base-vertical + 1px;
+  }
+}

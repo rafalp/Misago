@@ -3,11 +3,9 @@ import Participants from 'misago/components/participants'; // jshint ignore:line
 import { Poll } from 'misago/components/poll'; // jshint ignore:line
 import PostsList from 'misago/components/posts-list'; // jshint ignore:line
 import Header from './header'; // jshint ignore:line
-import Paginator from './paginator'; // jshint ignore:line
-import ReplyButton from './reply-button'; // jshint ignore:line
-import Subscription from './subscription'; // jshint ignore:line
+import ToolbarTopOld from './toolbar-top-old'; // jshint ignore:line
 import ToolbarTop from './toolbar-top'; // jshint ignore:line
-import PostsModeration from './moderation/posts'; // jshint ignore:line
+import ToolbarBottom from './toolbar-bottom'; // jshint ignore:line
 import * as participants from 'misago/reducers/participants'; // jshint ignore:line
 import * as poll from 'misago/reducers/poll'; // jshint ignore:line
 import * as posts from 'misago/reducers/posts';
@@ -121,7 +119,11 @@ export default class extends React.Component {
       <Header {...this.props} />
       <div className="container">
 
-        <ToolbarTop openReplyForm={this.openReplyForm} {...this.props} />
+        <ToolbarTopOld openReplyForm={this.openReplyForm} {...this.props} />
+        <ToolbarTop
+          openReplyForm={this.openReplyForm}
+          {...this.props}
+        />
         <Poll
           poll={this.props.poll}
           thread={this.props.thread}
@@ -133,31 +135,13 @@ export default class extends React.Component {
           user={this.props.user}
         />
         <PostsList {...this.props} />
-        <div className="toolbar-bottom">
-          <Paginator {...this.props} />
-          <Reply onClick={this.openReplyForm} thread={this.props.thread} />
-          <Subscription className="toolbar-right dropup" {...this.props} />
-          <PostsModeration {...this.props} />
-          <div className="clear-fix" />
-        </div>
+        <ToolbarBottom
+          openReplyForm={this.openReplyForm}
+          {...this.props}
+        />
 
       </div>
     </div>;
     /* jshint ignore:end */
-  }
-}
-
-export function Reply(props) {
-  if (props.thread.acl.can_reply) {
-    /* jshint ignore:start */
-    return (
-      <ReplyButton
-        className="btn btn-success toolbar-right"
-        onClick={props.onClick}
-      />
-    );
-    /* jshint ignore:end */
-  } else {
-    return null;
   }
 }

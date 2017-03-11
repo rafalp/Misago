@@ -10,31 +10,45 @@ export default function(props) {
 }
 
 export function Pager(props) {
-  if (props.posts.pages > 1) {
-    return <ul className="pagination">
-      <FirstPage {...props} />
-      <PreviousPage {...props} />
-      <NextPage {...props} />
-      <LastPage {...props} />
-    </ul>;
-  } else {
-    return null;
-  }
+  if (props.posts.pages < 2) return null;
+    return (
+      <div className="row row-paginator">
+        <div className="col-xs-3">
+          <FirstPage {...props} />
+        </div>
+        <div className="col-xs-3">
+          <PreviousPage {...props} />
+        </div>
+        <div className="col-xs-3">
+          <NextPage {...props} />
+        </div>
+        <div className="col-xs-3">
+          <LastPage {...props} />
+        </div>
+      </div>
+    );
 }
 
 export function FirstPage(props) {
   if (props.posts.isLoaded && props.posts.first) {
-    return <li>
-      <Link to={props.thread.url.index} title={gettext("Go to first page")}>
+    return (
+      <Link
+        className="btn btn-default btn-block btn-icon"
+        to={props.thread.url.index}
+        title={gettext("Go to first page")}
+      >
         <span className="material-icon">first_page</span>
       </Link>
-    </li>;
+    );
   } else {
-    return <li className="disabled">
-      <span title={gettext("Go to first page")}>
+    return (
+      <span
+        className="btn btn-default btn-block btn-icon disabled"
+        title={gettext("Go to first page")}
+      >
         <span className="material-icon">first_page</span>
       </span>
-    </li>;
+    );
   }
 }
 
@@ -45,17 +59,24 @@ export function PreviousPage(props) {
       previousUrl = props.posts.previous + '/';
     }
 
-    return <li>
-      <Link to={props.thread.url.index + previousUrl} title={gettext("Go to previous page")}>
+    return (
+      <Link
+        className="btn btn-default btn-block btn-icon"
+        to={props.thread.url.index + previousUrl}
+        title={gettext("Go to previous page")}
+      >
         <span className="material-icon">chevron_left</span>
       </Link>
-    </li>;
+    );
   } else {
-    return <li className="disabled">
-      <span title={gettext("Go to previous page")}>
+    return (
+      <span
+        className="btn btn-default btn-block btn-icon disabled"
+        title={gettext("Go to previous page")}
+      >
         <span className="material-icon">chevron_left</span>
       </span>
-    </li>;
+    );
   }
 }
 
@@ -66,33 +87,47 @@ export function NextPage(props) {
       nextUrl = props.posts.next + '/';
     }
 
-    return <li>
-      <Link to={props.thread.url.index + nextUrl} title={gettext("Go to next page")}>
+    return (
+      <Link
+        className="btn btn-default btn-block btn-icon"
+        to={props.thread.url.index + nextUrl}
+        title={gettext("Go to next page")}
+      >
         <span className="material-icon">chevron_right</span>
       </Link>
-    </li>;
+    );
   } else {
-    return <li className="disabled">
-      <span title={gettext("Go to next page")}>
+    return (
+      <span
+        className="btn btn-default btn-block btn-icon disabled"
+        title={gettext("Go to next page")}
+      >
         <span className="material-icon">chevron_right</span>
       </span>
-    </li>;
+    );
   }
 }
 
 export function LastPage(props) {
   if (props.posts.isLoaded && props.posts.last) {
-    return <li>
-      <Link to={props.thread.url.index + props.posts.last + '/'} title={gettext("Go to last page")}>
+    return (
+      <Link
+        className="btn btn-default btn-block btn-icon"
+        to={props.thread.url.index + props.posts.last + '/'}
+        title={gettext("Go to last page")}
+      >
         <span className="material-icon">last_page</span>
       </Link>
-    </li>;
+    );
   } else {
-    return <li className="disabled">
-      <span title={gettext("Go to last page")}>
+    return (
+      <span
+        className="btn btn-default btn-block btn-icon disabled"
+        title={gettext("Go to last page")}
+      >
         <span className="material-icon">last_page</span>
       </span>
-    </li>;
+    );
   }
 }
 

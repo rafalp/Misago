@@ -7,7 +7,7 @@ import SplitModal from './split';
 
 export default function(props) {
   return (
-    <ul className="dropdown-menu dropdown-menu-right">
+    <ul className="dropdown-menu">
       <Approve {...props} />
       <Merge {...props} />
       <Move {...props} />

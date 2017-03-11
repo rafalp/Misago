@@ -1,6 +1,5 @@
 /* jshint ignore:start */
 import React from 'react';
-import { isVisible } from './controls';
 import * as posts from 'misago/reducers/posts';
 import store from 'misago/services/store';
 
@@ -32,4 +31,15 @@ export default class extends React.Component{
       </div>
     );
   }
+}
+
+export function isVisible(acl) {
+  return (
+    acl.can_approve ||
+    acl.can_hide ||
+    acl.can_protect ||
+    acl.can_unhide ||
+    acl.can_delete ||
+    acl.can_move
+  );
 }

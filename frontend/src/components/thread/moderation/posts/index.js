@@ -12,11 +12,11 @@ export default function(props) {
   });
 
   return (
-    <div className="pull-right dropup">
+    <div className="dropup">
       <button
         aria-expanded="true"
         aria-haspopup="true"
-        className="btn btn-default btn-icon dropdown-toggle"
+        className="btn btn-default dropdown-toggle btn-block"
         data-toggle="dropdown"
         disabled={!selection.length}
         type="button"

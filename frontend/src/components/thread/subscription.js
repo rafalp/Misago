@@ -6,16 +6,14 @@ import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
 
 export default function(props) {
-  if (!props.user.id) {
-    return null;
-  }
+  if (!props.user.id) return null;
 
   return (
     <div className={props.className}>
       <button
         aria-expanded="true"
         aria-haspopup="true"
-        className="btn btn-default dropdown-toggle"
+        className={"btn btn-default dropdown-toggle " + (props.btnClassName || "")}
         data-toggle="dropdown"
         type="button"
       >
@@ -51,7 +49,7 @@ export function getLabel(subscription) {
 
 export function Dropdown(props) {
   return (
-    <ul className="dropdown-menu dropdown-menu-right">
+    <ul className="dropdown-menu">
       <Disable {...props} />
       <Enable {...props} />
       <Email {...props} />
