@@ -89,7 +89,7 @@ export class PollChoice extends React.Component {
         </button>
         <input
           disabled={this.props.disabled}
-          maxlength="255"
+          maxLength="255"
           placeholder={gettext("choice label")}
           type="text"
           onChange={this.onChange}

@@ -58,16 +58,19 @@
 }
 
 
-// Toolbar spacer
-@media screen and (max-width: @screen-xs-max) {
-  .row-toolbar .clearfix {
-    margin-top: @line-height-computed / 2;
-  }
+// Toolbar spacing utils
+.row-toolbar .toolbar-vertical-spacer {
+  margin-top: @line-height-computed / 2;
 }
 
+.row-toolbar-bottom-margin {
+  margin-bottom: @line-height-computed;
+}
+
+
 // even some paddings in row with buttons
-@media screen and (min-width: @screen-md-min) {
-  .row-toolbar>div>p {
+@media screen and (min-width: @screen-sm-min) {
+  .row-toolbar p {
     padding-top: @padding-base-vertical + 1px;
   }
 }

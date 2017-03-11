@@ -3,7 +3,6 @@ import Participants from 'misago/components/participants'; // jshint ignore:line
 import { Poll } from 'misago/components/poll'; // jshint ignore:line
 import PostsList from 'misago/components/posts-list'; // jshint ignore:line
 import Header from './header'; // jshint ignore:line
-import ToolbarTopOld from './toolbar-top-old'; // jshint ignore:line
 import ToolbarTop from './toolbar-top'; // jshint ignore:line
 import ToolbarBottom from './toolbar-bottom'; // jshint ignore:line
 import * as participants from 'misago/reducers/participants'; // jshint ignore:line
@@ -119,7 +118,6 @@ export default class extends React.Component {
       <Header {...this.props} />
       <div className="container">
 
-        <ToolbarTopOld openReplyForm={this.openReplyForm} {...this.props} />
         <ToolbarTop
           openReplyForm={this.openReplyForm}
           {...this.props}

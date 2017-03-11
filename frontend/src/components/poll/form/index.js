@@ -139,7 +139,7 @@ export default class extends Form {
                       id="id_questions"
                       onChange={this.bindInput('question')}
                       type="text"
-                      maxlength="255"
+                      maxLength="255"
                       value={this.state.question}
                     />
                   </FormGroup>
@@ -190,7 +190,7 @@ export default class extends Form {
                       id="id_allowed_choices"
                       onChange={this.bindInput('allowed_choices')}
                       type="text"
-                      maxlength="255"
+                      maxLength="255"
                       value={this.state.allowed_choices}
                     />
                   </FormGroup>

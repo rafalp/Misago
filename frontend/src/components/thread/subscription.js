@@ -13,7 +13,7 @@ export default function(props) {
       <button
         aria-expanded="true"
         aria-haspopup="true"
-        className={"btn btn-default dropdown-toggle " + (props.btnClassName || "")}
+        className={"btn btn-default dropdown-toggle btn-block"}
         data-toggle="dropdown"
         type="button"
       >
@@ -49,7 +49,7 @@ export function getLabel(subscription) {
 
 export function Dropdown(props) {
   return (
-    <ul className="dropdown-menu">
+    <ul className={props.dropdownClassName || "dropdown-menu"}>
       <Disable {...props} />
       <Enable {...props} />
       <Email {...props} />

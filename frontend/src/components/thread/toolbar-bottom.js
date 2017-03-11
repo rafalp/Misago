@@ -10,16 +10,20 @@ export default function(props) {
     <div className="row row-toolbar">
       <div className="col-xs-12 text-center visible-xs-block">
         <More more={props.posts.more} />
-        <div className="clearfix visible-xs-block" />
+        <div className="toolbar-vertical-spacer" />
       </div>
-      <div className="col-md-3">
-        <Pager {...props} />
-      </div>
-      <div className="col-md-4 hidden-xs">
-        <More more={props.posts.more} />
+      <div className="col-md-7">
+        <div className="row">
+          <div className="col-sm-4 col-md-5">
+            <Pager {...props} />
+          </div>
+          <div className="col-sm-8 col-md-7 hidden-xs">
+            <More more={props.posts.more} />
+          </div>
+        </div>
       </div>
       <Options visible={!!props.user.id}>
-        <div className="clearfix visible-xs-block" />
+        <div className="toolbar-vertical-spacer hidden-md hidden-lg" />
         <div className="row">
           <Spacer {...props} />
           <Moderation {...props} />
@@ -48,7 +52,7 @@ export function Moderation(props) {
   if (!props.user.id) return null;
 
   return (
-    <div className="col-md-4 hidden-xs">
+    <div className="col-sm-4 hidden-xs">
       <PostsModeration {...props} />
     </div>
   )
@@ -62,7 +66,7 @@ export function Subscription(props) {
   }
 
   return (
-    <div className={xsClass + " col-md-4"}>
+    <div className={xsClass + " col-sm-4"}>
       <SubscriptionSwitch
         btnClassName="btn-block"
         className="dropup"
@@ -76,7 +80,7 @@ export function Reply(props) {
   if (!props.thread.acl.can_reply) return null;
 
   return (
-    <div className="col-xs-6 col-md-4">
+    <div className="col-xs-6 col-sm-4">
       <ReplyButton
         className="btn btn-success btn-block"
         onClick={props.onClick}
@@ -89,6 +93,6 @@ export function Spacer(props) {
   if (props.thread.acl.can_reply) return null;
 
   return (
-    <div className="hidden-xs col-md-4"></div>
+    <div className="hidden-xs hidden-sm col-sm-4"></div>
   );
 }
