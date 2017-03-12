@@ -10,8 +10,6 @@ export default function(props) {
 }
 
 export function Pager(props) {
-  if (props.posts.pages < 2) return null;
-
   return (
     <div className="row row-paginator">
       <div className="col-xs-3">
