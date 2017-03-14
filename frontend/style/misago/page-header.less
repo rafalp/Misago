@@ -23,6 +23,11 @@
     }
   }
 
+  .row .btn-aligned {
+    // just hotfix for mess in header aligments
+    margin-top: 0px;
+  }
+
   @media screen and (min-width: @screen-md-min) {
     .container>.row {
       margin-top: @line-height-computed * 1.25;
@@ -41,14 +46,13 @@
 
 // Small displays
 @media screen and (max-width: @screen-sm-max) {
+  .page-header .row .btn-aligned {
+    margin-top: @line-height-computed * 0.75;
+  }
+
   .container {
     h1 {
       font-size: @font-size-large * 1.25;
-    }
-
-    .btn-aligned {
-      float: right;
-      margin-top: @line-height-computed - 7px;
     }
 
     .btn-icon {
@@ -81,6 +85,26 @@
 
   &:before {
     margin-left: 4px;
+  }
+}
+
+
+// Small go back button
+.go-back-sm {
+  margin-top: @line-height-computed * 0.5;
+  margin-bottom: @line-height-computed * -0.66;
+
+  font-size: @font-size-small;
+
+  .material-icon {
+    height: @font-size-large;
+    width: @font-size-large;
+
+    font-size: @font-size-large;
+    line-height: @font-size-large;
+
+    position: relative;
+    top: -1px;
   }
 }
 
@@ -157,61 +181,6 @@
 @media screen and (min-width: @screen-md-min) {
   .page-header.tabbed {
     padding-bottom: 0px;
-  }
-}
-
-
-// Compact menu
-.menu-compact {
-  margin-top: @line-height-computed;
-  margin-bottom: @padding-large-vertical * -1 + 1px;
-
-  position: static;
-  height: auto;
-}
-
-.menu-compact .dropdown-toggle {
-  background: transparent;
-  border: 0px;
-  border-top: 1px solid @gray-lighter;
-  border-radius: 0px;
-
-  margin-bottom: 0px;
-  padding-top: @padding-large-vertical;
-  padding-bottom: @padding-large-vertical;
-}
-
-.menu-compact.open .dropdown-toggle {
-  border-top: 1px solid @gray-lighter;
-}
-
-.menu-compact.open .dropdown-menu {
-  border-radius: 0px;
-  border: none;
-
-  .box-shadow(0px 0px 16px @gray-light);
-
-  clear: both;
-  top: auto;
-  width: 100%;
-
-  position: fixed;
-  bottom: 0px;
-
-  margin: 0px;
-  padding: 0px;
-
-  li {
-    float: none;
-
-    margin: 0px;
-
-    clear: both;
-
-    a {
-      padding-top: @padding-large-vertical;
-      padding-bottom: @padding-large-vertical;
-    }
   }
 }
 

@@ -9,13 +9,11 @@ export default class extends React.Component {
 
     /* jshint ignore:start */
     return (
-      <div className="col-xs-3 col-sm-3 col-md-2 dropdown">
-        <CategoryPicker
-          categories={this.props.categoriesMap}
-          choices={this.props.subcategories}
-          list={this.props.list}
-        />
-      </div>
+      <CategoryPicker
+        categories={this.props.categoriesMap}
+        choices={this.props.subcategories}
+        list={this.props.list}
+      />
     );
     /* jshint ignore:end */
   }
@@ -54,7 +52,7 @@ export default class extends React.Component {
           addThreads={this.props.addThreads}
           categories={this.props.categories}
           categoriesMap={this.props.categoriesMap}
-          className="dropdown-menu dropdown-menu-right"
+          className="dropdown-menu dropdown-menu-right stick-to-bottom"
           deleteThread={this.props.deleteThread}
           freezeThread={this.props.freezeThread}
           moderation={this.props.moderation}
@@ -89,7 +87,7 @@ export default class extends React.Component {
         </button>
 
         <SelectionControls
-          className="dropdown-menu dropdown-menu-right"
+          className="dropdown-menu dropdown-menu-right stick-to-bottom"
           threads={this.props.threads}
         />
       </div>
@@ -101,7 +99,9 @@ export default class extends React.Component {
     /* jshint ignore:start */
     return (
       <div className="row row-toolbar row-toolbar-bottom-margin">
-        {this.getCategoryPicker()}
+        <div className="col-xs-3 col-sm-3 col-md-2 dropdown">
+          {this.getCategoryPicker()}
+        </div>
         <div className="hidden-xs col-sm-4 col-md-7" />
         {this.getModerationButton()}
         {this.getSelectionButton()}

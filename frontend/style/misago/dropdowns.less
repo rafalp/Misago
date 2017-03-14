@@ -147,3 +147,40 @@
   white-space: normal;
   word-wrap: break-word;
 }
+
+
+// Stick to bottom on mobile
+@media screen and (max-width: @screen-sm-max) {
+  .dropdown-menu.stick-to-bottom {
+    border-radius: 0px;
+    border: none;
+
+    max-height: 300px;
+    overflow-y: auto;
+
+    .box-shadow(0px 0px @line-height-computed * 1.5 @gray-light);
+
+    clear: both;
+    top: auto;
+    width: 100%;
+
+    position: fixed;
+    bottom: 0px;
+
+    margin: 0px;
+    padding: 0px;
+
+    li {
+      float: none;
+
+      margin: 0px;
+
+      clear: both;
+
+      &>a, &>.btn {
+        padding-top: @padding-large-vertical;
+        padding-bottom: @padding-large-vertical;
+      }
+    }
+  }
+}

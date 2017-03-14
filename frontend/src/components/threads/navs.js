@@ -36,22 +36,26 @@ export class TabsNav extends React.Component {
 // jshint ignore:start
 export function CompactNav(props) {
   return (
-    <div className="menu-compact dropdown hidden-md hidden-lg">
-      <button
-        aria-expanded="true"
-        aria-haspopup="true"
-        className="btn dropdown-toggle btn-block"
-        data-toggle="dropdown"
-        type="button"
-      >
-        <span className="material-icon">
-          more_vert
-        </span>
-        {props.list.longName}
-      </button>
-      <ul className="dropdown-menu">
-        {navLinks(props.baseUrl, props.list, props.lists, props.hideNav)}
-      </ul>
+    <div className="container sm-margin-top hidden-md hidden-lg">
+
+      <div className="dropdown">
+        <button
+          aria-expanded="true"
+          aria-haspopup="true"
+          className="btn btn-default dropdown-toggle btn-block"
+          data-toggle="dropdown"
+          type="button"
+        >
+          <span className="material-icon">
+            filter_list
+          </span>
+          {props.list.longName}
+        </button>
+        <ul className="dropdown-menu stick-to-bottom">
+          {navLinks(props.baseUrl, props.list, props.lists, props.hideNav)}
+        </ul>
+      </div>
+
     </div>
   );
 

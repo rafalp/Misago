@@ -54,21 +54,29 @@ export default class extends React.Component {
   };
   /* jshint ignore:end */
 
-  getGoBackButton() {
-    if (this.props.route.category.parent) {
-      /* jshint ignore:start */
-      const parent = this.props.categories[this.props.route.category.parent];
+  hasGoBackButton() {
+    return !!this.props.route.category.parent;
+  }
 
-      return <Link className="btn btn-default btn-aligned btn-icon btn-go-back pull-left"
-                   to={parent.absolute_url + this.props.route.list.path}>
-        <span className="material-icon">
-          keyboard_arrow_left
-        </span>
-      </Link>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+  getGoBackButton() {
+    if (!this.props.route.category.parent) return null;
+
+    /* jshint ignore:start */
+    const parent = this.props.categories[this.props.route.category.parent];
+
+    return (
+      <div className="hidden-xs col-xs-3 col-md-2 col-lg-1">
+        <Link
+          className="btn btn-default btn-icon btn-aligned btn-go-back btn-block"
+          to={parent.absolute_url + this.props.route.list.path}
+        >
+          <span className="material-icon">
+            keyboard_arrow_left
+          </span>
+        </Link>
+      </div>
+    );
+    /* jshint ignore:end */
   }
 
   getStartThreadButton() {
@@ -78,7 +86,7 @@ export default class extends React.Component {
     return (
       <div className="col-xs-6">
         <Button
-          className="btn btn-success btn-block"
+          className="btn-success btn-block"
           onClick={this.startThread}
           disabled={this.props.disabled}
         >
@@ -99,7 +107,7 @@ export default class extends React.Component {
     return (
       <div className="col-xs-6">
         <Button
-          className="btn btn-default btn-block"
+          className="btn-default btn-block"
           onClick={this.markAsRead}
           loading={this.state.isBusy}
           disabled={this.props.disabled}
@@ -156,26 +164,62 @@ export default class extends React.Component {
 
   render() {
     /* jshint ignore:start */
-    return <div className={this.getClassName()}>
-      <div className="container">
-        <div className="row">
-          <div className="col-md-8">
-            {this.getGoBackButton()}
-            <h1 className="pull-left">{this.props.title}</h1>
-          </div>
-          <div className="col-md-4">
-            <div className="row">
-              {this.getMarkAsReadButton()}
-              {this.getStartThreadButton()}
+    let headerClassName = 'col-xs-12';
+    if (this.hasGoBackButton()) {
+      headerClassName += ' col-sm-9 col-md-10 col-lg-11';
+    }
+
+    return (
+      <div className={this.getClassName()}>
+        <div className="container">
+          <div className="row">
+            <div className="col-md-8">
+              <div className="row">
+                {this.getGoBackButton()}
+                <div className={headerClassName}>
+                  <ParentCategory
+                    categories={this.props.categories}
+                    category={this.props.route.category.parent}
+                  />
+                  <h1>{this.props.title}</h1>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4 sm-margin-top-half">
+              <div className="row">
+                {this.getMarkAsReadButton()}
+                {this.getStartThreadButton()}
+              </div>
             </div>
           </div>
         </div>
+
+        {this.getTabsNav()}
+        {this.getCompactNav()}
+
       </div>
-
-      {this.getTabsNav()}
-      {this.getCompactNav()}
-
-    </div>;
+    );
     /* jshint ignore:end */
   }
 }
+
+/* jshint ignore:start */
+export function ParentCategory(props) {
+  const { categories, category } = props;
+  if (!category) return null;
+
+  const parent = categories[category];
+
+  return (
+    <Link
+      className="go-back-sm visible-xs-block"
+      to={parent.absolute_url}
+    >
+      <span className="material-icon">
+        chevron_left
+      </span>
+      {parent.parent ? parent.name : gettext("Threads")}
+    </Link>
+  );
+}
+/* jshint ignore:end */
