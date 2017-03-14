@@ -12,6 +12,7 @@ from misago.conf import settings
 from misago.core.utils import parse_iso8601_string
 from misago.markup import finalise_markup
 from misago.threads.checksums import is_post_valid, update_post_checksum
+from misago.threads.filtersearch import filter_search
 
 
 @python_2_unicode_compatible
@@ -166,9 +167,9 @@ class Post(models.Model):
 
     def set_search_document(self, thread_title=None):
         if thread_title:
-            self.search_document = '\n\n'.join([thread_title, self.original])
+            self.search_document = filter_search('\n\n'.join([thread_title, self.original]))
         else:
-            self.search_document = self.original
+            self.search_document = filter_search(self.original)
 
     def update_search_vector(self):
         self.search_vector = SearchVector(

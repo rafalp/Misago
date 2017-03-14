@@ -19,6 +19,7 @@
 * [Extending pages](./ExtendingPages.md)
 * [Validating registrations](./ValidatingRegistrations.md)
 * [Validators](./Validators.md)
+* [Search filters](./SearchFilters.md)
 * [Template tags](./TemplateTags.md)
 * [Shortcuts](./Shortcuts.md)
 * [Thread store](./ThreadStore.md)

@@ -152,6 +152,11 @@ Max age, in days, of notifications stored in database. Notifications older than 
 Limit of attachments that may be uploaded in single post. Lower limits may hamper image-heavy forums, but help keep memory usage by posting process. 
 
 
+## `MISAGO_POST_SEARCH_FILTERS`
+
+List of post search filters that are used to normalize search queries and documents used in forum search engine.
+
+
 ## `MISAGO_POST_VALIDATORS`
 
 List of post validators used to validate posts.

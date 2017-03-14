@@ -34,6 +34,11 @@ MISAGO_MARKUP_EXTENSIONS = []
 MISAGO_POST_VALIDATORS = []
 
 
+# Post search filters
+
+MISAGO_POST_SEARCH_FILTERS = []
+
+
 # Posting middlewares
 # https://misago.readthedocs.io/en/latest/developers/posting_process.html
 

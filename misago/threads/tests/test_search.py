@@ -175,6 +175,37 @@ class SearchApiTests(AuthenticatedUserTestCase):
                 self.assertEqual(len(results), 1)
                 self.assertEqual(results[0]['id'], post.id)
 
+    def test_filtered_query(self):
+        """search filters are used by search system"""
+        thread = testutils.post_thread(self.category)
+        post = testutils.reply_thread(
+            thread,
+            message="You just do MMM in 4th minute and its pwnt",
+        )
+
+        self.index_post(post)
+
+        response = self.client.get('%s?q=MMM' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        reponse_json = response.json()
+        self.assertIn('threads', [p['id'] for p in reponse_json])
+
+        for provider in reponse_json:
+            if provider['id'] == 'threads':
+                results = provider['results']['results']
+                self.assertEqual(len(results), 1)
+                self.assertEqual(results[0]['id'], post.id)
+
+        response = self.client.get('%s?q=Marines Medics' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        for provider in reponse_json:
+            if provider['id'] == 'threads':
+                results = provider['results']['results']
+                self.assertEqual(len(results), 1)
+                self.assertEqual(results[0]['id'], post.id)
+
 
 class SearchProviderApiTests(SearchApiTests):
     def setUp(self):

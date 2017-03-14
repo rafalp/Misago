@@ -89,6 +89,12 @@ MISAGO_SEARCH_CONFIG = 'english'
 MISAGO_POST_VALIDATORS = [
     'misago.core.testproject.validators.test_post_validator',
 ]
+
+
+# Register test post search filter
+MISAGO_POST_SEARCH_FILTERS = [
+    'misago.core.testproject.searchfilters.test_filter',
+]
 """
 
     if os.environ.get('TRAVIS'):

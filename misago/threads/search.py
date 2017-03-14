@@ -5,12 +5,12 @@ from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
 from misago.search import SearchProvider
 
+from .filtersearch import filter_search
 from .models import Post, Thread
 from .permissions import exclude_invisible_threads
 from .serializers import FeedSerializer
 from .utils import add_categories_to_items
 from .viewmodels import ThreadsRootCategory
-
 
 class SearchThreads(SearchProvider):
     name = _("Threads")
@@ -56,8 +56,14 @@ class SearchThreads(SearchProvider):
 
 
 def search_threads(request, query, visible_threads):
-    search_query = SearchQuery(query, config=settings.MISAGO_SEARCH_CONFIG)
-    search_vector = SearchVector('search_document', config=settings.MISAGO_SEARCH_CONFIG)
+    search_query = SearchQuery(
+        filter_search(query),
+        config=settings.MISAGO_SEARCH_CONFIG,
+    )
+    search_vector = SearchVector(
+        'search_document',
+        config=settings.MISAGO_SEARCH_CONFIG,
+    )
 
     return Post.objects.select_related('thread', 'poster').filter(
         is_event=False,
