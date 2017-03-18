@@ -8,7 +8,7 @@ import SplitModal from './split';
 
 export default function(props) {
   return (
-    <ul className="dropdown-menu dropdown-menu-right">
+    <ul className="dropdown-menu dropdown-menu-right stick-to-bottom">
       <Permalink {...props} />
       <PostEdits {...props} />
       <Approve {...props} />

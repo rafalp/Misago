@@ -65,7 +65,7 @@ export default class extends React.Component {
     const parent = this.props.categories[this.props.route.category.parent];
 
     return (
-      <div className="hidden-xs col-xs-3 col-md-2 col-lg-1">
+      <div className="hidden-xs col-sm-2 col-lg-1">
         <Link
           className="btn btn-default btn-icon btn-aligned btn-go-back btn-block"
           to={parent.absolute_url + this.props.route.list.path}
@@ -84,7 +84,7 @@ export default class extends React.Component {
 
     /* jshint ignore:start */
     return (
-      <div className="col-xs-6">
+      <div className="col-xs-6 col-sm-4 col-md-6">
         <Button
           className="btn-success btn-block"
           onClick={this.startThread}
@@ -105,7 +105,7 @@ export default class extends React.Component {
 
     /* jshint ignore:start */
     return (
-      <div className="col-xs-6">
+      <div className="col-xs-6 col-sm-4 col-md-6">
         <Button
           className="btn-default btn-block"
           onClick={this.markAsRead}
@@ -166,14 +166,16 @@ export default class extends React.Component {
     /* jshint ignore:start */
     let headerClassName = 'col-xs-12';
     if (this.hasGoBackButton()) {
-      headerClassName += ' col-sm-9 col-md-10 col-lg-11';
+      headerClassName += ' col-sm-10 col-lg-11';
     }
+
+    const isAuthenticated = !!this.props.user.id;
 
     return (
       <div className={this.getClassName()}>
         <div className="container">
           <div className="row">
-            <div className="col-md-8">
+            <div className={isAuthenticated ? "col-md-8" : "col-xs-12"}>
               <div className="row">
                 {this.getGoBackButton()}
                 <div className={headerClassName}>
@@ -185,17 +187,27 @@ export default class extends React.Component {
                 </div>
               </div>
             </div>
-            <div className="col-md-4 sm-margin-top-half">
-              <div className="row">
-                {this.getMarkAsReadButton()}
-                {this.getStartThreadButton()}
+            {isAuthenticated && (
+              <div className="col-md-4">
+                <div className="row xs-margin-top-half sm-margin-top-half">
+                  <div className="col-sm-4 visible-sm-block">
+                    {this.getCompactNav()}
+                  </div>
+                  {this.getMarkAsReadButton()}
+                  {this.getStartThreadButton()}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
         {this.getTabsNav()}
-        {this.getCompactNav()}
+
+        {isAuthenticated && (
+          <div className="container xs-margin-top hidden-sm hidden-md hidden-lg">
+            {this.getCompactNav()}
+          </div>
+        )}
 
       </div>
     );

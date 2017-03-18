@@ -25,9 +25,15 @@ page-private-threads
 {% block page-header %}
 <div class="page-header tabbed">
   <div class="container">
-    <h1 class="pull-left">
-      {{ category }}
-    </h1>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-xs-12">
+            <h1>{{ category }}</h1>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   {% if user.is_authenticated %}
     {% include "misago/threadslist/tabs.html" with hide_unapproved=True %}

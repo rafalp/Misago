@@ -9,8 +9,8 @@ const navLinks = function(baseUrl, active, lists, hideNav) {
                  isActive={list.path === active.path}
                  key={baseUrl + list.path}>
         <Link to={baseUrl + list.path} onClick={hideNav}>
-          <span className="hidden-xs hidden-sm">{list.name}</span>
-          <span className="hidden-md hidden-lg">{list.longName}</span>
+          <span className="hidden-xs">{list.name}</span>
+          <span className="hidden-sm hidden-md hidden-lg">{list.longName}</span>
         </Link>
       </Li>;
   });
@@ -36,26 +36,22 @@ export class TabsNav extends React.Component {
 // jshint ignore:start
 export function CompactNav(props) {
   return (
-    <div className="container sm-margin-top hidden-md hidden-lg">
-
-      <div className="dropdown">
-        <button
-          aria-expanded="true"
-          aria-haspopup="true"
-          className="btn btn-default dropdown-toggle btn-block"
-          data-toggle="dropdown"
-          type="button"
-        >
-          <span className="material-icon">
-            filter_list
-          </span>
-          {props.list.longName}
-        </button>
-        <ul className="dropdown-menu stick-to-bottom">
-          {navLinks(props.baseUrl, props.list, props.lists, props.hideNav)}
-        </ul>
-      </div>
-
+    <div className="dropdown">
+      <button
+        aria-expanded="true"
+        aria-haspopup="true"
+        className="btn btn-default dropdown-toggle btn-block"
+        data-toggle="dropdown"
+        type="button"
+      >
+        <span className="material-icon">
+          filter_list
+        </span>
+        {props.list.longName}
+      </button>
+      <ul className="dropdown-menu stick-to-bottom">
+        {navLinks(props.baseUrl, props.list, props.lists, props.hideNav)}
+      </ul>
     </div>
   );
 

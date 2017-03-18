@@ -4,39 +4,39 @@
     <ul class="nav nav-pills">
       <li{% if list_type == 'all' %} class="active"{% endif %}>
         <a href="{{ category.get_absolute_url }}">
-          <span class="hidden-xs hidden-sm">{% trans "All" %}</span>
-          <span class="hidden-md hidden-lg">{% trans "All threads" %}</span>
+          <span class="hidden-xs">{% trans "All" %}</span>
+          <span class="hidden-sm hidden-md hidden-lg">{% trans "All threads" %}</span>
         </a>
       </li>
       <li{% if list_type == 'my' %} class="active"{% endif %}>
         <a href="{{ category.get_absolute_url }}my/">
-          <span class="hidden-xs hidden-sm">{% trans "My" %}</span>
-          <span class="hidden-md hidden-lg">{% trans "My threads" %}</span>
+          <span class="hidden-xs">{% trans "My" %}</span>
+          <span class="hidden-sm hidden-md hidden-lg">{% trans "My threads" %}</span>
         </a>
       </li>
       <li{% if list_type == 'new' %} class="active"{% endif %}>
         <a href="{{ category.get_absolute_url }}new/">
-          <span class="hidden-xs hidden-sm">{% trans "New" %}</span>
-          <span class="hidden-md hidden-lg">{% trans "New threads" %}</span>
+          <span class="hidden-xs">{% trans "New" %}</span>
+          <span class="hidden-sm hidden-md hidden-lg">{% trans "New threads" %}</span>
         </a>
       </li>
       <li{% if list_type == 'unread' %} class="active"{% endif %}>
         <a href="{{ category.get_absolute_url }}unread/">
-          <span class="hidden-xs hidden-sm">{% trans "Unread" %}</span>
-          <span class="hidden-md hidden-lg">{% trans "Unread threads" %}</span>
+          <span class="hidden-xs">{% trans "Unread" %}</span>
+          <span class="hidden-sm hidden-md hidden-lg">{% trans "Unread threads" %}</span>
         </a>
       </li>
       <li{% if list_type == 'subscribed' %} class="active"{% endif %}>
         <a href="{{ category.get_absolute_url }}subscribed/">
-          <span class="hidden-xs hidden-sm">{% trans "Subscribed" %}</span>
-          <span class="hidden-md hidden-lg">{% trans "Subscribed threads" %}</span>
+          <span class="hidden-xs">{% trans "Subscribed" %}</span>
+          <span class="hidden-sm hidden-md hidden-lg">{% trans "Subscribed threads" %}</span>
         </a>
       </li>
       {% if user.acl_cache.can_see_unapproved_content_lists and not hide_unapproved %}
         <li{% if list_type == 'unapproved' %} class="active"{% endif %}>
           <a href="{{ category.get_absolute_url }}unapproved/">
-            <span class="hidden-xs hidden-sm">{% trans "Unapproved" %}</span>
-            <span class="hidden-md hidden-lg">{% trans "Unapproved content" %}</span>
+            <span class="hidden-xs">{% trans "Unapproved" %}</span>
+            <span class="hidden-sm hidden-md hidden-lg">{% trans "Unapproved content" %}</span>
           </a>
         </li>
       {% endif %}

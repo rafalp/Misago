@@ -12,12 +12,22 @@
 
 
 // add top margin on smaller displays
-@media screen and (max-width: @screen-sm-max) {
+@media screen and (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
   .sm-margin-top {
     margin-top: @line-height-computed;
   }
 
   .sm-margin-top-half {
+    margin-top: @line-height-computed * 0.33;
+  }
+}
+
+@media screen and (max-width: @screen-xs-max) {
+  .xs-margin-top {
+    margin-top: @line-height-computed;
+  }
+
+  .xs-margin-top-half {
     margin-top: @line-height-computed * 0.33;
   }
 }

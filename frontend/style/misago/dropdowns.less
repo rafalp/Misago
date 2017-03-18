@@ -150,7 +150,7 @@
 
 
 // Stick to bottom on mobile
-@media screen and (max-width: @screen-sm-max) {
+@media screen and (max-width: @screen-xs-max) {
   .dropdown-menu.stick-to-bottom {
     border-radius: 0px;
     border: none;
@@ -170,6 +170,8 @@
     margin: 0px;
     padding: 0px;
 
+    padding-bottom: @line-height-computed;
+
     li {
       float: none;
 
@@ -178,8 +180,10 @@
       clear: both;
 
       &>a, &>.btn {
-        padding-top: @padding-large-vertical;
-        padding-bottom: @padding-large-vertical;
+        padding-top: @line-height-computed * 0.75;
+        padding-bottom: @line-height-computed * 0.75;
+
+        border-bottom: 1px solid @dropdown-divider-bg;
       }
     }
   }

@@ -34,15 +34,28 @@
 {% block page-header %}
 <div class="page-header {{ user.is_authenticated|iftrue:"tabbed" }}">
   <div class="container">
-    <a href="{{ category.parent.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="btn btn-default btn-aligned btn-icon btn-go-back pull-left">
-      <span class="material-icon">
-        keyboard_arrow_left
-      </span>
-    </a>
-
-    <h1 class="pull-left">
-      {{ category }}
-    </h1>
+    <div class="row">
+      <div class="{{ user.is_authenticated|yesno:'col-md-8,col-xs-12' }}">
+        <div class="row">
+          <div class="hidden-xs col-sm-2 col-lg-1">
+            <a href="{{ category.parent.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="btn btn-default btn-icon btn-aligned btn-go-back btn-block">
+              <span class="material-icon">
+                keyboard_arrow_left
+              </span>
+            </a>
+          </div>
+          <div class="col-xs-12 col-sm-10 col-lg-11">
+            <a href="{{ category.parent.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="go-back-sm visible-xs-block">
+              <span class="material-icon">
+                chevron_left
+              </span>
+              {% if parent.parent %}{{ parent.name }}{% else %}{% trans "Threads" %}{% endif %}
+            </a>
+            <h1>{{ category }}</h1>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   {% if user.is_authenticated %}
     {% include "misago/threadslist/tabs.html" %}
