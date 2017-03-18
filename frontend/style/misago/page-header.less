@@ -184,38 +184,7 @@
 }
 
 
-// Edit title
-.title-editable {
-  overflow: auto;
-  position: relative;
-
-  h1 {
-    width: 100%;
-  }
-
-  .btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-
-    padding: @padding-small-vertical @padding-small-vertical;
-    .opacity(0.5);
-  }
-
-  &:hover .btn {
-    .opacity(1);
-  }
-
-  .material-icon {
-    width: 14px;
-    height: 14px;
-
-    font-size: 14px;
-    line-height:14px;
-  }
-}
-
+// Title edit form
 .title-edit-form {
-  margin: 0px;
-  margin-bottom: 12px;
+  margin-bottom: @line-height-computed;
 }

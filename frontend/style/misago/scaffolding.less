@@ -11,23 +11,33 @@
 }
 
 
-// add top margin on smaller displays
+// top margin utils
+@media screen and (min-width: @screen-md-min) {
+  .md-margin-top-no {
+    margin-top: 0px !important;
+  }
+}
+
 @media screen and (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
   .sm-margin-top {
-    margin-top: @line-height-computed;
+    margin-top: @line-height-computed !important;
+  }
+  
+  .sm-margin-top-no {
+    margin-top: 0px !important;
   }
 
   .sm-margin-top-half {
-    margin-top: @line-height-computed * 0.33;
+    margin-top: @line-height-computed * 0.33 !important;
   }
 }
 
 @media screen and (max-width: @screen-xs-max) {
   .xs-margin-top {
-    margin-top: @line-height-computed;
+    margin-top: @line-height-computed !important;
   }
 
   .xs-margin-top-half {
-    margin-top: @line-height-computed * 0.33;
+    margin-top: @line-height-computed * 0.33 !important;
   }
 }

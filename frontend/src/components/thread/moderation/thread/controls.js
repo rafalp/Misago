@@ -318,7 +318,7 @@ export default class extends React.Component {
 
   render() {
     return (
-      <ul className="dropdown-menu stick-to-bottom">
+      <ul className="dropdown-menu dropdown-menu-right stick-to-bottom">
         {this.getPinGloballyButton()}
         {this.getPinLocallyButton()}
         {this.getUnpinButton()}
