@@ -10,37 +10,49 @@ import misago from 'misago/index';
 export default class extends WithDropdown {
   render() {
     /* jshint ignore:start */
-    return <div className="page page-users-lists">
-
-      <div className="page-header tabbed">
-        <div className="container">
-
-          <h1 className="pull-left">{gettext("Users")}</h1>
-
-          <DropdownToggle toggleNav={this.toggleNav}
-                          dropdown={this.state.dropdown} />
-
-        </div>
-        <div className="page-tabs hidden-xs hidden-sm">
+    return (
+      <div className="page page-users-lists">
+        <div className="page-header tabbed">
           <div className="container">
+            <h1>{gettext("Users")}</h1>
+          </div>
+          <div className="page-tabs hidden-xs">
+            <div className="container">
 
-            <TabsNav lists={misago.get('USERS_LISTS')}
-                     baseUrl={misago.get('USERS_LIST_URL')} />
+              <TabsNav
+                lists={misago.get('USERS_LISTS')}
+                baseUrl={misago.get('USERS_LIST_URL')}
+              />
 
+            </div>
           </div>
         </div>
+        <div className="page-header page-header-followup visible-xs-block">
+          <div className="container">
+            <div className="dropdown">
+              <button
+                aria-expanded="true"
+                aria-haspopup="true"
+                className="btn btn-default dropdown-toggle btn-block"
+                data-toggle="dropdown"
+                type="button"
+              >
+                <span className="material-icon">
+                  menu
+                </span>
+                {gettext("Menu")}
+              </button>
+              <CompactNav
+                lists={misago.get('USERS_LISTS')}
+                baseUrl={misago.get('USERS_LIST_URL')}
+              />
+            </div>
+          </div>
+        </div>
+
+        {this.props.children}
       </div>
-      <div className={this.getCompactNavClassName()}>
-
-        <CompactNav lists={misago.get('USERS_LISTS')}
-                    baseUrl={misago.get('USERS_LIST_URL')}
-                    hideNav={this.hideNav} />
-
-      </div>
-
-      {this.props.children}
-
-    </div>;
+    );
     /* jshint ignore:end */
   }
 }
