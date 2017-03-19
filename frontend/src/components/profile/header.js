@@ -9,32 +9,45 @@ import Status, { StatusIcon, StatusLabel } from 'misago/components/user-status';
 export default class extends React.Component {
   getUserStatus() {
     /* jshint ignore:start */
-    return <li className="user-status-display">
-      <Status user={this.props.profile} status={this.props.profile.status}>
-        <StatusIcon user={this.props.profile}
-                    status={this.props.profile.status} />
-        <StatusLabel user={this.props.profile}
-                     status={this.props.profile.status}
-                     className="status-label" />
-      </Status>
-    </li>;
+    return (
+      <li className="user-status-display">
+        <Status
+          user={this.props.profile}
+          status={this.props.profile.status}
+        >
+          <StatusIcon
+            user={this.props.profile}
+            status={this.props.profile.status}
+          />
+          <StatusLabel
+            user={this.props.profile}
+            status={this.props.profile.status}
+            className="status-label"
+          />
+        </Status>
+      </li>
+    );
     /* jshint ignore:end */
   }
 
   getUserRank() {
     if (this.props.profile.rank.is_tab) {
       /* jshint ignore:start */
-      return <li className="user-rank">
-        <a href={this.props.profile.rank.absolute_url} className="item-title">
-          {this.props.profile.rank.name}
-        </a>
-      </li>;
+      return (
+        <li className="user-rank">
+          <a href={this.props.profile.rank.absolute_url} className="item-title">
+            {this.props.profile.rank.name}
+          </a>
+        </li>
+      );
       /* jshint ignore:end */
     } else {
       /* jshint ignore:start */
-      return <li className="user-rank">
-        <span className="item-title">{this.props.profile.rank.name}</span>
-      </li>;
+      return (
+        <li className="user-rank">
+          <span className="item-title">{this.props.profile.rank.name}</span>
+        </li>
+      );
       /* jshint ignore:end */
     }
   }
@@ -42,15 +55,19 @@ export default class extends React.Component {
   getUserTitle() {
     if (this.props.profile.title) {
       /* jshint ignore:start */
-      return <li className="user-title">
-        {this.props.profile.title}
-      </li>;
+      return (
+        <li className="user-title">
+          {this.props.profile.title}
+        </li>
+      );
       /* jshint ignore:end */
     } else if (this.props.profile.rank.title) {
       /* jshint ignore:start */
-      return <li className="user-title">
-        {this.props.profile.rank.title}
-      </li>;
+      return (
+        <li className="user-title">
+          {this.props.profile.rank.title}
+        </li>
+      );
       /* jshint ignore:end */
     } else {
       return null;
@@ -67,22 +84,26 @@ export default class extends React.Component {
       'joined_on': this.props.profile.joined_on.fromNow()
     }, true);
 
-    return <li className="user-joined-on">
-      <abbr title={title}>
-        {age}
-      </abbr>
-    </li>;
+    return (
+      <li className="user-joined-on">
+        <abbr title={title}>
+          {age}
+        </abbr>
+      </li>
+    );
     /* jshint ignore:end */
   }
 
   getEmail() {
     if (this.props.profile.email) {
       /* jshint ignore:start */
-      return <li className="user-email">
-        <a href={'mailto:' + this.props.profile.email} className="item-title">
-          {this.props.profile.email}
-        </a>
-      </li>;
+      return (
+        <li className="user-email">
+          <a href={'mailto:' + this.props.profile.email} className="item-title">
+            {this.props.profile.email}
+          </a>
+        </li>
+      );
       /* jshint ignore:end */
     } else {
       return null;
@@ -92,8 +113,12 @@ export default class extends React.Component {
   getFollowButton() {
     if (this.props.profile.acl.can_follow) {
       /* jshint ignore:start */
-      return <FollowButton className="btn btn-aligned hidden-xs hidden-sm"
-                           profile={this.props.profile} />;
+      return (
+        <FollowButton
+          className="btn btn-block"
+          profile={this.props.profile}
+        />
+      );
       /* jshint ignore:end */
     } else {
       return null;
@@ -103,19 +128,25 @@ export default class extends React.Component {
   getModerationButton() {
     if (this.props.profile.acl.can_moderate) {
       /* jshint ignore:start */
-      return <div className="btn-group btn-aligned hidden-xs hidden-sm">
-        <button className="btn btn-default btn-moderate dropdown-toggle"
-                type="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false">
-          <span className="material-icon">
-            tonality
-          </span>
-          {gettext("Moderation")}
-        </button>
-        <ModerationNav profile={this.props.profile} />
-      </div>;
+      return (
+        <div className="btn-group btn-group-justified">
+          <div className="btn-group">
+            <button
+              className="btn btn-default btn-moderate dropdown-toggle"
+              type="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <span className="material-icon">
+                tonality
+              </span>
+              {gettext("Moderation")}
+            </button>
+            <ModerationNav profile={this.props.profile} />
+          </div>
+        </div>
+      );
       /* jshint ignore:end */
     } else {
       return null;
@@ -124,54 +155,92 @@ export default class extends React.Component {
 
   render() {
     /* jshint ignore:start */
-    return<div className="page-header">
-      <div className="container">
+    const canFollow = this.props.profile.acl.can_follow;
+    const canModerate = this.props.profile.acl.can_moderate;
 
-        <IsDisabledMessage
-          isActive={this.props.profile.is_active}
-        />
+    const isProfileOwner = this.props.user.id === this.props.profile.id;
+    const canMessage = !isProfileOwner && this.props.user.acl.can_start_private_threads;
 
-        <div className="row">
-          <div className="col-md-9 col-md-offset-3">
+    let cols = 0;
+    if (canFollow) cols += 1;
+    if (canModerate) cols += 1;
+    if (canMessage) cols += 1;
 
-            <h1 className="pull-left">
-              <Avatar user={this.props.profile} size="100" />
-              <span className="user-name">{this.props.profile.username}</span>
-            </h1>
+    const colsWidth = cols ? 2 * cols + 1 : 0;
 
-            <MessageButton
-              className="btn btn-default btn-aligned hidden-xs hidden-sm"
-              profile={this.props.profile}
-              user={this.props.user}
-            />
-            {this.getFollowButton()}
-            {this.getModerationButton()}
-
-            <DropdownToggle toggleNav={this.props.toggleNav}
-                            dropdown={this.props.dropdown} />
-
-          </div>
-        </div>
-
-      </div>
-      <div className="header-stats">
+    return (
+      <div className="page-header">
         <div className="container">
+
+          <IsDisabledMessage
+            isActive={this.props.profile.is_active}
+          />
+
           <div className="row">
             <div className="col-md-9 col-md-offset-3">
 
-              <ul className="list-inline">
-                {this.getUserStatus()}
-                {this.getUserRank()}
-                {this.getUserTitle()}
-                {this.getJoinedOn()}
-                {this.getEmail()}
-              </ul>
+              <div className="row">
+                <div className={"col-sm-" + (12 - colsWidth)}>
 
+                  <Avatar
+                    className="user-avatar user-avatar-sm"
+                    user={this.props.profile}
+                    size="100"
+                  />
+                  <h1>{this.props.profile.username}</h1>
+
+                </div>
+                {!!cols && (
+                  <div className={"col-sm-" + colsWidth}>
+
+                    <div className="row xs-margin-top sm-margin-top">
+                      {canMessage && (
+                      <div className={getColStyle(cols, 0)}>
+                        <MessageButton
+                          className="btn btn-default btn-block"
+                          profile={this.props.profile}
+                          user={this.props.user}
+                        />
+                      </div>
+                      )}
+                      {canFollow && (
+                        <div className={getColStyle(cols, 1)}>
+                          {this.getFollowButton()}
+                        </div>
+                      )}
+                      {canModerate && (
+                        <div className={getColStyle(cols, 2)}>
+                          {this.getModerationButton()}
+                        </div>
+                      )}
+                    </div>
+
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div className="header-stats">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-9 col-md-offset-3">
+
+                <ul className="list-inline">
+                  {this.getUserStatus()}
+                  {this.getUserRank()}
+                  {this.getUserTitle()}
+                  {this.getJoinedOn()}
+                  {this.getEmail()}
+                </ul>
+
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>;
+    );
     /* jshint ignore:end */
   }
 }
@@ -185,5 +254,27 @@ export function IsDisabledMessage(props) {
       <p>{gettext("This user's account has been disabled by administrator.")}</p>
     </div>
   );
+}
+
+export function getColStyle(cols, col) {
+  let colStyle = "";
+
+  if (cols == 1) {
+    colStyle = "col-xs-12";
+  }
+
+  if (cols == 2) {
+    colStyle = "col-xs-6 col-sm-6";
+  }
+
+  if (cols == 3) {
+    if (col == 2) {
+      colStyle = "col-xs-12 col-sm-4 xs-margin-top";
+    } else {
+      colStyle += "col-xs-6 col-sm-4";
+    }
+  }
+
+  return colStyle;
 }
 /* jshint ignore:end */

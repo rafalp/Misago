@@ -92,39 +92,76 @@ export default class extends WithDropdown {
 
   render() {
     /* jshint ignore:start */
-    return <div className={this.getClassName()}>
+    const pages = misago.get('PROFILE_PAGES');
 
-      <Header user={this.props.user}
+    return (
+      <div className={this.getClassName()}>
+
+        <Header
+          user={this.props.user}
+          profile={this.props.profile}
+          toggleNav={this.toggleNav}
+          toggleModeration={this.toggleModeration}
+        />
+
+        <div className="page-header page-header-followup visible-sm-block">
+          <div className="container">
+            <CompactNav
+              className="nav nav-pills"
+              pages={pages}
+              baseUrl={misago.get('PROFILE').absolute_url}
               profile={this.props.profile}
-              toggleNav={this.toggleNav}
-              toggleModeration={this.toggleModeration} />
-
-      <div className={this.getCompactNavClassName()}>
-        {this.getNavDropdown()}
-      </div>
-      <div className="container">
-
-        <div className="row">
-          <div className="col-md-3 hidden-xs hidden-sm">
-
-            <div className="profile-side-avatar">
-              <Avatar user={this.props.profile} size="400" />
-            </div>
-
-            <SideNav pages={misago.get('PROFILE_PAGES')}
-                     baseUrl={misago.get('PROFILE').absolute_url}
-                     profile={this.props.profile} />
-
-          </div>
-          <div className="col-md-9">
-
-            {this.props.children}
-
+            />
           </div>
         </div>
 
+        <div className="page-header page-header-followup visible-xs-block">
+          <div className="container">
+            <div className="dropdown">
+              <button
+                aria-expanded="true"
+                aria-haspopup="true"
+                className="btn btn-default dropdown-toggle btn-block"
+                data-toggle="dropdown"
+                type="button"
+              >
+                <span className="material-icon">
+                  menu
+                </span>
+                {gettext("Menu")}
+              </button>
+              <CompactNav
+                pages={pages}
+                baseUrl={misago.get('PROFILE').absolute_url}
+                profile={this.props.profile}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="container">
+
+          <div className="row">
+            <div className="col-md-3 hidden-xs hidden-sm">
+
+              <div className="profile-side-avatar">
+                <Avatar user={this.props.profile} size="400" />
+              </div>
+
+              <SideNav
+                pages={pages}
+                baseUrl={misago.get('PROFILE').absolute_url}
+                profile={this.props.profile}
+              />
+
+            </div>
+            <div className="col-md-9">
+              {this.props.children}
+            </div>
+          </div>
+
+        </div>
       </div>
-    </div>;
+    );
     /* jshint ignore:end */
   }
 }

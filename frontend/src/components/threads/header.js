@@ -204,7 +204,7 @@ export default class extends React.Component {
         {this.getTabsNav()}
 
         {isAuthenticated && (
-          <div className="container xs-margin-top hidden-sm hidden-md hidden-lg">
+          <div className="container xs-margin-top visible-xs-block">
             {this.getCompactNav()}
           </div>
         )}

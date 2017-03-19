@@ -1,0 +1,14 @@
+{% load misago_shorthands %}
+<div class="page-header page-header-followup visible-sm-block">
+  <div class="container">
+    <ul class="nav nav-pills">
+      {% for section in sections %}
+        <li{% if section.is_active %} class="active"{% endif %}>
+          <a href="{% url section.link slug=profile.slug pk=profile.pk %}">
+            {{ section.name }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

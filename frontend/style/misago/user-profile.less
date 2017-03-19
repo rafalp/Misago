@@ -4,6 +4,11 @@
 
 
 .page-user-profile .page-header {
+  .alert {
+    margin-top: @line-height-computed;
+    margin-bottom: 0px;
+  }
+
   h1 {
     margin-bottom: 0px;
   }
@@ -14,24 +19,28 @@
 }
 
 
-// Small displays
-@media screen and (max-width: @screen-sm-max) {
+// Small displays header
+@media screen and (max-width: @screen-xs-max) {
   .page-user-profile .page-header {
-    h1 img {
-      width: 40px;
-      height: 40px;
+    text-align: center;
+
+    img {
+      clear: both;
+      margin-top: @line-height-computed;
+
+      width: 100px;
+      height: 100px;
     }
 
-    h1.pull-left img {
-      margin-right: 6px;
-    }
+    h1 {
+      margin-top: @line-height-computed;
 
-    h1 .user-name {
-      position: relative;
-      top: 2px;
+      font-size: @font-size-base * 2;
     }
 
     .header-stats ul {
+      margin-top: @line-height-computed;
+
       text-align: center;
 
       li {
@@ -47,16 +56,56 @@
   }
 }
 
-// Tabbed on full display
-@media screen and (min-width: @screen-md-min) {
-  .page-user-profile .page-header h1 img {
-    display: none;
-  }
 
-  .header-stats ul {
-    li {
-      display: block;
+// Tablet displays
+@media screen and (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+  .page-user-profile .page-header {
+    img, h1 {
       float: left;
+    }
+
+    img {
+      margin-top: @line-height-computed;
+      margin-bottom: @line-height-computed;
+      margin-right: 16px;
+
+      width: 64px;
+      height: 64px;
+    }
+
+    h1 {
+      position: relative;
+      top: @line-height-computed / 4;
+    }
+
+    .header-stats {
+      margin-left: 64px + 24px;
+      margin-bottom: @line-height-computed * -2;
+
+      position: relative;
+      bottom: @line-height-computed * 2.5;
+    }
+  }
+}
+
+
+// Dekstops header
+@media screen and (min-width: @screen-md-min) {
+  .page-user-profile .page-header {
+    .user-avatar-sm {
+      display: none;
+    }
+
+    h1 {
+      position: relative;
+      top: 5px;
+    }
+
+    .header-stats ul {
+      li {
+        display: block;
+        float: left;
+      }
     }
   }
 
