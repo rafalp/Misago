@@ -1,5 +1,3 @@
-from rest_framework import status
-
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.test import override_settings
@@ -32,7 +30,7 @@ class TestDjangoAdminUserForm(AdminTestCase):
         """basic data about a user is present in Django admin"""
         response = self.client.get(self.edit_test_user_in_django_url)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, 200)
 
         self.assertContains(response, self.test_user.username)
         self.assertContains(response, self.test_user.email)
@@ -49,7 +47,7 @@ class TestDjangoAdminUserForm(AdminTestCase):
             self.assertContains(response, permission)
 
     def test_user_edit_view_post(self):
-        """a user's permissions are editable through Django admin"""
+        """user permissions are editable through Django admin"""
         perms_all = Permission.objects.all()
         perms_all_pks = []
         for perm in perms_all:
@@ -59,7 +57,7 @@ class TestDjangoAdminUserForm(AdminTestCase):
             self.edit_test_user_in_django_url,
             data={'user_permissions': perms_all_pks},
         )
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.status_code, 302)
 
         user_perms = self.test_user.user_permissions.all()
         for perm_pk in perms_all_pks:
