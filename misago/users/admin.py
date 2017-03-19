@@ -1,8 +1,9 @@
 from django.conf.urls import url
 from django.contrib import admin as djadmin
+from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 
-from .djangoadmin import UserAdmin, UserModel
+from .djangoadmin import UserAdminModel
 from .views.admin.bans import BansList, DeleteBan, EditBan, NewBan
 from .views.admin.ranks import (
     DefaultRank, DeleteRank, EditRank, MoveDownRank, MoveUpRank, NewRank, RanksList, RankUsers)
@@ -10,8 +11,7 @@ from .views.admin.users import (
     DeleteAccountStep, DeletePostsStep, DeleteThreadsStep, EditUser, NewUser, UsersList)
 
 
-# register misago user model in django admin panel
-djadmin.site.register(model_or_iterable=UserModel, admin_class=UserAdmin)
+djadmin.site.register(model_or_iterable=get_user_model(), admin_class=UserAdminModel)
 
 
 class MisagoAdminExtension(object):
