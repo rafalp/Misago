@@ -9,7 +9,8 @@ export default class extends React.Component {
     super(props);
 
     this.state = {
-      'isLoading': false
+      isLoading: false,
+      deviceRatio: 1,
     };
   }
 
@@ -31,13 +32,23 @@ export default class extends React.Component {
 
   componentDidMount() {
     let cropit = $('.crop-form');
-    cropit.width(this.getAvatarSize());
+    let cropperWidth = this.getAvatarSize();
+
+    const initialWidth = cropit.width();
+    while (initialWidth < cropperWidth) {
+      cropperWidth = cropperWidth / 2;
+    }
+
+    const deviceRatio = this.getAvatarSize() / cropperWidth;
+
+    cropit.width(cropperWidth);
 
     cropit.cropit({
-      'width': this.getAvatarSize(),
-      'height': this.getAvatarSize(),
-      'imageState': {
-        'src': this.getImagePath()
+      width: cropperWidth,
+      height: cropperWidth,
+      exportZoom: deviceRatio,
+      imageState: {
+        src: this.getImagePath()
       },
       onImageLoaded: () => {
         if (this.props.upload) {
@@ -51,31 +62,32 @@ export default class extends React.Component {
             let offsetX = (displayedWidth - this.getAvatarSize()) / -2;
 
             cropit.cropit('offset', {
-              'x': offsetX,
-              'y': 0
+              x: offsetX,
+              y: 0
             });
           } else if (imageSize.width < imageSize.height) {
             let displayedHeight = (imageSize.height * zoomLevel);
             let offsetY = (displayedHeight - this.getAvatarSize()) / -2;
 
             cropit.cropit('offset', {
-              'x': 0,
-              'y': offsetY
+              x: 0,
+              y: offsetY
             });
           } else {
             cropit.cropit('offset', {
-              'x': 0,
-              'y': 0
+              x: 0,
+              y: 0
             });
           }
         } else {
           // use preserved crop
           let crop = this.props.options.crop_src.crop;
+
           if (crop) {
             cropit.cropit('zoom', crop.zoom);
             cropit.cropit('offset', {
-              'x': crop.x,
-              'y': crop.y
+              x: crop.x,
+              y: crop.y
             });
           }
         }
@@ -100,11 +112,17 @@ export default class extends React.Component {
     let avatarType = this.props.upload ? 'crop_tmp' : 'crop_src';
     let cropit = $('.crop-form');
 
+    const deviceRatio = cropit.cropit('exportZoom');
+    const cropitOffset = cropit.cropit('offset');
+
     ajax.post(this.props.user.api_url.avatar, {
-      'avatar': avatarType,
-      'crop': {
-        'offset': cropit.cropit('offset'),
-        'zoom': cropit.cropit('zoom')
+      avatar: avatarType,
+      crop: {
+        offset: {
+          x: cropitOffset.x * deviceRatio,
+          y: cropitOffset.y * deviceRatio,
+        },
+        zoom: cropit.cropit('zoom') * deviceRatio,
       }
     }).then((data) => {
       this.props.onComplete(data);
@@ -113,7 +131,7 @@ export default class extends React.Component {
       if (rejection.status === 400) {
         snackbar.error(rejection.detail);
         this.setState({
-          'isLoading': false
+          isLoading: false
         });
       } else {
         this.props.showError(rejection);
