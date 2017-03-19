@@ -11,42 +11,69 @@ import misago from 'misago/index';
 export default class extends WithDropdown {
   render() {
     /* jshint ignore:start */
-    return <div className="page page-options">
-      <div className="page-header">
+    return (
+      <div className="page page-options">
+        <div className="page-header">
+          <div className="container">
+
+            <h1>{gettext("Change your options")}</h1>
+
+          </div>
+        </div>
+        <div className="page-header page-header-followup visible-sm-block">
+          <div className="container">
+
+            <CompactNav
+              className="nav nav-pills"
+              baseUrl={misago.get('USERCP_URL')}
+              options={misago.get('USER_OPTIONS')}
+            />
+
+          </div>
+        </div>
+        <div className="page-header page-header-followup visible-xs-block">
+          <div className="container">
+            <div className="dropdown">
+              <button
+                aria-expanded="true"
+                aria-haspopup="true"
+                className="btn btn-default dropdown-toggle btn-block"
+                data-toggle="dropdown"
+                type="button"
+              >
+                <span className="material-icon">
+                  menu
+                </span>
+                {gettext("Menu")}
+              </button>
+              <CompactNav
+                baseUrl={misago.get('USERCP_URL')}
+                options={misago.get('USER_OPTIONS')}
+              />
+            </div>
+          </div>
+        </div>
         <div className="container">
 
-          <h1 className="pull-left">{gettext("Change your options")}</h1>
+          <div className="row">
+            <div className="col-md-3 hidden-xs hidden-sm">
 
-          <DropdownToggle toggleNav={this.toggleNav}
-                          dropdown={this.state.dropdown} />
+              <SideNav
+                baseUrl={misago.get('USERCP_URL')}
+                options={misago.get('USER_OPTIONS')}
+              />
+
+            </div>
+            <div className="col-md-9">
+
+              {this.props.children}
+
+            </div>
+          </div>
 
         </div>
       </div>
-      <div className={this.getCompactNavClassName()}>
-
-        <CompactNav options={misago.get('USER_OPTIONS')}
-                    baseUrl={misago.get('USERCP_URL')}
-                    hideNav={this.hideNav} />
-
-      </div>
-      <div className="container">
-
-        <div className="row">
-          <div className="col-md-3 hidden-xs hidden-sm">
-
-            <SideNav options={misago.get('USER_OPTIONS')}
-                     baseUrl={misago.get('USERCP_URL')} />
-
-          </div>
-          <div className="col-md-9">
-
-            {this.props.children}
-
-          </div>
-        </div>
-
-      </div>
-    </div>;
+    );
     /* jshint ignore:end */
   }
 }

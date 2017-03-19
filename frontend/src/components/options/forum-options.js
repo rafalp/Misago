@@ -98,99 +98,101 @@ export default class extends Form {
 
   render() {
     /* jshint ignore:start */
-    return <form onSubmit={this.handleSubmit} className="form-horizontal">
-      <div className="panel panel-default panel-form">
-        <div className="panel-heading">
-          <h3 className="panel-title">{gettext("Change forum options")}</h3>
-        </div>
-        <div className="panel-body">
+    return (
+      <form onSubmit={this.handleSubmit} className="form-horizontal">
+        <div className="panel panel-default panel-form">
+          <div className="panel-heading">
+            <h3 className="panel-title">{gettext("Change forum options")}</h3>
+          </div>
+          <div className="panel-body">
 
-          <fieldset>
-            <legend>{gettext("Privacy settings")}</legend>
+            <fieldset>
+              <legend>{gettext("Privacy settings")}</legend>
 
-            <FormGroup
-              label={gettext("Hide my presence")}
-              helpText={gettext("If you hide your presence, only members with permission to see hidden users will see when you are online.")}
-              for="id_is_hiding_presence"
-              labelClass="col-sm-4"
-              controlClass="col-sm-8"
-            >
-              <YesNoSwitch
-                id="id_is_hiding_presence"
-                disabled={this.state.isLoading}
-                iconOn="visibility_off"
-                iconOff="visibility"
-                labelOn={gettext("Hide my presence from other users")}
-                labelOff={gettext("Show my presence to other users")}
-                onChange={this.bindInput('is_hiding_presence')}
-                value={this.state.is_hiding_presence}
-              />
-            </FormGroup>
+              <FormGroup
+                label={gettext("Hide my presence")}
+                helpText={gettext("If you hide your presence, only members with permission to see hidden users will see when you are online.")}
+                for="id_is_hiding_presence"
+                labelClass="col-sm-4"
+                controlClass="col-sm-8"
+              >
+                <YesNoSwitch
+                  id="id_is_hiding_presence"
+                  disabled={this.state.isLoading}
+                  iconOn="visibility_off"
+                  iconOff="visibility"
+                  labelOn={gettext("Hide my presence from other users")}
+                  labelOff={gettext("Show my presence to other users")}
+                  onChange={this.bindInput('is_hiding_presence')}
+                  value={this.state.is_hiding_presence}
+                />
+              </FormGroup>
 
-            <FormGroup
-              label={gettext("Private thread invitations")}
-              for="id_limits_private_thread_invites_to"
-              labelClass="col-sm-4"
-              controlClass="col-sm-8"
-            >
-              <Select
-                id="id_limits_private_thread_invites_to"
-                disabled={this.state.isLoading}
-                onChange={this.bindInput('limits_private_thread_invites_to')}
-                value={this.state.limits_private_thread_invites_to}
-                choices={this.privateThreadInvitesChoices}
-              />
-            </FormGroup>
-          </fieldset>
+              <FormGroup
+                label={gettext("Private thread invitations")}
+                for="id_limits_private_thread_invites_to"
+                labelClass="col-sm-4"
+                controlClass="col-sm-8"
+              >
+                <Select
+                  id="id_limits_private_thread_invites_to"
+                  disabled={this.state.isLoading}
+                  onChange={this.bindInput('limits_private_thread_invites_to')}
+                  value={this.state.limits_private_thread_invites_to}
+                  choices={this.privateThreadInvitesChoices}
+                />
+              </FormGroup>
+            </fieldset>
 
-          <fieldset>
-            <legend>{gettext("Automatic subscriptions")}</legend>
+            <fieldset>
+              <legend>{gettext("Automatic subscriptions")}</legend>
 
-            <FormGroup
-              label={gettext("Threads I start")}
-              for="id_subscribe_to_started_threads"
-              labelClass="col-sm-4"
-              controlClass="col-sm-8"
-            >
-              <Select
-                id="id_subscribe_to_started_threads"
-                disabled={this.state.isLoading}
-                onChange={this.bindInput('subscribe_to_started_threads')}
-                value={this.state.subscribe_to_started_threads}
-                choices={this.subscribeToChoices}
-              />
-            </FormGroup>
+              <FormGroup
+                label={gettext("Threads I start")}
+                for="id_subscribe_to_started_threads"
+                labelClass="col-sm-4"
+                controlClass="col-sm-8"
+              >
+                <Select
+                  id="id_subscribe_to_started_threads"
+                  disabled={this.state.isLoading}
+                  onChange={this.bindInput('subscribe_to_started_threads')}
+                  value={this.state.subscribe_to_started_threads}
+                  choices={this.subscribeToChoices}
+                />
+              </FormGroup>
 
-            <FormGroup
-              label={gettext("Threads I reply to")}
-              for="id_subscribe_to_replied_threads"
-              labelClass="col-sm-4"
-              controlClass="col-sm-8"
-            >
-              <Select
-                id="id_subscribe_to_replied_threads"
-                disabled={this.state.isLoading}
-                onChange={this.bindInput('subscribe_to_replied_threads')}
-                value={this.state.subscribe_to_replied_threads}
-                choices={this.subscribeToChoices}
-              />
-            </FormGroup>
-          </fieldset>
+              <FormGroup
+                label={gettext("Threads I reply to")}
+                for="id_subscribe_to_replied_threads"
+                labelClass="col-sm-4"
+                controlClass="col-sm-8"
+              >
+                <Select
+                  id="id_subscribe_to_replied_threads"
+                  disabled={this.state.isLoading}
+                  onChange={this.bindInput('subscribe_to_replied_threads')}
+                  value={this.state.subscribe_to_replied_threads}
+                  choices={this.subscribeToChoices}
+                />
+              </FormGroup>
+            </fieldset>
 
-        </div>
-        <div className="panel-footer">
-          <div className="row">
-            <div className="col-sm-8 col-sm-offset-4">
+          </div>
+          <div className="panel-footer">
+            <div className="row">
+              <div className="col-sm-8 col-sm-offset-4">
 
-              <Button className="btn-primary" loading={this.state.isLoading}>
-                {gettext("Save changes")}
-              </Button>
+                <Button className="btn-primary" loading={this.state.isLoading}>
+                  {gettext("Save changes")}
+                </Button>
 
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    );
     /* jshint ignore:end */
   }
 }
