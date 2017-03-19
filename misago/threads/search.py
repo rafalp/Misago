@@ -12,6 +12,7 @@ from .serializers import FeedSerializer
 from .utils import add_categories_to_items
 from .viewmodels import ThreadsRootCategory
 
+
 class SearchThreads(SearchProvider):
     name = _("Threads")
     url = 'threads'
