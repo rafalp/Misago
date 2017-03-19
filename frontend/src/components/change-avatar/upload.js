@@ -10,10 +10,11 @@ export default class extends React.Component {
     super(props);
 
     this.state = {
-      'image': null,
-      'preview': null,
-      'progress': 0,
-      'uploaded': null,
+      image: null,
+      preview: null,
+      progress: 0,
+      uploaded: null,
+      dataUrl: null,
     };
   }
 
@@ -60,8 +61,8 @@ export default class extends React.Component {
 
     this.setState({
       image,
-      'preview': URL.createObjectURL(image),
-      'progress': 0
+      preview: URL.createObjectURL(image),
+      progress: 0
     });
 
     let data = new FormData();
@@ -74,17 +75,18 @@ export default class extends React.Component {
       });
     }).then((data) => {
       this.setState({
-        'options': data,
-        'uploaded': data.detail
+        options: data,
+        uploaded: data.detail,
       });
+
       snackbar.info(gettext("Your image has been uploaded and you may now crop it."));
     }, (rejection) => {
       if (rejection.status === 400 || rejection.status === 413) {
         snackbar.error(rejection.detail);
         this.setState({
-          'isLoading': false,
-          'image': null,
-          'progress': 0
+          isLoading: false,
+          image: null,
+          progress: 0
         });
       } else {
         this.props.showError(rejection);
@@ -106,9 +108,12 @@ export default class extends React.Component {
 
   getUploadButton() {
     /* jshint ignore:start */
-    return <div className="modal-body modal-avatar-upload">
-        <Button className="btn-pick-file"
-                onClick={this.pickFile}>
+    return (
+      <div className="modal-body modal-avatar-upload">
+        <Button
+          className="btn-pick-file"
+          onClick={this.pickFile}
+        >
           <div className="material-icon">
             input
           </div>
@@ -117,7 +122,8 @@ export default class extends React.Component {
         <p className="text-muted">
           {this.getUploadRequirements(this.props.options.upload)}
         </p>
-    </div>;
+      </div>
+    );
     /* jshint ignore:end */
   }
 
@@ -129,62 +135,80 @@ export default class extends React.Component {
 
   getUploadProgress() {
     /* jshint ignore:start */
-    return <div className="modal-body modal-avatar-upload">
+    return (
+      <div className="modal-body modal-avatar-upload">
         <div className="upload-progress">
           <img src={this.state.preview} />
 
           <div className="progress">
-            <div className="progress-bar" role="progressbar"
-                 aria-valuenow="{this.state.progress}"
-                 aria-valuemin="0" aria-valuemax="100"
-                 style={{width: this.state.progress + '%'}}>
+            <div
+              className="progress-bar"
+              role="progressbar"
+              aria-valuenow="{this.state.progress}"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              style={{width: this.state.progress + '%'}}
+            >
               <span className="sr-only">{this.getUploadProgressLabel()}</span>
             </div>
           </div>
         </div>
-    </div>;
+      </div>
+    );
     /* jshint ignore:end */
   }
 
   renderUpload() {
     /* jshint ignore:start */
-    return <div>
-      <input type="file"
-             id="avatar-hidden-upload"
-             className="hidden-file-upload"
-             onChange={this.uploadFile} />
-      {this.state.image ? this.getUploadProgress()
-                        : this.getUploadButton()}
-      <div className="modal-footer">
-        <div className="col-md-6 col-md-offset-3">
+    return (
+      <div>
+        <input
+          type="file"
+          id="avatar-hidden-upload"
+          className="hidden-file-upload"
+          onChange={this.uploadFile}
+        />
+        {this.state.image ? this.getUploadProgress()
+                          : this.getUploadButton()}
+        <div className="modal-footer">
+          <div className="col-md-6 col-md-offset-3">
 
-          <Button onClick={this.props.showIndex}
-                  disabled={!!this.state.image}
-                  className="btn-default btn-block">
-            {gettext("Cancel")}
-          </Button>
+            <Button
+              onClick={this.props.showIndex}
+              disabled={!!this.state.image}
+              className="btn-default btn-block"
+            >
+              {gettext("Cancel")}
+            </Button>
 
+          </div>
         </div>
       </div>
-    </div>;
+    );
     /* jshint ignore:end */
   }
 
   renderCrop() {
     /* jshint ignore:start */
-    return <AvatarCrop options={this.state.options}
-                       user={this.props.user}
-                       upload={this.state.uploaded}
-                       onComplete={this.props.onComplete}
-                       showError={this.props.showError}
-                       showIndex={this.props.showIndex} />;
+    return (
+      <AvatarCrop
+        options={this.state.options}
+        user={this.props.user}
+        upload={this.state.uploaded}
+        dataUrl={this.state.preview}
+        onComplete={this.props.onComplete}
+        showError={this.props.showError}
+        showIndex={this.props.showIndex}
+      />
+    );
     /* jshint ignore:end */
   }
 
   render() {
     /* jshint ignore:start */
-    return (this.state.uploaded ? this.renderCrop()
-                                : this.renderUpload());
+    if (this.state.uploaded) return this.renderCrop();
+
+    return this.renderUpload();
     /* jshint ignore:end */
   }
 }

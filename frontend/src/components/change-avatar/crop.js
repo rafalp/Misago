@@ -23,7 +23,7 @@ export default class extends React.Component {
 
   getImagePath() {
     if (this.props.upload) {
-      return this.props.options.crop_tmp.url;
+      return this.props.dataUrl;
     } else {
       return this.props.options.crop_src.url;
     }
@@ -124,32 +124,41 @@ export default class extends React.Component {
 
   render() {
     /* jshint ignore:start */
-    return <div>
-      <div className="modal-body modal-avatar-crop">
-        <div className="crop-form">
-          <div className="cropit-preview"></div>
-          <input type="range" className="cropit-image-zoom-input" />
+    return (
+      <div>
+        <div className="modal-body modal-avatar-crop">
+          <div className="crop-form">
+            <div className="cropit-preview"></div>
+            <input
+              type="range"
+              className="cropit-image-zoom-input"
+            />
+          </div>
+        </div>
+        <div className="modal-footer">
+          <div className="col-md-6 col-md-offset-3">
+
+            <Button
+              onClick={this.cropAvatar}
+              loading={this.state.isLoading}
+              className="btn-primary btn-block"
+            >
+              {this.props.upload ? gettext("Set avatar")
+                                 : gettext("Crop image")}
+            </Button>
+
+            <Button
+              onClick={this.props.showIndex}
+              disabled={this.state.isLoading}
+              className="btn-default btn-block"
+            >
+              {gettext("Cancel")}
+            </Button>
+
+          </div>
         </div>
       </div>
-      <div className="modal-footer">
-        <div className="col-md-6 col-md-offset-3">
-
-          <Button onClick={this.cropAvatar}
-                  loading={this.state.isLoading}
-                  className="btn-primary btn-block">
-            {this.props.upload ? gettext("Set avatar")
-                               : gettext("Crop image")}
-          </Button>
-
-          <Button onClick={this.props.showIndex}
-                  disabled={this.state.isLoading}
-                  className="btn-default btn-block">
-            {gettext("Cancel")}
-          </Button>
-
-        </div>
-      </div>
-    </div>;
+    );
     /* jshint ignore:end */
   }
 }
