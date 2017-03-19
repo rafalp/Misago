@@ -168,6 +168,30 @@ export default class extends Form {
           <Stats thread={thread} />
         </div>
       );
+    } else if (showModeration) {
+      return (
+        <div className="page-header with-stats with-breadcrumbs">
+          <Breadcrumbs path={thread.path} />
+          <div className="container">
+            <div className="row">
+              <div className="col-sm-9 col-md-10">
+                <h1>
+                  {thread.title}
+                </h1>
+              </div>
+              <div className="col-sm-3 col-md-2">
+                <div className="row sm-margin-top md-margin-top-no">
+                  <Moderation
+                    isSingle={true}
+                    {...this.props}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <Stats thread={thread} />
+        </div>
+      );
     } else {
       return (
         <div className="page-header with-stats with-breadcrumbs">
@@ -184,7 +208,7 @@ export default class extends Form {
 
 export function Moderation(props) {
   return (
-    <div className="col-xs-6">
+    <div className={props.isSingle ? "col-xs-12" : "col-xs-6"}>
       <div className="btn-group btn-group-justified">
         <div className="btn-group">
           <button
@@ -198,7 +222,7 @@ export function Moderation(props) {
             <span className="material-icon">
               settings
             </span>
-            <span className="hidden-sm">
+            <span className={props.isSingle ? "" : "hidden-sm"}>
               {gettext("Moderation")}
             </span>
           </button>
