@@ -10,7 +10,7 @@ fake-factory~=0.7.2
 html5lib<0.99999999,>=0.999
 markdown~=2.6.7
 path.py~=9.0
-pillow~=3.4.2
+pillow~=4.0.0
 psycopg2~=2.6.2
 pytz
 requests<3
