@@ -30,7 +30,7 @@ export function isVisible(post) {
   return (!post.is_hidden || post.acl.can_see_hidden) && (
     post.acl.can_reply ||
     post.acl.can_edit ||
-    post.acl.can_see_likes ||
+    (post.acl.can_see_likes && (post.last_likes || []).length) ||
     post.acl.can_like
   );
 }
