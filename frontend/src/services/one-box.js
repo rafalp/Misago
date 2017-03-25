@@ -104,6 +104,8 @@ export function cleanUrl(url) {
 }
 
 export function getVideoIdFromUrl(url) {
+  if (url.indexOf('youtu') === -1) return null;
+
   const video = url.match(ytRegExp);
   if (video) {
     return video[1];

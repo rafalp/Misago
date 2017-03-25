@@ -9,24 +9,16 @@ const USER_SPAN = '<span class="item-title">%(user)s</span>';
 const USER_URL = '<a href="%(url)s" class="item-title">%(user)s</a>';
 
 export default function(props) {
-  if (props.attachment === null) {
-    return (
-      <td className="col-md-6">
-        &nbsp;
-      </td>
-    );
-  }
-
   return (
-    <td className="col-md-6">
+    <div className="col-xs-12 col-md-6">
       <AttachmentPreview {...props} />
       <div className="post-attachment">
-        <a href={props.attachment.url.index} className="item-title">
+        <a href={props.attachment.url.index} className="attachment-name item-title">
           {props.attachment.filename}
         </a>
         <AttachmentDetails {...props} />
       </div>
-    </td>
+    </div>
   );
 }
 

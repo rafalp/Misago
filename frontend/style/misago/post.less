@@ -111,8 +111,19 @@
 .post-attachments {
   @post-preview-width: 40px;
 
-  td {
-    position: @padding-base-vertical @padding-base-horizontal;
+  border-top: 1px solid @gray-lighter;
+  padding: @padding-base-vertical @padding-large-horizontal;
+
+  abbr {
+    white-space: nowrap;
+  }
+
+  .attachment-name {
+    word-wrap: break-word;
+  }
+
+  .row>div {
+    margin: @padding-large-vertical 0px;
   }
 
   .post-attachment-preview {

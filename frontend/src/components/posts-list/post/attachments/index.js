@@ -9,14 +9,12 @@ export default function(props) {
   }
 
   return (
-    <table className="table post-attachments">
-      <tbody>
-        {batch(props.post.attachments, 2, null).map((row) => {
-          const key = row.map((a) => {return a ? a.id : 0;}).join('_');
-          return <Row key={key} row={row} />;
-        })}
-      </tbody>
-    </table>
+    <div className="post-attachments">
+      {batch(props.post.attachments, 2).map((row) => {
+        const key = row.map((a) => {return a ? a.id : 0;}).join('_');
+        return <Row key={key} row={row} />;
+      })}
+    </div>
   );
 }
 
@@ -26,7 +24,7 @@ export function isVisible(post) {
 
 export function Row(props) {
   return (
-    <tr className="row">
+    <div className="row">
       {props.row.map((attachment) => {
         return (
           <Attachment
@@ -35,6 +33,6 @@ export function Row(props) {
           />
         );
       })}
-    </tr>
+    </div>
   );
 }
