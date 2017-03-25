@@ -8,7 +8,6 @@ export class OneBox {
   // jshint ignore:start
   render = (domnode) => {
     if (!domnode) return;
-
     this.highlightCode(domnode);
     this.embedYoutubePlayers(domnode);
   };
