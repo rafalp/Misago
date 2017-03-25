@@ -47,7 +47,9 @@ export class OneBox {
       url += '&start=' + youtube.start;
     }
 
-    $(element).replaceWith($('<iframe width="560" height="315" src="' + url + '" frameborder="0" allowfullscreen></iframe>'));
+    const player = $('<iframe class="embed-responsive-item" src="' + url + '" allowfullscreen></iframe>');
+    $(element).replaceWith(player);
+    player.wrap('<div class="embed-responsive embed-responsive-16by9"></div>');
   }
 }
 
