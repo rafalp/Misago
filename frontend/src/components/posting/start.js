@@ -220,72 +220,96 @@ export default class extends Form {
 
   render() {
     /* jshint ignore:start */
-    if (this.state.isReady) {
-      return (
-        <Container className="posting-form" withFirstRow={true}>
-          <form onSubmit={this.handleSubmit}>
-            <div className="row first-row">
-              <div className={this.state.showOptions ? 'col-md-6' : 'col-md-8'}>
-                <input
-                  className="form-control"
-                  disabled={this.state.isLoading}
-                  onChange={this.onTitleChange}
-                  placeholder={gettext("Thread title")}
-                  type="text"
-                  value={this.state.title}
-                />
-              </div>
-              <div className={'col-md-4'}>
-                <CategorySelect
-                  choices={this.state.categories}
-                  disabled={this.state.isLoading}
-                  onChange={this.onCategoryChange}
-                  value={this.state.category}
-                />
-              </div>
-              <Options
-                close={this.state.close}
-                disabled={this.state.isLoading}
-                hide={this.state.hide}
-                onClose={this.onClose}
-                onHide={this.onHide}
-                onOpen={this.onOpen}
-                onPinGlobally={this.onPinGlobally}
-                onPinLocally={this.onPinLocally}
-                onUnhide={this.onUnhide}
-                onUnpin={this.onUnpin}
-                options={this.state.categoryOptions}
-                pin={this.state.pin}
-                showOptions={this.state.showOptions}
-              />
-            </div>
-            <div className="row">
-              <div className="col-md-12">
-
-                <Editor
-                  attachments={this.state.attachments}
-                  loading={this.state.isLoading}
-                  onAttachmentsChange={this.onAttachmentsChange}
-                  onCancel={this.onCancel}
-                  onChange={this.onPostChange}
-                  submitLabel={gettext("Post thread")}
-                  value={this.state.post}
-                />
-
-              </div>
-            </div>
-          </form>
-        </Container>
-      );
-    } else if (this.state.isErrored) {
+    if (this.state.isErrored) {
       return (
         <Message message={this.state.isErrored} />
       );
-    } else {
+    }
+
+    if (!this.state.isReady) {
       return (
         <Loader />
       );
     }
+
+    let columns = 0;
+    if (this.state.categoryOptions.close) columns += 1;
+    if (this.state.categoryOptions.hide) columns += 1;
+    if (this.state.categoryOptions.pin) columns += 1;
+
+    let titleStyle = null;
+
+    if (columns === 1) {
+      titleStyle = 'col-sm-6';
+    } else {
+      titleStyle = 'col-sm-8';
+    }
+
+    if (columns === 3) {
+      titleStyle += ' col-md-6'
+    } else if (columns) {
+      titleStyle += ' col-md-7'
+    } else {
+      titleStyle += ' col-md-9'
+    }
+
+    return (
+      <Container className="posting-form" withFirstRow={true}>
+        <form onSubmit={this.handleSubmit}>
+          <div className="row first-row">
+            <div className={titleStyle}>
+              <input
+                className="form-control"
+                disabled={this.state.isLoading}
+                onChange={this.onTitleChange}
+                placeholder={gettext("Thread title")}
+                type="text"
+                value={this.state.title}
+              />
+            </div>
+            <div className='col-xs-12 col-sm-4 col-md-3 xs-margin-top'>
+              <CategorySelect
+                choices={this.state.categories}
+                disabled={this.state.isLoading}
+                onChange={this.onCategoryChange}
+                value={this.state.category}
+              />
+            </div>
+            <Options
+              close={this.state.close}
+              columns={columns}
+              disabled={this.state.isLoading}
+              hide={this.state.hide}
+              onClose={this.onClose}
+              onHide={this.onHide}
+              onOpen={this.onOpen}
+              onPinGlobally={this.onPinGlobally}
+              onPinLocally={this.onPinLocally}
+              onUnhide={this.onUnhide}
+              onUnpin={this.onUnpin}
+              options={this.state.categoryOptions}
+              pin={this.state.pin}
+              showOptions={this.state.showOptions}
+            />
+          </div>
+          <div className="row">
+            <div className="col-md-12">
+
+              <Editor
+                attachments={this.state.attachments}
+                loading={this.state.isLoading}
+                onAttachmentsChange={this.onAttachmentsChange}
+                onCancel={this.onCancel}
+                onChange={this.onPostChange}
+                submitLabel={gettext("Post thread")}
+                value={this.state.post}
+              />
+
+            </div>
+          </div>
+        </form>
+      </Container>
+    );
     /* jshint ignore:end */
   }
 }

@@ -2,125 +2,172 @@
 import React from 'react';
 
 export default function(props) {
-  if (props.showOptions) {
-    return (
-      <div className="col-md-2 posting-options">
+  if (!props.showOptions) return null;
+
+  const { columns } = props;
+
+  let className = 'col-xs-12 xs-margin-top';
+
+  if (columns === 1) {
+    className += ' col-sm-2';
+  } else {
+    className += ' sm-margin-top';
+  }
+
+  if (columns === 3) {
+    className += ' col-md-3';
+  } else {
+    className += ' col-md-2';
+  }
+  className += ' posting-options';
+
+  const columnClassName = 'col-xs-' + (12 / columns);
+
+  let textClassName = 'btn-text'
+  if (columns === 3) {
+      textClassName += ' visible-sm-inline-block';
+  } else if (columns === 2) {
+      textClassName += ' hidden-md hidden-lg';
+  } else {
+      textClassName += ' hidden-sm';
+  }
+
+  return (
+    <div className={className}>
+      <div className="row">
         <PinOptions
+          className={columnClassName}
           disabled={props.disabled}
           onPinGlobally={props.onPinGlobally}
           onPinLocally={props.onPinLocally}
           onUnpin={props.onUnpin}
           pin={props.pin}
           show={props.options.pin}
+          textClassName={textClassName}
         />
         <HideOptions
+          className={columnClassName}
           disabled={props.disabled}
           hide={props.hide}
           onHide={props.onHide}
           onUnhide={props.onUnhide}
           show={props.options.hide}
+          textClassName={textClassName}
         />
         <CloseOptions
+          className={columnClassName}
           close={props.close}
           disabled={props.disabled}
           onClose={props.onClose}
           onOpen={props.onOpen}
           show={props.options.close}
+          textClassName={textClassName}
         />
       </div>
-    );
-  } else {
-    return null;
-  }
+    </div>
+  );
 }
 
 export function CloseOptions(props) {
-  if (props.show) {
-    return (
+  if (!props.show) return null;
+
+  const label = props.close ? gettext('Closed') : gettext('Open');
+
+  return (
+    <div className={props.className}>
       <button
-        className="btn btn-default"
+        className="btn btn-default btn-block"
         disabled={props.disabled}
         onClick={props.close ? props.onOpen : props.onClose}
-        title={props.close ? gettext('Closed') : gettext('Open')}
+        title={label}
         type="button"
       >
         <span className="material-icon">
           {props.close ? 'lock' : 'lock_outline'}
         </span>
+        <span className={props.textClassName}>
+          {label}
+        </span>
       </button>
-    );
-  } else {
-    return null;
-  }
+    </div>
+  );
 }
 
 export function HideOptions(props) {
-  if (props.show) {
-    return (
+  if (!props.show) return null;
+
+  const label = props.hide ? gettext('Hidden') : gettext('Not hidden');
+
+  return (
+    <div className={props.className}>
       <button
-        className="btn btn-default"
+        className="btn btn-default btn-block"
         disabled={props.disabled}
         onClick={props.hide ? props.onUnhide : props.onHide}
-        title={props.hide ? gettext('Hidden') : gettext('Not hidden')}
+        title={label}
         type="button"
       >
         <span className="material-icon">
           {props.hide ? 'visibility_off' : 'visibility'}
         </span>
+        <span className={props.textClassName}>
+          {label}
+        </span>
       </button>
-    );
-  } else {
-    return null;
-  }
+    </div>
+  );
 }
 
 export function PinOptions(props) {
-  if (props.show) {
-    let icon = null;
-    let onClick = null;
-    let tooltip = null;
+  if (!props.show) return null;
 
-    switch (props.pin) {
-      case 0:
-        icon = 'radio_button_unchecked';
-        onClick = props.onPinLocally;
-        tooltip = gettext("Unpinned");
-        break;
+  let icon = null;
+  let onClick = null;
+  let label = null;
 
-      case 1:
-        icon = 'info_outline';
+  switch (props.pin) {
+    case 0:
+      icon = 'radio_button_unchecked';
+      onClick = props.onPinLocally;
+      label = gettext("Unpinned");
+      break;
+
+    case 1:
+      icon = 'info_outline';
+      onClick = props.onPinGlobally;
+      label = gettext("Pinned locally");
+
+      if (props.show == 2) {
         onClick = props.onPinGlobally;
-        tooltip = gettext("Pinned locally");
-
-        if (props.show == 2) {
-          onClick = props.onPinGlobally;
-        } else {
-          onClick = props.onUnpin;
-        }
-
-        break;
-
-      case 2:
-        icon = 'info';
+      } else {
         onClick = props.onUnpin;
-        tooltip = gettext("Pinned globally");
-        break;
-    }
+      }
 
-    return (
+      break;
+
+    case 2:
+      icon = 'info';
+      onClick = props.onUnpin;
+      label = gettext("Pinned globally");
+      break;
+  }
+
+  return (
+    <div className={props.className}>
       <button
-        className="btn btn-default"
+        className="btn btn-default btn-block"
         disabled={props.disabled}
         onClick={onClick}
-        title={tooltip}
+        title={label}
         type="button"
       >
         <span className="material-icon">
           {icon}
         </span>
+        <span className={props.textClassName}>
+          {label}
+        </span>
       </button>
-    );
-  } else {
-    return null;
-  }
+    </div>
+  );
 }
