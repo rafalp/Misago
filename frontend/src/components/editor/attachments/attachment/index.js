@@ -11,13 +11,15 @@ export default function(props) {
     return (
       <AttachmentComplete {...props} />
     );
-  } else if (props.item.error) {
+  }
+
+  if (props.item.error) {
     return (
       <AttachmentError {...props} />
     );
-  } else {
-    return (
-      <AttachmentUpload {...props} />
-    );
   }
+
+  return (
+    <AttachmentUpload {...props} />
+  );
 }

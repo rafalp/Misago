@@ -53,16 +53,22 @@ export default class extends React.Component {
   render() {
     return (
       <li className="editor-attachment-complete">
-        <Preview {...this.props} />
-        <Actions
-          onInsert={this.onInsert}
-          onRemove={this.onRemove}
-          onUndo={this.onUndo}
-          {...this.props}
-        />
-        <div className="editor-attachment-details">
-          <Filename {...this.props} />
-          <Details {...this.props} />
+        <div className="row">
+          <div className="col-xs-12 col-sm-8 col-md-9">
+            <Preview {...this.props} />
+            <div className="editor-attachment-details">
+              <Filename {...this.props} />
+              <Details {...this.props} />
+            </div>
+          </div>
+          <div className="col-xs-12 col-sm-4 col-md-3 xs-margin-top-half">
+            <Actions
+              onInsert={this.onInsert}
+              onRemove={this.onRemove}
+              onUndo={this.onUndo}
+              {...this.props}
+            />
+          </div>
         </div>
       </li>
     );
@@ -151,11 +157,13 @@ export function Details(props) {
 
 export function Actions(props) {
   return (
-    <ul className="list-unstyled list-inline editor-attachment-actions">
-      <Insert {...props} />
-      <Remove {...props} />
-      <Undo {...props} />
-    </ul>
+    <div className="editor-attachment-actions">
+      <div className="row">
+        <Insert {...props} />
+        <Remove {...props} />
+        <Undo {...props} />
+      </div>
+    </div>
   );
 }
 
@@ -165,15 +173,15 @@ export function Insert(props) {
   }
 
   return (
-    <li>
+    <div className="col-xs-6">
       <button
-        className="btn btn-default btn-sm"
+        className="btn btn-default btn-sm btn-block"
         onClick={props.onInsert}
         type="button"
       >
         {gettext("Insert")}
       </button>
-    </li>
+    </div>
   );
 }
 
@@ -183,15 +191,15 @@ export function Remove(props) {
   }
 
   return (
-    <li>
+    <div className="col-xs-6">
       <button
-        className="btn btn-default btn-sm"
+        className="btn btn-default btn-sm btn-block"
         onClick={props.onRemove}
         type="button"
       >
         {gettext("Remove")}
       </button>
-    </li>
+    </div>
   );
 }
 
@@ -201,14 +209,14 @@ export function Undo(props) {
   }
 
   return (
-    <li>
+    <div className="col-xs-12">
       <button
-        className="btn btn-default btn-sm"
+        className="btn btn-default btn-sm btn-block"
         onClick={props.onUndo}
         type="button"
       >
         {gettext("Undo removal")}
       </button>
-    </li>
+    </div>
   );
 }

@@ -35,6 +35,59 @@
   .pull-right {
     margin-left: @padding-base-horizontal;
   }
+
+  .btn-icon .material-icon {
+    margin-bottom: -2px;
+  }
+
+  // center buttons on small devices
+  @media screen and (max-width: @screen-sm-max) {
+    .buttons-list {
+      float: none !important;
+
+      margin: 0px;
+      margin-bottom: @line-height-computed / 2;
+
+      text-align: center;
+
+      .btn {
+        display: inline-block;
+        float: none !important;
+
+        margin: @line-height-computed / 3;
+      }
+    }
+
+    .btn-protect {
+      .btn-text {
+        margin-left: @padding-small-horizontal;
+      }
+
+      .material-icon {
+        position: relative;
+        bottom: 2px;
+
+        width: 14px;
+        height: 14px;
+
+        font-size: 14px;
+        line-height: 14px;
+      }
+    }
+  }
+
+  // make lock button full width
+  @media screen and (max-width: @screen-xs-max) {
+    .btn-protect {
+      display: block;
+      float: none !important;
+
+      width: 100%;
+
+      margin: 0px;
+      margin-top: @line-height-computed / 2;
+    }
+  }
 }
 
 
@@ -51,7 +104,6 @@
 .editor-attachment-complete {
   border-top: 1px solid @editor-border;
   padding: @padding-base-vertical 0px;
-  padding-right: @padding-base-horizontal;
 
   .editor-attachment-image {
     float: left;
@@ -103,17 +155,22 @@
       color: @gray-light;
       font-size: @font-size-small;
     }
+
+    abbr {
+      white-space: nowrap;
+    }
   }
 }
 
 
 .editor-attachment-actions {
-  float: right;
-  margin: 0px;
-  margin-top: 3px;
+  @media screen and (min-width: @screen-sm-min) {
+    padding-top: 3px;
+  }
 
-  li {
-    margin-left: @line-height-computed / 2;
+  @media screen and (max-width: @screen-xs-max) {
+    padding-left: @padding-base-horizontal;
+    padding-right: @padding-base-horizontal;
   }
 }
 
@@ -127,6 +184,8 @@
 .editor-attachment-error-icon {
   float: left;
   width: 50px;
+
+  text-align: center;
 
   .material-icon {
     position: relative;
@@ -161,6 +220,14 @@
     position: absolute;
     top: @padding-base-vertical + 3px;
     right: @padding-base-horizontal;
+  
+    @media screen and (max-width: @screen-xs-max) {
+      display: block;
+
+      margin-top: @line-height-computed / 2;
+
+      position: static;
+    }
   }
 }
 

@@ -81,50 +81,52 @@ export default class extends React.Component {
           rows="9"
         ></textarea>
         <div className="editor-footer">
-          <Strong
-            className="btn-default btn-sm pull-left"
-            disabled={this.props.loading || this.state.isPreviewLoading}
-            replaceSelection={this.replaceSelection}
-          />
-          <Emphasis
-            className="btn-default btn-sm pull-left"
-            disabled={this.props.loading || this.state.isPreviewLoading}
-            replaceSelection={this.replaceSelection}
-          />
-          <Striketrough
-            className="btn-default btn-sm pull-left"
-            disabled={this.props.loading || this.state.isPreviewLoading}
-            replaceSelection={this.replaceSelection}
-          />
-          <Hr
-            className="btn-default btn-sm pull-left"
-            disabled={this.props.loading || this.state.isPreviewLoading}
-            replaceSelection={this.replaceSelection}
-          />
-          <Link
-            className="btn-default btn-sm pull-left"
-            disabled={this.props.loading || this.state.isPreviewLoading}
-            replaceSelection={this.replaceSelection}
-          />
-          <Image
-            className="btn-default btn-sm pull-left"
-            disabled={this.props.loading || this.state.isPreviewLoading}
-            replaceSelection={this.replaceSelection}
-          />
-          <Quote
-            className="btn-default btn-sm pull-left"
-            disabled={this.props.loading || this.state.isPreviewLoading}
-            replaceSelection={this.replaceSelection}
-          />
-          <Code
-            className="btn-default btn-sm pull-left"
-            disabled={this.props.loading || this.state.isPreviewLoading}
-            replaceSelection={this.replaceSelection}
-          />
-          <Upload
-            className="btn-default btn-sm pull-left"
-            disabled={this.props.loading || this.state.isPreviewLoading}
-          />
+          <div className="buttons-list pull-left">
+            <Strong
+              className="btn-default btn-sm pull-left"
+              disabled={this.props.loading || this.state.isPreviewLoading}
+              replaceSelection={this.replaceSelection}
+            />
+            <Emphasis
+              className="btn-default btn-sm pull-left"
+              disabled={this.props.loading || this.state.isPreviewLoading}
+              replaceSelection={this.replaceSelection}
+            />
+            <Striketrough
+              className="btn-default btn-sm pull-left"
+              disabled={this.props.loading || this.state.isPreviewLoading}
+              replaceSelection={this.replaceSelection}
+            />
+            <Hr
+              className="btn-default btn-sm pull-left"
+              disabled={this.props.loading || this.state.isPreviewLoading}
+              replaceSelection={this.replaceSelection}
+            />
+            <Link
+              className="btn-default btn-sm pull-left"
+              disabled={this.props.loading || this.state.isPreviewLoading}
+              replaceSelection={this.replaceSelection}
+            />
+            <Image
+              className="btn-default btn-sm pull-left"
+              disabled={this.props.loading || this.state.isPreviewLoading}
+              replaceSelection={this.replaceSelection}
+            />
+            <Quote
+              className="btn-default btn-sm pull-left"
+              disabled={this.props.loading || this.state.isPreviewLoading}
+              replaceSelection={this.replaceSelection}
+            />
+            <Code
+              className="btn-default btn-sm pull-left"
+              disabled={this.props.loading || this.state.isPreviewLoading}
+              replaceSelection={this.replaceSelection}
+            />
+            <Upload
+              className="btn-default btn-sm pull-left"
+              disabled={this.props.loading || this.state.isPreviewLoading}
+            />
+          </div>
           <Button
             className="btn-default btn-sm pull-left"
             disabled={this.props.loading || this.state.isPreviewLoading}
@@ -147,6 +149,7 @@ export default class extends React.Component {
           >
             {gettext("Cancel")}
           </button>
+          <div className="clearfix visible-xs-block" />
           <Protect
             canProtect={this.props.canProtect}
             disabled={this.props.loading}
@@ -167,21 +170,24 @@ export default class extends React.Component {
 }
 
 export function Protect(props) {
-  if (props.canProtect) {
-    return (
-      <button
-        className="btn btn-icon btn-default btn-sm pull-right"
-        disabled={props.disabled}
-        onClick={props.protect ? props.onUnprotect : props.onProtect}
-        title={props.protect ? gettext('Protected') : gettext('Protect')}
-        type="button"
-      >
-        <span className="material-icon">
-          {props.protect ? 'lock' : 'lock_outline'}
-        </span>
-      </button>
-    );
-  } else {
-    return null;
-  }
+  if (!props.canProtect) return null;
+
+  const label = props.protect ? gettext('Protected') : gettext('Protect');
+
+  return (
+    <button
+      className="btn btn-icon btn-default btn-protect btn-sm pull-right"
+      disabled={props.disabled}
+      onClick={props.protect ? props.onUnprotect : props.onProtect}
+      title={label}
+      type="button"
+    >
+      <span className="material-icon">
+        {props.protect ? 'lock' : 'lock_outline'}
+      </span>
+      <span className="btn-text hidden-md hidden-lg">
+        {label}
+      </span>
+    </button>
+  );
 }
