@@ -21,6 +21,14 @@ export default class extends React.Component {
 
   /* jshint ignore:start */
   markAsRead = () => {
+    let message = gettext("Are you sure you want to mark those threads as read? This action is not reversible.");
+    if (this.props.route.category.parent) {
+      message = gettext("Are you sure you want to mark threads in this category as read? This action is not reversible.");
+    }
+
+    const decision = confirm(message);
+    if (!decision) return false;
+
     this.setState({
       isBusy: true
     });
