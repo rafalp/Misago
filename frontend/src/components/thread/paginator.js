@@ -1,12 +1,14 @@
 /* jshint ignore:start */
 import React from 'react';
-import { Link } from 'react-router'; // jshint ignore:line
+import { Link } from 'react-router';
 
 export default function(props) {
-  return <nav className="misago-pagination pull-left">
-    <Pager {...props} />
-    <More more={props.posts.more} />
-  </nav>;
+  return (
+    <nav className="misago-pagination pull-left">
+      <Pager {...props} />
+      <More more={props.posts.more} />
+    </nav>
+  );
 }
 
 export function Pager(props) {
