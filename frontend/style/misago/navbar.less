@@ -111,8 +111,24 @@
 }
 
 // Make navbar's height match compact nav
-@media (max-width: (@grid-float-breakpoint - 1)) {
+@media (max-width: (@grid-float-breakpoint)) {
   .navbar.navbar-misago {
     min-height: auto;
+  }
+}
+
+
+// Hide compact navbar above breakpoint
+.navbar-misago .navbar-desktop-nav {
+  display: none;
+}
+
+@media (min-width: @grid-float-breakpoint) {
+  .navbar-misago ul.navbar-compact-nav {
+    display: none;
+  }
+
+  .navbar-misago .navbar-desktop-nav {
+    display: block;
   }
 }

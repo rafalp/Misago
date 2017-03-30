@@ -80,6 +80,7 @@
 
 @event-icon-size:         28px;
 
+
 //-- Z-index master list
 //
 // Warning: Avoid customizing these values. They're used for a bird's eye view
@@ -95,3 +96,14 @@
 @zindex-modal-background:  1040;
 @zindex-modal:             1050;
 @zindex-auth-message:      1070;
+
+
+//== Grid system
+//
+//## Define your custom responsive grid.
+
+// Navbar collapse
+//** Point at which the navbar becomes uncollapsed.
+@grid-float-breakpoint:     700px;
+//** Point at which the navbar begins collapsing.
+@grid-float-breakpoint-max: (@grid-float-breakpoint - 1);

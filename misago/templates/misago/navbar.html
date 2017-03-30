@@ -1,7 +1,7 @@
 {% load i18n staticfiles %}
 <nav class="navbar navbar-misago navbar-default navbar-static-top" role="navigation">
 
-  <div class="container navbar-full hidden-xs hidden-sm">
+  <div class="container navbar-full navbar-desktop-nav">
     {% if misago_settings.forum_branding_display %}
     <a href="{% url 'misago:index' %}" class="navbar-brand">
       <img src="{% static 'misago/img/site-logo.png' %}" alt="">
@@ -52,7 +52,7 @@
     <div id="user-menu-mount"></div>
   </div><!-- /full navbar -->
 
-  <ul class="nav navbar-nav navbar-compact-nav hidden-md hidden-lg" itemscope itemtype="http://schema.org/SiteNavigationElement">
+  <ul class="nav navbar-nav navbar-compact-nav" itemscope itemtype="http://schema.org/SiteNavigationElement">
     {% if misago_settings.forum_branding_display %}
       <li>
         <a href="{% url 'misago:index' %}">
