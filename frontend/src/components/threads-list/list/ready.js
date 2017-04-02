@@ -14,9 +14,10 @@ export default function(props) {
         {props.threads.map((thread) => {
           return (
             <Thread
+              activeCategory={props.activeCategory}
               categories={props.categories}
-              thread={thread}
               list={props.list}
+              thread={thread}
 
               showOptions={props.showOptions}
               isSelected={props.selection.indexOf(thread.id) >= 0}

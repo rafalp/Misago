@@ -301,6 +301,7 @@ export default class extends WithDropdown {
         >
 
           <ThreadsList
+            category={this.props.route.category}
             categories={this.props.route.categoriesMap}
             list={this.props.route.list}
             selection={this.props.selection}

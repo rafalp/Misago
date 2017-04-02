@@ -24,9 +24,10 @@ export default function(props) {
 
   return (
     <ListReady
-      threads={props.threads}
+      activeCategory={props.category}
       categories={props.categories}
       list={props.list}
+      threads={props.threads}
 
       diffSize={props.diffSize}
       applyDiff={props.applyDiff}

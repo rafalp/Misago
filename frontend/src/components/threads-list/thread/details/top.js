@@ -1,5 +1,6 @@
 /* jshint ignore:start */
 import React from 'react';
+import Category from './category';
 
 export default function({ category, thread }) {
   return (
@@ -13,12 +14,10 @@ export default function({ category, thread }) {
         thread={thread.is_unapproved}
         posts={thread.has_unapproved_posts}
       />
-      <a
+      <Category
         className="item-title thread-detail-category visible-xs-inline-block"
-        href={category.absolute_url}
-      >
-        {category.name}
-      </a>
+        category={category}
+      />
       <LastReplyLabel
         datetime={thread.last_post_on}
         url={thread.url.last_post}

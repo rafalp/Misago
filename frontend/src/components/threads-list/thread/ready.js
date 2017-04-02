@@ -5,6 +5,7 @@ import { Options } from './options';
 
 export default function(props) {
   const {
+    activeCategory,
     categories,
     list,
     thread,
@@ -14,7 +15,10 @@ export default function(props) {
     showOptions,
   } = props;
 
-  const category = categories[thread.category];
+  let category = null;
+  if (activeCategory.id !== thread.category) {
+    category = categories[thread.category];
+  }
 
   let className = 'col-xs-12';
   if (showOptions) {

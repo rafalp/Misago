@@ -1,5 +1,6 @@
 /* jshint ignore:start */
 import React from 'react';
+import Category from './category';
 import { OptionsXs } from '../options';
 
 export default function({category, isBusy, showOptions, isSelected, thread}) {
@@ -27,12 +28,10 @@ export default function({category, isBusy, showOptions, isSelected, thread}) {
   return (
     <div className="row thread-details-bottom">
       <div className={className}>
-        <a
+        <Category
           className="item-title thread-detail-category hidden-xs"
-          href={category.absolute_url}
-        >
-          {category.name}
-        </a>
+          category={category}
+        />
         <HiddenLabel
           textClassName={textClassName}
           display={thread.is_hidden}
