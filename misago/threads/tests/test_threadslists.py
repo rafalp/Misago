@@ -548,8 +548,9 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
 
         self.assertContains(response, 'subcategory-%s' % self.category_a.css_class)
         self.assertContains(response, 'subcategory-%s' % self.category_e.css_class)
-        self.assertContains(response, 'thread-category-%s' % self.category_a.css_class)
-        self.assertContains(response, 'thread-category-%s' % self.category_c.css_class)
+
+        self.assertNotContains(response, 'thread-detail-category-%s' % self.category_a.css_class)
+        self.assertContains(response, 'thread-detail-category-%s' % self.category_c.css_class)
 
         # api displays same data
         self.access_all_categories()
@@ -569,8 +570,8 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         # thread displays
         self.assertContains(response, test_thread.get_absolute_url())
 
-        self.assertNotContains(response, 'thread-category-%s' % self.category_b.css_class)
-        self.assertContains(response, 'thread-category-%s' % self.category_c.css_class)
+        self.assertNotContains(response, 'thread-detail-category-%s' % self.category_b.css_class)
+        self.assertContains(response, 'thread-detail-category-%s' % self.category_c.css_class)
 
         # api displays same data
         self.access_all_categories()

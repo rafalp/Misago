@@ -14,7 +14,7 @@ from misago.threads.moderation import threads as moderation
 from misago.threads.permissions import can_reply_thread, can_see_thread
 from misago.threads.serializers import NewThreadSerializer, ThreadsListSerializer
 from misago.threads.threadtypes import trees_map
-from misago.threads.utils import add_categories_to_items, get_thread_id_from_url
+from misago.threads.utils import get_thread_id_from_url
 
 from .pollmergehandler import PollMergeHandler
 
@@ -223,17 +223,6 @@ def merge_threads(request, validated_data, threads, poll):
     # set extra attrs on thread for UI
     new_thread.is_read = False
     new_thread.subscription = None
-
-    # add top category to thread
-    if validated_data.get('top_category'):
-        categories = list(
-            Category.objects.all_categories().filter(
-                id__in=request.user.acl_cache['visible_categories'],
-            )
-        )
-        add_categories_to_items(validated_data['top_category'], categories, [new_thread])
-    else:
-        new_thread.top_category = None
 
     add_acl(request.user, new_thread)
     return new_thread

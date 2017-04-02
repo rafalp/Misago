@@ -22,20 +22,13 @@ class FeedSerializer(PostSerializer, MutableFields):
     category = FeedCategorySerializer(many=False, read_only=True)
 
     thread = serializers.SerializerMethodField()
-    top_category = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
-        fields = PostSerializer.Meta.fields + ['category', 'thread', 'top_category']
+        fields = PostSerializer.Meta.fields + ['category', 'thread']
 
     def get_thread(self, obj):
         return {
             'title': obj.thread.title,
             'url': obj.thread.get_absolute_url(),
         }
-
-    def get_top_category(self, obj):
-        try:
-            return FeedCategorySerializer(obj.top_category).data
-        except AttributeError:
-            return None

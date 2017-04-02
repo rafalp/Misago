@@ -112,7 +112,6 @@ export default class extends Form {
   /* jshint ignore:start */
   getFormdata = () => {
     return {
-      top_category: this.props.route.category.id,
       threads: this.props.threads.map((thread) => thread.id),
       title: this.state.title,
       category: this.state.category,

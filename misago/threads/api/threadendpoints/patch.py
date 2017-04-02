@@ -17,7 +17,6 @@ from misago.threads.permissions import (
     allow_add_participant, allow_add_participants, allow_change_owner, allow_edit_thread,
     allow_remove_participant, allow_start_thread)
 from misago.threads.serializers import ThreadParticipantSerializer
-from misago.threads.utils import add_categories_to_items
 from misago.threads.validators import validate_title
 
 
@@ -106,31 +105,11 @@ def patch_move(request, thread, value):
 thread_patch_dispatcher.replace('category', patch_move)
 
 
-def patch_top_category(request, thread, value):
-    category_pk = get_int_or_404(value)
-    root_category = get_object_or_404(
-        Category.objects.all_categories(include_root=True), pk=category_pk
-    )
-
-    categories = list(
-        Category.objects.all_categories()
-        .filter(id__in=request.user.acl_cache['visible_categories'])
-    )
-    add_categories_to_items(root_category, categories, [thread])
-    return {'top_category': CategorySerializer(thread.top_category).data}
-
-
-thread_patch_dispatcher.add('top-category', patch_top_category)
-
-
 def patch_flatten_categories(request, thread, value):
     try:
-        return {
-            'category': thread.category_id,
-            'top_category': thread.top_category.pk,
-        }
+        return {'category': thread.category_id}
     except AttributeError:
-        return {'category': thread.category_id, 'top_category': None}
+        return {'category': thread.category_id}
 
 
 thread_patch_dispatcher.replace('flatten-categories', patch_flatten_categories)

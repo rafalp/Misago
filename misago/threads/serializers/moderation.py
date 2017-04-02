@@ -17,7 +17,6 @@ __all__ = [
 class NewThreadSerializer(serializers.Serializer):
     title = serializers.CharField()
     category = serializers.IntegerField()
-    top_category = serializers.IntegerField(required=False, allow_null=True)
     weight = serializers.IntegerField(
         required=False,
         allow_null=True,
@@ -35,9 +34,6 @@ class NewThreadSerializer(serializers.Serializer):
         if not can_start_thread(self.context, self.category):
             raise ValidationError(_("You can't create new threads in selected category."))
         return self.category
-
-    def validate_top_category(self, category_id):
-        return validate_category(self.context, category_id, allow_root=True)
 
     def validate_weight(self, weight):
         try:

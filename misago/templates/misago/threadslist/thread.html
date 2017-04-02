@@ -53,7 +53,7 @@
           </span>
         {% endif %}
         {% if thread.category != category %}
-          <a class="item-title thread-detail-category visible-xs-inline-block" href="{{ thread.category.get_absolute_url }}">
+          <a class="item-title thread-detail-category visible-xs-inline-block {% if thread.category.css_class %}thread-detail-category-{{ thread.category.css_class }}{% endif %}" href="{{ thread.category.get_absolute_url }}">
             {{ thread.category.name }}
           </a>
         {% endif %}
@@ -79,7 +79,7 @@
         <div class="row thread-details-bottom">
           <div class="col-xs-12">
             {% if thread.category != category %}
-              <a class="item-title thread-detail-category hidden-xs" href="{{ thread.category.get_absolute_url }}">
+              <a class="item-title thread-detail-category hidden-xs {% if thread.category.css_class %}thread-detail-category-{{ thread.category.css_class }}{% endif %}" href="{{ thread.category.get_absolute_url }}">
                 {{ thread.category.name }}
               </a>
             {% endif %}

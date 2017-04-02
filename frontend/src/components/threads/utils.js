@@ -53,7 +53,6 @@ export function isThreadChanged(current, fromDb) {
     current.title === fromDb.title,
     current.weight === fromDb.weight,
     current.category === fromDb.category,
-    current.top_category === fromDb.top_category,
     current.last_post === fromDb.last_post,
     current.last_poster_name === fromDb.last_poster_name
   ].indexOf(false) >= 0;

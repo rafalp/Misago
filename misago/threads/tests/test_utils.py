@@ -109,7 +109,6 @@ class AddCategoriesToItemsTests(MisagoTestCase):
         thread = testutils.post_thread(category=self.root)
         add_categories_to_items(self.root, self.categories, [thread])
 
-        self.assertIsNone(thread.top_category)
         self.assertEqual(thread.category, self.root)
 
     def test_root_thread_from_elsewhere(self):
@@ -117,7 +116,6 @@ class AddCategoriesToItemsTests(MisagoTestCase):
         thread = testutils.post_thread(category=self.root)
         add_categories_to_items(self.category_e, self.categories, [thread])
 
-        self.assertIsNone(thread.top_category)
         self.assertEqual(thread.category, self.root)
 
     def test_direct_child_thread_from_parent(self):
@@ -125,7 +123,6 @@ class AddCategoriesToItemsTests(MisagoTestCase):
         thread = testutils.post_thread(category=self.category_e)
         add_categories_to_items(self.root, self.categories, [thread])
 
-        self.assertEqual(thread.top_category, self.category_e)
         self.assertEqual(thread.category, self.category_e)
 
     def test_direct_child_thread_from_elsewhere(self):
@@ -133,7 +130,6 @@ class AddCategoriesToItemsTests(MisagoTestCase):
         thread = testutils.post_thread(category=self.category_e)
         add_categories_to_items(self.category_b, self.categories, [thread])
 
-        self.assertEqual(thread.top_category, self.category_e)
         self.assertEqual(thread.category, self.category_e)
 
     def test_child_thread_from_root(self):
@@ -141,7 +137,6 @@ class AddCategoriesToItemsTests(MisagoTestCase):
         thread = testutils.post_thread(category=self.category_d)
         add_categories_to_items(self.root, self.categories, [thread])
 
-        self.assertEqual(thread.top_category, self.category_a)
         self.assertEqual(thread.category, self.category_d)
 
     def test_child_thread_from_parent(self):
@@ -149,7 +144,6 @@ class AddCategoriesToItemsTests(MisagoTestCase):
         thread = testutils.post_thread(category=self.category_d)
         add_categories_to_items(self.category_a, self.categories, [thread])
 
-        self.assertEqual(thread.top_category, self.category_b)
         self.assertEqual(thread.category, self.category_d)
 
     def test_child_thread_from_category(self):
@@ -157,7 +151,6 @@ class AddCategoriesToItemsTests(MisagoTestCase):
         thread = testutils.post_thread(category=self.category_d)
         add_categories_to_items(self.category_d, self.categories, [thread])
 
-        self.assertIsNone(thread.top_category)
         self.assertEqual(thread.category, self.category_d)
 
     def test_child_thread_from_elsewhere(self):
@@ -165,7 +158,6 @@ class AddCategoriesToItemsTests(MisagoTestCase):
         thread = testutils.post_thread(category=self.category_d)
         add_categories_to_items(self.category_f, self.categories, [thread])
 
-        self.assertEqual(thread.top_category, self.category_a)
         self.assertEqual(thread.category, self.category_d)
 
 

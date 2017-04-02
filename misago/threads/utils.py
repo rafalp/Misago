@@ -10,31 +10,8 @@ def add_categories_to_items(root_category, categories, items):
     for category in categories:
         categories_dict[category.pk] = category
 
-    top_categories_map = {}
-
     for item in items:
-        item.top_category = None
         item.category = categories_dict[item.category_id]
-
-        if item.category == root_category:
-            continue
-        elif item.category.parent_id == root_category.pk:
-            item.top_category = item.category
-        elif item.category_id in top_categories_map:
-            item.top_category = top_categories_map[item.category_id]
-        elif root_category.has_child(item.category):
-            # item in subcategory resolution
-            for category in categories:
-                if (category.parent_id == root_category.pk and category.has_child(item.category)):
-                    top_categories_map[item.category_id] = category
-                    item.top_category = category
-        else:
-            # item from other category's scope
-            for category in categories:
-                category_is_parent = category.has_child(item.category)
-                if category.level == 1 and (category == item.category or category_is_parent):
-                    top_categories_map[item.category_id] = category
-                    item.top_category = category
 
 
 def add_likes_to_posts(user, posts):

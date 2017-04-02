@@ -80,12 +80,6 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
         except AttributeError:
             return None
 
-    def get_top_category(self, obj):
-        try:
-            return obj.top_category.pk
-        except AttributeError:
-            return None
-
     def get_participants(self, obj):
         return ThreadParticipantSerializer(obj.participants_list, many=True).data
 
@@ -144,11 +138,9 @@ class ThreadsListSerializer(ThreadSerializer):
     category = serializers.PrimaryKeyRelatedField(read_only=True)
     last_post = serializers.PrimaryKeyRelatedField(read_only=True)
 
-    top_category = serializers.SerializerMethodField()
-
     class Meta:
         model = Thread
-        fields = ThreadSerializer.Meta.fields + ['has_poll', 'top_category']
+        fields = ThreadSerializer.Meta.fields + ['has_poll']
 
 
 ThreadsListSerializer = ThreadsListSerializer.exclude_fields('path', 'poll')

@@ -392,7 +392,6 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
 
         reponse_json = response.json()
         self.assertEqual(reponse_json['category'], self.category_b.pk)
-        self.assertEqual(reponse_json['top_category'], None)
 
     def test_move_thread_with_top(self):
         """api moves thread to other category, sets top"""
@@ -427,7 +426,6 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
 
         reponse_json = response.json()
         self.assertEqual(reponse_json['category'], self.category_b.pk)
-        self.assertEqual(reponse_json['top_category'], self.category.pk)
 
     def test_move_thread_no_permission(self):
         """api move thread to other category with no permission fails"""
@@ -547,33 +545,6 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
 
         response_json = response.json()
         self.assertEqual(response_json['category'], self.category.pk)
-
-    def test_thread_top_flatten_categories(self):
-        """api flatten thread with top category"""
-        self.thread.category = self.category_b
-        self.thread.save()
-
-        self.override_other_acl({})
-
-        response = self.patch(
-            self.api_link, [
-                {
-                    'op': 'add',
-                    'path': 'top-category',
-                    'value': Category.objects.root_category().pk,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'flatten-categories',
-                    'value': None,
-                },
-            ]
-        )
-        self.assertEqual(response.status_code, 200)
-
-        response_json = response.json()
-        self.assertEqual(response_json['top_category'], self.category.pk)
-        self.assertEqual(response_json['category'], self.category_b.pk)
 
 
 class ThreadCloseApiTests(ThreadPatchApiTestCase):

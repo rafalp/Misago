@@ -66,7 +66,6 @@ export default class extends Form {
 
     this.props.callApi([
       {op: 'replace', path: 'category', value: this.state.category},
-      {op: 'add', path: 'top-category', value: this.props.route.category.id},
       {op: 'replace', path: 'flatten-categories', value: null},
       {op: 'add', path: 'acl', value: true}
     ], gettext("Selected threads were moved."), onSuccess);
