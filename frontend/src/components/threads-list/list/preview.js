@@ -8,13 +8,13 @@ export default class extends React.Component {
 
   render () {
     /* jshint ignore:start */
-    return <div className="threads-list ui-preview">
-      <ul className="list-group">
-        {[0, 1, 2].map((i) => {
-          return <ThreadPreview hiddenOnMobile={i > 0} key={i} />
-        })}
-      </ul>
-    </div>;
+    return (
+      <div className="threads-list ui-preview">
+        <ul className="list-group">
+          <ThreadPreview />
+        </ul>
+      </div>
+    );
     /* jshint ignore:end */
   }
 }
