@@ -10,343 +10,83 @@
 
 // Thread layout
 // --------------------------------------------------
-
-// Remove side padding from thread row
-.threads-list .thread-new,
-.threads-list .thread-read,
-.threads-list .thread-preview {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-
-// Icon column
-.threads-list .thread-icon {
-  float: left;
-  width: @thread-col-icon;
-
-  @media screen and (max-width: @screen-sm-max) {
-    width: @thread-col-icon-mb;
-  }
-}
-
-// Options column
-.thread-ops-one .thread-options {
-  float: right;
-  width: @thread-col-option;
-
-  @media screen and (max-width: @screen-sm-max) {
-    width: @thread-col-option-mb;
-  }
-}
-
-.thread-ops-two .thread-options {
-  float: right;
-  width: @thread-col-options;
-
-  @media screen and (max-width: @screen-sm-max) {
-    width: @thread-col-options-mb;
-  }
-}
-
-// Thready body left space
-.thread-main {
-  margin-left: @thread-col-icon;
-
-  @media screen and (max-width: @screen-sm-max) {
-    margin-left: @thread-col-icon-mb;
-    padding-top: 2px;
-  }
-}
-
-// Thready body right space
-.thread-main {
-  margin-right: 10px;
-}
-
-.thread-ops-one .thread-main {
-  margin-right: @thread-col-option;
-
-  @media screen and (max-width: @screen-sm-max) {
-    margin-right: @thread-col-option-mb;
-  }
-}
-
-.thread-ops-two .thread-main {
-  margin-right: @thread-col-options;
-
-  @media screen and (max-width: @screen-sm-max) {
-    margin-right: @thread-col-options-mb;
-  }
-}
-
-
-// Thread icon
-// --------------------------------------------------
-.threads-list .thread-icon {
-  padding-top: 2px;
-
-  text-align: center;
-}
-
-// Read icon
-.threads-list .read-status {
-  .material-icon {
-    width: 24px;
-    height: 24px;
-
-    color: @thread-read-icon-color;
-    font-size: 24px;
-    line-height: 24px;
-  }
-}
-
-.threads-list .thread-new .read-status {
-  .material-icon {
-    color: @thread-new-icon-color;
-  }
-}
-
-.threads-list .thread-preview .read-status {
-  .material-icon {
-    color: @ui-preview;
-  }
-}
-
-// Loader
-.threads-list .thread-icon .loader {
-  height: 24px;
-}
-
-.threads-list .thread-icon .loader-spinning-wheel {
-  width: 24px;
-  height: 24px;
-
-  border-color: lighten(@loader-color, 25%) transparent;
-}
-
-
-// Thread flags
-.threads-list .thread-flags {
-  display: none;
-  margin-left: auto;
-  margin-right: auto;
-
-  position: relative;
-  bottom: 4px;
-
-  color: @text-muted;
-
-  pointer-events: none;
-
-  @media screen and (max-width: @screen-sm-max) {
-    display: block;
-    margin: 0px;
-    padding: 0px;
-  }
-
-  li {
-    margin: 0px 2px;
-  }
-
-  .material-icon {
-    font-size: 10px;
-    line-height: 10px;
-  }
-}
-
-
-// Thread top row
-// --------------------------------------------------
-
-// Thread title
 .threads-list .thread-title {
-  &, &:link, &:active, &:visited, &:hover, &:focus {
-    color: @thread-read-color;
+  &, &:link, &:active, &:visited, &:focus, &:hover {
     font-size: @font-size-large;
     font-weight: normal;
-    word-wrap: break-word;
+  }
+}
 
-    .ui-preview-text {
-      height: @font-size-large;
+.threads-list .thread-last-action {
+  padding-top: @padding-large-vertical + 2px;
+}
+
+.threads-list .thread-options {
+  padding-top: @padding-base-vertical - 1px;
+}
+
+
+// Thread details
+// --------------------------------------------------
+.threads-list .thread-details-top {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.threads-list .thread-details-bottom div,
+.threads-list .thread-details-top {
+  &>a, &>span {
+    margin-right: @padding-large-horizontal;
+
+    font-size: @font-size-small;
+    font-weight: normal;
+
+    &>.material-icon {
+      position: relative;
+      top: -1px;
+    }
+
+    .detail-text {
+      margin-left: 2px;
     }
 
     @media screen and (max-width: @screen-sm-max) {
-      font-size: @font-size-base;
-      font-weight: bold;
-
-      .ui-preview-text {
-        height: @font-size-base;
-      }
+      margin-right: @padding-base-horizontal;
     }
   }
 }
 
-.threads-list .thread-new .thread-title {
-  &, &:link, &:active, &:visited, &:hover, &:focus {
-    color: @thread-new-color;
-  }
-}
-
-
-// Bottom row
-// --------------------------------------------------
-
-// Full details used on desktop
-.threads-list .thread-details-full {
-  display: block;
-  float: none;
-  margin: 0px;
-  margin-top: @line-height-computed * .25;
-  padding: 0px;
-  overflow: auto;
-
-  font-size: @font-size-small;
-
-  @media screen and (max-width: @screen-sm-max) {
-    display: none;
+@media screen and (max-width: @screen-xs-max) {
+  .threads-list .thread-details-bottom {
+    margin-top: @padding-large-vertical - 2px;
   }
 
-  &>li {
-    display: block;
-    float: left;
-    margin: 0px;
-    margin-right: 6px;
-    padding: 0px;
-    overflow: auto;
-
-    .material-icon {
-      position: relative;
-      top: 1px;
-
-      float: left;
-      margin-right: 2px;
-
-      font-size: 14px;
-      line-height: 14px;
-    }
-
-    .icon-legend {
-      float: left;
-    }
-
-    .ui-preview-text {
-      height: @font-size-small;
-    }
-
-    &.thread-path a {
-      float: left;
-    }
-  }
-}
-
-// Compact details used on mobile
-.threads-list .thread-details-compact {
-  display: none;
-  float: none;
-  margin: 0px;
-  margin-top: @line-height-computed * .25;
-  padding: 0px;
-  overflow: auto;
-
-  color: @text-muted;
-  font-size: @font-size-base * .66;
-
-  @media screen and (max-width: @screen-sm-max) {
-    display: block;
-  }
-
-  &>li {
-    display: block;
-    float: left;
-    margin: 0px;
-    margin-right: 6px;
-    padding: 0px;
-
-    .material-icon {
-      position: relative;
-      top: -1px;
-
-      margin-right: 2px;
-
-      font-size: (@font-size-base * .66) + 1px;
-      line-height: (@font-size-base * .66) + 1px;
-    }
-
-    .ui-preview-text {
-      height: @font-size-base * .66;
-    }
-  }
-}
-
-// Thread path
-.threads-list .thread-path {
-  .material-icon {
-    margin: 0px 2px;
+  .threads-list .thread-details-top {
+    margin-bottom: @padding-base-vertical;
   }
 }
 
 
 // Thread options
 // --------------------------------------------------
-.threads-list .thread-options {
-  @media screen and (max-width: @screen-sm-max) {
-    overflow: visible;
-    position: relative;
+.thread-options-xs {
+  margin-top: @line-height-computed * -0.5;
+  margin-bottom: @line-height-computed * -1;
 
-    width: 100px;
-  }
+  position: relative;
+  top: @padding-base-vertical - 1px;
 
-  &>ul {
-    margin: 0px;
-    padding: 0px;
+  .btn {
+    padding: 0px 2px;
 
-    @media screen and (max-width: @screen-sm-max) {
-      position: absolute;
-      top: -3px;
-      right: 2px;
-    }
-
-    &>li {
-      float: right;
-      @media screen and (max-width: @screen-sm-max) {
-        overflow: hidden;
-      }
-    }
-  }
-
-  .btn-default {
-    padding: 4px;
-
-    color: @gray-light;
-
-    @media screen and (max-width: @screen-sm-max) {
-      background: transparent;
-      opacity: .33;
-    }
-
-    &:hover, &:active {
-      color: @gray;
-
-      @media screen and (max-width: @screen-sm-max) {
-        background: @btn-default-bg;
-        opacity: 1;
-      }
-    }
+    font-size: @font-size-small;
 
     .material-icon {
-      margin: 0px;
-      position: relative;
-      top: 0px;
+      width: 14px;
+      height: 14px;
 
-      width: 20px;
-      height: 20px;
-
-      font-size: 20px;
-      line-height: 20px;
-    }
-
-    .icon-legend {
-      display: none;
+      font-size: 14px;
+      line-height: 14px;
     }
   }
 }

@@ -4,7 +4,7 @@ import { compareGlobalWeight, compareWeight } from 'misago/components/threads/co
 import Container from 'misago/components/threads/container'; // jshint ignore:line
 import Header from 'misago/components/threads/header'; // jshint ignore:line
 import { diffThreads, getModerationActions, getPageTitle, getTitle } from 'misago/components/threads/utils'; // jshint ignore:line
-import ThreadsList from 'misago/components/threads-list/root'; // jshint ignore:line
+import ThreadsList from 'misago/components/threads-list'; // jshint ignore:line
 import ThreadsListEmpty from 'misago/components/threads/list-empty'; // jshint ignore:line
 import WithDropdown from 'misago/components/with-dropdown'; // jshint ignore:line
 import misago from 'misago/index';

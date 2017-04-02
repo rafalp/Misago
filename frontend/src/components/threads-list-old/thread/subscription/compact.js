@@ -12,30 +12,19 @@ export default class extends SubscriptionFull {
 
   render() {
     /* jshint ignore:start */
-    const { moderation } = this.props.thread;
-
-    let className = ''
-    if (moderation.length) {
-      className += 'col-xs-6';
-    } else {
-      className += 'col-xs-12';
-    }
-    className += ' hidden-md hidden-lg';
-
-    return (
-      <div className={className}>
-        <button
-          type="button"
-          className={this.getClassName()}
-          disabled={this.props.disabled}
-          onClick={this.showOptions}
-        >
-          <span className="material-icon">
-            {this.getIcon()}
-          </span>
-        </button>
-      </div>
-    );
+    return <li className="hidden-md hidden-lg">
+      <button type="button"
+              className={this.getClassName()}
+              disabled={this.props.disabled}
+              onClick={this.showOptions}>
+        <span className="material-icon">
+          {this.getIcon()}
+        </span>
+        <span className="icon-legend">
+          {this.getLegend()}
+        </span>
+      </button>
+    </li>;
     /* jshint ignore:end */
   }
 }
