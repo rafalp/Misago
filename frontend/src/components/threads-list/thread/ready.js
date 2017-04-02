@@ -101,7 +101,11 @@ export function getClassName(isRead, isBusy, isSelected) {
 
 export function Timestamp({ datetime, url }) {
   return (
-    <a href={url} title={datetime.format('LLL')}>
+    <a
+      className="thread-last-reply"
+      href={url}
+      title={datetime.format('LLL')}
+    >
       {datetime.fromNow(true)}
     </a>
   );
@@ -109,20 +113,18 @@ export function Timestamp({ datetime, url }) {
 
 export function LastPoster(props) {
   const { posterName, url } = props;
+  const className = 'item-title thread-last-poster';
 
   if (url) {
     return (
-      <a
-        className="item-title thread-last-poster"
-        href={url}
-      >
+      <a className={className} href={url} >
         {posterName}
       </a>
     );
   }
 
   return (
-    <span className="item-title thread-last-poster">
+    <span className={className}>
       {posterName}
     </span>
   );

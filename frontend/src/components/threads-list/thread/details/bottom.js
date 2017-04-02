@@ -158,20 +158,18 @@ export function LastReplyLabel({ datetime, url }) {
 
 export function LastPoster(props) {
   const { posterName, url } = props;
+  const className = 'visible-sm-inline-block item-title thread-last-poster';
 
   if (url) {
     return (
-      <a
-        className="visible-sm-inline-block item-title thread-last-poster"
-        href={url}
-      >
+      <a className={className} href={url}>
         {posterName}
       </a>
     );
   }
 
   return (
-    <span className="visible-sm-inline-block item-title thread-last-poster">
+    <span className={className}>
       {posterName}
     </span>
   );
