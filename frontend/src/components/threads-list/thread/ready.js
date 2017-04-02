@@ -20,7 +20,7 @@ export default function(props) {
     category = categories[thread.category];
   }
 
-  let className = 'col-xs-12';
+  let className = 'thread-main col-xs-12';
   if (showOptions) {
     if (thread.moderation.length) {
       className += ' col-sm-9 col-md-7';
@@ -33,7 +33,7 @@ export default function(props) {
 
   return (
     <li className={getClassName(thread.is_read, isBusy, isSelected)}>
-      <div className="row">
+      <div className="row thread-row">
         <div className={className}>
 
           <TopDetails
