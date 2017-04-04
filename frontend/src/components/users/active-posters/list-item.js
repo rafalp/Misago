@@ -17,17 +17,21 @@ export default class extends React.Component {
   getUserStatus() {
     if (this.props.user.status) {
       /* jshint ignore:start */
-      return <Status user={this.props.user} status={this.props.user.status}>
-        <StatusIcon user={this.props.user}
-                    status={this.props.user.status} />
-        <StatusLabel user={this.props.user}
-                     status={this.props.user.status}
-                     className="status-label hidden-xs hidden-sm" />
-      </Status>;
+      return (
+        <Status user={this.props.user} status={this.props.user.status}>
+          <StatusIcon user={this.props.user}
+                      status={this.props.user.status} />
+          <StatusLabel user={this.props.user}
+                       status={this.props.user.status}
+                       className="status-label hidden-xs hidden-sm" />
+        </Status>
+      );
       /* jshint ignore:end */
-    } else {
-      /* jshint ignore:start */
-      return <span className="user-status">
+    }
+
+    /* jshint ignore:start */
+    return (
+      <span className="user-status">
         <span className="status-icon ui-preview-text">
           &nbsp;
         </span>
@@ -35,77 +39,94 @@ export default class extends React.Component {
               style={{width: random.int(30, 50) + "px"}}>
           &nbsp;
         </span>
-      </span>;
-      /* jshint ignore:end */
-    }
+      </span>
+    );
+    /* jshint ignore:end */
   }
 
   getRankName() {
-    if (this.props.rank.is_tab) {
+    if (!this.props.rank.is_tab) {
       /* jshint ignore:start */
-      let rankUrl = misago.get('USERS_LIST_URL') + this.props.rank.slug + '/';
-      return <Link to={rankUrl} className="rank-name item-title">
-        {this.props.rank.name}
-      </Link>;
-      /* jshint ignore:end */
-    } else {
-      /* jshint ignore:start */
-      return <span className="rank-name item-title">
-        {this.props.rank.name}
-      </span>;
+      return (
+        <span className="rank-name item-title">
+          {this.props.rank.name}
+        </span>
+      );
       /* jshint ignore:end */
     }
+
+    /* jshint ignore:start */
+    let rankUrl = misago.get('USERS_LIST_URL') + this.props.rank.slug + '/';
+    return (
+      <Link to={rankUrl} className="rank-name item-title">
+        {this.props.rank.name}
+      </Link>
+    );
+    /* jshint ignore:end */
   }
 
   getUserTitle() {
-    if (this.props.user.title) {
-      /* jshint ignore:start */
-      return <span className="user-title hidden-xs hidden-sm">
+    if (!this.props.user.title) return null;
+
+    /* jshint ignore:start */
+    return (
+      <span className="user-title hidden-xs hidden-sm">
         {this.props.user.title}
-      </span>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+      </span>
+    );
+    /* jshint ignore:end */
   }
 
   render() {
     /* jshint ignore:start */
-    return <li className={this.getClassName()}>
-      <div className="rank-user-avatar">
-        <a href={this.props.user.absolute_url}>
-          <Avatar user={this.props.user} size={50} size2x={64} />
-        </a>
-      </div>
-
-      <div className="rank-user">
-        <div className="user-name">
-          <a href={this.props.user.absolute_url} className="item-title">
-            {this.props.user.username}
+    return (
+      <li className={this.getClassName()}>
+        <div className="rank-user-avatar">
+          <a href={this.props.user.absolute_url}>
+            <Avatar user={this.props.user} size={50} size2x={64} />
           </a>
         </div>
-        <div className="user-details">
-          {this.getUserStatus()}
-          {this.getRankName()}
-          {this.getUserTitle()}
+
+        <div className="rank-user">
+          <div className="user-name">
+            <a href={this.props.user.absolute_url} className="item-title">
+              {this.props.user.username}
+            </a>
+          </div>
+          <div className="user-details">
+            {this.getUserStatus()}
+            {this.getRankName()}
+            {this.getUserTitle()}
+          </div>
+          <div className="user-compact-stats visible-xs-block">
+            <span className="rank-position">
+              <strong>#{this.props.counter}</strong>
+              <small>{gettext("Rank")}</small>
+            </span>
+
+            <span className="rank-posts-counted">
+              <strong>{this.props.user.meta.score}</strong>
+              <small>{gettext("Ranked posts")}</small>
+            </span>
+          </div>
         </div>
-      </div>
 
-      <div className="rank-position">
-        <strong>#{this.props.counter}</strong>
-        <small>{gettext("Rank")}</small>
-      </div>
+        <div className="rank-position hidden-xs">
+          <strong>#{this.props.counter}</strong>
+          <small>{gettext("Rank")}</small>
+        </div>
 
-      <div className="rank-posts-counted">
-        <strong>{this.props.user.meta.score}</strong>
-        <small>{gettext("Ranked posts")}</small>
-      </div>
+        <div className="rank-posts-counted hidden-xs">
+          <strong>{this.props.user.meta.score}</strong>
+          <small>{gettext("Ranked posts")}</small>
+        </div>
 
-      <div className="rank-posts-total">
-        <strong>{this.props.user.posts}</strong>
-        <small>{gettext("Total posts")}</small>
-      </div>
-    </li>;
+        <div className="rank-posts-total hidden-xs">
+          <strong>{this.props.user.posts}</strong>
+          <small>{gettext("Total posts")}</small>
+        </div>
+      </li>
+    );
     /* jshint ignore:end */
   }
 }

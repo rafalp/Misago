@@ -41,6 +41,12 @@
     width: 40%;
   }
 
+  @media screen and (max-width: @screen-xs-max) {
+    float: none;
+    margin-left: 50px;
+    width: 100%;
+  }
+
   @media screen and (min-width: @screen-md-min) {
     margin-left: @line-height-computed * .8;
     width: 25%;
@@ -85,6 +91,14 @@
       top: 1px;
 
       vertical-align: baseline;
+    }
+  }
+
+  @media screen and (max-width: @screen-xs-max) {
+    margin-top: @padding-base-vertical / 2;
+
+    .rank-name, .user-title {
+      font-weight: normal;
     }
   }
 }
@@ -208,9 +222,41 @@
   }
 }
 
+.user-compact-stats {
+  .rank-position, .rank-posts-counted {
+    strong, small {
+      display: inline-block;
+      float: none;
+    }
 
-// Small adjustments for stats on compact displays
-@media screen and (max-width: @screen-sm-max) {
+    strong {
+      min-width: auto;
+    }
+
+    small {
+      margin-right: @line-height-computed;
+    }
+  }
+}
+
+
+// Tablet displays
+@media screen and (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+  // Margin top first state so its even with username
+  .active-posters .rank-position {
+    margin-top: 6px;
+  }
+
+
+  // Hide rank-posts-total on small displays (cos it overflows for crazy posters)
+  .active-posters .rank-posts-total {
+    display: none;
+  }
+}
+
+
+// Mobile displays
+@media screen and (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
   // Margin top first state so its even with username
   .active-posters .rank-position {
     margin-top: 6px;

@@ -66,19 +66,29 @@
                     </span>
                   {% endif %}
                 </div>
+                <div class="user-compact-stats visible-xs-block">
+                  <span class="rank-position">
+                    <strong>#{{ forloop.counter }}</strong>
+                    <small>{% trans "Rank" %}</small>
+                  </span>
+                  <span class="rank-posts-counted">
+                    <strong>{{ ranked.score }}</strong>
+                    <small>{% trans "Ranked posts" %}</small>
+                  </span>
+                </div>
               </div>
 
-              <div class="rank-position">
+              <div class="rank-position hidden-xs">
                 <strong>#{{ forloop.counter }}</strong>
                 <small>{% trans "Rank" %}</small>
               </div>
 
-              <div class="rank-posts-counted">
+              <div class="rank-posts-counted hidden-xs">
                 <strong>{{ ranked.score }}</strong>
                 <small>{% trans "Ranked posts" %}</small>
               </div>
 
-              <div class="rank-posts-total">
+              <div class="rank-posts-total hidden-xs">
                 <strong>{{ ranked.posts }}</strong>
                 <small>{% trans "Total posts" %}</small>
               </div>
