@@ -16,4 +16,12 @@ def home_redirect(*args, **kwargs):
 @cache_page(86400 * 2, key_prefix='misagojsi18n')
 @last_modified(lambda req, **kw: timezone.now())
 def javascript_catalog(request):
-    return i18n.javascript_catalog(request, 'djangojs', None)
+    return i18n.javascript_catalog(
+        request,
+        'djangojs',
+        {
+            'packages': [
+                'misago',
+            ],
+        },
+    )
