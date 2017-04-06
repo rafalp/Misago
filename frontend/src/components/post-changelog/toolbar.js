@@ -26,28 +26,42 @@ export default class extends React.Component {
 
   render() {
     return (
-      <div className="modal-toolbar">
-        <GoBackBtn
-          disabled={this.props.disabled}
-          edit={this.props.edit}
-          onClick={this.goBack}
-        />
-        <GoForwardBtn
-          disabled={this.props.disabled}
-          edit={this.props.edit}
-          onClick={this.goForward}
-        />
-        <GoLastBtn
-          disabled={this.props.disabled}
-          edit={this.props.edit}
-          onClick={this.goLast}
-        />
-        <Label edit={this.props.edit} />
-        <RevertBtn
-          canRevert={this.props.canRevert}
-          disabled={this.props.disabled}
-          onClick={this.revertEdit}
-        />
+      <div className="modal-toolbar post-changelog-toolbar">
+        <div className="row">
+          <div className="col-xs-12 col-sm-4">
+            <div className="row">
+              <div className="col-xs-4">
+                <GoBackBtn
+                  disabled={this.props.disabled}
+                  edit={this.props.edit}
+                  onClick={this.goBack}
+                />
+              </div>
+              <div className="col-xs-4">
+                <GoForwardBtn
+                  disabled={this.props.disabled}
+                  edit={this.props.edit}
+                  onClick={this.goForward}
+                />
+              </div>
+              <div className="col-xs-4">
+                <GoLastBtn
+                  disabled={this.props.disabled}
+                  edit={this.props.edit}
+                  onClick={this.goLast}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="col-xs-12 col-sm-5 xs-margin-top-half post-change-label">
+            <Label edit={this.props.edit} />
+          </div>
+          <RevertBtn
+            canRevert={this.props.canRevert}
+            disabled={this.props.disabled}
+            onClick={this.revertEdit}
+          />
+        </div>
       </div>
     );
   }
@@ -56,7 +70,7 @@ export default class extends React.Component {
 export function GoBackBtn(props) {
   return (
     <Button
-      className="btn-default btn-icon btn-sm pull-left"
+      className="btn-default btn-block btn-icon btn-sm"
       disabled={props.disabled || !props.edit.previous}
       onClick={props.onClick}
       title={gettext("See previous change")}
@@ -71,7 +85,7 @@ export function GoBackBtn(props) {
 export function GoForwardBtn(props) {
   return (
     <Button
-      className="btn-default btn-icon btn-sm pull-left"
+      className="btn-default btn-block btn-icon btn-sm"
       disabled={props.disabled || !props.edit.next}
       onClick={props.onClick}
       title={gettext("See previous change")}
@@ -86,7 +100,7 @@ export function GoForwardBtn(props) {
 export function GoLastBtn(props) {
   return (
     <Button
-      className="btn-default btn-icon btn-sm pull-left"
+      className="btn-default btn-block btn-icon btn-sm"
       disabled={props.disabled || !props.edit.next}
       onClick={props.onClick}
       title={gettext("See previous change")}
@@ -102,14 +116,16 @@ export function RevertBtn(props) {
   if (!props.canRevert) return null;
 
   return (
-    <Button
-      className="btn-default btn-sm pull-right"
-      disabled={props.disabled}
-      onClick={props.onClick}
-      title={gettext("Revert post to state from before this edit.")}
-    >
-      {gettext("Revert")}
-    </Button>
+    <div className="col-sm-3 hidden-xs">
+      <Button
+        className="btn-default btn-sm btn-block"
+        disabled={props.disabled}
+        onClick={props.onClick}
+        title={gettext("Revert post to state from before this edit.")}
+      >
+        {gettext("Revert")}
+      </Button>
+    </div>
   )
 }
 
@@ -137,9 +153,6 @@ export function Label(props) {
   }, true);
 
   return (
-    <p
-      className="pull-left"
-      dangerouslySetInnerHTML={{__html: message}}
-    />
+    <p dangerouslySetInnerHTML={{__html: message}} />
   );
 }

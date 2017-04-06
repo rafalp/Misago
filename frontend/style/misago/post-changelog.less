@@ -6,6 +6,11 @@
   padding: 0px;
   margin: 0px;
 
+  .list-unstyled {
+    padding: 0px;
+    margin: @padding-small-vertical 0px;
+  }
+
   .diff-item {
     padding: @padding-small-vertical @padding-small-horizontal;
   }
@@ -16,5 +21,11 @@
 
   .diff-item-add {
     color: @brand-success;
+  }
+}
+
+.post-changelog-toolbar .post-change-label {
+  @media screen and (max-width: @screen-xs-max) {
+    text-align: center;
   }
 }

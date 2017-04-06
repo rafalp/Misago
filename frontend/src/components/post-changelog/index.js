@@ -1,6 +1,7 @@
 // jshint ignore:start
 import React from 'react';
 import Diff from './diff';
+import Footer from './footer';
 import Toolbar from './toolbar';
 import { hydrateEdit } from './utils';
 import Message from 'misago/components/modal-message';
@@ -101,6 +102,12 @@ export default class extends React.Component {
             revertEdit={this.revertEdit}
           />
           <Diff diff={this.state.edit.diff} />
+          <Footer
+            canRevert={this.state.canRevert}
+            disabled={this.state.isBusy}
+            edit={this.state.edit}
+            revertEdit={this.revertEdit}
+          />
         </ModalDialog>
       );
     }
