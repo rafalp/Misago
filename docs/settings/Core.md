@@ -123,6 +123,12 @@ In case of more events than specified being found, oldest events will be truncat
 Hourly limit of posts that may be posted from single account. Fail-safe for situations when forum is flooded by spam bot. Change to 0 to lift this restriction.
 
 
+## `MISAGO_JS_CATALOG_PACKAGES`
+
+List of packages that should be included in Misago's default JS I18n catalog, available under the `/django-i18n.js` url. Defaults to `['misago']`. See [Django documentation](https://docs.djangoproject.com/en/1.10/topics/i18n/translation/#internationalization-in-javascript-code) for further explanation.
+
+
+
 ## `MISAGO_LOGIN_API_URL`
 URL to API endpoint used to authenticate sign-in credentials. Musn't contain api prefix or wrapping slashes. Defaults to 'auth/login'.
 

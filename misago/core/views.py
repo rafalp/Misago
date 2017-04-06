@@ -4,6 +4,8 @@ from django.views import i18n
 from django.views.decorators.cache import cache_page
 from django.views.decorators.http import last_modified
 
+from misago.conf import settings
+
 
 def forum_index(request):
     return  # blow up as this view is normally non-reachable!
@@ -20,8 +22,6 @@ def javascript_catalog(request):
         request,
         'djangojs',
         {
-            'packages': [
-                'misago',
-            ],
+            'packages': settings.MISAGO_JS_CATALOG_PACKAGES,
         },
     )
