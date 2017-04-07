@@ -8,7 +8,7 @@ export default function(props) {
   const participant = props.participant;
 
   return (
-    <div className="col-md-3 participant-card">
+    <div className="col-xs-12 col-sm-6 col-md-3 participant-card">
       <a className="avatar-link" href={participant.url}>
         <Avatar user={participant} size="50" />
       </a>

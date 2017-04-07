@@ -5,7 +5,7 @@
       {% for row in participants|batch:4 %}
         <div class="row">
           {% for participant in row %}
-            <div class="col-md-3 participant-card">
+            <div class="col-xs-12 col-sm-6 col-md-3 participant-card">
               <a class="avatar-link" href="{{ participant.user.get_absolute_url }}">
                 <img class="user-avatar" src="{{ participant.user|avatar:50 }}" alt="">
               </a>
