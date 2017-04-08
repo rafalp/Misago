@@ -94,7 +94,7 @@ export function ModalBody(props) {
 
 export function ChoicesList(props) {
   return (
-    <div className="modal-body">
+    <div className="modal-body modal-poll-votes">
       <ul className="list-unstyled votes-details">
         {props.data.map((choice) => {
           return (
@@ -162,7 +162,7 @@ export function Voter(props) {
         >
           {props.username}
         </a>
-        &nbsp;
+        {' '}
         <VoteDate voted_on={props.voted_on} />
       </li>
     );
@@ -171,7 +171,7 @@ export function Voter(props) {
   return (
     <li>
       <strong>{props.username}</strong>
-      &nbsp;
+      {' '}
       <VoteDate voted_on={props.voted_on} />
     </li>
   );

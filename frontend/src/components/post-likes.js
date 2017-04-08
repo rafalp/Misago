@@ -101,8 +101,8 @@ export function ModalDialog(props) {
 
 export function LikesList(props) {
   return (
-    <table className="table">
-      <tbody>
+    <div className="modal-body modal-post-likers">
+      <ul className="list-unstyled">
         {props.likes.map((like) => {
           return (
             <LikeDetails
@@ -111,47 +111,43 @@ export function LikesList(props) {
             />
           );
         })}
-      </tbody>
-    </table>
+      </ul>
+    </div>
   );
 }
 
 export function LikeDetails(props) {
   if (props.url) {
     return (
-      <tr>
-        <td className="col-md-6">
-          <a
-            className="item-title"
-            href={props.url}
-          >
-            {props.username}
-          </a>
-        </td>
+      <li>
+        <a
+          className="item-title"
+          href={props.url}
+        >
+          {props.username}
+        </a>
+        {' '}
         <LikeDate likedOn={props.liked_on} />
-      </tr>
+      </li>
     );
   }
 
   return (
-    <tr>
-      <td className="col-md-6">
-        <strong>{props.username}</strong>
-      </td>
+    <li>
+      <strong>{props.username}</strong>
+      {' '}
       <LikeDate likedOn={props.liked_on} />
-    </tr>
+    </li>
   );
 }
 
 export function LikeDate(props) {
   return (
-    <td className="col-md-6">
-      <abbr
-        className="text-muted"
-        title={props.likedOn.format('LLL')}
-      >
-        {props.likedOn.fromNow()}
-      </abbr>
-    </td>
+    <abbr
+      className="text-muted"
+      title={props.likedOn.format('LLL')}
+    >
+      {props.likedOn.fromNow()}
+    </abbr>
   );
 }
