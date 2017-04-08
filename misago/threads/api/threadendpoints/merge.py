@@ -7,7 +7,6 @@ from django.utils.translation import ungettext
 
 from misago.acl import add_acl
 from misago.categories import THREADS_ROOT_NAME
-from misago.categories.models import Category
 from misago.threads.events import record_event
 from misago.threads.models import Thread
 from misago.threads.moderation import threads as moderation
