@@ -204,6 +204,7 @@ export default class extends React.Component {
                   {this.getMarkAsReadButton()}
                   {this.getStartThreadButton()}
                 </div>
+                <div className="sm-margin-top" />
               </div>
             )}
           </div>
