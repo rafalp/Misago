@@ -10,22 +10,42 @@ import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
 
 export default function(props) {
-  if (!isVisible(props.isPollOver, props.poll.acl, props.poll)) return null;
+  const { isPollOver, poll, showVoting, thread } = props;
+
+  if (!isVisible(isPollOver, poll.acl, poll)) return null;
+
+  const controls = [];
+
+  const canVote = poll.acl.can_vote;
+  const canChangeVote = !poll.hasSelectedChoices || poll.allow_revotes;
+
+  if (canVote && canChangeVote) controls.push(0);
+  if (poll.is_public || poll.acl.can_see_votes) controls.push(1);
+  if (poll.acl.can_edit) controls.push(2);
+  if (poll.acl.can_delete) controls.push(3);
 
   return (
-    <ul className="list-unstyled list-inline poll-options">
+    <div className="row poll-options">
       <ChangeVote
-        isPollOver={props.isPollOver}
-        poll={props.poll}
-        showVoting={props.showVoting}
+        controls={controls}
+        isPollOver={isPollOver}
+        poll={poll}
+        showVoting={showVoting}
       />
-      <SeeVotes poll={props.poll} />
+      <SeeVotes
+        controls={controls}
+        poll={poll}
+      />
       <Edit
-        poll={props.poll}
-        thread={props.thread}
+        controls={controls}
+        poll={poll}
+        thread={thread}
       />
-      <Delete poll={props.poll} />
-    </ul>
+      <Delete
+        controls={controls}
+        poll={poll}
+      />
+    </div>
   );
 }
 
@@ -39,6 +59,20 @@ export function isVisible(isPollOver, acl, poll) {
   );
 }
 
+export function getClassName(controls, control) {
+  let className = 'col-xs-6';
+
+  if (controls.length === 1) {
+    className = 'col-xs-12';
+  }
+
+  if (controls.length === 3 && controls[0] === control) {
+    className = 'col-xs-12';
+  }
+
+  return className + ' col-sm-3 col-md-2';
+}
+
 export function ChangeVote(props) {
   const canVote = props.poll.acl.can_vote;
   const canChangeVote = !props.poll.hasSelectedChoices || props.poll.allow_revotes;
@@ -46,15 +80,15 @@ export function ChangeVote(props) {
   if (!(canVote && canChangeVote)) return null;
 
   return (
-    <li>
+    <div className={getClassName(props.controls, 0)}>
       <button
-        className="btn btn-default"
+        className="btn btn-default btn-block btn-sm"
         disabled={props.poll.isBusy}
         onClick={props.showVoting}
       >
         {gettext("Vote")}
       </button>
-    </li>
+    </div>
   );
 }
 
@@ -70,15 +104,15 @@ export class SeeVotes extends React.Component {
     if (!seeVotes) return null;
 
     return (
-      <li>
+      <div className={getClassName(this.props.controls, 1)}>
         <button
-          className="btn btn-default"
+          className="btn btn-default btn-block btn-sm"
           disabled={this.props.poll.isBusy}
           onClick={this.onClick}
         >
           {gettext("See votes")}
         </button>
-      </li>
+      </div>
     );
   }
 }
@@ -86,11 +120,12 @@ export class SeeVotes extends React.Component {
 export class Edit extends React.Component {
   onClick = () => {
     posting.open({
+      submit: this.props.poll.api.index,
+
       thread: this.props.thread,
       poll: this.props.poll,
-      config: {
-        mode: 'POLL'
-      }
+
+      mode: 'POLL'
     });
   };
 
@@ -98,15 +133,15 @@ export class Edit extends React.Component {
     if (!this.props.poll.acl.can_edit) return null;
 
     return (
-      <li>
+      <div className={getClassName(this.props.controls, 2)}>
         <button
-          className="btn btn-default"
+          className="btn btn-default btn-block btn-sm"
           disabled={this.props.poll.isBusy}
           onClick={this.onClick}
         >
           {gettext("Edit")}
         </button>
-      </li>
+      </div>
     );
   }
 }
@@ -114,12 +149,12 @@ export class Edit extends React.Component {
 export class Delete extends React.Component {
   onClick = () => {
     const deletePoll = confirm(gettext("Are you sure you want to delete this poll? This action is not reversible."));
-    if (deletePoll) {
-      store.dispatch(poll.busy());
+    if (!deletePoll) return false;
 
-      ajax.delete(this.props.poll.api.index).then(
-        this.handleSuccess, this.handleError);
-    }
+    store.dispatch(poll.busy());
+
+    ajax.delete(this.props.poll.api.index).then(
+      this.handleSuccess, this.handleError);
   };
 
   handleSuccess = (newThreadAcl) => {
@@ -137,15 +172,15 @@ export class Delete extends React.Component {
     if (!this.props.poll.acl.can_delete) return null;
 
     return (
-      <li>
+      <div className={getClassName(this.props.controls, 3)}>
         <button
-          className="btn btn-default"
+          className="btn btn-default btn-block btn-sm"
           disabled={this.props.poll.isBusy}
           onClick={this.onClick}
         >
           {gettext("Delete")}
         </button>
-      </li>
+      </div>
     );
   }
 }

@@ -59,4 +59,12 @@
 
 .poll-options {
   margin-bottom: 0px;
+  
+  @media screen and (max-width: @screen-xs-max) {
+    margin-top: @padding-base-vertical * -1;
+
+    .btn {
+      margin: @padding-base-vertical 0px;
+    }
+  }
 }

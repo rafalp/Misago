@@ -37,17 +37,23 @@ export default class extends React.Component {
 
   render() {
     /* jshint ignore:start */
-    return <button type="button"
-                   onClick={this.toggle}
-                   className={this.getClassName()}
-                   id={this.props.id || null}
-                   aria-describedby={this.props['aria-describedby'] || null}
-                   disabled={this.props.disabled || false}>
-      <span className="material-icon">
-        {this.getIcon()}
-      </span>
-      {this.getLabel()}
-    </button>;
+    return (
+      <button
+        type="button"
+        onClick={this.toggle}
+        className={this.getClassName()}
+        id={this.props.id || null}
+        aria-describedby={this.props['aria-describedby'] || null}
+        disabled={this.props.disabled || false}
+      >
+        <span className="material-icon">
+          {this.getIcon()}
+        </span>
+        <span className="btn-text">
+          {this.getLabel()}
+        </span>
+      </button>
+    );
     /* jshint ignore:end */
   }
 }

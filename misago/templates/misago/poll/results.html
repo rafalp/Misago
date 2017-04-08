@@ -48,35 +48,35 @@
   </ul>
 
   {% if poll.acl.can_vote or poll.acl.can_see_votes or poll.acl.can_edit or poll.acl.can_delete %}
-    <ul class="list-unstyled list-inline poll-options">
+    <div class="row poll-options">
       {% if poll.acl.can_vote %}
-        <li>
-          <button class="btn btn-default" disabled>
+        <div class="col-xs-6 col-sm-4 col-md-2">
+          <button class="btn btn-default btn-block btn-sm" disabled>
             {% trans "Vote" %}
           </button>
-        </li>
+        </div>
       {% endif %}
       {% if poll.acl.can_see_votes %}
-        <li>
-          <button class="btn btn-default" disabled>
+        <div class="col-xs-6 col-sm-4 col-md-2">
+          <button class="btn btn-default btn-block btn-sm" disabled>
             {% trans "See votes" %}
           </button>
-        </li>
+        </div>
       {% endif %}
       {% if poll.acl.can_see_votes %}
-        <li>
-          <button class="btn btn-default" disabled>
+        <div class="col-xs-6 col-sm-4 col-md-2">
+          <button class="btn btn-default btn-block btn-sm" disabled>
             {% trans "Edit" %}
           </button>
-        </li>
+        </div>
       {% endif %}
       {% if poll.acl.can_see_votes %}
-        <li>
-          <button class="btn btn-default" disabled>
+        <div class="col-xs-6 col-sm-4 col-md-2">
+          <button class="btn btn-default btn-block btn-sm" disabled>
             {% trans "Delete" %}
           </button>
-        </li>
+        </div>
       {% endif %}
-    </ul>
+    </div>
   {% endif %}
 </div>

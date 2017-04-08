@@ -83,13 +83,13 @@ export function ModalBody(props) {
         message={props.error}
       />
     );
-  } else {
-    return (
-      <ChoicesList
-        data={props.data}
-      />
-    );
   }
+
+  return (
+    <ChoicesList
+      data={props.data}
+    />
+  );
 }
 
 export function ChoicesList(props) {
@@ -143,7 +143,7 @@ export function VotesList(props) {
       {props.voters.map((user) => {
         return (
           <Voter
-            key={user.slug}
+            key={user.username}
             {...user}
           />
         );

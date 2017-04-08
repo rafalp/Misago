@@ -40,11 +40,17 @@
 
   </div>
   <div class="panel-footer">
-    <button class="btn btn-primary" disabled>
-      {% trans "Save your vote" %}
-    </button>
-    <button class="btn btn-default" disabled>
-      {% trans "See results" %}
-    </button>
+    <div class="row">
+      <div class="col-xs-6 col-sm-4 col-md-2">
+        <button class="btn btn-primary btn-block btn-sm" disabled>
+          {% trans "Save your vote" %}
+        </button>
+      </div>
+      <div class="col-xs-6 col-sm-4 col-md-2">
+        <button class="btn btn-default btn-block btn-sm" disabled>
+          {% trans "See results" %}
+        </button>
+      </div>
+    </div>
   </div>
 </form>

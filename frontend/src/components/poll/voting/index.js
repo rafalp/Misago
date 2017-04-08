@@ -120,21 +120,26 @@ export default class extends Form {
             />
           </div>
           <div className="panel-footer">
-            <Button
-              className="btn-primary"
-              loading={this.state.isLoading}
-            >
-              {gettext("Save your vote")}
-            </Button>
-            &nbsp;
-            <button
-              className="btn btn-default"
-              disabled={this.state.isLoading}
-              onClick={this.props.showResults}
-              type="button"
-            >
-              {gettext("See results")}
-            </button>
+            <div className="row">
+              <div className="col-xs-6 col-sm-4 col-md-2">
+                <Button
+                  className="btn-primary btn-block btn-sm"
+                  loading={this.state.isLoading}
+                >
+                  {gettext("Save your vote")}
+                </Button>
+              </div>
+              <div className="col-xs-6 col-sm-4 col-md-2">
+                <button
+                  className="btn btn-default btn-block btn-sm"
+                  disabled={this.state.isLoading}
+                  onClick={this.props.showResults}
+                  type="button"
+                >
+                  {gettext("See results")}
+                </button>
+              </div>
+            </div>
           </div>
         </form>
       </div>
