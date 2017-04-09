@@ -106,7 +106,7 @@ export default class extends Form {
                   <div className="row xs-margin-top-half sm-margin-top-no md-margin-top-no">
                     <div className="col-xs-6">
                       <button
-                        className="btn btn-success btn-block"
+                        className="btn btn-success btn-block btn-outline"
                         disabled={this.state.isLoading}
                         title={gettext("Change title")}
                       >
@@ -115,7 +115,7 @@ export default class extends Form {
                     </div>
                     <div className="col-xs-6">
                       <button
-                        className="btn btn-default btn-block"
+                        className="btn btn-default btn-block btn-outline"
                         disabled={this.state.isLoading}
                         onClick={this.onCancel}
                         title={gettext("Cancel")}
@@ -144,10 +144,10 @@ export default class extends Form {
                 </h1>
               </div>
               <div className={showModeration ? "col-sm-3 col-md-4" : "col-sm-3 col-md-2"}>
-                <div className="row sm-margin-top md-margin-top-no">
+                <div className="row xs-margin-top sm-margin-top md-margin-top-no">
                   <div className="col-xs-6">
                     <button
-                      className="btn btn-default btn-block"
+                      className="btn btn-default btn-block btn-outline"
                       onClick={this.onEdit}
                       title={gettext("Edit title")}
                       type="button"
@@ -180,7 +180,7 @@ export default class extends Form {
                 </h1>
               </div>
               <div className="col-sm-3 col-md-2">
-                <div className="row sm-margin-top md-margin-top-no">
+                <div className="row xs-margin-top sm-margin-top md-margin-top-no">
                   <Moderation
                     isSingle={true}
                     {...this.props}
@@ -192,17 +192,17 @@ export default class extends Form {
           <Stats thread={thread} />
         </div>
       );
-    } else {
-      return (
-        <div className="page-header with-stats with-breadcrumbs">
-          <Breadcrumbs path={thread.path} />
-          <div className="container">
-            <h1>{thread.title}</h1>
-          </div>
-          <Stats thread={thread} />
-        </div>
-      );
     }
+
+    return (
+      <div className="page-header with-stats with-breadcrumbs">
+        <Breadcrumbs path={thread.path} />
+        <div className="container">
+          <h1>{thread.title}</h1>
+        </div>
+        <Stats thread={thread} />
+      </div>
+    );
   }
 }
 
@@ -214,7 +214,7 @@ export function Moderation(props) {
           <button
             aria-expanded="false"
             aria-haspopup="true"
-            className="btn btn-default dropdown-toggle"
+            className="btn btn-default btn-outline dropdown-toggle"
             data-toggle="dropdown"
             disabled={props.thread.isBusy}
             type="button"

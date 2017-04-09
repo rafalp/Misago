@@ -69,35 +69,37 @@ export default class extends Form {
 
   render() {
     return (
-      <div className="page-header">
-        <form onSubmit={this.handleSubmit}>
-          <div className="container">
-            <div className="row">
-              <div className="col-md-3">
-                <h1>{gettext("Search")}</h1>
-              </div>
-              <div className="col-md-7">
-                <div className="form-group">
-                  <input
-                    className="form-control"
+      <div className="page-header-bg">
+        <div className="page-header">
+          <form onSubmit={this.handleSubmit}>
+            <div className="container">
+              <div className="row">
+                <div className="col-md-3">
+                  <h1>{gettext("Search")}</h1>
+                </div>
+                <div className="col-md-7">
+                  <div className="form-group">
+                    <input
+                      className="form-control"
+                      disabled={this.props.search.isLoading || this.state.isLoading}
+                      onChange={this.onQueryChange}
+                      type="text"
+                      value={this.state.query}
+                    />
+                  </div>
+                </div>
+                <div className="col-md-2">
+                  <button
+                    className="btn btn-primary btn-block"
                     disabled={this.props.search.isLoading || this.state.isLoading}
-                    onChange={this.onQueryChange}
-                    type="text"
-                    value={this.state.query}
-                  />
+                  >
+                    {gettext("Search")}
+                  </button>
                 </div>
               </div>
-              <div className="col-md-2">
-                <button
-                  className="btn btn-primary btn-block"
-                  disabled={this.props.search.isLoading || this.state.isLoading}
-                >
-                  {gettext("Search")}
-                </button>
-              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     )
   }

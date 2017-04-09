@@ -12,40 +12,42 @@ export default class extends WithDropdown {
     /* jshint ignore:start */
     return (
       <div className="page page-users-lists">
-        <div className="page-header tabbed">
-          <div className="container">
-            <h1>{gettext("Users")}</h1>
-          </div>
-          <div className="page-tabs hidden-xs">
+        <div className="page-header-bg">
+          <div className="page-header tabbed">
             <div className="container">
+              <h1>{gettext("Users")}</h1>
+            </div>
+            <div className="page-tabs hidden-xs">
+              <div className="container">
 
-              <TabsNav
-                lists={misago.get('USERS_LISTS')}
-                baseUrl={misago.get('USERS_LIST_URL')}
-              />
+                <TabsNav
+                  lists={misago.get('USERS_LISTS')}
+                  baseUrl={misago.get('USERS_LIST_URL')}
+                />
 
+              </div>
             </div>
           </div>
-        </div>
-        <div className="page-header page-header-followup visible-xs-block">
-          <div className="container">
-            <div className="dropdown">
-              <button
-                aria-expanded="true"
-                aria-haspopup="true"
-                className="btn btn-default dropdown-toggle btn-block"
-                data-toggle="dropdown"
-                type="button"
-              >
-                <span className="material-icon">
-                  menu
-                </span>
-                {gettext("Menu")}
-              </button>
-              <CompactNav
-                lists={misago.get('USERS_LISTS')}
-                baseUrl={misago.get('USERS_LIST_URL')}
-              />
+          <div className="page-header page-header-followup visible-xs-block">
+            <div className="container">
+              <div className="dropdown">
+                <button
+                  aria-expanded="true"
+                  aria-haspopup="true"
+                  className="btn btn-default dropdown-toggle btn-block"
+                  data-toggle="dropdown"
+                  type="button"
+                >
+                  <span className="material-icon">
+                    menu
+                  </span>
+                  {gettext("Menu")}
+                </button>
+                <CompactNav
+                  lists={misago.get('USERS_LISTS')}
+                  baseUrl={misago.get('USERS_LIST_URL')}
+                />
+              </div>
             </div>
           </div>
         </div>

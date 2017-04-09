@@ -115,7 +115,9 @@ export default class extends React.Component {
   render() {
     /* jshint ignore:start */
     return <div className="page page-thread">
-      <Header {...this.props} />
+      <div className="page-header-bg">
+        <Header {...this.props} />
+      </div>
       <div className="container">
 
         <ToolbarTop

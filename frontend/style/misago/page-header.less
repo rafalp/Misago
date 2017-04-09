@@ -92,7 +92,7 @@
 // Small go back button
 .go-back-sm {
   margin-top: @line-height-computed * 0.5;
-  margin-bottom: @line-height-computed * -0.66;
+  margin-bottom: @line-height-computed * -0.33;
 
   font-size: @font-size-small;
 
@@ -145,6 +145,10 @@
     margin-bottom: 0px;
 
     font-size: @font-size-small;
+
+    li>.material-icon {
+      top: 2px;
+    }
   }
 }
 
@@ -186,7 +190,7 @@
 
 // Title edit form
 .title-edit-form {
-  margin-bottom: @line-height-computed;
+  margin-bottom: @line-height-computed / 2 + 2px;
 }
 
 

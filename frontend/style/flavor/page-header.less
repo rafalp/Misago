@@ -1,0 +1,193 @@
+//
+// Flavor Header
+// --------------------------------------------------
+
+
+// Graphic background
+.page-header {
+  background: none; // we'll use header handler for that
+  border-bottom: none;
+}
+
+.page-header-bg {
+  background-color: @page-header-bg;
+  background-position: center center;
+
+  .shadow-2dp();
+
+  @media screen and (max-width: 640px) {
+    background-image: url('../img/page-header/640.jpg');
+  }
+
+  @media screen and (min-width: 641px) and (max-width: 800px) {
+    background-image: url('../img/page-header/800.jpg');
+  }
+
+  @media screen and (min-width: 801px) and (max-width: 1280px) {
+    background-image: url('../img/page-header/1280.jpg');
+  }
+
+  @media screen and (min-width: 1281px) and (max-width: 1440px) {
+    background-image: url('../img/page-header/1440.jpg');
+  }
+
+  @media screen and (min-width: 1441px) and (max-width: 1920px) {
+    background-image: url('../img/page-header/1920.jpg');
+  }
+
+  @media screen and (min-width: 1921px) and (max-width: 2600px) {
+    background-image: url('../img/page-header/2600.jpg');
+  }
+
+  @media screen and (min-width: 2601px) and (max-width: 3000px) {
+    background-image: url('../img/page-header/3000.jpg');
+  }
+
+  @media screen and (min-width: 3001px) {
+    background-image: url('../img/page-header/4k.jpg');
+  }
+}
+
+
+// Item colors
+.page-header {
+  h1 {
+    color: @page-header-color;
+    font-weight: 400;
+    text-shadow: 0px 1px 1px @page-header-bg;
+  }
+}
+
+// Buttons
+.page-header .btn-outline {
+  background: transparent;
+
+  &.btn-default {
+    background: @page-header-btn-default-bg;
+    border-color: @page-header-btn-default-border;
+
+    color: @page-header-btn-default-color;
+
+    &:focus, &:hover {
+      background: @page-header-btn-default-hover-bg;
+      border-color: @page-header-btn-default-hover-border;
+
+      color: @page-header-btn-default-hover-color;
+    }
+
+    &:active {
+      background: @page-header-btn-default-active-bg;
+      border-color: @page-header-btn-default-active-border;
+
+      color: @page-header-btn-default-active-color;
+    }
+  }
+
+  &.btn-success {
+    background: @page-header-btn-success-bg;
+    border-color: @page-header-btn-success-border;
+
+    color: @page-header-btn-success-color;
+
+    &:focus, &:hover {
+      background: @page-header-btn-success-hover-bg;
+      border-color: @page-header-btn-success-hover-border;
+
+      color: @page-header-btn-success-hover-color;
+    }
+
+    &:active {
+      background: @page-header-btn-success-active-bg;
+      border-color: @page-header-btn-success-active-border;
+
+      color: @page-header-btn-success-active-color;
+    }
+  }
+}
+
+
+// Stats
+.header-stats {
+  color: @page-header-text-color;
+  text-shadow: 0px 1px 1px @page-header-bg;
+
+  li {
+    a, a:link, a:visited {
+      color: @page-header-link-color;
+    }
+
+    a:hover, a:focus, a:active {
+      color: @page-header-link-hover-color;
+    }
+  }
+}
+
+
+// Go back
+.page-header .go-back-sm {
+  text-shadow: 0px 1px 1px @page-header-bg;
+  
+  &, &:link, &:visited {
+    color: @page-header-text-color;
+  }
+
+  &:hover, &:focus, &:active {
+    color: @page-header-link-hover-color;
+  }
+}
+
+
+// Breadcrumbs
+.page-header .breadcrumb {
+  color: @page-header-text-color;
+  text-shadow: 0px 1px 1px @page-header-bg;
+  
+  a, a:link, a:visited {
+    color: @page-header-text-color;
+  }
+
+  a:hover, a:focus, a:active {
+    color: @page-header-link-color;
+  }
+
+  li:before {
+    color: @page-header-text-color;
+    text-shadow: 0px 1px 1px @page-header-bg;
+  }
+}
+
+
+// Header tabs
+.page-tabs {
+  background-color: fadeOut(@body-bg, 50%);
+
+  margin-top: @line-height-computed - 3px;
+
+  li a {
+    &, &:link, &:visited {
+      background-color: @page-tabs-link-bg;
+
+      color: @page-tabs-link-color;
+    }
+
+    &:hover, &:focus {
+      background-color: @page-tabs-link-hover-bg;
+
+      color: @page-tabs-link-hover-color;
+    }
+
+    &:active {
+      background-color: @page-tabs-link-focus-bg;
+
+      color: @page-tabs-link-focus-color;
+    }
+  }
+
+  li.active a {
+    &, &:link, &:active, &:visited, &:hover, &:focus {
+      background-color: @page-tabs-link-active-bg;
+
+      color: @page-tabs-link-active-color;
+    }
+  }
+}

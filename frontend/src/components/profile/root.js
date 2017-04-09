@@ -97,44 +97,46 @@ export default class extends WithDropdown {
     return (
       <div className={this.getClassName()}>
 
-        <Header
-          user={this.props.user}
-          profile={this.props.profile}
-          toggleNav={this.toggleNav}
-          toggleModeration={this.toggleModeration}
-        />
+        <div className="page-header-bg">
+          <Header
+            user={this.props.user}
+            profile={this.props.profile}
+            toggleNav={this.toggleNav}
+            toggleModeration={this.toggleModeration}
+          />
 
-        <div className="page-header page-header-followup visible-sm-block">
-          <div className="container">
-            <CompactNav
-              className="nav nav-pills"
-              pages={pages}
-              baseUrl={misago.get('PROFILE').absolute_url}
-              profile={this.props.profile}
-            />
-          </div>
-        </div>
-
-        <div className="page-header page-header-followup visible-xs-block">
-          <div className="container">
-            <div className="dropdown">
-              <button
-                aria-expanded="true"
-                aria-haspopup="true"
-                className="btn btn-default dropdown-toggle btn-block"
-                data-toggle="dropdown"
-                type="button"
-              >
-                <span className="material-icon">
-                  menu
-                </span>
-                {gettext("Menu")}
-              </button>
+          <div className="page-header page-header-followup visible-sm-block">
+            <div className="container">
               <CompactNav
+                className="nav nav-pills"
                 pages={pages}
                 baseUrl={misago.get('PROFILE').absolute_url}
                 profile={this.props.profile}
               />
+            </div>
+          </div>
+
+          <div className="page-header page-header-followup visible-xs-block">
+            <div className="container">
+              <div className="dropdown">
+                <button
+                  aria-expanded="true"
+                  aria-haspopup="true"
+                  className="btn btn-default dropdown-toggle btn-block"
+                  data-toggle="dropdown"
+                  type="button"
+                >
+                  <span className="material-icon">
+                    menu
+                  </span>
+                  {gettext("Menu")}
+                </button>
+                <CompactNav
+                  pages={pages}
+                  baseUrl={misago.get('PROFILE').absolute_url}
+                  profile={this.props.profile}
+                />
+              </div>
             </div>
           </div>
         </div>

@@ -124,17 +124,19 @@ export function LastReply(props) {
 }
 
 export default function(props) {
-  return <div className="header-stats">
-    <div className="container">
-      <ul className="list-inline">
-        <Weight thread={props.thread} />
-        <Unapproved thread={props.thread} />
-        <IsHidden thread={props.thread} />
-        <IsClosed thread={props.thread} />
-        <Replies thread={props.thread} />
-        <LastReply thread={props.thread} />
-      </ul>
+  return (
+    <div className="header-stats xs-margin-top-half">
+      <div className="container">
+        <ul className="list-inline">
+          <Weight thread={props.thread} />
+          <Unapproved thread={props.thread} />
+          <IsHidden thread={props.thread} />
+          <IsClosed thread={props.thread} />
+          <Replies thread={props.thread} />
+          <LastReply thread={props.thread} />
+        </ul>
+      </div>
     </div>
-  </div>;
+  );
 }
 /* jshint ignore:end */

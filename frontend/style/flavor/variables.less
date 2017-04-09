@@ -1,3 +1,127 @@
 //
 // Flavor Theme Variables
 // --------------------------------------------------
+
+
+//== Colors
+//
+//## Gray and brand colors for use across Bootstrap.
+
+@gray-base:              #000;
+@gray-darker:            lighten(@gray-base, 13.5%); // #222
+@gray-dark:              lighten(@gray-base, 20%);   // #333
+@gray:                   lighten(@gray-base, 33.5%); // #555
+@gray-light:             lighten(@gray-base, 46.7%); // #777
+@gray-lighter:           lighten(@gray-base, 93.5%); // #eee
+
+@brand-primary:         #536dfe;
+@brand-success:         #5cb85c;
+@brand-info:            #5bc0de;
+@brand-warning:         #f0ad4e;
+@brand-danger:          #d9534f;
+
+
+//== Scaffolding
+//
+//## Settings for some of the most global styles.
+
+//** Background color for `<body>`.
+@body-bg:               #fafafa;
+//** Global text color on `<body>`.
+@text-color:            #212121;
+
+//** Global textual link color.
+@link-color:            @brand-primary;
+//** Link hover color set via `darken()` function.
+@link-hover-color:      darken(@link-color, 15%);
+//** Link hover decoration.
+@link-hover-decoration: underline;
+
+//** Shadows
+@shadow-key-umbra-opacity: 0.2;
+@shadow-key-penumbra-opacity: 0.14;
+@shadow-ambient-shadow-opacity: 0.12;
+
+
+//== Navbar
+//
+//##
+
+// Basics of a navbar
+@navbar-default-color:             #757575;
+@navbar-default-bg:                #fff;
+
+// Navbar links
+@navbar-default-link-color:                #757575;
+@navbar-default-link-hover-color:          #424242;
+@navbar-default-link-hover-bg:             transparent;
+@navbar-default-link-active-color:         @text-color;
+@navbar-default-link-active-bg:            darken(@navbar-default-bg, 6.5%);
+@navbar-default-link-disabled-color:       #ccc;
+@navbar-default-link-disabled-bg:          transparent;
+
+// Navbar brand label
+@navbar-default-brand-color:               #7e57c2;
+@navbar-default-brand-hover-color:         #311b92;
+@navbar-default-brand-hover-bg:            transparent;
+
+
+//== Page header
+//
+//##
+
+// Basics
+//** Background
+@page-header-bg:              #131826;
+//** Border color
+@page-header-border-color:    #e0e0e0;
+
+//** Heading color
+@page-header-color:               #fff;
+
+//** Other text color
+@page-header-text-color:          #c5cae9;
+//** Link color
+@page-header-link-color:          #fff;
+//** Text color
+@page-header-link-hover-color:    #fff;
+
+//** Default btn
+@page-header-btn-default-color:            #e8eaf6;
+@page-header-btn-default-border:           #e8eaf6;
+@page-header-btn-default-bg:               fadeOut(#1a237e, 80%);
+
+@page-header-btn-default-hover-color:      #1a237e;
+@page-header-btn-default-hover-border:     #e8eaf6;
+@page-header-btn-default-hover-bg:         #e8eaf6;
+
+@page-header-btn-default-active-color:     #e8eaf6;
+@page-header-btn-default-active-border:    #3f51b5;
+@page-header-btn-default-active-bg:        #3f51b5;
+
+//** Success btn
+@page-header-btn-success-color:            #00e676;
+@page-header-btn-success-border:           #00e676;
+@page-header-btn-success-bg:               fadeOut(#1a237e, 80%);
+
+@page-header-btn-success-hover-color:      #fff;
+@page-header-btn-success-hover-border:     #00e676;
+@page-header-btn-success-hover-bg:         #00e676;
+
+@page-header-btn-success-active-color:     #fff;
+@page-header-btn-success-active-border:    #00c853;
+@page-header-btn-success-active-bg:        #00c853;
+
+
+//** Tabs bar background
+@page-tabs-link-color:      @gray-lighter;
+@page-tabs-link-bg:         transparent;
+
+@page-tabs-link-hover-color:      @gray;
+@page-tabs-link-hover-bg:         fadeOut(@body-bg, 40%);
+
+@page-tabs-link-focus-color:      @text-color;
+@page-tabs-link-focus-bg:         fadeOut(@body-bg, 25%);
+
+@page-tabs-link-active-color:     @text-color;
+@page-tabs-link-active-bg:        @body-bg;
