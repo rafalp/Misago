@@ -125,7 +125,7 @@ export function LastReply(props) {
 
 export default function(props) {
   return (
-    <div className="header-stats xs-margin-top-half">
+    <div className="header-stats">
       <div className="container">
         <ul className="list-inline">
           <Weight thread={props.thread} />

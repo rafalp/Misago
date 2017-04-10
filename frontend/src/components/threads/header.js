@@ -73,7 +73,7 @@ export default class extends React.Component {
     const parent = this.props.categories[this.props.route.category.parent];
 
     return (
-      <div className="hidden-xs col-sm-1 col-md-2 col-lg-1">
+      <div className="hidden-xs col-sm-2 col-lg-1">
         <Link
           className="btn btn-default btn-icon btn-aligned btn-go-back btn-block btn-outline"
           to={parent.absolute_url + this.props.route.list.path}
@@ -162,26 +162,18 @@ export default class extends React.Component {
     }
   }
 
-  getClassName() {
-    if (this.props.route.lists.length > 1) {
-      return 'page-header tabbed';
-    } else {
-      return 'page-header';
-    }
-  }
-
   render() {
     /* jshint ignore:start */
     let headerClassName = 'col-xs-12';
     if (this.hasGoBackButton()) {
-      headerClassName += ' col-sm-10 col-lg-11';
+      headerClassName += ' col-sm-10 col-lg-11 sm-margin-top-half';
     }
 
     const isAuthenticated = !!this.props.user.id;
 
     return (
       <div className="page-header-bg">
-        <div className={this.getClassName()}>
+        <div className="page-header page-header-tall">
           <div className="container">
             <div className="row">
               <div className={isAuthenticated ? "col-md-8" : "col-xs-12"}>
@@ -197,11 +189,10 @@ export default class extends React.Component {
                 </div>
               </div>
               {isAuthenticated && (
-                <div className="col-md-4">
-                  <div className="row xs-margin-top-half sm-margin-top-half">
+                <div className="col-md-4 xs-margin-top">
+                  <div className="row sm-margin-top">
                     <div className="col-sm-4 visible-sm-block">
                       {this.getCompactNav()}
-                      <div className="xs-margin-top sm-margin-top" />
                     </div>
                     {this.getMarkAsReadButton()}
                     {this.getStartThreadButton()}

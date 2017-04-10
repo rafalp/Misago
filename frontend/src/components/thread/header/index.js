@@ -89,10 +89,10 @@ export default class extends Form {
 
     if (this.state.isEditing) {
       return (
-        <div className="page-header with-stats with-breadcrumbs">
+        <div className="page-header">
           <Breadcrumbs path={thread.path} />
           <div className="container">
-            <div className="row xs-margin-top sm-margin-top title-edit-form">
+            <div className="row xs-margin-top title-edit-form">
               <form onSubmit={this.handleSubmit}>
                 <div className="col-sm-6 col-md-6">
                   <input
@@ -134,7 +134,7 @@ export default class extends Form {
       );
     } else if (user.id && thread.acl.can_edit) {
       return (
-        <div className="page-header with-stats with-breadcrumbs">
+        <div className="page-header">
           <Breadcrumbs path={thread.path} />
           <div className="container">
             <div className="row">
@@ -144,7 +144,7 @@ export default class extends Form {
                 </h1>
               </div>
               <div className={showModeration ? "col-sm-3 col-md-4" : "col-sm-3 col-md-2"}>
-                <div className="row xs-margin-top sm-margin-top md-margin-top-no">
+                <div className="row xs-margin-top md-margin-top-no">
                   <div className="col-xs-6">
                     <button
                       className="btn btn-default btn-block btn-outline"
@@ -170,7 +170,7 @@ export default class extends Form {
       );
     } else if (showModeration) {
       return (
-        <div className="page-header with-stats with-breadcrumbs">
+        <div className="page-header">
           <Breadcrumbs path={thread.path} />
           <div className="container">
             <div className="row">
@@ -180,7 +180,7 @@ export default class extends Form {
                 </h1>
               </div>
               <div className="col-sm-3 col-md-2">
-                <div className="row xs-margin-top sm-margin-top md-margin-top-no">
+                <div className="row xs-margin-top md-margin-top-no">
                   <Moderation
                     isSingle={true}
                     {...this.props}
@@ -195,7 +195,7 @@ export default class extends Form {
     }
 
     return (
-      <div className="page-header with-stats with-breadcrumbs">
+      <div className="page-header">
         <Breadcrumbs path={thread.path} />
         <div className="container">
           <h1>{thread.title}</h1>

@@ -13,7 +13,7 @@ export default class extends WithDropdown {
     return (
       <div className="page page-users-lists">
         <div className="page-header-bg">
-          <div className="page-header tabbed">
+          <div className="page-header">
             <div className="container">
               <h1>{gettext("Users")}</h1>
             </div>

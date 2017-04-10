@@ -32,19 +32,19 @@
 
 
 {% block page-header %}
-<div class="page-header {{ user.is_authenticated|iftrue:"tabbed" }}">
+<div class="page-header page-header-tall">
   <div class="container">
     <div class="row">
       <div class="{{ user.is_authenticated|yesno:'col-md-8,col-xs-12' }}">
         <div class="row">
-          <div class="hidden-xs col-sm-1 col-md-2 col-lg-1">
+          <div class="hidden-xs col-sm-2 col-lg-1">
             <a href="{{ category.parent.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="btn btn-default btn-icon btn-aligned btn-go-back btn-block btn-outline">
               <span class="material-icon">
                 keyboard_arrow_left
               </span>
             </a>
           </div>
-          <div class="col-xs-12 col-sm-10 col-lg-11">
+          <div class="col-xs-12 col-sm-10 col-lg-11 sm-margin-top-half">
             <a href="{{ category.parent.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="go-back-sm visible-xs-block btn-outline">
               <span class="material-icon">
                 chevron_left

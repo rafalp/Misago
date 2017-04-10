@@ -26,7 +26,7 @@
 //## Settings for some of the most global styles.
 
 //** Background color for `<body>`.
-@body-bg:               #fafafa;
+@body-bg:               #f9f9f9;
 //** Global text color on `<body>`.
 @text-color:            #212121;
 
@@ -61,8 +61,8 @@
 @navbar-default-link-disabled-bg:          transparent;
 
 // Navbar brand label
-@navbar-default-brand-color:               #7e57c2;
-@navbar-default-brand-hover-color:         #311b92;
+@navbar-default-brand-color:               #aa00ff;
+@navbar-default-brand-hover-color:         #aa00ff;
 @navbar-default-brand-hover-bg:            transparent;
 
 
@@ -72,7 +72,7 @@
 
 // Basics
 //** Background
-@page-header-bg:              #131826;
+@page-header-bg:              @gray-darker;
 //** Border color
 @page-header-border-color:    #e0e0e0;
 
@@ -80,7 +80,7 @@
 @page-header-color:               #fff;
 
 //** Other text color
-@page-header-text-color:          #c5cae9;
+@page-header-text-color:          @gray-lighter;
 //** Link color
 @page-header-link-color:          #fff;
 //** Text color
@@ -89,39 +89,38 @@
 //** Default btn
 @page-header-btn-default-color:            #e8eaf6;
 @page-header-btn-default-border:           #e8eaf6;
-@page-header-btn-default-bg:               fadeOut(#1a237e, 80%);
+@page-header-btn-default-bg:               fadeOut(@gray-darker, 50%);
 
-@page-header-btn-default-hover-color:      #1a237e;
-@page-header-btn-default-hover-border:     #e8eaf6;
-@page-header-btn-default-hover-bg:         #e8eaf6;
+@page-header-btn-default-hover-color:      @gray;
+@page-header-btn-default-hover-border:     #f5f5f5;
+@page-header-btn-default-hover-bg:         #f5f5f5;
 
-@page-header-btn-default-active-color:     #e8eaf6;
-@page-header-btn-default-active-border:    #3f51b5;
-@page-header-btn-default-active-bg:        #3f51b5;
+@page-header-btn-default-active-color:     #fff;
+@page-header-btn-default-active-border:    #651FFF;
+@page-header-btn-default-active-bg:        #651FFF;
 
 //** Success btn
 @page-header-btn-success-color:            #00e676;
 @page-header-btn-success-border:           #00e676;
-@page-header-btn-success-bg:               fadeOut(#1a237e, 80%);
+@page-header-btn-success-bg:               fadeOut(@gray-darker, 50%);
 
 @page-header-btn-success-hover-color:      #fff;
-@page-header-btn-success-hover-border:     #00e676;
-@page-header-btn-success-hover-bg:         #00e676;
+@page-header-btn-success-hover-border:     #4caf50;
+@page-header-btn-success-hover-bg:         #4caf50;
 
 @page-header-btn-success-active-color:     #fff;
-@page-header-btn-success-active-border:    #00c853;
-@page-header-btn-success-active-bg:        #00c853;
-
+@page-header-btn-success-active-border:    #2e7d32;
+@page-header-btn-success-active-bg:        #2e7d32;
 
 //** Tabs bar background
-@page-tabs-link-color:      @gray-lighter;
+@page-tabs-link-color:      darken(@gray-lighter, 25%);
 @page-tabs-link-bg:         transparent;
 
-@page-tabs-link-hover-color:      @gray;
-@page-tabs-link-hover-bg:         fadeOut(@body-bg, 40%);
+@page-tabs-link-hover-color:      @gray-lighter;
+@page-tabs-link-hover-bg:         fadeOut(@gray-darker, 60%);
 
-@page-tabs-link-focus-color:      @text-color;
-@page-tabs-link-focus-bg:         fadeOut(@body-bg, 25%);
+@page-tabs-link-focus-color:      #fff;
+@page-tabs-link-focus-bg:         #651fff;
 
 @page-tabs-link-active-color:     @text-color;
 @page-tabs-link-active-bg:        @body-bg;

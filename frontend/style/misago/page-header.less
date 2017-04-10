@@ -7,14 +7,16 @@
 .page-header {
   margin: 0px;
   margin-bottom: @line-height-computed;
+  padding: @line-height-computed 0px;
 
   h1 {
+    margin: 0px;
+
     word-wrap: break-word;
   }
 
   .btn-aligned {
     float: right;
-    margin-top: @line-height-computed + 3px;
     margin-left: 8px;
 
     &.pull-left {
@@ -23,15 +25,15 @@
     }
   }
 
-  .row .btn-aligned {
-    // just hotfix for mess in header aligments
-    margin-top: 0px;
-  }
-
   @media screen and (min-width: @screen-md-min) {
-    .container>.row {
-      margin-top: @line-height-computed * 1.25;
+    &.page-header-tall {
+       &>.container {
+        padding-top: @line-height-computed;
+        padding-bottom: @line-height-computed;
+      }
+    }
 
+    .container>.row {
       h1 {
         margin-top: -3px;
       }
@@ -47,7 +49,7 @@
 // Small displays
 @media screen and (max-width: @screen-sm-max) {
   .page-header .row .btn-aligned {
-    margin-top: @line-height-computed * 0.75;
+    margin-top: @line-height-computed / 10;
   }
 
   .container {
@@ -69,11 +71,14 @@
 
 
 // Breadcrumbs
+.page-breadcrumbs {
+  margin-bottom: @line-height-computed;
+}
+
 .page-breadcrumbs .breadcrumb {
   background: none;
-  padding-left: 0px;
-  padding-right: 0px;
-  margin-bottom: @line-height-computed * -.5;
+  margin: 0px;
+  padding: 0px;
   overflow: auto;
 }
 
@@ -91,10 +96,7 @@
 
 // Small go back button
 .go-back-sm {
-  margin-top: @line-height-computed * 0.5;
-  margin-bottom: @line-height-computed * -0.33;
-
-  font-size: @font-size-small;
+  margin-bottom: @line-height-computed;
 
   .material-icon {
     height: @font-size-large;
@@ -108,9 +110,21 @@
   }
 }
 
+.page-breadcrumbs .go-back-sm {
+  margin-bottom: 0px;
+}
 
 // Stats
+.header-stats {
+  margin-top: @line-height-computed;
+}
+
+.header-stats .list-inline {
+  margin-bottom: 0px;
+}
+
 .header-stats .list-inline li {
+  margin-bottom: 0px;
   margin-right: 8px;
   overflow: auto;
 
@@ -141,8 +155,6 @@
 
 @media screen and (max-width: @screen-sm-max) {
   .header-stats .list-inline {
-    margin-top: @line-height-computed / 2;
-    margin-bottom: 0px;
 
     font-size: @font-size-small;
 
@@ -154,6 +166,11 @@
 
 
 // Tabs
+.page-header .page-tabs {
+  margin-top: @line-height-computed;
+  margin-bottom: @line-height-computed * -1;
+}
+
 .page-header .page-tabs .nav {
   &>li {
     margin: 0px;
@@ -165,11 +182,6 @@
 }
 
 @media screen and (max-width: @screen-xs-max) {
-  .page-header .page-tabs {
-    margin-top: ((@line-height-computed / 2) - 1);
-    margin-bottom: ((@line-height-computed / 2) - 1) * -1;
-  }
-
   .page-header .page-tabs .container {
     padding: 0px;
     width: 100%;
@@ -178,12 +190,6 @@
       display: block;
       float: none;
     }
-  }
-}
-
-@media screen and (min-width: @screen-sm-min) {
-  .page-header.tabbed {
-    padding-bottom: 0px;
   }
 }
 

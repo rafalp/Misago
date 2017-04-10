@@ -1,5 +1,5 @@
 {% extends "misago/threadslist/base.html" %}
-{% load i18n misago_shorthands %}
+{% load i18n %}
 
 
 {% block title %}
@@ -31,7 +31,7 @@
 
 
 {% block page-header %}
-<div class="page-header {{ user.is_authenticated|iftrue:"tabbed" }}">
+<div class="page-header page-header-tall">
   <div class="container">
     <div class="row">
       <div class="{{ user.is_authenticated|yesno:'col-md-8,col-xs-12' }}">

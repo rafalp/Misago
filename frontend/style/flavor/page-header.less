@@ -65,12 +65,14 @@
     border-color: @page-header-btn-default-border;
 
     color: @page-header-btn-default-color;
+    text-shadow: 0px 1px 1px @page-header-bg;
 
     &:focus, &:hover {
       background: @page-header-btn-default-hover-bg;
       border-color: @page-header-btn-default-hover-border;
 
       color: @page-header-btn-default-hover-color;
+      text-shadow: none;
     }
 
     &:active {
@@ -78,6 +80,7 @@
       border-color: @page-header-btn-default-active-border;
 
       color: @page-header-btn-default-active-color;
+      text-shadow: none;
     }
   }
 
@@ -86,12 +89,14 @@
     border-color: @page-header-btn-success-border;
 
     color: @page-header-btn-success-color;
+    text-shadow: 0px 1px 1px @page-header-bg;
 
     &:focus, &:hover {
       background: @page-header-btn-success-hover-bg;
       border-color: @page-header-btn-success-hover-border;
 
       color: @page-header-btn-success-hover-color;
+      text-shadow: none;
     }
 
     &:active {
@@ -99,6 +104,7 @@
       border-color: @page-header-btn-success-active-border;
 
       color: @page-header-btn-success-active-color;
+      text-shadow: none;
     }
   }
 }
@@ -157,9 +163,7 @@
 
 // Header tabs
 .page-tabs {
-  background-color: fadeOut(@body-bg, 50%);
-
-  margin-top: @line-height-computed - 3px;
+  background-color: fadeOut(@gray-darker, 60%);
 
   li a {
     &, &:link, &:visited {
