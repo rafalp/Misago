@@ -1,5 +1,5 @@
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _
+from django.utils.translation import ugettext as _
 
 from misago.core.exceptions import Banned
 

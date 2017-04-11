@@ -3,7 +3,7 @@ from hashlib import md5
 from django.http import Http404
 from django.shortcuts import redirect, render
 from django.utils.encoding import force_bytes
-from django.utils.translation import gettext as _
+from django.utils.translation import ugettext as _
 
 from misago.conf import settings
 from misago.core.cache import cache

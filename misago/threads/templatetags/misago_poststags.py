@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
 
 from django import template
-from django.utils.translation import gettext as _
-from django.utils.translation import ngettext
+from django.utils.translation import ugettext as _
+from django.utils.translation import ungettext
 
 
 register = template.Library()
@@ -30,7 +30,7 @@ def likes_label(post):
 
     formats = {'users': usernames_string, 'likes': hidden_likes}
 
-    return ngettext(
+    return ungettext(
         "%(users)s and %(likes)s other user like this.",
         "%(users)s and %(likes)s other users like this.",
         hidden_likes,
