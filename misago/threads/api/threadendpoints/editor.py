@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _
+from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
 from misago.categories import THREADS_ROOT_NAME

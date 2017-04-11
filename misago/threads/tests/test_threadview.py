@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.conf import settings
 from misago.threads import testutils
+from misago.threads.checksums import update_post_checksum
 from misago.threads.events import record_event
 from misago.threads.moderation import threads as threads_moderation
 from misago.threads.moderation import hide_post
@@ -521,3 +523,57 @@ class ThreadAnonViewTests(ThreadViewTestCase):
         self.assertContains(response, post.get_absolute_url())
         self.assertNotContains(response, hidden_event.get_absolute_url())
         self.assertNotContains(response, unapproved_post.get_absolute_url())
+
+
+class ThreadUnicodeSupportTests(ThreadViewTestCase):
+    def test_category_name(self):
+        """unicode in category name causes no showstopper"""
+        self.category.name = u'Łódź'
+        self.category.slug = 'Lodz'
+
+        self.category.save()
+
+        self.override_acl()
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+
+    def test_thread_title(self):
+        """unicode in thread title causes no showstopper"""
+        self.thread.title = u'Łódź'
+        self.thread.slug = 'Lodz'
+
+        self.thread.save()
+
+        self.override_acl()
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+
+    def test_post_content(self):
+        """unicode in thread title causes no showstopper"""
+        self.thread.first_post.original = u'Łódź'
+        self.thread.first_post.parsed = u'<p>Łódź</p>'
+
+        update_post_checksum(self.thread.first_post)
+
+        self.thread.first_post.save()
+
+        self.override_acl()
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_rank(self):
+        """unicode in user rank causes no showstopper"""
+        self.user.title = u'Łódź'
+        self.user.rank.name = u'Łódź'
+        self.user.rank.title = u'Łódź'
+
+        self.user.rank.save()
+        self.user.save()
+
+        self.override_acl()
+
+        response = self.client.get(self.thread.get_absolute_url())
+        self.assertEqual(response.status_code, 200)

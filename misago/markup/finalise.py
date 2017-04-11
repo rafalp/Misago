@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import re
 
-from django.utils.translation import gettext as _
+from django.utils.translation import ugettext as _
 
 
 HEADER_RE = re.compile(

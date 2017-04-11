@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
-from django.utils.translation import gettext as _
+from django.utils.translation import ugettext as _
 
 from misago.categories import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
 from misago.core.shortcuts import get_int_or_404

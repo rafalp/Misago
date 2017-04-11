@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http import Http404
-from django.utils.translation import gettext as _
+from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
 from misago.core.shortcuts import get_int_or_404

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from django.core.exceptions import ValidationError
-from django.utils.translation import gettext as _
+from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
 from misago.threads.models import Thread

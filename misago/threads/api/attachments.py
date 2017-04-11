@@ -3,7 +3,7 @@ from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.template.defaultfilters import filesizeformat
-from django.utils.translation import gettext as _
+from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
 from misago.threads.models import Attachment, AttachmentType
