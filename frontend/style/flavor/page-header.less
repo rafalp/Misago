@@ -6,43 +6,17 @@
 // Graphic background
 .page-header {
   background: none; // we'll use header handler for that
-  border-bottom: none;
+  border-bottom: 1px solid @page-header-border-color;
 }
 
 .page-header-bg {
   background-color: @page-header-bg;
-  background-position: center center;
+  background: url('../img/page-header.png');
 
-  @media screen and (max-width: 640px) {
-    background-image: url('../img/page-header/640.jpg');
-  }
-
-  @media screen and (min-width: 641px) and (max-width: 800px) {
-    background-image: url('../img/page-header/800.jpg');
-  }
-
-  @media screen and (min-width: 801px) and (max-width: 1280px) {
-    background-image: url('../img/page-header/1280.jpg');
-  }
-
-  @media screen and (min-width: 1281px) and (max-width: 1440px) {
-    background-image: url('../img/page-header/1440.jpg');
-  }
-
-  @media screen and (min-width: 1441px) and (max-width: 1920px) {
-    background-image: url('../img/page-header/1920.jpg');
-  }
-
-  @media screen and (min-width: 1921px) and (max-width: 2600px) {
-    background-image: url('../img/page-header/2600.jpg');
-  }
-
-  @media screen and (min-width: 2601px) and (max-width: 3000px) {
-    background-image: url('../img/page-header/3000.jpg');
-  }
-
-  @media screen and (min-width: 3001px) {
-    background-image: url('../img/page-header/4k.jpg');
+  .shadow-2dp();
+  
+  @media screen and (min-width: @screen-md-min) {
+    margin-bottom: @line-height-computed * 2;
   }
 }
 
@@ -163,23 +137,28 @@
 
 // Header tabs
 .page-tabs {
-  background-color: fadeOut(@gray-darker, 60%);
+  background-color: @page-tabs-bg;
 
   li a {
+    padding-bottom: 7px;
+
     &, &:link, &:visited {
       background-color: @page-tabs-link-bg;
+      border-bottom: 3px solid transparent;
 
       color: @page-tabs-link-color;
     }
 
     &:hover, &:focus {
       background-color: @page-tabs-link-hover-bg;
+      border-bottom: 3px solid lighten(@page-tabs-link-hover-color, 75%);
 
       color: @page-tabs-link-hover-color;
     }
 
     &:active {
       background-color: @page-tabs-link-focus-bg;
+      border-bottom: 3px solid lighten(@page-tabs-link-focus-color, 50%);
 
       color: @page-tabs-link-focus-color;
     }
@@ -188,6 +167,7 @@
   li.active a {
     &, &:link, &:active, &:visited, &:hover, &:focus {
       background-color: @page-tabs-link-active-bg;
+      border-bottom: 3px solid @page-tabs-link-active-color;
 
       color: @page-tabs-link-active-color;
     }

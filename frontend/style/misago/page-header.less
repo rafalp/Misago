@@ -4,9 +4,12 @@
 
 
 // Common styles
+.page-header-bg {
+  margin-bottom: @line-height-computed;
+}
+
 .page-header {
   margin: 0px;
-  margin-bottom: @line-height-computed;
   padding: @line-height-computed 0px;
 
   h1 {
@@ -27,10 +30,7 @@
 
   @media screen and (min-width: @screen-md-min) {
     &.page-header-tall {
-       &>.container {
-        padding-top: @line-height-computed;
-        padding-bottom: @line-height-computed;
-      }
+      padding: @line-height-computed * 2 0px;
     }
 
     .container>.row {
@@ -169,8 +169,16 @@
 .page-header .page-tabs {
   margin-top: @line-height-computed;
   margin-bottom: @line-height-computed * -1;
+
 }
 
+@media screen and (min-width: @screen-md-min) {
+  .page-header-tall .page-tabs {
+    margin-top: @line-height-computed * 2;
+    margin-bottom: @line-height-computed * -2;
+  }
+}
+ 
 .page-header .page-tabs .nav {
   &>li {
     margin: 0px;
