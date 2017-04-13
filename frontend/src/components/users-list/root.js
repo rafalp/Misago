@@ -9,13 +9,11 @@ export default class extends React.Component {
   }
 
   getPager() {
-    if (this.props.pages > 1) {
-      /* jshint ignore:start */
-      return <Pager {...this.props} />
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+    if (this.props.pages < 2) return null;
+
+    /* jshint ignore:start */
+    return <Pager {...this.props} />
+    /* jshint ignore:end */
   }
 
   getClassName() {
@@ -34,15 +32,21 @@ export default class extends React.Component {
     if (this.props.isLoaded) {
       /* jshint ignore:start */
       return batch(this.props.users, this.props.cols).map((row, r) => {
-        return <div className="row" key={r}>
-          {row.map((user) => {
-            return <div className={this.getColClassName()} key={user.id}>
-              <UserCard user={user}
-                        showStatus={this.props.showStatus}
-                        showRank={this.props.showRank} />
-            </div>;
-          })}
-        </div>;
+        return (
+            <div className="row" key={r}>
+            {row.map((user) => {
+              return (
+                <div className={this.getColClassName()} key={user.id}>
+                  <UserCard
+                    showStatus={this.props.showStatus}
+                    showRank={this.props.showRank}
+                    user={user}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        );
       });
       /* jshint ignore:end */
     } else {
@@ -56,22 +60,28 @@ export default class extends React.Component {
         }
       }
 
-      return <div className="row">
-        {row.map((className, i) => {
-          return <div className={className} key={i}>
-            <UserPreview showStatus={this.props.showStatus} />
-          </div>;
-        })}
-      </div>;
+      return (
+        <div className="row">
+          {row.map((className, i) => {
+            return (
+              <div className={className} key={i}>
+                <UserPreview showStatus={this.props.showStatus} />
+              </div>
+            );
+          })}
+        </div>
+      );
       /* jshint ignore:end */
     }
   }
 
   render() {
     /* jshint ignore:start */
-    return <div className="users-cards-list ui-ready">
-      {this.getBody()}
-    </div>;
+    return (
+      <div className="users-cards-list ui-ready">
+        {this.getBody()}
+      </div>
+    );
     /* jshint ignore:end */
   }
 }

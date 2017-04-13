@@ -12,18 +12,20 @@
 <div class="page page-user-profile{% if profile.rank.css_class %} page-user-profile-{{ profile.rank.css_class }}{% endif %}">
 
   <div class="page-header-bg">
-    {% include "misago/profile/header.html" %}
-    {% include "misago/profile/nav-sm.html" %}
+    <div class="page-header">
+      {% include "misago/profile/header.html" %}
+      {% include "misago/profile/nav-sm.html" %}
+    </div>
   </div>
 
   <div class="container">
     <div class="row">
-      <div class="col-md-3 hidden-sm">
+      <div class="col-md-3 hidden-xs hidden-sm">
 
         {% include "misago/profile/nav.html" %}
 
       </div>
-      <div class="col-md-9">
+      <div class="col-xs-12 col-md-9">
 
         {% block section %}{% endblock section %}
 

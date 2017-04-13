@@ -1,7 +1,7 @@
 import React from 'react'; // jshint ignore:line
 import { connect } from 'react-redux';
 import DropdownToggle from 'misago/components/dropdown-toggle'; // jshint ignore:line
-import { TabsNav, CompactNav } from 'misago/components/users/navs'; // jshint ignore:line
+import Nav from 'misago/components/users/nav'; // jshint ignore:line
 import ActivePosters from 'misago/components/users/active-posters/root'; // jshint ignore:line
 import Rank from 'misago/components/users/rank/root';
 import WithDropdown from 'misago/components/with-dropdown';
@@ -17,36 +17,14 @@ export default class extends WithDropdown {
             <div className="container">
               <h1>{gettext("Users")}</h1>
             </div>
-            <div className="page-tabs hidden-xs">
+            <div className="page-tabs">
               <div className="container">
 
-                <TabsNav
+                <Nav
                   lists={misago.get('USERS_LISTS')}
                   baseUrl={misago.get('USERS_LIST_URL')}
                 />
 
-              </div>
-            </div>
-          </div>
-          <div className="page-header page-header-followup visible-xs-block">
-            <div className="container">
-              <div className="dropdown">
-                <button
-                  aria-expanded="true"
-                  aria-haspopup="true"
-                  className="btn btn-default dropdown-toggle btn-block"
-                  data-toggle="dropdown"
-                  type="button"
-                >
-                  <span className="material-icon">
-                    menu
-                  </span>
-                  {gettext("Menu")}
-                </button>
-                <CompactNav
-                  lists={misago.get('USERS_LISTS')}
-                  baseUrl={misago.get('USERS_LIST_URL')}
-                />
               </div>
             </div>
           </div>

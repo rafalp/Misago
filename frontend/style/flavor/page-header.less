@@ -154,6 +154,14 @@
       border-bottom: 3px solid lighten(@page-tabs-link-hover-color, 75%);
 
       color: @page-tabs-link-hover-color;
+  
+      @media screen and (max-width: @screen-sm-max) {
+        // sticky hover on touch devices is confusing, so don.t add it
+        background-color: @page-tabs-link-bg;
+        border-bottom: 3px solid transparent;
+
+        color: @page-tabs-link-color;
+      }
     }
 
     &:active {

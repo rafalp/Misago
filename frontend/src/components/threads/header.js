@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router'; // jshint ignore:line
 import Button from 'misago/components/button'; // jshint ignore:line
 import DropdownToggle from 'misago/components/dropdown-toggle'; // jshint ignore:line
-import { CompactNav, TabsNav } from 'misago/components/threads/navs'; // jshint ignore:line
+import Nav from 'misago/components/threads/nav'; // jshint ignore:line
 import { read } from 'misago/reducers/threads'; // jshint ignore:line
 import ajax from 'misago/services/ajax'; // jshint ignore:line
 import posting from 'misago/services/posting'; // jshint ignore:line
@@ -130,38 +130,6 @@ export default class extends React.Component {
     /* jshint ignore:end */
   }
 
-  getTabsNav() {
-    if (this.props.route.lists.length > 1) {
-      /* jshint ignore:start */
-      return (
-        <TabsNav
-          baseUrl={this.props.route.category.absolute_url}
-          list={this.props.route.list}
-          lists={this.props.route.lists}
-        />
-      );
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
-  }
-
-  getCompactNav() {
-    if (this.props.route.lists.length > 1) {
-      /* jshint ignore:start */
-      return (
-        <CompactNav
-          baseUrl={this.props.route.category.absolute_url}
-          list={this.props.route.list}
-          lists={this.props.route.lists}
-        />
-      );
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
-  }
-
   render() {
     /* jshint ignore:start */
     let headerClassName = 'col-xs-12';
@@ -191,9 +159,6 @@ export default class extends React.Component {
               {isAuthenticated && (
                 <div className="col-md-4 xs-margin-top">
                   <div className="row sm-margin-top">
-                    <div className="col-sm-4 visible-sm-block">
-                      {this.getCompactNav()}
-                    </div>
                     {this.getMarkAsReadButton()}
                     {this.getStartThreadButton()}
                   </div>
@@ -202,14 +167,11 @@ export default class extends React.Component {
             </div>
           </div>
 
-          {this.getTabsNav()}
-
-          {isAuthenticated && (
-            <div className="container xs-margin-top visible-xs-block">
-              {this.getCompactNav()}
-              <div className="xs-margin-top-half" />
-            </div>
-          )}
+          <Nav
+            baseUrl={this.props.route.category.absolute_url}
+            list={this.props.route.list}
+            lists={this.props.route.lists}
+          />
 
         </div>
       </div>
