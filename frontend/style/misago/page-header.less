@@ -10,7 +10,7 @@
 
 .page-header {
   margin: 0px;
-  padding: @line-height-computed 0px;
+  padding: @line-height-computed * 2 0px;
 
   h1 {
     margin: 0px;
@@ -29,10 +29,6 @@
   }
 
   @media screen and (min-width: @screen-md-min) {
-    &.page-header-tall {
-      padding: @line-height-computed * 2 0px;
-    }
-
     .container>.row {
       h1 {
         margin-top: -3px;
@@ -78,6 +74,7 @@
 .page-breadcrumbs .breadcrumb {
   background: none;
   margin: 0px;
+  margin-top: @line-height-computed * -1;
   padding: 0px;
   overflow: auto;
 }
@@ -96,6 +93,7 @@
 
 // Small go back button
 .go-back-sm {
+  margin-top: @line-height-computed * -1;
   margin-bottom: @line-height-computed;
 
   .material-icon {
@@ -117,6 +115,7 @@
 // Stats
 .header-stats {
   margin-top: @line-height-computed;
+  margin-bottom: @line-height-computed * -1;
 }
 
 .header-stats .list-inline {
@@ -155,7 +154,6 @@
 
 @media screen and (max-width: @screen-sm-max) {
   .header-stats .list-inline {
-
     font-size: @font-size-small;
 
     li>.material-icon {
@@ -168,15 +166,8 @@
 // Tabs
 .page-header .page-tabs {
   margin-top: @line-height-computed;
-  margin-bottom: @line-height-computed * -1;
+  margin-bottom: @line-height-computed * -2;
 
-}
-
-@media screen and (min-width: @screen-md-min) {
-  .page-header-tall .page-tabs {
-    margin-top: @line-height-computed * 2;
-    margin-bottom: @line-height-computed * -2;
-  }
 }
  
 .page-header .page-tabs .nav {

@@ -92,7 +92,7 @@ export default class extends React.Component {
 
     /* jshint ignore:start */
     return (
-      <div className="col-xs-6 col-sm-4 col-md-6">
+      <div className="col-xs-6">
         <Button
           className="btn-success btn-block btn-outline"
           onClick={this.startThread}
@@ -113,7 +113,7 @@ export default class extends React.Component {
 
     /* jshint ignore:start */
     return (
-      <div className="col-xs-6 col-sm-4 col-md-6">
+      <div className="col-xs-6">
         <Button
           className="btn-default btn-block btn-outline"
           onClick={this.markAsRead}
@@ -141,7 +141,7 @@ export default class extends React.Component {
 
     return (
       <div className="page-header-bg">
-        <div className="page-header page-header-tall">
+        <div className="page-header">
           <div className="container">
             <div className="row">
               <div className={isAuthenticated ? "col-md-8" : "col-xs-12"}>
