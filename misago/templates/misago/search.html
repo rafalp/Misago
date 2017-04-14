@@ -8,21 +8,25 @@
 {% block content %}
 <div class="page page-search">
   <div class="page-header-bg">
-    <div class="page-header">
+    <div class="page-header page-search-form">
       <div class="container">
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-xs-12 col-md-3">
             <h1>{% trans "Search" %}</h1>
           </div>
-          <div class="col-md-7">
-            <div class="form-group">
-              <input class="form-control" type="text" disabled/>
+          <div class="col-xs-12 col-md-9">
+            <div class="row xs-margin-top sm-margin-top">
+              <div class="col-xs-12 col-sm-8 col-md-9">
+                <div class="form-group">
+                  <input class="form-control" type="text" disabled/>
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-4 col-md-3">
+                <button class="btn btn-success btn-block btn-outline" disabled>
+                  {% trans "Search" %}
+                </button>
+              </div>
             </div>
-          </div>
-          <div class="col-md-2">
-            <button class="btn btn-primary btn-block" disabled>
-              {% trans "Search" %}
-            </button>
           </div>
         </div>
       </div>
@@ -31,7 +35,7 @@
 
   <div class="container">
 
-    <p class="lead text-center">
+    <p class="lead text-center xs-margin-top sm-margin-top">
       {% trans "Loading search..." %}
     </p>
 

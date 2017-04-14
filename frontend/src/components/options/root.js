@@ -20,34 +20,10 @@ export default class extends WithDropdown {
               <h1>{gettext("Change your options")}</h1>
 
             </div>
-          </div>
-          <div className="page-header page-header-followup visible-sm-block">
-            <div className="container">
-
-              <CompactNav
-                className="nav nav-pills"
-                baseUrl={misago.get('USERCP_URL')}
-                options={misago.get('USER_OPTIONS')}
-              />
-
-            </div>
-          </div>
-          <div className="page-header page-header-followup visible-xs-block">
-            <div className="container">
-              <div className="dropdown">
-                <button
-                  aria-expanded="true"
-                  aria-haspopup="true"
-                  className="btn btn-default dropdown-toggle btn-block"
-                  data-toggle="dropdown"
-                  type="button"
-                >
-                  <span className="material-icon">
-                    menu
-                  </span>
-                  {gettext("Menu")}
-                </button>
+            <div className="page-tabs visible-xs-block visible-sm-block">
+              <div className="container">
                 <CompactNav
+                  className="nav nav-pills"
                   baseUrl={misago.get('USERCP_URL')}
                   options={misago.get('USER_OPTIONS')}
                 />

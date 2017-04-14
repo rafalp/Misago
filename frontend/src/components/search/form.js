@@ -70,31 +70,35 @@ export default class extends Form {
   render() {
     return (
       <div className="page-header-bg">
-        <div className="page-header">
+        <div className="page-header page-search-form">
           <form onSubmit={this.handleSubmit}>
             <div className="container">
               <div className="row">
-                <div className="col-md-3">
+                <div className="col-xs-12 col-md-3">
                   <h1>{gettext("Search")}</h1>
                 </div>
-                <div className="col-md-7">
-                  <div className="form-group">
-                    <input
-                      className="form-control"
-                      disabled={this.props.search.isLoading || this.state.isLoading}
-                      onChange={this.onQueryChange}
-                      type="text"
-                      value={this.state.query}
-                    />
+                <div className="col-xs-12 col-md-9">
+                  <div className="row xs-margin-top sm-margin-top">
+                    <div className="col-xs-12 col-sm-8 col-md-9">
+                      <div className="form-group">
+                        <input
+                          className="form-control"
+                          disabled={this.props.search.isLoading || this.state.isLoading}
+                          onChange={this.onQueryChange}
+                          type="text"
+                          value={this.state.query}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-xs-12 col-sm-4 col-md-3">
+                      <button
+                        className="btn btn-success btn-block btn-outline"
+                        disabled={this.props.search.isLoading || this.state.isLoading}
+                      >
+                        {gettext("Search")}
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <div className="col-md-2">
-                  <button
-                    className="btn btn-primary btn-block"
-                    disabled={this.props.search.isLoading || this.state.isLoading}
-                  >
-                    {gettext("Search")}
-                  </button>
                 </div>
               </div>
             </div>
