@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-05 21:02+0200\n"
+"POT-Creation-Date: 2017-04-17 00:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -157,7 +157,7 @@ msgid "Failed to connect to GitHub API. Try again later."
 msgstr ""
 
 #: categories/admin.py:47 templates/misago/categories/base.html:7
-#: templates/misago/categories/header.html:11 templates/misago/navbar.html:23
+#: templates/misago/categories/header.html:12 templates/misago/navbar.html:23
 #: templates/misago/navbar.html:29
 msgid "Categories"
 msgstr ""
@@ -681,7 +681,7 @@ msgid "You don't have permission to search site."
 msgstr ""
 
 #: search/permissions.py:10 templates/misago/navbar.html:46
-#: templates/misago/search.html:14 templates/misago/search.html:23
+#: templates/misago/search.html:15 templates/misago/search.html:26
 msgid "Search"
 msgstr ""
 
@@ -732,31 +732,31 @@ msgid "Can't activate account."
 msgstr ""
 
 #: templates/misago/activation/request.html:5
-#: templates/misago/activation/request.html:12
+#: templates/misago/activation/request.html:13
 msgid "Request activation link"
 msgstr ""
 
-#: templates/misago/activation/request.html:22
+#: templates/misago/activation/request.html:24
 msgid ""
 "Site administrator may impose requirement on newly regitered accounts to be "
 "activated before users will be able to sign in."
 msgstr ""
 
-#: templates/misago/activation/request.html:23
+#: templates/misago/activation/request.html:25
 msgid ""
 "Depending on time of registration, you will be able activate your account by "
 "clicking special activation link. This link will be valid only for your "
 "browser, for seven days or until your account is activated."
 msgstr ""
 
-#: templates/misago/activation/request.html:25
-#: templates/misago/forgottenpassword/request.html:25
+#: templates/misago/activation/request.html:27
+#: templates/misago/forgottenpassword/request.html:27
 msgid ""
 "To receive this link, enter your account's e-mail addres in form and press "
 "the \"Send link\" button."
 msgstr ""
 
-#: templates/misago/activation/request.html:43
+#: templates/misago/activation/request.html:45
 msgid "To request new activation link please enable JavaScript."
 msgstr ""
 
@@ -1252,7 +1252,7 @@ msgstr ""
 
 #: templates/misago/admin/index.html:85 templates/misago/navbar.html:40
 #: templates/misago/userslists/base.html:5
-#: templates/misago/userslists/base.html:13 users/admin.py:70
+#: templates/misago/userslists/base.html:14 users/admin.py:70
 #: users/migrations/0002_users_settings.py:16
 #: users/migrations/0006_update_settings.py:17 users/search.py:18
 msgid "Users"
@@ -1807,7 +1807,7 @@ msgstr ""
 #: templates/misago/emails/register/inactive.txt:30
 msgid ""
 "Once your account is activated, you can always sign in to it using the form "
-"velow:"
+"below:"
 msgstr ""
 
 #: templates/misago/emails/thread/reply.html:9
@@ -1891,31 +1891,31 @@ msgid "Can't change forgotten password."
 msgstr ""
 
 #: templates/misago/forgottenpassword/form.html:5
-#: templates/misago/forgottenpassword/form.html:12
+#: templates/misago/forgottenpassword/form.html:13
 #: templates/misago/forgottenpassword/request.html:5
-#: templates/misago/forgottenpassword/request.html:12
+#: templates/misago/forgottenpassword/request.html:13
 msgid "Change forgotten password"
 msgstr ""
 
-#: templates/misago/forgottenpassword/form.html:30
+#: templates/misago/forgottenpassword/form.html:32
 msgid "To reset your password please enable JavaScript."
 msgstr ""
 
-#: templates/misago/forgottenpassword/request.html:22
+#: templates/misago/forgottenpassword/request.html:24
 msgid ""
 "Because user passwords are processed in an irreversible way before being "
 "saved to database, it is not possible for us to simply send you your "
 "password."
 msgstr ""
 
-#: templates/misago/forgottenpassword/request.html:23
+#: templates/misago/forgottenpassword/request.html:25
 msgid ""
 "Instead, you can change your password using special secure form that will be "
 "available by special link valid only for your browser, for seven days or "
 "until your password is changed."
 msgstr ""
 
-#: templates/misago/forgottenpassword/request.html:43
+#: templates/misago/forgottenpassword/request.html:45
 msgid "To request new password reset link please enable JavaScript."
 msgstr ""
 
@@ -2016,11 +2016,11 @@ msgstr ""
 msgid "Votes are final."
 msgstr ""
 
-#: templates/misago/poll/voting.html:44
+#: templates/misago/poll/voting.html:46
 msgid "Save your vote"
 msgstr ""
 
-#: templates/misago/poll/voting.html:47
+#: templates/misago/poll/voting.html:51
 msgid "See results"
 msgstr ""
 
@@ -2141,11 +2141,11 @@ msgstr ""
 msgid "%(username)s is not following any users."
 msgstr ""
 
-#: templates/misago/profile/header.html:7
+#: templates/misago/profile/header.html:6
 msgid "This user's account has been disabled by administrator."
 msgstr ""
 
-#: templates/misago/profile/header.html:43
+#: templates/misago/profile/header.html:42
 #, python-format
 msgid "Member since %(joined_on)s"
 msgstr ""
@@ -2227,7 +2227,7 @@ msgstr ""
 msgid "Search site"
 msgstr ""
 
-#: templates/misago/search.html:33
+#: templates/misago/search.html:39
 msgid "Loading search..."
 msgstr ""
 
@@ -2381,7 +2381,7 @@ msgstr ""
 
 #: templates/misago/thread/posts/post/header.html:55
 #: templates/misago/thread/toolbar-top.html:7
-#: templates/misago/threadslist/tabs.html:19
+#: templates/misago/threadslist/tabs.html:17
 msgid "New"
 msgstr ""
 
@@ -2401,7 +2401,7 @@ msgstr ""
 
 #: templates/misago/thread/stats.html:30
 #: templates/misago/thread/toolbar-top.html:14
-#: templates/misago/threadslist/tabs.html:38
+#: templates/misago/threadslist/tabs.html:33
 #: templates/misago/threadslist/thread.html:42
 msgid "Unapproved"
 msgstr ""
@@ -2446,30 +2446,30 @@ msgstr ""
 msgid "Go to last post"
 msgstr ""
 
-#: templates/misago/threadslist/base.html:59
+#: templates/misago/threadslist/base.html:61
 msgid "There are no threads in this category."
 msgstr ""
 
-#: templates/misago/threadslist/base.html:61
+#: templates/misago/threadslist/base.html:63
 msgid "There are no threads on this forum... yet!"
 msgstr ""
 
-#: templates/misago/threadslist/base.html:65
+#: templates/misago/threadslist/base.html:67
 #: templates/misago/threadslist/private_threads.html:67
 msgid "Why not start one yourself?"
 msgstr ""
 
-#: templates/misago/threadslist/base.html:68
+#: templates/misago/threadslist/base.html:70
 #: templates/misago/threadslist/private_threads.html:70
 msgid "No threads matching specified criteria were found."
 msgstr ""
 
-#: templates/misago/threadslist/base.html:83
-#: templates/misago/threadslist/base.html:91
+#: templates/misago/threadslist/base.html:85
+#: templates/misago/threadslist/base.html:93
 msgid "Previous page"
 msgstr ""
 
-#: templates/misago/threadslist/base.html:100
+#: templates/misago/threadslist/base.html:102
 msgid "Next page"
 msgstr ""
 
@@ -2487,41 +2487,16 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: templates/misago/threadslist/tabs.html:8 threads/permissions/polls.py:38
-#: threads/permissions/threads.py:90 threads/permissions/threads.py:104
-msgid "All threads"
-msgstr ""
-
-#: templates/misago/threadslist/tabs.html:13
+#: templates/misago/threadslist/tabs.html:12
 msgid "My"
 msgstr ""
 
-#: templates/misago/threadslist/tabs.html:14
-msgid "My threads"
-msgstr ""
-
-#: templates/misago/threadslist/tabs.html:20 threads/viewmodels/threads.py:27
-msgid "New threads"
-msgstr ""
-
-#: templates/misago/threadslist/tabs.html:25
+#: templates/misago/threadslist/tabs.html:22
 msgid "Unread"
 msgstr ""
 
-#: templates/misago/threadslist/tabs.html:26 threads/viewmodels/threads.py:28
-msgid "Unread threads"
-msgstr ""
-
-#: templates/misago/threadslist/tabs.html:31
+#: templates/misago/threadslist/tabs.html:27
 msgid "Subscribed"
-msgstr ""
-
-#: templates/misago/threadslist/tabs.html:32 threads/viewmodels/threads.py:29
-msgid "Subscribed threads"
-msgstr ""
-
-#: templates/misago/threadslist/tabs.html:39 threads/viewmodels/threads.py:30
-msgid "Unapproved content"
 msgstr ""
 
 #: templates/misago/threadslist/thread.html:13
@@ -2665,7 +2640,7 @@ msgstr ""
 msgid "You can't move posts in this thread."
 msgstr ""
 
-#: threads/api/postendpoints/move.py:50 threads/api/threadendpoints/merge.py:36
+#: threads/api/postendpoints/move.py:50 threads/api/threadendpoints/merge.py:35
 msgid "This is not a valid thread link."
 msgstr ""
 
@@ -2673,7 +2648,7 @@ msgstr ""
 msgid "Thread to move posts to is same as current one."
 msgstr ""
 
-#: threads/api/postendpoints/move.py:59 threads/api/threadendpoints/merge.py:54
+#: threads/api/postendpoints/move.py:59 threads/api/threadendpoints/merge.py:53
 msgid ""
 "The thread you have entered link to doesn't exist or you don't have "
 "permission to see it."
@@ -2831,44 +2806,44 @@ msgid ""
 "No categories that allow new threads are available to you at the moment."
 msgstr ""
 
-#: threads/api/threadendpoints/merge.py:32
-#: threads/api/threadendpoints/merge.py:111
+#: threads/api/threadendpoints/merge.py:31
+#: threads/api/threadendpoints/merge.py:110
 msgid "You don't have permission to merge this thread with others."
 msgstr ""
 
-#: threads/api/threadendpoints/merge.py:38
+#: threads/api/threadendpoints/merge.py:37
 msgid "You can't merge thread with itself."
 msgstr ""
 
-#: threads/api/threadendpoints/merge.py:43
+#: threads/api/threadendpoints/merge.py:42
 msgid "You can't merge this thread into thread you can't reply."
 msgstr ""
 
-#: threads/api/threadendpoints/merge.py:46
+#: threads/api/threadendpoints/merge.py:45
 msgid "You don't have permission to merge this thread with current one."
 msgstr ""
 
-#: threads/api/threadendpoints/merge.py:76
-#: threads/api/threadendpoints/merge.py:128
+#: threads/api/threadendpoints/merge.py:75
+#: threads/api/threadendpoints/merge.py:127
 msgid "Invalid choice."
 msgstr ""
 
-#: threads/api/threadendpoints/merge.py:144
+#: threads/api/threadendpoints/merge.py:143
 msgid "One or more thread ids received were invalid."
 msgstr ""
 
-#: threads/api/threadendpoints/merge.py:147
+#: threads/api/threadendpoints/merge.py:146
 msgid "You have to select at least two threads to merge."
 msgstr ""
 
-#: threads/api/threadendpoints/merge.py:150
+#: threads/api/threadendpoints/merge.py:149
 #, python-format
 msgid "No more than %(limit)s thread can be merged at single time."
 msgid_plural "No more than %(limit)s threads can be merged at single time."
 msgstr[0] ""
 msgstr[1] ""
 
-#: threads/api/threadendpoints/merge.py:170
+#: threads/api/threadendpoints/merge.py:169
 msgid "One or more threads to merge could not be found."
 msgstr ""
 
@@ -3175,6 +3150,11 @@ msgstr ""
 
 #: threads/permissions/polls.py:37 threads/permissions/threads.py:103
 msgid "Own threads"
+msgstr ""
+
+#: threads/permissions/polls.py:38 threads/permissions/threads.py:90
+#: threads/permissions/threads.py:104
+msgid "All threads"
 msgstr ""
 
 #: threads/permissions/polls.py:42
@@ -4028,6 +4008,22 @@ msgstr[1] ""
 
 #: threads/viewmodels/threads.py:26
 msgid "Your threads"
+msgstr ""
+
+#: threads/viewmodels/threads.py:27
+msgid "New threads"
+msgstr ""
+
+#: threads/viewmodels/threads.py:28
+msgid "Unread threads"
+msgstr ""
+
+#: threads/viewmodels/threads.py:29
+msgid "Subscribed threads"
+msgstr ""
+
+#: threads/viewmodels/threads.py:30
+msgid "Unapproved content"
 msgstr ""
 
 #: threads/viewmodels/threads.py:34
