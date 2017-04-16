@@ -173,7 +173,7 @@ export class CompactUserNav extends React.Component {
     /* jshint ignore:start */
     return (
       <button type="button" onClick={this.showUserMenu}>
-        <Avatar user={this.props.user} size="64" />
+        <Avatar user={this.props.user} size="50" />
       </button>
     );
     /* jshint ignore:end */

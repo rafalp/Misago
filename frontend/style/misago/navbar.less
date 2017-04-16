@@ -68,21 +68,24 @@
 
 // Compact (mobile) navbar
 .navbar ul.navbar-compact-nav {
-  margin: 0px;
+  border-collapse:collapse;
   display: table;
+  margin: 0px;
+  table-layout: fixed;
   width: 100%;
 
   &>li {
     display: table-cell;
+    width: 100%;
   }
 
   &>li>a, &>li>button {
     background: none;
     border: none;
+    display: block;
     padding-top: 13px;
     padding-bottom: 13px;
 
-    display: block;
     width: 100%;
 
     color: @navbar-default-link-color;
@@ -100,8 +103,9 @@
   }
 
   &>li>button {
-    padding-top:    10px;
-    padding-bottom: 10px;
+    display: inline-block;
+    padding-top: 13px;
+    padding-bottom: 13px;
   }
 
   &>li>a>.material-icon {
