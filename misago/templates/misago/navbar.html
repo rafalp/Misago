@@ -55,7 +55,7 @@
   <ul class="nav navbar-nav navbar-compact-nav" itemscope itemtype="http://schema.org/SiteNavigationElement">
     {% if misago_settings.forum_branding_display %}
       <li>
-        <a href="{% url 'misago:index' %}">
+        <a href="{% url 'misago:index' %}" class="brand-link">
           <img src="{% static 'misago/img/site-icon.png' %}" alt="">
         </a>
       </li>

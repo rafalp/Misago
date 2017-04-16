@@ -6,14 +6,14 @@
 // Graphic background
 .page-header {
   background: none; // we'll use header handler for that
-  border-bottom: 1px solid @page-header-border-color;
+  border-bottom: none;
 }
 
 .page-header-bg {
   background-color: @page-header-bg;
   background: url('../img/page-header.png');
 
-  .shadow-2dp();
+  .shadow-4dp();
   
   @media screen and (min-width: @screen-md-min) {
     margin-bottom: @line-height-computed * 2;
@@ -162,13 +162,6 @@
 
         color: @page-tabs-link-color;
       }
-    }
-
-    &:active {
-      background-color: @page-tabs-link-focus-bg;
-      border-bottom: 3px solid lighten(@page-tabs-link-focus-color, 50%);
-
-      color: @page-tabs-link-focus-color;
     }
   }
 

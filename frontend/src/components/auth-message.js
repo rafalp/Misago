@@ -17,29 +17,32 @@ export default class extends React.Component {
     }
   }
 
-  getClassName() {
-    if (this.props.signedIn || this.props.signedOut) {
-      return "auth-message show";
-    } else {
-      return "auth-message";
-    }
-  }
-
   render() {
     /* jshint ignore:start */
-    return <div className={this.getClassName()}>
-      <div className="container">
-        <p className="lead">{this.getMessage()}</p>
-        <p>
-          <button type="button" className="btn btn-default"
-                  onClick={this.refresh}>
-            {gettext("Reload page")}
-          </button> <span className="hidden-xs hidden-sm text-muted">
-            {gettext("or press F5 key.")}
-          </span>
-        </p>
+    let className = 'auth-message';
+    if (this.props.signedIn || this.props.signedOut) {
+      className += ' show';
+    }
+
+    return (
+      <div className={className}>
+        <div className="container">
+          <p className="lead">{this.getMessage()}</p>
+          <p>
+            <button
+              className="btn btn-default"
+              type="button"
+              onClick={this.refresh}
+            >
+              {gettext("Reload page")}
+            </button>
+            <span className="hidden-xs hidden-sm">
+              {' ' + gettext("or press F5 key.")}
+            </span>
+          </p>
+        </div>
       </div>
-    </div>;
+    );
     /* jshint ignore:end */
   }
 }
