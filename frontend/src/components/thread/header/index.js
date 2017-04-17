@@ -106,7 +106,7 @@ export default class extends Form {
                   <div className="row xs-margin-top-half sm-margin-top-no md-margin-top-no">
                     <div className="col-xs-6">
                       <button
-                        className="btn btn-success btn-block btn-outline"
+                        className="btn btn-primary btn-block btn-outline"
                         disabled={this.state.isLoading}
                         title={gettext("Change title")}
                       >

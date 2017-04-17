@@ -48,6 +48,77 @@
 @component-active-bg:       @link-color;
 
 
+//== Buttons
+//
+//## For each of Bootstrap's buttons, define text, background and border color.
+
+// Default - non primary
+@btn-default-color:              #757575;
+@btn-default-bg:                 #f3f3f3;
+
+@btn-default-hover-color:        @text-color;
+@btn-default-hover-bg:           #e0e0e0;
+
+@btn-default-active-color:       @text-color;
+@btn-default-active-bg:          #bdbdbd;
+
+// Submit form
+@btn-primary-color:              #fff;
+@btn-primary-bg:                 #651fff;
+
+@btn-primary-hover-color:        #fff;
+@btn-primary-hover-bg:           #b388ff;
+
+@btn-primary-active-color:       #fff;
+@btn-primary-active-bg:          #6200ea;
+
+// Delete something
+@btn-danger-color:               #fff;
+@btn-danger-bg:                  #ef5350;
+
+@btn-danger-hover-color:         #fff;
+@btn-danger-hover-bg:            #ff8a80;
+
+@btn-danger-active-color:        #fff;
+@btn-danger-active-bg:           #d32f2f;
+
+// Submit form
+@btn-primary-color:              #fff;
+@btn-primary-bg:                 #651fff;
+
+@btn-primary-hover-color:        #fff;
+@btn-primary-hover-bg:           #b388ff;
+
+@btn-primary-active-color:       #fff;
+@btn-primary-active-bg:          #6200ea;
+
+// Default outlined
+@btn-default-outline-color:              #757575;
+@btn-default-outline-border:             #e0e0e0;
+@btn-default-outline-bg:                 transparent;
+
+@btn-default-outline-hover-color:        @text-color;
+@btn-default-outline-hover-border:       #8c9eff;
+@btn-default-outline-hover-bg:           transparent;
+
+@btn-default-outline-active-color:       #fff;
+@btn-default-outline-active-border:      #536dfe;
+@btn-default-outline-active-bg:          #536dfe;
+
+// Primary outlined
+@btn-primary-outline-color:              darken(#b388ff, 5%);
+@btn-primary-outline-border:             #b388ff;
+@btn-primary-outline-bg:                 transparent;
+
+@btn-primary-outline-hover-color:        #651fff;
+@btn-primary-outline-hover-border:       #651fff;
+@btn-primary-outline-hover-bg:           transparent;
+
+@btn-primary-outline-active-color:       #fff;
+@btn-primary-outline-active-border:      #6200ea;
+@btn-primary-outline-active-bg:          #6200ea;
+
+
 //== Navbar
 //
 //##
@@ -70,32 +141,6 @@
 @navbar-default-brand-hover-color:         #aa00ff;
 @navbar-default-brand-hover-bg:            transparent;
 
-// Navbar default button (sign in)
-@navbar-btn-default-color:             #757575;
-@navbar-btn-default-border:            #e0e0e0;
-@navbar-btn-default-bg:                transparent;
-
-@navbar-btn-default-hover-color:       #651fff;
-@navbar-btn-default-hover-border:      #651fff;
-@navbar-btn-default-hover-bg:          transparent;
-
-@navbar-btn-default-active-color:      #fff;
-@navbar-btn-default-active-border:     #651fff;
-@navbar-btn-default-active-bg:         #651fff;
-
-// Navbar primary button (register)
-@navbar-btn-primary-color:             #7c4dff;
-@navbar-btn-primary-border:            #7c4dff;
-@navbar-btn-primary-bg:                transparent;
-
-@navbar-btn-primary-hover-color:       #fff;
-@navbar-btn-primary-hover-border:      #7c4dff;
-@navbar-btn-primary-hover-bg:          #7c4dff;
-
-@navbar-btn-primary-active-color:      #fff;
-@navbar-btn-primary-active-border:     #512da8;
-@navbar-btn-primary-active-bg:         #512da8;
-
 
 //== Page header
 //
@@ -114,32 +159,6 @@
 @page-header-link-color:          @gray-dark;
 //** Text color
 @page-header-link-hover-color:    @text-color;
-
-//** Default btn
-@page-header-btn-default-color:            @gray-light;
-@page-header-btn-default-border:           lighten(@gray-light, 20%);
-@page-header-btn-default-bg:               fadeOut(@page-header-bg, 50%);
-
-@page-header-btn-default-hover-color:      #651fff;
-@page-header-btn-default-hover-border:     #651fff;
-@page-header-btn-default-hover-bg:         #f5f5f5;
-
-@page-header-btn-default-active-color:     #fff;
-@page-header-btn-default-active-border:    #651fff;
-@page-header-btn-default-active-bg:        #651fff;
-
-//** Success btn
-@page-header-btn-success-color:            #aa00ff;
-@page-header-btn-success-border:           #aa00ff;
-@page-header-btn-success-bg:               fadeOut(@page-header-bg, 50%);
-
-@page-header-btn-success-hover-color:      #d500f9;
-@page-header-btn-success-hover-border:     #d500f9;
-@page-header-btn-success-hover-bg:         #f5f5f5;
-
-@page-header-btn-success-active-color:     #fff;
-@page-header-btn-success-active-border:    #d500f9;
-@page-header-btn-success-active-bg:        #d500f9;
 
 //** Tabs bar background
 @page-tabs-bg:              fadeOut(#fff, 40%);

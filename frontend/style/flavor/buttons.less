@@ -1,0 +1,140 @@
+//
+// Buttons Flavor
+// --------------------------------------------------
+
+
+// mixins
+.misago-btn(@color, @bg, @color-hover, @bg-hover, @color-active, @bg-active) {
+  &, &:disabled, &:disabled:hover {
+    background: @bg;
+    border: 1px solid @bg;
+
+    color: @color;
+
+    .box-shadow(none);
+  }
+
+  &:hover, &:focus {
+    background: @bg-hover;
+    border: 1px solid @bg-hover;
+
+    color: @color-hover;
+  
+    .box-shadow(none);
+  }
+
+  &:active:focus, &:active {
+    background: @bg-active;
+    border: 1px solid @bg-active;
+
+    color: @color-active;
+
+    .box-shadow(none);
+  }
+}
+
+.misago-btn-outline(@color, @bg, @border,
+                    @color-hover, @bg-hover, @border-hover,
+                    @color-active, @bg-active, @border-active) {
+  &, &:disabled, &:disabled:hover {
+    background: @bg;
+    border: 1px solid @border;
+
+    color: @color;
+
+    .box-shadow(none);
+  }
+
+  &:hover, &:focus {
+    background: @bg-hover;
+    border: 1px solid @border-hover;
+
+    color: @color-hover;
+  
+    .box-shadow(none);
+  }
+
+  &:active:focus, &:active {
+    background: @bg-active;
+    border: 1px solid @border-active;
+
+    color: @color-active;
+
+    .box-shadow(none);
+  }
+}
+
+
+// button styles
+.btn-default {
+  .misago-btn(
+    @btn-default-color,
+    @btn-default-bg,
+
+    @btn-default-hover-color,
+    @btn-default-hover-bg,
+
+    @btn-default-active-color,
+    @btn-default-active-bg
+  );
+}
+
+.btn-primary {
+  .misago-btn(
+    @btn-primary-color,
+    @btn-primary-bg,
+
+    @btn-primary-hover-color,
+    @btn-primary-hover-bg,
+
+    @btn-primary-active-color,
+    @btn-primary-active-bg
+  );
+}
+
+.btn-danger {
+  .misago-btn(
+    @btn-danger-color,
+    @btn-danger-bg,
+
+    @btn-danger-hover-color,
+    @btn-danger-hover-bg,
+
+    @btn-danger-active-color,
+    @btn-danger-active-bg
+  );
+}
+
+
+// outlined button styles
+.btn-default.btn-outline {
+  .misago-btn-outline(
+    @btn-default-outline-color,
+    @btn-default-outline-bg,
+    @btn-default-outline-border,
+
+    @btn-default-outline-hover-color,
+    @btn-default-outline-hover-bg,
+    @btn-default-outline-hover-border,
+
+    @btn-default-outline-active-color,
+    @btn-default-outline-active-bg,
+    @btn-default-outline-active-border
+  );
+}
+
+.btn-primary.btn-outline {
+  .misago-btn-outline(
+    @btn-primary-outline-color,
+    @btn-primary-outline-bg,
+    @btn-primary-outline-border,
+
+    @btn-primary-outline-hover-color,
+    @btn-primary-outline-hover-bg,
+    @btn-primary-outline-hover-border,
+
+    @btn-primary-outline-active-color,
+    @btn-primary-outline-active-bg,
+    @btn-primary-outline-active-border
+  );
+}

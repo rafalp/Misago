@@ -4,7 +4,7 @@ import React from 'react';
 export default function(props) {
   return (
     <button
-      className={props.className || 'btn btn-success'}
+      className={props.className || 'btn btn-primary'}
       onClick={props.onClick}
       type="button"
     >

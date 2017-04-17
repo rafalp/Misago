@@ -94,7 +94,7 @@ export default class extends React.Component {
     return (
       <div className="col-xs-6">
         <Button
-          className="btn-success btn-block btn-outline"
+          className="btn-primary btn-block btn-outline"
           onClick={this.startThread}
           disabled={this.props.disabled}
         >

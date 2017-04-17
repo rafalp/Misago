@@ -92,7 +92,7 @@ export default class extends Form {
                     </div>
                     <div className="col-xs-12 col-sm-4 col-md-3">
                       <button
-                        className="btn btn-success btn-block btn-outline"
+                        className="btn btn-primary btn-block btn-outline"
                         disabled={this.props.search.isLoading || this.state.isLoading}
                       >
                         {gettext("Search")}
