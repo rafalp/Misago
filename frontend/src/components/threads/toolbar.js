@@ -38,7 +38,7 @@ export default class extends React.Component {
           <div className="btn-group dropdown">
             <button
               type="button"
-              className="btn btn-default dropdown-toggle"
+              className="btn btn-default btn-outline dropdown-toggle"
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
@@ -80,7 +80,7 @@ export default class extends React.Component {
           <div className="btn-group dropdown">
             <button
               type="button"
-              className="btn btn-default btn-icon dropdown-toggle"
+              className="btn btn-default btn-outline btn-icon dropdown-toggle"
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"

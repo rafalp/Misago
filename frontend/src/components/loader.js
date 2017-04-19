@@ -1,11 +1,10 @@
+/* jshint ignore:start */
 import React from 'react';
 
-export default class extends React.Component {
-  render() {
-    /* jshint ignore:start */
-    return <div className={this.props.className || "loader"}>
+export default function(props) {
+  return (
+    <div className={props.className || "loader"}>
       <div className="loader-spinning-wheel"></div>
-    </div>;
-    /* jshint ignore:end */
-  }
+    </div>
+  );
 }

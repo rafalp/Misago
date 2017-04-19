@@ -162,20 +162,23 @@ export default class extends React.Component {
   }
 
   getMoreButton() {
-    if (this.state.more) {
-      /* jshint ignore:start */
-      return <div className="pager-more">
-        <Button loading={this.state.isBusy}
-                onClick={this.loadMore}>
+    if (!this.state.more) return null;
+
+    /* jshint ignore:start */
+    return (
+      <div className="pager-more">
+        <Button
+          className="btn btn-default btn-outline"
+          loading={this.state.isBusy}
+          onClick={this.loadMore}
+        >
           {interpolate(gettext("Show older (%(more)s)"), {
             'more': this.state.more
           }, true)}
         </Button>
-      </div>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+      </div>
+    );
+    /* jshint ignore:end */
   }
 
   render() {

@@ -47,7 +47,7 @@ export function GotoNew(props) {
     <div className="col-sm-4">
       <a
         href={props.thread.url.new_post}
-        className="btn btn-default btn-block"
+        className="btn btn-default btn-block btn-outline"
         title={gettext('Go to first new post')}
       >
         {gettext("New")}
@@ -65,7 +65,7 @@ export function GotoUnapproved(props) {
     <div className="col-sm-4">
       <a
         href={props.thread.url.unapproved_post}
-        className="btn btn-default btn-block"
+        className="btn btn-default btn-block btn-outline"
         title={gettext('Go to first unapproved post')}
       >
         {gettext("Unapproved")}
@@ -79,7 +79,7 @@ export function GotoLast(props) {
     <div className="col-sm-4">
       <a
         href={props.thread.url.last_post}
-        className="btn btn-default btn-block"
+        className="btn btn-default btn-block btn-outline"
         title={gettext('Go to last post')}
       >
         {gettext("Last")}
@@ -94,7 +94,7 @@ export function CompactOptions(props) {
       <button
         aria-expanded="true"
         aria-haspopup="true"
-        className="btn btn-default dropdown-toggle btn-block"
+        className="btn btn-default dropdown-toggle btn-block btn-outline"
         data-toggle="dropdown"
         type="button"
       >
@@ -164,7 +164,7 @@ export function Reply(props) {
   return (
     <div className="col-sm-4 hidden-xs">
       <ReplyButton
-        className="btn btn-primary btn-block"
+        className="btn btn-primary btn-block btn-outline"
         onClick={props.openReplyForm}
       />
     </div>
@@ -204,7 +204,7 @@ export class StartPoll extends React.Component {
     return (
       <div className="col-sm-4 hidden-xs">
         <button
-          className="btn btn-default btn-block"
+          className="btn btn-default btn-block btn-outline"
           onClick={this.onClick}
           type="button"
         >
@@ -251,7 +251,7 @@ export class AddParticipant extends React.Component {
     return (
       <div className="col-sm-4 hidden-xs">
         <button
-          className="btn btn-default btn-block"
+          className="btn btn-default btn-block btn-outline"
           onClick={this.onClick}
           type="button"
         >

@@ -34,7 +34,7 @@ export function FirstPage(props) {
   if (props.posts.isLoaded && props.posts.first) {
     return (
       <Link
-        className="btn btn-default btn-block btn-icon"
+        className="btn btn-default btn-block btn-outline btn-icon"
         to={props.thread.url.index}
         title={gettext("Go to first page")}
       >
@@ -44,7 +44,7 @@ export function FirstPage(props) {
   } else {
     return (
       <span
-        className="btn btn-default btn-block btn-icon disabled"
+        className="btn btn-default btn-block btn-outline btn-icon disabled"
         title={gettext("Go to first page")}
       >
         <span className="material-icon">first_page</span>
@@ -62,7 +62,7 @@ export function PreviousPage(props) {
 
     return (
       <Link
-        className="btn btn-default btn-block btn-icon"
+        className="btn btn-default btn-block btn-outline btn-icon"
         to={props.thread.url.index + previousUrl}
         title={gettext("Go to previous page")}
       >
@@ -72,7 +72,7 @@ export function PreviousPage(props) {
   } else {
     return (
       <span
-        className="btn btn-default btn-block btn-icon disabled"
+        className="btn btn-default btn-block btn-outline btn-icon disabled"
         title={gettext("Go to previous page")}
       >
         <span className="material-icon">chevron_left</span>
@@ -90,7 +90,7 @@ export function NextPage(props) {
 
     return (
       <Link
-        className="btn btn-default btn-block btn-icon"
+        className="btn btn-default btn-block btn-outline btn-icon"
         to={props.thread.url.index + nextUrl}
         title={gettext("Go to next page")}
       >
@@ -100,7 +100,7 @@ export function NextPage(props) {
   } else {
     return (
       <span
-        className="btn btn-default btn-block btn-icon disabled"
+        className="btn btn-default btn-block btn-outline btn-icon disabled"
         title={gettext("Go to next page")}
       >
         <span className="material-icon">chevron_right</span>
@@ -113,7 +113,7 @@ export function LastPage(props) {
   if (props.posts.isLoaded && props.posts.last) {
     return (
       <Link
-        className="btn btn-default btn-block btn-icon"
+        className="btn btn-default btn-block btn-outline btn-icon"
         to={props.thread.url.index + props.posts.last + '/'}
         title={gettext("Go to last page")}
       >
@@ -123,7 +123,7 @@ export function LastPage(props) {
   } else {
     return (
       <span
-        className="btn btn-default btn-block btn-icon disabled"
+        className="btn btn-default btn-block btn-outline btn-icon disabled"
         title={gettext("Go to last page")}
       >
         <span className="material-icon">last_page</span>

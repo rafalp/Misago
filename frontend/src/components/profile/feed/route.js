@@ -102,6 +102,7 @@ export function LoadMoreButton(props) {
   return (
     <div className="pager-more">
       <Button
+        className="btn btn-default btn-outline"
         loading={props.isLoading}
         onClick={props.loadMore}
       >

@@ -63,6 +63,7 @@ export class LoadMore extends React.Component {
     return (
       <div className="pager-more">
         <Button
+          className="btn btn-default btn-outline"
           loading={this.props.isBusy}
           onClick={this.onClick}
         >

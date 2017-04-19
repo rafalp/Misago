@@ -5,6 +5,10 @@
 
 // mixins
 .misago-btn(@color, @bg, @color-hover, @bg-hover, @color-active, @bg-active) {
+  &.btn-loading {
+    color: transparent;
+  }
+
   &, &:disabled, &:disabled:hover {
     background: @bg;
     border: 1px solid @bg;
@@ -23,7 +27,8 @@
     .box-shadow(none);
   }
 
-  &:active:focus, &:active {
+  &:active:focus, &:active,
+  .dropdown.open & {
     background: @bg-active;
     border: 1px solid @bg-active;
 
@@ -50,17 +55,31 @@
     border: 1px solid @border-hover;
 
     color: @color-hover;
-  
+
     .box-shadow(none);
   }
 
-  &:active:focus, &:active {
+  &:active:focus, &:active,
+  .dropdown.open & {
     background: @bg-active;
     border: 1px solid @border-active;
 
     color: @color-active;
 
     .box-shadow(none);
+  }
+
+  &.btn-loading {
+    &, &:disabled, &:disabled:hover,
+    &:hover, &:focus,
+    &:active:focus, &:active {
+      background: @bg;
+      border: 1px solid @border;
+
+      color: transparent;
+
+    .box-shadow(none);
+    }
   }
 }
 

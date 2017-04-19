@@ -30,7 +30,7 @@ export default class extends React.Component {
       <div className="dropdown category-picker">
         <button
           type="button"
-          className="btn btn-default btn-icon dropdown-toggle btn-block"
+          className="btn btn-default btn-outline btn-icon dropdown-toggle btn-block"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"

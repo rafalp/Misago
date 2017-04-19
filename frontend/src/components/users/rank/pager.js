@@ -49,7 +49,7 @@ export function FirstPage(props) {
   if (props.isLoaded && props.first) {
     return (
       <Link
-        className="btn btn-default btn-block btn-icon"
+        className="btn btn-default btn-block btn-icon btn-outline"
         onClick={resetScroll}
         to={props.baseUrl}
         title={gettext("Go to first page")}
@@ -60,7 +60,7 @@ export function FirstPage(props) {
   } else {
     return (
       <span
-        className="btn btn-default btn-block btn-icon disabled"
+        className="btn btn-default btn-block btn-icon btn-outline disabled"
         title={gettext("Go to first page")}
       >
         <span className="material-icon">first_page</span>
@@ -78,7 +78,7 @@ export function PreviousPage(props) {
 
     return (
       <Link
-        className="btn btn-default btn-block btn-icon"
+        className="btn btn-default btn-block btn-icon btn-outline"
         onClick={resetScroll}
         to={props.baseUrl + previousUrl}
         title={gettext("Go to previous page")}
@@ -89,7 +89,7 @@ export function PreviousPage(props) {
   } else {
     return (
       <span
-        className="btn btn-default btn-block btn-icon disabled"
+        className="btn btn-default btn-block btn-icon btn-outline disabled"
         title={gettext("Go to previous page")}
       >
         <span className="material-icon">chevron_left</span>
@@ -107,7 +107,7 @@ export function NextPage(props) {
 
     return (
       <Link
-        className="btn btn-default btn-block btn-icon"
+        className="btn btn-default btn-block btn-icon btn-outline"
         onClick={resetScroll}
         to={props.baseUrl + nextUrl}
         title={gettext("Go to next page")}
@@ -118,7 +118,7 @@ export function NextPage(props) {
   } else {
     return (
       <span
-        className="btn btn-default btn-block btn-icon disabled"
+        className="btn btn-default btn-block btn-icon btn-outline disabled"
         title={gettext("Go to next page")}
       >
         <span className="material-icon">chevron_right</span>
@@ -131,7 +131,7 @@ export function LastPage(props) {
   if (props.isLoaded && props.last) {
     return (
       <Link
-        className="btn btn-default btn-block btn-icon"
+        className="btn btn-default btn-block btn-icon btn-outline"
         onClick={resetScroll}
         to={props.baseUrl + props.last + '/'}
         title={gettext("Go to last page")}
@@ -142,7 +142,7 @@ export function LastPage(props) {
   } else {
     return (
       <span
-        className="btn btn-default btn-block btn-icon disabled"
+        className="btn btn-default btn-block btn-icon btn-outline disabled"
         title={gettext("Go to last page")}
       >
         <span className="material-icon">last_page</span>

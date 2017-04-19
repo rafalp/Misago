@@ -13,7 +13,7 @@ export default function(props) {
       <button
         aria-expanded="true"
         aria-haspopup="true"
-        className={"btn btn-default dropdown-toggle btn-block"}
+        className="btn btn-default dropdown-toggle btn-block btn-outline"
         data-toggle="dropdown"
         type="button"
       >
