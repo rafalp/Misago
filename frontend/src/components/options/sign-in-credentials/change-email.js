@@ -75,7 +75,7 @@ export default class extends Form {
 
   render() {
     /* jshint ignore:start */
-    return <form onSubmit={this.handleSubmit} className="form-horizontal">
+    return <form onSubmit={this.handleSubmit}>
       <input type="type" style={{display: 'none'}} />
       <input type="password" style={{display: 'none'}} />
       <div className="panel panel-default panel-form">
@@ -84,8 +84,7 @@ export default class extends Form {
         </div>
         <div className="panel-body">
 
-          <FormGroup label={gettext("New e-mail")} for="id_new_email"
-                     labelClass="col-sm-4" controlClass="col-sm-8">
+          <FormGroup label={gettext("New e-mail")} for="id_new_email">
             <input type="text" id="id_new_email" className="form-control"
                    disabled={this.state.isLoading}
                    onChange={this.bindInput('new_email')}
@@ -94,8 +93,7 @@ export default class extends Form {
 
           <hr />
 
-          <FormGroup label={gettext("Your current password")} for="id_password"
-                     labelClass="col-sm-4" controlClass="col-sm-8">
+          <FormGroup label={gettext("Your current password")} for="id_password">
             <input type="password" id="id_password" className="form-control"
                    disabled={this.state.isLoading}
                    onChange={this.bindInput('password')}
@@ -104,15 +102,11 @@ export default class extends Form {
 
         </div>
         <div className="panel-footer">
-          <div className="row">
-            <div className="col-sm-8 col-sm-offset-4">
 
-              <Button className="btn-primary" loading={this.state.isLoading}>
-                {gettext("Change e-mail")}
-              </Button>
+          <Button className="btn-primary" loading={this.state.isLoading}>
+            {gettext("Change e-mail")}
+          </Button>
 
-            </div>
-          </div>
         </div>
       </div>
     </form>;

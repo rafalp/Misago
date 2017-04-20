@@ -120,7 +120,7 @@ export default class extends Form {
     return (
       <div className="poll-form">
         <div className="container">
-          <form onSubmit={this.handleSubmit} className="form-horizontal">
+          <form onSubmit={this.handleSubmit}>
             <div className="panel panel-default panel-form">
               <div className="panel-body">
 
@@ -130,7 +130,6 @@ export default class extends Form {
                   <FormGroup
                     label={gettext("Poll question")}
                     for="id_questions"
-                    labelClass="col-sm-4" controlClass="col-sm-8"
                     validation={this.state.errors.question}
                   >
                     <input
@@ -146,7 +145,6 @@ export default class extends Form {
 
                   <FormGroup
                     label={gettext("Available choices")}
-                    labelClass="col-sm-4" controlClass="col-sm-8"
                     validation={this.state.errors.choices}
                   >
                     <ChoicesControl
@@ -165,7 +163,6 @@ export default class extends Form {
                     label={gettext("Poll length")}
                     helpText={gettext("Enter number of days for which voting in this poll should be possible or zero to run this poll indefinitely.")}
                     for="id_length"
-                    labelClass="col-sm-4" controlClass="col-sm-8"
                     validation={this.state.errors.length}
                   >
                     <input
@@ -181,7 +178,6 @@ export default class extends Form {
                   <FormGroup
                     label={gettext("Allowed choices")}
                     for="id_allowed_choices"
-                    labelClass="col-sm-4" controlClass="col-sm-8"
                     validation={this.state.errors.allowed_choices}
                   >
                     <input
@@ -198,7 +194,6 @@ export default class extends Form {
                   <FormGroup
                     label={gettext("Allow vote changes")}
                     for="id_allow_revotes"
-                    labelClass="col-sm-4" controlClass="col-sm-8"
                   >
                     <YesNoSwitch
                       id="id_allow_revotes"
@@ -223,27 +218,25 @@ export default class extends Form {
 
               </div>
               <div className="panel-footer">
-                <div className="row">
-                  <div className="col-sm-8 col-sm-offset-4">
 
-                    <Button
-                      className="btn-primary"
-                      loading={this.state.isLoading}
-                    >
-                      {this.state.isEdit ? gettext("Save changes") : gettext("Post poll")}
-                    </Button>
-                    &nbsp;
-                    <button
-                      className="btn btn-default"
-                      disabled={this.state.isLoading}
-                      onClick={this.onCancel}
-                      type="button"
-                    >
-                      {gettext("Cancel")}
-                    </button>
+                <Button
+                  className="btn-primary"
+                  loading={this.state.isLoading}
+                >
+                  {this.state.isEdit ? gettext("Save changes") : gettext("Post poll")}
+                </Button>
 
-                  </div>
-                </div>
+                {' '}
+
+                <button
+                  className="btn btn-default"
+                  disabled={this.state.isLoading}
+                  onClick={this.onCancel}
+                  type="button"
+                >
+                  {gettext("Cancel")}
+                </button>
+
               </div>
             </div>
           </form>
@@ -261,7 +254,6 @@ export function PollPublicSwitch(props) {
       label={gettext("Make voting public")}
       helpText={gettext("Making voting public will allow everyone to access detailed list of votes, showing which users voted for which choices and at which times. This option can't be changed after poll's creation. Moderators may see voting details for all polls.")}
       for="id_is_public"
-      labelClass="col-sm-4" controlClass="col-sm-8"
     >
       <YesNoSwitch
         id="id_is_public"

@@ -120,13 +120,12 @@ export class RegisterForm extends Form {
           </button>
           <h4 className="modal-title">{gettext("Register")}</h4>
         </div>
-        <form onSubmit={this.handleSubmit} className="form-horizontal">
+        <form onSubmit={this.handleSubmit}>
           <input type="type" style={{display: 'none'}} />
           <input type="password" style={{display: 'none'}} />
           <div className="modal-body">
 
             <FormGroup label={gettext("Username")} for="id_username"
-                       labelClass="col-sm-4" controlClass="col-sm-8"
                        validation={this.state.errors.username}>
               <input type="text" id="id_username" className="form-control"
                      aria-describedby="id_username_status"
@@ -136,7 +135,6 @@ export class RegisterForm extends Form {
             </FormGroup>
 
             <FormGroup label={gettext("E-mail")} for="id_email"
-                       labelClass="col-sm-4" controlClass="col-sm-8"
                        validation={this.state.errors.email}>
               <input type="text" id="id_email" className="form-control"
                      aria-describedby="id_email_status"
@@ -146,7 +144,6 @@ export class RegisterForm extends Form {
             </FormGroup>
 
             <FormGroup label={gettext("Password")} for="id_password"
-                       labelClass="col-sm-4" controlClass="col-sm-8"
                        validation={this.state.errors.password}
                        extra={<PasswordStrength password={this.state.password}
                                                 inputs={[
@@ -162,16 +159,14 @@ export class RegisterForm extends Form {
 
             {captcha.component({
               form: this,
-              labelClass: "col-sm-4",
-              controlClass: "col-sm-8"
             })}
 
           </div>
           <div className="modal-footer">
-            {this.getLegalFootNote()}
             <Button className="btn-primary" loading={this.state.isLoading}>
               {gettext("Register account")}
             </Button>
+            {this.getLegalFootNote()}
           </div>
         </form>
       </div>

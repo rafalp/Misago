@@ -1,17 +1,43 @@
+//
 // Panels Flavor
 // --------------------------------------------------
 
 
-.threads-list, .panel {
+.panel {
+  border: none;
   border-radius: @border-radius-base;
   .shadow-4dp();
+
+  .panel-heading, .panel-footer {
+    background: @panel-bg;
+  }
+
+  .panel-title {
+    color: @panel-title-color;
+  }
+
+  .panel-body>.form-group:first-child {
+    margin-top: @line-height-computed / 2;
+  }
+
+  fieldset {
+    margin-top: @line-height-computed;
+
+    &:first-child {
+      margin-top: 0px;
+    }
+
+    legend {
+      border: none;
+
+      color: @panel-fieldset-color;
+      font-weight: 300;
+    }
+  }
 }
 
-.threads-list .list-group-item {
-  border-left: none;
-  border-right: none;
-}
 
-.threads-list .list-group-item:first-child {
-  border: none;
+// remove bottom margin from poll panel
+.poll-form .panel {
+  margin: 0px;
 }

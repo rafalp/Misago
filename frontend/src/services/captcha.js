@@ -51,8 +51,8 @@ export class QACaptcha extends BaseCaptcha {
   /* jshint ignore:start */
   component(kwargs) {
     return <FormGroup label={this.question} for="id_captcha"
-                      labelClass={kwargs.labelClass || "col-sm-4"}
-                      controlClass={kwargs.controlClass || "col-sm-8"}
+                      labelClass={kwargs.labelClass || ""}
+                      controlClass={kwargs.controlClass || ""}
                       validation={kwargs.form.state.errors.captcha}
                       helpText={this.helpText || null}>
       <input type="text" id="id_captcha" className="form-control"
@@ -113,8 +113,8 @@ export class ReCaptcha extends BaseCaptcha {
   /* jshint ignore:start */
   component(kwargs) {
     return <FormGroup label={gettext("Captcha")} for="id_captcha"
-                      labelClass={kwargs.labelClass || "col-sm-4"}
-                      controlClass={kwargs.controlClass || "col-sm-8"}
+                      labelClass={kwargs.labelClass || ""}
+                      controlClass={kwargs.controlClass || ""}
                       validation={kwargs.form.state.errors.captcha}
                       helpText={gettext("Please solve the quick test.")}>
       <ReCaptchaComponent siteKey={this._context.get('SETTINGS').recaptcha_site_key}
