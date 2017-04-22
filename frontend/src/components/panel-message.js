@@ -15,19 +15,21 @@ export default class extends React.Component {
 
   render() {
     /* jshint ignore:start */
-    return <div className="panel-body panel-message-body">
-      <div className="message-icon">
-        <span className="material-icon">
-          {this.props.icon || 'info_outline'}
-        </span>
+    return (
+      <div className="panel-body panel-message-body">
+        <div className="message-icon">
+          <span className="material-icon">
+            {this.props.icon || 'info_outline'}
+          </span>
+        </div>
+        <div className="message-body">
+          <p className="lead">
+            {this.props.message}
+          </p>
+          {this.getHelpText()}
+        </div>
       </div>
-      <div className="message-body">
-        <p className="lead">
-          {this.props.message}
-        </p>
-        {this.getHelpText()}
-      </div>
-    </div>;
+    );
     /* jshint ignore:end */
   }
 }
