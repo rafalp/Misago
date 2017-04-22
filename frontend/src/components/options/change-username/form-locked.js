@@ -14,15 +14,17 @@ export default class extends React.Component {
 
   render() {
     /* jshint ignore:start */
-    return <div className="panel panel-default panel-form">
-      <div className="panel-heading">
-        <h3 className="panel-title">{gettext("Change username")}</h3>
+    return (
+      <div className="panel panel-default panel-form">
+        <div className="panel-heading">
+          <h3 className="panel-title">{gettext("Change username")}</h3>
+        </div>
+        <PanelMessage
+          helpText={this.getHelpText()}
+          message={gettext("You can't change your username at the moment.")}
+        />
       </div>
-
-      <PanelMessage message={gettext("You can't change your username at the moment.")}
-                    helpText={this.getHelpText()} />
-
-    </div>;
+    );
     /* jshint ignore:end */
   }
 }
