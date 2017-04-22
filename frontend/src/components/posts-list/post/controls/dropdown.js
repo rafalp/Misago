@@ -23,14 +23,31 @@ export default function(props) {
   );
 }
 
-export function Permalink(props) {
-  return (
-    <li>
-      <a href={props.post.url.index}>
-        {gettext("Link")}
-      </a>
-    </li>
-  );
+export class Permalink extends React.Component {
+  onClick = () => {
+    let permaUrl = window.location.protocol + '//';
+    permaUrl += window.location.host;
+    permaUrl += this.props.post.url.index;
+
+    prompt(gettext("Permament link to this post:"), permaUrl);
+  };
+
+  render() {
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.onClick}
+          type="button"
+        >
+          <span className="material-icon">
+            link
+          </span>
+          {gettext("Permament link")}
+        </button>
+      </li>
+    );
+  }
 }
 
 export class PostEdits extends React.Component {
@@ -57,7 +74,14 @@ export class PostEdits extends React.Component {
 
     return (
       <li>
-        <button type="button" className="btn btn-link" onClick={this.onClick}>
+        <button
+          className="btn btn-link"
+          onClick={this.onClick}
+          type="button"
+        >
+          <span className="material-icon">
+            edit
+          </span>
           {gettext("Changes history")}
         </button>
       </li>
@@ -71,17 +95,23 @@ export class Approve extends React.Component {
   };
 
   render() {
-    if (this.props.post.acl.can_approve && this.props.post.is_unapproved) {
-      return (
-        <li>
-          <button type="button" className="btn btn-link" onClick={this.onClick}>
-            {gettext("Approve")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (!this.props.post.acl.can_approve) return null;
+    if (!this.props.post.is_unapproved) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.onClick}
+          type="button"
+        >
+          <span className="material-icon">
+            done
+          </span>
+          {gettext("Approve")}
+        </button>
+      </li>
+    );
   }
 }
 
@@ -93,17 +123,22 @@ export class Move extends React.Component {
   };
 
   render() {
-    if (this.props.post.acl.can_move) {
-      return (
-        <li>
-          <button type="button" className="btn btn-link" onClick={this.onClick}>
-            {gettext("Move")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (!this.props.post.acl.can_move) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.onClick}
+          type="button"
+        >
+          <span className="material-icon">
+            arrow_forward
+          </span>
+          {gettext("Move")}
+        </button>
+      </li>
+    );
   }
 }
 
@@ -115,17 +150,22 @@ export class Split extends React.Component {
   };
 
   render() {
-    if (this.props.post.acl.can_move) {
-      return (
-        <li>
-          <button type="button" className="btn btn-link" onClick={this.onClick}>
-            {gettext("Split")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (!this.props.post.acl.can_move) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.onClick}
+          type="button"
+        >
+          <span className="material-icon">
+            call_split
+          </span>
+          {gettext("Split")}
+        </button>
+      </li>
+    );
   }
 }
 
@@ -135,17 +175,23 @@ export class Protect extends React.Component {
   };
 
   render() {
-    if (this.props.post.acl.can_protect && !this.props.post.is_protected) {
-      return (
-        <li>
-          <button type="button" className="btn btn-link" onClick={this.onClick}>
-            {gettext("Protect")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (!this.props.post.acl.can_protect) return null;
+    if (this.props.post.is_protected) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.onClick}
+          type="button"
+        >
+          <span className="material-icon">
+            lock_outline
+          </span>
+          {gettext("Protect")}
+        </button>
+      </li>
+    );
   }
 }
 
@@ -155,17 +201,23 @@ export class Unprotect extends React.Component {
   };
 
   render() {
-    if (this.props.post.acl.can_protect && this.props.post.is_protected) {
-      return (
-        <li>
-          <button type="button" className="btn btn-link" onClick={this.onClick}>
-            {gettext("Remove protection")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (!this.props.post.acl.can_protect) return null;
+    if (!this.props.post.is_protected) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.onClick}
+          type="button"
+        >
+          <span className="material-icon">
+            lock_open
+          </span>
+          {gettext("Remove protection")}
+        </button>
+      </li>
+    );
   }
 }
 
@@ -175,17 +227,23 @@ export class Hide extends React.Component {
   };
 
   render() {
-    if (this.props.post.acl.can_hide && !this.props.post.is_hidden) {
-      return (
-        <li>
-          <button type="button" className="btn btn-link" onClick={this.onClick}>
-            {gettext("Hide")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (!this.props.post.acl.can_hide) return null;
+    if (this.props.post.is_hidden) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.onClick}
+          type="button"
+        >
+          <span className="material-icon">
+            visibility_off
+          </span>
+          {gettext("Hide")}
+        </button>
+      </li>
+    );
   }
 }
 
@@ -195,17 +253,23 @@ export class Unhide extends React.Component {
   };
 
   render() {
-    if (this.props.post.acl.can_unhide && this.props.post.is_hidden) {
-      return (
-        <li>
-          <button type="button" className="btn btn-link" onClick={this.onClick}>
-            {gettext("Unhide")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (!this.props.post.acl.can_unhide) return null;
+    if (!this.props.post.is_hidden) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.onClick}
+          type="button"
+        >
+          <span className="material-icon">
+            visibility
+          </span>
+          {gettext("Unhide")}
+        </button>
+      </li>
+    );
   }
 }
 
@@ -215,16 +279,21 @@ export class Delete extends React.Component {
   };
 
   render() {
-    if (this.props.post.acl.can_delete) {
-      return (
-        <li>
-          <button type="button" className="btn btn-link" onClick={this.onClick}>
-            {gettext("Delete")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (!this.props.post.acl.can_delete) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.onClick}
+          type="button"
+        >
+          <span className="material-icon">
+            clear
+          </span>
+          {gettext("Delete")}
+        </button>
+      </li>
+    );
   }
 }

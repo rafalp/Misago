@@ -36,9 +36,9 @@ export default class extends React.Component {
           aria-expanded="false"
         >
           <span className="material-icon">
-            label_outline
+            more_horiz
           </span>
-          <span className="hidden-xs">{' ' + gettext("Go to")}</span>
+          <span className="btn-text hidden-xs">{' ' + gettext("Go to")}</span>
         </button>
         <ul className="dropdown-menu stick-to-bottom categories-menu">
           {this.props.choices.map((id) => {
