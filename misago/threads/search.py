@@ -15,6 +15,7 @@ from .viewmodels import ThreadsRootCategory
 
 class SearchThreads(SearchProvider):
     name = _("Threads")
+    icon = 'forum'
     url = 'threads'
 
     def search(self, query, page=1):

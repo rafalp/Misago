@@ -36,6 +36,7 @@ def search(request, search_provider):
         request.frontend_context['SEARCH_PROVIDERS'].append({
             'id': provider.url,
             'name': six.text_type(provider.name),
+            'icon': provider.icon,
             'url': reverse('misago:search', kwargs={'search_provider': provider.url}),
             'api': reverse('misago:api:search', kwargs={'search_provider': provider.url}),
             'results': None,

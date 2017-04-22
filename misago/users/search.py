@@ -16,6 +16,7 @@ UserModel = get_user_model()
 
 class SearchUsers(SearchProvider):
     name = ugettext_lazy("Users")
+    icon = 'people'
     url = 'users'
 
     def allow_search(self):
