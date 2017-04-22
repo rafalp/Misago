@@ -180,8 +180,10 @@ export default class extends React.Component {
 
   showInactivePage(apiResponse) {
     ReactDOM.render(
-      <AccountInactivePage activation={apiResponse.code}
-                           message={apiResponse.detail} />,
+      <AccountInactivePage
+        activation={apiResponse.code}
+        message={apiResponse.detail}
+      />,
       document.getElementById('page-mount')
     );
   }
@@ -190,11 +192,20 @@ export default class extends React.Component {
   render() {
     /* jshint ignore:start */
     if (this.state.complete) {
-      return <LinkSent user={this.state.complete} callback={this.reset} />;
-    } else {
-      return <RequestResetForm callback={this.complete}
-                               showInactivePage={this.showInactivePage} />;
-    };
+      return (
+        <LinkSent
+          callback={this.reset}
+          user={this.state.complete}
+        />
+      );
+    }
+
+    return (
+      <RequestResetForm
+        callback={this.complete}
+        showInactivePage={this.showInactivePage}
+      />
+    );
     /* jshint ignore:end */
   }
 }

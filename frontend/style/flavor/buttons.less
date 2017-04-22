@@ -5,10 +5,6 @@
 
 // mixins
 .misago-btn(@color, @bg, @color-hover, @bg-hover, @color-active, @bg-active) {
-  &.btn-loading {
-    color: transparent;
-  }
-
   &, &:disabled, &:disabled:hover {
     background: @bg;
     border: 1px solid @bg;
@@ -35,6 +31,14 @@
     color: @color-active;
 
     .box-shadow(none);
+  }
+
+  &.btn-loading {
+    &, &:disabled, &:disabled:hover,
+    &:hover, &:focus,
+    &:active:focus, &:active {
+      color: transparent;
+    }
   }
 }
 
@@ -78,7 +82,7 @@
 
       color: transparent;
 
-    .box-shadow(none);
+      .box-shadow(none);
     }
   }
 }
