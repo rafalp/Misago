@@ -1,6 +1,7 @@
 // jshint ignore:start
 import React from 'react';
 import moment from 'moment';
+import Avatar from 'misago/components/avatar';
 import Message from 'misago/components/modal-message';
 import Loader from 'misago/components/modal-loader';
 import ajax from 'misago/services/ajax';
@@ -44,7 +45,7 @@ export default class extends React.Component {
     } else if (this.state.isReady) {
       if (this.state.likes.length) {
         return (
-          <ModalDialog>
+          <ModalDialog likes={this.state.likes}>
             <LikesList
               likes={this.state.likes}
             />
@@ -75,10 +76,21 @@ export function hydrateLike(data) {
   });
 }
 
-export function ModalDialog(props) {
+export function ModalDialog({ className, children, likes }) {
+  let title = gettext("Post Likes");
+  if (likes) {
+    const likesCount = likes.length;
+    const message = ngettext(
+      "%(likes)s like",
+      "%(likes)s likes",
+      likesCount);
+
+    title = interpolate(message, { likes: likesCount }, true);
+  }
+
   return (
     <div
-      className={"modal-dialog modal-sm " + (props.className || '')}
+      className={"modal-dialog modal-sm " + (className || '')}
       role="document"
     >
       <div className="modal-content">
@@ -91,9 +103,9 @@ export function ModalDialog(props) {
           >
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 className="modal-title">{gettext("Post Likes")}</h4>
+          <h4 className="modal-title">{title}</h4>
         </div>
-        {props.children}
+        {children}
       </div>
     </div>
   )
@@ -102,7 +114,7 @@ export function ModalDialog(props) {
 export function LikesList(props) {
   return (
     <div className="modal-body modal-post-likers">
-      <ul className="list-unstyled">
+      <ul className="media-list">
         {props.likes.map((like) => {
           return (
             <LikeDetails
@@ -118,36 +130,58 @@ export function LikesList(props) {
 
 export function LikeDetails(props) {
   if (props.url) {
+    const user = {
+      id: props.liker_id,
+      avatars: props.avatars
+    };
+
     return (
-      <li>
-        <a
-          className="item-title"
-          href={props.url}
-        >
-          {props.username}
-        </a>
-        {' '}
-        <LikeDate likedOn={props.liked_on} />
+      <li className="media">
+        <div className="media-left">
+          <a
+            className="user-avatar"
+            href={props.url}
+          >
+            <Avatar size="50" user={user} />
+          </a>
+        </div>
+        <div className="media-body">
+          <a
+            className="item-title"
+            href={props.url}
+          >
+            {props.username}
+          </a>
+          {' '}
+          <LikeDate likedOn={props.liked_on} />
+        </div>
       </li>
     );
   }
 
   return (
-    <li>
-      <strong>{props.username}</strong>
-      {' '}
-      <LikeDate likedOn={props.liked_on} />
+    <li className="media">
+      <div className="media-left">
+        <span className="user-avatar">
+          <Avatar size="50" />
+        </span>
+      </div>
+      <div className="media-body">
+        <strong>{props.username}</strong>
+        {' '}
+        <LikeDate likedOn={props.liked_on} />
+      </div>
     </li>
   );
 }
 
 export function LikeDate(props) {
   return (
-    <abbr
+    <span
       className="text-muted"
       title={props.likedOn.format('LLL')}
     >
       {props.likedOn.fromNow()}
-    </abbr>
+    </span>
   );
 }

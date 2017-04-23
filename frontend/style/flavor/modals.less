@@ -12,7 +12,7 @@
   color: @modal-header-color;
 
   .close {
-    padding: 2px 6px;
+    padding: 0px 6px;
 
     color: @modal-header-color;
     font-size: 24px;
@@ -76,5 +76,26 @@
 
   a:focus, a:hover, a:active {
     color: @text-color;
+  }
+}
+
+
+// Post likes
+.modal-post-likers {
+  .media {
+    border-bottom: 1px solid @gray-lighter;
+    padding-bottom: 15px; // hardcoded in BS less
+
+    img {
+      border-radius: @border-radius-base;
+
+      width: 40px;
+      height: 40px;
+    }
+
+    &:last-child {
+      border: none;
+      padding-bottom: 0px;
+    }
   }
 }
