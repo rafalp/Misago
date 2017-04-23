@@ -45,7 +45,10 @@ export default class extends React.Component {
     } else if (this.state.isReady) {
       if (this.state.likes.length) {
         return (
-          <ModalDialog likes={this.state.likes}>
+          <ModalDialog
+            className="modal-sm"
+            likes={this.state.likes}
+          >
             <LikesList
               likes={this.state.likes}
             />
@@ -63,7 +66,7 @@ export default class extends React.Component {
     }
 
     return (
-      <ModalDialog>
+      <ModalDialog className="modal-sm">
         <Loader />
       </ModalDialog>
     );
@@ -90,7 +93,7 @@ export function ModalDialog({ className, children, likes }) {
 
   return (
     <div
-      className={"modal-dialog modal-sm " + (className || '')}
+      className={"modal-dialog " + (className || '')}
       role="document"
     >
       <div className="modal-content">
