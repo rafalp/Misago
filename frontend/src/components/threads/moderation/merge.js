@@ -215,8 +215,7 @@ export default class extends Form {
     if (this.acl[this.state.category].can_pin_threads) {
       /* jshint ignore:start */
       return <FormGroup label={gettext("Thread weight")}
-                        for="id_weight"
-                        labelClass="col-sm-4" controlClass="col-sm-8">
+                        for="id_weight">
         <Select id="id_weight"
                 onChange={this.bindInput('weight')}
                 value={this.state.weight}
@@ -232,8 +231,7 @@ export default class extends Form {
     if (this.acl[this.state.category].can_hide_threads) {
       /* jshint ignore:start */
       return <FormGroup label={gettext("Hide thread")}
-                        for="id_is_hidden"
-                        labelClass="col-sm-4" controlClass="col-sm-8">
+                        for="id_is_hidden">
         <Select id="id_is_closed"
                 onChange={this.bindInput('is_hidden')}
                 value={this.state.is_hidden}
@@ -249,8 +247,7 @@ export default class extends Form {
     if (this.acl[this.state.category].can_close_threads) {
       /* jshint ignore:start */
       return <FormGroup label={gettext("Close thread")}
-                        for="id_is_closed"
-                        labelClass="col-sm-4" controlClass="col-sm-8">
+                        for="id_is_closed">
         <Select id="id_is_closed"
                 onChange={this.bindInput('is_closed')}
                 value={this.state.is_closed}
@@ -269,7 +266,6 @@ export default class extends Form {
 
         <FormGroup label={gettext("Thread title")}
                    for="id_title"
-                   labelClass="col-sm-4" controlClass="col-sm-8"
                    validation={this.state.errors.title}>
           <input id="id_title"
                  className="form-control"
@@ -281,7 +277,6 @@ export default class extends Form {
 
         <FormGroup label={gettext("Category")}
                    for="id_category"
-                   labelClass="col-sm-4" controlClass="col-sm-8"
                    validation={this.state.errors.category}>
           <CategorySelect id="id_category"
                           onChange={this.onCategoryChange}

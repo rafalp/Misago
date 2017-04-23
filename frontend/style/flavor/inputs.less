@@ -33,3 +33,20 @@ input.form-control {
     box-shadow: inset 0px 0px 0px 1px lighten(@state-success-border, 20%);
   }
 }
+
+
+// password strenght marker
+.password-strength {
+  margin-top: @line-height-computed / 2;
+
+  .text-small {
+    margin-top: @line-height-computed / 5;
+    
+    color: lighten(@text-color, 25%);
+    font-size: @font-size-small;
+  }
+
+  .progress {
+    margin: 0px;
+  }
+}

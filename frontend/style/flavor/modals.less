@@ -2,6 +2,79 @@
 // Modal Flavor
 // --------------------------------------------------
 
+
+// Custom header styles
+.modal-header {
+  background: @modal-header-bg;
+  border-bottom-color: @modal-header-bg;
+  border-radius: @border-radius-large @border-radius-large 0px 0px;
+
+  color: @modal-header-color;
+
+  .close {
+    padding: 2px 6px;
+
+    color: @modal-header-color;
+    font-size: 24px;
+    line-height: 24px;
+    text-shadow: none;
+  }
+}
+
+
+// Color message icon
 .modal-message .message-icon {
   color: @message-icon-color;
+}
+
+
+
+// Even out space between form fields
+.modal-body>.form-group {
+  margin: @line-height-computed 0px;
+
+  &:first-child {
+    margin-top: 0px;
+  }
+
+  &:last-child {
+    margin-bottom: 0px;
+  }
+}
+
+
+// Sign in modal
+.modal-sign-in {
+  .modal-body {
+    padding-top: 0px;
+    padding-bottom: 0px;
+
+    &>.form-group {
+      margin: @line-height-computed 0px;
+    }
+  }
+}
+
+
+// Register modal
+.modal-register .legal-footnote {
+  text-align: center;
+
+  .material-icon {
+    margin-right: 4px;
+    position: relative;
+    bottom: 1px;
+
+    color: @gray-light;
+    font-size: 28px;
+    line-height: 28px;
+  }
+
+  a, a:link, a:visited {
+    color: @gray-light;
+  }
+
+  a:focus, a:hover, a:active {
+    color: @text-color;
+  }
 }

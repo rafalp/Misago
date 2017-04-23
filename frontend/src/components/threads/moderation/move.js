@@ -86,8 +86,7 @@ export default class extends Form {
       <div className="modal-body">
 
         <FormGroup label={gettext("New category")}
-                   for="id_new_category"
-                   labelClass="col-sm-4" controlClass="col-sm-8">
+                   for="id_new_category">
           <CategorySelect id="id_new_category"
                           onChange={this.bindInput('category')}
                           value={this.state.category}

@@ -32,19 +32,6 @@ export default class extends React.Component {
     }
   }
 
-  getFeedbackIcon() {
-    if (this.isValidated()) {
-      /* jshint ignore:start */
-      return <span className="material-icon form-control-feedback"
-                   aria-hidden="true" key={this.props.for + 'FeedbackIcon'}>
-        {this.props.validation ? 'clear' : 'check'}
-      </span>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
-  }
-
   getFeedbackDescription() {
     if (this.isValidated()) {
       /* jshint ignore:start */
@@ -76,7 +63,6 @@ export default class extends React.Component {
       </label>
       <div className={this.props.controlClass || ''}>
         {this.props.children}
-        {this.getFeedbackIcon()}
         {this.getFeedbackDescription()}
         {this.getFeedback()}
         {this.getHelpText()}

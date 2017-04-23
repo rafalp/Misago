@@ -97,16 +97,23 @@ export class RegisterForm extends Form {
   }
 
   getLegalFootNote() {
-    if (misago.get('TERMS_OF_SERVICE_URL')) {
-      /* jshint ignore:start */
-      return <a href={misago.get('TERMS_OF_SERVICE_URL')}
-                target="_blank">
-        {gettext("By registering you agree to site's terms and conditions.")}
-      </a>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+    if (!misago.get('TERMS_OF_SERVICE_URL')) return null;
+
+    /* jshint ignore:start */
+    return (
+      <p className="legal-footnote">
+        <span className="material-icon">
+          info_outline
+        </span>
+        <a
+          href={misago.get('TERMS_OF_SERVICE_URL')}
+          target="_blank"
+        >
+          {gettext("By registering you agree to site's terms and conditions.")}
+        </a>
+      </p>
+    );
+    /* jshint ignore:end */
   }
 
   render() {
@@ -145,11 +152,15 @@ export class RegisterForm extends Form {
 
             <FormGroup label={gettext("Password")} for="id_password"
                        validation={this.state.errors.password}
-                       extra={<PasswordStrength password={this.state.password}
-                                                inputs={[
-                                                  this.state.username,
-                                                  this.state.email
-                                                ]} />} >
+                       extra={
+                          <PasswordStrength
+                            password={this.state.password}
+                            inputs={[
+                              this.state.username,
+                              this.state.email
+                            ]}
+                          />
+                        } >
               <input type="password" id="id_password" className="form-control"
                      aria-describedby="id_password_status"
                      disabled={this.state.isLoading}
@@ -160,6 +171,8 @@ export class RegisterForm extends Form {
             {captcha.component({
               form: this,
             })}
+
+            {this.getLegalFootNote()}
 
           </div>
           <div className="modal-footer">
@@ -174,7 +187,6 @@ export class RegisterForm extends Form {
             <Button className="btn-primary" loading={this.state.isLoading}>
               {gettext("Register account")}
             </Button>
-            {this.getLegalFootNote()}
           </div>
         </form>
       </div>

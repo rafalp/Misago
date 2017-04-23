@@ -86,20 +86,18 @@ export default class extends Form {
   }
 
   getActivationButton() {
-    if (this.state.showActivation) {
-      /* jshint ignore:start */
-      return (
-        <a
-          className="btn btn-success btn-block"
-          href={misago.get('REQUEST_ACTIVATION_URL')}
-        >
-          {gettext("Activate account")}
-        </a>
-      );
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+    if (!this.state.showActivation) return null;
+
+    /* jshint ignore:start */
+    return (
+      <a
+        className="btn btn-success btn-block"
+        href={misago.get('REQUEST_ACTIVATION_URL')}
+      >
+        {gettext("Activate account")}
+      </a>
+    );
+    /* jshint ignore:end */
   }
 
   render() {
@@ -126,21 +124,29 @@ export default class extends Form {
 
               <div className="form-group">
                 <div className="control-input">
-                  <input id="id_username" className="form-control" type="text"
-                         disabled={this.state.isLoading}
-                         placeholder={gettext("Username or e-mail")}
-                         onChange={this.bindInput('username')}
-                         value={this.state.username} />
+                  <input
+                    className="form-control input-lg"
+                    disabled={this.state.isLoading}
+                    id="id_username"
+                    onChange={this.bindInput('username')}
+                    placeholder={gettext("Username or e-mail")}
+                    type="text"
+                    value={this.state.username}
+                  />
                 </div>
               </div>
 
               <div className="form-group">
                 <div className="control-input">
-                  <input id="id_password" className="form-control" type="password"
-                         disabled={this.state.isLoading}
-                         placeholder={gettext("Password")}
-                         onChange={this.bindInput('password')}
-                         value={this.state.password} />
+                  <input
+                    className="form-control input-lg"
+                    disabled={this.state.isLoading}
+                    id="id_password"
+                    onChange={this.bindInput('password')}
+                    placeholder={gettext("Password")}
+                    type="password"
+                    value={this.state.password}
+                  />
                 </div>
               </div>
 
