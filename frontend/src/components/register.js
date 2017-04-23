@@ -254,17 +254,21 @@ export default class extends React.Component {
   render() {
     /* jshint ignore:start */
     if (this.state.complete) {
-      return <RegisterComplete activation={this.state.complete.activation}
-                               username={this.state.complete.username}
-                               email={this.state.complete.email} />;
-    } else {
       return (
-        <RegisterForm
-          callback={this.completeRegistration}
-          {...this.props}
+        <RegisterComplete
+          activation={this.state.complete.activation}
+          email={this.state.complete.email}
+          username={this.state.complete.username}
         />
       );
     }
+
+    return (
+      <RegisterForm
+        callback={this.completeRegistration}
+        {...this.props}
+      />
+    );
     /* jshint ignore:end */
   }
 }
