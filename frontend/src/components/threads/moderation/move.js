@@ -96,6 +96,14 @@ export default class extends Form {
 
       </div>
       <div className="modal-footer">
+        <button
+          className="btn btn-default"
+          data-dismiss="modal"
+          disabled={this.state.isLoading}
+          type="button"
+        >
+          {gettext("Cancel")}
+        </button>
         <button className="btn btn-primary">
           {gettext("Move threads")}
         </button>
@@ -119,6 +127,13 @@ export default class extends Form {
         <p>
           {gettext("You need permission to start threads in category to be able to move threads to it.")}
         </p>
+        <button
+          className="btn btn-default"
+          data-dismiss="modal"
+          type="button"
+        >
+          {gettext("Ok")}
+        </button>
       </div>
     </div>;
     /* jshint ignore:end */

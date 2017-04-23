@@ -74,6 +74,14 @@ export default class extends Form {
               >
                 {gettext("Add participant")}
               </button>
+              <button
+                className="btn btn-block btn-default"
+                data-dismiss="modal"
+                disabled={this.state.isLoading}
+                type="button"
+              >
+                {gettext("Cancel")}
+              </button>
             </div>
           </div>
         </form>

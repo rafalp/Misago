@@ -310,6 +310,14 @@ export class ModerationForm extends Form {
 
           </div>
           <div className="modal-footer">
+            <button
+              className="btn btn-default"
+              data-dismiss="modal"
+              disabled={this.state.isLoading}
+              type="button"
+            >
+              {gettext("Cancel")}
+            </button>
             <Button className="btn-primary" loading={this.state.isLoading}>
               {gettext("Split posts")}
             </Button>
@@ -343,6 +351,13 @@ export function Error(props) {
         <p>
           {props.message}
         </p>
+        <button
+          className="btn btn-default"
+          data-dismiss="modal"
+          type="button"
+        >
+          {gettext("Ok")}
+        </button>
       </div>
     </Modal>
   );

@@ -163,6 +163,14 @@ export class RegisterForm extends Form {
 
           </div>
           <div className="modal-footer">
+            <button
+              className="btn btn-default"
+              data-dismiss="modal"
+              disabled={this.state.isLoading}
+              type="button"
+            >
+              {gettext("Cancel")}
+            </button>
             <Button className="btn-primary" loading={this.state.isLoading}>
               {gettext("Register account")}
             </Button>
@@ -221,6 +229,13 @@ export class RegisterComplete extends React.Component {
                 this.getSubscript(),
                 {'email': this.props.email}, true)}
             </p>
+            <button
+              className="btn btn-default"
+              data-dismiss="modal"
+              type="button"
+            >
+              {gettext("Ok")}
+            </button>
           </div>
         </div>
       </div>

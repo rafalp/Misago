@@ -114,6 +114,14 @@ export default class extends Form {
                 </FormGroup>
               </div>
               <div className="modal-footer">
+                <button
+                  className="btn btn-default"
+                  data-dismiss="modal"
+                  disabled={this.state.isLoading}
+                  type="button"
+                >
+                  {gettext("Cancel")}
+                </button>
                 <button className="btn btn-primary" loading={this.state.isLoading || this.props.thread.isBusy}>
                   {gettext("Move thread")}
                 </button>
@@ -180,6 +188,13 @@ export function ModalMessage(props) {
           <p>
             {props.message}
           </p>
+          <button
+            className="btn btn-default"
+            data-dismiss="modal"
+            type="button"
+          >
+            {gettext("Ok")}
+          </button>
         </div>
       </div>
     </div>
