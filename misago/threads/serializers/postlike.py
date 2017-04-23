@@ -35,7 +35,7 @@ class PostLikeSerializer(serializers.ModelSerializer):
         return obj['liker_name']
 
     def get_avatars(self, obj):
-        return obj['liker__avatars']
+        return obj.get('liker__avatars')
 
     def get_url(self, obj):
         if obj['liker_id']:

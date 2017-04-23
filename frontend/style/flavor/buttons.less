@@ -5,7 +5,9 @@
 
 // mixins
 .misago-btn(@color, @bg, @color-hover, @bg-hover, @color-active, @bg-active) {
-  &, &:disabled, &:disabled:hover {
+  &,
+  &:disabled, &:disabled:hover,
+  &.disabled, &.disabled:hover, &.disabled:active {
     background: @bg;
     border: 1px solid @bg;
 
@@ -48,7 +50,8 @@
 .misago-btn-outline(@color, @bg, @border,
                     @color-hover, @bg-hover, @border-hover,
                     @color-active, @bg-active, @border-active) {
-  &, &:disabled, &:disabled:hover {
+  &, &:disabled, &:disabled:hover
+  &.disabled, &.disabled:hover, &.disabled:active {
     background: @bg;
     border: 1px solid @border;
 
