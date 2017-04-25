@@ -30,15 +30,15 @@ export default class extends React.Component {
       <div className="dropdown category-picker">
         <button
           type="button"
-          className="btn btn-default btn-outline btn-icon dropdown-toggle btn-block"
+          className="btn btn-default btn-outline dropdown-toggle btn-block"
           data-toggle="dropdown"
           aria-haspopup="true"
           aria-expanded="false"
         >
           <span className="material-icon">
-            more_horiz
+            label_outline
           </span>
-          <span className="btn-text hidden-xs">{' ' + gettext("Go to")}</span>
+          <span className="hidden-xs">{gettext("Category")}</span>
         </button>
         <ul className="dropdown-menu stick-to-bottom categories-menu">
           {this.props.choices.map((id) => {
