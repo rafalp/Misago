@@ -17,12 +17,24 @@
   }
 }
 
-.threads-list .thread-last-action {
-  padding-top: @padding-large-vertical + 2px;
+.thread-last-action {
+  .media-left, .media-body {
+    padding-top: 2px;
+  }
 }
 
 .threads-list .thread-options {
   padding-top: @padding-base-vertical - 1px;
+}
+
+
+// Thread starter
+// --------------------------------------------------
+.threads-list .thread-main {
+  .media-left {
+    padding-top: 2px;
+    padding-bottom: 1px;
+  }
 }
 
 
@@ -63,6 +75,21 @@
 
   .threads-list .thread-details-top {
     margin-bottom: @padding-base-vertical;
+  }
+}
+
+@media screen and (min-width: @screen-sm-min) {
+  .threads-list .thread-details-top {
+    margin-left: 54px;
+  }
+}
+
+
+// Last action
+// --------------------------------------------------
+.thread-last-action {
+  .thread-last-poster {
+    display: block;
   }
 }
 

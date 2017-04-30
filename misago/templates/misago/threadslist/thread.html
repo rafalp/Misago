@@ -1,157 +1,187 @@
-{% load i18n misago_capture %}
+{% load i18n misago_avatars misago_capture %}
 <li class="list-group-item thread-{{ thread.is_read|yesno:'read,new' }}" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+
+  <div class="thread-details-top">
+    {% if not thread.is_read %}
+      <a href="{{ thread.get_new_post_url }}" class="thread-detail-new">
+        <span class="material-icon">
+          comment
+        </span>
+        <span class="detail-text">
+          {% trans "New posts" %}
+        </span>
+      </a>
+    {% endif %}
+    {% if thread.weight == 2 %}
+      <span class="thread-detail-pinned-globally">
+        <span class="material-icon">
+          bookmark
+        </span>
+        <span class="detail-text">
+          {% trans "Pinned globally" %}
+        </span>
+      </span>
+    {% elif thread.weight %}
+      <span class="thread-detail-pinned-locally">
+        <span class="material-icon">
+          bookmark_border
+        </span>
+        <span class="detail-text">
+          {% trans "Pinned locally" %}
+        </span>
+      </span>
+    {% endif %}
+    {% if thread.is_unapproved %}
+      <span class="thread-detail-unapproved">
+        <span class="material-icon">
+          remove_circle
+        </span>
+        <span class="detail-text">
+          {% trans "Unapproved" %}
+        </span>
+      </span>
+    {% elif thread.has_unapproved_posts %}
+      <span class="thread-detail-unapproved-posts">
+        <span class="material-icon">
+          remove_circle_outline
+        </span>
+        <span class="detail-text">
+          {% trans "Unapproved posts" %}
+        </span>
+      </span>
+    {% endif %}
+    {% if thread.category != category %}
+      <a class="item-title thread-detail-category visible-xs-inline-block {% if thread.category.css_class %}thread-detail-category-{{ thread.category.css_class }}{% endif %}" href="{{ thread.category.get_absolute_url }}">
+        {{ thread.category.name }}
+      </a>
+    {% endif %}
+    <a href="{{ thread.get_last_post_url }}" class="visible-xs-inline-block thread-detail-last-reply" title="{{ thread.last_post_on|date:'DATETIME_FORMAT' }}">
+      {{ thread.last_post_on|date }}
+    </a>
+    {% if thread.last_poster_id %}
+      <a href="{% url 'misago:user' slug=thread.last_poster_slug pk=thread.last_poster_id %}" class="visible-xs-inline-block item-title thread-last-poster">
+        {{ thread.last_poster_name }}
+      </a>
+    {% else %}
+      <span class="visible-xs-inline-block item-title thread-last-poster">
+        {{ thread.last_poster_name }}
+      </span>
+    {% endif %}
+  </div>
+
   <div class="row thread-row">
     <div class="col-xs-12 col-md-7 thread-main">
 
-      <div class="thread-details-top">
-        {% if not thread.is_read %}
-          <a href="{{ thread.get_new_post_url }}" class="thread-detail-new">
-            <span class="material-icon">
-              comment
-            </span>
-            <span class="detail-text">
-              {% trans "New posts" %}
-            </span>
-          </a>
-        {% endif %}
-        {% if thread.weight == 2 %}
-          <span class="thread-detail-pinned-globally">
-            <span class="material-icon">
-              bookmark
-            </span>
-            <span class="detail-text">
-              {% trans "Pinned globally" %}
-            </span>
-          </span>
-        {% elif thread.weight %}
-          <span class="thread-detail-pinned-locally">
-            <span class="material-icon">
-              bookmark_border
-            </span>
-            <span class="detail-text">
-              {% trans "Pinned locally" %}
-            </span>
-          </span>
-        {% endif %}
-        {% if thread.is_unapproved %}
-          <span class="thread-detail-unapproved">
-            <span class="material-icon">
-              remove_circle
-            </span>
-            <span class="detail-text">
-              {% trans "Unapproved" %}
-            </span>
-          </span>
-        {% elif thread.has_unapproved_posts %}
-          <span class="thread-detail-unapproved-posts">
-            <span class="material-icon">
-              remove_circle_outline
-            </span>
-            <span class="detail-text">
-              {% trans "Unapproved posts" %}
-            </span>
-          </span>
-        {% endif %}
-        {% if thread.category != category %}
-          <a class="item-title thread-detail-category visible-xs-inline-block {% if thread.category.css_class %}thread-detail-category-{{ thread.category.css_class }}{% endif %}" href="{{ thread.category.get_absolute_url }}">
-            {{ thread.category.name }}
-          </a>
-        {% endif %}
-        <a href="{{ thread.get_last_post_url }}" class="visible-xs-inline-block thread-detail-last-reply" title="{{ thread.last_post_on|date:'DATETIME_FORMAT' }}">
-          {{ thread.last_post_on|date }}
-        </a>
-        {% if thread.last_poster_id %}
-          <a href="{% url 'misago:user' slug=thread.last_poster_slug pk=thread.last_poster_id %}" class="visible-xs-inline-block item-title thread-last-poster">
-            {{ thread.last_poster_name }}
-          </a>
-        {% else %}
-          <span class="visible-xs-inline-block item-title thread-last-poster">
-            {{ thread.last_poster_name }}
-          </span>
-        {% endif %}
-      </div>
+      <div class="media">
+        <div class="media-left hidden-xs">
 
-      <a href="{{ thread.get_absolute_url }}" class="item-title thread-title" itemprop="url">
-        <span itemprop="name">{{ thread.title }}</span>
-      </a>
-
-      <div class="thread-details-bottom">
-        <div class="row thread-details-bottom">
-          <div class="col-xs-12">
-            {% if thread.category != category %}
-              <a class="item-title thread-detail-category hidden-xs {% if thread.category.css_class %}thread-detail-category-{{ thread.category.css_class }}{% endif %}" href="{{ thread.category.get_absolute_url }}">
-                {{ thread.category.name }}
-              </a>
-            {% endif %}
-            {% if thread.is_hidden %}
-              <span class="thread-detail-hidden">
-                <span class="material-icon">
-                  visibility_off
-                </span>
-                <span class="detail-text hidden-xs">
-                  {% trans "Hidden" %}
-                </span>
-              </span>
-            {% endif %}
-            {% if thread.is_closed %}
-              <span class="thread-detail-closed">
-                <span class="material-icon">
-                  lock_outline
-                </span>
-                <span class="detail-text hidden-xs">
-                  {% trans "Closed" %}
-                </span>
-              </span>
-            {% endif %}
-            {% if thread.has_poll %}
-              <span class="thread-detail-poll">
-                <span class="material-icon">
-                  assessment
-                </span>
-                <span class="detail-text hidden-xs">
-                  {% trans "Poll" %}
-                </span>
-              </span>
-            {% endif %}
-            <span class="thread-detail-replies">
-              <span class="material-icon">
-                forum
-              </span>
-              <span class="detail-text">
-                {% blocktrans trimmed count replies=thread.replies %}
-                  {{ replies }} reply
-                {% plural %}
-                  {{ replies }} replies
-                {% endblocktrans %}
-              </span>
-            </span>
-            <a href="{{ thread.get_last_post_url }}" class="visible-sm-inline-block thread-detail-last-reply" title="{{ thread.last_post_on|date:'DATETIME_FORMAT' }}">
-              {{ thread.last_post_on|date }}
+          {% if thread.starter %}
+            <a href="{{ thread.starter.get_absolute_url }}" class="thread-starter-avatar">
+              <img src="{{ thread.starter|avatar:40 }}" width="40" height="40" alt="">
             </a>
-            {% if thread.last_poster_id %}
-              <a href="{% url 'misago:user' slug=thread.last_poster_slug pk=thread.last_poster_id %}" class="visible-sm-inline-block item-title thread-last-poster">
-                {{ thread.last_poster_name }}
-              </a>
-            {% else %}
-              <span class="visible-sm-inline-block item-title thread-last-poster">
-                {{ thread.last_poster_name }}
-              </span>
-            {% endif %}
+          {% else %}
+            <span class="thread-starter-avatar">
+              <img src="{{ BLANK_AVATAR_URL }}" width="40" height="40" alt="">
+            </span>
+          {% endif %}
+
+        </div>
+        <div class="media-body">
+
+          <a href="{{ thread.get_absolute_url }}" class="item-title thread-title" itemprop="url">
+            <span itemprop="name">{{ thread.title }}</span>
+          </a>
+
+          <div class="thread-details-bottom">
+            <div class="row thread-details-bottom">
+              <div class="col-xs-12">
+                {% if thread.category != category %}
+                  <a class="item-title thread-detail-category hidden-xs {% if thread.category.css_class %}thread-detail-category-{{ thread.category.css_class }}{% endif %}" href="{{ thread.category.get_absolute_url }}">
+                    {{ thread.category.name }}
+                  </a>
+                {% endif %}
+                {% if thread.is_hidden %}
+                  <span class="thread-detail-hidden">
+                    <span class="material-icon">
+                      visibility_off
+                    </span>
+                    <span class="detail-text hidden-xs">
+                      {% trans "Hidden" %}
+                    </span>
+                  </span>
+                {% endif %}
+                {% if thread.is_closed %}
+                  <span class="thread-detail-closed">
+                    <span class="material-icon">
+                      lock_outline
+                    </span>
+                    <span class="detail-text hidden-xs">
+                      {% trans "Closed" %}
+                    </span>
+                  </span>
+                {% endif %}
+                {% if thread.has_poll %}
+                  <span class="thread-detail-poll">
+                    <span class="material-icon">
+                      assessment
+                    </span>
+                    <span class="detail-text hidden-xs">
+                      {% trans "Poll" %}
+                    </span>
+                  </span>
+                {% endif %}
+                <span class="thread-detail-replies">
+                  <span class="material-icon">
+                    forum
+                  </span>
+                  <span class="detail-text">
+                    {% blocktrans trimmed count replies=thread.replies %}
+                      {{ replies }} reply
+                    {% plural %}
+                      {{ replies }} replies
+                    {% endblocktrans %}
+                  </span>
+                </span>
+                <a href="{{ thread.get_last_post_url }}" class="visible-sm-inline-block thread-detail-last-reply" title="{{ thread.last_post_on|date:'DATETIME_FORMAT' }}">
+                  {{ thread.last_post_on|date }}
+                </a>
+                {% if thread.last_poster_id %}
+                  <a href="{% url 'misago:user' slug=thread.last_poster_slug pk=thread.last_poster_id %}" class="visible-sm-inline-block item-title thread-last-poster">
+                    {{ thread.last_poster_name }}
+                  </a>
+                {% else %}
+                  <span class="visible-sm-inline-block item-title thread-last-poster">
+                    {{ thread.last_poster_name }}
+                  </span>
+                {% endif %}
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
 
     </div>
     <div class="col-md-5 hidden-xs hidden-sm thread-last-action">
-      <div class="row">
-        <div class="col-xs-5">
-          <a href="{{ thread.get_last_post_url }}" class="thread-last-reply" title="{{ thread.last_post_on|date:'DATETIME_FORMAT' }}">
-            {{ thread.last_post_on|date }}
-          </a>
+
+      <div class="media">
+        <div class="media-left">
+
+          {% if thread.last_poster %}
+            <a href="{{ thread.last_poster.get_absolute_url }}" class="thread-last-poster-avatar">
+              <img src="{{ thread.last_poster|avatar:40 }}" width="40" height="40" alt="">
+            </a>
+          {% else %}
+            <span class="thread-last-poster-avatar">
+              <img src="{{ BLANK_AVATAR_URL }}" width="40" height="40" alt="">
+            </span>
+          {% endif %}
+
         </div>
-        <div class="col-xs-7">
-          {% if thread.last_poster_id %}
-            <a href="{% url 'misago:user' slug=thread.last_poster_slug pk=thread.last_poster_id %}" class="item-title thread-last-poster">
+        <div class="media-body">
+
+          {% if thread.last_poster %}
+            <a href="{{ thread.last_poster.get_absolute_url }}" class="item-title thread-last-poster">
               {{ thread.last_poster_name }}
             </a>
           {% else %}
@@ -159,6 +189,10 @@
               {{ thread.last_poster_name }}
             </span>
           {% endif %}
+          <a href="{{ thread.get_last_post_url }}" class="thread-last-reply" title="{{ thread.last_post_on|date:'DATETIME_FORMAT' }}">
+            {{ thread.last_post_on|date }}
+          </a>
+
         </div>
       </div>
     </div>

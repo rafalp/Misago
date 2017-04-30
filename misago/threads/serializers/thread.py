@@ -120,8 +120,7 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
                     'pk': obj.last_poster_id,
                 }
             )
-        else:
-            return None
+        return None
 
 
 class PrivateThreadSerializer(ThreadSerializer):
@@ -137,10 +136,33 @@ class PrivateThreadSerializer(ThreadSerializer):
 class ThreadsListSerializer(ThreadSerializer):
     category = serializers.PrimaryKeyRelatedField(read_only=True)
     last_post = serializers.PrimaryKeyRelatedField(read_only=True)
+    starter = serializers.SerializerMethodField()
+    last_poster = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Thread
-        fields = ThreadSerializer.Meta.fields + ['has_poll']
+        fields = ThreadSerializer.Meta.fields + [
+            'has_poll',
+            'starter',
+            'last_poster',
+        ]
+
+    def get_starter(self, obj):
+        if obj.starter_id:
+            return {
+                'id': obj.starter_id,
+                'avatars': obj.starter.avatars,
+            }
+        return None
+
+    def get_last_poster(self, obj):
+        if obj.last_poster_id:
+            return {
+                'id': obj.last_poster_id,
+                'avatars': obj.last_poster.avatars,
+            }
+        return None
 
 
 ThreadsListSerializer = ThreadsListSerializer.exclude_fields('path', 'poll')

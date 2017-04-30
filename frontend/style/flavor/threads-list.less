@@ -1,0 +1,112 @@
+//
+// Threads Lists Flavor
+// --------------------------------------------------
+
+
+.threads-list .thread-main {
+  img {
+    border-radius: @border-radius-base;
+    margin: 0px 2px;
+  }
+}
+
+.threads-list .thread-last-action {
+  img {
+    border-radius: @border-radius-base;
+  }
+
+  .thread-last-reply {
+    &, &:link, &:visited {
+      color: @gray-light;
+      font-size: @font-size-small;
+    }
+
+    &:hover, &:focus, &:active {
+      color: @gray;
+    }
+  }
+}
+
+// Details
+.threads-list .thread-details-top {
+  color: @gray-light;
+
+  a, a:link, a:visited {
+    color: @gray-light;
+    font-size: @font-size-small;
+  }
+
+  a:hover, a:focus, a:active {
+    color: @text-color;
+  }
+
+  .thread-detail-new {
+    &, &:link, &:visited {
+      color: @thread-unread-badge-color;
+    }
+
+    &:hover, &:focus, &:active {
+      color: darken(@thread-unread-badge-color, 10%);
+    }
+  }
+
+  .thread-detail-pinned-globally {
+    color: @thread-global-badge-color;
+  }
+
+  .thread-detail-pinned-locally {
+    color: @thread-pinned-badge-color;
+  }
+
+  .thread-detail-unapproved {
+    color: @thread-unapproved-badge-color;
+  }
+
+  .thread-detail-unapproved-posts {
+    color: @thread-unapproved-posts-badge-color;
+  }
+}
+
+.threads-list .thread-details-bottom {
+  color: @gray-light;
+
+  a, a:link, a:visited {
+    color: @gray;
+    font-size: @font-size-small;
+  }
+
+  a:hover, a:focus, a:active {
+    color: @text-color;
+  }
+}
+
+// Read state
+.threads-list .thread-read {
+  .thread-title {
+    &, &:link, &:visited, &:hover, &:focus, &:active {
+      color: @gray;
+    }
+  }
+}
+
+// New state
+.threads-list .thread-new {
+}
+
+// Diff message
+.threads-diff-message .btn {
+  .misago-btn(
+    @threads-diff-color,
+    @threads-diff-bg,
+
+    @threads-diff-hover-color,
+    @threads-diff-hover-bg,
+
+    @threads-diff-active-color,
+    @threads-diff-active-bg
+  );
+
+  &, &:hover, &:focus, &:focus:active, &:active {
+    border: none;
+  }
+}
