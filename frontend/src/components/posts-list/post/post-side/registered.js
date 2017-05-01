@@ -1,15 +1,26 @@
 /* jshint ignore:start */
 import React from 'react';
 import Avatar from 'misago/components/avatar';
-import UserStatus, { StatusIcon, StatusLabel } from 'misago/components/user-status';
+import Controls from 'misago/components/posts-list/post/controls';
+import Select from 'misago/components/posts-list/post/select';
+import UserStatus, { StatusIcon } from 'misago/components/user-status';
 import UserPostcount from './user-postcount';
+import UserStatusLabel from './user-status';
 import UserTitle from './user-title';
 
-export default function({ post }) {
+export default function({ post, thread }) {
   const { poster } = post;
 
   return (
-    <div className="col-md-3 post-side post-side-registered">
+    <div className="col-xs-12 col-md-3 post-side post-side-registered">
+      <Select
+        post={post}
+        thread={thread}
+      />
+      <Controls
+        post={post}
+        thread={thread}
+      />
       <div className="media">
         <div className="media-left">
           <a href={poster.absolute_url}>
@@ -22,25 +33,24 @@ export default function({ post }) {
         </div>
         <div className="media-body">
 
-          <a
-            className="media-heading item-title"
-            href={poster.absolute_url}
-          >
-            {poster.username}
-          </a>
+          <div className="media-heading">
+            <a
+              className="item-title"
+              href={poster.absolute_url}
+            >
+              {poster.username}
+            </a>
+            <UserStatus status={poster.status}>
+              <StatusIcon status={poster.status} />
+            </UserStatus>
+          </div>
 
           <UserTitle
             rank={poster.rank}
             title={poster.title}
           />
 
-          <UserStatus status={poster.status}>
-            <StatusLabel
-              status={poster.status}
-              user={poster}
-            />
-          </UserStatus>
-
+          <UserStatusLabel poster={poster} />
           <UserPostcount poster={poster} />
 
         </div>

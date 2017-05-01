@@ -59,7 +59,7 @@ export class Like extends React.Component {
         onClick={this.onClick}
         type="button"
       >
-        {this.props.post.is_liked ? gettext("Unlike") : gettext("Like")}
+        {this.props.post.is_liked ? gettext("Liked") : gettext("Like")}
       </button>
     );
   }

@@ -3,14 +3,14 @@ import React from 'react';
 import Anonymous from './anonymous';
 import Registered from './registered';
 
-export default function({ post }) {
-  if (post.poster) {
+export default function(props) {
+  if (props.post.poster) {
     return (
-      <Registered post={post} />
+      <Registered {...props} />
     );
   }
 
   return (
-    <Anonymous post={post} />
+    <Anonymous {...props} />
   );
 }

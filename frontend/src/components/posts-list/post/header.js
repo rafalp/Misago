@@ -4,7 +4,6 @@ import Controls from './controls';
 import Select from './select';
 import {StatusIcon, getStatusClassName, getStatusDescription} from 'misago/components/user-status';
 import PostChangelog from 'misago/components/post-changelog';
-import PosterAvatar from './poster-avatar';
 import modal from 'misago/services/modal';
 
 export default function(props) {
@@ -13,9 +12,9 @@ export default function(props) {
       <UnreadLabel {...props} />
       <UnreadCompact {...props} />
       <PostedOn {...props} />
-      <PostEdits {...props} />
       <PostedOnCompact {...props} />
-      <EditedCompact {...props} />
+      <PostEdits {...props} />
+      <PostEditsCompacts {...props} />
       <ProtectedLabel {...props} />
       <Select {...props} />
       <Controls {...props} />
@@ -41,21 +40,12 @@ export function PostedOn(props) {
 
 export function PostedOnCompact(props) {
   return (
-    <span className="posted-on-compact visible-xs-inline-block">
-      {props.post.posted_on.fromNow()}
-    </span>
-  );
-}
-
-export function EditedCompact(props) {
-  const isHidden = props.post.is_hidden && !props.post.acl.can_see_hidden;
-  const isUnedited = props.post.edits === 0;
-  if (isHidden || isUnedited) return null;
-
-  return (
-    <span className="edited-compact visible-xs-inline-block">
-      {gettext("edited")}
-    </span>
+    <a
+      href={props.post.url.index}
+      className="btn btn-link posted-on visible-xs-inline-block"
+    >
+      {props.post.posted_on.fromNow(true)}
+    </a>
   );
 }
 
@@ -63,8 +53,8 @@ export function UnreadCompact(props) {
   if (props.post.is_read) return null;
 
   return (
-    <span className="unread-compact text-warning visible-xs-inline-block">
-      {gettext("new")}
+    <span className="label label-unread visible-xs-inline-block">
+      {gettext("New")}
     </span>
   );
 }
@@ -102,6 +92,32 @@ export class PostEdits extends React.Component {
         className="btn btn-link btn-see-edits hidden-xs"
         onClick={this.onClick}
         title={title}
+        type="button"
+      >
+        {interpolate(label, {
+          'edits': this.props.post.edits
+        }, true)}
+      </button>
+    )
+  }
+}
+
+export class PostEditsCompacts extends PostEdits {
+  render() {
+    const isHidden = this.props.post.is_hidden && !this.props.post.acl.can_see_hidden;
+    const isUnedited = this.props.post.edits === 0;
+    if (isHidden || isUnedited) return null;
+
+    const label = ngettext(
+      "%(edits)s edit",
+      "%(edits)s edits",
+      this.props.post.edits
+    );
+
+    return (
+      <button
+        className="btn btn-link btn-see-edits visible-xs-inline-block"
+        onClick={this.onClick}
         type="button"
       >
         {interpolate(label, {

@@ -28,8 +28,15 @@ export default function(props) {
 }
 
 export function GotoMenu(props) {
+  const { user } = props;
+
+  let className = 'col-xs-3 col-sm-3 col-md-5';
+  if (user.is_anonymous) {
+    className = 'col-xs-12 col-sm-3 col-md-5';
+  }
+
   return (
-    <div className="col-xs-3 col-md-5">
+    <div className={className}>
       <div className="row hidden-xs hidden-sm">
         <GotoLast thread={props.thread} />
         <GotoNew thread={props.thread} />
@@ -89,6 +96,20 @@ export function GotoLast(props) {
 }
 
 export function CompactOptions(props) {
+  const { user } = props;
+  if (user.is_anonymous) {
+    return (
+      <div className="visible-xs-block visible-sm-block">
+        <a
+          href={props.thread.url.last_post}
+          className="btn btn-default btn-block btn-outline"
+        >
+          {gettext("Last post")}
+        </a>
+      </div>
+    );
+  }
+
   return (
     <div className="dropdown visible-xs-block visible-sm-block">
       <button
@@ -100,6 +121,9 @@ export function CompactOptions(props) {
       >
         <span className="material-icon">
           expand_more
+        </span>
+        <span className="btn-text hidden-xs">
+          {gettext("Options")}
         </span>
       </button>
       <ul className="dropdown-menu">
@@ -120,7 +144,7 @@ export function GotoNewCompact(props) {
     <li>
       <a
         href={props.thread.url.new_post}
-        className="btn btn-default"
+        className="btn btn-link"
       >
         {gettext("Go to first new post")}
       </a>
@@ -137,7 +161,7 @@ export function GotoUnapprovedCompact(props) {
     <li>
       <a
         href={props.thread.url.unapproved_post}
-        className="btn btn-default"
+        className="btn btn-link"
       >
         {gettext("Go to first unapproved post")}
       </a>
@@ -150,7 +174,7 @@ export function GotoLastCompact(props) {
     <li>
       <a
         href={props.thread.url.last_post}
-        className="btn btn-default"
+        className="btn btn-link"
       >
         {gettext("Go to last post")}
       </a>

@@ -6,7 +6,6 @@ import { FlagHidden, FlagUnapproved, FlagProtected } from './flags';
 import Footer from './footer';
 import Header from './header';
 import PostSide from './post-side';
-import PosterAvatar from './poster-avatar';
 
 export default function(props) {
   let className = 'post';
@@ -26,8 +25,8 @@ export default function(props) {
         <div className="panel-body">
 
           <div className="row">
-            <PostSide post={props.post} />
-            <div className="col-md-9">
+            <PostSide {...props} />
+            <div className="col-xs-12 col-md-9">
               <Header {...props} />
               <FlagUnapproved {...props} />
               <FlagProtected {...props} />

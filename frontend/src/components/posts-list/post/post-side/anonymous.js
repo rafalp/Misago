@@ -6,9 +6,16 @@ import UserPostcount from './user-postcount';
 import UserTitle from './user-title';
 
 export default function({ post }) {
-  console.log(post);
   return (
-    <div className="col-md-3 post-side post-side-anonymous">
+    <div className="col-xs-12 col-md-3 post-side post-side-anonymous">
+      <Select
+        post={post}
+        thread={thread}
+      />
+      <Controls
+        post={post}
+        thread={thread}
+      />
       <div className="media">
         <div className="media-left">
           <span>

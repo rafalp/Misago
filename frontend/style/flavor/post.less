@@ -6,36 +6,9 @@
 // Post side
 .post-side {
   color: @gray-light;
-  font-size: @font-size-small;
 
   .poster-avatar {
     border-radius: @border-radius-base;
-
-    margin-top: 4px;
-
-    height: 82px;
-    width: 82px;
-  }
-
-  .media-heading {
-    display: block;
-    margin-top: 3px;
-
-    font-size: @font-size-large;
-  }
-
-  .user-title {
-    display: block;
-    margin-top: -4px;
-    margin-bottom: 5px;
-  }
-
-  .user-postcount {
-    display: block;
-  }
-
-  .user-status {
-    display: block;
   }
 }
 
@@ -49,6 +22,7 @@
 
   .label-protected {
     background-color: transparent;
+    margin-left: @padding-base-horizontal * 2;
 
     position: relative;
     top: 1px;
@@ -85,13 +59,30 @@
   }
 }
 
+
 // Status
-.post-status-hidden, .post-status-unapproved {
+.post-status-message {
   border-radius: @border-radius-base;
   margin-top: @line-height-computed / 2;
   padding: @padding-base-vertical @padding-base-horizontal;
+  
+  @media screen and (max-width: @screen-xs-max) {
+    font-size: @font-size-small;
 
-  text-align: center;
+    .material-icon {
+      margin-top: 3px;
+    }
+
+    p {
+      margin-top: 0px;
+    }
+  }
+}
+
+
+// Post body
+.post-body:last-child {
+  padding-bottom: @line-height-computed / 2;
 }
 
 
@@ -101,6 +92,16 @@
   border: none;
   border-radius: @border-radius-base;
   margin-bottom: @line-height-computed * 1.5;
+
+  &:last-child {
+    margin-bottom: @line-height-computed / 2;
+  }
+
+  @media screen and (max-width: @screen-xs-max) {
+    border-radius: 0px;
+    margin: 0px -15px;
+    margin-bottom: @line-height-computed;
+  }
 }
 
 
@@ -129,14 +130,16 @@
 
 // Hidden and invalid messages
 .post-body-hidden, .post-body-invalid {
-  padding-top: @line-height-computed / 5;
-  padding-bottom: 0px;
-
-  p {
-    margin-bottom: 0px;
+  padding-top: @line-height-computed / 2;
+  padding-bottom: @line-height-computed / 2;
+  
+  .lead {
+    margin-bottom: @line-height-computed / 2;
   }
 
   .text-muted {
+    margin-bottom: 0px;
+
     font-size: @font-size-small;
   }
 }
@@ -145,8 +148,4 @@
 // Fade out hidden posts a little
 .post-hidden {
   .opacity(0.75);
-
-  &:hover {
-    .opacity(1);
-  }
 }
