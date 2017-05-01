@@ -2,14 +2,16 @@
 import React from 'react';
 import Avatar from 'misago/components/avatar';
 
-export default function(props) {
-  if (props.post.poster) {
+export default function({ post, size }) {
+  if (post.poster) {
     return (
-      <a href={props.post.poster.absolute_url}>
-        <Avatar size={props.size || 100} size2x={props.size || 150} user={props.post.poster} />
+      <a href={post.poster.absolute_url}>
+        <Avatar size={size || 100} size2x={size || 150} user={post.poster} />
       </a>
     );
-  } else {
-    return <Avatar size={props.size || 100} />;
   }
+
+  return (
+    <Avatar size={size || 100} />
+  );
 }

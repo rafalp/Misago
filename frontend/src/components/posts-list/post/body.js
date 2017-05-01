@@ -20,7 +20,7 @@ export default function(props) {
 
 export function Default(props) {
  return (
-    <Waypoint className="panel-body" post={props.post}>
+    <Waypoint className="post-body" post={props.post}>
       <MisagoMarkup markup={props.post.content} />
     </Waypoint>
   );
@@ -50,8 +50,8 @@ export function Hidden(props) {
   }, true);
 
   return (
-    <Waypoint className="panel-body panel-body-hidden" post={props.post}>
-      <p className="lead">{gettext("This post is hidden. You cannot not see its contents.")}</p>
+    <Waypoint className="post-body post-body-hidden" post={props.post}>
+      <p className="lead">{gettext("This post is hidden. You cannot see its contents.")}</p>
       <p className="text-muted" dangerouslySetInnerHTML={{__html: message}} />
     </Waypoint>
   );
@@ -59,7 +59,7 @@ export function Hidden(props) {
 
 export function Invalid(props) {
  return (
-    <Waypoint className="panel-body panel-body-invalid" post={props.post}>
+    <Waypoint className="post-body post-body-invalid" post={props.post}>
       <p className="lead">{gettext("This post's contents cannot be displayed.")}</p>
       <p className="text-muted">{gettext("This error is caused by invalid post content manipulation.")}</p>
     </Waypoint>

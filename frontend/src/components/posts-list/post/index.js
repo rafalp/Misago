@@ -5,6 +5,7 @@ import Body from './body';
 import { FlagHidden, FlagUnapproved, FlagProtected } from './flags';
 import Footer from './footer';
 import Header from './header';
+import PostSide from './post-side';
 import PosterAvatar from './poster-avatar';
 
 export default function(props) {
@@ -21,20 +22,22 @@ export default function(props) {
 
   return (
     <li id={'post-' + props.post.id} className={className}>
-      <div className="post-border">
-        <div className="post-avatar post-avatar-lg">
-          <PosterAvatar post={props.post} />
-        </div>
-        <div className="post-body">
-          <div className="panel panel-default panel-post">
-            <Header {...props} />
-            <FlagHidden {...props} />
-            <FlagUnapproved {...props} />
-            <FlagProtected {...props} />
-            <Body {...props} />
-            <Attachments {...props} />
-            <Footer {...props} />
+      <div className="panel panel-default panel-post">
+        <div className="panel-body">
+
+          <div className="row">
+            <PostSide post={props.post} />
+            <div className="col-md-9">
+              <Header {...props} />
+              <FlagUnapproved {...props} />
+              <FlagProtected {...props} />
+              <FlagHidden {...props} />
+              <Body {...props} />
+              <Attachments {...props} />
+              <Footer {...props} />
+            </div>
           </div>
+
         </div>
       </div>
     </li>

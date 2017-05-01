@@ -3,67 +3,44 @@
 // --------------------------------------------------
 
 
-// Post unread border
-.post-new .panel-default {
-  border-color: @brand-warning;
-}
+// Heading
+.post-heading {
+  height: 36px;
 
-
-// Post header
-.post-heading-container {
-  overflow: visible;
-  height: 22px;
-
-  &>* {
-    float: left;
-    margin-left: 0px;
-    margin-right: 8px;
-
-    &.pull-right {
-      float: right;
-      margin-left: 8px;
-      margin-right: 0px;
-    }
+  .pull-right {
+    margin-left: @padding-large-horizontal;
   }
-}
 
-.post-heading .label {
-  position: relative;
-  top: 3px;
-}
+  &>.btn-link {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
 
-.post-heading .btn-sm {
-  margin-top: -3px;
-  margin-bottom: 0px;
-  padding: 4px @padding-small-horizontal;
-}
+  .label {
+    margin-top: 6px;
 
-.post-heading .btn-icon {
-  margin: -6px 0px;
-  margin-left: 8px;
-  padding: 0px 3px;
-
-  .material-icon {
-    position: static;
-
-    width: 28px;
-    height: 28px;
-
-    font-size: 28px;
-    line-height: 28px;
+    font-size: @font-size-base;
+    font-weight: normal;
   }
 }
 
 
-// Post status flags
+// Body
+.post-body {
+  padding-top: @line-height-computed;
+  padding-bottom: @line-height-computed * 1.5;
+}
+
+
+// Status
 .post-status-message {
-  padding: @padding-base-vertical @padding-base-horizontal;
   overflow: auto;
 
   .material-icon {
     float: left;
 
     font-size: 28px;
+    line-height: 28px;
   }
 
   p {
@@ -76,38 +53,44 @@
 
 .post-status-hidden {
   background-color: @brand-danger;
+  
   color: #fff;
 }
 
 
 .post-status-unapproved {
   background-color: @brand-primary;
+  
   color: #fff;
 }
 
 
 .post-status-protected {
   background-color: @gray;
+  
   color: #fff;
 }
 
 
-// Hidden post message
-.posts-list .panel-body-hidden {
-  .lead, .text-muted {
-    margin: 0px;
+// Footer
+.post-footer {
+  .pull-left {
+    margin-right: @padding-large-horizontal;
+  }
+
+  .pull-right {
+    margin-left: @padding-large-horizontal;
+  }
+
+  p {
+    padding-top: 7px;
+    padding-bottom: 6px;
+    margin-bottom: 0px;
   }
 }
 
-// Invalid post message
-.posts-list .panel-body-invalid {
-  .lead, .text-muted {
-    margin: 0px;
-  }
-}
 
-
-// Post attachments
+// Attachments
 .post-attachments {
   @post-preview-width: 40px;
 
@@ -169,93 +152,5 @@
 
     color: @text-muted;
     font-size: @font-size-small;
-  }
-}
-
-
-// Post footer
-.post-footer {
-  overflow: auto;
-
-  .btn.pull-right {
-    margin-left: @line-height-computed / 2;
-  }
-
-  p.pull-left {
-    margin: 0px;
-    margin-left: @line-height-computed / 2;
-    padding: (@padding-base-vertical + 1px) 0px;
-  }
-}
-
-
-// UI Preview
-.posts-list.ui-preview {
-  .post-heading .ui-preview-text {
-    position: relative;
-    top: 0px;
-  }
-}
-
-
-// Mobile tweaks
-@media screen and (max-width: @screen-xs-max) {
-  .post-heading .post-heading-container {
-    margin-left: 46px;
-    height: 34px;
-
-    position: relative;
-    bottom: 2px;
-
-    .pull-right {
-      margin-top: -31px;
-    }
-  }
-
-  .post-heading .user-status {
-    margin-right: 3px;
-  }
-
-  .post-heading {
-    .posted-on-compact, .edited-compact, .unread-compact {
-      margin-top: -14px;
-
-      font-size: @font-size-small;
-    }
-  }
-
-  .post-heading .unread-compact {
-    color: @brand-warning;
-  }
-
-  .post-heading .posted-on-compact {
-    clear: left;
-  }
-
-  .post-heading .btn-icon {
-    margin-top: 0px;
-    margin-bottom: 0px;
-    padding: 1px 4px;
-  }
-
-  .post-heading .post-avatar-sm {
-    float: left;
-
-    img {
-      width: 35px;
-      height: 35px;
-    }
-  }
-
-  .post-footer {
-    .btn, p {
-      font-size: @font-size-small;
-    }
-
-    p .material-icon {
-      margin-right: 3px;
-      position: relative;
-      bottom: 1px;
-    }
   }
 }

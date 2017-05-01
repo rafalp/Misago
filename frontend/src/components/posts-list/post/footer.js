@@ -9,7 +9,7 @@ export default function(props) {
   if (!isVisible(props.post)) return null;
 
   return (
-    <div className="panel-footer post-footer">
+    <div className="post-footer">
       <Like {...props} />
       <Likes
         lastLikes={props.post.last_likes}
@@ -47,9 +47,14 @@ export class Like extends React.Component {
   render() {
     if (!this.props.post.acl.can_like) return null;
 
+    let className = 'btn btn-default btn-sm pull-left';
+    if (this.props.post.is_liked) {
+      className = 'btn btn-success btn-sm pull-left';
+    }
+
     return (
       <button
-        className="btn btn-default pull-left"
+        className={className}
         disabled={this.props.post.isBusy}
         onClick={this.onClick}
         type="button"
@@ -76,7 +81,7 @@ export class Likes extends React.Component {
     if (this.props.post.acl.can_see_likes === 2) {
       return (
         <button
-          className="btn btn-link pull-left hidden-xs"
+          className="btn btn-link btn-sm pull-left hidden-xs"
           onClick={this.onClick}
           type="button"
         >
@@ -101,7 +106,7 @@ export class LikesCompact extends Likes {
     if (this.props.post.acl.can_see_likes === 2) {
       return (
         <button
-          className="btn btn-link likes-compact pull-left visible-xs-block"
+          className="btn btn-link btn-sm likes-compact pull-left visible-xs-block"
           onClick={this.onClick}
           type="button"
         >
@@ -177,7 +182,11 @@ export class Reply extends React.Component {
   render() {
     if (this.props.post.acl.can_reply) {
       return (
-        <button type="button" className="btn btn-primary pull-right" onClick={this.onClick}>
+        <button
+          className="btn btn-primary btn-sm pull-right"
+          type="button"
+          onClick={this.onClick}
+        >
           {gettext("Reply")}
         </button>
       );
@@ -200,7 +209,11 @@ export class Edit extends React.Component {
   render() {
     if (this.props.post.acl.can_edit) {
       return (
-        <button type="button" className="btn btn-default pull-right" onClick={this.onClick}>
+        <button
+          className="btn btn-default btn-sm pull-right"
+          type="button"
+          onClick={this.onClick}
+        >
           {gettext("Edit")}
         </button>
       );

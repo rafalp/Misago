@@ -1,0 +1,152 @@
+//
+// Posts Flavor
+// --------------------------------------------------
+
+
+// Post side
+.post-side {
+  color: @gray-light;
+  font-size: @font-size-small;
+
+  .poster-avatar {
+    border-radius: @border-radius-base;
+
+    margin-top: 4px;
+
+    height: 82px;
+    width: 82px;
+  }
+
+  .media-heading {
+    display: block;
+    margin-top: 3px;
+
+    font-size: @font-size-large;
+  }
+
+  .user-title {
+    display: block;
+    margin-top: -4px;
+    margin-bottom: 5px;
+  }
+
+  .user-postcount {
+    display: block;
+  }
+
+  .user-status {
+    display: block;
+  }
+}
+
+
+// Header
+.post-heading {
+  .label-unread {
+    background-color: @post-unread-label;
+    margin-right: @padding-large-horizontal;
+  }
+
+  .label-protected {
+    background-color: transparent;
+
+    position: relative;
+    top: 1px;
+
+    color: @post-protected-icon;
+
+    .material-icon {
+      margin-right: 2px;
+
+      position: relative;
+      top: -1px;
+
+      font-size: 16px;
+      line-height: 16px;
+    }
+  }
+
+  &>.btn-link {
+    padding-left: 0px;
+    padding-right: 0px;
+
+    &, &:link, &:visited {
+      color: @gray-light;
+    }
+
+    &:hover, &:focus, &:focus:active, &:active {
+      color: @text-color;
+      text-decoration: none;
+    }
+  }
+
+  .btn-see-edits {
+    margin-left: @padding-base-horizontal * 2;
+  }
+}
+
+// Status
+.post-status-hidden, .post-status-unapproved {
+  border-radius: @border-radius-base;
+  margin-top: @line-height-computed / 2;
+  padding: @padding-base-vertical @padding-base-horizontal;
+
+  text-align: center;
+}
+
+
+// Attachments
+.post-attachments {
+  background-color: darken(@panel-bg, 5%);
+  border: none;
+  border-radius: @border-radius-base;
+  margin-bottom: @line-height-computed * 1.5;
+}
+
+
+// Footer
+.post-footer {
+  &>.btn-link {
+    padding-left: 0px;
+    padding-right: 0px;
+
+    &, &:link, &:visited {
+      color: @gray-light;
+    }
+
+    &:hover, &:focus, &:focus:active, &:active {
+      color: @text-color;
+      text-decoration: none;
+    }
+  }
+
+  p {
+    color: @gray-light;
+    font-size: @font-size-small;
+  }
+}
+
+
+// Hidden and invalid messages
+.post-body-hidden, .post-body-invalid {
+  padding-top: @line-height-computed / 5;
+  padding-bottom: 0px;
+
+  p {
+    margin-bottom: 0px;
+  }
+
+  .text-muted {
+    font-size: @font-size-small;
+  }
+}
+
+
+// Fade out hidden posts a little
+.post-hidden {
+  .opacity(0.75);
+
+  &:hover {
+    .opacity(1);
+  }
+}
