@@ -162,6 +162,33 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
         response = self.client.get(self.tested_links[1])
         self.assertContains(response, unapproved_post.get_absolute_url())
 
+    def test_api_validates_has_unapproved_posts_visibility(self):
+        """api checks acl before exposing unapproved flag"""
+        self.thread.has_unapproved_posts = True
+        self.thread.save()
+
+        for link in self.tested_links:
+            self.override_acl()
+
+            response = self.client.get(link)
+            self.assertEqual(response.status_code, 200)
+
+            response_json = response.json()
+            self.assertEqual(response_json['id'], self.thread.pk)
+            self.assertEqual(response_json['title'], self.thread.title)
+            self.assertFalse(response_json['has_unapproved_posts'])
+
+        for link in self.tested_links:
+            self.override_acl({'can_approve_content': 1})
+
+            response = self.client.get(link)
+            self.assertEqual(response.status_code, 200)
+
+            response_json = response.json()
+            self.assertEqual(response_json['id'], self.thread.pk)
+            self.assertEqual(response_json['title'], self.thread.title)
+            self.assertTrue(response_json['has_unapproved_posts'])
+
 
 class ThreadsReadApiTests(ThreadsApiTestCase):
     def setUp(self):

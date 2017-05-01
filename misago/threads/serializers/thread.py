@@ -26,6 +26,7 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
     category = BasicCategorySerializer(many=False, read_only=True)
 
     acl = serializers.SerializerMethodField()
+    has_unapproved_posts = serializers.SerializerMethodField()
     is_new = serializers.SerializerMethodField()
     is_read = serializers.SerializerMethodField()
     path = BasicCategorySerializer(many=True, read_only=True)
@@ -67,6 +68,14 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             return obj.acl
         except AttributeError:
             return {}
+
+    def get_has_unapproved_posts(self, obj):
+        try:
+            acl = obj.acl
+        except AttributeError:
+            return False
+
+        return acl.get('can_approve') and obj.has_unapproved_posts
 
     def get_is_new(self, obj):
         try:
@@ -138,7 +147,6 @@ class ThreadsListSerializer(ThreadSerializer):
     last_post = serializers.PrimaryKeyRelatedField(read_only=True)
     starter = serializers.SerializerMethodField()
     last_poster = serializers.SerializerMethodField()
-
 
     class Meta:
         model = Thread
