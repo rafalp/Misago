@@ -48,7 +48,7 @@
     <script src="{% static 'misago/js/misago.js' %}"></script>
     {% include "misago/scripts.html" %}
     <script type="text/javascript">
-      // misago.init({{ frontend_context|as_json }});
+      misago.init({{ frontend_context|as_json }});
     </script>
 
   </body>
