@@ -3,26 +3,28 @@ import React from 'react';
 import Icon from './icon';
 import Info from './info';
 import Message from './message';
+import UnreadLabel from './unread-label';
 import Waypoint from '../waypoint';
 
 export default function(props) {
   let className = 'event';
   if (props.post.isDeleted) {
     className = 'hide';
-  } else if (props.post.is_hidden && !props.post.acl.can_see_hidden) {
+  } else if (props.post.is_hidden) {
     className = 'event post-hidden';
   }
 
   return (
     <li id={'post-' + props.post.id} className={className}>
-      <div className="post-border">
-
-        <Icon {...props} />
-        <Waypoint className="post-body" post={props.post}>
+      <UnreadLabel post={props.post} />
+      <div className="media">
+        <div className="media-left">
+          <Icon {...props} />
+        </div>
+        <Waypoint className="media-body" post={props.post}>
           <Message {...props} />
           <Info {...props} />
         </Waypoint>
-
       </div>
     </li>
   );

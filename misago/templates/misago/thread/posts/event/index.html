@@ -1,8 +1,15 @@
 {% load i18n misago_capture misago_shorthands %}
 <li id="post-{{ post.pk }}" class="event {{ post.is_hidden|iftrue:'event-hidden' }}">
-  <div class="post-border">
+  {% if not post.is_read %}
+    <div class="event-label">
+      <span class="label label-unread">
+        {% trans "New event" %}
+      </span>
+    </div>
+  {% endif %}
+  <div class="media">
 
-    <div class="post-avatar">
+    <div class="media-left">
       <span class="material-icon">
         {% if post.event_type == 'changed_title' %}
           edit
@@ -38,7 +45,7 @@
       </span>
     </div>
 
-    <div class="post-body">
+    <div class="media-body">
       <p class="event-message">
         {% if post.event_type == 'changed_title' %}
           {% capture trimmed as old_title %}
