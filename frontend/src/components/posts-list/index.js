@@ -13,19 +13,23 @@ export default function(props) {
         })}
       </ul>
     );
-  } else {
-    return (
-      <ul className="posts-list ui-preview">
-        <PostPreview />
-      </ul>
-    );
   }
+
+  return (
+    <ul className="posts-list ui-preview">
+      <PostPreview />
+    </ul>
+  );
 }
 
 export function ListItem(props) {
   if (props.post.is_event) {
-    return <Event {...props} />;
-  } else {
-    return <Post {...props} />;
+    return (
+      <Event {...props} />
+    );
   }
+
+  return (
+    <Post {...props} />
+  );
 }

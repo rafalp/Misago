@@ -22,6 +22,26 @@ export default function(props) {
   );
 }
 
+export function UnreadLabel(props) {
+  if (props.post.is_read) return null;
+
+  return (
+    <span className="label label-unread hidden-xs">
+      {gettext("New post")}
+    </span>
+  );
+}
+
+export function UnreadCompact(props) {
+  if (props.post.is_read) return null;
+
+  return (
+    <span className="label label-unread visible-xs-inline-block">
+      {gettext("New")}
+    </span>
+  );
+}
+
 export function PostedOn(props) {
   const tooltip = interpolate(gettext("posted %(posted_on)s"), {
     'posted_on': props.post.posted_on.format('LL, LT')
@@ -46,16 +66,6 @@ export function PostedOnCompact(props) {
     >
       {props.post.posted_on.fromNow(true)}
     </a>
-  );
-}
-
-export function UnreadCompact(props) {
-  if (props.post.is_read) return null;
-
-  return (
-    <span className="label label-unread visible-xs-inline-block">
-      {gettext("New")}
-    </span>
   );
 }
 
@@ -126,16 +136,6 @@ export class PostEditsCompacts extends PostEdits {
       </button>
     )
   }
-}
-
-export function UnreadLabel(props) {
-  if (props.post.is_read) return null;
-
-  return (
-    <span className="label label-unread hidden-xs">
-      {gettext("New post")}
-    </span>
-  );
 }
 
 export function ProtectedLabel(props) {

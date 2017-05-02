@@ -1,0 +1,79 @@
+{% load i18n misago_avatars %}
+<div class="col-xs-12 col-md-3 post-side post-side-{% if post.poster %}registered{% else %}anonymous{% endif %}">
+  <div class="pull-right">
+    <a href="{{ post.get_absolute_url }}" title="{% trans 'Post link' %}" class="btn btn-default btn-icon">
+      <span class="material-icon">
+        link
+      </span>
+    </a>
+  </div>
+  {% if post.poster %}
+    <div class="media">
+      <div class="media-left">
+        <a href="{{ post.poster.get_absolute_url }}">
+          <img class="poster-avatar" src="{{ post.poster|avatar:100 }}" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+
+        <div class="media-heading">
+          <a class="item-title" href="{{ post.poster.get_absolute_url }}">
+            <span itemprop="author">{{ post.poster.username }}</span>
+          </a>
+        </div>
+
+        {% if post.poster.get_any_title %}
+          {% if post.poster.rank.is_tab %}
+            <a href="{{ post.poster.rank.get_absolute_url }}" class="user-title {% if post.poster.rank.css_class %}user-title-{{ post.poster.rank.css_class }}{% endif %}">
+          {% else %}
+            <span class="user-title {% if post.poster.rank.css_class %}user-title-{{ post.poster.rank.css_class }}{% endif %}">
+          {% endif %}
+          {{ post.poster.get_any_title }}
+          {% if post.poster.rank.is_tab %}
+            </a>
+          {% else %}
+            </span>
+          {% endif %}
+        {% endif %}
+
+        {% if post.poster.title or post.poster.rank.title or post.poster.rank.is_tab %}
+          <span class="user-postcount hidden-xs hidden-sm">
+            {% blocktrans trimmed count posts=post.poster.posts %}
+              {{ posts }} post
+            {% plural %}
+              {{ posts }} posts
+            {% endblocktrans %}
+          </span>
+        {% else %}
+          <span class="user-postcount">
+            {% blocktrans trimmed count posts=post.poster.posts %}
+              {{ posts }} post
+            {% plural %}
+              {{ posts }} posts
+            {% endblocktrans %}
+          </span>
+        {% endif %}
+
+      </div>
+    </div>
+  {% else %}
+    <div class="media">
+      <div class="media-left">
+        <span>
+          <img class="poster-avatar" src="{{ BLANK_AVATAR_URL }}" width="100" height="100" alt="">
+        </span>
+      </div>
+      <div class="media-body">
+
+        <span class="media-heading item-title" itemprop="author">
+          {{ post.poster_name }}
+        </span>
+
+        <span class="user-title user-title-anonymous">
+          {% trans "Removed user" %}
+        </span>
+
+      </div>
+    </div>
+  {% endif %}
+</div>
