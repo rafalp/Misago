@@ -133,7 +133,7 @@ export function PinOptions(props) {
       break;
 
     case 1:
-      icon = 'info_outline';
+      icon = 'bookmark_outline';
       onClick = props.onPinGlobally;
       label = gettext("Pinned locally");
 
@@ -146,7 +146,7 @@ export function PinOptions(props) {
       break;
 
     case 2:
-      icon = 'info';
+      icon = 'bookmark';
       onClick = props.onUnpin;
       label = gettext("Pinned globally");
       break;

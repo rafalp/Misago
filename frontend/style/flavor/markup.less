@@ -1,0 +1,59 @@
+//
+// Markup Flavor
+// --------------------------------------------------
+
+
+// Round images
+.misago-markup img {
+  border-radius: @border-radius-base;
+}
+
+
+// Quote block
+.misago-markup .quote-block,
+.misago-markup blockquote {
+  background-color: #ffecb3;
+  border-color: #b3e5fc;
+  overflow: hidden;
+
+  color: #3e2723;
+
+  .quote-heading {
+    background-color: #ffe082;
+    border: none;
+
+    color: #795548;
+
+    a, a:link, a:visited {
+      color: #5d4037;
+    }
+
+    a:hover, a:focus, a:active {
+      color: #3e2723;
+    }
+  }
+
+  hr {
+    border-color: #ffca28;
+  }
+}
+
+.misago-markup>.quote-block,
+.misago-markup>blockquote {
+  background: #ffecb3;
+  border: none;
+  border-radius: @border-radius-base;
+
+  .quote-block { 
+    background: #ffecb3;
+  }
+}
+
+.misago-markup .quote-body {
+  background: #ffecb3;
+
+  &>.quote-block, &>blockquote {
+    border-color: #ffe082;
+    border-radius: @border-radius-base;
+  }
+}
