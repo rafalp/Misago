@@ -118,8 +118,19 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             'new_post': obj.get_new_post_url(),
             'last_post': obj.get_last_post_url(),
             'unapproved_post': obj.get_unapproved_post_url(),
+            'starter': self.get_starter_url(obj),
             'last_poster': self.get_last_poster_url(obj),
         }
+
+    def get_starter_url(self, obj):
+        if obj.starter_id:
+            return reverse(
+                'misago:user', kwargs={
+                    'slug': obj.starter_slug,
+                    'pk': obj.starter_id,
+                }
+            )
+        return None
 
     def get_last_poster_url(self, obj):
         if obj.last_poster_id:

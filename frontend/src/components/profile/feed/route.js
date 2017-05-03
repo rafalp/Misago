@@ -1,6 +1,6 @@
 // jshint ignore:start
 import React from 'react';
-import PostsList from './posts-list';
+import PostFeed from 'misago/components/post-feed';
 import Button from 'misago/components/button';
 import * as posts from 'misago/reducers/posts';
 import title from 'misago/services/page-title';
@@ -83,9 +83,10 @@ export function Feed(props) {
 
   return (
     <div>
-      <PostsList
+      <PostFeed
         isReady={props.posts.isLoaded}
         posts={props.posts.results}
+        poster={props.profile}
       />
       <LoadMoreButton
         isLoading={props.isLoading}

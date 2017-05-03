@@ -125,6 +125,11 @@ def make_posts_read_aware(user, thread, posts):
         for post in posts:
             if is_date_tracked(post.posted_on, user):
                 post.is_read = post.posted_on <= thread.last_read_on
+                print '----' * 8
+                print thread.title
+                print is_thread_read
+                print thread.last_read_on
+                print post.posted_on
             else:
                 post.is_read = True
             post.is_new = not post.is_read

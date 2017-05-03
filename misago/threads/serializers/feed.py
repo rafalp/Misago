@@ -32,3 +32,6 @@ class FeedSerializer(PostSerializer, MutableFields):
             'title': obj.thread.title,
             'url': obj.thread.get_absolute_url(),
         }
+
+
+FeedSerializer = FeedSerializer.exclude_fields('is_liked', 'is_new', 'is_read')

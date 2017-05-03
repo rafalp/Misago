@@ -212,6 +212,15 @@
   }
 }
 
+
+// Insert blank space between tabs and details on smallest displays
+@media screen and (max-width: @screen-xs-max) {
+  .header-stats + .page-tabs {
+    margin-top: @line-height-computed * 1.5;
+  }
+}
+
+
 // Title edit form
 .title-edit-form {
   margin-bottom: @line-height-computed / 2 + 2px;
