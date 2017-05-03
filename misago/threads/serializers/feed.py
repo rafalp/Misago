@@ -12,7 +12,14 @@ __all__ = [
     'FeedSerializer',
 ]
 
-FeedUserSerializer = UserSerializer.subset_fields('id', 'username', 'avatars', 'absolute_url')
+FeedUserSerializer = UserSerializer.subset_fields(
+    'id',
+    'username',
+    'avatars',
+    'absolute_url',
+    'title',
+    'rank',
+)
 
 FeedCategorySerializer = CategorySerializer.subset_fields('name', 'css_class', 'absolute_url')
 

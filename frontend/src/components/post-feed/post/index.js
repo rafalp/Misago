@@ -1,6 +1,6 @@
 /* jshint ignore:start */
 import React from 'react';
-import Body from 'misago/components/posts-list/post/body';
+import Body from './body';
 import Header from './header';
 import PostSide from './post-side';
 
