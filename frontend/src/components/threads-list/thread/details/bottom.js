@@ -64,7 +64,7 @@ export default function({category, isBusy, showOptions, isSelected, thread}) {
         thread={thread}
       />
     </div>
-  );
+  );;
 }
 
 export function HiddenLabel({ display, textClassName }) {
@@ -79,7 +79,7 @@ export function HiddenLabel({ display, textClassName }) {
         {gettext("Hidden")}
       </span>
     </span>
-  )
+  );
 }
 
 export function ClosedLabel({ display, textClassName }) {
@@ -94,7 +94,7 @@ export function ClosedLabel({ display, textClassName }) {
         {gettext("Closed")}
       </span>
     </span>
-  )
+  );
 }
 
 export function PollLabel({ display, textClassName }) {
@@ -109,7 +109,7 @@ export function PollLabel({ display, textClassName }) {
         {gettext("Poll")}
       </span>
     </span>
-  )
+  );
 }
 
 export function RepliesLabel({ replies, forceFullText }) {
@@ -141,7 +141,7 @@ export function RepliesLabel({ replies, forceFullText }) {
         {interpolate(text, { replies }, true)}
       </span>
     </span>
-  )
+  );
 }
 
 export function LastReplyLabel({ datetime, url }) {
@@ -153,7 +153,7 @@ export function LastReplyLabel({ datetime, url }) {
     >
       {datetime.fromNow(true)}
     </a>
-  )
+  );
 }
 
 export function LastPoster(props) {
@@ -172,5 +172,5 @@ export function LastPoster(props) {
     <span className={className}>
       {posterName}
     </span>
-  );
+  );;
 }

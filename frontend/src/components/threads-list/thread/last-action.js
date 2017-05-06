@@ -9,6 +9,7 @@ export default function({ thread }) {
       <div className="media-left">
         <UserUrl
           className="thread-last-poster-avatar"
+          title={thread.last_poster_name}
           url={thread.url.last_poster}
         >
           <Avatar

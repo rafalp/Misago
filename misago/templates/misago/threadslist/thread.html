@@ -76,11 +76,11 @@
         <div class="media-left hidden-xs">
 
           {% if thread.starter %}
-            <a href="{{ thread.starter.get_absolute_url }}" class="thread-starter-avatar">
+            <a href="{{ thread.starter.get_absolute_url }}" class="thread-starter-avatar" title="{{ thread.starter_name }}">
               <img src="{{ thread.starter|avatar:40 }}" width="40" height="40" alt="">
             </a>
           {% else %}
-            <span class="thread-starter-avatar">
+            <span class="thread-starter-avatar" title="{{ thread.starter_name }}">
               <img src="{{ BLANK_AVATAR_URL }}" width="40" height="40" alt="">
             </span>
           {% endif %}
@@ -168,11 +168,11 @@
         <div class="media-left">
 
           {% if thread.last_poster %}
-            <a href="{{ thread.last_poster.get_absolute_url }}" class="thread-last-poster-avatar">
+            <a href="{{ thread.last_poster.get_absolute_url }}" class="thread-last-poster-avatar" title="{{ thread.last_poster_name }}">
               <img src="{{ thread.last_poster|avatar:40 }}" width="40" height="40" alt="">
             </a>
           {% else %}
-            <span class="thread-last-poster-avatar">
+            <span class="thread-last-poster-avatar" title="{{ thread.last_poster_name }}">
               <img src="{{ BLANK_AVATAR_URL }}" width="40" height="40" alt="">
             </span>
           {% endif %}

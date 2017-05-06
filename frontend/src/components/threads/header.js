@@ -134,7 +134,7 @@ export default class extends React.Component {
     /* jshint ignore:start */
     let headerClassName = 'col-xs-12';
     if (this.hasGoBackButton()) {
-      headerClassName += ' col-sm-10 col-lg-11 sm-margin-top-half';
+      headerClassName += ' col-sm-10 col-lg-11 sm-align-row-buttons';
     }
 
     const isAuthenticated = !!this.props.user.id;
@@ -144,7 +144,7 @@ export default class extends React.Component {
         <div className="page-header">
           <div className="container">
             <div className="row">
-              <div className={isAuthenticated ? "col-md-8" : "col-xs-12"}>
+              <div className={isAuthenticated ? "col-sm-6 col-md-8" : "col-xs-12"}>
                 <div className="row">
                   {this.getGoBackButton()}
                   <div className={headerClassName}>
@@ -157,8 +157,8 @@ export default class extends React.Component {
                 </div>
               </div>
               {isAuthenticated && (
-                <div className="col-md-4 xs-margin-top">
-                  <div className="row sm-margin-top">
+                <div className="col-sm-6 col-md-4 xs-margin-top">
+                  <div className="row">
                     {this.getMarkAsReadButton()}
                     {this.getStartThreadButton()}
                   </div>

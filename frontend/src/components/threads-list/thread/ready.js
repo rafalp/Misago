@@ -48,6 +48,7 @@ export default function(props) {
 
               <UserUrl
                 className="thread-starter-avatar"
+                title={thread.starter_name}
                 url={thread.url.starter}
               >
                 <Avatar

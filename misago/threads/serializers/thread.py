@@ -45,6 +45,7 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             'replies',
             'has_unapproved_posts',
             'started_on',
+            'starter_name',
             'last_post_on',
             'last_post_is_event',
             'last_post',
