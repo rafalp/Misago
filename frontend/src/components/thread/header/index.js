@@ -77,7 +77,7 @@ export default class extends Form {
 
   handleError(rejection) {
     if (rejection.status === 400) {
-      console.log(rejection);
+      snackbar.error(rejection.detail[0]);
     } else {
       snackbar.apiError(rejection);
     }
