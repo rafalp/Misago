@@ -1,5 +1,6 @@
 // jshint ignore:start
 import React from 'react';
+import AddParticipant from './add-participant';
 import CardsList from './cards-list';
 import * as utils from './utils';
 
@@ -13,7 +14,12 @@ export default function(props) {
           userIsOwner={getUserIsOwner(props.user, props.participants)}
           {...props}
         />
-        <p>{utils.getParticipantsCopy(props.participants)}</p>
+        <div className="row">
+          <AddParticipant thread={props.thread} />
+          <div className="col-xs-12 col-sm-9">
+            <p>{utils.getParticipantsCopy(props.participants)}</p>
+          </div>
+        </div>
       </div>
     </div>
   );

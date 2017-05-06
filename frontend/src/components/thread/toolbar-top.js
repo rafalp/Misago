@@ -2,13 +2,10 @@
 import React from 'react';
 import ReplyButton from './reply-button';
 import Subscription from './subscription';
-import AddParticipantModal from 'misago/components/add-participant';
-import modal from 'misago/services/modal';
 import posting from 'misago/services/posting';
 
 export default function(props) {
-  const hiddenSpecialOption = (
-    !props.thread.acl.can_add_participants && (!props.thread.acl.can_start_poll || props.thread.poll));
+  const hiddenSpecialOption = (!props.thread.acl.can_start_poll || props.thread.poll);
 
   return (
     <div className="row row-toolbar row-toolbar-bottom-margin">
@@ -19,7 +16,6 @@ export default function(props) {
           <Spacer visible={hiddenSpecialOption} />
           <SubscriptionMenu {...props} />
           <StartPoll {...props} />
-          <AddParticipant {...props} />
           <Reply {...props} />
         </div>
       </div>
@@ -128,7 +124,6 @@ export function CompactOptions(props) {
       </button>
       <ul className="dropdown-menu">
         <StartPollCompact {...props} />
-        <AddParticipantCompact {...props} />
         <GotoNewCompact {...props} />
         <GotoUnapprovedCompact {...props} />
         <GotoLastCompact {...props} />
@@ -202,7 +197,7 @@ export function SubscriptionMenu(props) {
     <div className="col-xs-12 col-sm-4">
       <Subscription
         className="dropdown"
-        dropdownClassName="dropdown-menu dropdown-menu-right"
+        dropdownClassName="dropdown-menu dropdown-menu-right stick-to-bottom"
         {...props}
       />
     </div>
@@ -256,51 +251,6 @@ export class StartPollCompact extends StartPoll {
           type="button"
         >
           {gettext("Add poll")}
-        </button>
-      </li>
-    );
-  }
-}
-
-export class AddParticipant extends React.Component {
-  onClick = () => {
-    modal.show(
-      <AddParticipantModal thread={this.props.thread} />
-    );
-  }
-
-  render() {
-    if (!this.props.thread.acl.can_add_participants) return null;
-
-    return (
-      <div className="col-sm-4 hidden-xs">
-        <button
-          className="btn btn-default btn-block btn-outline"
-          onClick={this.onClick}
-          type="button"
-        >
-          <span className="material-icon">
-            person_add
-          </span>
-          {gettext("Add participant")}
-        </button>
-      </div>
-    );
-  }
-}
-
-export class AddParticipantCompact extends AddParticipant {
-  render() {
-    if (!this.props.thread.acl.can_add_participants) return null;
-
-    return (
-      <li>
-        <button
-          className="btn btn-link"
-          onClick={this.onClick}
-          type="button"
-        >
-          {gettext("Add participant")}
         </button>
       </li>
     );

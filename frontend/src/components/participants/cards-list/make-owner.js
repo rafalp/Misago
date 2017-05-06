@@ -31,7 +31,11 @@ export default class extends React.Component {
 
     return (
       <li>
-        <button type="button" onClick={this.onClick} className="btn-link btn-sm">
+        <button
+          className="btn btn-link"
+          onClick={this.onClick}
+          type="button"
+        >
           {gettext("Make owner")}
         </button>
       </li>
