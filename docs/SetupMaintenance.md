@@ -1,7 +1,7 @@
 Setup and maintenance
 =====================
 
-Misago is Python and Django application which means system requirements as well as setup process and way maintenace taks are performed may appear confusing and suprising to administrators that have no experience outside of running PHP solutions.
+Misago is Python and Django application which means system requirements as well as setup process and way maintenace tasks are performed may appear confusing and suprising to administrators that have no experience outside of running PHP solutions.
 
 
 ## Installing Misago
