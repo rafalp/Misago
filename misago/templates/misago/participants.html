@@ -1,40 +1,45 @@
-{% load i18n misago_avatars misago_batch %}
+{% load i18n misago_avatars %}
 <div class="panel panel-default panel-participants">
   <div class="panel-body">
     <div class="participants-cards">
-      {% for row in participants|batch:4 %}
-        <div class="row">
-          {% for participant in row %}
-            <div class="col-xs-12 col-sm-6 col-md-3 participant-card">
-              <a class="avatar-link" href="{{ participant.user.get_absolute_url }}">
-                <img class="user-avatar" src="{{ participant.user|avatar:50 }}" alt="">
-              </a>
-              <div class="participant-profile">
-                <a class="item-title" href="{{ participant.user.get_absolute_url }}">
-                  {{ participant.user }}
-                </a>
-                <ul class="list-unstyled list-inline">
-                  {% if participant.is_owner %}
-                    <li class="participant-owner">
-                      <span class="material-icon">
-                        grade
-                      </span>
-                      {% trans "Owner" %}
-                    </li>
-                  {% endif %}
-                </ul>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-      {% endfor %}
+      <div class="row">
+        {% for participant in participants %}
+          <div class="col-xs-12 col-sm-3 col-md-2 participant-card">
+            <button
+              aria-haspopup="true"
+              aria-expanded="false"
+              class="btn btn-{{ participant.is_owner|yesno:'primary,default' }} btn-user btn-block"
+              data-toggle="dropdown"
+              type="button"
+              disabled
+            >
+              <img class="user-avatar" src="{{ participant.user|avatar:34 }}" height="34" width="34" alt="">
+              <span class="btn-text">
+                {{ participant.user }}
+              </span>
+            </button>
+          </div>
+        {% endfor %}
+      </div>
     </div>
-    <p>
-      {% blocktrans trimmed count users=participants|length %}
-        This thread has {{ users }} participant.
-      {% plural %}
-        This thread has {{ users }} participants.
-      {% endblocktrans %}
-    </p>
+    <div class="row">
+      {% if thread.acl.can_add_participants %}
+        <div class="col-xs-12 col-sm-3">
+          <button class="btn btn-default btn-block" type="button" disabled>
+            <span class="material-icon">person_add</span>
+            {% trans "Add participant" %}
+          </button>
+        </div>
+      {% endif %}
+      <div class="col-xs-12 col-sm-9">
+        <p>
+          {% blocktrans trimmed count users=participants|length %}
+            This thread has {{ users }} participant.
+          {% plural %}
+            This thread has {{ users }} participants.
+          {% endblocktrans %}
+        </p>
+      </div>
+    </div>
   </div>
 </div>
