@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function(props) {
   return (
-    <ul className="list-unstyled poll-choices-bars">
+    <div className="poll-choices-bars">
       {props.poll.choices.map((choice) => {
         return (
           <PollChoice
@@ -13,7 +13,7 @@ export default function(props) {
           />
         );
       })}
-    </ul>
+    </div>
   );
 }
 
@@ -24,32 +24,32 @@ export function PollChoice(props) {
   }
 
   return (
-    <li>
-      <ul className="list-unstyled list-inline poll-chart">
-        <li className="poll-char-label">
-          <strong>{props.choice.label}</strong>
-        </li>
-        <ChoiceVotes
-          proc={proc}
-          votes={props.choice.votes}
-        />
-        <UserChoice selected={props.choice.selected} />
-      </ul>
-      <div className="progress">
-        <div
-          className="progress-bar"
-          role="progressbar"
-          aria-valuenow={proc}
-          aria-valuemin="0"
-          aria-valuemax="100"
-          style={{width: proc + '%'}}
-        >
-          <span className="sr-only">
-            {getVotesLabel(props.votes, props.proc)}
-          </span>
+    <dl className="dl-horizontal">
+      <dt>{props.choice.label}</dt>
+      <dd>
+        <div className="progress">
+          <div
+            className="progress-bar"
+            role="progressbar"
+            aria-valuenow={proc}
+            aria-valuemin="0"
+            aria-valuemax="100"
+            style={{width: proc + '%'}}
+          >
+            <span className="sr-only">
+              {getVotesLabel(props.votes, props.proc)}
+            </span>
+          </div>
         </div>
-      </div>
-    </li>
+        <ul className="list-unstyled list-inline poll-chart">
+          <ChoiceVotes
+            proc={proc}
+            votes={props.choice.votes}
+          />
+          <UserChoice selected={props.choice.selected} />
+        </ul>
+      </dd>
+    </dl>
   );
 }
 
@@ -78,7 +78,7 @@ export function UserChoice(props) {
   return (
     <li className="poll-chart-selected">
       <span className="material-icon">
-        check_circle
+        check_box
       </span>
       {gettext("Your choice.")}
     </li>

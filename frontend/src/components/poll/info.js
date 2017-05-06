@@ -9,10 +9,10 @@ const USER_URL = '<a href="%(url)s" class="item-title">%(user)s</a>';
 export default function(props) {
   return (
     <ul className="list-unstyled list-inline poll-details">
-      <PollCreation poll={props.poll} />
-      <PollLength poll={props.poll} />
       <PollVotes votes={props.poll.votes} />
+      <PollLength poll={props.poll} />
       <PollIsPublic poll={props.poll} />
+      <PollCreation poll={props.poll} />
     </ul>
   );
 }
@@ -76,7 +76,7 @@ export function getEndsOn(poll) {
 }
 
 export function PollVotes(props) {
-  const message = ngettext("%(votes)s vote", "%(votes)s votes", props.votes);
+  const message = ngettext("%(votes)s vote.", "%(votes)s votes.", props.votes);
   const label = interpolate(message, {
     'votes': props.votes
   }, true);

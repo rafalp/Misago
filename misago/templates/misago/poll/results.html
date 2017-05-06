@@ -3,49 +3,49 @@
   <h2>{{ poll.question }}</h2>
   {% include "misago/poll/info.html" %}
 
-  <ul class="list-unstyled poll-choices-bars">
+  <div class="poll-choices-bars">
     {% for choice in poll.view_choices %}
-      <li>
-        <ul class="list-unstyled list-inline poll-chart">
-          <li class="poll-char-label">
-            <strong>{{ choice.label }}</strong>
-          </li>
-          <li class="poll-chart-votes">
-            {% blocktrans trimmed count votes=choice.votes with proc=choice.proc %}
-              {{ votes }} vote, {{ proc }}% of total.
-            {% plural %}
-              {{ votes }} votes, {{ proc }}% of total.
-            {% endblocktrans %}
-          </li>
-          {% if choice.selected %}
-            <li class="poll-chart-selected">
-              <span class="material-icon">
-                check_circle
-              </span> {% trans "Your choice." %}
-            </li>
-          {% endif %}
-        </ul>
-        <div class="progress">
-          <div
-            class="progress-bar"
-            role="progressbar"
-            aria-valuenow={proc}
-            aria-valuemin="0"
-            aria-valuemax="100"
-            style="width: {{ choice.proc }}%""
-          >
-            <span class="sr-only">
+      <dl class="dl-horizontal">
+        <dt>{{ choice.label }}</dt>
+        <dd>
+          <div class="progress">
+            <div
+              class="progress-bar"
+              role="progressbar"
+              aria-valuenow={proc}
+              aria-valuemin="0"
+              aria-valuemax="100"
+              style="width: {{ choice.proc }}%""
+            >
+              <span class="sr-only">
+                {% blocktrans trimmed count votes=choice.votes with proc=choice.proc %}
+                  {{ votes }} vote, {{ proc }}% of total.
+                {% plural %}
+                  {{ votes }} votes, {{ proc }}% of total.
+                {% endblocktrans %}
+              </span>
+            </div>
+          </div>
+          <ul class="list-unstyled list-inline poll-chart">
+            <li class="poll-chart-votes">
               {% blocktrans trimmed count votes=choice.votes with proc=choice.proc %}
                 {{ votes }} vote, {{ proc }}% of total.
               {% plural %}
                 {{ votes }} votes, {{ proc }}% of total.
               {% endblocktrans %}
-            </span>
-          </div>
-        </div>
-      </li>
+            </li>
+            {% if choice.selected %}
+              <li class="poll-chart-selected">
+                <span class="material-icon">
+                  check_box
+                </span> {% trans "Your choice." %}
+              </li>
+            {% endif %}
+          </ul>
+        </dd>
+      </dl>
     {% endfor %}
-  </ul>
+  </div>
 
   {% if poll.acl.can_vote or poll.acl.can_see_votes or poll.acl.can_edit or poll.acl.can_delete %}
     <div class="row poll-options">

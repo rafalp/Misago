@@ -15,14 +15,22 @@ export default function(props) {
   );
 }
 
-export function PollChoicesLeft(props) {
+export function PollChoicesLeft({ choicesLeft }) {
+  if (choicesLeft === 0) {
+    return (
+      <li className="poll-help-choices-left">
+        {gettext("You can't select any more choices.")}
+      </li>
+    );
+  }
+
   const message = ngettext(
-    "You can select %(choices)s choice.",
-    "You can select %(choices)s choices.",
-    props.choicesLeft);
+    "You can select %(choices)s more choice.",
+    "You can select %(choices)s more choices.",
+    choicesLeft);
 
   const label = interpolate(message, {
-    'choices': props.choicesLeft
+    'choices': choicesLeft
   }, true);
 
   return (
