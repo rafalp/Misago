@@ -3,159 +3,29 @@
 // --------------------------------------------------
 
 
-// Card container
+// Center card's content on larger displays
 .user-card {
-  background: @body-bg;
-  border: 1px solid @gray-lighter;
-  border-radius: @border-radius-large;
-  margin-bottom: @line-height-computed;
-  overflow: hidden;
-}
-
-
-// Inset image container
-.user-card-bg-image .bg-image {
-  display: none
-}
-
-
-// Details container
-.user-card .user-details {
-  padding: @padding-base-vertical @padding-base-horizontal;
-  overflow: auto;
-}
-
-
-// Avatar
-.user-card .user-details .user-avatar {
-  float: left;
-
-  img {
-    width: 60px;
-    height: 60px;
-  }
-
-  // Scale avatar down on mobile
-  @media screen and (max-width: @screen-sm-max) {
-    img {
-      width: 46px;
-      height: 46px;
-    }
+  @media screen and (min-width: @screen-sm-min) {
+    text-align: center;
   }
 }
 
 
-// Username
-.user-card .user-name {
-  margin-left: 76px;
-
-  .item-title {
-    font-size: @font-size-large;
-  }
-
-  // Move username to the left
-  @media screen and (max-width: @screen-sm-max) {
-    margin-left: 58px;
-    margin-top: @padding-small-vertical;
-    margin-bottom: @padding-base-vertical;
-  }
-}
-
-
-// Subscript containing details
-.user-card .user-subscript {
-  margin-left: 76px;
-  margin-bottom: 0px;
-  overflow: auto;
-
-  color: @text-muted;
-  font-size: @font-size-base * 0.66;
-
-  &>* {
-    display: block;
-    float: left;
-    height: auto;
-
-    padding: 0px;
-    margin: 0px;
-    margin-right: 8px;
-  }
-
-  // Move subscript to the left
-  @media screen and (max-width: @screen-sm-max) {
-    margin-left: 58px;
-  }
-
-  // Default UI preview style
-  .ui-preview-text {
-    position: relative;
-    top: auto;
-
-    height: @font-size-base * 0.66;
-
-    font-size: @font-size-base * 0.66;
-    line-height: @font-size-base * 0.66;
-  }
-}
-
-
-// Online state
-.user-card .user-status .status-icon {
-  margin-right: 2px;
-
-  position: relative;
-  bottom: 1px;
-
-  width: 11px;
-  height: 11px;
-
-  font-size: 11px;
-  line-height: 11px;
-
-  // UI preview icon
-  &.ui-preview-text {
-    margin-right: 3px;
-
-    position: relative;
-    bottom: 0px;
-
-    width: 12px;
-    height: 12px;
-
-    font-size: 12px;
-    line-height: 12px;
-  }
-}
-
-
-// Stats list
-.user-card .user-card-stats {
-  border-top: 1px solid @gray-lighter;
-  display: table;
-  table-layout: fixed;
+// Max out small avatar's width
+.user-card-small-avatar img {
   width: 100%;
+  height: auto;
+}
 
-  ul {
-    display: table-row;
-
-    li {
-      display: table-cell;
-      overflow: auto;
-      padding: @padding-base-vertical @padding-base-horizontal;
-
-      font-size: @font-size-small;
-      font-weight: bold;
-      text-align: center;
-    }
+// Toggle avatar visibility
+@media screen and (min-width: @screen-sm-min) {
+  .user-card-small-avatar {
+    display: none;
   }
+}
 
-  // Default UI preview style
-  .ui-preview-text {
-    position: static;
-
-    height: @font-size-small;
-
-    font-size: @font-size-small;
-    line-height: @font-size-small;
+@media screen and (max-width: @screen-xs-max) {
+  .user-card-avatar {
+    display: none;
   }
 }

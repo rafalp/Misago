@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from 'misago/components/button'; // jshint ignore:line
 import Search from 'misago/components/quick-search'; // jshint ignore:line
-import UsersList from 'misago/components/users-list/root'; // jshint ignore:line
+import UsersList from 'misago/components/users-list'; // jshint ignore:line
 import misago from 'misago/index';
 import { hydrate, append } from 'misago/reducers/users'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
@@ -197,18 +197,21 @@ export default class extends React.Component {
         {this.getEmptyMessage()}
       </p>;
       /* jshint ignore:end */
-    } else {
-      /* jshint ignore:start */
-      return <div>
-        <UsersList isLoaded={this.state.isLoaded}
-                   users={this.props.users}
-                   showRank={true}
-                   cols={2} />
+    }
+
+    /* jshint ignore:start */
+    return (
+      <div>
+        <UsersList
+          cols={3}
+          isReady={this.state.isLoaded}
+          users={this.props.users}
+        />
 
         {this.getMoreButton()}
-      </div>;
-      /* jshint ignore:end */
-    }
+      </div>
+    );
+    /* jshint ignore:end */
   }
 
   getClassName() {

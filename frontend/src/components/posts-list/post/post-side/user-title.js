@@ -1,7 +1,7 @@
 /* jshint ignore:start */
 import React from 'react';
 
-export default function({ title, rank }) {
+export default function({ rank, title }) {
   let userTitle = title || rank.title;
   if (!userTitle && rank.is_tab) {
     userTitle = rank.name;

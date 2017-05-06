@@ -1,14 +1,14 @@
 /* jshint ignore:start */
 import React from 'react';
 import Pager from 'misago/components/users/rank/pager';
-import UsersList from 'misago/components/users-list/root';
+import UsersList from 'misago/components/users-list';
 
 export default function(props) {
   return (
     <div>
       <UsersList
-        cols={3}
-        isLoaded={true}
+        cols={4}
+        isReady={true}
         showStatus={true}
         users={props.users}
       />
