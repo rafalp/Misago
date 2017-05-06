@@ -1,7 +1,7 @@
- // jshint ignore:start
- import React from 'react';
-import Card from 'misago/components/users-list/card';
-import Preview from 'misago/components/users-list/preview';
+// jshint ignore:start
+import React from 'react';
+import Card from './card';
+import Preview from './preview';
 
 
 export default function({ cols, isReady, showStatus, users }) {
@@ -13,6 +13,7 @@ export default function({ cols, isReady, showStatus, users }) {
   if (!isReady) {
     return (
       <Preview
+        colClassName={colClassName}
         cols={cols}
       />
     );
