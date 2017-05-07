@@ -74,8 +74,7 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
                 'plain': obj.description,
                 'html': format_plaintext_for_html(obj.description),
             }
-        else:
-            return None
+        return None
 
     def get_is_read(self, obj):
         try:
@@ -100,6 +99,14 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
     def get_last_post_url(self, obj):
         return obj.get_last_post_url()
 
+    def get_last_poster(self, obj):
+        if obj.last_poster_id:
+            return {
+                'id': obj.last_poster_id,
+                'avatars': obj.last_poster.avatars,
+            }
+        return None
+
     @last_activity_detail
     def get_last_poster_url(self, obj):
         if obj.last_poster_id:
@@ -109,8 +116,7 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
                     'pk': obj.last_poster_id,
                 }
             )
-        else:
-            return None
+        return None
 
     def get_acl(self, obj):
         try:
@@ -122,3 +128,15 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
         return {
             'read': obj.get_read_api_url(),
         }
+
+
+class CategoryWithPosterSerializer(CategorySerializer):
+    last_poster = serializers.SerializerMethodField()
+
+    def get_subcategories(self, obj):
+        try:
+            return CategoryWithPosterSerializer(obj.subcategories, many=True).data
+        except AttributeError:
+            return []
+
+CategoryWithPosterSerializer = CategoryWithPosterSerializer.extend_fields('last_poster')

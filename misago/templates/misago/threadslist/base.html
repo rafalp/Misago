@@ -67,7 +67,9 @@
                         {% trans "Why not start one yourself?" %}
                       </p>
                     {% else %}
-                      {% trans "No threads matching specified criteria were found." %}
+                      <p class="lead">
+                        {% trans "No threads matching specified criteria were found." %}
+                      </p>
                     {% endif %}
                   {% endblock list-empty-message %}
                 </li>

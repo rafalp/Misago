@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Categories, { select } from 'misago/components/categories/root';
+import Categories, { select } from 'misago/components/categories';
 import misago from 'misago/index';
 import mount from 'misago/utils/mount-component';
 

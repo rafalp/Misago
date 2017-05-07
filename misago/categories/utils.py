@@ -4,7 +4,7 @@ from misago.readtracker import categoriestracker
 from .models import Category
 
 
-def get_categories_tree(user, parent=None):
+def get_categories_tree(user, parent=None, join_posters=False):
     if not user.acl_cache['visible_categories']:
         return []
 
@@ -14,6 +14,8 @@ def get_categories_tree(user, parent=None):
         queryset = Category.objects.all_categories()
 
     queryset_with_acl = queryset.filter(id__in=user.acl_cache['visible_categories'])
+    if join_posters:
+        queryset_with_acl = queryset_with_acl.select_related('last_poster')
 
     visible_categories = list(queryset_with_acl)
 
