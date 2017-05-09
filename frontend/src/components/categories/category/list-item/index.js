@@ -7,6 +7,13 @@ import Subcategories from './subcategories';
 
 export default function({ category, isFirst }) {
   let className = 'list-group-item';
+
+  if (category.description) {
+    className += ' list-group-category-has-description';
+  } else {
+    className += ' list-group-category-no-description';
+  }
+
   if (isFirst) {
     className += ' list-group-item-first';
   }

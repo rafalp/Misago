@@ -24,6 +24,15 @@ class PrivateThread(ThreadType):
             }
         )
 
+    def get_category_last_thread_new_url(self, category):
+        return reverse(
+            'misago:private-thread-new',
+            kwargs={
+                'slug': category.last_thread_slug,
+                'pk': category.last_thread_id,
+            }
+        )
+
     def get_category_last_post_url(self, category):
         return reverse(
             'misago:private-thread-last',

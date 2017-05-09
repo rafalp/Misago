@@ -27,7 +27,7 @@ export function LastThread({ category }) {
         <div className="media-heading">
           <a
             className="item-title thread-title"
-            href={category.last_thread_url}
+            href={category.last_thread_new_url}
             title={category.last_thread_title}
           >
             {category.last_thread_title}
@@ -38,7 +38,7 @@ export function LastThread({ category }) {
             <LastPosterName category={category} />
           </li>
           <li className="divider">
-            -
+            &#8212;
           </li>
           <li className="category-last-thread-date">
             <a href={category.last_post_url}>

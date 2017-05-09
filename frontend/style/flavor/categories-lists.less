@@ -1,0 +1,120 @@
+//
+// Categories Lists Flavor
+// --------------------------------------------------
+
+
+// Make category read status icon visually larger
+.category-main .media-left {
+  .read-status {
+    background: @category-read-color;
+    border-radius: @border-radius-base;
+    padding: @padding-small-vertical (@padding-large-vertical - 2px);
+  }
+
+  .material-icon {
+    height: 14px;
+    width: 14px;
+
+    color: @gray;
+    font-size: 14px;
+    line-height: 14px;
+  }
+
+  .read-status.item-new {
+    background-color: @category-new-color;
+
+    .material-icon {
+      color: #fff;
+    }
+  }
+  
+  @media screen and (min-width: @screen-sm-min) {
+    padding: @padding-small-vertical 0px;
+  }
+}
+
+
+// Fix category main alignment
+.category-main .media-body {
+  padding-left: @padding-base-horizontal;
+  
+  @media screen and (max-width: @screen-xs-max) {
+    padding-left: @padding-small-horizontal / 3;
+  }
+}
+
+.list-group-category-no-description {
+  .category-main .media-heading {
+    margin-top: @padding-large-vertical;
+
+    @media screen and (max-width: @screen-xs-max) {
+      margin-top: @padding-large-vertical / 2;
+    }
+  }
+}
+
+
+// Make category name larger
+.category-main .media-heading {
+  a, a:link, a:visited {
+    color: @gray-dark;
+  }
+
+  a:focus, a:hover, a:active {
+    color: @text-color;
+  }
+}
+
+
+// Fade out stats
+.category-stats {
+  color: @gray;
+}
+
+
+// Fade out category description
+.category-main .category-description p {
+  font-size: @font-size-small;
+
+  &:last-child {
+    margin-bottom: 0px;
+  }
+}
+
+// Round last poster's up avatar
+.category-last-thread img {
+  border-radius: @border-radius-base;
+}
+
+// Last thread
+.category-last-thread .media-heading {
+  margin-bottom: 2px;
+
+  @media screen and (max-width: @screen-xs-max) {
+    margin-top: @line-height-computed / 2;
+  }
+}
+
+.category-last-thread .list-inline {
+  color: @gray-light;
+  font-size: @font-size-small;
+
+  a, a:link, a:visited {
+    color: @gray-light;
+  }
+
+  a:hover, a:active, a:focus {
+    color: @gray-dark;
+  }
+
+  .item-title {
+    &, &:link, &:visited {
+      color: @gray-dark;
+    }
+
+    &:hover, &:active, &:focus {
+      color: @text-color;
+    }
+  }
+}
+
