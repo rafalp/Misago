@@ -1,0 +1,87 @@
+{% load i18n misago_avatars misago_capture %}
+<div class="col-xs-12 col-sm-6 col-md-4 category-last-thread">
+  {% if category.acl.can_browse %}
+    {% if category.acl.can_see_all_threads %}
+      {% if category.last_thread_title %}
+        <div class="media">
+          <div class="media-left hidden-xs">
+            {% if category.last_poster_id %}
+              <a href="{{ category.last_poster.get_absolute_url }}" class="last-poster-avatar" title="{{ category.last_poster_name }}">
+                <img src="{{ category.last_poster|avatar:40 }}" width="40" height="40" alt="">
+              </a>
+            {% else %}
+              <span class="last-poster-avatar" title="{{ category.last_poster_name }}">
+                <img src="{{ BLANK_AVATAR_URL }}" width="40" height="40" alt="">
+              </span>
+            {% endif %}
+          </div>
+          <div class="media-body">
+            <div class="media-heading">
+              <a class="item-title thread-title" href="{{ category.get_last_thread_new_url }}" title="{{ category.last_thread_title }}">
+                {{ category.last_thread_title }}
+              </a>
+            </div>
+            <ul class="list-inline">
+              <li class="category-last-thread-poster">
+                {% if category.last_poster_id %}
+                  <a href="{{ category.last_poster.get_absolute_url }}" class="item-title">
+                    {{ category.last_poster_name }}
+                  </a>
+                {% else %}
+                  <span class="item-title">{{ category.last_poster_name }}</span>
+                {% endif %}
+              </li>
+              <li class="divider">
+                &#8212;
+              </li>
+              <li class="category-last-thread-date">
+                <a href="{{ category.get_last_post_url }}">
+                  {{ category.last_post_on|date:'DATETIME_FORMAT' }}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      {% else %}
+        <div class="media category-thread-message">
+          <div class="media-left">
+            <span class="material-icon">
+              info_outline
+            </span>
+          </div>
+          <div class="media-body">
+            <p>
+              {% trans "This category is empty. No threads were posted within it so far." %}
+            </p>
+          </div>
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="media category-thread-message">
+        <div class="media-left">
+          <span class="material-icon">
+            info_outline
+          </span>
+        </div>
+        <div class="media-body">
+          <p>
+            {% trans "This category is private. You can see only your own threads within it." %}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+  {% else %}
+    <div class="media category-thread-message">
+      <div class="media-left">
+        <span class="material-icon">
+          info_outline
+        </span>
+      </div>
+      <div class="media-body">
+        <p>
+          {% trans "This category is protected. You can't browse it's contents." %}
+        </p>
+      </div>
+    </div>
+  {% endif %}
+</div>

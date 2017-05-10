@@ -118,3 +118,23 @@
   }
 }
 
+
+// Last thread message
+.category-thread-message {
+  color: @gray-light;
+
+  .material-icon {
+    padding: @padding-base-vertical 0px;
+    margin-right: @padding-base-vertical / 2;
+  }
+
+  @media screen and (max-width: @screen-xs-max) {
+    padding-top: @line-height-computed * 0.75;
+
+    font-size: @font-size-small;
+
+    .material-icon {
+      padding: 3px 0px;
+    }
+  }
+}

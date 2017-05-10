@@ -106,9 +106,9 @@ export function Empty({ category }) {
   if (category.last_thread_title) return null;
 
   return (
-    <p className="category-thread-message category-thread-message-private">
-      {gettext("This category is private. You can see only your own threads within it.")}
-    </p>
+    <Message
+      message={gettext("This category is empty. No threads were posted within it so far.")}
+    />
   );
 }
 
@@ -117,9 +117,9 @@ export function Private({ category }) {
   if (category.acl.can_see_all_threads) return null;
 
   return (
-    <p className="category-thread-message category-thread-message-private">
-      {gettext("This category is private. You can see only your own threads within it.")}
-    </p>
+    <Message
+      message={gettext("This category is private. You can see only your own threads within it.")}
+    />
   );
 }
 
@@ -127,8 +127,25 @@ export function Protected({ category }) {
   if (category.acl.can_browse) return null;
 
   return (
-    <p className="category-thread-message category-thread-message-protected">
-      {gettext("This category is protected. You can't browse it's contents.")}
-    </p>
+    <Message
+      message={gettext("This category is protected. You can't browse it's contents.")}
+    />
+  );
+}
+
+export function Message({ message }) {
+  return (
+    <div className="media category-thread-message">
+      <div className="media-left">
+        <span className="material-icon">
+          info_outline
+        </span>
+      </div>
+      <div className="media-body">
+        <p>
+          {message}
+        </p>
+      </div>
+    </div>
   );
 }

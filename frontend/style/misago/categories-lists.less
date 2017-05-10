@@ -18,14 +18,39 @@
 
 // Last thread
 .category-last-thread .media-heading {
-  overflow: hidden;
-  white-space: nowrap;
-  width: 290px; // md-3 - avatar column
+  a {
+    display: inline-block;
+    overflow: hidden;
 
-  text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 290px; // md-3 - avatar column
 
-  @media screen and (max-width: @screen-xs-max) {
-    width: 260px; // md-3 - avatar column
+    text-overflow: ellipsis;
+    vertical-align: top;
+
+    @media screen and (max-width: @screen-sm-max) {
+      width: 275px; // md-3 - avatar column
+    }
+
+    @media screen and (max-width: @screen-xs-max) {
+      width: 260px; // md-3 - avatar column
+    }
+  }
+}
+
+
+// Last thread message
+.category-thread-message {
+  .material-icon {
+    width: 28px;
+    height: 28px;
+
+    font-size: 28px;
+    line-height: 28px;
+  }
+
+  p {
+    margin: 0px;
   }
 }
 
