@@ -23,6 +23,8 @@ export default function(props) {
     category = categories[thread.category];
   }
 
+  const flavor = category || activeCategory;
+
   let className = 'thread-main col-xs-12';
   if (showOptions) {
     if (thread.moderation.length) {
@@ -35,7 +37,7 @@ export default function(props) {
   }
 
   return (
-    <li className={getClassName(thread.is_read, isBusy, isSelected)}>
+    <li className={getClassName(thread.is_read, isBusy, isSelected, flavor)}>
       <TopDetails
         category={category}
         thread={thread}
@@ -90,8 +92,12 @@ export default function(props) {
   );
 }
 
-export function getClassName(isRead, isBusy, isSelected) {
+export function getClassName(isRead, isBusy, isSelected, flavor) {
   let styles = ['list-group-item'];
+
+  if (flavor && flavor.css_class) {
+    styles.push('list-group-item-category-' + flavor.css_class);
+  }
 
   if (isRead) {
     styles.push('thread-read');
