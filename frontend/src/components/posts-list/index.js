@@ -5,19 +5,25 @@ import Post from './post';
 import PostPreview from './post/preview';
 
 export default function(props) {
-  if (props.posts.isLoaded) {
+  if (!props.posts.isLoaded) {
     return (
-      <ul className="posts-list ui-ready">
-        {props.posts.results.map((post) => {
-          return <ListItem key={post.id} post={post} {...props} />;
-        })}
+      <ul className="posts-list ui-preview">
+        <PostPreview />
       </ul>
     );
   }
 
   return (
-    <ul className="posts-list ui-preview">
-      <PostPreview />
+    <ul className="posts-list ui-ready">
+      {props.posts.results.map((post) => {
+        return (
+          <ListItem
+            key={post.id}
+            post={post}
+            {...props}
+          />
+        );
+      })}
     </ul>
   );
 }
