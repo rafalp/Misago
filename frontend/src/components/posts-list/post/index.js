@@ -15,6 +15,10 @@ export default function(props) {
     className = 'post post-hidden';
   }
 
+  if (props.post.poster && props.post.poster.rank.css_class) {
+    className += ' post-' + props.post.poster.rank.css_class;
+  }
+
   if (!props.post.is_read) {
     className += ' post-new';
   }

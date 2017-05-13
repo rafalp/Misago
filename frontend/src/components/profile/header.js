@@ -169,9 +169,14 @@ export default class extends React.Component {
 
     const colsWidth = cols ? 2 * cols + 1 : 0;
 
+    let headerClassName = 'page-header';
+    if (this.props.profile.rank.css_class) {
+      headerClassName += ' page-header-rank-' + this.props.profile.rank.css_class;
+    }
+
     return (
       <div className="page-header-bg">
-        <div className="page-header">
+        <div className={headerClassName}>
           <div className="container">
 
             <IsDisabledMessage

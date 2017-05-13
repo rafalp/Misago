@@ -1,7 +1,7 @@
 {% load i18n misago_avatars %}
 <ul class="posts-list post-feed ui-ready">
   {% for post in posts %}
-    <li id="post-{{ post.pk }}" class="post">
+    <li id="post-{{ post.pk }}" class="post {% if profile.rank.css_class %}post-{{ profile.rank.css_class }}{% endif %}">
       <div class="panel panel-default panel-post">
         <div class="panel-body">
           <div class="post-side post-side-registered">

@@ -37,22 +37,13 @@ export default class extends WithDropdown {
   };
   /* jshint ignore:end */
 
-  getClassName() {
-    const baseClass = 'page page-user-profile';
-    if (false && this.props.profile.rank.css_class) {
-      return baseClass + ' page-user-profile-' + this.props.profile.rank.css_class;
-    }
-
-    return baseClass;
-  }
-
   render() {
     /* jshint ignore:start */
     const baseUrl = misago.get('PROFILE').absolute_url;
     const pages = misago.get('PROFILE_PAGES');
 
     return (
-      <div className={this.getClassName()}>
+      <div className="page page-user-profile">
 
         <Header
           baseUrl={baseUrl}

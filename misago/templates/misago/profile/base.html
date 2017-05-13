@@ -9,10 +9,10 @@
 
 
 {% block content %}
-<div class="page page-user-profile{% if profile.rank.css_class %} page-user-profile-{{ profile.rank.css_class }}{% endif %}">
+<div class="page page-user-profile">
 
   <div class="page-header-bg">
-    <div class="page-header">
+    <div class="page-header{% if profile.rank.css_class %} page-header-rank-{{ profile.rank.css_class }}{% endif %}">
       {% include "misago/profile/header.html" %}
       {% include "misago/profile/nav-sm.html" %}
     </div>

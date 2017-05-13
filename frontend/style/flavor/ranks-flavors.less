@@ -1,0 +1,140 @@
+//
+// Default flavors for user ranks
+// --------------------------------------------------
+
+.post-rank-flavor(@border, @title) {
+  .panel-body {
+    border: 2px solid @border;
+    border-radius: @panel-border-radius;
+    padding: @panel-body-padding - 2px;
+  }
+
+  .user-title {
+    color: @title;
+
+    a, a:link, a:visited,
+    a:focus, a:hover, a:active {
+      color: @title;
+    }
+  }
+}
+
+.card-rank-flavor(@border, @title) {
+  .panel-body {
+    border: 2px solid @border;
+    border-radius: @panel-border-radius;
+    padding: @panel-body-padding - 2px;
+  }
+
+  .user-card-title {
+    color: @title;
+
+    a.user-title {
+      &, &:link, &:visited,
+      &:focus, &:hover, &:active {
+        color: @title;
+      }
+    }
+  }
+}
+
+.list-group-rank-flavor(@border, @title) {
+  border-left: 4px solid @border;
+  padding-left: 11px;
+
+  span.rank-name {
+    color: @title;
+  }
+
+  a.rank-name {
+    &, &:link, &:visited,
+    &:focus, &:hover, &:active {
+      color: @title;
+    }
+  }
+}
+
+.user-profile-rank-flavor(@color) {
+  .user-rank {
+    color: @color;
+
+    a, a:link, a:visited,
+    a:focus, a:hover, a:active {
+      color: @color;
+    }
+  }
+}
+
+
+// Posts
+.post-primary {
+  .post-rank-flavor(#b388ff, #6200ea);
+}
+
+.post-success {
+  .post-rank-flavor(#69f0ae, #00c853);
+}
+
+.post-warning {
+  .post-rank-flavor(#ffd180, #ff6d00);
+}
+
+.post-danger {
+  .post-rank-flavor(#ff8a80, #d50000);
+}
+
+
+// Cards
+.user-card-primary {
+  .card-rank-flavor(#b388ff, #6200ea);
+}
+
+.user-card-success {
+  .card-rank-flavor(#69f0ae, #00c853);
+}
+
+.user-card-warning {
+  .card-rank-flavor(#ffd180, #ff6d00);
+}
+
+.user-card-danger {
+  .card-rank-flavor(#ff8a80, #d50000);
+}
+
+
+// Posters ranking
+.list-group {
+  .list-group-rank-primary {
+    .list-group-rank-flavor(#b388ff, #6200ea);
+  }
+
+  .list-group-rank-success {
+    .list-group-rank-flavor(#69f0ae, #00c853);
+  }
+
+  .list-group-rank-warning {
+    .list-group-rank-flavor(#ffd180, #ff6d00);
+  }
+
+  .list-group-rank-danger {
+    .list-group-rank-flavor(#ff8a80, #d50000);
+  }
+}
+
+
+// User profiles
+.page-header-rank-primary {
+  .user-profile-rank-flavor(#6200ea);
+}
+
+.page-header-rank-success {
+  .user-profile-rank-flavor(#00c853);
+}
+
+.page-header-rank-warning {
+  .user-profile-rank-flavor(#ff6d00);
+}
+
+.page-header-rank-danger {
+  .user-profile-rank-flavor(#d50000);
+}

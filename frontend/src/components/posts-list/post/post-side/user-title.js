@@ -16,15 +16,17 @@ export default function({ rank, title }) {
 
   if (rank.is_tab) {
     return (
-      <a className={className} href={rank.absolute_url}>
-        {userTitle}
-      </a>
+      <div className={className}>
+        <a href={rank.absolute_url}>
+          {userTitle}
+        </a>
+      </div>
     );
   }
 
   return (
-    <span className={className}>
+    <div className={className}>
       {userTitle}
-    </span>
+    </div>
   );
 }
