@@ -14,17 +14,21 @@ export default function(props) {
     className = 'event post-hidden';
   }
 
+  props.post.is_read = false;
+
   return (
     <li id={'post-' + props.post.id} className={className}>
       <UnreadLabel post={props.post} />
-      <div className="media">
-        <div className="media-left">
+      <div className="row">
+        <div className="col-xs-2 col-sm-3 text-right">
           <Icon {...props} />
         </div>
-        <Waypoint className="media-body" post={props.post}>
-          <Message {...props} />
-          <Info {...props} />
-        </Waypoint>
+        <div className="col-xs-10 col-sm-9 text-left">
+          <Waypoint post={props.post}>
+            <Message {...props} />
+            <Info {...props} />
+          </Waypoint>
+        </div>
       </div>
     </li>
   );

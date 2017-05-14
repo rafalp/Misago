@@ -17,8 +17,6 @@
 
 // Event label
 .posts-list .event-label {
-  margin-left: @event-icon-size + 10px;
-
   .label-unread {
     background-color: @brand-success;
 
@@ -27,8 +25,14 @@
 }
 
 // Event icon
-.posts-list .event .media-left {
+.posts-list .event .text-right {
+  padding-right: 0px;
+
+  text-align: right;
+
   .material-icon {
+    margin-right: -12px;
+
     height: @event-icon-size;
     width: @event-icon-size;
 
@@ -37,6 +41,12 @@
 
     text-align: center;
   }
+}
+
+
+// Align event content with post's content
+.posts-list .event .text-left {
+  padding-left: 24px;
 }
 
 
@@ -81,8 +91,14 @@
 
 // Mobile tweaks
 @media screen and (max-width: @screen-xs-max) {
-  .posts-list .event .post-avatar {
+  .posts-list .event .text-right {
     width: @event-icon-size;
+
+    text-align: right;
+  }
+
+  .posts-list .event .text-left:first-child {
+    padding-left: 0px;
   }
 
   .posts-list .event .event-info {
