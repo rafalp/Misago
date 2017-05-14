@@ -41,8 +41,8 @@ export default class extends Form {
 
     if (this.props.user.acl.name_changes_expire > 0) {
       let message = ngettext(
-        "Used changes redeem after %(name_changes_expire)s day.",
-        "Used changes redeem after %(name_changes_expire)s days.",
+        "Used changes become available again after %(name_changes_expire)s day.",
+        "Used changes become available again after %(name_changes_expire)s days.",
         this.props.user.acl.name_changes_expire);
 
       phrases.push(interpolate(message, {
