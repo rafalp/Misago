@@ -31,11 +31,11 @@ Misago aims to be complete, featured and modern forum solution that has no fear 
 Screenshots
 ===========
 
-.. image:: https://misago-project.org/media/mporg-home.png
+.. image:: https://misago-project.org/media/mporg-home-small.png
    :target: https://misago-project.org
    :alt: Forum index
 
-.. image:: https://misago-project.org/media/mporg-thread.png
+.. image:: https://misago-project.org/media/mporg-thread-small.png
    :target: https://misago-project.org
    :alt: Thread view
 
