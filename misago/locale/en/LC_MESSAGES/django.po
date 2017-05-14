@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-17 00:11+0200\n"
+"POT-Creation-Date: 2017-05-14 02:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1204,14 +1204,14 @@ msgstr ""
 #: templates/misago/admin/generic/paginator.html:17
 #: templates/misago/thread/paginator.html:13
 #: templates/misago/thread/paginator.html:19
-#: templates/misago/userslists/rank.html:128
-#: templates/misago/userslists/rank.html:136
+#: templates/misago/userslists/rank.html:63
+#: templates/misago/userslists/rank.html:71
 msgid "Go to previous page"
 msgstr ""
 
 #: templates/misago/admin/generic/paginator.html:26
 #: templates/misago/thread/paginator.html:27
-#: templates/misago/userslists/rank.html:145
+#: templates/misago/userslists/rank.html:80
 msgid "Go to next page"
 msgstr ""
 
@@ -1594,62 +1594,50 @@ msgstr ""
 msgid "Log out"
 msgstr ""
 
-#: templates/misago/categories/body.html:18
-msgid "No categories are available."
+#: templates/misago/categories/body.html:15
+msgid "No categories exist or you don't have permission to see them."
 msgstr ""
 
-#: templates/misago/categories/body.html:19
-msgid ""
-"No categories are currently defined or you don't have permission to see them."
-msgstr ""
-
-#: templates/misago/categories/last_activity.html:8
-msgid "This category is private. You can see only your own threads within it."
-msgstr ""
-
-#: templates/misago/categories/last_activity.html:28
-#, python-format
-msgid "Last post in %(thread)s by %(user)s %(date)s"
-msgstr ""
-
-#: templates/misago/categories/last_activity.html:37
-msgid "This category is empty."
-msgstr ""
-
-#: templates/misago/categories/last_activity.html:45
-msgid "This category is protected. You can't browse it's contents."
-msgstr ""
-
-#: templates/misago/categories/read_icon.html:4
+#: templates/misago/categories/icon.html:4
 msgid "This category has no new posts. (closed)"
 msgstr ""
 
-#: templates/misago/categories/read_icon.html:10
+#: templates/misago/categories/icon.html:10
 msgid "This category has new posts. (closed)"
 msgstr ""
 
-#: templates/misago/categories/read_icon.html:18
+#: templates/misago/categories/icon.html:18
 msgid "This category has no new posts."
 msgstr ""
 
-#: templates/misago/categories/read_icon.html:24
+#: templates/misago/categories/icon.html:24
 msgid "This category has new posts."
 msgstr ""
 
-#: templates/misago/categories/stats.html:4
-#: templates/misago/profile/followers.html:77
-#: templates/misago/profile/follows.html:77
-#: templates/misago/userslists/rank.html:93
+#: templates/misago/categories/last_thread.html:54
+msgid "This category is empty. No threads were posted within it so far."
+msgstr ""
+
+#: templates/misago/categories/last_thread.html:68
+msgid "This category is private. You can see only your own threads within it."
+msgstr ""
+
+#: templates/misago/categories/last_thread.html:82
+msgid "This category is protected. You can't browse it's contents."
+msgstr ""
+
+#: templates/misago/categories/stats.html:5
+#: templates/misago/userslists/usercard.html:59
 #, python-format
 msgid "%(threads)s thread"
 msgid_plural "%(threads)s threads"
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/categories/stats.html:11
-#: templates/misago/profile/followers.html:70
-#: templates/misago/profile/follows.html:70
-#: templates/misago/userslists/rank.html:86
+#: templates/misago/categories/stats.html:12
+#: templates/misago/thread/posts/post/side.html:41
+#: templates/misago/thread/posts/post/side.html:49
+#: templates/misago/userslists/usercard.html:52
 #, python-format
 msgid "%(posts)s post"
 msgid_plural "%(posts)s posts"
@@ -1950,46 +1938,46 @@ msgstr ""
 msgid "You need to enable JavaScript in your browser to change your options."
 msgstr ""
 
-#: templates/misago/participants.html:22
-msgid "Owner"
+#: templates/misago/participants.html:30
+msgid "Add participant"
 msgstr ""
 
-#: templates/misago/participants.html:33
+#: templates/misago/participants.html:36
 #, python-format
 msgid "This thread has %(users)s participant."
 msgid_plural "This thread has %(users)s participants."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/poll/info.html:14
+#: templates/misago/poll/info.html:4
 #, python-format
-msgid "Posted by %(poster)s on %(posted_on)s."
-msgstr ""
+msgid "%(votes)s vote."
+msgid_plural "%(votes)s votes."
+msgstr[0] ""
+msgstr[1] ""
 
-#: templates/misago/poll/info.html:23
+#: templates/misago/poll/info.html:15
 #, python-format
 msgid "Voting ends on %(ends_on)s."
 msgstr ""
 
-#: templates/misago/poll/info.html:29
-#, python-format
-msgid "%(votes)s vote"
-msgid_plural "%(votes)s votes"
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/misago/poll/info.html:37
+#: templates/misago/poll/info.html:22
 msgid "Votes are public."
 msgstr ""
 
-#: templates/misago/poll/results.html:14 templates/misago/poll/results.html:38
+#: templates/misago/poll/info.html:36
+#, python-format
+msgid "Posted by %(poster)s on %(posted_on)s."
+msgstr ""
+
+#: templates/misago/poll/results.html:21 templates/misago/poll/results.html:31
 #, python-format
 msgid "%(votes)s vote, %(proc)s%% of total."
 msgid_plural "%(votes)s votes, %(proc)s%% of total."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/poll/results.html:24
+#: templates/misago/poll/results.html:41
 msgid "Your choice."
 msgstr ""
 
@@ -2056,19 +2044,18 @@ msgstr ""
 msgid "Member since %(joined_on)s."
 msgstr ""
 
-#: templates/misago/profile/feed.html:17
+#: templates/misago/profile/feed.html:10
+msgid "See post"
+msgstr ""
+
+#: templates/misago/profile/feed.html:61
 #: templates/misago/thread/posts/post/body.html:10
 msgid "This post's contents cannot be displayed."
 msgstr ""
 
-#: templates/misago/profile/feed.html:18
+#: templates/misago/profile/feed.html:62
 #: templates/misago/thread/posts/post/body.html:11
 msgid "This error is caused by invalid post content manipulation."
-msgstr ""
-
-#: templates/misago/profile/feed.html:30
-#, python-format
-msgid "%(posted_on)s, in %(thread)s, %(category)s"
 msgstr ""
 
 #: templates/misago/profile/followers.html:4 users/apps.py:79
@@ -2089,27 +2076,11 @@ msgid_plural "%(username)s has %(users)s followers."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/profile/followers.html:59
-#: templates/misago/profile/follows.html:59
-#: templates/misago/userslists/rank.html:74
-#, python-format
-msgid "Joined on %(joined_on)s"
-msgstr ""
-
-#: templates/misago/profile/followers.html:84
-#: templates/misago/profile/follows.html:84
-#: templates/misago/userslists/rank.html:100
-#, python-format
-msgid "%(followers)s follower"
-msgid_plural "%(followers)s followers"
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/misago/profile/followers.html:105
+#: templates/misago/profile/followers.html:44
 msgid "You have no followers."
 msgstr ""
 
-#: templates/misago/profile/followers.html:107
+#: templates/misago/profile/followers.html:46
 #, python-format
 msgid "%(username)s has no followers."
 msgstr ""
@@ -2132,11 +2103,11 @@ msgid_plural "%(username)s is following %(users)s users."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/profile/follows.html:105
+#: templates/misago/profile/follows.html:44
 msgid "You are not following any users."
 msgstr ""
 
-#: templates/misago/profile/follows.html:107
+#: templates/misago/profile/follows.html:46
 #, python-format
 msgid "%(username)s is not following any users."
 msgstr ""
@@ -2242,76 +2213,76 @@ msgstr[1] ""
 msgid "There are no more posts in this thread."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:47
+#: templates/misago/thread/posts/event/index.html:48
 #, python-format
 msgid "Thread title has been changed from %(old_title)s."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:51
+#: templates/misago/thread/posts/event/index.html:52
 msgid "Thread has been pinned globally."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:53
+#: templates/misago/thread/posts/event/index.html:54
 msgid "Thread has been pinned locally."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:55
+#: templates/misago/thread/posts/event/index.html:56
 msgid "Thread has been unpinned."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:60
+#: templates/misago/thread/posts/event/index.html:61
 #, python-format
 msgid "Thread has been moved from %(from_category)s."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:67
+#: templates/misago/thread/posts/event/index.html:68
 #, python-format
 msgid "The %(merged_thread)s thread has been merged into this thread."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:71
+#: templates/misago/thread/posts/event/index.html:72
 msgid "Thread has been approved."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:73
+#: templates/misago/thread/posts/event/index.html:74
 msgid "Thread has been opened."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:75
+#: templates/misago/thread/posts/event/index.html:76
 msgid "Thread has been closed."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:77
+#: templates/misago/thread/posts/event/index.html:78
 msgid "Thread has been revealed."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:79
+#: templates/misago/thread/posts/event/index.html:80
 msgid "Thread has been made hidden."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:81
+#: templates/misago/thread/posts/event/index.html:82
 msgid "Took thread over."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:83
+#: templates/misago/thread/posts/event/index.html:84
 msgid "Owner has left thread. This thread is now closed."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:85
+#: templates/misago/thread/posts/event/index.html:86
 msgid "Participant has left thread."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:90
+#: templates/misago/thread/posts/event/index.html:91
 #, python-format
 msgid "Changed thread owner to %(user)s."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:97
+#: templates/misago/thread/posts/event/index.html:98
 #, python-format
 msgid "Added %(user)s to thread."
 msgstr ""
 
-#: templates/misago/thread/posts/event/index.html:104
+#: templates/misago/thread/posts/event/index.html:105
 #, python-format
 msgid "Removed %(user)s from thread."
 msgstr ""
@@ -2355,7 +2326,7 @@ msgid "This post is protected. Only moderators may change it."
 msgstr ""
 
 #: templates/misago/thread/posts/post/footer.html:7
-msgid "Unlike"
+msgid "Liked"
 msgstr ""
 
 #: templates/misago/thread/posts/post/footer.html:9
@@ -2366,63 +2337,59 @@ msgstr ""
 msgid "Reply"
 msgstr ""
 
-#: templates/misago/thread/posts/post/header.html:34
-msgid "Unregistered"
+#: templates/misago/thread/posts/post/header.html:5
+msgid "New post"
 msgstr ""
 
-#: templates/misago/thread/posts/post/header.html:40
-#, python-format
-msgid "posted on %(posted_on)s"
-msgstr ""
-
-#: templates/misago/thread/posts/post/header.html:52
-msgid "new"
-msgstr ""
-
-#: templates/misago/thread/posts/post/header.html:55
+#: templates/misago/thread/posts/post/header.html:8
 #: templates/misago/thread/toolbar-top.html:7
 #: templates/misago/threadslist/tabs.html:17
 msgid "New"
 msgstr ""
 
-#: templates/misago/thread/posts/post/header.html:60
+#: templates/misago/thread/posts/post/header.html:22
+#: templates/misago/thread/posts/post/side.html:4
 msgid "Post link"
 msgstr ""
 
+#: templates/misago/thread/posts/post/side.html:73
+msgid "Removed user"
+msgstr ""
+
 #: templates/misago/thread/stats.html:11
-#: templates/misago/threadslist/thread.html:23
+#: templates/misago/threadslist/thread.html:21
 msgid "Pinned globally"
 msgstr ""
 
 #: templates/misago/thread/stats.html:20
-#: templates/misago/threadslist/thread.html:32
+#: templates/misago/threadslist/thread.html:30
 msgid "Pinned locally"
 msgstr ""
 
 #: templates/misago/thread/stats.html:30
 #: templates/misago/thread/toolbar-top.html:14
 #: templates/misago/threadslist/tabs.html:33
-#: templates/misago/threadslist/thread.html:42
+#: templates/misago/threadslist/thread.html:40
 msgid "Unapproved"
 msgstr ""
 
 #: templates/misago/thread/stats.html:39
-#: templates/misago/threadslist/thread.html:51
+#: templates/misago/threadslist/thread.html:49
 msgid "Unapproved posts"
 msgstr ""
 
 #: templates/misago/thread/stats.html:49
-#: templates/misago/threadslist/thread.html:92
+#: templates/misago/threadslist/thread.html:109
 msgid "Hidden"
 msgstr ""
 
 #: templates/misago/thread/stats.html:59
-#: templates/misago/threadslist/thread.html:102
+#: templates/misago/threadslist/thread.html:119
 msgid "Closed"
 msgstr ""
 
 #: templates/misago/thread/stats.html:68
-#: templates/misago/threadslist/thread.html:121
+#: templates/misago/threadslist/thread.html:138
 #, python-format
 msgid "%(replies)s reply"
 msgid_plural "%(replies)s replies"
@@ -2459,17 +2426,17 @@ msgstr ""
 msgid "Why not start one yourself?"
 msgstr ""
 
-#: templates/misago/threadslist/base.html:70
+#: templates/misago/threadslist/base.html:71
 #: templates/misago/threadslist/private_threads.html:70
 msgid "No threads matching specified criteria were found."
 msgstr ""
 
-#: templates/misago/threadslist/base.html:85
-#: templates/misago/threadslist/base.html:93
+#: templates/misago/threadslist/base.html:87
+#: templates/misago/threadslist/base.html:95
 msgid "Previous page"
 msgstr ""
 
-#: templates/misago/threadslist/base.html:102
+#: templates/misago/threadslist/base.html:104
 msgid "Next page"
 msgstr ""
 
@@ -2499,11 +2466,11 @@ msgstr ""
 msgid "Subscribed"
 msgstr ""
 
-#: templates/misago/threadslist/thread.html:13
+#: templates/misago/threadslist/thread.html:11
 msgid "New posts"
 msgstr ""
 
-#: templates/misago/threadslist/thread.html:112
+#: templates/misago/threadslist/thread.html:129
 msgid "Poll"
 msgstr ""
 
@@ -2534,9 +2501,22 @@ msgstr ""
 msgid "Total posts"
 msgstr ""
 
-#: templates/misago/userslists/rank.html:159
+#: templates/misago/userslists/rank.html:94
 msgid "There are no users with this rank at the moment."
 msgstr ""
+
+#: templates/misago/userslists/usercard.html:42
+#: templates/misago/userslists/usercard.html:45
+#, python-format
+msgid "Joined on %(joined_on)s"
+msgstr ""
+
+#: templates/misago/userslists/usercard.html:66
+#, python-format
+msgid "%(followers)s follower"
+msgid_plural "%(followers)s followers"
+msgstr[0] ""
+msgstr[1] ""
 
 #: threads/admin.py:32 threads/permissions/attachments.py:12
 #: threads/permissions/attachments.py:28
@@ -4046,7 +4026,7 @@ msgstr ""
 msgid "You have to sign in to see list of threads with unapproved posts."
 msgstr ""
 
-#: threads/viewmodels/threads.py:98
+#: threads/viewmodels/threads.py:100
 msgid "You don't have permission to see unapproved content lists."
 msgstr ""
 
@@ -5310,7 +5290,7 @@ msgstr ""
 msgid "You can't see users bans details."
 msgstr ""
 
-#: users/search.py:23
+#: users/search.py:24
 msgid "You don't have permission to search users."
 msgstr ""
 
