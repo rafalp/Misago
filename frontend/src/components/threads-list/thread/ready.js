@@ -96,6 +96,7 @@ export function getClassName(isRead, isBusy, isSelected, flavor) {
   let styles = ['list-group-item'];
 
   if (flavor && flavor.css_class) {
+    styles.push('list-group-category-has-flavor');
     styles.push('list-group-item-category-' + flavor.css_class);
   }
 

@@ -18,6 +18,7 @@ export default function({ category, isFirst }) {
     className += ' list-group-item-first';
   }
   if (category.css_class) {
+    className += ' list-group-category-has-flavor';
     className += ' list-group-item-category-' + category.css_class;
   }
 
