@@ -8,12 +8,31 @@
   margin-bottom: @line-height-computed;
 
   color: @text-muted;
+
+  .media {
+    margin-top: @line-height-computed / 4;
+  }
 }
 
 
+// Event label
+.posts-list .event-label {
+  .label-unread {
+    background-color: @brand-success;
+
+    color: #fff;
+  }
+}
+
 // Event icon
-.posts-list .event .post-avatar {
+.posts-list .event .text-right {
+  padding-right: 0px;
+
+  text-align: right;
+
   .material-icon {
+    margin-right: -12px;
+
     height: @event-icon-size;
     width: @event-icon-size;
 
@@ -25,11 +44,17 @@
 }
 
 
+// Align event content with post's content
+.posts-list .event .text-left {
+  padding-left: 24px;
+}
+
+
 // Event first and second rows
 .posts-list .event .event-message {
-  margin: 0px;
+  margin-bottom: @line-height-computed / 4;
 
-  font-size: @font-size-base;
+  font-size: @font-size-large;
 }
 
 .posts-list .event .event-info {
@@ -38,7 +63,11 @@
   font-size: @font-size-small;
 
   li {
-    margin-right: @line-height-computed / 4;
+    margin-right: @padding-base-horizontal;
+
+    &:last-child {
+      margin-right: 0px;
+    }
   }
 }
 
@@ -48,43 +77,46 @@
   .btn-link {
     border: 0px;
     margin: 0px;
-    margin-right: @line-height-computed / 4;
+    margin-right: @padding-base-horizontal;
     padding: 0px;
 
     font-size: @font-size-small;
+
+    &:last-child {
+      margin-right: 0px;
+    }
   }
 }
 
 
 // Mobile tweaks
 @media screen and (max-width: @screen-xs-max) {
-  .posts-list .event .post-avatar {
+  .posts-list .event .text-right {
     width: @event-icon-size;
+
+    text-align: right;
   }
 
-  .posts-list .event .post-body {
-    margin-left: @event-icon-size * 1.2;
-  }
-
-  .posts-list .event .event-message {
-    color: @text-color;
-    font-size: @font-size-base * 1.2;
+  .posts-list .event .text-left:first-child {
+    padding-left: 0px;
   }
 
   .posts-list .event .event-info {
     margin-top: @line-height-computed / 4;
-
-    font-size: @font-size-base;
   }
 
   .posts-list .event .event-controls {
     clear: both;
     margin-top: @line-height-computed / 4;
 
-    .btn {
+    .btn-link {
       margin-right: @line-height-computed;
 
       font-size: @font-size-base;
+
+      &:last-child {
+        margin-right: 0px;
+      }
     }
   }
 }

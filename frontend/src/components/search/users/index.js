@@ -1,7 +1,7 @@
 // jshint ignore:start
 import React from 'react';
 import SearchPage from '../page';
-import UsersList from 'misago/components/users-list/root';
+import UsersList from 'misago/components/users-list';
 
 export default function(props) {
   return (
@@ -14,8 +14,8 @@ export default function(props) {
         users={props.users}
       >
         <UsersList
-          isLoaded={true}
-          cols={2}
+          cols={3}
+          isReady={true}
           users={props.users}
         />
       </Blankslate>

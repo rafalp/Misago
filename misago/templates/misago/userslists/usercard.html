@@ -1,0 +1,78 @@
+{% load i18n misago_avatars misago_shorthands %}
+<div class="panel user-card {% if user.rank.css_class %}user-card-{{ user.rank.css_class }}{% endif %}">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-3 user-card-left">
+
+        <div class="user-card-small-avatar">
+          <a href="{{ user.get_absolute_url }}">
+            <img src="{{ user|avatar:50 }}" srcset="{{ user|avatar:80 }}" alt="">
+          </a>
+        </div>
+
+      </div>
+      <div class="col-xs-9 col-sm-12 user-card-body">
+
+        <div class="user-card-avatar">
+          <a href="{{ user.get_absolute_url }}">
+            <img src="{{ user|avatar:150 }}" srcset="{{ user|avatar:200 }}" alt="">
+          </a>
+        </div>
+        <div class="user-card-username">
+          <a href="{{ user.get_absolute_url }}" itemprop="url">
+            <span itemprop="name">{{ user }}</span>
+          </a>
+        </div>
+        <div class="user-card-title">
+          {% if user.rank.is_tab %}
+            <a href="{{ user.rank.get_absolute_url }}" class="user-title {% if user.rank.css_class %}user-title-{{ user.rank.css_class }}{% endif %}">
+          {% else %}
+            <span class="user-title {% if user.rank.css_class %}user-title-{{ user.rank.css_class }}{% endif %}">
+          {% endif %}
+          {{ user.get_any_title }}
+          {% if user.rank.is_tab %}
+            </a>
+          {% else %}
+            </span>
+          {% endif %}
+        </div>
+        <div class="user-card-stats">
+          <ul class="list-unstyled">
+            <li class="user-stat-join-date">
+              <abbr title="{% blocktrans trimmed with joined_on=user.joined_on|date:'DATETIME_FORMAT' %}
+                  Joined on {{ joined_on }}
+                {% endblocktrans %}">
+                {% blocktrans trimmed with joined_on=user.joined_on|date %}
+                  Joined on {{ joined_on }}
+                {% endblocktrans %}
+              </abbr>
+            </li>
+            <li class="user-stat-divider" />
+            <li class="user-stat-posts {{ user.posts|iffalse:'user-stat-empty' }}">
+              {% blocktrans trimmed count posts=user.posts %}
+                {{ posts }} post
+              {% plural %}
+                {{ posts }} posts
+              {% endblocktrans %}
+            </li>
+            <li class="user-stat-threads {{ user.threads|iffalse:'user-stat-empty' }}">
+              {% blocktrans trimmed count threads=user.threads %}
+                {{ threads }} thread
+              {% plural %}
+                {{ threads }} threads
+              {% endblocktrans %}
+            </li>
+            <li class="user-stat-followers {{ user.followers|iffalse:'user-stat-empty' }}">
+              {% blocktrans trimmed count followers=user.followers %}
+                {{ followers }} follower
+              {% plural %}
+                {{ followers }} followers
+              {% endblocktrans %}
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

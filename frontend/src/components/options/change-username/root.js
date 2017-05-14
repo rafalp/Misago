@@ -62,23 +62,31 @@ export default class extends React.Component {
   /* jshint ignore:end */
 
   getChangeForm() {
-    if (this.state.isLoaded) {
-      if (this.state.options.changes_left > 0) {
-        /* jshint ignore:start */
-        return <Form user={this.props.user}
-                     options={this.state.options}
-                     complete={this.onComplete} />;
-        /* jshint ignore:end */
-      } else {
-        /* jshint ignore:start */
-        return <FormLocked options={this.state.options} />;
-        /* jshint ignore:end */
-      }
-    } else {
+    if (!this.state.isLoaded) {
       /* jshint ignore:start */
-      return <FormLoading />;
+      return (
+        <FormLoading />
+      );
       /* jshint ignore:end */
     }
+
+    if (this.state.options.changes_left === 0) {
+      /* jshint ignore:start */
+      return (
+        <FormLocked options={this.state.options} />
+      );
+      /* jshint ignore:end */
+    }
+
+    /* jshint ignore:start */
+    return (
+      <Form
+        complete={this.onComplete}
+        options={this.state.options}
+        user={this.props.user}
+      />
+    );
+    /* jshint ignore:end */
   }
 
   render() {

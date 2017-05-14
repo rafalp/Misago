@@ -4,6 +4,8 @@
 * [Setup and maintenance](./SetupMaintenance.md)
 * [Upgrading from Misago 0.5](./UpgradingFrom05.md)
 * [Coding style](./CodingStyle.md)
+* [User rank styles](./UserRankStyles.md)
+* [Category styles](./CategoryStyles.md)
 * [User authentication](./Auth.md)
 * [Writing new admin actions](./WritingNewAdminActions.md)
 * [Permissions framework](./PermissionsFramework.md)

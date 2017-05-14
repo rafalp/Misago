@@ -14,8 +14,8 @@ export default function(props) {
       <Split {...props} />
       <Protect {...props} />
       <Unprotect {...props} />
-      <Hide {...props} />
       <Unhide {...props} />
+      <Hide {...props} />
       <Delete {...props} />
     </ul>
   );
@@ -31,13 +31,14 @@ export class Approve extends React.Component {
       return post.acl.can_approve;
     });
 
-    if (!isVisible) {
-      return null;
-    }
+    if (!isVisible) return null;
 
     return (
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
+          <span className="material-icon">
+            done
+          </span>
           {gettext("Approve")}
         </button>
       </li>
@@ -51,13 +52,15 @@ export class Merge extends React.Component {
   };
 
   render() {
-    if (this.props.selection.length < 2 || !this.props.thread.acl.can_merge_posts) {
-      return null;
-    }
+    if (this.props.selection.length < 2) return null;
+    if (!this.props.thread.acl.can_merge_posts) return null;
 
     return (
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
+          <span className="material-icon">
+            call_merge
+          </span>
           {gettext("Merge")}
         </button>
       </li>
@@ -77,13 +80,14 @@ export class Move extends React.Component {
       return post.acl.can_move;
     });
 
-    if (!isVisible) {
-      return null;
-    }
+    if (!isVisible) return null;
 
     return (
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
+          <span className="material-icon">
+            arrow_forward
+          </span>
           {gettext("Move")}
         </button>
       </li>
@@ -103,13 +107,14 @@ export class Split extends React.Component {
       return post.acl.can_move;
     });
 
-    if (!isVisible) {
-      return null;
-    }
+    if (!isVisible) return null;
 
     return (
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
+          <span className="material-icon">
+            call_split
+          </span>
           {gettext("Split")}
         </button>
       </li>
@@ -127,13 +132,14 @@ export class Protect extends React.Component {
       return post.acl.can_protect;
     });
 
-    if (!isVisible) {
-      return null;
-    }
+    if (!isVisible) return null;
 
     return (
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
+          <span className="material-icon">
+            lock_outline
+          </span>
           {gettext("Protect")}
         </button>
       </li>
@@ -151,13 +157,14 @@ export class Unprotect extends React.Component {
       return post.acl.can_protect;
     });
 
-    if (!isVisible) {
-      return null;
-    }
+    if (!isVisible) return null;
 
     return (
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
+          <span className="material-icon">
+            lock_open
+          </span>
           {gettext("Unprotect")}
         </button>
       </li>
@@ -175,13 +182,14 @@ export class Hide extends React.Component {
       return post.acl.can_hide;
     });
 
-    if (!isVisible) {
-      return null;
-    }
+    if (!isVisible) return null;
 
     return (
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
+          <span className="material-icon">
+            visibility_off
+          </span>
           {gettext("Hide")}
         </button>
       </li>
@@ -199,13 +207,14 @@ export class Unhide extends React.Component {
       return post.acl.can_unhide;
     });
 
-    if (!isVisible) {
-      return null;
-    }
+    if (!isVisible) return null;
 
     return (
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
+          <span className="material-icon">
+            visibility
+          </span>
           {gettext("Unhide")}
         </button>
       </li>
@@ -223,13 +232,14 @@ export class Delete extends React.Component {
       return post.acl.can_delete;
     });
 
-    if (!isVisible) {
-      return null;
-    }
+    if (!isVisible) return null;
 
     return (
       <li>
         <button type="button" className="btn btn-link" onClick={this.onClick}>
+          <span className="material-icon">
+            clear
+          </span>
           {gettext("Delete")}
         </button>
       </li>

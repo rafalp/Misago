@@ -1,41 +1,30 @@
 //
-// Thread participants
+// Thread Participants
 // --------------------------------------------------
 
-.participant-card .avatar-link {
-  float: left;
-}
+.participant-card .btn-user,
+.participant-card .dropdown.open .btn-user {
+  margin-bottom: @line-height-computed;
 
-.participant-profile {
-  margin-left: 54px;
-  margin-top: 2px;
-}
+  &, &:hover, &:focus, &:focus:active {
+    padding: 0px;
 
-.participant-profile .item-title {
-  margin-left: @padding-base-horizontal;
-}
+    overflow: hidden;
 
-.participant-profile .participant-owner {
-  margin-left: @padding-base-horizontal;
-}
+    text-align: left;
+  }
 
-.participant-profile .list-unstyled {
-  font-size: @font-size-small;
+  img {
+    background-color: #fff;
+    width: 34px;
+    height: 34px;
 
-  .material-icon {
-    margin-right: 2px;
-    width: 14px;
-    height: 14px;
-
-    position: relative;
-    bottom: 2px;
-
-    font-size: 14px;
-    line-height: 14px;
+    margin-right: 8px;
   }
 }
 
 // Panel copy
 .panel-participants p {
   margin: 0px;
+  margin-top: @padding-base-vertical + 1px;
 }

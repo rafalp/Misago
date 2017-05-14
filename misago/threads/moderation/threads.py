@@ -142,6 +142,11 @@ def unhide_thread(request, thread):
         thread.is_hidden = False
 
         record_event(request, thread, 'unhid')
+
+        if thread.pk == thread.category.last_thread_id:
+            thread.category.synchronize()
+            thread.category.save()
+
         return True
     else:
         return False
@@ -167,6 +172,11 @@ def hide_thread(request, thread):
         thread.is_hidden = True
 
         record_event(request, thread, 'hid')
+
+        if thread.pk == thread.category.last_thread_id:
+            thread.category.synchronize()
+            thread.category.save()
+
         return True
     else:
         return False
@@ -175,4 +185,8 @@ def hide_thread(request, thread):
 @atomic
 def delete_thread(request, thread):
     thread.delete()
+
+    thread.category.synchronize()
+    thread.category.save()
+
     return True

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router'; // jshint ignore:line
 import Button from 'misago/components/button'; // jshint ignore:line
 import DropdownToggle from 'misago/components/dropdown-toggle'; // jshint ignore:line
-import { CompactNav, TabsNav } from 'misago/components/threads/navs'; // jshint ignore:line
+import Nav from 'misago/components/threads/nav'; // jshint ignore:line
 import { read } from 'misago/reducers/threads'; // jshint ignore:line
 import ajax from 'misago/services/ajax'; // jshint ignore:line
 import posting from 'misago/services/posting'; // jshint ignore:line
@@ -75,7 +75,7 @@ export default class extends React.Component {
     return (
       <div className="hidden-xs col-sm-2 col-lg-1">
         <Link
-          className="btn btn-default btn-icon btn-aligned btn-go-back btn-block"
+          className="btn btn-default btn-icon btn-aligned btn-go-back btn-block btn-outline"
           to={parent.absolute_url + this.props.route.list.path}
         >
           <span className="material-icon">
@@ -92,9 +92,9 @@ export default class extends React.Component {
 
     /* jshint ignore:start */
     return (
-      <div className="col-xs-6 col-sm-4 col-md-6">
+      <div className="col-xs-6">
         <Button
-          className="btn-success btn-block"
+          className="btn-primary btn-block btn-outline"
           onClick={this.startThread}
           disabled={this.props.disabled}
         >
@@ -113,9 +113,9 @@ export default class extends React.Component {
 
     /* jshint ignore:start */
     return (
-      <div className="col-xs-6 col-sm-4 col-md-6">
+      <div className="col-xs-6">
         <Button
-          className="btn-default btn-block"
+          className="btn-default btn-block btn-outline"
           onClick={this.markAsRead}
           loading={this.state.isBusy}
           disabled={this.props.disabled}
@@ -130,94 +130,50 @@ export default class extends React.Component {
     /* jshint ignore:end */
   }
 
-  getTabsNav() {
-    if (this.props.route.lists.length > 1) {
-      /* jshint ignore:start */
-      return (
-        <TabsNav
-          baseUrl={this.props.route.category.absolute_url}
-          list={this.props.route.list}
-          lists={this.props.route.lists}
-        />
-      );
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
-  }
-
-  getCompactNav() {
-    if (this.props.route.lists.length > 1) {
-      /* jshint ignore:start */
-      return (
-        <CompactNav
-          baseUrl={this.props.route.category.absolute_url}
-          list={this.props.route.list}
-          lists={this.props.route.lists}
-        />
-      );
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
-  }
-
-  getClassName() {
-    if (this.props.route.lists.length > 1) {
-      return 'page-header tabbed';
-    } else {
-      return 'page-header';
-    }
-  }
-
   render() {
     /* jshint ignore:start */
     let headerClassName = 'col-xs-12';
     if (this.hasGoBackButton()) {
-      headerClassName += ' col-sm-10 col-lg-11';
+      headerClassName += ' col-sm-10 col-lg-11 sm-align-row-buttons';
     }
 
     const isAuthenticated = !!this.props.user.id;
 
     return (
-      <div className={this.getClassName()}>
-        <div className="container">
-          <div className="row">
-            <div className={isAuthenticated ? "col-md-8" : "col-xs-12"}>
-              <div className="row">
-                {this.getGoBackButton()}
-                <div className={headerClassName}>
-                  <ParentCategory
-                    categories={this.props.categories}
-                    category={this.props.route.category.parent}
-                  />
-                  <h1>{this.props.title}</h1>
-                </div>
-              </div>
-            </div>
-            {isAuthenticated && (
-              <div className="col-md-4">
-                <div className="row xs-margin-top-half sm-margin-top-half">
-                  <div className="col-sm-4 visible-sm-block">
-                    {this.getCompactNav()}
+      <div className="page-header-bg">
+        <div className="page-header">
+          <div className="container">
+            <div className="row">
+              <div className={isAuthenticated ? "col-sm-6 col-md-8" : "col-xs-12"}>
+                <div className="row">
+                  {this.getGoBackButton()}
+                  <div className={headerClassName}>
+                    <ParentCategory
+                      categories={this.props.categories}
+                      category={this.props.route.category.parent}
+                    />
+                    <h1>{this.props.title}</h1>
                   </div>
-                  {this.getMarkAsReadButton()}
-                  {this.getStartThreadButton()}
                 </div>
-                <div className="sm-margin-top" />
               </div>
-            )}
+              {isAuthenticated && (
+                <div className="col-sm-6 col-md-4 xs-margin-top">
+                  <div className="row">
+                    {this.getMarkAsReadButton()}
+                    {this.getStartThreadButton()}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
+
+          <Nav
+            baseUrl={this.props.route.category.absolute_url}
+            list={this.props.route.list}
+            lists={this.props.route.lists}
+          />
+
         </div>
-
-        {this.getTabsNav()}
-
-        {isAuthenticated && (
-          <div className="container xs-margin-top visible-xs-block">
-            {this.getCompactNav()}
-          </div>
-        )}
-
       </div>
     );
     /* jshint ignore:end */

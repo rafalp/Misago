@@ -1,23 +1,23 @@
 // jshint ignore:start
 import React from 'react';
-import Row from './row';
-import batch from 'misago/utils/batch';
+import Card from './card';
 
-export default function(props) {
+export default function({ participants, thread, user, userIsOwner }) {
   return (
     <div className="participants-cards">
-      {batch(props.participants, 4).map((row) => {
-        const key = row.map((i) => i.id).join('_');
-        return (
-          <Row
-            key={key}
-            participants={row}
-            thread={props.thread}
-            user={props.user}
-            userIsOwner={props.userIsOwner}
-          />
-        );
-      })}
+      <div className="row">
+        {participants.map((participant) => {
+          return (
+            <Card
+              key={participant.id}
+              participant={participant}
+              thread={thread}
+              user={user}
+              userIsOwner={userIsOwner}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }

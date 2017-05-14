@@ -3,20 +3,20 @@
   <ul class="list-inline">
     {% if thread.is_new %}
       <li>
-        <a href="{{ thread.get_new_post_url }}" class="btn btn-default" title="{% trans 'Go to first new post' %}">
+        <a href="{{ thread.get_new_post_url }}" class="btn btn-default btn-outline" title="{% trans 'Go to first new post' %}">
           {% trans "New" %}
         </a>
       </li>
     {% endif %}
     {% if thread.has_unapproved_posts and thread.acl.can_approve %}
       <li>
-        <a href="{{ thread.get_unapproved_post_url }}" class="btn btn-default" title="{% trans 'Go to first unapproved post' %}">
+        <a href="{{ thread.get_unapproved_post_url }}" class="btn btn-default btn-outline" title="{% trans 'Go to first unapproved post' %}">
           {% trans "Unapproved" %}
         </a>
       </li>
     {% endif %}
     <li>
-      <a href="{{ thread.get_last_post_url }}" class="btn btn-default" title="{% trans 'Go to last post' %}">
+      <a href="{{ thread.get_last_post_url }}" class="btn btn-default btn-outline" title="{% trans 'Go to last post' %}">
         {% trans "Last" %}
       </a>
     </li>

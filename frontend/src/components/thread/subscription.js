@@ -13,7 +13,7 @@ export default function(props) {
       <button
         aria-expanded="true"
         aria-haspopup="true"
-        className={"btn btn-default dropdown-toggle btn-block"}
+        className="btn btn-default dropdown-toggle btn-block btn-outline"
         data-toggle="dropdown"
         type="button"
       >
@@ -49,7 +49,7 @@ export function getLabel(subscription) {
 
 export function Dropdown(props) {
   return (
-    <ul className={props.dropdownClassName || "dropdown-menu"}>
+    <ul className={props.dropdownClassName || "dropdown-menu stick-to-bottom"}>
       <Disable {...props} />
       <Enable {...props} />
       <Email {...props} />
@@ -69,7 +69,7 @@ export class Disable extends React.Component {
   render() {
     return (
       <li>
-        <button className="btn-link" onClick={this.onClick}>
+        <button className="btn btn-link" onClick={this.onClick}>
           <span className="material-icon">
             star_border
           </span>
@@ -92,7 +92,7 @@ export class Enable extends React.Component {
   render() {
     return (
       <li>
-        <button className="btn-link" onClick={this.onClick}>
+        <button className="btn btn-link" onClick={this.onClick}>
           <span className="material-icon">
             star_half
           </span>
@@ -115,7 +115,7 @@ export class Email extends React.Component {
   render() {
     return (
       <li>
-        <button className="btn-link" onClick={this.onClick}>
+        <button className="btn btn-link" onClick={this.onClick}>
           <span className="material-icon">
             star
           </span>

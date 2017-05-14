@@ -1,9 +1,10 @@
 import React from 'react';
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
 import DropdownToggle from 'misago/components/dropdown-toggle'; // jshint ignore:line
-import FollowButton from 'misago/components/profile/follow-button'; // jshint ignore:line
-import MessageButton from 'misago/components/profile/message-button'; // jshint ignore:line
-import ModerationNav from 'misago/components/profile/moderation/nav'; // jshint ignore:line
+import FollowButton from './follow-button'; // jshint ignore:line
+import MessageButton from './message-button'; // jshint ignore:line
+import ModerationNav from './moderation/nav'; // jshint ignore:line
+import { CompactNav } from './navs'; // jshint ignore:line
 import Status, { StatusIcon, StatusLabel } from 'misago/components/user-status'; // jshint ignore:line
 
 export default class extends React.Component {
@@ -115,7 +116,7 @@ export default class extends React.Component {
       /* jshint ignore:start */
       return (
         <FollowButton
-          className="btn btn-block"
+          className="btn btn-block btn-outline"
           profile={this.props.profile}
         />
       );
@@ -132,7 +133,7 @@ export default class extends React.Component {
         <div className="btn-group btn-group-justified">
           <div className="btn-group">
             <button
-              className="btn btn-default btn-moderate dropdown-toggle"
+              className="btn btn-default btn-moderate btn-outline dropdown-toggle"
               type="button"
               data-toggle="dropdown"
               aria-haspopup="true"
@@ -168,76 +169,91 @@ export default class extends React.Component {
 
     const colsWidth = cols ? 2 * cols + 1 : 0;
 
+    let headerClassName = 'page-header';
+    if (this.props.profile.rank.css_class) {
+      headerClassName += ' page-header-rank-' + this.props.profile.rank.css_class;
+    }
+
     return (
-      <div className="page-header">
-        <div className="container">
-
-          <IsDisabledMessage
-            isActive={this.props.profile.is_active}
-          />
-
-          <div className="row">
-            <div className="col-md-9 col-md-offset-3">
-
-              <div className="row">
-                <div className={"col-sm-" + (12 - colsWidth)}>
-
-                  <Avatar
-                    className="user-avatar user-avatar-sm"
-                    user={this.props.profile}
-                    size="100"
-                  />
-                  <h1>{this.props.profile.username}</h1>
-
-                </div>
-                {!!cols && (
-                  <div className={"col-sm-" + colsWidth}>
-
-                    <div className="row xs-margin-top sm-margin-top">
-                      {canMessage && (
-                      <div className={getColStyle(cols, 0)}>
-                        <MessageButton
-                          className="btn btn-default btn-block"
-                          profile={this.props.profile}
-                          user={this.props.user}
-                        />
-                      </div>
-                      )}
-                      {canFollow && (
-                        <div className={getColStyle(cols, 1)}>
-                          {this.getFollowButton()}
-                        </div>
-                      )}
-                      {canModerate && (
-                        <div className={getColStyle(cols, 2)}>
-                          {this.getModerationButton()}
-                        </div>
-                      )}
-                    </div>
-
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <div className="header-stats">
+      <div className="page-header-bg">
+        <div className={headerClassName}>
           <div className="container">
+
+            <IsDisabledMessage
+              isActive={this.props.profile.is_active}
+            />
+
             <div className="row">
               <div className="col-md-9 col-md-offset-3">
 
-                <ul className="list-inline">
-                  {this.getUserStatus()}
-                  {this.getUserRank()}
-                  {this.getUserTitle()}
-                  {this.getJoinedOn()}
-                  {this.getEmail()}
-                </ul>
+                <div className="row">
+                  <div className={"col-sm-" + (12 - colsWidth)}>
 
+                    <Avatar
+                      className="user-avatar user-avatar-sm"
+                      user={this.props.profile}
+                      size="100"
+                      size2x="200"
+                    />
+                    <h1>{this.props.profile.username}</h1>
+
+                  </div>
+                  {!!cols && (
+                    <div className={"col-sm-" + colsWidth}>
+
+                      <div className="row xs-margin-top sm-margin-top">
+                        {canMessage && (
+                        <div className={getColStyle(cols, 0)}>
+                          <MessageButton
+                            className="btn btn-default btn-block btn-outline"
+                            profile={this.props.profile}
+                            user={this.props.user}
+                          />
+                        </div>
+                        )}
+                        {canFollow && (
+                          <div className={getColStyle(cols, 1)}>
+                            {this.getFollowButton()}
+                          </div>
+                        )}
+                        {canModerate && (
+                          <div className={getColStyle(cols, 2)}>
+                            {this.getModerationButton()}
+                          </div>
+                        )}
+                      </div>
+
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div className="header-stats">
+            <div className="container">
+              <div className="row">
+                <div className="col-md-9 col-md-offset-3">
+
+                  <ul className="list-inline">
+                    {this.getUserStatus()}
+                    {this.getUserRank()}
+                    {this.getUserTitle()}
+                    {this.getJoinedOn()}
+                    {this.getEmail()}
+                  </ul>
+
+                </div>
               </div>
             </div>
           </div>
+
+          <CompactNav
+            baseUrl={this.props.baseUrl}
+            pages={this.props.pages}
+            profile={this.props.profile}
+          />
+
         </div>
       </div>
     );

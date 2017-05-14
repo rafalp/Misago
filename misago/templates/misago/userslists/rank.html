@@ -1,5 +1,5 @@
 {% extends "misago/userslists/base.html" %}
-{% load i18n misago_avatars misago_batch misago_pagetitle misago_shorthands misago_stringutils %}
+{% load i18n misago_pagetitle misago_shorthands misago_stringutils %}
 
 
 {% block title %}{% pagetitle rank.name page=paginator.page %} | {{ block.super }}{% endblock %}
@@ -42,79 +42,14 @@
     {% if paginator.count %}
       <section>
         <div class="users-cards-list ui-ready" itemscope itemtype="http://schema.org/ItemList">
-          {% for row in users|batch:3 %}
-            <div class="row">
-              {% for user in row %}
-                <div class="col-md-4">
-
-                  <div class="user-card {% if rank.css_class %} user-card-{{ rank.css_class }}{% endif %}" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-                    <div class="user-card-bg-image">
-                      <img src="{{ user|avatar:400 }}" alt="" class="bg-image">
-
-                      <div class="user-card-bg">
-                        <div class="user-details">
-
-                          <div class="user-avatar">
-                            <a href="{{ user.get_absolute_url }}">
-                              <img src="{{ user|avatar:400 }}" alt="">
-                            </a>
-                          </div>
-
-                          <h4 class="user-name">
-                            <a href="{{ user.get_absolute_url }}" class="item-title" itemprop="url">
-                              <span itemprop="name">{{ user.username }}</span>
-                            </a>
-                          </h4>
-
-                          <p class="user-subscript">
-                            {% if user.title %}
-                              <span class="user-title">{{ user.title }}</span>
-                            {% endif %}
-                            <span class="user-joined-on">
-                              {% blocktrans trimmed with joined_on=user.joined_on|date %}
-                                Joined on {{ joined_on }}
-                              {% endblocktrans %}
-                            </span>
-                          </p>
-
-                        </div>
-                      </div>
-                      <div class="user-card-stats">
-
-                        <ul class="list-unstyled">
-                          <li class="user-posts-count">
-                            {% blocktrans trimmed count posts=user.posts %}
-                              {{ posts }} post
-                            {% plural %}
-                              {{ posts }} posts
-                            {% endblocktrans %}
-                          </li>
-                          <li class="user-threads-count">
-                            {% blocktrans trimmed count threads=user.threads %}
-                              {{ threads }} thread
-                            {% plural %}
-                              {{ threads }} threads
-                            {% endblocktrans %}
-                          </li>
-                          <li class="user-followers-count">
-                            {% blocktrans trimmed count followers=user.followers %}
-                              {{ followers }} follower
-                            {% plural %}
-                              {{ followers }} followers
-                            {% endblocktrans %}
-                          </li>
-                        </ul>
-
-                      </div>
-                    </div>
-
-                    <meta itemprop="position" content="{{ paginator.before|add:forloop.counter }}" />
-                  </div>
-
-                </div>
-              {% endfor %}
-            </div>
-          {% endfor %}
+          <div class="row">
+            {% for user in users %}
+              <div class="col-xs-12 col-sm-4 col-md-3" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                {% include "misago/userslists/usercard.html" with user=user %}
+                <meta itemprop="position" content="{{ paginator.before|add:forloop.counter }}" />
+              </div>
+            {% endfor %}
+          </div>
           <meta itemprop="numberOfItems" content="{{ paginator.count }}">
           <meta itemprop="itemListOrder" content="http://schema.org/ItemListOrderAscending">
         </div>

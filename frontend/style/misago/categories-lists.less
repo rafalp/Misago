@@ -3,6 +3,58 @@
 // --------------------------------------------------
 
 
+// Category Block
+// --------------------------------------------------
+
+// Thread unread state icon
+.category-main .read-status .material-icon {
+  color: @category-read-color;
+}
+
+.category-main .read-status.item-new .material-icon {
+  color: @category-new-color;
+}
+
+
+// Last thread
+.category-last-thread .media-heading {
+  a {
+    display: inline-block;
+    overflow: hidden;
+
+    white-space: nowrap;
+    width: 290px; // md-3 - avatar column
+
+    text-overflow: ellipsis;
+    vertical-align: top;
+
+    @media screen and (max-width: @screen-sm-max) {
+      width: 275px; // md-3 - avatar column
+    }
+
+    @media screen and (max-width: @screen-xs-max) {
+      width: 260px; // md-3 - avatar column
+    }
+  }
+}
+
+
+// Last thread message
+.category-thread-message {
+  .material-icon {
+    width: 28px;
+    height: 28px;
+
+    font-size: 28px;
+    line-height: 28px;
+  }
+
+  p {
+    margin: 0px;
+  }
+}
+
+
 // Subcategories list
 // --------------------------------------------------
 .list-inline.subcategories-list {
@@ -33,189 +85,10 @@
   }
 }
 
-// Category Block
-// --------------------------------------------------
+.row.subcategories-list {
+  .btn {
+    margin-top: @line-height-computed;
 
-// Alone heading
-.panel-category {
-  .panel-heading.heading-alone {
-    border-radius: @border-radius-base;
-    border-bottom: none;
-  }
-}
-
-
-// Category titles
-.panel-category {
-  .panel-title, h4 {
-    overflow: auto;
-    margin: 0px;
-    padding: 0px;
-
-    font-size: @font-size-large;
-
-    a {
-      display: block;
-      float: left;
-      margin-top: 1px;
-    }
-
-    .read-status {
-      float: left;
-
-      cursor: help;
-
-      .material-icon {
-        margin: 0px;
-        margin-right: 4px;
-        width: 26px;
-
-        position: relative;
-        bottom: 1px;
-
-        color: @category-read-color;
-        font-size: 24px;
-        line-height: 24px;
-        text-align: center;
-      }
-
-      &.item-new .material-icon {
-        color: @category-new-color;
-      }
-    }
-  }
-}
-
-// Even category description
-.panel-category .category-description,
-.panel-category .subcategory-description {
-  p:last-child {
-    margin-bottom: 0px;
-  }
-}
-
-
-.panel-category .subcategory-description {
-  margin-top: @line-height-computed / 2;
-
-  font-size: @font-size-small;
-}
-
-
-// Subcategories upper margin
-.panel-category .category-subcategories {
-  .subcategories-list {
-    margin-top: 0px;
-
-    a, a:link, a:visited, a:active, a:hover, a:focus {
-      margin-top: @line-height-computed / 2;
-      padding: @padding-small-vertical @padding-small-horizontal;
-
-      font-size: @font-size-small;
-    }
-  }
-}
-
-
-// Last activity
-.category-last-post {
-  margin-top: 6px;
-  margin-bottom: 0px;
-}
-
-
-// Category message
-.category-thread-message {
-  overflow: auto;
-  margin-top: 6px;
-  margin-bottom: 0px;
-
-  .material-icon {
-    display: block;
-    float: left;
-
-    margin-right: 4px;
-    position: relative;
-    top: 1px;
-
-    font-size: 18px;
-    line-height: 18px;
-  }
-}
-
-
-// Compact displays
-@media screen and (max-width: @screen-sm-max) {
-  .panel-category {
-    // Add little extra top margin over category names
-    .panel-title, h4 {
-      margin-top: 3px;
-    }
-
-    // Put top margin over stats, make it small
-    .category-stats {
-      display: none;
-    }
-
-    // Don't break thread titles into many lines
-    .category-last-activity {
-      margin-bottom: 0px;
-
-      .thread-title {
-        float: none;
-        clear: both;
-        overflow: hidden;
-        margin-top: @line-height-computed / 2;
-        margin-bottom: @line-height-computed / 5;
-        padding-right: 0px;
-
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-
-      .poster-name, .thread-date {
-        font-size: @font-size-small;
-      }
-
-      .thread-date {
-        position: relative;
-        top: 1px;
-      }
-    }
-
-    .thread-message {
-      padding-top: @line-height-computed / 5;
-
-      font-size: small;
-
-      .material-icon {
-        position: relative;
-        top: -1px;
-      }
-    }
-  }
-}
-
-
-// Full displays
-@media screen and (min-width: @screen-md-min) {
-  .panel-category {
-    // Pull category stats to the right
-    .category-stats {
-      float: right;
-      margin: 0px;
-      margin-top: @line-height-computed * -1 - 3px;
-      overflow: auto;
-
-      li {
-        display: block;
-        float: left;
-      }
-    }
-
-    .category-last-activity {
-      margin-top: @line-height-computed / 5;
-      margin-bottom: 0px;
-    }
+    text-align: left;
   }
 }

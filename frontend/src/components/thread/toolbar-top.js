@@ -2,13 +2,10 @@
 import React from 'react';
 import ReplyButton from './reply-button';
 import Subscription from './subscription';
-import AddParticipantModal from 'misago/components/add-participant';
-import modal from 'misago/services/modal';
 import posting from 'misago/services/posting';
 
 export default function(props) {
-  const hiddenSpecialOption = (
-    !props.thread.acl.can_add_participants && (!props.thread.acl.can_start_poll || props.thread.poll));
+  const hiddenSpecialOption = (!props.thread.acl.can_start_poll || props.thread.poll);
 
   return (
     <div className="row row-toolbar row-toolbar-bottom-margin">
@@ -19,7 +16,6 @@ export default function(props) {
           <Spacer visible={hiddenSpecialOption} />
           <SubscriptionMenu {...props} />
           <StartPoll {...props} />
-          <AddParticipant {...props} />
           <Reply {...props} />
         </div>
       </div>
@@ -28,8 +24,15 @@ export default function(props) {
 }
 
 export function GotoMenu(props) {
+  const { user } = props;
+
+  let className = 'col-xs-3 col-sm-3 col-md-5';
+  if (user.is_anonymous) {
+    className = 'col-xs-12 col-sm-3 col-md-5';
+  }
+
   return (
-    <div className="col-xs-3 col-md-5">
+    <div className={className}>
       <div className="row hidden-xs hidden-sm">
         <GotoLast thread={props.thread} />
         <GotoNew thread={props.thread} />
@@ -47,7 +50,7 @@ export function GotoNew(props) {
     <div className="col-sm-4">
       <a
         href={props.thread.url.new_post}
-        className="btn btn-default btn-block"
+        className="btn btn-default btn-block btn-outline"
         title={gettext('Go to first new post')}
       >
         {gettext("New")}
@@ -65,7 +68,7 @@ export function GotoUnapproved(props) {
     <div className="col-sm-4">
       <a
         href={props.thread.url.unapproved_post}
-        className="btn btn-default btn-block"
+        className="btn btn-default btn-block btn-outline"
         title={gettext('Go to first unapproved post')}
       >
         {gettext("Unapproved")}
@@ -79,7 +82,7 @@ export function GotoLast(props) {
     <div className="col-sm-4">
       <a
         href={props.thread.url.last_post}
-        className="btn btn-default btn-block"
+        className="btn btn-default btn-block btn-outline"
         title={gettext('Go to last post')}
       >
         {gettext("Last")}
@@ -89,22 +92,38 @@ export function GotoLast(props) {
 }
 
 export function CompactOptions(props) {
+  const { user } = props;
+  if (user.is_anonymous) {
+    return (
+      <div className="visible-xs-block visible-sm-block">
+        <a
+          href={props.thread.url.last_post}
+          className="btn btn-default btn-block btn-outline"
+        >
+          {gettext("Last post")}
+        </a>
+      </div>
+    );
+  }
+
   return (
     <div className="dropdown visible-xs-block visible-sm-block">
       <button
         aria-expanded="true"
         aria-haspopup="true"
-        className="btn btn-default dropdown-toggle btn-block"
+        className="btn btn-default dropdown-toggle btn-block btn-outline"
         data-toggle="dropdown"
         type="button"
       >
         <span className="material-icon">
           expand_more
         </span>
+        <span className="btn-text hidden-xs">
+          {gettext("Options")}
+        </span>
       </button>
       <ul className="dropdown-menu">
         <StartPollCompact {...props} />
-        <AddParticipantCompact {...props} />
         <GotoNewCompact {...props} />
         <GotoUnapprovedCompact {...props} />
         <GotoLastCompact {...props} />
@@ -120,7 +139,7 @@ export function GotoNewCompact(props) {
     <li>
       <a
         href={props.thread.url.new_post}
-        className="btn btn-default"
+        className="btn btn-link"
       >
         {gettext("Go to first new post")}
       </a>
@@ -137,7 +156,7 @@ export function GotoUnapprovedCompact(props) {
     <li>
       <a
         href={props.thread.url.unapproved_post}
-        className="btn btn-default"
+        className="btn btn-link"
       >
         {gettext("Go to first unapproved post")}
       </a>
@@ -150,7 +169,7 @@ export function GotoLastCompact(props) {
     <li>
       <a
         href={props.thread.url.last_post}
-        className="btn btn-default"
+        className="btn btn-link"
       >
         {gettext("Go to last post")}
       </a>
@@ -164,7 +183,7 @@ export function Reply(props) {
   return (
     <div className="col-sm-4 hidden-xs">
       <ReplyButton
-        className="btn btn-success btn-block"
+        className="btn btn-primary btn-block btn-outline"
         onClick={props.openReplyForm}
       />
     </div>
@@ -178,7 +197,7 @@ export function SubscriptionMenu(props) {
     <div className="col-xs-12 col-sm-4">
       <Subscription
         className="dropdown"
-        dropdownClassName="dropdown-menu dropdown-menu-right"
+        dropdownClassName="dropdown-menu dropdown-menu-right stick-to-bottom"
         {...props}
       />
     </div>
@@ -204,7 +223,7 @@ export class StartPoll extends React.Component {
     return (
       <div className="col-sm-4 hidden-xs">
         <button
-          className="btn btn-default btn-block"
+          className="btn btn-default btn-block btn-outline"
           onClick={this.onClick}
           type="button"
         >
@@ -232,51 +251,6 @@ export class StartPollCompact extends StartPoll {
           type="button"
         >
           {gettext("Add poll")}
-        </button>
-      </li>
-    );
-  }
-}
-
-export class AddParticipant extends React.Component {
-  onClick = () => {
-    modal.show(
-      <AddParticipantModal thread={this.props.thread} />
-    );
-  }
-
-  render() {
-    if (!this.props.thread.acl.can_add_participants) return null;
-
-    return (
-      <div className="col-sm-4 hidden-xs">
-        <button
-          className="btn btn-default btn-block"
-          onClick={this.onClick}
-          type="button"
-        >
-          <span className="material-icon">
-            person_add
-          </span>
-          {gettext("Add participant")}
-        </button>
-      </div>
-    );
-  }
-}
-
-export class AddParticipantCompact extends AddParticipant {
-  render() {
-    if (!this.props.thread.acl.can_add_participants) return null;
-
-    return (
-      <li>
-        <button
-          className="btn btn-link"
-          onClick={this.onClick}
-          type="button"
-        >
-          {gettext("Add participant")}
         </button>
       </li>
     );

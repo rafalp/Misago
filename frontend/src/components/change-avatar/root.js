@@ -32,6 +32,13 @@ export class ChangeAvatarError extends React.Component {
           {this.props.message}
         </p>
         {this.getErrorReason()}
+        <button
+          className="btn btn-default"
+          data-dismiss="modal"
+          type="button"
+        >
+          {gettext("Ok")}
+        </button>
       </div>
     </div>;
     /* jshint ignore:end */

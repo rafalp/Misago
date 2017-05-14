@@ -7,9 +7,11 @@ export default class extends React.Component {
 
   render() {
     /* jshint ignore:start */
-    return <span className={this.getClass()}>
-      {this.props.children}
-    </span>;
+    return (
+      <span className={this.getClass()}>
+        {this.props.children}
+      </span>
+    );
     /* jshint ignore:end */
   }
 }

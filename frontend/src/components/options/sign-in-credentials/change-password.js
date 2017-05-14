@@ -81,7 +81,7 @@ export default class extends Form {
 
   render() {
     /* jshint ignore:start */
-    return <form onSubmit={this.handleSubmit} className="form-horizontal">
+    return <form onSubmit={this.handleSubmit}>
       <input type="type" style={{display: 'none'}} />
       <input type="password" style={{display: 'none'}} />
       <div className="panel panel-default panel-form">
@@ -90,16 +90,14 @@ export default class extends Form {
         </div>
         <div className="panel-body">
 
-          <FormGroup label={gettext("New password")} for="id_new_password"
-                     labelClass="col-sm-4" controlClass="col-sm-8">
+          <FormGroup label={gettext("New password")} for="id_new_password">
             <input type="password" id="id_new_password" className="form-control"
                    disabled={this.state.isLoading}
                    onChange={this.bindInput('new_password')}
                    value={this.state.new_password} />
           </FormGroup>
 
-          <FormGroup label={gettext("Repeat password")} for="id_repeat_password"
-                     labelClass="col-sm-4" controlClass="col-sm-8">
+          <FormGroup label={gettext("Repeat password")} for="id_repeat_password">
             <input type="password" id="id_repeat_password" className="form-control"
                    disabled={this.state.isLoading}
                    onChange={this.bindInput('repeat_password')}
@@ -108,8 +106,7 @@ export default class extends Form {
 
           <hr />
 
-          <FormGroup label={gettext("Your current password")} for="id_password"
-                     labelClass="col-sm-4" controlClass="col-sm-8">
+          <FormGroup label={gettext("Your current password")} for="id_password">
             <input type="password" id="id_password" className="form-control"
                    disabled={this.state.isLoading}
                    onChange={this.bindInput('password')}
@@ -118,15 +115,11 @@ export default class extends Form {
 
         </div>
         <div className="panel-footer">
-          <div className="row">
-            <div className="col-sm-8 col-sm-offset-4">
 
-              <Button className="btn-primary" loading={this.state.isLoading}>
-                {gettext("Change password")}
-              </Button>
+          <Button className="btn-primary" loading={this.state.isLoading}>
+            {gettext("Change password")}
+          </Button>
 
-            </div>
-          </div>
         </div>
       </div>
     </form>;

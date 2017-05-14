@@ -141,179 +141,220 @@ export default class extends React.Component {
   };
 
   getPinGloballyButton() {
-    if (this.props.thread.weight < 2 && this.props.thread.acl.can_pin == 2) {
-      return (
-        <li>
-          <button type="button"
-                  className="btn btn-link"
-                  onClick={this.pinGlobally}>
-            {gettext("Pin globally")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (this.props.thread.weight === 2) return null;
+    if (this.props.thread.acl.can_pin !== 2) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.pinGlobally}
+          type="button"
+        >
+          <span className="material-icon">
+            bookmark
+          </span>
+          {gettext("Pin globally")}
+        </button>
+      </li>
+    );
   }
 
   getPinLocallyButton() {
-    if (this.props.thread.weight !== 1 && this.props.thread.acl.can_pin > 0) {
-      return (
-        <li>
-          <button type="button"
-                  className="btn btn-link"
-                  onClick={this.pinLocally}>
-            {gettext("Pin locally")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (this.props.thread.weight === 1) return null;
+    if (this.props.thread.acl.can_pin === 0) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.pinLocally}
+          type="button"
+        >
+          <span className="material-icon">
+            bookmark_border
+          </span>
+          {gettext("Pin locally")}
+        </button>
+      </li>
+    );
   }
 
   getUnpinButton() {
-    if (this.props.thread.weight > 0 && this.props.thread.acl.can_pin > 0) {
-      return (
-        <li>
-          <button type="button"
-                  className="btn btn-link"
-                  onClick={this.unpin}>
-            {gettext("Unpin")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (this.props.thread.weight === 0) return null;
+    if (this.props.thread.acl.can_pin === 0) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.unpin}
+          type="button"
+        >
+          <span className="material-icon">
+            panorama_fish_eye
+          </span>
+          {gettext("Unpin")}
+        </button>
+      </li>
+    );
   }
 
   getMoveButton() {
-    if (this.props.thread.acl.can_move) {
-      return (
-        <li>
-          <button type="button"
-                  className="btn btn-link"
-                  onClick={this.move}>
-            {gettext("Move")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (!this.props.thread.acl.can_move) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.move}
+          type="button"
+        >
+          <span className="material-icon">
+            arrow_forward
+          </span>
+          {gettext("Move")}
+        </button>
+      </li>
+    );
   }
 
   getMergeButton() {
-    if (this.props.thread.acl.can_merge) {
-      return (
-        <li>
-          <button type="button"
-                  className="btn btn-link"
-                  onClick={this.merge}>
-            {gettext("Merge")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (!this.props.thread.acl.can_merge) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.merge}
+          type="button"
+        >
+          <span className="material-icon">
+            call_merge
+          </span>
+          {gettext("Merge")}
+        </button>
+      </li>
+    );
   }
 
   getApproveButton() {
-    if (this.props.thread.is_unapproved && this.props.thread.acl.can_approve) {
-      return (
-        <li>
-          <button type="button"
-                  className="btn btn-link"
-                  onClick={this.approve}>
-            {gettext("Approve")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (!this.props.thread.is_unapproved) return null;
+    if (!this.props.thread.acl.can_approve) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.approve}
+          type="button"
+        >
+          <span className="material-icon">
+            done
+          </span>
+          {gettext("Approve")}
+        </button>
+      </li>
+    );
   }
 
   getOpenButton() {
-    if (this.props.thread.is_closed && this.props.thread.acl.can_close) {
-      return (
-        <li>
-          <button type="button"
-                  className="btn btn-link"
-                  onClick={this.open}>
-            {gettext("Open")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (!this.props.thread.is_closed) return null;
+    if (!this.props.thread.acl.can_close) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.open}
+          type="button"
+        >
+          <span className="material-icon">
+            lock_open
+          </span>
+          {gettext("Open")}
+        </button>
+      </li>
+    );
   }
 
   getCloseButton() {
-    if (!this.props.thread.is_closed && this.props.thread.acl.can_close) {
-      return (
-        <li>
-          <button type="button"
-                  className="btn btn-link"
-                  onClick={this.close}>
-            {gettext("Close")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (this.props.thread.is_closed) return null;
+    if (!this.props.thread.acl.can_close) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.close}
+          type="button"
+        >
+          <span className="material-icon">
+            lock_outline
+          </span>
+          {gettext("Close")}
+        </button>
+      </li>
+    );
   }
 
   getUnhideButton() {
-    if (this.props.thread.is_hidden && this.props.thread.acl.can_hide) {
-      return (
-        <li>
-          <button type="button"
-                  className="btn btn-link"
-                  onClick={this.unhide}>
-            {gettext("Unhide")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (!this.props.thread.is_hidden) return null;
+    if (!this.props.thread.acl.can_hide) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.unhide}
+          type="button"
+        >
+          <span className="material-icon">
+            visibility
+          </span>
+          {gettext("Unhide")}
+        </button>
+      </li>
+    );
   }
 
   getHideButton() {
-    if (!this.props.thread.is_hidden && this.props.thread.acl.can_hide) {
-      return (
-        <li>
-          <button type="button"
-                  className="btn btn-link"
-                  onClick={this.hide}>
-            {gettext("Hide")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (this.props.thread.is_hidden) return null;
+    if (!this.props.thread.acl.can_hide) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.hide}
+          type="button"
+        >
+          <span className="material-icon">
+            visibility_off
+          </span>
+          {gettext("Hide")}
+        </button>
+      </li>
+    );
   }
 
   getDeleteButton() {
-    if (this.props.thread.acl.can_hide == 2) {
-      return (
-        <li>
-          <button type="button"
-                  className="btn btn-link"
-                  onClick={this.delete}>
-            {gettext("Delete")}
-          </button>
-        </li>
-      );
-    } else {
-      return null;
-    }
+    if (this.props.thread.acl.can_hide !== 2) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.delete}
+          type="button"
+        >
+          <span className="material-icon">
+            clear
+          </span>
+          {gettext("Delete")}
+        </button>
+      </li>
+    );
   }
 
   render() {

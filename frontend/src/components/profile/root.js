@@ -35,109 +35,24 @@ export default class extends WithDropdown {
   update = (data) => {
     store.dispatch(hydrate(data));
   };
-
-  toggleNav = () => {
-    if (this.state.dropdown === 'pages') {
-      this.setState({
-        dropdown: false
-      });
-    } else {
-      this.setState({
-        dropdown: 'pages'
-      });
-    }
-  };
-
-  toggleModeration = () => {
-    if (this.state.dropdown === 'moderation') {
-      this.setState({
-        dropdown: false
-      });
-    } else {
-      this.setState({
-        dropdown: 'moderation'
-      });
-    }
-  };
   /* jshint ignore:end */
-
-  getNavDropdown() {
-    if (this.state.dropdown === 'pages') {
-      /* jshint ignore:start */
-      return <CompactNav pages={misago.get('PROFILE_PAGES')}
-                         baseUrl={misago.get('PROFILE').absolute_url}
-                         profile={this.props.profile}
-                         toggleModeration={this.toggleModeration}
-                         hideNav={this.hideNav} />;
-      /* jshint ignore:end */
-    } else if (this.state.dropdown === 'moderation') {
-      /* jshint ignore:start */
-      return <ModerationNav profile={this.props.profile}
-                            toggleNav={this.toggleNav}
-                            hideNav={this.hideNav} />;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
-  }
-
-  getClassName() {
-    const baseClass = 'page page-user-profile';
-    if (false && this.props.profile.rank.css_class) {
-      return baseClass + ' page-user-profile-' + this.props.profile.rank.css_class;
-    } else {
-      return baseClass;
-    }
-  }
 
   render() {
     /* jshint ignore:start */
+    const baseUrl = misago.get('PROFILE').absolute_url;
     const pages = misago.get('PROFILE_PAGES');
 
     return (
-      <div className={this.getClassName()}>
+      <div className="page page-user-profile">
 
         <Header
-          user={this.props.user}
+          baseUrl={baseUrl}
+          pages={pages}
           profile={this.props.profile}
           toggleNav={this.toggleNav}
           toggleModeration={this.toggleModeration}
+          user={this.props.user}
         />
-
-        <div className="page-header page-header-followup visible-sm-block">
-          <div className="container">
-            <CompactNav
-              className="nav nav-pills"
-              pages={pages}
-              baseUrl={misago.get('PROFILE').absolute_url}
-              profile={this.props.profile}
-            />
-          </div>
-        </div>
-
-        <div className="page-header page-header-followup visible-xs-block">
-          <div className="container">
-            <div className="dropdown">
-              <button
-                aria-expanded="true"
-                aria-haspopup="true"
-                className="btn btn-default dropdown-toggle btn-block"
-                data-toggle="dropdown"
-                type="button"
-              >
-                <span className="material-icon">
-                  menu
-                </span>
-                {gettext("Menu")}
-              </button>
-              <CompactNav
-                pages={pages}
-                baseUrl={misago.get('PROFILE').absolute_url}
-                profile={this.props.profile}
-              />
-            </div>
-          </div>
-        </div>
         <div className="container">
 
           <div className="row">
@@ -148,8 +63,8 @@ export default class extends WithDropdown {
               </div>
 
               <SideNav
+                baseUrl={baseUrl}
                 pages={pages}
-                baseUrl={misago.get('PROFILE').absolute_url}
                 profile={this.props.profile}
               />
 

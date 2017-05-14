@@ -1,5 +1,5 @@
 import React from 'react';
-import Loader from 'misago/components/loader'; // jshint ignore:line
+import Loader from './loader'; // jshint ignore:line
 
 export default class Button extends React.Component {
   render() {
@@ -12,13 +12,17 @@ export default class Button extends React.Component {
     }
 
     /* jshint ignore:start */
-    return <button type={this.props.onClick ? 'button' : 'submit'}
-                   className={className}
-                   disabled={disabled}
-                   onClick={this.props.onClick}>
-      {this.props.children}
-      {this.props.loading ? <Loader /> : null}
-    </button>;
+    return (
+      <button
+        className={className}
+        disabled={disabled}
+        onClick={this.props.onClick}
+        type={this.props.onClick ? 'button' : 'submit'}
+      >
+        {this.props.children}
+        {this.props.loading ? <Loader /> : null}
+      </button>
+    );
     /* jshint ignore:end */
   }
 }

@@ -120,7 +120,7 @@ export default class extends Form {
     return (
       <div className="poll-form">
         <div className="container">
-          <form onSubmit={this.handleSubmit} className="form-horizontal">
+          <form onSubmit={this.handleSubmit}>
             <div className="panel panel-default panel-form">
               <div className="panel-body">
 
@@ -130,7 +130,6 @@ export default class extends Form {
                   <FormGroup
                     label={gettext("Poll question")}
                     for="id_questions"
-                    labelClass="col-sm-4" controlClass="col-sm-8"
                     validation={this.state.errors.question}
                   >
                     <input
@@ -146,7 +145,6 @@ export default class extends Form {
 
                   <FormGroup
                     label={gettext("Available choices")}
-                    labelClass="col-sm-4" controlClass="col-sm-8"
                     validation={this.state.errors.choices}
                   >
                     <ChoicesControl
@@ -161,89 +159,88 @@ export default class extends Form {
                 <fieldset>
                   <legend>{gettext("Voting")}</legend>
 
-                  <FormGroup
-                    label={gettext("Poll length")}
-                    helpText={gettext("Enter number of days for which voting in this poll should be possible or zero to run this poll indefinitely.")}
-                    for="id_length"
-                    labelClass="col-sm-4" controlClass="col-sm-8"
-                    validation={this.state.errors.length}
-                  >
-                    <input
-                      className="form-control"
-                      disabled={this.state.isLoading}
-                      id="id_length"
-                      onChange={this.bindInput('length')}
-                      type="text"
-                      value={this.state.length}
-                    />
-                  </FormGroup>
+                  <div className="row">
+                    <div className="col-xs-12 col-sm-6">
+                      <FormGroup
+                        label={gettext("Poll length")}
+                        helpText={gettext("Enter number of days for which voting in this poll should be possible or zero to run this poll indefinitely.")}
+                        for="id_length"
+                        validation={this.state.errors.length}
+                      >
+                        <input
+                          className="form-control"
+                          disabled={this.state.isLoading}
+                          id="id_length"
+                          onChange={this.bindInput('length')}
+                          type="text"
+                          value={this.state.length}
+                        />
+                      </FormGroup>
+                    </div>
+                    <div className="col-xs-12 col-sm-6">
+                      <FormGroup
+                        label={gettext("Allowed choices")}
+                        for="id_allowed_choices"
+                        validation={this.state.errors.allowed_choices}
+                      >
+                        <input
+                          className="form-control"
+                          disabled={this.state.isLoading}
+                          id="id_allowed_choices"
+                          onChange={this.bindInput('allowed_choices')}
+                          type="text"
+                          maxLength="255"
+                          value={this.state.allowed_choices}
+                        />
+                      </FormGroup>
+                    </div>
+                  </div>
 
-                  <FormGroup
-                    label={gettext("Allowed choices")}
-                    for="id_allowed_choices"
-                    labelClass="col-sm-4" controlClass="col-sm-8"
-                    validation={this.state.errors.allowed_choices}
-                  >
-                    <input
-                      className="form-control"
+                  <div className="row">
+                    <PollPublicSwitch
+                      bindInput={this.bindInput}
                       disabled={this.state.isLoading}
-                      id="id_allowed_choices"
-                      onChange={this.bindInput('allowed_choices')}
-                      type="text"
-                      maxLength="255"
-                      value={this.state.allowed_choices}
+                      isEdit={this.state.isEdit}
+                      value={this.state.is_public}
                     />
-                  </FormGroup>
-
-                  <FormGroup
-                    label={gettext("Allow vote changes")}
-                    for="id_allow_revotes"
-                    labelClass="col-sm-4" controlClass="col-sm-8"
-                  >
-                    <YesNoSwitch
-                      id="id_allow_revotes"
-                      disabled={this.state.isLoading}
-                      iconOn="check"
-                      iconOff="close"
-                      labelOn={gettext("Allow participants to change their vote")}
-                      labelOff={gettext("Don't allow participants to change their vote")}
-                      onChange={this.bindInput('allow_revotes')}
-                      value={this.state.allow_revotes}
-                    />
-                  </FormGroup>
-
-                  <PollPublicSwitch
-                    bindInput={this.bindInput}
-                    disabled={this.state.isLoading}
-                    isEdit={this.state.isEdit}
-                    value={this.state.is_public}
-                  />
+                    <div className="col-xs-12 col-sm-6">
+                      <FormGroup
+                        label={gettext("Allow vote changes")}
+                        for="id_allow_revotes"
+                      >
+                        <YesNoSwitch
+                          id="id_allow_revotes"
+                          disabled={this.state.isLoading}
+                          iconOn="check"
+                          iconOff="close"
+                          labelOn={gettext("Allow participants to change their vote")}
+                          labelOff={gettext("Don't allow participants to change their vote")}
+                          onChange={this.bindInput('allow_revotes')}
+                          value={this.state.allow_revotes}
+                        />
+                      </FormGroup>
+                    </div>
+                  </div>
 
                 </fieldset>
 
               </div>
-              <div className="panel-footer">
-                <div className="row">
-                  <div className="col-sm-8 col-sm-offset-4">
-
-                    <Button
-                      className="btn-primary"
-                      loading={this.state.isLoading}
-                    >
-                      {this.state.isEdit ? gettext("Save changes") : gettext("Post poll")}
-                    </Button>
-                    &nbsp;
-                    <button
-                      className="btn btn-default"
-                      disabled={this.state.isLoading}
-                      onClick={this.onCancel}
-                      type="button"
-                    >
-                      {gettext("Cancel")}
-                    </button>
-
-                  </div>
-                </div>
+              <div className="panel-footer text-right">
+                <button
+                  className="btn btn-default"
+                  disabled={this.state.isLoading}
+                  onClick={this.onCancel}
+                  type="button"
+                >
+                  {gettext("Cancel")}
+                </button>
+                {' '}
+                <Button
+                  className="btn-primary"
+                  loading={this.state.isLoading}
+                >
+                  {this.state.isEdit ? gettext("Save changes") : gettext("Post poll")}
+                </Button>
               </div>
             </div>
           </form>
@@ -257,22 +254,23 @@ export function PollPublicSwitch(props) {
   if (props.isEdit) return null;
 
   return (
-    <FormGroup
-      label={gettext("Make voting public")}
-      helpText={gettext("Making voting public will allow everyone to access detailed list of votes, showing which users voted for which choices and at which times. This option can't be changed after poll's creation. Moderators may see voting details for all polls.")}
-      for="id_is_public"
-      labelClass="col-sm-4" controlClass="col-sm-8"
-    >
-      <YesNoSwitch
-        id="id_is_public"
-        disabled={props.disabled}
-        iconOn="visibility"
-        iconOff="visibility_off"
-        labelOn={gettext("Votes are public")}
-        labelOff={gettext("Votes are hidden")}
-        onChange={props.bindInput('is_public')}
-        value={props.value}
-      />
-    </FormGroup>
+    <div className="col-xs-12 col-sm-6">
+      <FormGroup
+        label={gettext("Make voting public")}
+        helpText={gettext("Making voting public will allow everyone to access detailed list of votes, showing which users voted for which choices and at which times. This option can't be changed after poll's creation. Moderators may see voting details for all polls.")}
+        for="id_is_public"
+      >
+        <YesNoSwitch
+          id="id_is_public"
+          disabled={props.disabled}
+          iconOn="visibility"
+          iconOff="visibility_off"
+          labelOn={gettext("Votes are public")}
+          labelOff={gettext("Votes are hidden")}
+          onChange={props.bindInput('is_public')}
+          value={props.value}
+        />
+      </FormGroup>
+    </div>
   );
 }

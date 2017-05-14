@@ -12,32 +12,39 @@ export class GuestMenu extends React.Component {
 
   render() {
     /* jshint ignore:start */
-    return <ul className="dropdown-menu user-dropdown dropdown-menu-right"
-               role="menu">
-      <li className="guest-preview">
-        <h4>{gettext("You are browsing as guest.")}</h4>
-        <p>
-          {gettext('Sign in or register to start and participate in discussions.')}
-        </p>
-        <div className="row">
-          <div className="col-xs-6">
+    return (
+      <ul
+        className="dropdown-menu user-dropdown dropdown-menu-right"
+        role="menu"
+      >
+        <li className="guest-preview">
+          <h4>{gettext("You are browsing as guest.")}</h4>
+          <p>
+            {gettext('Sign in or register to start and participate in discussions.')}
+          </p>
+          <div className="row">
+            <div className="col-xs-6">
 
-            <button type="button" className="btn btn-default btn-block"
-                    onClick={this.showSignInModal}>
-              {gettext("Sign in")}
-            </button>
+              <button
+                className="btn btn-default btn-block"
+                onClick={this.showSignInModal}
+                type="button"
+              >
+                {gettext("Sign in")}
+              </button>
 
+            </div>
+            <div className="col-xs-6">
+
+              <RegisterButton className="btn-success btn-block">
+                {gettext("Register")}
+              </RegisterButton>
+
+            </div>
           </div>
-          <div className="col-xs-6">
-
-            <RegisterButton className="btn-primary btn-block">
-              {gettext("Register")}
-            </RegisterButton>
-
-          </div>
-        </div>
-      </li>
-    </ul>;
+        </li>
+      </ul>
+    );
     /* jshint ignore:end */
   }
 }
@@ -45,15 +52,20 @@ export class GuestMenu extends React.Component {
 export class GuestNav extends GuestMenu {
   render() {
     /* jshint ignore:start */
-    return <div className="nav nav-guest">
-      <button type="button" className="btn navbar-btn btn-default"
-              onClick={this.showSignInModal}>
-        {gettext("Sign in")}
-      </button>
-      <RegisterButton className="navbar-btn btn-primary">
-        {gettext("Register")}
-      </RegisterButton>
-    </div>;
+    return (
+      <div className="nav nav-guest">
+        <button
+          className="btn navbar-btn btn-default"
+          onClick={this.showSignInModal}
+          type="button"
+        >
+          {gettext("Sign in")}
+        </button>
+        <RegisterButton className="navbar-btn btn-success btn-outline">
+          {gettext("Register")}
+        </RegisterButton>
+      </div>
+    );
     /* jshint ignore:end */
   }
 }
@@ -65,9 +77,11 @@ export class CompactGuestNav extends React.Component {
 
   render() {
     /* jshint ignore:start */
-    return <button type="button" onClick={this.showGuestMenu}>
-      <Avatar size="64" />
-    </button>;
+    return (
+      <button type="button" onClick={this.showGuestMenu}>
+        <Avatar size="64" />
+      </button>
+    );
     /* jshint ignore:end */
   }
 }

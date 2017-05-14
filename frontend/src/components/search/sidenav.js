@@ -13,6 +13,9 @@ export default function(props) {
             key={provider.id}
             to={provider.url}
           >
+            <span className="material-icon">
+              {provider.icon}
+            </span>
             {provider.name}
             <Badge results={provider.results} />
           </Link>

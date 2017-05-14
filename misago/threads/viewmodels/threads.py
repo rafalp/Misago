@@ -46,6 +46,8 @@ class ViewModel(object):
         category_model = category.unwrap()
 
         base_queryset = self.get_base_queryset(request, category.categories, list_type)
+        base_queryset = base_queryset.select_related('starter', 'last_poster')
+
         threads_categories = [category_model] + category.subcategories
 
         threads_queryset = self.get_remaining_threads_queryset(
@@ -102,8 +104,11 @@ class ViewModel(object):
         return LISTS_NAMES[list_type]
 
     def get_base_queryset(self, request, threads_categories, list_type):
-        return get_threads_queryset(request.user, threads_categories,
-                                    list_type).order_by('-last_post_id')
+        return get_threads_queryset(
+            request.user,
+            threads_categories,
+            list_type,
+        ).order_by('-last_post_id')
 
     def get_pinned_threads(self, queryset, category, threads_categories):
         return []
@@ -157,8 +162,8 @@ class ForumThreads(ViewModel):
 
 class PrivateThreads(ViewModel):
     def get_base_queryset(self, request, threads_categories, list_type):
-        queryset = super(PrivateThreads,
-                         self).get_base_queryset(request, threads_categories, list_type)
+        queryset = super(PrivateThreads, self).get_base_queryset(
+            request, threads_categories, list_type)
 
         # limit queryset to threads we are participant of
         participated_threads = request.user.threadparticipant_set.values('thread_id')

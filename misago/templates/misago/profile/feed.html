@@ -1,38 +1,67 @@
-{% load i18n misago_capture %}
-<ul class="posts-list ui-ready">
+{% load i18n misago_avatars %}
+<ul class="posts-list post-feed ui-ready">
   {% for post in posts %}
-    <li id="post-{{ post.pk }}" class="post post-infeed {% if post.is_new %}post-new{% endif %}">
-      <div class="post-border">
-        <div class="post-body">
-          <div class="panel panel-default panel-post">
-
-            {% if post.is_valid %}
-              <div class="panel-body">
-                <article class="misago-markup">
-                  {{ post.content|safe }}
-                </article>
+    <li id="post-{{ post.pk }}" class="post {% if profile.rank.css_class %}post-{{ profile.rank.css_class }}{% endif %}">
+      <div class="panel panel-default panel-post">
+        <div class="panel-body">
+          <div class="post-side post-side-registered">
+            <a class="btn btn-default btn-icon pull-right" href="{{ post.get_absolute_url }}">
+              <span class="btn-text-left hidden-xs">
+                {% trans "See post" %}
+              </span>
+              <span class="material-icon">
+                chevron_right
+              </span>
+            </a>
+            <div class="media">
+              <div class="media-left">
+                <a href="{{ profile.get_absolute_url }}">
+                  <img src="{{ profile|avatar:50 }}" class="poster-avatar" alt="" height="50" width="50"/>
+                </a>
               </div>
-            {% else %}
-              <div class="panel-body panel-body-invalid">
-                <p class="lead">{% trans "This post's contents cannot be displayed." %}</p>
-                <p class="text-muted">{% trans "This error is caused by invalid post content manipulation." %}</p>
+              <div class="media-body">
+                <div class="media-heading">
+                  <a class="item-title" href="{{ profile.get_absolute_url }}">
+                    {{ profile }}
+                  </a>
+                </div>
+                {% if profile.rank.is_tab %}
+                  <a href="{{ profile.rank.get_absolute_url }}" class="user-title {% if profile.rank.css_class %}user-title-{{ profile.rank.css_class }}{% endif %}">
+                {% else %}
+                  <span class="user-title {% if profile.rank.css_class %}user-title-{{ profile.rank.css_class }}{% endif %}">
+                {% endif %}
+                {{ profile.get_any_title }}
+                {% if profile.rank.is_tab %}
+                  </a>
+                {% else %}
+                  </span>
+                {% endif %}
               </div>
-            {% endif %}
-
-            <div class="panel-footer post-infeed-footer">
-              {% capture trimmed as category %}
-                <span class="category-name">{{ post.category }}</span>
-              {% endcapture %}
-              {% capture trimmed as thread %}
-                <span class="item-title">{{ post.thread }}</span>
-              {% endcapture %}
-              <a href="{{ post.get_absolute_url }}">
-                {% blocktrans trimmed with posted_on=post.posted_on|date:'DATETIME_FORMAT' thread=thread|safe category=category|safe %}
-                  {{ posted_on }}, in {{ thread }}, {{ category }}
-                {% endblocktrans %}
-              </a>
             </div>
           </div>
+          <div class="post-heading">
+            <a class="btn btn-link item-title" href="{{ post.thread.get_absolute_url }}">
+              {{ post.thread }}
+            </a>
+            <a class="btn btn-link post-category" href="{{ post.category.get_absolute_url }}">
+              {{ post.category }}
+            </a>
+            <a class="btn btn-link posted-on" href="{{ post.get_absolute_url }}">
+              {{ post.posted_on|date:'DATETIME_FORMAT' }}
+            </a>
+          </div>
+          {% if post.is_valid %}
+            <div class="post-body">
+              <article class="misago-markup">
+                {{ post.content|safe }}
+              </article>
+            </div>
+          {% else %}
+            <div class="post-body post-body-invalid">
+              <p class="lead">{% trans "This post's contents cannot be displayed." %}</p>
+              <p class="text-muted">{% trans "This error is caused by invalid post content manipulation." %}</p>
+            </div>
+          {% endif %}
         </div>
       </div>
     </li>

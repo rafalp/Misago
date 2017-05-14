@@ -20,8 +20,10 @@
   {% block extra-css %}{% endblock extra-css %}
 {% endspaceless %}">
 
-  {% block page-header %}
-  {% endblock page-header %}
+  <div class="page-header-bg">
+    {% block page-header %}
+    {% endblock page-header %}
+  </div>
 
   <div class="container">
 
@@ -65,7 +67,9 @@
                         {% trans "Why not start one yourself?" %}
                       </p>
                     {% else %}
-                      {% trans "No threads matching specified criteria were found." %}
+                      <p class="lead">
+                        {% trans "No threads matching specified criteria were found." %}
+                      </p>
                     {% endif %}
                   {% endblock list-empty-message %}
                 </li>

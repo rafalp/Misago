@@ -1,0 +1,123 @@
+//
+// Flavor Header
+// --------------------------------------------------
+
+
+// Graphic background
+.page-header {
+  background: none; // we'll use header handler for that
+  border-bottom: none;
+}
+
+.page-header-bg {
+  background-color: @page-header-bg;
+  background: url('../img/page-header.png');
+
+  .shadow-4dp();
+  
+  @media screen and (min-width: @screen-md-min) {
+    margin-bottom: @line-height-computed * 2;
+  }
+}
+
+
+// Item colors
+.page-header {
+  h1 {
+    color: @page-header-color;
+    font-weight: 400;
+    text-shadow: 0px 1px 1px @page-header-bg;
+  }
+}
+
+
+// Stats
+.header-stats {
+  color: @page-header-text-color;
+  text-shadow: 0px 1px 1px @page-header-bg;
+
+  li {
+    a, a:link, a:visited {
+      color: @page-header-link-color;
+    }
+
+    a:hover, a:focus, a:active {
+      color: @page-header-link-hover-color;
+    }
+  }
+}
+
+
+// Go back
+.page-header .go-back-sm {
+  text-shadow: 0px 1px 1px @page-header-bg;
+  
+  &, &:link, &:visited {
+    color: @page-header-text-color;
+  }
+
+  &:hover, &:focus, &:active {
+    color: @page-header-link-hover-color;
+  }
+}
+
+
+// Breadcrumbs
+.page-header .breadcrumb {
+  color: @page-header-text-color;
+  text-shadow: 0px 1px 1px @page-header-bg;
+  
+  a, a:link, a:visited {
+    color: @page-header-text-color;
+  }
+
+  a:hover, a:focus, a:active {
+    color: @page-header-link-color;
+  }
+
+  li:before {
+    color: @page-header-text-color;
+    text-shadow: 0px 1px 1px @page-header-bg;
+  }
+}
+
+
+// Header tabs
+.page-tabs {
+  background-color: @page-tabs-bg;
+
+  li a {
+    padding-bottom: 7px;
+
+    &, &:link, &:visited {
+      background-color: @page-tabs-link-bg;
+      border-bottom: 3px solid transparent;
+
+      color: @page-tabs-link-color;
+    }
+
+    &:hover, &:focus {
+      background-color: @page-tabs-link-hover-bg;
+      border-bottom: 3px solid lighten(@page-tabs-link-hover-color, 75%);
+
+      color: @page-tabs-link-hover-color;
+  
+      @media screen and (max-width: @screen-sm-max) {
+        // sticky hover on touch devices is confusing, so don.t add it
+        background-color: @page-tabs-link-bg;
+        border-bottom: 3px solid transparent;
+
+        color: @page-tabs-link-color;
+      }
+    }
+  }
+
+  li.active a {
+    &, &:link, &:active, &:visited, &:hover, &:focus {
+      background-color: @page-tabs-link-active-bg;
+      border-bottom: 3px solid @page-tabs-link-active-color;
+
+      color: @page-tabs-link-active-color;
+    }
+  }
+}

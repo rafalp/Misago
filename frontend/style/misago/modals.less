@@ -97,30 +97,6 @@
 }
 
 
-// Registration modal
-.modal-register .modal-footer a {
-  float: left;
-  margin-top: @line-height-computed / 3;
-}
-
-@media screen and (max-width: @screen-sm-max) {
-  .modal-register .modal-footer {
-    text-align: center;
-
-    a {
-      display: block;
-    }
-
-    .btn {
-      display: block;
-      float: none;
-      margin-top: @line-height-computed / 2;
-      width: 100%;
-    }
-  }
-}
-
-
 // Errors modal
 .list-item-errors {
   margin-bottom: @line-height-computed;
@@ -132,6 +108,12 @@
 
 
 // Post likes modal
-.modal-post-likers .list-unstyled {
-  margin: 0px;
+.modal-post-likers {
+  .media-list {
+    margin: 0px;
+  }
+
+  .item-title {
+    display: block;
+  }
 }

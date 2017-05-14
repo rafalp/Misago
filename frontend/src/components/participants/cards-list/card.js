@@ -7,17 +7,41 @@ import Avatar from 'misago/components/avatar';
 export default function(props) {
   const participant = props.participant;
 
+  let className = 'btn btn-default';
+  if (participant.is_owner) {
+    className = 'btn btn-primary';
+  }
+  className += ' btn-user btn-block';
+
   return (
-    <div className="col-xs-12 col-sm-6 col-md-3 participant-card">
-      <a className="avatar-link" href={participant.url}>
-        <Avatar user={participant} size="50" />
-      </a>
-      <div className="participant-profile">
-        <a className="item-title" href={participant.url}>
-          {participant.username}
-        </a>
-        <ul className="list-unstyled list-inline">
-          <OwnerBadge {...participant} />
+    <div className="col-xs-12 col-sm-3 col-md-2 participant-card">
+      <div className="dropdown">
+        <button
+          aria-haspopup="true"
+          aria-expanded="false"
+          className={className}
+          data-toggle="dropdown"
+          type="button"
+        >
+          <Avatar
+            size="34"
+            user={participant}
+          />
+          <span className="btn-text">
+            {participant.username}
+          </span>
+        </button>
+        <ul className="dropdown-menu stick-to-bottom">
+          <UserStatus isOwner={participant.is_owner} />
+          <li className="dropdown-header" />
+          <li>
+            <a
+              href={participant.url}
+            >
+              {gettext("See profile")}
+            </a>
+          </li>
+          <li role="separator" className="divider"></li>
           <MakeOwner {...props} />
           <Remove {...props} />
         </ul>
@@ -26,15 +50,17 @@ export default function(props) {
   );
 }
 
-export function OwnerBadge(props) {
-  if (!props.is_owner) return null;
+export function UserStatus({ isOwner }) {
+  if (!isOwner) return null;
 
   return (
-    <li className="participant-owner">
+    <li className="dropdown-header dropdown-header-owner">
       <span className="material-icon">
-        grade
+        start
       </span>
-      {gettext("Owner")}
+      <span className="icon-text">
+        {gettext("Thread owner")}
+      </span>
     </li>
   );
 }

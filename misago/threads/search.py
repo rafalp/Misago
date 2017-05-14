@@ -15,6 +15,7 @@ from .viewmodels import ThreadsRootCategory
 
 class SearchThreads(SearchProvider):
     name = _("Threads")
+    icon = 'forum'
     url = 'threads'
 
     def search(self, query, page=1):
@@ -66,7 +67,7 @@ def search_threads(request, query, visible_threads):
         config=settings.MISAGO_SEARCH_CONFIG,
     )
 
-    return Post.objects.select_related('thread', 'poster').filter(
+    return Post.objects.select_related('thread', 'poster', 'poster__rank').filter(
         is_event=False,
         is_hidden=False,
         is_unapproved=False,

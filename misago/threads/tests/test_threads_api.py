@@ -162,6 +162,33 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
         response = self.client.get(self.tested_links[1])
         self.assertContains(response, unapproved_post.get_absolute_url())
 
+    def test_api_validates_has_unapproved_posts_visibility(self):
+        """api checks acl before exposing unapproved flag"""
+        self.thread.has_unapproved_posts = True
+        self.thread.save()
+
+        for link in self.tested_links:
+            self.override_acl()
+
+            response = self.client.get(link)
+            self.assertEqual(response.status_code, 200)
+
+            response_json = response.json()
+            self.assertEqual(response_json['id'], self.thread.pk)
+            self.assertEqual(response_json['title'], self.thread.title)
+            self.assertFalse(response_json['has_unapproved_posts'])
+
+        for link in self.tested_links:
+            self.override_acl({'can_approve_content': 1})
+
+            response = self.client.get(link)
+            self.assertEqual(response.status_code, 200)
+
+            response_json = response.json()
+            self.assertEqual(response_json['id'], self.thread.pk)
+            self.assertEqual(response_json['title'], self.thread.title)
+            self.assertTrue(response_json['has_unapproved_posts'])
+
 
 class ThreadsReadApiTests(ThreadsApiTestCase):
     def setUp(self):
@@ -218,6 +245,12 @@ class ThreadsReadApiTests(ThreadsApiTestCase):
 
 
 class ThreadDeleteApiTests(ThreadsApiTestCase):
+    def setUp(self):
+        super(ThreadDeleteApiTests, self).setUp()
+
+        self.last_thread = testutils.post_thread(category=self.category)
+        self.api_link = self.last_thread.get_api_url()
+
     def test_delete_thread_no_permission(self):
         """DELETE to API link with no permission to delete fails"""
         self.override_acl({'can_hide_threads': 1})
@@ -235,12 +268,36 @@ class ThreadDeleteApiTests(ThreadsApiTestCase):
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
 
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'], "You don't have permission to delete this thread."
+        )
+
     def test_delete_thread(self):
         """DELETE to API link with permission deletes thread"""
         self.override_acl({'can_hide_threads': 2})
+
+        category = Category.objects.get(slug='first-category')
+        self.assertEqual(category.last_thread_id, self.last_thread.pk)
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 200)
 
         with self.assertRaises(Thread.DoesNotExist):
+            Thread.objects.get(pk=self.last_thread.pk)
+
+        # category was synchronised after deletion
+        category = Category.objects.get(slug='first-category')
+        self.assertEqual(category.last_thread_id, self.thread.pk)
+
+        # test that last thread's deletion triggers category sync
+        self.override_acl({'can_hide_threads': 2})
+
+        response = self.client.delete(self.thread.get_api_url())
+        self.assertEqual(response.status_code, 200)
+
+        with self.assertRaises(Thread.DoesNotExist):
             Thread.objects.get(pk=self.thread.pk)
+
+        category = Category.objects.get(slug='first-category')
+        self.assertIsNone(category.last_thread_id)

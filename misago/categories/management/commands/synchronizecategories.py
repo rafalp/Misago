@@ -1,3 +1,5 @@
+import time
+
 from django.core.management.base import BaseCommand
 
 from misago.categories.models import Category
@@ -13,7 +15,9 @@ class Command(BaseCommand):
         message = 'Synchronizing %s categories...\n'
         self.stdout.write(message % categories_to_sync)
 
-        message = '\n\nSynchronized %s categories'
+        message = '\n\nSynchronized %s categories in %s'
+
+        start_time = time.time()
 
         synchronized_count = 0
         show_progress(self, synchronized_count, categories_to_sync)
@@ -24,4 +28,7 @@ class Command(BaseCommand):
             synchronized_count += 1
             show_progress(self, synchronized_count, categories_to_sync)
 
-        self.stdout.write(message % synchronized_count)
+        end_time = time.time() - start_time
+        total_time = time.strftime('%H:%M:%S', time.gmtime(end_time))
+
+        self.stdout.write(message % (synchronized_count, total_time))

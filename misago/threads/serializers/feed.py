@@ -12,7 +12,14 @@ __all__ = [
     'FeedSerializer',
 ]
 
-FeedUserSerializer = UserSerializer.subset_fields('id', 'username', 'avatars', 'absolute_url')
+FeedUserSerializer = UserSerializer.subset_fields(
+    'id',
+    'username',
+    'avatars',
+    'absolute_url',
+    'title',
+    'rank',
+)
 
 FeedCategorySerializer = CategorySerializer.subset_fields('name', 'css_class', 'absolute_url')
 
@@ -32,3 +39,6 @@ class FeedSerializer(PostSerializer, MutableFields):
             'title': obj.thread.title,
             'url': obj.thread.get_absolute_url(),
         }
+
+
+FeedSerializer = FeedSerializer.exclude_fields('is_liked', 'is_new', 'is_read')

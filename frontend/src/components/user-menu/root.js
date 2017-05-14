@@ -6,9 +6,13 @@ export class UserMenu extends React.Component {
   render() {
     /* jshint ignore:start */
     if (this.props.isAuthenticated) {
-      return <UserNav user={this.props.user} />;
+      return (
+        <UserNav user={this.props.user} />
+      );
     } else {
-      return <GuestNav />;
+      return (
+        <GuestNav />
+      );
     }
     /* jshint ignore:end */
   }
@@ -18,9 +22,13 @@ export class CompactUserMenu extends React.Component {
   render() {
     /* jshint ignore:start */
     if (this.props.isAuthenticated) {
-      return <CompactUserNav user={this.props.user} />;
+      return (
+        <CompactUserNav user={this.props.user} />
+      );
     } else {
-      return <CompactGuestNav />;
+      return (
+        <CompactGuestNav />
+      );
     }
     /* jshint ignore:end */
   }

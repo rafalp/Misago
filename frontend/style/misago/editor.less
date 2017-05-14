@@ -40,6 +40,7 @@
     margin-bottom: -2px;
   }
 
+
   // center buttons on small devices
   @media screen and (max-width: @screen-sm-max) {
     .buttons-list {
@@ -47,8 +48,6 @@
 
       margin: 0px;
       margin-bottom: @line-height-computed / 2;
-
-      text-align: center;
 
       .btn {
         display: inline-block;
@@ -75,9 +74,21 @@
       }
     }
   }
+}
 
-  // make lock button full width
-  @media screen and (max-width: @screen-xs-max) {
+@media screen and (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+  .buttons-list .btn {
+    &:first-child {
+      margin-left: 0px;
+    }
+  }
+}
+
+// make lock button full width
+@media screen and (max-width: @screen-xs-max) {
+  .buttons-list {
+    text-align: center;
+
     .btn-protect {
       display: block;
       float: none !important;
@@ -104,6 +115,7 @@
 .editor-attachment-complete {
   border-top: 1px solid @editor-border;
   padding: @padding-base-vertical 0px;
+  padding-right: @padding-base-horizontal;
 
   .editor-attachment-image {
     float: left;

@@ -86,68 +86,90 @@ export default class extends Form {
   }
 
   getActivationButton() {
-    if (this.state.showActivation) {
-      /* jshint ignore:start */
-      return <a href={misago.get('REQUEST_ACTIVATION_URL')}
-                className="btn btn-success btn-block">
-         {gettext("Activate account")}
-      </a>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+    if (!this.state.showActivation) return null;
+
+    /* jshint ignore:start */
+    return (
+      <a
+        className="btn btn-success btn-block"
+        href={misago.get('REQUEST_ACTIVATION_URL')}
+      >
+        {gettext("Activate account")}
+      </a>
+    );
+    /* jshint ignore:end */
   }
 
   render() {
     /* jshint ignore:start */
-    return <div className="modal-dialog modal-sm modal-sign-in"
-                role="document">
-      <div className="modal-content">
-        <div className="modal-header">
-          <button type="button" className="close" data-dismiss="modal"
-                  aria-label={gettext("Close")}>
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 className="modal-title">{gettext("Sign in")}</h4>
+    return (
+      <div
+        className="modal-dialog modal-sm modal-sign-in"
+        role="document"
+      >
+        <div className="modal-content">
+          <div className="modal-header">
+            <button
+              aria-label={gettext("Close")}
+              className="close"
+              data-dismiss="modal"
+              type="button"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 className="modal-title">{gettext("Sign in")}</h4>
+          </div>
+          <form onSubmit={this.handleSubmit}>
+            <div className="modal-body">
+
+              <div className="form-group">
+                <div className="control-input">
+                  <input
+                    className="form-control input-lg"
+                    disabled={this.state.isLoading}
+                    id="id_username"
+                    onChange={this.bindInput('username')}
+                    placeholder={gettext("Username or e-mail")}
+                    type="text"
+                    value={this.state.username}
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <div className="control-input">
+                  <input
+                    className="form-control input-lg"
+                    disabled={this.state.isLoading}
+                    id="id_password"
+                    onChange={this.bindInput('password')}
+                    placeholder={gettext("Password")}
+                    type="password"
+                    value={this.state.password}
+                  />
+                </div>
+              </div>
+
+            </div>
+            <div className="modal-footer">
+              {this.getActivationButton()}
+              <Button
+                className="btn-primary btn-block"
+                loading={this.state.isLoading}
+              >
+                {gettext("Sign in")}
+              </Button>
+              <a
+                className="btn btn-default btn-block"
+                href={misago.get('FORGOTTEN_PASSWORD_URL')}
+              >
+                 {gettext("Forgot password?")}
+              </a>
+            </div>
+          </form>
         </div>
-        <form onSubmit={this.handleSubmit}>
-          <div className="modal-body">
-
-            <div className="form-group">
-              <div className="control-input">
-                <input id="id_username" className="form-control" type="text"
-                       disabled={this.state.isLoading}
-                       placeholder={gettext("Username or e-mail")}
-                       onChange={this.bindInput('username')}
-                       value={this.state.username} />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <div className="control-input">
-                <input id="id_password" className="form-control" type="password"
-                       disabled={this.state.isLoading}
-                       placeholder={gettext("Password")}
-                       onChange={this.bindInput('password')}
-                       value={this.state.password} />
-              </div>
-            </div>
-
-          </div>
-          <div className="modal-footer">
-            {this.getActivationButton()}
-            <Button className="btn-primary btn-block"
-                    loading={this.state.isLoading}>
-              {gettext("Sign in")}
-            </Button>
-            <a href={misago.get('FORGOTTEN_PASSWORD_URL')}
-               className="btn btn-default btn-block">
-               {gettext("Forgot password?")}
-            </a>
-          </div>
-        </form>
       </div>
-    </div>;
+    );
     /* jshint ignore:end */
   }
 }

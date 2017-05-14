@@ -26,6 +26,7 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
     category = BasicCategorySerializer(many=False, read_only=True)
 
     acl = serializers.SerializerMethodField()
+    has_unapproved_posts = serializers.SerializerMethodField()
     is_new = serializers.SerializerMethodField()
     is_read = serializers.SerializerMethodField()
     path = BasicCategorySerializer(many=True, read_only=True)
@@ -44,6 +45,7 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             'replies',
             'has_unapproved_posts',
             'started_on',
+            'starter_name',
             'last_post_on',
             'last_post_is_event',
             'last_post',
@@ -67,6 +69,14 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             return obj.acl
         except AttributeError:
             return {}
+
+    def get_has_unapproved_posts(self, obj):
+        try:
+            acl = obj.acl
+        except AttributeError:
+            return False
+
+        return acl.get('can_approve') and obj.has_unapproved_posts
 
     def get_is_new(self, obj):
         try:
@@ -109,8 +119,19 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             'new_post': obj.get_new_post_url(),
             'last_post': obj.get_last_post_url(),
             'unapproved_post': obj.get_unapproved_post_url(),
+            'starter': self.get_starter_url(obj),
             'last_poster': self.get_last_poster_url(obj),
         }
+
+    def get_starter_url(self, obj):
+        if obj.starter_id:
+            return reverse(
+                'misago:user', kwargs={
+                    'slug': obj.starter_slug,
+                    'pk': obj.starter_id,
+                }
+            )
+        return None
 
     def get_last_poster_url(self, obj):
         if obj.last_poster_id:
@@ -120,8 +141,7 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
                     'pk': obj.last_poster_id,
                 }
             )
-        else:
-            return None
+        return None
 
 
 class PrivateThreadSerializer(ThreadSerializer):
@@ -137,10 +157,32 @@ class PrivateThreadSerializer(ThreadSerializer):
 class ThreadsListSerializer(ThreadSerializer):
     category = serializers.PrimaryKeyRelatedField(read_only=True)
     last_post = serializers.PrimaryKeyRelatedField(read_only=True)
+    starter = serializers.SerializerMethodField()
+    last_poster = serializers.SerializerMethodField()
 
     class Meta:
         model = Thread
-        fields = ThreadSerializer.Meta.fields + ['has_poll']
+        fields = ThreadSerializer.Meta.fields + [
+            'has_poll',
+            'starter',
+            'last_poster',
+        ]
+
+    def get_starter(self, obj):
+        if obj.starter_id:
+            return {
+                'id': obj.starter_id,
+                'avatars': obj.starter.avatars,
+            }
+        return None
+
+    def get_last_poster(self, obj):
+        if obj.last_poster_id:
+            return {
+                'id': obj.last_poster_id,
+                'avatars': obj.last_poster.avatars,
+            }
+        return None
 
 
 ThreadsListSerializer = ThreadsListSerializer.exclude_fields('path', 'poll')

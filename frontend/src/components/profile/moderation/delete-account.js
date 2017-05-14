@@ -96,11 +96,10 @@ export default class extends Form {
 
   getForm() {
     /* jshint ignore:start */
-    return <form onSubmit={this.handleSubmit} className="form-horizontal">
+    return <form onSubmit={this.handleSubmit}>
       <div className="modal-body">
 
         <FormGroup label={gettext("User content")}
-                   labelClass="col-sm-4" controlClass="col-sm-8"
                    for="id_with_content">
           <YesNoSwitch id="id_with_content"
                        disabled={this.state.isLoading}

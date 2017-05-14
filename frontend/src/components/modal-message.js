@@ -27,6 +27,13 @@ export default class extends PanelMessage {
           {this.props.message}
         </p>
         {this.getHelpText()}
+        <button
+          className="btn btn-default"
+          data-dismiss="modal"
+          type="button"
+        >
+          {gettext("Ok")}
+        </button>
       </div>
     </div>;
     /* jshint ignore:end */

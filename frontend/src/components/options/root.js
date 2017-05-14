@@ -13,43 +13,21 @@ export default class extends WithDropdown {
     /* jshint ignore:start */
     return (
       <div className="page page-options">
-        <div className="page-header">
-          <div className="container">
+        <div className="page-header-bg">
+          <div className="page-header">
+            <div className="container">
 
-            <h1>{gettext("Change your options")}</h1>
+              <h1>{gettext("Change your options")}</h1>
 
-          </div>
-        </div>
-        <div className="page-header page-header-followup visible-sm-block">
-          <div className="container">
-
-            <CompactNav
-              className="nav nav-pills"
-              baseUrl={misago.get('USERCP_URL')}
-              options={misago.get('USER_OPTIONS')}
-            />
-
-          </div>
-        </div>
-        <div className="page-header page-header-followup visible-xs-block">
-          <div className="container">
-            <div className="dropdown">
-              <button
-                aria-expanded="true"
-                aria-haspopup="true"
-                className="btn btn-default dropdown-toggle btn-block"
-                data-toggle="dropdown"
-                type="button"
-              >
-                <span className="material-icon">
-                  menu
-                </span>
-                {gettext("Menu")}
-              </button>
-              <CompactNav
-                baseUrl={misago.get('USERCP_URL')}
-                options={misago.get('USER_OPTIONS')}
-              />
+            </div>
+            <div className="page-tabs visible-xs-block visible-sm-block">
+              <div className="container">
+                <CompactNav
+                  className="nav nav-pills"
+                  baseUrl={misago.get('USERCP_URL')}
+                  options={misago.get('USER_OPTIONS')}
+                />
+              </div>
             </div>
           </div>
         </div>

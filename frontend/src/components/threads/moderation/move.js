@@ -86,8 +86,7 @@ export default class extends Form {
       <div className="modal-body">
 
         <FormGroup label={gettext("New category")}
-                   for="id_new_category"
-                   labelClass="col-sm-4" controlClass="col-sm-8">
+                   for="id_new_category">
           <CategorySelect id="id_new_category"
                           onChange={this.bindInput('category')}
                           value={this.state.category}
@@ -96,6 +95,14 @@ export default class extends Form {
 
       </div>
       <div className="modal-footer">
+        <button
+          className="btn btn-default"
+          data-dismiss="modal"
+          disabled={this.state.isLoading}
+          type="button"
+        >
+          {gettext("Cancel")}
+        </button>
         <button className="btn btn-primary">
           {gettext("Move threads")}
         </button>
@@ -119,6 +126,13 @@ export default class extends Form {
         <p>
           {gettext("You need permission to start threads in category to be able to move threads to it.")}
         </p>
+        <button
+          className="btn btn-default"
+          data-dismiss="modal"
+          type="button"
+        >
+          {gettext("Ok")}
+        </button>
       </div>
     </div>;
     /* jshint ignore:end */

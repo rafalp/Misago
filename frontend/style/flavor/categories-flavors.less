@@ -1,0 +1,36 @@
+//
+// Categories Flavors
+// --------------------------------------------------
+
+.misago-category-flavor(@color) {
+  border-left: 4px solid @color;
+  padding-left: 11px;
+}
+
+
+// Color flavors
+.list-group-item {
+  &.list-group-item-category-primary {
+    .misago-category-flavor(#7e57c2);
+  }
+
+  &.list-group-item-category-info {
+    .misago-category-flavor(#ab47bc);
+  }
+
+  &.list-group-item-category-success {
+    .misago-category-flavor(#66bb6a);
+  }
+
+  &.list-group-item-category-warning {
+    .misago-category-flavor(#ffa726);
+  }
+
+  &.list-group-item-category-danger {
+    .misago-category-flavor(#ef5350);
+  }
+
+  &.list-group-item-category-inverse {
+    .misago-category-flavor(#bdbdbd);
+  }
+}

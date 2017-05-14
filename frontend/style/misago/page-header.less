@@ -4,17 +4,22 @@
 
 
 // Common styles
+.page-header-bg {
+  margin-bottom: @line-height-computed;
+}
+
 .page-header {
   margin: 0px;
-  margin-bottom: @line-height-computed;
+  padding: @line-height-computed * 2 0px;
 
   h1 {
+    margin: 0px;
+
     word-wrap: break-word;
   }
 
   .btn-aligned {
     float: right;
-    margin-top: @line-height-computed + 3px;
     margin-left: 8px;
 
     &.pull-left {
@@ -23,15 +28,8 @@
     }
   }
 
-  .row .btn-aligned {
-    // just hotfix for mess in header aligments
-    margin-top: 0px;
-  }
-
   @media screen and (min-width: @screen-md-min) {
     .container>.row {
-      margin-top: @line-height-computed * 1.25;
-
       h1 {
         margin-top: -3px;
       }
@@ -46,10 +44,6 @@
 
 // Small displays
 @media screen and (max-width: @screen-sm-max) {
-  .page-header .row .btn-aligned {
-    margin-top: @line-height-computed * 0.75;
-  }
-
   .container {
     h1 {
       font-size: @font-size-large * 1.25;
@@ -60,6 +54,8 @@
         width: 24px;
         height: 24px;
 
+        margin: -3px 0px;
+
         font-size: 24px;
         line-height: 24px;
       }
@@ -69,11 +65,15 @@
 
 
 // Breadcrumbs
+.page-breadcrumbs {
+  margin-bottom: @line-height-computed;
+}
+
 .page-breadcrumbs .breadcrumb {
   background: none;
-  padding-left: 0px;
-  padding-right: 0px;
-  margin-bottom: @line-height-computed * -.5;
+  margin: 0px;
+  margin-top: @line-height-computed * -1;
+  padding: 0px;
   overflow: auto;
 }
 
@@ -91,10 +91,8 @@
 
 // Small go back button
 .go-back-sm {
-  margin-top: @line-height-computed * 0.5;
-  margin-bottom: @line-height-computed * -0.66;
-
-  font-size: @font-size-small;
+  margin-top: @line-height-computed * -1;
+  margin-bottom: @line-height-computed;
 
   .material-icon {
     height: @font-size-large;
@@ -108,9 +106,22 @@
   }
 }
 
+.page-breadcrumbs .go-back-sm {
+  margin-bottom: 0px;
+}
 
 // Stats
+.header-stats {
+  margin-top: @line-height-computed;
+  margin-bottom: @line-height-computed * -1;
+}
+
+.header-stats .list-inline {
+  margin-bottom: 0px;
+}
+
 .header-stats .list-inline li {
+  margin-bottom: 0px;
   margin-right: 8px;
   overflow: auto;
 
@@ -141,15 +152,22 @@
 
 @media screen and (max-width: @screen-sm-max) {
   .header-stats .list-inline {
-    margin-top: @line-height-computed / 2;
-    margin-bottom: 0px;
-
     font-size: @font-size-small;
+
+    li>.material-icon {
+      top: 2px;
+    }
   }
 }
 
 
 // Tabs
+.page-header .page-tabs {
+  margin-top: @line-height-computed;
+  margin-bottom: @line-height-computed * -2;
+
+}
+ 
 .page-header .page-tabs .nav {
   &>li {
     margin: 0px;
@@ -160,37 +178,48 @@
   }
 }
 
-@media screen and (max-width: @screen-xs-max) {
-  .page-header .page-tabs {
-    margin-top: ((@line-height-computed / 2) - 1);
-    margin-bottom: ((@line-height-computed / 2) - 1) * -1;
+.page-tabs {
+  ul {
+    display: block;
+    overflow-x: auto;
+
+    white-space: nowrap;
+
+    li, a {
+      display: inline-block;
+      float: none;
+    
+      white-space: nowrap;
+
+      .material-icon {
+        margin-right: @padding-base-horizontal / 2;
+      }
+    }
   }
 
-  .page-header .page-tabs .container {
-    padding: 0px;
-    width: 100%;
+  @media screen and (max-width: @screen-xs-max) {
+    .container {
+      padding-left: 0px;
+      padding-right: 0px;
+    }
 
-    ul li {
-      display: block;
-      float: none;
+    li a {
+      padding-left: @line-height-computed * 1.33;
+      padding-right: @line-height-computed * 1.33;
     }
   }
 }
 
-@media screen and (min-width: @screen-sm-min) {
-  .page-header.tabbed {
-    padding-bottom: 0px;
+
+// Insert blank space between tabs and details on smallest displays
+@media screen and (max-width: @screen-xs-max) {
+  .header-stats + .page-tabs {
+    margin-top: @line-height-computed * 1.5;
   }
 }
 
 
 // Title edit form
 .title-edit-form {
-  margin-bottom: @line-height-computed;
-}
-
-
-// Next header
-.page-header-followup {
-  margin-top: @line-height-computed * -0.5;
+  margin-bottom: @line-height-computed / 2 + 2px;
 }

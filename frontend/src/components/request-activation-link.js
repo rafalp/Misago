@@ -55,27 +55,29 @@ export class RequestLinkForm extends Form {
 
   render() {
     /* jshint ignore:start */
-    return <div className="well well-form well-form-request-activation-link">
-      <form onSubmit={this.handleSubmit}>
-        <div className="form-group">
-          <div className="control-input">
+    return (
+      <div className="well well-form well-form-request-activation-link">
+        <form onSubmit={this.handleSubmit}>
+          <div className="form-group">
+            <div className="control-input">
 
-            <input type="text" className="form-control"
-                   placeholder={gettext("Your e-mail address")}
-                   disabled={this.state.isLoading}
-                   onChange={this.bindInput('email')}
-                   value={this.state.email} />
+              <input type="text" className="form-control"
+                     placeholder={gettext("Your e-mail address")}
+                     disabled={this.state.isLoading}
+                     onChange={this.bindInput('email')}
+                     value={this.state.email} />
 
+            </div>
           </div>
-        </div>
 
-        <Button className="btn-primary btn-block"
-                loading={this.state.isLoading}>
-          {gettext("Send link")}
-        </Button>
+          <Button className="btn-primary btn-block"
+                  loading={this.state.isLoading}>
+            {gettext("Send link")}
+          </Button>
 
-      </form>
-    </div>;
+        </form>
+      </div>
+    );
     /* jshint ignore:end */
   }
 }
@@ -89,24 +91,29 @@ export class LinkSent extends React.Component {
 
   render() {
     /* jshint ignore:start */
-    return <div className="well well-form well-form-request-activation-link well-done">
-      <div className="done-message">
-        <div className="message-icon">
-          <span className="material-icon">
-            check
-          </span>
+    return (
+      <div className="well well-form well-form-request-activation-link well-done">
+        <div className="done-message">
+          <div className="message-icon">
+            <span className="material-icon">
+              check
+            </span>
+          </div>
+          <div className="message-body">
+            <p>
+              {this.getMessage()}
+            </p>
+          </div>
+          <button
+            className="btn btn-primary btn-block"
+            type="button"
+            onClick={this.props.callback}
+          >
+            {gettext("Request another link")}
+          </button>
         </div>
-        <div className="message-body">
-          <p>
-            {this.getMessage()}
-          </p>
-        </div>
-        <button type="button" className="btn btn-primary btn-block"
-                onClick={this.props.callback}>
-          {gettext("Request another link")}
-        </button>
       </div>
-    </div>;
+    );
     /* jshint ignore:end */
   }
 }

@@ -1,10 +1,9 @@
 from misago.acl import add_acl
 from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
-from misago.readtracker import threadstracker
 from misago.threads.permissions import exclude_invisible_threads
 from misago.threads.serializers import FeedSerializer
-from misago.threads.utils import add_categories_to_items, add_likes_to_posts
+from misago.threads.utils import add_categories_to_items
 from misago.threads.viewmodels import ThreadsRootCategory
 
 
@@ -36,12 +35,6 @@ class UserThreads(object):
 
         add_acl(request.user, threads)
         add_acl(request.user, posts)
-
-        threadstracker.make_threads_read_aware(request.user, threads)
-        for post in posts:
-            threadstracker.make_posts_read_aware(request.user, post.thread, [post])
-
-        add_likes_to_posts(request.user, posts)
 
         self._user = request.user
 

@@ -30,7 +30,7 @@
             {% trans "Unapproved" %}
           </span>
         </li>
-      {% elif thread.has_unapproved_posts %}
+      {% elif thread.has_unapproved_posts and thread.acl.can_approve %}
         <li class="thread-unapproved-posts">
           <span class="material-icon">
             remove_circle_outline

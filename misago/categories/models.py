@@ -151,6 +151,9 @@ class Category(MPTTModel):
     def get_last_thread_url(self):
         return self.thread_type.get_category_last_thread_url(self)
 
+    def get_last_thread_new_url(self):
+        return self.thread_type.get_category_last_thread_new_url(self)
+
     def get_last_post_url(self):
         return self.thread_type.get_category_last_post_url(self)
 

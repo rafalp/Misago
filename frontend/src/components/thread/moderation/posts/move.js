@@ -86,6 +86,14 @@ export default class extends Form {
               </FormGroup>
             </div>
             <div className="modal-footer">
+              <button
+                className="btn btn-default"
+                data-dismiss="modal"
+                disabled={this.state.isLoading}
+                type="button"
+              >
+                {gettext("Cancel")}
+              </button>
               <button className="btn btn-primary" loading={this.state.isLoading}>
                 {gettext("Move posts")}
               </button>

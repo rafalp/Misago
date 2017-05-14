@@ -31,7 +31,7 @@ export class ChoiceSelect extends React.Component {
           type="button"
         >
           <span className="material-icon">
-            {this.props.choice.selected ? 'check_circle' : 'check'}
+            {this.props.choice.selected ? 'check_box' : 'check_box_outline_blank'}
           </span>
           <strong>
             {this.props.choice.label}

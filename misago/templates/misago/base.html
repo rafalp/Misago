@@ -18,15 +18,17 @@
     <div id="auth-message-mount"></div>
     <div id="snackbar-mount"></div>
 
-    {% include "misago/jumbotron.html" %}
-    {% include "misago/navbar.html" %}
+    <div id="misago-container">
+      {% include "misago/jumbotron.html" %}
+      {% include "misago/navbar.html" %}
 
-    <div id="page-mount">
-      {% block content %}{% endblock content %}
+      <div id="page-mount">
+        {% block content %}{% endblock content %}
+      </div>
+
+      {% include "misago/posting.html" %}
+      {% include "misago/footer.html" %}
     </div>
-
-    {% include "misago/posting.html" %}
-    {% include "misago/footer.html" %}
     {% include "misago/auth.html" %}
 
     <div class="modal fade" id="modal-mount" tabindex="-1" role="dialog" aria-labelledby="misago-modal-label"></div>

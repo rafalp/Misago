@@ -11,6 +11,7 @@ __all__ = [
 
 
 class PostLikeSerializer(serializers.ModelSerializer):
+    avatars = serializers.SerializerMethodField()
     liker_id = serializers.SerializerMethodField()
     username = serializers.SerializerMethodField()
 
@@ -20,6 +21,7 @@ class PostLikeSerializer(serializers.ModelSerializer):
         model = PostLike
         fields = [
             'id',
+            'avatars',
             'liked_on',
             'liker_id',
             'username',
@@ -31,6 +33,9 @@ class PostLikeSerializer(serializers.ModelSerializer):
 
     def get_username(self, obj):
         return obj['liker_name']
+
+    def get_avatars(self, obj):
+        return obj.get('liker__avatars')
 
     def get_url(self, obj):
         if obj['liker_id']:

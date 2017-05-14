@@ -1,7 +1,10 @@
 /* jshint ignore:start */
 import React from 'react';
+import Avatar from 'misago/components/avatar';
 import { BottomDetails, TopDetails } from './details';
+import LastAction from './last-action';
 import { Options } from './options';
+import UserUrl from './user-url';
 
 export default function(props) {
   const {
@@ -20,6 +23,8 @@ export default function(props) {
     category = categories[thread.category];
   }
 
+  const flavor = category || activeCategory;
+
   let className = 'thread-main col-xs-12';
   if (showOptions) {
     if (thread.moderation.length) {
@@ -32,43 +37,49 @@ export default function(props) {
   }
 
   return (
-    <li className={getClassName(thread.is_read, isBusy, isSelected)}>
+    <li className={getClassName(thread.is_read, isBusy, isSelected, flavor)}>
+      <TopDetails
+        category={category}
+        thread={thread}
+      />
       <div className="row thread-row">
         <div className={className}>
 
-          <TopDetails
-            category={category}
-            thread={thread}
-          />
+          <div className="media">
+            <div className="media-left hidden-xs">
 
-          <a href={thread.url.index} className="item-title thread-title">
-            {thread.title}
-          </a>
+              <UserUrl
+                className="thread-starter-avatar"
+                title={thread.starter_name}
+                url={thread.url.starter}
+              >
+                <Avatar
+                  size={40}
+                  user={thread.starter}
+                />
+              </UserUrl>
 
-          <BottomDetails
-            category={category}
-            disabled={isBusy}
-            isSelected={isSelected}
-            showOptions={showOptions}
-            thread={thread}
-          />
+            </div>
+            <div className="media-body">
+
+              <a href={thread.url.index} className="item-title thread-title">
+                {thread.title}
+              </a>
+
+              <BottomDetails
+                category={category}
+                disabled={isBusy}
+                isSelected={isSelected}
+                showOptions={showOptions}
+                thread={thread}
+              />
+
+            </div>
+          </div>
 
         </div>
         <div className="col-md-3 hidden-xs hidden-sm thread-last-action">
-          <div className="row">
-            <div className="col-xs-5">
-              <Timestamp
-                datetime={thread.last_post_on}
-                url={thread.url.last_post}
-              />
-            </div>
-            <div className="col-xs-7">
-              <LastPoster
-                posterName={thread.last_poster_name}
-                url={thread.url.last_poster}
-              />
-            </div>
-          </div>
+          <LastAction thread={thread} />
         </div>
         <Options
           disabled={isBusy}
@@ -81,8 +92,12 @@ export default function(props) {
   );
 }
 
-export function getClassName(isRead, isBusy, isSelected) {
+export function getClassName(isRead, isBusy, isSelected, flavor) {
   let styles = ['list-group-item'];
+
+  if (flavor && flavor.css_class) {
+    styles.push('list-group-item-category-' + flavor.css_class);
+  }
 
   if (isRead) {
     styles.push('thread-read');
@@ -97,35 +112,4 @@ export function getClassName(isRead, isBusy, isSelected) {
   }
 
   return styles.join(' ');
-}
-
-export function Timestamp({ datetime, url }) {
-  return (
-    <a
-      className="thread-last-reply"
-      href={url}
-      title={datetime.format('LLL')}
-    >
-      {datetime.fromNow(true)}
-    </a>
-  );
-}
-
-export function LastPoster(props) {
-  const { posterName, url } = props;
-  const className = 'item-title thread-last-poster';
-
-  if (url) {
-    return (
-      <a className={className} href={url} >
-        {posterName}
-      </a>
-    );
-  }
-
-  return (
-    <span className={className}>
-      {posterName}
-    </span>
-  );
 }

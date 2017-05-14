@@ -20,17 +20,45 @@ export class UserMenu extends React.Component {
 
   render() {
     /* jshint ignore:start */
+    const { user } = this.props;
+
     return (
       <ul
         className="dropdown-menu user-dropdown dropdown-menu-right"
         role="menu"
       >
         <li className="dropdown-header">
-          <strong>{this.props.user.username}</strong>
+          <strong>{user.username}</strong>
+          <ul className="list-unstyled list-inline user-stats">
+            <li>
+              <span className="material-icon">
+                message
+              </span>
+              {user.posts}
+            </li>
+            <li>
+              <span className="material-icon">
+                forum
+              </span>
+              {user.threads}
+            </li>
+            <li>
+              <span className="material-icon">
+                favorite
+              </span>
+              {user.followers}
+            </li>
+            <li>
+              <span className="material-icon">
+                favorite_outline
+              </span>
+              {user.following}
+            </li>
+          </ul>
         </li>
         <li className="divider" />
         <li>
-          <a href={this.props.user.absolute_url}>
+          <a href={user.absolute_url}>
             <span className="material-icon">account_circle</span>
             {gettext("See your profile")}
           </a>
@@ -55,18 +83,18 @@ export class UserMenu extends React.Component {
           <a href={misago.get('PRIVATE_THREADS_URL')}>
             <span className="material-icon">message</span>
             {gettext("Private threads")}
-            <PrivateThreadsBadge user={this.props.user} />
+            <PrivateThreadsBadge user={user} />
           </a>
         </li>
         <li className="divider" />
         <li className="dropdown-buttons">
-            <button
-              className="btn btn-default btn-block"
-              onClick={this.logout}
-              type="button"
-            >
-              {gettext("Log out")}
-            </button>
+          <button
+            className="btn btn-default btn-block"
+            onClick={this.logout}
+            type="button"
+          >
+            {gettext("Log out")}
+          </button>
         </li>
       </ul>
     );
@@ -74,13 +102,13 @@ export class UserMenu extends React.Component {
   }
 }
 
-export function PrivateThreadsBadge(props) {
-  if (!props.user.unread_private_threads) return null;
+export function PrivateThreadsBadge({ user }) {
+  if (!user.unread_private_threads) return null;
 
   /* jshint ignore:start */
   return (
     <span className="badge">
-      {props.user.unread_private_threads}
+      {user.unread_private_threads}
     </span>
   );
   /* jshint ignore:end */
@@ -88,22 +116,22 @@ export function PrivateThreadsBadge(props) {
 }
 
 /* jshint ignore:start */
-export function UserNav(props) {
+export function UserNav({ user }) {
     return (
       <ul className="ul nav navbar-nav nav-user">
-        <UserPrivateThreadsLink user={props.user} />
+        <UserPrivateThreadsLink user={user} />
         <li className="dropdown">
           <a
             aria-haspopup="true"
             aria-expanded="false"
             className="dropdown-toggle"
             data-toggle="dropdown"
-            href={props.user.absolute_url}
+            href={user.absolute_url}
             role="button"
           >
-            <Avatar user={props.user} size="64" />
+            <Avatar user={user} size="64" />
           </a>
-          <UserMenu user={props.user} />
+          <UserMenu user={user} />
         </li>
       </ul>
     );
@@ -143,9 +171,11 @@ export class CompactUserNav extends React.Component {
 
   render() {
     /* jshint ignore:start */
-    return <button type="button" onClick={this.showUserMenu}>
-      <Avatar user={this.props.user} size="64" />
-    </button>;
+    return (
+      <button type="button" onClick={this.showUserMenu}>
+        <Avatar user={this.props.user} size="50" />
+      </button>
+    );
     /* jshint ignore:end */
   }
 }

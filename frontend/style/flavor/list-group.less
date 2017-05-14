@@ -1,0 +1,33 @@
+//
+// List Groups Flavor
+// --------------------------------------------------
+
+
+.list-group {
+  border-radius: @border-radius-base;
+  .shadow-4dp();
+}
+
+.list-group .list-group-item {
+  border-left: none;
+  border-right: none;
+}
+
+.list-group .list-group-item:first-child {
+  border-top: none;
+}
+
+.list-group .list-group-item:last-child {
+  border-bottom: none;
+}
+
+.list-group-item.empty-message {
+  padding-top: @line-height-computed;
+  padding-bottom: @line-height-computed;
+  
+  text-align: center;
+
+  p {
+    margin: @line-height-computed / 2 0px;
+  }
+}

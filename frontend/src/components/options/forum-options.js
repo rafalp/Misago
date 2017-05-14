@@ -99,7 +99,7 @@ export default class extends Form {
   render() {
     /* jshint ignore:start */
     return (
-      <form onSubmit={this.handleSubmit} className="form-horizontal">
+      <form onSubmit={this.handleSubmit}>
         <div className="panel panel-default panel-form">
           <div className="panel-heading">
             <h3 className="panel-title">{gettext("Change forum options")}</h3>
@@ -113,8 +113,6 @@ export default class extends Form {
                 label={gettext("Hide my presence")}
                 helpText={gettext("If you hide your presence, only members with permission to see hidden users will see when you are online.")}
                 for="id_is_hiding_presence"
-                labelClass="col-sm-4"
-                controlClass="col-sm-8"
               >
                 <YesNoSwitch
                   id="id_is_hiding_presence"
@@ -131,8 +129,6 @@ export default class extends Form {
               <FormGroup
                 label={gettext("Private thread invitations")}
                 for="id_limits_private_thread_invites_to"
-                labelClass="col-sm-4"
-                controlClass="col-sm-8"
               >
                 <Select
                   id="id_limits_private_thread_invites_to"
@@ -150,8 +146,6 @@ export default class extends Form {
               <FormGroup
                 label={gettext("Threads I start")}
                 for="id_subscribe_to_started_threads"
-                labelClass="col-sm-4"
-                controlClass="col-sm-8"
               >
                 <Select
                   id="id_subscribe_to_started_threads"
@@ -165,8 +159,6 @@ export default class extends Form {
               <FormGroup
                 label={gettext("Threads I reply to")}
                 for="id_subscribe_to_replied_threads"
-                labelClass="col-sm-4"
-                controlClass="col-sm-8"
               >
                 <Select
                   id="id_subscribe_to_replied_threads"
@@ -180,15 +172,11 @@ export default class extends Form {
 
           </div>
           <div className="panel-footer">
-            <div className="row">
-              <div className="col-sm-8 col-sm-offset-4">
 
-                <Button className="btn-primary" loading={this.state.isLoading}>
-                  {gettext("Save changes")}
-                </Button>
+            <Button className="btn-primary" loading={this.state.isLoading}>
+              {gettext("Save changes")}
+            </Button>
 
-              </div>
-            </div>
           </div>
         </div>
       </form>

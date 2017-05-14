@@ -91,7 +91,7 @@ export function UnapprovedLabel({ posts, thread }) {
       <span className="material-icon">
         {icon}
       </span>
-      <span className="detail-text hidden-xs">
+      <span className="detail-text">
         {text}
       </span>
     </span>

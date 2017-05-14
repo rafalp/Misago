@@ -241,12 +241,17 @@ export default class extends WithDropdown {
   getMoreButton() {
     if (this.state.more) {
       /* jshint ignore:start */
-      return <div className="pager-more">
-        <Button loading={this.state.isBusy || this.state.busyThreads.length}
-                onClick={this.loadMore}>
-          {gettext("Show more")}
-        </Button>
-      </div>;
+      return (
+        <div className="pager-more">
+          <Button
+            className="btn btn-default btn-outline"
+            loading={this.state.isBusy || this.state.busyThreads.length}
+            onClick={this.loadMore}
+          >
+            {gettext("Show more")}
+          </Button>
+        </div>
+      );
       /* jshint ignore:end */
     } else {
       return null;

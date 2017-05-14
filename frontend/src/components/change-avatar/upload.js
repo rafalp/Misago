@@ -52,6 +52,7 @@ export default class extends React.Component {
 
   uploadFile = () => {
     let image = document.getElementById('avatar-hidden-upload').files[0];
+    if (!image) return;
 
     let validationError = this.validateFile(image);
     if (validationError) {

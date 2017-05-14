@@ -130,11 +130,13 @@ export default class extends React.Component {
 
   move = () => {
     modal.show(
-      <MoveThreads callApi={this.callApi}
-                   categories={this.props.categories}
-                   categoriesMap={this.props.categoriesMap}
-                   route={this.props.route}
-                   user={this.props.user} />
+      <MoveThreads
+        callApi={this.callApi}
+        categories={this.props.categories}
+        categoriesMap={this.props.categoriesMap}
+        route={this.props.route}
+        user={this.props.user}
+      />
     );
   };
 
@@ -207,179 +209,234 @@ export default class extends React.Component {
   /* jshint ignore:end */
 
   getPinGloballyButton() {
-    if (this.props.moderation.can_pin == 2) {
-      /* jshint ignore:start */
-      return <li>
-        <button type="button"
-                className="btn btn-link"
-                onClick={this.pinGlobally}>
+    if (this.props.moderation.can_pin !== 2) return null;
+
+    /* jshint ignore:start */
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.pinGlobally}
+          type="button"
+        >
+          <span className="material-icon">
+            bookmark
+          </span>
           {gettext("Pin threads globally")}
         </button>
-      </li>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+      </li>
+    );
+    /* jshint ignore:end */
   }
 
   getPinLocallyButton() {
-    if (this.props.moderation.can_pin > 0) {
-      /* jshint ignore:start */
-      return <li>
-        <button type="button"
-                className="btn btn-link"
-                onClick={this.pinLocally}>
+    if (this.props.moderation.can_pin === 0) return null;
+
+    /* jshint ignore:start */
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.pinLocally}
+          type="button"
+        >
+          <span className="material-icon">
+            bookmark_border
+          </span>
           {gettext("Pin threads locally")}
         </button>
-      </li>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+      </li>
+    );
+    /* jshint ignore:end */
   }
 
   getUnpinButton() {
-    if (this.props.moderation.can_pin > 0) {
-      /* jshint ignore:start */
-      return <li>
-        <button type="button"
-                className="btn btn-link"
-                onClick={this.unpin}>
+    if (this.props.moderation.can_pin === 0) return null;
+
+    /* jshint ignore:start */
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.unpin}
+          type="button"
+        >
+          <span className="material-icon">
+            panorama_fish_eye
+          </span>
           {gettext("Unpin threads")}
         </button>
-      </li>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+      </li>
+    );
+    /* jshint ignore:end */
   }
 
   getMoveButton() {
-    if (this.props.moderation.can_move) {
-      /* jshint ignore:start */
-      return <li>
-        <button type="button"
-                className="btn btn-link"
-                onClick={this.move}>
+    if (!this.props.moderation.can_move) return null;
+
+    /* jshint ignore:start */
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.move}
+          type="button"
+        >
+          <span className="material-icon">
+            arrow_forward
+          </span>
           {gettext("Move threads")}
         </button>
-      </li>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+      </li>
+    );
+    /* jshint ignore:end */
   }
 
   getMergeButton() {
-    if (this.props.moderation.can_merge) {
-      /* jshint ignore:start */
-      return <li>
-        <button type="button"
-                className="btn btn-link"
-                onClick={this.merge}>
+    if (!this.props.moderation.can_merge) return null;
+
+    /* jshint ignore:start */
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.merge}
+          type="button"
+        >
+          <span className="material-icon">
+            call_merge
+          </span>
           {gettext("Merge threads")}
         </button>
-      </li>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+      </li>
+    );
+    /* jshint ignore:end */
   }
 
   getApproveButton() {
-    if (this.props.moderation.can_approve) {
-      /* jshint ignore:start */
-      return <li>
-        <button type="button"
-                className="btn btn-link"
-                onClick={this.approve}>
+    if (!this.props.moderation.can_approve) return null;
+
+    /* jshint ignore:start */
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.approve}
+          type="button"
+        >
+          <span className="material-icon">
+            done
+          </span>
           {gettext("Approve threads")}
         </button>
-      </li>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+      </li>
+    );
+    /* jshint ignore:end */
   }
 
   getOpenButton() {
-    if (this.props.moderation.can_close) {
-      /* jshint ignore:start */
-      return <li>
-        <button type="button"
-                className="btn btn-link"
-                onClick={this.open}>
+    if (!this.props.moderation.can_close) return null;
+
+    /* jshint ignore:start */
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.open}
+          type="button"
+        >
+          <span className="material-icon">
+            lock_open
+          </span>
           {gettext("Open threads")}
         </button>
-      </li>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+      </li>
+    );
+    /* jshint ignore:end */
   }
 
   getCloseButton() {
-    if (this.props.moderation.can_close) {
-      /* jshint ignore:start */
-      return <li>
-        <button type="button"
-                className="btn btn-link"
-                onClick={this.close}>
+    if (!this.props.moderation.can_close) return null;
+
+    /* jshint ignore:start */
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.close}
+          type="button"
+        >
+          <span className="material-icon">
+            lock_outline
+          </span>
           {gettext("Close threads")}
         </button>
-      </li>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+      </li>
+    );
+    /* jshint ignore:end */
   }
 
   getUnhideButton() {
-    if (this.props.moderation.can_hide) {
-      /* jshint ignore:start */
-      return <li>
-        <button type="button"
-                className="btn btn-link"
-                onClick={this.unhide}>
+    if (!this.props.moderation.can_hide) return null;
+
+    /* jshint ignore:start */
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.unhide}
+          type="button"
+        >
+          <span className="material-icon">
+            visibility
+          </span>
           {gettext("Unhide threads")}
         </button>
-      </li>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+      </li>
+    );
+    /* jshint ignore:end */
   }
 
   getHideButton() {
-    if (this.props.moderation.can_hide) {
-      /* jshint ignore:start */
-      return <li>
-        <button type="button"
-                className="btn btn-link"
-                onClick={this.hide}>
+    if (!this.props.moderation.can_hide) return null;
+
+    /* jshint ignore:start */
+    return (
+      <li>
+        <button
+          onClick={this.hide}
+          type="button"
+          className="btn btn-link"
+        >
+          <span className="material-icon">
+            visibility_off
+          </span>
           {gettext("Hide threads")}
         </button>
-      </li>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+      </li>
+    );
+    /* jshint ignore:end */
   }
 
   getDeleteButton() {
-    if (this.props.moderation.can_hide == 2) {
-      /* jshint ignore:start */
-      return <li>
-        <button type="button"
-                className="btn btn-link"
-                onClick={this.delete}>
+    if (this.props.moderation.can_hide != 2) return null;
+
+    /* jshint ignore:start */
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.delete}
+          type="button"
+        >
+          <span className="material-icon">
+            clear
+          </span>
           {gettext("Delete threads")}
         </button>
-      </li>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+      </li>
+    );
+    /* jshint ignore:end */
   }
 
   render() {

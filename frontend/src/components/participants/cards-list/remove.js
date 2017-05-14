@@ -36,7 +36,11 @@ export default class extends React.Component {
 
     return (
       <li>
-        <button className="btn-link btn-sm" onClick={this.onClick} type="button">
+        <button
+          className="btn btn-link"
+          onClick={this.onClick}
+          type="button"
+        >
           {this.isUser ? gettext("Leave thread") : gettext("Remove")}
         </button>
       </li>

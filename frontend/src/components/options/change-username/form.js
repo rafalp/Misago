@@ -41,8 +41,8 @@ export default class extends Form {
 
     if (this.props.user.acl.name_changes_expire > 0) {
       let message = ngettext(
-        "Used changes redeem after %(name_changes_expire)s day.",
-        "Used changes redeem after %(name_changes_expire)s days.",
+        "Used changes become available again after %(name_changes_expire)s day.",
+        "Used changes become available again after %(name_changes_expire)s days.",
         this.props.user.acl.name_changes_expire);
 
       phrases.push(interpolate(message, {
@@ -86,7 +86,7 @@ export default class extends Form {
 
   render() {
     /* jshint ignore:start */
-    return <form onSubmit={this.handleSubmit} className="form-horizontal">
+    return <form onSubmit={this.handleSubmit}>
       <div className="panel panel-default panel-form">
         <div className="panel-heading">
           <h3 className="panel-title">{gettext("Change username")}</h3>
@@ -94,7 +94,6 @@ export default class extends Form {
         <div className="panel-body">
 
           <FormGroup label={gettext("New username")} for="id_username"
-                     labelClass="col-sm-4" controlClass="col-sm-8"
                      helpText={this.getHelpText()}>
             <input type="text" id="id_username" className="form-control"
                    disabled={this.state.isLoading}
@@ -104,15 +103,11 @@ export default class extends Form {
 
         </div>
         <div className="panel-footer">
-          <div className="row">
-            <div className="col-sm-8 col-sm-offset-4">
 
-              <Button className="btn-primary" loading={this.state.isLoading}>
-                {gettext("Change username")}
-              </Button>
+          <Button className="btn-primary" loading={this.state.isLoading}>
+            {gettext("Change username")}
+          </Button>
 
-            </div>
-          </div>
         </div>
       </div>
     </form>;
