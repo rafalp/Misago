@@ -64,7 +64,6 @@ Even more features will follow in future releases:
 * content reporting
 * warning system
 * notifications
-* custom design
 
 If you are looking into using Misago to run live forum, you are absolutely invited to, but please keep in mind that Misago is relatively immature software that may contain serious bugs or issues as well as quirks and lackings thay may take time to resolve, despite best efforts. 
 
