@@ -14,8 +14,6 @@ export default function(props) {
     className = 'event post-hidden';
   }
 
-  props.post.is_read = false;
-
   return (
     <li id={'post-' + props.post.id} className={className}>
       <UnreadLabel post={props.post} />
