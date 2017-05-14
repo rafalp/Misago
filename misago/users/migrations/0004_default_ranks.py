@@ -14,7 +14,7 @@ def create_default_ranks(apps, schema_editor):
         name=_("Forum team"),
         slug=slugify(_("Forum team")),
         title=_("Team"),
-        css_class='team',
+        css_class='primary',
         is_tab=True,
         order=0
     )
