@@ -15,4 +15,4 @@ Misago's default theme defines following basic classes, visualised as color band
 - `success`
 - `danger`
 - `warning`
-- `inversed`
+- `inverse`
