@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-14 02:25+0200\n"
+"POT-Creation-Date: 2017-05-17 22:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -142,17 +142,17 @@ msgstr ""
 msgid "Action is not allowed."
 msgstr ""
 
-#: admin/views/index.py:62
+#: admin/views/index.py:70
 #, python-format
-msgid "Outdated: %(current)s < %(latest)s"
+msgid "Outdated: %(current)s! (latest: %(latest)s)"
 msgstr ""
 
-#: admin/views/index.py:79
+#: admin/views/index.py:78
 #, python-format
 msgid "Up to date! (%(current)s)"
 msgstr ""
 
-#: admin/views/index.py:84
+#: admin/views/index.py:87
 msgid "Failed to connect to GitHub API. Try again later."
 msgstr ""
 
@@ -199,7 +199,7 @@ msgstr ""
 msgid "Only members with valid permissions can post in closed categories."
 msgstr ""
 
-#: categories/forms.py:75 templates/misago/admin/index.html:77
+#: categories/forms.py:75 templates/misago/admin/index.html:83
 #: templates/misago/admin/users/delete.html:32 templates/misago/navbar.html:18
 #: templates/misago/navbar.html:34 templates/misago/profile/threads.html:4
 #: templates/misago/threadslist/category.html:52
@@ -1233,15 +1233,19 @@ msgstr ""
 msgid "Misago version"
 msgstr ""
 
-#: templates/misago/admin/index.html:55
+#: templates/misago/admin/index.html:56
 msgid "Check version"
 msgstr ""
 
-#: templates/misago/admin/index.html:70
+#: templates/misago/admin/index.html:62
+msgid "This feature requires \"packaging\" python module."
+msgstr ""
+
+#: templates/misago/admin/index.html:76
 msgid "DB Contents"
 msgstr ""
 
-#: templates/misago/admin/index.html:81
+#: templates/misago/admin/index.html:87
 #: templates/misago/admin/users/delete.html:36
 #: templates/misago/admin/users/list.html:23
 #: templates/misago/profile/posts.html:4
@@ -1250,7 +1254,7 @@ msgstr ""
 msgid "Posts"
 msgstr ""
 
-#: templates/misago/admin/index.html:85 templates/misago/navbar.html:40
+#: templates/misago/admin/index.html:91 templates/misago/navbar.html:40
 #: templates/misago/userslists/base.html:5
 #: templates/misago/userslists/base.html:14 users/admin.py:70
 #: users/migrations/0002_users_settings.py:16
@@ -1258,11 +1262,11 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: templates/misago/admin/index.html:90
+#: templates/misago/admin/index.html:96
 msgid "Inactive users"
 msgstr ""
 
-#: templates/misago/admin/index.html:116
+#: templates/misago/admin/index.html:122
 msgid "Checking..."
 msgstr ""
 
