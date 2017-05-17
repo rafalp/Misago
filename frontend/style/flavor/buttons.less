@@ -16,6 +16,11 @@
     .box-shadow(none);
   }
 
+  &:disabled, &:disabled:hover,
+  &.disabled, &.disabled:hover, &.disabled:active {
+    .opacity(0.25);
+  }
+
   &:hover, &:focus {
     background: @bg-hover;
     border: 1px solid @bg-hover;
@@ -58,6 +63,11 @@
     color: @color;
 
     .box-shadow(none);
+  }
+
+  &:disabled, &:disabled:hover,
+  &.disabled, &.disabled:hover, &.disabled:active {
+    .opacity(0.25);
   }
 
   &:hover, &:focus {
