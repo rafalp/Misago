@@ -33,7 +33,7 @@ export default class extends React.Component {
       isBusy: true
     });
 
-    ajax.post(this.props.route.category.api_url.read).then(() => {
+    ajax.post(this.props.route.category.api.read).then(() => {
       store.dispatch(read(this.props.route.categoriesMap, this.props.route.category));
 
       this.setState({
@@ -76,7 +76,7 @@ export default class extends React.Component {
       <div className="hidden-xs col-sm-2 col-lg-1">
         <Link
           className="btn btn-default btn-icon btn-aligned btn-go-back btn-block btn-outline"
-          to={parent.url + this.props.route.list.path}
+          to={parent.url.index + this.props.route.list.path}
         >
           <span className="material-icon">
             keyboard_arrow_left
@@ -168,7 +168,7 @@ export default class extends React.Component {
           </div>
 
           <Nav
-            baseUrl={this.props.route.category.url}
+            baseUrl={this.props.route.category.url.index}
             list={this.props.route.list}
             lists={this.props.route.lists}
           />

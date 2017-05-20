@@ -26,7 +26,7 @@ export default class extends Form {
   }
 
   componentDidMount() {
-    ajax.get(this.props.profile.api_url.moderate_avatar).then((options) => {
+    ajax.get(this.props.profile.api.moderate_avatar).then((options) => {
       this.setState({
         isLoaded: true,
 
@@ -52,7 +52,7 @@ export default class extends Form {
   }
 
   send() {
-    return ajax.post(this.props.profile.api_url.moderate_avatar, {
+    return ajax.post(this.props.profile.api.moderate_avatar, {
       is_avatar_locked: this.state.is_avatar_locked,
       avatar_lock_user_message: this.state.avatar_lock_user_message,
       avatar_lock_staff_message: this.state.avatar_lock_staff_message

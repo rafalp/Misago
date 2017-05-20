@@ -16,7 +16,7 @@ export default class extends React.Component {
       this.initWithoutPreloadedData();
     }
 
-    this.startPolling(props.profile.api_url.ban);
+    this.startPolling(props.profile.api.ban);
   }
 
   initWithPreloadedData(ban) {

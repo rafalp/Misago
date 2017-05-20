@@ -12,7 +12,7 @@ export default function({ category }) {
         </div>
         <div className="media-body">
           <h4 className="media-heading">
-            <a href={category.url}>
+            <a href={category.url.index}>
               {category.name}
             </a>
           </h4>

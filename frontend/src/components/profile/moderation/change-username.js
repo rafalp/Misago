@@ -30,7 +30,7 @@ export default class extends Form {
   }
 
   componentDidMount() {
-    ajax.get(this.props.profile.api_url.moderate_username).then(() => {
+    ajax.get(this.props.profile.api.moderate_username).then(() => {
       this.setState({
         isLoaded: true
       });
@@ -52,7 +52,7 @@ export default class extends Form {
   }
 
   send() {
-    return ajax.post(this.props.profile.api_url.moderate_username, {
+    return ajax.post(this.props.profile.api.moderate_username, {
       username: this.state.username
     });
   }

@@ -56,7 +56,7 @@ export default class extends React.Component {
       }));
     }
 
-    ajax.post(this.props.profile.api_url.follow).then((data) => {
+    ajax.post(this.props.profile.api.follow).then((data) => {
       this.setState({
         isLoading: false
       });

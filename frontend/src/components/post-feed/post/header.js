@@ -18,7 +18,7 @@ export default function({ post }) {
       </a>
       <a
         className="btn btn-link post-category"
-        href={category.url}
+        href={category.url.index}
       >
         {category.name}
       </a>

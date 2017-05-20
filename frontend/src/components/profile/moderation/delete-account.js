@@ -27,7 +27,7 @@ export default class extends Form {
   }
 
   componentDidMount() {
-    ajax.get(this.props.profile.api_url.delete).then(() => {
+    ajax.get(this.props.profile.api.delete).then(() => {
       this.setState({
         isLoaded: true
       });
@@ -59,7 +59,7 @@ export default class extends Form {
   /* jshint ignore:end */
 
   send() {
-    return ajax.post(this.props.profile.api_url.delete, {
+    return ajax.post(this.props.profile.api.delete, {
       with_content: this.state.with_content
     });
   }

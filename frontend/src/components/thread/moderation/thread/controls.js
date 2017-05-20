@@ -133,7 +133,7 @@ export default class extends React.Component {
 
     ajax.delete(this.props.thread.api.index).then((data) => {
       snackbar.success(gettext("Thread has been deleted."))
-      window.location = this.props.thread.category.url;
+      window.location = this.props.thread.category.url.index;
     }, (rejection) => {
       store.dispatch(thread.release());
       snackbar.apiError(rejection);
