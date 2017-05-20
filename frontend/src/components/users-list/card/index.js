@@ -18,7 +18,7 @@ export default function({ showStatus, user }) {
         <div className="row">
           <div className="col-xs-3 user-card-left">
             <div className="user-card-small-avatar">
-              <a href={user.absolute_url}>
+              <a href={user.url}>
                 <Avatar
                   size="50"
                   size2x="80"
@@ -30,7 +30,7 @@ export default function({ showStatus, user }) {
           <div className="col-xs-9 col-sm-12 user-card-body">
 
             <div className="user-card-avatar">
-              <a href={user.absolute_url}>
+              <a href={user.url}>
                 <Avatar
                   size="150"
                   size2x="200"
@@ -40,7 +40,7 @@ export default function({ showStatus, user }) {
             </div>
 
             <div className="user-card-username">
-              <a href={user.absolute_url}>
+              <a href={user.url}>
                 {user.username}
               </a>
             </div>

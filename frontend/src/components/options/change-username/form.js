@@ -67,7 +67,7 @@ export default class extends Form {
   }
 
   send() {
-    return ajax.post(this.props.user.api_url.username, {
+    return ajax.post(this.propsuser.api.username, {
       'username': this.state.username
     });
   }

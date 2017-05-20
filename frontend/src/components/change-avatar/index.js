@@ -23,7 +23,7 @@ export default class extends React.Component {
       'isLoading': true
     });
 
-    ajax.post(this.props.user.api_url.avatar, {
+    ajax.post(this.props.user.api.avatar, {
       avatar: avatarType
     }).then((response) => {
       this.setState({

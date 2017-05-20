@@ -115,7 +115,7 @@ export default class extends React.Component {
     const deviceRatio = cropit.cropit('exportZoom');
     const cropitOffset = cropit.cropit('offset');
 
-    ajax.post(this.props.user.api_url.avatar, {
+    ajax.post(this.props.user.api.avatar, {
       avatar: avatarType,
       crop: {
         offset: {

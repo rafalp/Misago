@@ -19,7 +19,7 @@ export default class extends WithDropdown {
   constructor(props) {
     super(props);
 
-    this.startPolling(props.profile.api_url.root);
+    this.startPolling(props.profile.api.index);
   }
 
   startPolling(api) {
@@ -39,7 +39,7 @@ export default class extends WithDropdown {
 
   render() {
     /* jshint ignore:start */
-    const baseUrl = misago.get('PROFILE').absolute_url;
+    const baseUrl = misago.get('PROFILE').url;
     const pages = misago.get('PROFILE_PAGES');
 
     return (
@@ -106,7 +106,7 @@ export function paths() {
 
   misago.get('PROFILE_PAGES').forEach(function(item) {
     paths.push(Object.assign({}, item, {
-      path: misago.get('PROFILE').absolute_url + item.component + '/',
+      path: misago.get('PROFILE').url + item.component + '/',
       component: connect(select)(COMPONENTS[item.component]),
     }));
   });

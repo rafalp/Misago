@@ -47,7 +47,7 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
     def get_email(self, obj):
         return obj.email
 
-    def get_api_url(self, obj):
+    def get_api(self, obj):
         return {
             'avatar': reverse('misago:api:user-avatar', kwargs={'pk': obj.pk}),
             'options': reverse('misago:api:user-forum-options', kwargs={'pk': obj.pk}),

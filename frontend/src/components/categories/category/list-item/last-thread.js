@@ -27,7 +27,7 @@ export function LastThread({ category }) {
         <div className="media-heading">
           <a
             className="item-title thread-title"
-            href={category.last_thread_new_url}
+            href={category.url.last_thread_new}
             title={category.last_thread_title}
           >
             {category.last_thread_title}
@@ -41,7 +41,7 @@ export function LastThread({ category }) {
             &#8212;
           </li>
           <li className="category-last-thread-date">
-            <a href={category.last_post_url}>
+            <a href={category.url.last_post}>
               {category.last_post_on.fromNow()}
             </a>
           </li>
@@ -52,11 +52,11 @@ export function LastThread({ category }) {
 }
 
 export function LastPosterAvatar({ category }) {
-  if (category.last_poster_url) {
+  if (category.last_poster) {
     return (
       <a
         className="last-poster-avatar"
-        href={category.last_poster_url}
+        href={category.last_poster.url}
         title={category.last_poster_name}
       >
         <Avatar
@@ -82,11 +82,11 @@ export function LastPosterAvatar({ category }) {
 }
 
 export function LastPosterName({ category }) {
-  if (category.last_poster_url) {
+  if (category.last_poster) {
     return (
       <a
         className="item-title"
-        href={category.last_poster_url}
+        href={category.last_poster.url}
       >
         {category.last_poster_name}
       </a>

@@ -70,7 +70,7 @@ export default class extends React.Component {
     data.append('avatar', 'upload');
     data.append('image', image);
 
-    ajax.upload(this.props.user.api_url.avatar, data, (progress) => {
+    ajax.upload(this.props.user.api.avatar, data, (progress) => {
       this.setState({
         progress
       });

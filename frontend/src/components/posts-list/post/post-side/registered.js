@@ -23,7 +23,7 @@ export default function({ post, thread }) {
       />
       <div className="media">
         <div className="media-left">
-          <a href={poster.absolute_url}>
+          <a href={poster.url}>
             <Avatar
               className="poster-avatar"
               size={100}
@@ -36,7 +36,7 @@ export default function({ post, thread }) {
           <div className="media-heading">
             <a
               className="item-title"
-              href={poster.absolute_url}
+              href={poster.url}
             >
               {poster.username}
             </a>

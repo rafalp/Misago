@@ -17,7 +17,7 @@ export default function(props) {
 export function Breadcrumb(props) {
   return (
     <li>
-      <a href={props.node.absolute_url}>{props.node.name}</a>
+      <a href={props.node.url}>{props.node.name}</a>
     </li>
   );
 }
@@ -26,7 +26,7 @@ export function GoBack(props) {
   const lastItem = props.path[props.path.length - 1];
 
   return (
-    <a href={lastItem.absolute_url} className="go-back-sm visible-xs-block">
+    <a href={lastItem.url} className="go-back-sm visible-xs-block">
       <span className="material-icon">
         chevron_left
       </span>

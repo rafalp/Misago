@@ -51,7 +51,7 @@ export default class extends Form {
   }
 
   send() {
-    return ajax.post(this.props.user.api_url.change_password, {
+    return ajax.post(this.propsuser.api.change_password, {
       new_password: this.state.new_password,
       password: this.state.password
     });

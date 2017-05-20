@@ -10,7 +10,7 @@ export default function({ post, poster }) {
       <GoToButton post={post} />
       <div className="media">
         <div className="media-left">
-          <a href={poster.absolute_url}>
+          <a href={poster.url}>
             <Avatar
               className="poster-avatar"
               size={50}
@@ -22,7 +22,7 @@ export default function({ post, poster }) {
           <div className="media-heading">
             <a
               className="item-title"
-              href={poster.absolute_url}
+              href={poster.url}
             >
               {poster.username}
             </a>

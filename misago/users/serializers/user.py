@@ -36,8 +36,8 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
     meta = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
 
-    absolute_url = serializers.SerializerMethodField()
-    api_url = serializers.SerializerMethodField()
+    api = serializers.SerializerMethodField()
+    url = serializers.SerializerMethodField()
 
     class Meta:
         model = UserModel
@@ -64,8 +64,8 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
             'meta',
             'status',
 
-            'absolute_url',
-            'api_url',
+            'api',
+            'url',
         ]
 
     def get_acl(self, obj):
@@ -104,22 +104,72 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
         except AttributeError:
             return None
 
-    def get_absolute_url(self, obj):
-        return obj.get_absolute_url()
-
-    def get_api_url(self, obj):
+    def get_api(self, obj):
         return {
-            'root': reverse('misago:api:user-detail', kwargs={'pk': obj.pk}),
-            'follow': reverse('misago:api:user-follow', kwargs={'pk': obj.pk}),
-            'ban': reverse('misago:api:user-ban', kwargs={'pk': obj.pk}),
-            'moderate_avatar': reverse('misago:api:user-moderate-avatar', kwargs={'pk': obj.pk}),
-            'moderate_username': reverse('misago:api:user-moderate-username', kwargs={'pk': obj.pk}),
-            'delete': reverse('misago:api:user-delete', kwargs={'pk': obj.pk}),
-            'followers': reverse('misago:api:user-followers', kwargs={'pk': obj.pk}),
-            'follows': reverse('misago:api:user-follows', kwargs={'pk': obj.pk}),
-            'threads': reverse('misago:api:user-threads', kwargs={'pk': obj.pk}),
-            'posts': reverse('misago:api:user-posts', kwargs={'pk': obj.pk}),
+            'index': reverse(
+                'misago:api:user-detail',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'follow': reverse(
+                'misago:api:user-follow',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'ban': reverse(
+                'misago:api:user-ban',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'moderate_avatar': reverse(
+                'misago:api:user-moderate-avatar',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'moderate_username': reverse(
+                'misago:api:user-moderate-username',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'delete': reverse(
+                'misago:api:user-delete',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'followers': reverse(
+                'misago:api:user-followers',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'follows': reverse(
+                'misago:api:user-follows',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'threads': reverse(
+                'misago:api:user-threads',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'posts': reverse(
+                'misago:api:user-posts',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
         }
+
+    def get_url(self, obj):
+        return obj.get_absolute_url()
 
 
 UserCardSerializer = UserSerializer.subset_fields(
@@ -133,5 +183,5 @@ UserCardSerializer = UserSerializer.subset_fields(
     'threads',
     'posts',
     'status',
-    'absolute_url',
+    'url',
 )

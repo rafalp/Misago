@@ -76,7 +76,7 @@ export default class extends React.Component {
       <div className="hidden-xs col-sm-2 col-lg-1">
         <Link
           className="btn btn-default btn-icon btn-aligned btn-go-back btn-block btn-outline"
-          to={parent.absolute_url + this.props.route.list.path}
+          to={parent.url + this.props.route.list.path}
         >
           <span className="material-icon">
             keyboard_arrow_left
@@ -168,7 +168,7 @@ export default class extends React.Component {
           </div>
 
           <Nav
-            baseUrl={this.props.route.category.absolute_url}
+            baseUrl={this.props.route.category.url}
             list={this.props.route.list}
             lists={this.props.route.lists}
           />
@@ -190,7 +190,7 @@ export function ParentCategory(props) {
   return (
     <Link
       className="go-back-sm visible-xs-block"
-      to={parent.absolute_url}
+      to={parent.url}
     >
       <span className="material-icon">
         chevron_left

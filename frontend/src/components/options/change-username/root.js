@@ -29,7 +29,7 @@ export default class extends React.Component {
     });
 
     Promise.all([
-      ajax.get(this.props.user.api_url.username),
+      ajax.get(this.propsuser.api.username),
       ajax.get(misago.get('USERNAME_CHANGES_API'), {user: this.props.user.id})
     ]).then((data) => {
       store.dispatch(hydrate(data[1].results));

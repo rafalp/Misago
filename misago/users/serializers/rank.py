@@ -22,7 +22,6 @@ class RankSerializer(serializers.ModelSerializer):
             'css_class',
             'is_default',
             'is_tab',
-
             'url',
         ]
 

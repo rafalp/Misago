@@ -11,7 +11,7 @@ export default function({ category }) {
     <div className="col-xs-12 col-sm-4 col-md-3">
       <a
         className={className}
-        href={category.absolute_url}
+        href={category.url}
       >
         <span className="material-icon">
           {getIcon(category)}

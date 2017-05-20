@@ -58,7 +58,7 @@ export function Poster(props) {
   let user = null;
   if (props.post.poster) {
     user = interpolate(USER_URL, {
-      url: escapeHtml(props.post.poster.absolute_url),
+      url: escapeHtml(props.post.poster.url),
       user: escapeHtml(props.post.poster_name)
     }, true);
   } else {

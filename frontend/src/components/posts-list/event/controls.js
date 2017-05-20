@@ -31,7 +31,7 @@ export class Hide extends React.Component {
       hidden_on: moment(),
       hidden_by_name: this.props.user.username,
       url: Object.assign(this.props.post.url, {
-        hidden_by: this.props.user.absolute_url
+        hidden_by: this.props.user.url
       })
     }));
 

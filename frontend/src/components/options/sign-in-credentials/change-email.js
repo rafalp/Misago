@@ -46,7 +46,7 @@ export default class extends Form {
   }
 
   send() {
-    return ajax.post(this.props.user.api_url.change_email, {
+    return ajax.post(this.propsuser.api.change_email, {
       new_email: this.state.new_email,
       password: this.state.password,
     });
