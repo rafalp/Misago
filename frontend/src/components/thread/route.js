@@ -114,7 +114,12 @@ export default class extends React.Component {
 
   render() {
     /* jshint ignore:start */
-    return <div className="page page-thread">
+    let className = 'page page-thread';
+    if (this.props.thread.category.css_class) {
+      className += ' page-thread-' + this.props.thread.category.css_class;
+    }
+
+    return <div className={className}>
       <div className="page-header-bg">
         <Header {...this.props} />
       </div>

@@ -3,7 +3,7 @@ Category styles
 
 Misago categories allow you to specify their css class when editing them in admin control panel.
 
-This class is then used to build proper css class names used around the UI. For example, entering "protoss" in class's css name will result in category on categories lists and threads in this class on threads list having `list-group-category-has-flavor` and `list-group-item-category-protoss` css classes on them, allowing you to differentiate this category and its threads on lists. In addition to this, such category's page and its thread page would have `page-protoss` class so you could customize it further.
+This class is then used to build proper css class names used around the UI. For example, entering "protoss" in class's css name will result in category on categories lists and threads in this class on threads list having `list-group-category-has-flavor` and `list-group-item-category-protoss` css classes on them, allowing you to differentiate this category and its threads on lists. In addition to this, such category's page and its thread page would have `page-threads-protoss` and `page-thread-protoss` classes so you could customize it further.
 
 
 ## CSS shared for all custom classed
