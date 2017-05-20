@@ -36,7 +36,7 @@ export default class extends React.Component {
       /* jshint ignore:start */
       return (
         <li className="user-rank">
-          <a href={this.props.profile.rank.absolute_url} className="item-title">
+          <a href={this.props.profile.rank.url} className="item-title">
             {this.props.profile.rank.name}
           </a>
         </li>

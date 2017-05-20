@@ -60,8 +60,10 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
             'acl',
             'is_followed',
             'is_blocked',
+
             'meta',
             'status',
+
             'absolute_url',
             'api_url',
         ]
