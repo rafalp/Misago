@@ -81,11 +81,11 @@
 
 {% block list-container %}
   {% if category.description %}
-  <div class="category-description">
-    <div class="page-lead {{ category.description|escape|linebreaks|isdescriptionshort|iftrue:"lead" }}">
-      {{ category.description|escape|urlize|linebreaks|safe }}
+    <div class="category-description">
+      <div class="page-lead {{ category.description|escape|linebreaks|isdescriptionshort|iftrue:"lead" }}">
+        {{ category.description|escape|urlize|linebreaks|safe }}
+      </div>
     </div>
-  </div>
   {% endif %}
 
   {{ block.super }}
