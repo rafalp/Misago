@@ -72,6 +72,21 @@
   }
 }
 
+.user-dropdown .badge {
+  background-color: @brand-danger;
+}
+
+.user-dropdown {
+  a:hover, a:focus, a:active,
+  .btn-link:hover, .btn-link:focus, .btn-link:active {
+    .badge {
+      background-color: #fff;
+      
+      color: @brand-danger;
+    }
+  }
+}
+
 .user-dropdown .btn-default {
   background: @dropdown-btn-default-bg;
   border-color: @dropdown-btn-default-border;
