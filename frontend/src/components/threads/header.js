@@ -181,8 +181,7 @@ export default class extends React.Component {
 }
 
 /* jshint ignore:start */
-export function ParentCategory(props) {
-  const { categories, category } = props;
+export function ParentCategory({ categories, category }) {
   if (!category) return null;
 
   const parent = categories[category];
@@ -190,7 +189,7 @@ export function ParentCategory(props) {
   return (
     <Link
       className="go-back-sm visible-xs-block"
-      to={parent.url}
+      to={parent.url.index}
     >
       <span className="material-icon">
         chevron_left
