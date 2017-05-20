@@ -5,7 +5,25 @@
 {% block title %}{% trans "Page not available" %} | {{ block.super }}{% endblock %}
 
 
-{% block meta_description %}{% if message %}{{ message }}{% else %}{% trans "You don't have permission to access this page." %}{% endif %}{% endblock meta_description %}
+{% block meta-description %}
+  {% if message %}
+    {{ message }}
+  {% else %}
+    {% trans "You don't have permission to access this page." %}
+  {% endif %}
+{% endblock meta-description %}
+
+
+{% block og-title %}{% trans "Page not found" %}{% endblock %}
+
+
+{% block og-description %}
+  {% if message %}
+    {{ message }}
+  {% else %}
+    {% trans "You don't have permission to access this page." %}
+  {% endif %}
+{% endblock %}
 
 
 {% block content %}
@@ -20,9 +38,9 @@
       <div class="message-body">
         <p class="lead">{% trans "This page is not available." %}</p>
         {% if message %}
-        <p>{{ message|escape|urlize|linebreaksbr }}</p>
+          <p>{{ message|escape|urlize|linebreaksbr }}</p>
         {% else %}
-        <p>{% trans "You don't have permission to access this page." %}</p>
+          <p>{% trans "You don't have permission to access this page." %}</p>
         {% endif %}
       </div>
 

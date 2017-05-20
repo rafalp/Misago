@@ -3,26 +3,51 @@
 
 
 {% block title %}{% pagetitle rank.name page=paginator.page %} | {{ block.super }}{% endblock %}
+
+
 {% block meta-description %}
-{{ rank.description|default:"" }}
+  {{ rank.description|default:"" }} {% blocktrans trimmed count users=paginator.count %}
+    {{ users }} user have this rank.
+  {% plural %}
+    {{ users }} users have this rank.
+  {% endblocktrans %}
 {% endblock %}
 
 
 {% block meta-extra %}
-{% if paginator.page > 1 %}
-<link rel="canonical" href="{% url 'misago:users-rank' slug=rank.slug page=paginator.page %}" />
-{% else %}
-<link rel="canonical" href="{% url 'misago:users-rank' slug=rank.slug %}" />
-{% endif %}
-{% if paginator.previous > 1 %}
-<link rel="prev" href="{% url 'misago:users-rank' slug=rank.slug page=paginator.previous %}" />
-{% elif paginator.previous %}
-<link rel="prev" href="{% url 'misago:users-rank' slug=rank.slug %}" />
-{% endif %}
-{% if paginator.next %}
-<link rel="next" href="{% url 'misago:users-rank' slug=rank.slug page=paginator.next %}" />
-{% endif %}
+  {% if paginator.page > 1 %}
+    <link rel="canonical" href="{% url 'misago:users-rank' slug=rank.slug page=paginator.page %}" />
+  {% else %}
+    <link rel="canonical" href="{% url 'misago:users-rank' slug=rank.slug %}" />
+  {% endif %}
+  {% if paginator.previous > 1 %}
+    <link rel="prev" href="{% url 'misago:users-rank' slug=rank.slug page=paginator.previous %}" />
+  {% elif paginator.previous %}
+    <link rel="prev" href="{% url 'misago:users-rank' slug=rank.slug %}" />
+  {% endif %}
+  {% if paginator.next %}
+    <link rel="next" href="{% url 'misago:users-rank' slug=rank.slug page=paginator.next %}" />
+  {% endif %}
 {% endblock meta-extra %}
+
+
+{% block og-title %}
+  {{ rank.name }}
+{% endblock og-title %}
+
+
+{% block og-description %}
+  {% if rank.description %}
+    {{ rank.description }}
+  {% endif %} {% blocktrans trimmed count users=paginator.count %}
+    {{ users }} user have this rank.
+  {% plural %}
+    {{ users }} users have this rank.
+  {% endblocktrans %}
+{% endblock og-description %}
+
+
+{% block og-url %}{{ SITE_ADDRESS }}{{ rank.get_absolute_url }}{% endblock %}
 
 
 {% block content %}

@@ -3,12 +3,31 @@
 
 
 {% block title %}
-{% if paginator.page > 1 %}
-  {{ thread.title }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ category.name }} | {{ block.super }}
-{% else %}
-  {{ thread.title }} | {{ category.name }} | {{ block.super }}
-{% endif %}
+  {% if paginator.page > 1 %}
+    {{ thread.title }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ category.name }} | {{ block.super }}
+  {% else %}
+    {{ thread.title }} | {{ category.name }} | {{ block.super }}
+  {% endif %}
 {% endblock title %}
+
+
+{% block og-title %}{{ thread.title }}{% endblock %}
+
+
+{% block og-description %}
+  {% blocktrans trimmed with starter=thread.starter_name started_on=thread.started_on|date category=category.name %}
+    Started by {{ starter }} on {{ started_on }} in the {{ category }} category.
+  {% endblocktrans %} {% blocktrans trimmed count replies=thread.replies with last_post_on=thread.last_post_on|date %}
+    {{ replies }} reply, last one from {{ last_post_on }}.
+  {% plural %}
+    {{ replies }} replies, last one from {{ last_post_on }}.
+  {% endblocktrans %}
+{% endblock og-description %}
+
+
+{% block og-url %}
+{{ SITE_ADDRESS }}{{ thread.get_absolute_url }}
+{% endblock og-url %}
 
 
 {% block meta-extra %}

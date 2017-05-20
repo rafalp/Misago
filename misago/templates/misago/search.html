@@ -5,6 +5,12 @@
 {% block title %}{% trans "Search site" %} | {{ block.super }}{% endblock %}
 
 
+{% block og-title %}{% trans "Search site" %}{% endblock %}
+
+
+{% block og-url %}{{ SITE_ADDRESS }}{{ REQUEST_PATH }}{% endblock %}
+
+
 {% block content %}
 <div class="page page-search">
   <div class="page-header-bg">

@@ -5,7 +5,17 @@
 {% block title %}{% trans "Page not found" %} | {{ block.super }}{% endblock %}
 
 
-{% block meta_description %}{% trans "The link you clicked was incorrect or the page has been moved or deleted." %}{% endblock meta_description %}
+{% block meta-description %}
+{% trans "The link you clicked was incorrect or the page has been moved or deleted." %}
+{% endblock meta-description %}
+
+
+{% block og-title %}{% trans "Page not found" %}{% endblock %}
+
+
+{% block og-description %}
+{% trans "The link you clicked was incorrect or the page has been moved or deleted." %}
+{% endblock %}
 
 
 {% block content %}

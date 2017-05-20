@@ -3,31 +3,47 @@
 
 
 {% block title %}
-{% if THREADS_ON_INDEX and paginator.page == 1 %}
-  {% if list_name %}
-    {{ list_name }} | {{ block.super }}
-  {% elif misago_settings.forum_index_title %}
-    {{ misago_settings.forum_index_title }}
+  {% if THREADS_ON_INDEX and paginator.page == 1 %}
+    {% if list_name %}
+      {{ list_name }} | {{ block.super }}
+    {% elif misago_settings.forum_index_title %}
+      {{ misago_settings.forum_index_title }}
+    {% else %}
+      {{ misago_settings.forum_name }}
+    {% endif %}
   {% else %}
-    {{ misago_settings.forum_name }}
+    {% if list_name %}
+      {{ list_name }} | {% trans "Threads" %} | {{ block.super }}
+    {% elif paginator.page > 1 %}
+      {% trans "Threads" %} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ block.super }}
+    {% else %}
+      {% trans "Threads" %} | {{ block.super }}
+    {% endif %}
   {% endif %}
-{% else %}
-  {% if list_name %}
-    {{ list_name }} | {% trans "Threads" %} | {{ block.super }}
-  {% elif paginator.page > 1 %}
-    {% trans "Threads" %} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ block.super }}
-  {% else %}
-    {% trans "Threads" %} | {{ block.super }}
-  {% endif %}
-{% endif %}
 {% endblock title %}
 
 
 {% block meta-description %}
-{% if THREADS_ON_INDEX and misago_settings.forum_index_meta_description %}
-  {{ misago_settings.forum_index_meta_description }}
-{% endif %}
+  {% if THREADS_ON_INDEX and misago_settings.forum_index_meta_description %}
+    {{ misago_settings.forum_index_meta_description }}
+  {% endif %}
 {% endblock meta-description %}
+
+
+{% block og-title %}
+  {% if THREADS_ON_INDEX %}
+    {% if misago_settings.forum_index_title %}
+      {{ misago_settings.forum_index_title }}
+    {% else %}
+      {{ misago_settings.forum_name }}
+    {% endif %}
+  {% else %}
+    {% trans "Threads" %}
+  {% endif %}
+{% endblock og-title %}
+
+
+{% block og-url %}{{ SITE_ADDRESS }}{{ REQUEST_PATH }}{% endblock %}
 
 
 {% block page-header %}

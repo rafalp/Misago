@@ -3,9 +3,34 @@
 
 
 {% block title %}{{ profile.username }} | {{ block.super }}{% endblock %}
+
+
 {% block meta-description %}
-{% blocktrans trimmed with joined_on=user.joined_on|date %}Member since {{ joined_on }}.{% endblocktrans %} {{ profile.rank.name }}
+  {% blocktrans trimmed with title=profile.get_any_title joined_on=profile.joined_on|date %}
+    {{ title }}, joined on {{ joined_on }}.
+  {% endblocktrans %}
 {% endblock %}
+
+
+{% block og-title %}{{ profile.username }}{% endblock %}
+
+
+{% block og-description %}
+  {% blocktrans trimmed with title=profile.get_any_title joined_on=profile.joined_on|date %}
+    {{ title }}, joined on {{ joined_on }}.
+  {% endblocktrans %} {% blocktrans trimmed count posts=profile.posts %}
+    Wrote {{ posts }} post.
+  {% plural %}
+    Wrote {{ posts }} posts.
+  {% endblocktrans %} {% blocktrans trimmed count threads=profile.threads %}
+    Started {{ threads }} thread.
+  {% plural %}
+    Started {{ threads }} threads.
+  {% endblocktrans %}
+{% endblock og-description %}
+
+
+{% block og-url %}{{ SITE_ADDRESS }}{{ REQUEST_PATH }}{% endblock %}
 
 
 {% block content %}

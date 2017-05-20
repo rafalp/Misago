@@ -161,7 +161,9 @@ export function UserPrivateThreadsLink(props) {
 }
 
 export function selectUserMenu(state) {
-  return {user: state.auth.user};
+  return {
+    user: state.auth.user
+  };
 }
 
 export class CompactUserNav extends React.Component {
