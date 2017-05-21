@@ -9,6 +9,8 @@ from misago.acl.models import permissions_default
 
 class Migration(migrations.Migration):
 
+    initial = True
+
     dependencies = []
 
     operations = [

@@ -13,6 +13,8 @@ from misago.core.pgutils import CreatePartialIndex
 
 class Migration(migrations.Migration):
 
+    initial = True
+
     dependencies = [
         ('auth', '0001_initial'),
         ('misago_acl', '0001_initial'),

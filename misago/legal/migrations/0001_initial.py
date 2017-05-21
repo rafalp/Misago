@@ -117,6 +117,8 @@ def create_legal_settings_group(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
+    initial = True
+
     dependencies = [
         ('misago_conf', '0001_initial'),
     ]
