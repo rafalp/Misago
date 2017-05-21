@@ -54,14 +54,3 @@ if settings.MISAGO_ADMIN_PATH:
     urlpatterns += [
         url(admin_prefix, include((adminpatterns, 'admin'), namespace='admin')),
     ]
-
-
-# Make error pages accessible casually in DEBUG
-if settings.DEBUG:
-    from misago.core import errorpages
-    urlpatterns += [
-        url(r'^403/$', errorpages.permission_denied),
-        url(r'^404/$', errorpages.page_not_found),
-        url(r'^405/$', errorpages.not_allowed),
-        url(r'^csrf-failure/$', errorpages.csrf_failure),
-    ]

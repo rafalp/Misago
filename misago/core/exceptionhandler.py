@@ -32,7 +32,7 @@ def handle_ajax_error(request, exception):
 
 
 def handle_banned_exception(request, exception):
-    return errorpages.banned(request, exception.ban)
+    return errorpages.banned(request, exception)
 
 
 def handle_explicit_first_page_exception(request, exception):
@@ -48,7 +48,7 @@ def handle_explicit_first_page_exception(request, exception):
 
 
 def handle_http404_exception(request, exception):
-    return errorpages.page_not_found(request)
+    return errorpages.page_not_found(request, exception)
 
 
 def handle_outdated_slug_exception(request, exception):
@@ -63,12 +63,7 @@ def handle_outdated_slug_exception(request, exception):
 
 
 def handle_permission_denied_exception(request, exception):
-    try:
-        error_message = exception.args[0]
-    except IndexError:
-        error_message = None
-
-    return errorpages.permission_denied(request, error_message)
+    return errorpages.permission_denied(request, exception)
 
 
 EXCEPTION_HANDLERS = [

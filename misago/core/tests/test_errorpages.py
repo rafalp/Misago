@@ -1,3 +1,5 @@
+from django.core.exceptions import PermissionDenied
+from django.http import Http404
 from django.test import Client, TestCase, override_settings
 from django.test.client import RequestFactory
 from django.urls import reverse
@@ -64,9 +66,9 @@ class CustomErrorPagesTests(TestCase):
         response = self.client.get(reverse('raise-403'))
         self.assertContains(response, "Custom 403", status_code=403)
 
-        response = mock_custom_403_error_page(self.misago_request)
+        response = mock_custom_403_error_page(self.misago_request, PermissionDenied())
         self.assertNotContains(response, "Custom 403", status_code=403)
-        response = mock_custom_403_error_page(self.site_request)
+        response = mock_custom_403_error_page(self.site_request, PermissionDenied())
         self.assertContains(response, "Custom 403", status_code=403)
 
     def test_shared_404_decorator(self):
@@ -76,7 +78,7 @@ class CustomErrorPagesTests(TestCase):
         response = self.client.get(reverse('raise-404'))
         self.assertContains(response, "Custom 404", status_code=404)
 
-        response = mock_custom_404_error_page(self.misago_request)
+        response = mock_custom_404_error_page(self.misago_request, Http404())
         self.assertNotContains(response, "Custom 404", status_code=404)
-        response = mock_custom_404_error_page(self.site_request)
+        response = mock_custom_404_error_page(self.site_request, Http404())
         self.assertContains(response, "Custom 404", status_code=404)
