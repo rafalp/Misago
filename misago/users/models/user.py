@@ -174,7 +174,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_ip = models.GenericIPAddressField(null=True, blank=True)
     is_hiding_presence = models.BooleanField(default=False)
 
-    rank = models.ForeignKey('Rank', null=True, blank=True, on_delete=models.deletion.PROTECT)
+    rank = models.ForeignKey(
+        'Rank',
+        null=True,
+        blank=True,
+        on_delete=models.deletion.PROTECT,
+    )
     title = models.CharField(max_length=255, null=True, blank=True)
     requires_activation = models.PositiveIntegerField(default=ACTIVATION_NONE)
 
@@ -425,6 +430,7 @@ class Online(models.Model):
         settings.AUTH_USER_MODEL,
         primary_key=True,
         related_name='online_tracker',
+        on_delete=models.CASCADE,
     )
     current_ip = models.GenericIPAddressField()
     last_click = models.DateTimeField(default=timezone.now)
@@ -437,7 +443,11 @@ class Online(models.Model):
 
 
 class UsernameChange(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='namechanges')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='namechanges',
+        on_delete=models.CASCADE,
+    )
     changed_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,

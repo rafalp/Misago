@@ -17,8 +17,14 @@ from misago.threads.filtersearch import filter_search
 
 @python_2_unicode_compatible
 class Post(models.Model):
-    category = models.ForeignKey('misago_categories.Category')
-    thread = models.ForeignKey('misago_threads.Thread')
+    category = models.ForeignKey(
+        'misago_categories.Category',
+        on_delete=models.CASCADE,
+    )
+    thread = models.ForeignKey(
+        'misago_threads.Thread',
+        on_delete=models.CASCADE,
+    )
     poster = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         blank=True,

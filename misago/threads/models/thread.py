@@ -19,7 +19,10 @@ class Thread(models.Model):
         (WEIGHT_GLOBAL, _("Pin thread globally")),
     ]
 
-    category = models.ForeignKey('misago_categories.Category')
+    category = models.ForeignKey(
+        'misago_categories.Category',
+        on_delete=models.CASCADE,
+    )
     title = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
     replies = models.PositiveIntegerField(default=0, db_index=True)

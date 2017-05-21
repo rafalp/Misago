@@ -4,9 +4,18 @@ from django.utils import timezone
 
 
 class PollVote(models.Model):
-    category = models.ForeignKey('misago_categories.Category')
-    thread = models.ForeignKey('misago_threads.Thread')
-    poll = models.ForeignKey('misago_threads.Poll')
+    category = models.ForeignKey(
+        'misago_categories.Category',
+        on_delete=models.CASCADE,
+    )
+    thread = models.ForeignKey(
+        'misago_threads.Thread',
+        on_delete=models.CASCADE,
+    )
+    poll = models.ForeignKey(
+        'misago_threads.Poll',
+        on_delete=models.CASCADE,
+    )
     voter = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         blank=True,

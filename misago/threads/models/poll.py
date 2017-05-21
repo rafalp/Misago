@@ -8,8 +8,14 @@ from django.utils import timezone
 
 
 class Poll(models.Model):
-    category = models.ForeignKey('misago_categories.Category')
-    thread = models.OneToOneField('misago_threads.Thread')
+    category = models.ForeignKey(
+        'misago_categories.Category',
+        on_delete=models.CASCADE,
+    )
+    thread = models.OneToOneField(
+        'misago_threads.Thread',
+        on_delete=models.CASCADE,
+    )
     poster = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         blank=True,

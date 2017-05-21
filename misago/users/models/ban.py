@@ -124,8 +124,14 @@ class BanCache(models.Model):
         settings.AUTH_USER_MODEL,
         primary_key=True,
         related_name='ban_cache',
+        on_delete=models.CASCADE,
     )
-    ban = models.ForeignKey(Ban, null=True, blank=True, on_delete=models.SET_NULL)
+    ban = models.ForeignKey(
+        Ban,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
     bans_version = models.PositiveIntegerField(default=0)
     user_message = models.TextField(null=True, blank=True)
     staff_message = models.TextField(null=True, blank=True)

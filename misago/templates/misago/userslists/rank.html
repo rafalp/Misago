@@ -58,8 +58,8 @@
 
     {% if rank.description %}
       <section class="rank-description">
-        <div class="page-lead {{ rank.description|escape|linebreaks|isdescriptionshort|iftrue:"lead" }}">
-          {{ rank.description|escape|urlize|linebreaks|safe }}
+        <div class="page-lead {{ rank.description|force_escape|linebreaks|isdescriptionshort|iftrue:"lead" }}">
+          {{ rank.description|force_escape|urlize|linebreaks|safe }}
         </div>
       </section>
     {% endif %}

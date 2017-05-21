@@ -15,7 +15,11 @@ def login(request):
     if request.method == 'POST':
         redirect_to = request.POST.get('redirect_to')
         if redirect_to:
-            is_redirect_safe = is_safe_url(url=redirect_to, host=request.get_host())
+            is_redirect_safe = is_safe_url(
+                url=redirect_to,
+                allowed_hosts={request.get_host()},
+                require_https=request.is_secure(),
+            )
             if is_redirect_safe:
                 redirect_to_path = urlparse(redirect_to).path
                 return redirect(redirect_to_path)

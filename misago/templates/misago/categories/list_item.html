@@ -14,7 +14,7 @@
           </h4>
           {% if category.description %}
             <div class="category-description">
-              {{ category.description|escape|urlize|linebreaks }}
+              {{ category.description|force_escape|urlize|linebreaks }}
             </div>
           {% endif %}
         </div>

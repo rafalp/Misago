@@ -37,14 +37,14 @@ def banned(request, ban):
     )
 
 
-def permission_denied(request, message=None):
+def permission_denied(request, message=None, exception=None):
     if request.is_ajax():
         return _ajax_error(403, message or _("Permission denied."))
     else:
         return _error_page(request, 403, message)
 
 
-def page_not_found(request):
+def page_not_found(request, exception=None):
     if request.is_ajax():
         return _ajax_error(404, "Not found.")
     else:

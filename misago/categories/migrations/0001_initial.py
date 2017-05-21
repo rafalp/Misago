@@ -67,6 +67,7 @@ class Migration(migrations.Migration):
                 (
                     'parent', mptt.fields.TreeForeignKey(
                         related_name='children',
+                        on_delete=django.db.models.deletion.CASCADE,
                         blank=True,
                         to='misago_categories.Category',
                         null=True
@@ -105,14 +106,25 @@ class Migration(migrations.Migration):
                 ),
                 (
                     'category', models.ForeignKey(
-                        related_name='category_role_set', to='misago_categories.Category'
+                        related_name='category_role_set',
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='misago_categories.Category',
                     )
                 ),
                 (
-                    'category_role',
-                    models.ForeignKey(to='misago_categories.CategoryRole', to_field='id')
+                    'category_role', models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='misago_categories.CategoryRole',
+                        to_field='id',
+                    )
                 ),
-                ('role', models.ForeignKey(related_name='categories_acls', to='misago_acl.Role')),
+                (
+                    'role', models.ForeignKey(
+                        related_name='categories_acls',
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='misago_acl.Role',
+                    )
+                ),
             ],
             options={},
             bases=(models.Model, ),

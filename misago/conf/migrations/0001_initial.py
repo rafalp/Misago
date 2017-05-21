@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import django.db.models.deletion
 from django.contrib.postgres.fields import JSONField
 from django.db import migrations, models
 
@@ -52,7 +53,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='setting',
             name='group',
-            field=models.ForeignKey(to='misago_conf.SettingsGroup', to_field='id'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to='misago_conf.SettingsGroup',
+                to_field='id',
+            ),
             preserve_default=True,
         ),
     ]

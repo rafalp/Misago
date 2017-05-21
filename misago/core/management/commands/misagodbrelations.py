@@ -34,8 +34,10 @@ class Command(BaseCommand):
                         for field in model_relations:
                             self.stdout.write(
                                 field_pattern % (
-                                    field.name, field.__class__.__name__,
-                                    field.related_model.__name__, field.rel.on_delete.__name__,
+                                    field.name,
+                                    field.__class__.__name__,
+                                    field.related_model.__name__,
+                                    field.remote_field.on_delete.__name__,
                                 )
                             )
 

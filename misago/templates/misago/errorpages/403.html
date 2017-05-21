@@ -38,7 +38,7 @@
       <div class="message-body">
         <p class="lead">{% trans "This page is not available." %}</p>
         {% if message %}
-          <p>{{ message|escape|urlize|linebreaksbr }}</p>
+          <p>{{ message|force_escape|urlize|linebreaksbr }}</p>
         {% else %}
           <p>{% trans "You don't have permission to access this page." %}</p>
         {% endif %}

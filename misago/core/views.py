@@ -1,10 +1,4 @@
 from django.shortcuts import redirect
-from django.utils import timezone
-from django.views import i18n
-from django.views.decorators.cache import cache_page
-from django.views.decorators.http import last_modified
-
-from misago.conf import settings
 
 
 def forum_index(request):
@@ -13,15 +7,3 @@ def forum_index(request):
 
 def home_redirect(*args, **kwargs):
     return redirect('misago:index')
-
-
-@cache_page(86400 * 2, key_prefix='misagojsi18n')
-@last_modified(lambda req, **kw: timezone.now())
-def javascript_catalog(request):
-    return i18n.javascript_catalog(
-        request,
-        'djangojs',
-        {
-            'packages': settings.MISAGO_JS_CATALOG_PACKAGES,
-        },
-    )

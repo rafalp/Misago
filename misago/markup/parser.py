@@ -83,7 +83,13 @@ def parse(
 
 def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
     """creates and configures markdown object"""
-    md = markdown.Markdown(safe_mode='escape', extensions=['nl2br'])
+    md = markdown.Markdown(extensions=[
+        'markdown.extensions.nl2br',
+    ])
+
+    # Remove HTML allowances
+    del md.preprocessors['html_block']
+    del md.inlinePatterns['html']
 
     # Remove references
     del md.preprocessors['reference']
