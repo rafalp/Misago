@@ -3,7 +3,7 @@ from math import ceil
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import ugettext as _
-from django.views.generic import View
+from django.views import View
 
 from misago.conf import settings
 from misago.threads.permissions import exclude_invisible_posts

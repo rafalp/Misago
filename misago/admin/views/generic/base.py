@@ -1,4 +1,4 @@
-from django.views.generic import View
+from django.views import View
 
 from misago.admin.views import render
 
