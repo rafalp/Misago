@@ -270,7 +270,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def clean(self):
         self.username = self.normalize_username(self.username)
-        self.email = self.__class__.objects.normalize_email(self.email)
+        self.email = UserManager.normalize_email(self.email)
 
     def lock(self):
         """locks user in DB, shortcut for locking user model in views"""
