@@ -286,7 +286,7 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
         """.strip()
 
         expected_result = """
-<p><a href="/a/test/43/" rel="nofollow"><img alt="3.png" src="/a/thumb/test/43/"/></a></p>
+<p><a href="/a/test/43/"><img alt="3.png" src="/a/thumb/test/43/"/></a></p>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)

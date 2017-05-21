@@ -4,7 +4,6 @@ import shutil
 import sys
 
 from django import setup
-from django.test.utils import setup_test_environment
 
 
 def runtests():
@@ -135,7 +134,6 @@ DATABASES = {
 
 def run_django(*args, **kwargs):
     setup()
-    setup_test_environment()
 
     from django.core.management import call_command
     sys.exit(call_command('test', *args, **kwargs))

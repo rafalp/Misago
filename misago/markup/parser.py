@@ -144,18 +144,11 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
 
 
 def linkify_paragraphs(result):
-    result['parsed_text'] = bleach.linkify(result['parsed_text'], skip_pre=True, parse_email=True)
-
-    # dirty fix for
-    if '<code>' in result['parsed_text'] and '<a' in result['parsed_text']:
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-
-            soup = BeautifulSoup(result['parsed_text'], 'html5lib')
-            for link in soup.select('code > a'):
-                link.replace_with(BeautifulSoup(link.string, 'html.parser'))
-            # [6:-7] trims <body></body> wrap
-            result['parsed_text'] = six.text_type(soup.body)[6:-7]
+    result['parsed_text'] = bleach.linkify(
+        result['parsed_text'],
+        skip_tags=['a', 'code', 'pre'],
+        parse_email=True,
+    )
 
 
 def clean_links(request, result, force_shva=False):
@@ -170,6 +163,7 @@ def clean_links(request, result, force_shva=False):
         else:
             result['outgoing_links'].append(clean_link_prefix(link['href']))
             link['href'] = assert_link_prefix(link['href'])
+            link['rel'] = 'nofollow'
 
         if link.string:
             link.string = clean_link_prefix(link.string)
