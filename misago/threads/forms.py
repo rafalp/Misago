@@ -92,11 +92,11 @@ class AttachmentTypeForm(forms.ModelForm):
         return data
 
     def clean_mimetypes(self):
-        return self.clean_list(self.cleaned_data['mimetypes'])
+        data = self.cleaned_data['mimetypes']
+        if not data:
+            return None
+        return self.clean_list(data)
 
     def clean_list(self, value):
-        if not value:
-            return None
-
         items = [v.lstrip('.') for v in value.lower().replace(' ', '').split(',')]
         return ','.join(set(filter(bool, items)))
