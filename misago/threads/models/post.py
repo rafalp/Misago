@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import copy
 
+from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import models
@@ -88,6 +89,10 @@ class Post(models.Model):
     search_vector = SearchVectorField()
 
     class Meta:
+        indexes = [
+            GinIndex(fields=['search_vector'])
+        ]
+
         index_together = [
             ('thread', 'id'),  # speed up threadview for team members
             ('is_event', 'is_hidden'),

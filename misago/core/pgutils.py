@@ -45,23 +45,6 @@ DROP INDEX %(index_name)s
         return message % formats
 
 
-def batch_update(queryset, step=50):
-    """util because psycopg2 iterators aren't memory effective in Dj<1.11"""
-    paginator = Paginator(queryset.order_by('pk'), step)
-    for page_number in paginator.page_range:
-        for obj in paginator.page(page_number).object_list:
-            yield obj
-
-
-def batch_delete(queryset, step=50):
-    """another util cos paginator goes bobbins when you are deleting"""
-    queryset_exists = True
-    while queryset_exists:
-        for obj in queryset[:step]:
-            yield obj
-        queryset_exists = queryset.exists()
-
-
 class CreatePartialCompositeIndex(CreatePartialIndex):
     CREATE_SQL = """
 CREATE INDEX %(index_name)s ON %(table)s (%(fields)s)
@@ -94,3 +77,20 @@ DROP INDEX %(index_name)s
         message = ("Create PostgreSQL partial composite index on fields %s in %s for %s")
         formats = (', '.join(self.fields), self.model_name, self.values)
         return message % formats
+
+
+def batch_update(queryset, step=50):
+    """util because psycopg2 iterators aren't memory effective in Dj<1.11"""
+    paginator = Paginator(queryset.order_by('pk'), step)
+    for page_number in paginator.page_range:
+        for obj in paginator.page(page_number).object_list:
+            yield obj
+
+
+def batch_delete(queryset, step=50):
+    """another util cos paginator goes bobbins when you are deleting"""
+    queryset_exists = True
+    while queryset_exists:
+        for obj in queryset[:step]:
+            yield obj
+        queryset_exists = queryset.exists()

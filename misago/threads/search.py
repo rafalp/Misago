@@ -13,6 +13,9 @@ from .utils import add_categories_to_items
 from .viewmodels import ThreadsRootCategory
 
 
+HITS_CEILING = settings.MISAGO_POSTS_PER_PAGE * 5
+
+
 class SearchThreads(SearchProvider):
     name = _("Threads")
     icon = 'forum'
@@ -39,13 +42,18 @@ class SearchThreads(SearchProvider):
         )
         paginator = pagination_dict(list_page)
 
-        posts = list(list_page.object_list)
+        posts = []
         threads = []
+        if paginator['count']:
+            posts = list(list_page.object_list.select_related(
+                'thread', 'poster', 'poster__rank'
+            ))
 
-        for post in posts:
-            threads.append(post.thread)
+            threads = []
+            for post in posts:
+                threads.append(post.thread)
 
-        add_categories_to_items(root_category.unwrap(), threads_categories, posts + threads)
+            add_categories_to_items(root_category.unwrap(), threads_categories, posts + threads)
 
         results = {
             'results': FeedSerializer(posts, many=True, context={
@@ -67,10 +75,19 @@ def search_threads(request, query, visible_threads):
         config=settings.MISAGO_SEARCH_CONFIG,
     )
 
-    return Post.objects.select_related('thread', 'poster', 'poster__rank').filter(
+    queryset = Post.objects.filter(
         is_event=False,
         is_hidden=False,
         is_unapproved=False,
         thread_id__in=visible_threads.values('id'),
         search_vector=search_query,
-    ).annotate(rank=SearchRank(search_vector, search_query)).order_by('-rank', '-id')
+    )
+
+    if queryset[:HITS_CEILING + 1].count() > HITS_CEILING:
+        queryset = queryset.order_by('-id')[:HITS_CEILING]
+
+    return Post.objects.filter(
+        id__in=queryset.values('id'),
+    ).annotate(
+        rank=SearchRank(search_vector, search_query),
+    ).order_by('-rank', '-id')
