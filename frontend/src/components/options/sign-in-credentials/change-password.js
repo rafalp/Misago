@@ -42,7 +42,7 @@ export default class extends Form {
       return false;
     }
 
-    if (this.state.new_password.trim() !== this.state.repeat_password.trim()) {
+    if (this.state.new_password !== this.state.repeat_password) {
       snackbar.error(gettext("New passwords are different."));
       return false;
     }

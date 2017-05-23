@@ -449,6 +449,19 @@ class ChangePasswordAPITests(TestCase):
         user = UserModel.objects.get(id=self.user.pk)
         self.assertTrue(user.check_password('n3wp4ss!'))
 
+    def test_submit_with_whitespaces(self):
+        """submit change password form api changes password with whitespaces"""
+        response = self.client.post(
+            self.link % (self.user.pk, make_password_change_token(self.user)),
+            data={
+                'password': ' n3wp4ss! ',
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+
+        user = UserModel.objects.get(id=self.user.pk)
+        self.assertTrue(user.check_password(' n3wp4ss! '))
+
     def test_invalid_token_link(self):
         """api errors on invalid user id link"""
         response = self.client.post(self.link % (self.user.pk, 'asda7ad89sa7d9s789as'))

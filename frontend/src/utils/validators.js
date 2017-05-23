@@ -89,12 +89,20 @@ export function usernameContent() {
   };
 }
 
-export function passwordMinLength(lengthMin) {
-  var message = function(lengthMin) {
-    return ngettext(
-      "Valid password must be at least %(limit_value)s character long.",
-      "Valid password must be at least %(limit_value)s characters long.",
-      lengthMin);
+export function passwordMinLength(limitValue) {
+  return function(value) {
+    const length = value.length;
+
+    if (length < limitValue) {
+      const returnMessage = ngettext(
+        "Valid password must be at least %(limit_value)s character long.",
+        "Valid password must be at least %(limit_value)s characters long.",
+        limitValue);
+
+      return interpolate(returnMessage, {
+        limit_value: limitValue,
+        show_value: length
+      }, true);
+    }
   };
-  return minLength(lengthMin, message);
 }
