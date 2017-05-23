@@ -14,7 +14,7 @@ UserModel = get_user_model()
 class RegisterForm(forms.Form):
     username = forms.CharField(validators=[validators.validate_username])
     email = forms.CharField(validators=[validators.validate_email])
-    password = forms.CharField()
+    password = forms.CharField(strip=False)
 
     # placeholder field for setting captcha errors on form
     captcha = forms.CharField(required=False)

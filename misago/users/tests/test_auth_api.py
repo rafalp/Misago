@@ -48,6 +48,37 @@ class GatewayTests(TestCase):
         self.assertEqual(user_json['id'], user.id)
         self.assertEqual(user_json['username'], user.username)
 
+    def test_login_whitespaces_password(self):
+        """api signs user in with password left untouched"""
+        user = UserModel.objects.create_user('Bob', 'bob@test.com', ' Pass.123 ')
+
+        response = self.client.post(
+            '/api/auth/',
+            data={
+                'username': 'Bob',
+                'password': 'Pass.123',
+            },
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+        response = self.client.post(
+            '/api/auth/',
+            data={
+                'username': 'Bob',
+                'password': ' Pass.123 ',
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get('/api/auth/')
+        self.assertEqual(response.status_code, 200)
+
+        user_json = response.json()
+        self.assertEqual(user_json['id'], user.id)
+        self.assertEqual(user_json['username'], user.username)
+
     def test_submit_empty(self):
         """login api errors for no body"""
         response = self.client.post('/api/auth/')
