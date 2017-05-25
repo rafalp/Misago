@@ -514,7 +514,7 @@ msgid "Index title"
 msgstr ""
 
 #: core/migrations/0002_basic_settings.py:36
-msgid "You may set custon title on forum index by typing it here."
+msgid "You may set a custom title on forum index by typing it here."
 msgstr ""
 
 #: core/migrations/0002_basic_settings.py:37
