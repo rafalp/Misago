@@ -33,7 +33,7 @@ def create_basic_settings_group(apps, schema_editor):
                 {
                     'setting': 'forum_index_title',
                     'name': _("Index title"),
-                    'description': _("You may set custon title on forum index by typing it here."),
+                    'description': _("You may set a custom title on forum index by typing it here."),
                     'legend': _("Forum index"),
                     'field_extra': {
                         'max_length': 255
