@@ -10,6 +10,7 @@ from django.utils import six, timezone
 from django.utils.encoding import python_2_unicode_compatible
 
 from misago.conf import settings
+from misago.core.pgutils import PgPartialIndex
 from misago.core.utils import parse_iso8601_string
 from misago.markup import finalise_markup
 from misago.threads.checksums import is_post_valid, update_post_checksum
@@ -90,7 +91,15 @@ class Post(models.Model):
 
     class Meta:
         indexes = [
-            GinIndex(fields=['search_vector'])
+            PgPartialIndex(
+                fields=['has_open_reports'],
+                where={'has_open_reports': True},
+            ),
+            PgPartialIndex(
+                fields=['is_hidden'],
+                where={'is_hidden': False},
+            ),
+            GinIndex(fields=['search_vector']),
         ]
 
         index_together = [
