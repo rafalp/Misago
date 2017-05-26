@@ -13,7 +13,7 @@ class PgPartialIndex(Index):
             raise ValueError('partial index requires WHERE clause')
         self.where = where
 
-        super(PartialIndex, self).__init__(fields, name)
+        super(PgPartialIndex, self).__init__(fields, name)
 
     def set_name_with_model(self, model):
         table_name = model._meta.db_table
@@ -25,7 +25,7 @@ class PgPartialIndex(Index):
 
         # The length of the parts of the name is based on the default max
         # length of 30 characters.
-        hash_data = [table_name] + where_items + [self.suffix]
+        hash_data = [table_name] + self.fields + where_items + [self.suffix]
         self.name = '%s_%s_%s' % (
             table_name[:11],
             column_names[0][:7],
@@ -52,45 +52,48 @@ class PgPartialIndex(Index):
                 'where': "'{}'".format(', '.join(where_items)),
             }
         else:
-            return super(PartialIndex, self).__repr__()
+            return super(PgPartialIndex, self).__repr__()
 
     def deconstruct(self):
-        path, args, kwargs = super(PartialIndex, self).deconstruct()
+        path, args, kwargs = super(PgPartialIndex, self).deconstruct()
         kwargs['where'] = self.where
         return path, args, kwargs
 
     def get_sql_create_template_values(self, model, schema_editor, using):
-        parameters = super(PartialIndex, self).get_sql_create_template_values(model, schema_editor, '')
-        parameters['extra'] = self.get_sql_extra(schema_editor)
+        parameters = super(PgPartialIndex, self).get_sql_create_template_values(
+            model, schema_editor, '')
+        parameters['extra'] = self.get_sql_extra(model, schema_editor)
         return parameters
 
-    def get_sql_extra(self, schema_editor):
+    def get_sql_extra(self, model, schema_editor):
         quote_name = schema_editor.quote_name
         quote_value = schema_editor.quote_value
 
         clauses = []
         for field, condition in self.where.items():
-            fieldname = None
+            field_name = None
             compr = None
             if field.endswith('__lt'):
-                fieldname = field[:-4]
+                field_name = field[:-4]
                 compr = '<'
             elif field.endswith('__gt'):
-                fieldname = field[:-4]
+                field_name = field[:-4]
                 compr = '>'
             elif field.endswith('__lte'):
-                fieldname = field[:-5]
+                field_name = field[:-5]
                 compr = '<='
             elif field.endswith('__gte'):
-                fieldname = field[:-5]
+                field_name = field[:-5]
                 compr = '>='
             else:
-                fieldname = field
+                field_name = field
                 compr = '='
 
+            column = model._meta.get_field(field_name).column
             clauses.append('{} {} {}'.format(
-                quote_name(fieldname), compr, quote_value(condition)))
-        return ' WHERE {}'.format(' AND '.join(clauses))
+                quote_name(column), compr, quote_value(condition)))
+        # sort clauses for their order to be determined and testable
+        return ' WHERE {}'.format(' AND '.join(sorted(clauses)))
 
 
 class CreatePartialIndex(RunSQL):

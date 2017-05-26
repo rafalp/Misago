@@ -24,6 +24,78 @@ class Migration(migrations.Migration):
                 WHERE has_open_reports = TRUE
             """,
         ),
+        migrations.RunSQL(
+            "DROP INDEX misago_post_is_hidden_partial",
+            """
+                CREATE INDEX misago_post_is_hidden_partial
+                ON misago_threads_post(is_hidden)
+                WHERE is_hidden = FALSE
+            """,
+        ),
+        migrations.RunSQL(
+            "DROP INDEX misago_thread_is_global",
+            """
+                CREATE INDEX misago_thread_is_global
+                ON misago_threads_thread(weight)
+                WHERE weight = 2
+            """,
+        ),
+        migrations.RunSQL(
+            "DROP INDEX misago_thread_is_local",
+            """
+                CREATE INDEX misago_thread_is_local
+                ON misago_threads_thread(weight)
+                WHERE weight < 2
+            """,
+        ),
+        migrations.RunSQL(
+            "DROP INDEX misago_thread_has_reported_posts_partial",
+            """
+                CREATE INDEX misago_thread_has_reported_posts_partial
+                ON misago_threads_thread(has_reported_posts)
+                WHERE has_reported_posts = TRUE
+            """,
+        ),
+        migrations.RunSQL(
+            "DROP INDEX misago_thread_has_unapproved_posts_partial",
+            """
+                CREATE INDEX misago_thread_has_unapproved_posts_partial
+                ON misago_threads_thread(has_unapproved_posts)
+                WHERE has_unapproved_posts = TRUE
+            """,
+        ),
+        migrations.RunSQL(
+            "DROP INDEX misago_thread_is_hidden_partial",
+            """
+                CREATE INDEX misago_thread_is_hidden_partial
+                ON misago_threads_thread(is_hidden)
+                WHERE is_hidden = FALSE
+            """,
+        ),
+        migrations.RunSQL(
+            "DROP INDEX misago_thread_is_pinned_globally_partial",
+            """
+                CREATE INDEX misago_thread_is_pinned_globally_partial
+                ON misago_threads_thread(weight)
+                WHERE weight = 2
+            """,
+        ),
+        migrations.RunSQL(
+            "DROP INDEX misago_thread_is_pinned_locally_partial",
+            """
+                CREATE INDEX misago_thread_is_pinned_locally_partial
+                ON misago_threads_thread(weight)
+                WHERE weight = 1
+            """,
+        ),
+        migrations.RunSQL(
+            "DROP INDEX misago_thread_is_unpinned_partial",
+            """
+                CREATE INDEX misago_thread_is_unpinned_partial
+                ON misago_threads_thread(weight)
+                WHERE weight = 0
+            """,
+        ),
 
         migrations.AddIndex(
             model_name='post',

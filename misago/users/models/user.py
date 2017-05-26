@@ -14,6 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 from misago.acl import get_user_acl
 from misago.acl.models import Role
 from misago.conf import settings
+from misago.core.pgutils import PgPartialIndex
 from misago.core.utils import slugify
 from misago.users import avatars
 from misago.users.signatures import is_user_signature_valid
@@ -267,6 +268,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['email']
 
     objects = UserManager()
+
+    class Meta:
+        indexes = [
+            PgPartialIndex(
+                fields=['is_staff'],
+                where={'is_staff': True},
+            ),
+            PgPartialIndex(
+                fields=['requires_activation'],
+                where={'requires_activation__gt': 0},
+            ),
+        ]
 
     def clean(self):
         self.username = self.normalize_username(self.username)
