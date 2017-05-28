@@ -32,10 +32,10 @@ class Migration(migrations.Migration):
 
         migrations.AddIndex(
             model_name='user',
-            index=misago.core.pgutils.PgPartialIndex(fields=[b'is_staff'], name='misago_user_is_staf_f5a0fa_part', where={b'is_staff': True}),
+            index=misago.core.pgutils.PgPartialIndex(fields=['is_staff'], name='misago_user_is_staf_bf68aa_part', where={'is_staff': True}),
         ),
         migrations.AddIndex(
             model_name='user',
-            index=misago.core.pgutils.PgPartialIndex(fields=[b'requires_activation'], name='misago_user_require_50b161_part', where={b'requires_activation__gt': 0}),
+            index=misago.core.pgutils.PgPartialIndex(fields=['requires_activation'], name='misago_user_require_05204a_part', where={'requires_activation__gt': 0}),
         ),
     ]

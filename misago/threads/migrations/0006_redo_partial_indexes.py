@@ -99,38 +99,38 @@ class Migration(migrations.Migration):
 
         migrations.AddIndex(
             model_name='post',
-            index=misago.core.pgutils.PgPartialIndex(fields=['has_open_reports'], name='misago_thre_has_ope_92be2c_part', where={'has_open_reports': True}),
+            index=misago.core.pgutils.PgPartialIndex(fields=['has_open_reports'], name='misago_thre_has_ope_479906_part', where={'has_open_reports': True}),
         ),
         migrations.AddIndex(
             model_name='post',
-            index=misago.core.pgutils.PgPartialIndex(fields=['is_hidden'], name='misago_thre_is_hidd_29a6b4_part', where={'is_hidden': False}),
+            index=misago.core.pgutils.PgPartialIndex(fields=['is_hidden'], name='misago_thre_is_hidd_85db69_part', where={'is_hidden': False}),
         ),
         migrations.AddIndex(
             model_name='thread',
-            index=misago.core.pgutils.PgPartialIndex(fields=[b'weight'], name='misago_thre_weight_78926f_part', where={b'weight': 2}),
+            index=misago.core.pgutils.PgPartialIndex(fields=['weight'], name='misago_thre_weight_955884_part', where={'weight': 2}),
         ),
         migrations.AddIndex(
             model_name='thread',
-            index=misago.core.pgutils.PgPartialIndex(fields=[b'weight'], name='misago_thre_weight_525ed7_part', where={b'weight': 1}),
+            index=misago.core.pgutils.PgPartialIndex(fields=['weight'], name='misago_thre_weight_9e8f9c_part', where={'weight': 1}),
         ),
         migrations.AddIndex(
             model_name='thread',
-            index=misago.core.pgutils.PgPartialIndex(fields=[b'weight'], name='misago_thre_weight_5810c3_part', where={b'weight': 0}),
+            index=misago.core.pgutils.PgPartialIndex(fields=['weight'], name='misago_thre_weight_c7ef29_part', where={'weight': 0}),
         ),
         migrations.AddIndex(
             model_name='thread',
-            index=misago.core.pgutils.PgPartialIndex(fields=[b'weight'], name='misago_thre_weight__1981ff_part', where={b'weight__lt': 2}),
+            index=misago.core.pgutils.PgPartialIndex(fields=['weight'], name='misago_thre_weight__4af9ee_part', where={'weight__lt': 2}),
         ),
         migrations.AddIndex(
             model_name='thread',
-            index=misago.core.pgutils.PgPartialIndex(fields=[b'has_reported_posts'], name='misago_thre_has_rep_8867fa_part', where={b'has_reported_posts': True}),
+            index=misago.core.pgutils.PgPartialIndex(fields=['has_reported_posts'], name='misago_thre_has_rep_84acfa_part', where={'has_reported_posts': True}),
         ),
         migrations.AddIndex(
             model_name='thread',
-            index=misago.core.pgutils.PgPartialIndex(fields=[b'has_unapproved_posts'], name='misago_thre_has_una_c66880_part', where={b'has_unapproved_posts': True}),
+            index=misago.core.pgutils.PgPartialIndex(fields=['has_unapproved_posts'], name='misago_thre_has_una_b0dbf5_part', where={'has_unapproved_posts': True}),
         ),
         migrations.AddIndex(
             model_name='thread',
-            index=misago.core.pgutils.PgPartialIndex(fields=[b'is_hidden'], name='misago_thre_is_hidd_0aef24_part', where={b'is_hidden': False}),
+            index=misago.core.pgutils.PgPartialIndex(fields=['is_hidden'], name='misago_thre_is_hidd_d2b96c_part', where={'is_hidden': False}),
         ),
     ]
