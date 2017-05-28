@@ -7,6 +7,7 @@ python:
   - "3.5"
   - "3.6"
 install:
+  - python -m pip install -U pip
   - pip install coveralls
 before_script:
   - psql -c "create database travis_ci_test;" -U postgres
