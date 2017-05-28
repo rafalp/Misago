@@ -99,7 +99,7 @@ Only superusers may enable extensions in your database. To solve this issue, you
     # make your database user the superuser
     alter role user_name superuser;
 
-    # after installation is complete run below query in psql
+    # after installation is complete run below query in the psql
     # to remove super user privileges from your database user
     alter role user_name nosuperuser;
 
