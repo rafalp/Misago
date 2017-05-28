@@ -25,6 +25,24 @@ class MockPoster(object):
     slug = 'loremipsum'
 
 
+class HTMLTests(TestCase):
+    def test_html_escaped(self):
+        """parser escapes all html"""
+        test_text = """
+Lorem <strong>ipsum!</strong>
+""".strip()
+
+        expected_result = """
+<p>Lorem &lt;strong&gt;ipsum!&lt;/strong&gt;</p>
+""".strip()
+
+        result = parse(test_text, MockRequest(), MockPoster(), minify=True)
+        self.assertEqual(expected_result, result['parsed_text'])
+        self.assertEqual(result['internal_links'], [])
+        self.assertEqual(result['images'], [])
+        self.assertEqual(result['outgoing_links'], [])
+
+
 class BBCodeTests(TestCase):
     def test_inline_text(self):
         """inline elements are correctly parsed"""
@@ -286,7 +304,7 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
         """.strip()
 
         expected_result = """
-<p><a href="/a/test/43/" rel="nofollow"><img alt="3.png" src="/a/thumb/test/43/"/></a></p>
+<p><a href="/a/test/43/"><img alt="3.png" src="/a/thumb/test/43/"/></a></p>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)

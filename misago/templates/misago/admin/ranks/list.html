@@ -34,7 +34,7 @@
 </td>
 <td>
   {% if item.title %}
-  {% trans item.title %}
+    {{ item.title }}
   {% else %}
   <i class="text-muted">{% trans "No title set" %}</i>
   {% endif %}

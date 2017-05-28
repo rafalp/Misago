@@ -262,7 +262,7 @@ export default class extends WithDropdown {
     let className = 'page page-threads';
     className += ' page-threads-' + this.props.route.list.type;
     if (this.props.route.category.css_class) {
-      className += ' page-' + this.props.route.category.css_class;
+      className += ' page-threads-' + this.props.route.category.css_class;
     }
     return className;
   }

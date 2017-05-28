@@ -5,6 +5,9 @@
 {% block title %}{% trans "Ban details" %} | {{ block.super }}{% endblock %}
 
 
+{% block og-title %}{% trans "Ban details" %} | {{ block.super }}{% endblock %}
+
+
 {% block section %}
 <div class="profile-ban-details">
   <div class="panel panel-default">
@@ -14,25 +17,25 @@
     <div>
 
       {% if ban.user_message %}
-      <div class="panel-body ban-message ban-user-message">
+        <div class="panel-body ban-message ban-user-message">
 
-        <h4>{% trans "User-shown ban message" %}</h4>
-        <div class="lead">
-          {{ ban.user_message|escape|urlize|linebreaks }}
+          <h4>{% trans "User-shown ban message" %}</h4>
+          <div class="lead">
+            {{ ban.user_message|force_escape|urlize|linebreaks }}
+          </div>
+
         </div>
-
-      </div>
       {% endif %}
 
       {% if ban.staff_message %}
-      <div class="panel-body ban-message ban-staff-message">
+        <div class="panel-body ban-message ban-staff-message">
 
-        <h4>{% trans "Team-shown ban message" %}</h4>
-        <div class="lead">
-          {{ ban.staff_message|escape|urlize|linebreaks }}
+          <h4>{% trans "Team-shown ban message" %}</h4>
+          <div class="lead">
+            {{ ban.staff_message|force_escape|urlize|linebreaks }}
+          </div>
+
         </div>
-
-      </div>
       {% endif %}
 
       <div class="panel-body ban-expires">

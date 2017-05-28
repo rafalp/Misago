@@ -6,7 +6,7 @@ from misago.threads import testutils
 from misago.threads.models import Thread
 
 
-class CategoryAdminTestCate(AdminTestCase):
+class CategoryAdminTestCase(AdminTestCase):
     def assertValidTree(self, expected_tree):
         root = Category.objects.root_category()
         queryset = Category.objects.filter(tree_id=root.tree_id).order_by('lft')
@@ -40,7 +40,7 @@ class CategoryAdminTestCate(AdminTestCase):
                            'found %s instead') % (i, category[3], _category[3]))
 
 
-class CategoryAdminViewsTests(CategoryAdminTestCate):
+class CategoryAdminViewsTests(CategoryAdminTestCase):
     def test_link_registered(self):
         """admin nav contains categories link"""
         response = self.client.get(reverse('misago:admin:categories:nodes:index'))
@@ -326,7 +326,7 @@ class CategoryAdminViewsTests(CategoryAdminTestCate):
         ])
 
 
-class CategoryAdminDeleteViewTests(CategoryAdminTestCate):
+class CategoryAdminDeleteViewTests(CategoryAdminTestCase):
     def setUp(self):
         """
         Create categories tree for test cases:

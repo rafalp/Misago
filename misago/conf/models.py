@@ -41,7 +41,7 @@ class SettingsManager(models.Manager):
 
 
 class Setting(models.Model):
-    group = models.ForeignKey(SettingsGroup)
+    group = models.ForeignKey(SettingsGroup, on_delete=models.CASCADE)
     setting = models.CharField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)

@@ -23,8 +23,14 @@ class ThreadParticipantManager(models.Manager):
 
 
 class ThreadParticipant(models.Model):
-    thread = models.ForeignKey('misago_threads.Thread')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    thread = models.ForeignKey(
+        'misago_threads.Thread',
+        on_delete=models.CASCADE,
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
     is_owner = models.BooleanField(default=False)
 
     objects = ThreadParticipantManager()

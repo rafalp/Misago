@@ -65,6 +65,7 @@ class Category(MPTTModel):
         null=True,
         blank=True,
         related_name='children',
+        on_delete=models.CASCADE,
     )
     special_role = models.CharField(max_length=255, null=True, blank=True)
     name = models.CharField(max_length=255)
@@ -191,6 +192,14 @@ class CategoryRole(BaseRole):
 
 
 class RoleCategoryACL(models.Model):
-    role = models.ForeignKey('misago_acl.Role', related_name='categories_acls')
-    category = models.ForeignKey('Category', related_name='category_role_set')
-    category_role = models.ForeignKey(CategoryRole)
+    role = models.ForeignKey(
+        'misago_acl.Role',
+        related_name='categories_acls',
+        on_delete=models.CASCADE,
+    )
+    category = models.ForeignKey(
+        'Category',
+        related_name='category_role_set',
+        on_delete=models.CASCADE,
+    )
+    category_role = models.ForeignKey(CategoryRole, on_delete=models.CASCADE)

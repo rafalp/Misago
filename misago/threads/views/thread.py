@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.generic import View
+from django.views import View
 
 from misago.threads.viewmodels import ForumThread, PrivateThread, ThreadPosts
 

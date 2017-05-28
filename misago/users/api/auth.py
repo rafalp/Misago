@@ -199,7 +199,7 @@ def change_forgotten_password(request, pk, token):
         )
 
     try:
-        new_password = request.data.get('password', '').strip()
+        new_password = request.data.get('password', '')
         validate_password(new_password, user=user)
         user.set_password(new_password)
         user.save()

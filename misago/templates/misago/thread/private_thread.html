@@ -3,11 +3,11 @@
 
 
 {% block title %}
-{% if paginator.page > 1 %}
-  {{ thread.title }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ category }} | {{ block.super }}
-{% else %}
-  {{ thread.title }} | {{ category }} | {{ block.super }}
-{% endif %}
+  {% if paginator.page > 1 %}
+    {{ thread.title }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ category }} | {{ block.super }}
+  {% else %}
+    {{ thread.title }} | {{ category }} | {{ block.super }}
+  {% endif %}
 {% endblock title %}
 
 

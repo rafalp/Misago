@@ -5,6 +5,7 @@ import ListItem from './list-item';
 export default function({ category }) {
   let className = 'list-group list-group-category';
   if (category.css_class) {
+    className += ' list-group-category-has-flavor';
     className += ' list-group-category-' + category.css_class;
   }
 

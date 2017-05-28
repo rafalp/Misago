@@ -17,6 +17,7 @@ class MisagoBackendTests(TestCase):
     def test_authenticate_username(self):
         """auth authenticates with username"""
         user = backend.authenticate(
+            None,
             username=self.user.username,
             password=self.password,
         )
@@ -26,6 +27,7 @@ class MisagoBackendTests(TestCase):
     def test_authenticate_email(self):
         """auth authenticates with email instead of username"""
         user = backend.authenticate(
+            None,
             username=self.user.email,
             password=self.password,
         )
@@ -35,6 +37,7 @@ class MisagoBackendTests(TestCase):
     def test_authenticate_invalid_credential(self):
         """auth handles invalid credentials"""
         user = backend.authenticate(
+            None,
             username='InvalidCredential',
             password=self.password,
         )
@@ -44,6 +47,7 @@ class MisagoBackendTests(TestCase):
     def test_authenticate_invalid_password(self):
         """auth validates password"""
         user = backend.authenticate(
+            None,
             username=self.user.email,
             password='Invalid',
         )
@@ -56,6 +60,7 @@ class MisagoBackendTests(TestCase):
         self.user.save()
 
         user = backend.authenticate(
+            None,
             username=self.user.email,
             password=self.password,
         )

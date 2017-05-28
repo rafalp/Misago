@@ -34,13 +34,10 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
     description = serializers.SerializerMethodField()
     is_read = serializers.SerializerMethodField()
     subcategories = serializers.SerializerMethodField()
-    absolute_url = serializers.SerializerMethodField()
-    last_poster_url = serializers.SerializerMethodField()
-    last_post_url = serializers.SerializerMethodField()
-    last_thread_url = serializers.SerializerMethodField()
-    last_thread_new_url = serializers.SerializerMethodField()
     acl = serializers.SerializerMethodField()
-    api_url = serializers.SerializerMethodField()
+
+    api = serializers.SerializerMethodField()
+    url = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
@@ -54,20 +51,17 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
             'posts',
             'last_post_on',
             'last_thread_title',
+            'last_poster',
             'last_poster_name',
             'css_class',
             'is_read',
             'subcategories',
-            'absolute_url',
-            'last_thread_url',
-            'last_thread_new_url',
-            'last_post_url',
-            'last_poster_url',
             'acl',
-            'api_url',
             'level',
             'lft',
             'rght',
+            'api',
+            'url',
         ]
 
     def get_description(self, obj):
@@ -90,8 +84,39 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
         except AttributeError:
             return []
 
-    def get_absolute_url(self, obj):
-        return obj.get_absolute_url()
+    def get_acl(self, obj):
+        try:
+            return obj.acl
+        except AttributeError:
+            return {}
+
+    @last_activity_detail
+    def get_last_poster(self, obj):
+        if obj.last_poster_id:
+            return {
+                'id': obj.last_poster_id,
+                'avatars': obj.last_poster.avatars,
+                'url': reverse(
+                    'misago:user', kwargs={
+                        'slug': obj.last_poster_slug,
+                        'pk': obj.last_poster_id,
+                    }
+                )
+            }
+        return None
+
+    def get_api(self, obj):
+        return {
+            'read': obj.get_read_api_url(),
+        }
+
+    def get_url(self, obj):
+        return {
+            'index': obj.get_absolute_url(),
+            'last_thread': self.get_last_thread_url(obj),
+            'last_thread_new': self.get_last_thread_new_url(obj),
+            'last_post': self.get_last_post_url(obj),
+        }
 
     @last_activity_detail
     def get_last_thread_url(self, obj):
@@ -104,37 +129,6 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
     @last_activity_detail
     def get_last_post_url(self, obj):
         return obj.get_last_post_url()
-
-    @last_activity_detail
-    def get_last_poster(self, obj):
-        if obj.last_poster_id:
-            return {
-                'id': obj.last_poster_id,
-                'avatars': obj.last_poster.avatars,
-            }
-        return None
-
-    @last_activity_detail
-    def get_last_poster_url(self, obj):
-        if obj.last_poster_id:
-            return reverse(
-                'misago:user', kwargs={
-                    'slug': obj.last_poster_slug,
-                    'pk': obj.last_poster_id,
-                }
-            )
-        return None
-
-    def get_acl(self, obj):
-        try:
-            return obj.acl
-        except AttributeError:
-            return {}
-
-    def get_api_url(self, obj):
-        return {
-            'read': obj.get_read_api_url(),
-        }
 
 
 class CategoryWithPosterSerializer(CategorySerializer):

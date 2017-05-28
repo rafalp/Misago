@@ -1,13 +1,14 @@
 #-*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.core.exceptions import PermissionDenied
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
 
 from misago.core.utils import (
     clean_return_path, format_plaintext_for_html, is_referer_local, is_request_to_misago,
-    parse_iso8601_string, slugify)
+    parse_iso8601_string, slugify, get_exception_message)
 
 
 VALID_PATHS = ("/", "/threads/", )
@@ -238,3 +239,29 @@ class IsRefererLocalTests(TestCase):
             }
         )
         self.assertFalse(is_referer_local(bad_request))
+
+
+class GetExceptionMessageTests(TestCase):
+    def test_no_args(self):
+        """both of helper args are optional"""
+        message = get_exception_message()
+        self.assertIsNone(message)
+
+    def test_no_default_message(self):
+        """helper's default message arg is optional"""
+        message = get_exception_message(PermissionDenied('Lorem Ipsum'))
+        self.assertEqual(message, 'Lorem Ipsum')
+
+        message = get_exception_message(PermissionDenied())
+        self.assertIsNone(message)
+
+    def test_default_message(self):
+        """helper's default message arg is used"""
+        message = get_exception_message(PermissionDenied('Lorem Ipsum'), 'Default')
+        self.assertEqual(message, 'Lorem Ipsum')
+
+        message = get_exception_message(PermissionDenied(), 'Default')
+        self.assertEqual(message, 'Default')
+
+        message = get_exception_message(default_message='Lorem Ipsum')
+        self.assertEqual(message, 'Lorem Ipsum')

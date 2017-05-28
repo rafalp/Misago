@@ -58,7 +58,7 @@ export class UserMenu extends React.Component {
         </li>
         <li className="divider" />
         <li>
-          <a href={user.absolute_url}>
+          <a href={user.url}>
             <span className="material-icon">account_circle</span>
             {gettext("See your profile")}
           </a>
@@ -126,7 +126,7 @@ export function UserNav({ user }) {
             aria-expanded="false"
             className="dropdown-toggle"
             data-toggle="dropdown"
-            href={user.absolute_url}
+            href={user.url}
             role="button"
           >
             <Avatar user={user} size="64" />
@@ -161,7 +161,9 @@ export function UserPrivateThreadsLink(props) {
 }
 
 export function selectUserMenu(state) {
-  return {user: state.auth.user};
+  return {
+    user: state.auth.user
+  };
 }
 
 export class CompactUserNav extends React.Component {

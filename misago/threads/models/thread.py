@@ -4,6 +4,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from misago.conf import settings
+from misago.core.pgutils import PgPartialIndex
 from misago.core.utils import slugify
 
 
@@ -19,7 +20,10 @@ class Thread(models.Model):
         (WEIGHT_GLOBAL, _("Pin thread globally")),
     ]
 
-    category = models.ForeignKey('misago_categories.Category')
+    category = models.ForeignKey(
+        'misago_categories.Category',
+        on_delete=models.CASCADE,
+    )
     title = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
     replies = models.PositiveIntegerField(default=0, db_index=True)
@@ -82,6 +86,37 @@ class Thread(models.Model):
     )
 
     class Meta:
+        indexes = [
+            PgPartialIndex(
+                fields=['weight'],
+                where={'weight': 2},
+            ),
+            PgPartialIndex(
+                fields=['weight'],
+                where={'weight': 1},
+            ),
+            PgPartialIndex(
+                fields=['weight'],
+                where={'weight': 0},
+            ),
+            PgPartialIndex(
+                fields=['weight'],
+                where={'weight__lt': 2},
+            ),
+            PgPartialIndex(
+                fields=['has_reported_posts'],
+                where={'has_reported_posts': True},
+            ),
+            PgPartialIndex(
+                fields=['has_unapproved_posts'],
+                where={'has_unapproved_posts': True},
+            ),
+            PgPartialIndex(
+                fields=['is_hidden'],
+                where={'is_hidden': False},
+            ),
+        ]
+
         index_together = [
             ['category', 'id'],
             ['category', 'last_post_on'],

@@ -13,6 +13,9 @@ from misago.core.pgutils import CreatePartialIndex
 
 
 class Migration(migrations.Migration):
+
+    initial = True
+
     dependencies = [
         ('misago_categories', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
@@ -55,7 +58,12 @@ class Migration(migrations.Migration):
                 ('is_unapproved', models.BooleanField(default=False, db_index=True)),
                 ('is_hidden', models.BooleanField(default=False)),
                 ('is_protected', models.BooleanField(default=False)),
-                ('category', models.ForeignKey(to='misago_categories.Category')),
+                (
+                    'category', models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='misago_categories.Category',
+                    )
+                ),
                 (
                     'last_editor', models.ForeignKey(
                         related_name='+',
@@ -149,8 +157,18 @@ class Migration(migrations.Migration):
                         verbose_name='ID', serialize=False, auto_created=True, primary_key=True
                     )
                 ),
-                ('thread', models.ForeignKey(to='misago_threads.Thread')),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                (
+                    'thread', models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='misago_threads.Thread',
+                    )
+                ),
+                (
+                    'user', models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    )
+                ),
                 ('is_owner', models.BooleanField(default=False)),
             ],
             options={},
@@ -199,7 +217,10 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='post',
             name='thread',
-            field=models.ForeignKey(to='misago_threads.Thread'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to='misago_threads.Thread',
+            ),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -217,7 +238,10 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='thread',
             name='category',
-            field=models.ForeignKey(to='misago_categories.Category'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to='misago_categories.Category',
+            ),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -281,9 +305,24 @@ class Migration(migrations.Migration):
                 ),
                 ('last_read_on', models.DateTimeField(default=django.utils.timezone.now)),
                 ('send_email', models.BooleanField(default=False)),
-                ('category', models.ForeignKey(to='misago_categories.Category')),
-                ('thread', models.ForeignKey(to='misago_threads.Thread')),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                (
+                    'category', models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='misago_categories.Category',
+                    )
+                ),
+                (
+                    'thread', models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='misago_threads.Thread',
+                    )
+                ),
+                (
+                    'user', models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    )
+                ),
             ],
             options={},
             bases=(models.Model, ),

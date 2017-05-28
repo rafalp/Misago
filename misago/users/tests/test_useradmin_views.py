@@ -199,7 +199,35 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         UserModel.objects.get_by_username('Bawww')
-        UserModel.objects.get_by_email('reg@stered.com')
+        test_user = UserModel.objects.get_by_email('reg@stered.com')
+
+        self.assertTrue(test_user.check_password('pass123'))
+
+    def test_new_view_password_with_whitespaces(self):
+        """new user view creates account with whitespaces password"""
+        response = self.client.get(reverse('misago:admin:users:accounts:new'))
+        self.assertEqual(response.status_code, 200)
+
+        default_rank = Rank.objects.get_default()
+        authenticated_role = Role.objects.get(special_role='authenticated')
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:new'),
+            data={
+                'username': 'Bawww',
+                'rank': six.text_type(default_rank.pk),
+                'roles': six.text_type(authenticated_role.pk),
+                'email': 'reg@stered.com',
+                'new_password': ' pass123 ',
+                'staff_level': '0',
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+
+        UserModel.objects.get_by_username('Bawww')
+        test_user = UserModel.objects.get_by_email('reg@stered.com')
+
+        self.assertTrue(test_user.check_password(' pass123 '))
 
     def test_edit_view(self):
         """edit user view changes account"""
@@ -283,6 +311,47 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(updated_user.slug, 'bob')
         self.assertEqual(updated_user.namechanges.count(), 0)
 
+    def test_edit_change_password_whitespaces(self):
+        """edit user view changes account password to include whitespaces"""
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_link = reverse(
+            'misago:admin:users:accounts:edit', kwargs={
+                'pk': test_user.pk,
+            }
+        )
+
+        response = self.client.get(test_link)
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(
+            test_link,
+            data={
+                'username': 'Bawww',
+                'rank': six.text_type(test_user.rank_id),
+                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'email': 'reg@stered.com',
+                'new_password': ' newpass123 ',
+                'staff_level': '0',
+                'signature': 'Hello world!',
+                'is_signature_locked': '1',
+                'is_hiding_presence': '0',
+                'limits_private_thread_invites_to': '0',
+                'signature_lock_staff_message': 'Staff message',
+                'signature_lock_user_message': 'User message',
+                'subscribe_to_started_threads': '2',
+                'subscribe_to_replied_threads': '2',
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+
+        updated_user = UserModel.objects.get(pk=test_user.pk)
+        self.assertTrue(updated_user.check_password(' newpass123 '))
+        self.assertEqual(updated_user.username, 'Bawww')
+        self.assertEqual(updated_user.slug, 'bawww')
+
+        UserModel.objects.get_by_username('Bawww')
+        UserModel.objects.get_by_email('reg@stered.com')
+
     def test_edit_make_admin(self):
         """edit user view allows super admin to make other user admin"""
         test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
@@ -360,6 +429,52 @@ class UserAdminViewsTests(AdminTestCase):
         updated_user = UserModel.objects.get(pk=test_user.pk)
         self.assertFalse(updated_user.is_staff)
         self.assertTrue(updated_user.is_superuser)
+
+    def test_edit_denote_superadmin(self):
+        """edit user view allows super admin to denote other super admin"""
+        test_user = UserModel.objects.create_user(
+            'Bob',
+            'bob@test.com',
+            'pass123',
+            is_staff=True,
+            is_superuser=True,
+        )
+
+        test_link = reverse(
+            'misago:admin:users:accounts:edit', kwargs={
+                'pk': test_user.pk,
+            }
+        )
+
+        response = self.client.get(test_link)
+        self.assertContains(response, 'id="id_is_staff_1"')
+        self.assertContains(response, 'id="id_is_superuser_1"')
+
+        response = self.client.post(
+            test_link,
+            data={
+                'username': 'Bawww',
+                'rank': six.text_type(test_user.rank_id),
+                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'email': 'reg@stered.com',
+                'new_password': 'pass123',
+                'is_staff': '0',
+                'is_superuser': '0',
+                'signature': 'Hello world!',
+                'is_signature_locked': '1',
+                'is_hiding_presence': '0',
+                'limits_private_thread_invites_to': '0',
+                'signature_lock_staff_message': 'Staff message',
+                'signature_lock_user_message': 'User message',
+                'subscribe_to_started_threads': '2',
+                'subscribe_to_replied_threads': '2',
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+
+        updated_user = UserModel.objects.get(pk=test_user.pk)
+        self.assertFalse(updated_user.is_staff)
+        self.assertFalse(updated_user.is_superuser)
 
     def test_edit_cant_make_admin(self):
         """edit user view forbids admins from making other admins"""

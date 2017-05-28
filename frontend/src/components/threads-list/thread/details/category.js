@@ -9,7 +9,10 @@ export default function({ category, className }) {
   }
 
   return (
-    <a className={className} href={category.absolute_url}>
+    <a
+      className={className}
+      href={category.url.index}
+    >
       {category.name}
     </a>
   );

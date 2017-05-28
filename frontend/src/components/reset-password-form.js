@@ -22,7 +22,7 @@ export class ResetPasswordForm extends Form {
   }
 
   clean() {
-    if (this.isValid()) {
+    if (this.state.password.trim().length) {
       return true;
     } else {
       snackbar.error(gettext("Enter new password."));

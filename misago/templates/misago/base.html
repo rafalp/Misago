@@ -1,4 +1,4 @@
-{% load i18n staticfiles misago_json %}
+{% load i18n static misago_json %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE_SHORT }}">
   <head>
@@ -9,6 +9,14 @@
     <meta name="description" content="{% spaceless %}{% block meta-description %}{% endblock %}{% endspaceless %}">
     {% spaceless %}
       {% block meta-extra %}{% endblock meta-extra %}
+      {% block og-tags %}
+        <meta property="og:site_name" content="{% spaceless %}{% block og-site-name %}{{ misago_settings.forum_name }}{% endblock og-site-name %}{% endspaceless %}" />
+        <meta property="og:title" content="{% spaceless %}{% block og-title %}{% endblock og-title %}{% endspaceless %}" />
+        <meta property="og:description" content="{% spaceless %}{% block og-description %}{{ misago_settings.forum_index_meta_description|default:'' }}{% endblock og-description %}{% endspaceless %}" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="{% spaceless %}{% block og-url %}{{ SITE_ADDRESS }}{% endblock og-url %}{% endspaceless %}" />
+        <meta property="og:image" content="{% spaceless %}{% block og-image %}{% static 'og-image.jpg' %}{% endblock og-image %}{% endspaceless %}" />
+      {% endblock og-tags %}
     {% endspaceless %}
     {% include "misago/head.html" %}
     <script type="application/ld+json">{"@context":"http://schema.org","@type":"WebSite","url":"{{ SITE_ADDRESS }}"}</script>

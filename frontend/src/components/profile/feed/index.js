@@ -38,7 +38,7 @@ export function Threads(props) {
 
   return (
     <Route
-      api={props.profile.api_url.threads}
+      api={props.profile.api.threads}
       emptyMessage={emptyMessage}
       header={header}
       title={gettext("Threads")}
@@ -83,7 +83,7 @@ export function Posts(props) {
 
   return (
     <Route
-      api={props.profile.api_url.posts}
+      api={props.profile.api.posts}
       emptyMessage={emptyMessage}
       header={header}
       title={gettext("Posts")}

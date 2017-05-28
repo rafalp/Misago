@@ -2,25 +2,31 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext
 
 from misago.core.utils import slugify
+
+
+_ = lambda x: x
 
 
 def create_default_ranks(apps, schema_editor):
     Rank = apps.get_model('misago_users', 'Rank')
 
     team = Rank.objects.create(
-        name=_("Forum team"),
-        slug=slugify(_("Forum team")),
-        title=_("Team"),
-        css_class='team',
+        name=ugettext("Forum team"),
+        slug=slugify(ugettext("Forum team")),
+        title=ugettext("Team"),
+        css_class='primary',
         is_tab=True,
-        order=0
+        order=0,
     )
 
     member = Rank.objects.create(
-        name=_("Members"), slug=slugify(_("Members")), is_default=True, order=1
+        name=ugettext("Members"),
+        slug=slugify(ugettext("Members")),
+        is_default=True,
+        order=1,
     )
 
     Role = apps.get_model('misago_acl', 'Role')

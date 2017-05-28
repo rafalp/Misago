@@ -33,7 +33,7 @@ def upload_to(instance, filename):
 @python_2_unicode_compatible
 class Attachment(models.Model):
     secret = models.CharField(max_length=64)
-    filetype = models.ForeignKey('AttachmentType')
+    filetype = models.ForeignKey('AttachmentType', on_delete=models.CASCADE)
     post = models.ForeignKey('Post', blank=True, null=True, on_delete=models.SET_NULL)
 
     uploaded_on = models.DateTimeField(default=timezone.now, db_index=True)

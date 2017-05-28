@@ -1,7 +1,7 @@
 from django.http import Http404
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.generic import View
+from django.views import View
 
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.viewmodels import (

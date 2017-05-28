@@ -73,8 +73,8 @@ class ChangeUsernameSerializer(serializers.Serializer):
 
 
 class ChangePasswordSerializer(serializers.Serializer):
-    password = serializers.CharField(max_length=200)
-    new_password = serializers.CharField(max_length=200)
+    password = serializers.CharField(max_length=200, trim_whitespace=False)
+    new_password = serializers.CharField(max_length=200, trim_whitespace=False)
 
     def validate_password(self, value):
         if not self.context['user'].check_password(value):
@@ -87,7 +87,7 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 
 class ChangeEmailSerializer(serializers.Serializer):
-    password = serializers.CharField(max_length=200)
+    password = serializers.CharField(max_length=200, trim_whitespace=False)
     new_email = serializers.CharField(max_length=200)
 
     def validate_password(self, value):

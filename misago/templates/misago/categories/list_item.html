@@ -1,5 +1,5 @@
 {% load misago_shorthands %}
-<li class="list-group-item list-group-category-{{ category.description|yesno:'has,no' }}-description {{ first|iftrue:'list-group-item-first' }} {% if category.css_class %}list-group-item-category-{{ category.css_class }}{% endif %}">
+<li class="list-group-item list-group-category-{{ category.description|yesno:'has,no' }}-description {{ first|iftrue:'list-group-item-first' }} {% if category.css_class %}list-group-category-has-flavor list-group-item-category-{{ category.css_class }}{% endif %}">
   <div class="row">
     <div class="col-xs-12 col-sm-6 col-md-6 category-main">
       <div class="media">
@@ -14,7 +14,7 @@
           </h4>
           {% if category.description %}
             <div class="category-description">
-              {{ category.description|escape|urlize|linebreaks }}
+              {{ category.description|force_escape|urlize|linebreaks }}
             </div>
           {% endif %}
         </div>

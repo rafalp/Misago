@@ -42,7 +42,7 @@ export default class extends Form {
       return false;
     }
 
-    if (this.state.new_password.trim() !== this.state.repeat_password.trim()) {
+    if (this.state.new_password !== this.state.repeat_password) {
       snackbar.error(gettext("New passwords are different."));
       return false;
     }
@@ -51,7 +51,7 @@ export default class extends Form {
   }
 
   send() {
-    return ajax.post(this.props.user.api_url.change_password, {
+    return ajax.post(this.props.user.api.change_password, {
       new_password: this.state.new_password,
       password: this.state.password
     });

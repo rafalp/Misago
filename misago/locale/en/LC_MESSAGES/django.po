@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-14 02:25+0200\n"
+"POT-Creation-Date: 2017-05-22 19:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,9 +42,9 @@ msgid "Guest"
 msgstr ""
 
 #: acl/migrations/0003_default_roles.py:91
-#: categories/migrations/0003_categories_roles.py:112
-#: categories/migrations/0003_categories_roles.py:162
-#: users/migrations/0004_default_ranks.py:28
+#: categories/migrations/0003_categories_roles.py:114
+#: categories/migrations/0003_categories_roles.py:164
+#: users/migrations/0004_default_ranks.py:34
 msgid "Moderator"
 msgstr ""
 
@@ -57,7 +57,7 @@ msgid "Banning users"
 msgstr ""
 
 #: acl/migrations/0003_default_roles.py:176
-#: users/migrations/0004_default_ranks.py:31 users/permissions/delete.py:22
+#: users/migrations/0004_default_ranks.py:37 users/permissions/delete.py:22
 msgid "Deleting users"
 msgstr ""
 
@@ -68,13 +68,13 @@ msgstr ""
 #: acl/migrations/0003_default_roles.py:197
 #: threads/permissions/privatethreads.py:34
 #: threads/threadtypes/privatethread.py:13 threads/viewmodels/thread.py:152
-#: users/migrations/0004_default_ranks.py:29
-#: users/migrations/0004_default_ranks.py:33
+#: users/migrations/0004_default_ranks.py:35
+#: users/migrations/0004_default_ranks.py:39
 msgid "Private threads"
 msgstr ""
 
 #: acl/migrations/0003_default_roles.py:212
-#: users/migrations/0004_default_ranks.py:30
+#: users/migrations/0004_default_ranks.py:36
 msgid "Private threads moderator"
 msgstr ""
 
@@ -142,21 +142,22 @@ msgstr ""
 msgid "Action is not allowed."
 msgstr ""
 
-#: admin/views/index.py:62
+#: admin/views/index.py:70
 #, python-format
-msgid "Outdated: %(current)s < %(latest)s"
+msgid "Outdated: %(current)s! (latest: %(latest)s)"
 msgstr ""
 
-#: admin/views/index.py:79
+#: admin/views/index.py:78
 #, python-format
 msgid "Up to date! (%(current)s)"
 msgstr ""
 
-#: admin/views/index.py:84
+#: admin/views/index.py:87
 msgid "Failed to connect to GitHub API. Try again later."
 msgstr ""
 
 #: categories/admin.py:47 templates/misago/categories/base.html:7
+#: templates/misago/categories/base.html:33
 #: templates/misago/categories/header.html:12 templates/misago/navbar.html:23
 #: templates/misago/navbar.html:29
 msgid "Categories"
@@ -199,18 +200,20 @@ msgstr ""
 msgid "Only members with valid permissions can post in closed categories."
 msgstr ""
 
-#: categories/forms.py:75 templates/misago/admin/index.html:77
+#: categories/forms.py:75 templates/misago/admin/index.html:83
 #: templates/misago/admin/users/delete.html:32 templates/misago/navbar.html:18
-#: templates/misago/navbar.html:34 templates/misago/profile/threads.html:4
-#: templates/misago/threadslist/category.html:52
+#: templates/misago/navbar.html:34 templates/misago/profile/threads.html:5
+#: templates/misago/profile/threads.html:8
+#: templates/misago/threadslist/category.html:67
 #: templates/misago/threadslist/threads.html:16
 #: templates/misago/threadslist/threads.html:18
 #: templates/misago/threadslist/threads.html:20
-#: templates/misago/threadslist/threads.html:47
+#: templates/misago/threadslist/threads.html:41
+#: templates/misago/threadslist/threads.html:63
 #: threads/migrations/0002_threads_settings.py:16
 #: threads/migrations/0004_update_settings.py:16
 #: threads/permissions/threads.py:51 threads/permissions/threads.py:82
-#: threads/search.py:17 threads/viewmodels/thread.py:122 users/apps.py:73
+#: threads/search.py:20 threads/viewmodels/thread.py:122 users/apps.py:73
 msgid "Threads"
 msgstr ""
 
@@ -330,23 +333,23 @@ msgstr ""
 msgid "First category"
 msgstr ""
 
-#: categories/migrations/0003_categories_roles.py:12
+#: categories/migrations/0003_categories_roles.py:14
 msgid "See only"
 msgstr ""
 
-#: categories/migrations/0003_categories_roles.py:23
+#: categories/migrations/0003_categories_roles.py:25
 msgid "Read only"
 msgstr ""
 
-#: categories/migrations/0003_categories_roles.py:42
+#: categories/migrations/0003_categories_roles.py:44
 msgid "Reply to threads"
 msgstr ""
 
-#: categories/migrations/0003_categories_roles.py:64
+#: categories/migrations/0003_categories_roles.py:66
 msgid "Start and reply threads"
 msgstr ""
 
-#: categories/migrations/0003_categories_roles.py:88
+#: categories/migrations/0003_categories_roles.py:90
 msgid "Start and reply threads, make polls"
 msgstr ""
 
@@ -464,11 +467,11 @@ msgstr ""
 msgid "System"
 msgstr ""
 
-#: core/errorpages.py:42
+#: core/errorpages.py:46
 msgid "Permission denied."
 msgstr ""
 
-#: core/errorpages.py:57
+#: core/errorpages.py:61
 msgid "Request authentication is invalid."
 msgstr ""
 
@@ -681,7 +684,7 @@ msgid "You don't have permission to search site."
 msgstr ""
 
 #: search/permissions.py:10 templates/misago/navbar.html:46
-#: templates/misago/search.html:15 templates/misago/search.html:26
+#: templates/misago/search.html:21 templates/misago/search.html:32
 msgid "Search"
 msgstr ""
 
@@ -1093,23 +1096,27 @@ msgid "Requested page is not available."
 msgstr ""
 
 #: templates/misago/admin/errorpages/403.html:21
-#: templates/misago/errorpages/403.html:8
-#: templates/misago/errorpages/403.html:25
+#: templates/misago/errorpages/403.html:12
+#: templates/misago/errorpages/403.html:24
+#: templates/misago/errorpages/403.html:43
 msgid "You don't have permission to access this page."
 msgstr ""
 
 #: templates/misago/admin/errorpages/404.html:5
+#: templates/misago/errorpages/403.html:17
 #: templates/misago/errorpages/404.html:5
+#: templates/misago/errorpages/404.html:13
 msgid "Page not found"
 msgstr ""
 
 #: templates/misago/admin/errorpages/404.html:17
-#: templates/misago/errorpages/404.html:21
+#: templates/misago/errorpages/404.html:31
 msgid "Requested page could not be found."
 msgstr ""
 
 #: templates/misago/admin/errorpages/404.html:18
-#: templates/misago/errorpages/404.html:8
+#: templates/misago/errorpages/404.html:9
+#: templates/misago/errorpages/404.html:17
 msgid ""
 "The link you clicked was incorrect or the page has been moved or deleted."
 msgstr ""
@@ -1123,14 +1130,14 @@ msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure.html:19
 #: templates/misago/admin/errorpages/csrf_failure_authenticated.html:17
-#: templates/misago/errorpages/csrf_failure.html:21
+#: templates/misago/errorpages/csrf_failure.html:23
 #: templates/misago/errorpages/csrf_failure_authenticated.html:18
 msgid "Suspicious request blocked."
 msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure.html:20
 #: templates/misago/admin/errorpages/csrf_failure_authenticated.html:18
-#: templates/misago/errorpages/csrf_failure.html:22
+#: templates/misago/errorpages/csrf_failure.html:24
 #: templates/misago/errorpages/csrf_failure_authenticated.html:19
 msgid ""
 "This is usually caused by your browser not accepting or using outdated "
@@ -1139,7 +1146,7 @@ msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure.html:21
 #: templates/misago/admin/errorpages/csrf_failure_authenticated.html:19
-#: templates/misago/errorpages/csrf_failure.html:23
+#: templates/misago/errorpages/csrf_failure.html:25
 #: templates/misago/errorpages/csrf_failure_authenticated.html:20
 msgid "Check your browser configuration and try again."
 msgstr ""
@@ -1204,14 +1211,14 @@ msgstr ""
 #: templates/misago/admin/generic/paginator.html:17
 #: templates/misago/thread/paginator.html:13
 #: templates/misago/thread/paginator.html:19
-#: templates/misago/userslists/rank.html:63
-#: templates/misago/userslists/rank.html:71
+#: templates/misago/userslists/rank.html:88
+#: templates/misago/userslists/rank.html:96
 msgid "Go to previous page"
 msgstr ""
 
 #: templates/misago/admin/generic/paginator.html:26
 #: templates/misago/thread/paginator.html:27
-#: templates/misago/userslists/rank.html:80
+#: templates/misago/userslists/rank.html:105
 msgid "Go to next page"
 msgstr ""
 
@@ -1233,24 +1240,28 @@ msgstr ""
 msgid "Misago version"
 msgstr ""
 
-#: templates/misago/admin/index.html:55
+#: templates/misago/admin/index.html:56
 msgid "Check version"
 msgstr ""
 
-#: templates/misago/admin/index.html:70
+#: templates/misago/admin/index.html:62
+msgid "This feature requires \"packaging\" python module."
+msgstr ""
+
+#: templates/misago/admin/index.html:76
 msgid "DB Contents"
 msgstr ""
 
-#: templates/misago/admin/index.html:81
+#: templates/misago/admin/index.html:87
 #: templates/misago/admin/users/delete.html:36
 #: templates/misago/admin/users/list.html:23
-#: templates/misago/profile/posts.html:4
+#: templates/misago/profile/posts.html:5 templates/misago/profile/posts.html:8
 #: threads/migrations/0002_threads_settings.py:48
 #: threads/migrations/0004_update_settings.py:48 users/apps.py:67
 msgid "Posts"
 msgstr ""
 
-#: templates/misago/admin/index.html:85 templates/misago/navbar.html:40
+#: templates/misago/admin/index.html:91 templates/misago/navbar.html:40
 #: templates/misago/userslists/base.html:5
 #: templates/misago/userslists/base.html:14 users/admin.py:70
 #: users/migrations/0002_users_settings.py:16
@@ -1258,11 +1269,11 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: templates/misago/admin/index.html:90
+#: templates/misago/admin/index.html:96
 msgid "Inactive users"
 msgstr ""
 
-#: templates/misago/admin/index.html:116
+#: templates/misago/admin/index.html:122
 msgid "Checking..."
 msgstr ""
 
@@ -1336,8 +1347,8 @@ msgstr ""
 
 #: templates/misago/admin/ranks/list.html:16
 #: templates/misago/admin/users/list.html:21
-#: templates/misago/userslists/active_posters.html:72
-#: templates/misago/userslists/active_posters.html:83 users/forms/admin.py:205
+#: templates/misago/userslists/active_posters.html:95
+#: templates/misago/userslists/active_posters.html:106 users/forms/admin.py:205
 msgid "Rank"
 msgstr ""
 
@@ -1397,7 +1408,7 @@ msgstr ""
 #: templates/misago/admin/users/ban.html:35
 #: templates/misago/admin/users/edit.html:103
 #: templates/misago/admin/users/list.html:34
-#: templates/misago/userslists/active_posters.html:43
+#: templates/misago/userslists/active_posters.html:66
 msgid "Avatar"
 msgstr ""
 
@@ -1593,6 +1604,18 @@ msgstr ""
 #: templates/misago/auth.html:10
 msgid "Log out"
 msgstr ""
+
+#: templates/misago/categories/base.html:22
+#: templates/misago/categories/base.html:48
+#, python-format
+msgid ""
+"There is %(categories)s main category currenty available on the "
+"%(forum_name)s."
+msgid_plural ""
+"There are %(categories)s main categories currenty available on the "
+"%(forum_name)s."
+msgstr[0] ""
+msgstr[1] ""
 
 #: templates/misago/categories/body.html:15
 msgid "No categories exist or you don't have permission to see them."
@@ -1821,25 +1844,27 @@ msgid ""
 "the thread \"%(thread)s\" that you are subscribed to."
 msgstr ""
 
-#: templates/misago/errorpages/403.html:21
+#: templates/misago/errorpages/403.html:39
 msgid "This page is not available."
 msgstr ""
 
-#: templates/misago/errorpages/404.html:22
+#: templates/misago/errorpages/404.html:32
 msgid ""
 "The link you followed was incorrect or the page has been moved or deleted."
 msgstr ""
 
 #: templates/misago/errorpages/405.html:5
+#: templates/misago/errorpages/405.html:13
 msgid "Wrong way"
 msgstr ""
 
-#: templates/misago/errorpages/405.html:8
-#: templates/misago/errorpages/405.html:22
+#: templates/misago/errorpages/405.html:9
+#: templates/misago/errorpages/405.html:17
+#: templates/misago/errorpages/405.html:32
 msgid "This page should be reached via form submission or pressing button."
 msgstr ""
 
-#: templates/misago/errorpages/405.html:21
+#: templates/misago/errorpages/405.html:31
 msgid "Page reached in wrong way."
 msgstr ""
 
@@ -1847,20 +1872,20 @@ msgstr ""
 msgid "You are banned"
 msgstr ""
 
-#: templates/misago/errorpages/banned.html:8
+#: templates/misago/errorpages/banned.html:9
 msgid "You are banned from accessing this page."
 msgstr ""
 
-#: templates/misago/errorpages/banned.html:33
+#: templates/misago/errorpages/banned.html:35
 #, python-format
 msgid "This ban expires on %(expires_on)s."
 msgstr ""
 
-#: templates/misago/errorpages/banned.html:37
+#: templates/misago/errorpages/banned.html:39
 msgid "This ban is permanent."
 msgstr ""
 
-#: templates/misago/errorpages/csrf_failure.html:8
+#: templates/misago/errorpages/csrf_failure.html:9
 msgid ""
 "This is usually caused by your browser not accepting or using outdated "
 "cookies. Check your browser configuration and try again."
@@ -2013,36 +2038,51 @@ msgid "See results"
 msgstr ""
 
 #: templates/misago/profile/ban_details.html:5
-#: templates/misago/profile/ban_details.html:12 users/apps.py:98
+#: templates/misago/profile/ban_details.html:8
+#: templates/misago/profile/ban_details.html:15 users/apps.py:98
 msgid "Ban details"
 msgstr ""
 
-#: templates/misago/profile/ban_details.html:19
+#: templates/misago/profile/ban_details.html:22
 msgid "User-shown ban message"
 msgstr ""
 
-#: templates/misago/profile/ban_details.html:30
+#: templates/misago/profile/ban_details.html:33
 msgid "Team-shown ban message"
 msgstr ""
 
-#: templates/misago/profile/ban_details.html:39
+#: templates/misago/profile/ban_details.html:42
 msgid "Ban expiration"
 msgstr ""
 
-#: templates/misago/profile/ban_details.html:43
+#: templates/misago/profile/ban_details.html:46
 #, python-format
 msgid "%(username)s's ban expires on %(expires_on)s."
 msgstr ""
 
-#: templates/misago/profile/ban_details.html:47
+#: templates/misago/profile/ban_details.html:50
 #, python-format
 msgid "%(username)s's ban is permanent."
 msgstr ""
 
-#: templates/misago/profile/base.html:7
+#: templates/misago/profile/base.html:9 templates/misago/profile/base.html:19
 #, python-format
-msgid "Member since %(joined_on)s."
+msgid "%(title)s, joined on %(joined_on)s."
 msgstr ""
+
+#: templates/misago/profile/base.html:21
+#, python-format
+msgid "Wrote %(posts)s post."
+msgid_plural "Wrote %(posts)s posts."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/profile/base.html:25
+#, python-format
+msgid "Started %(threads)s thread."
+msgid_plural "Started %(threads)s threads."
+msgstr[0] ""
+msgstr[1] ""
 
 #: templates/misago/profile/feed.html:10
 msgid "See post"
@@ -2058,56 +2098,58 @@ msgstr ""
 msgid "This error is caused by invalid post content manipulation."
 msgstr ""
 
-#: templates/misago/profile/followers.html:4 users/apps.py:79
+#: templates/misago/profile/followers.html:5
+#: templates/misago/profile/followers.html:8 users/apps.py:79
 msgid "Followers"
 msgstr ""
 
-#: templates/misago/profile/followers.html:13
+#: templates/misago/profile/followers.html:17
 #, python-format
 msgid "You have %(users)s follower."
 msgid_plural "You have %(users)s followers."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/profile/followers.html:19
+#: templates/misago/profile/followers.html:23
 #, python-format
 msgid "%(username)s has %(users)s follower."
 msgid_plural "%(username)s has %(users)s followers."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/profile/followers.html:44
+#: templates/misago/profile/followers.html:48
 msgid "You have no followers."
 msgstr ""
 
-#: templates/misago/profile/followers.html:46
+#: templates/misago/profile/followers.html:50
 #, python-format
 msgid "%(username)s has no followers."
 msgstr ""
 
-#: templates/misago/profile/follows.html:4 users/apps.py:85
+#: templates/misago/profile/follows.html:5
+#: templates/misago/profile/follows.html:8 users/apps.py:85
 msgid "Follows"
 msgstr ""
 
-#: templates/misago/profile/follows.html:13
+#: templates/misago/profile/follows.html:17
 #, python-format
 msgid "You are following %(users)s user."
 msgid_plural "You are following %(users)s users."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/profile/follows.html:19
+#: templates/misago/profile/follows.html:23
 #, python-format
 msgid "%(username)s is following %(users)s user."
 msgid_plural "%(username)s is following %(users)s users."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/profile/follows.html:44
+#: templates/misago/profile/follows.html:48
 msgid "You are not following any users."
 msgstr ""
 
-#: templates/misago/profile/follows.html:46
+#: templates/misago/profile/follows.html:50
 #, python-format
 msgid "%(username)s is not following any users."
 msgstr ""
@@ -2121,84 +2163,85 @@ msgstr ""
 msgid "Member since %(joined_on)s"
 msgstr ""
 
-#: templates/misago/profile/posts.html:15
+#: templates/misago/profile/posts.html:19
 #, python-format
 msgid "You have posted %(posts)s message."
 msgid_plural "You have posted %(posts)s messages."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/profile/posts.html:21
+#: templates/misago/profile/posts.html:25
 #, python-format
 msgid "%(username)s has posted %(posts)s message."
 msgid_plural "%(username)s has posted %(posts)s messages."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/profile/posts.html:35
+#: templates/misago/profile/posts.html:39
 msgid "You have posted no messages"
 msgstr ""
 
-#: templates/misago/profile/posts.html:37
+#: templates/misago/profile/posts.html:41
 #, python-format
 msgid "%(username)s posted no messages."
 msgstr ""
 
-#: templates/misago/profile/threads.html:15
+#: templates/misago/profile/threads.html:19
 #, python-format
 msgid "You have started %(threads)s thread."
 msgid_plural "You have started %(threads)s threads."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/profile/threads.html:21
+#: templates/misago/profile/threads.html:25
 #, python-format
 msgid "%(username)s has started %(threads)s thread."
 msgid_plural "%(username)s has started %(threads)s threads."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/profile/threads.html:35
+#: templates/misago/profile/threads.html:39
 msgid "You have no started threads."
 msgstr ""
 
-#: templates/misago/profile/threads.html:37
+#: templates/misago/profile/threads.html:41
 #, python-format
 msgid "%(username)s started no threads."
 msgstr ""
 
-#: templates/misago/profile/username_history.html:5 users/apps.py:91
+#: templates/misago/profile/username_history.html:5
+#: templates/misago/profile/username_history.html:8 users/apps.py:91
 msgid "Username history"
 msgstr ""
 
-#: templates/misago/profile/username_history.html:14
+#: templates/misago/profile/username_history.html:17
 #, python-format
 msgid "Your username was changed %(changes)s time."
 msgid_plural "Your username was changed %(changes)s times."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/profile/username_history.html:20
+#: templates/misago/profile/username_history.html:23
 #, python-format
 msgid "%(username)s's username was changed %(changes)s time."
 msgid_plural "%(username)s's username was changed %(changes)s times."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/profile/username_history.html:75
+#: templates/misago/profile/username_history.html:78
 msgid "Your username was never changed."
 msgstr ""
 
-#: templates/misago/profile/username_history.html:77
+#: templates/misago/profile/username_history.html:80
 #, python-format
 msgid "%(username)s's username was never changed."
 msgstr ""
 
-#: templates/misago/search.html:5
+#: templates/misago/search.html:5 templates/misago/search.html:8
 msgid "Search site"
 msgstr ""
 
-#: templates/misago/search.html:39
+#: templates/misago/search.html:45
 msgid "Loading search..."
 msgstr ""
 
@@ -2401,6 +2444,18 @@ msgstr[1] ""
 msgid "last reply by %(user)s %(date)s"
 msgstr ""
 
+#: templates/misago/thread/thread.html:18
+#, python-format
+msgid "Started by %(starter)s on %(started_on)s in the %(category)s category."
+msgstr ""
+
+#: templates/misago/thread/thread.html:20
+#, python-format
+msgid "%(replies)s reply, last one from %(last_post_on)s."
+msgid_plural "%(replies)s replies, last one from %(last_post_on)s."
+msgstr[0] ""
+msgstr[1] ""
+
 #: templates/misago/thread/toolbar-top.html:6
 msgid "Go to first new post"
 msgstr ""
@@ -2413,30 +2468,30 @@ msgstr ""
 msgid "Go to last post"
 msgstr ""
 
-#: templates/misago/threadslist/base.html:61
+#: templates/misago/threadslist/base.html:63
 msgid "There are no threads in this category."
 msgstr ""
 
-#: templates/misago/threadslist/base.html:63
+#: templates/misago/threadslist/base.html:65
 msgid "There are no threads on this forum... yet!"
 msgstr ""
 
-#: templates/misago/threadslist/base.html:67
+#: templates/misago/threadslist/base.html:69
 #: templates/misago/threadslist/private_threads.html:67
 msgid "Why not start one yourself?"
 msgstr ""
 
-#: templates/misago/threadslist/base.html:71
+#: templates/misago/threadslist/base.html:73
 #: templates/misago/threadslist/private_threads.html:70
 msgid "No threads matching specified criteria were found."
 msgstr ""
 
-#: templates/misago/threadslist/base.html:87
-#: templates/misago/threadslist/base.html:95
+#: templates/misago/threadslist/base.html:89
+#: templates/misago/threadslist/base.html:97
 msgid "Previous page"
 msgstr ""
 
-#: templates/misago/threadslist/base.html:104
+#: templates/misago/threadslist/base.html:106
 msgid "Next page"
 msgstr ""
 
@@ -2474,34 +2529,45 @@ msgstr ""
 msgid "Poll"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:5 users/apps.py:43
+#: templates/misago/userslists/active_posters.html:5
+#: templates/misago/userslists/active_posters.html:23 users/apps.py:43
 msgid "Active posters"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:8
-#: templates/misago/userslists/active_posters.html:29
+#: templates/misago/userslists/active_posters.html:10
+#: templates/misago/userslists/active_posters.html:28
+#: templates/misago/userslists/active_posters.html:52
 #, python-format
 msgid "%(posters)s most active poster from last %(days)s days."
 msgid_plural "%(posters)s most active posters from last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/userslists/active_posters.html:14
-#: templates/misago/userslists/active_posters.html:105
+#: templates/misago/userslists/active_posters.html:16
+#: templates/misago/userslists/active_posters.html:34
+#: templates/misago/userslists/active_posters.html:128
 #, python-format
 msgid "No users have posted any new messages during last %(days)s days."
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:76
-#: templates/misago/userslists/active_posters.html:88
+#: templates/misago/userslists/active_posters.html:99
+#: templates/misago/userslists/active_posters.html:111
 msgid "Ranked posts"
 msgstr ""
 
-#: templates/misago/userslists/active_posters.html:93
+#: templates/misago/userslists/active_posters.html:116
 msgid "Total posts"
 msgstr ""
 
-#: templates/misago/userslists/rank.html:94
+#: templates/misago/userslists/rank.html:9
+#: templates/misago/userslists/rank.html:42
+#, python-format
+msgid "%(users)s user have this rank."
+msgid_plural "%(users)s users have this rank."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/misago/userslists/rank.html:119
 msgid "There are no users with this rank at the moment."
 msgstr ""
 
@@ -4218,11 +4284,15 @@ msgstr ""
 msgid "Password change confirmation link was sent to your address."
 msgstr ""
 
-#: users/api/userendpoints/create.py:22
+#: users/api/userendpoints/create.py:23
 msgid "New users registrations are currently closed."
 msgstr ""
 
-#: users/api/userendpoints/create.py:49
+#: users/api/userendpoints/create.py:53
+msgid "Please try resubmitting the form."
+msgstr ""
+
+#: users/api/userendpoints/create.py:58
 #, python-format
 msgid "Welcome on %(forum_name)s forums!"
 msgstr ""
@@ -4974,16 +5044,17 @@ msgstr ""
 msgid "Enter each answer in new line. Answers are case-insensitive."
 msgstr ""
 
-#: users/migrations/0004_default_ranks.py:14
-#: users/migrations/0004_default_ranks.py:15 users/models/user.py:109
+#: users/migrations/0004_default_ranks.py:17
+#: users/migrations/0004_default_ranks.py:18 users/models/user.py:109
 msgid "Forum team"
 msgstr ""
 
-#: users/migrations/0004_default_ranks.py:16
+#: users/migrations/0004_default_ranks.py:19
 msgid "Team"
 msgstr ""
 
-#: users/migrations/0004_default_ranks.py:23
+#: users/migrations/0004_default_ranks.py:26
+#: users/migrations/0004_default_ranks.py:27
 msgid "Members"
 msgstr ""
 
@@ -5023,19 +5094,19 @@ msgstr ""
 msgid "joined on"
 msgstr ""
 
-#: users/models/user.py:182
+#: users/models/user.py:187
 msgid "staff status"
 msgstr ""
 
-#: users/models/user.py:184
+#: users/models/user.py:189
 msgid "Designates whether the user can log into admin sites."
 msgstr ""
 
-#: users/models/user.py:191
+#: users/models/user.py:196
 msgid "active"
 msgstr ""
 
-#: users/models/user.py:195
+#: users/models/user.py:200
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."

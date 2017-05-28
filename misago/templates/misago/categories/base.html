@@ -3,23 +3,58 @@
 
 
 {% block title %}
-{% if THREADS_ON_INDEX %}
-  {% trans "Categories" %} | {{ block.super }}
-{% else %}
-  {% if misago_settings.forum_index_title %}
-    {{ misago_settings.forum_index_title }}
+  {% if THREADS_ON_INDEX %}
+    {% trans "Categories" %} | {{ block.super }}
   {% else %}
-    {{ misago_settings.forum_name }}
+    {% if misago_settings.forum_index_title %}
+      {{ misago_settings.forum_index_title }}
+    {% else %}
+      {{ misago_settings.forum_name }}
+    {% endif %}
   {% endif %}
-{% endif %}
 {% endblock title %}
 
 
 {% block meta-description %}
-{% if not THREADS_ON_INDEX and misago_settings.forum_index_meta_description %}
-  {{ misago_settings.forum_index_meta_description }}
-{% endif %}
+  {% if not THREADS_ON_INDEX and misago_settings.forum_index_meta_description %}
+    {{ misago_settings.forum_index_meta_description }}
+  {% else %}
+  {% blocktrans trimmed count categories=categories|length with forum_name=misago_settings.forum_name %}
+      There is {{ categories }} main category currenty available on the {{ forum_name }}.
+    {% plural %}
+      There are {{ categories }} main categories currenty available on the {{ forum_name }}.
+    {% endblocktrans %}
+  {% endif %}
 {% endblock meta-description %}
+
+
+{% block og-title %}
+  {% if THREADS_ON_INDEX %}
+    {% trans "Categories" %}
+  {% else %}
+    {% if misago_settings.forum_index_title %}
+      {{ misago_settings.forum_index_title }}
+    {% else %}
+      {{ misago_settings.forum_name }}
+    {% endif %}
+  {% endif %}
+{% endblock og-title %}
+
+
+{% block og-description %}
+  {% if not THREADS_ON_INDEX and misago_settings.forum_index_meta_description %}
+    {{ misago_settings.forum_index_meta_description }}
+  {% else %}
+    {% blocktrans trimmed count categories=categories|length with forum_name=misago_settings.forum_name %}
+      There is {{ categories }} main category currenty available on the {{ forum_name }}.
+    {% plural %}
+      There are {{ categories }} main categories currenty available on the {{ forum_name }}.
+    {% endblocktrans %}
+  {% endif %}
+{% endblock og-description %}
+
+
+{% block og-url %}{{ SITE_ADDRESS }}{{ REQUEST_PATH }}{% endblock %}
 
 
 {% block content %}

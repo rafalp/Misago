@@ -5,6 +5,12 @@
 {% block title %}{{ title }} | {{ block.super }}{% endblock %}
 
 
+{% block og-title %}{{ title }}{% endblock %}
+
+
+{% block og-url %}{{ SITE_ADDRESS }}{{ REQUEST_PATH }}{% endblock %}
+
+
 {% block content %}
 <div class="legal-page legal-terms-of-service">
   <div class="page-header-bg">

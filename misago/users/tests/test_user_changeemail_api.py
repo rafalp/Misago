@@ -118,3 +118,46 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
 
         self.reload_user()
         self.assertEqual(self.user.email, new_email)
+
+    def test_change_email_user_password_whitespace(self):
+        """api supports users with whitespace around their passwords"""
+        user_password = ' old password '
+        new_password = ' N3wP@55w0rd '
+
+        new_email = 'new@email.com'
+
+        self.user.set_password(user_password)
+        self.user.save()
+
+        self.login_user(self.user)
+
+        response = self.client.post(
+            self.link,
+            data={
+                'new_email': new_email,
+                'password': user_password,
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+
+        self.assertIn('Confirm e-mail change', mail.outbox[0].subject)
+        for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
+            if line.startswith('http://'):
+                token = line.rstrip('/').split('/')[-1]
+                break
+        else:
+            self.fail("E-mail sent didn't contain confirmation url")
+
+        response = self.client.get(
+            reverse(
+                'misago:options-confirm-email-change',
+                kwargs={
+                    'token': token,
+                },
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        self.reload_user()
+        self.assertEqual(self.user.email, new_email)

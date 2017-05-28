@@ -73,7 +73,7 @@ export function paths(user, mode) {
       categoriesMap[category.id] = category;
 
       routes.push({
-        path: category.absolute_url + list.path,
+        path: category.url.index + list.path,
         component: connect(getSelect(mode))(Route),
 
         categories: misago.get('CATEGORIES'),

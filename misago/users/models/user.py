@@ -14,6 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 from misago.acl import get_user_acl
 from misago.acl.models import Role
 from misago.conf import settings
+from misago.core.pgutils import PgPartialIndex
 from misago.core.utils import slugify
 from misago.users import avatars
 from misago.users.signatures import is_user_signature_valid
@@ -174,7 +175,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_ip = models.GenericIPAddressField(null=True, blank=True)
     is_hiding_presence = models.BooleanField(default=False)
 
-    rank = models.ForeignKey('Rank', null=True, blank=True, on_delete=models.deletion.PROTECT)
+    rank = models.ForeignKey(
+        'Rank',
+        null=True,
+        blank=True,
+        on_delete=models.deletion.PROTECT,
+    )
     title = models.CharField(max_length=255, null=True, blank=True)
     requires_activation = models.PositiveIntegerField(default=ACTIVATION_NONE)
 
@@ -263,9 +269,21 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
+    class Meta:
+        indexes = [
+            PgPartialIndex(
+                fields=['is_staff'],
+                where={'is_staff': True},
+            ),
+            PgPartialIndex(
+                fields=['requires_activation'],
+                where={'requires_activation__gt': 0},
+            ),
+        ]
+
     def clean(self):
         self.username = self.normalize_username(self.username)
-        self.email = self.__class__.objects.normalize_email(self.email)
+        self.email = UserManager.normalize_email(self.email)
 
     def lock(self):
         """locks user in DB, shortcut for locking user model in views"""
@@ -425,6 +443,7 @@ class Online(models.Model):
         settings.AUTH_USER_MODEL,
         primary_key=True,
         related_name='online_tracker',
+        on_delete=models.CASCADE,
     )
     current_ip = models.GenericIPAddressField()
     last_click = models.DateTimeField(default=timezone.now)
@@ -437,7 +456,11 @@ class Online(models.Model):
 
 
 class UsernameChange(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='namechanges')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='namechanges',
+        on_delete=models.CASCADE,
+    )
     changed_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,

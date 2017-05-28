@@ -5,7 +5,17 @@
 {% block title %}{% trans "Wrong way" %} | {{ block.super }}{% endblock %}
 
 
-{% block meta_description %}{% trans "This page should be reached via form submission or pressing button." %}{% endblock meta_description %}
+{% block meta-description %}
+{% trans "This page should be reached via form submission or pressing button." %}
+{% endblock meta-description %}
+
+
+{% block og-title %}{% trans "Wrong way" %}{% endblock %}
+
+
+{% block og-description %}
+{% trans "This page should be reached via form submission or pressing button." %}
+{% endblock %}
 
 
 {% block content %}

@@ -5,9 +5,15 @@ from misago.conf import settings
 
 
 class Subscription(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    thread = models.ForeignKey('Thread')
-    category = models.ForeignKey('misago_categories.Category')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+    thread = models.ForeignKey('Thread', on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        'misago_categories.Category',
+        on_delete=models.CASCADE,
+    )
 
     last_read_on = models.DateTimeField(default=timezone.now)
     send_email = models.BooleanField(default=False)

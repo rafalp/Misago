@@ -39,7 +39,7 @@ export default class extends React.Component {
   getScore(password, inputs) {
     let cacheStale = false;
 
-    if (password.trim() !== this._password) {
+    if (password !== this._password) {
       cacheStale = true;
     }
 
@@ -55,7 +55,7 @@ export default class extends React.Component {
 
     if (cacheStale) {
       this._score = zxcvbn.scorePassword(password, inputs);
-      this._password = password.trim();
+      this._password = password;
       this._inputs = inputs.map(function(value) {
         return value.trim();
       });

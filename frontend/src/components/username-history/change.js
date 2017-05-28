@@ -5,7 +5,7 @@ export default class extends React.Component {
   renderUserAvatar() {
     if (this.props.change.changed_by) {
       /* jshint ignore:start */
-      return <a href={this.props.change.changed_by.absolute_url} className="user-avatar-wrapper">
+      return <a href={this.props.change.changed_by.url} className="user-avatar-wrapper">
         <Avatar user={this.props.change.changed_by} size="100" />
       </a>;
       /* jshint ignore:end */
@@ -21,7 +21,7 @@ export default class extends React.Component {
   renderUsername() {
     if (this.props.change.changed_by) {
       /* jshint ignore:start */
-      return <a href={this.props.change.changed_by.absolute_url} className="item-title">
+      return <a href={this.props.change.changed_by.url} className="item-title">
         {this.props.change.changed_by.username}
       </a>;
       /* jshint ignore:end */

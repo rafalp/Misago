@@ -4,9 +4,9 @@ import { Link } from 'react-router'; // jshint ignore:line
 export class Subcategory extends React.Component {
   getUrl() {
     if (this.props.listPath) {
-      return this.props.category.absolute_url + this.props.listPath;
+      return this.props.category.url.index + this.props.listPath;
     } else {
-      return this.props.category.absolute_url;
+      return this.props.category.url.index;
     }
   }
 

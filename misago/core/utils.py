@@ -136,3 +136,13 @@ def is_referer_local(request):
         return False
 
     return True
+
+
+def get_exception_message(exception=None, default_message=None):
+    if not exception:
+        return default_message
+
+    try:
+        return exception.args[0]
+    except IndexError:
+        return default_message

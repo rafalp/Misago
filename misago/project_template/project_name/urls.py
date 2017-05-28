@@ -17,9 +17,11 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.views.generic import TemplateView
+from django.utils import timezone
+from django.views.decorators.cache import cache_page
+from django.views.decorators.http import last_modified
+from django.views.i18n import JavaScriptCatalog
 
-from misago.core.views import javascript_catalog
 from misago.users.forms.auth import AdminAuthenticationForm
 
 
@@ -31,10 +33,20 @@ urlpatterns = [
     url(r'^', include('misago.urls', namespace='misago')),
 
     # Javascript translations
-    url(r'^django-i18n.js$', javascript_catalog, name='django-i18n'),
+    url(
+        r'^django-i18n.js$',
+        cache_page(86400 * 2, key_prefix='misagojsi18n')(
+            last_modified(lambda req, **kw: timezone.now())(
+                JavaScriptCatalog.as_view(
+                    packages=['misago'],
+                ),
+            ),
+        ),
+        name='django-i18n'
+    ),
 
     # Uncomment next line if you plan to use Django admin for 3rd party apps
-    #url(r'^django-admin/', include(admin.site.urls)),
+    #url(r'^django-admin/', admin.site.urls),
 ]
 
 

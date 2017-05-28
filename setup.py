@@ -46,7 +46,7 @@ setup(
     ]},
     test_suite="runtests.runtests",
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',

@@ -23,7 +23,7 @@ export default class extends React.Component {
       'isLoading': true
     });
 
-    ajax.post(this.props.user.api_url.avatar, {
+    ajax.post(this.props.user.api.avatar, {
       avatar: avatarType
     }).then((response) => {
       this.setState({
@@ -69,45 +69,51 @@ export default class extends React.Component {
   }
 
   getCropButton() {
-    if (this.props.options.crop_src) {
-      /* jshint ignore:start */
-      return <Button onClick={this.props.showCrop}
-              disabled={this.state.isLoading}
-              className="btn-default btn-block btn-avatar-crop">
+    if (!this.props.options.crop_src) return null;
+
+    /* jshint ignore:start */
+    return (
+      <Button
+        className="btn-default btn-block btn-avatar-crop"
+        disabled={this.state.isLoading}
+        onClick={this.props.showCrop}
+      >
         {gettext("Re-crop uploaded image")}
-      </Button>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+      </Button>
+    );
+    /* jshint ignore:end */
   }
 
   getUploadButton() {
-    if (this.props.options.upload) {
-      /* jshint ignore:start */
-      return <Button onClick={this.props.showUpload}
-              disabled={this.state.isLoading}
-              className="btn-default btn-block btn-avatar-upload">
+    if (!this.props.options.upload) return null;
+
+    /* jshint ignore:start */
+    return (
+      <Button
+        className="btn-default btn-block btn-avatar-upload"
+        disabled={this.state.isLoading}
+        onClick={this.props.showUpload}
+      >
         {gettext("Upload new image")}
-      </Button>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+      </Button>
+    );
+    /* jshint ignore:end */
   }
 
   getGalleryButton() {
-    if (this.props.options.galleries) {
-      /* jshint ignore:start */
-      return <Button onClick={this.props.showGallery}
-              disabled={this.state.isLoading}
-              className="btn-default btn-block btn-avatar-gallery">
+    if (!this.props.options.galleries) return null;
+
+    /* jshint ignore:start */
+    return (
+      <Button
+        className="btn-default btn-block btn-avatar-gallery"
+        disabled={this.state.isLoading}
+        onClick={this.props.showGallery}
+      >
         {gettext("Pick avatar from gallery")}
-      </Button>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+      </Button>
+    );
+    /* jshint ignore:end */
   }
 
   getAvatarPreview() {
@@ -120,18 +126,28 @@ export default class extends React.Component {
 
     if (this.state.isLoading) {
       /* jshint ignore:start */
-      return <div className="avatar-preview preview-loading">
-        <Avatar user={userPeview} size="200" />
-        <Loader />
-      </div>;
-      /* jshint ignore:end */
-    } else {
-      /* jshint ignore:start */
-      return <div className="avatar-preview">
-        <Avatar user={userPeview} size="200" />
-      </div>;
+      return (
+        <div className="avatar-preview preview-loading">
+          <Avatar
+            size="200"
+            user={userPeview}
+          />
+          <Loader />
+        </div>
+      );
       /* jshint ignore:end */
     }
+
+    /* jshint ignore:start */
+    return (
+      <div className="avatar-preview">
+        <Avatar
+          size="200"
+          user={userPeview}
+        />
+      </div>
+    );
+    /* jshint ignore:end */
   }
 
   render() {

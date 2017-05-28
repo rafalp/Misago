@@ -63,7 +63,7 @@ export default class extends React.Component {
   }
 
   loadUsers(page=1, search=null) {
-    const apiUrl = this.props.profile.api_url[this.API_FILTER];
+    const apiUrl = this.props.profile.api[this.API_FILTER];
 
     ajax.get(apiUrl, {
       search: search,

@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import copy
 
+from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import models
@@ -9,6 +10,7 @@ from django.utils import six, timezone
 from django.utils.encoding import python_2_unicode_compatible
 
 from misago.conf import settings
+from misago.core.pgutils import PgPartialIndex
 from misago.core.utils import parse_iso8601_string
 from misago.markup import finalise_markup
 from misago.threads.checksums import is_post_valid, update_post_checksum
@@ -17,8 +19,14 @@ from misago.threads.filtersearch import filter_search
 
 @python_2_unicode_compatible
 class Post(models.Model):
-    category = models.ForeignKey('misago_categories.Category')
-    thread = models.ForeignKey('misago_threads.Thread')
+    category = models.ForeignKey(
+        'misago_categories.Category',
+        on_delete=models.CASCADE,
+    )
+    thread = models.ForeignKey(
+        'misago_threads.Thread',
+        on_delete=models.CASCADE,
+    )
     poster = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         blank=True,
@@ -82,6 +90,18 @@ class Post(models.Model):
     search_vector = SearchVectorField()
 
     class Meta:
+        indexes = [
+            PgPartialIndex(
+                fields=['has_open_reports'],
+                where={'has_open_reports': True},
+            ),
+            PgPartialIndex(
+                fields=['is_hidden'],
+                where={'is_hidden': False},
+            ),
+            GinIndex(fields=['search_vector']),
+        ]
+
         index_together = [
             ('thread', 'id'),  # speed up threadview for team members
             ('is_event', 'is_hidden'),

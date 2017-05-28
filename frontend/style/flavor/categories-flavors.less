@@ -3,34 +3,127 @@
 // --------------------------------------------------
 
 .misago-category-flavor(@color) {
-  border-left: 4px solid @color;
-  padding-left: 11px;
+  border-left-color: @color;
 }
 
 
+// Shared css across all flavors
+.list-group-item.list-group-category-has-flavor {
+  border-left: 5px solid #fff;
+  padding-left: 10px;
+}
+
 // Color flavors
 .list-group-item {
-  &.list-group-item-category-primary {
-    .misago-category-flavor(#7e57c2);
+  &.list-group-item-category-red {
+    .misago-category-flavor(#f44336);
   }
 
-  &.list-group-item-category-info {
-    .misago-category-flavor(#ab47bc);
+  &.list-group-item-category-light-red {
+    .misago-category-flavor(#ef9a9a);
   }
 
-  &.list-group-item-category-success {
-    .misago-category-flavor(#66bb6a);
+  &.list-group-item-category-pink {
+    .misago-category-flavor(#e91e63);
   }
 
-  &.list-group-item-category-warning {
-    .misago-category-flavor(#ffa726);
+  &.list-group-item-category-light-pink {
+    .misago-category-flavor(#f48fb1);
   }
 
-  &.list-group-item-category-danger {
-    .misago-category-flavor(#ef5350);
+  &.list-group-item-category-purple {
+    .misago-category-flavor(#9c27b0);
   }
 
-  &.list-group-item-category-inverse {
-    .misago-category-flavor(#bdbdbd);
+  &.list-group-item-category-light-purple {
+    .misago-category-flavor(#ce93d8);
+  }
+
+  &.list-group-item-category-deep-purple {
+    .misago-category-flavor(#673ab7);
+  }
+
+  &.list-group-item-category-indigo {
+    .misago-category-flavor(#3f51b5);
+  }
+
+  &.list-group-item-category-light-indigo {
+    .misago-category-flavor(#9fa8da);
+  }
+
+  &.list-group-item-category-blue {
+    .misago-category-flavor(#2196f3);
+  }
+
+  &.list-group-item-category-light-blue {
+    .misago-category-flavor(#81d4fa);
+  }
+
+  &.list-group-item-category-cyan {
+    .misago-category-flavor(#00bcd4);
+  }
+
+  &.list-group-item-category-light-cyan {
+    .misago-category-flavor(#80deea);
+  }
+
+  &.list-group-item-category-teal {
+    .misago-category-flavor(#009688);
+  }
+
+  &.list-group-item-category-light-teal {
+    .misago-category-flavor(#80cbc4);
+  }
+
+  &.list-group-item-category-green {
+    .misago-category-flavor(#4caf50);
+  }
+
+  &.list-group-item-category-light-green {
+    .misago-category-flavor(#aed581);
+  }
+
+  &.list-group-item-category-lime {
+    .misago-category-flavor(#cddc39);
+  }
+
+  &.list-group-item-category-yellow {
+    .misago-category-flavor(#ffeb3b);
+  }
+
+  &.list-group-item-category-amber {
+    .misago-category-flavor(#ffc107);
+  }
+
+  &.list-group-item-category-orange {
+    .misago-category-flavor(#ff9800);
+  }
+
+  &.list-group-item-category-deep-orange {
+    .misago-category-flavor(#ff5722);
+  }
+
+  &.list-group-item-category-brown {
+    .misago-category-flavor(#795548);
+  }
+
+  &.list-group-item-category-light-brown {
+    .misago-category-flavor(#bcaaa4);
+  }
+
+  &.list-group-item-category-blue-grey {
+    .misago-category-flavor(#607d8b);
+  }
+
+  &.list-group-item-category-light-blue-grey {
+    .misago-category-flavor(#b0bec5);
+  }
+
+  &.list-group-item-category-grey {
+    .misago-category-flavor(#9e9e9e);
+  }
+
+  &.list-group-item-category-black {
+    .misago-category-flavor(#000000);
   }
 }

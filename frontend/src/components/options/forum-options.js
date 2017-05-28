@@ -63,7 +63,7 @@ export default class extends Form {
   }
 
   send() {
-    return ajax.post(this.props.user.api_url.options, {
+    return ajax.post(this.props.user.api.options, {
       is_hiding_presence: this.state.is_hiding_presence,
       limits_private_thread_invites_to: this.state.limits_private_thread_invites_to,
       subscribe_to_started_threads: this.state.subscribe_to_started_threads,

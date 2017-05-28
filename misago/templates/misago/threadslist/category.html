@@ -3,31 +3,46 @@
 
 
 {% block title %}
-{% if list_name %}
-  {% if paginator.page > 1 %}
-    {{ list_name }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ category }} | {{ block.super }}
+  {% if list_name %}
+    {% if paginator.page > 1 %}
+      {{ list_name }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ category }} | {{ block.super }}
+    {% else %}
+      {{ list_name }} | {{ category }} | {{ block.super }}
+    {% endif %}
+  {% elif paginator.page > 1 %}
+    {{ category }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ block.super }}
   {% else %}
-    {{ list_name }} | {{ category }} | {{ block.super }}
+    {{ category }} | {{ block.super }}
   {% endif %}
-{% elif paginator.page > 1 %}
-  {{ category }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ block.super }}
-{% else %}
-  {{ category }} | {{ block.super }}
-{% endif %}
 {% endblock title %}
 
 
 {% block meta-description %}
-{% if category.description %}
-  {{ category.description }}
-{% endif %}
+  {% if category.description %}
+    {{ category.description }}
+  {% endif %}
 {% endblock meta-description %}
 
 
+{% block og-title %}
+  {{ category }}
+{% endblock og-title %}
+
+
+{% block og-description %}
+  {% if category.description %}
+    {{ category.description }}
+  {% endif %}
+{% endblock og-description %}
+
+
+{% block og-url %}{{ SITE_ADDRESS }}{{ REQUEST_PATH }}{% endblock %}
+
+
 {% block extra-css %}
-{% if category.css_class %}
-  page-{{ category.css_class }}
-{% endif %}
+  {% if category.css_class %}
+    page-threads-{{ category.css_class }}
+  {% endif %}
 {% endblock extra-css %}
 
 
@@ -66,11 +81,11 @@
 
 {% block list-container %}
   {% if category.description %}
-  <div class="category-description">
-    <div class="page-lead {{ category.description|escape|linebreaks|isdescriptionshort|iftrue:"lead" }}">
-      {{ category.description|escape|urlize|linebreaks|safe }}
+    <div class="category-description">
+      <div class="page-lead {{ category.description|force_escape|linebreaks|isdescriptionshort|iftrue:"lead" }}">
+        {{ category.description|force_escape|urlize|linebreaks|safe }}
+      </div>
     </div>
-  </div>
   {% endif %}
 
   {{ block.super }}

@@ -72,7 +72,7 @@ export function hide(props) {
       hidden_on: moment(),
       hidden_by_name: props.user.username,
       url: Object.assign(selection.url, {
-        hidden_by: props.user.absolute_url
+        hidden_by: props.user.url
       })
     }));
 

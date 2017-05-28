@@ -34,6 +34,7 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
         fields = UserSerializer.Meta.fields + [
             'is_hiding_presence',
             'limits_private_thread_invites_to',
+            'unread_private_threads',
             'subscribe_to_started_threads',
             'subscribe_to_replied_threads',
             'is_authenticated',
@@ -46,7 +47,7 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
     def get_email(self, obj):
         return obj.email
 
-    def get_api_url(self, obj):
+    def get_api(self, obj):
         return {
             'avatar': reverse('misago:api:user-avatar', kwargs={'pk': obj.pk}),
             'options': reverse('misago:api:user-forum-options', kwargs={'pk': obj.pk}),

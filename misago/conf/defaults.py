@@ -244,14 +244,6 @@ MISAGO_USERS_PER_PAGE = 12
 MISAGO_READTRACKER_CUTOFF = 40
 
 
-# List of packages that should be included in Misago's default JS I18n catalog
-# https://docs.djangoproject.com/en/1.10/topics/i18n/translation/#internationalization-in-javascript-code
-
-MISAGO_JS_CATALOG_PACKAGES = [
-    'misago',
-]
-
-
 # Available Moment.js locales
 
 MISAGO_MOMENT_JS_LOCALES = [

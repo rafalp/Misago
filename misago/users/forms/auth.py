@@ -49,8 +49,17 @@ class AuthenticationForm(MisagoAuthMixin, BaseAuthenticationForm):
     Base class for authenticating users, Floppy-forms and
     Misago login field compliant
     """
-    username = forms.CharField(label=_("Username or e-mail"), required=False, max_length=254)
-    password = forms.CharField(label=_("Password"), required=False, widget=forms.PasswordInput)
+    username = forms.CharField(
+        label=_("Username or e-mail"),
+        required=False,
+        max_length=254,
+    )
+    password = forms.CharField(
+        label=_("Password"),
+        strip=False,
+        required=False,
+        widget=forms.PasswordInput,
+    )
 
     def clean(self):
         username = self.cleaned_data.get('username')

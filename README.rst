@@ -19,7 +19,7 @@ Misago
    :alt: Works on Python 2.7, 3.5, 3,6
 
 
-**Development Status: Alpha**
+**Development Status: `🍌Banans🍌 <https://en.wikipedia.org/wiki/Perpetual_beta>`_**
 
 Misago aims to be complete, featured and modern forum solution that has no fear to say 'NO' to common and outdated opinions about how forum software should be made and what it should do.
 
@@ -58,12 +58,17 @@ As of now Misago implements all features considered "must have" on live internet
 * Post attachments complete thumbnailing and gif's animation removal.
 * Posts edits log allowing you to see how user messages used to look in past as well as revert function protecting you from malignant users emptying their posts contents.
 * Moderation queue for users and categories allowing you to moderate content before it becomes visible to other members of the community.
+* Custom theme developed over bootstrap.
 
 Even more features will follow in future releases:
 
-* content reporting
-* warning system
-* notifications
+* Admin-manageable custom profile fields letting site admins to define custom fields for users to fill in without need to write any code.
+* Content reporting for users to report offensive content.
+* Forum-wide JS routing further reducing navigation times.
+* Notifications for users to notice content and events of concern faster.
+* Post accurate read tracker that lets moderators spot unapproved replies and non-moderators spot approved posts.
+* Warning system for easy tracking users history of infractions and offenses.
+* WYSIWYM content editor for even easier post formatting.
 
 If you are looking into using Misago to run live forum, you are absolutely invited to, but please keep in mind that Misago is relatively immature software that may contain serious bugs or issues as well as quirks and lackings thay may take time to resolve, despite best efforts. 
 

@@ -55,7 +55,11 @@ class UserBaseForm(forms.ModelForm):
 
 
 class NewUserForm(UserBaseForm):
-    new_password = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
+    new_password = forms.CharField(
+        label=_("Password"),
+        strip=False,
+        widget=forms.PasswordInput,
+    )
 
     class Meta:
         model = UserModel
@@ -92,6 +96,7 @@ class EditUserForm(UserBaseForm):
 
     new_password = forms.CharField(
         label=_("Change password to"),
+        strip=False,
         widget=forms.PasswordInput,
         required=False,
     )

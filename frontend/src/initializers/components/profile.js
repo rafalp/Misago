@@ -6,7 +6,7 @@ import mount from 'misago/utils/routed-component';
 export default function initializer(context) {
   if (context.has('PROFILE') && context.has('PROFILE_PAGES')) {
     mount({
-      root: misago.get('PROFILE').absolute_url,
+      root: misago.get('PROFILE').url,
       component: connect(select)(Profile),
       paths: paths()
     });

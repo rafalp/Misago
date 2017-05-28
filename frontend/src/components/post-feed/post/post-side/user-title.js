@@ -11,7 +11,7 @@ export default function({ rank, title }) {
 
   if (rank.is_tab) {
     return (
-      <a className={className} href={rank.absolute_url}>
+      <a className={className} href={rank.url}>
         {userTitle}
       </a>
     );

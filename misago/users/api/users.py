@@ -299,6 +299,6 @@ UserProfileSerializer = UserSerializer.subset_fields(
     'is_followed',
     'is_blocked',
     'status',
-    'absolute_url',
-    'api_url',
+    'api',
+    'url',
 )

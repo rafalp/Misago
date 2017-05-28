@@ -3,6 +3,7 @@ from rest_framework.response import Response
 
 from django.contrib.auth import authenticate, get_user_model, login
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.db import IntegrityError
 from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 
@@ -23,13 +24,13 @@ def create_endpoint(request):
 
     form = RegisterForm(request.data, request=request)
 
+    if not form.is_valid():
+        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+
     try:
         captcha.test_request(request)
     except ValidationError as e:
         form.add_error('captcha', e)
-
-    if not form.is_valid():
-        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
     activation_kwargs = {}
     if settings.account_activation == 'user':
@@ -37,14 +38,22 @@ def create_endpoint(request):
     elif settings.account_activation == 'admin':
         activation_kwargs = {'requires_activation': UserModel.ACTIVATION_ADMIN}
 
-    new_user = UserModel.objects.create_user(
-        form.cleaned_data['username'],
-        form.cleaned_data['email'],
-        form.cleaned_data['password'],
-        joined_from_ip=request.user_ip,
-        set_default_avatar=True,
-        **activation_kwargs
-    )
+    try:
+        new_user = UserModel.objects.create_user(
+            form.cleaned_data['username'],
+            form.cleaned_data['email'],
+            form.cleaned_data['password'],
+            joined_from_ip=request.user_ip,
+            set_default_avatar=True,
+            **activation_kwargs
+        )
+    except IntegrityError:
+        return Response(
+            {
+                '__all__': _("Please try resubmitting the form.")
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     mail_subject = _("Welcome on %(forum_name)s forums!")
     mail_subject = mail_subject % {'forum_name': settings.forum_name}

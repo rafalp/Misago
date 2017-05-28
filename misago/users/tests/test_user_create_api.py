@@ -270,6 +270,8 @@ class UserCreateTests(UserTestCase):
         test_user = UserModel.objects.get_by_email('bob@bob.com')
         self.assertEqual(Online.objects.filter(user=test_user).count(), 1)
 
+        self.assertTrue(test_user.check_password('pass123'))
+
         response = self.client.get(reverse('misago:index'))
         self.assertContains(response, 'Bob')
 
@@ -316,5 +318,34 @@ class UserCreateTests(UserTestCase):
 
         UserModel.objects.get_by_username('Bob')
         UserModel.objects.get_by_email('bob@bob.com')
+
+        self.assertIn('Welcome', mail.outbox[0].subject)
+
+    def test_registration_creates_user_with_whitespace_password(self):
+        """api creates user with spaces around password"""
+        settings.override_setting('account_activation', 'none')
+
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'Bob',
+                'email': 'bob@bob.com',
+                'password': ' pass123 ',
+            },
+        )
+
+        self.assertContains(response, 'active')
+        self.assertContains(response, 'Bob')
+        self.assertContains(response, 'bob@bob.com')
+
+        UserModel.objects.get_by_username('Bob')
+
+        test_user = UserModel.objects.get_by_email('bob@bob.com')
+        self.assertEqual(Online.objects.filter(user=test_user).count(), 1)
+
+        self.assertTrue(test_user.check_password(' pass123 '))
+
+        response = self.client.get(reverse('misago:index'))
+        self.assertContains(response, 'Bob')
 
         self.assertIn('Welcome', mail.outbox[0].subject)

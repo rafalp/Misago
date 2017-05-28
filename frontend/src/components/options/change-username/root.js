@@ -29,7 +29,7 @@ export default class extends React.Component {
     });
 
     Promise.all([
-      ajax.get(this.props.user.api_url.username),
+      ajax.get(this.props.user.api.username),
       ajax.get(misago.get('USERNAME_CHANGES_API'), {user: this.props.user.id})
     ]).then((data) => {
       store.dispatch(hydrate(data[1].results));
@@ -91,11 +91,15 @@ export default class extends React.Component {
 
   render() {
     /* jshint ignore:start */
-    return <div>
-      {this.getChangeForm()}
-      <UsernameHistory isLoaded={this.state.isLoaded}
-                       changes={this.props['username-history']} />
-    </div>
+    return (
+      <div>
+        {this.getChangeForm()}
+        <UsernameHistory
+          changes={this.props['username-history']}
+          isLoaded={this.state.isLoaded}
+        />
+      </div>
+    );
     /* jshint ignore:end */
   }
 }

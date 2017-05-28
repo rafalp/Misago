@@ -5,6 +5,8 @@ from misago.conf import settings
 from misago.core.views import forum_index
 
 
+app_name = 'misago'
+
 # Register Misago Apps
 urlpatterns = [
     url(r'^', include('misago.legal.urls')),
@@ -26,6 +28,7 @@ urlpatterns = [
     url(r'^$', forum_index, name='index'),
 ]
 
+
 # Register API
 apipatterns = [
     url(r'^', include('misago.categories.urls.api')),
@@ -36,8 +39,9 @@ apipatterns = [
 ]
 
 urlpatterns += [
-    url(r'^api/', include(apipatterns, namespace='api')),
+    url(r'^api/', include((apipatterns, 'api'), namespace='api')),
 ]
+
 
 # Register Misago ACP
 if settings.MISAGO_ADMIN_PATH:
@@ -48,15 +52,5 @@ if settings.MISAGO_ADMIN_PATH:
 
     admin_prefix = r'^%s/' % settings.MISAGO_ADMIN_PATH
     urlpatterns += [
-        url(admin_prefix, include(adminpatterns, namespace='admin')),
-    ]
-
-# Make error pages accessible casually in DEBUG
-if settings.DEBUG:
-    from misago.core import errorpages
-    urlpatterns += [
-        url(r'^403/$', errorpages.permission_denied),
-        url(r'^404/$', errorpages.page_not_found),
-        url(r'^405/$', errorpages.not_allowed),
-        url(r'^csrf-failure/$', errorpages.csrf_failure),
+        url(admin_prefix, include((adminpatterns, 'admin'), namespace='admin')),
     ]

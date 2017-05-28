@@ -131,10 +131,10 @@ def test_require_post(request):
 
 
 @errorpages.shared_403_exception_handler
-def mock_custom_403_error_page(request):
+def mock_custom_403_error_page(request, exception):
     return HttpResponse("Custom 403", status=403)
 
 
 @errorpages.shared_404_exception_handler
-def mock_custom_404_error_page(request):
+def mock_custom_404_error_page(request, exception):
     return HttpResponse("Custom 404", status=404)

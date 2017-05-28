@@ -29,17 +29,19 @@
 
     {% block list-container %}
       {% if subcategories %}
-        <section class="toolbar" itemscope itemtype="http://schema.org/SiteNavigationElement">
-          <ul class="list-inline subcategories-list">
-            {% for subcategory in subcategories %}
-              <li>
-                <a href="{{ subcategory.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="subcategory {% if subcategory.css_class %}subcategory-{{ subcategory.css_class }}{% endif %}">
-                  {{ subcategory.name }}
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
-        </section>
+        <noscript>
+          <section class="toolbar" itemscope itemtype="http://schema.org/SiteNavigationElement">
+            <ul class="list-inline subcategories-list">
+              {% for subcategory in subcategories %}
+                <li>
+                  <a href="{{ subcategory.get_absolute_url }}{% if list_type != 'all' %}{{ list_type }}/{% endif %}" class="subcategory {% if subcategory.css_class %}subcategory-{{ subcategory.css_class }}{% endif %}">
+                    {{ subcategory.name }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </section>
+        </noscript>
       {% endif %}
 
       <section>

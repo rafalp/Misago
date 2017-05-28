@@ -161,7 +161,7 @@ class="form-horizontal"
         <div class="{{ field_class }}">
           <div class="form-control-static">
             {% if target.is_active_staff_message %}
-              {{ target.is_active_staff_message|escape|linebreaks }}
+              {{ target.is_active_staff_message|force_escape|urlize|linebreaks }}
             {% else %}
               <em>{% trans "No staff message is available." %}</em>
             {% endif %}
