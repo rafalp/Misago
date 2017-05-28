@@ -19,7 +19,7 @@ Misago
    :alt: Works on Python 2.7, 3.5, 3,6
 
 
-**Development Status: `🍌Banans🍌 <https://en.wikipedia.org/wiki/Perpetual_beta>`_**
+**Development Status: `Banans <https://en.wikipedia.org/wiki/Perpetual_beta>`_**
 
 Misago aims to be complete, featured and modern forum solution that has no fear to say 'NO' to common and outdated opinions about how forum software should be made and what it should do.
 
