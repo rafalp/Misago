@@ -16,7 +16,7 @@ Before you start make sure your hosting provider grants you:
 - SSH access to the server
 - Python 2.7, 3.4, 3.5 or 3.6
 - SetupTools >= 8.0
-- PostgreSQL >= 9.4
+- PostgreSQL >= 9.4 with access to superuser and GIN extension
 - At least 128 megabytes of free memory for Misago's processes
 - HTTP server that supports WSGI applications (like NGINX with UWSGI or Apache2 with mod_wsgi)
 - Crontab
@@ -26,7 +26,7 @@ This isn't an issue on VPS or dedicated servers, but availability of shared serv
 Speaking of shared servers, ability to download, compile and run software from internet may be needed, but different ISP's have different approach to this. Some options come with all dependencies preinstalled, others let you install them yourself and others require you to mail them every time you need something installed. Generally you should avoid offers coming from last group because this turns running Python apps into a hore.
 
 
-##### About `'install_requires' must be a string or list of strings containing valid project/version requirement specifiers` error during installation
+#### About the `'install_requires' must be a string or list of strings containing valid project/version requirement specifiers` error during installation
 
 This error is caused by Misago being installed using setuptools older than 8.0 release, which was first to introduce support for [PEP 440](https://www.python.org/dev/peps/pep-0440/), which defines version requirments used in Misago's requirements.txt.
 
@@ -76,6 +76,32 @@ Finally, start development server using "runserver" command:
     python manage.py runserver
 
 If server starts, you should be able to visit `http://127.0.0.1:8000` in your browser and see forum index, however as work on project is underway revisions may frequently introduce changes that will break runserver.
+
+
+#### About the `could not open extension control file` error during database migration
+
+If you run into an error that looks like following:
+
+    django.db.utils.OperationalError: could not open extension control file "/usr/share/postgresql/9.4/extension/btree_gin.control": No such file or directory
+
+This means you'll need to install the `postgresql-contrib` package that includes extensions for PostgreSQL:
+
+    sudo apt-get install postgresql-contrib
+
+
+#### About the `django.db.utils.ProgrammingError: permission denied to create extension "btree_gin"` error during database migration
+
+Only superusers may enable extensions in your database. To solve this issue, you may grant your database user super user privileges for duration of the installation:
+
+    # switch to postgresql user and start psql tool
+    sudo -u postgres psql postgres
+
+    # make your database user the superuser
+    alter role user_name superuser;
+
+    # after installation is complete run below query in psql
+    # to remove super user privileges from your database user
+    alter role user_name nosuperuser;
 
 
 ### Deployment
