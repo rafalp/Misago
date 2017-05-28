@@ -1,3 +1,5 @@
+dist: trusty
+sudo: required
 addons:
   postgresql: "9.4"
 language: python
