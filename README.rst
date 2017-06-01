@@ -19,7 +19,7 @@ Misago
    :alt: Works on Python 2.7, 3.5, 3,6
 
 
-**Development Status:** 🍌 `Banans <https://en.wikipedia.org/wiki/Perpetual_beta>`_ 🍌
+**Development Status:** 🍌 `Bananas <https://en.wikipedia.org/wiki/Perpetual_beta>`_ 🍌
 
 Misago aims to be complete, featured and modern forum solution that has no fear to say 'NO' to common and outdated opinions about how forum software should be made and what it should do.
 
@@ -62,11 +62,13 @@ As of now Misago implements all features considered "must have" on live internet
 
 Even more features will follow in future releases:
 
-* Admin-manageable custom profile fields letting site admins to define custom fields for users to fill in without need to write any code.
+* Achievements and awards system.
+* Custom profile fields letting site owners to define custom fields for users to fill in.
 * Content reporting for users to report offensive content.
 * Forum-wide JS routing further reducing navigation times.
 * Notifications for users to notice content and events of concern faster.
 * Post accurate read tracker that lets moderators spot unapproved replies and non-moderators spot approved posts.
+* Sign in with Facebook/Google/Github/Steam/etc/ect.
 * Warning system for easy tracking users history of infractions and offenses.
 * WYSIWYM content editor for even easier post formatting.
 

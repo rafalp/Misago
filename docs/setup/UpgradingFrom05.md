@@ -1,7 +1,14 @@
-Upgrading from Misago 0.5
+Updating from Misago 0.5
 =========================
 
-Misago 0.6 comes with special utility that allows those upgrading from Misago 0.5 to move their data to new site. This utility, named `datamover`, provides set of management commands allowing you to move data over.
+Misago 0.6 comes with special utility that allows those updating from Misago 0.5 to move their data to new site. This utility, named `datamover`, provides set of management commands allowing you to move data over.
+
+
+##### Version support
+
+The `datamover` is only available in the Misago 0.6. If you are updating from Misago 0.5, make sure you've installed Misago 0.6 before moving on.
+
+If you have already updated to 0.6 and you looking to preserve redirects from old links after updating Misago to next version, please use the [Misago 0.5 Redirects](https://github.com/rafalp/Misago-05-Redirects) app.
 
 
 ##### Note:

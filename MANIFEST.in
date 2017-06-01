@@ -4,6 +4,7 @@ include README.rst
 include requirements.txt
 graft docs
 prune docs/build
+prune extras
 prune testproject
 graft misago
 global-exclude __pycache__
