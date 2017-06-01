@@ -1,12 +1,12 @@
 Setup and maintenance
 =====================
 
-Misago is Python and Django application which means system requirements as well as setup process and way maintenace taks are performed may appear confusing and suprising to administrators that have no experience outside of running PHP solutions.
+Misago is Python and Django application which means system requirements as well as setup process and way maintenace tasks are performed may appear confusing and suprising to administrators that have no experience outside of running PHP solutions.
 
 
 ## Installing Misago
 
-Misago installation is three step process. First you compare your server's specification to check if will be able to run Misago. Next you setup Misago and all extra services required for it to function like e-mails, database and automatic maintenance tasks. Finally you get your site running and accessible for your users.
+Misago installation is three step process. First you compare your server's specification to check if it will be able to run Misago. Next you setup Misago and all extra services required for it to function like e-mails, database and automatic maintenance tasks. Finally you get your site running and accessible for your users.
 
 
 ### Requirements
