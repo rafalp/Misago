@@ -1,8 +1,12 @@
 # Table of contents
 
 * [Introduction](./README.md)
-* [Setup and maintenance](./SetupMaintenance.md)
-* [Upgrading from Misago 0.5](./UpgradingFrom05.md)
+* [Setup and maintenance](./setup/README.md)
+  * [Updating from Misago 0.5](./setup/UpdatingFrom05.md)
+  * [Update paths](./setup/UpdatePaths.md)
+* [Settings](./settings/README.md)
+  * [Core settings](./settings/Core.md)
+  * [Database settings](./settings/Database.md)
 * [Coding style](./CodingStyle.md)
 * [User rank styles](./UserRankStyles.md)
 * [Category styles](./CategoryStyles.md)
@@ -26,6 +30,3 @@
 * [Shortcuts](./Shortcuts.md)
 * [Thread store](./ThreadStore.md)
 * [View errors](./ViewErrors.md)
-* [Settings](./settings/README.md)
-  * [Core settings](./settings/Core.md)
-  * [Database settings](./settings/Database.md)

@@ -13,23 +13,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL(
-            "DROP INDEX misago_users_user_is_staff_partial",
-            """
-                CREATE INDEX misago_users_user_is_staff_partial
-                ON misago_users_user(is_staff)
-                WHERE is_staff = TRUE
-            """,
-        ),
-        migrations.RunSQL(
-            "DROP INDEX misago_users_user_requires_activation_partial",
-            """
-                CREATE INDEX misago_users_user_requires_activation_partial
-                ON misago_users_user(requires_activation)
-                WHERE requires_activation > 0
-            """,
-        ),
-
         migrations.AddIndex(
             model_name='user',
             index=misago.core.pgutils.PgPartialIndex(fields=['is_staff'], name='misago_user_is_staf_bf68aa_part', where={'is_staff': True}),

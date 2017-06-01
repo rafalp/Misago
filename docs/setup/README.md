@@ -35,7 +35,7 @@ This error is caused by Misago being installed using setuptools older than 8.0 r
 
 To install Misago setup and activate virtual environment for your site and then fire following command:
 
-    pip install misago --pre
+    pip install misago
 
 This will install Misago in your virtual environment and make `misago-start.py` script available for you to use to create pre-configured Misago site.
 
@@ -43,7 +43,7 @@ Now decide on your site's module name. This name will be used for python module 
 
 Once you've decided on your name, create your site configuration module. In example we assume your site will be named "misagoforumorg":
 
-	misago-start.py misagoforumorg
+    misago-start.py misagoforumorg
 
 This will create directory "misagoforumorg" in your working directory. Inside you will find following items:
 

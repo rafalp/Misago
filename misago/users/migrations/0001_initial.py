@@ -8,7 +8,6 @@ from django.contrib.postgres.fields import JSONField
 from django.db import migrations, models
 
 import misago.users.avatars.store
-from misago.core.pgutils import CreatePartialIndex
 
 
 class Migration(migrations.Migration):
@@ -138,16 +137,6 @@ class Migration(migrations.Migration):
                 'abstract': False,
             },
             bases=(models.Model, ),
-        ),
-        CreatePartialIndex(
-            field='User.is_staff',
-            index_name='misago_users_user_is_staff_partial',
-            condition='is_staff = TRUE',
-        ),
-        CreatePartialIndex(
-            field='User.requires_activation',
-            index_name='misago_users_user_requires_activation_partial',
-            condition='requires_activation > 0',
         ),
         migrations.CreateModel(
             name='Online',

@@ -9,7 +9,6 @@ from django.contrib.postgres.search import SearchVectorField
 from django.db import migrations, models
 
 import misago.threads.models.attachment
-from misago.core.pgutils import CreatePartialIndex
 
 
 class Migration(migrations.Migration):
@@ -97,16 +96,6 @@ class Migration(migrations.Migration):
             options={},
             bases=(models.Model, ),
         ),
-        CreatePartialIndex(
-            field='Post.has_open_reports',
-            index_name='misago_post_has_open_reports_partial',
-            condition='has_open_reports = TRUE',
-        ),
-        CreatePartialIndex(
-            field='Post.is_hidden',
-            index_name='misago_post_is_hidden_partial',
-            condition='is_hidden = FALSE',
-        ),
         migrations.CreateModel(
             name='Thread',
             fields=[
@@ -138,16 +127,6 @@ class Migration(migrations.Migration):
             ],
             options={},
             bases=(models.Model, ),
-        ),
-        CreatePartialIndex(
-            field='Thread.weight',
-            index_name='misago_thread_is_global',
-            condition='weight = 2',
-        ),
-        CreatePartialIndex(
-            field='Thread.weight',
-            index_name='misago_thread_is_local',
-            condition='weight < 2',
         ),
         migrations.CreateModel(
             name='ThreadParticipant',
@@ -183,36 +162,6 @@ class Migration(migrations.Migration):
                 to=settings.AUTH_USER_MODEL
             ),
             preserve_default=True,
-        ),
-        CreatePartialIndex(
-            field='Thread.has_reported_posts',
-            index_name='misago_thread_has_reported_posts_partial',
-            condition='has_reported_posts = TRUE',
-        ),
-        CreatePartialIndex(
-            field='Thread.has_unapproved_posts',
-            index_name='misago_thread_has_unapproved_posts_partial',
-            condition='has_unapproved_posts = TRUE',
-        ),
-        CreatePartialIndex(
-            field='Thread.is_hidden',
-            index_name='misago_thread_is_hidden_partial',
-            condition='is_hidden = FALSE',
-        ),
-        CreatePartialIndex(
-            field='Thread.weight',
-            index_name='misago_thread_is_pinned_globally_partial',
-            condition='weight = 2',
-        ),
-        CreatePartialIndex(
-            field='Thread.weight',
-            index_name='misago_thread_is_pinned_locally_partial',
-            condition='weight = 1',
-        ),
-        CreatePartialIndex(
-            field='Thread.weight',
-            index_name='misago_thread_is_unpinned_partial',
-            condition='weight = 0',
         ),
         migrations.AddField(
             model_name='post',
