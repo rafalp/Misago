@@ -1,5 +1,5 @@
 import React from 'react';
-import Avatar from 'misago/components/Avatar'; // jshint ignore:line
+import Avatar from 'misago/components/avatar'; // jshint ignore:line
 import Button from 'misago/components/button'; // jshint ignore:line
 import misago from 'misago/index'; // jshint ignore:line
 import ajax from 'misago/services/ajax'; // jshint ignore:line

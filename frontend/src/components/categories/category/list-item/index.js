@@ -2,7 +2,7 @@
 import React from 'react';
 import Main from './main';
 import LastThread from './last-thread';
-import Stats from './Stats';
+import Stats from './stats';
 import Subcategories from './subcategories';
 
 export default function({ category, isFirst }) {
