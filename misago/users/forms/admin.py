@@ -10,6 +10,7 @@ from misago.core import threadstore
 from misago.core.forms import IsoDateTimeField, YesNoSwitch
 from misago.core.validators import validate_sluggable
 from misago.users.models import Ban, Rank
+from misago.users.profilefields import profilefields
 from misago.users.validators import validate_email, validate_username
 
 
@@ -273,6 +274,8 @@ def EditUserFormFactory(FormType, instance, add_is_active_fields=False, add_admi
 
     if add_admin_fields:
         FormType = StaffFlagUserFormFactory(FormType, instance)
+
+    FormType = profilefields.extend_admin_form(FormType, instance)
 
     return FormType
 

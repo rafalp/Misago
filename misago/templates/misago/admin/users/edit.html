@@ -116,6 +116,16 @@ class="form-horizontal"
     {% form_row form.signature_lock_staff_message label_class field_class %}
 
   </fieldset>
+  {% for group in form.get_profile_fields_groups %}
+    <fieldset>
+      <legend>{% trans group.name %}</legend>
+
+      {% for field in group.fields %}
+        {% form_row field label_class field_class %}
+      {% endfor %}
+
+    </fieldset>
+  {% endfor %}
   <fieldset>
     <legend>{% trans "Forum options" %}</legend>
 
