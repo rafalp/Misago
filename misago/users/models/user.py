@@ -264,6 +264,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     last_posted_on = models.DateTimeField(null=True, blank=True)
 
+    extra = JSONField(default=dict)
+
     USERNAME_FIELD = 'slug'
     REQUIRED_FIELDS = ['email']
 
