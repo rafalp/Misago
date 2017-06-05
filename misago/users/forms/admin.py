@@ -10,7 +10,6 @@ from misago.core import threadstore
 from misago.core.forms import IsoDateTimeField, YesNoSwitch
 from misago.core.validators import validate_sluggable
 from misago.users.models import Ban, Rank
-from misago.users.profilefields import profilefields
 from misago.users.validators import validate_email, validate_username
 
 
@@ -188,6 +187,28 @@ class EditUserForm(UserBaseForm):
             'subscribe_to_replied_threads',
         ]
 
+    def __init__(self, *args, **kwargs):
+        self.profilefields = kwargs.pop('profilefields')
+        self._profile_fields_groups = []
+
+        super(EditUserForm, self).__init__(*args, **kwargs)
+
+        self.profilefields.update_admin_form(self)
+
+    def get_profile_fields_groups(self):
+        profile_fields_groups = []
+        for group in self._profile_fields_groups:
+            fields_group = {
+                'name': group['name'],
+                'fields': [],
+            }
+
+            for fieldname in group['fields']:
+                fields_group['fields'].append(self[fieldname])
+
+            profile_fields_groups.append(fields_group)
+        return profile_fields_groups
+
     def clean_signature(self):
         data = self.cleaned_data['signature']
 
@@ -202,6 +223,10 @@ class EditUserForm(UserBaseForm):
             )
 
         return data
+
+    def clean(self):
+        data = super(EditUserForm, self).clean()
+        return self.profilefields.clean_admin_form(self, data)
 
 
 def UserFormFactory(FormType, instance):
@@ -274,8 +299,6 @@ def EditUserFormFactory(FormType, instance, add_is_active_fields=False, add_admi
 
     if add_admin_fields:
         FormType = StaffFlagUserFormFactory(FormType, instance)
-
-    FormType = profilefields.extend_admin_form(FormType, instance)
 
     return FormType
 

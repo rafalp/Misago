@@ -2,7 +2,7 @@ from django.utils.module_loading import import_string
 
 from misago.conf import settings
 
-from .base import ProfileField, TextProfileField
+from .base import ProfileField, TextProfileField, TextareaProfileField
 
 
 class ProfileFields(object):
@@ -36,16 +36,11 @@ class ProfileFields(object):
                             dict_from_map[field.fieldname]._field_path,
                         )
                     )
-                self.fields_dict[field_path] = field
+                self.fields_dict[field_path] = field()
 
         self.is_loaded = True
 
-    def extend_admin_form(self, form, user):
-        class ProfileFieldsForm(form, ProfileFieldsMixin):
-            profile_fields_groups = []
-
-        new_form = ProfileFieldsForm
-
+    def update_admin_form(self, form):
         if not self.is_loaded:
             self.load()
 
@@ -56,34 +51,22 @@ class ProfileFields(object):
             }
 
             for field_path in group['fields']:
-                old_form = new_form
+                field = self.fields_dict[field_path]
+                admin_field = field.get_admin_field(form.instance)
+                if admin_field:
+                    form.fields[field.fieldname] = admin_field
+                    group_dict['fields'].append(field.fieldname)
 
-                field = self.fields_dict[field_path]()
-                new_form = field.extend_admin_form(old_form, user)
+            form._profile_fields_groups.append(group_dict)
 
-                if new_form != old_form:
-                   group_dict['fields'].append(field.fieldname)
+    def clean_admin_form(self, form, data):
+        for field in self.fields_dict.values():
+            data = field.clean_admin_form(form, data) or data
+        return data
 
-            if group_dict['fields']:
-                new_form.profile_fields_groups.append(group_dict)
-
-        return new_form
-
-
-class ProfileFieldsMixin(object):
-    def get_profile_fields_groups(self):
-        profile_fields_groups = []
-        for group in self.profile_fields_groups:
-            fields_group = {
-                'name': group['name'],
-                'fields': [],
-            }
-
-            for fieldname in group['fields']:
-                fields_group['fields'].append(self[fieldname])
-
-            profile_fields_groups.append(fields_group)
-        return profile_fields_groups
+    def admin_update_extra(self, user, cleaned_data):
+        for field in self.fields_dict.values():
+            field.admin_update_extra(user, cleaned_data)
 
 
 profilefields = ProfileFields(settings.MISAGO_PROFILE_FIELDS)

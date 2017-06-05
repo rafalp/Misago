@@ -7,6 +7,7 @@ class ProfileField(object):
     """
     fieldname = None
     label = None
+    readonly = False
 
     def get_label(self, user):
         if not self.label:
@@ -16,36 +17,36 @@ class ProfileField(object):
             )
         return self.label
 
-    def extend_admin_form(self, form, user):
-        return form
+    def get_admin_field(self, user):
+        return None
+
+    def clean_admin_form(self, form, data):
+        return data
+
+    def admin_update_extra(self, user, cleaned_data):
+        if self.readonly:
+            return
+        user.extra[self.fieldname] = cleaned_data.get(self.fieldname)
 
 
 class TextProfileField(ProfileField):
-    def extend_admin_form(self, form, user):
-        fieldname = self.fieldname
-
-        return type('TextProfileFieldForm', (form,), {
-            fieldname: self.get_admin_form_field(
-                user, fieldname, self.get_label(user)),
-            'clean_{}'.format(fieldname): self.get_admin_form_field_clean(
-                user, fieldname),
-        })
-
-    def get_admin_form_field(self, user, fieldname, label):
+    def get_admin_field(self, user):
         return forms.CharField(
-            label=label,
-            initial=user.extra.get(fieldname),
+            label=self.get_label(user),
+            initial=user.extra.get(self.fieldname),
             max_length=250,
             required=False,
         )
 
-    def get_admin_form_field_clean(self, user, fieldname):
-        def clean_field(self):
-            data = self.cleaned_data.get(fieldname)
-            user.extra[fieldname] = data
-            return data
-        return clean_field
-
 
 class TextareaProfileField(TextProfileField):
-    pass
+    def get_admin_field(self, user):
+        return forms.CharField(
+            label=self.get_label(user),
+            initial=user.extra.get(self.fieldname),
+            max_length=250,
+            widget=forms.Textarea(
+                attrs={'rows': 4},
+            ),
+            required=False,
+        )

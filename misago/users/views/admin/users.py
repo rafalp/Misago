@@ -16,6 +16,7 @@ from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
 from misago.users.forms.admin import (
     BanUsersForm, EditUserForm, EditUserFormFactory, NewUserForm, SearchUsersForm)
 from misago.users.models import Ban
+from misago.users.profilefields import profilefields
 from misago.users.signatures import set_user_signature
 
 
@@ -263,6 +264,17 @@ class EditUser(UserAdmin, generic.ModelFormView):
         target.old_is_avatar_locked = target.is_avatar_locked
         return super(EditUser, self).real_dispatch(request, target)
 
+    def initialize_form(self, form, request, target):
+        if request.method == 'POST':
+            return form(
+                request.POST,
+                request.FILES,
+                instance=target,
+                profilefields=profilefields,
+            )
+        else:
+            return form(instance=target, profilefields=profilefields)
+
     def handle_form(self, form, request, target):
         target.username = target.old_username
         if target.username != form.cleaned_data.get('username'):
@@ -298,6 +310,8 @@ class EditUser(UserAdmin, generic.ModelFormView):
         target.roles.add(*form.cleaned_data['roles'])
 
         set_user_signature(request, target, form.cleaned_data.get('signature'))
+
+        profilefields.admin_update_extra(target, form.cleaned_data)
 
         target.update_acl_key()
         target.save()
