@@ -3,7 +3,7 @@
 * [Introduction](./README.md)
 * [Setup and maintenance](./setup/README.md)
   * [Updating from Misago 0.5](./setup/UpdatingFrom05.md)
-  * [Update paths](./setup/UpdatePath.md)
+  * [Update paths](./setup/UpdatePaths.md)
 * [Settings](./settings/README.md)
   * [Core settings](./settings/Core.md)
   * [Database settings](./settings/Database.md)
