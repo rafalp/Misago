@@ -101,6 +101,11 @@ MISAGO_NEW_REGISTRATIONS_VALIDATORS = [
 ]
 
 
+# Custom profile fields
+
+MISAGO_PROFILE_FIELDS = []
+
+
 # Stop Forum Spam settings
 
 MISAGO_USE_STOP_FORUM_SPAM = True
