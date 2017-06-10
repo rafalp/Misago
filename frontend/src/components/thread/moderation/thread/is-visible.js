@@ -1,5 +1,5 @@
 export default function(thread) {
-  return (
+  return !!(
     (thread.acl.can_approve && thread.is_unapproved) ||
     thread.acl.can_close ||
     thread.acl.can_hide ||
