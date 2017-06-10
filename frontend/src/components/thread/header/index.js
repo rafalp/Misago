@@ -85,7 +85,7 @@ export default class extends Form {
 
   render() {
     const {thread, user} = this.props;
-    const showModeration = user.id && isModerationVisible(thread);
+    const showModeration = !!user.id && isModerationVisible(thread);
 
     if (this.state.isEditing) {
       return (
@@ -145,7 +145,7 @@ export default class extends Form {
               </div>
               <div className={showModeration ? "col-sm-3 col-md-4" : "col-sm-3 col-md-2"}>
                 <div className="row xs-margin-top md-margin-top-no">
-                  <div className="col-xs-6">
+                  <div className={showModeration ? "col-xs-6" : "col-xs-12"}>
                     <button
                       className="btn btn-default btn-block btn-outline"
                       onClick={this.onEdit}
