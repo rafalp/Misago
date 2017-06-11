@@ -15,17 +15,26 @@ class ProfileFields(object):
     def load(self):
         self.fields_dict = {}
 
+        fieldnames = {}
+
         for group in self.fields_groups:
             for field_path in group['fields']:
                 field = import_string(field_path)
                 field._field_path = field_path
-                if not field.fieldname:
+
+                if field_path in self.fields_dict:
+                    raise ValueError(
+                        "{} profile field has been specified twice".format(field._field_path)
+                    )
+
+                if not getattr(field, 'fieldname', None):
                     raise ValueError(
                         "{} profile field has to specify fieldname attribute".format(
                             field._field_path,
                         )
                     )
-                if field.fieldname in self.fields_dict:
+
+                if field.fieldname in fieldnames:
                     raise ValueError(
                         (
                             '{} profile field defines fieldname "{}" '
@@ -33,9 +42,11 @@ class ProfileFields(object):
                         ).format(
                             field._field_path,
                             field.fieldname,
-                            dict_from_map[field.fieldname]._field_path,
+                            fieldnames[field.fieldname],
                         )
                     )
+
+                fieldnames[field.fieldname] = field_path
                 self.fields_dict[field_path] = field()
 
         self.is_loaded = True
