@@ -2,7 +2,7 @@ from django.utils.module_loading import import_string
 
 from misago.conf import settings
 
-from .base import ProfileField, TextProfileField, TextareaProfileField
+from .basefields import *
 
 
 class ProfileFields(object):
