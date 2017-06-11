@@ -10,6 +10,7 @@ from misago.core import threadstore
 from misago.core.forms import IsoDateTimeField, YesNoSwitch
 from misago.core.validators import validate_sluggable
 from misago.users.models import Ban, Rank
+from misago.users.profilefields import profilefields
 from misago.users.validators import validate_email, validate_username
 
 
@@ -188,12 +189,11 @@ class EditUserForm(UserBaseForm):
         ]
 
     def __init__(self, *args, **kwargs):
-        self.profilefields = kwargs.pop('profilefields')
         self._profile_fields_groups = []
 
         super(EditUserForm, self).__init__(*args, **kwargs)
 
-        self.profilefields.update_admin_form(self)
+        profilefields.update_admin_form(self)
 
     def get_profile_fields_groups(self):
         profile_fields_groups = []
@@ -226,7 +226,7 @@ class EditUserForm(UserBaseForm):
 
     def clean(self):
         data = super(EditUserForm, self).clean()
-        return self.profilefields.clean_admin_form(self, data)
+        return profilefields.clean_admin_form(self, data)
 
 
 def UserFormFactory(FormType, instance):
@@ -306,6 +306,7 @@ def EditUserFormFactory(FormType, instance, add_is_active_fields=False, add_admi
 class SearchUsersFormBase(forms.Form):
     username = forms.CharField(label=_("Username starts with"), required=False)
     email = forms.CharField(label=_("E-mail starts with"), required=False)
+    profilefields = forms.CharField(label=_("Profile fields contain"), required=False)
     inactive = YesNoSwitch(label=_("Inactive only"))
     disabled = YesNoSwitch(label=_("Disabled only"))
     is_staff = YesNoSwitch(label=_("Admins only"))
@@ -331,6 +332,10 @@ class SearchUsersFormBase(forms.Form):
 
         if criteria.get('is_staff'):
             queryset = queryset.filter(is_staff=True)
+
+        if criteria.get('profilefields', '').strip():
+            queryset = profilefields.admin_search(
+                criteria.get('profilefields').strip(), queryset)
 
         return queryset
 

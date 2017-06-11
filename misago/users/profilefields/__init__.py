@@ -75,9 +75,26 @@ class ProfileFields(object):
             data = field.clean_admin_form(form, data) or data
         return data
 
-    def admin_update_extra(self, user, cleaned_data):
+    def admin_update_profile_fields(self, user, cleaned_data):
         for field in self.fields_dict.values():
-            field.admin_update_extra(user, cleaned_data)
+            field.admin_update_profile_fields(user, cleaned_data)
+
+    def admin_search(self, criteria, queryset):
+        if not self.is_loaded:
+            self.load()
+
+        q_obj = None
+        for field in self.fields_dict.values():
+            q = field.admin_search(criteria, queryset)
+            if q:
+                if q_obj:
+                    q_obj = q_obj | q
+                else:
+                    q_obj = q
+        if q_obj:
+            return queryset.filter(q_obj)
+
+        return queryset
 
 
 profilefields = ProfileFields(settings.MISAGO_PROFILE_FIELDS)
