@@ -69,6 +69,7 @@ urlpatterns += [
             url(r'^threads/$', profile.UserThreadsView.as_view(), name='user-threads'),
             url(r'^followers/$', profile.UserFollowersView.as_view(), name='user-followers'),
             url(r'^follows/$', profile.UserFollowsView.as_view(), name='user-follows'),
+            url(r'^details/$', profile.UserProfileDetailsView.as_view(), name='user-details'),
             url(
                 r'^username-history/$',
                 profile.UserUsernameHistoryView.as_view(),

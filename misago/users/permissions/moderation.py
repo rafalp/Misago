@@ -21,6 +21,8 @@ __all__ = [
     'can_moderate_avatar',
     'allow_moderate_signature',
     'can_moderate_signature',
+    'allow_edit_profile_details',
+    'can_edit_profile_details',
     'allow_ban_user',
     'can_ban_user',
     'allow_lift_ban',
@@ -34,6 +36,7 @@ class PermissionsForm(forms.Form):
     can_rename_users = YesNoSwitch(label=_("Can rename users"))
     can_moderate_avatars = YesNoSwitch(label=_("Can moderate avatars"))
     can_moderate_signatures = YesNoSwitch(label=_("Can moderate signatures"))
+    can_moderate_profile_details = YesNoSwitch(label=_("Can moderate profile details"))
     can_ban_users = YesNoSwitch(label=_("Can ban users"))
     max_ban_length = forms.IntegerField(
         label=_("Max length, in days, of imposed ban"),
@@ -62,6 +65,7 @@ def build_acl(acl, roles, key_name):
         'can_rename_users': 0,
         'can_moderate_avatars': 0,
         'can_moderate_signatures': 0,
+        'can_moderate_profile_details': 0,
         'can_ban_users': 0,
         'max_ban_length': 2,
         'can_lift_bans': 0,
@@ -76,6 +80,7 @@ def build_acl(acl, roles, key_name):
         can_rename_users=algebra.greater,
         can_moderate_avatars=algebra.greater,
         can_moderate_signatures=algebra.greater,
+        can_moderate_profile_details=algebra.greater,
         can_ban_users=algebra.greater,
         max_ban_length=algebra.greater_or_zero,
         can_lift_bans=algebra.greater,
@@ -87,6 +92,7 @@ def add_acl_to_user(user, target):
     target.acl['can_rename'] = can_rename_user(user, target)
     target.acl['can_moderate_avatar'] = can_moderate_avatar(user, target)
     target.acl['can_moderate_signature'] = can_moderate_signature(user, target)
+    target.acl['can_edit_profile_details'] = can_edit_profile_details(user, target)
     target.acl['can_ban'] = can_ban_user(user, target)
     target.acl['max_ban_length'] = user.acl_cache['max_ban_length']
     target.acl['can_lift_ban'] = can_lift_ban(user, target)
@@ -95,6 +101,7 @@ def add_acl_to_user(user, target):
         'can_rename',
         'can_moderate_avatar',
         'can_moderate_signature',
+        'can_edit_profile_details',
         'can_ban',
     ]
 
@@ -137,6 +144,19 @@ def allow_moderate_signature(user, target):
 
 
 can_moderate_signature = return_boolean(allow_moderate_signature)
+
+
+def allow_edit_profile_details(user, target):
+    if user.is_anonymous:
+        raise PermissionDenied(_("You have to sign in to change profile details."))
+    if user != target and not user.acl_cache['can_moderate_profile_details']:
+        raise PermissionDenied(_("You can't change other users profile details."))
+    if not user.is_superuser and (target.is_staff or target.is_superuser):
+        message = _("You can't moderate administrators profile details.")
+        raise PermissionDenied(message)
+
+
+can_edit_profile_details = return_boolean(allow_edit_profile_details)
 
 
 def allow_ban_user(user, target):

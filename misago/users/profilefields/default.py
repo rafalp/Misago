@@ -1,9 +1,11 @@
+from __future__ import unicode_literals
+
 from django.utils.translation import ugettext_lazy as _
 
 from . import basefields
 
 
-class BioField(basefields.TextareaProfileField):
+class BioField(basefields.UrlifiedTextareaProfileField):
     fieldname = 'bio'
     label = _("Bio")
 
@@ -44,3 +46,9 @@ class TwitterHandleField(basefields.SlugProfileField):
     fieldname = 'twitter'
     label = _("Twitter handle")
     help_text = _('Without leading "@" sign.')
+
+    def get_display_data(self, request, user, data):
+        return {
+            'text': '@{}'.format(data),
+            'url': 'https://twitter.com/{}'.format(data),
+        }

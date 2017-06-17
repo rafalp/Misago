@@ -9,6 +9,7 @@ from misago.core.shortcuts import paginate, pagination_dict, validate_slug
 from misago.users.bans import get_user_ban
 from misago.users.online.utils import get_user_status
 from misago.users.pages import user_profile
+from misago.users.profilefields import profilefields, serialize_profilefields_data
 from misago.users.serializers import BanDetailsSerializer, UsernameChangeSerializer, UserSerializer
 from misago.users.viewmodels import Followers, Follows, UserPosts, UserThreads
 
@@ -143,6 +144,19 @@ class UserFollowsView(ProfileView):
 
         request.frontend_context['PROFILE_FOLLOWS'] = users.get_frontend_context()
         return users.get_template_context()
+
+
+class UserProfileDetailsView(ProfileView):
+    template_name = 'misago/profile/details.html'
+
+    def get_context_data(self, request, profile):
+        details = serialize_profilefields_data(request, profilefields, profile)
+
+        request.frontend_context['PROFILE_DETAILS'] = details
+
+        return {
+            'profile_details': details,
+        }
 
 
 class UserUsernameHistoryView(ProfileView):

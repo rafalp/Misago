@@ -87,6 +87,12 @@ class MisagoUsersConfig(AppConfig):
             component='follows',
         )
         user_profile.add_section(
+            link='misago:user-details',
+            name=_("Details"),
+            icon='person_outline',
+            component='details',
+        )
+        user_profile.add_section(
             link='misago:username-history',
             name=_("Username history"),
             icon='card_membership',

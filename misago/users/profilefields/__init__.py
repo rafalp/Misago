@@ -1,8 +1,10 @@
 from django.utils.module_loading import import_string
+from django.utils.translation import ugettext as _
 
 from misago.conf import settings
 
 from .basefields import *
+from .serializers import serialize_profilefields_data
 
 
 class ProfileFields(object):
@@ -57,7 +59,7 @@ class ProfileFields(object):
 
         for group in self.fields_groups:
             group_dict = {
-                'name': group['name'],
+                'name': _(group['name']),
                 'fields': [],
             }
 
@@ -95,6 +97,25 @@ class ProfileFields(object):
             return queryset.filter(q_obj)
 
         return queryset
+
+    def get_fields_groups(self):
+        if not self.is_loaded:
+            self.load()
+
+        groups = []
+        for group in self.fields_groups:
+            group_dict = {
+                'name': _(group['name']),
+                'fields': [],
+            }
+
+            for field_path in group['fields']:
+                field = self.fields_dict[field_path]
+                group_dict['fields'].append(field)
+
+            if group_dict['fields']:
+                groups.append(group_dict)
+        return groups
 
 
 profilefields = ProfileFields(settings.MISAGO_PROFILE_FIELDS)

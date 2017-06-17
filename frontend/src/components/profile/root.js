@@ -1,6 +1,7 @@
 import React from 'react'; // jshint ignore:line
 import { connect } from 'react-redux';
 import BanDetails from './ban-details'; // jshint ignore:line
+import Details from './details'; // jshint ignore:line
 import { Posts, Threads } from './feed'; // jshint ignore:line
 import Followers from './followers'; // jshint ignore:line
 import Follows from './follows'; // jshint ignore:line
@@ -97,13 +98,13 @@ const COMPONENTS = {
   'threads': Threads,
   'followers': Followers,
   'follows': Follows,
+  'details': Details,
   'username-history': UsernameHistory,
   'ban-details': BanDetails
 };
 
 export function paths() {
   let paths = [];
-
   misago.get('PROFILE_PAGES').forEach(function(item) {
     paths.push(Object.assign({}, item, {
       path: misago.get('PROFILE').url + item.component + '/',

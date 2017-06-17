@@ -136,6 +136,7 @@ def create_default_roles(apps, schema_editor):
                 'can_warn_users': 1,
                 'can_moderate_avatars': 1,
                 'can_moderate_signatures': 1,
+                'can_moderate_profile_details': 1,
             },
 
             # delete users
