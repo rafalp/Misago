@@ -19,13 +19,15 @@ from misago.threads.moderation import hide_post, hide_thread
 from misago.users.bans import get_user_ban
 from misago.users.online.utils import get_user_status
 from misago.users.permissions import (
-    allow_browse_users_list, allow_delete_user, allow_follow_user, allow_moderate_avatar,
-    allow_rename_user, allow_see_ban_details)
+    allow_browse_users_list, allow_delete_user, allow_edit_profile_details,
+    allow_follow_user, allow_moderate_avatar, allow_rename_user, allow_see_ban_details)
+from misago.users.profilefields import profilefields, serialize_profilefields_data
 from misago.users.serializers import BanDetailsSerializer, ForumOptionsSerializer, UserSerializer
 from misago.users.viewmodels import Followers, Follows, UserPosts, UserThreads
 
 from .rest_permissions import BasePermission, UnbannedAnonOnly
 from .userendpoints.avatar import avatar_endpoint, moderate_avatar_endpoint
+from .userendpoints.changedetails import change_details_endpoint
 from .userendpoints.changeemail import change_email_endpoint
 from .userendpoints.changepassword import change_password_endpoint
 from .userendpoints.create import create_endpoint
@@ -225,6 +227,18 @@ class UserViewSet(viewsets.GenericViewSet):
                 profile.delete()
 
         return Response({'detail': 'ok'})
+
+    @detail_route(methods=['get'])
+    def details(self, request, pk=None):
+        profile = self.get_user(request, pk)
+        data = serialize_profilefields_data(request, profilefields, profile)
+        return Response(data)
+
+    @detail_route(methods=['get', 'post'])
+    def change_details(self, request, pk=None):
+        profile = self.get_user(request, pk)
+        allow_edit_profile_details(request.user, profile)
+        return change_details_endpoint(request, profile)
 
     @detail_route(methods=['get'])
     def followers(self, request, pk=None):

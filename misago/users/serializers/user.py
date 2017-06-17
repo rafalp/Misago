@@ -124,6 +124,18 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
                     'pk': obj.pk
                 }
             ),
+            'details': reverse(
+                'misago:api:user-details',
+                kwargs={
+                    'pk': obj.pk,
+                }
+            ),
+            'change_details': reverse(
+                'misago:api:user-change-details',
+                kwargs={
+                    'pk': obj.pk,
+                }
+            ),
             'moderate_avatar': reverse(
                 'misago:api:user-moderate-avatar',
                 kwargs={

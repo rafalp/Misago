@@ -4,7 +4,7 @@ from misago.users.permissions import can_edit_profile_details
 def serialize_profilefields_data(request, profilefields, user):
     data = {
         'groups': [],
-        'edit': None,
+        'edit': False,
     }
 
     can_edit = can_edit_profile_details(request.user, user)
@@ -24,7 +24,6 @@ def serialize_profilefields_data(request, profilefields, user):
                 'fields': group_fields
             })
 
-    if can_edit and has_editable_fields:
-        data['edit'] = '/some-pfields-edit-url/'
+    data['edit'] = can_edit and has_editable_fields
 
     return data

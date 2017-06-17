@@ -53,7 +53,7 @@ class ProfileField(object):
         })
 
     def get_data(self, request, user):
-        field_data = user.profile_fields.get(self.fieldname)
+        field_data = user.profile_fields.get(self.fieldname, '')
         if not len(field_data):
             return None
 

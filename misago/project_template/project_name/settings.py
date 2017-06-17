@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/{{ docs_version }}/ref/settings/
 
 import os
 
+# Define placeholder gettext function
+# This function will mark strings in settings visible to makemessages
+# without need for Django's i18n features be initialized first.
+_ = lambda x: x
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -331,3 +336,26 @@ MISAGO_SEARCH_CONFIG = 'simple'
 # Those galleries can be loaded by running loadavatargallery command
 
 MISAGO_AVATAR_GALLERY = os.path.join(BASE_DIR, 'avatargallery')
+
+
+# Profile fields
+
+MISAGO_PROFILE_FIELDS = [
+    {
+        'name': _("Personal"),
+        'fields': [
+            'misago.users.profilefields.default.FullNameField',
+            'misago.users.profilefields.default.GenderField',
+            'misago.users.profilefields.default.BioField',
+            'misago.users.profilefields.default.LocationField',
+        ],
+    },
+    {
+        'name': _("Contact"),
+        'fields': [
+            'misago.users.profilefields.default.TwitterHandleField',
+            'misago.users.profilefields.default.SkypeHandleField',
+            'misago.users.profilefields.default.WebsiteField',
+        ],
+    },
+]
