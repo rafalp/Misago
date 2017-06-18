@@ -98,6 +98,11 @@ class ProfileFields(object):
 
         return queryset
 
+    def get_fields(self):
+        if not self.is_loaded:
+            self.load()
+        return self.fields_dict.values()
+
     def get_fields_groups(self):
         if not self.is_loaded:
             self.load()

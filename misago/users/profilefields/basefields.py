@@ -73,6 +73,26 @@ class ProfileField(object):
     def can_edit(self, request, user):
         return not self.readonly
 
+    def get_edit_field_json(self, request, user):
+        return {
+            'fieldname': self.fieldname,
+            'label': self.get_label(user),
+            'help_text': self.get_help_text(user),
+            'initial': user.profile_fields.get(self.fieldname),
+            'input': self.get_edit_field_input_attrs(request, user)
+        }
+
+    def get_edit_field_input_attrs(self, request, user):
+        return {
+            'type': 'text',
+        }
+
+    def get_field_for_validation(self, request, user):
+        return forms.CharField(max_length=250, required=False)
+
+    def clean_field(self, request, user, data):
+        return data
+
 
 class ChoiceProfileField(ProfileField):
     choices = None
@@ -117,6 +137,22 @@ class ChoiceProfileField(ProfileField):
                 }
         return None
 
+    def get_edit_field_input_attrs(self, request, user):
+        choices = []
+        for key, choice in self.get_choices():
+            choices.append({
+                'value': key,
+                'label': choice,
+            })
+
+        return {
+            'type': 'select',
+            'choices': choices,
+        }
+
+    def get_field_for_validation(self, request, user):
+        return forms.ChoiceField(choices=self.get_choices(user), required=False)
+
 
 class TextProfileField(ProfileField):
     def get_admin_field(self, user):
@@ -136,7 +172,7 @@ class TextareaProfileField(ProfileField):
             label=self.get_label(user),
             help_text=self.get_help_text(user),
             initial=user.profile_fields.get(self.fieldname),
-            max_length=250,
+            max_length=500,
             widget=forms.Textarea(
                 attrs={'rows': 4},
             ),
@@ -148,6 +184,14 @@ class TextareaProfileField(ProfileField):
         return {
             'html': html.linebreaks(html.escape(data)),
         }
+
+    def get_edit_field_input_attrs(self, request, user):
+        return {
+            'type': 'texarea',
+        }
+
+    def get_field_for_validation(self, request, user):
+        return forms.CharField(max_length=500, required=False)
 
 
 class UrlifiedTextareaProfileField(TextareaProfileField):
@@ -174,6 +218,9 @@ class SlugProfileField(ProfileField):
             'url': data,
         }
 
+    def get_field_for_validation(self, request, user):
+        return forms.SlugField(max_length=250, required=False)
+
 
 class UrlProfileField(ProfileField):
     def get_admin_field(self, user):
@@ -191,3 +238,6 @@ class UrlProfileField(ProfileField):
             'text': data,
             'url': data,
         }
+
+    def get_field_for_validation(self, request, user):
+        return forms.URLField(max_length=250, required=False)

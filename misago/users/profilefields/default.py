@@ -28,7 +28,7 @@ class GenderField(basefields.ChoiceProfileField):
         ('', _('Not specified')),
         ('secret', _('Not telling')),
         ('f', _('Female')),
-        ('f', _('Male')),
+        ('m', _('Male')),
     )
 
 
@@ -42,7 +42,7 @@ class SkypeHandleField(basefields.TextProfileField):
     label = _("Skype ID")
 
 
-class TwitterHandleField(basefields.SlugProfileField):
+class TwitterHandleField(basefields.TextProfileField):
     fieldname = 'twitter'
     label = _("Twitter handle")
     help_text = _('Without leading "@" sign.')
@@ -52,3 +52,6 @@ class TwitterHandleField(basefields.SlugProfileField):
             'text': '@{}'.format(data),
             'url': 'https://twitter.com/{}'.format(data),
         }
+
+    def clean_field(self, request, user, data):
+        return data.lstrip('@')

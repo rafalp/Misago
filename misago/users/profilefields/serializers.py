@@ -3,6 +3,7 @@ from misago.users.permissions import can_edit_profile_details
 
 def serialize_profilefields_data(request, profilefields, user):
     data = {
+        'id': user.pk,
         'groups': [],
         'edit': False,
     }
