@@ -61,7 +61,10 @@ class ProfileField(object):
         if not data:
             return None
 
-        data['name'] = text_type(self.get_label(user))
+        data.update({
+            'fieldname': self.fieldname,
+            'name': text_type(self.get_label(user)),
+        })
 
         return data
 

@@ -54,4 +54,4 @@ class TwitterHandleField(basefields.TextProfileField):
         }
 
     def clean_field(self, request, user, data):
-        return data.lstrip('@')
+        return data.lstrip('@').replace('/', '').replace('\\', '')

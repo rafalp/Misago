@@ -84,11 +84,14 @@ export default class extends WithDropdown {
 
 export function select(store) {
   return {
-    'tick': store.tick.tick,
-    'user': store.auth.user,
-    'users': store.users,
-    'posts': store.posts,
-    'profile': store.profile,
+    isAuthenticated: store.auth.user === store.profile.id,
+
+    tick: store.tick.tick,
+    user: store.auth.user,
+    users: store.users,
+    posts: store.posts,
+    profile: store.profile,
+    profileDetails: store['profile-details'],
     'username-history': store['username-history']
   };
 }
