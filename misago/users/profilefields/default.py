@@ -27,8 +27,8 @@ class GenderField(basefields.ChoiceProfileField):
     choices = (
         ('', _('Not specified')),
         ('secret', _('Not telling')),
-        ('f', _('Female')),
-        ('m', _('Male')),
+        ('female', _('Female')),
+        ('male', _('Male')),
     )
 
 

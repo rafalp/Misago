@@ -42,9 +42,7 @@ export default class extends React.Component {
               aria-expanded="false"
               aria-describedby={this.props['aria-describedby'] || null}
               disabled={this.props.disabled || false}>
-        <span className="material-icon">
-          {this.getIcon()}
-        </span>
+        <Icon icon={this.getIcon()} />
         {this.getLabel()}
       </button>
       <ul className="dropdown-menu">
@@ -52,9 +50,7 @@ export default class extends React.Component {
           return <li key={i}>
             <button type="button" className="btn-link"
                     onClick={this.change(item.value)}>
-              <span className="material-icon">
-                {item.icon}
-              </span>
+              <Icon icon={item.icon} />
               {item.label}
             </button>
           </li>;
@@ -64,3 +60,15 @@ export default class extends React.Component {
     /* jshint ignore:end */
   }
 }
+
+/* jshint ignore:start */
+export function Icon({ icon }) {
+  if (!icon) return null;
+
+  return (
+    <span className="material-icon">
+      {icon}
+    </span>
+  )
+}
+/* jshint ignore:end */

@@ -190,7 +190,7 @@ class TextareaProfileField(ProfileField):
 
     def get_edit_field_input_attrs(self, request, user):
         return {
-            'type': 'texarea',
+            'type': 'textarea',
         }
 
     def get_field_for_validation(self, request, user):
