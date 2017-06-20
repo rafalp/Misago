@@ -44,16 +44,17 @@ export default class extends React.Component {
         <Loader display={this.state.loading} />
         <FormDisplay
           api={this.props.api}
-          groups={this.state.groups}
           display={!this.state.loading}
+          groups={this.state.groups}
           onCancel={this.props.onCancel}
+          onSuccess={this.props.onSuccess}
         />
       </div>
     );
   }
 }
 
-export function FormDisplay({ api, groups, display, onCancel }) {
+export function FormDisplay({ api, display, groups, onCancel, onSuccess }) {
   if (!display) return null;
 
   return (
@@ -61,6 +62,7 @@ export function FormDisplay({ api, groups, display, onCancel }) {
       api={api}
       groups={groups}
       onCancel={onCancel}
+      onSuccess={onSuccess}
     />
   );
 }

@@ -3,6 +3,7 @@ import React from 'react';
 import Fieldset from './fieldset';
 import Button from 'misago/components/button';
 import Form from 'misago/components/form';
+import ajax from 'misago/services/ajax';
 
 export default class extends Form {
   constructor(props) {
@@ -24,6 +25,19 @@ export default class extends Form {
         this.state[fieldname] = initial;
       }
     }
+  }
+
+  send() {
+    const data = Object.assign({}, this.state, {
+      errors: null,
+      isLoading: null
+    });
+
+    return ajax.post(this.props.api, data)
+  }
+
+  handleSuccess(data) {
+    this.props.onSuccess(data);
   }
 
   onChange = (name, value) => {

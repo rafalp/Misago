@@ -4,7 +4,9 @@ import Form from './form';
 import GroupsList from './groups-list';
 import Header from './header';
 import ProfileDetailsData from 'misago/data/profile-details';
+import { load as loadDetails } from 'misago/reducers/profile-details';
 import title from 'misago/services/page-title';
+import snackbar from 'misago/services/snackbar';
 
 export default class extends React.Component {
   constructor(props) {
@@ -22,12 +24,32 @@ export default class extends React.Component {
     });
   }
 
+  onCancel = () => {
+    this.setState({ editing: false });
+  };
+
   onEdit = () => {
     this.setState({ editing: true });
   };
 
-  onCancel = () => {
-    this.setState({ editing: false });
+  onSuccess = (newDetails) => {
+    const { dispatch, isAuthenticated, profile } = this.props;
+
+    let message = null;
+    if (isAuthenticated) {
+      message = gettext("Your profile details have been updated.");
+    } else {
+      message = interpolate(
+        gettext("%(username)s's profile details have been updated."),
+        {
+          'username': profile.username,
+        },
+        true
+      );
+    }
+
+    snackbar.info(message);
+    dispatch(loadDetails(newDetails));
   };
 
   render() {
@@ -54,9 +76,10 @@ export default class extends React.Component {
           />
           <Form
             api={profile.api.change_details}
-            onCancel={this.onCancel}
             dispatch={dispatch}
             display={this.state.editing}
+            onCancel={this.onCancel}
+            onSuccess={this.onSuccess}
           />
         </div>
       </ProfileDetailsData>

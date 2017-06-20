@@ -2,13 +2,13 @@
 import React from 'react';
 import Form from 'misago/components/edit-profile-details';
 
-export default function({ api, onCancel, dispatch, display }) {
+export default function({ api, display, onCancel, onSuccess }) {
   if (!display) return null;
 
   return (
     <Form
       api={api}
-      dispatch={dispatch}
+      onSuccess={onSuccess}
       onCancel={onCancel}
     />
   );

@@ -90,7 +90,7 @@ class UserChangeDetailsApiTests(AuthenticatedUserTestCase):
     def test_api_updates_select_field(self):
         """api updates select field"""
         response = self.client.post(self.api_link, data={
-            'gender': 'f',
+            'gender': 'female',
         })
 
         self.assertEqual(response.status_code, 200)
