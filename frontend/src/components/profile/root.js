@@ -84,7 +84,7 @@ export default class extends WithDropdown {
 
 export function select(store) {
   return {
-    isAuthenticated: store.auth.user === store.profile.id,
+    isAuthenticated: store.auth.user.id === store.profile.id,
 
     tick: store.tick.tick,
     user: store.auth.user,
