@@ -53,6 +53,7 @@ export default class extends Form {
           {this.props.groups.map((group, i) => {
             return (
               <Fieldset
+                disabled={this.state.isLoading}
                 fields={group.fields}
                 name={group.name}
                 key={i}

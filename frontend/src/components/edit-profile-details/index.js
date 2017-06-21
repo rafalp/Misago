@@ -1,5 +1,6 @@
 /* jshint ignore:start */
 import React from 'react';
+import Blankslate from './blankslate';
 import Loader from './loader';
 import Form from './form';
 import ajax from 'misago/services/ajax';
@@ -34,6 +35,8 @@ export default class extends React.Component {
   }
 
   render() {
+    const { groups, loading } = this.state;
+
     return (
       <div className="panel panel-default panel-form">
         <div className="panel-heading">
@@ -41,11 +44,12 @@ export default class extends React.Component {
             {gettext("Edit profile details")}
           </h3>
         </div>
-        <Loader display={this.state.loading} />
+        <Loader display={loading} />
+        <Blankslate display={!loading && !groups.length} />
         <FormDisplay
           api={this.props.api}
-          display={!this.state.loading}
-          groups={this.state.groups}
+          display={!loading && groups.length}
+          groups={groups}
           onCancel={this.props.onCancel}
           onSuccess={this.props.onSuccess}
         />

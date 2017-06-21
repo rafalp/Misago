@@ -26,6 +26,7 @@ urlpatterns += [
     url(r'^options/$', options.index, name='options'),
     url(r'^options/(?P<form_name>[-a-zA-Z]+)/$', options.index, name='options-form'),
     url(r'^options/forum-options/$', options.index, name='usercp-change-forum-options'),
+    url(r'^options/edit-details/$', options.index, name='usercp-edit-profile-details'),
     url(r'^options/change-username/$', options.index, name='usercp-change-username'),
     url(r'^options/sign-in-credentials/$', options.index, name='usercp-change-email-password'),
     url(

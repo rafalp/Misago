@@ -9,13 +9,14 @@ export default class extends React.Component {
   }
 
   render() {
-    const { field, value } = this.props;
+    const { disabled, field, value } = this.props;
     const { input } = field;
 
     if (input.type === 'select') {
       return (
         <Select
           choices={input.choices}
+          disabled={disabled}
           id={"id_" + field.fieldname}
           onChange={this.onChange}
           value={value}
@@ -27,6 +28,7 @@ export default class extends React.Component {
       return (
         <textarea
           className="form-control"
+          disabled={disabled}
           id={"id_" + field.fieldname}
           onChange={this.onChange}
           rows="4"
@@ -40,6 +42,7 @@ export default class extends React.Component {
       return (
         <input
           className="form-control"
+          disabled={disabled}
           id={"id_" + field.fieldname}
           onChange={this.onChange}
           type="text"

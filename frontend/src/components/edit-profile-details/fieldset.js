@@ -3,7 +3,7 @@ import React from 'react';
 import FieldInput from './field-input';
 import FormGroup from 'misago/components/form-group';
 
-export default function({ name, fields, onChange, value }) {
+export default function({ disabled, fields, name, onChange, value }) {
   return (
     <fieldset>
       <legend>{name}</legend>
@@ -15,6 +15,7 @@ export default function({ name, fields, onChange, value }) {
             label={field.label}
           >
             <FieldInput
+              disabled={disabled}
               field={field}
               onChange={onChange}
               value={value[field.fieldname]}

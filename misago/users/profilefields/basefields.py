@@ -81,7 +81,7 @@ class ProfileField(object):
             'fieldname': self.fieldname,
             'label': self.get_label(user),
             'help_text': self.get_help_text(user),
-            'initial': user.profile_fields.get(self.fieldname),
+            'initial': user.profile_fields.get(self.fieldname, ''),
             'input': self.get_edit_field_input_attrs(request, user)
         }
 
