@@ -9,12 +9,12 @@ from misago.users.testutils import AuthenticatedUserTestCase
 UserModel = get_user_model()
 
 
-class UserChangeDetailsApiTests(AuthenticatedUserTestCase):
+class UserEditDetailsApiTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(UserChangeDetailsApiTests, self).setUp()
+        super(UserEditDetailsApiTests, self).setUp()
 
         self.api_link = reverse(
-            'misago:api:user-change-details',
+            'misago:api:user-edit-details',
             kwargs={
                 'pk': self.user.pk,
             }
@@ -38,7 +38,7 @@ class UserChangeDetailsApiTests(AuthenticatedUserTestCase):
         test_user = UserModel.objects.create_user('BobBoberson', 'bob@test.com', 'bob123456')
 
         api_link = reverse(
-            'misago:api:user-change-details',
+            'misago:api:user-edit-details',
             kwargs={
                 'pk': test_user.pk,
             }
@@ -63,7 +63,7 @@ class UserChangeDetailsApiTests(AuthenticatedUserTestCase):
     def test_nonexistant_user(self):
         """api handles nonexistant users"""
         api_link = reverse(
-            'misago:api:user-change-details',
+            'misago:api:user-edit-details',
             kwargs={
                 'pk': self.user.pk + 123,
             }

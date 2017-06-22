@@ -6,7 +6,7 @@ from django import forms
 from misago.users.profilefields import profilefields, serialize_profilefields_data
 
 
-def change_details_endpoint(request, user):
+def edit_details_endpoint(request, user):
     if request.method == 'GET':
         return get_form_description(request, user)
 

@@ -148,11 +148,11 @@ can_moderate_signature = return_boolean(allow_moderate_signature)
 
 def allow_edit_profile_details(user, target):
     if user.is_anonymous:
-        raise PermissionDenied(_("You have to sign in to change profile details."))
+        raise PermissionDenied(_("You have to sign in to edit profile details."))
     if user != target and not user.acl_cache['can_moderate_profile_details']:
-        raise PermissionDenied(_("You can't change other users profile details."))
+        raise PermissionDenied(_("You can't edit other users details."))
     if not user.is_superuser and (target.is_staff or target.is_superuser):
-        message = _("You can't moderate administrators profile details.")
+        message = _("You can't edit administrators details.")
         raise PermissionDenied(message)
 
 

@@ -19,7 +19,7 @@ export default class extends React.Component {
   render() {
     return (
       <Form
-        api={this.props.user.api.change_details}
+        api={this.props.user.api.edit_details}
         onSuccess={this.onSuccess}
       />
     );

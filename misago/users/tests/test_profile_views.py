@@ -150,6 +150,15 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         for i in range(10):
             self.assertContains(response, "Follower%s" % i)
 
+    def test_user_details(self):
+        """user details page has no showstoppers"""
+        response = self.client.get(reverse(
+            'misago:user-details',
+            kwargs=self.link_kwargs,
+        ))
+
+        self.assertEqual(response.status_code, 200)
+
     def test_username_history_list(self):
         """user name changes history list has no showstoppers"""
         response = self.client.get(reverse(

@@ -76,7 +76,7 @@ export default class extends React.Component {
             profile={profile}
           />
           <Form
-            api={profile.api.change_details}
+            api={profile.api.edit_details}
             dispatch={dispatch}
             display={this.state.editing}
             onCancel={this.onCancel}
