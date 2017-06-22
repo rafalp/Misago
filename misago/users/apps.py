@@ -24,8 +24,8 @@ class MisagoUsersConfig(AppConfig):
             icon='settings',
         )
         usercp.add_section(
-            link='misago:usercp-change-profile-details',
-            name=_('Edit profile details'),
+            link='misago:usercp-change-details',
+            name=_('Edit details'),
             component='edit-details',
             icon='person_outline',
         )

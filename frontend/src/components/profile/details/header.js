@@ -8,7 +8,7 @@ export default function({ onEdit, showEditButton }) {
         <div className="row">
           <div className="col-sm-8 col-md-10">
             <h3 className="md-margin-top-no">
-              {gettext("Profile details")}
+              {gettext("Details")}
             </h3>
           </div>
           <EditButton

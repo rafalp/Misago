@@ -37,10 +37,10 @@ export default class extends React.Component {
 
     let message = null;
     if (isAuthenticated) {
-      message = gettext("Your profile details have been updated.");
+      message = gettext("Your details have been updated.");
     } else {
       message = interpolate(
-        gettext("%(username)s's profile details have been updated."),
+        gettext("%(username)s's details have been updated."),
         {
           'username': profile.username,
         },
@@ -50,6 +50,7 @@ export default class extends React.Component {
 
     snackbar.info(message);
     dispatch(loadDetails(newDetails));
+    this.setState({ editing: false });
   };
 
   render() {

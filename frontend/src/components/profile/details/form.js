@@ -1,6 +1,6 @@
 /* jshint ignore:start */
 import React from 'react';
-import Form from 'misago/components/edit-profile-details';
+import Form from 'misago/components/edit-details';
 
 export default function({ api, display, onCancel, onSuccess }) {
   if (!display) return null;
@@ -8,8 +8,8 @@ export default function({ api, display, onCancel, onSuccess }) {
   return (
     <Form
       api={api}
-      onSuccess={onSuccess}
       onCancel={onCancel}
+      onSuccess={onSuccess}
     />
   );
 }

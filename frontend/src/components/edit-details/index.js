@@ -41,7 +41,7 @@ export default class extends React.Component {
       <div className="panel panel-default panel-form">
         <div className="panel-heading">
           <h3 className="panel-title">
-            {gettext("Edit profile details")}
+            {gettext("Edit details")}
           </h3>
         </div>
         <Loader display={loading} />
