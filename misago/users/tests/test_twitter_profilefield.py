@@ -8,9 +8,9 @@ from misago.admin.testutils import AdminTestCase
 UserModel = get_user_model()
 
 
-class BioProfileFieldTests(AdminTestCase):
+class TwitterProfileFieldTests(AdminTestCase):
     def setUp(self):
-        super(BioProfileFieldTests, self).setUp()
+        super(TwitterProfileFieldTests, self).setUp()
 
         self.test_link = reverse(
             'misago:admin:users:accounts:edit',
@@ -22,15 +22,15 @@ class BioProfileFieldTests(AdminTestCase):
     def test_field_displays_in_admin(self):
         """field displays in admin"""
         response = self.client.get(self.test_link)
-        self.assertContains(response, 'name="bio"')
+        self.assertContains(response, 'name="twitter"')
 
     def test_admin_clears_field(self):
         """admin form allows admins to clear field"""
-        self.user.profile_fields['bio'] = 'Exists!'
+        self.user.profile_fields['twitter'] = 'lorem_ipsum'
         self.user.save()
 
         self.reload_user()
-        self.assertEqual(self.user.profile_fields['bio'], 'Exists!')
+        self.assertEqual(self.user.profile_fields['twitter'], 'lorem_ipsum')
 
         response = self.client.post(
             self.test_link,
@@ -53,7 +53,31 @@ class BioProfileFieldTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         self.reload_user()
-        self.assertEqual(self.user.profile_fields['bio'], '')
+        self.assertEqual(self.user.profile_fields['twitter'], '')
+
+    def test_admin_validates_field(self):
+        """admin form allows admins to edit field"""
+        response = self.client.post(
+            self.test_link,
+            data={
+                'username': 'Edited',
+                'rank': six.text_type(self.user.rank_id),
+                'roles': six.text_type(self.user.roles.all()[0].pk),
+                'email': 'reg@stered.com',
+                'twitter': 'lorem!ipsum',
+                'new_password': '',
+                'signature': '',
+                'is_signature_locked': '0',
+                'is_hiding_presence': '0',
+                'limits_private_thread_invites_to': '0',
+                'signature_lock_staff_message': '',
+                'signature_lock_user_message': '',
+                'subscribe_to_started_threads': '2',
+                'subscribe_to_replied_threads': '2',
+            }
+        )
+
+        self.assertContains(response, "This is not a valid twitter handle.")
 
     def test_admin_edits_field(self):
         """admin form allows admins to edit field"""
@@ -64,7 +88,7 @@ class BioProfileFieldTests(AdminTestCase):
                 'rank': six.text_type(self.user.rank_id),
                 'roles': six.text_type(self.user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
-                'bio': 'Edited field!',
+                'twitter': 'lorem_ipsum',
                 'new_password': '',
                 'signature': '',
                 'is_signature_locked': '0',
@@ -79,19 +103,19 @@ class BioProfileFieldTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         self.reload_user()
-        self.assertEqual(self.user.profile_fields['bio'], 'Edited field!')
+        self.assertEqual(self.user.profile_fields['twitter'], 'lorem_ipsum')
 
     def test_admin_search_field(self):
         """admin users search searches this field"""
         test_link = reverse('misago:admin:users:accounts:index')
 
-        response = self.client.get('{}?redirected=1&profilefields=Ipsum'.format(test_link))
+        response = self.client.get('{}?redirected=1&profilefields=ipsum'.format(test_link))
         self.assertContains(response, "No users matching search criteria have been found.")
 
-        self.user.profile_fields['bio'] = 'Lorem Ipsum Dolor Met'
+        self.user.profile_fields['twitter'] = 'lorem_ipsum'
         self.user.save()
 
-        response = self.client.get('{}?redirected=1&profilefields=Ipsum'.format(test_link))
+        response = self.client.get('{}?redirected=1&profilefields=ipsum'.format(test_link))
         self.assertNotContains(response, "No users matching search criteria have been found.")
 
     def test_field_display(self):
@@ -105,15 +129,15 @@ class BioProfileFieldTests(AdminTestCase):
         )
 
         response = self.client.get(test_link)
-        self.assertNotContains(response, 'Bio')
+        self.assertNotContains(response, 'Twitter')
 
-        self.user.profile_fields['bio'] = 'I am Bob!\n\nThis is <b>my</b> bio!'
+        self.user.profile_fields['twitter'] = 'lorem_ipsum'
         self.user.save()
 
         response = self.client.get(test_link)
-        self.assertContains(response, 'Bio')
-        self.assertContains(response, '<p>I am Bob!</p>')
-        self.assertContains(response, '<p>This is &lt;b&gt;my&lt;/b&gt; bio!</p>')
+        self.assertContains(response, 'Twitter')
+        self.assertContains(response, 'href="https://twitter.com/lorem_ipsum"')
+        self.assertContains(response, '@lorem_ipsum')
 
     def test_field_display_json(self):
         """field is included in display json"""
@@ -122,7 +146,7 @@ class BioProfileFieldTests(AdminTestCase):
         response = self.client.get(test_link)
         self.assertEqual(response.json()['groups'], [])
 
-        self.user.profile_fields['bio'] = 'I am Bob!\n\nThis is <b>my</b> bio!'
+        self.user.profile_fields['twitter'] = 'lorem_ipsum'
         self.user.save()
 
         response = self.client.get(test_link)
@@ -130,12 +154,13 @@ class BioProfileFieldTests(AdminTestCase):
             response.json()['groups'],
             [
                 {
-                    'name': 'Personal',
+                    'name': 'Contact',
                     'fields': [
                         {
-                            'fieldname': 'bio',
-                            'name': 'Bio',
-                            'html': '<p>I am Bob!</p>\n\n<p>This is &lt;b&gt;my&lt;/b&gt; bio!</p>',
+                            'fieldname': 'twitter',
+                            'name': 'Twitter handle',
+                            'text': '@lorem_ipsum',
+                            'url': 'https://twitter.com/lorem_ipsum',
                         }
                     ],
                 },
@@ -151,14 +176,14 @@ class BioProfileFieldTests(AdminTestCase):
         found_field = None
         for group in response.json():
             for field in group['fields']:
-                if field['fieldname'] == 'bio':
+                if field['fieldname'] == 'twitter':
                     found_field = field
 
         self.assertEqual(found_field, {
-            'fieldname': 'bio',
-            'label': 'Bio',
-            'help_text': None,
-            'input': {'type': 'textarea'},
+            'fieldname': 'twitter',
+            'label': 'Twitter handle',
+            'help_text': 'Without leading "@" sign.',
+            'input': {'type': 'text'},
             'initial': '',
         })
 
@@ -166,24 +191,31 @@ class BioProfileFieldTests(AdminTestCase):
         """field can be cleared via api"""
         test_link = reverse('misago:api:user-edit-details', kwargs={'pk': self.user.pk})
 
-        self.user.profile_fields['bio'] = 'Exists!'
+        self.user.profile_fields['twitter'] = 'lorem_ipsum'
         self.user.save()
 
         self.reload_user()
-        self.assertEqual(self.user.profile_fields['bio'], 'Exists!')
+        self.assertEqual(self.user.profile_fields['twitter'], 'lorem_ipsum')
 
         response = self.client.post(test_link, data={})
         self.assertEqual(response.status_code, 200)
 
         self.reload_user()
-        self.assertEqual(self.user.profile_fields['bio'], '')
+        self.assertEqual(self.user.profile_fields['twitter'], '')
+
+    def test_api_validates_field(self):
+        """field can be edited via api"""
+        test_link = reverse('misago:api:user-edit-details', kwargs={'pk': self.user.pk})
+
+        response = self.client.post(test_link, data={'twitter': '@lorem!ipsum'})
+        self.assertContains(response, "This is not a valid twitter handle.", status_code=400)
 
     def test_api_edits_field(self):
         """field can be edited via api"""
         test_link = reverse('misago:api:user-edit-details', kwargs={'pk': self.user.pk})
 
-        response = self.client.post(test_link, data={'bio': 'Lorem Ipsum!'})
+        response = self.client.post(test_link, data={'twitter': '@lorem_ipsum'})
         self.assertEqual(response.status_code, 200)
 
         self.reload_user()
-        self.assertEqual(self.user.profile_fields['bio'], 'Lorem Ipsum!')
+        self.assertEqual(self.user.profile_fields['twitter'], 'lorem_ipsum')
