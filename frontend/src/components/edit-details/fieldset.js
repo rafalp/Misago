@@ -11,6 +11,7 @@ export default function({ disabled, errors, fields, name, onChange, value }) {
         return (
           <FormGroup
             for={"id_" + field.fieldname}
+            helpText={field.help_text}
             key={field.fieldname}
             label={field.label}
             validation={errors[field.fieldname]}

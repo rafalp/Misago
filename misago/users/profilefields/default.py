@@ -38,17 +38,34 @@ class GenderField(basefields.ChoiceProfileField):
 class WebsiteField(basefields.UrlProfileField):
     fieldname = 'website'
     label = _("Website")
+    help_text = _(
+        'If you own website in the internet you wish to share on your profile '
+        'you may enter its address here. Remember to for it to be valid http '
+        'address starting with either "http://" or "https://".'
+    )
 
 
 class SkypeHandleField(basefields.TextProfileField):
     fieldname = 'skype'
     label = _("Skype ID")
+    help_text = _(
+        "Entering your Skype ID in this field may invite other users to contact you over "
+        "the Skype instead of via private threads."
+    )
 
 
 class TwitterHandleField(basefields.TextProfileField):
     fieldname = 'twitter'
     label = _("Twitter handle")
-    help_text = _('Without leading "@" sign.')
+
+    def get_help_text(self, user):
+        return _(
+            'If you own Twitter account, here you may enter your Twitter handle for other users '
+            'to find you. Starting your handle with "@" sign is optional. Either "@%(slug)s" or '
+            '"%(slug)s" are valid values.'
+        ) % {
+            'slug': user.slug
+        }
 
     def get_value_display_data(self, request, user, data):
         return {
