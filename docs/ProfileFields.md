@@ -33,7 +33,7 @@ Your field will have to define either `label` attribute, or `get_label(user)` me
 Below field will always display "Skype ID" as its label:
 
 ```python
-class SkypeHandleField(basefields.TextProfileField):
+class SkypeIdField(basefields.TextProfileField):
     fieldname = 'skype'
     label = _("Skype ID")
 ```
@@ -395,7 +395,119 @@ In addition to this `ChoiceProfileField` base field provides custom implementati
 
 ## Base fields
 
+To make it easier to implement common profile fields, Misago defines few custom classes importable from the `misago.users.profilefields`:
+
+
+### `ChoiceProfileField`
+
+This field lets user select single choice from list of available options. Example of such fields in Misago is `GenderField` that allows user to select gender information to be displayed on his or her profile.
+
+
+#### `choices` and `get_choices`
+
+Fields inheriting from the `ChoiceProfileField` require you to specify either `choices` attribute, or `get_choices` method if you wish for choices to be dependant on individual user.
+
+If no user is provided to `get_choices`, all possible choices should be returned - however this only affects the behaviour of searching users in admin control panel.
+
+Example of field that lets user select gender information:
+
+```python
+class GenderField(basefields.ChoiceProfileField):
+    fieldname = 'gender'
+    label = _("Gender")
+
+    choices = (
+        ('', _('Not specified')),
+        ('secret', _('Not telling')),
+        ('female', _('Female')),
+        ('male', _('Male')),
+    )
+```
+
+Field that associates available choices with user's posts count:
+
+```python
+class FleetRankField(basefields.ChoiceProfileField):
+    fieldname = 'fleet_rank'
+    label = _("Fleet rank")
+
+    def get_choices(self, user=None):
+        choices = [
+            ('', _('Not specified')),
+            ('ensign', _('Ensign')),
+        ]
+
+        if not user or user.posts > 5:
+            choices.append(['leutenant', _('Leutenant')])
+        if not user or user.posts > 15:
+            choices.append(['wing_commander', _('Wing commander')])
+        if not user or user.posts > 30:
+            choices.append(['group_captain', _('Group captain')])
+        if not user or user.posts > 50:
+            choices.append(['admiral', _('Admiral')])
+
+        return choices
+```
+
+
+### `TextProfileField`
+
+Default text input that takes no more than 250 characters and displays them as paragraph of text.
+
+
+### `TextareaProfileField`
+
+Textarea that takes no more than 500 characters and displays them as list paragraphs.
+
+
+### `UrlifiedTextareaProfileField`
+
+This field behaves same as `UrlifiedTextareaProfileField`, but if user enters urls in the field, those will be turned into clickable anchor links.
+
+### `UrlProfileField`
+
+Text input that takes no more than 250 characters, validates if input is valid URL and displays it as anchor link with `rel="nofollow"` attribute on user's profile.
+
+
 ## Default fields
+
+Misago defines few default profile fields that can be imported from the `misago.users.profilefields.default`:
+
+
+### `BioField`
+
+Field inheriting from `UrlifiedTextareaProfileField` that allows user to enter small text bit about themselves.
+
+
+### `FullNameField`
+
+Field inheriting from `TextProfileField` that allows user to enter real name.
+
+
+### `LocationField`
+
+Field inheriting from `TextProfileField` that allows user to enter their location or origin.
+
+
+### `GenderField`
+
+Field inheriting from `ChoiceProfileField` that allows user to disclose his/her gender to other members, or make their wish to keep it secret explictly known via "Not telling" option.
+
+
+### `WebsiteField`
+
+Field inheriting from `UrlProfileField` that allows user to enter their website's address.
+
+
+### `SkypeIdField`
+
+Field inheriting from `TextProfileField` that allows user to enter their Skype ID.
+
+
+### `TwitterHandleField`
+
+Field inheriting from `TextProfileField` that allows user to enter their Twitter handle. This field validates valid handles, strips optional leading "@" and displays handle as `rel="nofollow"` url to user's Twitter profile.
+
 
 ## Obtaining list of profile fields keys existing in database
 

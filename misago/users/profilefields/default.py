@@ -45,7 +45,7 @@ class WebsiteField(basefields.UrlProfileField):
     )
 
 
-class SkypeHandleField(basefields.TextProfileField):
+class SkypeIdField(basefields.TextProfileField):
     fieldname = 'skype'
     label = _("Skype ID")
     help_text = _(

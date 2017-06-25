@@ -354,7 +354,7 @@ MISAGO_PROFILE_FIELDS = [
         'name': _("Contact"),
         'fields': [
             'misago.users.profilefields.default.TwitterHandleField',
-            'misago.users.profilefields.default.SkypeHandleField',
+            'misago.users.profilefields.default.SkypeIdField',
             'misago.users.profilefields.default.WebsiteField',
         ],
     },
