@@ -358,4 +358,11 @@ MISAGO_PROFILE_FIELDS = [
             'misago.users.profilefields.default.WebsiteField',
         ],
     },
+    {
+        'name': _("IP address"),
+        'fields': [
+            'misago.users.profilefields.default.JoinIpField',
+            'misago.users.profilefields.default.LastIpField',
+        ],
+    },
 ]

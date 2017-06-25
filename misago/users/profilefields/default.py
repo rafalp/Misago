@@ -61,3 +61,31 @@ class TwitterHandleField(basefields.TextProfileField):
         if data and not re.search('^[A-Za-z0-9_]+$', data):
             raise ValidationError(ugettext("This is not a valid twitter handle."))
         return data
+
+
+class JoinIpField(basefields.TextProfileField):
+    fieldname = 'join_ip'
+    label = _("Join IP")
+    readonly = True
+
+    def get_value_display_data(self, request, user, value):
+        if not request.user.acl_cache.get('can_see_users_ips'):
+            return None
+
+        return {
+            'text': user.joined_from_ip
+        }
+
+
+class LastIpField(basefields.TextProfileField):
+    fieldname = 'last_ip'
+    label = _("Last IP")
+    readonly = True
+
+    def get_value_display_data(self, request, user, value):
+        if not request.user.acl_cache.get('can_see_users_ips'):
+            return None
+
+        return {
+            'text': user.last_ip
+        }

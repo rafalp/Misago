@@ -62,7 +62,7 @@ class ProfileField(object):
 
     def get_display_data(self, request, user):
         value = user.profile_fields.get(self.fieldname, '')
-        if not len(value):
+        if not self.readonly and not len(value):
             return None
 
         data = self.get_value_display_data(request, user, value)
