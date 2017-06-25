@@ -135,7 +135,7 @@ class ProfileFields(object):
 
         q_obj = None
         for field in self.fields_dict.values():
-            q = field.search_users(criteria, queryset)
+            q = field.search_users(criteria)
             if q:
                 if q_obj:
                     q_obj = q_obj | q

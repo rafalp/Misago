@@ -67,10 +67,10 @@ class TwitterHandleField(basefields.TextProfileField):
             'slug': user.slug
         }
 
-    def get_value_display_data(self, request, user, data):
+    def get_value_display_data(self, request, user, value):
         return {
-            'text': '@{}'.format(data),
-            'url': 'https://twitter.com/{}'.format(data),
+            'text': '@{}'.format(value),
+            'url': 'https://twitter.com/{}'.format(value),
         }
 
     def clean(self, request, user, data):

@@ -77,7 +77,7 @@ class ProfileField(object):
             'text': value
         }
 
-    def search_users(self, criteria, queryset):
+    def search_users(self, criteria):
         if self.readonly:
             return None
 
@@ -128,7 +128,7 @@ class ChoiceProfileField(ProfileField):
                 }
         return None
 
-    def search_users(self, criteria, queryset):
+    def search_users(self, criteria):
         """custom search implementation for choice fields"""
         q_obj = Q(**{
             'profile_fields__{}__contains'.format(self.fieldname): criteria
