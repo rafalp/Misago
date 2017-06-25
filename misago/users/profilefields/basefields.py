@@ -42,16 +42,12 @@ class ProfileField(object):
         return None
 
     def get_form_field_json(self, request, user):
-        input_json = self.get_input_json(request, user)
-        if not input_json:
-            return None
-
         return {
             'fieldname': self.fieldname,
             'label': self.get_label(user),
             'help_text': self.get_help_text(user),
             'initial': user.profile_fields.get(self.fieldname, ''),
-            'input': input_json,
+            'input': self.get_input_json(request, user),
         }
 
     def get_input_json(self, request, user):
