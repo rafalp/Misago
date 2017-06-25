@@ -177,6 +177,30 @@ Controls number of posts displayed on thread page. Greater numbers can increase 
 Defines minimal number of posts for thread's last page. If number of posts on last page is smaller or equal to one specified in this setting, last page will be appended to previous page instead.
 
 
+## `MISAGO_PROFILE_FIELDS`
+
+Defines list of groups of profile fields used on users profiles "details" tab.
+
+Should be list of dicts defining `name` key that's string with name of fields group and `fields` that is list of paths to Python types implementing fields: 
+
+    MISAGO_PROFILE_FIELDS = [
+        {
+            'name': _("Personal"),
+            'fields': [
+                'misago.users.profilefields.default.FullNameField',
+                'misago.users.profilefields.default.GenderField',
+            ],
+        },
+        {
+            'name': _("Contact"),
+            'fields': [
+                'misago.users.profilefields.default.TwitterHandleField',
+                'misago.users.profilefields.default.WebsiteField',
+            ],
+        },
+    ]
+
+
 ## `MISAGO_RANKING_LENGTH`
 
 Some lists act as rankings, displaying users in order of certain scoring criteria, like number of posts or likes received.

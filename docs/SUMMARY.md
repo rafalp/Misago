@@ -21,6 +21,7 @@
 * [Sending mails](./Mails.md)
 * [Markup](./Markup.md)
 * [Posting process](./PostingProcess.md)
+* [Profile fields](./ProfileFields.md)
 * [Threads types](./ThreadTypes.md)
 * [Extending pages](./ExtendingPages.md)
 * [Validating registrations](./ValidatingRegistrations.md)
