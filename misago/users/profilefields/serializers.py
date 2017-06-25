@@ -14,10 +14,10 @@ def serialize_profilefields_data(request, profilefields, user):
     for group in profilefields.get_fields_groups():
         group_fields = []
         for field in group['fields']:
-            display_data = field.get_data(request, user)
+            display_data = field.get_display_data(request, user)
             if display_data:
                 group_fields.append(display_data)
-        if can_edit and field.can_edit(request, user):
+        if can_edit and field.is_editable(request, user):
             has_editable_fields = True
         if group_fields:
             data['groups'].append({

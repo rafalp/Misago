@@ -24,6 +24,9 @@ class ProfileField(object):
     help_text = None
     readonly = False
 
+    def is_editable(self, request, user):
+        return not self.readonly
+
     def get_label(self, user):
         if not self.label:
             raise NotImplementedError(
@@ -35,29 +38,34 @@ class ProfileField(object):
     def get_help_text(self, user):
         return self.help_text
 
-    def get_admin_field(self, user):
+    def get_form_field(self, request, user):
         return None
 
-    def clean_admin_form(self, form, data):
-        return data
-
-    def admin_update_profile_fields(self, user, cleaned_data):
-        if self.readonly:
-            return
-
-        user.profile_fields[self.fieldname] = cleaned_data.get(self.fieldname)
-
-    def admin_search(self, criteria, queryset):
-        return Q(**{
-            'profile_fields__{}__contains'.format(self.fieldname): criteria
-        })
-
-    def get_data(self, request, user):
-        field_data = user.profile_fields.get(self.fieldname, '')
-        if not len(field_data):
+    def get_form_field_json(self, request, user):
+        input_json = self.get_input_json(request, user)
+        if not input_json:
             return None
 
-        data = self.get_display_data(request, user, field_data)
+        return {
+            'fieldname': self.fieldname,
+            'label': self.get_label(user),
+            'help_text': self.get_help_text(user),
+            'initial': user.profile_fields.get(self.fieldname, ''),
+            'input': input_json,
+        }
+
+    def get_input_json(self, request, user):
+        return None
+
+    def clean(self, request, user, data):
+        return data
+
+    def get_display_data(self, request, user):
+        value = user.profile_fields.get(self.fieldname, '')
+        if not len(value):
+            return None
+
+        data = self.get_value_display_data(request, user, value)
         if not data:
             return None
 
@@ -68,33 +76,15 @@ class ProfileField(object):
 
         return data
 
-    def get_display_data(self, request, user, data):
+    def get_value_display_data(self, request, user, value):
         return {
-            'text': data
+            'text': value
         }
 
-    def can_edit(self, request, user):
-        return not self.readonly
-
-    def get_edit_field_json(self, request, user):
-        return {
-            'fieldname': self.fieldname,
-            'label': self.get_label(user),
-            'help_text': self.get_help_text(user),
-            'initial': user.profile_fields.get(self.fieldname, ''),
-            'input': self.get_edit_field_input_attrs(request, user)
-        }
-
-    def get_edit_field_input_attrs(self, request, user):
-        return {
-            'type': 'text',
-        }
-
-    def get_field_for_validation(self, request, user):
-        return forms.CharField(max_length=250, required=False)
-
-    def clean_field(self, request, user, data):
-        return data
+    def search_users(self, criteria, queryset):
+        return Q(**{
+            'profile_fields__{}__contains'.format(self.fieldname): criteria
+        })
 
 
 class ChoiceProfileField(ProfileField):
@@ -108,7 +98,7 @@ class ChoiceProfileField(ProfileField):
             )
         return self.choices
 
-    def get_admin_field(self, user):
+    def get_form_field(self, request, user):
         return forms.ChoiceField(
             label=self.get_label(user),
             help_text=self.get_help_text(user),
@@ -118,7 +108,28 @@ class ChoiceProfileField(ProfileField):
             required=False,
         )
 
-    def admin_search(self, criteria, queryset):
+    def get_input_json(self, request, user):
+        choices = []
+        for key, choice in self.get_choices():
+            choices.append({
+                'value': key,
+                'label': choice,
+            })
+
+        return {
+            'type': 'select',
+            'choices': choices,
+        }
+
+    def get_value_display_data(self, request, user, value):
+        for key, name in self.get_choices():
+            if key == value:
+                return {
+                    'text': text_type(name),
+                }
+        return None
+
+    def search_users(self, criteria, queryset):
         """custom search implementation for choice fields"""
         q_obj = Q(**{
             'profile_fields__{}__contains'.format(self.fieldname): criteria
@@ -132,33 +143,9 @@ class ChoiceProfileField(ProfileField):
 
         return q_obj
 
-    def get_display_data(self, request, user, data):
-        for key, name in self.get_choices():
-            if key == data:
-                return {
-                    'text': text_type(name),
-                }
-        return None
-
-    def get_edit_field_input_attrs(self, request, user):
-        choices = []
-        for key, choice in self.get_choices():
-            choices.append({
-                'value': key,
-                'label': choice,
-            })
-
-        return {
-            'type': 'select',
-            'choices': choices,
-        }
-
-    def get_field_for_validation(self, request, user):
-        return forms.ChoiceField(choices=self.get_choices(user), required=False)
-
 
 class TextProfileField(ProfileField):
-    def get_admin_field(self, user):
+    def get_form_field(self, request, user):
         return forms.CharField(
             label=self.get_label(user),
             help_text=self.get_help_text(user),
@@ -168,9 +155,14 @@ class TextProfileField(ProfileField):
             required=False,
         )
 
+    def get_input_json(self, request, user):
+        return {
+            'type': 'text',
+        }
+
 
 class TextareaProfileField(ProfileField):
-    def get_admin_field(self, user):
+    def get_form_field(self, request, user):
         return forms.CharField(
             label=self.get_label(user),
             help_text=self.get_help_text(user),
@@ -183,50 +175,26 @@ class TextareaProfileField(ProfileField):
             required=False,
         )
 
-    def get_display_data(self, request, user, data):
-        return {
-            'html': html.linebreaks(html.escape(data)),
-        }
-
-    def get_edit_field_input_attrs(self, request, user):
+    def get_input_json(self, request, user):
         return {
             'type': 'textarea',
         }
 
-    def get_field_for_validation(self, request, user):
-        return forms.CharField(max_length=500, required=False)
+    def get_value_display_data(self, request, user, value):
+        return {
+            'html': html.linebreaks(html.escape(value)),
+        }
 
 
 class UrlifiedTextareaProfileField(TextareaProfileField):
-    def get_display_data(self, request, user, data):
+    def get_value_display_data(self, request, user, value):
         return {
-            'html': format_plaintext_for_html(data),
+            'html': format_plaintext_for_html(value),
         }
 
 
-class SlugProfileField(ProfileField):
-    def get_admin_field(self, user):
-        return forms.SlugField(
-            label=self.get_label(user),
-            help_text=self.get_help_text(user),
-            initial=user.profile_fields.get(self.fieldname),
-            max_length=250,
-            disabled=self.readonly,
-            required=False,
-        )
-
-    def get_display_data(self, request, user, data):
-        return {
-            'text': data,
-            'url': data,
-        }
-
-    def get_field_for_validation(self, request, user):
-        return forms.SlugField(max_length=250, required=False)
-
-
-class UrlProfileField(ProfileField):
-    def get_admin_field(self, user):
+class UrlProfileField(TextProfileField):
+    def get_form_field(self, request, user):
         return forms.URLField(
             label=self.get_label(user),
             help_text=self.get_help_text(user),
@@ -236,11 +204,8 @@ class UrlProfileField(ProfileField):
             required=False,
         )
 
-    def get_display_data(self, request, user, data):
+    def get_value_display_data(self, request, user, value):
         return {
-            'text': data,
-            'url': data,
+            'text': value,
+            'url': value,
         }
-
-    def get_field_for_validation(self, request, user):
-        return forms.URLField(max_length=250, required=False)

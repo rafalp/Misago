@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.utils.module_loading import import_string
 from django.utils.translation import ugettext as _
 
@@ -53,51 +54,6 @@ class ProfileFields(object):
 
         self.is_loaded = True
 
-    def update_admin_form(self, form):
-        if not self.is_loaded:
-            self.load()
-
-        for group in self.fields_groups:
-            group_dict = {
-                'name': _(group['name']),
-                'fields': [],
-            }
-
-            for field_path in group['fields']:
-                field = self.fields_dict[field_path]
-                admin_field = field.get_admin_field(form.instance)
-                if admin_field:
-                    form.fields[field.fieldname] = admin_field
-                    group_dict['fields'].append(field.fieldname)
-
-            form._profile_fields_groups.append(group_dict)
-
-    def clean_admin_form(self, form, data):
-        for field in self.fields_dict.values():
-            data = field.clean_admin_form(form, data) or data
-        return data
-
-    def admin_update_profile_fields(self, user, cleaned_data):
-        for field in self.fields_dict.values():
-            field.admin_update_profile_fields(user, cleaned_data)
-
-    def admin_search(self, criteria, queryset):
-        if not self.is_loaded:
-            self.load()
-
-        q_obj = None
-        for field in self.fields_dict.values():
-            q = field.admin_search(criteria, queryset)
-            if q:
-                if q_obj:
-                    q_obj = q_obj | q
-                else:
-                    q_obj = q
-        if q_obj:
-            return queryset.filter(q_obj)
-
-        return queryset
-
     def get_fields(self):
         if not self.is_loaded:
             self.load()
@@ -121,6 +77,74 @@ class ProfileFields(object):
             if group_dict['fields']:
                 groups.append(group_dict)
         return groups
+
+    def add_fields_to_form(self, request, user, form):
+        if not self.is_loaded:
+            self.load()
+
+        form._profile_fields = []
+
+        for field in self.get_fields():
+            if not field.is_editable(request, user):
+                continue
+
+            form._profile_fields.append(field.fieldname)
+            form.fields[field.fieldname] = field.get_form_field(request, user)
+
+    def add_fields_to_admin_form(self, request, user, form):
+        self.add_fields_to_form(request, user, form)
+
+        form._profile_fields_groups = []
+        for group in self.fields_groups:
+            group_dict = {
+                'name': _(group['name']),
+                'fields': [],
+            }
+
+            for field_path in group['fields']:
+                field = self.fields_dict[field_path]
+                if field.fieldname in form._profile_fields:
+                    group_dict['fields'].append(field.fieldname)
+
+            if group_dict['fields']:
+                form._profile_fields_groups.append(group_dict)
+
+    def clean_form(self, request, user, form, cleaned_data):
+        for field in self.get_fields():
+            if field.fieldname not in cleaned_data:
+                continue
+
+            try:
+                cleaned_data[field.fieldname] = field.clean(
+                    request, user, cleaned_data[field.fieldname])
+            except ValidationError as e:
+                form.add_error(field.fieldname, e)
+
+        return cleaned_data
+
+    def update_user_profile_fields(self, user, form):
+        cleaned_profile_fields = {}
+        for fieldname in form._profile_fields:
+            if fieldname in form.cleaned_data:
+                cleaned_profile_fields[fieldname] = form.cleaned_data[fieldname]
+        user.profile_fields = cleaned_profile_fields
+
+    def search_users(self, criteria, queryset):
+        if not self.is_loaded:
+            self.load()
+
+        q_obj = None
+        for field in self.fields_dict.values():
+            q = field.search_users(criteria, queryset)
+            if q:
+                if q_obj:
+                    q_obj = q_obj | q
+                else:
+                    q_obj = q
+        if q_obj:
+            return queryset.filter(q_obj)
+
+        return queryset
 
 
 profilefields = ProfileFields(settings.MISAGO_PROFILE_FIELDS)

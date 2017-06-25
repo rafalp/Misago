@@ -189,11 +189,11 @@ class EditUserForm(UserBaseForm):
         ]
 
     def __init__(self, *args, **kwargs):
-        self._profile_fields_groups = []
+        self.request = kwargs.pop('request')
 
         super(EditUserForm, self).__init__(*args, **kwargs)
 
-        profilefields.update_admin_form(self)
+        profilefields.add_fields_to_admin_form(self.request, self.instance, self)
 
     def get_profile_fields_groups(self):
         profile_fields_groups = []
@@ -226,7 +226,7 @@ class EditUserForm(UserBaseForm):
 
     def clean(self):
         data = super(EditUserForm, self).clean()
-        return profilefields.clean_admin_form(self, data)
+        return profilefields.clean_form(self.request, self.instance, self, data)
 
 
 def UserFormFactory(FormType, instance):
@@ -334,7 +334,7 @@ class SearchUsersFormBase(forms.Form):
             queryset = queryset.filter(is_staff=True)
 
         if criteria.get('profilefields', '').strip():
-            queryset = profilefields.admin_search(
+            queryset = profilefields.search_users(
                 criteria.get('profilefields').strip(), queryset)
 
         return queryset

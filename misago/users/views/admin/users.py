@@ -264,6 +264,17 @@ class EditUser(UserAdmin, generic.ModelFormView):
         target.old_is_avatar_locked = target.is_avatar_locked
         return super(EditUser, self).real_dispatch(request, target)
 
+    def initialize_form(self, form, request, target):
+        if request.method == 'POST':
+            return form(
+                request.POST,
+                request.FILES,
+                instance=target,
+                request=request,
+            )
+        else:
+            return form(instance=target, request=request)
+
     def handle_form(self, form, request, target):
         target.username = target.old_username
         if target.username != form.cleaned_data.get('username'):
@@ -300,7 +311,7 @@ class EditUser(UserAdmin, generic.ModelFormView):
 
         set_user_signature(request, target, form.cleaned_data.get('signature'))
 
-        profilefields.admin_update_profile_fields(target, form.cleaned_data)
+        profilefields.update_user_profile_fields(target, form)
 
         target.update_acl_key()
         target.save()

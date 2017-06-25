@@ -18,8 +18,8 @@ def get_form_description(request, user):
     for group in profilefields.get_fields_groups():
         group_fields = []
         for field in group['fields']:
-            if field.can_edit(request, user):
-                group_fields.append(field.get_edit_field_json(request, user))
+            if field.is_editable(request, user):
+                group_fields.append(field.get_form_field_json(request, user))
         if group_fields:
             groups.append({
                 'name': group['name'],
@@ -32,18 +32,17 @@ def get_form_description(request, user):
 def submit_form(request, user):
     fields = []
     for field in profilefields.get_fields():
-        if field.can_edit(request, user):
+        if field.is_editable(request, user):
             fields.append(field)
 
     form = DetailsForm(
         request.data,
         request=request,
         user=user,
-        profilefields=fields,
     )
 
     if form.is_valid():
-        user.profile_fields = form.cleaned_data
+        profilefields.update_user_profile_fields(user, form)
         user.save(update_fields=['profile_fields'])
 
         return Response(serialize_profilefields_data(request, profilefields, user))
@@ -55,21 +54,11 @@ class DetailsForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
         self.user = kwargs.pop('user')
-        self.profilefields = kwargs.pop('profilefields')
 
         super(DetailsForm, self).__init__(*args, **kwargs)
 
-        for field in self.profilefields:
-            self.fields[field.fieldname] = field.get_field_for_validation(
-                self.request, self.user)
+        profilefields.add_fields_to_form(self.request, self.user, self)
 
     def clean(self):
         data = super(DetailsForm, self).clean()
-        for field in self.profilefields:
-            if field.fieldname in data:
-                try:
-                    data[field.fieldname] = field.clean_field(
-                        self.request, self.user, data[field.fieldname])
-                except forms.ValidationError as e:
-                    self.add_error(field.fieldname, e)
-        return data
+        return profilefields.clean_form(self.request, self.user, self, data)
