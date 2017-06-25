@@ -4,6 +4,7 @@ import Fieldset from './fieldset';
 import Button from 'misago/components/button';
 import Form from 'misago/components/form';
 import ajax from 'misago/services/ajax';
+import snackbar from 'misago/services/snackbar';
 
 export default class extends Form {
   constructor(props) {
@@ -40,6 +41,15 @@ export default class extends Form {
     this.props.onSuccess(data);
   }
 
+  handleError(rejection) {
+    if (rejection.status === 400) {
+      snackbar.error(gettext("Form contains errors."));
+      this.setState({ errors: rejection })
+    } else {
+      snackbar.apiError(rejection);
+    }
+  }
+
   onChange = (name, value) => {
     this.setState({
       [name]: value
@@ -54,6 +64,7 @@ export default class extends Form {
             return (
               <Fieldset
                 disabled={this.state.isLoading}
+                errors={this.state.errors}
                 fields={group.fields}
                 name={group.name}
                 key={i}
