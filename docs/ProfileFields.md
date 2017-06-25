@@ -511,6 +511,30 @@ Field inheriting from `TextProfileField` that allows user to enter their Twitter
 
 ## Obtaining list of profile fields keys existing in database
 
-## Removing profile fields from database
+Misago comes with special `listusedprofilefields` command that lists fields existing in database, by their `fieldname`:
+
+```
+$ python manage.py listusedprofilefields
+bio:      5
+fullname: 5
+location: 2
+```
+
+Above result means that 5 users `profile_fields` has `bio` and `fullname` keys and two users have `location` key. This tool doesn't filter off empty values, meaning that those key exist, but may be empty strings.
+
+
+## Deleting profile field from database
+
+If you want to delete key from users `profile_fields`, you may do it with `deleteprofilefield` commant. For example, to delete all information set in `website` field, you may do this:
+
+```
+$ python manage.py deleteprofilefield website
+"website" profile field has been deleted from 132 users.
+```
+
+Likewise, this field deletes keys and does no checking if those are user entered values or empty strings.
+
 
 ## Using logging for controling profile fields usage
+
+Whenever user's `profile_fields` value is edited either in admin control panel or via "edit details" form, such event, new values and old values are logged by `misago.users.ProfileFields` logger.

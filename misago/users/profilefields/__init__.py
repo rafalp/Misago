@@ -1,3 +1,8 @@
+from __future__ import unicode_literals
+
+import copy
+import logging
+
 from django.core.exceptions import ValidationError
 from django.utils.module_loading import import_string
 from django.utils.translation import ugettext as _
@@ -6,6 +11,9 @@ from misago.conf import settings
 
 from .basefields import *
 from .serializers import serialize_profilefields_data
+
+
+logger = logging.getLogger('misago.users.ProfileFields')
 
 
 class ProfileFields(object):
@@ -123,11 +131,22 @@ class ProfileFields(object):
         return cleaned_data
 
     def update_user_profile_fields(self, user, form):
-        cleaned_profile_fields = {}
+        old_fields = copy.copy(user.profile_fields or {})
+
+        new_fields = {}
         for fieldname in form._profile_fields:
             if fieldname in form.cleaned_data:
-                cleaned_profile_fields[fieldname] = form.cleaned_data[fieldname]
-        user.profile_fields = cleaned_profile_fields
+                new_fields[fieldname] = form.cleaned_data[fieldname]
+        user.profile_fields = new_fields
+
+        if old_fields != new_fields:
+            logger.info(
+                "Changed {}'s (ID: {}) profile fields".format(user.username, user.pk),
+                extra={
+                    'old_fields': old_fields,
+                    'new_fields': new_fields,
+                }
+            )
 
     def search_users(self, criteria, queryset):
         if not self.is_loaded:
