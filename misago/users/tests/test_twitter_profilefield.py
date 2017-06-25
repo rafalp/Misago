@@ -144,7 +144,26 @@ class TwitterProfileFieldTests(AdminTestCase):
         test_link = reverse('misago:api:user-details', kwargs={'pk': self.user.pk})
 
         response = self.client.get(test_link)
-        self.assertEqual(response.json()['groups'], [])
+        self.assertEqual(
+            response.json()['groups'],
+            [
+                {
+                    'name': 'IP address',
+                    'fields': [
+                        {
+                            'fieldname': 'join_ip',
+                            'name': 'Join IP',
+                            'text': '127.0.0.1',
+                        },
+                        {
+                            'fieldname': 'last_ip',
+                            'name': 'Last IP',
+                            'text': '127.0.0.1',
+                        },
+                    ],
+                },
+            ]
+        )
 
         self.user.profile_fields['twitter'] = 'lorem_ipsum'
         self.user.save()
@@ -162,6 +181,21 @@ class TwitterProfileFieldTests(AdminTestCase):
                             'text': '@lorem_ipsum',
                             'url': 'https://twitter.com/lorem_ipsum',
                         }
+                    ],
+                },
+                {
+                    'name': 'IP address',
+                    'fields': [
+                        {
+                            'fieldname': 'join_ip',
+                            'name': 'Join IP',
+                            'text': '127.0.0.1',
+                        },
+                        {
+                            'fieldname': 'last_ip',
+                            'name': 'Last IP',
+                            'text': '127.0.0.1',
+                        },
                     ],
                 },
             ]

@@ -170,7 +170,26 @@ class GenderProfileFieldTests(AdminTestCase):
         test_link = reverse('misago:api:user-details', kwargs={'pk': self.user.pk})
 
         response = self.client.get(test_link)
-        self.assertEqual(response.json()['groups'], [])
+        self.assertEqual(
+            response.json()['groups'],
+            [
+                {
+                    'name': 'IP address',
+                    'fields': [
+                        {
+                            'fieldname': 'join_ip',
+                            'name': 'Join IP',
+                            'text': '127.0.0.1',
+                        },
+                        {
+                            'fieldname': 'last_ip',
+                            'name': 'Last IP',
+                            'text': '127.0.0.1',
+                        },
+                    ],
+                },
+            ]
+        )
 
         self.user.profile_fields['gender'] = 'male'
         self.user.save()
@@ -189,6 +208,21 @@ class GenderProfileFieldTests(AdminTestCase):
                         }
                     ],
                 },
+                {
+                    'name': 'IP address',
+                    'fields': [
+                        {
+                            'fieldname': 'join_ip',
+                            'name': 'Join IP',
+                            'text': '127.0.0.1',
+                        },
+                        {
+                            'fieldname': 'last_ip',
+                            'name': 'Last IP',
+                            'text': '127.0.0.1',
+                        },
+                    ],
+                },
             ]
         )
 
@@ -197,13 +231,51 @@ class GenderProfileFieldTests(AdminTestCase):
         test_link = reverse('misago:api:user-details', kwargs={'pk': self.user.pk})
 
         response = self.client.get(test_link)
-        self.assertEqual(response.json()['groups'], [])
+        self.assertEqual(
+            response.json()['groups'],
+            [
+                {
+                    'name': 'IP address',
+                    'fields': [
+                        {
+                            'fieldname': 'join_ip',
+                            'name': 'Join IP',
+                            'text': '127.0.0.1',
+                        },
+                        {
+                            'fieldname': 'last_ip',
+                            'name': 'Last IP',
+                            'text': '127.0.0.1',
+                        },
+                    ],
+                },
+            ]
+        )
 
         self.user.profile_fields['gender'] = 'invalid'
         self.user.save()
 
         response = self.client.get(test_link)
-        self.assertEqual(response.json()['groups'], [])
+        self.assertEqual(
+            response.json()['groups'],
+            [
+                {
+                    'name': 'IP address',
+                    'fields': [
+                        {
+                            'fieldname': 'join_ip',
+                            'name': 'Join IP',
+                            'text': '127.0.0.1',
+                        },
+                        {
+                            'fieldname': 'last_ip',
+                            'name': 'Last IP',
+                            'text': '127.0.0.1',
+                        },
+                    ],
+                },
+            ]
+        )
 
     def test_api_returns_field_json(self):
         """field json is returned from API"""

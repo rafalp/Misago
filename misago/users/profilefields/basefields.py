@@ -82,6 +82,9 @@ class ProfileField(object):
         }
 
     def search_users(self, criteria, queryset):
+        if self.readonly:
+            return None
+
         return Q(**{
             'profile_fields__{}__contains'.format(self.fieldname): criteria
         })

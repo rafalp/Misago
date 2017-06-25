@@ -87,5 +87,5 @@ class LastIpField(basefields.TextProfileField):
             return None
 
         return {
-            'text': user.last_ip
+            'text': user.last_ip or user.joined_from_ip
         }
