@@ -53,7 +53,7 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
             'details': reverse('misago:api:user-details', kwargs={'pk': obj.pk}),
             'change_email': reverse('misago:api:user-change-email', kwargs={'pk': obj.pk}),
             'change_password': reverse('misago:api:user-change-password', kwargs={'pk': obj.pk}),
-            'edit_Details': reverse('misago:api:user-edit-details', kwargs={'pk': obj.pk}),
+            'edit_details': reverse('misago:api:user-edit-details', kwargs={'pk': obj.pk}),
             'options': reverse('misago:api:user-forum-options', kwargs={'pk': obj.pk}),
             'username': reverse('misago:api:user-username', kwargs={'pk': obj.pk}),
         }
