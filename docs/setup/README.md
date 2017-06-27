@@ -80,18 +80,26 @@ If server starts, you should be able to visit `http://127.0.0.1:8000` in your br
 
 #### About the `could not open extension control file` error during database migration
 
-If you run into an error that looks like following:
+If you run into any of following errors during migration:
 
     django.db.utils.OperationalError: could not open extension control file "/usr/share/postgresql/9.4/extension/btree_gin.control": No such file or directory
+    django.db.utils.OperationalError: could not open extension control file "/usr/share/postgresql/9.4/extension/hstore.control": No such file or directory
 
 This means you'll need to install the `postgresql-contrib` package that includes extensions for PostgreSQL:
 
     sudo apt-get install postgresql-contrib
 
 
-#### About the `django.db.utils.ProgrammingError: permission denied to create extension "btree_gin"` error during database migration
+#### About the `django.db.utils.ProgrammingError: permission denied to create extension` errors during database migration
 
-Only superusers may enable extensions in your database. To solve this issue, you may grant your database user super user privileges for duration of the installation:
+Misago relies on two PostgreSQL extensions for some of its features: the `btree_gin` and `hstore` extensions. If during migration command you get error that looks like one of those:
+
+    django.db.utils.ProgrammingError: permission denied to create extension "btree_gin"
+    django.db.utils.ProgrammingError: permission denied to create extension "hstore"
+
+This means you'll need to elevate your database user to superuser level for duration of migration.
+
+To grant your database user super user privileges for duration of the installation, you may follow those steps:
 
     # switch to postgresql user and start psql tool
     sudo -u postgres psql postgres
