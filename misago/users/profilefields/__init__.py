@@ -130,7 +130,7 @@ class ProfileFields(object):
 
         return cleaned_data
 
-    def update_user_profile_fields(self, user, form):
+    def update_user_profile_fields(self, request, user, form):
         old_fields = copy.copy(user.profile_fields or {})
 
         new_fields = {}
@@ -140,8 +140,13 @@ class ProfileFields(object):
         user.profile_fields = new_fields
 
         if old_fields != new_fields:
+            if request.user == user:
+                log_message = "{} edited own profile fields".format(user.username)
+            else:
+                log_message = "{} edited {}'s (#{}) profile fields".format(request.user, user.username, user.pk)
+
             logger.info(
-                "Changed {}'s (ID: {}) profile fields".format(user.username, user.pk),
+                log_message,
                 extra={
                     'old_fields': old_fields,
                     'new_fields': new_fields,

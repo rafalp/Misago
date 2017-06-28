@@ -311,7 +311,7 @@ class EditUser(UserAdmin, generic.ModelFormView):
 
         set_user_signature(request, target, form.cleaned_data.get('signature'))
 
-        profilefields.update_user_profile_fields(target, form)
+        profilefields.update_user_profile_fields(request, target, form)
 
         target.update_acl_key()
         target.save()

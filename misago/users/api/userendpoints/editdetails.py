@@ -42,7 +42,7 @@ def submit_form(request, user):
     )
 
     if form.is_valid():
-        profilefields.update_user_profile_fields(user, form)
+        profilefields.update_user_profile_fields(request, user, form)
         user.save(update_fields=['profile_fields'])
 
         return Response(serialize_profilefields_data(request, profilefields, user))
