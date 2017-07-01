@@ -319,5 +319,5 @@ MISAGO_MOMENT_JS_LOCALES = [
     'uk',
     'uz',
     'vi',
-    'zh-cn', 'zh-tw',
+    'zh-cn', 'zh-hans', 'zh-tw',
 ]

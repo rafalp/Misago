@@ -14,7 +14,7 @@ def get_locale_url(language):
 
 def clean_language_name(language):
     # lowercase language
-    language = language.lower()
+    language = language.lower().replace('_', '-')
 
     # first try: literal match
     if language in settings.MISAGO_MOMENT_JS_LOCALES:
