@@ -35,34 +35,32 @@ class GotoView(View):
         raise NotImplementedError("goto views should define their own get_target_post method")
 
     def compute_post_page(self, target_post, posts_queryset):
-        # filter out events
-        posts_queryset = posts_queryset.filter(is_event=False)
+        # filter out events, order queryset
+        posts_queryset = posts_queryset.filter(is_event=False).order_by('id')
 
-        thread_len = posts_queryset.count()
-        if thread_len <= settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL:
-            return 1  # no chance for post to be on other page than only page
-
-        # compute total count of thread pages
-        hits = max(1, thread_len - settings.MISAGO_POSTS_TAIL)
-        hits += int(ceil(hits / float(settings.MISAGO_POSTS_PER_PAGE)))
-        thread_pages = int(ceil(hits / float(settings.MISAGO_POSTS_PER_PAGE)))
+        thread_length = posts_queryset.count()
 
         # is target an event?
         if target_post.is_event:
             target_event = target_post
-            previous_posts = posts_queryset.filter(pk__lt=target_event.pk)
-            target_post = previous_posts.order_by('id').last()
+            previous_posts = posts_queryset.filter(id__lt=target_event.id)
+        else:
+            previous_posts = posts_queryset.filter(id__lte=target_post.id)
 
-        # resolve post's page
-        post_offset = posts_queryset.filter(pk__lte=target_post.pk).count()
-        hits = max(1, post_offset)
-        hits += int(ceil(hits / float(settings.MISAGO_POSTS_PER_PAGE)))
-        post_page = int(ceil(hits / float(settings.MISAGO_POSTS_PER_PAGE)))
+        post_position = previous_posts.count()
 
-        if post_page > thread_pages:
-            post_page = thread_pages
+        per_page = settings.MISAGO_POSTS_PER_PAGE - 1
+        orphans = settings.MISAGO_POSTS_TAIL
+        if orphans:
+            orphans += 1
 
-        return post_page
+        hits = max(1, thread_length - orphans)
+        thread_pages = int(ceil(hits / float(per_page)))
+
+        if post_position >= thread_pages * per_page:
+            return thread_pages
+
+        return int(ceil(float(post_position) / (per_page)))
 
     def get_redirect(self, thread, target_post, target_page):
         thread_url = thread.thread_type.get_thread_absolute_url(thread, target_page)

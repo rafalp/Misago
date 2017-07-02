@@ -248,3 +248,82 @@ class GotoUnapprovedTests(GotoViewTestCase):
         self.assertEqual(
             response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk)
         )
+
+
+class ThreadGotoPostTests(GotoViewTestCase):
+    """brureforcing regression tests for regression test for #869"""
+    def test_thread_growing_post_goto(self):
+        """growing thread goto views don't fail"""
+        for _ in range(60):
+            post = testutils.reply_thread(self.thread, posted_on=timezone.now())
+
+            # go to post link is valid
+            post_url = self.client.get(post.get_absolute_url())['location']
+
+            response = self.client.get(post_url)
+            self.assertContains(response, post.get_absolute_url())
+
+            # go to last post link is valid
+            last_url = self.client.get(self.thread.get_last_post_url())['location']
+            self.assertEqual(post_url, last_url)
+
+    def test_thread_growing_event_goto(self):
+        """growing thread goto views don't fail for events"""
+        for i in range(60):
+            testutils.reply_thread(self.thread, posted_on=timezone.now())
+
+            post = testutils.reply_thread(self.thread, posted_on=timezone.now())
+            post.is_event = True
+            post.save()
+
+            # go to post link is valid
+            post_url = self.client.get(post.get_absolute_url())['location']
+
+            if i == 0:
+                # manually set events flag after first event was created
+                self.thread.has_events = True
+                self.thread.save()
+
+            response = self.client.get(post_url)
+            self.assertContains(response, post.get_absolute_url())
+
+            # go to last post link is valid
+            last_url = self.client.get(self.thread.get_last_post_url())['location']
+            self.assertEqual(post_url, last_url)
+
+    def test_thread_post_goto(self):
+        """thread goto views don't fail"""
+        for _ in range(60):
+            testutils.reply_thread(self.thread, posted_on=timezone.now())
+
+        for post in self.thread.post_set.order_by('id').iterator():
+            # go to post link is valid
+            post_url = self.client.get(post.get_absolute_url())['location']
+
+            response = self.client.get(post_url)
+            self.assertContains(response, post.get_absolute_url())
+
+        # go to last post link is valid
+        last_url = self.client.get(self.thread.get_last_post_url())['location']
+        self.assertEqual(post_url, last_url)
+
+    def test_thread_event_goto(self):
+        """thread goto views don't fail for events"""
+        for _ in range(60):
+            testutils.reply_thread(self.thread, posted_on=timezone.now())
+
+            post = testutils.reply_thread(self.thread, posted_on=timezone.now())
+            post.is_event = True
+            post.save()
+
+        for post in self.thread.post_set.filter(is_event=True).order_by('id').iterator():
+            # go to post link is valid
+            post_url = self.client.get(post.get_absolute_url())['location']
+
+            response = self.client.get(post_url)
+            self.assertContains(response, post.get_absolute_url())
+
+        # go to last post link is valid
+        last_url = self.client.get(self.thread.get_last_post_url())['location']
+        self.assertEqual(post_url, last_url)
+
