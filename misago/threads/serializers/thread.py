@@ -75,7 +75,6 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             acl = obj.acl
         except AttributeError:
             return False
-
         return acl.get('can_approve') and obj.has_unapproved_posts
 
     def get_is_new(self, obj):

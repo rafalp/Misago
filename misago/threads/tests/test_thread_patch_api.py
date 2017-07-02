@@ -6,6 +6,8 @@ from django.utils import six, timezone
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 
+from misago.threads.models import Thread
+
 from .test_threads_api import ThreadsApiTestCase
 
 
@@ -59,6 +61,9 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
             ]
         )
         self.assertEqual(response.status_code, 200)
+
+        response_json = response.json()
+        self.assertEqual(response_json['title'], "Lorem ipsum change!")
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['title'], "Lorem ipsum change!")
@@ -143,6 +148,9 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+        response_json = response.json()
+        self.assertEqual(response_json['weight'], 2)
+
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 2)
 
@@ -166,6 +174,9 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
             ]
         )
         self.assertEqual(response.status_code, 200)
+
+        response_json = response.json()
+        self.assertEqual(response_json['weight'], 0)
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 0)
@@ -239,6 +250,9 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+        response_json = response.json()
+        self.assertEqual(response_json['weight'], 1)
+
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 1)
 
@@ -262,6 +276,9 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
             ]
         )
         self.assertEqual(response.status_code, 200)
+
+        response_json = response.json()
+        self.assertEqual(response_json['weight'], 0)
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 0)
@@ -385,13 +402,13 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+        reponse_json = response.json()
+        self.assertEqual(reponse_json['category'], self.category_b.pk)
+
         self.override_other_acl({})
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category_b.pk)
-
-        reponse_json = response.json()
-        self.assertEqual(reponse_json['category'], self.category_b.pk)
 
     def test_move_thread_with_top(self):
         """api moves thread to other category, sets top"""
@@ -419,13 +436,13 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+        reponse_json = response.json()
+        self.assertEqual(reponse_json['category'], self.category_b.pk)
+
         self.override_other_acl({})
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category_b.pk)
-
-        reponse_json = response.json()
-        self.assertEqual(reponse_json['category'], self.category_b.pk)
 
     def test_move_thread_no_permission(self):
         """api move thread to other category with no permission fails"""
@@ -563,6 +580,9 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+        response_json = response.json()
+        self.assertTrue(response_json['is_closed'])
+
         thread_json = self.get_thread_json()
         self.assertTrue(thread_json['is_closed'])
 
@@ -586,6 +606,9 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
             ]
         )
         self.assertEqual(response.status_code, 200)
+
+        response_json = response.json()
+        self.assertFalse(response_json['is_closed'])
 
         thread_json = self.get_thread_json()
         self.assertFalse(thread_json['is_closed'])
@@ -646,8 +669,14 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
 class ThreadApproveApiTests(ThreadPatchApiTestCase):
     def test_approve_thread(self):
         """api makes it possible to approve thread"""
-        self.thread.is_unapproved = True
+        self.thread.first_post.is_unapproved = True
+        self.thread.first_post.save()
+
+        self.thread.synchronize()
         self.thread.save()
+
+        self.assertTrue(self.thread.is_unapproved)
+        self.assertTrue(self.thread.has_unapproved_posts)
 
         self.override_acl({'can_approve_content': 1})
 
@@ -662,8 +691,17 @@ class ThreadApproveApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+        response_json = response.json()
+        self.assertFalse(response_json['is_unapproved'])
+        self.assertFalse(response_json['has_unapproved_posts'])
+
         thread_json = self.get_thread_json()
         self.assertFalse(thread_json['is_unapproved'])
+        self.assertFalse(thread_json['has_unapproved_posts'])
+
+        thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertFalse(thread.is_unapproved)
+        self.assertFalse(thread.has_unapproved_posts)
 
     def test_unapprove_thread(self):
         """api returns permission error on approval removal"""
@@ -700,6 +738,9 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+        reponse_json = response.json()
+        self.assertTrue(reponse_json['is_hidden'])
+
         self.override_acl({'can_hide_threads': 1})
 
         thread_json = self.get_thread_json()
@@ -727,6 +768,9 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
             ]
         )
         self.assertEqual(response.status_code, 200)
+
+        reponse_json = response.json()
+        self.assertFalse(reponse_json['is_hidden'])
 
         self.override_acl({'can_hide_threads': 1})
 
@@ -795,6 +839,9 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
 
         self.assertEqual(response.status_code, 200)
 
+        reponse_json = response.json()
+        self.assertFalse(reponse_json['subscription'])
+
         thread_json = self.get_thread_json()
         self.assertFalse(thread_json['subscription'])
 
@@ -815,6 +862,9 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
 
         self.assertEqual(response.status_code, 200)
 
+        reponse_json = response.json()
+        self.assertTrue(reponse_json['subscription'])
+
         thread_json = self.get_thread_json()
         self.assertTrue(thread_json['subscription'])
 
@@ -834,6 +884,9 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
         )
 
         self.assertEqual(response.status_code, 200)
+
+        reponse_json = response.json()
+        self.assertIsNone(reponse_json['subscription'])
 
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['subscription'])

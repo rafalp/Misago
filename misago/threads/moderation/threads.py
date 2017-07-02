@@ -104,9 +104,13 @@ def merge_thread(request, thread, other_thread):
 @atomic
 def approve_thread(request, thread):
     if thread.is_unapproved:
-        thread.is_unapproved = False
         thread.first_post.is_unapproved = False
         thread.first_post.save(update_fields=['is_unapproved'])
+
+        thread.is_unapproved = False
+
+        unapproved_post_qs = thread.post_set.filter(is_unapproved=True)
+        thread.has_unapproved_posts = unapproved_post_qs.exists()
 
         record_event(request, thread, 'approved')
         return True
