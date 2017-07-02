@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core import mail
+from django.test import override_settings
 from django.urls import reverse
 
 from misago.conf import settings
@@ -234,6 +235,39 @@ class UserCreateTests(UserTestCase):
         )
 
         self.assertContains(response, "password is too similar to the username", status_code=400)
+
+    @override_settings(captcha_type='qa', qa_question='Test', qa_answers='Lorem\nIpsum')
+    def test_registration_validates_captcha(self):
+        """api validates captcha"""
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+                'captcha': 'dolor'
+            },
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(), {
+                'captcha': ['Entered answer is incorrect.'],
+            }
+        )
+
+        # valid captcha
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+                'captcha': 'ipSUM'
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
 
     def test_registration_calls_validate_new_registration(self):
         """api uses validate_new_registration to validate registrations"""

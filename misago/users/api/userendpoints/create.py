@@ -24,13 +24,14 @@ def create_endpoint(request):
 
     form = RegisterForm(request.data, request=request)
 
-    if not form.is_valid():
-        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
-
     try:
-        captcha.test_request(request)
+        if form.is_valid():
+            captcha.test_request(request)
     except ValidationError as e:
         form.add_error('captcha', e)
+
+    if not form.is_valid():
+        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
     activation_kwargs = {}
     if settings.account_activation == 'user':
