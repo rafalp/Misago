@@ -11,7 +11,7 @@ import Quote from './actions/quote';
 import AttachmentsEditor from './attachments';
 import Upload from './attachments/upload-button/';
 import MarkupPreview from './markup-preview';
-import * as textUtils from './textUtils';
+import * as textUtils from './textutils';
 import Button from 'misago/components/button';
 import misago from 'misago';
 import ajax from 'misago/services/ajax';
