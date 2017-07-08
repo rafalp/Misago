@@ -67,6 +67,7 @@ Even more features will follow in future releases:
 * Content reporting for users to report offensive content.
 * Forum-wide JS routing further reducing navigation times.
 * IP search for moderators to find `sock puppets <https://en.wikipedia.org/wiki/Sockpuppet_(Internet)>`_ or bot nets.
+* Mark post in question thread as answer, bringing basic Q&A functionality.
 * Notifications for users to notice content and events of concern faster.
 * Post accurate read tracker that lets moderators spot unapproved replies and non-moderators spot approved posts.
 * Sign in with Facebook/Google/Github/Steam/etc/ect.
