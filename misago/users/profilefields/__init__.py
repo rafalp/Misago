@@ -4,6 +4,7 @@ import copy
 import logging
 
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 from django.utils.module_loading import import_string
 from django.utils.translation import ugettext as _
 
@@ -150,6 +151,18 @@ class ProfileFields(object):
                 extra={
                     'old_fields': old_fields,
                     'new_fields': new_fields,
+
+                    'tags': {
+                        'absolute_url': request.build_absolute_uri(
+                            reverse(
+                                'misago:user-details',
+                                kwargs={
+                                    'slug': user.slug,
+                                    'pk': user.pk,
+                                },
+                            )
+                        ),
+                    },
                 }
             )
 
