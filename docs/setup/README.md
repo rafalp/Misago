@@ -166,3 +166,23 @@ Depending on your python and virtual env setup, you'll need to customize it befo
     35 0 * * * cd /home/myforumorg/ && venv/bin/python manage.py clearsessions
     35 0 * * * cd /home/myforumorg/ && venv/bin/python manage.py invalidatebans
     0 3 * * * cd /home/myforumorg/ && venv/bin/python manage.py backupsite
+
+Now, you should be able to use this file to set up crontab running this command:
+
+    crontab cron.txt
+
+To see the contents of your crontab, you may run `crontab -l` and see if it outputs your cron.txt's contents:
+
+    $ crontab -l
+    # this is example crontab configuration
+    # you'll likely need to change it to use
+    # valid python version or paths to manage.py
+
+    10 0 * * * cd /home/myforumorg/ && venv/bin/python manage.py prunecategories
+    35 0 * * * cd /home/myforumorg/ && venv/bin/python manage.py buildactivepostersranking
+    35 0 * * * cd /home/myforumorg/ && venv/bin/python manage.py clearattachments
+    35 0 * * * cd /home/myforumorg/ && venv/bin/python manage.py clearreadtracker
+    35 0 * * * cd /home/myforumorg/ && venv/bin/python manage.py clearsessions
+    35 0 * * * cd /home/myforumorg/ && venv/bin/python manage.py invalidatebans
+    0 3 * * * cd /home/myforumorg/ && venv/bin/python manage.py backupsite
+
