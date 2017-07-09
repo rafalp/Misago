@@ -93,14 +93,15 @@
 
 // Expand code blocks a little
 .misago-markup pre {
-  background: rgb(25, 23, 28);
+  background: #eee;
   border: none;
   padding: @padding-large-vertical;
   overflow: hidden;
 
-  color: #8b8792;
+  color: #000;
 
   code.hljs {
     margin: @padding-large-vertical * -1;
+    padding: ((@line-height-computed - 1) / 2);
   }
 }
