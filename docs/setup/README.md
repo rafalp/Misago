@@ -134,3 +134,35 @@ While on dedicated and VPS serves the deployment method depends largery on your 
 ### Securing `MEDIA_ROOT`
 
 By default Misago uses the `FileSystemStorage` strategy that stores user-uploaded files in your site's `media` directory. You need to make sure that you have disabled indexing/listing of this directory contents in your HTTP server's settings, or your user-uploaded files will be easily discoverable from internet. This is especially important because Misago has no special protection system in place for uploaded files.
+
+
+### Setting up maintenance tasks
+
+Misago relies on periodically ran maintenance tasks for some features to run performantly or work at all. For example, there is task that removes expired entries from data used by read tracker, thus keeping it small and performant. There's also an task that populates active posters list on Misago's users page with current data. Without it, that list will be empty.
+
+When new forum setup is created using `misago-start.py`, example cron file named `cron.txt` is created. This file may differ between versions, but will look similiar to this:
+
+    # this is example crontab configuration
+    # you'll likely need to change it to use
+    # valid python version or paths to manage.py
+
+    15 0 * * * python manage.py prunecategories
+    25 0 * * * python manage.py buildactivepostersranking
+    25 0 * * * python manage.py clearattachments
+    25 0 * * * python manage.py clearreadtracker
+    25 0 * * * python manage.py clearsessions
+    25 0 * * * python manage.py invalidatebans
+
+Depending on your python and virtual env setup, you'll need to customize it before it works. Here's example config that was edited to activate venv before running the commands:
+
+    # this is example crontab configuration
+    # you'll likely need to change it to use
+    # valid python version or paths to manage.py
+
+    10 0 * * * cd /home/myforumorg/ && venv/bin/python manage.py prunecategories
+    35 0 * * * cd /home/myforumorg/ && venv/bin/python manage.py buildactivepostersranking
+    35 0 * * * cd /home/myforumorg/ && venv/bin/python manage.py clearattachments
+    35 0 * * * cd /home/myforumorg/ && venv/bin/python manage.py clearreadtracker
+    35 0 * * * cd /home/myforumorg/ && venv/bin/python manage.py clearsessions
+    35 0 * * * cd /home/myforumorg/ && venv/bin/python manage.py invalidatebans
+    0 3 * * * cd /home/myforumorg/ && venv/bin/python manage.py backupsite
