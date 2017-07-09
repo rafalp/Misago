@@ -17,6 +17,7 @@ def user_links(request):
             'USERS_API': reverse('misago:api:user-list'),
             'CAPTCHA_API': reverse('misago:api:captcha-question'),
             'USERNAME_CHANGES_API': reverse('misago:api:usernamechange-list'),
+            'MENTION_API': reverse('misago:api:mention-suggestions'),
         })
 
     return {

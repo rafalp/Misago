@@ -17,12 +17,15 @@
     "bootstrap-dropdown": "./node_modules/bootstrap/js/dropdown.js",
     "dropzone": "./node_modules/dropzone/dist/dropzone.js",
     "waypoints": "./node_modules/waypoints/lib/jquery.waypoints.js",
+    "jquery-caret": "./node_modules/jquery.caret/dist/jquery.caret.min.js",
+    "at-js": "./node_modules/at.js/dist/js/jquery.atwho.min.js",
     "highlight": "./highlight/highlight.pack.js"
   },
   "browserify-shim": {
     "jquery": "jQuery"
   },
   "dependencies": {
+    "at.js": "^1.5.3",
     "babel-core": "6.7.x",
     "babel-plugin-module-alias": "^1.0.0",
     "babel-plugin-transform-class-properties": "^6.3.13",
@@ -51,6 +54,7 @@
     "history": "^2.0.2",
     "jquery": "2.2.x",
     "jquery-mockjax": "^2.0.1",
+    "jquery.caret": "^0.3.1",
     "moment": "^2.10.6",
     "react": "^15.0.0",
     "react-addons-test-utils": "^15.0.0",

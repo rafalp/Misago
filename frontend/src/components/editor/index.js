@@ -27,6 +27,24 @@ export default class extends React.Component {
     };
   }
 
+  componentDidMount() {
+    $('#editor-textarea').atwho({
+      at: '@',
+      displayTpl: '<li><img src="${avatar}" alt="">${username}</li>',
+      insertTpl: '@${username}',
+      searchKey : 'username',
+      callbacks: {
+        remoteFilter: function(query, callback) {
+          $.getJSON(misago.get('MENTION_API'), {q: query}, callback);
+        }
+      }
+    });
+
+    $('#editor-textarea').on("inserted.atwho", (event, flag, query) => {
+      this.props.onChange(event);
+    });
+  }
+
   onPreviewClick = () => {
     if (this.state.isPreviewLoading) {
       return;

@@ -20,7 +20,7 @@ UserModel = get_user_model()
 class UsernameChangesViewSetPermission(BasePermission):
     def has_permission(self, request, view):
         try:
-            user_pk = int(request.GET.get('user'))
+            user_pk = int(request.query_params.get('user'))
         except (ValueError, TypeError):
             user_pk = -1
 
@@ -54,7 +54,7 @@ class UsernameChangesViewSet(viewsets.GenericViewSet):
         return queryset.select_related('user', 'changed_by').order_by('-id')
 
     def list(self, request):
-        page = get_int_or_404(request.GET.get('page', 0))
+        page = get_int_or_404(request.query_params.get('page', 0))
         if page == 1:
             page = 0  # api allows explicit first page
 
