@@ -52,7 +52,7 @@ def clean_thread_for_move(request, thread, viewmodel):
         raise PermissionDenied(_("Thread to move posts to is same as current one."))
 
     try:
-        new_thread = viewmodel(request, new_thread_id, select_for_update=True).unwrap()
+        new_thread = viewmodel(request, new_thread_id).unwrap()
     except Http404:
         raise PermissionDenied(
             _(
@@ -84,7 +84,7 @@ def clean_posts_for_move(request, thread):
         raise PermissionDenied(message % {'limit': MOVE_LIMIT})
 
     posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)
-    posts_queryset = posts_queryset.select_for_update().filter(id__in=posts_ids).order_by('id')
+    posts_queryset = posts_queryset.filter(id__in=posts_ids).order_by('id')
 
     posts = []
     for post in posts_queryset:

@@ -166,20 +166,24 @@ export function remove(props) {
     return;
   }
 
-  props.selection.forEach((selection) => {
+  props.selection.map((selection) => {
     store.dispatch(post.patch(selection, {
       isDeleted: true
     }));
+  });
 
-    ajax.delete(selection.api.index).then(() => {
-      return;
-    }, (rejection) => {
-      if (rejection.status === 400) {
-        snackbar.error(rejection.detail);
-      } else {
-        snackbar.apiError(rejection);
-      }
+  const ids = props.selection.map((post) => { return post.id; });
 
+  ajax.delete(props.thread.api.posts.index, ids).then(() => {
+    return;
+  }, (rejection) => {
+    if (rejection.status === 400) {
+      snackbar.error(rejection.detail);
+    } else {
+      snackbar.apiError(rejection);
+    }
+
+    props.selection.map((selection) => {
       store.dispatch(post.patch(selection, {
         isDeleted: false
       }));

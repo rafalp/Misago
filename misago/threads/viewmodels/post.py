@@ -9,24 +9,24 @@ __all__ = ['ThreadPost']
 
 
 class ViewModel(BaseViewModel):
-    def __init__(self, request, thread, pk, select_for_update=False):
-        model = self.get_post(request, thread, pk, select_for_update)
+    def __init__(self, request, thread, pk):
+        model = self.get_post(request, thread, pk)
 
         add_acl(request.user, model)
 
         self._model = model
 
-    def get_post(self, request, thread, pk, select_for_update=False):
+    def get_post(self, request, thread, pk):
         try:
             thread_model = thread.unwrap()
         except AttributeError:
             thread_model = thread
 
-        queryset = self.get_queryset(request, thread_model)
-        if select_for_update:
-            queryset = queryset.select_for_update()
-        else:
-            queryset = queryset.select_related('poster', 'poster__rank', 'poster__ban_cache')
+        queryset = self.get_queryset(request, thread_model).select_related(
+            'poster',
+            'poster__rank',
+            'poster__ban_cache',
+        )
 
         post = get_object_or_404(queryset, pk=pk)
 

@@ -28,6 +28,9 @@ def patch_is_liked(request, post, value):
     if not post.acl['can_like']:
         raise PermissionDenied(_("You can't like posts in this category."))
 
+    # lock user to protect us from likes flood
+    request.user.lock()
+
     # grab like state for this post and user
     try:
         user_like = post.postlike_set.get(liker=request.user)

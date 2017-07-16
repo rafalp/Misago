@@ -36,10 +36,9 @@ class ViewModel(BaseViewModel):
             slug=None,
             read_aware=False,
             subscription_aware=False,
-            poll_votes_aware=False,
-            select_for_update=False
+            poll_votes_aware=False
     ):
-        model = self.get_thread(request, pk, slug, select_for_update)
+        model = self.get_thread(request, pk, slug)
 
         model.path = self.get_thread_path(model.category)
 
@@ -66,7 +65,7 @@ class ViewModel(BaseViewModel):
     def poll(self):
         return self._poll
 
-    def get_thread(self, request, pk, slug=None, select_for_update=False):
+    def get_thread(self, request, pk, slug=None):
         raise NotImplementedError(
             'Thread view model has to implement get_thread(request, pk, slug=None)'
         )
@@ -101,14 +100,9 @@ class ViewModel(BaseViewModel):
 
 
 class ForumThread(ViewModel):
-    def get_thread(self, request, pk, slug=None, select_for_update=False):
-        if select_for_update:
-            queryset = Thread.objects.select_for_update()
-        else:
-            queryset = Thread.objects.select_related(*BASE_RELATIONS)
-
+    def get_thread(self, request, pk, slug=None):
         thread = get_object_or_404(
-            queryset,
+            Thread.objects.select_related(*BASE_RELATIONS),
             pk=pk,
             category__tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT_NAME),
         )
@@ -126,16 +120,11 @@ class ForumThread(ViewModel):
 
 
 class PrivateThread(ViewModel):
-    def get_thread(self, request, pk, slug=None, select_for_update=False):
+    def get_thread(self, request, pk, slug=None):
         allow_use_private_threads(request.user)
 
-        if select_for_update:
-            queryset = Thread.objects.select_for_update()
-        else:
-            queryset = Thread.objects.select_related(*BASE_RELATIONS)
-
         thread = get_object_or_404(
-            queryset,
+            Thread.objects.select_related(*BASE_RELATIONS),
             pk=pk,
             category__tree_id=trees_map.get_tree_id_for_root(PRIVATE_THREADS_ROOT_NAME),
         )

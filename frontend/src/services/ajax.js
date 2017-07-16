@@ -169,8 +169,8 @@ export class Ajax {
     return this.request('PUT', url, data);
   }
 
-  delete(url) {
-    return this.request('DELETE', url);
+  delete(url, data) {
+    return this.request('DELETE', url, data);
   }
 
   upload(url, data, progress) {

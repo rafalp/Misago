@@ -94,7 +94,6 @@ class PostDeleteApiTests(ThreadsApiTestCase):
 
         self.thread.is_closed = True
         self.thread.save()
-        self.post.save()
 
         response = self.client.delete(self.api_link)
         self.assertContains(
@@ -110,7 +109,6 @@ class PostDeleteApiTests(ThreadsApiTestCase):
 
         self.category.is_closed = True
         self.category.save()
-        self.post.save()
 
         response = self.client.delete(self.api_link)
         self.assertContains(
@@ -131,20 +129,6 @@ class PostDeleteApiTests(ThreadsApiTestCase):
 
         response = self.client.delete(api_link)
         self.assertContains(response, "You can't delete thread's first post.", status_code=403)
-
-    def test_delete_event(self):
-        """api differs posts from events"""
-        self.override_acl({
-            'can_hide_own_posts': 2,
-            'can_hide_posts': 2,
-            'can_hide_events': 0,
-        })
-
-        self.post.is_event = True
-        self.post.save()
-
-        response = self.client.delete(self.api_link)
-        self.assertContains(response, "You can't delete events in this category.", status_code=403)
 
     def test_delete_owned_post(self):
         """api deletes owned thread post"""

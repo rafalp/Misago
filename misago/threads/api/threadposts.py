@@ -9,13 +9,12 @@ from django.utils.translation import ugettext as _
 from misago.acl import add_acl
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.models import Post
-from misago.threads.moderation import posts as moderation
-from misago.threads.permissions import (
-    allow_delete_event, allow_delete_post, allow_edit_post, allow_reply_thread)
+from misago.threads.permissions import allow_edit_post, allow_reply_thread
 from misago.threads.serializers import AttachmentSerializer, PostSerializer
 from misago.threads.viewmodels import ForumThread, PrivateThread, ThreadPost, ThreadPosts
 from misago.users.online.utils import make_users_status_aware
 
+from .postendpoints.delete import delete_single, delete_bulk
 from .postendpoints.edits import get_edit_endpoint, revert_post_endpoint
 from .postendpoints.likes import likes_list_endpoint
 from .postendpoints.merge import posts_merge_endpoint
@@ -38,7 +37,6 @@ class ViewSet(viewsets.ViewSet):
             pk,
             read_aware=True,
             subscription_aware=True,
-            select_for_update=False,
     ):
         return self.thread(
             request,
@@ -46,7 +44,6 @@ class ViewSet(viewsets.ViewSet):
             None,
             read_aware,
             subscription_aware,
-            select_for_update,
         )
 
     def get_thread_for_update(self, request, pk):
@@ -55,17 +52,13 @@ class ViewSet(viewsets.ViewSet):
             pk,
             read_aware=False,
             subscription_aware=False,
-            select_for_update=True,
         )
 
     def get_posts(self, request, thread, page):
         return self.posts(request, thread, page)
 
-    def get_post(self, request, thread, pk, select_for_update=False):
-        return self.post_(request, thread, get_int_or_404(pk), select_for_update)
-
-    def get_post_for_update(self, request, thread, pk):
-        return self.get_post(request, thread, pk, select_for_update=True)
+    def get_post(self, request, thread, pk):
+        return self.post_(request, thread, get_int_or_404(pk))
 
     def list(self, request, thread_pk):
         page = get_int_or_404(request.query_params.get('page', 0))
@@ -83,24 +76,24 @@ class ViewSet(viewsets.ViewSet):
     @list_route(methods=['post'])
     @transaction.atomic
     def merge(self, request, thread_pk):
-        thread = self.get_thread_for_update(request, thread_pk).unwrap()
+        thread = self.get_thread(request, thread_pk).unwrap()
         return posts_merge_endpoint(request, thread)
 
     @list_route(methods=['post'])
     @transaction.atomic
     def move(self, request, thread_pk):
-        thread = self.get_thread_for_update(request, thread_pk).unwrap()
+        thread = self.get_thread(request, thread_pk).unwrap()
         return posts_move_endpoint(request, thread, self.thread)
 
     @list_route(methods=['post'])
     @transaction.atomic
     def split(self, request, thread_pk):
-        thread = self.get_thread_for_update(request, thread_pk).unwrap()
+        thread = self.get_thread(request, thread_pk).unwrap()
         return posts_split_endpoint(request, thread)
 
     @transaction.atomic
     def create(self, request, thread_pk):
-        thread = self.get_thread_for_update(request, thread_pk).unwrap()
+        thread = self.get_thread(request, thread_pk).unwrap()
         allow_reply_thread(request.user, thread)
 
         post = Post(
@@ -133,9 +126,9 @@ class ViewSet(viewsets.ViewSet):
             return Response(posting.errors, status=400)
 
     @transaction.atomic
-    def update(self, request, thread_pk, pk):
-        thread = self.get_thread_for_update(request, thread_pk).unwrap()
-        post = self.get_post_for_update(request, thread, pk).unwrap()
+    def update(self, request, thread_pk, pk=None):
+        thread = self.get_thread(request, thread_pk).unwrap()
+        post = self.get_post(request, thread, pk).unwrap()
 
         allow_edit_post(request.user, post)
 
@@ -164,8 +157,8 @@ class ViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     def partial_update(self, request, thread_pk, pk):
-        thread = self.get_thread_for_update(request, thread_pk)
-        post = self.get_post_for_update(request, thread, pk).unwrap()
+        thread = self.get_thread(request, thread_pk)
+        post = self.get_post(request, thread, pk).unwrap()
 
         if post.is_event:
             return event_patch_endpoint(request, post)
@@ -173,24 +166,14 @@ class ViewSet(viewsets.ViewSet):
             return post_patch_endpoint(request, post)
 
     @transaction.atomic
-    def delete(self, request, thread_pk, pk):
-        thread = self.get_thread_for_update(request, thread_pk)
-        post = self.get_post_for_update(request, thread, pk).unwrap()
+    def delete(self, request, thread_pk, pk=None):
+        thread = self.get_thread(request, thread_pk)
 
-        if post.is_event:
-            allow_delete_event(request.user, post)
-        else:
-            allow_delete_post(request.user, post)
+        if pk:
+            post = self.get_post(request, thread, pk).unwrap()
+            return delete_single(request, thread.unwrap(), post)
 
-        moderation.delete_post(request.user, post)
-
-        thread.synchronize()
-        thread.save()
-
-        thread.category.synchronize()
-        thread.category.save()
-
-        return Response({})
+        return delete_bulk(request, thread.unwrap())
 
     @detail_route(methods=['post'])
     @transaction.atomic
@@ -266,7 +249,7 @@ class ViewSet(viewsets.ViewSet):
         if request.method == 'POST':
             with transaction.atomic():
                 thread = self.get_thread(request, thread_pk)
-                post = self.get_post_for_update(request, thread, pk).unwrap()
+                post = self.get_post(request, thread, pk).unwrap()
 
                 allow_edit_post(request.user, post)
 

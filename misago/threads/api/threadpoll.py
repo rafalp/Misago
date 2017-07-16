@@ -22,15 +22,11 @@ from .pollvotecreateendpoint import poll_vote_create
 class ViewSet(viewsets.ViewSet):
     thread = None
 
-    def get_thread(self, request, thread_pk, select_for_update=False):
+    def get_thread(self, request, thread_pk):
         return self.thread(
             request,
             get_int_or_404(thread_pk),
-            select_for_update=select_for_update,
         ).unwrap()
-
-    def get_thread_for_update(self, request, thread_pk):
-        return self.get_thread(request, thread_pk, select_for_update=True)
 
     def get_poll(self, thread, pk):
         try:
@@ -38,7 +34,7 @@ class ViewSet(viewsets.ViewSet):
             if thread.poll.pk != poll_id:
                 raise Http404()
 
-            poll = Poll.objects.select_for_update().get(pk=thread.poll.pk)
+            poll = Poll.objects.get(pk=thread.poll.pk)
 
             poll.thread = thread
             poll.category = thread.category
@@ -49,7 +45,9 @@ class ViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     def create(self, request, thread_pk):
-        thread = self.get_thread_for_update(request, thread_pk)
+        request.user.lock()
+
+        thread = self.get_thread(request, thread_pk)
         allow_start_poll(request.user, thread)
 
         try:
@@ -84,7 +82,9 @@ class ViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     def update(self, request, thread_pk, pk):
-        thread = self.get_thread_for_update(request, thread_pk)
+        request.user.lock()
+
+        thread = self.get_thread(request, thread_pk)
         instance = self.get_poll(thread, pk)
 
         allow_edit_poll(request.user, instance)
@@ -102,7 +102,9 @@ class ViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     def delete(self, request, thread_pk, pk):
-        thread = self.get_thread_for_update(request, thread_pk)
+        request.user.lock()
+
+        thread = self.get_thread(request, thread_pk)
         instance = self.get_poll(thread, pk)
 
         allow_delete_poll(request.user, instance)
@@ -125,7 +127,9 @@ class ViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     def post_votes(self, request, thread_pk, pk):
-        thread = self.get_thread_for_update(request, thread_pk)
+        request.user.lock()
+
+        thread = self.get_thread(request, thread_pk)
         instance = self.get_poll(thread, pk)
 
         return poll_vote_create(request, thread, instance)

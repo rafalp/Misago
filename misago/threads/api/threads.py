@@ -24,25 +24,13 @@ from .threadendpoints.read import read_private_threads, read_threads
 class ViewSet(viewsets.ViewSet):
     thread = None
 
-    def get_thread(
-            self, request, pk, read_aware=True, subscription_aware=True, select_for_update=False
-    ):
+    def get_thread(self, request, pk, read_aware=True, subscription_aware=True):
         return self.thread(
             request,
             get_int_or_404(pk),
             None,
             read_aware,
             subscription_aware,
-            select_for_update,
-        )
-
-    def get_thread_for_update(self, request, pk):
-        return self.get_thread(
-            request,
-            pk,
-            read_aware=False,
-            subscription_aware=False,
-            select_for_update=True,
         )
 
     def retrieve(self, request, pk):
@@ -51,12 +39,14 @@ class ViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     def partial_update(self, request, pk):
-        thread = self.get_thread_for_update(request, pk).unwrap()
+        request.user.lock()
+        thread = self.get_thread(request, pk).unwrap()
         return thread_patch_endpoint(request, thread)
 
     @transaction.atomic
     def destroy(self, request, pk):
-        thread = self.get_thread_for_update(request, pk)
+        request.user.lock()
+        thread = self.get_thread(request, pk)
 
         if thread.acl.get('can_hide') == 2:
             moderation.delete_thread(request.user, thread)
@@ -100,7 +90,7 @@ class ThreadViewSet(ViewSet):
     @detail_route(methods=['post'], url_path='merge')
     @transaction.atomic
     def thread_merge(self, request, pk):
-        thread = self.get_thread_for_update(request, pk).unwrap()
+        thread = self.get_thread(request, pk).unwrap()
         return thread_merge_endpoint(request, thread, self.thread)
 
     @list_route(methods=['post'], url_path='merge')
@@ -130,6 +120,8 @@ class PrivateThreadViewSet(ViewSet):
         allow_use_private_threads(request.user)
         if not request.user.acl_cache['can_start_private_threads']:
             raise PermissionDenied(_("You can't start private threads."))
+
+        request.user.lock()
 
         # Initialize empty instances for new thread
         thread = Thread()

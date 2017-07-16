@@ -37,7 +37,7 @@ def thread_merge_endpoint(request, thread, viewmodel):
         return Response({'detail': _("You can't merge thread with itself.")}, status=400)
 
     try:
-        other_thread = viewmodel(request, other_thread_id, select_for_update=True).unwrap()
+        other_thread = viewmodel(request, other_thread_id).unwrap()
         if not can_reply_thread(request.user, other_thread):
             raise PermissionDenied(_("You can't merge this thread into thread you can't reply."))
         if not other_thread.acl['can_merge']:
@@ -157,7 +157,7 @@ def clean_threads_for_merge(request):
     threads_queryset = Thread.objects.filter(
         id__in=threads_ids,
         category__tree_id=threads_tree_id,
-    ).select_for_update().select_related('category').order_by('-id')
+    ).select_related('category').order_by('-id')
 
     threads = []
     for thread in threads_queryset:

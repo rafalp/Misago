@@ -53,7 +53,7 @@ def clean_posts_for_split(request, thread):
         raise SplitError(message % {'limit': SPLIT_LIMIT})
 
     posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)
-    posts_queryset = posts_queryset.select_for_update().filter(id__in=posts_ids).order_by('id')
+    posts_queryset = posts_queryset.filter(id__in=posts_ids).order_by('id')
 
     posts = []
     for post in posts_queryset:

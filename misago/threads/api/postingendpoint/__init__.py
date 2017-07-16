@@ -18,6 +18,10 @@ class PostingEndpoint(object):
     EDIT = 2
 
     def __init__(self, request, mode, **kwargs):
+        # we are using lock on user model to protect us from flood
+        request.user.lock()
+
+        # build kwargs dict for passing to middlewares
         self.kwargs = kwargs
         self.kwargs.update({'mode': mode, 'request': request, 'user': request.user})
 
