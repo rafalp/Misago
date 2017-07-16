@@ -54,7 +54,7 @@ class AttachmentsList(AttachmentAdmin, generic.ListView):
 
         if desynced_posts:
             with transaction.atomic():
-                for post in Post.objects().filter(id__in=desynced_posts):
+                for post in Post.objects.filter(id__in=desynced_posts):
                     self.delete_from_cache(post, deleted_attachments)
 
         for attachment in attachments:
