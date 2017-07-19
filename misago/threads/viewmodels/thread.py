@@ -34,13 +34,15 @@ class ViewModel(BaseViewModel):
             request,
             pk,
             slug=None,
+            path_aware=False,
             read_aware=False,
             subscription_aware=False,
             poll_votes_aware=False
     ):
         model = self.get_thread(request, pk, slug)
 
-        model.path = self.get_thread_path(model.category)
+        if path_aware:
+            model.path = self.get_thread_path(model.category)
 
         add_acl(request.user, model.category)
         add_acl(request.user, model)

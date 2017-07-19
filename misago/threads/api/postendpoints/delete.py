@@ -13,7 +13,7 @@ from misago.threads.permissions import exclude_invisible_posts
 DELETE_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
 
 
-def delete_single(request, thread, post):
+def delete_post(request, thread, post):
     if post.is_event:
         allow_delete_event(request.user, post)
     else:

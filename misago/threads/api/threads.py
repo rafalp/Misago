@@ -11,9 +11,11 @@ from misago.core.shortcuts import get_int_or_404
 from misago.threads.models import Post, Thread
 from misago.threads.moderation import threads as moderation
 from misago.threads.permissions import allow_use_private_threads
-from misago.threads.viewmodels import ForumThread, PrivateThread
+from misago.threads.viewmodels import (ForumThread, PrivateThread,
+    ThreadsRootCategory, PrivateThreadsCategory)
 
 from .postingendpoint import PostingEndpoint
+from .threadendpoints.delete import delete_bulk, delete_thread
 from .threadendpoints.editor import thread_start_editor
 from .threadendpoints.list import private_threads_list_endpoint, threads_list_endpoint
 from .threadendpoints.merge import thread_merge_endpoint, threads_merge_endpoint
@@ -24,17 +26,24 @@ from .threadendpoints.read import read_private_threads, read_threads
 class ViewSet(viewsets.ViewSet):
     thread = None
 
-    def get_thread(self, request, pk, read_aware=True, subscription_aware=True):
+    def get_thread(self, request, pk, path_aware=False, read_aware=False, subscription_aware=False):
         return self.thread(
             request,
             get_int_or_404(pk),
-            None,
-            read_aware,
-            subscription_aware,
+            path_aware=path_aware,
+            read_aware=read_aware,
+            subscription_aware=subscription_aware,
         )
 
     def retrieve(self, request, pk):
-        thread = self.get_thread(request, pk)
+        thread = self.get_thread(
+            request,
+            pk,
+            path_aware=True,
+            read_aware=True,
+            subscription_aware=True,
+        )
+
         return Response(thread.get_frontend_context())
 
     @transaction.atomic
@@ -43,19 +52,17 @@ class ViewSet(viewsets.ViewSet):
         thread = self.get_thread(request, pk).unwrap()
         return thread_patch_endpoint(request, thread)
 
-    @transaction.atomic
-    def destroy(self, request, pk):
-        request.user.lock()
-        thread = self.get_thread(request, pk)
+    def delete(self, request, pk=None):
+        if pk:
+            thread = self.get_thread(request, pk).unwrap()
+            return delete_thread(request, thread)
 
-        if thread.acl.get('can_hide') == 2:
-            moderation.delete_thread(request.user, thread)
-            return Response({'detail': 'ok'})
-        else:
-            raise PermissionDenied(_("You don't have permission to delete this thread."))
+        category = self.category(request)
+        return delete_bulk(request, self.thread)
 
 
 class ThreadViewSet(ViewSet):
+    category = ThreadsRootCategory
     thread = ForumThread
 
     def list(self, request):
@@ -106,10 +113,11 @@ class ThreadViewSet(ViewSet):
     @transaction.atomic
     def read(self, request):
         read_threads(request.user, request.GET.get('category'))
-        return Response({'detail': 'ok'})
+        return Response({})
 
 
 class PrivateThreadViewSet(ViewSet):
+    category = PrivateThreadsCategory
     thread = PrivateThread
 
     def list(self, request):
@@ -152,4 +160,4 @@ class PrivateThreadViewSet(ViewSet):
     def read(self, request):
         allow_use_private_threads(request.user)
         read_private_threads(request.user)
-        return Response({'detail': 'ok'})
+        return Response({})

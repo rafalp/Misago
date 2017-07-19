@@ -14,7 +14,7 @@ from misago.threads.serializers import AttachmentSerializer, PostSerializer
 from misago.threads.viewmodels import ForumThread, PrivateThread, ThreadPost, ThreadPosts
 from misago.users.online.utils import make_users_status_aware
 
-from .postendpoints.delete import delete_single, delete_bulk
+from .postendpoints.delete import delete_bulk, delete_post
 from .postendpoints.edits import get_edit_endpoint, revert_post_endpoint
 from .postendpoints.likes import likes_list_endpoint
 from .postendpoints.merge import posts_merge_endpoint
@@ -31,27 +31,13 @@ class ViewSet(viewsets.ViewSet):
     posts = ThreadPosts
     post_ = ThreadPost
 
-    def get_thread(
-            self,
-            request,
-            pk,
-            read_aware=True,
-            subscription_aware=True,
-    ):
+    def get_thread(self, request, pk, path_aware=False, read_aware=False, subscription_aware=False):
         return self.thread(
             request,
             get_int_or_404(pk),
-            None,
-            read_aware,
-            subscription_aware,
-        )
-
-    def get_thread_for_update(self, request, pk):
-        return self.get_thread(
-            request,
-            pk,
-            read_aware=False,
-            subscription_aware=False,
+            path_aware=path_aware,
+            read_aware=read_aware,
+            subscription_aware=subscription_aware,
         )
 
     def get_posts(self, request, thread, page):
@@ -65,7 +51,13 @@ class ViewSet(viewsets.ViewSet):
         if page == 1:
             page = 0  # api allows explicit first page
 
-        thread = self.get_thread(request, thread_pk)
+        thread = self.get_thread(
+            request,
+            thread_pk,
+            path_aware=True,
+            read_aware=True,
+            subscription_aware=True,
+        )
         posts = self.get_posts(request, thread, page)
 
         data = thread.get_frontend_context()
@@ -171,7 +163,7 @@ class ViewSet(viewsets.ViewSet):
 
         if pk:
             post = self.get_post(request, thread, pk).unwrap()
-            return delete_single(request, thread.unwrap(), post)
+            return delete_post(request, thread.unwrap(), post)
 
         return delete_bulk(request, thread.unwrap())
 
@@ -180,19 +172,19 @@ class ViewSet(viewsets.ViewSet):
     def read(self, request, thread_pk, pk):
         request.user.lock()
 
-        thread = self.get_thread(request, thread_pk).unwrap()
+        thread = self.get_thread(
+            request,
+            thread_pk,
+            read_aware=True,
+            subscription_aware=True,
+        ).unwrap()
         post = self.get_post(request, thread, pk).unwrap()
 
         return post_read_endpoint(request, thread, post)
 
     @detail_route(methods=['get'], url_path='editor')
     def post_editor(self, request, thread_pk, pk):
-        thread = self.get_thread(
-            request,
-            thread_pk,
-            read_aware=False,
-            subscription_aware=False,
-        )
+        thread = self.get_thread(request, thread_pk)
         post = self.get_post(request, thread, pk).unwrap()
 
         allow_edit_post(request.user, post)
@@ -217,9 +209,7 @@ class ViewSet(viewsets.ViewSet):
 
     @list_route(methods=['get'], url_path='editor')
     def reply_editor(self, request, thread_pk):
-        thread = self.get_thread(
-            request, thread_pk, read_aware=False, subscription_aware=False
-        ).unwrap()
+        thread = self.get_thread(request, thread_pk).unwrap()
         allow_reply_thread(request.user, thread)
 
         if 'reply' in request.query_params:

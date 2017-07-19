@@ -238,7 +238,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
                 profile.delete()
 
-        return Response({'detail': 'ok'})
+        return Response({})
 
     @detail_route(methods=['get'])
     def followers(self, request, pk=None):

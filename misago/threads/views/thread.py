@@ -23,7 +23,13 @@ class ThreadBase(View):
 
     def get_thread(self, request, pk, slug):
         return self.thread(
-            request, pk, slug, read_aware=True, subscription_aware=True, poll_votes_aware=True
+            request,
+            pk,
+            slug,
+            path_aware=True,
+            read_aware=True,
+            subscription_aware=True,
+            poll_votes_aware=True,
         )
 
     def get_posts(self, request, thread, page):

@@ -170,40 +170,25 @@ export default class extends React.Component {
       return;
     }
 
-    const errors = [];
-    const countdown = new Countdown(() => {
-      if (errors.length) {
-        modal.show(<ErrorsModal errors={errors} />);
-      } else {
-        snackbar.success(gettext("Selected threads were deleted."));
-      }
-
-      // unfreeze non-deleted threads
-      this.props.threads.forEach((thread) => {
-        this.props.freezeThread(thread.id);
-      });
-
-      // reduce selection to non-deleted threads
-      store.dispatch(select.all(this.props.threads.map(function(item) {
-        return item.id;
-      })));
-    }, this.props.threads.length);
-
-    this.props.threads.forEach((thread) => {
+    this.props.threads.map((thread) => {
       this.props.freezeThread(thread.id);
+    });
 
-      ajax.delete(thread.api.index).then((data) => {
+    const ids = this.props.threads.map((thread) => { return thread.id; });
+
+    ajax.delete(thread.api.index, ids).then((data) => {
+      this.props.threads.map((thread) => {
         this.props.freezeThread(thread.id);
         this.props.deleteThread(thread);
-        countdown.count();
-      }, (rejection) => {
-        errors.push({
-          thread: thread,
-          errors: [rejection.detail]
-        });
-
-        countdown.count();
       });
+
+      snackbar.success(gettext("Selected threads were deleted."));
+    }, (errors) => {
+      this.props.threads.map((thread) => {
+        this.props.freezeThread(thread.id);
+      });
+
+      modal.show(<ErrorsModal errors={errors} />);
     });
   };
   /* jshint ignore:end */
