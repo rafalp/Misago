@@ -47,7 +47,7 @@ class ViewSet(viewsets.ViewSet):
         return Response(thread.get_frontend_context())
 
     @transaction.atomic
-    def partial_update(self, request, pk):
+    def partial_update(self, request, pk=None):
         request.user.lock()
         thread = self.get_thread(request, pk).unwrap()
         return thread_patch_endpoint(request, thread)
@@ -56,8 +56,6 @@ class ViewSet(viewsets.ViewSet):
         if pk:
             thread = self.get_thread(request, pk).unwrap()
             return delete_thread(request, thread)
-
-        category = self.category(request)
         return delete_bulk(request, self.thread)
 
 
@@ -96,7 +94,7 @@ class ThreadViewSet(ViewSet):
 
     @detail_route(methods=['post'], url_path='merge')
     @transaction.atomic
-    def thread_merge(self, request, pk):
+    def thread_merge(self, request, pk=None):
         thread = self.get_thread(request, pk).unwrap()
         return thread_merge_endpoint(request, thread, self.thread)
 

@@ -148,7 +148,7 @@ class ViewSet(viewsets.ViewSet):
             return Response(posting.errors, status=400)
 
     @transaction.atomic
-    def partial_update(self, request, thread_pk, pk):
+    def partial_update(self, request, thread_pk, pk=None):
         thread = self.get_thread(request, thread_pk)
         post = self.get_post(request, thread, pk).unwrap()
 
@@ -169,7 +169,7 @@ class ViewSet(viewsets.ViewSet):
 
     @detail_route(methods=['post'])
     @transaction.atomic
-    def read(self, request, thread_pk, pk):
+    def read(self, request, thread_pk, pk=None):
         request.user.lock()
 
         thread = self.get_thread(
@@ -183,7 +183,7 @@ class ViewSet(viewsets.ViewSet):
         return post_read_endpoint(request, thread, post)
 
     @detail_route(methods=['get'], url_path='editor')
-    def post_editor(self, request, thread_pk, pk):
+    def post_editor(self, request, thread_pk, pk=None):
         thread = self.get_thread(request, thread_pk)
         post = self.get_post(request, thread, pk).unwrap()
 
@@ -229,7 +229,7 @@ class ViewSet(viewsets.ViewSet):
             return Response({})
 
     @detail_route(methods=['get', 'post'])
-    def edits(self, request, thread_pk, pk):
+    def edits(self, request, thread_pk, pk=None):
         if request.method == 'GET':
             thread = self.get_thread(request, thread_pk)
             post = self.get_post(request, thread, pk).unwrap()
@@ -246,7 +246,7 @@ class ViewSet(viewsets.ViewSet):
                 return revert_post_endpoint(request, post)
 
     @detail_route(methods=['get'])
-    def likes(self, request, thread_pk, pk):
+    def likes(self, request, thread_pk, pk=None):
         thread = self.get_thread(request, thread_pk)
         post = self.get_post(request, thread, pk).unwrap()
 

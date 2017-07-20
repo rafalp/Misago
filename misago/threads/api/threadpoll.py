@@ -81,7 +81,7 @@ class ViewSet(viewsets.ViewSet):
             return Response(serializer.errors, status=400)
 
     @transaction.atomic
-    def update(self, request, thread_pk, pk):
+    def update(self, request, thread_pk, pk=None):
         request.user.lock()
 
         thread = self.get_thread(request, thread_pk)
@@ -101,7 +101,7 @@ class ViewSet(viewsets.ViewSet):
             return Response(serializer.errors, status=400)
 
     @transaction.atomic
-    def delete(self, request, thread_pk, pk):
+    def delete(self, request, thread_pk, pk=None):
         request.user.lock()
 
         thread = self.get_thread(request, thread_pk)
@@ -119,14 +119,14 @@ class ViewSet(viewsets.ViewSet):
         })
 
     @detail_route(methods=['get', 'post'])
-    def votes(self, request, thread_pk, pk):
+    def votes(self, request, thread_pk, pk=None):
         if request.method == 'POST':
             return self.post_votes(request, thread_pk, pk)
         else:
             return self.get_votes(request, thread_pk, pk)
 
     @transaction.atomic
-    def post_votes(self, request, thread_pk, pk):
+    def post_votes(self, request, thread_pk, pk=None):
         request.user.lock()
 
         thread = self.get_thread(request, thread_pk)
@@ -134,7 +134,7 @@ class ViewSet(viewsets.ViewSet):
 
         return poll_vote_create(request, thread, instance)
 
-    def get_votes(self, request, thread_pk, pk):
+    def get_votes(self, request, thread_pk, pk=None):
         poll_pk = get_int_or_404(pk)
 
         try:

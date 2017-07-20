@@ -2,6 +2,7 @@ from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
+from django.http import Http404
 from django.utils.six import text_type
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
@@ -17,18 +18,17 @@ DELETE_LIMIT = settings.MISAGO_THREADS_PER_PAGE + settings.MISAGO_THREADS_TAIL
 def delete_thread(request, thread):
     allow_delete_thread(request.user, thread)
     moderation.delete_thread(request.user, thread)
-
     return Response({})
 
 
 def delete_bulk(request, viewmodel):
-    threads = clean_threads_for_delete(request, viewmodel)
-    raise Exception(threads)
+    threads_ids = clean_threads_ids(request)
 
     errors = []
-    for thread in threads:
+    for thread_id in threads_ids:
         try:
-            allow_delete_thread(request.user, thread)
+            thread = viewmodel(request, thread_id).unwrap()
+            delete_thread(request, thread)
         except PermissionDenied as e:
             errors.append({
                 'thread': {
@@ -37,18 +37,13 @@ def delete_bulk(request, viewmodel):
                 },
                 'error': text_type(e)
             })
+        except Http404:
+            pass # ignore invisible threads
 
-    if errors:
-        return Response(errors, status_code=403)
-
-    for thread in delete:
-        with transaction.atomic():
-            moderation.delete_thread(request.user, thread)
-
-    return Response({})
+    return Response(errors)
 
 
-def clean_threads_for_delete(request, viewmodel):
+def clean_threads_ids(request):
     try:
         threads_ids = list(map(int, request.data or []))
     except (ValueError, TypeError):
@@ -63,14 +58,9 @@ def clean_threads_for_delete(request, viewmodel):
             DELETE_LIMIT,
         )
         raise PermissionDenied(message % {'limit': DELETE_LIMIT})
-
-    threads = [viewmodel(request, pk) for pk in threads_ids]
-    if len(threads) != len(threads_ids):
-        raise PermissionDenied(_("One or more threads to delete could not be found."))
-
-    return threads
+    return set(threads_ids)
 
 
 def allow_delete_thread(user, thread):
-    if thread.acl.get('can_delete') != 2:
+    if thread.acl.get('can_hide') != 2:
         raise PermissionDenied(_("You don't have permission to delete this thread."))
