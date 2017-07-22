@@ -24,6 +24,10 @@ __all__ = [
     'can_reply_thread',
     'allow_edit_thread',
     'can_edit_thread',
+    'allow_unhide_thread',
+    'can_unhide_thread',
+    'allow_hide_thread',
+    'can_hide_thread',
     'allow_delete_thread',
     'can_delete_thread',
     'allow_see_post',
@@ -438,15 +442,17 @@ def add_acl_to_thread(user, thread):
     thread.acl.update({
         'can_reply': can_reply_thread(user, thread),
         'can_edit': can_edit_thread(user, thread),
-        'can_hide': category_acl.get('can_hide_threads', False),
+        'can_hide': can_hide_thread(user, thread),
+        'can_unhide': can_unhide_thread(user, thread),
+        'can_delete': can_delete_thread(user, thread),
         'can_pin': 0,
         'can_close': category_acl.get('can_close_threads', False),
         'can_move': False,
         'can_merge': False,
         'can_move_posts': False,
         'can_merge_posts': False,
-        'can_approve': category_acl.get('can_approve_content', False),
-        'can_see_reports': category_acl.get('can_see_reports', False),
+        'can_approve': False,
+        'can_see_reports': False,
     })
 
     if not category_acl.get('can_close_threads'):
@@ -454,18 +460,20 @@ def add_acl_to_thread(user, thread):
     else:
         thread_is_protected = False
 
-    if (can_change_owned_thread(user, thread) and not thread_is_protected
-            and not thread.replies and not thread.acl['can_hide']):
-        can_hide_thread = category_acl.get('can_hide_own_threads')
-        thread.acl['can_hide'] = can_hide_thread
+    if thread_is_protected:
+        return
 
-    if not thread_is_protected:
-        thread.acl['can_pin'] = category_acl.get('can_pin_threads', 0)
-        thread.acl['can_move'] = category_acl.get('can_move_threads', False)
-        thread.acl['can_merge'] = category_acl.get('can_merge_threads', False)
+    thread.acl.update({
+        'can_pin': category_acl.get('can_pin_threads', 0),
+        'can_move': category_acl.get('can_move_threads', False),
+        'can_merge': category_acl.get('can_merge_threads', False),
 
-        thread.acl['can_move_posts'] = category_acl.get('can_move_posts', False)
-        thread.acl['can_merge_posts'] = category_acl.get('can_merge_posts', False)
+        'can_move_posts': category_acl.get('can_move_posts', False),
+        'can_merge_posts': category_acl.get('can_merge_posts', False),
+
+        'can_approve': category_acl.get('can_approve_content', False),
+        'can_see_reports': category_acl.get('can_see_reports', False),
+    })
 
 
 def add_acl_to_post(user, post):
@@ -556,13 +564,13 @@ def allow_start_thread(user, target):
         }
     )
 
-    if target.is_closed and not category_acl['can_close_threads']:
-        raise PermissionDenied(_("This category is closed. You can't start new threads in it."))
-
     if not category_acl['can_start_threads']:
         raise PermissionDenied(
             _("You don't have permission to start new threads in this category.")
         )
+
+    if target.is_closed and not category_acl['can_close_threads']:
+        raise PermissionDenied(_("This category is closed. You can't start new threads in it."))
 
 
 can_start_thread = return_boolean(allow_start_thread)
@@ -579,14 +587,14 @@ def allow_reply_thread(user, target):
         }
     )
 
+    if not category_acl['can_reply_threads']:
+        raise PermissionDenied(_("You can't reply to threads in this category."))
+
     if not category_acl['can_close_threads']:
         if target.category.is_closed:
             raise PermissionDenied(_("This category is closed. You can't reply to threads in it."))
         if target.is_closed:
             raise PermissionDenied(_("You can't reply to closed threads in this category."))
-
-    if not category_acl['can_reply_threads']:
-        raise PermissionDenied(_("You can't reply to threads in this category."))
 
 
 can_reply_thread = return_boolean(allow_reply_thread)
@@ -607,12 +615,6 @@ def allow_edit_thread(user, target):
         if target.starter_id != user.pk:
             raise PermissionDenied(_("You can't edit other users threads in this category."))
 
-        if not category_acl['can_close_threads']:
-            if target.category.is_closed:
-                raise PermissionDenied(_("This category is closed. You can't edit threads in it."))
-            if target.is_closed:
-                raise PermissionDenied(_("You can't edit closed threads in this category."))
-
         if not has_time_to_edit_thread(user, target):
             message = ungettext(
                 "You can't edit threads that are older than %(minutes)s minute.",
@@ -621,8 +623,71 @@ def allow_edit_thread(user, target):
             )
             raise PermissionDenied(message % {'minutes': category_acl['thread_edit_time']})
 
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't edit threads in it."))
+        if target.is_closed:
+            raise PermissionDenied(_("You can't edit closed threads in this category."))
+
 
 can_edit_thread = return_boolean(allow_edit_thread)
+
+
+def allow_unhide_thread(user, target):
+    if user.is_anonymous:
+        raise PermissionDenied(_("You have to sign in to hide threads."))
+
+    category_acl = user.acl_cache['categories'].get(
+        target.category_id, {
+            'can_hide_threads': 0,
+            'can_hide_own_threads': 0,
+        }
+    )
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't reveal threads in it."))
+        if target.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't reveal it."))
+
+
+can_unhide_thread = return_boolean(allow_unhide_thread)
+
+
+def allow_hide_thread(user, target):
+    if user.is_anonymous:
+        raise PermissionDenied(_("You have to sign in to hide threads."))
+
+    category_acl = user.acl_cache['categories'].get(
+        target.category_id, {
+            'can_hide_threads': 0,
+            'can_hide_own_threads': 0,
+        }
+    )
+
+    if not category_acl['can_hide_threads'] and not category_acl['can_hide_own_threads']:
+        raise PermissionDenied(_("You can't hide threads in this category."))
+
+    if not category_acl['can_hide_threads'] and category_acl['can_hide_own_threads']:
+        if user.id != target.starter_id:
+            raise PermissionDenied(_("You can't hide other users theads in this category."))
+
+        if not has_time_to_edit_thread(user, target):
+            message = ungettext(
+                "You can't hide threads that are older than %(minutes)s minute.",
+                "You can't hide threads that are older than %(minutes)s minutes.",
+                category_acl['thread_edit_time'],
+            )
+            raise PermissionDenied(message % {'minutes': category_acl['thread_edit_time']})
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't hide threads in it."))
+        if target.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't hide it."))
+
+
+can_hide_thread = return_boolean(allow_hide_thread)
 
 
 def allow_delete_thread(user, target):
@@ -639,12 +704,6 @@ def allow_delete_thread(user, target):
     if category_acl['can_hide_threads'] != 2 and category_acl['can_hide_own_threads'] != 2:
         raise PermissionDenied(_("You can't delete threads in this category."))
 
-    if not category_acl['can_close_threads']:
-        if target.category.is_closed:
-            raise PermissionDenied(_("This category is closed. You can't delete threads in it."))
-        if target.is_closed:
-            raise PermissionDenied(_("This thread is closed. You can't delete it."))
-
     if category_acl['can_hide_threads'] != 2 and category_acl['can_hide_own_threads'] == 2:
         if user.id != target.starter_id:
             raise PermissionDenied(_("You can't delete other users theads in this category."))
@@ -656,6 +715,12 @@ def allow_delete_thread(user, target):
                 category_acl['thread_edit_time'],
             )
             raise PermissionDenied(message % {'minutes': category_acl['thread_edit_time']})
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't delete threads in it."))
+        if target.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't delete it."))
 
 
 can_delete_thread = return_boolean(allow_delete_thread)

@@ -15,7 +15,7 @@ from misago.threads.participants import (
     add_participant, change_owner, make_participants_aware, remove_participant)
 from misago.threads.permissions import (
     allow_add_participant, allow_add_participants, allow_change_owner, allow_edit_thread,
-    allow_remove_participant, allow_start_thread)
+    allow_hide_thread, allow_unhide_thread, allow_remove_participant, allow_start_thread)
 from misago.threads.serializers import ThreadParticipantSerializer
 from misago.threads.validators import validate_title
 
@@ -152,15 +152,14 @@ thread_patch_dispatcher.replace('is-closed', patch_is_closed)
 
 
 def patch_is_hidden(request, thread, value):
-    if thread.acl.get('can_hide'):
-        if value:
-            moderation.hide_thread(request, thread)
-        else:
-            moderation.unhide_thread(request, thread)
-
-        return {'is_hidden': thread.is_hidden}
+    if value:
+        allow_hide_thread(request.user, thread)
+        moderation.hide_thread(request, thread)
     else:
-        raise PermissionDenied(_("You don't have permission to hide this thread."))
+        allow_unhide_thread(request.user, thread)
+        moderation.unhide_thread(request, thread)
+
+    return {'is_hidden': thread.is_hidden}
 
 
 thread_patch_dispatcher.replace('is-hidden', patch_is_hidden)

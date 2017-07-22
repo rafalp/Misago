@@ -746,16 +746,142 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertTrue(thread_json['is_hidden'])
 
-    def test_show_thread(self):
-        """api makes it possible to unhide thread"""
+    def test_hide_thread_no_permission(self):
+        """api hide thread with no permission fails"""
+        self.override_acl({'can_hide_threads': 0})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You can't hide threads in this category."
+        )
+
+        thread_json = self.get_thread_json()
+        self.assertFalse(thread_json['is_hidden'])
+
+    def test_hide_non_owned_thread(self):
+        """api forbids non-moderator from hiding other users threads"""
+        self.override_acl({
+            'can_hide_own_threads': 1,
+            'can_hide_threads': 0
+        })
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You can't hide other users theads in this category."
+        )
+
+    def test_hide_owned_thread_no_time(self):
+        """api forbids non-moderator from hiding other users threads"""
+        self.override_acl({
+            'can_hide_own_threads': 1,
+            'can_hide_threads': 0,
+            'thread_edit_time': 1,
+        })
+
+        self.thread.starter = self.user
+        self.thread.started_on = timezone.now() - timedelta(minutes=5)
+        self.thread.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You can't hide threads that are older than 1 minute."
+        )
+
+    def test_hide_closed_category_no_permission(self):
+        """api test permission to hide thread in closed category"""
+        self.override_acl({
+            'can_hide_threads': 1,
+            'can_close_threads': 0
+        })
+
+        self.category.is_closed = True
+        self.category.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This category is closed. You can't hide threads in it."
+        )
+
+    def test_hide_closed_thread_no_permission(self):
+        """api test permission to hide closed thread"""
+        self.override_acl({
+            'can_hide_threads': 1,
+            'can_close_threads': 0
+        })
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This thread is closed. You can't hide it."
+        )
+
+
+class ThreadUnhideApiTests(ThreadPatchApiTestCase):
+    def setUp(self):
+        super(ThreadUnhideApiTests, self).setUp()
+
         self.thread.is_hidden = True
         self.thread.save()
 
-        self.override_acl({'can_hide_threads': 1})
-
-        thread_json = self.get_thread_json()
-        self.assertTrue(thread_json['is_hidden'])
-
+    def test_unhide_thread(self):
+        """api makes it possible to unhide thread"""
         self.override_acl({'can_hide_threads': 1})
 
         response = self.patch(
@@ -777,8 +903,8 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertFalse(thread_json['is_hidden'])
 
-    def test_hide_thread_no_permission(self):
-        """api hide thread with no permission fails"""
+    def test_unhide_thread_no_permission(self):
+        """api unhide thread with no permission fails as thread is invisible"""
         self.override_acl({'can_hide_threads': 0})
 
         response = self.patch(
@@ -790,27 +916,17 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 404)
 
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "You don't have permission to hide this thread."
-        )
+    def test_unhide_closed_category_no_permission(self):
+        """api test permission to unhide thread in closed category"""
+        self.override_acl({
+            'can_hide_threads': 1,
+            'can_close_threads': 0
+        })
 
-        thread_json = self.get_thread_json()
-        self.assertFalse(thread_json['is_hidden'])
-
-    def test_show_thread_no_permission(self):
-        """api unhide thread with no permission fails"""
-        self.thread.is_hidden = True
-        self.thread.save()
-
-        self.override_acl({'can_hide_threads': 1})
-
-        thread_json = self.get_thread_json()
-        self.assertTrue(thread_json['is_hidden'])
-
-        self.override_acl({'can_hide_threads': 0})
+        self.category.is_closed = True
+        self.category.save()
 
         response = self.patch(
             self.api_link, [
@@ -821,7 +937,38 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This category is closed. You can't reveal threads in it."
+        )
+
+    def test_unhide_closed_thread_no_permission(self):
+        """api test permission to unhide closed thread"""
+        self.override_acl({
+            'can_hide_threads': 1,
+            'can_close_threads': 0
+        })
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': False,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This thread is closed. You can't reveal it."
+        )
 
 
 class ThreadSubscribeApiTests(ThreadPatchApiTestCase):

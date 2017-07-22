@@ -79,10 +79,12 @@ export function getModerationActions(threads) {
 
     can_approve: 0,
     can_close: 0,
+    can_delete: 0,
     can_hide: 0,
     can_merge: 0,
     can_move: 0,
-    can_pin: 0
+    can_pin: 0,
+    can_unhide: 0
   };
 
   threads.forEach(function(thread) {
@@ -92,6 +94,10 @@ export function getModerationActions(threads) {
 
     if (thread.acl.can_close > moderation.can_close) {
       moderation.can_close = thread.acl.can_close;
+    }
+
+    if (thread.acl.can_delete > moderation.can_delete) {
+      moderation.can_delete = thread.acl.can_delete;
     }
 
     if (thread.acl.can_hide > moderation.can_hide) {
@@ -110,13 +116,19 @@ export function getModerationActions(threads) {
       moderation.can_pin = thread.acl.can_pin;
     }
 
+    if (thread.acl.can_unhide > moderation.can_unhide) {
+      moderation.can_unhide = thread.acl.can_unhide;
+    }
+
     moderation.allow = (
       moderation.can_approve ||
       moderation.can_close ||
+      moderation.can_delete ||
       moderation.can_hide ||
       moderation.can_merge ||
       moderation.can_move ||
-      moderation.can_pin
+      moderation.can_pin ||
+      moderation.can_unhide
     );
   });
 

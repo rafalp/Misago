@@ -371,7 +371,7 @@ export default class extends React.Component {
   }
 
   getUnhideButton() {
-    if (!this.props.moderation.can_hide) return null;
+    if (!this.props.moderation.can_unhide) return null;
 
     /* jshint ignore:start */
     return (
@@ -413,7 +413,7 @@ export default class extends React.Component {
   }
 
   getDeleteButton() {
-    if (this.props.moderation.can_hide != 2) return null;
+    if (!this.props.moderation.can_delete) return null;
 
     /* jshint ignore:start */
     return (

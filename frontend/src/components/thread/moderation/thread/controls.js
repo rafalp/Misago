@@ -300,7 +300,7 @@ export default class extends React.Component {
 
   getUnhideButton() {
     if (!this.props.thread.is_hidden) return null;
-    if (!this.props.thread.acl.can_hide) return null;
+    if (!this.props.thread.acl.can_unhide) return null;
 
     return (
       <li>
@@ -339,7 +339,7 @@ export default class extends React.Component {
   }
 
   getDeleteButton() {
-    if (this.props.thread.acl.can_hide !== 2) return null;
+    if (!this.props.thread.acl.can_delete) return null;
 
     return (
       <li>
