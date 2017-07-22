@@ -72,3 +72,4 @@ def get_thread_id_from_url(request, url):
         return int(resolution.kwargs.get(kwargname))
     except (TypeError, ValueError):
         return None
+

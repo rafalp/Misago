@@ -44,7 +44,10 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
 
     def test_validate_ids(self):
         """api validates that ids are list of ints"""
-        self.override_acl({'can_hide_own_posts': 2, 'can_hide_posts': 2})
+        self.override_acl({
+            'can_hide_own_posts': 2,
+            'can_hide_posts': 2,
+        })
 
         response = self.delete(self.api_link, True)
         self.assertContains(response, "One or more post ids received were invalid.", status_code=403)
@@ -57,21 +60,30 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
 
     def test_validate_ids_length(self):
         """api validates that ids are list of ints"""
-        self.override_acl({'can_hide_own_posts': 2, 'can_hide_posts': 2})
+        self.override_acl({
+            'can_hide_own_posts': 2,
+            'can_hide_posts': 2,
+        })
 
         response = self.delete(self.api_link, list(range(100)))
         self.assertContains(response, "No more than 24 posts can be deleted at single time.", status_code=403)
 
     def test_validate_posts_exist(self):
         """api validates that ids are visible posts"""
-        self.override_acl({'can_hide_own_posts': 2, 'can_hide_posts': 0})
+        self.override_acl({
+            'can_hide_own_posts': 2,
+            'can_hide_posts': 0,
+        })
 
         response = self.delete(self.api_link, [p.id * 10 for p in self.posts])
         self.assertContains(response, "One or more posts to delete could not be found.", status_code=403)
 
     def test_validate_posts_visibility(self):
         """api validates that ids are visible posts"""
-        self.override_acl({'can_hide_own_posts': 2, 'can_hide_posts': 0})
+        self.override_acl({
+            'can_hide_own_posts': 2,
+            'can_hide_posts': 0,
+        })
 
         self.posts[1].is_unapproved = True
         self.posts[1].save()
@@ -81,7 +93,10 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
 
     def test_validate_posts_same_thread(self):
         """api validates that ids are visible posts"""
-        self.override_acl({'can_hide_own_posts': 2, 'can_hide_posts': 2})
+        self.override_acl({
+            'can_hide_own_posts': 2,
+            'can_hide_posts': 2,
+        })
 
         other_thread = testutils.post_thread(category=self.category)
         self.posts.append(testutils.reply_thread(other_thread, poster=self.user))
@@ -91,7 +106,10 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
 
     def test_no_permission(self):
         """api validates permission to delete"""
-        self.override_acl({'can_hide_own_posts': 1, 'can_hide_posts': 1})
+        self.override_acl({
+            'can_hide_own_posts': 1,
+            'can_hide_posts': 1,
+        })
 
         response = self.delete(self.api_link, [p.id for p in self.posts])
         self.assertContains(response, "You can't delete posts in this category.", status_code=403)
@@ -173,7 +191,10 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
 
     def test_delete_first_post(self):
         """api disallows first post's deletion"""
-        self.override_acl({'can_hide_own_posts': 2, 'can_hide_posts': 2})
+        self.override_acl({
+            'can_hide_own_posts': 2,
+            'can_hide_posts': 2,
+        })
 
         ids = [p.id for p in self.posts]
         ids.append(self.thread.first_post_id)
@@ -215,7 +236,10 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
 
     def test_delete_posts(self):
         """api deletes thread posts"""
-        self.override_acl({'can_hide_own_posts': 0, 'can_hide_posts': 2})
+        self.override_acl({
+            'can_hide_own_posts': 0,
+            'can_hide_posts': 2,
+        })
 
         response = self.delete(self.api_link, [p.id for p in self.posts])
         self.assertEqual(response.status_code, 200)

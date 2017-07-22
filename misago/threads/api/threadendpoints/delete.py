@@ -38,7 +38,7 @@ def delete_bulk(request, viewmodel):
                 'error': text_type(e)
             })
         except Http404:
-            pass # ignore invisible threads
+            pass # skip invisible threads
 
     return Response(errors)
 
@@ -58,6 +58,7 @@ def clean_threads_ids(request):
             DELETE_LIMIT,
         )
         raise PermissionDenied(message % {'limit': DELETE_LIMIT})
+
     return set(threads_ids)
 
 
