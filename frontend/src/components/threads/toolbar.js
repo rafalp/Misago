@@ -52,6 +52,7 @@ export default class extends React.Component {
 
             <ModerationControls
               addThreads={this.props.addThreads}
+              api={this.props.api}
               categories={this.props.categories}
               categoriesMap={this.props.categoriesMap}
               className="dropdown-menu dropdown-menu-right stick-to-bottom"

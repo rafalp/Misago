@@ -1,3 +1,6 @@
+from datetime import timedelta
+
+from django.utils import timezone
 from django.urls import reverse
 
 from misago.acl.testutils import override_acl
@@ -252,25 +255,91 @@ class ThreadDeleteApiTests(ThreadsApiTestCase):
         self.api_link = self.last_thread.get_api_url()
 
     def test_delete_thread_no_permission(self):
-        """DELETE to API link with no permission to delete fails"""
+        """api tests permission to delete threads"""
+        self.override_acl({'can_hide_threads': 0})
+
+        response = self.client.delete(self.api_link)
+        self.assertEqual(response.status_code, 403)
+
+        self.assertEqual(
+            response.json()['detail'], "You can't delete threads in this category."
+        )
+
         self.override_acl({'can_hide_threads': 1})
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
 
-        self.override_acl({'can_hide_threads': 0})
-
-        response_json = response.json()
         self.assertEqual(
-            response_json['detail'], "You don't have permission to delete this thread."
+            response.json()['detail'], "You can't delete threads in this category."
         )
+
+    def test_delete_other_user_thread_no_permission(self):
+        """api tests thread owner when deleting own thread"""
+        self.override_acl({
+            'can_hide_threads': 1,
+            'can_hide_own_threads': 2,
+        })
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
 
-        response_json = response.json()
         self.assertEqual(
-            response_json['detail'], "You don't have permission to delete this thread."
+            response.json()['detail'], "You can't delete other users theads in this category."
+        )
+
+    def test_delete_thread_closed_category_no_permission(self):
+        """api tests category's closed state"""
+        self.category.is_closed = True
+        self.category.save()
+
+        self.override_acl({
+            'can_hide_threads': 2,
+            'can_hide_own_threads': 2,
+            'can_close_threads': False,
+        })
+
+        response = self.client.delete(self.api_link)
+        self.assertEqual(response.status_code, 403)
+
+        self.assertEqual(
+            response.json()['detail'], "This category is closed. You can't delete threads in it."
+        )
+
+    def test_delete_thread_closed_no_permission(self):
+        """api tests thread's closed state"""
+        self.last_thread.is_closed = True
+        self.last_thread.save()
+
+        self.override_acl({
+            'can_hide_threads': 2,
+            'can_hide_own_threads': 2,
+            'can_close_threads': False,
+        })
+
+        response = self.client.delete(self.api_link)
+        self.assertEqual(response.status_code, 403)
+
+        self.assertEqual(
+            response.json()['detail'], "This thread is closed. You can't delete it."
+        )
+
+    def test_delete_owned_thread_no_time(self):
+        """api tests permission to delete owned thread within time limit"""
+        self.override_acl({
+            'can_hide_threads': 1,
+            'can_hide_own_threads': 2,
+            'thread_edit_time': 1
+        })
+
+        self.last_thread.starter = self.user
+        self.last_thread.started_on = timezone.now() - timedelta(minutes=10)
+        self.last_thread.save()
+
+        response = self.client.delete(self.api_link)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json()['detail'], "You can't delete threads that are older than 1 minute."
         )
 
     def test_delete_thread(self):
@@ -301,3 +370,18 @@ class ThreadDeleteApiTests(ThreadsApiTestCase):
 
         category = Category.objects.get(slug='first-category')
         self.assertIsNone(category.last_thread_id)
+
+    def test_delete_owned_thread(self):
+        """api lets owner to delete owned thread within time limit"""
+        self.override_acl({
+            'can_hide_threads': 1,
+            'can_hide_own_threads': 2,
+            'thread_edit_time': 30
+        })
+
+        self.last_thread.starter = self.user
+        self.last_thread.started_on = timezone.now() - timedelta(minutes=10)
+        self.last_thread.save()
+
+        response = self.client.delete(self.api_link)
+        self.assertEqual(response.status_code, 200)

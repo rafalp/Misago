@@ -176,19 +176,28 @@ export default class extends React.Component {
 
     const ids = this.props.threads.map((thread) => { return thread.id; });
 
-    ajax.delete(thread.api.index, ids).then((data) => {
+    ajax.delete(this.props.api, ids).then(() => {
       this.props.threads.map((thread) => {
         this.props.freezeThread(thread.id);
         this.props.deleteThread(thread);
       });
 
       snackbar.success(gettext("Selected threads were deleted."));
-    }, (errors) => {
-      this.props.threads.map((thread) => {
-        this.props.freezeThread(thread.id);
-      });
+    }, (rejection) => {
+      if (rejection.status === 400) {
+        const failedThreads = rejection.map((thread) => { return thread.id; });
 
-      modal.show(<ErrorsModal errors={errors} />);
+        this.props.threads.map((thread) => {
+          this.props.freezeThread(thread.id);
+          if (failedThreads.indexOf(thread.id) === -1) {
+            this.props.deleteThread(thread);
+          }
+        });
+
+        modal.show(<ErrorsModal errors={rejection} />);
+      } else {
+        snackbar.apiError(rejection);
+      }
     });
   };
   /* jshint ignore:end */

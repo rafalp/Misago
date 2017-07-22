@@ -113,16 +113,18 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
             'can_hide_threads': 0,
         })
 
+        other_thread = self.threads[1]
+
         response = self.delete(self.api_link, [p.id for p in self.threads])
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), [
             {
                 'thread': {
-                    "id": self.threads[1].pk,
-                    "title": self.threads[1].title
+                    'id': other_thread.pk,
+                    'title': other_thread.title
                 },
-                'error': "You don't have permission to delete this thread."
+                'error': "You can't delete other users theads in this category."
             }
         ])
 
@@ -135,6 +137,55 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
 
         category = Category.objects.get(pk=self.category.pk)
         self.assertEqual(category.last_thread_id, self.threads[1].pk)
+
+    def test_delete_thread_closed_category_no_permission(self):
+        """api tests category's closed state"""
+        self.category.is_closed = True
+        self.category.save()
+
+        self.override_acl({
+            'can_hide_threads': 2,
+            'can_hide_own_threads': 2,
+            'can_close_threads': False,
+        })
+
+        response = self.delete(self.api_link, [p.id for p in self.threads])
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), [
+            {
+                'thread': {
+                    'id': thread.pk,
+                    'title': thread.title
+                },
+                'error': "This category is closed. You can't delete threads in it."
+            } for thread in self.threads
+        ])
+
+    def test_delete_thread_closed_no_permission(self):
+        """api tests thread's closed state"""
+        closed_thread = self.threads[1]
+        closed_thread.is_closed = True
+        closed_thread.save()
+
+        self.override_acl({
+            'can_hide_threads': 2,
+            'can_hide_own_threads': 2,
+            'can_close_threads': False,
+        })
+
+        response = self.delete(self.api_link, [p.id for p in self.threads])
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), [
+            {
+                'thread': {
+                    'id': closed_thread.pk,
+                    'title': closed_thread.title
+                },
+                'error': "This thread is closed. You can't delete it."
+            }
+        ])
 
     def test_delete_private_thread(self):
         """attempt to delete private thread fails"""

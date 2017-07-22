@@ -8,6 +8,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
 from misago.conf import settings
+from misago.threads.permissions import allow_delete_thread
 from misago.threads.moderation import threads as moderation
 
 
@@ -40,7 +41,9 @@ def delete_bulk(request, viewmodel):
         except Http404:
             pass # skip invisible threads
 
-    return Response(errors)
+    if errors:
+        return Response(errors, status=400)
+    return Response([])
 
 
 def clean_threads_ids(request):
@@ -60,8 +63,3 @@ def clean_threads_ids(request):
         raise PermissionDenied(message % {'limit': DELETE_LIMIT})
 
     return set(threads_ids)
-
-
-def allow_delete_thread(user, thread):
-    if thread.acl.get('can_hide') != 2:
-        raise PermissionDenied(_("You don't have permission to delete this thread."))

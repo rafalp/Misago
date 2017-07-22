@@ -283,6 +283,8 @@ export default class extends WithDropdown {
         />
 
         <Container
+          api={this.props.options.api}
+
           route={this.props.route}
           subcategories={this.state.subcategories}
           user={this.props.user}

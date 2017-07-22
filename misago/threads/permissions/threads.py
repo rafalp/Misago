@@ -24,6 +24,8 @@ __all__ = [
     'can_reply_thread',
     'allow_edit_thread',
     'can_edit_thread',
+    'allow_delete_thread',
+    'can_delete_thread',
     'allow_see_post',
     'can_see_post',
     'allow_edit_post',
@@ -621,6 +623,42 @@ def allow_edit_thread(user, target):
 
 
 can_edit_thread = return_boolean(allow_edit_thread)
+
+
+def allow_delete_thread(user, target):
+    if user.is_anonymous:
+        raise PermissionDenied(_("You have to sign in to delete threads."))
+
+    category_acl = user.acl_cache['categories'].get(
+        target.category_id, {
+            'can_hide_threads': 0,
+            'can_hide_own_threads': 0,
+        }
+    )
+
+    if category_acl['can_hide_threads'] != 2 and category_acl['can_hide_own_threads'] != 2:
+        raise PermissionDenied(_("You can't delete threads in this category."))
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't delete threads in it."))
+        if target.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't delete it."))
+
+    if category_acl['can_hide_threads'] != 2 and category_acl['can_hide_own_threads'] == 2:
+        if user.id != target.starter_id:
+            raise PermissionDenied(_("You can't delete other users theads in this category."))
+
+        if not has_time_to_edit_thread(user, target):
+            message = ungettext(
+                "You can't delete threads that are older than %(minutes)s minute.",
+                "You can't delete threads that are older than %(minutes)s minutes.",
+                category_acl['thread_edit_time'],
+            )
+            raise PermissionDenied(message % {'minutes': category_acl['thread_edit_time']})
+
+
+can_delete_thread = return_boolean(allow_delete_thread)
 
 
 def allow_see_post(user, target):

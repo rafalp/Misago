@@ -203,21 +203,24 @@ class PrivateThreadDeleteApiTests(PrivateThreadsTestCase):
         ThreadParticipant.objects.add_participants(self.thread, [self.user])
 
     def test_delete_thread_no_permission(self):
-        """DELETE to API link with no permission to delete fails"""
+        """api tests permission to delete threads"""
+        self.override_acl({'can_hide_threads': 0})
+
+        response = self.client.delete(self.api_link)
+        self.assertEqual(response.status_code, 403)
+
+        self.assertEqual(
+            response.json()['detail'], "You can't delete threads in this category."
+        )
+
         self.override_acl({'can_hide_threads': 1})
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
 
-        self.override_acl({'can_hide_threads': 0})
-
-        response_json = response.json()
         self.assertEqual(
-            response_json['detail'], "You don't have permission to delete this thread."
+            response.json()['detail'], "You can't delete threads in this category."
         )
-
-        response = self.client.delete(self.api_link)
-        self.assertEqual(response.status_code, 403)
 
     def test_delete_thread(self):
         """DELETE to API link with permission deletes thread"""

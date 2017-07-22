@@ -32,44 +32,50 @@ export default class extends React.Component {
   }
 
   getToolbar() {
-    if (this.props.subcategories.length || this.props.user.id) {
-      /* jshint ignore:start */
-      return <Toolbar subcategories={this.props.subcategories}
-                      categories={this.props.route.categories}
-                      categoriesMap={this.props.route.categoriesMap}
-                      list={this.props.route.list}
+    const isVisible = this.props.subcategories.length || this.props.user.id;
 
-                      threads={this.props.threads}
-                      moderation={this.props.moderation}
-                      selection={this.props.selection}
-                      selectAllThreads={this.props.selectAllThreads}
-                      selectNoneThreads={this.props.selectNoneThreads}
+    if (!isVisible) return null;
 
-                      addThreads={this.props.addThreads}
-                      freezeThread={this.props.freezeThread}
-                      deleteThread={this.props.deleteThread}
-                      updateThread={this.props.updateThread}
+    /* jshint ignore:start */
+    return (
+      <Toolbar
+        subcategories={this.props.subcategories}
+        categories={this.props.route.categories}
+        categoriesMap={this.props.route.categoriesMap}
+        list={this.props.route.list}
 
-                      route={this.props.route}
-                      disabled={this.getDisableToolbar()}
-                      user={this.props.user}>
-      </Toolbar>;
-      /* jshint ignore:end */
-    } else {
-      return null;
-    }
+        threads={this.props.threads}
+        moderation={this.props.moderation}
+        selection={this.props.selection}
+        selectAllThreads={this.props.selectAllThreads}
+        selectNoneThreads={this.props.selectNoneThreads}
+
+        addThreads={this.props.addThreads}
+        freezeThread={this.props.freezeThread}
+        deleteThread={this.props.deleteThread}
+        updateThread={this.props.updateThread}
+
+        api={this.props.api}
+        route={this.props.route}
+        disabled={this.getDisableToolbar()}
+        user={this.props.user}
+      />
+    );
+    /* jshint ignore:end */
   }
 
   render() {
     /* jshint ignore:start */
-    return <div className="container">
+    return (
+      <div className="container">
 
-      {this.getCategoryDescription()}
-      {this.getToolbar()}
+        {this.getCategoryDescription()}
+        {this.getToolbar()}
 
-      {this.props.children}
+        {this.props.children}
 
-    </div>;
+      </div>
+    );
     /* jshint ignore:end */
   }
 }
