@@ -2,6 +2,7 @@ from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
+from django.utils.six import text_type
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
@@ -10,7 +11,7 @@ from misago.categories import THREADS_ROOT_NAME
 from misago.threads.events import record_event
 from misago.threads.models import Thread
 from misago.threads.moderation import threads as moderation
-from misago.threads.permissions import can_reply_thread, can_see_thread
+from misago.threads.permissions import allow_merge_thread, can_reply_thread, can_see_thread
 from misago.threads.serializers import NewThreadSerializer, ThreadsListSerializer
 from misago.threads.threadtypes import trees_map
 from misago.threads.utils import get_thread_id_from_url
@@ -27,8 +28,7 @@ class MergeError(Exception):
 
 
 def thread_merge_endpoint(request, thread, viewmodel):
-    if not thread.acl['can_merge']:
-        raise PermissionDenied(_("You don't have permission to merge this thread with others."))
+    allow_merge_thread(request.user, thread)
 
     other_thread_id = get_thread_id_from_url(request, request.data.get('thread_url', None))
     if not other_thread_id:
@@ -38,12 +38,9 @@ def thread_merge_endpoint(request, thread, viewmodel):
 
     try:
         other_thread = viewmodel(request, other_thread_id).unwrap()
+        allow_merge_thread(request.user, other_thread, otherthread=True)
         if not can_reply_thread(request.user, other_thread):
             raise PermissionDenied(_("You can't merge this thread into thread you can't reply."))
-        if not other_thread.acl['can_merge']:
-            raise PermissionDenied(
-                _("You don't have permission to merge this thread with current one.")
-            )
     except PermissionDenied as e:
         return Response({'detail': e.args[0]}, status=400)
     except Http404:
@@ -103,11 +100,13 @@ def threads_merge_endpoint(request):
 
     invalid_threads = []
     for thread in threads:
-        if not thread.acl['can_merge']:
+        try:
+            allow_merge_thread(request.user, thread)
+        except PermissionDenied as e:
             invalid_threads.append({
                 'id': thread.pk,
                 'title': thread.title,
-                'errors': [_("You don't have permission to merge this thread with others.")]
+                'errors': [text_type(e)]
             })
 
     if invalid_threads:

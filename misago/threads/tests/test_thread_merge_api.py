@@ -41,6 +41,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             'can_hide_posts': 0,
             'can_hide_own_posts': 0,
             'can_merge_threads': 0,
+            'can_close_threads': 0,
         })
 
         if acl:
@@ -67,7 +68,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         response = self.client.post(self.api_link)
         self.assertContains(
             response,
-            "You don't have permission to merge this thread with others.",
+            "You can't merge threads in this category.",
             status_code=403
         )
 
@@ -145,15 +146,119 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'thread_url': other_thread.get_absolute_url(),
             }
         )
+
         self.assertContains(
-            response, "You don't have permission to merge this thread", status_code=400
+            response, "Other thread can't be merged with.", status_code=400
+        )
+
+    def test_thread_category_is_closed(self):
+        """api validates if thread's category is open"""
+        self.override_acl({'can_merge_threads': 1})
+
+        self.override_other_acl({
+            'can_merge_threads': 1,
+            'can_reply_threads': 0,
+            'can_close_threads': 0,
+        })
+
+        other_thread = testutils.post_thread(self.category_b)
+
+        self.category.is_closed = True
+        self.category.save()
+
+        response = self.client.post(
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+            }
+        )
+        self.assertContains(
+            response,
+            "This category is closed. You can't merge it's threads.",
+            status_code=403,
+        )
+
+    def test_thread_is_closed(self):
+        """api validates if thread is open"""
+        self.override_acl({'can_merge_threads': 1})
+
+        self.override_other_acl({
+            'can_merge_threads': 1,
+            'can_reply_threads': 0,
+            'can_close_threads': 0,
+        })
+
+        other_thread = testutils.post_thread(self.category_b)
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        response = self.client.post(
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+            }
+        )
+        self.assertContains(
+            response,
+            "This thread is closed. You can't merge it with other threads.",
+            status_code=403,
+        )
+
+    def test_other_thread_category_is_closed(self):
+        """api validates if other thread's category is open"""
+        self.override_acl({'can_merge_threads': 1})
+
+        self.override_other_acl({
+            'can_merge_threads': 1,
+            'can_reply_threads': 0,
+            'can_close_threads': 0,
+        })
+
+        other_thread = testutils.post_thread(self.category_b)
+
+        self.category_b.is_closed = True
+        self.category_b.save()
+
+        response = self.client.post(
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+            }
+        )
+        self.assertContains(
+            response, "Other thread's category is closed. You can't merge with it.", status_code=400
+        )
+
+    def test_other_thread_is_closed(self):
+        """api validates if other thread is open"""
+        self.override_acl({'can_merge_threads': 1})
+
+        self.override_other_acl({
+            'can_merge_threads': 1,
+            'can_reply_threads': 0,
+            'can_close_threads': 0,
+        })
+
+        other_thread = testutils.post_thread(self.category_b)
+
+        other_thread.is_closed = True
+        other_thread.save()
+
+        response = self.client.post(
+            self.api_link, {
+                'thread_url': other_thread.get_absolute_url(),
+            }
+        )
+        self.assertContains(
+            response, "Other thread is closed and can't be merged with", status_code=400
         )
 
     def test_other_thread_isnt_replyable(self):
-        """api validates if other thread can be replied, which is condition for merg"""
+        """api validates if other thread can be replied, which is condition for merge"""
         self.override_acl({'can_merge_threads': 1})
 
-        self.override_other_acl({'can_reply_threads': 0})
+        self.override_other_acl({
+            'can_merge_threads': 1,
+            'can_reply_threads': 0,
+        })
 
         other_thread = testutils.post_thread(self.category_b)
 

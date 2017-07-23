@@ -86,6 +86,58 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
         response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't edit threads in this category.")
 
+    def test_change_thread_title_closed_category_no_permission(self):
+        """api test permission to edit thread title in closed category"""
+        self.override_acl({
+            'can_edit_threads': 2,
+            'can_close_threads': 0
+        })
+
+        self.category.is_closed = True
+        self.category.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'title',
+                    'value': "Lorem ipsum change!",
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This category is closed. You can't edit threads in it."
+        )
+
+    def test_change_thread_title_closed_thread_no_permission(self):
+        """api test permission to edit closed thread title"""
+        self.override_acl({
+            'can_edit_threads': 2,
+            'can_close_threads': 0
+        })
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'title',
+                    'value': "Lorem ipsum change!",
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This thread is closed. You can't edit it."
+        )
+
     def test_change_thread_title_after_edit_time(self):
         """api cleans, validates and rejects too short title"""
         self.override_acl({'thread_edit_time': 1, 'can_edit_threads': 1})
@@ -154,6 +206,58 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 2)
 
+    def test_pin_thread_closed_category_no_permission(self):
+        """api checks if category is closed"""
+        self.override_acl({
+            'can_pin_threads': 2,
+            'can_close_threads': 0,
+        })
+
+        self.category.is_closed = True
+        self.category.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'weight',
+                    'value': 2,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This category is closed. You can't change threads weights in it."
+        )
+
+    def test_pin_thread_closed_no_permission(self):
+        """api checks if thread is closed"""
+        self.override_acl({
+            'can_pin_threads': 2,
+            'can_close_threads': 0,
+        })
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'weight',
+                    'value': 2,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This thread is closed. You can't change its weight."
+        )
+
     def test_unpin_thread(self):
         """api makes it possible to unpin thread"""
         self.thread.weight = 2
@@ -198,7 +302,7 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
 
         response_json = response.json()
         self.assertEqual(
-            response_json['detail'][0], "You don't have permission to pin this thread globally."
+            response_json['detail'][0], "You can't pin threads globally in this category."
         )
 
         thread_json = self.get_thread_json()
@@ -227,7 +331,7 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
 
         response_json = response.json()
         self.assertEqual(
-            response_json['detail'][0], "You don't have permission to change this thread's weight."
+            response_json['detail'][0], "You can't change globally pinned threads weights in this category."
         )
 
         thread_json = self.get_thread_json()
@@ -300,7 +404,7 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
 
         response_json = response.json()
         self.assertEqual(
-            response_json['detail'][0], "You don't have permission to change this thread's weight."
+            response_json['detail'][0], "You can't change threads weights in this category."
         )
 
         thread_json = self.get_thread_json()
@@ -329,7 +433,7 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
 
         response_json = response.json()
         self.assertEqual(
-            response_json['detail'][0], "You don't have permission to change this thread's weight."
+            response_json['detail'][0], "You can't change threads weights in this category."
         )
 
         thread_json = self.get_thread_json()
@@ -462,13 +566,67 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
 
         response_json = response.json()
         self.assertEqual(
-            response_json['detail'][0], "You don't have permission to move this thread."
+            response_json['detail'][0], "You can't move threads in this category."
         )
 
         self.override_other_acl({})
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category.pk)
+
+    def test_move_thread_closed_category_no_permission(self):
+        """api move thread from closed category with no permission fails"""
+        self.override_acl({
+            'can_move_threads': True,
+            'can_close_threads': False,
+        })
+        self.override_other_acl({})
+
+        self.category.is_closed = True
+        self.category.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'category',
+                    'value': self.category_b.pk,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This category is closed. You can't move it's threads."
+        )
+
+    def test_move_closed_thread_no_permission(self):
+        """api move closed thread with no permission fails"""
+        self.override_acl({
+            'can_move_threads': True,
+            'can_close_threads': False,
+        })
+        self.override_other_acl({})
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'category',
+                    'value': self.category_b.pk,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This thread is closed. You can't move it."
+        )
 
     def test_move_thread_no_category_access(self):
         """api move thread to category with no access fails"""
@@ -514,6 +672,33 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         self.assertEqual(
             response_json['detail'][0],
             'You don\'t have permission to browse "Category B" contents.'
+        )
+
+        self.override_other_acl({})
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['category']['id'], self.category.pk)
+
+    def test_move_thread_no_category_start_threads(self):
+        """api move thread to category with no posting access fails"""
+        self.override_acl({'can_move_threads': True})
+        self.override_other_acl({'can_start_threads': False})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'category',
+                    'value': self.category_b.pk,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0],
+            "You don't have permission to start new threads in this category."
         )
 
         self.override_other_acl({})
@@ -702,6 +887,72 @@ class ThreadApproveApiTests(ThreadPatchApiTestCase):
         thread = Thread.objects.get(pk=self.thread.pk)
         self.assertFalse(thread.is_unapproved)
         self.assertFalse(thread.has_unapproved_posts)
+
+    def test_approve_thread_category_closed_no_permission(self):
+        """api checks permission for approving threads in closed categories"""
+        self.thread.first_post.is_unapproved = True
+        self.thread.first_post.save()
+
+        self.thread.synchronize()
+        self.thread.save()
+
+        self.assertTrue(self.thread.is_unapproved)
+        self.assertTrue(self.thread.has_unapproved_posts)
+
+        self.category.is_closed = True
+        self.category.save()
+
+        self.override_acl({
+            'can_approve_content': 1,
+            'can_close_threads': 0,
+        })
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-unapproved',
+                    'value': False,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(response_json['detail'][0], "This category is closed. You can't approve threads in it.")
+
+    def test_approve_thread_closed_no_permission(self):
+        """api checks permission for approving posts in closed categories"""
+        self.thread.first_post.is_unapproved = True
+        self.thread.first_post.save()
+
+        self.thread.synchronize()
+        self.thread.save()
+
+        self.assertTrue(self.thread.is_unapproved)
+        self.assertTrue(self.thread.has_unapproved_posts)
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        self.override_acl({
+            'can_approve_content': 1,
+            'can_close_threads': 0,
+        })
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-unapproved',
+                    'value': False,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(response_json['detail'][0], "This thread is closed. You can't approve it.")
 
     def test_unapprove_thread(self):
         """api returns permission error on approval removal"""

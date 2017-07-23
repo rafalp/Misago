@@ -203,7 +203,7 @@ export default class extends React.Component {
   /* jshint ignore:end */
 
   getPinGloballyButton() {
-    if (this.props.moderation.can_pin !== 2) return null;
+    if (!this.props.moderation.can_pin_globally) return null;
 
     /* jshint ignore:start */
     return (
@@ -224,7 +224,7 @@ export default class extends React.Component {
   }
 
   getPinLocallyButton() {
-    if (this.props.moderation.can_pin === 0) return null;
+    if (!this.props.moderation.can_pin) return null;
 
     /* jshint ignore:start */
     return (
@@ -245,7 +245,7 @@ export default class extends React.Component {
   }
 
   getUnpinButton() {
-    if (this.props.moderation.can_pin === 0) return null;
+    if (!this.props.moderation.can_pin) return null;
 
     /* jshint ignore:start */
     return (

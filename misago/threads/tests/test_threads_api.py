@@ -37,6 +37,7 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
             'can_hide_posts': 0,
             'can_hide_own_posts': 0,
             'can_merge_threads': 0,
+            'can_close_threads': 0,
         })
 
         if acl:

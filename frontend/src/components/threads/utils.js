@@ -84,6 +84,7 @@ export function getModerationActions(threads) {
     can_merge: 0,
     can_move: 0,
     can_pin: 0,
+    can_pin_globally: 0,
     can_unhide: 0
   };
 
@@ -116,6 +117,10 @@ export function getModerationActions(threads) {
       moderation.can_pin = thread.acl.can_pin;
     }
 
+    if (thread.acl.can_pin_globally > moderation.can_pin_globally) {
+      moderation.can_pin_globally = thread.acl.can_pin_globally;
+    }
+
     if (thread.acl.can_unhide > moderation.can_unhide) {
       moderation.can_unhide = thread.acl.can_unhide;
     }
@@ -128,6 +133,7 @@ export function getModerationActions(threads) {
       moderation.can_merge ||
       moderation.can_move ||
       moderation.can_pin ||
+      moderation.can_pin_globally ||
       moderation.can_unhide
     );
   });

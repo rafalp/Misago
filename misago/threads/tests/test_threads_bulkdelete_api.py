@@ -159,7 +159,7 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
                     'title': thread.title
                 },
                 'error': "This category is closed. You can't delete threads in it."
-            } for thread in self.threads
+            } for thread in sorted(self.threads, key=lambda i: i.pk, reverse=True)
         ])
 
     def test_delete_thread_closed_no_permission(self):

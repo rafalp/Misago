@@ -14,8 +14,9 @@ from misago.threads.moderation import threads as moderation
 from misago.threads.participants import (
     add_participant, change_owner, make_participants_aware, remove_participant)
 from misago.threads.permissions import (
-    allow_add_participant, allow_add_participants, allow_change_owner, allow_edit_thread,
-    allow_hide_thread, allow_unhide_thread, allow_remove_participant, allow_start_thread)
+    allow_add_participant, allow_add_participants, allow_approve_thread, allow_change_owner, allow_edit_thread,
+    allow_pin_thread, allow_hide_thread, allow_move_thread, allow_remove_participant, allow_start_thread,
+    allow_unhide_thread)
 from misago.threads.serializers import ThreadParticipantSerializer
 from misago.threads.validators import validate_title
 
@@ -58,17 +59,16 @@ thread_patch_dispatcher.replace('title', patch_title)
 
 
 def patch_weight(request, thread, value):
-    message = _("You don't have permission to change this thread's weight.")
-    if not thread.acl.get('can_pin'):
-        raise PermissionDenied(message)
-    elif thread.weight > thread.acl.get('can_pin'):
-        raise PermissionDenied(message)
+    allow_pin_thread(request.user, thread)
+
+    if not thread.acl.get('can_pin_globally') and thread.weight == 2:
+        raise PermissionDenied(_("You can't change globally pinned threads weights in this category."))
 
     if value == 2:
-        if thread.acl.get('can_pin') == 2:
+        if thread.acl.get('can_pin_globally'):
             moderation.pin_thread_globally(request, thread)
         else:
-            raise PermissionDenied(_("You don't have permission to pin this thread globally."))
+            raise PermissionDenied(_("You can't pin threads globally in this category."))
     elif value == 1:
         moderation.pin_thread_locally(request, thread)
     elif value == 0:
@@ -81,8 +81,7 @@ thread_patch_dispatcher.replace('weight', patch_weight)
 
 
 def patch_move(request, thread, value):
-    if not thread.acl.get('can_move'):
-        raise PermissionDenied(_("You don't have permission to move this thread."))
+    allow_move_thread(request.user, thread)
 
     category_pk = get_int_or_404(value)
     new_category = get_object_or_404(
@@ -116,18 +115,17 @@ thread_patch_dispatcher.replace('flatten-categories', patch_flatten_categories)
 
 
 def patch_is_unapproved(request, thread, value):
-    if thread.acl.get('can_approve'):
-        if value:
-            raise PermissionDenied(_("Content approval can't be reversed."))
+    allow_approve_thread(request.user, thread)
 
-        moderation.approve_thread(request, thread)
+    if value:
+        raise PermissionDenied(_("Content approval can't be reversed."))
 
-        return {
-            'is_unapproved': thread.is_unapproved,
-            'has_unapproved_posts': thread.has_unapproved_posts,
-        }
-    else:
-        raise PermissionDenied(_("You don't have permission to approve this thread."))
+    moderation.approve_thread(request, thread)
+
+    return {
+        'is_unapproved': thread.is_unapproved,
+        'has_unapproved_posts': thread.has_unapproved_posts,
+    }
 
 
 thread_patch_dispatcher.replace('is-unapproved', patch_is_unapproved)

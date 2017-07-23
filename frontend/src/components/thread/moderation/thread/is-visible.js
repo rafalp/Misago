@@ -6,6 +6,7 @@ export default function(thread) {
     thread.acl.can_hide ||
     thread.acl.can_move ||
     thread.acl.can_pin ||
+    thread.acl.can_pin_globally ||
     thread.acl.can_unhide
   );
 }

@@ -62,4 +62,4 @@ def clean_threads_ids(request):
         )
         raise PermissionDenied(message % {'limit': DELETE_LIMIT})
 
-    return set(threads_ids)
+    return sorted(set(threads_ids), reverse=True)

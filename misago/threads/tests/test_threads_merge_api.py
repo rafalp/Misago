@@ -111,8 +111,6 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
 
     def test_merge_with_nonexisting_thread(self):
         """api validates if we are trying to merge with invalid thread"""
-        testutils.post_thread(category=self.category_b)
-
         response = self.client.post(
             self.api_link,
             json.dumps({
@@ -168,14 +166,64 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
                 {
                     'id': thread.pk,
                     'title': thread.title,
-                    'errors': ["You don't have permission to merge this thread with others."],
+                    'errors': ["You can't merge threads in this category."],
                 },
                 {
                     'id': self.thread.pk,
                     'title': self.thread.title,
-                    'errors': ["You don't have permission to merge this thread with others."],
+                    'errors': ["You can't merge threads in this category."],
                 },
             ]
+        )
+
+    def test_thread_category_is_closed(self):
+        """api validates if thread's category is open"""
+        self.override_acl({
+            'can_merge_threads': 1,
+            'can_close_threads': 0,
+        })
+
+        other_thread = testutils.post_thread(self.category)
+
+        self.category.is_closed = True
+        self.category.save()
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({
+                'threads': [self.thread.id, other_thread.id],
+            }),
+            content_type="application/json",
+        )
+        self.assertContains(
+            response,
+            "This category is closed. You can't merge it's threads.",
+            status_code=403,
+        )
+
+    def test_thread_is_closed(self):
+        """api validates if thread is open"""
+        self.override_acl({
+            'can_merge_threads': 1,
+            'can_close_threads': 0,
+        })
+
+        other_thread = testutils.post_thread(self.category)
+
+        other_thread.is_closed = True
+        other_thread.save()
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({
+                'threads': [self.thread.id, other_thread.id],
+            }),
+            content_type="application/json",
+        )
+        self.assertContains(
+            response,
+            "This thread is closed. You can't merge it with other threads.",
+            status_code=403,
         )
 
     def test_merge_too_many_threads(self):

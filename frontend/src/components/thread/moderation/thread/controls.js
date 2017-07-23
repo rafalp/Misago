@@ -142,7 +142,7 @@ export default class extends React.Component {
 
   getPinGloballyButton() {
     if (this.props.thread.weight === 2) return null;
-    if (this.props.thread.acl.can_pin !== 2) return null;
+    if (!this.props.thread.acl.can_pin_globally) return null;
 
     return (
       <li>
@@ -162,7 +162,7 @@ export default class extends React.Component {
 
   getPinLocallyButton() {
     if (this.props.thread.weight === 1) return null;
-    if (this.props.thread.acl.can_pin === 0) return null;
+    if (!this.props.thread.acl.can_pin) return null;
 
     return (
       <li>
@@ -182,7 +182,7 @@ export default class extends React.Component {
 
   getUnpinButton() {
     if (this.props.thread.weight === 0) return null;
-    if (this.props.thread.acl.can_pin === 0) return null;
+    if (!this.props.thread.acl.can_pin) return null;
 
     return (
       <li>

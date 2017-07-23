@@ -24,12 +24,20 @@ __all__ = [
     'can_reply_thread',
     'allow_edit_thread',
     'can_edit_thread',
+    'allow_pin_thread',
+    'can_pin_thread',
     'allow_unhide_thread',
     'can_unhide_thread',
     'allow_hide_thread',
     'can_hide_thread',
     'allow_delete_thread',
     'can_delete_thread',
+    'allow_move_thread',
+    'can_move_thread',
+    'allow_merge_thread',
+    'can_merge_thread',
+    'allow_approve_thread',
+    'can_approve_thread',
     'allow_see_post',
     'can_see_post',
     'allow_edit_post',
@@ -442,18 +450,22 @@ def add_acl_to_thread(user, thread):
     thread.acl.update({
         'can_reply': can_reply_thread(user, thread),
         'can_edit': can_edit_thread(user, thread),
+        'can_pin': can_pin_thread(user, thread),
+        'can_pin_globally': False,
         'can_hide': can_hide_thread(user, thread),
         'can_unhide': can_unhide_thread(user, thread),
         'can_delete': can_delete_thread(user, thread),
-        'can_pin': 0,
         'can_close': category_acl.get('can_close_threads', False),
-        'can_move': False,
-        'can_merge': False,
+        'can_move': can_move_thread(user, thread),
+        'can_merge': can_merge_thread(user, thread),
         'can_move_posts': False,
         'can_merge_posts': False,
-        'can_approve': False,
-        'can_see_reports': False,
+        'can_approve': can_approve_thread(user, thread),
+        'can_see_reports': category_acl.get('can_see_reports', False),
     })
+
+    if thread.acl['can_pin'] and category_acl.get('can_pin_threads') == 2:
+        thread.acl['can_pin_globally'] = True
 
     if not category_acl.get('can_close_threads'):
         thread_is_protected = thread.is_closed or thread.category.is_closed
@@ -464,15 +476,8 @@ def add_acl_to_thread(user, thread):
         return
 
     thread.acl.update({
-        'can_pin': category_acl.get('can_pin_threads', 0),
-        'can_move': category_acl.get('can_move_threads', False),
-        'can_merge': category_acl.get('can_merge_threads', False),
-
         'can_move_posts': category_acl.get('can_move_posts', False),
         'can_merge_posts': category_acl.get('can_merge_posts', False),
-
-        'can_approve': category_acl.get('can_approve_content', False),
-        'can_see_reports': category_acl.get('can_see_reports', False),
     })
 
 
@@ -559,7 +564,6 @@ def allow_start_thread(user, target):
 
     category_acl = user.acl_cache['categories'].get(
         target.pk, {
-            'can_close_threads': False,
             'can_start_threads': False,
         }
     )
@@ -582,7 +586,6 @@ def allow_reply_thread(user, target):
 
     category_acl = user.acl_cache['categories'].get(
         target.category_id, {
-            'can_close_threads': False,
             'can_reply_threads': False,
         }
     )
@@ -605,7 +608,9 @@ def allow_edit_thread(user, target):
         raise PermissionDenied(_("You have to sign in to edit threads."))
 
     category_acl = user.acl_cache['categories'].get(
-        target.category_id, {'can_edit_threads': False}
+        target.category_id, {
+            'can_edit_threads': False,
+        }
     )
 
     if not category_acl['can_edit_threads']:
@@ -627,10 +632,33 @@ def allow_edit_thread(user, target):
         if target.category.is_closed:
             raise PermissionDenied(_("This category is closed. You can't edit threads in it."))
         if target.is_closed:
-            raise PermissionDenied(_("You can't edit closed threads in this category."))
+            raise PermissionDenied(_("This thread is closed. You can't edit it."))
 
 
 can_edit_thread = return_boolean(allow_edit_thread)
+
+
+def allow_pin_thread(user, target):
+    if user.is_anonymous:
+        raise PermissionDenied(_("You have to sign in to change threads weights."))
+
+    category_acl = user.acl_cache['categories'].get(
+        target.category_id, {
+            'can_pin_threads': 0,
+        }
+    )
+
+    if not category_acl['can_pin_threads']:
+        raise PermissionDenied(_("You can't change threads weights in this category."))
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't change threads weights in it."))
+        if target.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't change its weight."))
+
+
+can_pin_thread = return_boolean(allow_pin_thread)
 
 
 def allow_unhide_thread(user, target):
@@ -639,8 +667,7 @@ def allow_unhide_thread(user, target):
 
     category_acl = user.acl_cache['categories'].get(
         target.category_id, {
-            'can_hide_threads': 0,
-            'can_hide_own_threads': 0,
+            'can_close_threads': False,
         }
     )
 
@@ -724,6 +751,81 @@ def allow_delete_thread(user, target):
 
 
 can_delete_thread = return_boolean(allow_delete_thread)
+
+
+def allow_move_thread(user, target):
+    if user.is_anonymous:
+        raise PermissionDenied(_("You have to sign in to move threads."))
+
+    category_acl = user.acl_cache['categories'].get(
+        target.category_id, {
+            'can_move_threads': 0,
+        }
+    )
+
+    if not category_acl['can_move_threads']:
+        raise PermissionDenied(_("You can't move threads in this category."))
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't move it's threads."))
+        if target.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't move it."))
+
+
+can_move_thread = return_boolean(allow_move_thread)
+
+
+def allow_merge_thread(user, target, otherthread=False):
+    if user.is_anonymous:
+        raise PermissionDenied(_("You have to sign in to merge threads."))
+
+    category_acl = user.acl_cache['categories'].get(
+        target.category_id, {
+            'can_merge_threads': 0,
+        }
+    )
+
+    if not category_acl['can_merge_threads']:
+        if otherthread:
+            raise PermissionDenied(_("Other thread can't be merged with."))
+        raise PermissionDenied(_("You can't merge threads in this category."))
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            if otherthread:
+                raise PermissionDenied(_("Other thread's category is closed. You can't merge with it."))
+            raise PermissionDenied(_("This category is closed. You can't merge it's threads."))
+        if target.is_closed:
+            if otherthread:
+                raise PermissionDenied(_("Other thread is closed and can't be merged with."))
+            raise PermissionDenied(_("This thread is closed. You can't merge it with other threads."))
+
+
+can_merge_thread = return_boolean(allow_merge_thread)
+
+
+def allow_approve_thread(user, target):
+    if user.is_anonymous:
+        raise PermissionDenied(_("You have to sign in to approve threads."))
+
+    category_acl = user.acl_cache['categories'].get(
+        target.category_id, {
+            'can_approve_content': 0,
+        }
+    )
+
+    if not category_acl['can_approve_content']:
+        raise PermissionDenied(_("You can't approve threads in this category."))
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't approve threads in it."))
+        if target.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't approve it."))
+
+
+can_approve_thread = return_boolean(allow_approve_thread)
 
 
 def allow_see_post(user, target):
