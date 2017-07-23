@@ -182,7 +182,7 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
         self.refresh_post()
         self.assertTrue(self.post.is_protected)
 
-    def test_unprotect_post_not_editable(self):
+    def test_protect_post_not_editable(self):
         """api validates if we can edit post we want to protect"""
         self.override_acl({'can_edit_posts': 0, 'can_protect_posts': 1})
 
@@ -202,6 +202,30 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
 
         self.refresh_post()
         self.assertFalse(self.post.is_protected)
+
+    def test_unprotect_post_not_editable(self):
+        """api validates if we can edit post we want to protect"""
+        self.post.is_protected = True
+        self.post.save()
+
+        self.override_acl({'can_edit_posts': 0, 'can_protect_posts': 1})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-protected',
+                    'value': False,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(response_json['detail'][0], "You can't protect posts you can't edit.")
+
+        self.refresh_post()
+        self.assertTrue(self.post.is_protected)
 
 
 class PostApproveApiTests(ThreadPostPatchApiTestCase):
@@ -242,7 +266,10 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(response_json['detail'][0], "Content approval can't be reversed.")
 
         self.refresh_post()
         self.assertFalse(self.post.is_unapproved)
@@ -267,6 +294,72 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
 
         response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't approve posts in this category.")
+
+        self.refresh_post()
+        self.assertTrue(self.post.is_unapproved)
+
+    def test_approve_post_closed_thread_no_permission(self):
+        """api validates approval permission in closed threads"""
+        self.post.is_unapproved = True
+        self.post.save()
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        self.override_acl({
+            'can_approve_content': 1,
+            'can_close_threads': 0,
+        })
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-unapproved',
+                    'value': False,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0],
+            "This thread is closed. You can't approve posts in it.",
+        )
+
+        self.refresh_post()
+        self.assertTrue(self.post.is_unapproved)
+
+    def test_approve_post_closed_category_no_permission(self):
+        """api validates approval permission in closed categories"""
+        self.post.is_unapproved = True
+        self.post.save()
+
+        self.category.is_closed = True
+        self.category.save()
+
+        self.override_acl({
+            'can_approve_content': 1,
+            'can_close_threads': 0,
+        })
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-unapproved',
+                    'value': False,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0],
+            "This category is closed. You can't approve posts in it.",
+        )
 
         self.refresh_post()
         self.assertTrue(self.post.is_unapproved)
@@ -348,6 +441,199 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.refresh_post()
         self.assertTrue(self.post.is_hidden)
 
+    def test_hide_own_post(self):
+        """api makes it possible to hide owned post"""
+        self.override_acl({'can_hide_own_posts': 1})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+
+        reponse_json = response.json()
+        self.assertTrue(reponse_json['is_hidden'])
+
+        self.refresh_post()
+        self.assertTrue(self.post.is_hidden)
+
+    def test_hide_post_no_permission(self):
+        """api hide post with no permission fails"""
+        self.override_acl({'can_hide_posts': 0})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(response_json['detail'][0], "You can't hide posts in this category.")
+
+        self.refresh_post()
+        self.assertFalse(self.post.is_hidden)
+
+    def test_hide_own_protected_post(self):
+        """api validates if we are trying to hide protected post"""
+        self.post.is_protected = True
+        self.post.save()
+
+        self.override_acl({'can_protect_posts': 0, 'can_hide_own_posts': 1})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(response_json['detail'][0], "This post is protected. You can't hide it.")
+
+        self.refresh_post()
+        self.assertFalse(self.post.is_hidden)
+
+    def test_hide_other_user_post(self):
+        """api validates post ownership when hiding"""
+        self.post.poster = None
+        self.post.save()
+
+        self.override_acl({'can_hide_own_posts': 1})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You can't hide other users posts in this category."
+        )
+
+        self.refresh_post()
+        self.assertFalse(self.post.is_hidden)
+
+    def test_hide_own_post_after_edit_time(self):
+        """api validates if we are trying to hide post after edit time"""
+        self.post.posted_on = timezone.now() - timedelta(minutes=10)
+        self.post.save()
+
+        self.override_acl({'post_edit_time': 1, 'can_hide_own_posts': 1})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You can't hide posts that are older than 1 minute."
+        )
+
+        self.refresh_post()
+        self.assertFalse(self.post.is_hidden)
+
+    def test_hide_post_in_closed_thread(self):
+        """api validates if we are trying to hide post in closed thread"""
+        self.thread.is_closed = True
+        self.thread.save()
+
+        self.override_acl({'can_hide_own_posts': 1})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This thread is closed. You can't hide posts in it."
+        )
+
+        self.refresh_post()
+        self.assertFalse(self.post.is_hidden)
+
+    def test_hide_post_in_closed_category(self):
+        """api validates if we are trying to hide post in closed category"""
+        self.category.is_closed = True
+        self.category.save()
+
+        self.override_acl({'can_hide_own_posts': 1})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This category is closed. You can't hide posts in it."
+        )
+
+        self.refresh_post()
+        self.assertFalse(self.post.is_hidden)
+
+    def test_hide_first_post(self):
+        """api hide first post fails"""
+        self.thread.set_first_post(self.post)
+        self.thread.save()
+
+        self.override_acl({'can_hide_posts': 1})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(response_json['detail'][0], "You can't hide thread's first post.")
+
+
+class PostUnhideApiTests(ThreadPostPatchApiTestCase):
     def test_show_post(self):
         """api makes it possible to unhide post"""
         self.post.is_hidden = True
@@ -375,27 +661,6 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.refresh_post()
         self.assertFalse(self.post.is_hidden)
 
-    def test_hide_own_post(self):
-        """api makes it possible to hide owned post"""
-        self.override_acl({'can_hide_own_posts': 1})
-
-        response = self.patch(
-            self.api_link, [
-                {
-                    'op': 'replace',
-                    'path': 'is-hidden',
-                    'value': True,
-                },
-            ]
-        )
-        self.assertEqual(response.status_code, 200)
-
-        reponse_json = response.json()
-        self.assertTrue(reponse_json['is_hidden'])
-
-        self.refresh_post()
-        self.assertTrue(self.post.is_hidden)
-
     def test_show_own_post(self):
         """api makes it possible to unhide owned post"""
         self.post.is_hidden = True
@@ -419,27 +684,6 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
 
         reponse_json = response.json()
         self.assertFalse(reponse_json['is_hidden'])
-
-        self.refresh_post()
-        self.assertFalse(self.post.is_hidden)
-
-    def test_hide_post_no_permission(self):
-        """api hide post with no permission fails"""
-        self.override_acl({'can_hide_posts': 0})
-
-        response = self.patch(
-            self.api_link, [
-                {
-                    'op': 'replace',
-                    'path': 'is-hidden',
-                    'value': True,
-                },
-            ]
-        )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(response_json['detail'][0], "You can't hide posts in this category.")
 
         self.refresh_post()
         self.assertFalse(self.post.is_hidden)
@@ -471,30 +715,6 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.refresh_post()
         self.assertTrue(self.post.is_hidden)
 
-    def test_hide_own_protected_post(self):
-        """api validates if we are trying to hide protected post"""
-        self.post.is_protected = True
-        self.post.save()
-
-        self.override_acl({'can_protect_posts': 0, 'can_hide_own_posts': 1})
-
-        response = self.patch(
-            self.api_link, [
-                {
-                    'op': 'replace',
-                    'path': 'is-hidden',
-                    'value': True,
-                },
-            ]
-        )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(response_json['detail'][0], "This post is protected. You can't hide it.")
-
-        self.refresh_post()
-        self.assertFalse(self.post.is_hidden)
-
     def test_show_own_protected_post(self):
         """api validates if we are trying to reveal protected post"""
         self.post.is_hidden = True
@@ -524,32 +744,6 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.refresh_post()
         self.assertTrue(self.post.is_hidden)
 
-    def test_hide_other_user_post(self):
-        """api validates post ownership when hiding"""
-        self.post.poster = None
-        self.post.save()
-
-        self.override_acl({'can_hide_own_posts': 1})
-
-        response = self.patch(
-            self.api_link, [
-                {
-                    'op': 'replace',
-                    'path': 'is-hidden',
-                    'value': True,
-                },
-            ]
-        )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "You can't hide other users posts in this category."
-        )
-
-        self.refresh_post()
-        self.assertFalse(self.post.is_hidden)
-
     def test_show_other_user_post(self):
         """api validates post ownership when revealing"""
         self.post.is_hidden = True
@@ -577,32 +771,6 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.refresh_post()
         self.assertTrue(self.post.is_hidden)
 
-    def test_hide_own_post_after_edit_time(self):
-        """api validates if we are trying to hide post after edit time"""
-        self.post.posted_on = timezone.now() - timedelta(minutes=10)
-        self.post.save()
-
-        self.override_acl({'post_edit_time': 1, 'can_hide_own_posts': 1})
-
-        response = self.patch(
-            self.api_link, [
-                {
-                    'op': 'replace',
-                    'path': 'is-hidden',
-                    'value': True,
-                },
-            ]
-        )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "You can't hide posts that are older than 1 minute."
-        )
-
-        self.refresh_post()
-        self.assertFalse(self.post.is_hidden)
-
     def test_show_own_post_after_edit_time(self):
         """api validates if we are trying to reveal post after edit time"""
         self.post.is_hidden = True
@@ -629,32 +797,6 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
 
         self.refresh_post()
         self.assertTrue(self.post.is_hidden)
-
-    def test_hide_post_in_closed_thread(self):
-        """api validates if we are trying to hide post in closed thread"""
-        self.thread.is_closed = True
-        self.thread.save()
-
-        self.override_acl({'can_hide_own_posts': 1})
-
-        response = self.patch(
-            self.api_link, [
-                {
-                    'op': 'replace',
-                    'path': 'is-hidden',
-                    'value': True,
-                },
-            ]
-        )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "This thread is closed. You can't hide posts in it."
-        )
-
-        self.refresh_post()
-        self.assertFalse(self.post.is_hidden)
 
     def test_show_post_in_closed_thread(self):
         """api validates if we are trying to reveal post in closed thread"""
@@ -685,32 +827,6 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.refresh_post()
         self.assertTrue(self.post.is_hidden)
 
-    def test_hide_post_in_closed_category(self):
-        """api validates if we are trying to hide post in closed category"""
-        self.category.is_closed = True
-        self.category.save()
-
-        self.override_acl({'can_hide_own_posts': 1})
-
-        response = self.patch(
-            self.api_link, [
-                {
-                    'op': 'replace',
-                    'path': 'is-hidden',
-                    'value': True,
-                },
-            ]
-        )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "This category is closed. You can't hide posts in it."
-        )
-
-        self.refresh_post()
-        self.assertFalse(self.post.is_hidden)
-
     def test_show_post_in_closed_category(self):
         """api validates if we are trying to reveal post in closed category"""
         self.category.is_closed = True
@@ -739,27 +855,6 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
 
         self.refresh_post()
         self.assertTrue(self.post.is_hidden)
-
-    def test_hide_first_post(self):
-        """api hide first post fails"""
-        self.thread.set_first_post(self.post)
-        self.thread.save()
-
-        self.override_acl({'can_hide_posts': 1})
-
-        response = self.patch(
-            self.api_link, [
-                {
-                    'op': 'replace',
-                    'path': 'is-hidden',
-                    'value': True,
-                },
-            ]
-        )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(response_json['detail'][0], "You can't hide thread's first post.")
 
     def test_show_first_post(self):
         """api unhide first post fails"""
@@ -1095,7 +1190,65 @@ class EventHideApiTests(ThreadEventPatchApiTestCase):
 
         response_json = response.json()
         self.assertEqual(
-            response_json['detail'][0], "You don't have permission to hide this event."
+            response_json['detail'][0], "You can't hide events in this category."
+        )
+
+        self.refresh_event()
+        self.assertFalse(self.event.is_hidden)
+
+    def test_hide_event_closed_thread_no_permission(self):
+        """api hide event in closed thread with no permission fails"""
+        self.override_acl({
+            'can_hide_events': 1,
+            'can_close_threads': 0,
+        })
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This thread is closed. You can't hide events in it."
+        )
+
+        self.refresh_event()
+        self.assertFalse(self.event.is_hidden)
+
+    def test_hide_event_closed_category_no_permission(self):
+        """api hide event in closed category with no permission fails"""
+        self.override_acl({
+            'can_hide_events': 1,
+            'can_close_threads': 0,
+        })
+
+        self.category.is_closed = True
+        self.category.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This category is closed. You can't hide events in it."
         )
 
         self.refresh_event()
@@ -1121,3 +1274,67 @@ class EventHideApiTests(ThreadEventPatchApiTestCase):
             ]
         )
         self.assertEqual(response.status_code, 404)
+
+    def test_show_event_closed_thread_no_permission(self):
+        """api show event in closed thread with no permission fails"""
+        self.event.is_hidden = True
+        self.event.save()
+
+        self.override_acl({
+            'can_hide_events': 1,
+            'can_close_threads': 0,
+        })
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': False,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This thread is closed. You can't reveal events in it."
+        )
+
+        self.refresh_event()
+        self.assertTrue(self.event.is_hidden)
+
+    def test_show_event_closed_category_no_permission(self):
+        """api show event in closed category with no permission fails"""
+        self.event.is_hidden = True
+        self.event.save()
+
+        self.override_acl({
+            'can_hide_events': 1,
+            'can_close_threads': 0,
+        })
+
+        self.category.is_closed = True
+        self.category.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': False,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This category is closed. You can't reveal events in it."
+        )
+
+        self.refresh_event()
+        self.assertTrue(self.event.is_hidden)

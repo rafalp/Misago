@@ -54,6 +54,10 @@ __all__ = [
     'can_approve_post',
     'allow_move_post',
     'can_move_post',
+    'allow_unhide_event',
+    'can_unhide_event',
+    'allow_hide_event',
+    'can_hide_event',
     'allow_delete_event',
     'can_delete_event',
     'exclude_invisible_threads',
@@ -458,27 +462,14 @@ def add_acl_to_thread(user, thread):
         'can_close': category_acl.get('can_close_threads', False),
         'can_move': can_move_thread(user, thread),
         'can_merge': can_merge_thread(user, thread),
-        'can_move_posts': False,
-        'can_merge_posts': False,
+        'can_move_posts': category_acl.get('can_move_posts', False),
+        'can_merge_posts': category_acl.get('can_merge_posts', False),
         'can_approve': can_approve_thread(user, thread),
         'can_see_reports': category_acl.get('can_see_reports', False),
     })
 
     if thread.acl['can_pin'] and category_acl.get('can_pin_threads') == 2:
         thread.acl['can_pin_globally'] = True
-
-    if not category_acl.get('can_close_threads'):
-        thread_is_protected = thread.is_closed or thread.category.is_closed
-    else:
-        thread_is_protected = False
-
-    if thread_is_protected:
-        return
-
-    thread.acl.update({
-        'can_move_posts': category_acl.get('can_move_posts', False),
-        'can_merge_posts': category_acl.get('can_merge_posts', False),
-    })
 
 
 def add_acl_to_post(user, post):
@@ -489,16 +480,21 @@ def add_acl_to_post(user, post):
 
 
 def add_acl_to_event(user, event):
+    can_hide_events = 0
+
     if user.is_authenticated:
-        category_acl = user.acl_cache['categories'].get(event.category_id, {})
-        can_hide_events = category_acl.get('can_hide_events', 0)
-    else:
-        can_hide_events = 0
+        category_acl = user.acl_cache['categories'].get(
+            event.category_id, {
+                'can_hide_events': 0,
+            }
+        )
+
+        can_hide_events = category_acl['can_hide_events']
 
     event.acl.update({
         'can_see_hidden': can_hide_events > 0,
-        'can_hide': can_hide_events > 0,
-        'can_delete': can_hide_events == 2,
+        'can_hide': can_hide_event(user, event),
+        'can_delete': can_delete_event(user, event),
     })
 
 
@@ -862,12 +858,6 @@ def allow_edit_post(user, target):
     if not category_acl['can_edit_posts']:
         raise PermissionDenied(_("You can't edit posts in this category."))
 
-    if not category_acl['can_close_threads']:
-        if target.category.is_closed:
-            raise PermissionDenied(_("This category is closed. You can't edit posts in it."))
-        if target.thread.is_closed:
-            raise PermissionDenied(_("This thread is closed. You can't edit posts in it."))
-
     if target.is_hidden and not target.is_first_post and not category_acl['can_hide_posts']:
         raise PermissionDenied(_("This post is hidden, you can't edit it."))
 
@@ -885,6 +875,12 @@ def allow_edit_post(user, target):
                 category_acl['post_edit_time'],
             )
             raise PermissionDenied(message % {'minutes': category_acl['post_edit_time']})
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't edit posts in it."))
+        if target.thread.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't edit posts in it."))
 
 
 can_edit_post = return_boolean(allow_edit_post)
@@ -908,12 +904,6 @@ def allow_unhide_post(user, target):
         if user.id != target.poster_id:
             raise PermissionDenied(_("You can't reveal other users posts in this category."))
 
-        if not category_acl['can_close_threads']:
-            if target.category.is_closed:
-                raise PermissionDenied(_("This category is closed. You can't reveal posts in it."))
-            if target.thread.is_closed:
-                raise PermissionDenied(_("This thread is closed. You can't reveal posts in it."))
-
         if target.is_protected and not category_acl['can_protect_posts']:
             raise PermissionDenied(_("This post is protected. You can't reveal it."))
 
@@ -927,6 +917,12 @@ def allow_unhide_post(user, target):
 
     if target.is_first_post:
         raise PermissionDenied(_("You can't reveal thread's first post."))
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't reveal posts in it."))
+        if target.thread.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't reveal posts in it."))
 
 
 can_unhide_post = return_boolean(allow_unhide_post)
@@ -950,12 +946,6 @@ def allow_hide_post(user, target):
         if user.id != target.poster_id:
             raise PermissionDenied(_("You can't hide other users posts in this category."))
 
-        if not category_acl['can_close_threads']:
-            if target.category.is_closed:
-                raise PermissionDenied(_("This category is closed. You can't hide posts in it."))
-            if target.thread.is_closed:
-                raise PermissionDenied(_("This thread is closed. You can't hide posts in it."))
-
         if target.is_protected and not category_acl['can_protect_posts']:
             raise PermissionDenied(_("This post is protected. You can't hide it."))
 
@@ -969,6 +959,12 @@ def allow_hide_post(user, target):
 
     if target.is_first_post:
         raise PermissionDenied(_("You can't hide thread's first post."))
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't hide posts in it."))
+        if target.thread.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't hide posts in it."))
 
 
 can_hide_post = return_boolean(allow_hide_post)
@@ -992,12 +988,6 @@ def allow_delete_post(user, target):
         if user.id != target.poster_id:
             raise PermissionDenied(_("You can't delete other users posts in this category."))
 
-        if not category_acl['can_close_threads']:
-            if target.category.is_closed:
-                raise PermissionDenied(_("This category is closed. You can't delete posts in it."))
-            if target.thread.is_closed:
-                raise PermissionDenied(_("This thread is closed. You can't delete posts in it."))
-
         if target.is_protected and not category_acl['can_protect_posts']:
             raise PermissionDenied(_("This post is protected. You can't delete it."))
 
@@ -1011,6 +1001,12 @@ def allow_delete_post(user, target):
 
     if target.is_first_post:
         raise PermissionDenied(_("You can't delete thread's first post."))
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't delete posts in it."))
+        if target.thread.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't delete posts in it."))
 
 
 can_delete_post = return_boolean(allow_delete_post)
@@ -1048,6 +1044,12 @@ def allow_approve_post(user, target):
     if not target.is_first_post and not category_acl['can_hide_posts'] and target.is_hidden:
         raise PermissionDenied(_("You can't approve posts the content you can't see."))
 
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't approve posts in it."))
+        if target.thread.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't approve posts in it."))
+
 
 can_approve_post = return_boolean(allow_approve_post)
 
@@ -1056,7 +1058,11 @@ def allow_move_post(user, target):
     if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to move posts."))
 
-    category_acl = user.acl_cache['categories'].get(target.category_id, {'can_move_posts': False})
+    category_acl = user.acl_cache['categories'].get(
+        target.category_id, {
+            'can_move_posts': False,
+        }
+    )
 
     if not category_acl['can_move_posts']:
         raise PermissionDenied(_("You can't move posts in this category."))
@@ -1067,18 +1073,80 @@ def allow_move_post(user, target):
     if not category_acl['can_hide_posts'] and target.is_hidden:
         raise PermissionDenied(_("You can't move posts the content you can't see."))
 
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't move posts in it."))
+        if target.thread.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't move posts in it."))
+
 
 can_move_post = return_boolean(allow_move_post)
+
+
+def allow_unhide_event(user, target):
+    if user.is_anonymous:
+        raise PermissionDenied(_("You have to sign in to reveal events."))
+
+    category_acl = user.acl_cache['categories'].get(
+        target.category_id, {
+            'can_hide_events': 0,
+        }
+    )
+
+    if not category_acl['can_hide_events']:
+        raise PermissionDenied(_("You can't reveal events in this category."))
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't reveal events in it."))
+        if target.thread.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't reveal events in it."))
+
+
+can_unhide_event = return_boolean(allow_unhide_event)
+
+
+def allow_hide_event(user, target):
+    if user.is_anonymous:
+        raise PermissionDenied(_("You have to sign in to hide events."))
+
+    category_acl = user.acl_cache['categories'].get(
+        target.category_id, {
+            'can_hide_events': 0,
+        }
+    )
+
+    if not category_acl['can_hide_events']:
+        raise PermissionDenied(_("You can't hide events in this category."))
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't hide events in it."))
+        if target.thread.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't hide events in it."))
+
+
+can_hide_event = return_boolean(allow_hide_event)
 
 
 def allow_delete_event(user, target):
     if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to delete events."))
 
-    category_acl = user.acl_cache['categories'].get(target.category_id)
+    category_acl = user.acl_cache['categories'].get(
+        target.category_id, {
+            'can_hide_events': 0,
+        }
+    )
 
-    if not category_acl or category_acl['can_hide_events'] != 2:
+    if category_acl['can_hide_events'] != 2:
         raise PermissionDenied(_("You can't delete events in this category."))
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't delete events in it."))
+        if target.thread.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't delete events in it."))
 
 
 can_delete_event = return_boolean(allow_delete_event)

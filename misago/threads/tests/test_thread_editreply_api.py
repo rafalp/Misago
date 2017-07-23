@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from datetime import timedelta
+
 from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 from django.urls import reverse
+from django.utils import timezone
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
@@ -84,6 +87,21 @@ class EditReplyTests(AuthenticatedUserTestCase):
         response = self.put(self.api_link)
         self.assertContains(
             response, "You can't edit other users posts in this category.", status_code=403
+        )
+
+    def test_edit_too_old(self):
+        """permission to edit reply within timelimit is validated"""
+        self.override_acl({
+            'can_edit_posts': 1,
+            'post_edit_time': 1,
+        })
+
+        self.post.posted_on = timezone.now() - timedelta(minutes=5)
+        self.post.save()
+
+        response = self.put(self.api_link)
+        self.assertContains(
+            response, "You can't edit posts that are older than 1 minute.", status_code=403
         )
 
     def test_closed_category(self):

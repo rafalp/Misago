@@ -4,6 +4,7 @@ from django.utils.translation import ugettext as _
 from misago.acl import add_acl
 from misago.core.apipatch import ApiPatch
 from misago.threads.moderation import posts as moderation
+from misago.threads.permissions import allow_hide_event, allow_unhide_event
 
 
 event_patch_dispatcher = ApiPatch()
@@ -22,15 +23,14 @@ event_patch_dispatcher.add('acl', patch_acl)
 
 
 def patch_is_hidden(request, event, value):
-    if event.acl.get('can_hide'):
-        if value:
-            moderation.hide_post(request.user, event)
-        else:
-            moderation.unhide_post(request.user, event)
-
-        return {'is_hidden': event.is_hidden}
+    if value:
+        allow_hide_event(request.user, event)
+        moderation.hide_post(request.user, event)
     else:
-        raise PermissionDenied(_("You don't have permission to hide this event."))
+        allow_unhide_event(request.user, event)
+        moderation.unhide_post(request.user, event)
+
+    return {'is_hidden': event.is_hidden}
 
 
 event_patch_dispatcher.replace('is-hidden', patch_is_hidden)

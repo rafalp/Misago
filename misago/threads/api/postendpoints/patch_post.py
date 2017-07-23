@@ -94,9 +94,13 @@ post_patch_dispatcher.replace('is-protected', patch_is_protected)
 
 
 def patch_is_unapproved(request, post, value):
-    if value is False:
-        allow_approve_post(request.user, post)
-        moderation.approve_post(request.user, post)
+    allow_approve_post(request.user, post)
+
+    if value:
+        raise PermissionDenied(_("Content approval can't be reversed."))
+
+    moderation.approve_post(request.user, post)
+
     return {'is_unapproved': post.is_unapproved}
 
 

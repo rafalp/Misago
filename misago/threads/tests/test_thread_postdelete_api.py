@@ -193,6 +193,36 @@ class EventDeleteApiTests(ThreadsApiTestCase):
         response = self.client.delete(self.api_link)
         self.assertContains(response, "You can't delete events in this category.", status_code=403)
 
+    def test_delete_event_closed_thread_no_permission(self):
+        """api valdiates if user can delete events in closed threads"""
+        self.override_acl({
+            'can_hide_events': 2,
+            'can_close_threads': 0,
+        })
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        response = self.client.delete(self.api_link)
+        self.assertContains(
+            response, "This thread is closed. You can't delete events in it.", status_code=403
+        )
+
+    def test_delete_event_closed_category_no_permission(self):
+        """api valdiates if user can delete events in closed categories"""
+        self.override_acl({
+            'can_hide_events': 2,
+            'can_close_threads': 0,
+        })
+
+        self.category.is_closed = True
+        self.category.save()
+
+        response = self.client.delete(self.api_link)
+        self.assertContains(
+            response, "This category is closed. You can't delete events in it.", status_code=403
+        )
+
     def test_delete_event(self):
         """api differs posts from events"""
         self.override_acl({
