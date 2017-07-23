@@ -88,7 +88,9 @@ def clean_posts_for_move(request, thread):
 
     posts = []
     for post in posts_queryset:
+        post.category = thread.category
         post.thread = thread
+
         allow_move_post(request.user, post)
         posts.append(post)
 

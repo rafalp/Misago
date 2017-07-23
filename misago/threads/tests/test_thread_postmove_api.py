@@ -59,7 +59,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
 
         override_acl(self.user, new_acl)
 
-    def override_other_acl(self, acl=None):
+    def override_other_acl(self, extra_acl=None):
         other_category_acl = self.user.acl_cache['categories'][self.category.pk].copy()
         other_category_acl.update({
             'can_see': 1,
@@ -71,8 +71,8 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             'can_move_posts': 1,
         })
 
-        if acl:
-            other_category_acl.update(acl)
+        if extra_acl:
+            other_category_acl.update(extra_acl)
 
         categories_acl = self.user.acl_cache['categories']
         categories_acl[self.category_b.pk] = other_category_acl
@@ -321,6 +321,49 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         )
         self.assertContains(
             response, "You can't move posts the content you can't see.", status_code=400
+        )
+
+    def test_move_posts_closed_thread_no_permission(self):
+        """api recjects attempt to move posts from closed thread"""
+        other_thread = testutils.post_thread(self.category)
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        self.override_acl({'can_close_threads': 0})
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({
+                'thread_url': other_thread.get_absolute_url(),
+                'posts': [testutils.reply_thread(self.thread).pk],
+            }),
+            content_type="application/json",
+        )
+        self.assertContains(
+            response, "This thread is closed. You can't move posts in it.", status_code=400
+        )
+
+    def test_move_posts_closed_category_no_permission(self):
+        """api recjects attempt to move posts from closed thread"""
+        other_thread = testutils.post_thread(self.category_b)
+
+        self.category.is_closed = True
+        self.category.save()
+
+        self.override_acl({'can_close_threads': 0})
+        self.override_other_acl({'can_reply_threads': 1})
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({
+                'thread_url': other_thread.get_absolute_url(),
+                'posts': [testutils.reply_thread(self.thread).pk],
+            }),
+            content_type="application/json",
+        )
+        self.assertContains(
+            response, "This category is closed. You can't move posts in it.", status_code=400
         )
 
     def test_move_posts(self):

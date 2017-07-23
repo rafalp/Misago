@@ -225,7 +225,8 @@ class CategoryPermissionsForm(forms.Form):
         help_text=_("Only users with this permission can edit protected posts."),
     )
     can_move_posts = YesNoSwitch(
-        label=_("Can move posts"), help_text=_("Will be able to move posts to other threads.")
+        label=_("Can move posts"),
+        help_text=_("Will be able to move posts to other threads."),
     )
     can_merge_posts = YesNoSwitch(label=_("Can merge posts"))
     can_approve_content = YesNoSwitch(
