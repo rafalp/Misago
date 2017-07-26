@@ -12,6 +12,8 @@ from django.http import Http404
 from django.urls import resolve
 from django.utils import six
 
+from misago.conf import settings
+
 from .bbcode import blocks, inline
 from .md.shortimgs import ShortImagesExtension
 from .md.striketrough import StriketroughExtension
@@ -152,6 +154,7 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
 def linkify_paragraphs(result):
     result['parsed_text'] = bleach.linkify(
         result['parsed_text'],
+        callbacks=getattr(settings, "MISAGO_BLEACH_CALLBACKS", []),
         skip_tags=['a', 'code', 'pre'],
         parse_email=True,
     )
