@@ -87,6 +87,11 @@ It's impossible to regenerate user avatars store for existing avatars. Misago co
 This path to image file that Misago should use as blank avatar.
 
 
+## `MISAGO_BLEACH_CALLBACKS`
+
+Custom callbacks for `bleach` to customize automatic links substitution with `bleach.linkify`.
+
+
 ## `MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH`
 
 Date format used by Misago `compact_date` filter for dates in this year.
