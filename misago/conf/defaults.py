@@ -39,6 +39,11 @@ MISAGO_POST_VALIDATORS = []
 MISAGO_POST_SEARCH_FILTERS = []
 
 
+# Bleach callbacks for linkifying paragraphs
+
+MISAGO_BLEACH_CALLBACKS = []
+
+
 # Posting middlewares
 # https://misago.readthedocs.io/en/latest/developers/posting_process.html
 
