@@ -29,6 +29,11 @@ MISAGO_ACL_EXTENSIONS = [
 MISAGO_MARKUP_EXTENSIONS = []
 
 
+# Bleach callbacks for linkifying paragraphs
+
+MISAGO_BLEACH_CALLBACKS = []
+
+
 # Custom post validators
 
 MISAGO_POST_VALIDATORS = []
@@ -37,11 +42,6 @@ MISAGO_POST_VALIDATORS = []
 # Post search filters
 
 MISAGO_POST_SEARCH_FILTERS = []
-
-
-# Bleach callbacks for linkifying paragraphs
-
-MISAGO_BLEACH_CALLBACKS = []
 
 
 # Posting middlewares
