@@ -154,7 +154,7 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
 def linkify_paragraphs(result):
     result['parsed_text'] = bleach.linkify(
         result['parsed_text'],
-        callbacks=getattr(settings, "MISAGO_BLEACH_CALLBACKS", []),
+        callbacks=settings.MISAGO_BLEACH_CALLBACKS,
         skip_tags=['a', 'code', 'pre'],
         parse_email=True,
     )
