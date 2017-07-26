@@ -192,7 +192,7 @@ Lorem ipsum: http://test.com
 """.strip()
 
         expected_result = """
-<p>Lorem ipsum: <a href="/" rel="nofollow">test.com</a></p>
+<p>Lorem ipsum: <a href="/">test.com</a></p>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
@@ -208,7 +208,7 @@ Lorem ipsum: test.com
 """.strip()
 
         expected_result = """
-<p>Lorem ipsum: <a href="/" rel="nofollow">test.com</a></p>
+<p>Lorem ipsum: <a href="/">test.com</a></p>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
@@ -224,7 +224,7 @@ Lorem ipsum: http://test.com/somewhere-something/
 """.strip()
 
         expected_result = """
-<p>Lorem ipsum: <a href="/somewhere-something/" rel="nofollow">test.com/somewhere-something/</a></p>
+<p>Lorem ipsum: <a href="/somewhere-something/">test.com/somewhere-something/</a></p>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
