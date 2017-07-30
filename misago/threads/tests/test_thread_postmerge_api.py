@@ -158,7 +158,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(response, "Events can't be merged.", status_code=403)
+        self.assertContains(response, "Events can't be merged.", status_code=400)
 
     def test_merge_notfound_pk(self):
         """api recjects nonexistant pk's"""
@@ -289,7 +289,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         self.assertContains(
             response,
             "This thread is closed. You can't merge posts in it.",
-            status_code=403,
+            status_code=400,
         )
 
         # allow closing threads
@@ -320,7 +320,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         self.assertContains(
             response,
             "This category is closed. You can't merge posts in it.",
-            status_code=403,
+            status_code=400,
         )
 
         # allow closing threads

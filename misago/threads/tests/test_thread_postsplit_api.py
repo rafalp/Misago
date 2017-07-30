@@ -186,7 +186,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(response, "Events can't be split.", status_code=403)
+        self.assertContains(response, "Events can't be split.", status_code=400)
 
     def test_split_first_post(self):
         """api rejects first post split"""
@@ -197,7 +197,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(response, "You can't split thread's first post.", status_code=403)
+        self.assertContains(response, "You can't split thread's first post.", status_code=400)
 
     def test_split_hidden_posts(self):
         """api recjects attempt to split urneadable hidden post"""
@@ -209,7 +209,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             content_type="application/json",
         )
         self.assertContains(
-            response, "You can't split posts the content you can't see.", status_code=403
+            response, "You can't split posts the content you can't see.", status_code=400
         )
 
     def test_split_posts_closed_thread_no_permission(self):
@@ -227,7 +227,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             content_type="application/json",
         )
         self.assertContains(
-            response, "This thread is closed. You can't split posts in it.", status_code=403
+            response, "This thread is closed. You can't split posts in it.", status_code=400
         )
 
     def test_split_posts_closed_category_no_permission(self):
@@ -245,7 +245,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             content_type="application/json",
         )
         self.assertContains(
-            response, "This category is closed. You can't split posts in it.", status_code=403
+            response, "This category is closed. You can't split posts in it.", status_code=400
         )
 
     def test_split_other_thread_posts(self):

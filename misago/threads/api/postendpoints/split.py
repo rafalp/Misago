@@ -1,8 +1,8 @@
 from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils import six
+from django.utils.translation import ugettext as _, ungettext
 
 from misago.conf import settings
 from misago.threads.models import Thread
@@ -14,19 +14,14 @@ from misago.threads.serializers import NewThreadSerializer
 SPLIT_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
 
 
-class SplitError(Exception):
-    def __init__(self, msg):
-        self.msg = msg
-
-
 def posts_split_endpoint(request, thread):
     if not thread.acl['can_move_posts']:
         raise PermissionDenied(_("You can't split posts from this thread."))
 
     try:
         posts = clean_posts_for_split(request, thread)
-    except SplitError as e:
-        return Response({'detail': e.msg}, status=400)
+    except PermissionDenied as e:
+        return Response({'detail': six.text_type(e)}, status=400)
 
     serializer = NewThreadSerializer(context=request.user, data=request.data)
     if serializer.is_valid():
@@ -40,17 +35,17 @@ def clean_posts_for_split(request, thread):
     try:
         posts_ids = list(map(int, request.data.get('posts', [])))
     except (ValueError, TypeError):
-        raise SplitError(_("One or more post ids received were invalid."))
+        raise PermissionDenied(_("One or more post ids received were invalid."))
 
     if not posts_ids:
-        raise SplitError(_("You have to specify at least one post to split."))
+        raise PermissionDenied(_("You have to specify at least one post to split."))
     elif len(posts_ids) > SPLIT_LIMIT:
         message = ungettext(
             "No more than %(limit)s post can be split at single time.",
             "No more than %(limit)s posts can be split at single time.",
             SPLIT_LIMIT,
         )
-        raise SplitError(message % {'limit': SPLIT_LIMIT})
+        raise PermissionDenied(message % {'limit': SPLIT_LIMIT})
 
     posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)
     posts_queryset = posts_queryset.filter(id__in=posts_ids).order_by('id')
@@ -65,7 +60,7 @@ def clean_posts_for_split(request, thread):
         posts.append(post)
 
     if len(posts) != len(posts_ids):
-        raise SplitError(_("One or more posts to split could not be found."))
+        raise PermissionDenied(_("One or more posts to split could not be found."))
 
     return posts
 

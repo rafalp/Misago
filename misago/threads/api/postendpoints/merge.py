@@ -1,8 +1,8 @@
 from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils import six
+from django.utils.translation import ugettext as _, ungettext
 
 from misago.acl import add_acl
 from misago.conf import settings
@@ -13,19 +13,14 @@ from misago.threads.serializers import PostSerializer
 MERGE_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
 
 
-class MergeError(Exception):
-    def __init__(self, msg):
-        self.msg = msg
-
-
 def posts_merge_endpoint(request, thread):
     if not thread.acl['can_merge_posts']:
         raise PermissionDenied(_("You can't merge posts in this thread."))
 
     try:
         posts = clean_posts_for_merge(request, thread)
-    except MergeError as e:
-        return Response({'detail': e.msg}, status=400)
+    except PermissionDenied as e:
+        return Response({'detail': six.text_type(e)}, status=400)
 
     first_post, merged_posts = posts[0], posts[1:]
     for post in merged_posts:
@@ -60,17 +55,17 @@ def clean_posts_for_merge(request, thread):
     try:
         posts_ids = list(map(int, request.data.get('posts', [])))
     except (ValueError, TypeError):
-        raise MergeError(_("One or more post ids received were invalid."))
+        raise PermissionDenied(_("One or more post ids received were invalid."))
 
     if len(posts_ids) < 2:
-        raise MergeError(_("You have to select at least two posts to merge."))
+        raise PermissionDenied(_("You have to select at least two posts to merge."))
     elif len(posts_ids) > MERGE_LIMIT:
         message = ungettext(
             "No more than %(limit)s post can be merged at single time.",
             "No more than %(limit)s posts can be merged at single time.",
             MERGE_LIMIT,
         )
-        raise MergeError(message % {'limit': MERGE_LIMIT})
+        raise PermissionDenied(message % {'limit': MERGE_LIMIT})
 
     posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)
     posts_queryset = posts_queryset.filter(id__in=posts_ids).order_by('id')
@@ -88,19 +83,19 @@ def clean_posts_for_merge(request, thread):
             authorship_error = _("Posts made by different users can't be merged.")
             if posts[0].poster_id:
                 if post.poster_id != posts[0].poster_id:
-                    raise MergeError(authorship_error)
+                    raise PermissionDenied(authorship_error)
             else:
                 if post.poster_id or post.poster_name != posts[0].poster_name:
-                    raise MergeError(authorship_error)
+                    raise PermissionDenied(authorship_error)
 
             if posts[0].pk != thread.first_post_id:
                 if (posts[0].is_hidden != post.is_hidden or
                         posts[0].is_unapproved != post.is_unapproved):
-                    raise MergeError(_("Posts with different visibility can't be merged."))
+                    raise PermissionDenied(_("Posts with different visibility can't be merged."))
 
             posts.append(post)
 
     if len(posts) != len(posts_ids):
-        raise MergeError(_("One or more posts to merge could not be found."))
+        raise PermissionDenied(_("One or more posts to merge could not be found."))
 
     return posts
