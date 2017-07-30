@@ -71,54 +71,6 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         )
         self.assertContains(response, "You can't merge posts in this thread.", status_code=403)
 
-    def test_closed_thread(self):
-        """api validates permission to merge in closed thread"""
-        self.thread.is_closed = True
-        self.thread.save()
-
-        response = self.client.post(
-            self.api_link,
-            json.dumps({}),
-            content_type="application/json",
-        )
-        self.assertContains(response, "You can't merge posts in this thread.", status_code=403)
-
-        # allow closing threads
-        self.override_acl({'can_close_threads': 1})
-
-        response = self.client.post(
-            self.api_link,
-            json.dumps({}),
-            content_type="application/json",
-        )
-        self.assertContains(
-            response, "You have to select at least two posts to merge.", status_code=400
-        )
-
-    def test_closed_category(self):
-        """api validates permission to merge in closed category"""
-        self.category.is_closed = True
-        self.category.save()
-
-        response = self.client.post(
-            self.api_link,
-            json.dumps({}),
-            content_type="application/json",
-        )
-        self.assertContains(response, "You can't merge posts in this thread.", status_code=403)
-
-        # allow closing threads
-        self.override_acl({'can_close_threads': 1})
-
-        response = self.client.post(
-            self.api_link,
-            json.dumps({}),
-            content_type="application/json",
-        )
-        self.assertContains(
-            response, "You have to select at least two posts to merge.", status_code=400
-        )
-
     def test_empty_data(self):
         """api handles empty data"""
         response = self.client.post(
@@ -206,7 +158,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(response, "Events can't be merged.", status_code=400)
+        self.assertContains(response, "Events can't be merged.", status_code=403)
 
     def test_merge_notfound_pk(self):
         """api recjects nonexistant pk's"""
@@ -318,6 +270,68 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         self.assertContains(
             response, "Posts with different visibility can't be merged.", status_code=400
         )
+
+    def test_closed_thread(self):
+        """api validates permission to merge in closed thread"""
+        self.thread.is_closed = True
+        self.thread.save()
+
+        posts = [
+            testutils.reply_thread(self.thread, poster=self.user).pk,
+            testutils.reply_thread(self.thread, poster=self.user).pk,
+        ]
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({'posts': posts}),
+            content_type="application/json",
+        )
+        self.assertContains(
+            response,
+            "This thread is closed. You can't merge posts in it.",
+            status_code=403,
+        )
+
+        # allow closing threads
+        self.override_acl({'can_close_threads': 1})
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({'posts': posts}),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_closed_category(self):
+        """api validates permission to merge in closed category"""
+        self.category.is_closed = True
+        self.category.save()
+
+        posts = [
+            testutils.reply_thread(self.thread, poster=self.user).pk,
+            testutils.reply_thread(self.thread, poster=self.user).pk,
+        ]
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({'posts': posts}),
+            content_type="application/json",
+        )
+        self.assertContains(
+            response,
+            "This category is closed. You can't merge posts in it.",
+            status_code=403,
+        )
+
+        # allow closing threads
+        self.override_acl({'can_close_threads': 1})
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({'posts': posts}),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
 
     def test_merge_posts(self):
         """api merges two posts"""

@@ -52,8 +52,11 @@ export class Merge extends React.Component {
   };
 
   render() {
-    if (this.props.selection.length < 2) return null;
-    if (!this.props.thread.acl.can_merge_posts) return null;
+    const isVisible = this.props.selection.length > 1 && this.props.selection.find((post) => {
+      return post.acl.can_merge;
+    });
+
+    if (!isVisible) return null;
 
     return (
       <li>
@@ -129,7 +132,7 @@ export class Protect extends React.Component {
 
   render() {
     const isVisible = this.props.selection.find((post) => {
-      return post.acl.can_protect;
+      return !post.is_protected && post.acl.can_protect;
     });
 
     if (!isVisible) return null;
@@ -154,7 +157,7 @@ export class Unprotect extends React.Component {
 
   render() {
     const isVisible = this.props.selection.find((post) => {
-      return post.acl.can_protect;
+      return post.is_protected && post.acl.can_protect;
     });
 
     if (!isVisible) return null;

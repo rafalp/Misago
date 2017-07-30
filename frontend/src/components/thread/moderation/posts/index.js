@@ -43,6 +43,7 @@ export function isVisible(thread, posts) {
         post.acl.can_delete ||
         (!post.is_hidden && post.acl.can_hide) ||
         post.acl.can_move ||
+        post.acl.can_merge ||
         post.acl.can_protect ||
         (post.is_hidden && post.acl.can_unhide) ||
         post.acl.can_unprotect

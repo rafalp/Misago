@@ -6,7 +6,7 @@ from django.utils.translation import ungettext
 
 from misago.acl import add_acl
 from misago.conf import settings
-from misago.threads.permissions import exclude_invisible_posts
+from misago.threads.permissions import allow_merge_post, exclude_invisible_posts
 from misago.threads.serializers import PostSerializer
 
 
@@ -77,12 +77,10 @@ def clean_posts_for_merge(request, thread):
 
     posts = []
     for post in posts_queryset:
-        if post.is_event:
-            raise MergeError(_("Events can't be merged."))
-        if post.is_hidden and not (
-                post.pk == thread.first_post_id or thread.category.acl['can_hide_posts']
-        ):
-            raise MergeError(_("You can't merge posts the content you can't see."))
+        post.category = thread.category
+        post.thread = thread
+
+        allow_merge_post(request.user, post)
 
         if not posts:
             posts.append(post)

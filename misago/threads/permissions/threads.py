@@ -54,6 +54,8 @@ __all__ = [
     'can_approve_post',
     'allow_move_post',
     'can_move_post',
+    'allow_merge_post',
+    'can_merge_post',
     'allow_unhide_event',
     'can_unhide_event',
     'allow_hide_event',
@@ -512,6 +514,7 @@ def add_acl_to_reply(user, post):
         'can_protect': can_protect_post(user, post),
         'can_approve': can_approve_post(user, post),
         'can_move': can_move_post(user, post),
+        'can_merge': can_merge_post(user, post),
         'can_report': category_acl.get('can_report_content', False),
         'can_see_reports': category_acl.get('can_see_reports', False),
         'can_see_likes': category_acl.get('can_see_posts_likes', 0),
@@ -1082,6 +1085,33 @@ def allow_move_post(user, target):
 
 
 can_move_post = return_boolean(allow_move_post)
+
+
+def allow_merge_post(user, target):
+    if user.is_anonymous:
+        raise PermissionDenied(_("You have to sign in to merge posts."))
+
+    category_acl = user.acl_cache['categories'].get(
+        target.category_id, {
+            'can_merge_posts': False,
+        }
+    )
+
+    if not category_acl['can_merge_posts']:
+        raise PermissionDenied(_("You can't merge posts in this category."))
+    if target.is_event:
+        raise PermissionDenied(_("Events can't be merged."))
+    if target.is_hidden and not category_acl['can_hide_posts'] and not target.is_first_post:
+        raise PermissionDenied(_("You can't merge posts the content you can't see."))
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't merge posts in it."))
+        if target.thread.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't merge posts in it."))
+
+
+can_merge_post = return_boolean(allow_merge_post)
 
 
 def allow_unhide_event(user, target):
