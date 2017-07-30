@@ -58,6 +58,8 @@ __all__ = [
     'can_merge_post',
     'allow_unhide_event',
     'can_unhide_event',
+    'allow_split_post',
+    'can_split_post',
     'allow_hide_event',
     'can_hide_event',
     'allow_delete_event',
@@ -1112,6 +1114,34 @@ def allow_merge_post(user, target):
 
 
 can_merge_post = return_boolean(allow_merge_post)
+
+
+def allow_split_post(user, target):
+    if user.is_anonymous:
+        raise PermissionDenied(_("You have to sign in to split posts."))
+
+    category_acl = user.acl_cache['categories'].get(
+        target.category_id, {
+            'can_move_posts': False,
+        }
+    )
+
+    if not category_acl['can_move_posts']:
+        raise PermissionDenied(_("You can't split posts in this category."))
+    if target.is_event:
+        raise PermissionDenied(_("Events can't be split."))
+    if target.is_first_post:
+        raise PermissionDenied(_("You can't split thread's first post."))
+    if not category_acl['can_hide_posts'] and target.is_hidden:
+        raise PermissionDenied(_("You can't split posts the content you can't see."))
+
+    if not category_acl['can_close_threads']:
+        if target.category.is_closed:
+            raise PermissionDenied(_("This category is closed. You can't split posts in it."))
+        if target.thread.is_closed:
+            raise PermissionDenied(_("This thread is closed. You can't split posts in it."))
+
+can_split_post = return_boolean(allow_split_post)
 
 
 def allow_unhide_event(user, target):

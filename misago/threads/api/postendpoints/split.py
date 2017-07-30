@@ -7,7 +7,7 @@ from django.utils.translation import ungettext
 from misago.conf import settings
 from misago.threads.models import Thread
 from misago.threads.moderation import threads as moderation
-from misago.threads.permissions import exclude_invisible_posts
+from misago.threads.permissions import allow_split_post, exclude_invisible_posts
 from misago.threads.serializers import NewThreadSerializer
 
 
@@ -57,12 +57,10 @@ def clean_posts_for_split(request, thread):
 
     posts = []
     for post in posts_queryset:
-        if post.is_event:
-            raise SplitError(_("Events can't be split."))
-        if post.pk == thread.first_post_id:
-            raise SplitError(_("You can't split thread's first post."))
-        if post.is_hidden and not thread.category.acl['can_hide_posts']:
-            raise SplitError(_("You can't split posts the content you can't see."))
+        post.category = thread.category
+        post.thread = thread
+
+        allow_split_post(request.user, post)
 
         posts.append(post)
 
