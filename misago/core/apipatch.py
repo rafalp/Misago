@@ -67,6 +67,41 @@ class ApiPatch(object):
         else:
             return Response(patch)
 
+    def dispatch_bulk(self, request, targets):
+        if not isinstance(request.data.get('ops'), list):
+            return Response({
+                'detail': "bulk PATCH request's ops value should be list of operations",
+            }, status=400)
+
+        is_errored = False
+        result = []
+
+        for target in targets:
+            detail = []
+
+            patch = {'id': target.pk}
+            for action in request.data['ops']:
+                try:
+                    self.validate_action(action)
+                    self.dispatch_action(patch, request, target, action)
+                    detail.append('ok')
+                except Http404:
+                    is_errored = True
+                    detail.append('NOT FOUND')
+                    break
+                except (InvalidAction, PermissionDenied) as e:
+                    is_errored = True
+                    detail.append(e.args[0])
+                    break
+
+            patch['detail'] = detail
+            result.append(patch)
+
+        if is_errored:
+            return Response(result, status=400)
+        else:
+            return Response(result)
+
     def validate_action(self, action):
         if not action.get('op'):
             raise InvalidAction(u"undefined op")

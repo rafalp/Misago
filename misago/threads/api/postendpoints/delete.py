@@ -5,6 +5,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
 from misago.conf import settings
+from misago.core.utils import clean_ids_list
 from misago.threads.moderation import posts as moderation
 from misago.threads.permissions import allow_delete_event, allow_delete_post
 from misago.threads.permissions import exclude_invisible_posts
@@ -44,10 +45,10 @@ def sync_related(thread):
 
 
 def clean_posts_for_delete(request, thread):
-    try:
-        posts_ids = list(map(int, request.data or []))
-    except (ValueError, TypeError):
-        raise PermissionDenied(_("One or more post ids received were invalid."))
+    posts_ids = clean_ids_list(
+        request.data or [],
+        _("One or more post ids received were invalid."),
+    )
 
     if not posts_ids:
         raise PermissionDenied(_("You have to specify at least one post to delete."))
@@ -64,6 +65,7 @@ def clean_posts_for_delete(request, thread):
 
     posts = []
     for post in posts_queryset:
+        post.category = thread.category
         post.thread = thread
         if post.is_event:
             allow_delete_event(request.user, post)

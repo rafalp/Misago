@@ -5,6 +5,7 @@ from django.utils import six
 from django.utils.translation import ugettext as _, ungettext
 
 from misago.conf import settings
+from misago.core.utils import clean_ids_list
 from misago.threads.models import Thread
 from misago.threads.moderation import threads as moderation
 from misago.threads.permissions import allow_split_post, exclude_invisible_posts
@@ -32,10 +33,10 @@ def posts_split_endpoint(request, thread):
 
 
 def clean_posts_for_split(request, thread):
-    try:
-        posts_ids = list(map(int, request.data.get('posts', [])))
-    except (ValueError, TypeError):
-        raise PermissionDenied(_("One or more post ids received were invalid."))
+    posts_ids = clean_ids_list(
+        request.data.get('posts', []),
+        _("One or more post ids received were invalid."),
+    )
 
     if not posts_ids:
         raise PermissionDenied(_("You have to specify at least one post to split."))

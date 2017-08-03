@@ -6,6 +6,7 @@ from django.utils import six
 from django.utils.translation import ugettext as _, ungettext
 
 from misago.conf import settings
+from misago.core.utils import clean_ids_list
 from misago.threads.permissions import allow_move_post, exclude_invisible_posts
 from misago.threads.utils import get_thread_id_from_url
 
@@ -67,10 +68,10 @@ def clean_thread_for_move(request, thread, viewmodel):
 
 
 def clean_posts_for_move(request, thread):
-    try:
-        posts_ids = list(map(int, request.data.get('posts', [])))
-    except (ValueError, TypeError):
-        raise PermissionDenied(_("One or more post ids received were invalid."))
+    posts_ids = clean_ids_list(
+        request.data.get('posts', []),
+        _("One or more post ids received were invalid."),
+    )
 
     if not posts_ids:
         raise PermissionDenied(_("You have to specify at least one post to move."))

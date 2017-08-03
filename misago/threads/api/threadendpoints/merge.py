@@ -8,6 +8,7 @@ from django.utils.translation import ungettext
 
 from misago.acl import add_acl
 from misago.categories import THREADS_ROOT_NAME
+from misago.core.utils import clean_ids_list
 from misago.threads.events import record_event
 from misago.threads.models import Thread
 from misago.threads.moderation import threads as moderation
@@ -136,10 +137,10 @@ def threads_merge_endpoint(request):
 
 
 def clean_threads_for_merge(request):
-    try:
-        threads_ids = list(map(int, request.data.get('threads', [])))
-    except (ValueError, TypeError):
-        raise MergeError(_("One or more thread ids received were invalid."))
+    threads_ids = clean_ids_list(
+        request.data.get('threads', []),
+        _("One or more thread ids received were invalid."),
+    )
 
     if len(threads_ids) < 2:
         raise MergeError(_("You have to select at least two threads to merge."))

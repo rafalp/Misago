@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.urls import resolve, reverse
 from django.utils import html, timezone
@@ -146,3 +147,10 @@ def get_exception_message(exception=None, default_message=None):
         return exception.args[0]
     except IndexError:
         return default_message
+
+
+def clean_ids_list(ids_list, error_message):
+    try:
+        return list(map(int, ids_list))
+    except (ValueError, TypeError):
+        raise PermissionDenied(error_message)

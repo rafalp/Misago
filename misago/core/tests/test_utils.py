@@ -5,10 +5,11 @@ from django.core.exceptions import PermissionDenied
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
+from django.utils import six
 
 from misago.core.utils import (
     clean_return_path, format_plaintext_for_html, is_referer_local, is_request_to_misago,
-    parse_iso8601_string, slugify, get_exception_message)
+    parse_iso8601_string, slugify, get_exception_message, clean_ids_list)
 
 
 VALID_PATHS = ("/", "/threads/", )
@@ -265,3 +266,37 @@ class GetExceptionMessageTests(TestCase):
 
         message = get_exception_message(default_message='Lorem Ipsum')
         self.assertEqual(message, 'Lorem Ipsum')
+
+
+class CleanIdsListTests(TestCase):
+    def test_valid_list(self):
+        """list of valid ids is cleaned"""
+        self.assertEqual(clean_ids_list(['1', 3, '42'], None), [1, 3, 42])
+
+    def test_empty_list(self):
+        """empty list passes validation"""
+        self.assertEqual(clean_ids_list([], None), [])
+
+    def test_string_list(self):
+        """string list passes validation"""
+        self.assertEqual(clean_ids_list('1234', None), [1, 2, 3, 4])
+
+    def test_message(self):
+        """utility uses passed message for exception"""
+        with self.assertRaisesMessage(PermissionDenied, "Test error message!"):
+            clean_ids_list(None, "Test error message!")
+
+    def test_invalid_inputs(self):
+        """utility raises exception for invalid inputs"""
+        INVALID_INPUTS = (
+            None,
+            'abc',
+            [None],
+            [1, 2, 'a', 4],
+            [1, None, 3],
+            {1: 2, 'a': 4},
+        )
+
+        for invalid_input in INVALID_INPUTS:
+            with self.assertRaisesMessage(PermissionDenied, "Test error message!"):
+                clean_ids_list(invalid_input, "Test error message!")

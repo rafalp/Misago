@@ -8,6 +8,7 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
 from misago.conf import settings
+from misago.core.utils import clean_ids_list
 from misago.threads.permissions import allow_delete_thread
 from misago.threads.moderation import threads as moderation
 
@@ -47,10 +48,10 @@ def delete_bulk(request, viewmodel):
 
 
 def clean_threads_ids(request):
-    try:
-        threads_ids = list(map(int, request.data or []))
-    except (ValueError, TypeError):
-        raise PermissionDenied(_("One or more thread ids received were invalid."))
+    threads_ids = clean_ids_list(
+        request.data or [],
+        _("One or more thread ids received were invalid."),
+    )
 
     if not threads_ids:
         raise PermissionDenied(_("You have to specify at least one thread to delete."))

@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _, ungettext
 
 from misago.acl import add_acl
 from misago.conf import settings
+from misago.core.utils import clean_ids_list
 from misago.threads.permissions import allow_merge_post, exclude_invisible_posts
 from misago.threads.serializers import PostSerializer
 
@@ -52,10 +53,10 @@ def posts_merge_endpoint(request, thread):
 
 
 def clean_posts_for_merge(request, thread):
-    try:
-        posts_ids = list(map(int, request.data.get('posts', [])))
-    except (ValueError, TypeError):
-        raise PermissionDenied(_("One or more post ids received were invalid."))
+    posts_ids = clean_ids_list(
+        request.data.get('posts', []),
+        _("One or more post ids received were invalid."),
+    )
 
     if len(posts_ids) < 2:
         raise PermissionDenied(_("You have to select at least two posts to merge."))
