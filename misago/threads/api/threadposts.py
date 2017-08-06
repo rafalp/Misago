@@ -20,7 +20,7 @@ from .postendpoints.likes import likes_list_endpoint
 from .postendpoints.merge import posts_merge_endpoint
 from .postendpoints.move import posts_move_endpoint
 from .postendpoints.patch_event import event_patch_endpoint
-from .postendpoints.patch_post import post_patch_endpoint
+from .postendpoints.patch_post import post_patch_endpoint, bulk_patch_endpoint
 from .postendpoints.read import post_read_endpoint
 from .postendpoints.split import posts_split_endpoint
 from .postingendpoint import PostingEndpoint
@@ -147,8 +147,12 @@ class ViewSet(viewsets.ViewSet):
         else:
             return Response(posting.errors, status=400)
 
+    def patch(self, request, thread_pk):
+        thread = self.get_thread(request, thread_pk)
+        return bulk_patch_endpoint(request, thread.unwrap())
+
     @transaction.atomic
-    def partial_update(self, request, thread_pk, pk=None):
+    def partial_update(self, request, thread_pk, pk):
         thread = self.get_thread(request, thread_pk)
         post = self.get_post(request, thread, pk).unwrap()
 

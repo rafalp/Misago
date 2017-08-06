@@ -81,15 +81,6 @@ class PostAddAclApiTests(ThreadPostPatchApiTestCase):
         response_json = response.json()
         self.assertIsNone(response_json['acl'])
 
-        response = self.patch(self.api_link, [
-            {
-                'op': 'add',
-                'path': 'acl',
-                'value': True,
-            },
-        ])
-        self.assertEqual(response.status_code, 200)
-
 
 class PostProtectApiTests(ThreadPostPatchApiTestCase):
     def test_protect_post(self):

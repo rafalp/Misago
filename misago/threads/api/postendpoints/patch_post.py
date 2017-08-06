@@ -1,3 +1,6 @@
+from rest_framework import serializers
+from rest_framework.response import Response
+
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 
@@ -126,69 +129,50 @@ post_patch_dispatcher.replace('is-hidden', patch_is_hidden)
 
 
 def post_patch_endpoint(request, post):
-    old_is_hidden = post.is_hidden
     old_is_unapproved = post.is_unapproved
-    old_thread = post.thread
-    old_category = post.category
 
     response = post_patch_dispatcher.dispatch(request, post)
 
-    # diff posts's state against pre-patch and resync category if necessary
-    hidden_changed = old_is_hidden != post.is_hidden
-    unapproved_changed = old_is_unapproved != post.is_unapproved
-    thread_changed = old_thread != post.thread
-    category_changed = old_category != post.category
-
-    if hidden_changed or unapproved_changed or thread_changed or category_changed:
+    # diff posts's state against pre-patch and resync thread/category if necessarys
+    if old_is_unapproved != post.is_unapproved:
         post.thread.synchronize()
         post.thread.save()
 
         post.category.synchronize()
         post.category.save()
 
-        if thread_changed:
-            old_thread.synchronize()
-            old_thread.save()
-
-        if category_changed:
-            old_category.synchronize()
-            old_category.save()
     return response
 
 
 def bulk_patch_endpoint(request, thread):
-    posts = clean_posts_for_patch(request, thread)
+    serializer = BulkPatchSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=400)
 
-    hidden_posts = 0
-    revealed_posts = 0
-    moved_posts = 0
+    posts = clean_posts_for_patch(request, thread, serializer.data['ids'])
+
+    old_unapproved_posts = [p.is_unapproved for p in posts].count(True)
 
     response = post_patch_dispatcher.dispatch_bulk(request, posts)
 
+    new_unapproved_posts = [p.is_unapproved for p in posts].count(True)
 
-def clean_posts_for_patch(request, thread):
-    if not isinstance(request.data, dict):
-        raise PermissionDenied(_("Bulk PATCH request should be a dict with ids and ops keys."))
+    if old_unapproved_posts != new_unapproved_posts:
+        thread.synchronize()
+        thread.save()
 
-    # todo: move this ids list cleanup step to utility
+        thread.category.synchronize()
+        thread.category.save()
 
-    try:
-        posts_ids = list(map(int, request.data.get('ids', [])))
-    except (ValueError, TypeError):
-        raise PermissionDenied(_("One or more post ids received were invalid."))
+    return response
 
-    if not posts_ids:
-        raise PermissionDenied(_("You have to specify at least one post to update."))
-    elif len(posts_ids) > PATCH_LIMIT:
-        message = ungettext(
-            "No more than %(limit)s post can be updated at single time.",
-            "No more than %(limit)s posts can be updated at single time.",
-            PATCH_LIMIT,
-        )
-        raise PermissionDenied(message % {'limit': PATCH_LIMIT})
 
+def clean_posts_for_patch(request, thread, posts_ids):
     posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)
-    posts_queryset = posts_queryset.filter(id__in=posts_ids).order_by('id')
+    posts_queryset = posts_queryset.filter(
+        id__in=posts_ids,
+        is_event=False,
+    ).order_by('id')
 
     posts = []
     for post in posts_queryset:
@@ -200,3 +184,16 @@ def clean_posts_for_patch(request, thread):
         raise PermissionDenied(_("One or more posts to update could not be found."))
 
     return posts
+
+
+class BulkPatchSerializer(serializers.Serializer):
+    ids = serializers.ListField(
+        child=serializers.IntegerField(min_value=1),
+        max_length=PATCH_LIMIT,
+        min_length=1,
+    )
+    ops = serializers.ListField(
+        child=serializers.DictField(),
+        min_length=1,
+        max_length=10,
+    )
