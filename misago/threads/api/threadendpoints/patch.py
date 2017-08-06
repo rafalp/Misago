@@ -1,5 +1,9 @@
+from rest_framework import serializers
+from rest_framework.response import Response
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils import six
 from django.utils.translation import ugettext as _
@@ -8,6 +12,7 @@ from misago.acl import add_acl
 from misago.categories.models import Category
 from misago.categories.permissions import allow_browse_category, allow_see_category
 from misago.categories.serializers import CategorySerializer
+from misago.conf import settings
 from misago.core.apipatch import ApiPatch
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.moderation import threads as moderation
@@ -20,6 +25,8 @@ from misago.threads.permissions import (
 from misago.threads.serializers import ThreadParticipantSerializer
 from misago.threads.validators import validate_title
 
+
+PATCH_LIMIT = settings.MISAGO_THREADS_PER_PAGE + settings.MISAGO_THREADS_TAIL
 
 UserModel = get_user_model()
 
@@ -303,3 +310,83 @@ def thread_patch_endpoint(request, thread):
         thread.category.save(update_fields=['last_thread_title', 'last_thread_slug'])
 
     return response
+
+
+def bulk_patch_endpoint(request, viewmodel):
+    serializer = BulkPatchSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=400)
+
+    threads = clean_threads_for_patch(request, viewmodel, serializer.data['ids'])
+
+    old_titles = [t.title for t in threads]
+    old_is_hidden = [t.is_hidden for t in threads]
+    old_is_unapproved = [t.is_unapproved for t in threads]
+    old_category = [t.category_id for t in threads]
+
+    response = thread_patch_dispatcher.dispatch_bulk(request, threads)
+
+    new_titles = [t.title for t in threads]
+    new_is_hidden = [t.is_hidden for t in threads]
+    new_is_unapproved = [t.is_unapproved for t in threads]
+    new_category = [t.category_id for t in threads]
+
+    # sync titles
+    if new_titles != old_titles:
+        for i, t in enumerate(threads):
+            if t.title != old_titles[i] and t.category.last_thread_id == t.pk:
+                t.category.last_thread_title = t.title
+                t.category.last_thread_slug = t.slug
+                t.category.save(update_fields=['last_thread_title', 'last_thread_slug'])
+
+    # sync categories
+    sync_categories = []
+
+    if new_is_hidden != old_is_hidden:
+        for i, t in enumerate(threads):
+            if t.is_hidden != old_is_hidden[i] and t.category_id not in sync_categories:
+                sync_categories.append(t.category_id)
+
+    if new_is_unapproved != old_is_unapproved:
+        for i, t in enumerate(threads):
+            if t.is_unapproved != old_is_unapproved[i] and t.category_id not in sync_categories:
+                sync_categories.append(t.category_id)
+
+    if new_category != old_category:
+        for i, t in enumerate(threads):
+            if t.category_id != old_category[i]:
+                if t.category_id not in sync_categories:
+                    sync_categories.append(t.category_id)
+                if old_category[i] not in sync_categories:
+                    sync_categories.append(old_category[i])
+
+    if sync_categories:
+        for category in Category.objects.filter(id__in=sync_categories):
+            category.synchronize()
+            category.save()
+
+    return response
+
+
+def clean_threads_for_patch(request, viewmodel, threads_ids):
+    threads = []
+    for thread_id in sorted(set(threads_ids), reverse=True):
+        try:
+            threads.append(viewmodel(request, thread_id).unwrap())
+        except (Http404, PermissionDenied):
+            raise PermissionDenied(_("One or more threads to update could not be found."))
+    return threads
+
+
+class BulkPatchSerializer(serializers.Serializer):
+    ids = serializers.ListField(
+        child=serializers.IntegerField(min_value=1),
+        max_length=PATCH_LIMIT,
+        min_length=1,
+    )
+    ops = serializers.ListField(
+        child=serializers.DictField(),
+        min_length=1,
+        max_length=10,
+    )
+

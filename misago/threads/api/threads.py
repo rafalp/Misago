@@ -19,7 +19,7 @@ from .threadendpoints.delete import delete_bulk, delete_thread
 from .threadendpoints.editor import thread_start_editor
 from .threadendpoints.list import private_threads_list_endpoint, threads_list_endpoint
 from .threadendpoints.merge import thread_merge_endpoint, threads_merge_endpoint
-from .threadendpoints.patch import thread_patch_endpoint
+from .threadendpoints.patch import bulk_patch_endpoint, thread_patch_endpoint
 from .threadendpoints.read import read_private_threads, read_threads
 
 
@@ -51,6 +51,9 @@ class ViewSet(viewsets.ViewSet):
         request.user.lock()
         thread = self.get_thread(request, pk).unwrap()
         return thread_patch_endpoint(request, thread)
+
+    def patch(self, request):
+        return bulk_patch_endpoint(request, self.thread)
 
     def delete(self, request, pk=None):
         if pk:
