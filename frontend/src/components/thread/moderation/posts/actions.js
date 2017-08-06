@@ -1,130 +1,215 @@
 import moment from 'moment';
+import React from 'react'; // jshint ignore:line
 import * as post from 'misago/reducers/post';
 import * as posts from 'misago/reducers/posts';
 import ajax from 'misago/services/ajax';
+import modal from 'misago/services/modal'; // jshint ignore:line
 import snackbar from 'misago/services/snackbar';
 import store from 'misago/services/store';
+import ErrorsList from './errors-list'; // jshint ignore:line
 
 export function approve(props) {
-  props.selection.forEach((selection) => {
-    store.dispatch(post.patch(selection, {
+  const { selection } = props;
+
+  const ops = [
+    {'op': 'replace', 'path': 'is-unapproved', 'value': false}
+  ];
+
+  const newState = selection.map((post) => {
+    return {
+      id: post.id,
       is_unapproved: false
-    }));
-
-    const ops = [
-      {'op': 'replace', 'path': 'is-unapproved', 'value': false}
-    ];
-
-    const previousState = {
-      is_unapproved: selection.is_unapproved
     };
-
-    patch(selection, ops, previousState);
   });
 
-  store.dispatch(posts.deselectAll());
+  const previousState = selection.map((post) => {
+    return {
+      id: post.id,
+      is_unapproved: post.is_unapproved
+    };
+  });
+
+  patch(props, ops, newState, previousState);
 }
 
 export function protect(props) {
-  props.selection.forEach((selection) => {
-    store.dispatch(post.patch(selection, {
-      is_protected: false
-    }));
+  const { selection } = props;
 
-    const ops = [
-      {'op': 'replace', 'path': 'is-protected', 'value': true}
-    ];
+  const ops = [
+    {'op': 'replace', 'path': 'is-protected', 'value': true}
+  ];
 
-    const previousState = {
-      is_protected: selection.is_protected
+  const newState = selection.map((post) => {
+    return {
+      id: post.id,
+      is_protected: true
     };
-
-    patch(selection, ops, previousState);
   });
 
-  store.dispatch(posts.deselectAll());
+  const previousState = selection.map((post) => {
+    return {
+      id: post.id,
+      is_protected: post.is_protected
+    };
+  });
+
+  patch(props, ops, newState, previousState);
 }
 
 export function unprotect(props) {
-  props.selection.forEach((selection) => {
-    store.dispatch(post.patch(selection, {
+  const { selection } = props;
+
+  const ops = [
+    {'op': 'replace', 'path': 'is-protected', 'value': false}
+  ];
+
+  const newState = selection.map((post) => {
+    return {
+      id: post.id,
       is_protected: false
-    }));
-
-    const ops = [
-      {'op': 'replace', 'path': 'is-protected', 'value': false}
-    ];
-
-    const previousState = {
-      is_protected: selection.is_protected
     };
-
-    patch(selection, ops, previousState);
   });
 
-  store.dispatch(posts.deselectAll());
+  const previousState = selection.map((post) => {
+    return {
+      id: post.id,
+      is_protected: post.is_protected
+    };
+  });
+
+  patch(props, ops, newState, previousState);
 }
 
 export function hide(props) {
-  props.selection.forEach((selection) => {
-    store.dispatch(post.patch(selection, {
+  const { selection } = props;
+
+  const ops = [
+    {'op': 'replace', 'path': 'is-hidden', 'value': true}
+  ];
+
+  const newState = selection.map((post) => {
+    return {
+      id: post.id,
       is_hidden: true,
       hidden_on: moment(),
       hidden_by_name: props.user.username,
-      url: Object.assign(selection.url, {
+      url: Object.assign(post.url, {
         hidden_by: props.user.url
       })
-    }));
-
-    const ops = [
-      {'op': 'replace', 'path': 'is-hidden', 'value': true}
-    ];
-
-    const previousState = {
-      is_hidden: selection.is_hidden,
-      hidden_on: selection.hidden_on,
-      hidden_by_name: selection.hidden_by_name,
-      url: selection.url
     };
-
-    patch(selection, ops, previousState);
   });
 
-  store.dispatch(posts.deselectAll());
+  const previousState = selection.map((post) => {
+    return {
+      id: post.id,
+      is_hidden: post.is_hidden,
+      hidden_on: post.hidden_on,
+      hidden_by_name: post.hidden_by_name,
+      url: post.url
+    };
+  });
+
+  patch(props, ops, newState, previousState);
 }
 
 export function unhide(props) {
-  props.selection.forEach((selection) => {
-    store.dispatch(post.patch(selection, {
-      is_hidden: false
-    }));
+  const { selection } = props;
 
-    const ops = [
-      {'op': 'replace', 'path': 'is-hidden', 'value': false}
-    ];
+  const ops = [
+    {'op': 'replace', 'path': 'is-hidden', 'value': false}
+  ];
 
-    const previousState = {
-      is_hidden: selection.is_hidden
+  const newState = selection.map((post) => {
+    return {
+      id: post.id,
+      is_hidden: false,
+      hidden_on: moment(),
+      hidden_by_name: props.user.username,
+      url: Object.assign(post.url, {
+        hidden_by: props.user.url
+      })
     };
-
-    patch(selection, ops, previousState);
   });
 
-  store.dispatch(posts.deselectAll());
+  const previousState = selection.map((post) => {
+    return {
+      id: post.id,
+      is_hidden: post.is_hidden,
+      hidden_on: post.hidden_on,
+      hidden_by_name: post.hidden_by_name,
+      url: post.url
+    };
+  });
+
+  patch(props, ops, newState, previousState);
 }
 
-export function patch(selection, ops, previousState) {
-  ajax.patch(selection.api.index, ops).then((newState) => {
-    store.dispatch(post.patch(selection, newState));
-  }, (rejection) => {
-    if (rejection.status === 400) {
-      snackbar.error(rejection.detail[0]);
-    } else {
-      snackbar.apiError(rejection);
-    }
+export function patch(props, ops, newState, previousState) {
+  const { selection, thread } = props;
 
-    store.dispatch(post.patch(selection, previousState));
+  // patch selected items
+  newState.forEach((item) => {
+    post.patch(item, item);
   });
+
+  // deselect all the things
+  store.dispatch(posts.deselectAll());
+
+  // call ajax
+  const data = {
+    ops,
+
+    ids: selection.map((post) => { return post.id; })
+  };
+
+  ajax.patch(thread.api.posts.index, data).then(
+    (data) => {
+      data.forEach((item) => {
+        store.dispatch(post.patch(item, item));
+      });
+    },
+    (rejection) => {
+      if (rejection.status !== 400) {
+        // rollback all
+        previousState.forEach((item) => {
+          store.dispatch(post.patch(item, item));
+        });
+        return snackbar.apiError(rejection);
+      }
+
+      let errors = [];
+      let rollback = [];
+
+      rejection.forEach((item) => {
+        if (item.detail) {
+          errors.push(item);
+          rollback.push(item.id);
+        } else {
+          store.dispatch(post.patch(item, item));
+        }
+
+        previousState.forEach((item) => {
+          if (rollback.indexOf(item) !== -1) {
+            store.dispatch(post.patch(item, item));
+          }
+        });
+      });
+
+      let posts = {};
+      selection.forEach((item) => {
+        posts[item.id] = item;
+      });
+
+      /* jshint ignore:start */
+      modal.show(
+        <ErrorsList
+          errors={errors}
+          posts={posts}
+        />
+      );
+      /* jshint ignore:end */
+    }
+  );
 }
 
 export function merge(props) {

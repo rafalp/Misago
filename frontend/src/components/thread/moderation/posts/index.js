@@ -39,7 +39,7 @@ export function isVisible(thread, posts) {
   posts.forEach((post) => {
     if (!post.is_event) {
       const showModeration = (
-        post.acl.can_approve ||
+        (post.acl.can_approve && post.is_unapproved) ||
         post.acl.can_delete ||
         (!post.is_hidden && post.acl.can_hide) ||
         post.acl.can_move ||

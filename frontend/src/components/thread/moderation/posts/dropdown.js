@@ -28,7 +28,7 @@ export class Approve extends React.Component {
 
   render() {
     const isVisible = this.props.selection.find((post) => {
-      return post.acl.can_approve;
+      return post.acl.can_approve && post.is_unapproved;
     });
 
     if (!isVisible) return null;
@@ -182,7 +182,7 @@ export class Hide extends React.Component {
 
   render() {
     const isVisible = this.props.selection.find((post) => {
-      return post.acl.can_hide;
+      return post.acl.can_hide && !post.is_hidden;
     });
 
     if (!isVisible) return null;
@@ -207,7 +207,7 @@ export class Unhide extends React.Component {
 
   render() {
     const isVisible = this.props.selection.find((post) => {
-      return post.acl.can_unhide;
+      return post.acl.can_unhide && post.is_hidden;
     });
 
     if (!isVisible) return null;
