@@ -27,7 +27,7 @@ export default class extends React.Component {
               {this.props.errors.map((item) => {
                 return (
                   <ThreadErrors
-                    error={item.error}
+                    errors={item.errors}
                     key={item.thread.id}
                     thread={item.thread}
                   />
@@ -44,11 +44,15 @@ export default class extends React.Component {
 }
 
 /* jshint ignore:start */
-export function ThreadErrors({ error, thread }) {
+export function ThreadErrors({ errors, thread }) {
   return (
     <li>
       <h5>{thread.title}</h5>
-      <p>{error}</p>
+      {errors.map((message, i) => {
+        return (
+          <p>{message}</p>
+        );
+      })}
     </li>
   );
 }

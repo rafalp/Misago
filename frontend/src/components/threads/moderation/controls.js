@@ -12,40 +12,70 @@ import Countdown from 'misago/utils/countdown'; // jshint ignore:line
 export default class extends React.Component {
   /* jshint ignore:start */
   callApi = (ops, successMessage, onSuccess=null) => {
-    const errors = [];
-    const countdown = new Countdown(() => {
-      this.props.threads.forEach((thread) => {
-        this.props.freezeThread(thread.id);
-      });
+    // freeze threads
+    this.props.threads.forEach((thread) => {
+      this.props.freezeThread(thread.id);
+    });
 
-      if (errors.length) {
-        modal.show(<ErrorsModal errors={errors} />);
-      } else {
+    // list ids
+    const ids = this.props.threads.map((thread) => {
+      return thread.id;
+    });
+
+    // always return current acl
+    ops.push({op: 'add', path: 'acl', value: true});
+
+    ajax.patch(this.props.api, { ids, ops }).then(
+      (data) => {
+        // unfreeze
+        this.props.threads.forEach((thread) => {
+          this.props.freezeThread(thread.id);
+        });
+
+        // update threads
+        data.forEach((thread) => {
+          this.props.updateThread(thread);
+        });
+
+        // show success message and call callback
         snackbar.success(successMessage);
         if (onSuccess) {
           onSuccess();
         }
-      }
-    }, this.props.threads.length);
-
-    // update thread acl together with its state
-    ops.push({op: 'add', path: 'acl', value: true});
-
-    this.props.threads.forEach((thread) => {
-      this.props.freezeThread(thread.id);
-
-      ajax.patch(thread.api.index, ops).then((data) => {
-        this.props.updateThread(data);
-        countdown.count();
-      }, (rejection) => {
-        errors.push({
-          thread: thread,
-          errors: [rejection.detail]
+      },
+      (rejection) => {
+        // unfreeze
+        this.props.threads.forEach((thread) => {
+          this.props.freezeThread(thread.id);
         });
 
-        countdown.count();
-      });
-    });
+        // escape on non-400 error
+        if (rejection.status !== 400) {
+          return snackbar.apiError(rejection);
+        }
+
+        // build errors list
+        let errors = [];
+        let threadsMap = {}
+
+        this.props.threads.forEach((thread) => {
+          threadsMap[thread.id] = thread;
+        });
+
+        rejection.forEach(({id, detail }) => {
+          if (typeof threadsMap[id] !== 'undefined') {
+            errors.push({
+              errors: detail,
+              thread: threadsMap[id]
+            });
+          }
+        });
+
+        modal.show(
+          <ErrorsModal errors={errors} />
+        );
+      }
+    );
   };
 
   pinGlobally = () => {
