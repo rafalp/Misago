@@ -8,6 +8,7 @@ from misago import __version__ as version
 
 SETUP_DIR = os.path.dirname(__file__)
 
+README = open(os.path.join(SETUP_DIR, 'README.rst')).read()
 
 with open(os.path.join(SETUP_DIR, 'requirements.txt'), "r") as f:
     REQUIREMENTS = [x.strip() for x in f.readlines()]
@@ -32,6 +33,7 @@ setup(
         "Python and ES6, powered by Django and React.js. It works out of "
         "the box and plays nicely with other projects like Django-CMS."
     ),
+    long_description=README,
     url='http://www.misago-project.org/',
     author=u'Rafał Pitoń',
     author_email='kontakt@rpiton.com',
