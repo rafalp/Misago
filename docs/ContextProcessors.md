@@ -1,7 +1,7 @@
 Context processors
 ==================
 
-Context Processors are simple python functions that receive HttpRequest object and extend template context with additional values. In addition to [default context processors defined by Django])https://docs.djangoproject.com/en/dev/ref/templates/api/#subclassing-context-requestcontext), Misago defines its own context processors:
+Context Processors are simple python functions that receive HttpRequest object and extend template context with additional values. In addition to [default context processors defined by Django](https://docs.djangoproject.com/en/dev/ref/templates/api/#subclassing-context-requestcontext), Misago defines its own context processors:
 
 
 ## `misago.core.context_processors.frontend_context`

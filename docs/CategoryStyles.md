@@ -13,7 +13,7 @@ Items on list that have custom class added to them also have `list-group-categor
 
 ## Default classes
 
-Misago's default theme defines basic classes named after colors in `Material Design Palette <https://material.io/guidelines/style/color.html#color-color-palette>`_, visualised as bands added to left side of category and its threads on lists:
+Misago's default theme defines basic classes named after colors in [Material Design Palette](https://material.io/guidelines/style/color.html#color-color-palette), visualised as bands added to left side of category and its threads on lists:
 
 - `red`
 - `light-red`
