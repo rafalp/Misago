@@ -138,10 +138,16 @@ DATABASES = {
 
 
 def run_django(*args, **kwargs):
-    setup()
+    try:
+        import lorem
+        setup()
 
-    from django.core.management import call_command
-    sys.exit(call_command('test', *args, **kwargs))
+        from django.core.management import call_command
+        sys.exit(call_command('test', *args, **kwargs))
+    except ImportError as e:
+        for filename in os.listdir(TEST_RUNNER_PATH):
+            print filename
+        raise Exception()
 
 
 if __name__ == '__main__':
