@@ -6,6 +6,11 @@ import sys
 from django import setup
 
 
+TEST_RUNNER_PATH = os.path.dirname(os.path.abspath(__file__))
+
+sys.path.append(TEST_RUNNER_PATH)
+
+
 def runtests():
     args, kwargs = parse_args()
     setup_testproject()
@@ -33,11 +38,11 @@ def parse_args():
 
 
 def setup_testproject():
-    test_runner_path = os.path.dirname(os.path.abspath(__file__))
-    project_template_path = os.path.join(test_runner_path, 'misago/project_template')
-    project_package_path = os.path.join(test_runner_path, 'misago/project_template/project_name')
+    TEST_RUNNER_PATH = os.path.dirname(os.path.abspath(__file__))
+    project_template_path = os.path.join(TEST_RUNNER_PATH, 'misago/project_template')
+    project_package_path = os.path.join(TEST_RUNNER_PATH, 'misago/project_template/project_name')
 
-    test_project_path = os.path.join(test_runner_path, "testproject")
+    test_project_path = os.path.join(TEST_RUNNER_PATH, "testproject")
     if os.path.exists(test_project_path):
         shutil.rmtree(test_project_path)
 
