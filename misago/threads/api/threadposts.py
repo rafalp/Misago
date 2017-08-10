@@ -182,6 +182,7 @@ class ViewSet(viewsets.ViewSet):
             read_aware=True,
             subscription_aware=True,
         ).unwrap()
+
         post = self.get_post(request, thread, pk).unwrap()
 
         return post_read_endpoint(request, thread, post)
