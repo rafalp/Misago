@@ -147,6 +147,8 @@ def run_django(*args, **kwargs):
         for filename in os.listdir(TEST_RUNNER_PATH):
             sys.stdout.write('\n')
             sys.stdout.write(filename)
+        for filename in os.listdir(os.path.join(TEST_RUNNER_PATH, 'testproject')):
+            sys.stdout.write('\ntestproject/{}'.format(filename))
         raise Exception()
 
 
