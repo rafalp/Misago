@@ -35,14 +35,14 @@ urlpatterns = [
     # Javascript translations
     url(
         r'^django-i18n.js$',
-        cache_page(86400 * 2, key_prefix='misagojsi18n')(
-            last_modified(lambda req, **kw: timezone.now())(
+        last_modified(lambda req, **kw: timezone.now())(
+            cache_page(86400 * 2, key_prefix='misagojsi18n')(
                 JavaScriptCatalog.as_view(
                     packages=['misago'],
                 ),
             ),
         ),
-        name='django-i18n'
+        name='django-i18n',
     ),
 
     # Uncomment next line if you plan to use Django admin for 3rd party apps

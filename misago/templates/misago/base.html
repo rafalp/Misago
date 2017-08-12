@@ -41,7 +41,7 @@
 
     <div class="modal fade" id="modal-mount" tabindex="-1" role="dialog" aria-labelledby="misago-modal-label"></div>
 
-    <script src="{% url 'django-i18n' %}"></script>
+    <script src="{% url 'django-i18n' %}?{{ LANGUAGE_CODE }}"></script>
     <script type="text/javascript">
       if (!(Object.assign && Array.from)) {
         var polyfill = document.createElement('script');
