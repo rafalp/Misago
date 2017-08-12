@@ -27,7 +27,7 @@ EXCLUDE_FROM_PACKAGES = [
 setup(
     name='Misago',
     version=version,
-    license='GNU General Public License v2 (GPLv2)',
+    license='GPLv2',
     description=(
         "Misago is modern, fully featured forum application written in "
         "Python and ES6, powered by Django and React.js. It works out of "
@@ -48,7 +48,7 @@ setup(
     ]},
     test_suite="runtests.runtests",
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',
