@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-01 20:39+0200\n"
+"POT-Creation-Date: 2017-08-12 18:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Paradox506 <Renyi_14@whu.edu.cn>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
@@ -180,8 +180,8 @@ msgid "Generate my individual avatar"
 msgstr "自动生成"
 
 #: static/misago/js/misago.js:2 static/misago/js/misago.js:4
-#: static/misago/js/misago.js:12 static/misago/js/misago.js:14
-#: static/misago/js/misago.js:15 static/misago/js/misago.js:18
+#: static/misago/js/misago.js:12 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:18
 msgid "Ok"
 msgstr "Ok"
 
@@ -354,7 +354,7 @@ msgstr "（错误）"
 msgid "(success)"
 msgstr "（成功）"
 
-#: static/misago/js/misago.js:3
+#: static/misago/js/misago.js:4
 msgid "Are you sure? This will delete other polls."
 msgstr "您确定？这将删除其他调查。"
 
@@ -658,7 +658,7 @@ msgstr "调查已被编辑。"
 msgid "Poll has been posted."
 msgstr "调查已发布。"
 
-#: static/misago/js/misago.js:5
+#: static/misago/js/misago.js:6
 msgid "Question and choices"
 msgstr "问题和选择"
 
@@ -1248,7 +1248,7 @@ msgstr "赞过"
 msgid "Like"
 msgstr "赞"
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 msgid "Reply"
 msgstr "回复"
 
@@ -1365,7 +1365,7 @@ msgid "%(username)s has posted %(posts)s message."
 msgid_plural "%(username)s has posted %(posts)s messages."
 msgstr[0] "%(username)s已发布%(posts)s消息。"
 
-#: static/misago/js/misago.js:10
+#: static/misago/js/misago.js:11
 msgid "Posts"
 msgstr "发帖"
 
@@ -1725,7 +1725,7 @@ msgstr "没有找到符合搜索条件的帖子。"
 msgid "Enter at least two characters to search threads."
 msgstr "多输入些内容才能搜索到主题帖."
 
-#: static/misago/js/misago.js:13 static/misago/js/misago.js:18
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:19
 msgid "Show more"
 msgstr "展示更多"
 
@@ -1800,10 +1800,18 @@ msgid "Unprotect"
 msgstr "取消保护"
 
 #: static/misago/js/misago.js:14
+msgid "%(username)s on %(posted_on)s"
+msgstr ""
+
+#: static/misago/js/misago.js:14
+msgid "One or more posts could not be changed:"
+msgstr ""
+
+#: static/misago/js/misago.js:14
 msgid "Posts options"
 msgstr "帖子选项"
 
-#: static/misago/js/misago.js:14
+#: static/misago/js/misago.js:14 static/misago/js/misago.js:15
 msgid "Move posts"
 msgstr "移动帖子"
 
@@ -1815,7 +1823,7 @@ msgstr "选定的帖子被移动到另一个主题帖。"
 msgid "Link to thread you want to move posts to"
 msgstr "链接到您要移动帖子的主题帖"
 
-#: static/misago/js/misago.js:14
+#: static/misago/js/misago.js:15
 msgid "You can't move selected posts at the moment."
 msgstr "您目前无法移动所选的帖子。"
 
@@ -1889,19 +1897,19 @@ msgstr "主题帖已被移动。"
 msgid "New category"
 msgstr "新版块"
 
-#: static/misago/js/misago.js:15 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:15 static/misago/js/misago.js:21
 msgid "Go to first page"
 msgstr "转到第一页"
 
-#: static/misago/js/misago.js:15 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:15 static/misago/js/misago.js:21
 msgid "Go to previous page"
 msgstr "转到上一页"
 
-#: static/misago/js/misago.js:15 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:15 static/misago/js/misago.js:21
 msgid "Go to next page"
 msgstr "转到下一页"
 
-#: static/misago/js/misago.js:15 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:15 static/misago/js/misago.js:21
 msgid "Go to last page"
 msgstr "转到最后一页"
 
@@ -2018,43 +2026,43 @@ msgstr "这个版块里面没有主题帖。"
 msgid "No threads matching specified criteria were found."
 msgstr "没有找到符合指定标准的主题帖。"
 
-#: static/misago/js/misago.js:17
+#: static/misago/js/misago.js:18
 msgid "Selected threads were pinned globally."
 msgstr "所选主题帖全局置顶。"
 
-#: static/misago/js/misago.js:17
+#: static/misago/js/misago.js:18
 msgid "Selected threads were pinned locally."
 msgstr "所选主题帖已在版块内置顶。"
 
-#: static/misago/js/misago.js:17
+#: static/misago/js/misago.js:18
 msgid "Selected threads were unpinned."
 msgstr "所选主题帖已取消置顶。"
 
-#: static/misago/js/misago.js:17
+#: static/misago/js/misago.js:18
 msgid "Selected threads were approved."
 msgstr "所选主题帖已通过审批。"
 
-#: static/misago/js/misago.js:17
+#: static/misago/js/misago.js:18
 msgid "Selected threads were opened."
 msgstr "所选主题帖已打开。"
 
-#: static/misago/js/misago.js:17
+#: static/misago/js/misago.js:18
 msgid "Selected threads were closed."
 msgstr "所选主题帖已关闭。"
 
-#: static/misago/js/misago.js:17
+#: static/misago/js/misago.js:18
 msgid "Selected threads were unhidden."
 msgstr "所选主题帖已取消隐藏。"
 
-#: static/misago/js/misago.js:17
+#: static/misago/js/misago.js:18
 msgid "Selected threads were hidden."
 msgstr "所选主题帖已隐藏。"
 
-#: static/misago/js/misago.js:17
+#: static/misago/js/misago.js:18
 msgid "You don't have permission to merge this thread with others."
 msgstr "您没有权限将此主题帖与其他的合并。"
 
-#: static/misago/js/misago.js:17
+#: static/misago/js/misago.js:18
 msgid "You have to select at least two threads to merge."
 msgstr "您必须至少选择两个主题帖进行合并。"
 
@@ -2115,10 +2123,8 @@ msgid "Threads moderation"
 msgstr "主题帖审核"
 
 #: static/misago/js/misago.js:18
-msgid ""
-"Errors were encountered when performing moderation action on one or more "
-"threads:"
-msgstr "在一个或多个主题帖上执行审核动作时遇到错误："
+msgid "One or more threads could not be deleted:"
+msgstr ""
 
 #: static/misago/js/misago.js:18
 msgid ""
@@ -2304,12 +2310,12 @@ msgstr[0] "%最近%(days)s天最活跃的发布者%(poster)s"
 msgid "Users"
 msgstr "用户"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:21
 msgid "There is %(more)s more member with this role."
 msgid_plural "There are %(more)s more members with this role."
 msgstr[0] "该身份新增了%(more)s个成员。"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:21
 msgid "There are no more members with this role."
 msgstr "已无拥有该身份的成员。"
 
@@ -2351,15 +2357,15 @@ msgstr "发生未知错误。"
 msgid "Upload was rejected by server as too large."
 msgstr "上传因为过大被服务器拒绝。"
 
-#: static/misago/js/misago.js:22
+#: static/misago/js/misago.js:23
 msgid "Failed to load CAPTCHA."
 msgstr "无法加载人机验证"
 
-#: static/misago/js/misago.js:22
+#: static/misago/js/misago.js:23
 msgid "Please solve the quick test"
 msgstr "请完成人机测试"
 
-#: static/misago/js/misago.js:22
+#: static/misago/js/misago.js:23
 msgid "This test helps us prevent automated spam registrations on our site."
 msgstr "此检测帮助本站预防自动化的批量垃圾注册。"
 
