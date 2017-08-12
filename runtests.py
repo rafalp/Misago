@@ -138,18 +138,10 @@ DATABASES = {
 
 
 def run_django(*args, **kwargs):
-    try:
-        setup()
+    setup()
 
-        from django.core.management import call_command
-        sys.exit(call_command('test', *args, **kwargs))
-    except ImportError as e:
-        for filename in os.listdir(TEST_RUNNER_PATH):
-            sys.stdout.write('\n')
-            sys.stdout.write(filename)
-        for filename in os.listdir(os.path.join(TEST_RUNNER_PATH, 'testproject')):
-            sys.stdout.write('\ntestproject/{}'.format(filename))
-        raise Exception()
+    from django.core.management import call_command
+    sys.exit(call_command('test', *args, **kwargs))
 
 
 if __name__ == '__main__':
