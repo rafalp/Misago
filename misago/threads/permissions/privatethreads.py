@@ -93,6 +93,7 @@ def build_acl(acl, roles, key_name):
     )
 
     if not new_acl['can_use_private_threads']:
+        new_acl['can_start_private_threads'] = 0
         return new_acl
 
     private_category = Category.objects.private_threads()

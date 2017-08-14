@@ -79,13 +79,15 @@ export class UserMenu extends React.Component {
             {gettext("Change avatar")}
           </button>
         </li>
-        <li>
-          <a href={misago.get('PRIVATE_THREADS_URL')}>
-            <span className="material-icon">message</span>
-            {gettext("Private threads")}
-            <PrivateThreadsBadge user={user} />
-          </a>
-        </li>
+        {!!user.acl.can_use_private_threads && (
+          <li>
+            <a href={misago.get('PRIVATE_THREADS_URL')}>
+              <span className="material-icon">message</span>
+              {gettext("Private threads")}
+              <PrivateThreadsBadge user={user} />
+            </a>
+          </li>
+        )}
         <li className="divider" />
         <li className="dropdown-buttons">
           <button
@@ -117,29 +119,29 @@ export function PrivateThreadsBadge({ user }) {
 
 /* jshint ignore:start */
 export function UserNav({ user }) {
-    return (
-      <ul className="ul nav navbar-nav nav-user">
-        <UserPrivateThreadsLink user={user} />
-        <li className="dropdown">
-          <a
-            aria-haspopup="true"
-            aria-expanded="false"
-            className="dropdown-toggle"
-            data-toggle="dropdown"
-            href={user.url}
-            role="button"
-          >
-            <Avatar user={user} size="64" />
-          </a>
-          <UserMenu user={user} />
-        </li>
-      </ul>
-    );
+  return (
+    <ul className="ul nav navbar-nav nav-user">
+      <UserPrivateThreadsLink user={user} />
+      <li className="dropdown">
+        <a
+          aria-haspopup="true"
+          aria-expanded="false"
+          className="dropdown-toggle"
+          data-toggle="dropdown"
+          href={user.url}
+          role="button"
+        >
+          <Avatar user={user} size="64" />
+        </a>
+        <UserMenu user={user} />
+      </li>
+    </ul>
+  );
 }
 /* jshint ignore:end */
 
-export function UserPrivateThreadsLink(props) {
-  if (!props.user.unread_private_threads) return null;
+export function UserPrivateThreadsLink({ user }) {
+  if (!user.acl.can_use_private_threads) return null;
 
   /* jshint ignore:start */
   return (
@@ -151,9 +153,11 @@ export function UserPrivateThreadsLink(props) {
         <span className="material-icon">
           message
         </span>
-        <span className="badge">
-          {props.user.unread_private_threads}
-        </span>
+        {user.unread_private_threads > 0 && (
+          <span className="badge">
+            {user.unread_private_threads}
+          </span>
+        )}
       </a>
     </li>
   );

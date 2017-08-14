@@ -202,7 +202,7 @@ export default class extends React.Component {
                     <div className={"col-sm-" + colsWidth}>
 
                       <div className="row xs-margin-top sm-margin-top">
-                        {canMessage && (
+                        {!!canMessage && (
                         <div className={getColStyle(cols, 0)}>
                           <MessageButton
                             className="btn btn-default btn-block btn-outline"
@@ -211,12 +211,12 @@ export default class extends React.Component {
                           />
                         </div>
                         )}
-                        {canFollow && (
+                        {!!canFollow && (
                           <div className={getColStyle(cols, 1)}>
                             {this.getFollowButton()}
                           </div>
                         )}
-                        {canModerate && (
+                        {!!canModerate && (
                           <div className={getColStyle(cols, 2)}>
                             {this.getModerationButton()}
                           </div>

@@ -265,6 +265,7 @@ TEMPLATES = [
                 'misago.markup.context_processors.preload_api_url',
                 'misago.threads.context_processors.preload_threads_urls',
                 'misago.users.context_processors.preload_user_json',
+                'misago.search.context_processors.search_providers',
 
                 # Note: keep frontend_context processor last for previous processors
                 # to be able to expose data UI app via request.frontend_context
