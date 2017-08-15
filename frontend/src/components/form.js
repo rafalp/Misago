@@ -139,7 +139,10 @@ export default class extends React.Component {
 
   handleSubmit = (event) => {
     // we don't reload page on submissions
-    event.preventDefault()
+    if (event) {
+      event.preventDefault()
+    }
+
     if (this.state.isLoading) {
       return;
     }

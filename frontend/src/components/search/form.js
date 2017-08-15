@@ -20,6 +20,12 @@ export default class extends Form {
     };
   }
 
+  componentDidMount() {
+    if (this.state.query.length) {
+      this.handleSubmit();
+    }
+  }
+
   onQueryChange = (event) => {
     this.changeValue('query', event.target.value);
   };

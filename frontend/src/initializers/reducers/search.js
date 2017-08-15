@@ -4,7 +4,8 @@ import store from 'misago/services/store';
 
 export default function initializer() {
   store.addReducer('search', reducer, Object.assign({}, initialState, {
-    providers: misago.get('SEARCH_PROVIDERS') || []
+    providers: misago.get('SEARCH_PROVIDERS') || [],
+    query: misago.get('SEARCH_QUERY') || ''
   }));
 }
 

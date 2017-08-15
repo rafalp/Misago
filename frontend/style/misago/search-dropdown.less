@@ -2,7 +2,11 @@
 // Search Dropdown
 // --------------------------------------------------
 
-.dropdown-search-results {
+
+// Base styles
+.navbar-misago .dropdown-menu.dropdown-search-results {
+  background: @dropdown-bg;
+  border: 1px solid @dropdown-border;
   width: 100%;
 }
 
@@ -12,4 +16,15 @@
 
 .dropdown-suggestions-list li {
   list-style: none;
+}
+
+
+// Suggestion
+.dropdown-suggestion {
+  padding: @padding-base-vertical @padding-base-horizontal;
+}
+
+// Last suggestion
+.dropdown-suggestion-last {
+  text-align: center;
 }

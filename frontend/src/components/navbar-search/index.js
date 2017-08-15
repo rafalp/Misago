@@ -1,78 +1,105 @@
 // jshint ignore:start
 import React from 'react';
-import Autosuggest from 'react-autosuggest';
 import ajax from 'misago/services/ajax';
 import misago from 'misago';
-import renderSuggestion from './render-suggestion';
-import THEME from './theme';
-import { getSuggestions } from './utils';
-import { getSectionSuggestions } from './utils';
-import { renderSectionTitle } from './utils';
-
-const getSuggestionValue = suggestion => suggestion.name;
+import cleanResults from './clean-results';
+import Input from './input';
 
 export default class extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      value: '',
-      suggestions: []
+      isLoading: false,
+      isOpen: false,
+      query: '',
+      results: []
     };
   }
 
-  onChange = (event, { newValue }) => {
-    this.setState({
-      value: newValue
-    });
+  componentDidMount() {
+    document.addEventListener('mousedown', this.onDocumentMouseDown);
+    document.addEventListener('keydown', this.onEscape);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.onDocumentMouseDown);
+    document.removeEventListener('keydown', this.onEscape);
+  }
+
+  onFocus = (ev) => {
+    this.setState({ isOpen: true });
   };
 
-  onSuggestionsFetchRequested = ({ value }) => {
-    ajax.get(misago.get('SEARCH_API'), {'q': value.trim()}).then(
+  onDocumentMouseDown = (ev) => {
+    let closeResults = true;
+    let node = ev.target;
+
+    while (node !== null && node !== document) {
+      if (node === this.container) {
+        closeResults = false;
+        return;
+      }
+
+      node = node.parentNode;
+    }
+
+    if (closeResults) {
+      this.setState({ isOpen: false });
+    }
+  };
+
+  onEscape = (ev) => {
+    if (ev.key === 'Escape') {
+      this.setState({ isOpen: false });
+    }
+  };
+
+  onChange = (ev) => {
+    const query = ev.target.value;
+
+    this.setState({ query });
+    this.loadResults(query.trim());
+  };
+
+  loadResults(query) {
+    if (!query.length) return;
+
+    ajax.get(misago.get('SEARCH_API'), {q: query}).then(
       (data) => {
         this.setState({
-          suggestions: getSuggestions(data)
+          isLoading: false,
+          results: cleanResults(data)
         });
       },
       (rejection) => {
-        console.log('ERROR!')
+        this.setState({ isLoading: false });
+        console.log(rejection);
       }
     );
-  };
-
-  onSuggestionsClearRequested = () => {
-    this.setState({
-      suggestions: []
-    });
-  };
+  }
 
   render() {
-    const { value, suggestions } = this.state;
-
-    const inputProps = {
-      value,
-
-      className: 'form-control',
-      onChange: this.onChange,
-      placeholder: gettext("Search")
-    };
+    let className = "navbar-right navbar-search dropdown";
+    if (this.state.isOpen) className += " open";
 
     return (
-      <div className="navbar-form">
-        <div className="form-group">
-          <Autosuggest
-            alwaysRenderSuggestions={false}
-            getSuggestionValue={getSuggestionValue}
-            getSectionSuggestions={getSectionSuggestions}
-            inputProps={inputProps}
-            multiSection={true}
-            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-            renderSectionTitle={renderSectionTitle}
-            renderSuggestion={renderSuggestion}
-            suggestions={suggestions}
-            theme={THEME}
-          />
+      <div className="navbar-form" ref={(container) => this.container = container}>
+        <div className={className}>
+          <div className="form-group">
+            <Input
+              value={this.state.query}
+              onChange={this.onChange}
+              onFocus={this.onFocus}
+            />
+          </div>
+          <ul className="dropdown-menu dropdown-search-results" role="menu">
+            <li>
+              <a href="/">
+                HELLO!
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     );

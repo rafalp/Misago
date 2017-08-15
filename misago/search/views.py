@@ -29,4 +29,8 @@ def search(request, search_provider):
     else:
         raise Http404()
 
+    if 'q' in request.GET:
+        request.frontend_context['SEARCH_QUERY'] = request.GET.get('q')
+
     return render(request, 'misago/search.html')
+
