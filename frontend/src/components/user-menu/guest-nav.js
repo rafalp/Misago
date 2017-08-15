@@ -1,5 +1,6 @@
 import React from 'react';
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
+import NavbarSearch from 'misago/components/navbar-search'; // jshint ignore:line
 import RegisterButton from 'misago/components/register-button'; // jshint ignore:line
 import SignInModal from 'misago/components/sign-in.js';
 import dropdown from 'misago/services/mobile-navbar-dropdown';
@@ -54,6 +55,9 @@ export class GuestNav extends GuestMenu {
     /* jshint ignore:start */
     return (
       <div className="nav nav-guest">
+        <div className="navbar-left">
+          <NavbarSearch />
+        </div>
         <button
           className="btn navbar-btn btn-default"
           onClick={this.showSignInModal}

@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Avatar from 'misago/components/avatar'; // jshint ignore:line
 import ChangeAvatarModal, { select } from 'misago/components/change-avatar/root'; // jshint ignore:line
+import NavbarSearch from 'misago/components/navbar-search'; // jshint ignore:line
 import misago from 'misago'; // jshint ignore:line
 import dropdown from 'misago/services/mobile-navbar-dropdown';
 import modal from 'misago/services/modal';
@@ -121,6 +122,9 @@ export function PrivateThreadsBadge({ user }) {
 export function UserNav({ user }) {
   return (
     <ul className="ul nav navbar-nav nav-user">
+      <li>
+        <NavbarSearch />
+      </li>
       <UserPrivateThreadsLink user={user} />
       <li className="dropdown">
         <a
