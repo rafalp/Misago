@@ -1,9 +1,11 @@
 // jshint ignore:start
 import React from 'react';
 import ajax from 'misago/services/ajax';
+import snackbar from 'misago/services/snackbar';
 import misago from 'misago';
 import cleanResults from './clean-results';
 import Input from './input';
+import Results from './results';
 
 export default class extends React.Component {
   constructor() {
@@ -15,6 +17,8 @@ export default class extends React.Component {
       query: '',
       results: []
     };
+
+    this.intervalId = null;
   }
 
   componentDidMount() {
@@ -65,17 +69,36 @@ export default class extends React.Component {
   loadResults(query) {
     if (!query.length) return;
 
-    ajax.get(misago.get('SEARCH_API'), {q: query}).then(
-      (data) => {
-        this.setState({
-          isLoading: false,
-          results: cleanResults(data)
-        });
+    const delay = 300 + (Math.random() * 300);
+
+    if (this.intervalId) {
+      window.clearTimeout(this.intervalId);
+    }
+
+    this.setState({ isLoading: true });
+
+    this.intervalId = window.setTimeout(
+      () => {
+        ajax.get(misago.get('SEARCH_API'), {q: query}).then(
+          (data) => {
+            this.setState({
+              intervalId: null,
+              isLoading: false,
+              results: cleanResults(data)
+            });
+          },
+          (rejection) => {
+            snackbar.apiError(rejection);
+
+            this.setState({
+              intervalId: null,
+              isLoading: false,
+              results: []
+            });
+          }
+        );
       },
-      (rejection) => {
-        this.setState({ isLoading: false });
-        console.log(rejection);
-      }
+      delay
     );
   }
 
@@ -93,13 +116,11 @@ export default class extends React.Component {
               onFocus={this.onFocus}
             />
           </div>
-          <ul className="dropdown-menu dropdown-search-results" role="menu">
-            <li>
-              <a href="/">
-                HELLO!
-              </a>
-            </li>
-          </ul>
+          <Results
+            isLoading={this.state.isLoading}
+            results={this.state.results}
+            query={this.state.query}
+          />
         </div>
       </div>
     );
