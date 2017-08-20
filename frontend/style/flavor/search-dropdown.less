@@ -7,3 +7,71 @@
 
   color: @text-muted;
 }
+
+.dropdown-search-loader {
+  padding: @padding-large-vertical @padding-large-horizontal;
+}
+
+.dropdown-search-header {
+  padding: 8px 20px;
+
+  color: @text-muted;
+  font-weight: bold;
+}
+
+
+// result
+.dropdown-search-thread, .dropdown-search-user {
+  small {
+    color: @text-muted;
+  }
+
+  &:hover small, &:focus small {
+    color: @dropdown-link-hover-color;
+  }
+
+  &:active small {
+    color: @dropdown-link-active-color;
+  }
+}
+
+.dropdown-search-thread {
+  .media-heading, .media-body small {
+    display: block;
+    width: 370px;
+
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .media-heading {
+    height: 22px;
+    margin-bottom: 0px;
+  }
+
+  .media-body small {
+    overflow: hidden;
+    white-space: normal;
+    max-height: 47px;
+  }
+
+  .dropdown-search-post-content {
+    margin-bottom: @line-height-computed / 4;
+  }
+}
+
+
+// footer
+.dropdown-search-footer {
+  border-bottom: 1px solid @gray-lighter;
+  padding-bottom: @padding-small-vertical;
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0px;
+  }
+}
+
+.dropdown-menu > li.dropdown-search-footer > a {
+  font-size: small;
+}

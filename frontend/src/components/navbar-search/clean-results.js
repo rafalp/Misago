@@ -7,6 +7,7 @@ export default function(data) {
 
   return filtered.map((section) => {
     return Object.assign({}, section, {
+      count: section.results.count,
       results: section.results.results.slice(0, MAX_RESULTS)
     });
   });

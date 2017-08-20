@@ -5,7 +5,7 @@ import snackbar from 'misago/services/snackbar';
 import misago from 'misago';
 import cleanResults from './clean-results';
 import Input from './input';
-import Results from './results';
+import Dropdown from './dropdown';
 
 export default class extends React.Component {
   constructor() {
@@ -116,7 +116,7 @@ export default class extends React.Component {
               onFocus={this.onFocus}
             />
           </div>
-          <Results
+          <Dropdown
             isLoading={this.state.isLoading}
             results={this.state.results}
             query={this.state.query}

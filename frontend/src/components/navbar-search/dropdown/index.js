@@ -1,6 +1,8 @@
 // jshint ignore:start
 import React from 'react';
+import Loader from './loader';
 import Message from './message';
+import Results from './results';
 
 const MSG_START = gettext("To start search enter search query in field above.");
 const MSG_EMPTY = gettext("Search returned no results.");
@@ -14,11 +16,14 @@ export default function({ isLoading, results, query }) {
 
   if (results.length) {
     return (
-      <Message message={"show results"} />
+      <Results
+        results={results}
+        query={query}
+      />
     );
   } else if (isLoading) {
     return (
-      <Message message={"show loader"} />
+      <Loader />
     );
   }
 
