@@ -23,7 +23,11 @@
 
   // Force search widths
   .navbar-search {
-    width: 400px;
+    width: 300px;
+
+    @media (max-width: @screen-sm-max) {
+      width: 150px;
+    }
 
     .form-group {
       display: block;
