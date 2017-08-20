@@ -12,10 +12,10 @@ def search_providers(request):
         if request.user.acl_cache['can_search']:
             allowed_providers = searchproviders.get_allowed_providers(request)
     except AttributeError:
-        # is user has no acl_cache, cease entire middleware
+        # is user has no acl_cache attribute, cease entire middleware
         # this is edge case that occurs when debug toolbar intercepts
         # the redirect response from logout page and runs context providers
-        # with non-misago's anonymous user model that hos acl support
+        # with non-misago's anonymous user model that has no acl support
         return {}
 
     request.frontend_context['SEARCH_API'] = reverse('misago:api:search')
