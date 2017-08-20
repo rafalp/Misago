@@ -4,7 +4,7 @@ import Loader from './loader';
 import Message from './message';
 import Results from './results';
 
-const MSG_START = gettext("To start search enter search query in field above.");
+const MSG_START = gettext("To start search enter search query.");
 const MSG_EMPTY = gettext("Search returned no results.");
 
 export default function({ isLoading, results, query }) {
