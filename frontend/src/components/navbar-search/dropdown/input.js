@@ -1,7 +1,7 @@
 // jshint ignore:start
 import React from 'react';
 
-export default function({ value, onChange, onFocus }) {
+export default function({ value, onChange }) {
   return (
     <input
       aria-haspopup="true"
@@ -10,7 +10,6 @@ export default function({ value, onChange, onFocus }) {
       className="form-control"
       value={value}
       onChange={onChange}
-      onFocus={onFocus}
       placeholder={gettext("Search")}
       role="combobox"
       type="text"

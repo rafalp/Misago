@@ -18,6 +18,7 @@ def search_providers(request):
         # with non-misago's anonymous user model that has no acl support
         return {}
 
+    request.frontend_context['SEARCH_URL'] = reverse('misago:search')
     request.frontend_context['SEARCH_API'] = reverse('misago:api:search')
     request.frontend_context['SEARCH_PROVIDERS'] = []
 

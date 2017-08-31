@@ -1,4 +1,4 @@
-import { HEADER, RESULT, FOOTER } from './contants';
+import { HEADER, RESULT, FOOTER } from './constants';
 
 export default function(results) {
   const flatlist = [];

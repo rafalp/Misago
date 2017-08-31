@@ -4,7 +4,6 @@ import ajax from 'misago/services/ajax';
 import snackbar from 'misago/services/snackbar';
 import misago from 'misago';
 import cleanResults from './clean-results';
-import Input from './input';
 import Dropdown from './dropdown';
 
 export default class extends React.Component {
@@ -31,8 +30,10 @@ export default class extends React.Component {
     document.removeEventListener('keydown', this.onEscape);
   }
 
-  onFocus = (ev) => {
-    this.setState({ isOpen: true });
+  onToggle = (ev) => {
+    this.setState((prevState, props) => {
+      return { isOpen: !prevState.isOpen };
+    });
   };
 
   onDocumentMouseDown = (ev) => {
@@ -109,15 +110,21 @@ export default class extends React.Component {
     return (
       <div className="navbar-form" ref={(container) => this.container = container}>
         <div className={className}>
-          <div className="form-group">
-            <Input
-              value={this.state.query}
-              onChange={this.onChange}
-              onFocus={this.onFocus}
-            />
-          </div>
+          <a
+            aria-haspopup="true"
+            aria-expanded="false"
+            className="btn navbar-btn dropdown-toggle"
+            data-toggle="dropdown"
+            href={misago.get('SEARCH_URL')}
+            onClick={this.onToggle}
+          >
+            <i className="material-icon">
+              search
+            </i>
+          </a>
           <Dropdown
             isLoading={this.state.isLoading}
+            onChange={this.onChange}
             results={this.state.results}
             query={this.state.query}
           />

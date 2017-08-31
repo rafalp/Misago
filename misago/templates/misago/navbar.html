@@ -3,50 +3,43 @@
 
   <div class="container navbar-full navbar-desktop-nav">
     {% if misago_settings.forum_branding_display %}
-    <a href="{% url 'misago:index' %}" class="navbar-brand">
-      <img src="{% static 'misago/img/site-logo.png' %}" alt="">
-      {% if misago_settings.forum_branding_text %}
-        <span class="hidden-xs hidden-sm">{{ misago_settings.forum_branding_text}}</span>
-      {% endif %}
-    </a>
+      <a href="{% url 'misago:index' %}" class="navbar-brand">
+        <img src="{% static 'misago/img/site-logo.png' %}" alt="">
+        {% if misago_settings.forum_branding_text %}
+          <span class="hidden-xs hidden-sm">{{ misago_settings.forum_branding_text}}</span>
+        {% endif %}
+      </a>
     {% endif %}
 
     <ul class="nav navbar-nav">
       {% if THREADS_ON_INDEX %}
-      <li>
-        <a href="{% url 'misago:index' %}">
-          {% trans "Threads" %}
-        </a>
-      </li>
-      <li>
-        <a href="{% url 'misago:categories' %}">
-          {% trans "Categories" %}
-        </a>
-      </li>
+        <li>
+          <a href="{% url 'misago:index' %}">
+            {% trans "Threads" %}
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'misago:categories' %}">
+            {% trans "Categories" %}
+          </a>
+        </li>
       {% else %}
-      <li>
-        <a href="{% url 'misago:categories' %}">
-          {% trans "Categories" %}
-        </a>
-      </li>
-      <li>
-        <a href="{% url 'misago:threads' %}">
-          {% trans "Threads" %}
-        </a>
-      </li>
+        <li>
+          <a href="{% url 'misago:categories' %}">
+            {% trans "Categories" %}
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'misago:threads' %}">
+            {% trans "Threads" %}
+          </a>
+        </li>
       {% endif %}
       <li>
         <a href="{% url 'misago:users' %}">
           {% trans "Users" %}
         </a>
       </li>
-      {% if user.acl_cache.can_search %}
-      <li>
-        <a href="{% url 'misago:search' %}">
-          {% trans "Search" %}
-        </a>
-      </li>
-      {% endif %}
     </ul>
 
     <div id="user-menu-mount"></div>
