@@ -2,20 +2,15 @@
 import React from 'react';
 import { RESULT } from './constants';
 import DropdownMenu from './dropdown-menu';
+import Empty from './empty';
 import Loader from './loader';
-import Message from './message';
 import Result from './result';
 import flattenResults from './flatten-results';
-
-const MSG_START = gettext("To start search enter search query.");
-const MSG_EMPTY = gettext("Search returned no results.");
 
 export default function({ isLoading, onChange, results, query }) {
   if (!query.trim().length) {
     return (
-      <DropdownMenu onChange={onChange} query={query}>
-        <Message message={MSG_START} />
-      </DropdownMenu>
+      <DropdownMenu onChange={onChange} query={query} />
     );
   }
 
@@ -56,7 +51,7 @@ export default function({ isLoading, onChange, results, query }) {
 
   return (
     <DropdownMenu onChange={onChange} query={query}>
-      <Message message={MSG_EMPTY} />
+      <Empty />
     </DropdownMenu>
   );
 }

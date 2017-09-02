@@ -21,50 +21,52 @@
     }
   }
 
-  // Force search widths
-  .navbar-search {
-    width: 300px;
+  .navbar-icon {
+    display: block;
+    height: @navbar-height;
+    padding: @nav-link-padding;
+    padding-top: (@navbar-height - 28px) / 2;
+    padding-bottom: (@navbar-height - 28px) / 2;
+    position: relative;
 
-    @media (max-width: @screen-sm-max) {
-      width: 150px;
+    color: @navbar-default-link-color;
+
+    &:hover, &:focus {
+      color: @navbar-default-link-hover-color;
+      background-color: @navbar-default-link-hover-bg;
     }
 
-    .form-group {
-      display: block;
+    .material-icon {
+      width: 28px;
+      height: 28px;
+
+      font-size: 28px;
+      line-height: 28px;
     }
 
-    .form-control {
-      width: 100%;
+    .badge {
+      background-color: @brand-danger;
+      position: absolute;
+
+      top: 6px;
+      right: 6px;
+
+      font-size: 9px;
     }
   }
+
+  .open .navbar-icon {
+    &, &:hover, &:focus {
+      background-color: @navbar-default-link-active-bg;
+      
+      color: @navbar-default-link-active-color;
+    }
+  }
+
 
   // Pull Guest and User menus to right
   .nav-guest, .nav-user {
     float: right;
-
-    .navbar-notification {
-      padding-top: (@navbar-height - 28px) / 2;
-      padding-bottom: (@navbar-height - 28px) / 2;
-      position: relative;
-
-      .material-icon {
-        width: 28px;
-        height: 28px;
-
-        font-size: 28px;
-        line-height: 28px;
-      }
-
-      .badge {
-        background-color: @brand-danger;
-        position: absolute;
-
-        top: 6px;
-        right: 6px;
-
-        font-size: 9px;
-      }
-    }
 
     .navbar-btn {
       margin-left: @navbar-padding-horizontal;

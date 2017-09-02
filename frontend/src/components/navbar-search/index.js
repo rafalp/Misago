@@ -32,6 +32,12 @@ export default class extends React.Component {
 
   onToggle = (ev) => {
     this.setState((prevState, props) => {
+      if (!prevState.isOpen) {
+        window.setTimeout(() => {
+          this.container.querySelector('input').focus();
+        }, 100);
+      }
+
       return { isOpen: !prevState.isOpen };
     });
   };
@@ -104,31 +110,29 @@ export default class extends React.Component {
   }
 
   render() {
-    let className = "navbar-right navbar-search dropdown";
+    let className = "navbar-search dropdown";
     if (this.state.isOpen) className += " open";
 
     return (
-      <div className="navbar-form" ref={(container) => this.container = container}>
-        <div className={className}>
-          <a
-            aria-haspopup="true"
-            aria-expanded="false"
-            className="btn navbar-btn dropdown-toggle"
-            data-toggle="dropdown"
-            href={misago.get('SEARCH_URL')}
-            onClick={this.onToggle}
-          >
-            <i className="material-icon">
-              search
-            </i>
-          </a>
-          <Dropdown
-            isLoading={this.state.isLoading}
-            onChange={this.onChange}
-            results={this.state.results}
-            query={this.state.query}
-          />
-        </div>
+      <div className={className} ref={(container) => this.container = container}>
+        <a
+          aria-haspopup="true"
+          aria-expanded="false"
+          className="navbar-icon"
+          data-toggle="dropdown"
+          href={misago.get('SEARCH_URL')}
+          onClick={this.onToggle}
+        >
+          <i className="material-icon">
+            search
+          </i>
+        </a>
+        <Dropdown
+          isLoading={this.state.isLoading}
+          onChange={this.onChange}
+          results={this.state.results}
+          query={this.state.query}
+        />
       </div>
     );
   }

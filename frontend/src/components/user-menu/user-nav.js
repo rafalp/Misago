@@ -151,7 +151,7 @@ export function UserPrivateThreadsLink({ user }) {
   return (
     <li>
       <a
-        className="navbar-notification"
+        className="navbar-icon"
         href={misago.get('PRIVATE_THREADS_URL')}
         title={gettext("You have unread private threads.")}>
         <span className="material-icon">

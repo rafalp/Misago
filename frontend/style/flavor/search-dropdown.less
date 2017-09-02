@@ -2,17 +2,25 @@
 // Search Dropdown
 // --------------------------------------------------
 
+
+.dropdown-search-results {
+  border-radius: 0px 0px @border-radius-base @border-radius-base;
+}
+
 .dropdown-search-message {
+  border-top: 1px solid @gray-lighter;
   padding: @padding-large-vertical @padding-large-horizontal;
 
   color: @text-muted;
 }
 
 .dropdown-search-loader {
+  border-top: 1px solid @gray-lighter;
   padding: @padding-large-vertical @padding-large-horizontal;
 }
 
 .dropdown-search-header {
+  border-top: 1px solid @gray-lighter;
   padding: 8px 20px;
 
   color: @text-muted;
@@ -52,11 +60,9 @@
 
 // footer
 .dropdown-search-footer {
-  border-bottom: 1px solid @gray-lighter;
   padding-bottom: @padding-small-vertical;
 
   &:last-child {
-    border-bottom: none;
     padding-bottom: 0px;
   }
 }
