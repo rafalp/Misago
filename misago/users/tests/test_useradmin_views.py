@@ -133,6 +133,80 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Ban.objects.count(), 24)
 
+    def test_mass_delete_accounts_self(self):
+        """its impossible to delete oneself"""
+        user_pks = [self.user.pk]
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={
+                'action': 'delete_accounts',
+                'selected_items': user_pks,
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(response['location'])
+        self.assertContains(response, "delete yourself")
+
+    def test_mass_delete_accounts_admin(self):
+        """its impossible to delete admin account"""
+        user_pks = []
+        for i in range(10):
+            test_user = UserModel.objects.create_user(
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+            )
+            user_pks.append(test_user.pk)
+
+            test_user.is_staff = True
+            test_user.save()
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={
+                'action': 'delete_accounts',
+                'selected_items': user_pks,
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(response['location'])
+        self.assertContains(response, "is admin and can")
+        self.assertContains(response, "be deleted.")
+
+        self.assertEqual(UserModel.objects.count(), 11)
+
+    def test_mass_delete_accounts_superadmin(self):
+        """its impossible to delete superadmin account"""
+        user_pks = []
+        for i in range(10):
+            test_user = UserModel.objects.create_user(
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+            )
+            user_pks.append(test_user.pk)
+
+            test_user.is_superuser = True
+            test_user.save()
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={
+                'action': 'delete_accounts',
+                'selected_items': user_pks,
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(response['location'])
+        self.assertContains(response, "is admin and can")
+        self.assertContains(response, "be deleted.")
+
+        self.assertEqual(UserModel.objects.count(), 11)
+
     def test_mass_delete_accounts(self):
         """users list deletes users"""
         user_pks = []
@@ -155,6 +229,80 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(UserModel.objects.count(), 1)
 
+    def test_mass_delete_all_self(self):
+        """its impossible to delete oneself with content"""
+        user_pks = [self.user.pk]
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={
+                'action': 'delete_all',
+                'selected_items': user_pks,
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(response['location'])
+        self.assertContains(response, "delete yourself")
+
+    def test_mass_delete_all_admin(self):
+        """its impossible to delete admin account and content"""
+        user_pks = []
+        for i in range(10):
+            test_user = UserModel.objects.create_user(
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+            )
+            user_pks.append(test_user.pk)
+
+            test_user.is_staff = True
+            test_user.save()
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={
+                'action': 'delete_all',
+                'selected_items': user_pks,
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(response['location'])
+        self.assertContains(response, "is admin and can")
+        self.assertContains(response, "be deleted.")
+
+        self.assertEqual(UserModel.objects.count(), 11)
+
+    def test_mass_delete_all_superadmin(self):
+        """its impossible to delete superadmin account and content"""
+        user_pks = []
+        for i in range(10):
+            test_user = UserModel.objects.create_user(
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+            )
+            user_pks.append(test_user.pk)
+
+            test_user.is_superuser = True
+            test_user.save()
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={
+                'action': 'delete_all',
+                'selected_items': user_pks,
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(response['location'])
+        self.assertContains(response, "is admin and can")
+        self.assertContains(response, "be deleted.")
+
+        self.assertEqual(UserModel.objects.count(), 11)
+
     def test_mass_delete_all(self):
         """users list deletes users and their content"""
         user_pks = []
@@ -170,12 +318,12 @@ class UserAdminViewsTests(AdminTestCase):
         response = self.client.post(
             reverse('misago:admin:users:accounts:index'),
             data={
-                'action': 'delete_accounts',
+                'action': 'delete_all',
                 'selected_items': user_pks,
             }
         )
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(UserModel.objects.count(), 1)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(UserModel.objects.count(), 11) # no user has been deleted
 
     def test_new_view(self):
         """new user view creates account"""
@@ -658,6 +806,56 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertTrue(updated_user.is_active)
         self.assertFalse(updated_user.is_active_staff_message)
 
+    def test_delete_threads_view_self(self):
+        """delete user threads view validates if user deletes self"""
+        test_link = reverse(
+            'misago:admin:users:accounts:delete-threads', kwargs={
+                'pk': self.user.pk,
+            }
+        )
+
+        response = self.client.post(test_link, **self.AJAX_HEADER)
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(reverse('misago:admin:index'))
+        self.assertContains(response, "delete yourself");
+
+    def test_delete_threads_view_staff(self):
+        """delete user threads view validates if user deletes staff"""
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user.is_staff = True
+        test_user.save()
+
+        test_link = reverse(
+            'misago:admin:users:accounts:delete-threads', kwargs={
+                'pk': test_user.pk,
+            }
+        )
+
+        response = self.client.post(test_link, **self.AJAX_HEADER)
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(reverse('misago:admin:index'))
+        self.assertContains(response, "is admin and");
+
+    def test_delete_threads_view_superuser(self):
+        """delete user threads view validates if user deletes superuser"""
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user.is_superuser = True
+        test_user.save()
+
+        test_link = reverse(
+            'misago:admin:users:accounts:delete-threads', kwargs={
+                'pk': test_user.pk,
+            }
+        )
+
+        response = self.client.post(test_link, **self.AJAX_HEADER)
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(reverse('misago:admin:index'))
+        self.assertContains(response, "is admin and");
+
     def test_delete_threads_view(self):
         """delete user threads view deletes threads"""
         test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
@@ -683,6 +881,56 @@ class UserAdminViewsTests(AdminTestCase):
         response_dict = response.json()
         self.assertEqual(response_dict['deleted_count'], 0)
         self.assertTrue(response_dict['is_completed'])
+
+    def test_delete_posts_view_self(self):
+        """delete user posts view validates if user deletes self"""
+        test_link = reverse(
+            'misago:admin:users:accounts:delete-posts', kwargs={
+                'pk': self.user.pk,
+            }
+        )
+
+        response = self.client.post(test_link, **self.AJAX_HEADER)
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(reverse('misago:admin:index'))
+        self.assertContains(response, "delete yourself");
+
+    def test_delete_posts_view_staff(self):
+        """delete user posts view validates if user deletes staff"""
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user.is_staff = True
+        test_user.save()
+
+        test_link = reverse(
+            'misago:admin:users:accounts:delete-posts', kwargs={
+                'pk': test_user.pk,
+            }
+        )
+
+        response = self.client.post(test_link, **self.AJAX_HEADER)
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(reverse('misago:admin:index'))
+        self.assertContains(response, "is admin and");
+
+    def test_delete_posts_view_superuser(self):
+        """delete user posts view validates if user deletes superuser"""
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user.is_superuser = True
+        test_user.save()
+
+        test_link = reverse(
+            'misago:admin:users:accounts:delete-posts', kwargs={
+                'pk': test_user.pk,
+            }
+        )
+
+        response = self.client.post(test_link, **self.AJAX_HEADER)
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(reverse('misago:admin:index'))
+        self.assertContains(response, "is admin and");
 
     def test_delete_posts_view(self):
         """delete user posts view deletes posts"""
@@ -710,6 +958,56 @@ class UserAdminViewsTests(AdminTestCase):
         response_dict = response.json()
         self.assertEqual(response_dict['deleted_count'], 0)
         self.assertTrue(response_dict['is_completed'])
+
+    def test_delete_account_view_self(self):
+        """delete user account view validates if user deletes self"""
+        test_link = reverse(
+            'misago:admin:users:accounts:delete-account', kwargs={
+                'pk': self.user.pk,
+            }
+        )
+
+        response = self.client.post(test_link, **self.AJAX_HEADER)
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(reverse('misago:admin:index'))
+        self.assertContains(response, "delete yourself");
+
+    def test_delete_account_view_staff(self):
+        """delete user account view validates if user deletes staff"""
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user.is_staff = True
+        test_user.save()
+
+        test_link = reverse(
+            'misago:admin:users:accounts:delete-account', kwargs={
+                'pk': test_user.pk,
+            }
+        )
+
+        response = self.client.post(test_link, **self.AJAX_HEADER)
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(reverse('misago:admin:index'))
+        self.assertContains(response, "is admin and");
+
+    def test_delete_account_view_superuser(self):
+        """delete user account view validates if user deletes superuser"""
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user.is_superuser = True
+        test_user.save()
+
+        test_link = reverse(
+            'misago:admin:users:accounts:delete-account', kwargs={
+                'pk': test_user.pk,
+            }
+        )
+
+        response = self.client.post(test_link, **self.AJAX_HEADER)
+        self.assertEqual(response.status_code, 302)
+
+        response = self.client.get(reverse('misago:admin:index'))
+        self.assertContains(response, "is admin and");
 
     def test_delete_account_view(self):
         """delete user account view deletes user account"""

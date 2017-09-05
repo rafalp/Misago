@@ -56,8 +56,8 @@
 
     DeletionController = function($e, on_complete) {
 
-      this.lang_deleting = "{% trans "deleting..." %}";
-      this.done = "{% trans "done" %}";
+      this.lang_deleting = "{% trans 'deleting...' %}";
+      this.done = "{% trans 'done' %}";
 
       this.$e = $e;
       this.on_complete = on_complete;
@@ -144,7 +144,7 @@
         var $form = $('.user').first().parents('form');
         var $btn = $form.find('.btn-default');
 
-        $btn.text("{% trans "Return to list of users" %}");
+        $btn.text("{% trans 'Return to list of users' %}");
         $btn.attr('class', 'btn btn-success');
 
       }

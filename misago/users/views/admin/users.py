@@ -197,6 +197,8 @@ class UsersList(UserAdmin, generic.ListView):
 
     def action_delete_accounts(self, request, users):
         for user in users:
+            if user == request.user:
+                raise generic.MassActionError(_("You can't delete yourself."))
             if user.is_staff or user.is_superuser:
                 message = _("%(user)s is admin and can't be deleted.") % {'user': user.username}
                 raise generic.MassActionError(message)
@@ -209,19 +211,18 @@ class UsersList(UserAdmin, generic.ListView):
 
     def action_delete_all(self, request, users):
         for user in users:
+            if user == request.user:
+                raise generic.MassActionError(_("You can't delete yourself."))
             if user.is_staff or user.is_superuser:
                 message = _("%(user)s is admin and can't be deleted.") % {'user': user.username}
                 raise generic.MassActionError(message)
 
-        for user in users:
-            user.delete(delete_content=True)
-
-        messages.success(request, _("Selected users and their content has been deleted."))
-
         return self.render(
-            request, template='misago/admin/users/delete.html', context={
+            request,
+            template='misago/admin/users/delete.html',
+            context={
                 'users': users,
-            }
+            },
         )
 
 
@@ -324,7 +325,10 @@ class DeletionStep(UserAdmin, generic.ButtonView):
 
     def check_permissions(self, request, target):
         if not request.is_ajax():
-            return _("This action can't be accessed directly")
+            return _("This action can't be accessed directly.")
+
+        if target == request.user:
+            return _("You can't delete yourself.")
 
         if target.is_staff or target.is_superuser:
             return _("%(user)s is admin and can't be deleted.") % {'user': target.username}
