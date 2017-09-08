@@ -1,4 +1,4 @@
-from django.db.transaction import atomic
+from django.db import transaction
 from django.utils import timezone
 
 from misago.threads.events import record_event
@@ -20,7 +20,7 @@ __all__ = [
 ]
 
 
-@atomic
+@transaction.atomic
 def change_thread_title(request, thread, new_title):
     if thread.title != new_title:
         old_title = thread.title
@@ -41,7 +41,7 @@ def change_thread_title(request, thread, new_title):
         return False
 
 
-@atomic
+@transaction.atomic
 def pin_thread_globally(request, thread):
     if thread.weight != 2:
         thread.weight = 2
@@ -51,7 +51,7 @@ def pin_thread_globally(request, thread):
         return False
 
 
-@atomic
+@transaction.atomic
 def pin_thread_locally(request, thread):
     if thread.weight != 1:
         thread.weight = 1
@@ -61,7 +61,7 @@ def pin_thread_locally(request, thread):
         return False
 
 
-@atomic
+@transaction.atomic
 def unpin_thread(request, thread):
     if thread.weight:
         thread.weight = 0
@@ -71,7 +71,7 @@ def unpin_thread(request, thread):
         return False
 
 
-@atomic
+@transaction.atomic
 def move_thread(request, thread, new_category):
     if thread.category_id != new_category.pk:
         from_category = thread.category
@@ -90,7 +90,7 @@ def move_thread(request, thread, new_category):
         return False
 
 
-@atomic
+@transaction.atomic
 def merge_thread(request, thread, other_thread):
     thread.merge(other_thread)
     other_thread.delete()
@@ -101,7 +101,7 @@ def merge_thread(request, thread, other_thread):
     return True
 
 
-@atomic
+@transaction.atomic
 def approve_thread(request, thread):
     if thread.is_unapproved:
         thread.first_post.is_unapproved = False
@@ -118,7 +118,7 @@ def approve_thread(request, thread):
         return False
 
 
-@atomic
+@transaction.atomic
 def open_thread(request, thread):
     if thread.is_closed:
         thread.is_closed = False
@@ -128,7 +128,7 @@ def open_thread(request, thread):
         return False
 
 
-@atomic
+@transaction.atomic
 def close_thread(request, thread):
     if not thread.is_closed:
         thread.is_closed = True
@@ -138,7 +138,7 @@ def close_thread(request, thread):
         return False
 
 
-@atomic
+@transaction.atomic
 def unhide_thread(request, thread):
     if thread.is_hidden:
         thread.first_post.is_hidden = False
@@ -156,7 +156,7 @@ def unhide_thread(request, thread):
         return False
 
 
-@atomic
+@transaction.atomic
 def hide_thread(request, thread):
     if not thread.is_hidden:
         thread.first_post.is_hidden = True
@@ -186,7 +186,7 @@ def hide_thread(request, thread):
         return False
 
 
-@atomic
+@transaction.atomic
 def delete_thread(request, thread):
     thread.delete()
 

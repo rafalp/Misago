@@ -1,4 +1,4 @@
-from django.db.transaction import atomic
+from django.db import transaction
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
@@ -78,7 +78,7 @@ def hide_post(user, post):
         return False
 
 
-@atomic
+@transaction.atomic
 def delete_post(user, post):
     if post.is_first_post:
         raise ModerationError(_("You can't delete original post without deleting thread."))

@@ -1,4 +1,4 @@
-from django.db.transaction import atomic
+from django.db import transaction
 from django.utils import timezone
 
 from . import categoriestracker, signals
@@ -136,7 +136,7 @@ def read_thread(user, thread, last_read_reply):
             sync_record(user, thread, last_read_reply)
 
 
-@atomic
+@transaction.atomic
 def sync_record(user, thread, last_read_reply):
     notification_triggers = ['read_thread_%s' % thread.pk]
 
