@@ -2,12 +2,12 @@
 host = https://www.transifex.com
 lang_map = sr@latin:sr_Latn, zh_CN:zh_Hans, zh_TW:zh_Hant
 
-[misago.djangopo]
+[misago.django]
 file_filter = misago/locale/<lang>/LC_MESSAGES/django.po
 source_file = misago/locale/en/LC_MESSAGES/django.po
 source_lang = en
 
-[misago.djangojspo]
+[misago.js-frontend]
 file_filter = misago/locale/<lang>/LC_MESSAGES/djangojs.po
 source_file = misago/locale/en/LC_MESSAGES/djangojs.po
 source_lang = en
