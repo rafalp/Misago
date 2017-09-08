@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-12 18:40+0200\n"
+"POT-Creation-Date: 2017-09-08 22:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: mayne <dreama9ain@gmail.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
@@ -680,15 +680,15 @@ msgstr "%(title)s 说："
 msgid "Quoted message:"
 msgstr "引用消息"
 
-#: project_template/project_name/settings.py:346
+#: project_template/project_name/settings.py:347
 msgid "Personal"
 msgstr "个人"
 
-#: project_template/project_name/settings.py:355
+#: project_template/project_name/settings.py:356
 msgid "Contact"
 msgstr "联系"
 
-#: project_template/project_name/settings.py:363 users/models/ban.py:77
+#: project_template/project_name/settings.py:364 users/models/ban.py:77
 msgid "IP address"
 msgstr "IP地址"
 
@@ -696,8 +696,8 @@ msgstr "IP地址"
 msgid "You don't have permission to search site."
 msgstr "您没有搜索全站的权限。"
 
-#: search/permissions.py:10 templates/misago/navbar.html:46
-#: templates/misago/search.html:21 templates/misago/search.html:32
+#: search/permissions.py:10 templates/misago/search.html:21
+#: templates/misago/search.html:32
 msgid "Search"
 msgstr "搜索"
 
@@ -3395,58 +3395,58 @@ msgid ""
 "threads."
 msgstr "允许用户阅读，回复，编辑和删除被报告的私人主题帖中的内容。"
 
-#: threads/permissions/privatethreads.py:175
+#: threads/permissions/privatethreads.py:176
 msgid "You have to sign in to use private threads."
 msgstr "您必须登录才能使用私人主题帖。"
 
-#: threads/permissions/privatethreads.py:177
+#: threads/permissions/privatethreads.py:178
 msgid "You can't use private threads."
 msgstr "您不能使用私人主题帖。"
 
-#: threads/permissions/privatethreads.py:203
+#: threads/permissions/privatethreads.py:204
 msgid "Only thread owner and moderators can change threads owners."
 msgstr "只有主题帖所有人和版主可以修改主题帖所有人"
 
-#: threads/permissions/privatethreads.py:206
+#: threads/permissions/privatethreads.py:207
 msgid "Only moderators can change closed threads owners."
 msgstr "只有版主可以改变关闭的主题帖的所有人"
 
-#: threads/permissions/privatethreads.py:217
+#: threads/permissions/privatethreads.py:218
 msgid "You have to be thread owner to add new participants to it."
 msgstr "要加入新的参与者，您必须是主题帖的所有人"
 
-#: threads/permissions/privatethreads.py:220
+#: threads/permissions/privatethreads.py:221
 msgid "Only moderators can add participants to closed threads."
 msgstr "只有版主可以向已关闭的主题帖中添加参与者。"
 
-#: threads/permissions/privatethreads.py:226
+#: threads/permissions/privatethreads.py:227
 msgid "You can't add any more new users to this thread."
 msgstr "您不能再向此主题帖中添加任何新用户。"
 
-#: threads/permissions/privatethreads.py:240
+#: threads/permissions/privatethreads.py:241
 msgid "Only moderators can remove participants from closed threads."
 msgstr "只有版主可以从关闭的主题帖中删除参与者。"
 
-#: threads/permissions/privatethreads.py:243
+#: threads/permissions/privatethreads.py:244
 msgid "You have to be thread owner to remove participants from it."
 msgstr "您必须是主题帖所有者才能从中删除参与者。"
 
-#: threads/permissions/privatethreads.py:254
+#: threads/permissions/privatethreads.py:255
 #, python-format
 msgid "%(user)s can't participate in private threads."
 msgstr "%(user)s不能参与私人主题帖。"
 
-#: threads/permissions/privatethreads.py:261
+#: threads/permissions/privatethreads.py:262
 #, python-format
 msgid "%(user)s is blocking you."
 msgstr "%(user)s拉黑了您"
 
-#: threads/permissions/privatethreads.py:265
+#: threads/permissions/privatethreads.py:266
 #, python-format
 msgid "%(user)s is not allowing invitations to private threads."
 msgstr "%(user)s不允许邀请到私人主题帖。"
 
-#: threads/permissions/privatethreads.py:269
+#: threads/permissions/privatethreads.py:270
 #, python-format
 msgid "%(user)s limits invitations to private threads to followed users."
 msgstr "%(user)s仅限关注用户发出私人主题帖的参与邀请。"
@@ -5426,7 +5426,8 @@ msgstr "可删除账号的最大帖子数"
 msgid "You can't delete users."
 msgstr "您无法删除用户。"
 
-#: users/permissions/delete.py:78
+#: users/permissions/delete.py:78 users/views/admin/users.py:201
+#: users/views/admin/users.py:215 users/views/admin/users.py:331
 msgid "You can't delete yourself."
 msgstr "您不能删除自己。"
 
@@ -5935,33 +5936,29 @@ msgstr "%(user)s是超级管理员，不能被封禁。"
 msgid "Selected users have been banned."
 msgstr "选中的用户已经被封禁。"
 
-#: users/views/admin/users.py:201 users/views/admin/users.py:213
-#: users/views/admin/users.py:330
+#: users/views/admin/users.py:203 users/views/admin/users.py:217
+#: users/views/admin/users.py:334
 #, python-format
 msgid "%(user)s is admin and can't be deleted."
 msgstr "%(user)s是管理员，不能被删除。"
 
-#: users/views/admin/users.py:207
+#: users/views/admin/users.py:209
 msgid "Selected users have been deleted."
 msgstr "选中的用户已经被删除"
 
-#: users/views/admin/users.py:219
-msgid "Selected users and their content has been deleted."
-msgstr "选定的用户和他们的内容已被删除。"
-
-#: users/views/admin/users.py:231
+#: users/views/admin/users.py:232
 #, python-format
 msgid "New user \"%(user)s\" has been registered."
 msgstr "新用户\"%(user)s\"已经被注册。"
 
-#: users/views/admin/users.py:260
+#: users/views/admin/users.py:261
 #, python-format
 msgid "User \"%(user)s\" has been edited."
 msgstr "用户\"%(user)s\"已经被编辑。"
 
-#: users/views/admin/users.py:327
-msgid "This action can't be accessed directly"
-msgstr "此操作不能直接访问"
+#: users/views/admin/users.py:328
+msgid "This action can't be accessed directly."
+msgstr ""
 
 #: users/views/forgottenpassword.py:38
 #, python-format
