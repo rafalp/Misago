@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.shortcuts import get_object_or_404
 
 from misago.categories import THREADS_ROOT_NAME
@@ -8,6 +9,7 @@ from misago.readtracker.categoriestracker import read_category
 from misago.threads.threadtypes import trees_map
 
 
+@transaction.atomic
 def read_threads(user, pk):
     user.lock()
 
@@ -27,7 +29,10 @@ def read_threads(user, pk):
     read_category(user, category)
 
 
+@transaction.atomic
 def read_private_threads(user):
+    user.lock()
+
     category = Category.objects.private_threads()
     read_category(user, category)
 

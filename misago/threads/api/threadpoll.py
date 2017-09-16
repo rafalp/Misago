@@ -45,8 +45,6 @@ class ViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     def create(self, request, thread_pk):
-        request.user.lock()
-
         thread = self.get_thread(request, thread_pk)
         allow_start_poll(request.user, thread)
 
@@ -82,8 +80,6 @@ class ViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     def update(self, request, thread_pk, pk=None):
-        request.user.lock()
-
         thread = self.get_thread(request, thread_pk)
         instance = self.get_poll(thread, pk)
 
@@ -102,8 +98,6 @@ class ViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     def delete(self, request, thread_pk, pk=None):
-        request.user.lock()
-
         thread = self.get_thread(request, thread_pk)
         instance = self.get_poll(thread, pk)
 
@@ -127,8 +121,6 @@ class ViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     def post_votes(self, request, thread_pk, pk=None):
-        request.user.lock()
-
         thread = self.get_thread(request, thread_pk)
         instance = self.get_poll(thread, pk)
 

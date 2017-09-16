@@ -48,7 +48,6 @@ class ViewSet(viewsets.ViewSet):
 
     @transaction.atomic
     def partial_update(self, request, pk=None):
-        request.user.lock()
         thread = self.get_thread(request, pk).unwrap()
         return thread_patch_endpoint(request, thread)
 
@@ -111,7 +110,6 @@ class ThreadViewSet(ViewSet):
         return thread_start_editor(request)
 
     @list_route(methods=['post'])
-    @transaction.atomic
     def read(self, request):
         read_threads(request.user, request.GET.get('category'))
         return Response({})
@@ -157,7 +155,6 @@ class PrivateThreadViewSet(ViewSet):
             return Response(posting.errors, status=400)
 
     @list_route(methods=['post'])
-    @transaction.atomic
     def read(self, request):
         allow_use_private_threads(request.user)
         read_private_threads(request.user)
