@@ -74,13 +74,29 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
     def test_empty_data(self):
         """api handles empty data"""
         response = self.client.post(
-            self.api_link,
-            json.dumps({}),
-            content_type="application/json",
+            self.api_link, json.dumps({}), content_type="application/json"
         )
         self.assertContains(
             response, "You have to select at least two posts to merge.", status_code=400
         )
+
+    def test_invalid_data(self):
+        """api handles post that is invalid type"""
+        self.override_acl()
+        response = self.client.post(self.api_link, '[]', content_type="application/json")
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
+
+        self.override_acl()
+        response = self.client.post(self.api_link, '123', content_type="application/json")
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
+
+        self.override_acl()
+        response = self.client.post(self.api_link, '"string"', content_type="application/json")
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
+
+        self.override_acl()
+        response = self.client.post(self.api_link, 'malformed', content_type="application/json")
+        self.assertContains(response, "JSON parse error", status_code=400)
 
     def test_no_posts_ids(self):
         """api rejects no posts ids"""
@@ -105,7 +121,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             content_type="application/json",
         )
         self.assertContains(
-            response, "One or more post ids received were invalid.", status_code=400
+            response, "Expected a list of items but got type", status_code=400
         )
 
     def test_invalid_posts_ids(self):

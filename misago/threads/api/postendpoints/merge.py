@@ -8,7 +8,7 @@ from misago.acl import add_acl
 from misago.conf import settings
 from misago.core.utils import clean_ids_list
 from misago.threads.permissions import allow_merge_post, exclude_invisible_posts
-from misago.threads.serializers import PostSerializer
+from misago.threads.serializers import MergePostsSerializer, PostSerializer
 
 
 MERGE_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
@@ -18,12 +18,25 @@ def posts_merge_endpoint(request, thread):
     if not thread.acl['can_merge_posts']:
         raise PermissionDenied(_("You can't merge posts in this thread."))
 
-    try:
-        posts = clean_posts_for_merge(request, thread)
-    except PermissionDenied as e:
-        return Response({'detail': six.text_type(e)}, status=400)
+    serializer = MergePostsSerializer(
+        data=request.data,
+        context={
+            'thread': thread,
+            'user': request.user,
+        },
+    )
 
+    if not serializer.is_valid():
+        return Response(
+            {
+                'detail': list(serializer.errors.values())[0][0],
+            },
+            status=400,
+        )
+
+    posts = serializer.posts_cache
     first_post, merged_posts = posts[0], posts[1:]
+
     for post in merged_posts:
         post.merge(first_post)
         post.delete()

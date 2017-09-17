@@ -1,17 +1,89 @@
 from rest_framework import serializers
 
-from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext as _
+from django.core.exceptions import PermissionDenied, ValidationError
+from django.utils import six
+from django.utils.translation import ugettext as _, ugettext_lazy, ungettext
 
 from misago.acl import add_acl
+from misago.conf import settings
 from misago.threads.models import Thread
-from misago.threads.permissions import can_start_thread
+from misago.threads.permissions import allow_merge_post, can_start_thread, exclude_invisible_posts
 from misago.threads.validators import validate_category, validate_title
 
 
+POSTS_MERGE_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
+
+
 __all__ = [
+    'MergePostsSerializer',
     'NewThreadSerializer',
 ]
+
+
+class MergePostsSerializer(serializers.Serializer):
+    posts = serializers.ListField(
+        child=serializers.IntegerField(
+            error_messages={
+                'invalid': ugettext_lazy("One or more post ids received were invalid."),
+            },
+        ),
+        error_messages={
+            'required': ugettext_lazy("You have to select at least two posts to merge."),
+        },
+    )
+
+    def validate_posts(self, data):
+        data = list(set(data))
+
+        if len(data) < 2:
+            raise serializers.ValidationError(_("You have to select at least two posts to merge."))
+        if len(data) > POSTS_MERGE_LIMIT:
+            message = ungettext(
+                "No more than %(limit)s post can be merged at single time.",
+                "No more than %(limit)s posts can be merged at single time.",
+                POSTS_MERGE_LIMIT,
+            )
+            raise serializers.ValidationError(message % {'limit': POSTS_MERGE_LIMIT})
+
+        user = self.context['user']
+        thread = self.context['thread']
+
+        posts_queryset = exclude_invisible_posts(user, thread.category, thread.post_set)
+        posts_queryset = posts_queryset.filter(id__in=data).order_by('id')
+
+        posts = []
+        for post in posts_queryset:
+            post.category = thread.category
+            post.thread = thread
+
+            try:
+                allow_merge_post(user, post)
+            except PermissionDenied as e:
+                raise serializers.ValidationError(six.text_type(e))
+
+            if not posts:
+                posts.append(post)
+            else:
+                authorship_error = _("Posts made by different users can't be merged.")
+                if posts[0].poster_id:
+                    if post.poster_id != posts[0].poster_id:
+                        raise serializers.ValidationError(authorship_error)
+                else:
+                    if post.poster_id or post.poster_name != posts[0].poster_name:
+                        raise serializers.ValidationError(authorship_error)
+
+                if posts[0].pk != thread.first_post_id:
+                    if (posts[0].is_hidden != post.is_hidden or
+                            posts[0].is_unapproved != post.is_unapproved):
+                        raise serializers.ValidationError(_("Posts with different visibility can't be merged."))
+
+                posts.append(post)
+
+        if len(posts) != len(data):
+            raise serializers.ValidationError(_("One or more posts to merge could not be found."))
+
+        self.posts_cache = posts
+        return data
 
 
 class NewThreadSerializer(serializers.Serializer):
