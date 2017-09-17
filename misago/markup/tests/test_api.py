@@ -24,6 +24,20 @@ class ParseMarkupApiTests(AuthenticatedUserTestCase):
         response = self.client.post(self.api_link)
         self.assertContains(response, "You have to enter a message.", status_code=400)
 
+    def test_invalid_data(self):
+        """api handles post that is invalid type"""
+        response = self.client.post(self.api_link, '[]', content_type="application/json")
+        self.assertContains(response, "Invalid data. Expected a dictionary, but got list.", status_code=400)
+
+        response = self.client.post(self.api_link, '123', content_type="application/json")
+        self.assertContains(response, "Invalid data. Expected a dictionary, but got int.", status_code=400)
+
+        response = self.client.post(self.api_link, '"string"', content_type="application/json")
+        self.assertContains(response, "Invalid data. Expected a dictionary, but got unicode.", status_code=400)
+
+        response = self.client.post(self.api_link, 'malformed', content_type="application/json")
+        self.assertContains(response, "JSON parse error - No JSON object could be decoded", status_code=400)
+
     def test_empty_post(self):
         """api handles empty post"""
         response = self.client.post(self.api_link, {'post': ''})

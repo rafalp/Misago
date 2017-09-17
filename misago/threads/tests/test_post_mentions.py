@@ -41,11 +41,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
         override_acl(self.user, new_acl)
 
-    def put(
-            self,
-            url,
-            data=None,
-    ):
+    def put(self, url, data=None):
         content = encode_multipart(BOUNDARY, data or {})
         return self.client.put(url, content, content_type=MULTIPART_CONTENT)
 
