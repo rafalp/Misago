@@ -36,7 +36,7 @@ class ParseMarkupApiTests(AuthenticatedUserTestCase):
         self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
 
         response = self.client.post(self.api_link, 'malformed', content_type="application/json")
-        self.assertContains(response, "JSON parse error - No JSON object could be decoded", status_code=400)
+        self.assertContains(response, "JSON parse error", status_code=400)
 
     def test_empty_post(self):
         """api handles empty post"""

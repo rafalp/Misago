@@ -188,14 +188,20 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         self.delete_user_votes()
 
         response = self.post(self.api_link)
-        self.assertContains(response, "You have to make a choice.", status_code=400)
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
-    def test_noninterable_vote(self):
-        """api validates if vote that user has made was iterable"""
+    def test_malformed_vote(self):
+        """api validates if vote that user has made was correctly structured"""
         self.delete_user_votes()
 
+        response = self.post(self.api_link, data={})
+        self.assertContains(response, "Expected a list of items", status_code=400)
+
+        response = self.post(self.api_link, data='hello')
+        self.assertContains(response, "Expected a list of items", status_code=400)
+
         response = self.post(self.api_link, data=123)
-        self.assertContains(response, "One or more of poll choices were invalid.", status_code=400)
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
     def test_invalid_choices(self):
         """api validates if vote that user has made overlaps with allowed votes"""
@@ -223,7 +229,7 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         self.delete_user_votes()
 
         response = self.post(self.api_link)
-        self.assertContains(response, "You have to make a choice.", status_code=400)
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
     def test_vote_in_closed_thread(self):
         """api validates is user has permission to vote poll in closed thread"""
@@ -240,7 +246,7 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         self.override_acl(category={'can_close_threads': 1})
 
         response = self.post(self.api_link)
-        self.assertContains(response, "You have to make a choice.", status_code=400)
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
     def test_vote_in_closed_category(self):
         """api validates is user has permission to vote poll in closed category"""
@@ -257,7 +263,7 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         self.override_acl(category={'can_close_threads': 1})
 
         response = self.post(self.api_link)
-        self.assertContains(response, "You have to make a choice.", status_code=400)
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
     def test_vote_in_finished_poll(self):
         """api valdiates if poll has finished before letting user to vote in it"""
@@ -274,7 +280,7 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         self.poll.save()
 
         response = self.post(self.api_link)
-        self.assertContains(response, "You have to make a choice.", status_code=400)
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
     def test_fresh_vote(self):
         """api handles first vote in poll"""

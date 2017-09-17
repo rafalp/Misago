@@ -2,14 +2,9 @@ from copy import deepcopy
 
 from rest_framework.response import Response
 
-from django.core.exceptions import ValidationError
-from django.utils import six
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
-
 from misago.acl import add_acl
 from misago.threads.permissions import allow_vote_poll
-from misago.threads.serializers import PollSerializer
+from misago.threads.serializers import PollSerializer, NewVoteSerializer
 
 
 def poll_vote_create(request, thread, poll):
@@ -17,13 +12,26 @@ def poll_vote_create(request, thread, poll):
 
     allow_vote_poll(request.user, poll)
 
-    try:
-        clean_votes = validate_votes(poll, request.data)
-    except ValidationError as e:
-        return Response({'detail': six.text_type(e)}, status=400)
+    serializer = NewVoteSerializer(
+        data={
+            'choices': request.data,
+        },
+        context={
+            'allowed_choices': poll.allowed_choices,
+            'choices': poll.choices,
+        },
+    )
 
-    remove_user_votes(request.user, poll, clean_votes)
-    set_new_votes(request, poll, clean_votes)
+    if not serializer.is_valid():
+        return Response(
+            {
+                'detail': serializer.errors['choices'][0],
+            },
+            status=400,
+        )
+
+    remove_user_votes(request.user, poll, serializer.data['choices'])
+    set_new_votes(request, poll, serializer.data['choices'])
 
     add_acl(request.user, poll)
     serialized_poll = PollSerializer(poll).data
@@ -37,34 +45,6 @@ def poll_vote_create(request, thread, poll):
 def presave_clean_choice(choice):
     del choice['selected']
     return choice
-
-
-def validate_votes(poll, votes):
-    try:
-        votes_len = len(votes)
-        if votes_len > poll.allowed_choices:
-            message = ungettext(
-                "This poll disallows voting for more than %(choices)s choice.",
-                "This poll disallows voting for more than %(choices)s choices.",
-                poll.allowed_choices,
-            )
-            raise ValidationError(message % {'choices': poll.allowed_choices})
-    except TypeError:
-        raise ValidationError(_("One or more of poll choices were invalid."))
-
-    valid_choices = [c['hash'] for c in poll.choices]
-    clean_votes = []
-
-    for vote in votes:
-        if vote in valid_choices:
-            clean_votes.append(vote)
-
-    if len(clean_votes) != len(votes):
-        raise ValidationError(_("One or more of poll choices were invalid."))
-    if not len(votes):
-        raise ValidationError(_("You have to make a choice."))
-
-    return clean_votes
 
 
 def remove_user_votes(user, poll, final_votes):
