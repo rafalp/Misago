@@ -187,12 +187,17 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         """api validates if vote that user has made was empty"""
         self.delete_user_votes()
 
-        response = self.post(self.api_link)
-        self.assertContains(response, "Expected a list of items", status_code=400)
+        response = self.client.post(
+            self.api_link, '[]', content_type='application/json'
+        )
+        self.assertContains(response, "You have to make a choice.", status_code=400)
 
     def test_malformed_vote(self):
         """api validates if vote that user has made was correctly structured"""
         self.delete_user_votes()
+
+        response = self.post(self.api_link)
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
         response = self.post(self.api_link, data={})
         self.assertContains(response, "Expected a list of items", status_code=400)

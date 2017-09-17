@@ -8,8 +8,8 @@ from django.urls import reverse
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.threads import testutils
-from misago.threads.api.postendpoints.merge import MERGE_LIMIT
 from misago.threads.models import Post, Thread
+from misago.threads.serializers.moderation import POSTS_MERGE_LIMIT
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -155,12 +155,12 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'posts': list(range(MERGE_LIMIT + 1))
+                'posts': list(range(POSTS_MERGE_LIMIT + 1))
             }),
             content_type="application/json",
         )
         self.assertContains(
-            response, "No more than {} posts can be merged".format(MERGE_LIMIT), status_code=400
+            response, "No more than {} posts can be merged".format(POSTS_MERGE_LIMIT), status_code=400
         )
 
     def test_merge_event(self):

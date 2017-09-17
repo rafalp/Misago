@@ -1,21 +1,27 @@
 from rest_framework import serializers
 
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.http import Http404
 from django.utils import six
 from django.utils.translation import ugettext as _, ugettext_lazy, ungettext
 
 from misago.acl import add_acl
 from misago.conf import settings
 from misago.threads.models import Thread
-from misago.threads.permissions import allow_merge_post, can_start_thread, exclude_invisible_posts
+from misago.threads.permissions import (
+    allow_merge_post, allow_move_post, can_start_thread, exclude_invisible_posts)
+from misago.threads.utils import get_thread_id_from_url
 from misago.threads.validators import validate_category, validate_title
 
 
 POSTS_MERGE_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
+POSTS_MOVE_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
+
 
 
 __all__ = [
     'MergePostsSerializer',
+    'MovePostsSerializer',
     'NewThreadSerializer',
 ]
 
@@ -75,7 +81,9 @@ class MergePostsSerializer(serializers.Serializer):
                 if posts[0].pk != thread.first_post_id:
                     if (posts[0].is_hidden != post.is_hidden or
                             posts[0].is_unapproved != post.is_unapproved):
-                        raise serializers.ValidationError(_("Posts with different visibility can't be merged."))
+                        raise serializers.ValidationError(
+                            _("Posts with different visibility can't be merged.")
+                        )
 
                 posts.append(post)
 
@@ -83,6 +91,88 @@ class MergePostsSerializer(serializers.Serializer):
             raise serializers.ValidationError(_("One or more posts to merge could not be found."))
 
         self.posts_cache = posts
+
+        return data
+
+
+class MovePostsSerializer(serializers.Serializer):
+    thread_url = serializers.CharField(
+        error_messages={
+            'required': ugettext_lazy("Enter link to new thread."),
+        },
+    )
+    posts = serializers.ListField(
+        allow_empty=False,
+        child=serializers.IntegerField(
+            error_messages={
+                'invalid': ugettext_lazy("One or more post ids received were invalid."),
+            },
+        ),
+        error_messages={
+            'empty': ugettext_lazy("You have to specify at least one post to move."),
+        },
+    )
+
+    def validate_thread_url(self, data):
+        request = self.context['request']
+        thread = self.context['thread']
+        viewmodel = self.context['viewmodel']
+
+        new_thread_id = get_thread_id_from_url(request, data)
+        if not new_thread_id:
+            raise serializers.ValidationError(_("This is not a valid thread link."))
+        if new_thread_id == thread.pk:
+            raise serializers.ValidationError(_("Thread to move posts to is same as current one."))
+
+        try:
+            new_thread = viewmodel(request, new_thread_id).unwrap()
+        except Http404:
+            raise serializers.ValidationError(
+                _(
+                    "The thread you have entered link to doesn't "
+                    "exist or you don't have permission to see it."
+                )
+            )
+
+        if not new_thread.acl['can_reply']:
+            raise serializers.ValidationError(_("You can't move posts to threads you can't reply."))
+
+        self.new_thread = new_thread
+
+        return data
+
+    def validate_posts(self, data):
+        data = list(set(data))
+        if len(data) > POSTS_MOVE_LIMIT:
+            message = ungettext(
+                "No more than %(limit)s post can be moved at single time.",
+                "No more than %(limit)s posts can be moved at single time.",
+                POSTS_MOVE_LIMIT,
+            )
+            raise serializers.ValidationError(message % {'limit': POSTS_MOVE_LIMIT})
+
+        request = self.context['request']
+        thread = self.context['thread']
+
+        posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)
+        posts_queryset = posts_queryset.filter(id__in=data).order_by('id')
+
+        posts = []
+        for post in posts_queryset:
+            post.category = thread.category
+            post.thread = thread
+
+            try:
+                allow_move_post(request.user, post)
+                posts.append(post)
+            except PermissionDenied as e:
+                raise serializers.ValidationError(six.text_type(e))
+
+        if len(posts) != len(data):
+            raise serializers.ValidationError(_("One or more posts to move could not be found."))
+
+        self.posts_cache = posts
+
         return data
 
 

@@ -8,8 +8,8 @@ from django.urls import reverse
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.threads import testutils
-from misago.threads.api.postendpoints.move import MOVE_LIMIT
 from misago.threads.models import Thread
+from misago.threads.serializers.moderation import POSTS_MOVE_LIMIT
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -95,6 +95,24 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(self.api_link, json.dumps({}), content_type="application/json")
         self.assertEqual(response.status_code, 403)
 
+    def test_invalid_data(self):
+        """api handles post that is invalid type"""
+        self.override_acl()
+        response = self.client.post(self.api_link, '[]', content_type="application/json")
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
+
+        self.override_acl()
+        response = self.client.post(self.api_link, '123', content_type="application/json")
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
+
+        self.override_acl()
+        response = self.client.post(self.api_link, '"string"', content_type="application/json")
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
+
+        self.override_acl()
+        response = self.client.post(self.api_link, 'malformed', content_type="application/json")
+        self.assertContains(response, "JSON parse error", status_code=400)
+
     def test_no_permission(self):
         """api validates permission to move"""
         self.override_acl({'can_move_posts': 0})
@@ -105,7 +123,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     def test_move_no_url(self):
         """api validates if thread url was given"""
         response = self.client.post(self.api_link)
-        self.assertContains(response, "This is not a valid thread link.", status_code=400)
+        self.assertContains(response, "Enter link to new thread.", status_code=400)
 
     def test_invalid_url(self):
         """api validates thread url"""
@@ -121,6 +139,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
                 'thread_url': self.thread.get_absolute_url(),
             }
         )
+
         self.assertContains(
             response, "Thread to move posts to is same as current one.", status_code=400
         )
@@ -174,6 +193,15 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         """api handles empty data"""
         other_thread = testutils.post_thread(self.category)
 
+        response = self.client.post(self.api_link)
+        self.assertContains(
+            response, "Enter link to new thread.", status_code=400
+        )
+
+    def test_empty_posts_data(self):
+        """api handles empty data"""
+        other_thread = testutils.post_thread(self.category)
+
         response = self.client.post(
             self.api_link, {
                 'thread_url': other_thread.get_absolute_url(),
@@ -212,7 +240,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             content_type="application/json",
         )
         self.assertContains(
-            response, "One or more post ids received were invalid.", status_code=400
+            response, "Expected a list of items", status_code=400
         )
 
     def test_invalid_posts_ids(self):
@@ -239,12 +267,12 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             self.api_link,
             json.dumps({
                 'thread_url': other_thread.get_absolute_url(),
-                'posts': list(range(MOVE_LIMIT + 1)),
+                'posts': list(range(POSTS_MOVE_LIMIT + 1)),
             }),
             content_type="application/json",
         )
         self.assertContains(
-            response, "No more than {} posts can be moved".format(MOVE_LIMIT), status_code=400
+            response, "No more than {} posts can be moved".format(POSTS_MOVE_LIMIT), status_code=400
         )
 
     def test_move_invisible(self):
