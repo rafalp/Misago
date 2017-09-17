@@ -11,7 +11,7 @@ def parse_markup(request):
     serializer = MarkupSerializer(data=request.data)
     if not serializer.is_valid():
         return Response(
-            serializer.errors['non_field_errors'][0],
+            {'detail': serializer.errors['non_field_errors'][0]},
             status=status.HTTP_400_BAD_REQUEST,
         )
 
