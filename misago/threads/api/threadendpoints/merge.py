@@ -113,7 +113,11 @@ def threads_merge_endpoint(request):
     if invalid_threads:
         return Response(invalid_threads, status=403)
 
-    serializer = NewThreadSerializer(context=request.user, data=request.data)
+    serializer = NewThreadSerializer(
+        data=request.data,
+        context={'user': request.user},
+    )
+
     if serializer.is_valid():
         polls_handler = PollMergeHandler(threads)
         if len(polls_handler.polls) == 1:

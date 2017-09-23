@@ -183,13 +183,20 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         response = self.post(self.api_link)
         self.assertEqual(response.status_code, 403)
 
-    def test_empty_vote(self):
+    def test_empty_vote_json(self):
         """api validates if vote that user has made was empty"""
         self.delete_user_votes()
 
         response = self.client.post(
             self.api_link, '[]', content_type='application/json'
         )
+        self.assertContains(response, "You have to make a choice.", status_code=400)
+
+    def test_empty_vote_form(self):
+        """api validates if vote that user has made was empty"""
+        self.delete_user_votes()
+
+        response = self.client.post(self.api_link)
         self.assertContains(response, "You have to make a choice.", status_code=400)
 
     def test_malformed_vote(self):

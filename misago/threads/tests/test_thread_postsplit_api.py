@@ -8,8 +8,8 @@ from django.urls import reverse
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.threads import testutils
-from misago.threads.api.postendpoints.split import SPLIT_LIMIT
 from misago.threads.models import Thread
+from misago.threads.serializers.moderation import POSTS_LIMIT
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -112,8 +112,37 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             response, "You have to specify at least one post to split.", status_code=400
         )
 
+    def test_invalid_data(self):
+        """api handles post that is invalid type"""
+        self.override_acl()
+        response = self.client.post(self.api_link, '[]', content_type="application/json")
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
+
+        self.override_acl()
+        response = self.client.post(self.api_link, '123', content_type="application/json")
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
+
+        self.override_acl()
+        response = self.client.post(self.api_link, '"string"', content_type="application/json")
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
+
+        self.override_acl()
+        response = self.client.post(self.api_link, 'malformed', content_type="application/json")
+        self.assertContains(response, "JSON parse error", status_code=400)
+
     def test_no_posts_ids(self):
         """api rejects no posts ids"""
+        response = self.client.post(
+            self.api_link,
+            json.dumps({}),
+            content_type="application/json",
+        )
+        self.assertContains(
+            response, "You have to specify at least one post to split.", status_code=400
+        )
+
+    def test_empty_posts_ids(self):
+        """api rejects empty posts ids list"""
         response = self.client.post(
             self.api_link,
             json.dumps({
@@ -135,7 +164,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             content_type="application/json",
         )
         self.assertContains(
-            response, "One or more post ids received were invalid.", status_code=400
+            response, "Expected a list of items but got type", status_code=400
         )
 
     def test_invalid_posts_ids(self):
@@ -156,12 +185,12 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'posts': list(range(SPLIT_LIMIT + 1)),
+                'posts': list(range(POSTS_LIMIT + 1)),
             }),
             content_type="application/json",
         )
         self.assertContains(
-            response, "No more than {} posts can be split".format(SPLIT_LIMIT), status_code=400
+            response, "No more than {} posts can be split".format(POSTS_LIMIT), status_code=400
         )
 
     def test_split_invisible(self):

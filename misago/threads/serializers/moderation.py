@@ -2,31 +2,32 @@ from rest_framework import serializers
 
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
-from django.utils import six
 from django.utils.translation import ugettext as _, ugettext_lazy, ungettext
 
 from misago.acl import add_acl
 from misago.conf import settings
 from misago.threads.models import Thread
 from misago.threads.permissions import (
-    allow_merge_post, allow_move_post, can_start_thread, exclude_invisible_posts)
+    allow_merge_post, allow_move_post, allow_split_post,
+    can_start_thread, exclude_invisible_posts)
 from misago.threads.utils import get_thread_id_from_url
 from misago.threads.validators import validate_category, validate_title
 
 
-POSTS_MERGE_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
-POSTS_MOVE_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
-
+POSTS_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
 
 
 __all__ = [
     'MergePostsSerializer',
     'MovePostsSerializer',
     'NewThreadSerializer',
+    'SplitPostsSerializer',
 ]
 
 
 class MergePostsSerializer(serializers.Serializer):
+    error_empty_or_required = ugettext_lazy("You have to select at least two posts to merge.")
+
     posts = serializers.ListField(
         child=serializers.IntegerField(
             error_messages={
@@ -34,7 +35,7 @@ class MergePostsSerializer(serializers.Serializer):
             },
         ),
         error_messages={
-            'required': ugettext_lazy("You have to select at least two posts to merge."),
+            'required': error_empty_or_required,
         },
     )
 
@@ -42,14 +43,14 @@ class MergePostsSerializer(serializers.Serializer):
         data = list(set(data))
 
         if len(data) < 2:
-            raise serializers.ValidationError(_("You have to select at least two posts to merge."))
-        if len(data) > POSTS_MERGE_LIMIT:
+            raise serializers.ValidationError(self.error_empty_or_required)
+        if len(data) > POSTS_LIMIT:
             message = ungettext(
                 "No more than %(limit)s post can be merged at single time.",
                 "No more than %(limit)s posts can be merged at single time.",
-                POSTS_MERGE_LIMIT,
+                POSTS_LIMIT,
             )
-            raise serializers.ValidationError(message % {'limit': POSTS_MERGE_LIMIT})
+            raise serializers.ValidationError(message % {'limit': POSTS_LIMIT})
 
         user = self.context['user']
         thread = self.context['thread']
@@ -65,7 +66,7 @@ class MergePostsSerializer(serializers.Serializer):
             try:
                 allow_merge_post(user, post)
             except PermissionDenied as e:
-                raise serializers.ValidationError(six.text_type(e))
+                raise serializers.ValidationError(e)
 
             if not posts:
                 posts.append(post)
@@ -96,6 +97,8 @@ class MergePostsSerializer(serializers.Serializer):
 
 
 class MovePostsSerializer(serializers.Serializer):
+    error_empty_or_required = ugettext_lazy("You have to specify at least one post to move.")
+
     thread_url = serializers.CharField(
         error_messages={
             'required': ugettext_lazy("Enter link to new thread."),
@@ -109,7 +112,8 @@ class MovePostsSerializer(serializers.Serializer):
             },
         ),
         error_messages={
-            'empty': ugettext_lazy("You have to specify at least one post to move."),
+            'required': error_empty_or_required,
+            'empty': error_empty_or_required,
         },
     )
 
@@ -143,13 +147,13 @@ class MovePostsSerializer(serializers.Serializer):
 
     def validate_posts(self, data):
         data = list(set(data))
-        if len(data) > POSTS_MOVE_LIMIT:
+        if len(data) > POSTS_LIMIT:
             message = ungettext(
                 "No more than %(limit)s post can be moved at single time.",
                 "No more than %(limit)s posts can be moved at single time.",
-                POSTS_MOVE_LIMIT,
+                POSTS_LIMIT,
             )
-            raise serializers.ValidationError(message % {'limit': POSTS_MOVE_LIMIT})
+            raise serializers.ValidationError(message % {'limit': POSTS_LIMIT})
 
         request = self.context['request']
         thread = self.context['thread']
@@ -166,7 +170,7 @@ class MovePostsSerializer(serializers.Serializer):
                 allow_move_post(request.user, post)
                 posts.append(post)
             except PermissionDenied as e:
-                raise serializers.ValidationError(six.text_type(e))
+                raise serializers.ValidationError(e)
 
         if len(posts) != len(data):
             raise serializers.ValidationError(_("One or more posts to move could not be found."))
@@ -192,14 +196,14 @@ class NewThreadSerializer(serializers.Serializer):
         return validate_title(title)
 
     def validate_category(self, category_id):
-        self.category = validate_category(self.context, category_id)
-        if not can_start_thread(self.context, self.category):
+        self.category = validate_category(self.context['user'], category_id)
+        if not can_start_thread(self.context['user'], self.category):
             raise ValidationError(_("You can't create new threads in selected category."))
         return self.category
 
     def validate_weight(self, weight):
         try:
-            add_acl(self.context, self.category)
+            add_acl(self.context['user'], self.category)
         except AttributeError:
             return weight  # don't validate weight further if category failed
 
@@ -216,7 +220,7 @@ class NewThreadSerializer(serializers.Serializer):
 
     def validate_is_hidden(self, is_hidden):
         try:
-            add_acl(self.context, self.category)
+            add_acl(self.context['user'], self.category)
         except AttributeError:
             return is_hidden  # don't validate hidden further if category failed
 
@@ -226,7 +230,7 @@ class NewThreadSerializer(serializers.Serializer):
 
     def validate_is_closed(self, is_closed):
         try:
-            add_acl(self.context, self.category)
+            add_acl(self.context['user'], self.category)
         except AttributeError:
             return is_closed  # don't validate closed further if category failed
 
@@ -235,3 +239,54 @@ class NewThreadSerializer(serializers.Serializer):
                 _("You don't have permission to close threads in this category.")
             )
         return is_closed
+
+
+class SplitPostsSerializer(NewThreadSerializer):
+    error_empty_or_required = ugettext_lazy("You have to specify at least one post to split.")
+
+    posts = serializers.ListField(
+        allow_empty=False,
+        child=serializers.IntegerField(
+            error_messages={
+                'invalid': ugettext_lazy("One or more post ids received were invalid."),
+            },
+        ),
+        error_messages={
+            'required': error_empty_or_required,
+            'empty': error_empty_or_required,
+        },
+    )
+
+    def validate_posts(self, data):
+        if len(data) > POSTS_LIMIT:
+            message = ungettext(
+                "No more than %(limit)s post can be split at single time.",
+                "No more than %(limit)s posts can be split at single time.",
+                POSTS_LIMIT,
+            )
+            raise ValidationError(message % {'limit': POSTS_LIMIT})
+
+        thread = self.context['thread']
+        user = self.context['user']
+
+        posts_queryset = exclude_invisible_posts(user, thread.category, thread.post_set)
+        posts_queryset = posts_queryset.filter(id__in=data).order_by('id')
+
+        posts = []
+        for post in posts_queryset:
+            post.category = thread.category
+            post.thread = thread
+
+            try:
+                allow_split_post(user, post)
+            except PermissionDenied as e:
+                raise ValidationError(e)
+
+            posts.append(post)
+
+        if len(posts) != len(data):
+            raise ValidationError(_("One or more posts to split could not be found."))
+
+        self.posts_cache = posts
+
+        return data

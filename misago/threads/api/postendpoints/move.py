@@ -20,8 +20,8 @@ def posts_move_endpoint(request, thread, viewmodel):
     )
 
     if not serializer.is_valid():
-        if 'new_thread' in serializer.errors:
-            errors = serializer.errors['new_thread']
+        if 'thread_url' in serializer.errors:
+            errors = serializer.errors['thread_url']
         else:
             errors = list(serializer.errors.values())[0]
 

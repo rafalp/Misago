@@ -9,7 +9,7 @@ from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.threads import testutils
 from misago.threads.models import Post, Thread
-from misago.threads.serializers.moderation import POSTS_MERGE_LIMIT
+from misago.threads.serializers.moderation import POSTS_LIMIT
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -71,11 +71,19 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         )
         self.assertContains(response, "You can't merge posts in this thread.", status_code=403)
 
-    def test_empty_data(self):
-        """api handles empty data"""
+    def test_empty_data_json(self):
+        """api handles empty json data"""
         response = self.client.post(
             self.api_link, json.dumps({}), content_type="application/json"
         )
+        self.assertContains(
+            response, "You have to select at least two posts to merge.", status_code=400
+        )
+
+    def test_empty_data_form(self):
+        """api handles empty form data"""
+        response = self.client.post(self.api_link, {})
+
         self.assertContains(
             response, "You have to select at least two posts to merge.", status_code=400
         )
@@ -155,12 +163,12 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'posts': list(range(POSTS_MERGE_LIMIT + 1))
+                'posts': list(range(POSTS_LIMIT + 1))
             }),
             content_type="application/json",
         )
         self.assertContains(
-            response, "No more than {} posts can be merged".format(POSTS_MERGE_LIMIT), status_code=400
+            response, "No more than {} posts can be merged".format(POSTS_LIMIT), status_code=400
         )
 
     def test_merge_event(self):

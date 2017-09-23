@@ -9,7 +9,7 @@ from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.threads import testutils
 from misago.threads.models import Thread
-from misago.threads.serializers.moderation import POSTS_MOVE_LIMIT
+from misago.threads.serializers.moderation import POSTS_LIMIT
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -139,7 +139,6 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
                 'thread_url': self.thread.get_absolute_url(),
             }
         )
-
         self.assertContains(
             response, "Thread to move posts to is same as current one.", status_code=400
         )
@@ -198,15 +197,33 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             response, "Enter link to new thread.", status_code=400
         )
 
-    def test_empty_posts_data(self):
-        """api handles empty data"""
+    def test_empty_posts_data_json(self):
+        """api handles empty json data"""
         other_thread = testutils.post_thread(self.category)
 
         response = self.client.post(
-            self.api_link, {
+            self.api_link,
+            json.dumps({
                 'thread_url': other_thread.get_absolute_url(),
-            }
+            }),
+            content_type="application/json",
         )
+
+        self.assertContains(
+            response, "You have to specify at least one post to move.", status_code=400
+        )
+
+    def test_empty_posts_data_form(self):
+        """api handles empty form data"""
+        other_thread = testutils.post_thread(self.category)
+
+        response = self.client.post(
+            self.api_link,
+            {
+                'thread_url': other_thread.get_absolute_url(),
+            },
+        )
+
         self.assertContains(
             response, "You have to specify at least one post to move.", status_code=400
         )
@@ -267,12 +284,12 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             self.api_link,
             json.dumps({
                 'thread_url': other_thread.get_absolute_url(),
-                'posts': list(range(POSTS_MOVE_LIMIT + 1)),
+                'posts': list(range(POSTS_LIMIT + 1)),
             }),
             content_type="application/json",
         )
         self.assertContains(
-            response, "No more than {} posts can be moved".format(POSTS_MOVE_LIMIT), status_code=400
+            response, "No more than {} posts can be moved".format(POSTS_LIMIT), status_code=400
         )
 
     def test_move_invisible(self):

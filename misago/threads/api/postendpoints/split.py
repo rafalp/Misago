@@ -2,68 +2,38 @@ from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
 from django.utils import six
-from django.utils.translation import ugettext as _, ungettext
+from django.utils.translation import ugettext as _
 
-from misago.conf import settings
-from misago.core.utils import clean_ids_list
 from misago.threads.models import Thread
 from misago.threads.moderation import threads as moderation
-from misago.threads.permissions import allow_split_post, exclude_invisible_posts
-from misago.threads.serializers import NewThreadSerializer
-
-
-SPLIT_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
+from misago.threads.serializers import SplitPostsSerializer
 
 
 def posts_split_endpoint(request, thread):
     if not thread.acl['can_move_posts']:
         raise PermissionDenied(_("You can't split posts from this thread."))
 
-    try:
-        posts = clean_posts_for_split(request, thread)
-    except PermissionDenied as e:
-        return Response({'detail': six.text_type(e)}, status=400)
-
-    serializer = NewThreadSerializer(context=request.user, data=request.data)
-    if serializer.is_valid():
-        split_posts_to_new_thread(request, thread, serializer.validated_data, posts)
-        return Response({})
-    else:
-        return Response(serializer.errors, status=400)
-
-
-def clean_posts_for_split(request, thread):
-    posts_ids = clean_ids_list(
-        request.data.get('posts', []),
-        _("One or more post ids received were invalid."),
+    serializer = SplitPostsSerializer(
+        data=request.data,
+        context={
+            'thread': thread,
+            'user': request.user,
+        },
     )
 
-    if not posts_ids:
-        raise PermissionDenied(_("You have to specify at least one post to split."))
-    elif len(posts_ids) > SPLIT_LIMIT:
-        message = ungettext(
-            "No more than %(limit)s post can be split at single time.",
-            "No more than %(limit)s posts can be split at single time.",
-            SPLIT_LIMIT,
-        )
-        raise PermissionDenied(message % {'limit': SPLIT_LIMIT})
+    if not serializer.is_valid():
+        if 'posts' in serializer.errors:
+            errors = {
+                'detail': serializer.errors['posts'][0]
+            }
+        else :
+            errors = serializer.errors
 
-    posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)
-    posts_queryset = posts_queryset.filter(id__in=posts_ids).order_by('id')
+        return Response(errors, status=400)
 
-    posts = []
-    for post in posts_queryset:
-        post.category = thread.category
-        post.thread = thread
+    split_posts_to_new_thread(request, thread, serializer.validated_data, serializer.posts_cache)
 
-        allow_split_post(request.user, post)
-
-        posts.append(post)
-
-    if len(posts) != len(posts_ids):
-        raise PermissionDenied(_("One or more posts to split could not be found."))
-
-    return posts
+    return Response({})
 
 
 def split_posts_to_new_thread(request, thread, validated_data, posts):
