@@ -37,9 +37,19 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         response = self.delete(self.api_link)
         self.assertContains(response, "This action is not available to guests.", status_code=403)
 
+    def test_delete_no_data(self):
+        """api handles empty data"""
+        response = self.client.delete(self.api_link, content_type="application/json")
+        self.assertContains(response, "Expected a list of items", status_code=400)
+
     def test_delete_no_ids(self):
         """api requires ids to delete"""
         response = self.delete(self.api_link)
+        self.assertContains(response, "You have to specify at least one post to delete.", status_code=400)
+
+    def test_delete_empty_ids(self):
+        """api requires ids to delete"""
+        response = self.delete(self.api_link, [])
         self.assertContains(response, "You have to specify at least one post to delete.", status_code=400)
 
     def test_validate_ids(self):
