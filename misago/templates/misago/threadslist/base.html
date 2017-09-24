@@ -59,7 +59,7 @@
                   {% block list-empty-message %}
                     {% if list_type == 'all' %}
                       <p class="lead">
-                        {% if category.depth %}
+                        {% if category.level %}
                           {% trans "There are no threads in this category." %}
                         {% else %}
                           {% trans "There are no threads on this forum... yet!" %}

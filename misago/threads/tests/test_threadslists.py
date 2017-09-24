@@ -193,6 +193,10 @@ class AllThreadsListTests(ThreadsListTestCase):
             response = self.client.get('/' + url)
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, "empty-message")
+            if url:
+                self.assertContains(response, "No threads matching specified criteria")
+            else:
+                self.assertContains(response, "There are no threads on this forum")
 
             self.access_all_categories()
 
@@ -200,6 +204,10 @@ class AllThreadsListTests(ThreadsListTestCase):
             self.assertEqual(response.status_code, 200)
             self.assertContains(response, self.category_b.name)
             self.assertContains(response, "empty-message")
+            if url:
+                self.assertContains(response, "No threads matching specified criteria")
+            else:
+                self.assertContains(response, "There are no threads in this category")
 
             self.access_all_categories()
 
@@ -208,6 +216,33 @@ class AllThreadsListTests(ThreadsListTestCase):
 
             response_json = response.json()
             self.assertEqual(len(response_json['results']), 0)
+
+        # empty lists render for anonymous user?
+        self.logout_user()
+        self.user = self.get_anonymous_user()
+
+        self.access_all_categories()
+
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "empty-message")
+        self.assertContains(response, "There are no threads on this forum")
+
+        self.access_all_categories()
+
+        response = self.client.get(self.category_b.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.category_b.name)
+        self.assertContains(response, "empty-message")
+        self.assertContains(response, "There are no threads in this category")
+
+        self.access_all_categories()
+
+        response = self.client.get('%s?list=all' % self.api_link)
+        self.assertEqual(response.status_code, 200)
+
+        response_json = response.json()
+        self.assertEqual(len(response_json['results']), 0)
 
     def test_list_authenticated_only_views(self):
         """authenticated only views return 403 for guests"""
