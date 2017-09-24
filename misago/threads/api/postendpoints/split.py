@@ -31,12 +31,12 @@ def posts_split_endpoint(request, thread):
 
         return Response(errors, status=400)
 
-    split_posts_to_new_thread(request, thread, serializer.validated_data, serializer.posts_cache)
+    split_posts_to_new_thread(request, thread, serializer.validated_data)
 
     return Response({})
 
 
-def split_posts_to_new_thread(request, thread, validated_data, posts):
+def split_posts_to_new_thread(request, thread, validated_data):
     new_thread = Thread(
         category=validated_data['category'],
         started_on=thread.started_on,
@@ -46,7 +46,7 @@ def split_posts_to_new_thread(request, thread, validated_data, posts):
     new_thread.set_title(validated_data['title'])
     new_thread.save()
 
-    for post in posts:
+    for post in validated_data['posts']:
         post.move(new_thread)
         post.save()
 

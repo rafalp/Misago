@@ -27,7 +27,7 @@ def posts_merge_endpoint(request, thread):
             status=400,
         )
 
-    posts = serializer.posts_cache
+    posts = serializer.validated_data['posts']
     first_post, merged_posts = posts[0], posts[1:]
 
     for post in merged_posts:

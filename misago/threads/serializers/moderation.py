@@ -143,15 +143,13 @@ class MergePostsSerializer(serializers.Serializer):
         if len(posts) != len(data):
             raise serializers.ValidationError(_("One or more posts to merge could not be found."))
 
-        self.posts_cache = posts
-
-        return data
+        return posts
 
 
 class MovePostsSerializer(serializers.Serializer):
     error_empty_or_required = ugettext_lazy("You have to specify at least one post to move.")
 
-    thread_url = serializers.CharField(
+    new_thread = serializers.CharField(
         error_messages={
             'required': ugettext_lazy("Enter link to new thread."),
         },
@@ -170,7 +168,7 @@ class MovePostsSerializer(serializers.Serializer):
         },
     )
 
-    def validate_thread_url(self, data):
+    def validate_new_thread(self, data):
         request = self.context['request']
         thread = self.context['thread']
         viewmodel = self.context['viewmodel']
@@ -194,9 +192,7 @@ class MovePostsSerializer(serializers.Serializer):
         if not new_thread.acl['can_reply']:
             raise serializers.ValidationError(_("You can't move posts to threads you can't reply."))
 
-        self.new_thread = new_thread
-
-        return data
+        return new_thread
 
     def validate_posts(self, data):
         data = list(set(data))
@@ -228,9 +224,7 @@ class MovePostsSerializer(serializers.Serializer):
         if len(posts) != len(data):
             raise serializers.ValidationError(_("One or more posts to move could not be found."))
 
-        self.posts_cache = posts
-
-        return data
+        return posts
 
 
 class NewThreadSerializer(serializers.Serializer):
@@ -341,6 +335,4 @@ class SplitPostsSerializer(NewThreadSerializer):
         if len(posts) != len(data):
             raise ValidationError(_("One or more posts to split could not be found."))
 
-        self.posts_cache = posts
-
-        return data
+        return posts

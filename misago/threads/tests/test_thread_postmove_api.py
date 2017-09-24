@@ -120,23 +120,23 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(self.api_link, json.dumps({}), content_type="application/json")
         self.assertContains(response, "You can't move posts in this thread.", status_code=403)
 
-    def test_move_no_url(self):
-        """api validates if thread url was given"""
+    def test_move_no_new_thread_url(self):
+        """api validates if new thread url was given"""
         response = self.client.post(self.api_link)
         self.assertContains(response, "Enter link to new thread.", status_code=400)
 
-    def test_invalid_url(self):
-        """api validates thread url"""
+    def test_invalid_new_thread_url(self):
+        """api validates new thread url"""
         response = self.client.post(self.api_link, {
-            'thread_url': self.user.get_absolute_url(),
+            'new_thread': self.user.get_absolute_url(),
         })
         self.assertContains(response, "This is not a valid thread link.", status_code=400)
 
-    def test_current_thread_url(self):
-        """api validates if thread url given is to current thread"""
+    def test_current_new_thread_url(self):
+        """api validates if new thread url points to current thread"""
         response = self.client.post(
             self.api_link, {
-                'thread_url': self.thread.get_absolute_url(),
+                'new_thread': self.thread.get_absolute_url(),
             }
         )
         self.assertContains(
@@ -148,11 +148,11 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         self.override_other_acl()
 
         other_thread = testutils.post_thread(self.category_b)
-        other_thread_url = other_thread.get_absolute_url()
+        other_new_thread = other_thread.get_absolute_url()
         other_thread.delete()
 
         response = self.client.post(self.api_link, {
-            'thread_url': other_thread_url,
+            'new_thread': other_new_thread,
         })
         self.assertContains(
             response, "The thread you have entered link to doesn't exist", status_code=400
@@ -166,7 +166,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
 
         response = self.client.post(
             self.api_link, {
-                'thread_url': other_thread.get_absolute_url(),
+                'new_thread': other_thread.get_absolute_url(),
             }
         )
         self.assertContains(
@@ -181,7 +181,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
 
         response = self.client.post(
             self.api_link, {
-                'thread_url': other_thread.get_absolute_url(),
+                'new_thread': other_thread.get_absolute_url(),
             }
         )
         self.assertContains(
@@ -204,7 +204,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'thread_url': other_thread.get_absolute_url(),
+                'new_thread': other_thread.get_absolute_url(),
             }),
             content_type="application/json",
         )
@@ -220,7 +220,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             {
-                'thread_url': other_thread.get_absolute_url(),
+                'new_thread': other_thread.get_absolute_url(),
             },
         )
 
@@ -235,7 +235,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'thread_url': other_thread.get_absolute_url(),
+                'new_thread': other_thread.get_absolute_url(),
                 'posts': [],
             }),
             content_type="application/json",
@@ -251,7 +251,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'thread_url': other_thread.get_absolute_url(),
+                'new_thread': other_thread.get_absolute_url(),
                 'posts': 'string',
             }),
             content_type="application/json",
@@ -267,7 +267,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'thread_url': other_thread.get_absolute_url(),
+                'new_thread': other_thread.get_absolute_url(),
                 'posts': [1, 2, 'string'],
             }),
             content_type="application/json",
@@ -283,7 +283,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'thread_url': other_thread.get_absolute_url(),
+                'new_thread': other_thread.get_absolute_url(),
                 'posts': list(range(POSTS_LIMIT + 1)),
             }),
             content_type="application/json",
@@ -299,7 +299,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'thread_url': other_thread.get_absolute_url(),
+                'new_thread': other_thread.get_absolute_url(),
                 'posts': [testutils.reply_thread(self.thread, is_unapproved=True).pk],
             }),
             content_type="application/json",
@@ -315,7 +315,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'thread_url': other_thread.get_absolute_url(),
+                'new_thread': other_thread.get_absolute_url(),
                 'posts': [testutils.reply_thread(other_thread, is_hidden=True).pk],
             }),
             content_type="application/json",
@@ -331,7 +331,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'thread_url': other_thread.get_absolute_url(),
+                'new_thread': other_thread.get_absolute_url(),
                 'posts': [testutils.reply_thread(self.thread, is_event=True).pk],
             }),
             content_type="application/json",
@@ -345,7 +345,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'thread_url': other_thread.get_absolute_url(),
+                'new_thread': other_thread.get_absolute_url(),
                 'posts': [self.thread.first_post_id],
             }),
             content_type="application/json",
@@ -359,7 +359,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'thread_url': other_thread.get_absolute_url(),
+                'new_thread': other_thread.get_absolute_url(),
                 'posts': [testutils.reply_thread(self.thread, is_hidden=True).pk],
             }),
             content_type="application/json",
@@ -380,7 +380,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'thread_url': other_thread.get_absolute_url(),
+                'new_thread': other_thread.get_absolute_url(),
                 'posts': [testutils.reply_thread(self.thread).pk],
             }),
             content_type="application/json",
@@ -402,7 +402,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'thread_url': other_thread.get_absolute_url(),
+                'new_thread': other_thread.get_absolute_url(),
                 'posts': [testutils.reply_thread(self.thread).pk],
             }),
             content_type="application/json",
@@ -428,7 +428,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'thread_url': other_thread.get_absolute_url(),
+                'new_thread': other_thread.get_absolute_url(),
                 'posts': posts,
             }),
             content_type="application/json",

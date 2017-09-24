@@ -36,7 +36,7 @@ export default class extends Form {
 
   send() {
     return ajax.post(this.props.thread.api.posts.move, {
-      thread_url: this.state.url,
+      new_thread: this.state.url,
       posts: this.props.selection.map((post) => post.id)
     });
   }
