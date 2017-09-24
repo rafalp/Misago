@@ -90,7 +90,7 @@ def add_acl_to_category(user, target):
     target.acl['can_browse'] = can_browse_category(user, target)
 
 
-def serialize_categories_alcs(serialized_acl):
+def serialize_categories_acls(serialized_acl):
     categories_acl = []
     for category, acl in serialized_acl.pop('categories').items():
         if acl['can_browse']:
@@ -108,8 +108,8 @@ def serialize_categories_alcs(serialized_acl):
 def register_with(registry):
     registry.acl_annotator(Category, add_acl_to_category)
 
-    registry.acl_serializer(get_user_model(), serialize_categories_alcs)
-    registry.acl_serializer(AnonymousUser, serialize_categories_alcs)
+    registry.acl_serializer(get_user_model(), serialize_categories_acls)
+    registry.acl_serializer(AnonymousUser, serialize_categories_acls)
 
 
 def allow_see_category(user, target):
