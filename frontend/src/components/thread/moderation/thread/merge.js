@@ -38,7 +38,7 @@ export default class extends Form {
     store.dispatch(thread.busy());
 
     return ajax.post(this.props.thread.api.merge, {
-      thread_url: this.state.url
+      other_thread: this.state.url
     });
   }
 
@@ -65,7 +65,7 @@ export default class extends Form {
         modal.show(
           <MergePolls
             api={this.props.thread.api.merge}
-            data={{thread_url: this.state.url}}
+            data={{other_thread: this.state.url}}
             polls={rejection.polls}
             onError={this.handleError}
             onSuccess={this.handleSuccessUnmounted}

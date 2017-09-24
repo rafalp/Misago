@@ -8,8 +8,10 @@ from misago.acl import add_acl
 from misago.conf import settings
 from misago.threads.models import Thread
 from misago.threads.permissions import (
-    allow_delete_event, allow_delete_post, allow_merge_post, allow_move_post,
-    allow_split_post, can_start_thread, exclude_invisible_posts)
+    allow_delete_event, allow_delete_post, allow_merge_post, allow_merge_thread,
+    allow_move_post, allow_split_post, can_reply_thread, can_see_thread,
+    can_start_thread, exclude_invisible_posts)
+from misago.threads.pollmergehandler import PollMergeHandler
 from misago.threads.utils import get_thread_id_from_url
 from misago.threads.validators import validate_category, validate_title
 
@@ -20,6 +22,7 @@ POSTS_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
 __all__ = [
     'DeletePostsSerializer',
     'MergePostsSerializer',
+    'MergeThreadSerializer',
     'MovePostsSerializer',
     'NewThreadSerializer',
     'SplitPostsSerializer',
@@ -336,3 +339,68 @@ class SplitPostsSerializer(NewThreadSerializer):
             raise ValidationError(_("One or more posts to split could not be found."))
 
         return posts
+
+
+class MergeThreadSerializer(serializers.Serializer):
+    other_thread = serializers.CharField(
+        error_messages={
+            'required': ugettext_lazy("Enter link to new thread."),
+        },
+    )
+    poll = serializers.IntegerField(
+        required=False,
+        error_messages={
+            'invalid': ugettext_lazy("Invalid choice."),
+        },
+    )
+
+    def validate_other_thread(self, data):
+        request = self.context['request']
+        thread = self.context['thread']
+        viewmodel = self.context['viewmodel']
+
+        other_thread_id = get_thread_id_from_url(request, data)
+        if not other_thread_id:
+            raise ValidationError(_("This is not a valid thread link."))
+        if other_thread_id == thread.pk:
+            raise ValidationError(_("You can't merge thread with itself."))
+
+        try:
+            other_thread = viewmodel(request, other_thread_id).unwrap()
+            allow_merge_thread(request.user, other_thread, otherthread=True)
+        except PermissionDenied as e:
+            raise serializers.ValidationError(e)
+        except Http404:
+            raise ValidationError(
+                _(
+                    "The thread you have entered link to doesn't "
+                    "exist or you don't have permission to see it."
+                )
+            )
+
+        if not can_reply_thread(request.user, other_thread):
+            raise ValidationError(_("You can't merge this thread into thread you can't reply."))
+
+        return other_thread
+
+    def validate(self, data):
+        thread = self.context['thread']
+        other_thread = data['other_thread']
+
+        polls_handler = PollMergeHandler([thread, other_thread])
+
+        if len(polls_handler.polls) == 1:
+            data['poll'] = polls_handler.polls[0]
+        elif polls_handler.is_merge_conflict():
+            if 'poll' in data:
+                polls_handler.set_resolution(data['poll'])
+                if polls_handler.is_valid():
+                    data['poll'] = polls_handler.get_resolution()
+                else:
+                    raise serializers.ValidationError({'poll': _("Invalid choice.")})
+            else:
+                data['polls'] = polls_handler.get_available_resolutions()
+
+        self.polls_handler = polls_handler
+
+        return data

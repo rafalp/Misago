@@ -13,11 +13,10 @@ from misago.threads.events import record_event
 from misago.threads.models import Thread
 from misago.threads.moderation import threads as moderation
 from misago.threads.permissions import allow_merge_thread, can_reply_thread, can_see_thread
-from misago.threads.serializers import NewThreadSerializer, ThreadsListSerializer
+from misago.threads.pollmergehandler import PollMergeHandler
+from misago.threads.serializers import MergeThreadSerializer, NewThreadSerializer, ThreadsListSerializer
 from misago.threads.threadtypes import trees_map
 from misago.threads.utils import get_thread_id_from_url
-
-from .pollmergehandler import PollMergeHandler
 
 
 MERGE_LIMIT = 20  # no more than 20 threads can be merged in single action
@@ -31,49 +30,42 @@ class MergeError(Exception):
 def thread_merge_endpoint(request, thread, viewmodel):
     allow_merge_thread(request.user, thread)
 
-    other_thread_id = get_thread_id_from_url(request, request.data.get('thread_url', None))
-    if not other_thread_id:
-        return Response({'detail': _("This is not a valid thread link.")}, status=400)
-    if other_thread_id == thread.pk:
-        return Response({'detail': _("You can't merge thread with itself.")}, status=400)
+    serializer = MergeThreadSerializer(
+        data=request.data,
+        context={
+            'request': request,
+            'thread': thread,
+            'viewmodel': viewmodel,
+        },
+    )
 
-    try:
-        other_thread = viewmodel(request, other_thread_id).unwrap()
-        allow_merge_thread(request.user, other_thread, otherthread=True)
-        if not can_reply_thread(request.user, other_thread):
-            raise PermissionDenied(_("You can't merge this thread into thread you can't reply."))
-    except PermissionDenied as e:
-        return Response({'detail': e.args[0]}, status=400)
-    except Http404:
-        return Response(
-            {
-                'detail': _(
-                    "The thread you have entered link to doesn't "
-                    "exist or you don't have permission to see it."
-                )
-            },
-            status=400,
-        )
-
-    polls_handler = PollMergeHandler([thread, other_thread])
-    if len(polls_handler.polls) == 1:
-        poll = polls_handler.polls[0]
-        poll.move(other_thread)
-    elif polls_handler.is_merge_conflict():
-        if 'poll' in request.data:
-            polls_handler.set_resolution(request.data.get('poll'))
-            if polls_handler.is_valid():
-                poll = polls_handler.get_resolution()
-                if poll and poll.thread_id != other_thread.id:
-                    other_thread.poll.delete()
-                    poll.move(other_thread)
-                elif not poll:
-                    other_thread.poll.delete()
-            else:
-                return Response({'detail': _("Invalid choice.")}, status=400)
+    if not serializer.is_valid():
+        if 'other_thread' in serializer.errors:
+            errors = serializer.errors['other_thread']
+        elif 'poll' in serializer.errors:
+            errors = serializer.errors['poll']
         else:
-            return Response({'polls': polls_handler.get_available_resolutions()}, status=400)
+            errors = list(serializer.errors.values())[0]
+        return Response({'detail': errors[0]}, status=400)
 
+    # interrupt merge with request for poll resolution?
+    if serializer.validated_data.get('polls'):
+        return Response({'polls': serializer.validated_data['polls']}, status=400)
+
+    # merge polls
+    other_thread = serializer.validated_data['other_thread']
+    poll = serializer.validated_data.get('poll')
+
+    if len(serializer.polls_handler.polls) == 1:
+        poll.move(other_thread)
+    elif serializer.polls_handler.is_merge_conflict():
+        if poll and poll.thread_id != other_thread.id:
+            other_thread.poll.delete()
+            poll.move(other_thread)
+        elif not poll:
+            other_thread.poll.delete()
+
+    # merge thread contents
     moderation.merge_thread(request, other_thread, thread)
 
     other_thread.synchronize()
