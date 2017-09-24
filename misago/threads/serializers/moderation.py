@@ -8,8 +8,8 @@ from misago.acl import add_acl
 from misago.conf import settings
 from misago.threads.models import Thread
 from misago.threads.permissions import (
-    allow_merge_post, allow_move_post, allow_split_post,
-    can_start_thread, exclude_invisible_posts)
+    allow_delete_event, allow_delete_post, allow_merge_post, allow_move_post,
+    allow_split_post, can_start_thread, exclude_invisible_posts)
 from misago.threads.utils import get_thread_id_from_url
 from misago.threads.validators import validate_category, validate_title
 
@@ -18,11 +18,62 @@ POSTS_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
 
 
 __all__ = [
+    'DeletePostsSerializer',
     'MergePostsSerializer',
     'MovePostsSerializer',
     'NewThreadSerializer',
     'SplitPostsSerializer',
 ]
+
+
+class DeletePostsSerializer(serializers.Serializer):
+    error_empty_or_required = ugettext_lazy("You have to specify at least one post to delete.")
+
+    posts = serializers.ListField(
+        allow_empty=False,
+        child=serializers.IntegerField(
+            error_messages={
+                'invalid': ugettext_lazy("One or more post ids received were invalid."),
+            },
+        ),
+        error_messages={
+            'required': error_empty_or_required,
+            'null': error_empty_or_required,
+            'empty': error_empty_or_required,
+        },
+    )
+
+    def validate_posts(self, data):
+        if len(data) > POSTS_LIMIT:
+            message = ungettext(
+                "No more than %(limit)s post can be deleted at single time.",
+                "No more than %(limit)s posts can be deleted at single time.",
+                POSTS_LIMIT,
+            )
+            raise ValidationError(message % {'limit': POSTS_LIMIT})
+
+        user = self.context['user']
+        thread = self.context['thread']
+
+        posts_queryset = exclude_invisible_posts(user, thread.category, thread.post_set)
+        posts_queryset = posts_queryset.filter(id__in=data).order_by('id')
+
+        posts = []
+        for post in posts_queryset:
+            post.category = thread.category
+            post.thread = thread
+
+            if post.is_event:
+                allow_delete_event(user, post)
+            else:
+                allow_delete_post(user, post)
+
+            posts.append(post)
+
+        if len(posts) != len(data):
+            raise PermissionDenied(_("One or more posts to delete could not be found."))
+
+        return posts
 
 
 class MergePostsSerializer(serializers.Serializer):
@@ -35,6 +86,7 @@ class MergePostsSerializer(serializers.Serializer):
             },
         ),
         error_messages={
+            'null': error_empty_or_required,
             'required': error_empty_or_required,
         },
     )
@@ -112,8 +164,9 @@ class MovePostsSerializer(serializers.Serializer):
             },
         ),
         error_messages={
-            'required': error_empty_or_required,
             'empty': error_empty_or_required,
+            'null': error_empty_or_required,
+            'required': error_empty_or_required,
         },
     )
 
@@ -252,8 +305,9 @@ class SplitPostsSerializer(NewThreadSerializer):
             },
         ),
         error_messages={
-            'required': error_empty_or_required,
             'empty': error_empty_or_required,
+            'null': error_empty_or_required,
+            'required': error_empty_or_required,
         },
     )
 

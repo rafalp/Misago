@@ -40,7 +40,7 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
     def test_delete_no_ids(self):
         """api requires ids to delete"""
         response = self.delete(self.api_link)
-        self.assertContains(response, "You have to specify at least one post to delete.", status_code=403)
+        self.assertContains(response, "You have to specify at least one post to delete.", status_code=400)
 
     def test_validate_ids(self):
         """api validates that ids are list of ints"""
@@ -50,13 +50,13 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         })
 
         response = self.delete(self.api_link, True)
-        self.assertContains(response, "One or more post ids received were invalid.", status_code=403)
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
         response = self.delete(self.api_link, 'abbss')
-        self.assertContains(response, "One or more post ids received were invalid.", status_code=403)
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
         response = self.delete(self.api_link, [1, 2, 3, 'a', 'b', 'x'])
-        self.assertContains(response, "One or more post ids received were invalid.", status_code=403)
+        self.assertContains(response, "One or more post ids received were invalid.", status_code=400)
 
     def test_validate_ids_length(self):
         """api validates that ids are list of ints"""
@@ -66,7 +66,7 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         })
 
         response = self.delete(self.api_link, list(range(100)))
-        self.assertContains(response, "No more than 24 posts can be deleted at single time.", status_code=403)
+        self.assertContains(response, "No more than 24 posts can be deleted at single time.", status_code=400)
 
     def test_validate_posts_exist(self):
         """api validates that ids are visible posts"""
