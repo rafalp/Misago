@@ -3,6 +3,18 @@ from importlib import import_module
 from misago.conf import settings
 
 
+_NOT_INITIALIZED_ERROR = (
+    "PermissionProviders instance has to load providers with load() "
+    "before get_obj_type_annotators(), get_obj_type_serializers(), "
+    "list() or dict() methods will be available."
+)
+
+_ALREADY_INITIALIZED_ERROR = (
+    "PermissionProviders instance has already loaded providers and "
+    "acl_annotator or acl_serializer are no longer available."
+)
+
+
 class PermissionProviders(object):
     """manager for permission providers"""
 
@@ -14,7 +26,7 @@ class PermissionProviders(object):
         self._annotators = {}
         self._serializers = {}
 
-    def _assert_providers_registered(self):
+    def load(self):
         if not self._initialized:
             self._register_providers()
             self._change_lists_to_tupes(self._annotators)
@@ -35,26 +47,28 @@ class PermissionProviders(object):
 
     def acl_annotator(self, hashable_type, func):
         """registers ACL annotator for specified types"""
+        assert not self._initialized, _ALREADY_INITIALIZED_ERROR
         self._annotators.setdefault(hashable_type, []).append(func)
 
     def acl_serializer(self, hashable_type, func):
         """registers ACL serializer for specified types"""
+        assert not self._initialized, _ALREADY_INITIALIZED_ERROR
         self._serializers.setdefault(hashable_type, []).append(func)
 
-    def get_type_annotators(self, obj):
-        self._assert_providers_registered()
+    def get_obj_type_annotators(self, obj):
+        assert self._initialized, _NOT_INITIALIZED_ERROR
         return self._annotators.get(obj.__class__, [])
 
-    def get_type_serializers(self, obj):
-        self._assert_providers_registered()
+    def get_obj_type_serializers(self, obj):
+        assert self._initialized, _NOT_INITIALIZED_ERROR
         return self._serializers.get(obj.__class__, [])
 
     def list(self):
-        self._assert_providers_registered()
+        assert self._initialized, _NOT_INITIALIZED_ERROR
         return self._providers
 
     def dict(self):
-        self._assert_providers_registered()
+        assert self._initialized, _NOT_INITIALIZED_ERROR
         return self._providers_dict
 
 

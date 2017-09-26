@@ -51,7 +51,7 @@ def _add_acl_to_target(user, target):
     """add valid ACL to single target, helper for add_acl function"""
     target.acl = {}
 
-    for annotator in providers.get_type_annotators(target):
+    for annotator in providers.get_obj_type_annotators(target):
         annotator(user, target)
 
 
@@ -59,7 +59,7 @@ def serialize_acl(target):
     """serialize authenticated user's ACL"""
     serialized_acl = copy.deepcopy(target.acl_cache)
 
-    for serializer in providers.get_type_serializers(target):
+    for serializer in providers.get_obj_type_serializers(target):
         serializer(serialized_acl)
 
     return serialized_acl
