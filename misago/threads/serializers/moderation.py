@@ -5,6 +5,7 @@ from django.http import Http404
 from django.utils.translation import ugettext as _, ugettext_lazy, ungettext
 
 from misago.acl import add_acl
+from misago.categories import THREADS_ROOT_NAME
 from misago.conf import settings
 from misago.threads.models import Thread
 from misago.threads.permissions import (
@@ -12,17 +13,20 @@ from misago.threads.permissions import (
     allow_move_post, allow_split_post, can_reply_thread, can_see_thread,
     can_start_thread, exclude_invisible_posts)
 from misago.threads.pollmergehandler import PollMergeHandler
+from misago.threads.threadtypes import trees_map
 from misago.threads.utils import get_thread_id_from_url
 from misago.threads.validators import validate_category, validate_title
 
 
 POSTS_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
+THREADS_LIMIT = 20
 
 
 __all__ = [
     'DeletePostsSerializer',
     'MergePostsSerializer',
     'MergeThreadSerializer',
+    'MergeThreadsSerializer',
     'MovePostsSerializer',
     'NewThreadSerializer',
     'SplitPostsSerializer',
@@ -404,3 +408,52 @@ class MergeThreadSerializer(serializers.Serializer):
         self.polls_handler = polls_handler
 
         return data
+
+
+class MergeThreadsSerializer(NewThreadSerializer):
+    error_empty_or_required = ugettext_lazy("You have to select at least two threads to merge.")
+
+    threads = serializers.ListField(
+        allow_empty=False,
+        min_length=2,
+        child=serializers.IntegerField(
+            error_messages={
+                'invalid': ugettext_lazy("One or more thread ids received were invalid."),
+            },
+        ),
+        error_messages={
+            'empty': error_empty_or_required,
+            'null': error_empty_or_required,
+            'required': error_empty_or_required,
+            'min_length': error_empty_or_required,
+        },
+    )
+
+    def validate_threads(self, data):
+        if len(data) > THREADS_LIMIT:
+            message = ungettext(
+                "No more than %(limit)s thread can be merged at single time.",
+                "No more than %(limit)s threads can be merged at single time.",
+                POSTS_LIMIT,
+            )
+            raise ValidationError(message % {'limit': THREADS_LIMIT})
+
+        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
+
+        threads_queryset = Thread.objects.filter(
+            id__in=data,
+            category__tree_id=threads_tree_id,
+        ).select_related('category').order_by('-id')
+
+        user = self.context['user']
+
+        threads = []
+        for thread in threads_queryset:
+            add_acl(user, thread)
+            if can_see_thread(user, thread):
+                threads.append(thread)
+
+        if len(threads) != len(data):
+            raise ValidationError(_("One or more threads to merge could not be found."))
+
+        return threads

@@ -3,9 +3,10 @@ import json
 from django.urls import reverse
 
 from misago.acl import add_acl
+from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.threads import testutils
-from misago.threads.api.threadendpoints.merge import MERGE_LIMIT
+from misago.threads.serializers.moderation import THREADS_LIMIT
 from misago.threads.models import Poll, PollVote, Post, Thread
 from misago.threads.serializers import ThreadsListSerializer
 
@@ -26,6 +27,32 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             save=True,
         )
         self.category_b = Category.objects.get(slug='category-b')
+
+    def override_other_category(self):
+        categories =  self.user.acl_cache['categories']
+
+        visible_categories = self.user.acl_cache['visible_categories']
+        browseable_categories = self.user.acl_cache['browseable_categories']
+
+        visible_categories.append(self.category_b.pk)
+        browseable_categories.append(self.category_b.pk)
+
+        override_acl(
+            self.user, {
+                'visible_categories': visible_categories,
+                'browseable_categories': browseable_categories,
+                'categories': {
+                    self.category.pk: categories[self.category.pk],
+                    self.category_b.pk: {
+                        'can_see': 1,
+                        'can_browse': 1,
+                        'can_see_all_threads': 1,
+                        'can_see_own_threads': 0,
+                        'can_start_threads': 2,
+                    },
+                },
+            }
+        )
 
     def test_merge_no_threads(self):
         """api validates if we are trying to merge no threads"""
@@ -66,14 +93,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 403)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json, {
-                'detail': "One or more thread ids received were invalid.",
-            }
-        )
+        self.assertContains(response, "Expected a list of items", status_code=403)
 
         response = self.client.post(
             self.api_link,
@@ -154,6 +174,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
+                'category': self.category.pk,
+                'title': 'Lorem ipsum dolor',
                 'threads': [self.thread.id, thread.id],
             }),
             content_type="application/json",
@@ -182,6 +204,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             'can_merge_threads': 1,
             'can_close_threads': 0,
         })
+        self.override_other_category()
 
         other_thread = testutils.post_thread(self.category)
 
@@ -191,6 +214,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
+                'category': self.category_b.pk,
+                'title': 'Lorem ipsum dolor',
                 'threads': [self.thread.id, other_thread.id],
             }),
             content_type="application/json",
@@ -207,6 +232,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             'can_merge_threads': 1,
             'can_close_threads': 0,
         })
+        self.override_other_category()
 
         other_thread = testutils.post_thread(self.category)
 
@@ -216,6 +242,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
+                'category': self.category_b.pk,
+                'title': 'Lorem ipsum dolor',
                 'threads': [self.thread.id, other_thread.id],
             }),
             content_type="application/json",
@@ -229,7 +257,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
     def test_merge_too_many_threads(self):
         """api rejects too many threads to merge"""
         threads = []
-        for _ in range(MERGE_LIMIT + 1):
+        for _ in range(THREADS_LIMIT + 1):
             threads.append(testutils.post_thread(category=self.category).pk)
 
         self.override_acl({
@@ -251,7 +279,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         response_json = response.json()
         self.assertEqual(
             response_json, {
-                'detail': "No more than %s threads can be merged at single time." % MERGE_LIMIT,
+                'detail': "No more than %s threads can be merged at single time." % THREADS_LIMIT,
             }
         )
 

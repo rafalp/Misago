@@ -1,30 +1,17 @@
 from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
-from django.http import Http404
 from django.utils.six import text_type
 from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
 
 from misago.acl import add_acl
-from misago.categories import THREADS_ROOT_NAME
-from misago.core.utils import clean_ids_list
 from misago.threads.events import record_event
 from misago.threads.models import Thread
 from misago.threads.moderation import threads as moderation
-from misago.threads.permissions import allow_merge_thread, can_reply_thread, can_see_thread
+from misago.threads.permissions import allow_merge_thread
 from misago.threads.pollmergehandler import PollMergeHandler
-from misago.threads.serializers import MergeThreadSerializer, NewThreadSerializer, ThreadsListSerializer
-from misago.threads.threadtypes import trees_map
-from misago.threads.utils import get_thread_id_from_url
-
-
-MERGE_LIMIT = 20  # no more than 20 threads can be merged in single action
-
-
-class MergeError(Exception):
-    def __init__(self, msg):
-        self.msg = msg
+from misago.threads.serializers import (
+    MergeThreadSerializer, MergeThreadsSerializer, ThreadsListSerializer)
 
 
 def thread_merge_endpoint(request, thread, viewmodel):
@@ -86,12 +73,26 @@ def thread_merge_endpoint(request, thread, viewmodel):
 
 
 def threads_merge_endpoint(request):
-    try:
-        threads = clean_threads_for_merge(request)
-    except MergeError as e:
-        return Response({'detail': e.msg}, status=403)
+    serializer = MergeThreadsSerializer(
+        data=request.data,
+        context={
+            'user': request.user
+        },
+    )
 
+    if not serializer.is_valid():
+        if 'threads' in serializer.errors:
+            errors = {'detail': serializer.errors['threads'][0]}
+            return Response(errors, status=403)
+        elif 'non_field_errors' in serializer.errors:
+            errors = {'detail': serializer.errors['non_field_errors'][0]}
+            return Response(errors, status=403)
+        else:
+            return Response(serializer.errors, status=400)
+
+    threads = serializer.validated_data['threads']
     invalid_threads = []
+
     for thread in threads:
         try:
             allow_merge_thread(request.user, thread)
@@ -105,66 +106,23 @@ def threads_merge_endpoint(request):
     if invalid_threads:
         return Response(invalid_threads, status=403)
 
-    serializer = NewThreadSerializer(
-        data=request.data,
-        context={'user': request.user},
-    )
-
-    if serializer.is_valid():
-        polls_handler = PollMergeHandler(threads)
-        if len(polls_handler.polls) == 1:
-            poll = polls_handler.polls[0]
-        elif polls_handler.is_merge_conflict():
-            if 'poll' in request.data:
-                polls_handler.set_resolution(request.data.get('poll'))
-                if polls_handler.is_valid():
-                    poll = polls_handler.get_resolution()
-                else:
-                    return Response({'detail': _("Invalid choice.")}, status=400)
+    polls_handler = PollMergeHandler(threads)
+    if len(polls_handler.polls) == 1:
+        poll = polls_handler.polls[0]
+    elif polls_handler.is_merge_conflict():
+        if 'poll' in request.data:
+            polls_handler.set_resolution(request.data.get('poll'))
+            if polls_handler.is_valid():
+                poll = polls_handler.get_resolution()
             else:
-                return Response({'polls': polls_handler.get_available_resolutions()}, status=400)
+                return Response({'detail': _("Invalid choice.")}, status=400)
         else:
-            poll = None
-
-        new_thread = merge_threads(request, serializer.validated_data, threads, poll)
-        return Response(ThreadsListSerializer(new_thread).data)
+            return Response({'polls': polls_handler.get_available_resolutions()}, status=400)
     else:
-        return Response(serializer.errors, status=400)
+        poll = None
 
-
-def clean_threads_for_merge(request):
-    threads_ids = clean_ids_list(
-        request.data.get('threads', []),
-        _("One or more thread ids received were invalid."),
-    )
-
-    if len(threads_ids) < 2:
-        raise MergeError(_("You have to select at least two threads to merge."))
-    elif len(threads_ids) > MERGE_LIMIT:
-        message = ungettext(
-            "No more than %(limit)s thread can be merged at single time.",
-            "No more than %(limit)s threads can be merged at single time.",
-            MERGE_LIMIT,
-        )
-        raise MergeError(message % {'limit': MERGE_LIMIT})
-
-    threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
-
-    threads_queryset = Thread.objects.filter(
-        id__in=threads_ids,
-        category__tree_id=threads_tree_id,
-    ).select_related('category').order_by('-id')
-
-    threads = []
-    for thread in threads_queryset:
-        add_acl(request.user, thread)
-        if can_see_thread(request.user, thread):
-            threads.append(thread)
-
-    if len(threads) != len(threads_ids):
-        raise MergeError(_("One or more threads to merge could not be found."))
-
-    return threads
+    new_thread = merge_threads(request, serializer.validated_data, threads, poll)
+    return Response(ThreadsListSerializer(new_thread).data)
 
 
 def merge_threads(request, validated_data, threads, poll):
