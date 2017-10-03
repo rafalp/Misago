@@ -1,19 +1,11 @@
 from rest_framework.response import Response
 
-from django.core.exceptions import PermissionDenied
 from django.db import transaction
-from django.http import Http404
-from django.utils.six import text_type
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
 
-from misago.conf import settings
-from misago.core.utils import clean_ids_list
-from misago.threads.permissions import allow_delete_thread
 from misago.threads.moderation import threads as moderation
+from misago.threads.permissions import allow_delete_thread
+from misago.threads.serializers import DeleteThreadsSerializer
 
-
-DELETE_LIMIT = settings.MISAGO_THREADS_PER_PAGE + settings.MISAGO_THREADS_TAIL
 
 
 @transaction.atomic
@@ -24,43 +16,35 @@ def delete_thread(request, thread):
 
 
 def delete_bulk(request, viewmodel):
-    threads_ids = clean_threads_ids(request)
+    serializer = DeleteThreadsSerializer(
+        data={
+            'threads': request.data,
+        },
+        context={
+            'request': request,
+            'viewmodel': viewmodel,
+        },
+    )
 
-    errors = []
-    for thread_id in threads_ids:
-        try:
-            thread = viewmodel(request, thread_id).unwrap()
+    if not serializer.is_valid():
+        if 'threads' in serializer.errors:
+            errors = serializer.errors['threads']
+            if 'details' in errors:
+                return Response(
+                    hydrate_error_details(errors['details']), status=400)
+            return Response({'detail': errors[0]}, status=403)
+        else:
+            errors = list(serializer.errors)[0][0]
+            return Response({'detail': errors}, status=400)
+
+    for thread in serializer.validated_data['threads']:
+        with transaction.atomic():
             delete_thread(request, thread)
-        except PermissionDenied as e:
-            errors.append({
-                'thread': {
-                    'id': thread.id,
-                    'title': thread.title
-                },
-                'error': text_type(e)
-            })
-        except Http404:
-            pass # skip invisible threads
 
-    if errors:
-        return Response(errors, status=400)
     return Response([])
 
 
-def clean_threads_ids(request):
-    threads_ids = clean_ids_list(
-        request.data or [],
-        _("One or more thread ids received were invalid."),
-    )
-
-    if not threads_ids:
-        raise PermissionDenied(_("You have to specify at least one thread to delete."))
-    elif len(threads_ids) > DELETE_LIMIT:
-        message = ungettext(
-            "No more than %(limit)s thread can be deleted at single time.",
-            "No more than %(limit)s threads can be deleted at single time.",
-            DELETE_LIMIT,
-        )
-        raise PermissionDenied(message % {'limit': DELETE_LIMIT})
-
-    return sorted(set(threads_ids), reverse=True)
+def hydrate_error_details(errors):
+    for error in errors:
+        error['thread']['id'] = int(error['thread']['id'])
+    return errors

@@ -7,6 +7,7 @@ from misago.categories import PRIVATE_THREADS_ROOT_NAME
 from misago.categories.models import Category
 from misago.threads import testutils
 from misago.threads.models import Thread
+from misago.threads.serializers.moderation import THREADS_LIMIT
 from misago.threads.threadtypes import trees_map
 
 from .test_threads_api import ThreadsApiTestCase
@@ -58,10 +59,10 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
         })
 
         response = self.delete(self.api_link, True)
-        self.assertContains(response, "One or more thread ids received were invalid.", status_code=403)
+        self.assertContains(response, "Expected a list of items", status_code=403)
 
         response = self.delete(self.api_link, 'abbss')
-        self.assertContains(response, "One or more thread ids received were invalid.", status_code=403)
+        self.assertContains(response, "Expected a list of items", status_code=403)
 
         response = self.delete(self.api_link, [1, 2, 3, 'a', 'b', 'x'])
         self.assertContains(response, "One or more thread ids received were invalid.", status_code=403)
@@ -73,8 +74,12 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
             'can_hide_threads': 2,
         })
 
-        response = self.delete(self.api_link, list(range(100)))
-        self.assertContains(response, "No more than 40 threads can be deleted at single time.", status_code=403)
+        response = self.delete(self.api_link, list(range(THREADS_LIMIT + 1)))
+        self.assertContains(
+            response,
+            "No more than {} threads can be deleted at single time.".format(THREADS_LIMIT),
+            status_code=403,
+        )
 
     def test_validate_thread_visibility(self):
         """api valdiates if user can see deleted thread"""
@@ -91,20 +96,11 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
         threads_ids = [p.id for p in self.threads]
 
         response = self.delete(self.api_link, threads_ids)
+        self.assertContains(response, "threads to delete could not be found", status_code=403)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), [])
-
-        # unapproved thread wasn't deleted
-        Thread.objects.get(pk=unapproved_thread.pk)
-
-        deleted_threads = [self.threads[0], self.threads[2]]
-        for thread in deleted_threads:
-            with self.assertRaises(Thread.DoesNotExist):
-                Thread.objects.get(pk=thread.pk)
-
-        category = Category.objects.get(pk=self.category.pk)
-        self.assertNotIn(category.last_thread_id, threads_ids)
+        # no thread was deleted
+        for thread in self.threads:
+            Thread.objects.get(pk=thread.pk)
 
     def test_delete_other_user_thread_no_permission(self):
         """api valdiates if user can delete other users threads"""
@@ -128,15 +124,9 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
             }
         ])
 
-        Thread.objects.get(pk=self.threads[1].pk)
-
-        deleted_threads = [self.threads[0], self.threads[2]]
-        for thread in deleted_threads:
-            with self.assertRaises(Thread.DoesNotExist):
-                Thread.objects.get(pk=thread.pk)
-
-        category = Category.objects.get(pk=self.category.pk)
-        self.assertEqual(category.last_thread_id, self.threads[1].pk)
+        # no threads are removed on failed attempt
+        for thread in self.threads:
+            Thread.objects.get(pk=thread.pk)
 
     def test_delete_thread_closed_category_no_permission(self):
         """api tests category's closed state"""
@@ -159,7 +149,7 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
                     'title': thread.title
                 },
                 'error': "This category is closed. You can't delete threads in it."
-            } for thread in sorted(self.threads, key=lambda i: i.pk, reverse=True)
+            } for thread in sorted(self.threads, key=lambda i: i.pk)
         ])
 
     def test_delete_thread_closed_no_permission(self):
@@ -210,15 +200,7 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
 
         response = self.delete(self.api_link, threads_ids)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), [])
+        self.assertEqual(response.status_code, 403)
+        self.assertContains(response, "threads to delete could not be found", status_code=403)
 
         Thread.objects.get(pk=private_thread.pk)
-
-        deleted_threads = [self.threads[1], self.threads[2]]
-        for thread in deleted_threads:
-            with self.assertRaises(Thread.DoesNotExist):
-                Thread.objects.get(pk=thread.pk)
-
-        category = Category.objects.get(pk=self.category.pk)
-        self.assertNotIn(category.last_thread_id, threads_ids)

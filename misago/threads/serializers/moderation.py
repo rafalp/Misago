@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
+from django.utils import six
 from django.utils.translation import ugettext as _, ugettext_lazy, ungettext
 
 from misago.acl import add_acl
@@ -9,8 +10,10 @@ from misago.categories import THREADS_ROOT_NAME
 from misago.conf import settings
 from misago.threads.models import Thread
 from misago.threads.permissions import (
-    allow_delete_event, allow_delete_post, allow_merge_post, allow_merge_thread,
-    allow_move_post, allow_split_post, can_reply_thread, can_see_thread,
+    allow_delete_event, allow_delete_post, allow_delete_thread,
+    allow_merge_post, allow_merge_thread,
+    allow_move_post, allow_split_post,
+    can_reply_thread, can_see_thread,
     can_start_thread, exclude_invisible_posts)
 from misago.threads.pollmergehandler import PollMergeHandler
 from misago.threads.threadtypes import trees_map
@@ -19,11 +22,12 @@ from misago.threads.validators import validate_category, validate_title
 
 
 POSTS_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
-THREADS_LIMIT = 20
+THREADS_LIMIT = settings.MISAGO_THREADS_PER_PAGE + settings.MISAGO_THREADS_TAIL
 
 
 __all__ = [
     'DeletePostsSerializer',
+    'DeleteThreadsSerializer',
     'MergePostsSerializer',
     'MergeThreadSerializer',
     'MergeThreadsSerializer',
@@ -343,6 +347,63 @@ class SplitPostsSerializer(NewThreadSerializer):
             raise ValidationError(_("One or more posts to split could not be found."))
 
         return posts
+
+
+class DeleteThreadsSerializer(serializers.Serializer):
+    error_empty_or_required = ugettext_lazy("You have to specify at least one thread to delete.")
+
+    threads = serializers.ListField(
+        allow_empty=False,
+        child=serializers.IntegerField(
+            error_messages={
+                'invalid': ugettext_lazy("One or more thread ids received were invalid."),
+            },
+        ),
+        error_messages={
+            'required': error_empty_or_required,
+            'null': error_empty_or_required,
+            'empty': error_empty_or_required,
+        },
+    )
+
+    def validate_threads(self, data):
+        if len(data) > THREADS_LIMIT:
+            message = ungettext(
+                "No more than %(limit)s thread can be deleted at single time.",
+                "No more than %(limit)s threads can be deleted at single time.",
+                THREADS_LIMIT,
+            )
+            raise ValidationError(message % {'limit': THREADS_LIMIT})
+
+        request = self.context['request']
+        viewmodel = self.context['viewmodel']
+
+        threads = []
+        errors = []
+
+        for thread_id in data:
+            try:
+                thread = viewmodel(request, thread_id).unwrap()
+                allow_delete_thread(request.user, thread)
+                threads.append(thread)
+            except PermissionDenied as e:
+                errors.append({
+                    'thread': {
+                        'id': thread.id,
+                        'title': thread.title
+                    },
+                    'error': six.text_type(e)
+                })
+            except Http404 as e:
+                pass # skip invisible threads
+
+        if errors:
+            raise serializers.ValidationError({'details': errors})
+
+        if len(threads) != len(data):
+            raise ValidationError(_("One or more threads to delete could not be found."))
+
+        return threads
 
 
 class MergeThreadSerializer(serializers.Serializer):
