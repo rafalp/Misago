@@ -9,6 +9,7 @@ from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 
 from misago.conf import settings
+from misago.core.decorators import require_dict_data
 from misago.core.mail import mail_user
 from misago.users.bans import get_user_ban
 from misago.users.forms.auth import AuthenticationForm, ResendActivationForm, ResetPasswordForm
@@ -32,6 +33,7 @@ def gateway(request):
 @api_view(['POST'])
 @permission_classes((UnbannedAnonOnly, ))
 @csrf_protect
+@require_dict_data
 def login(request):
     """
     POST /auth/ with CSRF, username and password
@@ -85,6 +87,7 @@ def get_criteria(request):
 @api_view(['POST'])
 @permission_classes((UnbannedAnonOnly, ))
 @csrf_protect
+@require_dict_data
 def send_activation(request):
     """
     POST /auth/send-activation/ with CSRF token and email
@@ -123,6 +126,7 @@ def send_activation(request):
 @api_view(['POST'])
 @permission_classes((UnbannedOnly, ))
 @csrf_protect
+@require_dict_data
 def send_password_form(request):
     """
     POST /auth/send-password-form/ with CSRF token and email
@@ -167,6 +171,7 @@ class PasswordChangeFailed(Exception):
 @api_view(['POST'])
 @permission_classes((UnbannedOnly, ))
 @csrf_protect
+@require_dict_data
 def change_forgotten_password(request, pk, token):
     """
     POST /auth/change-password/user/token/ with CSRF and new password

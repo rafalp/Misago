@@ -7,12 +7,14 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
 from misago.conf import settings
+from misago.core.decorators import require_dict_data
 from misago.core.utils import format_plaintext_for_html
 from misago.users import avatars
 from misago.users.models import AvatarGallery
 from misago.users.serializers import ModerateAvatarSerializer
 
 
+@require_dict_data
 def avatar_endpoint(request, pk=None):
     if request.user.is_avatar_locked:
         if request.user.avatar_lock_user_message:

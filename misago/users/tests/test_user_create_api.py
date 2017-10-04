@@ -23,6 +23,15 @@ class UserCreateTests(UserTestCase):
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 400)
 
+    def test_invalid_data(self):
+        """invalid request data errors with code 400"""
+        response = self.client.post(
+            self.api_link,
+            'false',
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+
     def test_authenticated_request(self):
         """authentiated user request errors with code 403"""
         self.login_user(self.get_authenticated_user())

@@ -84,6 +84,15 @@ class GatewayTests(TestCase):
         response = self.client.post('/api/auth/')
         self.assertContains(response, 'empty_data', status_code=400)
 
+    def test_submit_invalid(self):
+        """login api errors for invalid data"""
+        response = self.client.post(
+            '/api/auth/',
+            'false',
+            content_type="application/json",
+        )
+        self.assertContains(response, "Invalid data.", status_code=400)
+
     def test_login_banned(self):
         """login api fails to sign banned user in"""
         UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
@@ -279,7 +288,16 @@ class SendActivationAPITests(TestCase):
 
         self.assertTrue(not mail.outbox)
 
-    def test_submit_invalid(self):
+    def test_submit_invalid_data(self):
+        """login api errors for invalid data"""
+        response = self.client.post(
+            self.link,
+            'false',
+            content_type="application/json",
+        )
+        self.assertContains(response, "Invalid data.", status_code=400)
+
+    def test_submit_invalid_email(self):
         """request activation link api errors for invalid email"""
         response = self.client.post(
             self.link,
@@ -403,6 +421,15 @@ class SendPasswordFormAPITests(TestCase):
 
         self.assertTrue(not mail.outbox)
 
+    def test_submit_invalid_data(self):
+        """login api errors for invalid data"""
+        response = self.client.post(
+            self.link,
+            'false',
+            content_type="application/json",
+        )
+        self.assertContains(response, "Invalid data.", status_code=400)
+
     def test_submit_inactive_user(self):
         """request change password form link api errors for inactive users"""
         self.user.requires_activation = 1
@@ -461,6 +488,15 @@ class ChangePasswordAPITests(TestCase):
 
         user = UserModel.objects.get(id=self.user.pk)
         self.assertTrue(user.check_password(' n3wp4ss! '))
+
+    def test_submit_invalid_data(self):
+        """login api errors for invalid data"""
+        response = self.client.post(
+            self.link % (self.user.pk, make_password_change_token(self.user)),
+            'false',
+            content_type="application/json",
+        )
+        self.assertContains(response, "Invalid data.", status_code=400)
 
     def test_invalid_token_link(self):
         """api errors on invalid user id link"""
