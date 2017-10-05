@@ -110,10 +110,20 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.override_acl()
 
         response = self.client.post(self.api_link, data={})
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'post': ["You have to enter a message."],
-        })
+
+        self.assertContains(response, "You have to enter a message.", status_code=400)
+
+    def test_invalid_data(self):
+        """api errors for invalid request data"""
+        self.override_acl()
+
+        response = self.client.post(
+            self.api_link,
+            'false',
+            content_type="application/json",
+        )
+
+        self.assertContains(response, "Invalid data.", status_code=400)
 
     def test_post_is_validated(self):
         """post is validated"""

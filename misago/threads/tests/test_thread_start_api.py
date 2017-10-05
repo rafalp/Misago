@@ -116,6 +116,18 @@ class StartThreadTests(AuthenticatedUserTestCase):
             }
         )
 
+    def test_invalid_data(self):
+        """api errors for invalid request data"""
+        self.override_acl()
+
+        response = self.client.post(
+            self.api_link,
+            'false',
+            content_type="application/json",
+        )
+
+        self.assertContains(response, "Invalid data.", status_code=400)
+
     def test_title_is_validated(self):
         """title is validated"""
         self.override_acl()
