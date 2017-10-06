@@ -163,6 +163,28 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
         self.assertEqual(subscription.category_id, self.category.id)
         self.assertTrue(subscription.send_email)
 
+    def test_subscribe_with_events(self):
+        """middleware omits events when testing for replied thread"""
+        self.user.subscribe_to_replied_threads = UserModel.SUBSCRIBE_ALL
+        self.user.save()
+
+        # set event in thread
+        testutils.reply_thread(self.thread, self.user, is_event=True)
+
+        # reply thread
+        response = self.client.post(
+            self.api_link, data={
+                'post': "This is test response!",
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # user has subscribed to thread
+        subscription = self.user.subscription_set.get(thread=self.thread)
+
+        self.assertEqual(subscription.category_id, self.category.id)
+        self.assertTrue(subscription.send_email)
+
     def test_dont_subscribe_replied(self):
         """middleware omits threads user already replied"""
         self.user.subscribe_to_replied_threads = UserModel.SUBSCRIBE_ALL
@@ -177,6 +199,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
 
         # clear subscription
         self.user.subscription_set.all().delete()
+
         # reply again
         response = self.client.post(
             self.api_link, data={

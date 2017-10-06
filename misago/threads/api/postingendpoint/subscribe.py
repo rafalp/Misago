@@ -41,8 +41,15 @@ class SubscribeMiddleware(PostingMiddleware):
         except Subscription.DoesNotExist:
             pass
 
-        # we are replying to thread again?
-        if self.user.post_set.filter(thread=self.thread).count() > 1:
+        # posts user's posts in this thread, minus events and current post
+        posts_queryset = self.user.post_set.filter(
+            thread=self.thread,
+            is_event=False,
+        ).exclude(
+            pk=self.post.pk,
+        )
+
+        if posts_queryset.exists():
             return
 
         self.user.subscription_set.create(
