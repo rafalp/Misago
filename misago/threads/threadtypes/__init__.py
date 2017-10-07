@@ -17,9 +17,6 @@ class ThreadType(object):
     def get_category_last_post_url(self, category):
         return None
 
-    def get_category_read_api_url(self, category):
-        return None
-
     def get_thread_absolute_url(self, thread, page=1):
         return None
 

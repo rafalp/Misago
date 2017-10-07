@@ -6,7 +6,6 @@ export const DELETE_THREAD = 'DELETE_THREAD';
 export const FILTER_THREADS = 'FILTER_THREADS';
 export const HYDRATE_THREADS = 'HYDRATE_THREADS';
 export const PATCH_THREAD = 'PATCH_THREAD';
-export const READ_THREADS = 'READ_THREADS';
 export const SORT_THREADS = 'SORT_THREADS';
 
 export const MODERATION_PERMISSIONS = [
@@ -56,14 +55,6 @@ export function patch(thread, patch, sorting=null) {
     thread,
     patch,
     sorting
-  };
-}
-
-export function read(categoriesMap, category) {
-  return {
-    type: READ_THREADS,
-    categoriesMap,
-    category
   };
 }
 
@@ -134,18 +125,6 @@ export default function thread(state=[], action=null) {
         return patchedState.sort(action.sorting);
       }
       return patchedState;
-
-    case READ_THREADS:
-      return state.map(function(item) {
-        const itemCategory = action.categoriesMap[item.category];
-        if (itemCategory.lft >= action.category.lft && itemCategory.rght <= action.category.rght) {
-          return Object.assign({}, item, {
-            is_read: true
-          });
-        } else {
-          return item;
-        }
-      });
 
     case SORT_THREADS:
       return state.sort(action.sorting);

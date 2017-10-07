@@ -42,9 +42,6 @@ class PrivateThread(ThreadType):
             }
         )
 
-    def get_category_read_api_url(self, category):
-        return reverse('misago:api:private-thread-read')
-
     def get_thread_absolute_url(self, thread, page=1):
         if page > 1:
             return reverse(

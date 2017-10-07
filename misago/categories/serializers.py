@@ -36,7 +36,6 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
     subcategories = serializers.SerializerMethodField()
     acl = serializers.SerializerMethodField()
 
-    api = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
 
     class Meta:
@@ -60,7 +59,6 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
             'level',
             'lft',
             'rght',
-            'api',
             'url',
         ]
 
@@ -104,11 +102,6 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
                 )
             }
         return None
-
-    def get_api(self, obj):
-        return {
-            'read': obj.get_read_api_url(),
-        }
 
     def get_url(self, obj):
         return {

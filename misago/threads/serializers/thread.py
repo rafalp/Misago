@@ -18,7 +18,7 @@ __all__ = [
 
 BasicCategorySerializer = CategorySerializer.subset_fields(
     'id', 'parent', 'name', 'description', 'is_closed', 'css_class',
-    'level', 'lft', 'rght', 'is_read', 'api', 'url'
+    'level', 'lft', 'rght', 'is_read', 'url'
 )
 
 

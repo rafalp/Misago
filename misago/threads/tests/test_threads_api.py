@@ -194,60 +194,6 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
             self.assertTrue(response_json['has_unapproved_posts'])
 
 
-class ThreadsReadApiTests(ThreadsApiTestCase):
-    def setUp(self):
-        super(ThreadsReadApiTests, self).setUp()
-        self.api_link = self.category.get_read_api_url()
-
-    def test_read_category_invalid_id(self):
-        """api validates that category id is int"""
-        api_link = '{}?category=abcd'.format(reverse('misago:api:thread-read'))
-
-        response = self.client.post(api_link)
-        self.assertEqual(response.status_code, 404)
-
-    def test_read_category_nonexistant_id(self):
-        """api validates that category for id exists"""
-        api_link = '{}123'.format(self.api_link)
-
-        response = self.client.post(api_link)
-        self.assertEqual(response.status_code, 404)
-
-    def test_read_category_no_see(self):
-        """api validates permission to see category"""
-        self.override_acl({'can_see': 0})
-
-        response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 404)
-
-    def test_read_category_no_browse(self):
-        """api validates permission to browse category"""
-        self.override_acl({'can_browse': 0})
-
-        response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-
-    def test_read_category(self):
-        """api sets threads in category as read"""
-        self.assertEqual(self.category.categoryread_set.count(), 0)
-
-        response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 200)
-
-        self.category.categoryread_set.get(user=self.user)
-
-    def test_read_all(self):
-        """api sets all threads as read"""
-        self.assertEqual(self.root.categoryread_set.count(), 0)
-        self.assertEqual(self.category.categoryread_set.count(), 0)
-
-        response = self.client.post(self.root.get_read_api_url())
-        self.assertEqual(response.status_code, 200)
-
-        self.root.categoryread_set.get(user=self.user)
-        self.category.categoryread_set.get(user=self.user)
-
-
 class ThreadDeleteApiTests(ThreadsApiTestCase):
     def setUp(self):
         super(ThreadDeleteApiTests, self).setUp()
