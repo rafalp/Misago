@@ -193,7 +193,7 @@ msgstr "Сгенерировать индивидуальную аватарку
 #: static/misago/js/misago.js:16 static/misago/js/misago.js:18
 #: static/misago/js/misago.js:19
 msgid "Ok"
-msgstr ""
+msgstr "Ок"
 
 #: static/misago/js/misago.js:2
 msgid "Change your avatar"
@@ -388,7 +388,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:4 static/misago/js/misago.js:13
 msgid "Search"
-msgstr ""
+msgstr "Поиск"
 
 #: static/misago/js/misago.js:4
 msgid "See full \"%(provider)s\" results page with %(count)s result."
@@ -598,7 +598,7 @@ msgstr "%(user)s новый владелец темы."
 
 #: static/misago/js/misago.js:5
 msgid "Thread owner"
-msgstr ""
+msgstr "Владелец темы"
 
 #: static/misago/js/misago.js:5
 msgid "See profile"
@@ -1172,7 +1172,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:9
 msgid "New event"
-msgstr ""
+msgstr "Новое событие"
 
 #: static/misago/js/misago.js:9
 msgid "Hidden by %(hidden_by)s %(hidden_on)s."
@@ -1193,19 +1193,19 @@ msgstr "Сообщение удалено."
 
 #: static/misago/js/misago.js:9
 msgid "Permament link to this post:"
-msgstr ""
+msgstr "Постоянная ссылка на это сообщение:"
 
 #: static/misago/js/misago.js:9
 msgid "Permament link"
-msgstr ""
+msgstr "Постоянная ссылка"
 
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:10
 msgid "This post was edited %(edits)s time."
 msgid_plural "This post was edited %(edits)s times."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Это сообщение было отредактировано %(edits)s раз."
+msgstr[1] "Это сообщение было отредактировано %(edits)s раза."
+msgstr[2] "Это сообщение было отредактировано %(edits)s раз."
+msgstr[3] "Это сообщение было отредактировано %(edits)s раз."
 
 #: static/misago/js/misago.js:9
 msgid "Changes history"
@@ -1265,7 +1265,7 @@ msgstr ""
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:15
 #: static/misago/js/misago.js:18
 msgid "Not pinned"
-msgstr ""
+msgstr "Не закреплено"
 
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:15
 #: static/misago/js/misago.js:18
@@ -1356,7 +1356,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:10
 msgid "protected"
-msgstr ""
+msgstr "защищено"
 
 #: static/misago/js/misago.js:10
 msgid "edited %(edits)s time"
@@ -1722,7 +1722,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:13
 msgid "Search..."
-msgstr ""
+msgstr "Поиск..."
 
 #: static/misago/js/misago.js:13
 msgid "New registrations are currently disabled."
@@ -1742,16 +1742,16 @@ msgstr "Регистрируясь, вы соглашаетесь с услов�
 
 #: static/misago/js/misago.js:13
 msgid "Username"
-msgstr ""
+msgstr "Имя пользователя"
 
 #: static/misago/js/misago.js:13 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:17
 msgid "E-mail"
-msgstr ""
+msgstr "Электронная почта"
 
 #: static/misago/js/misago.js:13 static/misago/js/misago.js:14
 msgid "Password"
-msgstr ""
+msgstr "Пароль"
 
 #: static/misago/js/misago.js:13
 msgid "Register account"
@@ -1900,10 +1900,10 @@ msgstr ""
 #: static/misago/js/misago.js:14 static/misago/js/misago.js:17
 msgid "%(replies)s reply"
 msgid_plural "%(replies)s replies"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%(replies)s ответ"
+msgstr[1] "%(replies)s ответа"
+msgstr[2] "%(replies)s ответов"
+msgstr[3] "%(replies)s ответов"
 
 #: static/misago/js/misago.js:14
 msgid "last reply by %(user)s %(date)s"

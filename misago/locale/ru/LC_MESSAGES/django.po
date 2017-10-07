@@ -2797,11 +2797,11 @@ msgstr[3] "%(followers)s последователя"
 #: threads/admin.py:32 threads/permissions/attachments.py:12
 #: threads/permissions/attachments.py:28
 msgid "Attachments"
-msgstr "Прикрепления"
+msgstr "Вложения"
 
 #: threads/admin.py:39
 msgid "Attachment types"
-msgstr "Типы прикрепления"
+msgstr "Типы вложений"
 
 #: threads/api/attachments.py:19
 msgid "You don't have permission to upload new files."
@@ -3002,7 +3002,7 @@ msgstr "Одна или больше публикаций не может быт
 #: threads/api/postingendpoint/attachments.py:61
 #, python-format
 msgid "You don't have permission to remove \"%(attachment)s\" attachment."
-msgstr "У вас нет разрешения удалять прикрепление — \"%(attachment)s\"."
+msgstr "У вас нет разрешения удалять вложение \"%(attachment)s\"."
 
 #: threads/api/postingendpoint/attachments.py:128
 #, python-format
@@ -3298,16 +3298,16 @@ msgid ""
 "List of comma separated file extensions associated with this attachment "
 "type."
 msgstr ""
-"Список расширений файлов разделённых запятой, ассоциированных с типом этого "
-"прикрепления."
+"Список разделённых через запятую расширений файлов, ассоциированых с этим "
+"типом вложения."
 
 #: threads/forms.py:63
 msgid ""
 "Optional list of comma separated mime types associated with this attachment "
 "type."
 msgstr ""
-"Дополнительный список mime-типов разделённых запятой ассоциированы с типом "
-"этого прикрепления."
+"Необязательный список разделённых через запятую mime-типов, ассоциированых с"
+" этим типом вложения."
 
 #: threads/forms.py:66
 msgid ""
@@ -3319,7 +3319,7 @@ msgstr ""
 
 #: threads/forms.py:69
 msgid "Controls this attachment type availability on your site."
-msgstr "Контроллеры этого типа прикрепления доступны на вашем сайте."
+msgstr "Контролирует доступность этого типа вложения на вашем сайте."
 
 #: threads/forms.py:71
 msgid ""
@@ -3330,7 +3330,7 @@ msgid ""
 msgstr ""
 "Если вы желаете ограничить вариант загрузки файлов этого типа пользователям "
 "с указанными ролями, выберете их в этом списке. Не выбрав никакую из ролей, "
-"вы позволите пользователям с разрешением загружать прикрепления этого типа."
+"вы позволите пользователям с разрешением загружать вложения этого типа."
 
 #: threads/forms.py:77
 msgid ""
@@ -3342,7 +3342,7 @@ msgstr ""
 "Если вы желаете ограничить вариант скачивания файлов этого типа "
 "пользователям с указанными ролями, выберете их в этом списке. Не выбрав "
 "никакую из ролей, вы позволите пользователям с разрешением скачивать "
-"прикрепления этого типа."
+"вложения этого типа."
 
 #: threads/migrations/0002_threads_settings.py:17
 #: threads/migrations/0004_update_settings.py:17
@@ -3444,23 +3444,23 @@ msgstr "%(user)s пригласил вас стать участником в п
 
 #: threads/permissions/attachments.py:15
 msgid "Max attached file size (in kb)"
-msgstr "Максимальный прикрепляемый размер файла (в kb)"
+msgstr "Максимальный прикрепляемый размер файла (в кб)"
 
 #: threads/permissions/attachments.py:16
 msgid "Enter 0 to don't allow uploading end deleting attachments."
-msgstr "Введите 0, чтобы не позволить загружать удаляемые прикрепления."
+msgstr "Введите 0, чтобы не позволить загрузку и удаление вложений."
 
 #: threads/permissions/attachments.py:22
 msgid "Can download other users attachments"
-msgstr "Можно скачивать прикрепления других пользователей"
+msgstr "Можно скачивать вложения других пользователей"
 
 #: threads/permissions/attachments.py:24
 msgid "Can delete other users attachments"
-msgstr "Можно удалять прикрепления других пользователей"
+msgstr "Можно удалять вложения других пользователей"
 
 #: threads/permissions/attachments.py:30
 msgid "Can download attachments"
-msgstr "Можно скачивать прикрепления"
+msgstr "Можно скачивать вложения"
 
 #: threads/permissions/polls.py:29
 msgid "Polls"
@@ -4758,7 +4758,7 @@ msgstr "У вас нет разрешения видеть не одобренн
 
 #: threads/views/admin/attachments.py:14
 msgid "Requested attachment could not be found."
-msgstr "Запрошенное прикрепление не может быть найдено."
+msgstr "Запрошенное вложение не может быть найдено."
 
 #: threads/views/admin/attachments.py:24 users/views/admin/bans.py:24
 #: users/views/admin/users.py:55
@@ -4790,19 +4790,19 @@ msgstr "Наибольшие файлы"
 
 #: threads/views/admin/attachments.py:31
 msgid "With attachments: 0"
-msgstr "С прикреплениями: 0"
+msgstr "С вложениями: 0"
 
 #: threads/views/admin/attachments.py:32
 msgid "Select attachments"
-msgstr "Выбрать прикрепления"
+msgstr "Выбрать вложения"
 
 #: threads/views/admin/attachments.py:36
 msgid "Delete attachments"
-msgstr "Удалить прикрепления"
+msgstr "Удалить вложения"
 
 #: threads/views/admin/attachments.py:38
 msgid "Are you sure you want to delete selected attachments?"
-msgstr "Вы уверены, что хотите удалить выбранные прикрепления?"
+msgstr "Вы уверены, что хотите удалить выбранные вложения?"
 
 #: threads/views/admin/attachments.py:63
 msgid "Selected attachments have been deleted."
@@ -4811,11 +4811,11 @@ msgstr "Выбранные прикрепления удалены."
 #: threads/views/admin/attachments.py:84
 #, python-format
 msgid "Attachment \"%(filename)s\" has been deleted."
-msgstr "Прикрепление \"%(filename)s\" было удалено."
+msgstr "Вложение \"%(filename)s\" было удалено."
 
 #: threads/views/admin/attachmenttypes.py:15
 msgid "Requested attachment type could not be found."
-msgstr "Запрошенное прикрепление не может быть найдено."
+msgstr "Запрошенное вложение не может быть найдено."
 
 #: threads/views/admin/attachmenttypes.py:36
 #, python-format
@@ -4825,7 +4825,7 @@ msgstr "Новый тип \"%(name)s\" был сохранён."
 #: threads/views/admin/attachmenttypes.py:40
 #, python-format
 msgid "Attachment type \"%(name)s\" has been edited."
-msgstr "Тип прикрепления \"%(name)s\" был отредактирован."
+msgstr "Тип вложений \"%(name)s\" был отредактирован."
 
 #: threads/views/admin/attachmenttypes.py:47
 #, python-format
@@ -4833,13 +4833,13 @@ msgid ""
 "Attachment type \"%(name)s\" has associated attachments and can't be "
 "deleted."
 msgstr ""
-"Тип прикрепления \"%(name)s\" ассоциировался с прикреплениями и не может "
+"Тип вложений \"%(name)s\" имеет ассоциированные с ним вложения и не может "
 "быть удалён."
 
 #: threads/views/admin/attachmenttypes.py:53
 #, python-format
 msgid "Attachment type \"%(name)s\" has been deleted."
-msgstr "Тип прикрепления \"%(name)s\" был удалён."
+msgstr "Тип вложения \"%(name)s\" был удалён."
 
 #: threads/views/goto.py:104
 msgid ""

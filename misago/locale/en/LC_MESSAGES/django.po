@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-08 22:51+0200\n"
+"POT-Creation-Date: 2017-10-07 01:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2650,108 +2650,16 @@ msgid ""
 "%(upload)s)."
 msgstr ""
 
-#: threads/api/pollvotecreateendpoint.py:47
-#, python-format
-msgid "This poll disallows voting for more than %(choices)s choice."
-msgid_plural "This poll disallows voting for more than %(choices)s choices."
-msgstr[0] ""
-msgstr[1] ""
-
-#: threads/api/pollvotecreateendpoint.py:53
-#: threads/api/pollvotecreateendpoint.py:63
-msgid "One or more of poll choices were invalid."
-msgstr ""
-
-#: threads/api/pollvotecreateendpoint.py:65
-msgid "You have to make a choice."
-msgstr ""
-
-#: threads/api/postendpoints/delete.py:50 threads/api/postendpoints/merge.py:58
-#: threads/api/postendpoints/move.py:73 threads/api/postendpoints/split.py:38
-msgid "One or more post ids received were invalid."
-msgstr ""
-
-#: threads/api/postendpoints/delete.py:54
-msgid "You have to specify at least one post to delete."
-msgstr ""
-
-#: threads/api/postendpoints/delete.py:57
-#, python-format
-msgid "No more than %(limit)s post can be deleted at single time."
-msgid_plural "No more than %(limit)s posts can be deleted at single time."
-msgstr[0] ""
-msgstr[1] ""
-
-#: threads/api/postendpoints/delete.py:77
-msgid "One or more posts to delete could not be found."
-msgstr ""
-
 #: threads/api/postendpoints/edits.py:89
 msgid "Edits record is unavailable for this post."
 msgstr ""
 
-#: threads/api/postendpoints/merge.py:19
+#: threads/api/postendpoints/merge.py:12
 msgid "You can't merge posts in this thread."
 msgstr ""
 
-#: threads/api/postendpoints/merge.py:62
-msgid "You have to select at least two posts to merge."
-msgstr ""
-
-#: threads/api/postendpoints/merge.py:65
-#, python-format
-msgid "No more than %(limit)s post can be merged at single time."
-msgid_plural "No more than %(limit)s posts can be merged at single time."
-msgstr[0] ""
-msgstr[1] ""
-
-#: threads/api/postendpoints/merge.py:84
-msgid "Posts made by different users can't be merged."
-msgstr ""
-
-#: threads/api/postendpoints/merge.py:95
-msgid "Posts with different visibility can't be merged."
-msgstr ""
-
-#: threads/api/postendpoints/merge.py:100
-msgid "One or more posts to merge could not be found."
-msgstr ""
-
-#: threads/api/postendpoints/move.py:19
+#: threads/api/postendpoints/move.py:11
 msgid "You can't move posts in this thread."
-msgstr ""
-
-#: threads/api/postendpoints/move.py:50 threads/api/threadendpoints/merge.py:36
-msgid "This is not a valid thread link."
-msgstr ""
-
-#: threads/api/postendpoints/move.py:52
-msgid "Thread to move posts to is same as current one."
-msgstr ""
-
-#: threads/api/postendpoints/move.py:59 threads/api/threadendpoints/merge.py:51
-msgid ""
-"The thread you have entered link to doesn't exist or you don't have "
-"permission to see it."
-msgstr ""
-
-#: threads/api/postendpoints/move.py:65
-msgid "You can't move posts to threads you can't reply."
-msgstr ""
-
-#: threads/api/postendpoints/move.py:77
-msgid "You have to specify at least one post to move."
-msgstr ""
-
-#: threads/api/postendpoints/move.py:80
-#, python-format
-msgid "No more than %(limit)s post can be moved at single time."
-msgid_plural "No more than %(limit)s posts can be moved at single time."
-msgstr[0] ""
-msgstr[1] ""
-
-#: threads/api/postendpoints/move.py:98
-msgid "One or more posts to move could not be found."
 msgstr ""
 
 #: threads/api/postendpoints/patch_post.py:36
@@ -2767,23 +2675,8 @@ msgstr ""
 msgid "One or more posts to update could not be found."
 msgstr ""
 
-#: threads/api/postendpoints/split.py:20
+#: threads/api/postendpoints/split.py:14
 msgid "You can't split posts from this thread."
-msgstr ""
-
-#: threads/api/postendpoints/split.py:42
-msgid "You have to specify at least one post to split."
-msgstr ""
-
-#: threads/api/postendpoints/split.py:45
-#, python-format
-msgid "No more than %(limit)s post can be split at single time."
-msgid_plural "No more than %(limit)s posts can be split at single time."
-msgstr[0] ""
-msgstr[1] ""
-
-#: threads/api/postendpoints/split.py:64
-msgid "One or more posts to split could not be found."
 msgstr ""
 
 #: threads/api/postingendpoint/attachments.py:61
@@ -2871,22 +2764,6 @@ msgstr ""
 msgid "You have to enter thread title."
 msgstr ""
 
-#: threads/api/threadendpoints/delete.py:53
-#: threads/api/threadendpoints/merge.py:142
-msgid "One or more thread ids received were invalid."
-msgstr ""
-
-#: threads/api/threadendpoints/delete.py:57
-msgid "You have to specify at least one thread to delete."
-msgstr ""
-
-#: threads/api/threadendpoints/delete.py:60
-#, python-format
-msgid "No more than %(limit)s thread can be deleted at single time."
-msgid_plural "No more than %(limit)s threads can be deleted at single time."
-msgstr[0] ""
-msgstr[1] ""
-
 #: threads/api/threadendpoints/editor.py:15
 msgid "You need to be signed in to start threads."
 msgstr ""
@@ -2896,32 +2773,9 @@ msgid ""
 "No categories that allow new threads are available to you at the moment."
 msgstr ""
 
-#: threads/api/threadendpoints/merge.py:38
-msgid "You can't merge thread with itself."
-msgstr ""
-
-#: threads/api/threadendpoints/merge.py:44
-msgid "You can't merge this thread into thread you can't reply."
-msgstr ""
-
-#: threads/api/threadendpoints/merge.py:73
-#: threads/api/threadendpoints/merge.py:127
+#: threads/api/threadendpoints/merge.py:118
+#: threads/serializers/moderation.py:418 threads/serializers/moderation.py:465
 msgid "Invalid choice."
-msgstr ""
-
-#: threads/api/threadendpoints/merge.py:146
-msgid "You have to select at least two threads to merge."
-msgstr ""
-
-#: threads/api/threadendpoints/merge.py:149
-#, python-format
-msgid "No more than %(limit)s thread can be merged at single time."
-msgid_plural "No more than %(limit)s threads can be merged at single time."
-msgstr[0] ""
-msgstr[1] ""
-
-#: threads/api/threadendpoints/merge.py:169
-msgid "One or more threads to merge could not be found."
 msgstr ""
 
 #: threads/api/threadendpoints/patch.py:52
@@ -2973,11 +2827,7 @@ msgstr ""
 msgid "One or more threads to update could not be found."
 msgstr ""
 
-#: threads/api/threadendpoints/pollmergehandler.py:33
-msgid "Delete all polls"
-msgstr ""
-
-#: threads/api/threadpoll.py:55
+#: threads/api/threadpoll.py:53
 msgid "There's already a poll in this thread."
 msgstr ""
 
@@ -2993,7 +2843,7 @@ msgstr ""
 msgid "You can't see who liked this post."
 msgstr ""
 
-#: threads/api/threads.py:131
+#: threads/api/threads.py:129
 msgid "You can't start private threads."
 msgstr ""
 
@@ -4185,24 +4035,165 @@ msgstr ""
 msgid "This thread is closed. You can't delete events in it."
 msgstr ""
 
-#: threads/serializers/moderation.py:35
+#: threads/pollmergehandler.py:33
+msgid "Delete all polls"
+msgstr ""
+
+#: threads/serializers/moderation.py:41
+msgid "You have to specify at least one post to delete."
+msgstr ""
+
+#: threads/serializers/moderation.py:47 threads/serializers/moderation.py:96
+#: threads/serializers/moderation.py:172 threads/serializers/moderation.py:309
+msgid "One or more post ids received were invalid."
+msgstr ""
+
+#: threads/serializers/moderation.py:60
+#, python-format
+msgid "No more than %(limit)s post can be deleted at single time."
+msgid_plural "No more than %(limit)s posts can be deleted at single time."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/serializers/moderation.py:85
+msgid "One or more posts to delete could not be found."
+msgstr ""
+
+#: threads/serializers/moderation.py:91
+msgid "You have to select at least two posts to merge."
+msgstr ""
+
+#: threads/serializers/moderation.py:112
+#, python-format
+msgid "No more than %(limit)s post can be merged at single time."
+msgid_plural "No more than %(limit)s posts can be merged at single time."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/serializers/moderation.py:137
+msgid "Posts made by different users can't be merged."
+msgstr ""
+
+#: threads/serializers/moderation.py:149
+msgid "Posts with different visibility can't be merged."
+msgstr ""
+
+#: threads/serializers/moderation.py:155
+msgid "One or more posts to merge could not be found."
+msgstr ""
+
+#: threads/serializers/moderation.py:161
+msgid "You have to specify at least one post to move."
+msgstr ""
+
+#: threads/serializers/moderation.py:165 threads/serializers/moderation.py:412
+msgid "Enter link to new thread."
+msgstr ""
+
+#: threads/serializers/moderation.py:189 threads/serializers/moderation.py:429
+msgid "This is not a valid thread link."
+msgstr ""
+
+#: threads/serializers/moderation.py:191
+msgid "Thread to move posts to is same as current one."
+msgstr ""
+
+#: threads/serializers/moderation.py:198 threads/serializers/moderation.py:441
+msgid ""
+"The thread you have entered link to doesn't exist or you don't have "
+"permission to see it."
+msgstr ""
+
+#: threads/serializers/moderation.py:204
+msgid "You can't move posts to threads you can't reply."
+msgstr ""
+
+#: threads/serializers/moderation.py:212
+#, python-format
+msgid "No more than %(limit)s post can be moved at single time."
+msgid_plural "No more than %(limit)s posts can be moved at single time."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/serializers/moderation.py:236
+msgid "One or more posts to move could not be found."
+msgstr ""
+
+#: threads/serializers/moderation.py:259
 msgid "You can't create new threads in selected category."
 msgstr ""
 
-#: threads/serializers/moderation.py:47
+#: threads/serializers/moderation.py:271
 msgid "You don't have permission to pin threads globally in this category."
 msgstr ""
 
-#: threads/serializers/moderation.py:51
+#: threads/serializers/moderation.py:275
 msgid "You don't have permission to pin threads in this category."
 msgstr ""
 
-#: threads/serializers/moderation.py:62
+#: threads/serializers/moderation.py:286
 msgid "You don't have permission to hide threads in this category."
 msgstr ""
 
-#: threads/serializers/moderation.py:73
+#: threads/serializers/moderation.py:297
 msgid "You don't have permission to close threads in this category."
+msgstr ""
+
+#: threads/serializers/moderation.py:303
+msgid "You have to specify at least one post to split."
+msgstr ""
+
+#: threads/serializers/moderation.py:322
+#, python-format
+msgid "No more than %(limit)s post can be split at single time."
+msgid_plural "No more than %(limit)s posts can be split at single time."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/serializers/moderation.py:347
+msgid "One or more posts to split could not be found."
+msgstr ""
+
+#: threads/serializers/moderation.py:353
+msgid "You have to specify at least one thread to delete."
+msgstr ""
+
+#: threads/serializers/moderation.py:359 threads/serializers/moderation.py:482
+msgid "One or more thread ids received were invalid."
+msgstr ""
+
+#: threads/serializers/moderation.py:372
+#, python-format
+msgid "No more than %(limit)s thread can be deleted at single time."
+msgid_plural "No more than %(limit)s threads can be deleted at single time."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/serializers/moderation.py:404
+msgid "One or more threads to delete could not be found."
+msgstr ""
+
+#: threads/serializers/moderation.py:431
+msgid "You can't merge thread with itself."
+msgstr ""
+
+#: threads/serializers/moderation.py:447
+msgid "You can't merge this thread into thread you can't reply."
+msgstr ""
+
+#: threads/serializers/moderation.py:475
+msgid "You have to select at least two threads to merge."
+msgstr ""
+
+#: threads/serializers/moderation.py:496
+#, python-format
+msgid "No more than %(limit)s thread can be merged at single time."
+msgid_plural "No more than %(limit)s threads can be merged at single time."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/serializers/moderation.py:518
+msgid "One or more threads to merge could not be found."
 msgstr ""
 
 #: threads/serializers/poll.py:129
@@ -4226,6 +4217,21 @@ msgstr[1] ""
 
 #: threads/serializers/poll.py:155
 msgid "Number of allowed choices can't be greater than number of all choices."
+msgstr ""
+
+#: threads/serializers/pollvote.py:22
+#, python-format
+msgid "This poll disallows voting for more than %(choices)s choice."
+msgid_plural "This poll disallows voting for more than %(choices)s choices."
+msgstr[0] ""
+msgstr[1] ""
+
+#: threads/serializers/pollvote.py:39
+msgid "One or more of poll choices were invalid."
+msgstr ""
+
+#: threads/serializers/pollvote.py:43
+msgid "You have to make a choice."
 msgstr ""
 
 #: threads/templatetags/misago_poststags.py:20
@@ -4458,21 +4464,21 @@ msgstr ""
 msgid "Bans"
 msgstr ""
 
-#: users/api/auth.py:97
+#: users/api/auth.py:100
 #, python-format
 msgid "Activate %(user)s account on %(forum_name)s forums"
 msgstr ""
 
-#: users/api/auth.py:135
+#: users/api/auth.py:139
 #, python-format
 msgid "Change %(user)s password on %(forum_name)s forums"
 msgstr ""
 
-#: users/api/auth.py:175
+#: users/api/auth.py:180
 msgid "Form link is invalid. Please try again."
 msgstr ""
 
-#: users/api/auth.py:176
+#: users/api/auth.py:181
 msgid "Your link has expired. Please request new one."
 msgstr ""
 
@@ -4480,51 +4486,51 @@ msgstr ""
 msgid "This action is not available to signed in users."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:25
+#: users/api/userendpoints/avatar.py:27
 msgid "Your avatar is locked. You can't change it."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:109
+#: users/api/userendpoints/avatar.py:111
 msgid "This avatar type is not allowed."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:118
+#: users/api/userendpoints/avatar.py:120
 msgid "Unknown avatar type."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:141
+#: users/api/userendpoints/avatar.py:143
 msgid "New avatar based on your account was set."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:147
+#: users/api/userendpoints/avatar.py:149
 msgid "Gravatar was downloaded and set as new avatar."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:149
+#: users/api/userendpoints/avatar.py:151
 msgid "No Gravatar is associated with your e-mail address."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:151
+#: users/api/userendpoints/avatar.py:153
 msgid "Failed to connect to Gravatar servers."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:161
+#: users/api/userendpoints/avatar.py:163
 msgid "Avatar from gallery was set."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:163
+#: users/api/userendpoints/avatar.py:165
 msgid "Incorrect image."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:169
+#: users/api/userendpoints/avatar.py:171
 msgid "No file was sent."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:182
+#: users/api/userendpoints/avatar.py:184
 msgid "Avatar was re-cropped."
 msgstr ""
 
-#: users/api/userendpoints/avatar.py:187
+#: users/api/userendpoints/avatar.py:189
 msgid "Uploaded avatar was set."
 msgstr ""
 

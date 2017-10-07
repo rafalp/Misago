@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-08 22:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Simon Veron <veron.simon@hotmail.fr>, 2017\n"
+"Last-Translator: Guy Cronimus <guy.cronimus@orange.fr>, 2017\n"
 "Language-Team: French (https://www.transifex.com/misago/teams/65369/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -146,7 +146,7 @@ msgstr "Cette action n'est pas autorisee."
 #: admin/views/index.py:70
 #, python-format
 msgid "Outdated: %(current)s! (latest: %(latest)s)"
-msgstr ""
+msgstr "Caduc: %(current)s! (dernier: %(latest)s)"
 
 #: admin/views/index.py:78
 #, python-format
@@ -198,11 +198,11 @@ msgstr ""
 
 #: categories/forms.py:63
 msgid "Closed category"
-msgstr "Catégorie fermée."
+msgstr "Catégorie closes."
 
 #: categories/forms.py:65
 msgid "Only members with valid permissions can post in closed categories."
-msgstr "Seul les membres autorisés peuvent écrire dans une catégorie fermée."
+msgstr "Seul les membres autorisés peuvent écrire dans une catégorie close."
 
 #: categories/forms.py:75 templates/misago/admin/index.html:83
 #: templates/misago/admin/users/delete.html:32 templates/misago/navbar.html:18
@@ -224,7 +224,7 @@ msgstr "Fils de discussion"
 #: categories/forms.py:77
 msgid "All threads started in this category will require moderator approval."
 msgstr ""
-"Les fils de discussions démarrées dans cette catégorie nécessiteront "
+"Les fils de discussion démarrés dans cette catégorie nécessiteront "
 "l'approbation du modérateur."
 
 #: categories/forms.py:80
@@ -258,9 +258,8 @@ msgid ""
 "Prune thread if number of days since its creation is greater than specified."
 " Enter 0 to disable this pruning criteria."
 msgstr ""
-"Le fils de discussion est retiré si le nombre de jours depuis sa création "
-"est supérieur à celui spécifié ci-contre. Entrez 0 pour désactiver ce "
-"critères."
+"Le fil de discussion est retiré si le nombre de jours depuis sa création est"
+" supérieur à celui spécifié ci-contre. Entrez 0 pour désactiver ce critère."
 
 #: categories/forms.py:100
 msgid "Last reply"
@@ -314,7 +313,7 @@ msgid ""
 "Instead of being deleted, pruned threads can be moved to designated "
 "category."
 msgstr ""
-"Au lieu d'être supprimé, les fils de discussions obsolètes peuvent être "
+"Au lieu d'être supprimé, les fils de discussion obsolètes peuvent être "
 "déplacés vers une catégorie."
 
 #: categories/forms.py:175
@@ -1730,11 +1729,11 @@ msgstr "Aucune catégorie n'existe ou vous n'êtes pas autorisé à les voir"
 
 #: templates/misago/categories/icon.html:4
 msgid "This category has no new posts. (closed)"
-msgstr "Cette catégorie n'a pas de nouveaux messages. (fermée)"
+msgstr "Cette catégorie n'a pas de nouveaux messages. (close)"
 
 #: templates/misago/categories/icon.html:10
 msgid "This category has new posts. (closed)"
-msgstr "Cette catégorie a de nouveaux messages. (fermée)"
+msgstr "Cette catégorie a de nouveaux messages. (close)"
 
 #: templates/misago/categories/icon.html:18
 msgid "This category has no new posts."
@@ -1865,12 +1864,12 @@ msgid ""
 "to participate in private thread %(thread)s."
 msgstr ""
 "%(user)s, vous recevez ce message car %(sender)s vous a invité à participer "
-"a un fil de discussion privé %(thread)s."
+"à un fil de discussion privé %(thread)s."
 
 #: templates/misago/emails/privatethread/added.html:14
 #: templates/misago/emails/privatethread/added.txt:10
 msgid "To read this thread click the link below:"
-msgstr "Pour lire ce fil, cliquez sur le lien ci-dessous:"
+msgstr "Pour lire ce fil de discussion, cliquez sur le lien ci-dessous :"
 
 #: templates/misago/emails/privatethread/added.txt:6
 #, python-format
@@ -1879,7 +1878,7 @@ msgid ""
 "to participate in private thread \"%(thread)s\"."
 msgstr ""
 "%(user)s, vous recevez ce message car %(sender)s vous a invité à participer "
-"a un fil de discussion privé %(thread)s."
+"à un fil de discussion privé %(thread)s."
 
 #: templates/misago/emails/register/complete.html:6
 #: templates/misago/emails/register/complete.txt:6
@@ -2137,14 +2136,14 @@ msgstr "Ajouter un participant"
 msgid "This thread has %(users)s participant."
 msgid_plural "This thread has %(users)s participants."
 msgstr[0] "%(users)s utilisateur participe a ce fil de discussion."
-msgstr[1] "%(users)s utilisateurs participent a ce fil de discussion."
+msgstr[1] "%(users)s utilisateurs participent à ce fil de discussion."
 
 #: templates/misago/poll/info.html:4
 #, python-format
 msgid "%(votes)s vote."
 msgid_plural "%(votes)s votes."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(votes)s vote."
+msgstr[1] "%(votes)s votes."
 
 #: templates/misago/poll/info.html:15
 #, python-format
@@ -2153,7 +2152,7 @@ msgstr "Les votent prennent fin le %(ends_on)s."
 
 #: templates/misago/poll/info.html:22
 msgid "Votes are public."
-msgstr "Les votes sont publiques."
+msgstr "Les votes sont publics."
 
 #: templates/misago/poll/info.html:36
 #, python-format
@@ -2389,7 +2388,7 @@ msgstr "Vous n'avez démarré aucun fil de discussion."
 #: templates/misago/profile/threads.html:41
 #, python-format
 msgid "%(username)s started no threads."
-msgstr "%(username)s n'a démarré aucuns fils de discussion."
+msgstr "%(username)s n'a démarré aucun fil de discussion."
 
 #: templates/misago/profile/username_history.html:5
 #: templates/misago/profile/username_history.html:8 users/apps.py:103
@@ -2436,29 +2435,30 @@ msgstr[1] "Il y a %(more)s messages de plus dans le fil de discussion."
 
 #: templates/misago/thread/paginator.html:47
 msgid "There are no more posts in this thread."
-msgstr "Il n'y a pas d'autre messages dans ce fil."
+msgstr "Il n'y a pas d'autre message dans ce fil de discussion."
 
 #: templates/misago/thread/posts/event/index.html:48
 #, python-format
 msgid "Thread title has been changed from %(old_title)s."
-msgstr "Le titre du fil %(old_title)s a été modifié."
+msgstr "Le titre du fil de discussion %(old_title)s a été modifié."
 
 #: templates/misago/thread/posts/event/index.html:52
 msgid "Thread has been pinned globally."
-msgstr "Le fil a été épinglé globalement."
+msgstr "Le fil de discussion a été épinglé globalement."
 
 #: templates/misago/thread/posts/event/index.html:54
 msgid "Thread has been pinned locally."
-msgstr "Le fil a été épinglé localement."
+msgstr "Le fil de discussion a été épinglé localement."
 
 #: templates/misago/thread/posts/event/index.html:56
 msgid "Thread has been unpinned."
-msgstr "Le fil n'est plus épinglé."
+msgstr "Le fil de discussion n'est plus épinglé."
 
 #: templates/misago/thread/posts/event/index.html:61
 #, python-format
 msgid "Thread has been moved from %(from_category)s."
-msgstr "Le fil a été déplacé de la catégorie %(from_category)s. "
+msgstr ""
+"Le fil de discussion a été déplacé de la catégorie %(from_category)s. "
 
 #: templates/misago/thread/posts/event/index.html:68
 #, python-format
@@ -2467,23 +2467,23 @@ msgstr "Le fil de discussion%(merged_thread)sa été fusionné avec celui- ici"
 
 #: templates/misago/thread/posts/event/index.html:72
 msgid "Thread has been approved."
-msgstr "Le fil a été accepté."
+msgstr "Le fil de discussion a été accepté."
 
 #: templates/misago/thread/posts/event/index.html:74
 msgid "Thread has been opened."
-msgstr "Le fil a été ouvert."
+msgstr "Le fil de discussion a été ouvert."
 
 #: templates/misago/thread/posts/event/index.html:76
 msgid "Thread has been closed."
-msgstr "Le fil a été fermé."
+msgstr "Le fil de discussion a été fermé."
 
 #: templates/misago/thread/posts/event/index.html:78
 msgid "Thread has been revealed."
-msgstr "Le fil a été révélé"
+msgstr "Le fil de discussion a été révélé."
 
 #: templates/misago/thread/posts/event/index.html:80
 msgid "Thread has been made hidden."
-msgstr "le fil a été dissimulé"
+msgstr "Le fil de discussion a été masqué."
 
 #: templates/misago/thread/posts/event/index.html:82
 msgid "Took thread over."
@@ -2491,7 +2491,7 @@ msgstr "A pris le contrôle du fil"
 
 #: templates/misago/thread/posts/event/index.html:84
 msgid "Owner has left thread. This thread is now closed."
-msgstr "Le propriétaire a quitté le fil. Ce fil est désormais fermé. "
+msgstr "Le propriétaire a quitté le fil. Ce fil est désormais clos. "
 
 #: templates/misago/thread/posts/event/index.html:86
 msgid "Participant has left thread."
@@ -2505,12 +2505,12 @@ msgstr "Le propriétaire du fil a été changé pour %(user)s."
 #: templates/misago/thread/posts/event/index.html:98
 #, python-format
 msgid "Added %(user)s to thread."
-msgstr "L'utilisateur %(user)s a été ajouté au fil."
+msgstr "L'utilisateur %(user)s a été ajouté au fil de discussion."
 
 #: templates/misago/thread/posts/event/index.html:105
 #, python-format
 msgid "Removed %(user)s from thread."
-msgstr "L'utilisateur %(user)s a été retiré du fil"
+msgstr "L'utilisateur %(user)s a été retiré du fil de discussion."
 
 #: templates/misago/thread/posts/event/info.html:12
 #: templates/misago/thread/posts/post/body-hidden.html:12
@@ -2616,7 +2616,7 @@ msgstr "Caché"
 #: templates/misago/thread/stats.html:59
 #: templates/misago/threadslist/thread.html:119
 msgid "Closed"
-msgstr "Fermé"
+msgstr "Clos"
 
 #: templates/misago/thread/stats.html:68
 #: templates/misago/threadslist/thread.html:138
@@ -2658,11 +2658,12 @@ msgstr "Aller au dernier message"
 
 #: templates/misago/threadslist/base.html:63
 msgid "There are no threads in this category."
-msgstr "Il n'y a pas de fil dans cette catégorie."
+msgstr "Il n'y a pas de fil de discussion dans cette catégorie."
 
 #: templates/misago/threadslist/base.html:65
 msgid "There are no threads on this forum... yet!"
-msgstr "Il n'y a aucun fil sur ce forum... pour l'instant du moins!"
+msgstr ""
+"Il n'y a aucun fil de discussion sur ce forum... pour l'instant du moins !"
 
 #: templates/misago/threadslist/base.html:69
 #: templates/misago/threadslist/private_threads.html:67
@@ -2672,7 +2673,8 @@ msgstr "Pourquoi ne pas en commencer un vous même?"
 #: templates/misago/threadslist/base.html:73
 #: templates/misago/threadslist/private_threads.html:70
 msgid "No threads matching specified criteria were found."
-msgstr "Aucun fil correspondant aux critères spécifiés n'a été trouvé."
+msgstr ""
+"Aucun fil de discussion correspondant aux critères spécifiés n'a été trouvé."
 
 #: templates/misago/threadslist/base.html:89
 #: templates/misago/threadslist/base.html:97
@@ -2688,12 +2690,12 @@ msgid ""
 "Private threads are threads which only those that started them and those "
 "they have invited may see and participate in."
 msgstr ""
-"Les fils privés sont des fils auxquels seuls leurs créateurs et les "
-"personnes invitées peuvent avoir accès et y participer "
+"Les fils de discussion privés sont des fils de discussion auxquels seuls "
+"leurs créateurs et les personnes invitées peuvent avoir accès et participer."
 
 #: templates/misago/threadslist/private_threads.html:64
 msgid "You aren't participating in any private threads."
-msgstr "Vous ne participez à aucun fil privé"
+msgstr "Vous ne participez à aucun fil privé."
 
 #: templates/misago/threadslist/tabs.html:7 threads/forms.py:27
 msgid "All"
@@ -2701,7 +2703,7 @@ msgstr "Tous"
 
 #: templates/misago/threadslist/tabs.html:12
 msgid "My"
-msgstr "Mon"
+msgstr "Mes fils"
 
 #: templates/misago/threadslist/tabs.html:22
 msgid "Unread"
@@ -2761,7 +2763,7 @@ msgstr[1] "%(users)s ont ce classement"
 
 #: templates/misago/userslists/rank.html:119
 msgid "There are no users with this rank at the moment."
-msgstr "Il n'y a aucun utilisateur avec ce classement pour le moment"
+msgstr "Il n'y a aucun utilisateur avec ce rang pour le moment"
 
 #: templates/misago/userslists/usercard.html:42
 #: templates/misago/userslists/usercard.html:45
@@ -2848,10 +2850,9 @@ msgstr "Vous devez spécifier au moins à message à effacer"
 #, python-format
 msgid "No more than %(limit)s post can be deleted at single time."
 msgid_plural "No more than %(limit)s posts can be deleted at single time."
-msgstr[0] ""
-"Pas plus de %(limit)s messages peuvent être supprimés simultanément"
+msgstr[0] "Pas plus d'%(limit)s message ne peut être supprimé simultanément"
 msgstr[1] ""
-"Pas plus de %(limit)s messages peuvent être supprimés simultanément"
+"Pas plus de %(limit)s messages ne peuvent être supprimés simultanément"
 
 #: threads/api/postendpoints/delete.py:77
 msgid "One or more posts to delete could not be found."
@@ -2863,7 +2864,7 @@ msgstr "L'enregistrement des mises à jour est indisponible pour ce message"
 
 #: threads/api/postendpoints/merge.py:19
 msgid "You can't merge posts in this thread."
-msgstr "Vous ne pouvez pas fusionner de messages dans ce fil de discussion"
+msgstr "Vous ne pouvez pas fusionner de messages dans ce fil de discussion."
 
 #: threads/api/postendpoints/merge.py:62
 msgid "You have to select at least two posts to merge."
@@ -2873,9 +2874,9 @@ msgstr "Vous devez sélectionner au minimum 2 postes à fusionner"
 #, python-format
 msgid "No more than %(limit)s post can be merged at single time."
 msgid_plural "No more than %(limit)s posts can be merged at single time."
-msgstr[0] "Pas plus de %(limit)s peuvent être fusionnés simultanément"
+msgstr[0] "Pas plus d'%(limit)sne peut être fusionné simultanément."
 msgstr[1] ""
-"Pas plus de %(limit)s messages peuvent être fusionnés simultanément"
+"Pas plus de %(limit)s messages peuvent être fusionnés simultanément."
 
 #: threads/api/postendpoints/merge.py:84
 msgid "Posts made by different users can't be merged."
@@ -2886,23 +2887,26 @@ msgstr ""
 #: threads/api/postendpoints/merge.py:95
 msgid "Posts with different visibility can't be merged."
 msgstr ""
+"Les messages avec une visibilité différente ne peuvent pas être fusionnés."
 
 #: threads/api/postendpoints/merge.py:100
 msgid "One or more posts to merge could not be found."
-msgstr ""
+msgstr "Un ou plusieurs messages à fusionner n'ont pas pu être trouvés."
 
 #: threads/api/postendpoints/move.py:19
 msgid "You can't move posts in this thread."
-msgstr ""
+msgstr "Vous ne pouvez pas déplacer les messages dans ce fil de discussion."
 
 #: threads/api/postendpoints/move.py:50
 #: threads/api/threadendpoints/merge.py:36
 msgid "This is not a valid thread link."
-msgstr ""
+msgstr "Ce lien n'est pas valide."
 
 #: threads/api/postendpoints/move.py:52
 msgid "Thread to move posts to is same as current one."
 msgstr ""
+"Vous ne pouvez pas déplacer les messages d'un fil de discussion vers lui-"
+"même."
 
 #: threads/api/postendpoints/move.py:59
 #: threads/api/threadendpoints/merge.py:51
@@ -2910,62 +2914,70 @@ msgid ""
 "The thread you have entered link to doesn't exist or you don't have "
 "permission to see it."
 msgstr ""
+"Le fil de discussion demandé n'existe pas ou vous n'avez pas l'autorisation "
+"de le voir."
 
 #: threads/api/postendpoints/move.py:65
 msgid "You can't move posts to threads you can't reply."
 msgstr ""
+"Vous ne pouvez pas déplacer de messages vers les fils de discussion pour "
+"lesquels vous n'avez pas le droit de réponse."
 
 #: threads/api/postendpoints/move.py:77
 msgid "You have to specify at least one post to move."
-msgstr ""
+msgstr "Vous devez spécifier au moins un message à déplacer."
 
 #: threads/api/postendpoints/move.py:80
 #, python-format
 msgid "No more than %(limit)s post can be moved at single time."
 msgid_plural "No more than %(limit)s posts can be moved at single time."
-msgstr[0] ""
+msgstr[0] "Pas plus d'%(limit)s message ne peut être déplacé simultanément."
 msgstr[1] ""
+"Pas plus de %(limit)s messages ne peuvent être déplacés simultanément."
 
 #: threads/api/postendpoints/move.py:98
 msgid "One or more posts to move could not be found."
-msgstr ""
+msgstr "Un ou plusieurs messages à déplacer sont introuvables."
 
 #: threads/api/postendpoints/patch_post.py:36
 msgid "You can't like posts in this category."
-msgstr ""
+msgstr "Vous ne pouvez pas aimer les messages dans cette catégorie."
 
 #: threads/api/postendpoints/patch_post.py:107
 #: threads/api/threadendpoints/patch.py:128
 msgid "Content approval can't be reversed."
-msgstr ""
+msgstr "L'approbation du contenu ne peut pas être annulée."
 
 #: threads/api/postendpoints/patch_post.py:184
 msgid "One or more posts to update could not be found."
-msgstr ""
+msgstr "Un ou plusieurs messages à mettre à jour sont introuvables."
 
 #: threads/api/postendpoints/split.py:20
 msgid "You can't split posts from this thread."
-msgstr ""
+msgstr "Vous ne pouvez pas séparer les messages de ce fil de discussion."
 
 #: threads/api/postendpoints/split.py:42
 msgid "You have to specify at least one post to split."
-msgstr ""
+msgstr "Vous devez spécifier au moins un message à dissocier."
 
 #: threads/api/postendpoints/split.py:45
 #, python-format
 msgid "No more than %(limit)s post can be split at single time."
 msgid_plural "No more than %(limit)s posts can be split at single time."
-msgstr[0] ""
+msgstr[0] "Pas plus d'%(limit)s message ne peut être supprimé simultanément."
 msgstr[1] ""
+"Pas plus de %(limit)s messages ne peuvent être dissociés simultanément."
 
 #: threads/api/postendpoints/split.py:64
 msgid "One or more posts to split could not be found."
-msgstr ""
+msgstr "Un ou plusieurs messages à dissocier n'ont pas pu être trouvés"
 
 #: threads/api/postingendpoint/attachments.py:61
 #, python-format
 msgid "You don't have permission to remove \"%(attachment)s\" attachment."
 msgstr ""
+"Vous n'avez pas la permission de supprimer la pièce jointe "
+"\"%(attachment)s\""
 
 #: threads/api/postingendpoint/attachments.py:128
 #, python-format
@@ -2976,52 +2988,61 @@ msgid_plural ""
 "You can't attach more than %(limit_value)s flies to single post (added "
 "%(show_value)s)."
 msgstr[0] ""
+"Vous ne pouvez pas attacher plus de %(limit_value)s fichier à une "
+"publication (%(show_value)s attaché)."
 msgstr[1] ""
+"Vous ne pouvez pas attacher plus de %(limit_value)s fichiers à une "
+"publication (%(show_value)s attachés)."
 
 #: threads/api/postingendpoint/category.py:45
 msgid "You have to select category to post thread in."
-msgstr ""
+msgstr "Vous devez sélectionner une catégorie dans laquelle publier."
 
 #: threads/api/postingendpoint/category.py:46
 #: threads/api/postingendpoint/category.py:65
 msgid "Selected category is invalid."
-msgstr ""
+msgstr "La catégorie sélectionnée n'est pas valide."
 
 #: threads/api/postingendpoint/category.py:72
 msgid ""
 "Selected category doesn't exist or you don't have permission to browse it."
 msgstr ""
+"La catégorie sélectionnée n'existe pas ou vous n'avez pas la permission de "
+"la parcourir."
 
 #: threads/api/postingendpoint/emailnotification.py:39
 #, python-format
 msgid "%(user)s has replied to your thread \"%(thread)s\""
-msgstr ""
+msgstr "%(user)s a répondu à votre fil de discussion \"%(thread)s\""
 
 #: threads/api/postingendpoint/emailnotification.py:41
 #, python-format
 msgid "%(user)s has replied to thread \"%(thread)s\" that you are watching"
-msgstr ""
+msgstr "%(user)s a répondu au fil de discussion \"%(thread)s\" que vous suivez"
 
 #: threads/api/postingendpoint/floodprotection.py:25
 msgid "You can't post message so quickly after previous one."
 msgstr ""
+"Vous ne pouvez pas poster un message aussi rapidement après le précédent."
 
 #: threads/api/postingendpoint/floodprotection.py:33
 msgid "Your account has excceed hourly post limit."
-msgstr ""
+msgstr "Votre compte a dépassé la limite de messages par heure."
 
 #: threads/api/postingendpoint/floodprotection.py:38
 msgid "Your account has excceed dialy post limit."
-msgstr ""
+msgstr "Votre compte a dépassé la limite de messages par jour."
 
 #: threads/api/postingendpoint/participants.py:47
 msgid ""
 "You can't include yourself on the list of users to invite to new thread."
 msgstr ""
+"Vous ne pouvez pas vous inclure dans la liste des utilisateurs à inviter "
+"dans le nouveau fil de discussion."
 
 #: threads/api/postingendpoint/participants.py:54
 msgid "You have to enter user names."
-msgstr ""
+msgstr "Vous devez saisir le nom d'utilisateur."
 
 #: threads/api/postingendpoint/participants.py:59
 #, python-format
@@ -3032,222 +3053,247 @@ msgid_plural ""
 "You can't add more than %(users)s users to private thread (you've added "
 "%(added)s)."
 msgstr[0] ""
+"Vous ne pouvez pas ajouter plus d'%(users)s utilisateur au fil privé (Vous "
+"en avez ajouté %(added)s)."
 msgstr[1] ""
+"Vous ne pouvez pas ajouter plus de %(users)s utilisateurs au fil de "
+"discussion privé (Vous en avez ajouté %(added)s)."
 
 #: threads/api/postingendpoint/participants.py:85
 #, python-format
 msgid "One or more users could not be found: %(usernames)s"
-msgstr ""
+msgstr "Un ou plusieurs utilisateurs n’ont pu être trouvés: %(usernames)s"
 
 #: threads/api/postingendpoint/reply.py:81 threads/validators.py:80
 msgid "You have to enter a message."
-msgstr ""
+msgstr "Vous devez saisir un message."
 
 #: threads/api/postingendpoint/reply.py:103 threads/validators.py:41
 msgid "You have to enter thread title."
-msgstr ""
+msgstr "Vous devez renseigner un titre pour le fil de discussion."
 
 #: threads/api/threadendpoints/delete.py:53
 #: threads/api/threadendpoints/merge.py:142
 msgid "One or more thread ids received were invalid."
 msgstr ""
+"Un ou plusieurs identifiants de fils de discussion reçus sont invalides."
 
 #: threads/api/threadendpoints/delete.py:57
 msgid "You have to specify at least one thread to delete."
-msgstr ""
+msgstr "Vous devez spécifier au moins un fil de discussion à effacer."
 
 #: threads/api/threadendpoints/delete.py:60
 #, python-format
 msgid "No more than %(limit)s thread can be deleted at single time."
 msgid_plural "No more than %(limit)s threads can be deleted at single time."
-msgstr[0] ""
+msgstr[0] "Pas plus d'%(limit)s fil ne peut être supprimé simultanément"
 msgstr[1] ""
+"Pas plus de %(limit)s fils de discussion ne peuvent être supprimés "
+"simultanément."
 
 #: threads/api/threadendpoints/editor.py:15
 msgid "You need to be signed in to start threads."
-msgstr ""
+msgstr "Vous devez être connecté pour lancer des discussions."
 
 #: threads/api/threadendpoints/editor.py:57
 msgid ""
 "No categories that allow new threads are available to you at the moment."
 msgstr ""
-"Aucune catégorie ne vous permet de créer un nouveau fils de discussion pour "
+"Aucune catégorie ne vous permet de créer un nouveau fil de discussion pour "
 "le moment."
 
 #: threads/api/threadendpoints/merge.py:38
 msgid "You can't merge thread with itself."
-msgstr ""
+msgstr "Vous ne pouvez pas fusionner la discussion avec elle-même."
 
 #: threads/api/threadendpoints/merge.py:44
 msgid "You can't merge this thread into thread you can't reply."
 msgstr ""
+"Vous ne pouvez pas fusionner cette discussion avec une discussion pour "
+"laquelle vous n'avez pas le droit de réponse."
 
 #: threads/api/threadendpoints/merge.py:73
 #: threads/api/threadendpoints/merge.py:127
 msgid "Invalid choice."
-msgstr ""
+msgstr "Choix non valide."
 
 #: threads/api/threadendpoints/merge.py:146
 msgid "You have to select at least two threads to merge."
-msgstr ""
+msgstr "Vous devez sélectionner au moins deux fils de discussion à fusionner."
 
 #: threads/api/threadendpoints/merge.py:149
 #, python-format
 msgid "No more than %(limit)s thread can be merged at single time."
 msgid_plural "No more than %(limit)s threads can be merged at single time."
-msgstr[0] ""
+msgstr[0] "Pas plus d'%(limit)s fil ne peut être fusionné simultanément."
 msgstr[1] ""
+"Pas plus de %(limit)s fils de discussion ne peuvent être fusionnés "
+"simultanément."
 
 #: threads/api/threadendpoints/merge.py:169
 msgid "One or more threads to merge could not be found."
 msgstr ""
+"Un ou plusieurs fils de discussion à fusionner n'ont pas pu être trouvés."
 
 #: threads/api/threadendpoints/patch.py:52
 msgid "Invalid thread title."
-msgstr ""
+msgstr "Titre de discussion non valide."
 
 #: threads/api/threadendpoints/patch.py:72
 msgid "You can't change globally pinned threads weights in this category."
 msgstr ""
+"Vous ne pouvez pas modifier les poids de fil de discussion épinglés "
+"globalement dans cette catégorie."
 
 #: threads/api/threadendpoints/patch.py:78
 msgid "You can't pin threads globally in this category."
 msgstr ""
+"Vous ne pouvez pas épingler les fils de discussion globalement dans cette "
+"catégorie."
 
 #: threads/api/threadendpoints/patch.py:104
 msgid "You can't move thread to the category it's already in."
 msgstr ""
+"Vous ne pouvez pas déplacer le fil de discussion vers la catégorie dans "
+"laquelle il se trouve déjà."
 
 #: threads/api/threadendpoints/patch.py:151
 msgid "You don't have permission to close this thread."
-msgstr ""
+msgstr "Vous n'avez pas l'autorisation pour fermer ce fil de discussion."
 
 #: threads/api/threadendpoints/patch.py:153
 msgid "You don't have permission to open this thread."
-msgstr ""
+msgstr "Vous n'avez pas l'autorisation d'ouvrir ce fil de discussion."
 
 #: threads/api/threadendpoints/patch.py:207
 msgid "You have to enter new participant's username."
-msgstr ""
+msgstr "Vous devez saisir le nom d'utilisateur du nouveau participant."
 
 #: threads/api/threadendpoints/patch.py:210
 msgid "No user with such name exists."
-msgstr ""
+msgstr "Il n'existe pas d'utilisateur avec ce nom."
 
 #: threads/api/threadendpoints/patch.py:213
 msgid "This user is already thread participant."
-msgstr ""
+msgstr "Cet utilisateur participe déjà au fil de discussion."
 
 #: threads/api/threadendpoints/patch.py:237
 #: threads/api/threadendpoints/patch.py:270
 msgid "Participant doesn't exist."
-msgstr ""
+msgstr "Le participant n'existe pas."
 
 #: threads/api/threadendpoints/patch.py:266
 msgid "This user already is thread owner."
-msgstr ""
+msgstr "Cet utilisateur est déjà propriétaire du fil de discussion."
 
 #: threads/api/threadendpoints/patch.py:377
 msgid "One or more threads to update could not be found."
-msgstr ""
+msgstr "Un ou plusieurs fils de discussion à mettre à jour sont introuvables."
 
 #: threads/api/threadendpoints/pollmergehandler.py:33
 msgid "Delete all polls"
-msgstr ""
+msgstr "Supprimer tous les sondages"
 
 #: threads/api/threadpoll.py:55
 msgid "There's already a poll in this thread."
-msgstr ""
+msgstr "Il y a déjà un sondage dans ce fil de discussion."
 
 #: threads/api/threadposts.py:224
 msgid "You can't reply to events."
-msgstr ""
+msgstr "Vous ne pouvez pas répondre aux événements."
 
 #: threads/api/threadposts.py:226
 msgid "You can't reply to hidden posts."
-msgstr ""
+msgstr "Vous ne pouvez pas répondre aux messages cachés."
 
 #: threads/api/threadposts.py:259
 msgid "You can't see who liked this post."
-msgstr ""
+msgstr "Vous ne pouvez pas voir qui a aimé cette publication."
 
 #: threads/api/threads.py:131
 msgid "You can't start private threads."
-msgstr ""
+msgstr "Vous ne pouvez pas démarrer des discussions privées."
 
 #: threads/forms.py:8
 msgid "All types"
-msgstr ""
+msgstr "Tous les types"
 
 #: threads/forms.py:14
 msgid "Uploader name contains"
-msgstr ""
+msgstr "Le nom de l'uploader contient"
 
 #: threads/forms.py:15
 msgid "Filename contains"
-msgstr ""
+msgstr "Le nom de fichier contient"
 
 #: threads/forms.py:17
 msgid "File type"
-msgstr ""
+msgstr "Type de fichier"
 
 #: threads/forms.py:24 users/forms/admin.py:591
 msgid "State"
-msgstr ""
+msgstr "État"
 
 #: threads/forms.py:28
 msgid "Only orphaned"
-msgstr ""
+msgstr "Orphelins seuls"
 
 #: threads/forms.py:29
 msgid "Not orphaned"
-msgstr ""
+msgstr "Non orphelin"
 
 #: threads/forms.py:52
 msgid "Type name"
-msgstr ""
+msgstr "Type"
 
 #: threads/forms.py:53
 msgid "File extensions"
-msgstr ""
+msgstr "Extensions de fichier"
 
 #: threads/forms.py:55
 msgid "Maximum allowed uploaded file size"
-msgstr ""
+msgstr "Taille maximale autorisée du fichier télédéposé"
 
 #: threads/forms.py:56
 msgid "Status"
-msgstr ""
+msgstr "Statut"
 
 #: threads/forms.py:57
 msgid "Limit uploads to"
-msgstr ""
+msgstr "Limiter les uploads à"
 
 #: threads/forms.py:58
 msgid "Limit downloads to"
-msgstr ""
+msgstr "Limiter les téléchargements à"
 
 #: threads/forms.py:61
 msgid ""
 "List of comma separated file extensions associated with this attachment "
 "type."
 msgstr ""
+"Liste des extensions de fichiers séparées par des virgules associées à ce "
+"type de pièce jointe."
 
 #: threads/forms.py:63
 msgid ""
 "Optional list of comma separated mime types associated with this attachment "
 "type."
 msgstr ""
+"Liste optionnelle des types de mime séparés par des virgules associés à ce "
+"type de pièce jointe."
 
 #: threads/forms.py:66
 msgid ""
 "Maximum allowed uploaded file size for this type, in kb. May be overriden "
 "via user permission."
 msgstr ""
+"Taille maximale du fichier télédéposé autorisée pour ce type de fichier, en "
+"kb. Peut être supplanté via les 'autorisations utilisateur'."
 
 #: threads/forms.py:69
 msgid "Controls this attachment type availability on your site."
 msgstr ""
+"Contrôle la possibilité d'attacher ce type de pièce jointe sur votre site."
 
 #: threads/forms.py:71
 msgid ""
@@ -3256,6 +3302,11 @@ msgid ""
 "to allow all users with permission to upload attachments to be able to "
 "upload attachments of this type."
 msgstr ""
+"Si vous souhaitez limiter les options possibles pour télédéposer ce type de "
+"fichiers aux utilisateurs ayant des rôles spécifiques, sélectionnez-les dans"
+" cette liste. Autrement, si vous ne choisissez aucun rôle, tous les "
+"utilisateurs disposant de l'autorisation de télédéposer des fichiers "
+"pourront télédéposer des pièces jointes de ce type de fichier."
 
 #: threads/forms.py:77
 msgid ""
@@ -3264,6 +3315,11 @@ msgid ""
 "to allow all users with permission to download attachments to be able to "
 "download attachments of this type."
 msgstr ""
+"Si vous souhaitez limiter les options possibles pour télécharger ce type de "
+"fichiers aux utilisateurs ayant des rôles spécifiques, sélectionnez-les dans"
+" cette liste. Autrement, si vous ne choisissez aucun rôle, tous les "
+"utilisateurs disposant de l'autorisation de v des fichiers pourront "
+"télécharger des pièces jointes de ce type de fichier."
 
 #: threads/migrations/0002_threads_settings.py:17
 #: threads/migrations/0004_update_settings.py:17
@@ -3278,17 +3334,17 @@ msgstr "Ces paramètres contrôlent les fils de discussion et les messages."
 #: users/migrations/0002_users_settings.py:64
 #: users/migrations/0006_update_settings.py:40
 msgid "Minimum length"
-msgstr ""
+msgstr "Longueur minimale"
 
 #: threads/migrations/0002_threads_settings.py:22
 #: threads/migrations/0004_update_settings.py:22
 msgid "Minimum allowed thread title length."
-msgstr ""
+msgstr "Longueur minimale autorisée pour le titre de discussion."
 
 #: threads/migrations/0002_threads_settings.py:23
 #: threads/migrations/0004_update_settings.py:23
 msgid "Thread titles"
-msgstr ""
+msgstr "Titre des discussions"
 
 #: threads/migrations/0002_threads_settings.py:34
 #: threads/migrations/0002_threads_settings.py:58
@@ -3299,17 +3355,17 @@ msgstr ""
 #: users/migrations/0006_update_settings.py:52
 #: users/migrations/0006_update_settings.py:117
 msgid "Maximum length"
-msgstr ""
+msgstr "Longueur maximale"
 
 #: threads/migrations/0002_threads_settings.py:35
 #: threads/migrations/0004_update_settings.py:35
 msgid "Maximum allowed thread length."
-msgstr ""
+msgstr "Longueur maximale autorisée pour le fil de discussion."
 
 #: threads/migrations/0002_threads_settings.py:47
 #: threads/migrations/0004_update_settings.py:47
 msgid "Minimum allowed user post length."
-msgstr ""
+msgstr "Longueur minimale de message autorisée."
 
 #: threads/migrations/0002_threads_settings.py:60
 #: threads/migrations/0004_update_settings.py:60
@@ -3317,148 +3373,169 @@ msgid ""
 "Maximum allowed user post length. Enter zero to disable. Longer posts are "
 "more costful to parse and index."
 msgstr ""
+"Longueur maximale de message autorisée. Entrez zéro pour aucune limite. A "
+"noter que plus les messages sont longs, plus ils prennent du temps à "
+"analyser et à indexer."
 
 #: threads/models/attachmenttype.py:21
 msgid "Allow uploads and downloads"
-msgstr ""
+msgstr "Autoriser upload et téléchargement"
 
 #: threads/models/attachmenttype.py:22
 msgid "Allow downloads only"
-msgstr ""
+msgstr "Autoriser uniquement le téléchargement"
 
 #: threads/models/attachmenttype.py:23
 msgid "Disallow both uploading and downloading"
-msgstr ""
+msgstr "Interdire la télédéposition et le téléchargement"
 
 #: threads/models/thread.py:18
 msgid "Don't pin thread"
-msgstr ""
+msgstr "Ne pas épingler la discussion"
 
 #: threads/models/thread.py:19
 msgid "Pin thread within category"
-msgstr ""
+msgstr "Épingler la discussion dans la catégorie"
 
 #: threads/models/thread.py:20
 msgid "Pin thread globally"
-msgstr ""
+msgstr "Épingler la discussion globalement "
 
 #: threads/moderation/posts.py:47
 msgid "You can't make original post visible without revealing thread."
 msgstr ""
+"Vous ne pouvez pas rendre visible la publication sans rendre visible le fil "
+"de discussion."
 
 #: threads/moderation/posts.py:59
 msgid "You can't hide original post without hiding thread."
 msgstr ""
+"Vous ne pouvez pas masquer la publication sans masquer le fil de discussion."
 
 #: threads/moderation/posts.py:84
 msgid "You can't delete original post without deleting thread."
 msgstr ""
+"Vous ne pouvez pas supprimer la publication sans supprimer le fil de "
+"discussion."
 
 #: threads/participants.py:143
 #, python-format
 msgid "%(user)s has invited you to participate in private thread \"%(thread)s\""
 msgstr ""
+"%(user)s vous a invité à participer au fil de discussion privé "
+"\"%(thread)s\""
 
 #: threads/permissions/attachments.py:15
 msgid "Max attached file size (in kb)"
-msgstr ""
+msgstr "Taille maximale du fichier attaché (en kb)"
 
 #: threads/permissions/attachments.py:16
 msgid "Enter 0 to don't allow uploading end deleting attachments."
 msgstr ""
+"Entrez 0 pour ne pas autoriser la télédéposition et la suppression des "
+"pièces jointes."
 
 #: threads/permissions/attachments.py:22
 msgid "Can download other users attachments"
-msgstr ""
+msgstr "Peut télécharger les pièces jointes d'autres utilisateurs"
 
 #: threads/permissions/attachments.py:24
 msgid "Can delete other users attachments"
-msgstr ""
+msgstr "Peut supprimer les pièces jointes d'autres utilisateurs"
 
 #: threads/permissions/attachments.py:30
 msgid "Can download attachments"
-msgstr ""
+msgstr "Peut télécharger des pièces jointes"
 
 #: threads/permissions/polls.py:29
 msgid "Polls"
-msgstr ""
+msgstr "Sondages"
 
 #: threads/permissions/polls.py:32
 msgid "Can start polls"
-msgstr ""
+msgstr "Peut initier des sondages"
 
 #: threads/permissions/polls.py:37 threads/permissions/threads.py:125
 msgid "Own threads"
-msgstr ""
+msgstr "Vos propres discussions"
 
 #: threads/permissions/polls.py:38 threads/permissions/threads.py:112
 #: threads/permissions/threads.py:126
 msgid "All threads"
-msgstr ""
+msgstr "Toutes les discussions"
 
 #: threads/permissions/polls.py:42
 msgid "Can edit polls"
-msgstr ""
+msgstr "Peut modifier des sondages"
 
 #: threads/permissions/polls.py:47 threads/permissions/polls.py:57
 msgid "Own polls"
-msgstr ""
+msgstr "Ses propres sondages"
 
 #: threads/permissions/polls.py:48 threads/permissions/polls.py:58
 msgid "All polls"
-msgstr ""
+msgstr "Tous les sondages"
 
 #: threads/permissions/polls.py:52
 msgid "Can delete polls"
-msgstr ""
+msgstr "Peut supprimer des sondages"
 
 #: threads/permissions/polls.py:62
 msgid "Time limit for own polls edits, in minutes"
 msgstr ""
+"Limite de temps pour la modification de ses propres sondages, en minutes"
 
 #: threads/permissions/polls.py:63
 msgid "Enter 0 to don't limit time for editing own polls."
 msgstr ""
+"Entrez 0 pour aucune limite de temps dans l'édition de ses propres sondages."
 
 #: threads/permissions/polls.py:68
 msgid "Can always see polls voters"
-msgstr ""
+msgstr "Peut toujours voir les votants"
 
 #: threads/permissions/polls.py:69
 msgid "Allows users to see who voted in poll even if poll votes are secret."
 msgstr ""
+"Permet aux utilisateurs de voir qui a voté dans le sondage, même si les "
+"votes sont sensés êtres secrets."
 
 #: threads/permissions/polls.py:123
 msgid "You have to sign in to start polls."
-msgstr ""
+msgstr "Vous devez vous connecter pour initier des sondages."
 
 #: threads/permissions/polls.py:132
 msgid "You can't start polls."
-msgstr ""
+msgstr "Vous ne pouvez pas initier de sondages."
 
 #: threads/permissions/polls.py:134
 msgid "You can't start polls in other users threads."
 msgstr ""
+"Vous ne pouvez pas initier de sondages dans les fils de discussion d'autres "
+"utilisateurs."
 
 #: threads/permissions/polls.py:138
 msgid "This category is closed. You can't start polls in it."
-msgstr ""
+msgstr "Cette catégorie est close. Vous ne pouvez pas y initier de sondages."
 
 #: threads/permissions/polls.py:140
 msgid "This thread is closed. You can't start polls in it."
 msgstr ""
+"Ce fil de discussion est clos. Vous ne pouvez pas y initier de sondages."
 
 #: threads/permissions/polls.py:148
 msgid "You have to sign in to edit polls."
-msgstr ""
+msgstr "Vous devez vous connecter pour éditer des sondages."
 
 #: threads/permissions/polls.py:157
 msgid "You can't edit polls."
-msgstr ""
+msgstr "Vous ne pouvez pas modifier les sondages."
 
 #: threads/permissions/polls.py:161
 msgid "You can't edit other users polls in this category."
 msgstr ""
+"Vous ne pouvez pas modifier les sondages d'autres utilisateurs dans cette "
+"catégorie."
 
 #: threads/permissions/polls.py:164
 #, python-format
@@ -3469,27 +3546,30 @@ msgstr[1] ""
 
 #: threads/permissions/polls.py:171
 msgid "This poll is over. You can't edit it."
-msgstr ""
+msgstr "Le sondage est clos. Vous ne pouvez pas le modifier."
 
 #: threads/permissions/polls.py:175
 msgid "This category is closed. You can't edit polls in it."
-msgstr ""
+msgstr "Cette catégorie est close. Vous ne pouvez pas y modifier de sondages."
 
 #: threads/permissions/polls.py:177
 msgid "This thread is closed. You can't edit polls in it."
 msgstr ""
+"Ce fil de discussion est clos. Vous ne pouvez pas y modifier de sondages."
 
 #: threads/permissions/polls.py:185
 msgid "You have to sign in to delete polls."
-msgstr ""
+msgstr "Vous devez vous connecter pour supprimer des sondages."
 
 #: threads/permissions/polls.py:194
 msgid "You can't delete polls."
-msgstr ""
+msgstr "Vous ne pouvez pas supprimer des sondages."
 
 #: threads/permissions/polls.py:198
 msgid "You can't delete other users polls in this category."
 msgstr ""
+"Vous ne pouvez pas supprimer les sondages d'autres utilisateurs dans cette "
+"catégorie."
 
 #: threads/permissions/polls.py:201
 #, python-format
@@ -3500,35 +3580,39 @@ msgstr[1] ""
 
 #: threads/permissions/polls.py:207
 msgid "This poll is over. You can't delete it."
-msgstr ""
+msgstr "Le sondage est clos. Vous ne pouvez pas le supprimer."
 
 #: threads/permissions/polls.py:211
 msgid "This category is closed. You can't delete polls in it."
 msgstr ""
+"Cette catégorie est close. Vous ne pouvez pas y supprimer de sondages."
 
 #: threads/permissions/polls.py:213
 msgid "This thread is closed. You can't delete polls in it."
 msgstr ""
+"Ce fil de discussion est clos. Vous ne pouvez pas y supprimer de sondages."
 
 #: threads/permissions/polls.py:221
 msgid "You have to sign in to vote in polls."
-msgstr ""
+msgstr "Vous devez vous connecter pour voter dans un sondage."
 
 #: threads/permissions/polls.py:224
 msgid "You have already voted in this poll."
-msgstr ""
+msgstr "Vous avez déjà voté dans ce sondage."
 
 #: threads/permissions/polls.py:226
 msgid "This poll is over. You can't vote in it."
-msgstr ""
+msgstr "Le sondage est clos. Vous ne pouvez pas voter."
 
 #: threads/permissions/polls.py:236
 msgid "This category is closed. You can't vote in it."
 msgstr ""
+"Cette catégorie est close. Vous ne pouvez plus voter dans les sondages."
 
 #: threads/permissions/polls.py:238
 msgid "This thread is closed. You can't vote in it."
 msgstr ""
+"Ce fil de discussion est clos. Vous ne pouvez plus voter dans les sondages."
 
 #: threads/permissions/polls.py:246
 msgid "You dont have permission to this poll's voters."
@@ -3536,98 +3620,119 @@ msgstr ""
 
 #: threads/permissions/privatethreads.py:36
 msgid "Can use private threads"
-msgstr ""
+msgstr "Peut utiliser des fils de discussion privés"
 
 #: threads/permissions/privatethreads.py:37
 msgid "Can start private threads"
-msgstr ""
+msgstr "Peut démarrer des fils de discussion privés"
 
 #: threads/permissions/privatethreads.py:39
 msgid "Max number of users invited to private thread"
-msgstr ""
+msgstr "Nombre maximal d'utilisateurs invités dans un fil de discussion privé"
 
 #: threads/permissions/privatethreads.py:40
 msgid "Enter 0 to don't limit number of participants."
-msgstr ""
+msgstr "Entrer 0 si vous ne voulez pas limiter le nombre de participants."
 
 #: threads/permissions/privatethreads.py:45
 msgid "Can add everyone to threads"
-msgstr ""
+msgstr "Peut ajouter tout le monde aux fils de discussion"
 
 #: threads/permissions/privatethreads.py:46
 msgid "Allows user to add users that are blocking him to private threads."
 msgstr ""
+"Permet à l'utilisateur d'ajouter des utilisateurs qui le bloquent dans des "
+"fils de discussion privés."
 
 #: threads/permissions/privatethreads.py:49
 msgid "Can report private threads"
-msgstr ""
+msgstr "Peut signaler des fils de discussion privés"
 
 #: threads/permissions/privatethreads.py:51
 msgid ""
 "Allows user to report private threads they are participating in, making them"
 " accessible to moderators."
 msgstr ""
+"Permet à l'utilisateur de signaler des fils de discussion privés auxquels il"
+" participe, le rendant accessible aux modérateurs."
 
 #: threads/permissions/privatethreads.py:56
 msgid "Can moderate private threads"
-msgstr ""
+msgstr "Peut modérer les fils de discussion privés"
 
 #: threads/permissions/privatethreads.py:58
 msgid ""
 "Allows user to read, reply, edit and delete content in reported private "
 "threads."
 msgstr ""
+"Permet à l'utilisateur de lire, répondre, modifier et supprimer du contenu "
+"dans des fils de discussion privés signalés."
 
 #: threads/permissions/privatethreads.py:176
 msgid "You have to sign in to use private threads."
 msgstr ""
+"Vous devez vous enregistrer pour utiliser des fils de discussion privés."
 
 #: threads/permissions/privatethreads.py:178
 msgid "You can't use private threads."
-msgstr ""
+msgstr "Vous ne pouvez pas utiliser de fils de discussion privés."
 
 #: threads/permissions/privatethreads.py:204
 msgid "Only thread owner and moderators can change threads owners."
 msgstr ""
+"Seul le propriétaire du fil de discussion et les modérateurs peuvent changer"
+" la propriété d'un fil de discussion."
 
 #: threads/permissions/privatethreads.py:207
 msgid "Only moderators can change closed threads owners."
 msgstr ""
+"Seuls les modérateurs peuvent modifier la propriété d'un fil de discussion "
+"clos."
 
 #: threads/permissions/privatethreads.py:218
 msgid "You have to be thread owner to add new participants to it."
 msgstr ""
+"Vous devez être le propriétaire du fil de discussion pour y ajouter de "
+"nouveaux participants."
 
 #: threads/permissions/privatethreads.py:221
 msgid "Only moderators can add participants to closed threads."
 msgstr ""
+"Seuls les modérateurs peuvent ajouter des participants dans un fil de "
+"discussion clos."
 
 #: threads/permissions/privatethreads.py:227
 msgid "You can't add any more new users to this thread."
 msgstr ""
+"Vous ne pouvez pas ajouter davantage d'utilisateurs à ce fil de discussion."
 
 #: threads/permissions/privatethreads.py:241
 msgid "Only moderators can remove participants from closed threads."
 msgstr ""
+"Seuls les modérateurs peuvent supprimer des participants dans un fil de "
+"discussion clos."
 
 #: threads/permissions/privatethreads.py:244
 msgid "You have to be thread owner to remove participants from it."
 msgstr ""
+"Vous devez être propriétaire du fil de discussion pour en supprimer des "
+"utilisateurs."
 
 #: threads/permissions/privatethreads.py:255
 #, python-format
 msgid "%(user)s can't participate in private threads."
-msgstr ""
+msgstr "%(user)sne peut pas participer aux fils de discussion privés."
 
 #: threads/permissions/privatethreads.py:262
 #, python-format
 msgid "%(user)s is blocking you."
-msgstr ""
+msgstr "%(user)svous bloque."
 
 #: threads/permissions/privatethreads.py:266
 #, python-format
 msgid "%(user)s is not allowing invitations to private threads."
 msgstr ""
+"%(user)sne permet pas d'invitations dans les fils de discussion privés."
 
 #: threads/permissions/privatethreads.py:270
 #, python-format
@@ -3636,7 +3741,7 @@ msgstr ""
 
 #: threads/permissions/threads.py:76
 msgid "Can see unapproved content list"
-msgstr ""
+msgstr "Peut voir la liste de contenu non approuvé"
 
 #: threads/permissions/threads.py:78
 msgid ""
@@ -3645,10 +3750,16 @@ msgid ""
 "being available on all threads lists, it will only display threads belonging"
 " to categories in which the user has permission to approve content."
 msgstr ""
+"Permet l'accès à des onglets \"non approuvés\" dans les listes de "
+"discussions, pour lister facilement les fils de discussion qui ne sont pas "
+"approuvés ou qui contiennent des messages non approuvés. Bien que l'onglet "
+"soit disponible sur toutes les listes de discussion, il ne montrera que les "
+"fils de discussions appartenant aux catégories dans lesquelles l'utilisateur"
+" a la permission d'approuver du contenu."
 
 #: threads/permissions/threads.py:87
 msgid "Can see reported content list"
-msgstr ""
+msgstr "Peut voir la liste de contenu signalé"
 
 #: threads/permissions/threads.py:89
 msgid ""
@@ -3657,85 +3768,99 @@ msgid ""
 "categories threads lists, it will only display threads belonging to "
 "categories in which the user has permission to see posts reports."
 msgstr ""
+"Permet l'accès à des onglets \"signalés\" dans les listes de discussions, "
+"pour lister facilement les fils de discussion qui contiennent des messages "
+"signalés. Bien que l'onglet soit disponible sur toutes les listes de "
+"discussion, il n'affichera que les fils de discussions appartenant aux "
+"catégories dans lesquelles l'utilisateur a la permission de voir les "
+"messages signalés."
 
 #: threads/permissions/threads.py:98
 msgid "Can omit flood protection"
-msgstr ""
+msgstr "Non concerné par la protection contre le flood"
 
 #: threads/permissions/threads.py:99
 msgid "Allows posting more frequently than flood protection would."
 msgstr ""
+"Permet de poster plus fréquemment que ce que la protection contre le flood "
+"permettrait."
 
 #: threads/permissions/threads.py:107
 msgid "Can see threads"
-msgstr ""
+msgstr "Peut voir les fils de discussion"
 
 #: threads/permissions/threads.py:111 users/forms/admin.py:166
 #: users/migrations/0002_users_settings.py:144
 #: users/migrations/0006_update_settings.py:130
 msgid "Started threads"
-msgstr ""
+msgstr "Fils de discussion débutés"
 
 #: threads/permissions/threads.py:116
 msgid "Can start threads"
-msgstr ""
+msgstr "Peut voir les fils de discussion"
 
 #: threads/permissions/threads.py:117
 msgid "Can reply to threads"
-msgstr ""
+msgstr "Peut répondre aux fils de discussion"
 
 #: threads/permissions/threads.py:120
 msgid "Can edit threads"
-msgstr ""
+msgstr "Peut modifier des fils de discussion"
 
 #: threads/permissions/threads.py:130
 msgid "Can hide own threads"
-msgstr ""
+msgstr "Peut masquer ses propres fils de discussion"
 
 #: threads/permissions/threads.py:132
 msgid ""
 "Only threads started within time limit and with no replies can be hidden."
 msgstr ""
+"Seuls les fils de discussion ouverts dans la limite de durée et sans "
+"réponses peuvent être masqués."
 
 #: threads/permissions/threads.py:139 threads/permissions/threads.py:155
 msgid "Hide threads"
-msgstr ""
+msgstr "Masquer des fils de discussion"
 
 #: threads/permissions/threads.py:140 threads/permissions/threads.py:156
 msgid "Delete threads"
-msgstr ""
+msgstr "Supprimer des fils de discussion"
 
 #: threads/permissions/threads.py:144
 msgid "Time limit for own threads edits, in minutes"
 msgstr ""
+"Limite de durée pour la modification de ses propres fils de discussion, en "
+"minutes"
 
 #: threads/permissions/threads.py:145
 msgid "Enter 0 to don't limit time for editing own threads."
 msgstr ""
+"Entrer 0 pour ne pas limiter la durée d'édition de ses propres fils de "
+"discussion."
 
 #: threads/permissions/threads.py:150
 msgid "Can hide all threads"
-msgstr ""
+msgstr "Peut masquer tous les fils de discussion"
 
 #: threads/permissions/threads.py:161
 msgid "Can pin threads"
-msgstr ""
+msgstr "Peut épingler des fils de discussion"
 
 #: threads/permissions/threads.py:166
 msgid "Locally"
-msgstr ""
+msgstr "Localement"
 
 #: threads/permissions/threads.py:167
 msgid "Globally"
-msgstr ""
+msgstr "Globalement"
 
 #: threads/permissions/threads.py:170
 msgid "Can close threads"
-msgstr ""
+msgstr "Peut fermer des fils de discussion"
 
 #: threads/permissions/threads.py:171
 msgid "Can move threads"
-msgstr ""
+msgstr "Peut déplacer des fils de discussion"
 
 #: threads/permissions/threads.py:172
 msgid "Can merge threads"
@@ -3872,6 +3997,8 @@ msgstr ""
 #: threads/permissions/threads.py:579
 msgid "This category is closed. You can't start new threads in it."
 msgstr ""
+"Cette catégorie est close. Vous ne pouvez pas y commencer de nouveaux fils "
+"de discussion."
 
 #: threads/permissions/threads.py:587
 msgid "You have to sign in to reply threads."
@@ -3884,10 +4011,14 @@ msgstr ""
 #: threads/permissions/threads.py:600
 msgid "This category is closed. You can't reply to threads in it."
 msgstr ""
+"Cette catégorie est close. Vous ne pouvez plus répondre au fils de "
+"discussion."
 
 #: threads/permissions/threads.py:602
 msgid "You can't reply to closed threads in this category."
 msgstr ""
+"Vous ne pouvez pas répondre dans les fils de discussions clos de cette "
+"catégorie."
 
 #: threads/permissions/threads.py:610
 msgid "You have to sign in to edit threads."
@@ -3911,6 +4042,8 @@ msgstr[1] ""
 #: threads/permissions/threads.py:635
 msgid "This category is closed. You can't edit threads in it."
 msgstr ""
+"Cette catégorie est close. Vous ne pouvez plus y éditer les fils de "
+"discussion."
 
 #: threads/permissions/threads.py:637
 msgid "This thread is closed. You can't edit it."
