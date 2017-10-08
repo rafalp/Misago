@@ -42,7 +42,7 @@ class Post(models.Model):
 
     attachments_cache = JSONField(null=True, blank=True)
 
-    posted_on = models.DateTimeField()
+    posted_on = models.DateTimeField(db_index=True)
     updated_on = models.DateTimeField()
     hidden_on = models.DateTimeField(default=timezone.now)
 

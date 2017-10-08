@@ -7,6 +7,9 @@ from .models import CategoryRead, ThreadRead
 
 
 def make_read_aware(user, target):
+    if not target:
+        return
+
     if hasattr(target, '__iter__'):
         make_threads_read_aware(user, target)
     else:
@@ -53,6 +56,8 @@ def make_categories_threads_read_aware(user, threads):
 
 
 def fetch_categories_cutoffs_for_threads(user, threads):
+    from misago.core import deprecations
+    deprecations.warn("threadstracker.fetch_categories_cutoffs_for_threads has been deprecated")
     categories = []
     for thread in threads:
         if thread.category_id not in categories:
@@ -109,6 +114,8 @@ def make_thread_read_aware(user, thread):
 
 
 def make_posts_read_aware(user, thread, posts):
+    from misago.core import deprecations
+    deprecations.warn("threadstracker.make_posts_read_aware has been deprecated")
     try:
         is_thread_read = thread.is_read
     except AttributeError:
@@ -131,6 +138,8 @@ def make_posts_read_aware(user, thread, posts):
 
 
 def read_thread(user, thread, last_read_reply):
+    from misago.core import deprecations
+    deprecations.warn("threadstracker.read_thread has been deprecated")
     if not thread.is_read:
         if thread.last_read_on < last_read_reply.posted_on:
             sync_record(user, thread, last_read_reply)
@@ -138,6 +147,9 @@ def read_thread(user, thread, last_read_reply):
 
 @transaction.atomic
 def sync_record(user, thread, last_read_reply):
+    from misago.core import deprecations
+    deprecations.warn("threadstracker.sync_record has been deprecated")
+
     notification_triggers = ['read_thread_%s' % thread.pk]
 
     if thread.read_record:

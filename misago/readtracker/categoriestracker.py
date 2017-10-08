@@ -40,6 +40,9 @@ def make_read(categories):
 
 
 def start_record(user, category):
+    from misago.core import deprecations
+    deprecations.warn("categoriestracker.start_record has been deprecated")
+
     user.categoryread_set.create(
         category=category,
         last_read_on=user.joined_on,
@@ -47,6 +50,9 @@ def start_record(user, category):
 
 
 def sync_record(user, category):
+    from misago.core import deprecations
+    deprecations.warn("categoriestracker.sync_record has been deprecated")
+
     cutoff_date = get_cutoff_date()
     if user.joined_on > cutoff_date:
         cutoff_date = user.joined_on
@@ -90,6 +96,9 @@ def sync_record(user, category):
 
 
 def read_category(user, category):
+    from misago.core import deprecations
+    deprecations.warn("categoriestracker.read_category has been deprecated")
+
     categories = [category.pk]
     if not category.is_leaf_node():
         categories += category.get_descendants().filter(
