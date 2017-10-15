@@ -1348,7 +1348,72 @@ def exclude_invisible_threads(user, categories, queryset):
         return Thread.objects.none()
 
 
-def exclude_invisible_posts(user, category, queryset):
+def exclude_invisible_posts(user, categories, queryset):
+    if hasattr(categories, '__iter__'):
+        return exclude_invisible_posts_in_categories(user, categories, queryset)
+    else:
+        return exclude_invisible_posts_in_category(user, categories, queryset)
+
+
+def exclude_invisible_posts_in_categories(user, categories, queryset):
+    show_all = []
+    show_approved = []
+    show_approved_owned = []
+
+    hide_invisible_events = []
+
+    for category in categories:
+        if category.acl['can_approve_content']:
+            show_all.append(category.pk)
+        else:
+            if user.is_authenticated:
+                show_approved_owned.append(category.pk)
+            else:
+                show_approved.append(category.pk)
+
+        if not category.acl['can_hide_events']:
+            hide_invisible_events.append(category.pk)
+
+    conditions = None
+    if show_all:
+        conditions = Q(category__in=show_all)
+
+    if show_approved:
+        condition = Q(
+            category__in=show_approved,
+            is_unapproved=False,
+        )
+
+        if conditions:
+            conditions = conditions | condition
+        else:
+            conditions = condition
+
+    if show_approved_owned:
+        condition = Q(
+            Q(poster=user) | Q(is_unapproved=False),
+            category__in=show_approved_owned,
+        )
+
+        if conditions:
+            conditions = conditions | condition
+        else:
+            conditions = condition
+
+    if hide_invisible_events:
+        queryset = queryset.exclude(
+            category__in=hide_invisible_events,
+            is_event=True,
+            is_hidden=True,
+        )
+
+    if conditions:
+        return queryset.filter(conditions)
+    else:
+        return Post.objects.none()
+
+
+def exclude_invisible_posts_in_category(user, category, queryset):
     if not category.acl['can_approve_content']:
         if user.is_authenticated:
             queryset = queryset.filter(Q(is_unapproved=False) | Q(poster=user))

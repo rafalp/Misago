@@ -31,7 +31,7 @@ class PostsTrackerTests(TestCase):
         poststracker.make_read_aware(self.user, False)
         poststracker.make_read_aware(self.user, [])
 
-    def test_anon_post_behind_cutoff(self):
+    def test_anon_post_before_cutoff(self):
         """non-tracked post is marked as read for anonymous users"""
         posted_on = timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)
         post = testutils.reply_thread(self.thread, posted_on=posted_on)
@@ -48,7 +48,7 @@ class PostsTrackerTests(TestCase):
         self.assertTrue(post.is_read)
         self.assertFalse(post.is_new)
 
-    def test_user_post_behind_cutoff(self):
+    def test_user_post_before_cutoff(self):
         """untracked post is marked as read for authenticated users"""
         posted_on = timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)
         post = testutils.reply_thread(self.thread, posted_on=posted_on)
