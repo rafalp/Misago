@@ -5,17 +5,13 @@ from .dates import get_cutoff_date
 from .models import PostRead
 
 
-def make_read_aware(user, target):
-    if not target:
+def make_read_aware(user, posts):
+    if not posts:
         return
 
-    if hasattr(target, '__iter__'):
-        make_posts_read_aware(user, target)
-    else:
-        make_posts_read_aware(user, [target])
+    if not hasattr(posts, '__iter__'):
+        posts = [posts]
 
-
-def make_posts_read_aware(user, posts):
     make_read(posts)
 
     if user.is_anonymous:

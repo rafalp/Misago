@@ -1363,6 +1363,8 @@ def exclude_invisible_posts_in_categories(user, categories, queryset):
     hide_invisible_events = []
 
     for category in categories:
+        add_acl(user, category)
+
         if category.acl['can_approve_content']:
             show_all.append(category.pk)
         else:
@@ -1414,6 +1416,8 @@ def exclude_invisible_posts_in_categories(user, categories, queryset):
 
 
 def exclude_invisible_posts_in_category(user, category, queryset):
+    add_acl(user, category)
+
     if not category.acl['can_approve_content']:
         if user.is_authenticated:
             queryset = queryset.filter(Q(is_unapproved=False) | Q(poster=user))

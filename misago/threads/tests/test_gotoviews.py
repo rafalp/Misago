@@ -3,7 +3,7 @@ from django.utils import timezone
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.conf import settings
-from misago.readtracker.threadstracker import make_thread_read_aware, read_thread
+from misago.readtracker.poststracker import save_read
 from misago.threads import testutils
 from misago.users.testutils import AuthenticatedUserTestCase
 
@@ -144,8 +144,7 @@ class GotoNewTests(GotoViewTestCase):
 
     def test_goto_first_new_post(self):
         """first unread post redirect url in already read thread is valid"""
-        make_thread_read_aware(self.user, self.thread)
-        read_thread(self.user, self.thread, self.thread.last_post)
+        save_read(self.user, self.thread.first_post)
 
         post = testutils.reply_thread(self.thread, posted_on=timezone.now())
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
@@ -159,11 +158,11 @@ class GotoNewTests(GotoViewTestCase):
 
     def test_goto_first_new_post_on_next_page(self):
         """first unread post redirect url in already read multipage thread is valid"""
-        for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
-            testutils.reply_thread(self.thread, posted_on=timezone.now())
+        save_read(self.user, self.thread.first_post)
 
-        make_thread_read_aware(self.user, self.thread)
-        read_thread(self.user, self.thread, self.thread.last_post)
+        for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
+            last_post = testutils.reply_thread(self.thread, posted_on=timezone.now())
+            save_read(self.user, last_post)
 
         post = testutils.reply_thread(self.thread, posted_on=timezone.now())
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
@@ -177,11 +176,11 @@ class GotoNewTests(GotoViewTestCase):
 
     def test_goto_first_new_post_in_read_thread(self):
         """goto new in read thread points to last post"""
+        save_read(self.user, self.thread.first_post)
+
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
             post = testutils.reply_thread(self.thread, posted_on=timezone.now())
-
-        make_thread_read_aware(self.user, self.thread)
-        read_thread(self.user, self.thread, self.thread.last_post)
+            save_read(self.user, post)
 
         response = self.client.get(self.thread.get_new_post_url())
         self.assertEqual(response.status_code, 302)
@@ -229,13 +228,10 @@ class GotoUnapprovedTests(GotoViewTestCase):
             GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id)
         )
 
-    def test_vie_handles_unapproved_posts(self):
+    def test_view_handles_unapproved_posts(self):
         """if thread has unapproved posts, redirect to first of them"""
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
             testutils.reply_thread(self.thread, posted_on=timezone.now())
-
-        make_thread_read_aware(self.user, self.thread)
-        read_thread(self.user, self.thread, self.thread.last_post)
 
         post = testutils.reply_thread(self.thread, is_unapproved=True, posted_on=timezone.now())
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
@@ -243,7 +239,7 @@ class GotoUnapprovedTests(GotoViewTestCase):
 
         self.grant_permission()
 
-        response = self.client.get(self.thread.get_new_post_url())
+        response = self.client.get(self.thread.get_unapproved_post_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
             response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk)

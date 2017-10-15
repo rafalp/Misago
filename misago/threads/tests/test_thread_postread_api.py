@@ -36,12 +36,27 @@ class PostReadApiTests(ThreadsApiTestCase):
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        thread_read = self.user.threadread_set.order_by('id').last()
-        self.assertEqual(thread_read.thread_id, self.thread.id)
-        self.assertEqual(thread_read.last_read_on, self.post.posted_on)
+        self.assertEqual(self.user.postread_set.count(), 1)
+        self.user.postread_set.get(post=self.post)
 
-        category_read = self.user.categoryread_set.order_by('id').last()
-        self.assertTrue(category_read.last_read_on >= self.post.posted_on)
+        # one post read, first post is still unread
+        self.assertFalse(response.json()['thread_is_read'])
+
+        # read second post
+        response = self.client.post(reverse(
+            'misago:api:thread-post-read',
+            kwargs={
+                'thread_pk': self.thread.pk,
+                'pk': self.thread.first_post.pk,
+            }
+        ))
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(self.user.postread_set.count(), 2)
+        self.user.postread_set.get(post=self.thread.first_post)
+
+        # both posts are read
+        self.assertTrue(response.json()['thread_is_read'])
 
     def test_read_subscribed_thread_post(self):
         """api marks post as read and updates subscription"""
@@ -54,13 +69,6 @@ class PostReadApiTests(ThreadsApiTestCase):
 
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 200)
-
-        thread_read = self.user.threadread_set.order_by('id').last()
-        self.assertEqual(thread_read.thread_id, self.thread.id)
-        self.assertEqual(thread_read.last_read_on, self.post.posted_on)
-
-        category_read = self.user.categoryread_set.order_by('id').last()
-        self.assertTrue(category_read.last_read_on >= self.post.posted_on)
 
         subscription = self.thread.subscription_set.order_by('id').last()
         self.assertEqual(subscription.last_read_on, self.post.posted_on)

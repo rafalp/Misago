@@ -11,9 +11,10 @@ from misago.acl import add_acl
 from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
 from misago.readtracker import threadstracker
-from misago.threads.models import Thread
+from misago.readtracker.dates import get_cutoff_date
+from misago.threads.models import Post, Thread
 from misago.threads.participants import make_participants_aware
-from misago.threads.permissions import exclude_invisible_threads
+from misago.threads.permissions import exclude_invisible_posts, exclude_invisible_threads
 from misago.threads.serializers import ThreadsListSerializer
 from misago.threads.subscriptions import make_subscription_aware
 from misago.threads.utils import add_categories_to_items
@@ -69,9 +70,11 @@ class ViewModel(object):
 
         if list_type in ('new', 'unread'):
             # we already know all threads on list are unread
-            threadstracker.make_unread(threads)
+            for thread in threads:
+                thread.is_read = False
+                thread.is_new = True
         else:
-            threadstracker.make_threads_read_aware(request.user, threads)
+            threadstracker.make_read_aware(request.user, threads)
 
         add_categories_to_items(category_model, category.categories, threads)
 
@@ -207,57 +210,22 @@ def filter_threads_queryset(user, categories, list_type, queryset):
 
 def filter_read_threads_queryset(user, categories, list_type, queryset):
     # grab cutoffs for categories
-    cutoff_date = timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)
+    cutoff_date = get_cutoff_date(user)
 
-    if cutoff_date < user.joined_on:
-        cutoff_date = user.joined_on
+    visible_posts = Post.objects.filter(posted_on__gt=cutoff_date)
+    visible_posts = exclude_invisible_posts(user, categories, visible_posts)
 
-    categories_dict = {}
-    for record in user.categoryread_set.filter(category__in=categories):
-        if record.last_read_on > cutoff_date:
-            categories_dict[record.category_id] = record.last_read_on
+    queryset = queryset.filter(id__in=visible_posts.values('thread'))
+
+    read_posts = visible_posts.filter(id__in=user.postread_set.values('post'))
 
     if list_type == 'new':
         # new threads have no entry in reads table
-        # AND were started after cutoff date
-        read_threads = user.threadread_set.filter(category__in=categories).values('thread_id')
+        return queryset.exclude(id__in=read_posts.values('thread'))
 
-        condition = Q(last_post_on__lte=cutoff_date)
-        condition = condition | Q(id__in=read_threads)
-
-        if categories_dict:
-            for category_id, category_cutoff in categories_dict.items():
-                condition = condition | Q(
-                    category_id=category_id,
-                    last_post_on__lte=category_cutoff,
-                )
-
-        return queryset.exclude(condition)
-    elif list_type == 'unread':
+    if list_type == 'unread':
         # unread threads were read in past but have new posts
-        # after cutoff date
-        read_threads = user.threadread_set.filter(
-            category__in=categories,
-            thread__last_post_on__gt=cutoff_date,
-            last_read_on__lt=F('thread__last_post_on'),
-        ).values('thread_id')
-
-        queryset = queryset.filter(id__in=read_threads)
-
-        # unread threads have last reply after read/cutoff date
-        if categories_dict:
-            conditions = None
-
-            for category_id, category_cutoff in categories_dict.items():
-                condition = Q(
-                    category_id=category_id,
-                    last_post_on__lte=category_cutoff,
-                )
-                if conditions:
-                    conditions = conditions | condition
-                else:
-                    conditions = condition
-
-            return queryset.exclude(conditions)
-        else:
-            return queryset
+        unread_posts = visible_posts.exclude(id__in=user.postread_set.values('post'))
+        queryset = queryset.filter(id__in=read_posts.values('thread'))
+        queryset = queryset.filter(id__in=unread_posts.values('thread'))
+        return queryset

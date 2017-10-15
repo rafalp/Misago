@@ -5,9 +5,6 @@ from misago.categories.signals import delete_category_content, move_category_con
 from misago.threads.signals import merge_thread, move_thread, move_post
 
 
-all_read = Signal()
-category_read = Signal(providing_args=["category"])
-thread_tracked = Signal(providing_args=["thread"])
 thread_read = Signal(providing_args=["thread"])
 
 

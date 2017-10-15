@@ -1,16 +1,22 @@
 from rest_framework.response import Response
 
-from misago.readtracker.threadstracker import make_posts_read_aware, read_thread
+from misago.readtracker import poststracker, threadstracker
+from misago.readtracker.signals import thread_read
 
 
 def post_read_endpoint(request, thread, post):
-    make_posts_read_aware(request.user, thread, [post])
-    if not post.is_read:
-        read_thread(request.user, thread, post)
+    poststracker.make_read_aware(request.user, post)
+    if post.is_new:
+        poststracker.save_read(request.user, post)
         if thread.subscription and thread.subscription.last_read_on < post.posted_on:
             thread.subscription.last_read_on = post.posted_on
             thread.subscription.save()
-        return Response({
-            'thread_is_read': thread.last_post_on <= post.posted_on,
-        })
-    return Response({'thread_is_read': True})
+
+    threadstracker.make_read_aware(request.user, thread)
+
+    # send signal if post read marked thread as read
+    # used in some places, eg. syncing unread thread count
+    if post.is_new and thread.is_read:
+        thread_read.send(request.user, thread=thread)
+
+    return Response({ 'thread_is_read': thread.is_read })

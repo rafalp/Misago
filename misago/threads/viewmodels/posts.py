@@ -1,7 +1,7 @@
 from misago.acl import add_acl
 from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
-from misago.readtracker.poststracker import make_posts_read_aware
+from misago.readtracker.poststracker import make_read_aware
 from misago.threads.paginator import PostsPaginator
 from misago.threads.permissions import exclude_invisible_posts
 from misago.threads.serializers import PostSerializer
@@ -62,7 +62,7 @@ class ViewModel(object):
 
         # make posts and events ACL and reads aware
         add_acl(request.user, posts)
-        make_posts_read_aware(request.user, thread_model, posts)
+        make_read_aware(request.user, posts)
 
         self._user = request.user
 

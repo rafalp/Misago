@@ -1,18 +1,19 @@
 from math import ceil
 
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import ugettext as _
 from django.views import View
 
 from misago.conf import settings
+from misago.readtracker.dates import get_cutoff_date
 from misago.threads.permissions import exclude_invisible_posts
 from misago.threads.viewmodels import ForumThread, PrivateThread
 
 
 class GotoView(View):
     thread = None
-    read_aware = False
 
     def get(self, request, pk, slug, **kwargs):
         thread = self.get_thread(request, pk, slug).unwrap()
@@ -20,18 +21,18 @@ class GotoView(View):
 
         posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)
 
-        target_post = self.get_target_post(thread, posts_queryset.order_by('id'), **kwargs)
+        target_post = self.get_target_post(request.user, thread, posts_queryset.order_by('id'), **kwargs)
         target_page = self.compute_post_page(target_post, posts_queryset)
 
         return self.get_redirect(thread, target_post, target_page)
 
     def get_thread(self, request, pk, slug):
-        return self.thread(request, pk, slug, read_aware=self.read_aware)
+        return self.thread(request, pk, slug)
 
     def test_permissions(self, request, thread):
         pass
 
-    def get_target_post(self, thread, posts_queryset):
+    def get_target_post(self, user, thread, posts_queryset):
         raise NotImplementedError("goto views should define their own get_target_post method")
 
     def compute_post_page(self, target_post, posts_queryset):
@@ -70,28 +71,38 @@ class GotoView(View):
 class ThreadGotoPostView(GotoView):
     thread = ForumThread
 
-    def get_target_post(self, thread, posts_queryset, **kwargs):
+    def get_target_post(self, user, thread, posts_queryset, **kwargs):
         return get_object_or_404(posts_queryset, pk=kwargs['post'])
 
 
 class ThreadGotoLastView(GotoView):
     thread = ForumThread
 
-    def get_target_post(self, thread, posts_queryset, **kwargs):
+    def get_target_post(self, user, thread, posts_queryset, **kwargs):
         return posts_queryset.order_by('id').last()
 
 
-class ThreadGotoNewView(GotoView):
-    thread = ForumThread
-    read_aware = True
+class GetFirstUnreadPostMixin(object):
+    def get_first_unread_post(self, user, posts_queryset):
+        if user.is_authenticated:
+            expired_posts = Q(posted_on__lt=get_cutoff_date(user))
+            read_posts = Q(id__in=user.postread_set.values('post'))
 
-    def get_target_post(self, thread, posts_queryset, **kwargs):
-        if thread.is_new:
-            return posts_queryset.filter(
-                posted_on__gt=thread.last_read_on,
+            first_unread = posts_queryset.exclude(
+                expired_posts | read_posts,
             ).order_by('id').first()
-        else:
-            return posts_queryset.order_by('id').last()
+
+            if first_unread:
+                return first_unread
+
+        return posts_queryset.order_by('id').last()
+
+
+class ThreadGotoNewView(GotoView, GetFirstUnreadPostMixin):
+    thread = ForumThread
+
+    def get_target_post(self, user, thread, posts_queryset, **kwargs):
+        return self.get_first_unread_post(user, posts_queryset)
 
 
 class ThreadGotoUnapprovedView(GotoView):
@@ -106,7 +117,7 @@ class ThreadGotoUnapprovedView(GotoView):
                 )
             )
 
-    def get_target_post(self, thread, posts_queryset, **kwargs):
+    def get_target_post(self, user, thread, posts_queryset, **kwargs):
         unapproved_post = posts_queryset.filter(
             is_unapproved=True,
         ).order_by('id').first()
@@ -119,25 +130,19 @@ class ThreadGotoUnapprovedView(GotoView):
 class PrivateThreadGotoPostView(GotoView):
     thread = PrivateThread
 
-    def get_target_post(self, thread, posts_queryset, **kwargs):
+    def get_target_post(self, user, thread, posts_queryset, **kwargs):
         return get_object_or_404(posts_queryset, pk=kwargs['post'])
 
 
 class PrivateThreadGotoLastView(GotoView):
     thread = PrivateThread
 
-    def get_target_post(self, thread, posts_queryset, **kwargs):
+    def get_target_post(self, user, thread, posts_queryset, **kwargs):
         return posts_queryset.order_by('id').last()
 
 
-class PrivateThreadGotoNewView(GotoView):
+class PrivateThreadGotoNewView(GotoView, GetFirstUnreadPostMixin):
     thread = PrivateThread
-    read_aware = True
 
-    def get_target_post(self, thread, posts_queryset, **kwargs):
-        if thread.is_new:
-            return posts_queryset.filter(
-                posted_on__gt=thread.last_read_on,
-            ).order_by('id').first()
-        else:
-            return posts_queryset.order_by('id').last()
+    def get_target_post(self, user, thread, posts_queryset, **kwargs):
+        return self.get_first_unread_post(user, posts_queryset)
