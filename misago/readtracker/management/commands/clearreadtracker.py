@@ -1,28 +1,20 @@
-from datetime import timedelta
-
 from django.core.management.base import BaseCommand
-from django.utils import timezone
 
-from misago.conf import settings
-from misago.readtracker.models import CategoryRead, ThreadRead
+from misago.readtracker.dates import get_cutoff_date
+from misago.readtracker.models import PostRead
 
 
 class Command(BaseCommand):
     help = "Deletes expired records from readtracker"
 
     def handle(self, *args, **options):
-        cutoff = timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)
+        queryset = PostRead.objects.filter(last_read_on__lt=get_cutoff_date())
+        deleted_count = queryset.count()
 
-        categories = CategoryRead.objects.filter(last_read_on__lte=cutoff)
-        threads = ThreadRead.objects.filter(last_read_on__lte=cutoff)
+        if deleted_count:
+            queryset.delete()
 
-        total_count = categories.count() + threads.count()
-
-        if total_count:
-            categories.delete()
-            threads.delete()
-
-            message = "\n\nDeleted %s expired entries" % total_count
+            message = "\n\nDeleted %s expired entries" % deleted_count
         else:
             message = "\n\nNo expired entries were found"
 

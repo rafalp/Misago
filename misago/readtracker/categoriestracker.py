@@ -1,11 +1,7 @@
-from django.db import transaction
-from django.utils import timezone
-
 from misago.threads.models import Post, Thread
 from misago.threads.permissions import exclude_invisible_posts, exclude_invisible_threads
 
 from .dates import get_cutoff_date
-from .models import CategoryRead, ThreadRead
 
 
 def make_read_aware(user, categories):

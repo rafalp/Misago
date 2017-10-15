@@ -1,8 +1,4 @@
-from django.db import transaction
-from django.utils import timezone
-
 from .dates import get_cutoff_date
-from .models import PostRead
 
 
 def make_read_aware(user, posts):
