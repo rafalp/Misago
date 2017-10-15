@@ -42,14 +42,3 @@ def make_read(threads):
     for thread in threads:
         thread.is_read = True
         thread.is_new = False
-
-
-# Noop placeholders for exploding tests suite
-def make_posts_read_aware(*args, **kwargs):
-    from misago.core import deprecations
-    deprecations.warn("threadstracker.make_posts_read_aware has been deprecated")
-
-
-def read_thread(*args, **kwargs):
-    from misago.core import deprecations
-    deprecations.warn("threadstracker.read_thread has been deprecated")

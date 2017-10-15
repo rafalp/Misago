@@ -44,19 +44,3 @@ def make_read(threads):
     for thread in threads:
         thread.is_read = True
         thread.is_new = False
-
-
-# Deprecated stuff goes here
-def start_record(user, category):
-    from misago.core import deprecations
-    deprecations.warn("categoriestracker.start_record has been deprecated")
-
-
-def sync_record(user, category):
-    from misago.core import deprecations
-    deprecations.warn("categoriestracker.sync_record has been deprecated")
-
-
-def read_category(user, category):
-    from misago.core import deprecations
-    deprecations.warn("categoriestracker.read_category has been deprecated")
