@@ -19,4 +19,4 @@ def post_read_endpoint(request, thread, post):
     if post.is_new and thread.is_read:
         thread_read.send(request.user, thread=thread)
 
-    return Response({ 'thread_is_read': thread.is_read })
+    return Response({'thread_is_read': thread.is_read})

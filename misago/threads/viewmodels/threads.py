@@ -68,6 +68,10 @@ class ViewModel(object):
             )
             threads = list(pinned_threads) + list(list_page.object_list)
 
+        add_categories_to_items(category_model, category.categories, threads)
+        add_acl(request.user, threads)
+        make_subscription_aware(request.user, threads)
+
         if list_type in ('new', 'unread'):
             # we already know all threads on list are unread
             for thread in threads:
@@ -75,11 +79,6 @@ class ViewModel(object):
                 thread.is_new = True
         else:
             threadstracker.make_read_aware(request.user, threads)
-
-        add_categories_to_items(category_model, category.categories, threads)
-
-        add_acl(request.user, threads)
-        make_subscription_aware(request.user, threads)
 
         self.filter_threads(request, threads)
 
@@ -215,17 +214,17 @@ def filter_read_threads_queryset(user, categories, list_type, queryset):
     visible_posts = Post.objects.filter(posted_on__gt=cutoff_date)
     visible_posts = exclude_invisible_posts(user, categories, visible_posts)
 
-    queryset = queryset.filter(id__in=visible_posts.values('thread'))
+    queryset = queryset.filter(id__in=visible_posts.distinct().values('thread'))
 
     read_posts = visible_posts.filter(id__in=user.postread_set.values('post'))
 
     if list_type == 'new':
         # new threads have no entry in reads table
-        return queryset.exclude(id__in=read_posts.values('thread'))
+        return queryset.exclude(id__in=read_posts.distinct().values('thread'))
 
     if list_type == 'unread':
         # unread threads were read in past but have new posts
         unread_posts = visible_posts.exclude(id__in=user.postread_set.values('post'))
-        queryset = queryset.filter(id__in=read_posts.values('thread'))
-        queryset = queryset.filter(id__in=unread_posts.values('thread'))
+        queryset = queryset.filter(id__in=read_posts.distinct().values('thread'))
+        queryset = queryset.filter(id__in=unread_posts.distinct().values('thread'))
         return queryset

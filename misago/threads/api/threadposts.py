@@ -172,14 +172,10 @@ class ViewSet(viewsets.ViewSet):
         return delete_bulk(request, thread.unwrap())
 
     @detail_route(methods=['post'])
-    @transaction.atomic
     def read(self, request, thread_pk, pk=None):
-        request.user.lock()
-
         thread = self.get_thread(
             request,
             thread_pk,
-            read_aware=True,
             subscription_aware=True,
         ).unwrap()
 

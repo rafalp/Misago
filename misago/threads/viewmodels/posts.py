@@ -71,6 +71,7 @@ class ViewModel(object):
 
     def get_posts_queryset(self, request, thread):
         queryset = thread.post_set.select_related(
+            'category',
             'poster',
             'poster__rank',
             'poster__ban_cache',
@@ -79,7 +80,13 @@ class ViewModel(object):
         return exclude_invisible_posts(request.user, thread.category, queryset)
 
     def get_events_queryset(self, request, thread, limit, first_post=None, last_post=None):
-        queryset = thread.post_set.select_related('poster').filter(is_event=True)
+        queryset = thread.post_set.select_related(
+            'category',
+            'poster',
+            'poster__rank',
+            'poster__ban_cache',
+            'poster__online_tracker',
+        ).filter(is_event=True)
 
         if first_post:
             queryset = queryset.filter(pk__gt=first_post.pk)
