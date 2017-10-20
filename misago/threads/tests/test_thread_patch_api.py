@@ -5,7 +5,7 @@ from django.utils import six, timezone
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
-
+from misago.readtracker import poststracker
 from misago.threads.models import Thread
 
 from .test_threads_api import ThreadsApiTestCase
@@ -547,6 +547,41 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category_b.pk)
+
+    def test_move_thread_reads(self):
+        """api moves thread reads together with thread"""
+        self.override_acl({'can_move_threads': True})
+        self.override_other_acl({'can_start_threads': 2})
+
+        poststracker.save_read(self.user, self.thread.first_post)
+
+        self.assertEqual(self.user.postread_set.count(), 1)
+        self.user.postread_set.get(category=self.category)
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'category',
+                    'value': self.category_b.pk,
+                },
+                {
+                    'op': 'add',
+                    'path': 'top-category',
+                    'value': self.category_b.pk,
+                },
+                {
+                    'op': 'replace',
+                    'path': 'flatten-categories',
+                    'value': None,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # thread read was moved to new category
+        self.assertEqual(self.user.postread_set.count(), 1)
+        self.user.postread_set.get(category=self.category_b)
 
     def test_move_thread_no_permission(self):
         """api move thread to other category with no permission fails"""
