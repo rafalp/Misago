@@ -7,6 +7,7 @@ from django.urls import reverse
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
+from misago.readtracker import poststracker
 from misago.threads import testutils
 from misago.threads.models import Post, Thread
 from misago.threads.serializers.moderation import POSTS_LIMIT
@@ -432,3 +433,23 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_merge_remove_reads(self):
+        """two posts merge removes read tracker from post"""
+        post_a = testutils.reply_thread(self.thread, poster=self.user, message="Battęry")
+        post_b = testutils.reply_thread(self.thread, poster=self.user, message="Hórse")
+
+        poststracker.save_read(self.user, post_a)
+        poststracker.save_read(self.user, post_b)
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({
+                'posts': [post_a.pk, post_b.pk]
+            }),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # both post's were removed from readtracker
+        self.assertEqual(self.user.postread_set.count(), 0)

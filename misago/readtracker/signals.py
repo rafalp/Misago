@@ -2,7 +2,7 @@ from django.dispatch import Signal, receiver
 
 from misago.categories import PRIVATE_THREADS_ROOT_NAME
 from misago.categories.signals import delete_category_content, move_category_content
-from misago.threads.signals import merge_thread, move_thread, move_post
+from misago.threads.signals import merge_thread, move_thread, merge_post, move_post
 
 
 thread_read = Signal(providing_args=["thread"])
@@ -33,6 +33,11 @@ def move_thread_tracker(sender, **kwargs):
         category=sender.category,
         thread=sender,
     )
+
+
+@receiver(merge_post)
+def merge_post_delete_tracker(sender, **kwargs):
+    sender.postread_set.all().delete()
 
 
 @receiver(move_post)

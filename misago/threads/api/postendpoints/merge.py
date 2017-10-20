@@ -44,6 +44,8 @@ def posts_merge_endpoint(request, thread):
     first_post.update_search_vector()
     first_post.save(update_fields=['search_vector'])
 
+    first_post.postread_set.all().delete()
+
     thread.synchronize()
     thread.save()
 
