@@ -5,6 +5,7 @@ from django.urls import reverse
 from misago.acl import add_acl
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
+from misago.readtracker import poststracker
 from misago.threads import testutils
 from misago.threads.serializers.moderation import THREADS_LIMIT
 from misago.threads.models import Poll, PollVote, Post, Thread
@@ -731,6 +732,9 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
 
         thread = testutils.post_thread(category=self.category)
 
+        poststracker.save_read(self.user, self.thread.first_post)
+        poststracker.save_read(self.user, thread.first_post)
+
         response = self.client.post(
             self.api_link,
             json.dumps({
@@ -767,6 +771,16 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
 
         # are old threads gone?
         self.assertEqual([t.pk for t in Thread.objects.all()], [new_thread.pk])
+
+        # posts reads are kept
+        postread_set = self.user.postread_set.order_by('post_id')
+
+        self.assertEqual(
+            list(postread_set.values_list('post_id', flat=True)),
+            [self.thread.first_post_id, thread.first_post_id]
+        )
+        self.assertEqual(postread_set.filter(thread=new_thread).count(), 2)
+        self.assertEqual(postread_set.filter(category=self.category).count(), 2)
 
     def test_merge_threads_kept_poll(self):
         """api merges two threads successfully, keeping poll from old thread"""

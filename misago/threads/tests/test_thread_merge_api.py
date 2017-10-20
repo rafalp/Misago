@@ -2,6 +2,7 @@ from django.urls import reverse
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
+from misago.readtracker import poststracker
 from misago.threads import testutils
 from misago.threads.models import Poll, PollVote, Thread
 
@@ -292,6 +293,34 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         # first thread is gone
         with self.assertRaises(Thread.DoesNotExist):
             Thread.objects.get(pk=self.thread.pk)
+
+    def test_merge_threads_keep_Reads(self):
+        """api keeps both threads readtrackers after merge"""
+        self.override_acl({'can_merge_threads': 1})
+
+        self.override_other_acl({'can_merge_threads': 1})
+
+        other_thread = testutils.post_thread(self.category_b)
+
+        poststracker.save_read(self.user, self.thread.first_post)
+        poststracker.save_read(self.user, other_thread.first_post)
+
+        response = self.client.post(
+            self.api_link, {
+                'other_thread': other_thread.get_absolute_url(),
+            }
+        )
+        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+
+        # posts reads are kept
+        postread_set = self.user.postread_set.order_by('post_id')
+
+        self.assertEqual(
+            list(postread_set.values_list('post_id', flat=True)),
+            [self.thread.first_post_id, other_thread.first_post_id]
+        )
+        self.assertEqual(postread_set.filter(thread=other_thread).count(), 2)
+        self.assertEqual(postread_set.filter(category=self.category_b).count(), 2)
 
     def test_merge_threads_kept_poll(self):
         """api merges two threads successfully, keeping poll from old thread"""
