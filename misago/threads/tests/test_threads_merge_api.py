@@ -786,14 +786,14 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         self.assertEqual([t.pk for t in Thread.objects.all()], [new_thread.pk])
 
         # posts reads are kept
-        postread_set = self.user.postread_set.order_by('post_id')
+        postreads = self.user.postread_set.filter(post__is_event=False).order_by('id')
 
         self.assertEqual(
-            list(postread_set.values_list('post_id', flat=True)),
+            list(postreads.values_list('post_id', flat=True)),
             [self.thread.first_post_id, thread.first_post_id]
         )
-        self.assertEqual(postread_set.filter(thread=new_thread).count(), 2)
-        self.assertEqual(postread_set.filter(category=self.category).count(), 2)
+        self.assertEqual(postreads.filter(thread=new_thread).count(), 2)
+        self.assertEqual(postreads.filter(category=self.category).count(), 2)
 
         # subscriptions are kept
         self.assertEqual(self.user.subscription_set.count(), 1)

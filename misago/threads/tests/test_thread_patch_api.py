@@ -580,8 +580,10 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         self.assertEqual(response.status_code, 200)
 
         # thread read was moved to new category
-        self.assertEqual(self.user.postread_set.count(), 1)
-        self.user.postread_set.get(category=self.category_b)
+        postreads = self.user.postread_set.filter(post__is_event=False).order_by('id')
+
+        self.assertEqual(postreads.count(), 1)
+        postreads.get(category=self.category_b)
 
     def test_move_thread_subscriptions(self):
         """api moves thread subscriptions together with thread"""

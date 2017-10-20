@@ -648,7 +648,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         self.assertEqual(split_thread.post_set.filter(pk__in=self.posts).count(), 2)
 
         # postreads were removed
-        postreads = self.user.postread_set.order_by('id')
+        postreads = self.user.postread_set.filter(post__is_event=False).order_by('id')
 
         postreads_threads = list(postreads.values_list('thread_id', flat=True))
         self.assertEqual(postreads_threads, [self.thread.pk])
