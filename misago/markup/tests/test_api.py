@@ -43,6 +43,10 @@ class ParseMarkupApiTests(AuthenticatedUserTestCase):
         response = self.client.post(self.api_link, {'post': ''})
         self.assertContains(response, "You have to enter a message.", status_code=400)
 
+        # regression test for #929
+        response = self.client.post(self.api_link, {'post': '\n'})
+        self.assertContains(response, "You have to enter a message.", status_code=400)
+
     def test_invalid_post(self):
         """api handles invalid post type"""
         response = self.client.post(self.api_link, {'post': 123})

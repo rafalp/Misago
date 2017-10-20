@@ -10,8 +10,9 @@ from .serializers import MarkupSerializer
 def parse_markup(request):
     serializer = MarkupSerializer(data=request.data)
     if not serializer.is_valid():
+        errors_list = list(serializer.errors.values())[0]
         return Response(
-            {'detail': serializer.errors['non_field_errors'][0]},
+            {'detail': errors_list[0]},
             status=status.HTTP_400_BAD_REQUEST,
         )
 
