@@ -7,6 +7,7 @@ from django.urls import reverse
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
+from misago.readtracker import poststracker
 from misago.threads import testutils
 from misago.threads.models import Thread
 from misago.threads.serializers.moderation import POSTS_LIMIT
@@ -442,3 +443,42 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         other_thread = Thread.objects.get(pk=other_thread.pk)
         self.assertEqual(other_thread.post_set.filter(pk__in=posts).count(), 4)
         self.assertEqual(other_thread.replies, 4)
+
+    def test_move_posts_reads(self):
+        """api moves posts reads together with posts"""
+        self.override_other_acl({'can_reply_threads': 1})
+
+        other_thread = testutils.post_thread(self.category_b)
+
+        posts = (
+            testutils.reply_thread(self.thread),
+            testutils.reply_thread(self.thread),
+        )
+
+        self.refresh_thread()
+        self.assertEqual(self.thread.replies, 2)
+
+        poststracker.save_read(self.user, self.thread.first_post)
+        for post in posts:
+            poststracker.save_read(self.user, post)
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({
+                'new_thread': other_thread.get_absolute_url(),
+                'posts': [p.pk for p in posts],
+            }),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+
+        other_thread = Thread.objects.get(pk=other_thread.pk)
+
+        # postreads were removed
+        postreads = self.user.postread_set.order_by('id')
+
+        postreads_threads = list(postreads.values_list('thread_id', flat=True))
+        self.assertEqual(postreads_threads, [self.thread.pk])
+
+        postreads_categories = list(postreads.values_list('category_id', flat=True))
+        self.assertEqual(postreads_categories, [self.category.pk])

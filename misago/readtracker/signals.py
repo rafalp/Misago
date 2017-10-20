@@ -36,11 +36,8 @@ def move_thread_tracker(sender, **kwargs):
 
 
 @receiver(move_post)
-def move_post_tracker(sender, **kwargs):
-    sender.postread_set.update(
-        category=sender.category,
-        thread=sender.thread,
-    )
+def move_post_delete_tracker(sender, **kwargs):
+    sender.postread_set.all().delete()
 
 
 @receiver(thread_read)

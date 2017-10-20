@@ -7,8 +7,9 @@ from django.urls import reverse
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
+from misago.readtracker import poststracker
 from misago.threads import testutils
-from misago.threads.models import Thread
+from misago.threads.models import Post, Thread
 from misago.threads.serializers.moderation import POSTS_LIMIT
 from misago.users.testutils import AuthenticatedUserTestCase
 
@@ -20,7 +21,8 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(category=self.category)
         self.posts = [
-            testutils.reply_thread(self.thread).pk, testutils.reply_thread(self.thread).pk
+            testutils.reply_thread(self.thread).pk,
+            testutils.reply_thread(self.thread).pk,
         ]
 
         self.api_link = reverse(
@@ -613,6 +615,10 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             'can_pin_threads': 2,
         })
 
+        poststracker.save_read(self.user, self.thread.first_post)
+        for post in self.posts:
+            poststracker.save_read(self.user, Post.objects.select_related().get(pk=post))
+
         response = self.client.post(
             self.api_link,
             json.dumps({
@@ -640,3 +646,12 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
 
         # posts were moved to new thread
         self.assertEqual(split_thread.post_set.filter(pk__in=self.posts).count(), 2)
+
+        # postreads were removed
+        postreads = self.user.postread_set.order_by('id')
+
+        postreads_threads = list(postreads.values_list('thread_id', flat=True))
+        self.assertEqual(postreads_threads, [self.thread.pk])
+
+        postreads_categories = list(postreads.values_list('category_id', flat=True))
+        self.assertEqual(postreads_categories, [self.category.pk])
