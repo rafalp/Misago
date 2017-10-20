@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-08 22:51+0200\n"
+"POT-Creation-Date: 2017-10-20 23:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Amandine G <amandyfriendly@msn.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/misago/teams/65369/fr/)\n"
@@ -957,7 +957,7 @@ msgstr "Votre réponse a bien été publiée."
 
 #: static/misago/js/misago.js:8
 msgid "Post reply"
-msgstr "Réponses"
+msgstr "Répondre au message"
 
 #: static/misago/js/misago.js:8
 msgid "Are you sure you want to discard private thread?"
@@ -1225,8 +1225,7 @@ msgstr[1] "Cette publication a été modifiée %(edits)s fois."
 msgid "Changes history"
 msgstr "Historique des modifications"
 
-#: static/misago/js/misago.js:9 static/misago/js/misago.js:14
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:9 static/misago/js/misago.js:15
 msgid "Approve"
 msgstr "Approuver"
 
@@ -1386,11 +1385,11 @@ msgid_plural "%(edits)s edits"
 msgstr[0] "%(edits)s modification."
 msgstr[1] "%(edits)s modifications."
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:11
+#: static/misago/js/misago.js:11
 msgid "Ban details"
 msgstr "Détails de l'interdiction"
 
-#: static/misago/js/misago.js:10
+#: static/misago/js/misago.js:11
 msgid "User-shown ban message"
 msgstr "Message d'interdiction à l'attention de l'utilisateur"
 
@@ -2042,7 +2041,7 @@ msgstr "Vous ne pouvez pas déplacer ce fil pour le moment."
 msgid "Thread has been moved."
 msgstr "Le fil a été déplacé."
 
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:19
+#: static/misago/js/misago.js:16 static/misago/js/misago.js:18
 msgid "New category"
 msgstr "Nouvelle catégorie"
 
@@ -2118,7 +2117,7 @@ msgstr "Options"
 
 #: static/misago/js/misago.js:16
 msgid "Add poll"
-msgstr "Ajouter un sondage"
+msgstr "Sondage"
 
 #: static/misago/js/misago.js:16
 msgid ""
@@ -2142,32 +2141,8 @@ msgid "Change subscription"
 msgstr "Changer l'abonnement"
 
 #: static/misago/js/misago.js:18
-msgid ""
-"Are you sure you want to mark those threads as read? This action is not "
-"reversible."
-msgstr ""
-"Êtes-vous sûr de vouloir marquer ces fils de discussion comme lu? Cette "
-"action est irréversible!"
-
-#: static/misago/js/misago.js:18
-msgid ""
-"Are you sure you want to mark threads in this category as read? This action "
-"is not reversible."
-msgstr ""
-"Êtes-vous sûr de vouloir marquer les fils de discussion dans cette catégorie"
-" comme lu? Cette action est irréversible!"
-
-#: static/misago/js/misago.js:18
-msgid "Threads have been marked as read."
-msgstr "Les fils ont été marqués comme lus."
-
-#: static/misago/js/misago.js:18
 msgid "Start thread"
 msgstr "Démarrer le fil"
-
-#: static/misago/js/misago.js:18
-msgid "Mark as read"
-msgstr "Marquer comme lu"
 
 #: static/misago/js/misago.js:18
 msgid "Why not start one yourself?"
@@ -2235,11 +2210,11 @@ msgstr "Les fils sélectionnés ont été supprimés."
 
 #: static/misago/js/misago.js:18
 msgid "Pin threads globally"
-msgstr "Épingler les fils globalement "
+msgstr "Épingler globalement "
 
 #: static/misago/js/misago.js:18
 msgid "Pin threads locally"
-msgstr "Épingler les fils localement "
+msgstr "Épingler localement "
 
 #: static/misago/js/misago.js:18
 msgid "Unpin threads"
@@ -2399,27 +2374,27 @@ msgstr "Fils de discussion privés"
 msgid "Log out"
 msgstr "Se deconnecter"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s is banned until %(ban_expires)s"
 msgstr "%(username)s est banni jusqu’à %(ban_expires)s"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s is banned"
 msgstr "%(username)s est banni"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s is hiding presence"
 msgstr "%(username)scache sa présence "
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s is online (hidden)"
 msgstr "%(username)sest en ligne (caché)"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s was last seen %(last_click)s (hidden)"
 msgstr "%(username)sa été vu pour la dernière fois le %(last_click)s (caché)"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s is online"
 msgstr "%(username)s est en ligne"
 
@@ -2457,7 +2432,7 @@ msgstr[1] "%(followers)s suiveurs"
 msgid "No users have posted any new messages during last %(days)s days."
 msgstr "Aucun utilisateur n'a posté de message depuis %(days)s jours"
 
-#: static/misago/js/misago.js:20 static/misago/js/misago.js:21
+#: static/misago/js/misago.js:20
 msgid "Rank"
 msgstr "Rang"
 

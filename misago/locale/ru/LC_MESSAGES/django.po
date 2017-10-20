@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-08 22:51+0200\n"
+"POT-Creation-Date: 2017-10-20 23:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Filipp Zhuravlev <shiningfinger@list.ru>, 2017\n"
+"Last-Translator: Ivan Khomutov <iskhomutov@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/misago/teams/65369/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2836,128 +2836,17 @@ msgstr ""
 "Вы не можете загрузить файлы этого типа, больше чем %(limit)s (Ваш файл "
 "имеет %(upload)s)."
 
-#: threads/api/pollvotecreateendpoint.py:47
-#, python-format
-msgid "This poll disallows voting for more than %(choices)s choice."
-msgid_plural "This poll disallows voting for more than %(choices)s choices."
-msgstr[0] "Этот опрос запрещает голосовать за больше чем %(choices)s выбор."
-msgstr[1] "Этот опрос запрещает голосовать за больше чем %(choices)s выборов."
-msgstr[2] "Этот опрос запрещает голосовать за больше чем %(choices)s выборов."
-msgstr[3] "Этот опрос запрещает голосовать за больше чем %(choices)s выбора."
-
-#: threads/api/pollvotecreateendpoint.py:53
-#: threads/api/pollvotecreateendpoint.py:63
-msgid "One or more of poll choices were invalid."
-msgstr "Один или больше выборов опроса неправильны."
-
-#: threads/api/pollvotecreateendpoint.py:65
-msgid "You have to make a choice."
-msgstr "Вы должны сделать выбор."
-
-#: threads/api/postendpoints/delete.py:50
-#: threads/api/postendpoints/merge.py:58 threads/api/postendpoints/move.py:73
-#: threads/api/postendpoints/split.py:38
-msgid "One or more post ids received were invalid."
-msgstr ""
-"Один или больше полученных идентификаторов публикации были неправильны."
-
-#: threads/api/postendpoints/delete.py:54
-msgid "You have to specify at least one post to delete."
-msgstr ""
-
-#: threads/api/postendpoints/delete.py:57
-#, python-format
-msgid "No more than %(limit)s post can be deleted at single time."
-msgid_plural "No more than %(limit)s posts can be deleted at single time."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-
-#: threads/api/postendpoints/delete.py:77
-msgid "One or more posts to delete could not be found."
-msgstr ""
-
 #: threads/api/postendpoints/edits.py:89
 msgid "Edits record is unavailable for this post."
 msgstr "Правки записи недоступны для этой публикации."
 
-#: threads/api/postendpoints/merge.py:19
+#: threads/api/postendpoints/merge.py:12
 msgid "You can't merge posts in this thread."
 msgstr "Вы не можете объединять публикации в этом теме."
 
-#: threads/api/postendpoints/merge.py:62
-msgid "You have to select at least two posts to merge."
-msgstr "Вы должны выбрать по крайне мере две публикации, чтобы объединить их."
-
-#: threads/api/postendpoints/merge.py:65
-#, python-format
-msgid "No more than %(limit)s post can be merged at single time."
-msgid_plural "No more than %(limit)s posts can be merged at single time."
-msgstr[0] "Не больше чем %(limit)s публикацию можно объединять в одно время."
-msgstr[1] "Не больше чем %(limit)s публикаций можно объединять в одно время."
-msgstr[2] "Не больше чем %(limit)s публикаций можно объединять в одно время."
-msgstr[3] "Не больше чем %(limit)s публикации можно объединять в одно время."
-
-#: threads/api/postendpoints/merge.py:84
-msgid "Posts made by different users can't be merged."
-msgstr "Публикации сделаны другими пользователями не могут быть объединены."
-
-#: threads/api/postendpoints/merge.py:95
-msgid "Posts with different visibility can't be merged."
-msgstr "Публикации с разным отображением не могут быть объединены."
-
-#: threads/api/postendpoints/merge.py:100
-msgid "One or more posts to merge could not be found."
-msgstr "Одна или больше публикаций не могут быть найдены."
-
-#: threads/api/postendpoints/move.py:19
+#: threads/api/postendpoints/move.py:11
 msgid "You can't move posts in this thread."
 msgstr "Вы не можете перемещать публикации в эту тему."
-
-#: threads/api/postendpoints/move.py:50
-#: threads/api/threadendpoints/merge.py:36
-msgid "This is not a valid thread link."
-msgstr "Это неправильная ссылка на тему."
-
-#: threads/api/postendpoints/move.py:52
-msgid "Thread to move posts to is same as current one."
-msgstr "Тема для перемещения публикаций в такую же тему как она сама."
-
-#: threads/api/postendpoints/move.py:59
-#: threads/api/threadendpoints/merge.py:51
-msgid ""
-"The thread you have entered link to doesn't exist or you don't have "
-"permission to see it."
-msgstr ""
-"Тема, в который вы вошли по ссылке - не существует или у вас нет разрешения "
-"просматривать её."
-
-#: threads/api/postendpoints/move.py:65
-msgid "You can't move posts to threads you can't reply."
-msgstr ""
-"Вы не можете перемещать публикации в темы, в которые не можете отвечать."
-
-#: threads/api/postendpoints/move.py:77
-msgid "You have to specify at least one post to move."
-msgstr "У вас есть по крайне мере одна отмеченная публикация для перемещения."
-
-#: threads/api/postendpoints/move.py:80
-#, python-format
-msgid "No more than %(limit)s post can be moved at single time."
-msgid_plural "No more than %(limit)s posts can be moved at single time."
-msgstr[0] ""
-"В одно время не может быть перемещены больше, чем %(limit)s публикация."
-msgstr[1] ""
-"В одно время не может быть перемещены больше, чем %(limit)s публикаций."
-msgstr[2] ""
-"В одно время не может быть перемещены больше, чем %(limit)s публикаций."
-msgstr[3] ""
-"В одно время не может быть перемещены больше, чем %(limit)s публикации."
-
-#: threads/api/postendpoints/move.py:98
-msgid "One or more posts to move could not be found."
-msgstr "Одна или больше публикаций для перемещения, не могут быть найдены."
 
 #: threads/api/postendpoints/patch_post.py:36
 msgid "You can't like posts in this category."
@@ -2970,34 +2859,11 @@ msgstr "Одобрение содержимого не может быть от�
 
 #: threads/api/postendpoints/patch_post.py:184
 msgid "One or more posts to update could not be found."
-msgstr ""
+msgstr "Одна или больше публикаций для обновления, не могут быть найдены."
 
-#: threads/api/postendpoints/split.py:20
+#: threads/api/postendpoints/split.py:14
 msgid "You can't split posts from this thread."
 msgstr "Вы не можете разделить публикации в этом теме."
-
-#: threads/api/postendpoints/split.py:42
-msgid "You have to specify at least one post to split."
-msgstr ""
-"Чтобы разделить публикации, вы должны ответить по крайне мере одну "
-"публикацию."
-
-#: threads/api/postendpoints/split.py:45
-#, python-format
-msgid "No more than %(limit)s post can be split at single time."
-msgid_plural "No more than %(limit)s posts can be split at single time."
-msgstr[0] ""
-"В одно время может быть разделено не больше чем %(limit)s публикация."
-msgstr[1] ""
-"В одно время может быть разделено не больше чем %(limit)s публикаций."
-msgstr[2] ""
-"В одно время может быть разделено не больше чем %(limit)s публикаций."
-msgstr[3] ""
-"В одно время может быть разделено не больше чем %(limit)s публикации."
-
-#: threads/api/postendpoints/split.py:64
-msgid "One or more posts to split could not be found."
-msgstr "Одна или больше публикаций не может быть найдена."
 
 #: threads/api/postingendpoint/attachments.py:61
 #, python-format
@@ -3107,24 +2973,6 @@ msgstr "Вы должны ввести сообщение."
 msgid "You have to enter thread title."
 msgstr "Вы должны ввести заголовок темы."
 
-#: threads/api/threadendpoints/delete.py:53
-#: threads/api/threadendpoints/merge.py:142
-msgid "One or more thread ids received were invalid."
-msgstr "Один или больше полученных идентификаторов темы неправильны."
-
-#: threads/api/threadendpoints/delete.py:57
-msgid "You have to specify at least one thread to delete."
-msgstr ""
-
-#: threads/api/threadendpoints/delete.py:60
-#, python-format
-msgid "No more than %(limit)s thread can be deleted at single time."
-msgid_plural "No more than %(limit)s threads can be deleted at single time."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-
 #: threads/api/threadendpoints/editor.py:15
 msgid "You need to be signed in to start threads."
 msgstr "Вы должны войти в аккаунт, чтобы начинать темы."
@@ -3135,36 +2983,10 @@ msgid ""
 msgstr ""
 "На данный момент нет категорий, в которых для вас доступны новые темы."
 
-#: threads/api/threadendpoints/merge.py:38
-msgid "You can't merge thread with itself."
-msgstr "Вы не можете объединить тему с самой собой."
-
-#: threads/api/threadendpoints/merge.py:44
-msgid "You can't merge this thread into thread you can't reply."
-msgstr ""
-"Вы не можете объединять тем внутри темы, в которой вы не можете ответить."
-
-#: threads/api/threadendpoints/merge.py:73
-#: threads/api/threadendpoints/merge.py:127
+#: threads/api/threadendpoints/merge.py:118
+#: threads/serializers/moderation.py:418 threads/serializers/moderation.py:465
 msgid "Invalid choice."
 msgstr "Неправильный выбор."
-
-#: threads/api/threadendpoints/merge.py:146
-msgid "You have to select at least two threads to merge."
-msgstr "Вы должны выбрать по крайне мере две темы, чтобы объединить их."
-
-#: threads/api/threadendpoints/merge.py:149
-#, python-format
-msgid "No more than %(limit)s thread can be merged at single time."
-msgid_plural "No more than %(limit)s threads can be merged at single time."
-msgstr[0] "Не больше чем %(limit)s тема может быть объединена в одно время."
-msgstr[1] "Не больше чем %(limit)s тем могут быть объединены в одно время."
-msgstr[2] "Не больше чем %(limit)s тем могут быть объединены в одно время."
-msgstr[3] "Не больше чем %(limit)s темы могут быть объединены в одно время."
-
-#: threads/api/threadendpoints/merge.py:169
-msgid "One or more threads to merge could not be found."
-msgstr "Одна или больше тем для объединения не могут быть найдены."
 
 #: threads/api/threadendpoints/patch.py:52
 msgid "Invalid thread title."
@@ -3176,7 +2998,7 @@ msgstr ""
 
 #: threads/api/threadendpoints/patch.py:78
 msgid "You can't pin threads globally in this category."
-msgstr ""
+msgstr "Вы не можете закреплять темы глобально в этой категории."
 
 #: threads/api/threadendpoints/patch.py:104
 msgid "You can't move thread to the category it's already in."
@@ -3215,29 +3037,25 @@ msgstr "Этот пользователь уже владелец темы."
 
 #: threads/api/threadendpoints/patch.py:377
 msgid "One or more threads to update could not be found."
-msgstr ""
+msgstr "Одна или больше тем для обновления не могут быть найдены."
 
-#: threads/api/threadendpoints/pollmergehandler.py:33
-msgid "Delete all polls"
-msgstr "Удалить все опросы"
-
-#: threads/api/threadpoll.py:55
+#: threads/api/threadpoll.py:53
 msgid "There's already a poll in this thread."
 msgstr "В этой теме уже есть опрос."
 
-#: threads/api/threadposts.py:224
+#: threads/api/threadposts.py:220
 msgid "You can't reply to events."
 msgstr "Вы не можете ответить на события."
 
-#: threads/api/threadposts.py:226
+#: threads/api/threadposts.py:222
 msgid "You can't reply to hidden posts."
 msgstr "Вы не можете ответить на скрытые публикации."
 
-#: threads/api/threadposts.py:259
+#: threads/api/threadposts.py:255
 msgid "You can't see who liked this post."
 msgstr "Вы не можете просматривать, кому понравилась эта публикация."
 
-#: threads/api/threads.py:131
+#: threads/api/threads.py:123
 msgid "You can't start private threads."
 msgstr "Вы не можете начать приватные темы."
 
@@ -4039,7 +3857,7 @@ msgstr "Эта категория закрыта. Вы не можете ред�
 
 #: threads/permissions/threads.py:637
 msgid "This thread is closed. You can't edit it."
-msgstr ""
+msgstr "Эта тема закрыта. Вы не можете редактировать её."
 
 #: threads/permissions/threads.py:645
 msgid "You have to sign in to change threads weights."
@@ -4059,90 +3877,90 @@ msgstr ""
 
 #: threads/permissions/threads.py:668 threads/permissions/threads.py:688
 msgid "You have to sign in to hide threads."
-msgstr ""
+msgstr "Вы должны войти, чтобы скрывать темы."
 
 #: threads/permissions/threads.py:678
 msgid "This category is closed. You can't reveal threads in it."
-msgstr ""
+msgstr "Эта категория закрыта. Вы не можете раскрывать темы в ней."
 
 #: threads/permissions/threads.py:680
 msgid "This thread is closed. You can't reveal it."
-msgstr ""
+msgstr "Эта тема закрыта. Вы не можете раскрыть ее."
 
 #: threads/permissions/threads.py:698
 msgid "You can't hide threads in this category."
-msgstr ""
+msgstr "Вы не можете скрывать темы в этой категории."
 
 #: threads/permissions/threads.py:702
 msgid "You can't hide other users theads in this category."
-msgstr ""
+msgstr "Вы не можете скрывать темы других пользователей в этой категории."
 
 #: threads/permissions/threads.py:706
 #, python-format
 msgid "You can't hide threads that are older than %(minutes)s minute."
 msgid_plural "You can't hide threads that are older than %(minutes)s minutes."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Вы не можете скрывать темы, которые старше чем %(minutes)s минута."
+msgstr[1] "Вы не можете скрывать темы, которые старше чем %(minutes)s минуты."
+msgstr[2] "Вы не можете скрывать темы, которые старше чем %(minutes)s минут."
+msgstr[3] "Вы не можете скрывать темы, которые старше чем %(minutes)s минуты."
 
 #: threads/permissions/threads.py:714
 msgid "This category is closed. You can't hide threads in it."
-msgstr ""
+msgstr "Эта категория закрыта. Вы не можете скрывать темы в ней."
 
 #: threads/permissions/threads.py:716
 msgid "This thread is closed. You can't hide it."
-msgstr ""
+msgstr "Эта тема закрыта. Вы не можете скрыть её."
 
 #: threads/permissions/threads.py:724
 msgid "You have to sign in to delete threads."
-msgstr ""
+msgstr "Вы должны войти, чтобы удалять темы."
 
 #: threads/permissions/threads.py:734
 msgid "You can't delete threads in this category."
-msgstr ""
+msgstr "Вы не можете удалять темы из этой категории."
 
 #: threads/permissions/threads.py:738
 msgid "You can't delete other users theads in this category."
-msgstr ""
+msgstr "Вы не можете удалять темы других пользователей в этой категории."
 
 #: threads/permissions/threads.py:742
 #, python-format
 msgid "You can't delete threads that are older than %(minutes)s minute."
 msgid_plural ""
 "You can't delete threads that are older than %(minutes)s minutes."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Вы не можете удалять темы, которые старше чем %(minutes)s минута."
+msgstr[1] "Вы не можете удалять темы, которые старше чем %(minutes)s минуты."
+msgstr[2] "Вы не можете удалять темы, которые старше чем %(minutes)s минут."
+msgstr[3] "Вы не можете удалять темы, которые старше чем %(minutes)s минут."
 
 #: threads/permissions/threads.py:750
 msgid "This category is closed. You can't delete threads in it."
-msgstr ""
+msgstr "Эта категория закрыта. Вы не можете удалять темы в ней."
 
 #: threads/permissions/threads.py:752
 msgid "This thread is closed. You can't delete it."
-msgstr ""
+msgstr "Эта тема закрыта. Вы не можете удалить её."
 
 #: threads/permissions/threads.py:760
 msgid "You have to sign in to move threads."
-msgstr ""
+msgstr "Вы должны войти, чтобы перемещать темы."
 
 #: threads/permissions/threads.py:769
 msgid "You can't move threads in this category."
-msgstr ""
+msgstr "Вы не можете перемещать темы в этой категории."
 
 #: threads/permissions/threads.py:773
 msgid "This category is closed. You can't move it's threads."
-msgstr ""
+msgstr "Эта категория закрыта. Вы не можете перемещать темы в ней."
 
 #: threads/permissions/threads.py:775
 msgid "This thread is closed. You can't move it."
-msgstr ""
+msgstr "Эта тема закрыта. Вы не можете переместить ее."
 
 #: threads/permissions/threads.py:783
 msgid "You have to sign in to merge threads."
-msgstr ""
+msgstr "Вы должны войти, чтобы объединять темы."
 
 #: threads/permissions/threads.py:793
 msgid "Other thread can't be merged with."
@@ -4150,7 +3968,7 @@ msgstr ""
 
 #: threads/permissions/threads.py:794
 msgid "You can't merge threads in this category."
-msgstr ""
+msgstr "Вы не можете объединять темы в этой категории."
 
 #: threads/permissions/threads.py:799
 msgid "Other thread's category is closed. You can't merge with it."
@@ -4158,7 +3976,7 @@ msgstr ""
 
 #: threads/permissions/threads.py:800
 msgid "This category is closed. You can't merge it's threads."
-msgstr ""
+msgstr "Эта категория закрыта. Вы не можете объединять темы в ней."
 
 #: threads/permissions/threads.py:803
 msgid "Other thread is closed and can't be merged with."
@@ -4166,23 +3984,23 @@ msgstr ""
 
 #: threads/permissions/threads.py:804
 msgid "This thread is closed. You can't merge it with other threads."
-msgstr ""
+msgstr "Эта тема закрыта. Вы не можете объединить ее с другими темами."
 
 #: threads/permissions/threads.py:812
 msgid "You have to sign in to approve threads."
-msgstr ""
+msgstr "Вы должны войти, чтобы одобрять темы."
 
 #: threads/permissions/threads.py:821
 msgid "You can't approve threads in this category."
-msgstr ""
+msgstr "Вы не можете одобрять темы в этой категории."
 
 #: threads/permissions/threads.py:825
 msgid "This category is closed. You can't approve threads in it."
-msgstr ""
+msgstr "Эта категория закрыта. Вы не можете одобрять темы в ней."
 
 #: threads/permissions/threads.py:827
 msgid "This thread is closed. You can't approve it."
-msgstr ""
+msgstr "Эта тема закрыта. Вы не можете одобрить её."
 
 #: threads/permissions/threads.py:857
 msgid "You have to sign in to edit posts."
@@ -4230,49 +4048,49 @@ msgstr "Эта категория закрыта. Вы не можете ред�
 
 #: threads/permissions/threads.py:889
 msgid "This thread is closed. You can't edit posts in it."
-msgstr "Этот тред закрыт. Вы не можете редактировать публикации в ней."
+msgstr "Эта тема закрыта. Вы не можете редактировать публикации в ней."
 
 #: threads/permissions/threads.py:897
 msgid "You have to sign in to reveal posts."
-msgstr "Вы должны войти, чтобы выявить публикации."
+msgstr "Вы должны войти, чтобы раскрывать публикации."
 
 #: threads/permissions/threads.py:908
 msgid "You can't reveal posts in this category."
-msgstr "Вы не можете выявить публикации в этой категории."
+msgstr "Вы не можете раскрывать публикации в этой категории."
 
 #: threads/permissions/threads.py:911
 msgid "You can't reveal other users posts in this category."
 msgstr ""
-"Вы не можете показывать публикации других пользователей в этой категории."
+"Вы не можете раскрывать публикации других пользователей в этой категории."
 
 #: threads/permissions/threads.py:914
 msgid "This post is protected. You can't reveal it."
-msgstr "Эта публикация защищена. Вы не можете выявить её."
+msgstr "Эта публикация защищена. Вы не можете раскрыть её."
 
 #: threads/permissions/threads.py:918
 #, python-format
 msgid "You can't reveal posts that are older than %(minutes)s minute."
 msgid_plural "You can't reveal posts that are older than %(minutes)s minutes."
 msgstr[0] ""
-"Вы не можете выявить публикации, которые старше, чем %(minutes)s минута."
+"Вы не можете раскрывать публикации, которые старше, чем %(minutes)s минута."
 msgstr[1] ""
-"Вы не можете выявить публикации, которые старше, чем %(minutes)s минут."
+"Вы не можете раскрывать публикации, которые старше, чем %(minutes)s минут."
 msgstr[2] ""
-"Вы не можете выявить публикации, которые старше, чем %(minutes)s минут."
+"Вы не можете раскрывать публикации, которые старше, чем %(minutes)s минут."
 msgstr[3] ""
-"Вы не можете выявить публикации, которые старше, чем %(minutes)s минуты."
+"Вы не можете раскрывать публикации, которые старше, чем %(minutes)s минуты."
 
 #: threads/permissions/threads.py:925
 msgid "You can't reveal thread's first post."
-msgstr "Вы не можете выявить первую публикацию этой темы."
+msgstr "Вы не можете раскрыть первую публикацию этой темы."
 
 #: threads/permissions/threads.py:929
 msgid "This category is closed. You can't reveal posts in it."
-msgstr "Эта категории закрыта. Вы не можете показывать публикации в ней."
+msgstr "Эта категории закрыта. Вы не можете раскрывать публикации в ней."
 
 #: threads/permissions/threads.py:931
 msgid "This thread is closed. You can't reveal posts in it."
-msgstr "Этот тема закрыта. Вы не можете выявить публикации в ней."
+msgstr "Этот тема закрыта. Вы не можете раскрывать публикации в ней."
 
 #: threads/permissions/threads.py:939
 msgid "You have to sign in to hide posts."
@@ -4388,11 +4206,11 @@ msgstr ""
 
 #: threads/permissions/threads.py:1055
 msgid "This category is closed. You can't approve posts in it."
-msgstr ""
+msgstr "Эта категория закрыта. Вы не можете одобрять публикации в ней."
 
 #: threads/permissions/threads.py:1057
 msgid "This thread is closed. You can't approve posts in it."
-msgstr ""
+msgstr "Эта тема закрыта. Вы не можете одобрять публикации в ней."
 
 #: threads/permissions/threads.py:1065
 msgid "You have to sign in to move posts."
@@ -4417,19 +4235,19 @@ msgstr ""
 
 #: threads/permissions/threads.py:1084
 msgid "This category is closed. You can't move posts in it."
-msgstr ""
+msgstr "Эта категория закрыта. Вы не можете перемещать публикации в ней."
 
 #: threads/permissions/threads.py:1086
 msgid "This thread is closed. You can't move posts in it."
-msgstr ""
+msgstr "Эта тема закрыта. Вы не можете перемещать публикации в ней."
 
 #: threads/permissions/threads.py:1094
 msgid "You have to sign in to merge posts."
-msgstr ""
+msgstr "Вы должны войти, чтобы объединять публикации."
 
 #: threads/permissions/threads.py:1103
 msgid "You can't merge posts in this category."
-msgstr ""
+msgstr "Вы не можете объединять публикации в этой категории."
 
 #: threads/permissions/threads.py:1105
 msgid "Events can't be merged."
@@ -4442,19 +4260,19 @@ msgstr ""
 
 #: threads/permissions/threads.py:1111
 msgid "This category is closed. You can't merge posts in it."
-msgstr ""
+msgstr "Эта категория закрыта. Вы не можете объединять публикации в ней."
 
 #: threads/permissions/threads.py:1113
 msgid "This thread is closed. You can't merge posts in it."
-msgstr ""
+msgstr "Эта тема закрыта. Вы не можете объединять публикации в ней."
 
 #: threads/permissions/threads.py:1121
 msgid "You have to sign in to split posts."
-msgstr ""
+msgstr "Вы должны войти, чтобы разделять публикации."
 
 #: threads/permissions/threads.py:1130
 msgid "You can't split posts in this category."
-msgstr ""
+msgstr "Вы не можете разделять публикации в этой категории."
 
 #: threads/permissions/threads.py:1132
 msgid "Events can't be split."
@@ -4471,43 +4289,43 @@ msgstr ""
 
 #: threads/permissions/threads.py:1140
 msgid "This category is closed. You can't split posts in it."
-msgstr ""
+msgstr "Эта категория закрыта. Вы не можете разделять публикации в ней."
 
 #: threads/permissions/threads.py:1142
 msgid "This thread is closed. You can't split posts in it."
-msgstr ""
+msgstr "Эта тема закрыта. Вы не можете разделять публикации в ней."
 
 #: threads/permissions/threads.py:1149
 msgid "You have to sign in to reveal events."
-msgstr ""
+msgstr "Вы должны войти, чтобы раскрывать события."
 
 #: threads/permissions/threads.py:1158
 msgid "You can't reveal events in this category."
-msgstr ""
+msgstr "Вы не можете раскрывать события в этой категории."
 
 #: threads/permissions/threads.py:1162
 msgid "This category is closed. You can't reveal events in it."
-msgstr ""
+msgstr "Эта категория закрыта. Вы не можете раскрывать события в ней."
 
 #: threads/permissions/threads.py:1164
 msgid "This thread is closed. You can't reveal events in it."
-msgstr ""
+msgstr "Этот тема закрыта. Вы не можете раскрывать события в ней."
 
 #: threads/permissions/threads.py:1172
 msgid "You have to sign in to hide events."
-msgstr ""
+msgstr "Вы должны войти, чтобы скрывать события."
 
 #: threads/permissions/threads.py:1181
 msgid "You can't hide events in this category."
-msgstr ""
+msgstr "Вы не можете скрывать события в этой категории."
 
 #: threads/permissions/threads.py:1185
 msgid "This category is closed. You can't hide events in it."
-msgstr ""
+msgstr "Эта категория закрыта. Вы не можете скрывать события в ней."
 
 #: threads/permissions/threads.py:1187
 msgid "This thread is closed. You can't hide events in it."
-msgstr ""
+msgstr "Эта тема закрыта. Вы не можете скрывать события в ней."
 
 #: threads/permissions/threads.py:1195
 msgid "You have to sign in to delete events."
@@ -4519,31 +4337,197 @@ msgstr "Вы не можете удалять события в этой кат�
 
 #: threads/permissions/threads.py:1208
 msgid "This category is closed. You can't delete events in it."
-msgstr ""
+msgstr "Эта категория закрыта. Вы не можете удалять события в ней."
 
 #: threads/permissions/threads.py:1210
 msgid "This thread is closed. You can't delete events in it."
-msgstr ""
+msgstr "Эта тема закрыта. Вы не можете удалять события в ней."
 
-#: threads/serializers/moderation.py:35
+#: threads/pollmergehandler.py:33
+msgid "Delete all polls"
+msgstr "Удалить все опросы"
+
+#: threads/serializers/moderation.py:41
+msgid "You have to specify at least one post to delete."
+msgstr "Вы должны выбрать по крайней мере одну публикацию для удаления."
+
+#: threads/serializers/moderation.py:47 threads/serializers/moderation.py:96
+#: threads/serializers/moderation.py:172 threads/serializers/moderation.py:309
+msgid "One or more post ids received were invalid."
+msgstr ""
+"Один или больше полученных идентификаторов публикации были неправильны."
+
+#: threads/serializers/moderation.py:60
+#, python-format
+msgid "No more than %(limit)s post can be deleted at single time."
+msgid_plural "No more than %(limit)s posts can be deleted at single time."
+msgstr[0] "За один раз может быть удалено не более %(limit)s публикации."
+msgstr[1] "За один раз может быть удалено не более %(limit)s публикаций."
+msgstr[2] "За один раз может быть удалено не более %(limit)s публикаций."
+msgstr[3] "За один раз может быть удалено не более %(limit)s публикаций."
+
+#: threads/serializers/moderation.py:85
+msgid "One or more posts to delete could not be found."
+msgstr "Одна или больше публикаций для удаления, не могут быть найдены."
+
+#: threads/serializers/moderation.py:91
+msgid "You have to select at least two posts to merge."
+msgstr "Вы должны выбрать по крайне мере две публикации, чтобы объединить их."
+
+#: threads/serializers/moderation.py:112
+#, python-format
+msgid "No more than %(limit)s post can be merged at single time."
+msgid_plural "No more than %(limit)s posts can be merged at single time."
+msgstr[0] "За один раз может быть объединено не более %(limit)s публикации."
+msgstr[1] "За один раз может быть объединено не более %(limit)s публикаций."
+msgstr[2] "За один раз может быть объединено не более %(limit)s публикаций."
+msgstr[3] "За один раз может быть объединено не более %(limit)s публикаций."
+
+#: threads/serializers/moderation.py:137
+msgid "Posts made by different users can't be merged."
+msgstr "Публикации сделаны другими пользователями не могут быть объединены."
+
+#: threads/serializers/moderation.py:149
+msgid "Posts with different visibility can't be merged."
+msgstr "Публикации с разным отображением не могут быть объединены."
+
+#: threads/serializers/moderation.py:155
+msgid "One or more posts to merge could not be found."
+msgstr "Одна или больше публикаций не могут быть найдены."
+
+#: threads/serializers/moderation.py:161
+msgid "You have to specify at least one post to move."
+msgstr "Вы должны выбрать по крайней мере одну публикацию для перемещения."
+
+#: threads/serializers/moderation.py:165 threads/serializers/moderation.py:412
+msgid "Enter link to new thread."
+msgstr "Введите ссылку на тему."
+
+#: threads/serializers/moderation.py:189 threads/serializers/moderation.py:429
+msgid "This is not a valid thread link."
+msgstr "Это неправильная ссылка на тему."
+
+#: threads/serializers/moderation.py:191
+msgid "Thread to move posts to is same as current one."
+msgstr "Тема для перемещения публикаций в такую же тему как она сама."
+
+#: threads/serializers/moderation.py:198 threads/serializers/moderation.py:441
+msgid ""
+"The thread you have entered link to doesn't exist or you don't have "
+"permission to see it."
+msgstr ""
+"Тема, в который вы вошли по ссылке - не существует или у вас нет разрешения "
+"просматривать её."
+
+#: threads/serializers/moderation.py:204
+msgid "You can't move posts to threads you can't reply."
+msgstr ""
+"Вы не можете перемещать публикации в темы, в которые не можете отвечать."
+
+#: threads/serializers/moderation.py:212
+#, python-format
+msgid "No more than %(limit)s post can be moved at single time."
+msgid_plural "No more than %(limit)s posts can be moved at single time."
+msgstr[0] ""
+"В одно время не может быть перемещены больше, чем %(limit)s публикация."
+msgstr[1] ""
+"В одно время не может быть перемещены больше, чем %(limit)s публикаций."
+msgstr[2] ""
+"В одно время не может быть перемещены больше, чем %(limit)s публикаций."
+msgstr[3] ""
+"В одно время не может быть перемещены больше, чем %(limit)s публикации."
+
+#: threads/serializers/moderation.py:236
+msgid "One or more posts to move could not be found."
+msgstr "Одна или больше публикаций для перемещения, не могут быть найдены."
+
+#: threads/serializers/moderation.py:259
 msgid "You can't create new threads in selected category."
 msgstr "Вы не можете создать новые темы в выбранной категории."
 
-#: threads/serializers/moderation.py:47
+#: threads/serializers/moderation.py:271
 msgid "You don't have permission to pin threads globally in this category."
 msgstr "У вас нет разрешения прикреплять темы глобально в этой категории."
 
-#: threads/serializers/moderation.py:51
+#: threads/serializers/moderation.py:275
 msgid "You don't have permission to pin threads in this category."
 msgstr "\"У вас нет разрешения прикреплять темы в этой категории."
 
-#: threads/serializers/moderation.py:62
+#: threads/serializers/moderation.py:286
 msgid "You don't have permission to hide threads in this category."
 msgstr "\"У вас нет разрешения скрывать темы в этой категории."
 
-#: threads/serializers/moderation.py:73
+#: threads/serializers/moderation.py:297
 msgid "You don't have permission to close threads in this category."
 msgstr "У вас нет разрешения закрывать темы в этой категории."
+
+#: threads/serializers/moderation.py:303
+msgid "You have to specify at least one post to split."
+msgstr "Вы должны выбрать по крайней мере одну публикацию для разделения."
+
+#: threads/serializers/moderation.py:322
+#, python-format
+msgid "No more than %(limit)s post can be split at single time."
+msgid_plural "No more than %(limit)s posts can be split at single time."
+msgstr[0] ""
+"В одно время может быть разделено не больше чем %(limit)s публикация."
+msgstr[1] ""
+"В одно время может быть разделено не больше чем %(limit)s публикаций."
+msgstr[2] ""
+"В одно время может быть разделено не больше чем %(limit)s публикаций."
+msgstr[3] ""
+"В одно время может быть разделено не больше чем %(limit)s публикации."
+
+#: threads/serializers/moderation.py:347
+msgid "One or more posts to split could not be found."
+msgstr "Одна или больше публикаций не может быть найдена."
+
+#: threads/serializers/moderation.py:353
+msgid "You have to specify at least one thread to delete."
+msgstr "Вы должны выбрать по крайней мере одну тему для удаления."
+
+#: threads/serializers/moderation.py:359 threads/serializers/moderation.py:482
+msgid "One or more thread ids received were invalid."
+msgstr "Один или больше полученных идентификаторов темы неправильны."
+
+#: threads/serializers/moderation.py:372
+#, python-format
+msgid "No more than %(limit)s thread can be deleted at single time."
+msgid_plural "No more than %(limit)s threads can be deleted at single time."
+msgstr[0] "За один раз может быть удалено не более %(limit)s темы."
+msgstr[1] "За один раз может быть удалено не более %(limit)s тем."
+msgstr[2] "За один раз может быть удалено не более %(limit)s тем."
+msgstr[3] "За один раз может быть удалено не более %(limit)s тем."
+
+#: threads/serializers/moderation.py:404
+msgid "One or more threads to delete could not be found."
+msgstr "Одна или больше тем для удаления не могут быть найдены."
+
+#: threads/serializers/moderation.py:431
+msgid "You can't merge thread with itself."
+msgstr "Вы не можете объединить тему с самой собой."
+
+#: threads/serializers/moderation.py:447
+msgid "You can't merge this thread into thread you can't reply."
+msgstr ""
+"Вы не можете объединять тем внутри темы, в которой вы не можете ответить."
+
+#: threads/serializers/moderation.py:475
+msgid "You have to select at least two threads to merge."
+msgstr "Вы должны выбрать по крайне мере две темы, чтобы объединить их."
+
+#: threads/serializers/moderation.py:496
+#, python-format
+msgid "No more than %(limit)s thread can be merged at single time."
+msgid_plural "No more than %(limit)s threads can be merged at single time."
+msgstr[0] "Не больше чем %(limit)s тема может быть объединена в одно время."
+msgstr[1] "Не больше чем %(limit)s тем могут быть объединены в одно время."
+msgstr[2] "Не больше чем %(limit)s тем могут быть объединены в одно время."
+msgstr[3] "Не больше чем %(limit)s темы могут быть объединены в одно время."
+
+#: threads/serializers/moderation.py:518
+msgid "One or more threads to merge could not be found."
+msgstr "Одна или больше тем для объединения не могут быть найдены."
 
 #: threads/serializers/poll.py:129
 msgid "One or more poll choices are invalid."
@@ -4578,6 +4562,23 @@ msgstr[3] ""
 msgid "Number of allowed choices can't be greater than number of all choices."
 msgstr ""
 "Число позволенных вариантов не может быть больше, чем число всех вариантов."
+
+#: threads/serializers/pollvote.py:22
+#, python-format
+msgid "This poll disallows voting for more than %(choices)s choice."
+msgid_plural "This poll disallows voting for more than %(choices)s choices."
+msgstr[0] "Этот опрос запрещает голосовать за больше чем %(choices)s выбор."
+msgstr[1] "Этот опрос запрещает голосовать за больше чем %(choices)s выборов."
+msgstr[2] "Этот опрос запрещает голосовать за больше чем %(choices)s выборов."
+msgstr[3] "Этот опрос запрещает голосовать за больше чем %(choices)s выбора."
+
+#: threads/serializers/pollvote.py:39
+msgid "One or more of poll choices were invalid."
+msgstr "Один или больше выборов опроса неправильны."
+
+#: threads/serializers/pollvote.py:43
+msgid "You have to make a choice."
+msgstr "Вы должны сделать выбор."
 
 #: threads/templatetags/misago_poststags.py:20
 #, python-format
@@ -4707,52 +4708,52 @@ msgstr[3] ""
 "Опубликованное сообщение не может быть длиннее, чем %(limit_value)s символа "
 "(у него %(show_value)s)."
 
-#: threads/viewmodels/threads.py:26
+#: threads/viewmodels/threads.py:27
 msgid "Your threads"
 msgstr "Ваши темы"
 
-#: threads/viewmodels/threads.py:27
+#: threads/viewmodels/threads.py:28
 msgid "New threads"
 msgstr "Новые темы"
 
-#: threads/viewmodels/threads.py:28
+#: threads/viewmodels/threads.py:29
 msgid "Unread threads"
 msgstr "Непрочитанные темы"
 
-#: threads/viewmodels/threads.py:29
+#: threads/viewmodels/threads.py:30
 msgid "Subscribed threads"
 msgstr "Подписанные темы"
 
-#: threads/viewmodels/threads.py:30
+#: threads/viewmodels/threads.py:31
 msgid "Unapproved content"
 msgstr "Не одобренное содержимое"
 
-#: threads/viewmodels/threads.py:34
+#: threads/viewmodels/threads.py:35
 msgid "You have to sign in to see list of threads that you have started."
 msgstr "Вы должны войти, чтобы просматривать список тем, которые вы начали."
 
-#: threads/viewmodels/threads.py:35
+#: threads/viewmodels/threads.py:36
 msgid "You have to sign in to see list of threads you haven't read."
 msgstr ""
 "Вы должны войти, чтобы просматривать список тем, которые вы не прочитали."
 
-#: threads/viewmodels/threads.py:36
+#: threads/viewmodels/threads.py:37
 msgid "You have to sign in to see list of threads with new replies."
 msgstr ""
 "Вы должны пойти, чтобы просматривать список тем, в которых есть новые "
 "ответы."
 
-#: threads/viewmodels/threads.py:37
+#: threads/viewmodels/threads.py:38
 msgid "You have to sign in to see list of threads you are subscribing."
 msgstr "Вы должны войти, чтобы просматривать темы, на которые вы подписаны."
 
-#: threads/viewmodels/threads.py:38
+#: threads/viewmodels/threads.py:39
 msgid "You have to sign in to see list of threads with unapproved posts."
 msgstr ""
 "Вы должны войти чтобы просматривать список тем, в которых есть не одобренные"
 " публикации."
 
-#: threads/viewmodels/threads.py:100
+#: threads/viewmodels/threads.py:102
 msgid "You don't have permission to see unapproved content lists."
 msgstr "У вас нет разрешения видеть не одобренное содержимое списков."
 
@@ -4841,7 +4842,7 @@ msgstr ""
 msgid "Attachment type \"%(name)s\" has been deleted."
 msgstr "Тип вложения \"%(name)s\" был удалён."
 
-#: threads/views/goto.py:104
+#: threads/views/goto.py:115
 msgid ""
 "You need permission to approve content to be able to go to first unapproved "
 "post."
@@ -4861,21 +4862,21 @@ msgstr "Ранги"
 msgid "Bans"
 msgstr "Запреты"
 
-#: users/api/auth.py:97
+#: users/api/auth.py:100
 #, python-format
 msgid "Activate %(user)s account on %(forum_name)s forums"
 msgstr "Активировать аккаунт %(user)s на %(forum_name)s форумах."
 
-#: users/api/auth.py:135
+#: users/api/auth.py:139
 #, python-format
 msgid "Change %(user)s password on %(forum_name)s forums"
 msgstr "Изменить пароль %(user)s на %(forum_name)s форумах"
 
-#: users/api/auth.py:175
+#: users/api/auth.py:180
 msgid "Form link is invalid. Please try again."
 msgstr "Ссылка формы неправильна. Пожалуйста, попробуйте заново."
 
-#: users/api/auth.py:176
+#: users/api/auth.py:181
 msgid "Your link has expired. Please request new one."
 msgstr "Ваша ссылка истекла. Пожалуйста, запросите новую."
 
@@ -4883,51 +4884,51 @@ msgstr "Ваша ссылка истекла. Пожалуйста, запрос
 msgid "This action is not available to signed in users."
 msgstr "Это действие не доступно вошедшим пользователям."
 
-#: users/api/userendpoints/avatar.py:25
+#: users/api/userendpoints/avatar.py:27
 msgid "Your avatar is locked. You can't change it."
 msgstr "Ваш аватар заблокирован. Вы не можете изменить его."
 
-#: users/api/userendpoints/avatar.py:109
+#: users/api/userendpoints/avatar.py:111
 msgid "This avatar type is not allowed."
 msgstr "Этот тип аватар не доступен."
 
-#: users/api/userendpoints/avatar.py:118
+#: users/api/userendpoints/avatar.py:120
 msgid "Unknown avatar type."
 msgstr "Неизвестный тип аватара."
 
-#: users/api/userendpoints/avatar.py:141
+#: users/api/userendpoints/avatar.py:143
 msgid "New avatar based on your account was set."
 msgstr "Новый аватар основанный на вашем аккаунте был установлен."
 
-#: users/api/userendpoints/avatar.py:147
+#: users/api/userendpoints/avatar.py:149
 msgid "Gravatar was downloaded and set as new avatar."
 msgstr "Gravatar был скачен и установлен как новый аватар."
 
-#: users/api/userendpoints/avatar.py:149
+#: users/api/userendpoints/avatar.py:151
 msgid "No Gravatar is associated with your e-mail address."
 msgstr "Нет Gravatar ассоциированным с вашим e-mail адресом."
 
-#: users/api/userendpoints/avatar.py:151
+#: users/api/userendpoints/avatar.py:153
 msgid "Failed to connect to Gravatar servers."
 msgstr "Не удалось присоединиться с Gravatar серверами."
 
-#: users/api/userendpoints/avatar.py:161
+#: users/api/userendpoints/avatar.py:163
 msgid "Avatar from gallery was set."
 msgstr "Аватар из галереи был установлен."
 
-#: users/api/userendpoints/avatar.py:163
+#: users/api/userendpoints/avatar.py:165
 msgid "Incorrect image."
 msgstr "Неправильное изображение."
 
-#: users/api/userendpoints/avatar.py:169
+#: users/api/userendpoints/avatar.py:171
 msgid "No file was sent."
 msgstr "Файл не был послан."
 
-#: users/api/userendpoints/avatar.py:182
+#: users/api/userendpoints/avatar.py:184
 msgid "Avatar was re-cropped."
 msgstr "Аватар был обрезан."
 
-#: users/api/userendpoints/avatar.py:187
+#: users/api/userendpoints/avatar.py:189
 msgid "Uploaded avatar was set."
 msgstr "Загруженный аватар был установлен."
 
@@ -5203,19 +5204,23 @@ msgstr ""
 #: users/forms/admin.py:146
 msgid "Optional message to user explaining why his/hers signature is locked."
 msgstr ""
+"Дополнительное сообщение для пользователя, объясняющее почему его/ее подпись"
+" заблокирована."
 
 #: users/forms/admin.py:152
 msgid ""
 "Optional message to team members explaining why user signature is locked."
 msgstr ""
+"Дополнительное сообщение для участников команды, объясняющее почему подпись "
+"пользователя заблокирована."
 
 #: users/forms/admin.py:157
 msgid "Hides presence"
-msgstr ""
+msgstr "Скрывает присутствие"
 
 #: users/forms/admin.py:160
 msgid "Who can add user to private threads"
-msgstr ""
+msgstr "Кто может добавлять пользователей в приватные темы."
 
 #: users/forms/admin.py:169
 msgid "Replid threads"
@@ -5225,10 +5230,10 @@ msgstr ""
 #, python-format
 msgid "Signature can't be longer than %(limit)s character."
 msgid_plural "Signature can't be longer than %(limit)s characters."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Подпись не может быть длиннее %(limit)s символа."
+msgstr[1] "Подпись не может быть длиннее %(limit)s символов."
+msgstr[2] "Подпись не может быть длиннее %(limit)s символов."
+msgstr[3] "Подпись не может быть длиннее %(limit)s символов."
 
 #: users/forms/admin.py:238
 msgid ""
@@ -5238,61 +5243,65 @@ msgstr ""
 
 #: users/forms/admin.py:248
 msgid "Roles"
-msgstr ""
+msgstr "Роли"
 
 #: users/forms/admin.py:249
 msgid "Individual roles of this user. All users must have \"member\" role."
 msgstr ""
+"Индивидуальная роль для этого пользователя. Все пользователи должны иметь "
+"роли \"участников\"."
 
 #: users/forms/admin.py:307
 msgid "Username starts with"
-msgstr ""
+msgstr "Имя пользователя начинается с"
 
 #: users/forms/admin.py:308
 msgid "E-mail starts with"
-msgstr ""
+msgstr "E-mail начинается с"
 
 #: users/forms/admin.py:309
 msgid "Profile fields contain"
-msgstr ""
+msgstr "Поля профиля содержат"
 
 #: users/forms/admin.py:310
 msgid "Inactive only"
-msgstr ""
+msgstr "Только неактивные"
 
 #: users/forms/admin.py:311
 msgid "Disabled only"
-msgstr ""
+msgstr "Только деактивированные"
 
 #: users/forms/admin.py:312
 msgid "Admins only"
-msgstr ""
+msgstr "Только администраторы"
 
 #: users/forms/admin.py:351
 msgid "All ranks"
-msgstr ""
+msgstr "Все ранги"
 
 #: users/forms/admin.py:358
 msgid "All roles"
-msgstr ""
+msgstr "Все роли"
 
 #: users/forms/admin.py:365
 msgid "Has rank"
-msgstr ""
+msgstr "Имеет ранг"
 
 #: users/forms/admin.py:371
 msgid "Has role"
-msgstr ""
+msgstr "Имеет роль"
 
 #: users/forms/admin.py:387
 msgid ""
 "Short and descriptive name of all users with this rank. \"The Team\" or "
 "\"Game Masters\" are good examples."
 msgstr ""
+"Короткое и наглядное имя пользователей с этим рангом. \"Команда\" или "
+"\"Мастера\" являются хорошим примером."
 
 #: users/forms/admin.py:392
 msgid "User title"
-msgstr ""
+msgstr "Пользовательский заголовок"
 
 #: users/forms/admin.py:395
 msgid ""
@@ -5308,7 +5317,7 @@ msgstr ""
 
 #: users/forms/admin.py:414
 msgid "Rank can give additional roles to users with it."
-msgstr ""
+msgstr "Ранг может давать дополнительные роли пользователям."
 
 #: users/forms/admin.py:419
 msgid "Optional css class added to content belonging to this rank owner."
@@ -5326,64 +5335,66 @@ msgstr ""
 
 #: users/forms/admin.py:450
 msgid "This name collides with other rank."
-msgstr ""
+msgstr "Это имя совпадает с именем другого ранга."
 
 #: users/forms/admin.py:457
 msgid "Values to ban"
-msgstr ""
+msgstr "Значения для блокировки"
 
 #: users/forms/admin.py:460 users/forms/admin.py:575
 msgid "Usernames"
-msgstr ""
+msgstr "Имена пользователя"
 
 #: users/forms/admin.py:461 users/forms/admin.py:576
 msgid "E-mails"
-msgstr ""
+msgstr "E-mail'ы"
 
 #: users/forms/admin.py:462
 msgid "E-mail domains"
-msgstr ""
+msgstr "E-mail домены"
 
 #: users/forms/admin.py:463
 msgid "IP addresses"
-msgstr ""
+msgstr "IP адреса"
 
 #: users/forms/admin.py:464
 msgid "First segment of IP addresses"
-msgstr ""
+msgstr "Первый сегмент IP адресов"
 
 #: users/forms/admin.py:465
 msgid "First two segments of IP addresses"
-msgstr ""
+msgstr "Первые два сегмента IP адресов"
 
 #: users/forms/admin.py:472
 msgid "Optional message displayed to users instead of default one."
 msgstr ""
+"Не обязательное сообщение, отображаемое пользователям вместо стандартного."
 
 #: users/forms/admin.py:475 users/forms/admin.py:485 users/forms/admin.py:528
 #: users/forms/admin.py:538
 msgid "Message can't be longer than 1000 characters."
-msgstr ""
+msgstr "Сообщение не может быть длиннее 1000 символов."
 
 #: users/forms/admin.py:479 users/forms/admin.py:532
 msgid "Team message"
-msgstr ""
+msgstr "Сообщение команды"
 
 #: users/forms/admin.py:482 users/forms/admin.py:535
 msgid "Optional ban message for moderators and administrators."
 msgstr ""
+"Не обязательное сообщение при блокировке для модераторов и администраторов."
 
 #: users/forms/admin.py:491
 msgid "Leave this field empty for set bans to never expire."
-msgstr ""
+msgstr "Оставьте это поле пустым, чтобы блокировки никогда не заканчивались."
 
 #: users/forms/admin.py:497
 msgid "Check type"
-msgstr ""
+msgstr "Проверить тип"
 
 #: users/forms/admin.py:502
 msgid "Restrict this ban to registrations"
-msgstr ""
+msgstr "Ограничить действие этой блокировки только на регистрацию."
 
 #: users/forms/admin.py:504
 msgid ""
@@ -5395,7 +5406,7 @@ msgstr ""
 
 #: users/forms/admin.py:510
 msgid "Banned value"
-msgstr ""
+msgstr "Заблокированное значение"
 
 #: users/forms/admin.py:513
 msgid ""
@@ -5403,34 +5414,38 @@ msgid ""
 "For example, making IP ban for value \"83.*\" will ban all IP addresses "
 "beginning with \"83.\"."
 msgstr ""
+"Это значение чувствительно к регистру и допускает знак * для широкого "
+"совпадения. К примеру, установив блокировку по IP со значением \"83.*\", "
+"будут заблокированы все IP адреса, начинающиеся с \"83.\"."
 
 #: users/forms/admin.py:518
 msgid "Banned value can't be longer than 250 characters."
-msgstr ""
+msgstr "Заблокированное значение может быть не длиннее 250 символов."
 
 #: users/forms/admin.py:525
 msgid "Optional message displayed to user instead of default one."
 msgstr ""
+"Не обязательное сообщение, отображаемое пользователю вместо стандартного."
 
 #: users/forms/admin.py:544
 msgid "Leave this field empty for this ban to never expire."
-msgstr ""
+msgstr "Оставьте это поле пустым, чтобы блокировка никогда не заканчивалась."
 
 #: users/forms/admin.py:564
 msgid "Banned value is too vague."
-msgstr ""
+msgstr "Заблокированное значение слишком расплывчато."
 
 #: users/forms/admin.py:574
 msgid "All bans"
-msgstr ""
+msgstr "Все блокировки"
 
 #: users/forms/admin.py:577
 msgid "IPs"
-msgstr ""
+msgstr "IP"
 
 #: users/forms/admin.py:580
 msgid "Banned value begins with"
-msgstr ""
+msgstr "Заблокированное значение начинается с"
 
 #: users/forms/admin.py:582
 msgid "Registration only"
@@ -5438,83 +5453,89 @@ msgstr ""
 
 #: users/forms/admin.py:585 users/forms/admin.py:594
 msgid "Any"
-msgstr ""
+msgstr "Все"
 
 #: users/forms/admin.py:595
 msgid "Active"
-msgstr ""
+msgstr "Активные"
 
 #: users/forms/admin.py:596
 msgid "Expired"
-msgstr ""
+msgstr "Истекшие"
 
 #: users/forms/auth.py:16
 msgid "Fill out both fields."
-msgstr ""
+msgstr "Заполнить оба поля."
 
 #: users/forms/auth.py:17
 msgid "Login or password is incorrect."
-msgstr ""
+msgstr "Логин или пароль неправильны."
 
 #: users/forms/auth.py:18
 msgid "You have to activate your account before you will be able to sign in."
-msgstr ""
+msgstr "Вам необходимо активировать Ваш аккаунт до того как Вы сможете войти."
 
 #: users/forms/auth.py:20
 msgid ""
 "Your account has to be activated by Administrator before you will be able to"
 " sign in."
 msgstr ""
+"Ваш аккаунт должен быть активирован Администратором до того как вы сможете "
+"войти."
 
 #: users/forms/auth.py:90
 msgid "Your account does not have admin privileges."
-msgstr ""
+msgstr "У вашего аккаунта нет администраторских полномочий."
 
 #: users/forms/auth.py:108
 msgid "Enter e-mail address."
-msgstr ""
+msgstr "Введите e-mail адрес."
 
 #: users/forms/auth.py:113
 msgid "Entered e-mail is invalid."
-msgstr ""
+msgstr "Введеный e-mail недействителен."
 
 #: users/forms/auth.py:121
 msgid "No user with this e-mail exists."
-msgstr ""
+msgstr "Пользователей с данным e-mail не существует."
 
 #: users/forms/auth.py:136 users/views/activation.py:46
 #, python-format
 msgid "%(user)s, your account is already active."
-msgstr ""
+msgstr "%(user)s, Ваш аккаунт уже активен."
 
 #: users/forms/auth.py:140
 #, python-format
 msgid "%(user)s, only administrator may activate your account."
-msgstr ""
+msgstr "%(user)s, только администратор может активировать Ваш аккаунт."
 
 #: users/forms/auth.py:147
 msgid ""
 "You have to activate your account before you will be able to request new "
 "password."
 msgstr ""
+"Вам необходимо активировать Ваш аккаунт до того как Вы сможете запросить "
+"новый пароль."
 
 #: users/forms/auth.py:151
 msgid ""
 "Administrator has to activate your account before you will be able to "
 "request new password."
 msgstr ""
+"Администратор должен активировать Ваш аккаунт до того как вы сможете "
+"запросить новый пароль."
 
 #: users/forms/register.py:34
 msgid "This usernane is not allowed."
-msgstr ""
+msgstr "Это имя пользователя недоступно."
 
 #: users/forms/register.py:45 users/validators.py:41
 msgid "This e-mail address is not allowed."
-msgstr ""
+msgstr "Этот e-mail адрес недоступен."
 
 #: users/forms/register.py:66
 msgid "New registrations from this IP address are not allowed."
-msgstr ""
+msgstr "Новые регистрации с данного IP адреса недоступны."
 
 #: users/migrations/0002_users_settings.py:18
 #: users/migrations/0006_update_settings.py:19
@@ -5522,69 +5543,71 @@ msgid ""
 "Those settings control user accounts default behaviour and features "
 "availability."
 msgstr ""
+"Эта настройка контролирует стандартное поведение пользовательского аккаунта "
+"и доступность функционала."
 
 #: users/migrations/0002_users_settings.py:23
 #: users/migrations/0006_update_settings.py:24
 msgid "New accounts activation"
-msgstr ""
+msgstr "Новые активации аккаунтов"
 
 #: users/migrations/0002_users_settings.py:24
 #: users/migrations/0006_update_settings.py:25
 msgid "New accounts"
-msgstr ""
+msgstr "Новые аккаунты"
 
 #: users/migrations/0002_users_settings.py:29
 #: users/migrations/0006_update_settings.py:30
 msgid "No activation required"
-msgstr ""
+msgstr "Активаций не требуется"
 
 #: users/migrations/0002_users_settings.py:30
 #: users/migrations/0006_update_settings.py:31
 msgid "Activation token sent to User"
-msgstr ""
+msgstr "Токен активации отправлен Пользователю"
 
 #: users/migrations/0002_users_settings.py:31
 #: users/migrations/0006_update_settings.py:32
 msgid "Activation by administrator"
-msgstr ""
+msgstr "Активации администратором"
 
 #: users/migrations/0002_users_settings.py:32
 #: users/migrations/0006_update_settings.py:33
 msgid "Don't allow new registrations"
-msgstr ""
+msgstr "Новые регистрации запрещены"
 
 #: users/migrations/0002_users_settings.py:40
 #: users/migrations/0006_update_settings.py:41
 msgid "Minimum allowed username length."
-msgstr ""
+msgstr "Минимальная допустимая длина имени пользователя."
 
 #: users/migrations/0002_users_settings.py:41
 #: users/migrations/0006_update_settings.py:42
 msgid "User names"
-msgstr ""
+msgstr "Имена пользователей"
 
 #: users/migrations/0002_users_settings.py:53
 #: users/migrations/0006_update_settings.py:53
 msgid "Maximum allowed username length."
-msgstr ""
+msgstr "Максимальная допустимая длина имени пользователя."
 
 #: users/migrations/0002_users_settings.py:65
 msgid "Minimum allowed user password length."
-msgstr ""
+msgstr "Минимальная допустимая длина пароля пользователя."
 
 #: users/migrations/0002_users_settings.py:66
 msgid "Passwords"
-msgstr ""
+msgstr "Пароли"
 
 #: users/migrations/0002_users_settings.py:77
 #: users/migrations/0006_update_settings.py:63
 msgid "Allow custom avatars"
-msgstr ""
+msgstr "Пользовательские аватары разрешены"
 
 #: users/migrations/0002_users_settings.py:78
 #: users/migrations/0006_update_settings.py:64
 msgid "Avatars"
-msgstr ""
+msgstr "Аватары"
 
 #: users/migrations/0002_users_settings.py:80
 #: users/migrations/0006_update_settings.py:66
@@ -5592,35 +5615,38 @@ msgid ""
 "Turning this option off will forbid forum users from using avatars from "
 "outside forums. Good for forums adressed at young users."
 msgstr ""
+"Выключение данной опции запретит пользователям форума использовать аватары "
+"из других форумов. Подходит для формумов, предназначеных молодым "
+"пользователям."
 
 #: users/migrations/0002_users_settings.py:91
 #: users/migrations/0006_update_settings.py:77
 msgid "Default avatar"
-msgstr ""
+msgstr "Аватар по умолчанию"
 
 #: users/migrations/0002_users_settings.py:96
 #: users/migrations/0002_users_settings.py:113
 #: users/migrations/0006_update_settings.py:82
 #: users/migrations/0006_update_settings.py:99
 msgid "Individual"
-msgstr ""
+msgstr "Индивидуальный"
 
 #: users/migrations/0002_users_settings.py:97
 #: users/migrations/0006_update_settings.py:83
 msgid "Gravatar"
-msgstr ""
+msgstr "Gravatar"
 
 #: users/migrations/0002_users_settings.py:98
 #: users/migrations/0002_users_settings.py:114
 #: users/migrations/0006_update_settings.py:84
 #: users/migrations/0006_update_settings.py:100
 msgid "Random avatar from gallery"
-msgstr ""
+msgstr "Случайный аватар из галереи"
 
 #: users/migrations/0002_users_settings.py:104
 #: users/migrations/0006_update_settings.py:90
 msgid "Fallback for default gravatar"
-msgstr ""
+msgstr "Вернуться к стандартному gravatar"
 
 #: users/migrations/0002_users_settings.py:106
 #: users/migrations/0006_update_settings.py:92
@@ -5628,38 +5654,40 @@ msgid ""
 "Select which avatar to use when user has no gravatar associated with his "
 "e-mail address."
 msgstr ""
+"Выбрать, какой аватар использовать в случае, если у пользователя нет "
+"gravatar, ассоциированного с его e-mail адресом."
 
 #: users/migrations/0002_users_settings.py:120
 #: users/migrations/0006_update_settings.py:106
 msgid "Maximum size of uploaded avatar"
-msgstr ""
+msgstr "Максимальный размер загружаемого аватара"
 
 #: users/migrations/0002_users_settings.py:121
 #: users/migrations/0006_update_settings.py:107
 msgid "Enter maximum allowed file size (in KB) for avatar uploads."
-msgstr ""
+msgstr "Введите максимально допустимый размер (в КБ) для загрузки аватара."
 
 #: users/migrations/0002_users_settings.py:132
 #: users/migrations/0006_update_settings.py:118
 msgid "Signatures"
-msgstr ""
+msgstr "Подписи"
 
 #: users/migrations/0002_users_settings.py:133
 #: users/migrations/0006_update_settings.py:119
 msgid "Maximum allowed signature length."
-msgstr ""
+msgstr "Максимально допустимая длина подписи."
 
 #: users/migrations/0002_users_settings.py:145
 #: users/migrations/0006_update_settings.py:131
 msgid "Default subscriptions settings"
-msgstr ""
+msgstr "Стандартные настройки подписок"
 
 #: users/migrations/0002_users_settings.py:150
 #: users/migrations/0002_users_settings.py:169
 #: users/migrations/0006_update_settings.py:136
 #: users/migrations/0006_update_settings.py:155
 msgid "Don't watch"
-msgstr ""
+msgstr "Не наблюдать"
 
 #: users/migrations/0002_users_settings.py:151
 #: users/migrations/0002_users_settings.py:170
@@ -5678,11 +5706,11 @@ msgstr ""
 #: users/migrations/0002_users_settings.py:164
 #: users/migrations/0006_update_settings.py:150
 msgid "Replied threads"
-msgstr ""
+msgstr "Отвеченные темы"
 
 #: users/migrations/0002_users_settings.py:188
 msgid "CAPTCHA"
-msgstr ""
+msgstr "CAPTCHA"
 
 #: users/migrations/0002_users_settings.py:189
 msgid ""
@@ -5691,189 +5719,196 @@ msgstr ""
 
 #: users/migrations/0002_users_settings.py:193
 msgid "Select CAPTCHA type"
-msgstr ""
+msgstr "Выберите тип CAPTCHA"
 
 #: users/migrations/0002_users_settings.py:194
 msgid "CAPTCHA type"
-msgstr ""
+msgstr "тип CAPTCHA"
 
 #: users/migrations/0002_users_settings.py:199
 msgid "No CAPTCHA"
-msgstr ""
+msgstr "No CAPTCHA"
 
 #: users/migrations/0002_users_settings.py:200
 msgid "reCaptcha"
-msgstr ""
+msgstr "reCaptcha"
 
 #: users/migrations/0002_users_settings.py:201
 #: users/migrations/0002_users_settings.py:229
 msgid "Question and answer"
-msgstr ""
+msgstr "Вопрос и ответ"
 
 #: users/migrations/0002_users_settings.py:208
 msgid "Site key"
-msgstr ""
+msgstr "Ключ сайта"
 
 #: users/migrations/0002_users_settings.py:209
 msgid "reCAPTCHA"
-msgstr ""
+msgstr "reCAPTCHA"
 
 #: users/migrations/0002_users_settings.py:219
 msgid "Secret key"
-msgstr ""
+msgstr "Секретный ключ"
 
 #: users/migrations/0002_users_settings.py:228
 msgid "Test question"
-msgstr ""
+msgstr "Проверочный вопрос"
 
 #: users/migrations/0002_users_settings.py:238
 msgid "Question help text"
-msgstr ""
+msgstr "Подсказка к проверочному вопросу"
 
 #: users/migrations/0002_users_settings.py:247
 msgid "Valid answers"
-msgstr ""
+msgstr "Допустимые ответы"
 
 #: users/migrations/0002_users_settings.py:248
 msgid "Enter each answer in new line. Answers are case-insensitive."
-msgstr ""
+msgstr "Введите каждый ответ в новой строке. Ответы чуствительны к регистру."
 
 #: users/migrations/0004_default_ranks.py:17
 #: users/migrations/0004_default_ranks.py:18 users/models/user.py:110
 msgid "Forum team"
-msgstr ""
+msgstr "Форум команды"
 
 #: users/migrations/0004_default_ranks.py:19
 msgid "Team"
-msgstr ""
+msgstr "Команда"
 
 #: users/migrations/0004_default_ranks.py:26
 #: users/migrations/0004_default_ranks.py:27
 msgid "Members"
-msgstr ""
+msgstr "Участники"
 
 #: users/models/user.py:37
 msgid "User must have an email address."
-msgstr ""
+msgstr "Пользователь обязан иметь e-mail адрес."
 
 #: users/models/user.py:39
 msgid "User must have a password."
-msgstr ""
+msgstr "Пользователь обязан иметь пароль."
 
 #: users/models/user.py:145
 msgid "Notify"
-msgstr ""
+msgstr "Уведомлять"
 
 #: users/models/user.py:146
 msgid "Notify with e-mail"
-msgstr ""
+msgstr "Уведомлять по e-mail"
 
 #: users/models/user.py:154
 msgid "Everybody"
-msgstr ""
+msgstr "Все"
 
 #: users/models/user.py:155
 msgid "Users I follow"
-msgstr ""
+msgstr "Пользователи, которых я читаю"
 
 #: users/models/user.py:156
 msgid "Nobody"
-msgstr ""
+msgstr "Никто"
 
 #: users/models/user.py:173
 msgid "joined on"
-msgstr ""
+msgstr "присоединился к"
 
 #: users/models/user.py:188
 msgid "staff status"
-msgstr ""
+msgstr "статус сотрудника"
 
 #: users/models/user.py:190
 msgid "Designates whether the user can log into admin sites."
-msgstr ""
+msgstr "Указывает, может ли пользователь заходить на администраторские сайты."
 
 #: users/models/user.py:197
 msgid "active"
-msgstr ""
+msgstr "активен"
 
 #: users/models/user.py:201
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
 msgstr ""
+"Определяет, должен ли пользователь считаться активным. Выключите это вместо "
+"удаления аккаунтов."
 
 #: users/permissions/account.py:10
 msgid "Account settings"
-msgstr ""
+msgstr "Настройки аккаунта"
 
 #: users/permissions/account.py:13
 msgid "Allowed username changes number"
-msgstr ""
+msgstr "Допустимое количество изменений имени пользователя"
 
 #: users/permissions/account.py:16
 msgid "Don't count username changes older than"
-msgstr ""
+msgstr "Не учитывать изменения имени пользователя старше"
 
 #: users/permissions/account.py:18
 msgid ""
 "Number of days since name change that makes that change no longer count to "
 "limit. Enter zero to make all changes count."
 msgstr ""
+"Количество дней с момента изменения имени после которых это изменение не "
+"учитывается в посчете лимита изменений. Введите ноль чтобы все изменения "
+"учитывались."
 
 #: users/permissions/account.py:25
 msgid "Can have signature"
-msgstr ""
+msgstr "Можно использовать подпись."
 
 #: users/permissions/account.py:26
 msgid "Can put links in signature"
-msgstr ""
+msgstr "Можно использовать ссылки в подписи. "
 
 #: users/permissions/account.py:27
 msgid "Can put images in signature"
-msgstr ""
+msgstr "Можно использовать изображения в подписи."
 
 #: users/permissions/account.py:29
 msgid "Can use text blocks in signature"
-msgstr ""
+msgstr "Можно использовать текстовые блоки в подписи."
 
 #: users/permissions/account.py:31
 msgid ""
 "Controls whether or not users can put quote, code, spoiler blocks and "
 "horizontal lines in signatures."
 msgstr ""
+"Контролирует могут ли пользователи добавлять блоки цитаты, кода, спойлера и "
+"горизонтальные линии в подписи."
 
 #: users/permissions/decorators.py:16
 msgid "You have to sig in to perform this action."
-msgstr ""
+msgstr "Вы должны войти, чтобы выполнить это действие."
 
 #: users/permissions/decorators.py:27
 msgid "Only guests can perform this action."
-msgstr ""
+msgstr "Только посетители могут выполнить это действие."
 
 #: users/permissions/delete.py:25
 msgid "Maximum age of deleted account (in days)"
-msgstr ""
+msgstr "Максимальный возраст удаленного аккаунта (в днях)."
 
 #: users/permissions/delete.py:26 users/permissions/delete.py:32
 msgid "Enter zero to disable this check."
-msgstr ""
+msgstr "Введите ноль чтобы отключить проверку."
 
 #: users/permissions/delete.py:31
 msgid "Maximum number of posts on deleted account"
-msgstr ""
+msgstr "Максимальное число публикаций с удаленного аккаунта."
 
 #: users/permissions/delete.py:75
 msgid "You can't delete users."
-msgstr ""
+msgstr "Вы не можете удалять пользователей."
 
 #: users/permissions/delete.py:78 users/views/admin/users.py:201
 #: users/views/admin/users.py:215 users/views/admin/users.py:331
 msgid "You can't delete yourself."
-msgstr ""
+msgstr "Вы не можете удалить себя."
 
 #: users/permissions/delete.py:80
 msgid "You can't delete administrators."
-msgstr ""
+msgstr "Вы не можете удалять администраторов."
 
 #: users/permissions/delete.py:85
 #, python-format
@@ -5881,42 +5916,58 @@ msgid "You can't delete users that are members for more than %(days)s day."
 msgid_plural ""
 "You can't delete users that are members for more than %(days)s days."
 msgstr[0] ""
+"Вы не можете удалять пользователей, являющихся участниками больше чем "
+"%(days)s день."
 msgstr[1] ""
+"Вы не можете удалять пользователей, являющихся участниками больше чем "
+"%(days)s дня."
 msgstr[2] ""
+"Вы не можете удалять пользователей, являющихся участниками больше чем "
+"%(days)s дней."
 msgstr[3] ""
+"Вы не можете удалять пользователей, являющихся участниками больше чем "
+"%(days)s дней."
 
 #: users/permissions/delete.py:93
 #, python-format
 msgid "You can't delete users that made more than %(posts)s post."
 msgid_plural "You can't delete users that made more than %(posts)s posts."
 msgstr[0] ""
+"Вы не можете удалять пользователей, которые сделали больше %(posts)s "
+"публикации."
 msgstr[1] ""
+"Вы не можете удалять пользователей, которые сделали больше %(posts)s "
+"публикаций."
 msgstr[2] ""
+"Вы не можете удалять пользователей, которые сделали больше %(posts)s "
+"публикаций."
 msgstr[3] ""
+"Вы не можете удалять пользователей, которые сделали больше %(posts)s "
+"публикаций."
 
 #: users/permissions/moderation.py:34
 msgid "Users moderation"
-msgstr ""
+msgstr "Модерация пользователей"
 
 #: users/permissions/moderation.py:36
 msgid "Can rename users"
-msgstr ""
+msgstr "Можно переименовывать пользователей"
 
 #: users/permissions/moderation.py:37
 msgid "Can moderate avatars"
-msgstr ""
+msgstr "Можно модерировать аватары"
 
 #: users/permissions/moderation.py:38
 msgid "Can moderate signatures"
-msgstr ""
+msgstr "Можно модерировать подписи"
 
 #: users/permissions/moderation.py:39
 msgid "Can moderate profile details"
-msgstr ""
+msgstr "Можно модерировать данные профиля"
 
 #: users/permissions/moderation.py:40
 msgid "Can ban users"
-msgstr ""
+msgstr "Можно блокировать пользователей"
 
 #: users/permissions/moderation.py:42
 msgid "Max length, in days, of imposed ban"
@@ -5937,50 +5988,51 @@ msgstr ""
 #: users/permissions/moderation.py:50
 msgid "Enter zero to let moderators lift permanent bans."
 msgstr ""
+"Введите ноль, чтобы позволить модераторам добавлять постоянные блокировки."
 
 #: users/permissions/moderation.py:120
 msgid "You can't rename users."
-msgstr ""
+msgstr "Вы не можете переименовывать пользователей."
 
 #: users/permissions/moderation.py:122
 msgid "You can't rename administrators."
-msgstr ""
+msgstr "Вы не можете переименовывать администраторов."
 
 #: users/permissions/moderation.py:130
 msgid "You can't moderate avatars."
-msgstr ""
+msgstr "Вы не можете модерировать аватары."
 
 #: users/permissions/moderation.py:132
 msgid "You can't moderate administrators avatars."
-msgstr ""
+msgstr "Вы не можете модерировать аватары администраторов."
 
 #: users/permissions/moderation.py:140
 msgid "You can't moderate signatures."
-msgstr ""
+msgstr "Вы не можете модерировать подписи."
 
 #: users/permissions/moderation.py:142
 msgid "You can't moderate administrators signatures."
-msgstr ""
+msgstr "Вы не можете модерировать подписи администраторов."
 
 #: users/permissions/moderation.py:151
 msgid "You have to sign in to edit profile details."
-msgstr ""
+msgstr "Вы должны войти, чтобы редактировать данные профиля."
 
 #: users/permissions/moderation.py:153
 msgid "You can't edit other users details."
-msgstr ""
+msgstr "Вы не можете редактировать данные других пользователей."
 
 #: users/permissions/moderation.py:155
 msgid "You can't edit administrators details."
-msgstr ""
+msgstr "Вы не можете редактировать данные администраторов."
 
 #: users/permissions/moderation.py:164
 msgid "You can't ban users."
-msgstr ""
+msgstr "Вы не можете блокировать пользователей."
 
 #: users/permissions/moderation.py:166
 msgid "You can't ban administrators."
-msgstr ""
+msgstr "Вы не можете блокировать администраторов."
 
 #: users/permissions/moderation.py:174
 msgid "You can't lift bans."
@@ -5988,7 +6040,7 @@ msgstr ""
 
 #: users/permissions/moderation.py:177
 msgid "This user is not banned."
-msgstr ""
+msgstr "Этот пользователь не заблокирован."
 
 #: users/permissions/moderation.py:182
 msgid "You can't lift permanent bans."
@@ -6001,112 +6053,114 @@ msgstr ""
 
 #: users/permissions/profiles.py:25
 msgid "Can browse users list"
-msgstr ""
+msgstr "Можно просматривать список пользователей"
 
 #: users/permissions/profiles.py:26
 msgid "Can search user profiles"
-msgstr ""
+msgstr "Можно искать профили пользователей"
 
 #: users/permissions/profiles.py:27
 msgid "Can see other members name history"
-msgstr ""
+msgstr "Можно видеть историю имен участников"
 
 #: users/permissions/profiles.py:29
 msgid "Can see members bans details"
-msgstr ""
+msgstr "Можно видеть информацию по блокировкам участников"
 
 #: users/permissions/profiles.py:30
 msgid "Allows users with this permission to see user and staff ban messages."
 msgstr ""
+"Позволять пользователям с этим разрешением видеть сообщения к блокировкам от"
+" пользователей и персонала."
 
 #: users/permissions/profiles.py:35
 msgid "User profiles"
-msgstr ""
+msgstr "Профили пользователей"
 
 #: users/permissions/profiles.py:46
 msgid "Can follow other users"
-msgstr ""
+msgstr "Можно читать других пользователей"
 
 #: users/permissions/profiles.py:47
 msgid "Can be blocked by other users"
-msgstr ""
+msgstr "Можно быть заблокированным другими пользователями"
 
 #: users/permissions/profiles.py:50
 msgid "Can see members e-mails"
-msgstr ""
+msgstr "Можно видеть e-mail участников"
 
 #: users/permissions/profiles.py:51
 msgid "Can see members IPs"
-msgstr ""
+msgstr "Можно видеть IP участников"
 
 #: users/permissions/profiles.py:52
 msgid "Can see members that hide their presence"
-msgstr ""
+msgstr "Можно видеть участников, которые скрывают свое присутствие"
 
 #: users/permissions/profiles.py:114
 msgid "You can't browse users list."
-msgstr ""
+msgstr "Вы не можете просматривать список пользователей."
 
 #: users/permissions/profiles.py:123
 msgid "You can't follow other users."
-msgstr ""
+msgstr "Вы не можете читать других пользователей."
 
 #: users/permissions/profiles.py:125
 msgid "You can't add yourself to followed."
-msgstr ""
+msgstr "Вы не можете добавить сами себя в читаемые."
 
 #: users/permissions/profiles.py:134
 msgid "You can't block administrators."
-msgstr ""
+msgstr "Вы не можете блокировать администраторов."
 
 #: users/permissions/profiles.py:136
 msgid "You can't block yourself."
-msgstr ""
+msgstr "Вы не можете заблокировать себя."
 
 #: users/permissions/profiles.py:138
 #, python-format
 msgid "%(user)s can't be blocked."
-msgstr ""
+msgstr "%(user)s не может быть заблокирован."
 
 #: users/permissions/profiles.py:148
 msgid "You can't see users bans details."
-msgstr ""
+msgstr "Вы не можете видеть подробности блокировки пользователей."
 
 #: users/profilefields/default.py:13
 msgid "Bio"
-msgstr ""
+msgstr "Биография"
 
 #: users/profilefields/default.py:18
 msgid "Full name"
-msgstr ""
+msgstr "Полное имя"
 
 #: users/profilefields/default.py:23
 msgid "Location"
-msgstr ""
+msgstr "Местонахождение"
 
 #: users/profilefields/default.py:28
 msgid "Gender"
-msgstr ""
+msgstr "Пол"
 
 #: users/profilefields/default.py:31
 msgid "Not specified"
-msgstr ""
+msgstr "Не указано"
 
 #: users/profilefields/default.py:32
 msgid "Not telling"
-msgstr ""
+msgstr "Не рассказано"
 
 #: users/profilefields/default.py:33
 msgid "Female"
-msgstr ""
+msgstr "Женщина"
 
 #: users/profilefields/default.py:34
 msgid "Male"
-msgstr ""
+msgstr "Мужчина"
 
 #: users/profilefields/default.py:40
 msgid "Website"
-msgstr ""
+msgstr "Вебсайт"
 
 #: users/profilefields/default.py:42
 msgid ""
@@ -6114,20 +6168,25 @@ msgid ""
 " enter its address here. Remember to for it to be valid http address "
 "starting with either \"http://\" or \"https://\"."
 msgstr ""
+"Если Вы владеете сайтом в интернете и хотите указать его в своем профиле, Вы"
+" можете ввести его адрес здесь. Учтите, чтобы быть действительным, адрес "
+"должен начинаться с \"http://\" или \"https://\"."
 
 #: users/profilefields/default.py:50
 msgid "Skype ID"
-msgstr ""
+msgstr "Skype ID"
 
 #: users/profilefields/default.py:52
 msgid ""
 "Entering your Skype ID in this field may invite other users to contact you "
 "over the Skype instead of via private threads."
 msgstr ""
+"Внесение вашего Skype ID в это поле может побудить других пользователей "
+"связываться с Вами через Skype вместо использования приватных тем."
 
 #: users/profilefields/default.py:59
 msgid "Twitter handle"
-msgstr ""
+msgstr "Twitter аккаунт"
 
 #: users/profilefields/default.py:63
 #, python-format
@@ -6136,10 +6195,13 @@ msgid ""
 " users to find you. Starting your handle with \"@\" sign is optional. Either"
 " \"@%(slug)s\" or \"%(slug)s\" are valid values."
 msgstr ""
+"Если у Вас есть аккаунт в Twitter, Вы можете внести его сюда, чтобы другие "
+"пользователи могли найти Вас. Указывать \"@\" в начале аккаунта не "
+"обязательно. И \"@%(slug)s\" и \"%(slug)s\" являются корректными значениями."
 
 #: users/profilefields/default.py:79
 msgid "This is not a valid twitter handle."
-msgstr ""
+msgstr "Это неправильный twitter аккаунт."
 
 #: users/profilefields/default.py:85
 msgid "Join IP"
@@ -6147,85 +6209,93 @@ msgstr ""
 
 #: users/profilefields/default.py:99
 msgid "Last IP"
-msgstr ""
+msgstr "Последний IP"
 
 #: users/search.py:24
 msgid "You don't have permission to search users."
-msgstr ""
+msgstr "У вас нет разрешения искать пользователей."
 
 #: users/serializers/ban.py:39
 msgid "Your IP address is banned."
-msgstr ""
+msgstr "Ваш IP адрес заблокирован."
 
 #: users/serializers/ban.py:41
 msgid "You are banned."
-msgstr ""
+msgstr "Вы заблокированы."
 
 #: users/serializers/options.py:49
 msgid "Signature is too long."
-msgstr ""
+msgstr "Подпись слишком длинная."
 
 #: users/serializers/options.py:61
 msgid "Enter new username."
-msgstr ""
+msgstr "Введите новое имя пользователя."
 
 #: users/serializers/options.py:64
 msgid "New username is same as current one."
-msgstr ""
+msgstr "Новое имя пользователя совпадает с текущим."
 
 #: users/serializers/options.py:81 users/serializers/options.py:95
 msgid "Entered password is invalid."
-msgstr ""
+msgstr "Введенный пароль недействителен."
 
 #: users/serializers/options.py:100
 msgid "You have to enter new e-mail address."
-msgstr ""
+msgstr "Вам необходимо ввести новый e-mail адрес."
 
 #: users/serializers/options.py:103
 msgid "New e-mail is same as current one."
-msgstr ""
+msgstr "Новый e-mail совпадает с текущим."
 
 #: users/validators.py:29
 msgid "This e-mail address is not available."
-msgstr ""
+msgstr "Данный e-mail адрес недоступен."
 
 #: users/validators.py:56
 msgid "This username is not available."
-msgstr ""
+msgstr "Данное имя пользователя недоступно."
 
 #: users/validators.py:68
 msgid "This username is not allowed."
-msgstr ""
+msgstr "Данное имя пользователя запрещено."
 
 #: users/validators.py:73
 msgid "Username can only contain latin alphabet letters and digits."
-msgstr ""
+msgstr "Имя пользователя может содержать только латинские буквы и цифры."
 
 #: users/validators.py:79
 #, python-format
 msgid "Username must be at least %(limit_value)s character long."
 msgid_plural "Username must be at least %(limit_value)s characters long."
 msgstr[0] ""
+"Имя пользователя должно быть по крайней мере длиной в %(limit_value)s "
+"символ."
 msgstr[1] ""
+"Имя пользователя должно быть по крайней мере длиной в %(limit_value)s "
+"символа."
 msgstr[2] ""
+"Имя пользователя должно быть по крайней мере длиной в %(limit_value)s "
+"символов."
 msgstr[3] ""
+"Имя пользователя должно быть по крайней мере длиной в %(limit_value)s "
+"символов."
 
 #: users/validators.py:87
 #, python-format
 msgid "Username cannot be longer than %(limit_value)s characters."
 msgid_plural "Username cannot be longer than %(limit_value)s characters."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Имя пользователя не может быть длиннее %(limit_value)s символа."
+msgstr[1] "Имя пользователя не может быть длиннее %(limit_value)s символов."
+msgstr[2] "Имя пользователя не может быть длиннее %(limit_value)s символов."
+msgstr[3] "Имя пользователя не может быть длиннее %(limit_value)s символов."
 
 #: users/validators.py:124
 msgid "Data entered was found in spammers database."
-msgstr ""
+msgstr "Введенные данные были найдены в базе данных спамеров."
 
 #: users/validators.py:136
 msgid "This email is not allowed."
-msgstr ""
+msgstr "Данный e-mail запрещен."
 
 #: users/views/activation.py:51
 #, python-format
@@ -6233,201 +6303,209 @@ msgid ""
 "%(user)s, your activation link is invalid. Try again or request new "
 "activation link."
 msgstr ""
+"%(user)s, ваша ссылка активации недействительна. Попробуйте еще раз или "
+"запросите новую ссылку активации."
 
 #: users/views/activation.py:76
 #, python-format
 msgid "%(user)s, your account has been activated!"
-msgstr ""
+msgstr "%(user)s, Ваш аккаунт был активирован."
 
 #: users/views/admin/bans.py:14
 msgid "Requested ban does not exist."
-msgstr ""
+msgstr "Запрашиваемая блокировка не существует."
 
 #: users/views/admin/bans.py:30
 msgid "With bans: 0"
-msgstr ""
+msgstr "С блокировками: 0"
 
 #: users/views/admin/bans.py:31
 msgid "Select bans"
-msgstr ""
+msgstr "Выбрать блокировки"
 
 #: users/views/admin/bans.py:35
 msgid "Remove bans"
-msgstr ""
+msgstr "Удалить блокировки"
 
 #: users/views/admin/bans.py:36
 msgid "Are you sure you want to remove those bans?"
-msgstr ""
+msgstr "Вы уверены что хотите удалить эти блокировки?"
 
 #: users/views/admin/bans.py:42
 msgid "Selected bans have been removed."
-msgstr ""
+msgstr "Выбранные блокировки были удалены."
 
 #: users/views/admin/bans.py:46
 #, python-format
 msgid "New ban \"%(name)s\" has been saved."
-msgstr ""
+msgstr "Новая блокировка \"%(name)s\" была сохранена."
 
 #: users/views/admin/bans.py:50
 #, python-format
 msgid "Ban \"%(name)s\" has been edited."
-msgstr ""
+msgstr "Блокировка \"%(name)s\" была отредактирована."
 
 #: users/views/admin/bans.py:57
 #, python-format
 msgid "Ban \"%(name)s\" has been removed."
-msgstr ""
+msgstr "Блокировка \"%(name)s\" была удалена."
 
 #: users/views/admin/ranks.py:16
 msgid "Requested rank does not exist."
-msgstr ""
+msgstr "Запрашиваемый ранг не существует."
 
 #: users/views/admin/ranks.py:33
 #, python-format
 msgid "New rank \"%(name)s\" has been saved."
-msgstr ""
+msgstr "Новый ранг \"%(name)s\" был сохранён."
 
 #: users/views/admin/ranks.py:37
 #, python-format
 msgid "Rank \"%(name)s\" has been edited."
-msgstr ""
+msgstr "Ранг \"%(name)s\" был отредактирован."
 
 #: users/views/admin/ranks.py:44
 #, python-format
 msgid "Rank \"%(name)s\" is default rank and can't be deleted."
-msgstr ""
+msgstr "Ранг \"%(name)s\" является рангом по умолчанию и не может быть удален."
 
 #: users/views/admin/ranks.py:47
 #, python-format
 msgid "Rank \"%(name)s\" is assigned to users and can't be deleted."
-msgstr ""
+msgstr "Ранг \"%(name)s\" назначен пользователю и не может быть удален."
 
 #: users/views/admin/ranks.py:52
 #, python-format
 msgid "Rank \"%(name)s\" has been deleted."
-msgstr ""
+msgstr "Ранг \"%(name)s\" был удален."
 
 #: users/views/admin/ranks.py:69
 #, python-format
 msgid "Rank \"%(name)s\" has been moved below \"%(other)s\"."
-msgstr ""
+msgstr "Ранг \"%(name)s\" был перемещен ниже \"%(other)s\"."
 
 #: users/views/admin/ranks.py:87
 #, python-format
 msgid "Rank \"%(name)s\" has been moved above \"%(other)s\"."
-msgstr ""
+msgstr "Ранг \"%(name)s\" был перемещен выше \"%(other)s\"."
 
 #: users/views/admin/ranks.py:101
 #, python-format
 msgid "Rank \"%(name)s\" is already default."
-msgstr ""
+msgstr "Ранг \"%(name)s\" уже является рангом по умолчанию."
 
 #: users/views/admin/ranks.py:106
 #, python-format
 msgid "Rank \"%(name)s\" has been made default."
-msgstr ""
+msgstr "Ранг \"%(name)s\" был назначен рангом по умолчанию."
 
 #: users/views/admin/users.py:59
 msgid "Biggest posters"
-msgstr ""
+msgstr "Наибольшие постеры"
 
 #: users/views/admin/users.py:60
 msgid "Smallest posters"
-msgstr ""
+msgstr "Наименьшие постеры"
 
 #: users/views/admin/users.py:62
 msgid "With users: 0"
-msgstr ""
+msgstr "С пользователями: 0"
 
 #: users/views/admin/users.py:63
 msgid "Select users"
-msgstr ""
+msgstr "Выбрать пользователей"
 
 #: users/views/admin/users.py:67
 msgid "Activate accounts"
-msgstr ""
+msgstr "Активировать аккаунты"
 
 #: users/views/admin/users.py:77
 msgid "Delete accounts"
-msgstr ""
+msgstr "Удалить аккаунты"
 
 #: users/views/admin/users.py:79
 msgid "Are you sure you want to delete selected users?"
-msgstr ""
+msgstr "Вы уверены что хотите удалить выбранных пользователей?"
 
 #: users/views/admin/users.py:83
 msgid "Delete all"
-msgstr ""
+msgstr "Удалить всё"
 
 #: users/views/admin/users.py:86
 msgid ""
 "Are you sure you want to delete selected users? This will also delete all "
 "content associated with their accounts."
 msgstr ""
+"Вы уверены что хотите удалить выбранных пользователей? Это также удалит все "
+"данные, связанные с этими аккаунтами."
 
 #: users/views/admin/users.py:107
 msgid "You have to select inactive users."
-msgstr ""
+msgstr "Вы должны выбрать неактивных пользователей."
 
 #: users/views/admin/users.py:114
 #, python-format
 msgid "Your account on %(forum_name)s forums has been activated"
-msgstr ""
+msgstr "Ваш аккаунт на форуме %(forum_name)s был активирован"
 
 #: users/views/admin/users.py:119
 msgid "Selected users accounts have been activated."
-msgstr ""
+msgstr "Выбранные аккаунты пользователей были активированы."
 
 #: users/views/admin/users.py:125
 #, python-format
 msgid "%(user)s is super admin and can't be banned."
-msgstr ""
+msgstr "%(user)s - суперадминистратор и не может быть заблокирован."
 
 #: users/views/admin/users.py:186
 msgid "Selected users have been banned."
-msgstr ""
+msgstr "Выбранные пользователи были заблокированы."
 
 #: users/views/admin/users.py:203 users/views/admin/users.py:217
 #: users/views/admin/users.py:334
 #, python-format
 msgid "%(user)s is admin and can't be deleted."
-msgstr ""
+msgstr "%(user)s - администратор и не может быть удален."
 
 #: users/views/admin/users.py:209
 msgid "Selected users have been deleted."
-msgstr ""
+msgstr "Выбранные пользователи были удалены."
 
 #: users/views/admin/users.py:232
 #, python-format
 msgid "New user \"%(user)s\" has been registered."
-msgstr ""
+msgstr "Новый пользователь \"%(user)s\" был зарегистрирован."
 
 #: users/views/admin/users.py:261
 #, python-format
 msgid "User \"%(user)s\" has been edited."
-msgstr ""
+msgstr "Пользователь \"%(user)s\" был отредактирован."
 
 #: users/views/admin/users.py:328
 msgid "This action can't be accessed directly."
-msgstr ""
+msgstr "Это действие нельзя выполнить напрямую."
 
 #: users/views/forgottenpassword.py:38
 #, python-format
 msgid ""
 "%(user)s, your link has expired. Please request new link and try again."
 msgstr ""
+"%(user)s, Ваша ссылка устарела. Пожалуйста, запросите новую и попробуйте еще"
+" раз."
 
 #: users/views/forgottenpassword.py:42
 #, python-format
 msgid "%(user)s, your link is invalid. Please try again or request new link."
 msgstr ""
+"%(user)s, Ваша ссылка недействительна. Пожалуйста, попробуйте снова или "
+"запросите новую ссылку."
 
 #: users/views/options.py:54
 #, python-format
 msgid "%(user)s, your e-mail has been changed."
-msgstr ""
+msgstr "%(user)s, Ваш e-mail был изменен."
 
 #: users/views/options.py:74
 #, python-format
 msgid "%(user)s, your password has been changed."
-msgstr ""
+msgstr "%(user)s, Ваш пароль был изменен."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-08 22:51+0200\n"
+"POT-Creation-Date: 2017-10-20 23:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: mayne <dreama9ain@gmail.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
@@ -2651,108 +2651,17 @@ msgid ""
 "%(upload)s)."
 msgstr "您不能上传大于%(limit)s的此类型的文件（您的文件有%(upload)s）。"
 
-#: threads/api/pollvotecreateendpoint.py:47
-#, python-format
-msgid "This poll disallows voting for more than %(choices)s choice."
-msgid_plural "This poll disallows voting for more than %(choices)s choices."
-msgstr[0] "此调查中每票最多选择%(choices)s个选项"
-
-#: threads/api/pollvotecreateendpoint.py:53
-#: threads/api/pollvotecreateendpoint.py:63
-msgid "One or more of poll choices were invalid."
-msgstr "存在不合法投票选项。"
-
-#: threads/api/pollvotecreateendpoint.py:65
-msgid "You have to make a choice."
-msgstr "您必须做出选择。"
-
-#: threads/api/postendpoints/delete.py:50
-#: threads/api/postendpoints/merge.py:58 threads/api/postendpoints/move.py:73
-#: threads/api/postendpoints/split.py:38
-msgid "One or more post ids received were invalid."
-msgstr "收到的一个或多个帖子ID无效。"
-
-#: threads/api/postendpoints/delete.py:54
-msgid "You have to specify at least one post to delete."
-msgstr ""
-
-#: threads/api/postendpoints/delete.py:57
-#, python-format
-msgid "No more than %(limit)s post can be deleted at single time."
-msgid_plural "No more than %(limit)s posts can be deleted at single time."
-msgstr[0] ""
-
-#: threads/api/postendpoints/delete.py:77
-msgid "One or more posts to delete could not be found."
-msgstr ""
-
 #: threads/api/postendpoints/edits.py:89
 msgid "Edits record is unavailable for this post."
 msgstr "此帖子无法编辑记录。"
 
-#: threads/api/postendpoints/merge.py:19
+#: threads/api/postendpoints/merge.py:12
 msgid "You can't merge posts in this thread."
 msgstr "您不能在此主题帖中合并帖子。"
 
-#: threads/api/postendpoints/merge.py:62
-msgid "You have to select at least two posts to merge."
-msgstr "至少两条帖子才能合并。"
-
-#: threads/api/postendpoints/merge.py:65
-#, python-format
-msgid "No more than %(limit)s post can be merged at single time."
-msgid_plural "No more than %(limit)s posts can be merged at single time."
-msgstr[0] "一次最多合并条%(limit)s帖子。"
-
-#: threads/api/postendpoints/merge.py:84
-msgid "Posts made by different users can't be merged."
-msgstr "不同用户发布的帖子无法合并。"
-
-#: threads/api/postendpoints/merge.py:95
-msgid "Posts with different visibility can't be merged."
-msgstr "具有不同可见性的帖子无法合并。"
-
-#: threads/api/postendpoints/merge.py:100
-msgid "One or more posts to merge could not be found."
-msgstr "找不到一条或多条要合并的帖子。"
-
-#: threads/api/postendpoints/move.py:19
+#: threads/api/postendpoints/move.py:11
 msgid "You can't move posts in this thread."
 msgstr "您不能在此主题帖中移动帖子。"
-
-#: threads/api/postendpoints/move.py:50
-#: threads/api/threadendpoints/merge.py:36
-msgid "This is not a valid thread link."
-msgstr "这不是一个有效的主题帖链接。"
-
-#: threads/api/postendpoints/move.py:52
-msgid "Thread to move posts to is same as current one."
-msgstr "帖子移动目的地与当前位置相同。"
-
-#: threads/api/postendpoints/move.py:59
-#: threads/api/threadendpoints/merge.py:51
-msgid ""
-"The thread you have entered link to doesn't exist or you don't have "
-"permission to see it."
-msgstr "您输入的主题帖链接不存在或您没有浏览它的权限。"
-
-#: threads/api/postendpoints/move.py:65
-msgid "You can't move posts to threads you can't reply."
-msgstr "您不能将帖子移动到您无法回帖的主题帖中。"
-
-#: threads/api/postendpoints/move.py:77
-msgid "You have to specify at least one post to move."
-msgstr "至少指定一条帖子才能移动。"
-
-#: threads/api/postendpoints/move.py:80
-#, python-format
-msgid "No more than %(limit)s post can be moved at single time."
-msgid_plural "No more than %(limit)s posts can be moved at single time."
-msgstr[0] "不多于%(limit)s帖子可以单独移动。"
-
-#: threads/api/postendpoints/move.py:98
-msgid "One or more posts to move could not be found."
-msgstr "找不到一条或多条移动的帖子。"
 
 #: threads/api/postendpoints/patch_post.py:36
 msgid "You can't like posts in this category."
@@ -2767,23 +2676,9 @@ msgstr "内容审批不能撤销。"
 msgid "One or more posts to update could not be found."
 msgstr ""
 
-#: threads/api/postendpoints/split.py:20
+#: threads/api/postendpoints/split.py:14
 msgid "You can't split posts from this thread."
 msgstr "您不能从这条主题帖拆分帖子。"
-
-#: threads/api/postendpoints/split.py:42
-msgid "You have to specify at least one post to split."
-msgstr "至少指定一条要分割的帖子。"
-
-#: threads/api/postendpoints/split.py:45
-#, python-format
-msgid "No more than %(limit)s post can be split at single time."
-msgid_plural "No more than %(limit)s posts can be split at single time."
-msgstr[0] "一次最多可拆分%(limit)s条帖子。"
-
-#: threads/api/postendpoints/split.py:64
-msgid "One or more posts to split could not be found."
-msgstr "无法找到一条或多条要拆分的帖子。"
 
 #: threads/api/postingendpoint/attachments.py:61
 #, python-format
@@ -2868,21 +2763,6 @@ msgstr "您必须输入消息。"
 msgid "You have to enter thread title."
 msgstr "您必须输入主题帖标题。"
 
-#: threads/api/threadendpoints/delete.py:53
-#: threads/api/threadendpoints/merge.py:142
-msgid "One or more thread ids received were invalid."
-msgstr "收到的一个或多个主题帖ID无效。"
-
-#: threads/api/threadendpoints/delete.py:57
-msgid "You have to specify at least one thread to delete."
-msgstr ""
-
-#: threads/api/threadendpoints/delete.py:60
-#, python-format
-msgid "No more than %(limit)s thread can be deleted at single time."
-msgid_plural "No more than %(limit)s threads can be deleted at single time."
-msgstr[0] ""
-
 #: threads/api/threadendpoints/editor.py:15
 msgid "You need to be signed in to start threads."
 msgstr "您需要登录才能发起主题帖。"
@@ -2892,32 +2772,10 @@ msgid ""
 "No categories that allow new threads are available to you at the moment."
 msgstr "目前没有允许新主题帖的版块可供您使用。"
 
-#: threads/api/threadendpoints/merge.py:38
-msgid "You can't merge thread with itself."
-msgstr "您不能将主题帖与自身合并。"
-
-#: threads/api/threadendpoints/merge.py:44
-msgid "You can't merge this thread into thread you can't reply."
-msgstr "您无法将此主题帖合并到您无法回帖的主题帖中。"
-
-#: threads/api/threadendpoints/merge.py:73
-#: threads/api/threadendpoints/merge.py:127
+#: threads/api/threadendpoints/merge.py:118
+#: threads/serializers/moderation.py:418 threads/serializers/moderation.py:465
 msgid "Invalid choice."
 msgstr "无效的选择。"
-
-#: threads/api/threadendpoints/merge.py:146
-msgid "You have to select at least two threads to merge."
-msgstr "您必须至少选择两条主题帖进行合并。"
-
-#: threads/api/threadendpoints/merge.py:149
-#, python-format
-msgid "No more than %(limit)s thread can be merged at single time."
-msgid_plural "No more than %(limit)s threads can be merged at single time."
-msgstr[0] "一次最多合并%(limit)s条主题帖。"
-
-#: threads/api/threadendpoints/merge.py:169
-msgid "One or more threads to merge could not be found."
-msgstr "找不到要合并的一条或多条主题帖。"
 
 #: threads/api/threadendpoints/patch.py:52
 msgid "Invalid thread title."
@@ -2968,27 +2826,23 @@ msgstr "该用户已经是主题帖所有者。"
 msgid "One or more threads to update could not be found."
 msgstr ""
 
-#: threads/api/threadendpoints/pollmergehandler.py:33
-msgid "Delete all polls"
-msgstr "删除所调查"
-
-#: threads/api/threadpoll.py:55
+#: threads/api/threadpoll.py:53
 msgid "There's already a poll in this thread."
 msgstr "此主题帖已存在一个调查。"
 
-#: threads/api/threadposts.py:224
+#: threads/api/threadposts.py:220
 msgid "You can't reply to events."
 msgstr "您不能回复事件。"
 
-#: threads/api/threadposts.py:226
+#: threads/api/threadposts.py:222
 msgid "You can't reply to hidden posts."
 msgstr "您不能回复隐藏的帖子。"
 
-#: threads/api/threadposts.py:259
+#: threads/api/threadposts.py:255
 msgid "You can't see who liked this post."
 msgstr "您看不到谁赞过这篇文章。"
 
-#: threads/api/threads.py:131
+#: threads/api/threads.py:123
 msgid "You can't start private threads."
 msgstr "您不能发起私人主题帖。"
 
@@ -4175,25 +4029,160 @@ msgstr ""
 msgid "This thread is closed. You can't delete events in it."
 msgstr ""
 
-#: threads/serializers/moderation.py:35
+#: threads/pollmergehandler.py:33
+msgid "Delete all polls"
+msgstr "删除所调查"
+
+#: threads/serializers/moderation.py:41
+msgid "You have to specify at least one post to delete."
+msgstr ""
+
+#: threads/serializers/moderation.py:47 threads/serializers/moderation.py:96
+#: threads/serializers/moderation.py:172 threads/serializers/moderation.py:309
+msgid "One or more post ids received were invalid."
+msgstr "收到的一个或多个帖子ID无效。"
+
+#: threads/serializers/moderation.py:60
+#, python-format
+msgid "No more than %(limit)s post can be deleted at single time."
+msgid_plural "No more than %(limit)s posts can be deleted at single time."
+msgstr[0] ""
+
+#: threads/serializers/moderation.py:85
+msgid "One or more posts to delete could not be found."
+msgstr ""
+
+#: threads/serializers/moderation.py:91
+msgid "You have to select at least two posts to merge."
+msgstr "至少两条帖子才能合并。"
+
+#: threads/serializers/moderation.py:112
+#, python-format
+msgid "No more than %(limit)s post can be merged at single time."
+msgid_plural "No more than %(limit)s posts can be merged at single time."
+msgstr[0] "一次最多合并条%(limit)s帖子。"
+
+#: threads/serializers/moderation.py:137
+msgid "Posts made by different users can't be merged."
+msgstr "不同用户发布的帖子无法合并。"
+
+#: threads/serializers/moderation.py:149
+msgid "Posts with different visibility can't be merged."
+msgstr "具有不同可见性的帖子无法合并。"
+
+#: threads/serializers/moderation.py:155
+msgid "One or more posts to merge could not be found."
+msgstr "找不到一条或多条要合并的帖子。"
+
+#: threads/serializers/moderation.py:161
+msgid "You have to specify at least one post to move."
+msgstr "至少指定一条帖子才能移动。"
+
+#: threads/serializers/moderation.py:165 threads/serializers/moderation.py:412
+msgid "Enter link to new thread."
+msgstr ""
+
+#: threads/serializers/moderation.py:189 threads/serializers/moderation.py:429
+msgid "This is not a valid thread link."
+msgstr "这不是一个有效的主题帖链接。"
+
+#: threads/serializers/moderation.py:191
+msgid "Thread to move posts to is same as current one."
+msgstr "帖子移动目的地与当前位置相同。"
+
+#: threads/serializers/moderation.py:198 threads/serializers/moderation.py:441
+msgid ""
+"The thread you have entered link to doesn't exist or you don't have "
+"permission to see it."
+msgstr "您输入的主题帖链接不存在或您没有浏览它的权限。"
+
+#: threads/serializers/moderation.py:204
+msgid "You can't move posts to threads you can't reply."
+msgstr "您不能将帖子移动到您无法回帖的主题帖中。"
+
+#: threads/serializers/moderation.py:212
+#, python-format
+msgid "No more than %(limit)s post can be moved at single time."
+msgid_plural "No more than %(limit)s posts can be moved at single time."
+msgstr[0] "不多于%(limit)s帖子可以单独移动。"
+
+#: threads/serializers/moderation.py:236
+msgid "One or more posts to move could not be found."
+msgstr "找不到一条或多条移动的帖子。"
+
+#: threads/serializers/moderation.py:259
 msgid "You can't create new threads in selected category."
 msgstr "您不能在所选版块中创建新主题帖。"
 
-#: threads/serializers/moderation.py:47
+#: threads/serializers/moderation.py:271
 msgid "You don't have permission to pin threads globally in this category."
 msgstr "您没有权限在此版块中将主题帖全局置顶。"
 
-#: threads/serializers/moderation.py:51
+#: threads/serializers/moderation.py:275
 msgid "You don't have permission to pin threads in this category."
 msgstr "您没有权限在此版块内置顶主题帖。"
 
-#: threads/serializers/moderation.py:62
+#: threads/serializers/moderation.py:286
 msgid "You don't have permission to hide threads in this category."
 msgstr "您没有在此版块中隐藏主题帖的权限。"
 
-#: threads/serializers/moderation.py:73
+#: threads/serializers/moderation.py:297
 msgid "You don't have permission to close threads in this category."
 msgstr "您没有权限关闭此版块中的主题帖。"
+
+#: threads/serializers/moderation.py:303
+msgid "You have to specify at least one post to split."
+msgstr "至少指定一条要分割的帖子。"
+
+#: threads/serializers/moderation.py:322
+#, python-format
+msgid "No more than %(limit)s post can be split at single time."
+msgid_plural "No more than %(limit)s posts can be split at single time."
+msgstr[0] "一次最多可拆分%(limit)s条帖子。"
+
+#: threads/serializers/moderation.py:347
+msgid "One or more posts to split could not be found."
+msgstr "无法找到一条或多条要拆分的帖子。"
+
+#: threads/serializers/moderation.py:353
+msgid "You have to specify at least one thread to delete."
+msgstr ""
+
+#: threads/serializers/moderation.py:359 threads/serializers/moderation.py:482
+msgid "One or more thread ids received were invalid."
+msgstr "收到的一个或多个主题帖ID无效。"
+
+#: threads/serializers/moderation.py:372
+#, python-format
+msgid "No more than %(limit)s thread can be deleted at single time."
+msgid_plural "No more than %(limit)s threads can be deleted at single time."
+msgstr[0] ""
+
+#: threads/serializers/moderation.py:404
+msgid "One or more threads to delete could not be found."
+msgstr ""
+
+#: threads/serializers/moderation.py:431
+msgid "You can't merge thread with itself."
+msgstr "您不能将主题帖与自身合并。"
+
+#: threads/serializers/moderation.py:447
+msgid "You can't merge this thread into thread you can't reply."
+msgstr "您无法将此主题帖合并到您无法回帖的主题帖中。"
+
+#: threads/serializers/moderation.py:475
+msgid "You have to select at least two threads to merge."
+msgstr "您必须至少选择两条主题帖进行合并。"
+
+#: threads/serializers/moderation.py:496
+#, python-format
+msgid "No more than %(limit)s thread can be merged at single time."
+msgid_plural "No more than %(limit)s threads can be merged at single time."
+msgstr[0] "一次最多合并%(limit)s条主题帖。"
+
+#: threads/serializers/moderation.py:518
+msgid "One or more threads to merge could not be found."
+msgstr "找不到要合并的一条或多条主题帖。"
 
 #: threads/serializers/poll.py:129
 msgid "One or more poll choices are invalid."
@@ -4216,6 +4205,20 @@ msgstr[0] "您不能在一次调查中加入多于%(limit_value)s个选项(已�
 #: threads/serializers/poll.py:155
 msgid "Number of allowed choices can't be greater than number of all choices."
 msgstr "允许的选择数不能大于所有选项的数量。"
+
+#: threads/serializers/pollvote.py:22
+#, python-format
+msgid "This poll disallows voting for more than %(choices)s choice."
+msgid_plural "This poll disallows voting for more than %(choices)s choices."
+msgstr[0] "此调查中每票最多选择%(choices)s个选项"
+
+#: threads/serializers/pollvote.py:39
+msgid "One or more of poll choices were invalid."
+msgstr "存在不合法投票选项。"
+
+#: threads/serializers/pollvote.py:43
+msgid "You have to make a choice."
+msgstr "您必须做出选择。"
 
 #: threads/templatetags/misago_poststags.py:20
 #, python-format
@@ -4298,47 +4301,47 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] "发帖不能超过%(limit_value)s字符（它有%(show_value)s）。"
 
-#: threads/viewmodels/threads.py:26
+#: threads/viewmodels/threads.py:27
 msgid "Your threads"
 msgstr "您的主题帖"
 
-#: threads/viewmodels/threads.py:27
+#: threads/viewmodels/threads.py:28
 msgid "New threads"
 msgstr "新主题帖"
 
-#: threads/viewmodels/threads.py:28
+#: threads/viewmodels/threads.py:29
 msgid "Unread threads"
 msgstr "未读主题帖"
 
-#: threads/viewmodels/threads.py:29
+#: threads/viewmodels/threads.py:30
 msgid "Subscribed threads"
 msgstr "订阅主题"
 
-#: threads/viewmodels/threads.py:30
+#: threads/viewmodels/threads.py:31
 msgid "Unapproved content"
 msgstr "未批准的内容"
 
-#: threads/viewmodels/threads.py:34
+#: threads/viewmodels/threads.py:35
 msgid "You have to sign in to see list of threads that you have started."
 msgstr "您必须登录才能看到您发起的主题帖列表。"
 
-#: threads/viewmodels/threads.py:35
+#: threads/viewmodels/threads.py:36
 msgid "You have to sign in to see list of threads you haven't read."
 msgstr "您必须登录才能看到您尚未阅读的主题帖列表。"
 
-#: threads/viewmodels/threads.py:36
+#: threads/viewmodels/threads.py:37
 msgid "You have to sign in to see list of threads with new replies."
 msgstr "登录后才能看到有新回复的主题帖列表。"
 
-#: threads/viewmodels/threads.py:37
+#: threads/viewmodels/threads.py:38
 msgid "You have to sign in to see list of threads you are subscribing."
 msgstr "您必须登录才能看到您订阅的主题帖列表。"
 
-#: threads/viewmodels/threads.py:38
+#: threads/viewmodels/threads.py:39
 msgid "You have to sign in to see list of threads with unapproved posts."
 msgstr "您必须登录才能看到有未批准帖子的主题帖列表。"
 
-#: threads/viewmodels/threads.py:100
+#: threads/viewmodels/threads.py:102
 msgid "You don't have permission to see unapproved content lists."
 msgstr "您没有权限查看未批准的内容列表。"
 
@@ -4425,7 +4428,7 @@ msgstr "附件类型\"%(name)s\"已经关联了附件，不能被删除"
 msgid "Attachment type \"%(name)s\" has been deleted."
 msgstr "附件类型\"%(name)s\"已经被删除"
 
-#: threads/views/goto.py:104
+#: threads/views/goto.py:115
 msgid ""
 "You need permission to approve content to be able to go to first unapproved "
 "post."
@@ -4443,21 +4446,21 @@ msgstr "级别"
 msgid "Bans"
 msgstr "封禁"
 
-#: users/api/auth.py:97
+#: users/api/auth.py:100
 #, python-format
 msgid "Activate %(user)s account on %(forum_name)s forums"
 msgstr "在%(forum_name)s论坛启用%(user)s账号"
 
-#: users/api/auth.py:135
+#: users/api/auth.py:139
 #, python-format
 msgid "Change %(user)s password on %(forum_name)s forums"
 msgstr "在%(forum_name)s论坛更改%(user)s密码"
 
-#: users/api/auth.py:175
+#: users/api/auth.py:180
 msgid "Form link is invalid. Please try again."
 msgstr "表单链接无效。请再试一次。"
 
-#: users/api/auth.py:176
+#: users/api/auth.py:181
 msgid "Your link has expired. Please request new one."
 msgstr "您的链接已过期,请申请新的。"
 
@@ -4465,51 +4468,51 @@ msgstr "您的链接已过期,请申请新的。"
 msgid "This action is not available to signed in users."
 msgstr "此操作无法登录用户。"
 
-#: users/api/userendpoints/avatar.py:25
+#: users/api/userendpoints/avatar.py:27
 msgid "Your avatar is locked. You can't change it."
 msgstr "您的头像被锁定.您不能改变它。"
 
-#: users/api/userendpoints/avatar.py:109
+#: users/api/userendpoints/avatar.py:111
 msgid "This avatar type is not allowed."
 msgstr "不允许使用此头像类型。"
 
-#: users/api/userendpoints/avatar.py:118
+#: users/api/userendpoints/avatar.py:120
 msgid "Unknown avatar type."
 msgstr "未知的头像类型。"
 
-#: users/api/userendpoints/avatar.py:141
+#: users/api/userendpoints/avatar.py:143
 msgid "New avatar based on your account was set."
 msgstr "根据您的账号设置了新的头像。"
 
-#: users/api/userendpoints/avatar.py:147
+#: users/api/userendpoints/avatar.py:149
 msgid "Gravatar was downloaded and set as new avatar."
 msgstr "Gravatar被下载并设置为新头像。"
 
-#: users/api/userendpoints/avatar.py:149
+#: users/api/userendpoints/avatar.py:151
 msgid "No Gravatar is associated with your e-mail address."
 msgstr "没有Gravatar与您的电子邮件地址相关联。"
 
-#: users/api/userendpoints/avatar.py:151
+#: users/api/userendpoints/avatar.py:153
 msgid "Failed to connect to Gravatar servers."
 msgstr "无法连接到Gravatar服务器。"
 
-#: users/api/userendpoints/avatar.py:161
+#: users/api/userendpoints/avatar.py:163
 msgid "Avatar from gallery was set."
 msgstr "画廊的头像已经设置好了。"
 
-#: users/api/userendpoints/avatar.py:163
+#: users/api/userendpoints/avatar.py:165
 msgid "Incorrect image."
 msgstr "图像不正确"
 
-#: users/api/userendpoints/avatar.py:169
+#: users/api/userendpoints/avatar.py:171
 msgid "No file was sent."
 msgstr "没有发送文件。"
 
-#: users/api/userendpoints/avatar.py:182
+#: users/api/userendpoints/avatar.py:184
 msgid "Avatar was re-cropped."
 msgstr "头像被重新裁剪。"
 
-#: users/api/userendpoints/avatar.py:187
+#: users/api/userendpoints/avatar.py:189
 msgid "Uploaded avatar was set."
 msgstr "上传的头像已经设置。"
 

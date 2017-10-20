@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-07 01:05+0200\n"
+"POT-Creation-Date: 2017-10-20 23:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1164,8 +1164,7 @@ msgstr[1] ""
 msgid "Changes history"
 msgstr ""
 
-#: static/misago/js/misago.js:9 static/misago/js/misago.js:14
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:9 static/misago/js/misago.js:15
 msgid "Approve"
 msgstr ""
 
@@ -1317,11 +1316,11 @@ msgid_plural "%(edits)s edits"
 msgstr[0] ""
 msgstr[1] ""
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:11
+#: static/misago/js/misago.js:11
 msgid "Ban details"
 msgstr ""
 
-#: static/misago/js/misago.js:10
+#: static/misago/js/misago.js:11
 msgid "User-shown ban message"
 msgstr ""
 
@@ -1939,7 +1938,7 @@ msgstr ""
 msgid "Thread has been moved."
 msgstr ""
 
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:19
+#: static/misago/js/misago.js:16 static/misago/js/misago.js:18
 msgid "New category"
 msgstr ""
 
@@ -2035,27 +2034,7 @@ msgid "Change subscription"
 msgstr ""
 
 #: static/misago/js/misago.js:18
-msgid ""
-"Are you sure you want to mark those threads as read? This action is not "
-"reversible."
-msgstr ""
-
-#: static/misago/js/misago.js:18
-msgid ""
-"Are you sure you want to mark threads in this category as read? This action "
-"is not reversible."
-msgstr ""
-
-#: static/misago/js/misago.js:18
-msgid "Threads have been marked as read."
-msgstr ""
-
-#: static/misago/js/misago.js:18
 msgid "Start thread"
-msgstr ""
-
-#: static/misago/js/misago.js:18
-msgid "Mark as read"
 msgstr ""
 
 #: static/misago/js/misago.js:18
@@ -2280,27 +2259,27 @@ msgstr ""
 msgid "Log out"
 msgstr ""
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s is banned until %(ban_expires)s"
 msgstr ""
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s is banned"
 msgstr ""
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s is hiding presence"
 msgstr ""
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s is online (hidden)"
 msgstr ""
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s was last seen %(last_click)s (hidden)"
 msgstr ""
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s is online"
 msgstr ""
 
@@ -2338,7 +2317,7 @@ msgstr[1] ""
 msgid "No users have posted any new messages during last %(days)s days."
 msgstr ""
 
-#: static/misago/js/misago.js:20 static/misago/js/misago.js:21
+#: static/misago/js/misago.js:20
 msgid "Rank"
 msgstr ""
 

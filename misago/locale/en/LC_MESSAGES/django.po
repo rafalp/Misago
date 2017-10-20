@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-07 01:04+0200\n"
+"POT-Creation-Date: 2017-10-20 23:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2831,19 +2831,19 @@ msgstr ""
 msgid "There's already a poll in this thread."
 msgstr ""
 
-#: threads/api/threadposts.py:224
+#: threads/api/threadposts.py:220
 msgid "You can't reply to events."
 msgstr ""
 
-#: threads/api/threadposts.py:226
+#: threads/api/threadposts.py:222
 msgid "You can't reply to hidden posts."
 msgstr ""
 
-#: threads/api/threadposts.py:259
+#: threads/api/threadposts.py:255
 msgid "You can't see who liked this post."
 msgstr ""
 
-#: threads/api/threads.py:129
+#: threads/api/threads.py:123
 msgid "You can't start private threads."
 msgstr ""
 
@@ -4320,47 +4320,47 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: threads/viewmodels/threads.py:26
+#: threads/viewmodels/threads.py:27
 msgid "Your threads"
 msgstr ""
 
-#: threads/viewmodels/threads.py:27
+#: threads/viewmodels/threads.py:28
 msgid "New threads"
 msgstr ""
 
-#: threads/viewmodels/threads.py:28
+#: threads/viewmodels/threads.py:29
 msgid "Unread threads"
 msgstr ""
 
-#: threads/viewmodels/threads.py:29
+#: threads/viewmodels/threads.py:30
 msgid "Subscribed threads"
 msgstr ""
 
-#: threads/viewmodels/threads.py:30
+#: threads/viewmodels/threads.py:31
 msgid "Unapproved content"
 msgstr ""
 
-#: threads/viewmodels/threads.py:34
+#: threads/viewmodels/threads.py:35
 msgid "You have to sign in to see list of threads that you have started."
 msgstr ""
 
-#: threads/viewmodels/threads.py:35
+#: threads/viewmodels/threads.py:36
 msgid "You have to sign in to see list of threads you haven't read."
 msgstr ""
 
-#: threads/viewmodels/threads.py:36
+#: threads/viewmodels/threads.py:37
 msgid "You have to sign in to see list of threads with new replies."
 msgstr ""
 
-#: threads/viewmodels/threads.py:37
+#: threads/viewmodels/threads.py:38
 msgid "You have to sign in to see list of threads you are subscribing."
 msgstr ""
 
-#: threads/viewmodels/threads.py:38
+#: threads/viewmodels/threads.py:39
 msgid "You have to sign in to see list of threads with unapproved posts."
 msgstr ""
 
-#: threads/viewmodels/threads.py:100
+#: threads/viewmodels/threads.py:102
 msgid "You don't have permission to see unapproved content lists."
 msgstr ""
 
@@ -4446,7 +4446,7 @@ msgstr ""
 msgid "Attachment type \"%(name)s\" has been deleted."
 msgstr ""
 
-#: threads/views/goto.py:104
+#: threads/views/goto.py:115
 msgid ""
 "You need permission to approve content to be able to go to first unapproved "
 "post."

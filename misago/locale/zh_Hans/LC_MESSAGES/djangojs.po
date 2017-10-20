@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-08 22:51+0200\n"
+"POT-Creation-Date: 2017-10-20 23:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: mayne <dreama9ain@gmail.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
@@ -1149,8 +1149,7 @@ msgstr[0] "此帖子被编辑了%(edits)s次"
 msgid "Changes history"
 msgstr "改变历史"
 
-#: static/misago/js/misago.js:9 static/misago/js/misago.js:14
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:9 static/misago/js/misago.js:15
 msgid "Approve"
 msgstr "批准"
 
@@ -1299,11 +1298,11 @@ msgid "%(edits)s edit"
 msgid_plural "%(edits)s edits"
 msgstr[0] "%(edits)s 次编辑。"
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:11
+#: static/misago/js/misago.js:11
 msgid "Ban details"
 msgstr "封禁细节"
 
-#: static/misago/js/misago.js:10
+#: static/misago/js/misago.js:11
 msgid "User-shown ban message"
 msgstr "显示给用户的封禁信息"
 
@@ -1909,7 +1908,7 @@ msgstr "您现在不可以移动这个主题帖。"
 msgid "Thread has been moved."
 msgstr "主题帖已被移动。"
 
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:19
+#: static/misago/js/misago.js:16 static/misago/js/misago.js:18
 msgid "New category"
 msgstr "新版块"
 
@@ -2003,28 +2002,8 @@ msgid "Change subscription"
 msgstr "更改订阅"
 
 #: static/misago/js/misago.js:18
-msgid ""
-"Are you sure you want to mark those threads as read? This action is not "
-"reversible."
-msgstr "您确定要将以下全部主题帖标记为已读么？该操作是不可逆的。"
-
-#: static/misago/js/misago.js:18
-msgid ""
-"Are you sure you want to mark threads in this category as read? This action "
-"is not reversible."
-msgstr "您确定要将此主题帖标记为已读么？该操作是不可逆的。"
-
-#: static/misago/js/misago.js:18
-msgid "Threads have been marked as read."
-msgstr "主题帖已被标记为已读。"
-
-#: static/misago/js/misago.js:18
 msgid "Start thread"
 msgstr "发起主题帖"
-
-#: static/misago/js/misago.js:18
-msgid "Mark as read"
-msgstr "全部标为已读"
 
 #: static/misago/js/misago.js:18
 msgid "Why not start one yourself?"
@@ -2248,27 +2227,27 @@ msgstr "私人主题帖"
 msgid "Log out"
 msgstr "退出"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s is banned until %(ban_expires)s"
 msgstr "%(username)s 已被封禁直到 %(ban_expires)s"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s is banned"
 msgstr "%(username)s 已被封禁"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s is hiding presence"
 msgstr "%(username)s 在隐身"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s is online (hidden)"
 msgstr "%(username)s 在线（隐身）"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s was last seen %(last_click)s (hidden)"
 msgstr "%(username)s 最后一次出现于 %(last_click)s（隐身）"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:19
 msgid "%(username)s is online"
 msgstr "%(username)s 在线"
 
@@ -2305,7 +2284,7 @@ msgstr[0] "%(followers)s的关注者"
 msgid "No users have posted any new messages during last %(days)s days."
 msgstr "已经%(days)s天没有用户发布消息。"
 
-#: static/misago/js/misago.js:20 static/misago/js/misago.js:21
+#: static/misago/js/misago.js:20
 msgid "Rank"
 msgstr "级别"
 
