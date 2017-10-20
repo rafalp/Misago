@@ -83,18 +83,3 @@ class PostsTrackerTests(TestCase):
 
         self.assertTrue(post.is_read)
         self.assertFalse(post.is_new)
-
-    def test_delete_reads(self):
-        """delete_reads util removes post's reads"""
-        post = testutils.reply_thread(self.thread, posted_on=timezone.now())
-        other_post = testutils.reply_thread(self.thread, posted_on=timezone.now())
-
-        poststracker.save_read(self.user, post)
-        poststracker.save_read(self.user, other_post)
-
-        self.assertEqual(PostRead.objects.count(), 2)
-
-        poststracker.delete_reads(post)
-
-        self.assertEqual(PostRead.objects.count(), 1)
-

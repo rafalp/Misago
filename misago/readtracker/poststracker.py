@@ -41,7 +41,3 @@ def save_read(user, post):
         thread=post.thread,
         post=post,
     )
-
-
-def delete_reads(post):
-    post.postread_set.all().delete()
