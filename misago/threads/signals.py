@@ -20,9 +20,25 @@ move_thread = Signal()
 
 
 @receiver(merge_thread)
-def merge_threads_posts(sender, **kwargs):
+def merge_threads(sender, **kwargs):
     other_thread = kwargs['other_thread']
+
     other_thread.post_set.update(
+        category=sender.category,
+        thread=sender,
+    )
+    other_thread.postedit_set.update(
+        category=sender.category,
+        thread=sender,
+    )
+    other_thread.postlike_set.update(
+        category=sender.category,
+        thread=sender,
+    )
+
+    other_thread.subscription_set.exclude(
+        user__in=sender.subscription_set.values('user'),
+    ).update(
         category=sender.category,
         thread=sender,
     )

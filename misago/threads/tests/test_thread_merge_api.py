@@ -294,7 +294,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         with self.assertRaises(Thread.DoesNotExist):
             Thread.objects.get(pk=self.thread.pk)
 
-    def test_merge_threads_keep_Reads(self):
+    def test_merge_threads_kept_reads(self):
         """api keeps both threads readtrackers after merge"""
         self.override_acl({'can_merge_threads': 1})
 
@@ -321,6 +321,108 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         )
         self.assertEqual(postread_set.filter(thread=other_thread).count(), 2)
         self.assertEqual(postread_set.filter(category=self.category_b).count(), 2)
+
+    def test_merge_threads_kept_subs(self):
+        """api keeps other thread's subscription after merge"""
+        self.override_acl({'can_merge_threads': 1})
+
+        self.override_other_acl({'can_merge_threads': 1})
+
+        other_thread = testutils.post_thread(self.category_b)
+
+        self.user.subscription_set.create(
+            thread=self.thread,
+            category=self.thread.category,
+            last_read_on=self.thread.last_post_on,
+            send_email=False,
+        )
+
+        self.assertEqual(self.user.subscription_set.count(), 1)
+        self.user.subscription_set.get(thread=self.thread)
+        self.user.subscription_set.get(category=self.category)
+
+        response = self.client.post(
+            self.api_link, {
+                'other_thread': other_thread.get_absolute_url(),
+            }
+        )
+        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+
+        # subscriptions are kept
+        self.assertEqual(self.user.subscription_set.count(), 1)
+        self.user.subscription_set.get(thread=other_thread)
+        self.user.subscription_set.get(category=self.category_b)
+
+    def test_merge_threads_moved_subs(self):
+        """api keeps other thread's subscription after merge"""
+        self.override_acl({'can_merge_threads': 1})
+
+        self.override_other_acl({'can_merge_threads': 1})
+
+        other_thread = testutils.post_thread(self.category_b)
+
+        self.user.subscription_set.create(
+            thread=other_thread,
+            category=other_thread.category,
+            last_read_on=other_thread.last_post_on,
+            send_email=False,
+        )
+
+        self.assertEqual(self.user.subscription_set.count(), 1)
+        self.user.subscription_set.get(thread=other_thread)
+        self.user.subscription_set.get(category=self.category_b)
+
+        response = self.client.post(
+            self.api_link, {
+                'other_thread': other_thread.get_absolute_url(),
+            }
+        )
+        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+
+        # subscriptions are kept
+        self.assertEqual(self.user.subscription_set.count(), 1)
+        self.user.subscription_set.get(thread=other_thread)
+        self.user.subscription_set.get(category=self.category_b)
+
+    def test_merge_threads_handle_subs_colision(self):
+        """api resolves conflicting thread subscriptions after merge"""
+        self.override_acl({'can_merge_threads': 1})
+
+        self.override_other_acl({'can_merge_threads': 1})
+
+        self.user.subscription_set.create(
+            thread=self.thread,
+            category=self.thread.category,
+            last_read_on=self.thread.last_post_on,
+            send_email=False,
+        )
+
+        other_thread = testutils.post_thread(self.category_b)
+
+        self.user.subscription_set.create(
+            thread=other_thread,
+            category=other_thread.category,
+            last_read_on=other_thread.last_post_on,
+            send_email=False,
+        )
+
+        self.assertEqual(self.user.subscription_set.count(), 2)
+        self.user.subscription_set.get(thread=self.thread)
+        self.user.subscription_set.get(category=self.category)
+        self.user.subscription_set.get(thread=other_thread)
+        self.user.subscription_set.get(category=self.category_b)
+
+        response = self.client.post(
+            self.api_link, {
+                'other_thread': other_thread.get_absolute_url(),
+            }
+        )
+        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+
+        # subscriptions are kept
+        self.assertEqual(self.user.subscription_set.count(), 1)
+        self.user.subscription_set.get(thread=other_thread)
+        self.user.subscription_set.get(category=self.category_b)
 
     def test_merge_threads_kept_poll(self):
         """api merges two threads successfully, keeping poll from old thread"""
