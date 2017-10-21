@@ -23,22 +23,19 @@ def settings(request):
 
 
 def preload_settings_json(request):
-    preloaded_settings = db_settings.get_public_settings()
-
-    preloaded_settings.update({
-        'LOGIN_API_URL': misago_settings.MISAGO_LOGIN_API_URL,
-        'LOGIN_REDIRECT_URL': reverse(misago_settings.LOGIN_REDIRECT_URL),
-        'LOGIN_URL': reverse(misago_settings.LOGIN_URL),
-        'LOGOUT_URL': reverse(misago_settings.LOGOUT_URL),
+    request.frontend_context['conf'].update(db_settings.get_public_settings())
+    request.frontend_context['conf'].update({
+        'csrf_cookie_name': misago_settings.CSRF_COOKIE_NAME,
+        'threads_on_index': misago_settings.MISAGO_THREADS_ON_INDEX,
     })
 
-    request.frontend_context.update({
-        'SETTINGS': preloaded_settings,
-        'MISAGO_PATH': reverse('misago:index'),
-        'BLANK_AVATAR_URL': BLANK_AVATAR_URL,
-        'STATIC_URL': misago_settings.STATIC_URL,
-        'CSRF_COOKIE_NAME': misago_settings.CSRF_COOKIE_NAME,
-        'THREADS_ON_INDEX': misago_settings.MISAGO_THREADS_ON_INDEX,
+    request.frontend_context['url'].update({
+        'index': reverse('misago:index'),
+        'blank_avatar': BLANK_AVATAR_URL,
+        'login_redirect': reverse(misago_settings.LOGIN_REDIRECT_URL),
+        'login': reverse(misago_settings.LOGIN_URL),
+        'logout': reverse(misago_settings.LOGOUT_URL),
+        'static': misago_settings.STATIC_URL,
     })
 
     return {}

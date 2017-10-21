@@ -19,9 +19,6 @@ def reset_view(f):
 
 @reset_view
 def request_reset(request):
-    request.frontend_context.update({
-        'SEND_PASSWORD_RESET_API': reverse('misago:api:send-password-form'),
-    })
     return render(request, 'misago/forgottenpassword/request.html')
 
 
@@ -52,12 +49,14 @@ def reset_password_form(request, pk, token):
             }, status=400
         )
 
-    api_url = reverse(
-        'misago:api:change-forgotten-password', kwargs={
-            'pk': pk,
-            'token': token,
-        }
-    )
+    request.frontend_context['url'].update({
+        'change_forgotten_password': reverse(
+            'misago:api:change-forgotten-password',
+            kwargs={
+                'pk': pk,
+                'token': token,
+            },
+        ),
+    })
 
-    request.frontend_context['CHANGE_PASSWORD_API'] = api_url
     return render(request, 'misago/forgottenpassword/form.html')

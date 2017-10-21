@@ -18,7 +18,7 @@ class ThreadsList(object):
         category = self.get_category(request, pk=request.query_params.get('category'))
         threads = self.get_threads(request, category, list_type, page)
 
-        return Response(self.get_response_json(request, category, threads)['THREADS'])
+        return Response(self.get_response_json(request, category, threads)['threads'])
 
     def get_category(self, request, pk=None):
         raise NotImplementedError('Threads list has to implement get_category(request, pk=None)')

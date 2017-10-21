@@ -8,7 +8,7 @@ from .context_processors import legal_links
 
 class MockRequest(object):
     def __init__(self):
-        self.frontend_context = {}
+        self.frontend_context = {'url': {}}
 
 
 class PrivacyPolicyTests(TestCase):
@@ -47,34 +47,41 @@ class PrivacyPolicyTests(TestCase):
         self.assertContains(response, 'Lorem ipsum dolor')
 
     def test_context_processor_no_policy(self):
-        """context processor has no TOS link"""
-        context_dict = legal_links(MockRequest())
+        """context processor has no privacy policy link"""
+        request = MockRequest()
+
+        context_dict = legal_links(request)
         self.assertFalse(context_dict)
+        self.assertEqual(request.frontend_context['url'], {})
 
     def test_context_processor_misago_policy(self):
         """context processor has TOS link to Misago view"""
-        settings.override_setting('privacy_policy', 'Lorem ipsum')
-        context_dict = legal_links(MockRequest())
+        request = MockRequest()
 
-        self.assertEqual(context_dict, {
-            'PRIVACY_POLICY_URL': reverse('misago:privacy-policy'),
+        settings.override_setting('privacy_policy', 'Lorem ipsum')
+        legal_links(request)
+
+        self.assertEqual(request.frontend_context['url'], {
+            'privacy_policy': reverse('misago:privacy-policy'),
         })
 
     def test_context_processor_remote_policy(self):
         """context processor has TOS link to remote url"""
-        settings.override_setting('privacy_policy_link', 'http://test.com')
-        context_dict = legal_links(MockRequest())
+        request = MockRequest()
 
-        self.assertEqual(context_dict, {
-            'PRIVACY_POLICY_URL': 'http://test.com',
+        settings.override_setting('privacy_policy_link', 'http://test.com')
+        legal_links(request)
+
+        self.assertEqual(request.frontend_context['url'], {
+            'privacy_policy': 'http://test.com',
         })
 
         # set misago view too
         settings.override_setting('privacy_policy', 'Lorem ipsum')
-        context_dict = legal_links(MockRequest())
+        legal_links(request)
 
-        self.assertEqual(context_dict, {
-            'PRIVACY_POLICY_URL': 'http://test.com',
+        self.assertEqual(request.frontend_context['url'], {
+            'privacy_policy': 'http://test.com',
         })
 
 
@@ -115,33 +122,40 @@ class TermsOfServiceTests(TestCase):
 
     def test_context_processor_no_tos(self):
         """context processor has no TOS link"""
-        context_dict = legal_links(MockRequest())
+        request = MockRequest()
+
+        context_dict = legal_links(request)
         self.assertFalse(context_dict)
+        self.assertEqual(request.frontend_context['url'], {})
 
     def test_context_processor_misago_tos(self):
         """context processor has TOS link to Misago view"""
+        request = MockRequest()
+
         settings.override_setting('terms_of_service', 'Lorem ipsum')
-        context_dict = legal_links(MockRequest())
+        legal_links(request)
 
         self.assertEqual(
-            context_dict, {
-                'TERMS_OF_SERVICE_URL': reverse('misago:terms-of-service'),
+            request.frontend_context['url'], {
+                'tos': reverse('misago:terms-of-service'),
             }
         )
 
     def test_context_processor_remote_tos(self):
         """context processor has TOS link to remote url"""
-        settings.override_setting('terms_of_service_link', 'http://test.com')
-        context_dict = legal_links(MockRequest())
+        request = MockRequest()
 
-        self.assertEqual(context_dict, {
-            'TERMS_OF_SERVICE_URL': 'http://test.com',
+        settings.override_setting('terms_of_service_link', 'http://test.com')
+        legal_links(request)
+
+        self.assertEqual(request.frontend_context['url'], {
+            'tos': 'http://test.com',
         })
 
         # set misago view too
         settings.override_setting('terms_of_service', 'Lorem ipsum')
-        context_dict = legal_links(MockRequest())
+        legal_links(request)
 
-        self.assertEqual(context_dict, {
-            'TERMS_OF_SERVICE_URL': 'http://test.com',
+        self.assertEqual(request.frontend_context['url'], {
+            'tos': 'http://test.com',
         })

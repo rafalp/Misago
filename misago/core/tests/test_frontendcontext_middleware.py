@@ -13,4 +13,10 @@ class FrontendContextMiddlewareTests(TestCase):
         request = MockRequest()
 
         FrontendContextMiddleware().process_request(request)
-        self.assertEqual(request.frontend_context, {})
+        self.assertEqual(request.frontend_context, {
+            'api': '/api/',
+            'auth': {},
+            'conf': {},
+            'store': {},
+            'url': {}
+        })

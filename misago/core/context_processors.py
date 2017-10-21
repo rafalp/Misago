@@ -21,22 +21,6 @@ def site_address(request):
     }
 
 
-def current_link(request):
-    if not request.resolver_match or request.frontend_context.get('CURRENT_LINK'):
-        return {}
-
-    url_name = request.resolver_match.url_name
-    if request.resolver_match.namespaces:
-        namespaces = ':'.join(request.resolver_match.namespaces)
-        link_name = '{}:{}'.format(namespaces, url_name)
-    else:
-        link_name = url_name
-
-    request.frontend_context.update({'CURRENT_LINK': link_name})
-
-    return {}
-
-
 def momentjs_locale(request):
     return {
         'MOMENTJS_LOCALE_URL': get_locale_url(get_language()),

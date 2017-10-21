@@ -18,17 +18,13 @@ def search_providers(request):
         # with non-misago's anonymous user model that has no acl support
         return {}
 
-    request.frontend_context['SEARCH_URL'] = reverse('misago:search')
-    request.frontend_context['SEARCH_API'] = reverse('misago:api:search')
-    request.frontend_context['SEARCH_PROVIDERS'] = []
+    request.frontend_context['search'] = []
 
     for provider in allowed_providers:
-        request.frontend_context['SEARCH_PROVIDERS'].append({
+        request.frontend_context['search'].append({
             'id': provider.url,
             'name': six.text_type(provider.name),
             'icon': provider.icon,
-            'url': reverse('misago:search', kwargs={'search_provider': provider.url}),
-            'api': reverse('misago:api:search', kwargs={'search_provider': provider.url}),
             'results': None,
             'time': None,
         })

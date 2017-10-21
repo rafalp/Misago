@@ -15,10 +15,6 @@ def _ajax_error(code, exception=None, default_message=None):
 
 @admin_error_page
 def _error_page(request, code, exception=None, default_message=None):
-    request.frontend_context.update({
-        'CURRENT_LINK': 'misago:error-%s' % code,
-    })
-
     return render(
         request, 'misago/errorpages/%s.html' % code, {
             'message': get_exception_message(exception, default_message),
@@ -29,9 +25,10 @@ def _error_page(request, code, exception=None, default_message=None):
 def banned(request, exception):
     ban = exception.ban
 
-    request.frontend_context.update({
-        'MESSAGE': ban.get_serialized_message(),
-        'CURRENT_LINK': 'misago:error-banned',
+    request.frontend_context['store'].update({
+        'error': {
+            'ban': ban.get_serialized_message(),
+        },
     })
 
     return render(

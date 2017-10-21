@@ -41,7 +41,7 @@ class ViewModel(BaseViewModel):
         return categories[0]
 
     def get_frontend_context(self):
-        return {'CATEGORIES': BasicCategorySerializer(self._categories, many=True).data}
+        return {'categories': BasicCategorySerializer(self._categories, many=True).data}
 
     def get_template_context(self):
         return {'category': self._model, 'subcategories': self._children}

@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
 from django.utils.translation import ugettext as _
 
 from misago.core.exceptions import Banned
@@ -23,9 +22,6 @@ def activation_view(f):
 
 @activation_view
 def request_activation(request):
-    request.frontend_context.update({
-        'SEND_ACTIVATION_API': reverse('misago:api:send-activation'),
-    })
     return render(request, 'misago/activation/request.html')
 
 
