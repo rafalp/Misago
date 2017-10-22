@@ -5,7 +5,6 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
 from misago.conf import settings
-from misago.core.utils import clean_ids_list
 from misago.threads.moderation import posts as moderation
 from misago.threads.permissions import allow_delete_event, allow_delete_post
 from misago.threads.permissions import exclude_invisible_posts

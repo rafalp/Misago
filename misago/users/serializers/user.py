@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from misago.core.serializers import MutableFields
+from misago.api.serializers import MutableFields
 
 from . import RankSerializer
 

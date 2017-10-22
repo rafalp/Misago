@@ -23,16 +23,16 @@ def serialize_message(message):
 
 
 class BanMessageSerializer(serializers.ModelSerializer):
-    message = serializers.SerializerMethodField()
+    detail = serializers.SerializerMethodField()
 
     class Meta:
         model = Ban
         fields = [
-            'message',
+            'detail',
             'expires_on',
         ]
 
-    def get_message(self, obj):
+    def get_detail(self, obj):
         if obj.user_message:
             message = obj.user_message
         elif obj.check_type == Ban.IP:

@@ -147,10 +147,3 @@ def get_exception_message(exception=None, default_message=None):
         return exception.args[0]
     except IndexError:
         return default_message
-
-
-def clean_ids_list(ids_list, error_message):
-    try:
-        return list(map(int, ids_list))
-    except (ValueError, TypeError):
-        raise PermissionDenied(error_message)

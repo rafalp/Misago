@@ -12,8 +12,8 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
+from misago.api.rest_permissions import IsAuthenticatedOrReadOnly
 from misago.categories.models import Category
-from misago.core.rest_permissions import IsAuthenticatedOrReadOnly
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.moderation import hide_post, hide_thread
 from misago.users.bans import get_user_ban

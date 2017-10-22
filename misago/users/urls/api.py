@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from misago.core.apirouter import MisagoApiRouter
+from misago.api.router import MisagoApiRouter
 from misago.users.api import auth, captcha, mention
 from misago.users.api.ranks import RanksViewSet
 from misago.users.api.usernamechanges import UsernameChangesViewSet

@@ -188,8 +188,9 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # Misago apps
-    'misago.admin',
     'misago.acl',
+    'misago.admin',
+    'misago.api',
     'misago.core',
     'misago.conf',
     'misago.markup',
@@ -215,7 +216,7 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 
     'misago.users.middleware.RealIPMiddleware',
-    'misago.core.middleware.frontendcontext.FrontendContextMiddleware',
+    'misago.api.middleware.FrontendContextMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -266,7 +267,7 @@ TEMPLATES = [
 
                 # Note: keep frontend_context processor last for previous processors
                 # to be able to expose data UI app via request.frontend_context
-                'misago.core.context_processors.frontend_context',
+                'misago.api.context_processors.frontend_context',
             ],
         },
     },
@@ -307,12 +308,12 @@ DEBUG_TOOLBAR_PANELS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'misago.core.rest_permissions.IsAuthenticatedOrReadOnly',
+        'misago.api.rest_permissions.IsAuthenticatedOrReadOnly',
     ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],
-    'EXCEPTION_HANDLER': 'misago.core.exceptionhandler.handle_api_exception',
+    'EXCEPTION_HANDLER': 'misago.api.exceptionhandler.handle_api_exception',
     'UNAUTHENTICATED_USER': 'misago.users.models.AnonymousUser',
     'URL_FORMAT_OVERRIDE': None,
 }

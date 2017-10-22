@@ -1,4 +1,4 @@
-from misago.core.apirouter import MisagoApiRouter
+from misago.api.router import MisagoApiRouter
 from misago.threads.api.attachments import AttachmentViewSet
 from misago.threads.api.threadpoll import ThreadPollViewSet
 from misago.threads.api.threadposts import PrivateThreadPostsViewSet, ThreadPostsViewSet

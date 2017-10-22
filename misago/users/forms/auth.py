@@ -37,7 +37,7 @@ class MisagoAuthMixin(object):
     def get_errors_dict(self):
         error = self.errors.as_data()['__all__'][0]
         if error.code == 'banned':
-            error.message = self.user_ban.ban.get_serialized_message()
+            return self.user_ban.ban.get_serialized_message()
         else:
             error.message = error.messages[0]
 

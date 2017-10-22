@@ -2,7 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
-from misago.core.apipatch import ApiPatch
+from misago.api.patch import ApiPatch
 from misago.threads.moderation import posts as moderation
 from misago.threads.permissions import allow_hide_event, allow_unhide_event
 

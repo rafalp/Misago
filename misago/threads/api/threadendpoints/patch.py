@@ -9,11 +9,11 @@ from django.utils import six
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
+from misago.api.patch import ApiPatch
 from misago.categories.models import Category
 from misago.categories.permissions import allow_browse_category, allow_see_category
 from misago.categories.serializers import CategorySerializer
 from misago.conf import settings
-from misago.core.apipatch import ApiPatch
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.moderation import threads as moderation
 from misago.threads.participants import (

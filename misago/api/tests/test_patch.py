@@ -2,7 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.test import TestCase
 
-from misago.core.apipatch import ApiPatch, InvalidAction
+from misago.api.patch import ApiPatch, InvalidAction
 
 
 class MockRequest(object):
