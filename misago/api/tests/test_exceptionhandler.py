@@ -34,19 +34,27 @@ class HandleAPIExceptionTests(TestCase):
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.data['detail'], "Permission denied.")
 
-    def test_permission_message_denied(self):
+    def test_permission_denied_message(self):
         """permission denied with message is correctly handled"""
         exception = PermissionDenied("You shall not pass!")
         response = exceptionhandler.handle_api_exception(exception, None)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.data['detail'], "You shall not pass!")
 
+    def test_not_found(self):
+        """exception handler sets NOT FOUND as default message for 404"""
+        response = exceptionhandler.handle_api_exception(Http404(), None)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.data['detail'], "NOT FOUND")
+
+    def test_not_found_message(self):
+        """exception handler sets keeps as custom message for 404"""
+        response = exceptionhandler.handle_api_exception(Http404("Nada!"), None)
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.data['detail'], "Nada!")
+
     def test_unhandled_exception(self):
         """our exception handler is not interrupting other exceptions"""
         for exception in INVALID_EXCEPTIONS:
             response = exceptionhandler.handle_api_exception(exception(), None)
             self.assertIsNone(response)
-
-        response = exceptionhandler.handle_api_exception(Http404(), None)
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.data['detail'], "Not found.")
