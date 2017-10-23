@@ -1,13 +1,8 @@
-from django.core.exceptions import PermissionDenied
-from django.http import Http404
+from __future__ import unicode_literals
+
 from django.test import TestCase
 
 from misago.api.patch import ApiPatch, InvalidAction
-
-
-class MockRequest(object):
-    def __init__(self, data=None):
-        self.data = data
 
 
 class MockObject(object):
@@ -91,19 +86,19 @@ class ApiPatchTests(TestCase):
             try:
                 patch.validate_action(action)
             except InvalidAction as e:
-                self.assertEqual(e.args[0], u"undefined op")
+                self.assertEqual(e.args[0], '"op" parameter must be defined.')
 
         # unsupported op
         try:
             patch.validate_action({'op': 'nope'})
         except InvalidAction as e:
-            self.assertEqual(e.args[0], u'"nope" op is unsupported')
+            self.assertEqual(e.args[0], u'"nope" op is unsupported.')
 
         # op lacking patch
         try:
             patch.validate_action({'op': 'add'})
         except InvalidAction as e:
-            self.assertEqual(e.args[0], u'"add" op has to specify path')
+            self.assertEqual(e.args[0], u'"add" op has to specify path.')
 
         # op lacking value
         try:
@@ -112,7 +107,7 @@ class ApiPatchTests(TestCase):
                 'path': 'yolo',
             })
         except InvalidAction as e:
-            self.assertEqual(e.args[0], u'"add" op has to specify value')
+            self.assertEqual(e.args[0], u'"add" op has to specify value.')
 
         # empty value is allowed
         try:
@@ -122,7 +117,7 @@ class ApiPatchTests(TestCase):
                 'value': '',
             })
         except InvalidAction as e:
-            self.assertEqual(e.args[0], u'"add" op has to specify value')
+            self.assertEqual(e.args[0], u'"add" op has to specify value.')
 
     def test_dispatch_action(self):
         """dispatch_action calls specified actions"""
@@ -165,159 +160,3 @@ class ApiPatchTests(TestCase):
         self.assertEqual(patch_dict['id'], 123)
         self.assertEqual(patch_dict['a'], 10)
         self.assertEqual(patch_dict['b'], 50)
-
-    def test_dispatch(self):
-        """dispatch calls actions and returns response"""
-        patch = ApiPatch()
-
-        def action_error(request, target, value):
-            if value == '404':
-                raise Http404()
-            if value == 'perm':
-                raise PermissionDenied("yo ain't doing that!")
-
-        patch.replace('error', action_error)
-
-        def action_mutate(request, target, value):
-            return {'value': value * 2}
-
-        patch.replace('mutate', action_mutate)
-
-        # dispatch requires list as an argument
-        response = patch.dispatch(MockRequest({}), {})
-        self.assertEqual(response.status_code, 400)
-
-        self.assertEqual(response.data['detail'], "PATCH request should be list of operations")
-
-        # valid dispatch
-        response = patch.dispatch(
-            MockRequest([
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 2,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 6,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 7,
-                },
-            ]), MockObject(13)
-        )
-
-        self.assertEqual(response.status_code, 200)
-
-        self.assertEqual(len(response.data['detail']), 3)
-        self.assertEqual(response.data['detail'][0], 'ok')
-        self.assertEqual(response.data['detail'][1], 'ok')
-        self.assertEqual(response.data['detail'][2], 'ok')
-        self.assertEqual(response.data['id'], 13)
-        self.assertEqual(response.data['value'], 14)
-
-        # invalid action in dispatch
-        response = patch.dispatch(
-            MockRequest([
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 2,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 6,
-                },
-                {
-                    'op': 'replace',
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 7,
-                },
-            ]), MockObject(13)
-        )
-
-        self.assertEqual(response.status_code, 400)
-
-        self.assertEqual(len(response.data['detail']), 3)
-        self.assertEqual(response.data['detail'][0], 'ok')
-        self.assertEqual(response.data['detail'][1], 'ok')
-        self.assertEqual(response.data['detail'][2], '"replace" op has to specify path')
-        self.assertEqual(response.data['id'], 13)
-        self.assertEqual(response.data['value'], 12)
-
-        # action in dispatch raised 404
-        response = patch.dispatch(
-            MockRequest([
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 2,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'error',
-                    'value': '404',
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 6,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 7,
-                },
-            ]), MockObject(13)
-        )
-
-        self.assertEqual(response.status_code, 400)
-
-        self.assertEqual(len(response.data['detail']), 2)
-        self.assertEqual(response.data['detail'][0], 'ok')
-        self.assertEqual(response.data['detail'][1], "NOT FOUND")
-        self.assertEqual(response.data['id'], 13)
-        self.assertEqual(response.data['value'], 4)
-
-        # action in dispatch raised perm denied
-        response = patch.dispatch(
-            MockRequest([
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 2,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 6,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 9,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'error',
-                    'value': 'perm',
-                },
-            ]), MockObject(13)
-        )
-
-        self.assertEqual(response.status_code, 400)
-
-        self.assertEqual(len(response.data['detail']), 4)
-        self.assertEqual(response.data['detail'][0], 'ok')
-        self.assertEqual(response.data['detail'][1], 'ok')
-        self.assertEqual(response.data['detail'][2], 'ok')
-        self.assertEqual(response.data['detail'][3], "yo ain't doing that!")
-        self.assertEqual(response.data['id'], 13)
-        self.assertEqual(response.data['value'], 18)
