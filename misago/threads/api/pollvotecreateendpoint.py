@@ -24,11 +24,7 @@ def poll_vote_create(request, thread, poll):
 
     if not serializer.is_valid():
         return Response(
-            {
-                'detail': serializer.errors['choices'][0],
-            },
-            status=400,
-        )
+            {'detail': serializer.errors}, status=400)
 
     remove_user_votes(request.user, poll, serializer.data['choices'])
     set_new_votes(request, poll, serializer.data['choices'])
@@ -58,7 +54,10 @@ def remove_user_votes(user, poll, final_votes):
             removed_votes.append(choice['hash'])
 
     if removed_votes:
-        poll.pollvote_set.filter(voter=user, choice_hash__in=removed_votes).delete()
+        poll.pollvote_set.filter(
+            voter=user,
+            choice_hash__in=removed_votes,
+        ).delete()
 
 
 def set_new_votes(request, poll, final_votes):

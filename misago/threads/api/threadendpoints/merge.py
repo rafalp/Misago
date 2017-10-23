@@ -27,13 +27,7 @@ def thread_merge_endpoint(request, thread, viewmodel):
     )
 
     if not serializer.is_valid():
-        if 'other_thread' in serializer.errors:
-            errors = serializer.errors['other_thread']
-        elif 'poll' in serializer.errors:
-            errors = serializer.errors['poll']
-        else:
-            errors = list(serializer.errors.values())[0]
-        return Response({'detail': errors[0]}, status=400)
+        return Response(serializer.errors, status=400)
 
     # interrupt merge with request for poll resolution?
     if serializer.validated_data.get('polls'):
@@ -81,14 +75,7 @@ def threads_merge_endpoint(request):
     )
 
     if not serializer.is_valid():
-        if 'threads' in serializer.errors:
-            errors = {'detail': serializer.errors['threads'][0]}
-            return Response(errors, status=403)
-        elif 'non_field_errors' in serializer.errors:
-            errors = {'detail': serializer.errors['non_field_errors'][0]}
-            return Response(errors, status=403)
-        else:
-            return Response(serializer.errors, status=400)
+        return Response(serializer.errors, status=400)
 
     threads = serializer.validated_data['threads']
     invalid_threads = []

@@ -1,6 +1,5 @@
 import json
 
-from rest_framework import status
 from rest_framework.response import Response
 
 from django.core.exceptions import ValidationError
@@ -18,16 +17,16 @@ from misago.users.serializers import ModerateAvatarSerializer
 def avatar_endpoint(request, pk=None):
     if request.user.is_avatar_locked:
         if request.user.avatar_lock_user_message:
-            reason = format_plaintext_for_html(request.user.avatar_lock_user_message)
+            extra = format_plaintext_for_html(request.user.avatar_lock_user_message)
         else:
-            reason = None
+            extra = None
 
         return Response(
             {
                 'detail': _("Your avatar is locked. You can't change it."),
-                'reason': reason,
+                'extra': extra,
             },
-            status=status.HTTP_403_FORBIDDEN,
+            status=403,
         )
 
     avatar_options = get_avatar_options(request.user)
@@ -110,7 +109,7 @@ def avatar_post(options, user, data):
                 {
                     'detail': _("This avatar type is not allowed."),
                 },
-                status=status.HTTP_400_BAD_REQUEST,
+                status=400,
             )
 
         rpc_handler = AVATAR_TYPES[data.get('avatar', 'nope')]
@@ -119,7 +118,7 @@ def avatar_post(options, user, data):
             {
                 'detail': _("Unknown avatar type."),
             },
-            status=status.HTTP_400_BAD_REQUEST,
+            status=400,
         )
 
     try:
@@ -129,7 +128,7 @@ def avatar_post(options, user, data):
             {
                 'detail': e.args[0],
             },
-            status=status.HTTP_400_BAD_REQUEST,
+            status=400,
         )
 
     user.save()
@@ -225,7 +224,7 @@ def moderate_avatar_endpoint(request, profile):
         else:
             return Response(
                 serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST,
+                status=400,
             )
     else:
         return Response({

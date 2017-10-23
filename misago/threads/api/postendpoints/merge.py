@@ -20,12 +20,7 @@ def posts_merge_endpoint(request, thread):
     )
 
     if not serializer.is_valid():
-        return Response(
-            {
-                'detail': list(serializer.errors.values())[0][0],
-            },
-            status=400,
-        )
+        return Response(serializer.errors, status=400)
 
     posts = serializer.validated_data['posts']
     first_post, merged_posts = posts[0], posts[1:]

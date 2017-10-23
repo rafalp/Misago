@@ -1,4 +1,3 @@
-from rest_framework import status
 from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
@@ -18,15 +17,17 @@ def signature_endpoint(request):
 
     if user.is_signature_locked:
         if user.signature_lock_user_message:
-            reason = format_plaintext_for_html(user.signature_lock_user_message)
+            extra = format_plaintext_for_html(user.signature_lock_user_message)
         else:
-            reason = None
+            extra = None
 
-        return Response({
-            'detail': _("Your signature is locked. You can't change it."),
-            'reason': reason
-        },
-                        status=status.HTTP_403_FORBIDDEN)
+        return Response(
+            {
+                'detail': _("Your signature is locked. You can't change it."),
+                'extra': extra
+            },
+            status=403,
+        )
 
     if request.method == 'POST':
         return edit_signature(request, user)
@@ -59,7 +60,9 @@ def edit_signature(request, user):
         user.save(update_fields=['signature', 'signature_parsed', 'signature_checksum'])
         return get_signature_options(user)
     else:
-        return Response({
-            'detail': serializer.errors['non_field_errors'][0]
-        },
-                        status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {
+                'detail': serializer.errors
+            },
+            status=400,
+        )

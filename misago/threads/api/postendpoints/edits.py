@@ -86,7 +86,7 @@ def get_edit(post, pk=None):
 
     edit = post.edits_record.first()
     if not edit:
-        raise PermissionDenied(_("Edits record is unavailable for this post."))
+        raise Http404(_("Edits record is unavailable for this post."))
     return edit
 
 

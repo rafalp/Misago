@@ -17,11 +17,7 @@ class AttachmentViewSet(viewsets.ViewSet):
     def create(self, request):
         if not request.user.acl_cache['max_attachment_size']:
             raise PermissionDenied(_("You don't have permission to upload new files."))
-
-        try:
-            return self.create_attachment(request)
-        except ValidationError as e:
-            return Response({'detail': e.args[0]}, status=400)
+        return self.create_attachment(request)
 
     def create_attachment(self, request):
         upload = request.FILES.get('upload')

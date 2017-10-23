@@ -1,4 +1,3 @@
-from rest_framework import status
 from rest_framework.response import Response
 
 from django.contrib.auth import authenticate, get_user_model, login
@@ -31,7 +30,7 @@ def create_endpoint(request):
         form.add_error('captcha', e)
 
     if not form.is_valid():
-        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(form.errors, status=400)
 
     activation_kwargs = {}
     if settings.account_activation == 'user':
@@ -51,9 +50,9 @@ def create_endpoint(request):
     except IntegrityError:
         return Response(
             {
-                '__all__': _("Please try resubmitting the form.")
+                'detail': _("Please try resubmitting the form."),
             },
-            status=status.HTTP_400_BAD_REQUEST,
+            status=400,
         )
 
     mail_subject = _("Welcome on %(forum_name)s forums!")

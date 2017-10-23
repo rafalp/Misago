@@ -1,4 +1,4 @@
-from rest_framework import status, viewsets
+from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
@@ -106,9 +106,9 @@ class UserViewSet(viewsets.GenericViewSet):
         serializer = ForumOptionsSerializer(request.user, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'detail': _("Your forum options have been changed.")})
+            return Response(status=204)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=400)
 
     @detail_route(methods=['get', 'post'])
     def username(self, request, pk=None):
@@ -176,7 +176,10 @@ class UserViewSet(viewsets.GenericViewSet):
             profile.save(update_fields=['followers'])
             request.user.save(update_fields=['following'])
 
-            return Response({'is_followed': followed, 'followers': profile_followers})
+            return Response({
+                'is_followed': followed,
+                'followers': profile_followers,
+            })
 
     @detail_route()
     def ban(self, request, pk=None):

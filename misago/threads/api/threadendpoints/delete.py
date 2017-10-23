@@ -27,15 +27,7 @@ def delete_bulk(request, viewmodel):
     )
 
     if not serializer.is_valid():
-        if 'threads' in serializer.errors:
-            errors = serializer.errors['threads']
-            if 'details' in errors:
-                return Response(
-                    hydrate_error_details(errors['details']), status=400)
-            return Response({'detail': errors[0]}, status=403)
-        else:
-            errors = list(serializer.errors)[0][0]
-            return Response({'detail': errors}, status=400)
+        return Response(serializer.errors, status=400)
 
     for thread in serializer.validated_data['threads']:
         with transaction.atomic():

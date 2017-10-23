@@ -1,4 +1,3 @@
-from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
@@ -46,10 +45,7 @@ def login(request):
             AuthenticatedUserSerializer(form.user_cache).data,
         )
     else:
-        return Response(
-            form.get_errors_dict(),
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+        return Response(form.get_errors_dict(), status=400)
 
 
 @api_view()
@@ -119,7 +115,7 @@ def send_activation(request):
     else:
         return Response(
             form.get_errors_dict(),
-            status=status.HTTP_400_BAD_REQUEST,
+            status=400,
         )
 
 
@@ -158,10 +154,7 @@ def send_password_form(request):
             'email': form.user_cache.email,
         })
     else:
-        return Response(
-            form.get_errors_dict(),
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+        return Response(form.get_errors_dict(), status=400)
 
 
 class PasswordChangeFailed(Exception):
@@ -196,24 +189,11 @@ def change_forgotten_password(request, pk, token):
         if get_user_ban(user):
             raise PasswordChangeFailed(expired_message)
     except PasswordChangeFailed as e:
-        return Response(
-            {
-                'detail': e.args[0],
-            },
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+        return Response({'detail': e.args}, status=400)
 
-    try:
-        new_password = request.data.get('password', '')
-        validate_password(new_password, user=user)
-        user.set_password(new_password)
-        user.save()
-    except ValidationError as e:
-        return Response(
-            {
-                'detail': e.messages[0],
-            },
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+    new_password = request.data.get('password', '')
+    validate_password(new_password, user=user)
+    user.set_password(new_password)
+    user.save()
 
     return Response({'username': user.username})

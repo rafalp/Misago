@@ -49,12 +49,9 @@ def patch_title(request, thread, value):
     try:
         value_cleaned = six.text_type(value).strip()
     except (TypeError, ValueError):
-        raise PermissionDenied(_("Invalid thread title."))
+        raise ValidationError(_("Invalid thread title."))
 
-    try:
-        validate_title(value_cleaned)
-    except ValidationError as e:
-        raise PermissionDenied(e.args[0])
+    validate_title(value_cleaned)
 
     allow_edit_thread(request.user, thread)
 
@@ -101,7 +98,7 @@ def patch_move(request, thread, value):
     allow_start_thread(request.user, new_category)
 
     if new_category == thread.category:
-        raise PermissionDenied(_("You can't move thread to the category it's already in."))
+        raise ValidationError(_("You can't move thread to the category it's already in."))
 
     moderation.move_thread(request, thread, new_category)
 
@@ -204,13 +201,13 @@ def patch_add_participant(request, thread, value):
     try:
         username = six.text_type(value).strip().lower()
         if not username:
-            raise PermissionDenied(_("You have to enter new participant's username."))
+            raise ValidationError(_("You have to enter new participant's username."))
         participant = UserModel.objects.get(slug=username)
     except UserModel.DoesNotExist:
-        raise PermissionDenied(_("No user with such name exists."))
+        raise ValidationError(_("No user with such name exists."))
 
     if participant in [p.user for p in thread.participants_list]:
-        raise PermissionDenied(_("This user is already thread participant."))
+        raise ValidationError(_("This user is already thread participant."))
 
     allow_add_participant(request.user, participant)
     add_participant(request, thread, participant)
@@ -234,7 +231,7 @@ def patch_remove_participant(request, thread, value):
         if participant.user_id == user_id:
             break
     else:
-        raise PermissionDenied(_("Participant doesn't exist."))
+        raise ValidationError(_("Participant doesn't exist."))
 
     allow_remove_participant(request.user, thread, participant.user)
     remove_participant(request, thread, participant.user)
@@ -263,11 +260,11 @@ def patch_replace_owner(request, thread, value):
     for participant in thread.participants_list:
         if participant.user_id == user_id:
             if participant.is_owner:
-                raise PermissionDenied(_("This user already is thread owner."))
+                raise ValidationError(_("This user already is thread owner."))
             else:
                 break
     else:
-        raise PermissionDenied(_("Participant doesn't exist."))
+        raise ValidationError(_("Participant doesn't exist."))
 
     allow_change_owner(request.user, thread)
     change_owner(request, thread, participant.user)
@@ -371,10 +368,7 @@ def bulk_patch_endpoint(request, viewmodel):
 def clean_threads_for_patch(request, viewmodel, threads_ids):
     threads = []
     for thread_id in sorted(set(threads_ids), reverse=True):
-        try:
-            threads.append(viewmodel(request, thread_id).unwrap())
-        except (Http404, PermissionDenied):
-            raise PermissionDenied(_("One or more threads to update could not be found."))
+        threads.append(viewmodel(request, thread_id).unwrap())
     return threads
 
 
