@@ -28,7 +28,7 @@ class ResetError(Exception):
 
 @reset_view
 def reset_password_form(request, pk, token):
-    requesting_user = get_object_or_404(get_user_model(), pk=pk)
+    requesting_user = get_object_or_404(get_user_model(), pk=pk, is_active=True)
 
     try:
         if (request.user.is_authenticated and request.user.id != requesting_user.id):
