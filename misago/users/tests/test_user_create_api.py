@@ -85,7 +85,7 @@ class UserCreateTests(UserTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(), {
-                '__all__': ["You can't register account like this."],
+                'non_field_errors': ["You can't register account like this."],
             }
         )
 
@@ -304,9 +304,11 @@ class UserCreateTests(UserTestCase):
             },
         )
 
-        self.assertContains(response, 'active')
-        self.assertContains(response, 'Bob')
-        self.assertContains(response, 'bob@bob.com')
+        self.assertEqual(response.json(), {
+            'activation': None,
+            'username': 'Bob',
+            'email': 'bob@bob.com',
+        })
 
         UserModel.objects.get_by_username('Bob')
 
@@ -333,9 +335,11 @@ class UserCreateTests(UserTestCase):
             },
         )
 
-        self.assertContains(response, 'user')
-        self.assertContains(response, 'Bob')
-        self.assertContains(response, 'bob@bob.com')
+        self.assertEqual(response.json(), {
+            'activation': 'user',
+            'username': 'Bob',
+            'email': 'bob@bob.com',
+        })
 
         UserModel.objects.get_by_username('Bob')
         UserModel.objects.get_by_email('bob@bob.com')
@@ -355,9 +359,11 @@ class UserCreateTests(UserTestCase):
             },
         )
 
-        self.assertContains(response, 'admin')
-        self.assertContains(response, 'Bob')
-        self.assertContains(response, 'bob@bob.com')
+        self.assertEqual(response.json(), {
+            'activation': 'admin',
+            'username': 'Bob',
+            'email': 'bob@bob.com',
+        })
 
         UserModel.objects.get_by_username('Bob')
         UserModel.objects.get_by_email('bob@bob.com')
@@ -377,9 +383,11 @@ class UserCreateTests(UserTestCase):
             },
         )
 
-        self.assertContains(response, 'active')
-        self.assertContains(response, 'Bob')
-        self.assertContains(response, 'bob@bob.com')
+        self.assertEqual(response.json(), {
+            'activation': None,
+            'username': 'Bob',
+            'email': 'bob@bob.com',
+        })
 
         UserModel.objects.get_by_username('Bob')
 

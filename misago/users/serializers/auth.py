@@ -93,7 +93,7 @@ class AnonymousUserSerializer(serializers.Serializer, AuthFlags):
 
 
 class LoginSerializer(serializers.Serializer, AuthMixin):
-    username = serializers.CharField(max_length=254)
+    username = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=255, trim_whitespace=False)
 
     def validate(self, data):
@@ -180,8 +180,3 @@ class ChangePasswordSerializer(serializers.Serializer, AuthMixin):
     def save(self):
         self.instance.set_password(self.validated_data['password'])
         self.instance.save()
-
-
-class CreateUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserModel

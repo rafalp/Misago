@@ -8,8 +8,7 @@ from django.views.decorators.csrf import csrf_protect
 
 from misago.conf import settings
 from misago.core.mail import mail_user
-from misago.users import captcha
-from misago.users.forms.register import RegisterForm
+from misago.users.serializers import RegisterUserSerializer
 from misago.users.tokens import make_activation_token
 
 
@@ -21,16 +20,12 @@ def create_endpoint(request):
     if settings.account_activation == 'closed':
         raise PermissionDenied(_("New users registrations are currently closed."))
 
-    form = RegisterForm(request.data, request=request)
+    serializer = RegisterUserSerializer(
+        data=request.data,
+        context={'request': request},
+    )
 
-    try:
-        if form.is_valid():
-            captcha.test_request(request)
-    except ValidationError as e:
-        form.add_error('captcha', e)
-
-    if not form.is_valid():
-        return Response(form.errors, status=400)
+    serializer.is_valid(raise_exception=True)
 
     activation_kwargs = {}
     if settings.account_activation == 'user':
@@ -40,9 +35,9 @@ def create_endpoint(request):
 
     try:
         new_user = UserModel.objects.create_user(
-            form.cleaned_data['username'],
-            form.cleaned_data['email'],
-            form.cleaned_data['password'],
+            serializer.validated_data['username'],
+            serializer.validated_data['email'],
+            serializer.validated_data['password'],
             joined_from_ip=request.user_ip,
             set_default_avatar=True,
             **activation_kwargs
@@ -60,14 +55,15 @@ def create_endpoint(request):
 
     if settings.account_activation == 'none':
         authenticated_user = authenticate(
-            username=new_user.email, password=form.cleaned_data['password']
+            username=new_user.email,
+            password=serializer.validated_data['password'],
         )
         login(request, authenticated_user)
 
         mail_user(request, new_user, mail_subject, 'misago/emails/register/complete')
 
         return Response({
-            'activation': 'active',
+            'activation': None,
             'username': new_user.username,
             'email': new_user.email
         })
