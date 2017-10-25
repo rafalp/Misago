@@ -49,14 +49,11 @@ def reset_password_form(request, pk, token):
             }, status=400
         )
 
-    request.frontend_context['url'].update({
-        'change_forgotten_password': reverse(
-            'misago:api:change-forgotten-password',
-            kwargs={
-                'pk': pk,
-                'token': token,
-            },
-        ),
+    request.frontend_context['store'].update({
+        'forgotten_password': {
+            'id': pk,
+            'token': token,
+        },
     })
 
     return render(request, 'misago/forgottenpassword/form.html')

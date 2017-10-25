@@ -6,7 +6,7 @@ from django.views.decorators.cache import cache_page
 from django.views.decorators.http import last_modified
 from django.views.i18n import JavaScriptCatalog
 
-from misago.users.forms.auth import AdminAuthenticationForm
+from misago.admin.forms import AdminAuthenticationForm
 
 from . import views
 

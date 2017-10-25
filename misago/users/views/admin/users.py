@@ -13,7 +13,7 @@ from misago.core.mail import mail_users
 from misago.core.pgutils import batch_update
 from misago.threads.models import Thread
 from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
-from misago.users.forms.admin import (
+from misago.users.forms import (
     BanUsersForm, EditUserForm, EditUserFormFactory, NewUserForm, SearchUsersForm)
 from misago.users.models import Ban
 from misago.users.profilefields import profilefields
