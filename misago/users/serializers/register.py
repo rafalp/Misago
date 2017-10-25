@@ -3,6 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.utils import six
 from django.utils.translation import ugettext as _
 
 from misago.users import captcha, validators
@@ -74,7 +75,7 @@ class RegisterUserSerializer(serializers.Serializer):
         try:
             captcha.test_request(self.context['request'])
         except ValidationError as e:
-            raise serializers.ValidationError({'captcha': [e.args[0]]})
+            raise serializers.ValidationError({'captcha': e.message})
 
         return data
 
@@ -89,5 +90,17 @@ class RegisterUserSerializer(serializers.Serializer):
             )
 
     def add_error(self, field, error):
-        """we are using custom implementation so custom validators work"""
-        self._added_errors.setdefault(field, []).append(error)
+        """
+        custom implementation for quasi add_error feature for custom validators
+        we are doing some hacky introspection here to deconstruct ValidationError
+        """
+        self._added_errors.setdefault(field, [])
+
+        if isinstance(error, ValidationError):
+            self._added_errors[field].extend(list(error))
+        elif isinstance(error, serializers.ValidationError):
+            details = [e['message'] for e in error.get_full_details()]
+            self._added_errors[field].extend(details)
+        else:
+            self._added_errors[field].append(six.text_type(error))
+

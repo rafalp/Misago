@@ -285,11 +285,13 @@ class UserCreateTests(UserTestCase):
             data={
                 'username': 'Bob',
                 'email': 'l.o.r.e.m.i.p.s.u.m@gmail.com',
-                'password': 'pas123',
+                'password': 'pass1234',
             },
         )
-
-        self.assertContains(response, "email is not allowed", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'email': ["This email is not allowed."]
+        })
 
     def test_registration_creates_active_user(self):
         """api creates active and signed in user on POST"""
