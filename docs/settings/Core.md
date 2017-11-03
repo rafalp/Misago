@@ -128,7 +128,13 @@ In case of more events than specified being found, oldest events will be truncat
 Hourly limit of posts that may be posted from single account. Fail-safe for situations when forum is flooded by spam bot. Change to 0 to lift this restriction.
 
 
+## `MISAGO_LOGO`
+
+URL to logo image, relative to `STATIC_URL`.
+
+
 ## `MISAGO_LOGIN_API_URL`
+
 URL to API endpoint used to authenticate sign-in credentials. Musn't contain api prefix or wrapping slashes. Defaults to 'auth/login'.
 
 
@@ -244,6 +250,15 @@ Path to function or callable used by Misago to generate slugs. Defaults to `misa
 ## `MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE`
 
 Minimum confidence returned by [Stop Forum Spam](http://www.stopforumspam.com/) for Misago to reject new registration and block IP address for 1 day.
+
+
+## `MISAGO_STYLE`
+
+This dict allows you override some CSS classes used by Misago in its style. For example, to specify custom CSS classess to use in Misago's navbar, you may add following to your `settings.py`:
+
+    MISAGO_STYLE = {
+        'navbar': 'navbar-dark bg-primary',
+    }
 
 
 ## `MISAGO_THREADS_ON_INDEX`

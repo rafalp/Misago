@@ -34,14 +34,9 @@ Default avatar assigned to new accounts. Can be either `initials` for randomly g
 Default timezone used by guests and newly registered users that haven't changed their timezone prefferences.
 
 
-## forum_branding_display
-
-Controls branding's visibility in forum navbar.
-
-
 ## forum_branding_text
 
-Allows you to include text besides brand logo on your forum.
+Allows you to specify default text displayed besides brand logo on your forum.
 
 
 ## forum_name

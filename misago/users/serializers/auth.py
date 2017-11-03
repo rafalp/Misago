@@ -25,18 +25,8 @@ __all__ = [
 ]
 
 
-class AuthFlags(object):
-    def get_is_authenticated(self, obj):
-        return bool(obj.is_authenticated)
-
-    def get_is_anonymous(self, obj):
-        return bool(obj.is_anonymous)
-
-
-class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
+class AuthenticatedUserSerializer(UserSerializer):
     email = serializers.SerializerMethodField()
-    is_authenticated = serializers.SerializerMethodField()
-    is_anonymous = serializers.SerializerMethodField()
 
     class Meta:
         model = UserModel
@@ -46,8 +36,6 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
             'unread_private_threads',
             'subscribe_to_started_threads',
             'subscribe_to_replied_threads',
-            'is_authenticated',
-            'is_anonymous',
         ]
 
     def get_acl(self, obj):
@@ -79,11 +67,9 @@ AuthenticatedUserSerializer = AuthenticatedUserSerializer.exclude_fields(
 )
 
 
-class AnonymousUserSerializer(serializers.Serializer, AuthFlags):
+class AnonymousUserSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
     acl = serializers.SerializerMethodField()
-    is_authenticated = serializers.SerializerMethodField()
-    is_anonymous = serializers.SerializerMethodField()
 
     def get_acl(self, obj):
         if hasattr(obj, 'acl_cache'):

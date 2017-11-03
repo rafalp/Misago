@@ -183,6 +183,22 @@ MISAGO_AVATARS_SIZES = [400, 200, 150, 100, 64, 50, 30]
 MISAGO_BLANK_AVATAR = 'blank-avatar.png'
 
 
+# Path to default logo image used in navbar.
+
+MISAGO_LOGO = 'logo.png'
+
+
+# Empty style options and defaults
+
+MISAGO_STYLE = {}
+
+# Default style settings that are updated with user-entered MISAGO_STYLE
+
+_MISAGO_STYLE_DEFAULT = {
+    'navbar': 'navbar-light bg-light',
+}
+
+
 # Threads lists pagination settings
 
 MISAGO_THREADS_PER_PAGE = 25

@@ -138,18 +138,21 @@ STATICFILES_DIRS = [
 ]
 
 
+# Path to default logo image used in navbar, should be relative to STATIC_URL.
+
+MISAGO_LOGO = 'logo.png'
+
+
 # Email configuration
 # https://docs.djangoproject.com/en/{{ docs_version }}/ref/settings/#email-backend
 
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 25
 
-
 # If either of these settings is empty, Django won't attempt authentication.
 
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
-
 
 # Default email address to use for various automated correspondence from the site manager(s).
 
