@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import auth
 from django.shortcuts import redirect
+from django.urls import NoReverseMatch
 from django.utils.http import is_safe_url
 from django.utils.six.moves.urllib.parse import urlparse
 from django.views.decorators.cache import never_cache
@@ -22,7 +23,10 @@ def login(request):
             )
             if is_redirect_safe:
                 redirect_to_path = urlparse(redirect_to).path
-                return redirect(redirect_to_path)
+                try:
+                    return redirect(redirect_to_path)
+                except NoReverseMatch:
+                    pass
 
     return redirect(settings.LOGIN_REDIRECT_URL)
 
