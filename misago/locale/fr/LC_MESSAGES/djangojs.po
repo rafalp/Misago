@@ -247,7 +247,7 @@ msgstr "Le formulaire contient des erreurs."
 #: static/misago/js/misago.js:6 static/misago/js/misago.js:12
 #: static/misago/js/misago.js:14
 msgid "Save changes"
-msgstr "Sauvegarder les changements"
+msgstr "Sauvegarder"
 
 #: static/misago/js/misago.js:2 static/misago/js/misago.js:4
 msgid "Edit details"
@@ -2503,7 +2503,9 @@ msgstr "Une erreur inconnue s'est produite."
 
 #: static/misago/js/misago.js:23
 msgid "Upload was rejected by server as too large."
-msgstr "Le chargement a été rejeté par le serveur trop grand."
+msgstr ""
+"La télédéposition a été refusée par le serveur car le fichier est trop "
+"volumineux."
 
 #: static/misago/js/misago.js:23
 msgid "Failed to load CAPTCHA."
