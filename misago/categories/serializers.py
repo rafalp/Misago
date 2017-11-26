@@ -8,7 +8,11 @@ from misago.core.utils import format_plaintext_for_html
 from .models import Category
 
 
-__all__ = ['CategorySerializer']
+__all__ = [
+    'CategorySerializer',
+    'BasicCategorySerializer',
+    'CategoryWithPosterSerializer',
+]
 
 
 def last_activity_detail(f):
@@ -134,3 +138,9 @@ class CategoryWithPosterSerializer(CategorySerializer):
             return []
 
 CategoryWithPosterSerializer = CategoryWithPosterSerializer.extend_fields('last_poster')
+
+
+BasicCategorySerializer = CategorySerializer.subset_fields(
+    'id', 'parent', 'name', 'description', 'is_closed', 'css_class',
+    'level', 'lft', 'rght', 'url'
+)

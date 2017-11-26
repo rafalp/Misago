@@ -265,6 +265,7 @@ TEMPLATES = [
                 'misago.legal.context_processors.legal_links',
 
                 # Data preloaders
+                'misago.categories.context_processors.preload_categories_json',
                 'misago.conf.context_processors.preload_settings_json',
                 'misago.users.context_processors.preload_user_json',
 
