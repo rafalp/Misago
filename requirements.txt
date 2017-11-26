@@ -2,7 +2,7 @@ django~=1.11.1
 djangorestframework~=3.6.3
 beautifulsoup4~=4.6.0
 bleach~=2.0.0
-django-debug-toolbar~=1.8
+django-debug-toolbar<1.9
 django-crispy-forms~=1.6.1
 django-htmlmin~=0.10.0
 django-mptt~=0.8.7
