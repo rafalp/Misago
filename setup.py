@@ -8,7 +8,7 @@ from misago import __version__ as version
 
 SETUP_DIR = os.path.dirname(__file__)
 
-README = open(os.path.join(SETUP_DIR, 'README.rst')).read()
+README = open(os.path.join(SETUP_DIR, 'README.rst'), 'rb').read().decode('utf-8')
 
 with open(os.path.join(SETUP_DIR, 'requirements.txt'), "r") as f:
     REQUIREMENTS = [x.strip() for x in f.readlines()]

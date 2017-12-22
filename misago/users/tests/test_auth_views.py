@@ -41,6 +41,28 @@ class AuthViewsTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/')
 
+        # invalid redirect (link name)
+        response = self.client.post(
+            reverse('misago:login'),
+            data={
+                'redirect_to': 'misago:users',
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
+
+        # invalid redirect (non url)
+        response = self.client.post(
+            reverse('misago:login'),
+            data={
+                'redirect_to': 'canada goose not url',
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
+
     def test_logout_view(self):
         """logout view logs user out on post"""
         response = self.client.post(
