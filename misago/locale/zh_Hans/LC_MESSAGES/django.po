@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-20 23:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: mayne <dreama9ain@gmail.com>, 2017\n"
+"Last-Translator: Neo Chang <me@neoto.xin>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2674,7 +2674,7 @@ msgstr "内容审批不能撤销。"
 
 #: threads/api/postendpoints/patch_post.py:184
 msgid "One or more posts to update could not be found."
-msgstr ""
+msgstr "无法找到一条或多条要更新的帖子。"
 
 #: threads/api/postendpoints/split.py:14
 msgid "You can't split posts from this thread."
@@ -2783,11 +2783,11 @@ msgstr "主题帖标题无效"
 
 #: threads/api/threadendpoints/patch.py:72
 msgid "You can't change globally pinned threads weights in this category."
-msgstr ""
+msgstr "您不能编辑该类别全局置顶帖的权重。"
 
 #: threads/api/threadendpoints/patch.py:78
 msgid "You can't pin threads globally in this category."
-msgstr ""
+msgstr "您无法全局置顶该类别的帖子。"
 
 #: threads/api/threadendpoints/patch.py:104
 msgid "You can't move thread to the category it's already in."
