@@ -65,7 +65,7 @@ _book/
 # Local development stuff
 dev/
 dev-manage.py
-futuredep/
+.vscode/
 venv/
 venv2/
 venv3/
