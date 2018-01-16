@@ -55,9 +55,6 @@ export class GuestNav extends GuestMenu {
     /* jshint ignore:start */
     return (
       <div className="nav nav-guest">
-        <div className="navbar-left">
-          <NavbarSearch />
-        </div>
         <button
           className="btn navbar-btn btn-default"
           onClick={this.showSignInModal}
@@ -68,6 +65,9 @@ export class GuestNav extends GuestMenu {
         <RegisterButton className="navbar-btn btn-success btn-outline">
           {gettext("Register")}
         </RegisterButton>
+        <div className="navbar-left">
+          <NavbarSearch />
+        </div>
       </div>
     );
     /* jshint ignore:end */
