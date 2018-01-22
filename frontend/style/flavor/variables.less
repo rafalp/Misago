@@ -25,8 +25,6 @@
 //
 //## Settings for some of the most global styles.
 
-//** Background color for `<body>`.
-@body-bg:               #fafafa;
 //** Global text color on `<body>`.
 @text-color:            #212121;
 
@@ -123,24 +121,54 @@
 //
 //##
 
-// Basics of a navbar
-@navbar-default-color:             #757575;
-@navbar-default-bg:                #fff;
-
 // Navbar links
-@navbar-default-link-color:                #757575;
-@navbar-default-link-hover-color:          #424242;
-@navbar-default-link-hover-bg:             transparent;
-@navbar-default-link-active-color:         @text-color;
-@navbar-default-link-active-bg:            darken(@navbar-default-bg, 6.5%);
-@navbar-default-link-disabled-color:       #ccc;
-@navbar-default-link-disabled-bg:          transparent;
+@navbar-inverse-link-color:                #e0e0e0;
+@navbar-inverse-link-hover-color:          #fff;
+@navbar-inverse-link-hover-bg:             transparent;
+@navbar-inverse-link-active-color:         #fff;
+@navbar-inverse-link-active-bg:            darken(@navbar-default-bg, 6.5%);
+@navbar-inverse-link-disabled-color:       #ccc;
+@navbar-inverse-link-disabled-bg:          transparent;
+
+//** Compact navbar
+@navbar-compact-link-color:                #e0e0e0;
+@navbar-compact-link-hover-color:          #212121;
+@navbar-compact-link-hover-bg:             #fafafa;
 
 // Navbar brand label
-@navbar-default-brand-color:               #651fff;
-@navbar-default-brand-hover-color:         #651fff;
-@navbar-default-brand-hover-bg:            transparent;
+@navbar-inverse-brand-color:               #fff;
+@navbar-inverse-brand-hover-color:         #fff;
+@navbar-inverse-brand-hover-bg:            transparent;
 
+// Sign in button
+@btn-sign-in-color:               #e0e0e0;
+@btn-sign-in-border:              transparent;
+@btn-sign-in-bg:                  transparent;
+
+@btn-sign-in-hover-color:         #fff;
+@btn-sign-in-hover-border:        #666060;
+@btn-sign-in-hover-bg:            #666060;
+
+@btn-sign-in-active-color:        #fff;
+@btn-sign-in-active-border:       #424242;
+@btn-sign-in-active-bg:           #424242;
+
+@btn-sign-in-radius:                100px;
+
+// Register button
+@btn-register-color:              #e0e0e0;
+@btn-register-border:             #757575;
+@btn-register-bg:                 transparent;
+
+@btn-register-hover-color:        #212121;
+@btn-register-hover-border:       #fff;
+@btn-register-hover-bg:           #fff;
+
+@btn-register-active-color:       #212121;
+@btn-register-active-border:      #bdbdbd;
+@btn-register-active-bg:          #bdbdbd;
+
+@btn-register-radius:               100px;
 
 //== Page header
 //
@@ -148,17 +176,17 @@
 
 // Basics
 //** Background
-@page-header-bg:              #f4f5f6;
+@page-header-bg:              #512da8;
 
 //** Heading color
-@page-header-color:               @gray-dark;
+@page-header-color:               #fff;
 
 //** Other text color
-@page-header-text-color:          @gray-light;
+@page-header-text-color:          #ede7f6;
 //** Link color
-@page-header-link-color:          @gray-dark;
+@page-header-link-color:          #fff;
 //** Text color
-@page-header-link-hover-color:    @text-color;
+@page-header-link-hover-color:    #f5f5f5;
 
 //** Tabs bar background
 @page-tabs-bg:              fadeOut(#fff, 40%);

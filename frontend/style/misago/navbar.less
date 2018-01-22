@@ -12,13 +12,24 @@
 .navbar .navbar-full {
   // Brand
   .navbar-brand {
+    padding-top: (@navbar-height - @navbar-icon-height) / 2;
+    padding-bottom: (@navbar-height - @navbar-icon-height) / 2;
+
+    font-size: @font-size-base * 1.5;
+
     &>* {
       display: inline-block;
+      vertical-align: middle;
     }
 
     img {
-      height: 16px;
+      height: @navbar-icon-height;
+      margin-right: @padding-base-horizontal / 2;
     }
+  }
+
+  .navbar-nav > li > a {
+    font-size: @font-size-base * 1.2;
   }
 
   .navbar-icon {
@@ -29,11 +40,11 @@
     padding-bottom: (@navbar-height - 28px) / 2;
     position: relative;
 
-    color: @navbar-default-link-color;
+    color: @navbar-inverse-link-color;
 
     &:hover, &:focus {
-      color: @navbar-default-link-hover-color;
-      background-color: @navbar-default-link-hover-bg;
+      color: @navbar-inverse-link-hover-color;
+      background-color: @navbar-inverse-link-hover-bg;
     }
 
     .material-icon {
@@ -107,12 +118,12 @@
 
     width: 100%;
 
-    color: @navbar-default-link-color;
+    color: @navbar-compact-link-color;
     text-align: center;
 
-    &:hover, &:focus {
-      color: @navbar-default-link-hover-color;
-      background-color: @navbar-default-link-hover-bg;
+    &.active, &:hover, &:focus {
+      color: @navbar-compact-link-hover-color;
+      background-color: @navbar-compact-link-hover-bg;
     }
 
     &>img {
