@@ -195,40 +195,41 @@
 }
 
 
-// special buttons: sign in and register
-.btn-sign-in {
-  border-radius: @btn-sign-in-radius;
+// sign in and register buttons in navbar
+.navbar-misago {
+  .btn-sign-in {
+    border-radius: @navbar-btn-sign-in-radius;
 
-  .misago-btn-outline(
-    @btn-sign-in-color,
-    @btn-sign-in-bg,
-    @btn-sign-in-border,
+    .misago-btn-outline(
+      @navbar-btn-sign-in-color,
+      @navbar-btn-sign-in-bg,
+      @navbar-btn-sign-in-border,
 
-    @btn-sign-in-hover-color,
-    @btn-sign-in-hover-bg,
-    @btn-sign-in-hover-border,
+      @navbar-btn-sign-in-hover-color,
+      @navbar-btn-sign-in-hover-bg,
+      @navbar-btn-sign-in-hover-border,
 
-    @btn-sign-in-active-color,
-    @btn-sign-in-active-bg,
-    @btn-sign-in-active-border
-  );
-}
+      @navbar-btn-sign-in-active-color,
+      @navbar-btn-sign-in-active-bg,
+      @navbar-btn-sign-in-active-border
+    );
+  }
 
+  .btn-register {
+    border-radius: @navbar-btn-register-radius;
 
-.btn-register {
-  border-radius: @btn-register-radius;
+    .misago-btn-outline(
+      @navbar-btn-register-color,
+      @navbar-btn-register-bg,
+      @navbar-btn-register-border,
 
-  .misago-btn-outline(
-    @btn-register-color,
-    @btn-register-bg,
-    @btn-register-border,
+      @navbar-btn-register-hover-color,
+      @navbar-btn-register-hover-bg,
+      @navbar-btn-register-hover-border,
 
-    @btn-register-hover-color,
-    @btn-register-hover-bg,
-    @btn-register-hover-border,
-
-    @btn-register-active-color,
-    @btn-register-active-bg,
-    @btn-register-active-border
-  );
+      @navbar-btn-register-active-color,
+      @navbar-btn-register-active-bg,
+      @navbar-btn-register-active-border
+    );
+  }
 }

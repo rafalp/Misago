@@ -37,7 +37,7 @@ export class GuestMenu extends React.Component {
             </div>
             <div className="col-xs-6">
 
-              <RegisterButton className="btn-success btn-register btn-block">
+              <RegisterButton className="btn-primary btn-register btn-block">
                 {gettext("Register")}
               </RegisterButton>
 
@@ -62,7 +62,7 @@ export class GuestNav extends GuestMenu {
         >
           {gettext("Sign in")}
         </button>
-        <RegisterButton className="navbar-btn btn-success btn-register">
+        <RegisterButton className="navbar-btn btn-primary btn-register">
           {gettext("Register")}
         </RegisterButton>
         <div className="navbar-left">
