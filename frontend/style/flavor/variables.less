@@ -177,7 +177,7 @@
 
 // Basics
 //** Background
-@page-header-bg:              #512da8;
+@page-header-bg:              #6200ea;
 
 //** Heading color
 @page-header-color:               #fff;
@@ -189,20 +189,45 @@
 //** Text color
 @page-header-link-hover-color:    #f5f5f5;
 
-//** Tabs bar background
-@page-tabs-bg:              fadeOut(#fff, 40%);
+//** Heading min height
+@page-header-min-height:            8px;
 
-@page-tabs-link-color:      @gray-light;
+// Buttons
+//** Default
+@page-header-btn-default-color:              #fff;
+@page-header-btn-default-bg:                 #7c4dff;
+
+@page-header-btn-default-hover-color:        #fff;
+@page-header-btn-default-hover-bg:           #651fff;
+
+@page-header-btn-default-active-color:       #fff;
+@page-header-btn-default-active-bg:          #6200ea;
+
+//** Primary
+@page-header-btn-primary-color:              #424242;
+@page-header-btn-primary-bg:                 #f5f5f5;
+
+@page-header-btn-primary-hover-color:        #212121;
+@page-header-btn-primary-hover-bg:           #fff;
+
+@page-header-btn-primary-active-color:       #fff;
+@page-header-btn-primary-active-bg:          #212121;
+
+// Tabs
+@page-tabs-bg:              transparent;
+
+@page-tabs-link-color:      #ede7f6;
 @page-tabs-link-bg:         transparent;
 
-@page-tabs-link-hover-color:      @text-color;
-@page-tabs-link-hover-bg:         transparent;
+@page-tabs-link-hover-color:      #fff;
+@page-tabs-link-hover-bg:         #7c4dff;
 
-@page-tabs-link-focus-color:      @text-color;
-@page-tabs-link-focus-bg:         transparent;
+@page-tabs-link-focus-color:      #fff;
+@page-tabs-link-focus-bg:         #7c4dff;
 
-@page-tabs-link-active-color:     @link-color;
-@page-tabs-link-active-bg:        transparent;
+@page-tabs-link-active-color:     #424242;
+@page-tabs-link-active-bg:        #fff;
+
 
 //== Footer
 //
@@ -214,7 +239,7 @@
 @page-footer-link-hover-color:       #212121;
 
 @page-footer-brand-color:            #b388ff;
-@page-footer-brand-hover-color:      #7c4dff;
+@page-footer-brand-hover-color:      lighten(#7c4dff, 5%);
 
 
 //== Auth Message
@@ -287,9 +312,9 @@
 //** Dropdown link text color.
 @dropdown-link-color:            @gray-dark;
 //** Hover color for dropdown links.
-@dropdown-link-hover-color:      @component-active-color;
+@dropdown-link-hover-color:      #FAFAFA;
 //** Hover background for dropdown links.
-@dropdown-link-hover-bg:         @component-active-bg;
+@dropdown-link-hover-bg:         #424242;
 
 //** Active dropdown menu item text color.
 @dropdown-link-active-color:     @component-active-color;
@@ -361,7 +386,8 @@
 //##
 
 //** `.list-group-item` border color
-@list-group-border:             #eee;
+@list-group-border:             @gray-lighter;
+@list-group-border-radius:      @border-radius-small;
 
 
 @list-group-link-color:         @gray-light;
