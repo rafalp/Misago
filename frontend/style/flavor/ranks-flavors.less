@@ -2,16 +2,11 @@
 // Default flavors for user ranks
 // --------------------------------------------------
 
-.post-rank-flavor(@border, @title, @color) {
+.post-rank-flavor(@border, @title) {
   .panel-post {
-    background: @body-bg;
     border: 2px solid @border;
     border-radius: @panel-border-radius;
     padding: @panel-body-padding - 2px;
-    
-    .misago-markup {
-      color: @color;
-    }
   }
 
   .user-title {
@@ -78,19 +73,19 @@
 
 // Posts
 .post-primary {
-  .post-rank-flavor(#7e57c2, #6200ea, #4a148c);
+  .post-rank-flavor(#7e57c2, #6200ea);
 }
 
 .post-success {
-  .post-rank-flavor(#66bb6a, #388e3c, #1b5e20);
+  .post-rank-flavor(#66bb6a, #388e3c);
 }
 
 .post-warning {
-  .post-rank-flavor(#ff7043, #ff6d00, #bf360c);
+  .post-rank-flavor(#ff7043, #ff6d00);
 }
 
 .post-danger {
-  .post-rank-flavor(#f44336, #d50000, #b71c1c);
+  .post-rank-flavor(#f44336, #d50000);
 }
 
 
