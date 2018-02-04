@@ -4,20 +4,21 @@
 
 
 .list-group {
+  border-radius: @list-group-border-radius;
   .shadow-2dp();
-}
 
-.list-group .list-group-item {
-  border-left: none;
-  border-right: none;
-}
+  .list-group-item {
+    border-left-color: @list-group-outer-border;
+    border-right-color: @list-group-outer-border;
+  }
 
-.list-group .list-group-item:first-child {
-  border-top: none;
-}
+  .list-group-item:first-child {
+    border-top-color: @list-group-outer-border;
+  }
 
-.list-group .list-group-item:last-child {
-  border-bottom: none;
+  .list-group-item:last-child {
+    border-bottom-color: @list-group-outer-border;
+  }
 }
 
 .list-group-item.empty-message {

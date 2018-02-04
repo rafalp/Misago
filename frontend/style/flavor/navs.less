@@ -8,7 +8,17 @@
 
 
 .nav-side>.list-group-item {
+  border-left: none;
+  border-right: none;
   margin-bottom: 1px;
+
+  &:first-child {
+    border-top: none;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
 
   &, &:link, &:visited {
     background: @side-nav-bg;
