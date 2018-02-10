@@ -2763,7 +2763,7 @@ msgstr "Nombre total de messages"
 msgid "%(users)s user have this rank."
 msgid_plural "%(users)s users have this rank."
 msgstr[0] "%(users)s ont ce classement"
-msgstr[1] "%(users)s ont ce classement"
+msgstr[1] "%(users)s ont ce rang"
 
 #: templates/misago/userslists/rank.html:119
 msgid "There are no users with this rank at the moment."
@@ -4937,7 +4937,7 @@ msgstr "Compte utilisateur"
 
 #: users/admin.py:87
 msgid "Ranks"
-msgstr "Classements"
+msgstr "Rangs"
 
 #: users/admin.py:96
 msgid "Bans"
@@ -5372,7 +5372,7 @@ msgstr "Administrateurs uniquement"
 
 #: users/forms/admin.py:351
 msgid "All ranks"
-msgstr "Tous les rangs."
+msgstr "Tous les rangs"
 
 #: users/forms/admin.py:358
 msgid "All roles"
@@ -6181,7 +6181,7 @@ msgstr "Peut chercher les profils utilisateurs"
 
 #: users/permissions/profiles.py:27
 msgid "Can see other members name history"
-msgstr "Peut accéder à l'historique des autres membres."
+msgstr "Peut accéder à l'historique des autres membres"
 
 #: users/permissions/profiles.py:29
 msgid "Can see members bans details"
@@ -6203,15 +6203,15 @@ msgstr "Vous pouvez suivre d'autres utilisateurs"
 
 #: users/permissions/profiles.py:47
 msgid "Can be blocked by other users"
-msgstr "Peut être bloqué par d'autres utilisateurs."
+msgstr "Peut être bloqué par d'autres utilisateurs"
 
 #: users/permissions/profiles.py:50
 msgid "Can see members e-mails"
-msgstr "Peut accéder aux courriels des membres."
+msgstr "Peut voir les courriels des membres"
 
 #: users/permissions/profiles.py:51
 msgid "Can see members IPs"
-msgstr "Peut accéder aux adresses IPs des membres."
+msgstr "Peut voir les adresses IPs des membres"
 
 #: users/permissions/profiles.py:52
 msgid "Can see members that hide their presence"
@@ -6274,11 +6274,11 @@ msgstr "Ne pas dire"
 
 #: users/profilefields/default.py:33
 msgid "Female"
-msgstr "Femelle"
+msgstr "Femme"
 
 #: users/profilefields/default.py:34
 msgid "Male"
-msgstr "Male"
+msgstr "Homme"
 
 #: users/profilefields/default.py:40
 msgid "Website"

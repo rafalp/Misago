@@ -2,11 +2,50 @@
 // Navs Flavor
 // --------------------------------------------------
 
+.nav-side {
+  .box-shadow(none);
+}
 
-.nav-side>a {
-  &.active .badge {
-    background: @list-group-active-color;
 
-    color: @list-group-active-bg;
+.nav-side>.list-group-item {
+  border-left: none;
+  border-right: none;
+  margin-bottom: 1px;
+
+  &:first-child {
+    border-top: none;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &, &:link, &:visited {
+    background: @side-nav-bg;
+    border: none;
+    
+    color: @side-nav-color;
+  }
+
+  &:hover, &:focus, &:active {
+    background: @side-nav-hover-bg;
+    
+    color: @side-nav-hover-color;
+  }
+
+  &.active {
+    &, &:link, &:visited,
+    &:hover, &:focus, &:active {
+      background: @side-nav-active-bg;
+      
+      color: @side-nav-active-color;
+      font-weight: bold;
+
+      .badge {
+        background: @list-group-active-color;
+
+        color: @list-group-active-bg;
+      }
+    }
   }
 }

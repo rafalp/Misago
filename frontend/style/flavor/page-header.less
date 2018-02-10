@@ -10,14 +10,19 @@
 }
 
 .page-header-bg {
-  background-color: @page-header-bg;
-  background: url('../img/page-header.png');
-
-  .shadow-4dp();
+  background: @page-header-bg;
+  background-image: url('../img/page-header.svg');
+  background-size: cover;
   
   @media screen and (min-width: @screen-md-min) {
     margin-bottom: @line-height-computed * 2;
   }
+}
+
+
+// Min-height the line on headless pages
+.page-header-bg {
+  min-height: @page-header-min-height;
 }
 
 
@@ -27,6 +32,36 @@
     color: @page-header-color;
     font-weight: 400;
     text-shadow: 0px 1px 1px @page-header-bg;
+  }
+}
+
+
+// Buttons
+.page-header .btn-outline {
+  &.btn-default {
+    .misago-btn(
+      @page-header-btn-default-color,
+      @page-header-btn-default-bg,
+
+      @page-header-btn-default-hover-color,
+      @page-header-btn-default-hover-bg,
+
+      @page-header-btn-default-active-color,
+      @page-header-btn-default-active-bg
+    );
+  }
+
+  &.btn-primary {
+    .misago-btn(
+      @page-header-btn-primary-color,
+      @page-header-btn-primary-bg,
+
+      @page-header-btn-primary-hover-color,
+      @page-header-btn-primary-hover-bg,
+
+      @page-header-btn-primary-active-color,
+      @page-header-btn-primary-active-bg
+    );
   }
 }
 
@@ -43,6 +78,18 @@
 
     a:hover, a:focus, a:active {
       color: @page-header-link-hover-color;
+    }
+
+    .user-status.user-banned, 
+    .user-status.user-online, 
+    .user-status.user-offline {
+      .status-icon {
+        color: @page-header-text-color;
+      }
+    }
+    
+    .item-title {
+      color: @page-header-link-color !important;
     }
   }
 }
@@ -83,29 +130,28 @@
 
 
 // Header tabs
-.page-tabs {
+.page-header .page-tabs {
   background-color: @page-tabs-bg;
+  margin-top: @line-height-computed * 1.66;
 
   li a {
-    padding-bottom: 7px;
+    font-weight: bold;
 
     &, &:link, &:visited {
       background-color: @page-tabs-link-bg;
-      border-bottom: 3px solid transparent;
+      border-radius: @border-radius-small @border-radius-small 0 0;
 
       color: @page-tabs-link-color;
     }
 
     &:hover, &:focus {
       background-color: @page-tabs-link-hover-bg;
-      border-bottom: 3px solid lighten(@page-tabs-link-hover-color, 75%);
 
       color: @page-tabs-link-hover-color;
   
       @media screen and (max-width: @screen-sm-max) {
         // sticky hover on touch devices is confusing, so don.t add it
         background-color: @page-tabs-link-bg;
-        border-bottom: 3px solid transparent;
 
         color: @page-tabs-link-color;
       }
@@ -115,7 +161,6 @@
   li.active a {
     &, &:link, &:active, &:visited, &:hover, &:focus {
       background-color: @page-tabs-link-active-bg;
-      border-bottom: 3px solid @page-tabs-link-active-color;
 
       color: @page-tabs-link-active-color;
     }

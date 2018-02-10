@@ -3,10 +3,8 @@
 // --------------------------------------------------
 
 .post-rank-flavor(@border, @title) {
-  .panel-body {
-    border: 2px solid @border;
-    border-radius: @panel-border-radius;
-    padding: @panel-body-padding - 2px;
+  .panel-post {
+    border-color: @border;
   }
 
   .user-title {
@@ -19,8 +17,9 @@
   }
 }
 
-.card-rank-flavor(@border, @title) {
+.card-rank-flavor(@border, @title, @color) {
   .panel-body {
+    background: @body-bg;
     border: 2px solid @border;
     border-radius: @panel-border-radius;
     padding: @panel-body-padding - 2px;
@@ -35,6 +34,10 @@
         color: @title;
       }
     }
+  }
+
+  .user-card-stats li {
+    color: @color;
   }
 }
 
@@ -68,56 +71,56 @@
 
 // Posts
 .post-primary {
-  .post-rank-flavor(#d1c4e9, #6200ea);
+  .post-rank-flavor(#b388ff, #6200ea);
 }
 
 .post-success {
-  .post-rank-flavor(#c8e6c9, #388e3c);
+  .post-rank-flavor(#00c853, #388e3c);
 }
 
 .post-warning {
-  .post-rank-flavor(#ffe0b2, #ff6d00);
+  .post-rank-flavor(#ffab40, #ff6d00);
 }
 
 .post-danger {
-  .post-rank-flavor(#ffcdd2, #d50000);
+  .post-rank-flavor(#ff8a80, #d50000);
 }
 
 
 // Cards
 .user-card-primary {
-  .card-rank-flavor(#d1c4e9, #6200ea);
+  .card-rank-flavor(#b388ff, #6200ea, #9575cd);
 }
 
 .user-card-success {
-  .card-rank-flavor(#c8e6c9, #388e3c);
+  .card-rank-flavor(#00c853, #388e3c, #66bb6a);
 }
 
 .user-card-warning {
-  .card-rank-flavor(#ffe0b2, #ff6d00);
+  .card-rank-flavor(#ffab40, #ff6d00, #ff6e40);
 }
 
 .user-card-danger {
-  .card-rank-flavor(#ffcdd2, #d50000);
+  .card-rank-flavor(#ff8a80, #d50000, #e57373);
 }
 
 
 // Posters ranking
 .list-group {
   .list-group-rank-primary {
-    .list-group-rank-flavor(#d1c4e9, #6200ea);
+    .list-group-rank-flavor(#7e57c2, #6200ea);
   }
 
   .list-group-rank-success {
-    .list-group-rank-flavor(#c8e6c9, #388e3c);
+    .list-group-rank-flavor(#9ccc65, #388e3c);
   }
 
   .list-group-rank-warning {
-    .list-group-rank-flavor(#ffe0b2, #ff6d00);
+    .list-group-rank-flavor(#ff7043, #ff6d00);
   }
 
   .list-group-rank-danger {
-    .list-group-rank-flavor(#ffcdd2, #d50000);
+    .list-group-rank-flavor(#f44336, #d50000);
   }
 }
 

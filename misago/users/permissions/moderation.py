@@ -101,8 +101,6 @@ def add_acl_to_user(user, target):
         'can_rename',
         'can_moderate_avatar',
         'can_moderate_signature',
-        'can_edit_profile_details',
-        'can_ban',
     ]
 
     for permission in mod_permissions:

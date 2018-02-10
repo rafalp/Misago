@@ -14,7 +14,7 @@ export class Auth {
   }
 
   syncSession() {
-    let state = this._store.getState().auth;
+    const state = this._store.getState().auth;
     if (state.isAuthenticated) {
       this._local.set('auth', {
         isAuthenticated: true,
@@ -28,12 +28,17 @@ export class Auth {
   }
 
   watchState() {
+    const state = this._store.getState().auth;
     this._local.watch('auth', (newState) => {
       if (newState.isAuthenticated) {
         this._store.dispatch(signIn({
           username: newState.username
         }));
-      } else {
+      } else if (state.isAuthenticated) {
+        // check if we are authenticated in this tab
+        // because some browser plugins prune local store
+        // aggressively, forcing erroneous message to display here
+        // tracking bug #955
         this._store.dispatch(signOut());
       }
     });

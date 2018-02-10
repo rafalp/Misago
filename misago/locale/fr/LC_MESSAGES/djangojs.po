@@ -1953,7 +1953,7 @@ msgstr "Un ou plusieurs messages n'ont pas pu ȇtre modifiés:"
 
 #: static/misago/js/misago.js:15
 msgid "Posts options"
-msgstr "Options des messages"
+msgstr "Options"
 
 #: static/misago/js/misago.js:15
 msgid "Move posts"

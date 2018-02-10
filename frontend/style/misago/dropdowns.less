@@ -92,31 +92,18 @@
 }
 
 
-// Always displayed on mobile dropdown
-.mobile-dropdown, .compact-nav {
-  position: static;
-  margin: 0px;
-  overflow: auto;
-
-  &.open {
-    margin-bottom: @line-height-computed;
-  }
-}
-
-.compact-nav.open {
-  margin-top: @line-height-computed * -1;
+// Navbar's dropdown
+.mobile-dropdown {
+  position: relative;
 }
 
 .mobile-dropdown.open>.dropdown-menu, .compact-nav.open>.dropdown-menu {
   border: none;
   border-radius: 0;
-  .box-shadow(none);
 
   display: block;
   margin: 0px;
   width: 100%;
-
-  position: static;
 }
 
 

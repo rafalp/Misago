@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-20 23:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2017\n"
+"Last-Translator: Carlos López <carlos@vocalaze.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/misago/teams/65369/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2819,8 +2819,7 @@ msgstr "No puedes dividir publicaciones de este hilo."
 #: threads/api/postingendpoint/attachments.py:61
 #, python-format
 msgid "You don't have permission to remove \"%(attachment)s\" attachment."
-msgstr ""
-"No tienes permiso para eliminar el archivo adjunto \"%(attachment)s\"."
+msgstr "No tienes permiso para eliminar el archivo adjunto \"%(attachment)s\"."
 
 #: threads/api/postingendpoint/attachments.py:128
 #, python-format
@@ -3491,7 +3490,8 @@ msgstr "%(user)s no permite invitaciones a hilos privados."
 #: threads/permissions/privatethreads.py:270
 #, python-format
 msgid "%(user)s limits invitations to private threads to followed users."
-msgstr "%(user)s limita las invitaciones a hilos privados a usuarios seguidos."
+msgstr ""
+"%(user)s limita las invitaciones a hilos privados a usuarios seguidos."
 
 #: threads/permissions/threads.py:76
 msgid "Can see unapproved content list"

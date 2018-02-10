@@ -25,8 +25,6 @@
 //
 //## Settings for some of the most global styles.
 
-//** Background color for `<body>`.
-@body-bg:               #fafafa;
 //** Global text color on `<body>`.
 @text-color:            #212121;
 
@@ -54,7 +52,7 @@
 
 // Default - non primary
 @btn-default-color:              #757575;
-@btn-default-bg:                 #f3f3f3;
+@btn-default-bg:                 #f5f5f5;
 
 @btn-default-hover-color:        @text-color;
 @btn-default-hover-bg:           #e0e0e0;
@@ -123,23 +121,54 @@
 //
 //##
 
-// Basics of a navbar
-@navbar-default-color:             #757575;
-@navbar-default-bg:                #fff;
-
 // Navbar links
-@navbar-default-link-color:                #757575;
-@navbar-default-link-hover-color:          #424242;
-@navbar-default-link-hover-bg:             transparent;
-@navbar-default-link-active-color:         @text-color;
-@navbar-default-link-active-bg:            darken(@navbar-default-bg, 6.5%);
-@navbar-default-link-disabled-color:       #ccc;
-@navbar-default-link-disabled-bg:          transparent;
+@navbar-inverse-link-color:                #e0e0e0;
+@navbar-inverse-link-hover-color:          #fff;
+@navbar-inverse-link-hover-bg:             transparent;
+@navbar-inverse-link-active-color:         #fff;
+@navbar-inverse-link-active-bg:            darken(@navbar-default-bg, 6.5%);
+@navbar-inverse-link-disabled-color:       #ccc;
+@navbar-inverse-link-disabled-bg:          transparent;
+
+//** Compact navbar
+@navbar-compact-link-color:                #e0e0e0;
+@navbar-compact-link-hover-color:          #212121;
+@navbar-compact-link-hover-bg:             #fafafa;
 
 // Navbar brand label
-@navbar-default-brand-color:               #651fff;
-@navbar-default-brand-hover-color:         #651fff;
-@navbar-default-brand-hover-bg:            transparent;
+@navbar-inverse-brand-color:               #fff;
+@navbar-inverse-brand-hover-color:         #fff;
+@navbar-inverse-brand-hover-bg:            transparent;
+
+// Sign in button
+@navbar-btn-sign-in-color:               #e0e0e0;
+@navbar-btn-sign-in-border:              transparent;
+@navbar-btn-sign-in-bg:                  transparent;
+
+@navbar-btn-sign-in-hover-color:         #fff;
+@navbar-btn-sign-in-hover-border:        #666060;
+@navbar-btn-sign-in-hover-bg:            #666060;
+
+@navbar-btn-sign-in-active-color:        #fff;
+@navbar-btn-sign-in-active-border:       #424242;
+@navbar-btn-sign-in-active-bg:           #424242;
+
+@navbar-btn-sign-in-radius:                100px;
+
+// Register button
+@navbar-btn-register-color:              #e0e0e0;
+@navbar-btn-register-border:             #757575;
+@navbar-btn-register-bg:                 transparent;
+
+@navbar-btn-register-hover-color:        #212121;
+@navbar-btn-register-hover-border:       #fff;
+@navbar-btn-register-hover-bg:           #fff;
+
+@navbar-btn-register-active-color:       #212121;
+@navbar-btn-register-active-border:      #bdbdbd;
+@navbar-btn-register-active-bg:          #bdbdbd;
+
+@navbar-btn-register-radius:               100px;
 
 
 //== Page header
@@ -148,32 +177,57 @@
 
 // Basics
 //** Background
-@page-header-bg:              #f4f5f6;
+@page-header-bg:              #6200ea;
 
 //** Heading color
-@page-header-color:               @gray-dark;
+@page-header-color:               #fff;
 
 //** Other text color
-@page-header-text-color:          @gray-light;
+@page-header-text-color:          #ede7f6;
 //** Link color
-@page-header-link-color:          @gray-dark;
+@page-header-link-color:          #fff;
 //** Text color
-@page-header-link-hover-color:    @text-color;
+@page-header-link-hover-color:    #f5f5f5;
 
-//** Tabs bar background
-@page-tabs-bg:              fadeOut(#fff, 40%);
+//** Heading min height
+@page-header-min-height:            8px;
 
-@page-tabs-link-color:      @gray-light;
+// Buttons
+//** Default
+@page-header-btn-default-color:              #fff;
+@page-header-btn-default-bg:                 #7c4dff;
+
+@page-header-btn-default-hover-color:        #fff;
+@page-header-btn-default-hover-bg:           #651fff;
+
+@page-header-btn-default-active-color:       #fff;
+@page-header-btn-default-active-bg:          #6200ea;
+
+//** Primary
+@page-header-btn-primary-color:              #424242;
+@page-header-btn-primary-bg:                 #f5f5f5;
+
+@page-header-btn-primary-hover-color:        #212121;
+@page-header-btn-primary-hover-bg:           #fff;
+
+@page-header-btn-primary-active-color:       #fff;
+@page-header-btn-primary-active-bg:          #212121;
+
+// Tabs
+@page-tabs-bg:              transparent;
+
+@page-tabs-link-color:      #ede7f6;
 @page-tabs-link-bg:         transparent;
 
-@page-tabs-link-hover-color:      @text-color;
-@page-tabs-link-hover-bg:         transparent;
+@page-tabs-link-hover-color:      #fff;
+@page-tabs-link-hover-bg:         #7c4dff;
 
-@page-tabs-link-focus-color:      @text-color;
-@page-tabs-link-focus-bg:         transparent;
+@page-tabs-link-focus-color:      #fff;
+@page-tabs-link-focus-bg:         #7c4dff;
 
-@page-tabs-link-active-color:     @link-color;
-@page-tabs-link-active-bg:        transparent;
+@page-tabs-link-active-color:     #424242;
+@page-tabs-link-active-bg:        #fff;
+
 
 //== Footer
 //
@@ -185,7 +239,7 @@
 @page-footer-link-hover-color:       #212121;
 
 @page-footer-brand-color:            #b388ff;
-@page-footer-brand-hover-color:      #7c4dff;
+@page-footer-brand-hover-color:      lighten(#7c4dff, 5%);
 
 
 //== Auth Message
@@ -258,31 +312,15 @@
 //** Dropdown link text color.
 @dropdown-link-color:            @gray-dark;
 //** Hover color for dropdown links.
-@dropdown-link-hover-color:      @component-active-color;
+@dropdown-link-hover-color:      #FAFAFA;
 //** Hover background for dropdown links.
-@dropdown-link-hover-bg:         @component-active-bg;
+@dropdown-link-hover-bg:         #424242;
 
 //** Active dropdown menu item text color.
 @dropdown-link-active-color:     @component-active-color;
 //** Active dropdown menu item background color.
 @dropdown-link-active-bg:        @component-active-bg;
 
-
-//** Background for the dropdown menu.
-@dropdown-inverse-bg:                    fadeOut(@gray, 3%);
-//** Divider color for between dropdown items.
-@dropdown-inverse-divider-bg:            @gray-light;
-
-//** Dropdown link text color.
-@dropdown-inverse-link-color:            @gray-lighter;
-//** Hover color for dropdown links.
-@dropdown-inverse-link-hover-color:      @component-active-color;
-//** Hover background for dropdown links.
-@dropdown-inverse-link-hover-bg:         @component-active-bg;
-
-//** Text color for headers within dropdown menus.
-@dropdown-inverse-header-color:          #fff;
-@dropdown-inverse-subheader-color:       darken(#fff, 15%);
 
 //** Default button in inversed dropdown
 @dropdown-btn-default-color:             darken(#fff, 30%);
@@ -342,14 +380,17 @@
 
 @panel-fieldset-color:           @gray;
 
+@panel-form-border:              #ddd;
+
 
 //== List group
 //
 //##
 
 //** `.list-group-item` border color
-@list-group-border:             #eee;
-
+@list-group-border:             @gray-lighter;
+@list-group-border-radius:      @border-radius-small;
+@list-group-outer-border:       #ddd;
 
 @list-group-link-color:         @gray-light;
 @list-group-link-hover-color:   @text-color;
@@ -365,11 +406,26 @@
 @list-group-active-border:      @list-group-border;
 
 
+//== Side nav
+//
+//##
+
+@side-nav-bg:               #f5f5f5;
+@side-nav-color:            #757575;
+
+@side-nav-hover-bg:         #e0e0e0;
+@side-nav-hover-color:      #424242;
+
+@side-nav-active-bg:        @component-active-bg;
+@side-nav-active-color:     @component-active-color;
+
+
 //== Wells
 //
 //##
 
 @well-bg:                     #fff;
+@well-border:                 #ddd;
 
 
 //== Page messages
@@ -381,6 +437,13 @@
 @message-icon-color:             #9575cd;
 @message-info-icon-color:        #9575cd;
 @message-success-icon-color:     #81c784;
+
+
+//== User cards
+//
+//##
+
+@user-card-bg:          #f5f5f5;
 
 
 //== Categories list
@@ -417,6 +480,9 @@
 //== Posts
 //
 //##
+
+@post-bg:                         @body-bg;
+@post-border:                     #ddd;
 
 @post-unread-label:               #aa00ff;
 @post-protected-icon:             #bdbdbd;
