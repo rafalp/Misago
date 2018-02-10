@@ -31,11 +31,11 @@ Misago aims to be complete, featured and modern forum solution that has no fear 
 Screenshots
 ===========
 
-.. image:: https://misago-project.org/media/mporg-home-small.png
+.. image:: https://misago-project.org/media/mporg-home-small.png?v2
    :target: https://misago-project.org
    :alt: Forum index
 
-.. image:: https://misago-project.org/media/mporg-thread-small.png
+.. image:: https://misago-project.org/media/mporg-thread-small.png?v2
    :target: https://misago-project.org
    :alt: Thread view
 
@@ -53,6 +53,7 @@ As of now Misago implements all features considered "must have" on live internet
 * Complete moderation toolset allowing admin-approved moderators to edit, move, hide, approve, delete or close user posted content. This also includes option to delete or block user accounts or avatars.
 * Ban system allows you to ban existing users as well as forbid certain user names, e-mails or IP addresses from registering accounts.
 * Permission system allowing you to control which features are available to users based on their rank, roles or category they are in.
+* Post accurate read tracker that lets your users spot threads with new posts as well as let moderators spot unapproved replies and non-moderators spot approved posts.
 * Private threads feature allowing users to create threads visible only to them and those they've invited. 
 * Python-based profile fields framework letting site owners to define custom fields for users to fill in complete with powerful customization options for custom requirements, display or validation logic.
 * Rich polls  system, allowing polls with public and private voters, single and multiple choices as well as ones that allow vote change or limit voting tp limited period of time.
@@ -69,7 +70,6 @@ Even more features will follow in future releases:
 * IP search for moderators to find `sock puppets <https://en.wikipedia.org/wiki/Sockpuppet_(Internet)>`_ or bot nets.
 * Mark post in question thread as answer, bringing basic Q&A functionality.
 * Notifications for users to notice content and events of concern faster.
-* Post accurate read tracker that lets moderators spot unapproved replies and non-moderators spot approved posts.
 * Sign in with Facebook/Google/Github/Steam/etc/ect.
 * Warning system for easy tracking users history of infractions and offenses.
 * WYSIWYM content editor for even easier post formatting.
