@@ -1486,11 +1486,11 @@ msgstr "Сейчас нет определённых ролей пользова
 #: templates/misago/admin/users/ban.html:6
 #: templates/misago/admin/users/ban.html:11 users/views/admin/users.py:72
 msgid "Ban users"
-msgstr "Блокировка пользователей"
+msgstr "Блокировать пользователей"
 
 #: templates/misago/admin/users/ban.html:16
 msgid "Ban selected users:"
-msgstr "Блокировка выбранных пользователей:"
+msgstr "Блокировать выбранных пользователей:"
 
 #: templates/misago/admin/users/ban.html:35
 #: templates/misago/admin/users/edit.html:103
@@ -2994,7 +2994,7 @@ msgstr "Неправильный заголовок темы."
 
 #: threads/api/threadendpoints/patch.py:72
 msgid "You can't change globally pinned threads weights in this category."
-msgstr ""
+msgstr "Вы не можете менять размеры глобальных тем в этой категории."
 
 #: threads/api/threadendpoints/patch.py:78
 msgid "You can't pin threads globally in this category."
@@ -3861,19 +3861,19 @@ msgstr "Эта тема закрыта. Вы не можете редактир�
 
 #: threads/permissions/threads.py:645
 msgid "You have to sign in to change threads weights."
-msgstr ""
+msgstr "Вы должны войти, чтобы менять размеры тем."
 
 #: threads/permissions/threads.py:654
 msgid "You can't change threads weights in this category."
-msgstr ""
+msgstr "Вы не можете менять размеры тем в этой категории."
 
 #: threads/permissions/threads.py:658
 msgid "This category is closed. You can't change threads weights in it."
-msgstr ""
+msgstr "Эта категория закрыта. Вы не можете менять размеры тем в ней."
 
 #: threads/permissions/threads.py:660
 msgid "This thread is closed. You can't change its weight."
-msgstr ""
+msgstr "Этот тема закрыта. Вы не можете менять ее размер."
 
 #: threads/permissions/threads.py:668 threads/permissions/threads.py:688
 msgid "You have to sign in to hide threads."
@@ -3964,7 +3964,7 @@ msgstr "Вы должны войти, чтобы объединять темы."
 
 #: threads/permissions/threads.py:793
 msgid "Other thread can't be merged with."
-msgstr ""
+msgstr "Другая тема не может быть объединена."
 
 #: threads/permissions/threads.py:794
 msgid "You can't merge threads in this category."
@@ -3972,7 +3972,7 @@ msgstr "Вы не можете объединять темы в этой кат�
 
 #: threads/permissions/threads.py:799
 msgid "Other thread's category is closed. You can't merge with it."
-msgstr ""
+msgstr "Категория в другой теме закрыта. Вы не можете объединять ее."
 
 #: threads/permissions/threads.py:800
 msgid "This category is closed. You can't merge it's threads."
@@ -3980,7 +3980,7 @@ msgstr "Эта категория закрыта. Вы не можете объ�
 
 #: threads/permissions/threads.py:803
 msgid "Other thread is closed and can't be merged with."
-msgstr ""
+msgstr "Другая тема закрыта и не может быть объединена."
 
 #: threads/permissions/threads.py:804
 msgid "This thread is closed. You can't merge it with other threads."
@@ -5200,6 +5200,8 @@ msgstr "Блокировка подписи"
 msgid ""
 "Setting this to yes will stop user from making changes to his/her signature."
 msgstr ""
+"Настройте это как \"да\", чтобы остановить пользователя изменять его /её "
+"подпись."
 
 #: users/forms/admin.py:146
 msgid "Optional message to user explaining why his/hers signature is locked."
@@ -5224,7 +5226,7 @@ msgstr "Кто может добавлять пользователей в пр�
 
 #: users/forms/admin.py:169
 msgid "Replid threads"
-msgstr ""
+msgstr "Отвеченные темы"
 
 #: users/forms/admin.py:219 users/serializers/moderation.py:42
 #, python-format
@@ -5240,6 +5242,8 @@ msgid ""
 "Ranks are used to group and distinguish users. They are also used to add "
 "permissions to groups of users."
 msgstr ""
+"Ранги используются для группировки и разпознавания пользователей. Они также "
+"используются для добавления разрешений для групп пользователей."
 
 #: users/forms/admin.py:248
 msgid "Roles"
@@ -5308,12 +5312,16 @@ msgid ""
 "Optional, singular version of rank name displayed by user names. For example"
 " \"GM\" or \"Dev\"."
 msgstr ""
+"Дополнительная, единичная версия имени ранга, которая показывается именами "
+"пользователей. Например, \"GM\" или \"Dev\"."
 
 #: users/forms/admin.py:405
 msgid ""
 "Optional description explaining function or status of members distincted "
 "with this rank."
 msgstr ""
+"Необязательное описание, объясняющее функцию или статус членов, связанных с "
+"этим рангом."
 
 #: users/forms/admin.py:414
 msgid "Rank can give additional roles to users with it."
@@ -5322,16 +5330,20 @@ msgstr "Ранг может давать дополнительные роли �
 #: users/forms/admin.py:419
 msgid "Optional css class added to content belonging to this rank owner."
 msgstr ""
+"Дополнительный класс CSS, добавленный к контенту, принадлежащий владельцу "
+"этого ранга."
 
 #: users/forms/admin.py:422
 msgid "Give rank dedicated tab on users list"
-msgstr ""
+msgstr "Дайте вкладку  рангу в списке пользователей"
 
 #: users/forms/admin.py:425
 msgid ""
 "Selecting this option will make users with this rank easily discoverable by "
 "others through dedicated page on forum users list."
 msgstr ""
+"Выбор данной опции сделает пользователей данного ранга легко распознаваемыми"
+" для других через соответствующий список пользователей на странице форума."
 
 #: users/forms/admin.py:450
 msgid "This name collides with other rank."
@@ -5403,6 +5415,10 @@ msgid ""
 "like ones from recently comprimised e-mail providers, without harming "
 "existing users."
 msgstr ""
+"При изменении этого на \"да\" проверка этой блокировки будет  возможна  "
+"только на стадии регистрации. Это хорошо, если вы хотите блокировать "
+"определенные регистрации, отклоненные недавно Email провайдерами, без ущерба"
+" существующих пользователей."
 
 #: users/forms/admin.py:510
 msgid "Banned value"
@@ -5449,7 +5465,7 @@ msgstr "Заблокированное значение начинается с"
 
 #: users/forms/admin.py:582
 msgid "Registration only"
-msgstr ""
+msgstr "Только регистрация"
 
 #: users/forms/admin.py:585 users/forms/admin.py:594
 msgid "Any"
@@ -5694,7 +5710,7 @@ msgstr "Не наблюдать"
 #: users/migrations/0006_update_settings.py:137
 #: users/migrations/0006_update_settings.py:156
 msgid "Put on watched threads list"
-msgstr ""
+msgstr "Поставить в отслеживаемый список тем"
 
 #: users/migrations/0002_users_settings.py:154
 #: users/migrations/0002_users_settings.py:173
@@ -5702,6 +5718,8 @@ msgstr ""
 #: users/migrations/0006_update_settings.py:159
 msgid "Put on watched threads list and e-mail user when somebody replies"
 msgstr ""
+"Поставить в отслеживаемый список тем и уведомлять пользователя по email, "
+"если кто-то отвечает"
 
 #: users/migrations/0002_users_settings.py:164
 #: users/migrations/0006_update_settings.py:150
@@ -5716,6 +5734,8 @@ msgstr "CAPTCHA"
 msgid ""
 "Those settings allow you to combat automatic registrations on your forum."
 msgstr ""
+"Эти настройки позволяют вам бороться с автоматическими регистрациями в вашем"
+" форуме."
 
 #: users/migrations/0002_users_settings.py:193
 msgid "Select CAPTCHA type"
@@ -5971,19 +5991,20 @@ msgstr "Можно блокировать пользователей"
 
 #: users/permissions/moderation.py:42
 msgid "Max length, in days, of imposed ban"
-msgstr ""
+msgstr "Максимальная длина соответствующей блокировки, в днях ."
 
 #: users/permissions/moderation.py:43
 msgid "Enter zero to let moderators impose permanent bans."
 msgstr ""
+"Введите ноль, чтобы позволить модераторам назначать постоянные блокировки."
 
 #: users/permissions/moderation.py:47
 msgid "Can lift bans"
-msgstr ""
+msgstr "Может снимать блокировки"
 
 #: users/permissions/moderation.py:49
 msgid "Max length, in days, of lifted ban"
-msgstr ""
+msgstr "Максимальная длина данной блокировки, в днях, ."
 
 #: users/permissions/moderation.py:50
 msgid "Enter zero to let moderators lift permanent bans."
@@ -6036,7 +6057,7 @@ msgstr "Вы не можете блокировать администратор
 
 #: users/permissions/moderation.py:174
 msgid "You can't lift bans."
-msgstr ""
+msgstr "Вы не можете снимать блокировки."
 
 #: users/permissions/moderation.py:177
 msgid "This user is not banned."
@@ -6044,12 +6065,13 @@ msgstr "Этот пользователь не заблокирован."
 
 #: users/permissions/moderation.py:182
 msgid "You can't lift permanent bans."
-msgstr ""
+msgstr "Вы не можете снимать постоянные блокировки."
 
 #: users/permissions/moderation.py:184
 #, python-format
 msgid "You can't lift bans that expire after %(expiration)s."
 msgstr ""
+"Вы не можете снимать блокировки, которые истекают после %(expiration)s."
 
 #: users/permissions/profiles.py:25
 msgid "Can browse users list"
@@ -6205,7 +6227,7 @@ msgstr "Это неправильный twitter аккаунт."
 
 #: users/profilefields/default.py:85
 msgid "Join IP"
-msgstr ""
+msgstr "Подсоединить IP-адрес"
 
 #: users/profilefields/default.py:99
 msgid "Last IP"
