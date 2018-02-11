@@ -51,7 +51,11 @@ class PrivacyPolicyTests(TestCase):
         request = MockRequest()
 
         context_dict = legal_links(request)
-        self.assertFalse(context_dict)
+
+        self.assertEqual(context_dict, {
+            'privacy_policy': None,
+            'terms_of_service': None,
+        })
         self.assertEqual(request.frontend_context['url'], {})
 
     def test_context_processor_misago_policy(self):
@@ -59,8 +63,12 @@ class PrivacyPolicyTests(TestCase):
         request = MockRequest()
 
         settings.override_setting('privacy_policy', 'Lorem ipsum')
-        legal_links(request)
+        context_dict = legal_links(request)
 
+        self.assertEqual(context_dict, {
+            'privacy_policy': 'Lorem ipsum',
+            'terms_of_service': None,
+        })
         self.assertEqual(request.frontend_context['url'], {
             'privacy_policy': reverse('misago:privacy-policy'),
         })
@@ -70,16 +78,24 @@ class PrivacyPolicyTests(TestCase):
         request = MockRequest()
 
         settings.override_setting('privacy_policy_link', 'http://test.com')
-        legal_links(request)
+        context_dict = legal_links(request)
 
+        self.assertEqual(context_dict, {
+            'privacy_policy': 'http://test.com',
+            'terms_of_service': None,
+        })
         self.assertEqual(request.frontend_context['url'], {
             'privacy_policy': 'http://test.com',
         })
 
         # set misago view too
         settings.override_setting('privacy_policy', 'Lorem ipsum')
-        legal_links(request)
+        context_dict = legal_links(request)
 
+        self.assertEqual(context_dict, {
+            'privacy_policy': 'http://test.com',
+            'terms_of_service': None,
+        })
         self.assertEqual(request.frontend_context['url'], {
             'privacy_policy': 'http://test.com',
         })
@@ -125,7 +141,11 @@ class TermsOfServiceTests(TestCase):
         request = MockRequest()
 
         context_dict = legal_links(request)
-        self.assertFalse(context_dict)
+
+        self.assertEqual(context_dict, {
+            'privacy_policy': None,
+            'terms_of_service': None,
+        })
         self.assertEqual(request.frontend_context['url'], {})
 
     def test_context_processor_misago_tos(self):
@@ -133,8 +153,12 @@ class TermsOfServiceTests(TestCase):
         request = MockRequest()
 
         settings.override_setting('terms_of_service', 'Lorem ipsum')
-        legal_links(request)
+        context_dict = legal_links(request)
 
+        self.assertEqual(context_dict, {
+            'privacy_policy': None,
+            'terms_of_service': 'Lorem ipsum',
+        })
         self.assertEqual(
             request.frontend_context['url'], {
                 'tos': reverse('misago:terms-of-service'),
@@ -146,16 +170,24 @@ class TermsOfServiceTests(TestCase):
         request = MockRequest()
 
         settings.override_setting('terms_of_service_link', 'http://test.com')
-        legal_links(request)
+        context_dict = legal_links(request)
 
+        self.assertEqual(context_dict, {
+            'privacy_policy': None,
+            'terms_of_service': 'http://test.com',
+        })
         self.assertEqual(request.frontend_context['url'], {
             'tos': 'http://test.com',
         })
 
         # set misago view too
         settings.override_setting('terms_of_service', 'Lorem ipsum')
-        legal_links(request)
+        context_dict = legal_links(request)
 
+        self.assertEqual(context_dict, {
+            'privacy_policy': None,
+            'terms_of_service': 'http://test.com',
+        })
         self.assertEqual(request.frontend_context['url'], {
             'tos': 'http://test.com',
         })

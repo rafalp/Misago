@@ -5,8 +5,6 @@ from misago.users.models import UsernameChange
 from .user import UserSerializer as BaseUserSerializer
 
 
-__all__ = ['UsernameChangeSerializer']
-
 UserSerializer = BaseUserSerializer.subset_fields('id', 'username', 'avatars', 'url')
 
 

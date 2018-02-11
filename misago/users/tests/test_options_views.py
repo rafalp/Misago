@@ -29,10 +29,13 @@ class ConfirmChangeEmailTests(AuthenticatedUserTestCase):
         link = '/api/users/%s/change-email/' % self.user.pk
 
         response = self.client.post(
-            link, data={'new_email': 'n3w@email.com',
-                        'password': self.USER_PASSWORD}
+            link,
+            data={
+                'new_email': 'n3w@email.com',
+                'password': self.USER_PASSWORD,
+            },
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
 
         for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
             if line.startswith('http://'):
@@ -74,7 +77,7 @@ class ConfirmChangePasswordTests(AuthenticatedUserTestCase):
                 'password': self.USER_PASSWORD,
             },
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
 
         for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
             if line.startswith('http://'):

@@ -95,7 +95,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
                 'password': self.USER_PASSWORD,
             },
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
 
         self.assertIn('Confirm e-mail change', mail.outbox[0].subject)
         for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
@@ -122,8 +122,6 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
     def test_change_email_user_password_whitespace(self):
         """api supports users with whitespace around their passwords"""
         user_password = ' old password '
-        new_password = ' N3wP@55w0rd '
-
         new_email = 'new@email.com'
 
         self.user.set_password(user_password)
@@ -138,7 +136,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
                 'password': user_password,
             },
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
 
         self.assertIn('Confirm e-mail change', mail.outbox[0].subject)
         for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:

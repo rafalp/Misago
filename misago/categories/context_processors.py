@@ -7,6 +7,11 @@ from .models import Category
 
 
 def preload_categories_json(request):
+    try:
+        user_acl_key = request.user.acl_key
+    except AttributeError:
+        return {}
+        
     cache_key = 'misago_categories_json_{}'.format(request.user.acl_key)
     categories_json = cache.get(cache_key, 'nada')
     if categories_json == 'nada':

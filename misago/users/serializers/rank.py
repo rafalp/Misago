@@ -4,9 +4,6 @@ from misago.core.utils import format_plaintext_for_html
 from misago.users.models import Rank
 
 
-__all__ = ['RankSerializer']
-
-
 class RankSerializer(serializers.ModelSerializer):
     description = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()

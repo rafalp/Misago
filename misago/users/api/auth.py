@@ -9,8 +9,8 @@ from django.shortcuts import get_object_or_404
 from misago.conf import settings
 from misago.core.mail import mail_user
 from misago.users.serializers import (
-    AnonymousUserSerializer, AuthenticatedUserSerializer, LoginSerializer,
-    ResendActivationSerializer, SendPasswordFormSerializer, ChangePasswordSerializer)
+    AnonymousUserSerializer, AuthenticatedUserSerializer, ChangeForgottenPasswordSerializer,
+    LoginSerializer, ResendActivationSerializer, SendPasswordFormSerializer)
 from misago.users.tokens import (
     make_activation_token, make_password_change_token)
 
@@ -161,7 +161,7 @@ def change_forgotten_password(request, pk):
     will change forgotten password
     """
     user = get_object_or_404(UserModel, pk=pk, is_active=True)
-    serializer = ChangePasswordSerializer(user, data=request.data)
+    serializer = ChangeForgottenPasswordSerializer(user, data=request.data)
     serializer.is_valid(raise_exception=True)
 
     serializer.save()

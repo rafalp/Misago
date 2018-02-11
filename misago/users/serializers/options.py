@@ -10,14 +10,6 @@ from misago.users.validators import validate_email, validate_username
 
 UserModel = get_user_model()
 
-__all__ = [
-    'ForumOptionsSerializer',
-    'EditSignatureSerializer',
-    'ChangeUsernameSerializer',
-    'ChangePasswordSerializer',
-    'ChangeEmailSerializer',
-]
-
 
 class ForumOptionsSerializer(serializers.ModelSerializer):
     class Meta:

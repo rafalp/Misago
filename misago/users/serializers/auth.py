@@ -15,15 +15,6 @@ from .user import UserSerializer
 
 UserModel = get_user_model()
 
-__all__ = [
-    'AuthenticatedUserSerializer',
-    'AnonymousUserSerializer',
-    'LoginSerializer',
-    'ResendActivationSerializer',
-    'SendPasswordFormSerializer',
-    'ChangePasswordSerializer',
-]
-
 
 class AuthenticatedUserSerializer(UserSerializer):
     email = serializers.SerializerMethodField()
@@ -128,7 +119,7 @@ class SendPasswordFormSerializer(GetUserSerializer):
         self.confirm_user_active(user)
 
 
-class ChangePasswordSerializer(serializers.Serializer, AuthMixin):
+class ChangeForgottenPasswordSerializer(serializers.Serializer, AuthMixin):
     password = serializers.CharField(
         max_length=255,
         trim_whitespace=False,

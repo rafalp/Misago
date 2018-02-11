@@ -87,7 +87,7 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
                 'password': self.USER_PASSWORD,
             },
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
 
         self.assertIn('Confirm password change', mail.outbox[0].subject)
         for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
@@ -125,7 +125,7 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
                 'password': old_password,
             },
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
 
         self.assertIn('Confirm password change', mail.outbox[0].subject)
         for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:

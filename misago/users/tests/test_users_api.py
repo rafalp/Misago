@@ -346,7 +346,7 @@ class UserForumOptionsTests(AuthenticatedUserTestCase):
                 'subscribe_to_replied_threads': 1,
             }
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
 
         self.reload_user()
 
@@ -364,7 +364,7 @@ class UserForumOptionsTests(AuthenticatedUserTestCase):
                 'subscribe_to_replied_threads': 1,
             }
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
 
         self.reload_user()
 
@@ -382,7 +382,7 @@ class UserForumOptionsTests(AuthenticatedUserTestCase):
                 'subscribe_to_replied_threads': 1,
             }
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 204)
 
         self.reload_user()
 

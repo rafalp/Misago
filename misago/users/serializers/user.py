@@ -10,8 +10,6 @@ from . import RankSerializer
 
 UserModel = get_user_model()
 
-__all__ = ['StatusSerializer', 'UserSerializer', 'UserCardSerializer']
-
 
 class StatusSerializer(serializers.Serializer):
     is_offline = serializers.BooleanField()

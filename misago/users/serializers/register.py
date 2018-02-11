@@ -13,9 +13,6 @@ from misago.users.bans import get_email_ban, get_ip_ban, get_username_ban
 UserModel = get_user_model()
 
 
-__all__ = ['RegisterUserSerializer']
-
-
 class RegisterUserSerializer(serializers.Serializer):
     username = serializers.CharField(
         max_length=255,

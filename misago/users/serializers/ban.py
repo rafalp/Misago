@@ -6,12 +6,6 @@ from misago.core.utils import format_plaintext_for_html
 from misago.users.models import Ban
 
 
-__all__ = [
-    'BanMessageSerializer',
-    'BanDetailsSerializer',
-]
-
-
 def serialize_message(message):
     if message:
         return {
