@@ -47,7 +47,7 @@ class ApiPatchDispatchTests(TestCase):
         # dispatch requires list as an argument
         response = patch.dispatch(MockRequest({}), {})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data['detail'], "PATCH request should be list of operations.")
+        self.assertEqual(response.data['detail'], "PATCH request should be a list of operations.")
 
         # valid dispatch
         response = patch.dispatch(

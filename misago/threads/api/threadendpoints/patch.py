@@ -209,9 +209,18 @@ def patch_add_participant(request, thread, value):
     if participant in [p.user for p in thread.participants_list]:
         raise ValidationError(_("This user is already thread participant."))
 
-    allow_add_participant(request.user, participant)
-    add_participant(request, thread, participant)
+    max_participants = request.user.acl_cache['max_private_thread_participants']
+    if max_participants:
+        current_participants = len(thread.participants_list)
+        if current_participants >= max_participants:
+            raise ValidationError(_("You can't add any more new users to this thread."))
+    
+    try:
+        allow_add_participant(request.user, participant)
+    except PermissionDenied as e:
+        raise ValidationError(six.text_type(e))
 
+    add_participant(request, thread, participant)
     make_participants_aware(request.user, thread)
     participants = ThreadParticipantSerializer(thread.participants_list, many=True)
 

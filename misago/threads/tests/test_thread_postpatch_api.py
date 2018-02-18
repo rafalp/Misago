@@ -27,7 +27,7 @@ class ThreadPostPatchApiTestCase(AuthenticatedUserTestCase):
             kwargs={
                 'thread_pk': self.thread.pk,
                 'pk': self.post.pk,
-            }
+            },
         )
 
     def patch(self, api_link, ops):
@@ -141,10 +141,10 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(response_json['detail'][0], "You can't protect posts in this category.")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't protect posts in this category.",
+        })
 
         self.refresh_post()
         self.assertFalse(self.post.is_protected)
@@ -165,10 +165,10 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(response_json['detail'][0], "You can't protect posts in this category.")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't protect posts in this category.",
+        })
 
         self.refresh_post()
         self.assertTrue(self.post.is_protected)
@@ -186,10 +186,10 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(response_json['detail'][0], "You can't protect posts you can't edit.")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't protect posts you can't edit.",
+        })
 
         self.refresh_post()
         self.assertFalse(self.post.is_protected)
@@ -210,10 +210,10 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(response_json['detail'][0], "You can't protect posts you can't edit.")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't protect posts you can't edit.",
+        })
 
         self.refresh_post()
         self.assertTrue(self.post.is_protected)
@@ -257,10 +257,10 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(response_json['detail'][0], "Content approval can't be reversed.")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "Content approval can't be reversed.",
+        })
 
         self.refresh_post()
         self.assertFalse(self.post.is_unapproved)
@@ -281,10 +281,10 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(response_json['detail'][0], "You can't approve posts in this category.")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't approve posts in this category.",
+        })
 
         self.refresh_post()
         self.assertTrue(self.post.is_unapproved)
@@ -311,13 +311,10 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0],
-            "This thread is closed. You can't approve posts in it.",
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This thread is closed. You can't approve posts in it.",
+        })
 
         self.refresh_post()
         self.assertTrue(self.post.is_unapproved)
@@ -344,13 +341,10 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0],
-            "This category is closed. You can't approve posts in it.",
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This category is closed. You can't approve posts in it.",
+        })
 
         self.refresh_post()
         self.assertTrue(self.post.is_unapproved)
@@ -374,10 +368,10 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(response_json['detail'][0], "You can't approve thread's first post.")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't approve thread's first post.",
+        })
 
         self.refresh_post()
         self.assertTrue(self.post.is_unapproved)
@@ -399,12 +393,10 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "You can't approve posts the content you can't see."
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't approve posts the content you can't see.",
+        })
 
         self.refresh_post()
         self.assertTrue(self.post.is_unapproved)
@@ -466,10 +458,10 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(response_json['detail'][0], "You can't hide posts in this category.")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't hide posts in this category.",
+        })
 
         self.refresh_post()
         self.assertFalse(self.post.is_hidden)
@@ -490,10 +482,10 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(response_json['detail'][0], "This post is protected. You can't hide it.")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This post is protected. You can't hide it.",
+        })
 
         self.refresh_post()
         self.assertFalse(self.post.is_hidden)
@@ -514,12 +506,10 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "You can't hide other users posts in this category."
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't hide other users posts in this category.",
+        })
 
         self.refresh_post()
         self.assertFalse(self.post.is_hidden)
@@ -540,12 +530,10 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "You can't hide posts that are older than 1 minute."
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't hide posts that are older than 1 minute.",
+        })
 
         self.refresh_post()
         self.assertFalse(self.post.is_hidden)
@@ -566,12 +554,10 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "This thread is closed. You can't hide posts in it."
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This thread is closed. You can't hide posts in it.",
+        })
 
         self.refresh_post()
         self.assertFalse(self.post.is_hidden)
@@ -592,12 +578,10 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "This category is closed. You can't hide posts in it."
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This category is closed. You can't hide posts in it.",
+        })
 
         self.refresh_post()
         self.assertFalse(self.post.is_hidden)
@@ -618,10 +602,10 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(response_json['detail'][0], "You can't hide thread's first post.")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't hide thread's first post.",
+        })
 
 
 class PostUnhideApiTests(ThreadPostPatchApiTestCase):
@@ -698,10 +682,10 @@ class PostUnhideApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(response_json['detail'][0], "You can't reveal posts in this category.")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't reveal posts in this category.",
+        })
 
         self.refresh_post()
         self.assertTrue(self.post.is_hidden)
@@ -725,12 +709,10 @@ class PostUnhideApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "This post is protected. You can't reveal it."
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This post is protected. You can't reveal it.",
+        })
 
         self.refresh_post()
         self.assertTrue(self.post.is_hidden)
@@ -752,12 +734,10 @@ class PostUnhideApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "You can't reveal other users posts in this category."
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't reveal other users posts in this category.",
+        })
 
         self.refresh_post()
         self.assertTrue(self.post.is_hidden)
@@ -779,12 +759,10 @@ class PostUnhideApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "You can't reveal posts that are older than 1 minute."
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't reveal posts that are older than 1 minute.",
+        })
 
         self.refresh_post()
         self.assertTrue(self.post.is_hidden)
@@ -808,12 +786,10 @@ class PostUnhideApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "This thread is closed. You can't reveal posts in it."
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This thread is closed. You can't reveal posts in it.",
+        })
 
         self.refresh_post()
         self.assertTrue(self.post.is_hidden)
@@ -837,12 +813,10 @@ class PostUnhideApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "This category is closed. You can't reveal posts in it."
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This category is closed. You can't reveal posts in it.",
+        })
 
         self.refresh_post()
         self.assertTrue(self.post.is_hidden)
@@ -863,10 +837,10 @@ class PostUnhideApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(response_json['detail'][0], "You can't reveal thread's first post.")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't reveal thread's first post.",
+        })
 
 
 class PostLikeApiTests(ThreadPostPatchApiTestCase):
@@ -883,7 +857,10 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertContains(response, "You can't like posts in this category.", status_code=400)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't like posts in this category.",
+        })
 
     def test_like_no_like_permission(self):
         """api validates user's permission to see posts likes"""
@@ -898,7 +875,10 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertContains(response, "You can't like posts in this category.", status_code=400)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't like posts in this category.",
+        })
 
     def test_like_post(self):
         """api adds user like to post"""
@@ -1177,12 +1157,10 @@ class EventHideApiTests(ThreadEventPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "You can't hide events in this category."
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't hide events in this category.",
+        })
 
         self.refresh_event()
         self.assertFalse(self.event.is_hidden)
@@ -1206,12 +1184,10 @@ class EventHideApiTests(ThreadEventPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "This thread is closed. You can't hide events in it."
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This thread is closed. You can't hide events in it.",
+        })
 
         self.refresh_event()
         self.assertFalse(self.event.is_hidden)
@@ -1235,12 +1211,10 @@ class EventHideApiTests(ThreadEventPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "This category is closed. You can't hide events in it."
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This category is closed. You can't hide events in it.",
+        })
 
         self.refresh_event()
         self.assertFalse(self.event.is_hidden)
@@ -1288,12 +1262,10 @@ class EventHideApiTests(ThreadEventPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "This thread is closed. You can't reveal events in it."
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This thread is closed. You can't reveal events in it.",
+        })
 
         self.refresh_event()
         self.assertTrue(self.event.is_hidden)
@@ -1320,12 +1292,10 @@ class EventHideApiTests(ThreadEventPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        self.assertEqual(
-            response_json['detail'][0], "This category is closed. You can't reveal events in it."
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This category is closed. You can't reveal events in it.",
+        })
 
         self.refresh_event()
         self.assertTrue(self.event.is_hidden)

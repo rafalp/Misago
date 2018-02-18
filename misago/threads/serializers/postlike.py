@@ -5,11 +5,6 @@ from django.urls import reverse
 from misago.threads.models import PostLike
 
 
-__all__ = [
-    'PostLikeSerializer',
-]
-
-
 class PostLikeSerializer(serializers.ModelSerializer):
     avatars = serializers.SerializerMethodField()
     liker_id = serializers.SerializerMethodField()

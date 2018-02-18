@@ -132,22 +132,20 @@ class BulkPatchSerializerTests(ThreadsBulkPatchApiTestCase):
             'ops': [{}],
         })
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 404)
         self.assertEqual(response.json(), {
-            'detail': "One or more threads to update could not be found.",
+            'detail': "NOT FOUND",
         })
 
     def test_ops_invalid(self):
         """api validates descriptions"""
         response = self.patch(self.api_link, {
-            'ids': self.ids[:1],
+            'ids': self.ids,
             'ops': [{}],
         })
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), [
-            {'id': self.ids[0], 'detail': ['undefined op']},
-        ])
+        self.assertEqual(response.json(), {'detail': '"op" parameter must be defined.'})
 
     def test_anonymous_user(self):
         """anonymous users can't use bulk actions"""
@@ -182,7 +180,7 @@ class ThreadAddAclApiTests(ThreadsBulkPatchApiTestCase):
             self.assertTrue(response_json[i]['acl'])
 
 
-class BulkThreadChangeTitleApiTests(ThreadsBulkPatchApiTestCase):
+class ThreadsBulkChangeTitleApiTests(ThreadsBulkPatchApiTestCase):
     def test_change_thread_title(self):
         """api changes thread title and resyncs the category"""
         self.override_acl({'can_edit_threads': 2})
@@ -230,20 +228,19 @@ class BulkThreadChangeTitleApiTests(ThreadsBulkPatchApiTestCase):
                 ]
             }
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [
+            {
+                'id': thread_id,
+                'status': 403,
+                'detail': "You can't edit threads in this category.",
+            } for thread_id in sorted(self.ids, reverse=True)
+        ])
 
-        response_json = response.json()
-        for i, thread in enumerate(self.threads):
-            self.assertEqual(response_json[i]['id'], thread.id)
-            self.assertEqual(
-                response_json[i]['detail'],
-                ["You can't edit threads in this category."],
-            )
 
-
-class BulkThreadMoveApiTests(ThreadsBulkPatchApiTestCase):
+class ThreadsBulkMoveApiTests(ThreadsBulkPatchApiTestCase):
     def setUp(self):
-        super(BulkThreadMoveApiTests, self).setUp()
+        super(ThreadsBulkMoveApiTests, self).setUp()
 
         Category(
             name='Category B',
@@ -321,7 +318,7 @@ class BulkThreadMoveApiTests(ThreadsBulkPatchApiTestCase):
         self.assertEqual(new_category.threads, 3)
 
 
-class BulkThreadsHideApiTests(ThreadsBulkPatchApiTestCase):
+class ThreadsBulksHideApiTests(ThreadsBulkPatchApiTestCase):
     def test_hide_thread(self):
         """api makes it possible to hide thread"""
         self.override_acl({'can_hide_threads': 1})
@@ -353,7 +350,7 @@ class BulkThreadsHideApiTests(ThreadsBulkPatchApiTestCase):
         self.assertNotIn(category.last_thread_id, self.ids)
 
 
-class BulkThreadsApproveApiTests(ThreadsBulkPatchApiTestCase):
+class ThreadsBulksApproveApiTests(ThreadsBulkPatchApiTestCase):
     def test_approve_thread(self):
         """api approvse threads and syncs category"""
         for thread in self.threads:

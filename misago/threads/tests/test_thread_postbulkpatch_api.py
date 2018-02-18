@@ -170,9 +170,7 @@ class BulkPatchSerializerTests(ThreadPostBulkPatchApiTestCase):
         })
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), [
-            {'id': self.ids[0], 'detail': ['undefined op']},
-        ])
+        self.assertEqual(response.json(), {'detail': '"op" parameter must be defined.'})
 
     def test_anonymous_user(self):
         """anonymous users can't use bulk actions"""
@@ -268,15 +266,14 @@ class BulkPostProtectApiTests(ThreadPostBulkPatchApiTestCase):
                 ]
             }
         )
-        self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
-        for i, post in enumerate(self.posts):
-            self.assertEqual(response_json[i]['id'], post.id)
-            self.assertEqual(
-                response_json[i]['detail'],
-                ["You can't protect posts in this category."],
-            )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), [
+            {
+                'id': post.id,
+                'status': 403,
+                'detail': "You can't protect posts in this category.",
+            } for post in self.posts
+        ])
 
         for post in Post.objects.filter(id__in=self.ids):
             self.assertFalse(post.is_protected)

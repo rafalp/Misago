@@ -10,13 +10,6 @@ from .poll import PollSerializer
 from .threadparticipant import ThreadParticipantSerializer
 
 
-__all__ = [
-    'ThreadSerializer',
-    'PrivateThreadSerializer',
-    'ThreadsListSerializer',
-]
-
-
 class ThreadSerializer(serializers.ModelSerializer, MutableFields):
     category = BasicCategorySerializer(many=False, read_only=True)
 

@@ -5,9 +5,6 @@ from django.urls import reverse
 from misago.threads.models import Attachment
 
 
-__all__ = ['AttachmentSerializer']
-
-
 class AttachmentSerializer(serializers.ModelSerializer):
     post = serializers.PrimaryKeyRelatedField(read_only=True)
 

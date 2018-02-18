@@ -5,12 +5,6 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
 
-__all__ = [
-    'NewVoteSerializer',
-    'PollVoteSerializer',
-]
-
-
 class NewVoteSerializer(serializers.Serializer):
     choices = serializers.ListField(
         child=serializers.CharField(),

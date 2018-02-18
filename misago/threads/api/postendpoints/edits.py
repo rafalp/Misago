@@ -2,6 +2,7 @@ from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
 from django.db.models import F
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.translation import ugettext as _
@@ -86,7 +87,7 @@ def get_edit(post, pk=None):
 
     edit = post.edits_record.first()
     if not edit:
-        raise Http404(_("Edits record is unavailable for this post."))
+        raise Http404()
     return edit
 
 

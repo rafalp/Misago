@@ -54,7 +54,7 @@ class ApiPatch(object):
     def dispatch(self, request, target):
         if not isinstance(request.data, list):
             return Response({
-                'detail': _("PATCH request should be list of operations."),
+                'detail': _("PATCH request should be a list of operations."),
             }, status=400)
 
         response = {'id': target.pk}

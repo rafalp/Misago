@@ -25,18 +25,6 @@ POSTS_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
 THREADS_LIMIT = settings.MISAGO_THREADS_PER_PAGE + settings.MISAGO_THREADS_TAIL
 
 
-__all__ = [
-    'DeletePostsSerializer',
-    'DeleteThreadsSerializer',
-    'MergePostsSerializer',
-    'MergeThreadSerializer',
-    'MergeThreadsSerializer',
-    'MovePostsSerializer',
-    'NewThreadSerializer',
-    'SplitPostsSerializer',
-]
-
-
 class DeletePostsSerializer(serializers.Serializer):
     error_empty_or_required = ugettext_lazy("You have to specify at least one post to delete.")
 

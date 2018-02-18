@@ -5,11 +5,6 @@ from django.urls import reverse
 from misago.threads.models import PostEdit
 
 
-__all__ = [
-    'PostEditSerializer',
-]
-
-
 class PostEditSerializer(serializers.ModelSerializer):
     diff = serializers.SerializerMethodField()
 

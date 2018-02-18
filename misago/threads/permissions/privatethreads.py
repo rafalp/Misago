@@ -220,12 +220,6 @@ def allow_add_participants(user, target):
         if target.is_closed:
             raise PermissionDenied(_("Only moderators can add participants to closed threads."))
 
-    max_participants = user.acl_cache['max_private_thread_participants']
-    current_participants = len(target.participants_list) - 1
-
-    if current_participants >= max_participants:
-        raise PermissionDenied(_("You can't add any more new users to this thread."))
-
 
 can_add_participants = return_boolean(allow_add_participants)
 

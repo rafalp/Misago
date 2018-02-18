@@ -3,9 +3,6 @@ from rest_framework import serializers
 from misago.threads.models import ThreadParticipant
 
 
-__all__ = ['ThreadParticipantSerializer']
-
-
 class ThreadParticipantSerializer(serializers.ModelSerializer):
     id = serializers.SerializerMethodField()
     username = serializers.SerializerMethodField()

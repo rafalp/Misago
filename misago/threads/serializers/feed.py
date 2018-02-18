@@ -8,10 +8,6 @@ from misago.users.serializers import UserSerializer
 from .post import PostSerializer
 
 
-__all__ = [
-    'FeedSerializer',
-]
-
 FeedUserSerializer = UserSerializer.subset_fields(
     'id',
     'username',

@@ -7,8 +7,6 @@ from misago.threads.models import Post
 from misago.users.serializers import UserSerializer as BaseUserSerializer
 
 
-__all__ = ['PostSerializer']
-
 UserSerializer = BaseUserSerializer.subset_fields(
     'id',
     'username',

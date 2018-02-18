@@ -1,4 +1,4 @@
-from rest_framework.views import exception_handler as rest_exception_handler
+from rest_framework.views import exception_handler as drf_exception_handler
 
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
@@ -8,7 +8,7 @@ from misago.core.exceptions import Banned
 
 
 def handle_api_exception(exception, context):
-    response = rest_exception_handler(exception, context)
+    response = drf_exception_handler(exception, context)
     if response:
         if isinstance(exception, Banned):
             response.data = exception.ban.get_serialized_message()
