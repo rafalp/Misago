@@ -9,7 +9,7 @@ import Striketrough from './actions/striketrough';
 import Strong from './actions/strong';
 import Quote from './actions/quote';
 import AttachmentsEditor from './attachments';
-import Upload from './attachments/upload-button/';
+import Upload from './attachments/upload-button';
 import MarkupPreview from './markup-preview';
 import * as textUtils from './textutils';
 import Button from 'misago/components/button';
