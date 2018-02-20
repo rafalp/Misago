@@ -18,7 +18,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
         response = self.client.get(self.test_link)
 
-        self.assertContains(response, "have permission to search site", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You don't have permission to search site."
+        })
 
     def test_no_phrase(self):
         """api handles no search query"""

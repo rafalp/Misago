@@ -38,19 +38,24 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         override_acl(self.user, {'can_use_private_threads': 0})
 
         response = self.client.post(self.api_link)
-        self.assertContains(response, "You can't use private threads.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't use private threads.",
+        })
 
     def test_cant_start_private_thread(self):
         """permission to start private thread is validated"""
         override_acl(self.user, {'can_start_private_threads': 0})
 
         response = self.client.post(self.api_link)
-        self.assertContains(response, "You can't start private threads.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't start private threads.",
+        })
 
     def test_empty_data(self):
         """no data sent handling has no showstoppers"""
         response = self.client.post(self.api_link, data={})
-
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(), {
@@ -320,11 +325,13 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
             }
         )
         self.assertEqual(response.status_code, 200)
-
+        
         thread = self.user.thread_set.all()[:1][0]
-
-        response_json = response.json()
-        self.assertEqual(response_json['url'], thread.get_absolute_url())
+        self.assertEqual(response.json(), {
+            'id': thread.pk,
+            'title': thread.title,
+            'url': thread.get_absolute_url(),
+        })
 
         response = self.client.get(thread.get_absolute_url())
         self.assertContains(response, self.category.name)

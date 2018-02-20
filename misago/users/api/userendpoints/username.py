@@ -19,25 +19,29 @@ def get_username_options(user):
     options = UsernameChanges(user)
     return {
         'changes_left': options.left,
-        'next_on': options.next_on,
+        'next_change_on': options.next_change_on,
         'length_min': settings.username_length_min,
         'length_max': settings.username_length_max,
     }
 
 
 def options_response(options):
-    if options['next_on']:
-        options['next_on'] = options['next_on'].isoformat()
+    if options['next_change_on']:
+        options['next_change_on'] = options['next_change_on'].isoformat()
     return Response(options)
 
 
 def change_username(request):
     options = get_username_options(request.user)
     if not options['changes_left']:
+        if options['next_change_on']:
+            next_change_on = options['next_change_on'].isoformat()
+        else:
+            next_change_on = None
         return Response(
             {
-                'detail': _("You can't change your username now."),
-                'options': options,
+                'username': [_("You can't change your username at this time.")],
+                'next_change_on': next_change_on,
             },
             status=400,
         )
@@ -60,7 +64,7 @@ def change_username(request):
     except IntegrityError:
         return Response(
             {
-                'detail': _("Error changing username. Please try again."),
+                'username': [_("Please try again.")],
             },
             status=400,
         )
@@ -71,7 +75,7 @@ def moderate_username_endpoint(request, profile):
         serializer = ChangeUsernameSerializer(data=request.data, context={'user': profile})
 
         if not serializer.is_valid():
-            return Response({'detail': serializer.errors}, status=400)
+            return Response(serializer.errors, status=400)
 
         try:
             serializer.change_username(changed_by=request.user)
@@ -82,7 +86,7 @@ def moderate_username_endpoint(request, profile):
         except IntegrityError:
             return Response(
                 {
-                    'detail': _("Error changing username. Please try again."),
+                    'username': [_("Please try again.")],
                 },
                 status=400,
             )

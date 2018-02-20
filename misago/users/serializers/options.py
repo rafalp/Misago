@@ -44,20 +44,13 @@ class EditSignatureSerializer(serializers.ModelSerializer):
 
 
 class ChangeUsernameSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=200, required=False, allow_blank=True)
+    username = serializers.CharField(max_length=200, required=True, allow_blank=False)
 
-    def validate(self, data):
-        username = data.get('username')
-
-        if not username:
-            raise serializers.ValidationError(_("Enter new username."))
-
+    def validate_username(self, username):
         if username == self.context['user'].username:
             raise serializers.ValidationError(_("New username is same as current one."))
-
         validate_username(username)
-
-        return data
+        return username
 
     def change_username(self, changed_by):
         self.context['user'].set_username(self.validated_data['username'], changed_by=changed_by)

@@ -407,12 +407,18 @@ class UserFollowTests(AuthenticatedUserTestCase):
         self.logout_user()
 
         response = self.client.post(self.link)
-        self.assertContains(response, "action is not available to guests", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This action is not available to guests.",
+        })
 
     def test_follow_myself(self):
         """you can't follow yourself"""
         response = self.client.post('/api/users/%s/follow/' % self.user.pk)
-        self.assertContains(response, "can't add yourself to followed", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't add yourself to followed.",
+        })
 
     def test_cant_follow(self):
         """no permission to follow users"""
@@ -421,7 +427,10 @@ class UserFollowTests(AuthenticatedUserTestCase):
         })
 
         response = self.client.post(self.link)
-        self.assertContains(response, "can't follow other users", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't follow other users.",
+        })
 
     def test_follow(self):
         """follow and unfollow other user"""
@@ -471,7 +480,10 @@ class UserBanTests(AuthenticatedUserTestCase):
         override_acl(self.user, {'can_see_ban_details': 0})
 
         response = self.client.get(self.link)
-        self.assertContains(response, "can't see users bans details", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't see users bans details.",
+        })
 
     def test_no_ban(self):
         """api returns empty json"""
@@ -479,7 +491,7 @@ class UserBanTests(AuthenticatedUserTestCase):
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(smart_str(response.content), '{}')
+        self.assertEqual(response.json(), {})
 
     def test_ban_details(self):
         """api returns ban json"""
@@ -493,10 +505,14 @@ class UserBanTests(AuthenticatedUserTestCase):
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
-
-        ban_json = response.json()
-        self.assertEqual(ban_json['user_message']['plain'], 'Nope!')
-        self.assertEqual(ban_json['user_message']['html'], '<p>Nope!</p>')
+        self.assertEqual(response.json(), {
+            'user_message': {
+                'plain': 'Nope!',
+                'html': '<p>Nope!</p>',
+            },
+            'staff_message': None,
+            'expires_on': None,
+        })
 
 
 class UserDeleteTests(AuthenticatedUserTestCase):
@@ -530,7 +546,9 @@ class UserDeleteTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.link)
         self.assertEqual(response.status_code, 403)
-        self.assertContains(response, "can't delete users", status_code=403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete users.",
+        })
 
     def test_delete_too_many_posts(self):
         """raises 403 error when user has too many posts"""
@@ -546,8 +564,9 @@ class UserDeleteTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.link)
         self.assertEqual(response.status_code, 403)
-        self.assertContains(response, "can't delete users", status_code=403)
-        self.assertContains(response, "made more than 5 posts", status_code=403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete users that made more than 5 posts.",
+        })
 
     def test_delete_too_old_member(self):
         """raises 403 error when user is too old"""
@@ -563,8 +582,9 @@ class UserDeleteTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.link)
         self.assertEqual(response.status_code, 403)
-        self.assertContains(response, "can't delete users", status_code=403)
-        self.assertContains(response, "members for more than 5 days", status_code=403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete users that are members for more than 5 days.",
+        })
 
     def test_delete_self(self):
         """raises 403 error when attempting to delete oneself"""
@@ -576,7 +596,10 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         )
 
         response = self.client.post('/api/users/%s/delete/' % self.user.pk)
-        self.assertContains(response, "can't delete yourself", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete yourself.",
+        })
 
     def test_delete_admin(self):
         """raises 403 error when attempting to delete admin"""
@@ -591,7 +614,10 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         self.other_user.save()
 
         response = self.client.post(self.link)
-        self.assertContains(response, "can't delete administrators", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete administrators.",
+        })
 
     def test_delete_superadmin(self):
         """raises 403 error when attempting to delete superadmin"""
@@ -606,7 +632,10 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         self.other_user.save()
 
         response = self.client.post(self.link)
-        self.assertContains(response, "can't delete administrators", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete administrators.",
+        })
 
     def test_delete_with_content(self):
         """returns 200 and deletes user with content"""

@@ -67,7 +67,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         self.override_acl({'can_merge_threads': 0})
 
         response = self.client.post(self.api_link)
-        self.assertContains(response, "You can't merge threads in this category.", status_code=403)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'detail': "You can't merge threads in this category.",
+        })
         
     def test_merge_no_url(self):
         """api validates if thread url was given"""
@@ -75,7 +78,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
 
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {'other_thread': ["Enter link to new thread."]})
+        self.assertEqual(response.json(), {
+            'other_thread': ["Enter link to new thread."],
+        })
 
     def test_invalid_url(self):
         """api validates thread url"""
@@ -87,7 +92,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             }
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {'other_thread': ["This is not a valid thread link."]})
+        self.assertEqual(response.json(), {
+            'other_thread': ["This is not a valid thread link."],
+        })
 
     def test_current_other_thread(self):
         """api validates if thread url given is to current thread"""
@@ -99,9 +106,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             }
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(), {'other_thread': ["You can't merge thread with itself."]}
-        )
+        self.assertEqual(response.json(), {
+            'other_thread': ["You can't merge thread with itself."],
+        })
 
     def test_other_thread_exists(self):
         """api validates if other thread exists"""
@@ -119,10 +126,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {'other_thread': [
-                "The thread you have entered link to doesn't exist or "
-                "you don't have permission to see it."
-            ]},
+            {
+                'other_thread': )
+                    "The thread you have entered link to doesn't exist or "
+                    "you don't have permission to see it."
+                ],
+            }
         )
 
     def test_other_thread_is_invisible(self):
@@ -141,10 +150,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {'other_thread': [
-                "The thread you have entered link to doesn't exist or "
-                "you don't have permission to see it."
-            ]},
+            {
+                'other_thread': [
+                    "The thread you have entered link to doesn't exist or "
+                    "you don't have permission to see it."
+                ],
+            },
         )
 
     def test_other_thread_isnt_mergeable(self):
@@ -162,7 +173,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {'other_thread': ["Other thread can't be merged with."]}
+            response.json(), {
+                'other_thread': ["Other thread can't be merged with."],
+            }
         )
 
     def test_thread_category_is_closed(self):
@@ -187,7 +200,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         )
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
-            response.json(), {'detail': "This category is closed. You can't merge it's threads."},
+            response.json(), {
+                'detail': "This category is closed. You can't merge it's threads.",
+            }
         )
 
     def test_thread_is_closed(self):
@@ -213,7 +228,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
             response.json(),
-            {'detail': "This thread is closed. You can't merge it with other threads."},
+            {
+                'detail': "This thread is closed. You can't merge it with other threads.",
+            },
         )
 
     def test_other_thread_category_is_closed(self):
@@ -239,7 +256,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {'other_thread': ["Other thread's category is closed. You can't merge with it."]},
+            {
+                'other_thread': ["Other thread's category is closed. You can't merge with it."],
+            },
         )
 
     def test_other_thread_is_closed(self):
@@ -265,7 +284,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {'other_thread': ["Other thread is closed and can't be merged with."]},
+            {
+                'other_thread': ["Other thread is closed and can't be merged with."],
+            }
         )
 
     def test_other_thread_isnt_replyable(self):
@@ -287,7 +308,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {'other_thread': ["You can't merge this thread into thread you can't reply."]},
+            {
+                'other_thread': ["You can't merge this thread into thread you can't reply."],
+            }
         )
 
     def test_merge_threads(self):

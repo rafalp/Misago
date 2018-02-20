@@ -11,7 +11,7 @@ from .models import UsernameChange
 class UsernameChanges(object):
     def __init__(self, user):
         self.left = 0
-        self.next_on = None
+        self.next_change_on = None
 
         if user.acl_cache['name_changes_allowed']:
             self.count_namechanges(user)
@@ -33,7 +33,7 @@ class UsernameChanges(object):
 
         if not self.left and name_changes_expire:
             try:
-                self.next_on = valid_changes_qs.latest().changed_on
-                self.next_on += timedelta(days=name_changes_expire)
+                self.next_change_on = valid_changes_qs.latest().changed_on
+                self.next_change_on += timedelta(days=name_changes_expire)
             except UsernameChange.DoesNotExist:
                 pass
