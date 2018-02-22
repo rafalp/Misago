@@ -67,7 +67,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         self.override_acl({'can_merge_threads': 0})
 
         response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
             'detail': "You can't merge threads in this category.",
         })
@@ -127,7 +127,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(
             response.json(),
             {
-                'other_thread': )
+                'other_thread': [
                     "The thread you have entered link to doesn't exist or "
                     "you don't have permission to see it."
                 ],

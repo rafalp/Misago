@@ -476,7 +476,7 @@ class UsernameChange(models.Model):
     old_username = models.CharField(max_length=255)
 
     class Meta:
-        get_latest_by = "changed_on"
+        get_latest_by = 'changed_on'
 
     def set_change_author(self, user):
         self.changed_by = user

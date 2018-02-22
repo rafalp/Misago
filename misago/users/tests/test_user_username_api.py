@@ -17,9 +17,8 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         super(UserUsernameTests, self).setUp()
         self.link = '/api/users/%s/username/' % self.user.pk
 
-    def test_get_change_username_options(self):
-        """get to API returns options"""
-
+    def test_get_change_username_form_options(self):
+        """get to API returns form options"""
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {
@@ -108,12 +107,8 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         self.assertEqual(response.json(), {
             'username': 'NewUsernamu',
             'slug': 'newusernamu',
-            'options': {
-                'changes_left': 1,
-                'next_change_on': None,
-                'length_min': settings.username_length_min,
-                'length_max': settings.username_length_max,
-            },
+            'changes_left': 1,
+            'next_change_on': None,
         })
 
         self.reload_user()

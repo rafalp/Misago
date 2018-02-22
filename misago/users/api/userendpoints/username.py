@@ -4,7 +4,7 @@ from django.db import IntegrityError
 from django.utils.translation import ugettext as _
 
 from misago.conf import settings
-from misago.users.namechanges import UsernameChanges
+from misago.users.namechanges import get_available_namechanges_data
 from misago.users.serializers import ChangeUsernameSerializer
 
 
@@ -12,36 +12,22 @@ def username_endpoint(request):
     if request.method == 'POST':
         return change_username(request)
     else:
-        return options_response(get_username_options(request.user))
-
-
-def get_username_options(user):
-    options = UsernameChanges(user)
-    return {
-        'changes_left': options.left,
-        'next_change_on': options.next_change_on,
-        'length_min': settings.username_length_min,
-        'length_max': settings.username_length_max,
-    }
-
-
-def options_response(options):
-    if options['next_change_on']:
-        options['next_change_on'] = options['next_change_on'].isoformat()
-    return Response(options)
+        form_options = get_available_namechanges_data(request.user)
+        form_options.update({
+            'length_min': settings.username_length_min,
+            'length_max': settings.username_length_max,
+        })
+        
+        return Response(form_options)
 
 
 def change_username(request):
-    options = get_username_options(request.user)
-    if not options['changes_left']:
-        if options['next_change_on']:
-            next_change_on = options['next_change_on'].isoformat()
-        else:
-            next_change_on = None
+    available_namechanges = get_available_namechanges_data(request.user)
+    if not available_namechanges['changes_left']:
         return Response(
             {
                 'username': [_("You can't change your username at this time.")],
-                'next_change_on': next_change_on,
+                'next_change_on': available_namechanges['next_change_on'],
             },
             status=400,
         )
@@ -56,11 +42,14 @@ def change_username(request):
 
     try:
         serializer.change_username(changed_by=request.user)
-        return Response({
+
+        response_data = get_available_namechanges_data(request.user)
+        response_data.update({
             'username': request.user.username,
             'slug': request.user.slug,
-            'options': get_username_options(request.user)
         })
+
+        return Response(response_data)
     except IntegrityError:
         return Response(
             {
@@ -91,6 +80,7 @@ def moderate_username_endpoint(request, profile):
                 status=400,
             )
     else:
+        # return form data
         return Response({
             'length_min': settings.username_length_min,
             'length_max': settings.username_length_max,
