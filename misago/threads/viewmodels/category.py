@@ -51,7 +51,7 @@ class ThreadsRootCategory(ViewModel):
     def get_categories(self, request):
         return [Category.objects.root_category()] + list(
             Category.objects.all_categories().filter(
-                id__in=request.user.acl_cache['browseable_categories'],
+                id__in=request.user.acl_cache['visible_categories'],
             ).select_related('parent')
         )
 
@@ -65,7 +65,7 @@ class ThreadsCategory(ThreadsRootCategory):
         for category in categories:
             if category.pk == int(kwargs['pk']):
                 if not category.special_role:
-                    # don't check permissions for non-special category
+                    # check permissions for non-special categories
                     allow_see_category(request.user, category)
                     allow_browse_category(request.user, category)
 
