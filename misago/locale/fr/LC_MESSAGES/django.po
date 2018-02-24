@@ -27,7 +27,7 @@ msgstr "Autorisations"
 
 #: acl/admin.py:33 users/forms/admin.py:410
 msgid "User roles"
-msgstr " Rôles de l'utilisateur"
+msgstr " Rôles d'utilisateurs"
 
 #: acl/forms.py:9 categories/forms.py:236
 msgid "Role name"
@@ -80,7 +80,7 @@ msgstr "Modérateur des fils de discussion privés"
 
 #: acl/panels.py:8
 msgid "Misago User ACL"
-msgstr "Misago Utilisateur ACL"
+msgstr "ACL utilisateur Misago"
 
 #: acl/panels.py:18
 msgid "Anonymous user"
@@ -97,23 +97,23 @@ msgstr "Le formulaire contient des erreurs."
 #: acl/views.py:65 categories/views/permsadmin.py:71
 #, python-format
 msgid "New role \"%(name)s\" has been saved."
-msgstr "Le nouveau rôle \"%(name)s\" a été sauvegardé."
+msgstr "Le nouveau rôle « %(name)s » a été sauvegardé."
 
 #: acl/views.py:69 categories/views/permsadmin.py:75
 #, python-format
 msgid "Role \"%(name)s\" has been changed."
-msgstr "Le rôle \"%(name)s\" a été modifié."
+msgstr "Le rôle « %(name)s » a été modifié."
 
 #: acl/views.py:75 categories/views/permsadmin.py:81
 #, python-format
 msgid "Role \"%(name)s\" is special role and can't be deleted."
 msgstr ""
-"Le rôle \"%(name)s\" est un rôle spécial et ne peut donc pas être supprimé."
+"Le rôle « %(name)s » est un rôle spécial et ne peut donc pas être supprimé."
 
 #: acl/views.py:80 categories/views/permsadmin.py:86
 #, python-format
 msgid "Role \"%(name)s\" has been deleted."
-msgstr "Le rôle \"%(name)s\" a été supprimé."
+msgstr "Le rôle « %(name)s » a été supprimé."
 
 #: admin/admin.py:11 templates/misago/admin/index.html:5
 msgid "Home"
@@ -121,7 +121,7 @@ msgstr "Accueil"
 
 #: admin/auth.py:36
 msgid "Your admin session has expired."
-msgstr "Votre session administrateur a expirée."
+msgstr "Votre session administrateur a expiré."
 
 #: admin/views/auth.py:39
 msgid "Your admin session has been closed."
@@ -129,7 +129,7 @@ msgstr "Votre session administrateur a été fermée."
 
 #: admin/views/generic/list.py:38
 msgid "Selected: 0"
-msgstr "Sélectionnés: 0"
+msgstr "Sélectionné : 0"
 
 #: admin/views/generic/list.py:39
 msgid "Select items"
@@ -137,21 +137,21 @@ msgstr "Sélectionner des éléments"
 
 #: admin/views/generic/list.py:292 admin/views/generic/list.py:297
 msgid "You have to select one or more items."
-msgstr "Vous devez selectionner au moins un element."
+msgstr "Vous devez sélectionner au moins un élément."
 
 #: admin/views/generic/list.py:312
 msgid "Action is not allowed."
-msgstr "Cette action n'est pas autorisee."
+msgstr "Cette action n'est pas autorisée."
 
 #: admin/views/index.py:70
 #, python-format
 msgid "Outdated: %(current)s! (latest: %(latest)s)"
-msgstr "Caduc: %(current)s! (dernier: %(latest)s)"
+msgstr "Caduc : %(current)s ! (dernier : %(latest)s)"
 
 #: admin/views/index.py:78
 #, python-format
 msgid "Up to date! (%(current)s)"
-msgstr "Mis à jour ! (%(current)s)"
+msgstr "Mis à jour ! (%(current)s)"
 
 #: admin/views/index.py:87
 msgid "Failed to connect to GitHub API. Try again later."
@@ -170,7 +170,7 @@ msgstr "Hiérarchie des catégories"
 
 #: categories/admin.py:62
 msgid "Category roles"
-msgstr "Rôles de la catégorie."
+msgstr "Rôles de catégories"
 
 #: categories/forms.py:47 users/forms/admin.py:384
 msgid "Name"
@@ -198,7 +198,7 @@ msgstr ""
 
 #: categories/forms.py:63
 msgid "Closed category"
-msgstr "Catégorie closes"
+msgstr "Catégorie fermée"
 
 #: categories/forms.py:65
 msgid "Only members with valid permissions can post in closed categories."
@@ -290,7 +290,7 @@ msgstr "Catégorie mère"
 
 #: categories/forms.py:159
 msgid "Copy permissions"
-msgstr "Autorisations de copier"
+msgstr "Copier les permissions depuis"
 
 #: categories/forms.py:161
 msgid ""
@@ -298,22 +298,22 @@ msgid ""
 "category selected here."
 msgstr ""
 "Vous pouvez remplacer les autorisations de cette catégorie par les "
-"autorisations copiées de la catégorie actuellement sélectionnée."
+"autorisations copiées depuis la catégorie sélectionnée."
 
 #: categories/forms.py:165
 msgid "Don't copy permissions"
-msgstr "Ne pas copier les autorisations"
+msgstr "Ne pas copier les permissions"
 
 #: categories/forms.py:169
 msgid "Archive"
-msgstr "Archive"
+msgstr "Archiver"
 
 #: categories/forms.py:171
 msgid ""
 "Instead of being deleted, pruned threads can be moved to designated "
 "category."
 msgstr ""
-"Au lieu d'être supprimé, les fils de discussion obsolètes peuvent être "
+"Au lieu d'être supprimés, les fils de discussion obsolètes peuvent être "
 "déplacés vers une catégorie."
 
 #: categories/forms.py:175
@@ -340,11 +340,11 @@ msgstr "Déplacer les fils de discussion de cette catégorie vers"
 
 #: categories/forms.py:214 categories/forms.py:228
 msgid "Delete with category"
-msgstr "Supprimer ainsi que la catégorie"
+msgstr "Supprimer avec la catégorie"
 
 #: categories/forms.py:226
 msgid "Move child categories to"
-msgstr "Déplacer la catégorie fille vers"
+msgstr "Déplacer les catégories filles vers"
 
 #: categories/forms.py:247 categories/forms.py:262
 #: templates/misago/acl_debug.html:15
@@ -400,8 +400,8 @@ msgstr "Peut voir le contenu d'une catégorie"
 #, python-format
 msgid "You don't have permission to browse \"%(category)s\" contents."
 msgstr ""
-"Vous n'avez pas le permission de parcourir le contenu de la catégorie "
-"\"%(category)s\" ."
+"Vous n'avez pas le permission de parcourir le contenu de la catégorie « "
+"%(category)s »."
 
 #: categories/views/categoriesadmin.py:17
 msgid "Requested category does not exist."
@@ -410,32 +410,32 @@ msgstr "La catégorie demandée n'existe pas."
 #: categories/views/categoriesadmin.py:96
 #, python-format
 msgid "New category \"%(name)s\" has been saved."
-msgstr "La nouvelle catégorie \"%(name)s\" a été sauvegardée."
+msgstr "La nouvelle catégorie « %(name)s » a été sauvegardée."
 
 #: categories/views/categoriesadmin.py:100
 #, python-format
 msgid "Category \"%(name)s\" has been edited."
-msgstr "La catégorie \"%(name)s\" a été modifiée."
+msgstr "La catégorie « %(name)s » a été modifiée."
 
 #: categories/views/categoriesadmin.py:104
 #, python-format
 msgid "Category \"%(name)s\" has been deleted."
-msgstr "La catégorie \"%(name)s\" a été supprimée."
+msgstr "La catégorie « %(name)s » a été supprimée."
 
 #: categories/views/categoriesadmin.py:154
 #, python-format
 msgid "Category \"%(name)s\" has been moved below \"%(other)s\"."
-msgstr "La catégorie \"%(name)s\" a été déplacée en dessous de \"%(other)s\"."
+msgstr "La catégorie « %(name)s » a été déplacée en dessous de « %(other)s »."
 
 #: categories/views/categoriesadmin.py:170
 #, python-format
 msgid "Category \"%(name)s\" has been moved above \"%(other)s\"."
-msgstr "La catégorie \"%(name)s\" a été déplacée au dessus de \"%(other)s\"."
+msgstr "La catégorie « %(name)s » a été déplacée au dessus de « %(other)s »."
 
 #: categories/views/permsadmin.py:133
 #, python-format
 msgid "Category %(name)s permissions have been changed."
-msgstr "Les autorisations de la catégorie %(name)s ont été modifiées."
+msgstr "Les permissions de la catégorie %(name)s ont été modifiées."
 
 #: categories/views/permsadmin.py:147
 msgid "Category permissions"
@@ -490,7 +490,7 @@ msgstr "Le groupe de paramètres n'a pas été trouvé."
 
 #: conf/views.py:49
 msgid "Changes in settings have been saved!"
-msgstr "Les changements de paramètres ont été enregistrés!"
+msgstr "Les changements de paramètres ont été enregistrés !"
 
 #: core/admin.py:10
 msgid "System"
@@ -612,7 +612,7 @@ msgstr "Cette action n'est pas autorisée pour les invités."
 #: templates/misago/threadslist/threads.html:18
 #, python-format
 msgid "page: %(page)s"
-msgstr "page: %(page)s"
+msgstr "page : %(page)s"
 
 #: core/validators.py:9
 msgid "Value has to contain alpha-numerical characters."
@@ -719,11 +719,11 @@ msgstr "Termes de service"
 #: markup/finalise.py:22
 #, python-format
 msgid "%(title)s has written:"
-msgstr "%(title)s a écrit:"
+msgstr "%(title)s a écrit :"
 
 #: markup/finalise.py:24
 msgid "Quoted message:"
-msgstr "Message cité:"
+msgstr "Message cité :"
 
 #: project_template/project_name/settings.py:347
 msgid "Personal"
@@ -829,7 +829,7 @@ msgid ""
 "the \"Send link\" button."
 msgstr ""
 "Pour recevoir ce lien, entrez l'adresse électronique de votre compte et "
-"appuyez sur le bouton \"Envoyer un lien\"."
+"appuyez sur le bouton « Envoyer un lien »."
 
 #: templates/misago/activation/request.html:45
 msgid "To request new activation link please enable JavaScript."
@@ -858,7 +858,7 @@ msgid ""
 "%(filetype)s, %(size)s, uploaded by %(uploader)s %(uploaded_on)s from "
 "%(uploader_ip)s."
 msgstr ""
-"%(filetype)s, %(size)s, télé-déposé par %(uploader)s %(uploaded_on)s depuis "
+"%(filetype)s, %(size)s, télédéposé par %(uploader)s %(uploaded_on)s depuis "
 "%(uploader_ip)s."
 
 #: templates/misago/admin/attachments/list.html:53
@@ -879,12 +879,11 @@ msgstr "Supprimer"
 
 #: templates/misago/admin/attachments/list.html:70
 msgid "No attachments matching search criteria exist."
-msgstr ""
-"Il n'existe pas de pièces jointes correspondant à des critères de recherche."
+msgstr "Aucune pièce jointe correspondant à ces critères de recherche."
 
 #: templates/misago/admin/attachments/list.html:72
 msgid "No attachments currently exist."
-msgstr "Aucune pièce jointe n'existe actuellement."
+msgstr "Aucune pièce jointe actuellement."
 
 #: templates/misago/admin/attachments/list.html:79
 msgid "Search attachments"
@@ -892,7 +891,7 @@ msgstr "Rechercher des pièces jointes"
 
 #: templates/misago/admin/attachments/list.html:112
 msgid "Are you sure you want to delete this attachment?"
-msgstr "Êtes-vous sûr de vouloir supprimer cette pièce jointe?"
+msgstr "Êtes-vous sûr⋅e de vouloir supprimer cette pièce jointe ?"
 
 #: templates/misago/admin/attachmenttypes/form.html:9
 #: templates/misago/admin/attachmenttypes/form.html:18
@@ -998,7 +997,7 @@ msgstr "Aucun bannissement prononcé."
 
 #: templates/misago/admin/bans/list.html:86
 msgid "Are you sure you want to remove this ban?"
-msgstr "Êtes-vous certain de vouloir supprimer ce bannissement?"
+msgstr "Êtes-vous certain de vouloir supprimer ce bannissement ?"
 
 #: templates/misago/admin/bans/list.html:95
 msgid "Search bans"
@@ -1006,7 +1005,7 @@ msgstr "Rechercher un bannissement"
 
 #: templates/misago/admin/base_thin.html:8
 msgid "Misago Administration"
-msgstr "Administration de Misago "
+msgstr "Administration de Misago"
 
 #: templates/misago/admin/categories/delete.html:6
 #: templates/misago/admin/categories/delete.html:13
@@ -1016,7 +1015,7 @@ msgid ""
 "Delete category: %(category)s\n"
 msgstr ""
 "\n"
-"Supprimer la catégorie: %(category)s\n"
+"Supprimer la catégorie : %(category)s\n"
 
 #: templates/misago/admin/categories/delete.html:21
 #, python-format
@@ -1026,7 +1025,7 @@ msgid ""
 "  "
 msgstr ""
 "\n"
-"  Supprimer la catégorie: %(category)s\n"
+"  Supprimer la catégorie : %(category)s\n"
 "  "
 
 #: templates/misago/admin/categories/delete.html:31
@@ -1085,7 +1084,7 @@ msgid ""
 "%(category)s: Permissions\n"
 msgstr ""
 "\n"
-"%(category)s: Autorisations\n"
+"%(category)s : Autorisations\n"
 
 #: templates/misago/admin/categoryroles/categoryroles.html:16
 #, python-format
@@ -1095,7 +1094,7 @@ msgid ""
 "  "
 msgstr ""
 "\n"
-"  %(category)s: Autorisations\n"
+"  %(category)s : Autorisations\n"
 "  "
 
 #: templates/misago/admin/categoryroles/categoryroles.html:48
@@ -1124,7 +1123,7 @@ msgstr "Annuler"
 #: templates/misago/admin/categoryroles/categoryroles.html:64
 #: templates/misago/admin/categoryroles/rolecategories.html:67
 msgid "Are you sure you want to abandon changes?"
-msgstr "Êtes-vous sûr de vouloir abandonner les changements?"
+msgstr "Êtes-vous sûr de vouloir abandonner les changements ?"
 
 #: templates/misago/admin/categoryroles/form.html:9
 #: templates/misago/admin/categoryroles/form.html:18
@@ -1153,7 +1152,7 @@ msgstr "Aucun rôle de catégorie n'est actuellement défini."
 #: templates/misago/admin/categoryroles/list.html:53
 #: templates/misago/admin/roles/list.html:69
 msgid "Are you sure you want to delete this role?"
-msgstr "Êtes-vous sûr de vouloir supprimer ce rôle?"
+msgstr "Êtes-vous sûr de vouloir supprimer ce rôle ?"
 
 #: templates/misago/admin/categoryroles/rolecategories.html:6
 #, python-format
@@ -1162,7 +1161,7 @@ msgid ""
 "%(role)s: Category permissions\n"
 msgstr ""
 "\n"
-"%(role)s: Droits d’accès aux catégories\n"
+"%(role)s : Droits d’accès aux catégories\n"
 
 #: templates/misago/admin/categoryroles/rolecategories.html:16
 #, python-format
@@ -1172,12 +1171,12 @@ msgid ""
 "  "
 msgstr ""
 "\n"
-"  %(role)s: Droits d’accès aux catégories\n"
+"  %(role)s : Droits d’accès aux catégories\n"
 "  "
 
 #: templates/misago/admin/conf/group.html:61
 msgid "Change settings"
-msgstr "Modifier les parametres"
+msgstr "Modifier les paramètres"
 
 #: templates/misago/admin/errorpages/403.html:5
 #: templates/misago/errorpages/403.html:5
@@ -1262,11 +1261,11 @@ msgstr "Enregistrer et en ajouter une autre"
 
 #: templates/misago/admin/generic/list.html:21
 msgid "Sort:"
-msgstr "Trier:"
+msgstr "Trier :"
 
 #: templates/misago/admin/generic/list.html:25
 msgid "Change sorting to:"
-msgstr "Changer le tri par:"
+msgstr "Changer le tri par :"
 
 #: templates/misago/admin/generic/list.html:50
 msgid "Change search"
@@ -1334,11 +1333,11 @@ msgstr "Dernier"
 
 #: templates/misago/admin/index.html:13
 msgid "Administration Home"
-msgstr "Accueil admnistration"
+msgstr "Accueil administration"
 
 #: templates/misago/admin/index.html:33
 msgid "Misago version"
-msgstr "Version Misago"
+msgstr "Version de Misago"
 
 #: templates/misago/admin/index.html:56
 msgid "Check version"
@@ -1346,7 +1345,7 @@ msgstr "Vérifier la version"
 
 #: templates/misago/admin/index.html:62
 msgid "This feature requires \"packaging\" python module."
-msgstr "Cette fonction demande un module de \"packaging\" python"
+msgstr "Cette fonction requiert le module Python nommé « packaging »"
 
 #: templates/misago/admin/index.html:76
 msgid "DB Contents"
@@ -1375,7 +1374,7 @@ msgstr "Utilisateurs inactifs"
 
 #: templates/misago/admin/index.html:122
 msgid "Checking..."
-msgstr "Vérification..."
+msgstr "Vérification…"
 
 #: templates/misago/admin/login.html:5
 msgid "Log in"
@@ -1412,7 +1411,7 @@ msgstr "S'enregistrer"
 
 #: templates/misago/admin/logout.html:8
 msgid "Log out?"
-msgstr "Se déconnecter?"
+msgstr "Vous déconnecter ?"
 
 #: templates/misago/admin/logout.html:19
 msgid "Log out from admin"
@@ -1487,7 +1486,7 @@ msgstr "Aucun rang n'est actuellement défini."
 
 #: templates/misago/admin/ranks/list.html:125
 msgid "Are you sure you want to delete this rank?"
-msgstr "Êtes-vous sûr de vouloir supprimer ce rang?"
+msgstr "Êtes-vous sûr de vouloir supprimer ce rang ?"
 
 #: templates/misago/admin/roles/list.html:38
 msgid "Users with role"
@@ -1504,7 +1503,7 @@ msgstr "Utilisateurs bannis"
 
 #: templates/misago/admin/users/ban.html:16
 msgid "Ban selected users:"
-msgstr "Interdire les utilisateurs sélectionnés:"
+msgstr "Interdire les utilisateurs sélectionnés :"
 
 #: templates/misago/admin/users/ban.html:35
 #: templates/misago/admin/users/edit.html:103
@@ -1524,7 +1523,7 @@ msgstr "Supprimer les utilisateurs avec le contenu"
 
 #: templates/misago/admin/users/delete.html:17
 msgid "Deleting users..."
-msgstr "Suppression des utilisateurs..."
+msgstr "Suppression des utilisateurs…"
 
 #: templates/misago/admin/users/delete.html:32
 #: templates/misago/admin/users/delete.html:36
@@ -1538,7 +1537,7 @@ msgstr "Compte"
 
 #: templates/misago/admin/users/delete.html:59
 msgid "deleting..."
-msgstr "suppression..."
+msgstr "suppression…"
 
 #: templates/misago/admin/users/delete.html:60
 msgid "done"
@@ -1582,7 +1581,7 @@ msgstr "Options du forum"
 
 #: templates/misago/admin/users/edit.html:137
 msgid "Automatic subscription preferences"
-msgstr "Préférences d' abonnement automatique"
+msgstr "Préférences d'abonnement automatique"
 
 #: templates/misago/admin/users/edit.html:144
 msgid "Account status"
@@ -1685,7 +1684,7 @@ msgstr "Permanent"
 #: templates/misago/admin/warnings/list.html:45
 #: templates/misago/admin/warnings/list.html:63
 msgid "Not restricted"
-msgstr "Non limité"
+msgstr "Non restreint"
 
 #: templates/misago/admin/warnings/list.html:50
 #: templates/misago/admin/warnings/list.html:68
@@ -1703,11 +1702,11 @@ msgstr "Aucun niveau d'avertissement n'est actuellement défini."
 
 #: templates/misago/admin/warnings/list.html:135
 msgid "Are you sure you want to delete this warning level?"
-msgstr "Êtes-vous sûr de vouloir supprimer ce niveau d'avertissement?"
+msgstr "Êtes-vous sûr de vouloir supprimer ce niveau d'avertissement ?"
 
 #: templates/misago/auth.html:10
 msgid "Log out"
-msgstr "Se deconnecter"
+msgstr "Se déconnecter"
 
 #: templates/misago/categories/base.html:22
 #: templates/misago/categories/base.html:48
@@ -1731,11 +1730,11 @@ msgstr "Aucune catégorie n'existe ou vous n'êtes pas autorisé à les voir"
 
 #: templates/misago/categories/icon.html:4
 msgid "This category has no new posts. (closed)"
-msgstr "Cette catégorie n'a pas de nouveaux messages. (close)"
+msgstr "Cette catégorie n'a pas de nouveaux messages. (fermée)"
 
 #: templates/misago/categories/icon.html:10
 msgid "This category has new posts. (closed)"
-msgstr "Cette catégorie a de nouveaux messages. (close)"
+msgstr "Cette catégorie contient de nouveaux messages. (fermée)"
 
 #: templates/misago/categories/icon.html:18
 msgid "This category has no new posts."
@@ -1790,7 +1789,7 @@ msgstr "%(user)s, votre compte a été activé par l'administrateur du forum."
 #: templates/misago/emails/register/complete.html:18
 #: templates/misago/emails/register/inactive.html:31
 msgid "this form"
-msgstr "ce forum"
+msgstr "ce formulaire"
 
 #: templates/misago/emails/activation/by_admin.html:14
 #, python-format
@@ -1800,18 +1799,19 @@ msgstr "Vous pouvez maintenant vous connecter à l'aide de %(login_form)s."
 #: templates/misago/emails/activation/by_admin.txt:10
 msgid "You can now sign in to it using the form below:"
 msgstr ""
-"Vous pouvez maintenant vous connecter en utilisant le formulaire ci-dessous:"
+"Vous pouvez maintenant vous connecter en utilisant le formulaire ci-dessous "
+":"
 
 #: templates/misago/emails/activation/by_user.html:6
 #: templates/misago/emails/activation/by_user.txt:6
 #, python-format
 msgid "%(user)s, to activate your account click the below link:"
-msgstr "%(user)s, pour activer votre compte, cliquez sur le lien ci-dessous:"
+msgstr "%(user)s, pour activer votre compte, cliquez sur le lien ci-dessous :"
 
 #: templates/misago/emails/activation/by_user.html:11
 #: templates/misago/emails/register/inactive.html:27
 msgid "Activate my account!"
-msgstr "Activer mon compte!"
+msgstr "Activer mon compte !"
 
 #: templates/misago/emails/change_email.html:6
 #: templates/misago/emails/change_email.txt:6
@@ -1852,8 +1852,8 @@ msgstr ""
 #: templates/misago/emails/change_password_form_link.txt:10
 msgid "To change your account password click the link below:"
 msgstr ""
-"Pour changer le mot de passe de votre compte, cliquez sur le lien ci-"
-"dessous:"
+"Pour changer le mot de passe de votre compte, cliquez sur le lien ci-dessous"
+" :"
 
 #: templates/misago/emails/change_password_form_link.html:16
 msgid "Set new password"
@@ -1871,7 +1871,7 @@ msgstr ""
 #: templates/misago/emails/privatethread/added.html:14
 #: templates/misago/emails/privatethread/added.txt:10
 msgid "To read this thread click the link below:"
-msgstr "Pour lire ce fil de discussion, cliquez sur le lien ci-dessous :"
+msgstr "Pour lire ce fil de discussion, cliquez sur le lien ci-dessous :"
 
 #: templates/misago/emails/privatethread/added.txt:6
 #, python-format
@@ -1887,7 +1887,7 @@ msgstr ""
 #: templates/misago/emails/register/inactive.txt:6
 #, python-format
 msgid "%(user)s, thank you for joining us!"
-msgstr "%(user)s, merci de nous avoir rejoint!"
+msgstr "%(user)s, merci de nous avoir rejoint !"
 
 #: templates/misago/emails/register/complete.html:12
 #: templates/misago/emails/register/complete.txt:10
@@ -1898,7 +1898,7 @@ msgid ""
 msgstr ""
 "Vous pouvez maintenant rejoindre des fils de discussion sur nos forums. "
 "Pourquoi ne pas venir faire un tour et partager votre avis, faire part de "
-"vos connaissances avec le reste de la communauté?"
+"vos connaissances avec le reste de la communauté ?"
 
 #: templates/misago/emails/register/complete.html:20
 #, python-format
@@ -1911,7 +1911,7 @@ msgstr ""
 msgid "You can always sign in to your account using the form below:"
 msgstr ""
 "Vous pouvez toujours vous connecter à votre compte en utilisant le "
-"formulaire ci-dessous:"
+"formulaire ci-dessous :"
 
 #: templates/misago/emails/register/inactive.html:7
 #: templates/misago/emails/register/inactive.txt:10
@@ -1934,7 +1934,7 @@ msgstr ""
 #: templates/misago/emails/register/inactive.html:17
 #: templates/misago/emails/register/inactive.txt:20
 msgid "Thank you for your patience and see you soon!"
-msgstr "Merci pour votre patience et à bientôt!"
+msgstr "Merci pour votre patience et à bientôt !"
 
 #: templates/misago/emails/register/inactive.html:22
 #: templates/misago/emails/register/inactive.txt:25
@@ -1943,7 +1943,7 @@ msgid ""
 "activate your account. To do so, simply click the link below:"
 msgstr ""
 "Avant de pouvoir participer aux discussions sur nos forums, vous devez "
-"activer votre compte. Pour cela, cliquez simplement sur le lien ci-dessous:"
+"activer votre compte. Pour cela, cliquez simplement sur le lien ci-dessous :"
 
 #: templates/misago/emails/register/inactive.html:33
 #, python-format
@@ -1960,7 +1960,7 @@ msgid ""
 "below:"
 msgstr ""
 "Une fois votre compte activé, vous pouvez toujours vous connecter à l'aide "
-"du formulaire ci-dessous"
+"du formulaire ci-dessous :"
 
 #: templates/misago/emails/thread/reply.html:9
 #, python-format
@@ -1974,7 +1974,7 @@ msgstr ""
 #: templates/misago/emails/thread/reply.html:14
 #: templates/misago/emails/thread/reply.txt:10
 msgid "To read this reply, click the below link:"
-msgstr "Pour lire cette réponse, cliquez sur le lien ci-dessous:"
+msgstr "Pour lire cette réponse, cliquez sur le lien ci-dessous :"
 
 #: templates/misago/emails/thread/reply.html:17
 msgid "Go to reply"
@@ -2019,11 +2019,11 @@ msgstr "Cette page n'a pas été atteinte par un chemin normal."
 
 #: templates/misago/errorpages/banned.html:5
 msgid "You are banned"
-msgstr "Vous êtes banni"
+msgstr "Vous êtes banni⋅e"
 
 #: templates/misago/errorpages/banned.html:9
 msgid "You are banned from accessing this page."
-msgstr "Vous ne pouvez plus acceder a cette page."
+msgstr "Vous ne pouvez plus accéder à cette page."
 
 #: templates/misago/errorpages/banned.html:35
 #, python-format
@@ -2049,7 +2049,7 @@ msgstr "Pour une expérience complète, activez JavaScript."
 
 #: templates/misago/forgottenpassword/error.html:5
 msgid "Change forgotten password error"
-msgstr "Erreur: mot de passe oublié"
+msgstr "Erreur pendant la modification du mot de passe oublié"
 
 #: templates/misago/forgottenpassword/error.html:18
 msgid "Can't change forgotten password."
@@ -2241,7 +2241,7 @@ msgstr "%(title)s, joint le %(joined_on)s"
 msgid "Wrote %(posts)s post."
 msgid_plural "Wrote %(posts)s posts."
 msgstr[0] "A écrit %(posts)s postes"
-msgstr[1] "A écrit %(posts)sposts"
+msgstr[1] "A écrit %(posts)s posts"
 
 #: templates/misago/profile/base.html:25
 #, python-format
@@ -2426,7 +2426,7 @@ msgstr "Rechercher sur le site"
 
 #: templates/misago/search.html:45
 msgid "Loading search..."
-msgstr "Recherche en cours..."
+msgstr "Recherche en cours…"
 
 #: templates/misago/thread/paginator.html:41
 #, python-format
@@ -2633,7 +2633,7 @@ msgstr[1] "%(replies)s réponses"
 #: templates/misago/thread/stats.html:83
 #, python-format
 msgid "last reply by %(user)s %(date)s"
-msgstr "Dernière réponse par %(user)s le %(date)s"
+msgstr "Dernière réponse par %(user)s %(date)s"
 
 #: templates/misago/thread/thread.html:18
 #, python-format
@@ -2666,13 +2666,12 @@ msgstr "Il n'y a pas de fil de discussion dans cette catégorie."
 
 #: templates/misago/threadslist/base.html:65
 msgid "There are no threads on this forum... yet!"
-msgstr ""
-"Il n'y a aucun fil de discussion sur ce forum... pour l'instant du moins !"
+msgstr "Il n'y a aucun fil de discussion sur ce forum… pour l'instant !"
 
 #: templates/misago/threadslist/base.html:69
 #: templates/misago/threadslist/private_threads.html:67
 msgid "Why not start one yourself?"
-msgstr "Pourquoi ne pas en commencer un vous même?"
+msgstr "Pourquoi ne pas en commencer un vous-même ?"
 
 #: templates/misago/threadslist/base.html:73
 #: templates/misago/threadslist/private_threads.html:70
@@ -2739,7 +2738,7 @@ msgid_plural "%(posters)s most active posters from last %(days)s days."
 msgstr[0] ""
 " %(posters)s ont été les utilisateurs les plus actifs depuis %(days)sjours"
 msgstr[1] ""
-"%(posters)s ont été les utilisateurs les plus actifs depuis%(days)sjours"
+"%(posters)s ont été les utilisateurs les plus actifs depuis%(days)s jours"
 
 #: templates/misago/userslists/active_posters.html:16
 #: templates/misago/userslists/active_posters.html:34
@@ -2767,7 +2766,7 @@ msgstr[1] "%(users)s ont ce rang"
 
 #: templates/misago/userslists/rank.html:119
 msgid "There are no users with this rank at the moment."
-msgstr "Il n'y a aucun utilisateur avec ce rang pour le moment"
+msgstr "Il n'y a aucun utilisateur avec ce rang pour le moment."
 
 #: templates/misago/userslists/usercard.html:42
 #: templates/misago/userslists/usercard.html:45
@@ -2793,27 +2792,27 @@ msgstr "Types de pièces jointes"
 
 #: threads/api/attachments.py:19
 msgid "You don't have permission to upload new files."
-msgstr "Vous n'êtes pas autorisé à télé-déposer de nouveaux fichiers"
+msgstr "Vous n'êtes pas autorisé⋅e à télédéposer de nouveaux fichiers."
 
 #: threads/api/attachments.py:29
 msgid "No file has been uploaded."
-msgstr "Aucun fichier n'a été télé-déposé"
+msgstr "Aucun fichier télédéposé."
 
 #: threads/api/attachments.py:50
 msgid "Uploaded image was corrupted or invalid."
-msgstr "L'image télé-déposé était corrompu ou invalide"
+msgstr "L'image télédéposée était corrompue ou invalide."
 
 #: threads/api/attachments.py:81
 msgid "You can't upload files of this type."
-msgstr "Vous ne pouvez pas déposer de fichiers de ce type"
+msgstr "Vous ne pouvez pas télédéposer de fichiers de ce type."
 
 #: threads/api/attachments.py:86
 #, python-format
 msgid ""
 "You can't upload files larger than %(limit)s (your file has %(upload)s)."
 msgstr ""
-"Vous ne pouvez pas télé-déposer des fichiers plus larges que %(limit)s "
-"(votre fichier a %(upload)s)"
+"Vous ne pouvez pas télédéposer des fichiers plus larges que %(limit)s (votre"
+" fichier fait %(upload)s)"
 
 #: threads/api/attachments.py:96
 #, python-format
@@ -2821,8 +2820,8 @@ msgid ""
 "You can't upload files of this type larger than %(limit)s (your file has "
 "%(upload)s)."
 msgstr ""
-"Vous ne pouvez pas télé-déposer de fichiers de ce type plus larges "
-"que%(limit)s(votre fichier a %(upload)s)"
+"Vous ne pouvez pas télédéposer de fichiers de ce type plus larges "
+"que%(limit)s(votre fichier fait %(upload)s)"
 
 #: threads/api/postendpoints/edits.py:89
 msgid "Edits record is unavailable for this post."
@@ -2857,8 +2856,8 @@ msgstr "Vous ne pouvez pas séparer les messages de ce fil de discussion."
 #, python-format
 msgid "You don't have permission to remove \"%(attachment)s\" attachment."
 msgstr ""
-"Vous n'avez pas la permission de supprimer la pièce jointe "
-"\"%(attachment)s\""
+"Vous n'avez pas la permission de supprimer la pièce-jointe « %(attachment)s "
+"»."
 
 #: threads/api/postingendpoint/attachments.py:128
 #, python-format
@@ -2894,12 +2893,13 @@ msgstr ""
 #: threads/api/postingendpoint/emailnotification.py:39
 #, python-format
 msgid "%(user)s has replied to your thread \"%(thread)s\""
-msgstr "%(user)s a répondu à votre fil de discussion \"%(thread)s\""
+msgstr "%(user)s a répondu à votre fil de discussion « %(thread)s »"
 
 #: threads/api/postingendpoint/emailnotification.py:41
 #, python-format
 msgid "%(user)s has replied to thread \"%(thread)s\" that you are watching"
-msgstr "%(user)s a répondu au fil de discussion \"%(thread)s\" que vous suivez"
+msgstr ""
+"%(user)s a répondu au fil de discussion « %(thread)s » que vous suivez"
 
 #: threads/api/postingendpoint/floodprotection.py:25
 msgid "You can't post message so quickly after previous one."
@@ -2938,12 +2938,12 @@ msgstr[0] ""
 "en avez ajouté %(added)s)."
 msgstr[1] ""
 "Vous ne pouvez pas ajouter plus de %(users)s utilisateurs au fil de "
-"discussion privé (Vous en avez ajouté %(added)s)."
+"discussion privé (vous en avez ajouté %(added)s)."
 
 #: threads/api/postingendpoint/participants.py:85
 #, python-format
 msgid "One or more users could not be found: %(usernames)s"
-msgstr "Un ou plusieurs utilisateurs n’ont pas été trouvés : %(usernames)s"
+msgstr "Un ou plusieurs utilisateurs n’ont pas été trouvés : %(usernames)s"
 
 #: threads/api/postingendpoint/reply.py:81 threads/validators.py:80
 msgid "You have to enter a message."
@@ -2967,7 +2967,7 @@ msgstr ""
 #: threads/api/threadendpoints/merge.py:118
 #: threads/serializers/moderation.py:418 threads/serializers/moderation.py:465
 msgid "Invalid choice."
-msgstr "Choix non valide."
+msgstr "Choix invalide."
 
 #: threads/api/threadendpoints/patch.py:52
 msgid "Invalid thread title."
@@ -3149,8 +3149,8 @@ msgstr ""
 "Si vous souhaitez limiter les options possibles pour télécharger ce type de "
 "fichiers aux utilisateurs ayant des rôles spécifiques, sélectionnez-les dans"
 " cette liste. Autrement, si vous ne choisissez aucun rôle, tous les "
-"utilisateurs disposant de l'autorisation de v des fichiers pourront "
-"télécharger des pièces jointes de ce type de fichier."
+"utilisateurs disposant de l'autorisation de télécharger des fichiers "
+"pourront télécharger des pièces jointes de ce type de fichier."
 
 #: threads/migrations/0002_threads_settings.py:17
 #: threads/migrations/0004_update_settings.py:17
@@ -3253,8 +3253,8 @@ msgstr ""
 #, python-format
 msgid "%(user)s has invited you to participate in private thread \"%(thread)s\""
 msgstr ""
-"%(user)s vous a invité à participer au fil de discussion privé "
-"\"%(thread)s\""
+"%(user)s vous a invité à participer au fil de discussion privé « %(thread)s "
+"»"
 
 #: threads/permissions/attachments.py:15
 msgid "Max attached file size (in kb)"
@@ -3557,24 +3557,25 @@ msgstr ""
 #: threads/permissions/privatethreads.py:255
 #, python-format
 msgid "%(user)s can't participate in private threads."
-msgstr "%(user)sne peut pas participer aux fils de discussion privés."
+msgstr "%(user)s ne peut pas participer aux fils de discussion privés."
 
 #: threads/permissions/privatethreads.py:262
 #, python-format
 msgid "%(user)s is blocking you."
-msgstr "%(user)svous bloque."
+msgstr "%(user)s vous bloque."
 
 #: threads/permissions/privatethreads.py:266
 #, python-format
 msgid "%(user)s is not allowing invitations to private threads."
 msgstr ""
-"%(user)sne permet pas d'invitations dans les fils de discussion privés."
+"%(user)s ne permet pas d'invitations dans les fils de discussion privés."
 
 #: threads/permissions/privatethreads.py:270
 #, python-format
 msgid "%(user)s limits invitations to private threads to followed users."
 msgstr ""
-"%(user)slimite les invitations aux fils privés pour les utilisateurs suivis."
+"%(user)s limite les invitations aux fils privés pour les utilisateurs "
+"suivis."
 
 #: threads/permissions/threads.py:76
 msgid "Can see unapproved content list"
@@ -3587,7 +3588,7 @@ msgid ""
 "being available on all threads lists, it will only display threads belonging"
 " to categories in which the user has permission to approve content."
 msgstr ""
-"Permet l'accès à des onglets \"non approuvés\" dans les listes de "
+"Permet l'accès à des onglets « non approuvés » dans les listes de "
 "discussions, pour lister facilement les fils de discussion qui ne sont pas "
 "approuvés ou qui contiennent des messages non approuvés. Bien que l'onglet "
 "soit disponible sur toutes les listes de discussion, il ne montrera que les "
@@ -3605,7 +3606,7 @@ msgid ""
 "categories threads lists, it will only display threads belonging to "
 "categories in which the user has permission to see posts reports."
 msgstr ""
-"Permet l'accès à des onglets \"signalés\" dans les listes de discussions, "
+"Permet l'accès à des onglets « signalés » dans les listes de discussions, "
 "pour lister facilement les fils de discussion qui contiennent des messages "
 "signalés. Bien que l'onglet soit disponible sur toutes les listes de "
 "discussion, il n'affichera que les fils de discussions appartenant aux "
@@ -4463,7 +4464,7 @@ msgid "No more than %(limit)s post can be deleted at single time."
 msgid_plural "No more than %(limit)s posts can be deleted at single time."
 msgstr[0] "Pas plus d'%(limit)s message ne peut être supprimé simultanément"
 msgstr[1] ""
-"Pas plus de %(limit)s messages ne peuvent être supprimés simultanément"
+"Pas plus de %(limit)s messages ne peuvent être supprimés simultanément."
 
 #: threads/serializers/moderation.py:85
 msgid "One or more posts to delete could not be found."
@@ -4471,7 +4472,7 @@ msgstr "Un ou plusieurs messages à supprimer n'ont pas été trouvés."
 
 #: threads/serializers/moderation.py:91
 msgid "You have to select at least two posts to merge."
-msgstr "Vous devez sélectionner au minimum 2 postes à fusionner"
+msgstr "Vous devez sélectionner au minimum 2 postes à fusionner."
 
 #: threads/serializers/moderation.py:112
 #, python-format
@@ -4655,8 +4656,8 @@ msgstr[0] ""
 "Vous ne pouvez pas ajouter plus de %(limit_value)soption à un seul sondage "
 "(%(show_value)s ajoutées)."
 msgstr[1] ""
-"Vous ne pouvez pas ajouter plus de %(limit_value)soptions à un seul sondage "
-"(%(show_value)s ajoutées)."
+"Vous ne pouvez pas ajouter plus de %(limit_value)s options à un seul sondage"
+" (%(show_value)s ajoutées)."
 
 #: threads/serializers/poll.py:155
 msgid "Number of allowed choices can't be greater than number of all choices."
@@ -4669,7 +4670,7 @@ msgstr ""
 msgid "This poll disallows voting for more than %(choices)s choice."
 msgid_plural "This poll disallows voting for more than %(choices)s choices."
 msgstr[0] "Ce sondage ne permet pas de voter pour plus de %(choices)schoix"
-msgstr[1] "Ce sondage ne permet pas de voter pour plus de %(choices)schoix"
+msgstr[1] "Ce sondage ne permet pas de voter pour plus de %(choices)s choix"
 
 #: threads/serializers/pollvote.py:39
 msgid "One or more of poll choices were invalid."
@@ -4687,7 +4688,7 @@ msgstr "%(user)s aime cela."
 #: threads/templatetags/misago_poststags.py:29
 #, python-format
 msgid "%(users)s like this."
-msgstr "%(users)s aiment cela"
+msgstr "%(users)s aiment cela."
 
 #: threads/templatetags/misago_poststags.py:34
 #, python-format
@@ -4703,7 +4704,7 @@ msgstr "%(users)s et %(last_user)s"
 
 #: threads/threadtypes/thread.py:16
 msgid "None (will become top level category)"
-msgstr "Aucune (Cette catégorie deviendra une catégorie parente)"
+msgstr "Aucune (cette catégorie deviendra une catégorie parente)"
 
 #: threads/validators.py:30
 msgid "Requested category could not be found."
@@ -4711,7 +4712,7 @@ msgstr "La catégorie demandée n'a pas été trouvée."
 
 #: threads/validators.py:33
 msgid "You don't have permission to access this category."
-msgstr "Vous n'avez pas les droits pour accéder à cette catégorie"
+msgstr "Vous n'avez pas les droits pour accéder à cette catégorie."
 
 #: threads/validators.py:45
 #, python-format
@@ -4741,7 +4742,7 @@ msgstr[0] ""
 " %(show_value)s)."
 msgstr[1] ""
 "Le titre du fil ne peut pas dépasser %(limit_value)s caractères "
-"(Actuellement %(show_value)s)."
+"(actuellement %(show_value)s)."
 
 #: threads/validators.py:69
 msgid "Thread title should contain alpha-numeric characters."
@@ -4765,7 +4766,7 @@ msgstr[0] ""
 "(Actuellement %(show_value)s)."
 msgstr[1] ""
 "Le message affiché doit comporter au moins %(limit_value)s caractères "
-"(Actuellement %(show_value)s)."
+"(actuellement %(show_value)s)."
 
 #: threads/validators.py:97
 #, python-format
@@ -4780,7 +4781,7 @@ msgstr[0] ""
 "(Actuellement %(show_value)s)."
 msgstr[1] ""
 "Le message affiché ne peut pas dépasser %(limit_value)s  caractères "
-"(Actuellement %(show_value)s)."
+"(actuellement %(show_value)s)."
 
 #: threads/viewmodels/threads.py:27
 msgid "Your threads"
@@ -4872,7 +4873,7 @@ msgstr "Fichiers de taille plus importante"
 
 #: threads/views/admin/attachments.py:31
 msgid "With attachments: 0"
-msgstr "Avec pièces jointes :0"
+msgstr "Avec pièces jointes : 0"
 
 #: threads/views/admin/attachments.py:32
 msgid "Select attachments"
@@ -4884,16 +4885,16 @@ msgstr "Supprimer les pièces jointes"
 
 #: threads/views/admin/attachments.py:38
 msgid "Are you sure you want to delete selected attachments?"
-msgstr "Etes vous sûr de vouloir supprimer les pièces jointes sélectionnées ?"
+msgstr "Etes vous sûr de vouloir supprimer les pièces jointes sélectionnées ?"
 
 #: threads/views/admin/attachments.py:63
 msgid "Selected attachments have been deleted."
-msgstr "Les pièces jointes sélectionnées ont été supprimées"
+msgstr "Les pièces jointes sélectionnées ont été supprimées."
 
 #: threads/views/admin/attachments.py:84
 #, python-format
 msgid "Attachment \"%(filename)s\" has been deleted."
-msgstr "La pièce jointe \"%(filename)s\" a été supprimée"
+msgstr "La pièce jointe « %(filename)s » a été supprimée"
 
 #: threads/views/admin/attachmenttypes.py:15
 msgid "Requested attachment type could not be found."
@@ -4902,12 +4903,12 @@ msgstr "Le type de pièce jointe requise n'a pu être trouvé"
 #: threads/views/admin/attachmenttypes.py:36
 #, python-format
 msgid "New type \"%(name)s\" has been saved."
-msgstr "Le nouveau type \"%(name)s\" a été sauvegardé."
+msgstr "Le nouveau type « %(name)s » a été sauvegardé."
 
 #: threads/views/admin/attachmenttypes.py:40
 #, python-format
 msgid "Attachment type \"%(name)s\" has been edited."
-msgstr "le type de pièce jointe  \"%(name)s\" a été modifié"
+msgstr "le type de pièce jointe  « %(name)s » a été modifié."
 
 #: threads/views/admin/attachmenttypes.py:47
 #, python-format
@@ -4915,13 +4916,13 @@ msgid ""
 "Attachment type \"%(name)s\" has associated attachments and can't be "
 "deleted."
 msgstr ""
-"Le type de pièce jointe  \"%(name)s\" est associé à d'autres pièces jointes "
-"et ne peut être supprimé"
+"Le type de pièce jointe  « %(name)s » est associé à d'autres pièces jointes "
+"et ne peut être supprimé."
 
 #: threads/views/admin/attachmenttypes.py:53
 #, python-format
 msgid "Attachment type \"%(name)s\" has been deleted."
-msgstr "Le type de pièce jointe  \"%(name)s\" a été supprimé"
+msgstr "Le type de pièce jointe  « %(name)s » a été supprimé."
 
 #: threads/views/goto.py:115
 msgid ""
@@ -4929,7 +4930,7 @@ msgid ""
 "post."
 msgstr ""
 "Une autorisation d'approbation des contenus est nécessaire  pour pouvoir "
-"accéder aux premiers messages non approuvés"
+"accéder aux premiers messages non approuvés."
 
 #: users/admin.py:79
 msgid "User Accounts"
@@ -4972,37 +4973,37 @@ msgstr "Votre avatar est verrouillé. Vous ne pouvez le modifier."
 
 #: users/api/userendpoints/avatar.py:111
 msgid "This avatar type is not allowed."
-msgstr "Cette catégorie d'avatar n'est pas autorisée"
+msgstr "Cette catégorie d'avatar n'est pas autorisée."
 
 #: users/api/userendpoints/avatar.py:120
 msgid "Unknown avatar type."
-msgstr "Catégorie d'avatar inconnue"
+msgstr "Catégorie d'avatar inconnue."
 
 #: users/api/userendpoints/avatar.py:143
 msgid "New avatar based on your account was set."
-msgstr "Un nouvel avatar associé à votre compte a été crée"
+msgstr "Un nouvel avatar associé à votre compte a été crée."
 
 #: users/api/userendpoints/avatar.py:149
 msgid "Gravatar was downloaded and set as new avatar."
 msgstr ""
 "Le service de centralisation des avatars a été téléchargé et a crée un "
-"nouvel avatar"
+"nouvel avatar."
 
 #: users/api/userendpoints/avatar.py:151
 msgid "No Gravatar is associated with your e-mail address."
-msgstr "Aucun Gravatar n'est associé à votre courriel"
+msgstr "Aucun Gravatar n'est associé à votre courriel."
 
 #: users/api/userendpoints/avatar.py:153
 msgid "Failed to connect to Gravatar servers."
-msgstr "Echec de connexion aux serveurs Gravatar"
+msgstr "Echec de connexion aux serveurs Gravatar."
 
 #: users/api/userendpoints/avatar.py:163
 msgid "Avatar from gallery was set."
-msgstr "Un avatar de la bibliothèque a été configuré"
+msgstr "Un avatar de la bibliothèque a été configuré."
 
 #: users/api/userendpoints/avatar.py:165
 msgid "Incorrect image."
-msgstr "image incorrecte"
+msgstr "Image incorrecte."
 
 #: users/api/userendpoints/avatar.py:171
 msgid "No file was sent."
@@ -5025,7 +5026,7 @@ msgstr "Confirmer le changement de courriel sur %(forum_name)s forums"
 msgid "E-mail change confirmation link was sent to new address."
 msgstr ""
 "Un lien permettant de confirmer le changement d'e mail a été envoyé à la "
-"nouvelle adresse"
+"nouvelle adresse."
 
 #: users/api/userendpoints/changepassword.py:23
 #, python-format
@@ -5035,28 +5036,28 @@ msgstr "Confirmer le changement de mot de passe sur  %(forum_name)s forums"
 #: users/api/userendpoints/changepassword.py:31
 msgid "Password change confirmation link was sent to your address."
 msgstr ""
-"Un lien permettant de changer de mot de passe a été envoyé à votre adresse"
+"Un lien permettant de changer de mot de passe a été envoyé à votre adresse."
 
 #: users/api/userendpoints/create.py:23
 msgid "New users registrations are currently closed."
-msgstr "Les inscriptions sont closes"
+msgstr "Les inscriptions sont closes."
 
 #: users/api/userendpoints/create.py:54
 msgid "Please try resubmitting the form."
-msgstr "Veuillez resoumettre le formulaire"
+msgstr "Veuillez resoumettre le formulaire."
 
 #: users/api/userendpoints/create.py:59
 #, python-format
 msgid "Welcome on %(forum_name)s forums!"
-msgstr "Bienvenue sur  %(forum_name)s forums!"
+msgstr "Bienvenue sur le forum %(forum_name)s !"
 
 #: users/api/userendpoints/signature.py:17
 msgid "You don't have permission to change signature."
-msgstr "Vous n'avez pas le droit de changer d'identifiant"
+msgstr "Vous n'avez pas le droit de changer de signature."
 
 #: users/api/userendpoints/signature.py:26
 msgid "Your signature is locked. You can't change it."
-msgstr "Votre identifiant est verrouillé. Vous ne pouvez le modifier."
+msgstr "Votre signature est verrouillée. Vous ne pouvez pas la modifier."
 
 #: users/api/userendpoints/username.py:39
 msgid "You can't change your username now."
@@ -5088,7 +5089,7 @@ msgstr "Vous ne pouvez modifier les options des autres utilisateurs."
 
 #: users/api/users.py:109
 msgid "Your forum options have been changed."
-msgstr "Vos options ont été modifiées pour ce forum."
+msgstr "Les options de votre forum ont été modifiées."
 
 #: users/api/users.py:116
 msgid "You can't change other users names."
@@ -5135,7 +5136,7 @@ msgstr ""
 
 #: users/avatars/uploaded.py:45
 msgid "Uploaded image is too big."
-msgstr "L'image téléchargée est trop volumineuse."
+msgstr "L'image télédéposée est trop volumineuse."
 
 #: users/avatars/uploaded.py:50
 msgid "Uploaded image ratio cannot be greater than 16:9."
@@ -5147,23 +5148,23 @@ msgstr "Les données collationnées sont invalides. Veuillez réessayer."
 
 #: users/captcha.py:24
 msgid "Failed to contact reCAPTCHA API."
-msgstr "Tentative de connexion à reCAPTCHA API échouée"
+msgstr "Tentative de connexion à reCAPTCHA API échouée."
 
 #: users/captcha.py:34
 msgid "Entered answer is incorrect."
-msgstr "La réponse est incorrecte"
+msgstr "La réponse est incorrecte."
 
 #: users/decorators.py:13
 msgid "This page is not available to signed in users."
-msgstr "Cette page n'est pas accessible aux utilisateurs enregistrés"
+msgstr "Cette page n'est pas accessible aux utilisateurs enregistrés."
 
 #: users/decorators.py:23
 msgid "You have to sign in to access this page."
-msgstr "Vous devez vous identifier pour accéder à cette page"
+msgstr "Vous devez vous identifier pour accéder à cette page."
 
 #: users/djangoadmin.py:30
 msgid "Misago user data"
-msgstr "Utilisateur de Misago"
+msgstr "Données des utilisateurs Misago"
 
 #: users/djangoadmin.py:36
 msgid "Edit permissions and groups"
@@ -5188,7 +5189,7 @@ msgstr "Courriel"
 
 #: users/forms/admin.py:52
 msgid "All registered members must have \"Member\" role."
-msgstr "Tous les membres enregistrés doivent avoir un rôle de \"Membre\"."
+msgstr "Tous les membres enregistrés doivent avoir un rôle de « Membre »."
 
 #: users/forms/admin.py:71
 msgid "Is administrator"
@@ -5286,7 +5287,7 @@ msgstr ""
 
 #: users/forms/admin.py:138
 msgid "Lock signature"
-msgstr "Verrouiller l'identifiant"
+msgstr "Verrouiller la signature"
 
 #: users/forms/admin.py:140
 msgid ""
@@ -5338,13 +5339,13 @@ msgstr ""
 
 #: users/forms/admin.py:248
 msgid "Roles"
-msgstr "Roles"
+msgstr "Rôles"
 
 #: users/forms/admin.py:249
 msgid "Individual roles of this user. All users must have \"member\" role."
 msgstr ""
 "Les rôles individuels de cet utilisateur. Tous les utilisateurs doivent "
-"avoir un rôle de \"membre\"."
+"avoir un rôle de « membre »."
 
 #: users/forms/admin.py:307
 msgid "Username starts with"
@@ -5356,15 +5357,15 @@ msgstr "Courriel commençant par"
 
 #: users/forms/admin.py:309
 msgid "Profile fields contain"
-msgstr "Esquisser le contenu des champs"
+msgstr "Les champs de profil contiennent"
 
 #: users/forms/admin.py:310
 msgid "Inactive only"
-msgstr "inactif uniquement"
+msgstr "Inactifs uniquement"
 
 #: users/forms/admin.py:311
 msgid "Disabled only"
-msgstr "Désactivé uniquement"
+msgstr "Désactivés uniquement"
 
 #: users/forms/admin.py:312
 msgid "Admins only"
@@ -5376,7 +5377,7 @@ msgstr "Tous les rangs"
 
 #: users/forms/admin.py:358
 msgid "All roles"
-msgstr "Tous les roles"
+msgstr "Tous les rôles"
 
 #: users/forms/admin.py:365
 msgid "Has rank"
@@ -5391,8 +5392,8 @@ msgid ""
 "Short and descriptive name of all users with this rank. \"The Team\" or "
 "\"Game Masters\" are good examples."
 msgstr ""
-"Nom court et descriptif de tous les utilisateurs avec ce rang. \"L'équipe\" "
-"ou  \"les maîtres du jeux\" sont de bons exemples."
+"Nom court et descriptif de tous les utilisateurs avec ce rang. « L'équipe » "
+"ou  « les maîtres du jeux » sont de bons exemples."
 
 #: users/forms/admin.py:392
 msgid "User title"
@@ -5404,7 +5405,7 @@ msgid ""
 " \"GM\" or \"Dev\"."
 msgstr ""
 "Version unique et optionnelle du rang affiché par les noms utilisateurs. Par"
-" exemple \"GM\" OU \"Dev\""
+" exemple « GM » OU « Dev »."
 
 #: users/forms/admin.py:405
 msgid ""
@@ -5412,7 +5413,7 @@ msgid ""
 "with this rank."
 msgstr ""
 "Description optionnelle expliquant la fonction ou le statut des membres "
-"distingués par ce rang"
+"distingués par ce rang."
 
 #: users/forms/admin.py:414
 msgid "Rank can give additional roles to users with it."
@@ -5422,8 +5423,8 @@ msgstr ""
 #: users/forms/admin.py:419
 msgid "Optional css class added to content belonging to this rank owner."
 msgstr ""
-"La classe optionnelle css est ajoutée au contenu possédé par le propriétaire"
-" de ce rang"
+"La classe CSS optionnelle est ajoutée au contenu possédé par le propriétaire"
+" de ce rang."
 
 #: users/forms/admin.py:422
 msgid "Give rank dedicated tab on users list"
@@ -5436,7 +5437,7 @@ msgid ""
 msgstr ""
 "Sélectionner cette option permettra de rendre les utilisateurs avec ce rang "
 "plus facilement détectable par les autres via une page dédiée sur le forum à"
-" la liste des utilisateurs "
+" la liste des utilisateurs."
 
 #: users/forms/admin.py:450
 msgid "This name collides with other rank."
@@ -5498,11 +5499,11 @@ msgstr ""
 
 #: users/forms/admin.py:497
 msgid "Check type"
-msgstr "Vérifier le type."
+msgstr "Vérifier le type"
 
 #: users/forms/admin.py:502
 msgid "Restrict this ban to registrations"
-msgstr "Restreindre cette interdiction aux enregistrements."
+msgstr "Restreindre cette interdiction aux enregistrements"
 
 #: users/forms/admin.py:504
 msgid ""
@@ -5527,8 +5528,8 @@ msgid ""
 "beginning with \"83.\"."
 msgstr ""
 "Cette valeur est insensible à la casse et accepte l'astérisque (*) pour les "
-"résultats bruts. Par exemple, interdire IP pour la valeur \"83. *\" "
-"interdira toutes les adresses IP commençant par \"83.\"."
+"résultats bruts. Par exemple, interdire IP pour la valeur « 83.* » interdira"
+" toutes les adresses IP commençant par « 83. »."
 
 #: users/forms/admin.py:518
 msgid "Banned value can't be longer than 250 characters."
@@ -5581,15 +5582,15 @@ msgstr "Expiré"
 
 #: users/forms/auth.py:16
 msgid "Fill out both fields."
-msgstr "Remplir les deux champs"
+msgstr "Remplissez les deux champs."
 
 #: users/forms/auth.py:17
 msgid "Login or password is incorrect."
-msgstr "Login ou mot de passe incorrect"
+msgstr "Identifiant ou mot de passe incorrect."
 
 #: users/forms/auth.py:18
 msgid "You have to activate your account before you will be able to sign in."
-msgstr "Vous devez activer votre compte avant de pouvoir vous identifier"
+msgstr "Vous devez activer votre compte avant de pouvoir vous identifier."
 
 #: users/forms/auth.py:20
 msgid ""
@@ -5597,7 +5598,7 @@ msgid ""
 " sign in."
 msgstr ""
 "Votre compte doit être d'abord activé par un administrateur pour pouvoir "
-"vous identifier"
+"vous identifier."
 
 #: users/forms/auth.py:90
 msgid "Your account does not have admin privileges."
@@ -5618,12 +5619,12 @@ msgstr "Il n'existe pas d'utilisateur avec ce courriel."
 #: users/forms/auth.py:136 users/views/activation.py:46
 #, python-format
 msgid "%(user)s, your account is already active."
-msgstr "%(user)s, votre compte est déjà actif"
+msgstr "%(user)s, votre compte est déjà actif."
 
 #: users/forms/auth.py:140
 #, python-format
 msgid "%(user)s, only administrator may activate your account."
-msgstr "%(user)s, votre compte ne peut être activé que par administrateur"
+msgstr "%(user)s, votre compte ne peut être activé que par administrateur."
 
 #: users/forms/auth.py:147
 msgid ""
@@ -5643,7 +5644,7 @@ msgstr ""
 
 #: users/forms/register.py:34
 msgid "This usernane is not allowed."
-msgstr "Ce nom d'utilisateur n'est pas autorisé"
+msgstr "Ce nom d'utilisateur n'est pas autorisé."
 
 #: users/forms/register.py:45 users/validators.py:41
 msgid "This e-mail address is not allowed."
@@ -5697,7 +5698,7 @@ msgstr "Ne pas autoriser de nouveaux enregsitrements"
 #: users/migrations/0002_users_settings.py:40
 #: users/migrations/0006_update_settings.py:41
 msgid "Minimum allowed username length."
-msgstr "Longueur minimale autorisée pour un nom d'utilisateur"
+msgstr "Longueur minimale autorisée pour un nom d'utilisateur."
 
 #: users/migrations/0002_users_settings.py:41
 #: users/migrations/0006_update_settings.py:42
@@ -5773,7 +5774,7 @@ msgid ""
 "e-mail address."
 msgstr ""
 "Sélectionner quel avatar utiliser quand l'utilisateur n'a aucun avatar "
-"universel associé à son courriel"
+"universel associé à son courriel."
 
 #: users/migrations/0002_users_settings.py:120
 #: users/migrations/0006_update_settings.py:106
@@ -5784,17 +5785,17 @@ msgstr "Taille maximale de l'avatar téléchargé"
 #: users/migrations/0006_update_settings.py:107
 msgid "Enter maximum allowed file size (in KB) for avatar uploads."
 msgstr ""
-"Entrer la taille maximale autorisée (in KB) pour les avatars téléchargés"
+"Entrer la taille maximale autorisée (in KB) pour les avatars téléchargés."
 
 #: users/migrations/0002_users_settings.py:132
 #: users/migrations/0006_update_settings.py:118
 msgid "Signatures"
-msgstr "identifiants"
+msgstr "Signatures"
 
 #: users/migrations/0002_users_settings.py:133
 #: users/migrations/0006_update_settings.py:119
 msgid "Maximum allowed signature length."
-msgstr "Longueur maximale autorisée pour un identifiant"
+msgstr "Longueur maximale autorisée pour une signature."
 
 #: users/migrations/0002_users_settings.py:145
 #: users/migrations/0006_update_settings.py:131
@@ -5806,7 +5807,7 @@ msgstr "Paramètres d'abonnement par défaut"
 #: users/migrations/0006_update_settings.py:136
 #: users/migrations/0006_update_settings.py:155
 msgid "Don't watch"
-msgstr "Ne pas regarder."
+msgstr "Ne pas surveiller"
 
 #: users/migrations/0002_users_settings.py:151
 #: users/migrations/0002_users_settings.py:170
@@ -5842,7 +5843,7 @@ msgstr ""
 
 #: users/migrations/0002_users_settings.py:193
 msgid "Select CAPTCHA type"
-msgstr "Sélectionner un type de CAPTCHA"
+msgstr "Sélectionner le type de CAPTCHA"
 
 #: users/migrations/0002_users_settings.py:194
 msgid "CAPTCHA type"
@@ -5879,11 +5880,11 @@ msgstr "Question test"
 
 #: users/migrations/0002_users_settings.py:238
 msgid "Question help text"
-msgstr "Aide"
+msgstr "Texte d'aide de la question"
 
 #: users/migrations/0002_users_settings.py:247
 msgid "Valid answers"
-msgstr "Valider les réponses"
+msgstr "Réponses valides"
 
 #: users/migrations/0002_users_settings.py:248
 msgid "Enter each answer in new line. Answers are case-insensitive."
@@ -5894,7 +5895,7 @@ msgstr ""
 #: users/migrations/0004_default_ranks.py:17
 #: users/migrations/0004_default_ranks.py:18 users/models/user.py:110
 msgid "Forum team"
-msgstr "équipe du forum"
+msgstr "Équipe du forum"
 
 #: users/migrations/0004_default_ranks.py:19
 msgid "Team"
@@ -5907,11 +5908,11 @@ msgstr "Membres"
 
 #: users/models/user.py:37
 msgid "User must have an email address."
-msgstr "L'utilisateur doit avoir un courriel"
+msgstr "L'utilisateur doit avoir un courriel."
 
 #: users/models/user.py:39
 msgid "User must have a password."
-msgstr "L'utilisateur doit avoir un mot de passe"
+msgstr "L'utilisateur doit avoir un mot de passe."
 
 #: users/models/user.py:145
 msgid "Notify"
@@ -5944,7 +5945,7 @@ msgstr "Statut du staff"
 #: users/models/user.py:190
 msgid "Designates whether the user can log into admin sites."
 msgstr ""
-"Indique si l'utilisateur peut se connecter sur les sites administrateurs"
+"Indique si l'utilisateur peut se connecter sur les sites d'administration."
 
 #: users/models/user.py:197
 msgid "active"
@@ -5982,27 +5983,27 @@ msgstr ""
 
 #: users/permissions/account.py:25
 msgid "Can have signature"
-msgstr "Peut avoir un identifiant"
+msgstr "Peut avoir une signature"
 
 #: users/permissions/account.py:26
 msgid "Can put links in signature"
-msgstr "Peut mettre un lien dans l'identifiant"
+msgstr "Peut mettre un lien dans la signature"
 
 #: users/permissions/account.py:27
 msgid "Can put images in signature"
-msgstr "Peut mettre des images dans l'identifiant"
+msgstr "Peut mettre des images dans la signature"
 
 #: users/permissions/account.py:29
 msgid "Can use text blocks in signature"
-msgstr "Peut utiliser des blocs de texte dans l'identifiant"
+msgstr "Peut utiliser des blocs de texte dans la signature"
 
 #: users/permissions/account.py:31
 msgid ""
 "Controls whether or not users can put quote, code, spoiler blocks and "
 "horizontal lines in signatures."
 msgstr ""
-"Contrôle si les utilisateurs peuvent insérer des guillemets, du code, des "
-"blocs de spoiler et des lignes horizontales dans les identifiants."
+"Contrôle si les utilisateurs peuvent insérer une citation, du code, des "
+"blocs de spoiler et des lignes horizontales dans les signatures."
 
 #: users/permissions/decorators.py:16
 msgid "You have to sig in to perform this action."
@@ -6010,7 +6011,7 @@ msgstr "Vous devez vous identifier pour réaliser cette action."
 
 #: users/permissions/decorators.py:27
 msgid "Only guests can perform this action."
-msgstr "Seuls les invités peuvent réaliser cette action"
+msgstr "Seuls les invités peuvent réaliser cette action."
 
 #: users/permissions/delete.py:25
 msgid "Maximum age of deleted account (in days)"
@@ -6018,7 +6019,7 @@ msgstr "Ancienneté maximale d'un compte supprimé (en jours)"
 
 #: users/permissions/delete.py:26 users/permissions/delete.py:32
 msgid "Enter zero to disable this check."
-msgstr "Entre zéro pour inactiver cette vérification"
+msgstr "Entre zéro pour inactiver cette vérification."
 
 #: users/permissions/delete.py:31
 msgid "Maximum number of posts on deleted account"
@@ -6026,16 +6027,16 @@ msgstr "Nombre maximal de messages d'un compte supprimé"
 
 #: users/permissions/delete.py:75
 msgid "You can't delete users."
-msgstr "Vous ne pouvez supprimer des utilisateurs"
+msgstr "Vous ne pouvez supprimer des utilisateurs."
 
 #: users/permissions/delete.py:78 users/views/admin/users.py:201
 #: users/views/admin/users.py:215 users/views/admin/users.py:331
 msgid "You can't delete yourself."
-msgstr "Vous ne pouvez supprimer votre compte"
+msgstr "Vous ne pouvez supprimer votre compte."
 
 #: users/permissions/delete.py:80
 msgid "You can't delete administrators."
-msgstr "Vous ne pouvez supprimer des administrateurs"
+msgstr "Vous ne pouvez pas supprimer des administrateurs."
 
 #: users/permissions/delete.py:85
 #, python-format
@@ -6100,7 +6101,7 @@ msgstr "Peut lever une interdiction"
 
 #: users/permissions/moderation.py:49
 msgid "Max length, in days, of lifted ban"
-msgstr "Durée maximale, en jours, d'une interdiction levée."
+msgstr "Durée maximale, en jours, d'une interdiction levée"
 
 #: users/permissions/moderation.py:50
 msgid "Enter zero to let moderators lift permanent bans."
@@ -6110,15 +6111,15 @@ msgstr ""
 
 #: users/permissions/moderation.py:120
 msgid "You can't rename users."
-msgstr "Vous ne pouvez renommer des utilisateurs"
+msgstr "Vous ne pouvez renommer des utilisateurs."
 
 #: users/permissions/moderation.py:122
 msgid "You can't rename administrators."
-msgstr "Vous ne pouvez renommer des administrateurs"
+msgstr "Vous ne pouvez renommer des administrateurs."
 
 #: users/permissions/moderation.py:130
 msgid "You can't moderate avatars."
-msgstr "Vous pouvez modérer des avatars."
+msgstr "Vous ne pouvez pas modérer des avatars."
 
 #: users/permissions/moderation.py:132
 msgid "You can't moderate administrators avatars."
@@ -6126,11 +6127,11 @@ msgstr "Vous ne pouvez pas modérer les avatars des administrateurs."
 
 #: users/permissions/moderation.py:140
 msgid "You can't moderate signatures."
-msgstr "Vous ne pouvez pas modérer des identifiants."
+msgstr "Vous ne pouvez pas modérer des signatures."
 
 #: users/permissions/moderation.py:142
 msgid "You can't moderate administrators signatures."
-msgstr "Vous ne pouvez pas modérer les identifiants des administrateurs."
+msgstr "Vous ne pouvez pas modérer les signatures des administrateurs."
 
 #: users/permissions/moderation.py:151
 msgid "You have to sign in to edit profile details."
@@ -6146,11 +6147,11 @@ msgstr "Vous ne pouvez pas modifier les détails des administrateurs."
 
 #: users/permissions/moderation.py:164
 msgid "You can't ban users."
-msgstr "Vous ne pouvez bannir des utilisateurs"
+msgstr "Vous ne pouvez pas bannir d'utilisateurs."
 
 #: users/permissions/moderation.py:166
 msgid "You can't ban administrators."
-msgstr "Vous ne pouvez bannir des administrateurs"
+msgstr "Vous ne pouvez bannir d'administrateurs."
 
 #: users/permissions/moderation.py:174
 msgid "You can't lift bans."
@@ -6158,7 +6159,7 @@ msgstr "Vous ne pouvez pas lever des interdictions."
 
 #: users/permissions/moderation.py:177
 msgid "This user is not banned."
-msgstr "Cet utilisateur n'est pas banni"
+msgstr "Cet utilisateur n'est pas banni."
 
 #: users/permissions/moderation.py:182
 msgid "You can't lift permanent bans."
@@ -6199,7 +6200,7 @@ msgstr "Profils utilisateur"
 
 #: users/permissions/profiles.py:46
 msgid "Can follow other users"
-msgstr "Vous pouvez suivre d'autres utilisateurs"
+msgstr "Peut suivre d'autres utilisateurs"
 
 #: users/permissions/profiles.py:47
 msgid "Can be blocked by other users"
@@ -6215,27 +6216,27 @@ msgstr "Peut voir les adresses IPs des membres"
 
 #: users/permissions/profiles.py:52
 msgid "Can see members that hide their presence"
-msgstr "Vous pouvez visualiser les membres qui cachent leur présence. "
+msgstr "Vous pouvez voir les membres qui cachent leur présence. "
 
 #: users/permissions/profiles.py:114
 msgid "You can't browse users list."
-msgstr "Vous ne pouvez pas aller voir la liste des utilisateurs"
+msgstr "Vous ne pouvez pas aller voir la liste des utilisateurs."
 
 #: users/permissions/profiles.py:123
 msgid "You can't follow other users."
-msgstr "Vous ne pouvez suivre d'autres utilisateurs"
+msgstr "Vous ne pouvez pas suivre d'autres utilisateurs."
 
 #: users/permissions/profiles.py:125
 msgid "You can't add yourself to followed."
-msgstr "Vous ne pouvez vous ajouter aux personnes suivies."
+msgstr "Vous ne pouvez pas vous ajouter aux personnes suivies."
 
 #: users/permissions/profiles.py:134
 msgid "You can't block administrators."
-msgstr "Vous ne pouvez bloquer les administrateurs."
+msgstr "Vous ne pouvez pas bloquer les administrateurs."
 
 #: users/permissions/profiles.py:136
 msgid "You can't block yourself."
-msgstr "Vous ne pouvez vous bloquer vous mêmes"
+msgstr "Vous ne pouvez pas vous bloquer vous mêmes"
 
 #: users/permissions/profiles.py:138
 #, python-format
@@ -6270,7 +6271,7 @@ msgstr "Non précisé"
 
 #: users/profilefields/default.py:32
 msgid "Not telling"
-msgstr "Ne pas dire"
+msgstr "N'en dit rien"
 
 #: users/profilefields/default.py:33
 msgid "Female"
@@ -6292,7 +6293,7 @@ msgid ""
 msgstr ""
 "Si vous disposez d'un site internet que vous souhaitez partager sur votre "
 "profil, vous pouvez renseigner son adresse ici. Ne pas oublier de débuter "
-"l'adresse http soit par \"http://\" soit par  \"https://\" pour qu'elle soit"
+"l'adresse http soit par « http:// » soit par  « https:// » pour qu'elle soit"
 " valide."
 
 #: users/profilefields/default.py:50
@@ -6310,7 +6311,7 @@ msgstr ""
 
 #: users/profilefields/default.py:59
 msgid "Twitter handle"
-msgstr "Un pseudo twitter"
+msgstr "Pseudo twitter"
 
 #: users/profilefields/default.py:63
 #, python-format
@@ -6321,8 +6322,8 @@ msgid ""
 msgstr ""
 "Si vous avez un compte Twitter, vous pouvez renseigner ici votre identifiant"
 " Twitter pour que d'autres utilisateurs puissent vous trouver.  Faire "
-"débuter votre identifiant par le signe \"@\" sign n'est pas obligatoire. "
-"Soit \"@%(slug)s\" soit \"%(slug)s\"  sont des valeurs acceptables."
+"débuter votre identifiant par le signe « @ » sign n'est pas obligatoire. "
+"Soit « @%(slug)s » soit « %(slug)s » sont des valeurs acceptables."
 
 #: users/profilefields/default.py:79
 msgid "This is not a valid twitter handle."
@@ -6330,11 +6331,11 @@ msgstr "Ceci n'est pas un pseudo twitter valide."
 
 #: users/profilefields/default.py:85
 msgid "Join IP"
-msgstr "Inscrit (IP)"
+msgstr "IP d'inscription"
 
 #: users/profilefields/default.py:99
 msgid "Last IP"
-msgstr "Dernier IP"
+msgstr "Dernière IP"
 
 #: users/search.py:24
 msgid "You don't have permission to search users."
@@ -6346,24 +6347,23 @@ msgstr "Votre adresse IP est bannie."
 
 #: users/serializers/ban.py:41
 msgid "You are banned."
-msgstr "Vous êtes banni"
+msgstr "Vous êtes banni⋅e."
 
 #: users/serializers/options.py:49
 msgid "Signature is too long."
-msgstr "L'identifiant est trop long"
+msgstr "La signature est trop longue."
 
 #: users/serializers/options.py:61
 msgid "Enter new username."
-msgstr "Entrer le nouveau nom d'utilisateur"
+msgstr "Entrer le nouveau nom d'utilisateur."
 
 #: users/serializers/options.py:64
 msgid "New username is same as current one."
-msgstr ""
-"Le nouveau nom d'utilisateur est le même que celui actuellement utilisé"
+msgstr "Le nouveau nom d'utilisateur est le même que l'actuel."
 
 #: users/serializers/options.py:81 users/serializers/options.py:95
 msgid "Entered password is invalid."
-msgstr "Le mot de passe saisi est non valide"
+msgstr "Le mot de passe saisi est invalide."
 
 #: users/serializers/options.py:100
 msgid "You have to enter new e-mail address."
@@ -6371,11 +6371,11 @@ msgstr "Vous devez entrer un nouveau courriel."
 
 #: users/serializers/options.py:103
 msgid "New e-mail is same as current one."
-msgstr "La nouveau courriel est le même que celui actuellement utilisé."
+msgstr "La nouveau courriel est le même que l'actuel."
 
 #: users/validators.py:29
 msgid "This e-mail address is not available."
-msgstr "Ce courriel n'est pas disponible"
+msgstr "Ce courriel n'est pas disponible."
 
 #: users/validators.py:56
 msgid "This username is not available."
@@ -6417,7 +6417,7 @@ msgstr ""
 
 #: users/validators.py:136
 msgid "This email is not allowed."
-msgstr "Ce courriel est non autorisé."
+msgstr "Ce courriel n'est pas autorisé."
 
 #: users/views/activation.py:51
 #, python-format
@@ -6431,7 +6431,7 @@ msgstr ""
 #: users/views/activation.py:76
 #, python-format
 msgid "%(user)s, your account has been activated!"
-msgstr "%(user)s, votre compte a été activé !"
+msgstr "%(user)s, votre compte a été activé !"
 
 #: users/views/admin/bans.py:14
 msgid "Requested ban does not exist."
@@ -6439,19 +6439,19 @@ msgstr "L'interdiction requise n’existe pas."
 
 #: users/views/admin/bans.py:30
 msgid "With bans: 0"
-msgstr "Avec interdictions :0."
+msgstr "Avec interdictions : 0"
 
 #: users/views/admin/bans.py:31
 msgid "Select bans"
-msgstr "Sélectionner les interdictions."
+msgstr "Sélectionner les interdictions"
 
 #: users/views/admin/bans.py:35
 msgid "Remove bans"
-msgstr "Enlever les interdictions."
+msgstr "Enlever les interdictions"
 
 #: users/views/admin/bans.py:36
 msgid "Are you sure you want to remove those bans?"
-msgstr "Etes vous certain de vouloir supprimer ces interdictions ?"
+msgstr "Etes vous certain de vouloir supprimer ces interdictions ?"
 
 #: users/views/admin/bans.py:42
 msgid "Selected bans have been removed."
@@ -6460,12 +6460,12 @@ msgstr "Les interdictions sélectionnées ont été supprimées."
 #: users/views/admin/bans.py:46
 #, python-format
 msgid "New ban \"%(name)s\" has been saved."
-msgstr "La nouvelle interdiction  \"%(name)s\" a été sauvegardée."
+msgstr "La nouvelle interdiction « %(name)s » a été sauvegardée."
 
 #: users/views/admin/bans.py:50
 #, python-format
 msgid "Ban \"%(name)s\" has been edited."
-msgstr "Le bannissement \"%(name)s\" a été modifié."
+msgstr "Le bannissement « %(name)s » a été modifié."
 
 #: users/views/admin/bans.py:57
 #, python-format
@@ -6479,49 +6479,49 @@ msgstr "Le rang demandé n'existe pas."
 #: users/views/admin/ranks.py:33
 #, python-format
 msgid "New rank \"%(name)s\" has been saved."
-msgstr "Le nouveau rang \"%(name)s\" a été sauvegardé."
+msgstr "Le nouveau rang « %(name)s » a été sauvegardé."
 
 #: users/views/admin/ranks.py:37
 #, python-format
 msgid "Rank \"%(name)s\" has been edited."
-msgstr "Le rang \"%(name)s\" a été modifié."
+msgstr "Le rang « %(name)s » a été modifié."
 
 #: users/views/admin/ranks.py:44
 #, python-format
 msgid "Rank \"%(name)s\" is default rank and can't be deleted."
-msgstr "Le rang \"%(name)s\"est le rang par défaut et ne peut être supprimé."
+msgstr "Le rang « %(name)s » est le rang par défaut et ne peut être supprimé."
 
 #: users/views/admin/ranks.py:47
 #, python-format
 msgid "Rank \"%(name)s\" is assigned to users and can't be deleted."
 msgstr ""
-"Le rang \"%(name)s\" a été attribué à des utilisateurs et ne peut être "
+"Le rang « %(name)s » a été attribué à des utilisateurs et ne peut être "
 "supprimé."
 
 #: users/views/admin/ranks.py:52
 #, python-format
 msgid "Rank \"%(name)s\" has been deleted."
-msgstr "Le rang \"%(name)s\" a été supprimé."
+msgstr "Le rang « %(name)s » a été supprimé."
 
 #: users/views/admin/ranks.py:69
 #, python-format
 msgid "Rank \"%(name)s\" has been moved below \"%(other)s\"."
-msgstr "Le rang\"%(name)s\" a été placé sous le rang  \"%(other)s\"."
+msgstr "Le rang « %(name)s » a été placé sous le rang « %(other)s »."
 
 #: users/views/admin/ranks.py:87
 #, python-format
 msgid "Rank \"%(name)s\" has been moved above \"%(other)s\"."
-msgstr "Le rang \"%(name)s\" a été déplacé au-dessus\"%(other)s\"."
+msgstr "Le rang « %(name)s » a été déplacé au-dessus de « %(other)s »."
 
 #: users/views/admin/ranks.py:101
 #, python-format
 msgid "Rank \"%(name)s\" is already default."
-msgstr "Le rang \"%(name)s\" est déjà le rang par défaut."
+msgstr "Le rang « %(name)s » est déjà le rang par défaut."
 
 #: users/views/admin/ranks.py:106
 #, python-format
 msgid "Rank \"%(name)s\" has been made default."
-msgstr "Le rang \"%(name)s\"  est défini comme rang par défaut"
+msgstr "Le rang « %(name)s » a été défini comme rang par défaut."
 
 #: users/views/admin/users.py:59
 msgid "Biggest posters"
@@ -6533,7 +6533,7 @@ msgstr "intervenants les moins actifs"
 
 #: users/views/admin/users.py:62
 msgid "With users: 0"
-msgstr "Avec des utilisateurs : 0"
+msgstr "Avec des utilisateurs : 0"
 
 #: users/views/admin/users.py:63
 msgid "Select users"
@@ -6549,7 +6549,7 @@ msgstr "Supprimer des comptes"
 
 #: users/views/admin/users.py:79
 msgid "Are you sure you want to delete selected users?"
-msgstr "Etes vous certain de supprimer les utilisateurs sélectionnés  ?"
+msgstr "Etes vous certain de supprimer les utilisateurs sélectionnés ?"
 
 #: users/views/admin/users.py:83
 msgid "Delete all"
@@ -6560,17 +6560,17 @@ msgid ""
 "Are you sure you want to delete selected users? This will also delete all "
 "content associated with their accounts."
 msgstr ""
-"Etes vous certain de vouloir supprimer les utilisateurs sélectionnés ? cela "
+"Etes vous certain de vouloir supprimer les utilisateurs sélectionnés ? Cela "
 "supprimera également tous les contenus associés à leurs comptes."
 
 #: users/views/admin/users.py:107
 msgid "You have to select inactive users."
-msgstr "Vous devez sélectionner les utilisateurs inactifs."
+msgstr "Vous devez sélectionner des utilisateurs inactifs."
 
 #: users/views/admin/users.py:114
 #, python-format
 msgid "Your account on %(forum_name)s forums has been activated"
-msgstr "Votre compte sur les %(forum_name)s forums a été activés."
+msgstr "Votre compte sur le forum %(forum_name)s a été activé."
 
 #: users/views/admin/users.py:119
 msgid "Selected users accounts have been activated."
@@ -6598,12 +6598,12 @@ msgstr "Les utilisateurs sélectionnés ont été supprimés."
 #: users/views/admin/users.py:232
 #, python-format
 msgid "New user \"%(user)s\" has been registered."
-msgstr "Le nouvel utilisateur \"%(user)s\" a été enregistré."
+msgstr "Le nouvel utilisateur « %(user)s » a été enregistré."
 
 #: users/views/admin/users.py:261
 #, python-format
 msgid "User \"%(user)s\" has been edited."
-msgstr "L'utilisateur \"%(user)s\" a été modifié."
+msgstr "L'utilisateur « %(user)s » a été modifié."
 
 #: users/views/admin/users.py:328
 msgid "This action can't be accessed directly."
@@ -6614,7 +6614,7 @@ msgstr "Il n'est pas possible de réaliser cette action directement."
 msgid ""
 "%(user)s, your link has expired. Please request new link and try again."
 msgstr ""
-"%(user)s, Votre lien a expiré. Veuillez demande un nouveau lien et "
+"%(user)s, votre lien a expiré. Veuillez demande un nouveau lien et "
 "réessayer."
 
 #: users/views/forgottenpassword.py:42

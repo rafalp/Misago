@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-20 23:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Katrin Kutepova <blackkatelv@gmail.com>, 2018\n"
+"Last-Translator: Roman Patsev <rpatsev@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/misago/teams/65369/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -225,7 +225,7 @@ msgstr "Завершено %(progress)s %"
 
 #: static/misago/js/misago.js:2
 msgid "No profile details are editable at this time."
-msgstr ""
+msgstr "В данный момент редактирование данных профиля недоступно."
 
 #: static/misago/js/misago.js:2
 msgid "This option is currently unavailable."
@@ -394,17 +394,24 @@ msgstr "Поиск"
 msgid "See full \"%(provider)s\" results page with %(count)s result."
 msgid_plural "See full \"%(provider)s\" results page with %(count)s results."
 msgstr[0] ""
+"Показать полные результаты \"%(provider)s\", содержащие %(count)s результат."
 msgstr[1] ""
+"Показать полные результаты \"%(provider)s\", содержащие %(count)s "
+"результата."
 msgstr[2] ""
+"Показать полные результаты \"%(provider)s\", содержащие %(count)s "
+"результатов."
 msgstr[3] ""
+"Показать полные результаты \"%(provider)s\", содержащие %(count)s "
+"результатов."
 
 #: static/misago/js/misago.js:4
 msgid "Posted by %(poster)s on %(posted_on)s in %(category)s."
-msgstr ""
+msgstr "Опубликовано %(poster)s%(posted_on)sв категории \"%(category)s\"."
 
 #: static/misago/js/misago.js:4
 msgid "%(title)s, joined on %(joined_on)s"
-msgstr ""
+msgstr "%(title)s, присоединился %(joined_on)s"
 
 #: static/misago/js/misago.js:4 static/misago/js/misago.js:12
 msgid "Change username"
@@ -832,10 +839,10 @@ msgstr "Вы не можете выбрать больше вариантов."
 #: static/misago/js/misago.js:6
 msgid "You can select %(choices)s more choice."
 msgid_plural "You can select %(choices)s more choices."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Вы можете выбрать ещё %(choices)s вариант."
+msgstr[1] "Вы можете выбрать ещё %(choices)sварианта."
+msgstr[2] "Вы можете выбрать ещё %(choices)s вариантов."
+msgstr[3] "Вы можете выбрать ещё %(choices)s вариантов."
 
 #: static/misago/js/misago.js:6
 msgid "You can change your vote later."
@@ -920,10 +927,10 @@ msgstr "Нравиться сообщений"
 #: static/misago/js/misago.js:7
 msgid "%(likes)s like"
 msgid_plural "%(likes)s likes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "%(likes)s лайк"
+msgstr[1] "%(likes)s лайка"
+msgstr[2] "%(likes)s лайков"
+msgstr[3] "%(likes)s лайков"
 
 #: static/misago/js/misago.js:7
 msgid "No users have liked this post."
@@ -1032,9 +1039,17 @@ msgid_plural ""
 "Thread title should be at least %(limit_value)s characters long (it has "
 "%(show_value)s)."
 msgstr[0] ""
+"Название темы должно быть не короче %(limit_value)s символа (сейчас "
+"%(show_value)s)."
 msgstr[1] ""
+"Название темы должно быть не короче %(limit_value)s символов (сейчас "
+"%(show_value)s)."
 msgstr[2] ""
+"Название темы должно быть не короче %(limit_value)s символов (сейчас "
+"%(show_value)s)."
 msgstr[3] ""
+"Название темы должно быть не короче %(limit_value)s символов (сейчас "
+"%(show_value)s)."
 
 #: static/misago/js/misago.js:8
 msgid ""
@@ -1044,9 +1059,17 @@ msgid_plural ""
 "Thread title cannot be longer than %(limit_value)s characters (it has "
 "%(show_value)s)."
 msgstr[0] ""
+"Название темы не должно быть длиннее %(limit_value)s символа (сейчас "
+"%(show_value)s)."
 msgstr[1] ""
+"Название темы не должно быть длиннее %(limit_value)s символов (сейчас "
+"%(show_value)s)."
 msgstr[2] ""
+"Название темы не должно быть длиннее %(limit_value)s символов (сейчас "
+"%(show_value)s)."
 msgstr[3] ""
+"Название темы не должно быть длиннее %(limit_value)s символов (сейчас "
+"%(show_value)s)."
 
 #: static/misago/js/misago.js:8
 msgid ""
@@ -1056,9 +1079,17 @@ msgid_plural ""
 "Posted message should be at least %(limit_value)s characters long (it has "
 "%(show_value)s)."
 msgstr[0] ""
+"Сообщение должно быть не короче %(limit_value)s символа (сейчас "
+"%(show_value)s)."
 msgstr[1] ""
+"Сообщение должно быть не короче %(limit_value)s символов (сейчас "
+"%(show_value)s)."
 msgstr[2] ""
+"Сообщение должно быть не короче %(limit_value)s символов (сейчас "
+"%(show_value)s)."
 msgstr[3] ""
+"Сообщение должно быть не короче %(limit_value)s символов (сейчас "
+"%(show_value)s)."
 
 #: static/misago/js/misago.js:8
 msgid ""
@@ -1068,9 +1099,17 @@ msgid_plural ""
 "Posted message cannot be longer than %(limit_value)s characters (it has "
 "%(show_value)s)."
 msgstr[0] ""
+"Сообщение не должно быть длиннее %(limit_value)s символа (сейчас "
+"%(show_value)s)."
 msgstr[1] ""
+"Сообщение не должно быть длиннее %(limit_value)s символов (сейчас "
+"%(show_value)s)."
 msgstr[2] ""
+"Сообщение не должно быть длиннее %(limit_value)s символов (сейчас "
+"%(show_value)s)."
 msgstr[3] ""
+"Сообщение не должно быть длиннее %(limit_value)s символов (сейчас "
+"%(show_value)s)."
 
 #: static/misago/js/misago.js:8 static/misago/js/misago.js:9
 #: static/misago/js/misago.js:15
@@ -1093,7 +1132,7 @@ msgstr "Событие было удалено."
 
 #: static/misago/js/misago.js:9
 msgid "Hidden by %(event_by)s %(event_on)s."
-msgstr ""
+msgstr "Скрыто %(event_by)s %(event_on)s."
 
 #: static/misago/js/misago.js:9
 msgid "By %(event_by)s %(event_on)s."
@@ -1362,10 +1401,10 @@ msgstr "защищено"
 #: static/misago/js/misago.js:10
 msgid "edited %(edits)s time"
 msgid_plural "edited %(edits)s times"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "отредактировано %(edits)s раз"
+msgstr[1] "отредактировано %(edits)s раза"
+msgstr[2] "отредактировано %(edits)s раз"
+msgstr[3] "отредактировано %(edits)s раз"
 
 #: static/misago/js/misago.js:10
 msgid "%(edits)s edit"
@@ -1389,7 +1428,7 @@ msgstr "Сообщение о блокировке для команды"
 
 #: static/misago/js/misago.js:11
 msgid "%(username)s's ban is permanent."
-msgstr ""
+msgstr "Блокировка %(username)s постоянна."
 
 #: static/misago/js/misago.js:11
 msgid "Ban expiration"
@@ -1405,7 +1444,7 @@ msgstr "Вы не поделились информацией о себе с д�
 
 #: static/misago/js/misago.js:11
 msgid "%(username)s is not sharing any details with others."
-msgstr ""
+msgstr "%(username)s не поделился никакими деталями с другими."
 
 #: static/misago/js/misago.js:11
 msgid "Details"
@@ -1413,7 +1452,7 @@ msgstr "Детали"
 
 #: static/misago/js/misago.js:11
 msgid "%(username)s's details have been updated."
-msgstr ""
+msgstr "%(username)sличные данные обновлены."
 
 #: static/misago/js/misago.js:11
 msgid "You have no started threads."
@@ -1421,7 +1460,7 @@ msgstr "У вас нет начатых тем."
 
 #: static/misago/js/misago.js:11
 msgid "%(username)s started no threads."
-msgstr ""
+msgstr "У %(username)s нет начатых тем."
 
 #: static/misago/js/misago.js:11
 msgid "You have started %(threads)s thread."
@@ -1454,7 +1493,7 @@ msgstr "Вы не написали сообщений."
 
 #: static/misago/js/misago.js:11
 msgid "%(username)s posted no messages."
-msgstr ""
+msgstr "У %(username)s нет опубликованных сообщений."
 
 #: static/misago/js/misago.js:11
 msgid "You have posted %(posts)s message."
@@ -1539,10 +1578,10 @@ msgstr "Подписан"
 #: static/misago/js/misago.js:11
 msgid "You are following %(users)s user."
 msgid_plural "You are following %(users)s users."
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "Вы подписаны на %(users)s пользователей."
+msgstr[1] "Вы подписаны на %(users)s пользователей."
+msgstr[2] "Вы подписаны на %(users)s пользователей."
+msgstr[3] "Вы подписаны на %(users)s пользователей."
 
 #: static/misago/js/misago.js:11
 msgid "%(username)s is following %(users)s user."
@@ -1661,7 +1700,7 @@ msgstr "Удалить с аккаунтом пользователя"
 
 #: static/misago/js/misago.js:12
 msgid "Hide after deleting user's account"
-msgstr ""
+msgstr "Скрыть после удаления аккаунта пользователя."
 
 #: static/misago/js/misago.js:12
 msgid "Return to users list"
@@ -1841,7 +1880,7 @@ msgstr "Войти"
 
 #: static/misago/js/misago.js:13
 msgid "You have to enter search query."
-msgstr ""
+msgstr "Вы дожны ввести поисковый запрос."
 
 #: static/misago/js/misago.js:13
 msgid "Search took %(time)s s to complete"
@@ -2451,7 +2490,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:21
 msgid "There are no users with this rank at the moment."
-msgstr ""
+msgstr "В данный момент нет пользователей с таким рейтингом."
 
 #: static/misago/js/misago.js:21
 msgid "yes"
@@ -2485,7 +2524,7 @@ msgstr "Произошла неизвестная ошибка."
 
 #: static/misago/js/misago.js:23
 msgid "Upload was rejected by server as too large."
-msgstr ""
+msgstr "Загрузка на сервер была отклонена из-за превышения объема файла."
 
 #: static/misago/js/misago.js:23
 msgid "Failed to load CAPTCHA."
@@ -2498,6 +2537,8 @@ msgstr "Пожалуйста, решите простой тест"
 #: static/misago/js/misago.js:23
 msgid "This test helps us prevent automated spam registrations on our site."
 msgstr ""
+"Этот тест помогает нам предотвратить автоматическую спам регистрацию на "
+"нашем сайте."
 
 #: static/misago/js/misago.js:23
 msgid "page: %(page)s"
