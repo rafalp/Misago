@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 
 from misago.core.exceptions import Banned
@@ -20,6 +22,8 @@ def deny_authenticated(f):
 def deny_guests(f):
     def decorator(request, *args, **kwargs):
         if request.user.is_anonymous:
+            if request.GET.get('ref') == 'login':
+                return redirect(settings.LOGIN_REDIRECT_URL)
             raise PermissionDenied(_("You have to sign in to access this page."))
         else:
             return f(request, *args, **kwargs)
