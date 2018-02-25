@@ -56,7 +56,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'upload': ["No file has been uploaded."],
+            'upload': ["No file was submitted."],
         })
 
     def test_invalid_extension(self):

@@ -8,6 +8,6 @@ from .post import PostSerializer
 from .feed import FeedSerializer
 from .postedit import PostEditSerializer
 from .postlike import PostLikeSerializer
-from .attachment import AttachmentSerializer
+from .attachment import AttachmentSerializer, NewAttachmentSerializer
 from .poll import EditPollSerializer, NewPollSerializer, PollChoiceSerializer, PollSerializer
 from .pollvote import NewVoteSerializer, PollVoteSerializer
