@@ -10,16 +10,12 @@ Misago
    :target: https://coveralls.io/github/rafalp/Misago?branch=master
    :alt: Test Coverage
 
-.. image:: https://badges.gitter.im/Misago/Misago.svg
-   :target: https://gitter.im/Misago/Misago?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
-   :alt: Development Chat
-
 .. image:: https://img.shields.io/badge/python-2.7%2C%203.4%2C%203.5%2C%203.6-blue.svg
    :target: https://travis-ci.org/rafalp/Misago
    :alt: Works on Python 2.7, 3.5, 3,6
 
 
-**Development Status:** 🍌 `Bananas <https://en.wikipedia.org/wiki/Perpetual_beta>`_ 🍌
+**Development Status:** Big changes happening on master, use `latest release <https://github.com/rafalp/Misago/releases>` for working code.
 
 Misago aims to be complete, featured and modern forum solution that has no fear to say 'NO' to common and outdated opinions about how forum software should be made and what it should do.
 
@@ -71,8 +67,13 @@ Even more features will follow in future releases:
 * Mark post in question thread as answer, bringing basic Q&A functionality.
 * Notifications for users to notice content and events of concern faster.
 * Sign in with Facebook/Google/Github/Steam/etc/ect.
+* OAuth2 server for those looking to use Misago as auth provider for other apps.
 * Warning system for easy tracking users history of infractions and offenses.
 * WYSIWYM content editor for even easier post formatting.
+* Ranking system for forum search results based on post links, likes, author and thread importance.
+* Post reactions in place of likes.
+
+...and more!
 
 If you are looking into using Misago to run live forum, you are absolutely invited to, but please keep in mind that Misago is relatively immature software that may contain serious bugs or issues as well as quirks and lackings thay may take time to resolve, despite best efforts. 
 
@@ -122,6 +123,14 @@ You will likely want to customize your site via changing settings and creating c
 Frontend
 --------
 
+.. image:: https://img.shields.io/badge/github-Misago--Frontend-blue.svg
+   :target: https://github.com/rafalp/Misago-Frontend
+   :alt: Tests Result
+
+.. image:: https://travis-ci.org/rafalp/Misago-Frontend.svg?branch=master
+   :target: https://travis-ci.org/rafalp/Misago-Frontend
+   :alt: Tests Result
+
 With exception of Admin Panel, Misago frontend relies heavily on React.js components backed by Django API. This application relies on custom Gulp.js-based toolkit for development. As of current, Misago's ``gulpfile.js`` defines following tasks:
 
 * **build** does production build of Misago's assets, concating and minifying javascripts, css and images, as well as moving them to misago/static directory
@@ -168,7 +177,7 @@ English sentences used within ``misago.faker.phrases`` were extracted from `Nati
 Copyright and license
 =====================
 
-**Misago** - Copyright © 2016 `Rafał Pitoń <http://github.com/ralfp>`_
+**Misago** - Copyright © 2018 `Rafał Pitoń <http://github.com/ralfp>`_
 This program comes with ABSOLUTELY NO WARRANTY.
 
 This is free software and you are welcome to modify and redistribute it under the conditions described in the license.
