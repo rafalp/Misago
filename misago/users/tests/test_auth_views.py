@@ -28,7 +28,7 @@ class AuthViewsTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/redirect/')
+        self.assertEqual(response['location'], '/redirect/?ref=login')
 
         # invalid redirect (redirects to other site)
         response = self.client.post(

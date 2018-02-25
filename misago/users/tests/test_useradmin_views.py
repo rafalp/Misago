@@ -209,15 +209,25 @@ class UserAdminViewsTests(AdminTestCase):
 
     def test_mass_delete_accounts(self):
         """users list deletes users"""
+        # create 10 users to delete
         user_pks = []
         for i in range(10):
             test_user = UserModel.objects.create_user(
                 'Bob%s' % i,
                 'bob%s@test.com' % i,
                 'pass123',
-                requires_activation=1,
+                requires_activation=0,
             )
             user_pks.append(test_user.pk)
+
+        # create 10 more users that won't be deleted
+        for i in range(10):
+            test_user = UserModel.objects.create_user(
+                'Weebl%s' % i,
+                'weebl%s@test.com' % i,
+                'pass123',
+                requires_activation=0,
+            )
 
         response = self.client.post(
             reverse('misago:admin:users:accounts:index'),
@@ -227,7 +237,7 @@ class UserAdminViewsTests(AdminTestCase):
             }
         )
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(UserModel.objects.count(), 1)
+        self.assertEqual(UserModel.objects.count(), 11)
 
     def test_mass_delete_all_self(self):
         """its impossible to delete oneself with content"""
@@ -304,7 +314,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(UserModel.objects.count(), 11)
 
     def test_mass_delete_all(self):
-        """users list deletes users and their content"""
+        """users list mass deleting view has no showstoppers"""
         user_pks = []
         for i in range(10):
             test_user = UserModel.objects.create_user(
@@ -323,7 +333,9 @@ class UserAdminViewsTests(AdminTestCase):
             }
         )
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(UserModel.objects.count(), 11) # no user has been deleted
+         # asser that no user has been deleted, because actuall deleting happens in
+         # dedicated views called via ajax from JavaScript
+        self.assertEqual(UserModel.objects.count(), 11)
 
     def test_new_view(self):
         """new user view creates account"""

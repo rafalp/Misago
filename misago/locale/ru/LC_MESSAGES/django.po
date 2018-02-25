@@ -544,7 +544,7 @@ msgstr "Указательный заголовок"
 #: core/migrations/0002_basic_settings.py:36
 msgid "You may set custon title on forum index by typing it here."
 msgstr ""
-"Мы можете установить настраиваемый заголовок на указателе форума, напечатав "
+"Вы можете установить настраиваемый заголовок на указателе форума, напечатав "
 "его здесь."
 
 #: core/migrations/0002_basic_settings.py:37
@@ -647,8 +647,7 @@ msgstr "Ссылка на условия"
 #: legal/migrations/0001_initial.py:34
 msgid "If terms of service are located on other page, enter there its link."
 msgstr ""
-"Если условия сервиса не размещаются на другой странице, введите там их "
-"ссылку."
+"Если условия сервиса размещаются на другой странице, введите там их ссылку."
 
 #: legal/migrations/0001_initial.py:44
 msgid "Terms contents"

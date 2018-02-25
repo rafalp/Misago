@@ -481,7 +481,7 @@ class CategoryThreadsListTests(ThreadsListTestCase):
             override_acl(
                 self.user, {
                     'visible_categories': [test_category.pk],
-                    'browseable_categories': [test_category.pk],
+                    'browseable_categories': [],
                     'categories': {
                         test_category.pk: {
                             'can_see': 1,
@@ -490,14 +490,13 @@ class CategoryThreadsListTests(ThreadsListTestCase):
                     },
                 }
             )
-
             response = self.client.get(test_category.get_absolute_url() + url)
             self.assertEqual(response.status_code, 403)
 
             override_acl(
                 self.user, {
                     'visible_categories': [test_category.pk],
-                    'browseable_categories': [test_category.pk],
+                    'browseable_categories': [],
                     'categories': {
                         test_category.pk: {
                             'can_see': 1,
@@ -506,7 +505,6 @@ class CategoryThreadsListTests(ThreadsListTestCase):
                     },
                 }
             )
-
             response = self.client.get(
                 '%s?category=%s&list=%s' % (self.api_link, test_category.pk, url.strip('/'), )
             )

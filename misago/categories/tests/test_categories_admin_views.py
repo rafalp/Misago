@@ -439,6 +439,8 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Category.objects.all_categories().count(), 6)
         self.assertEqual(Thread.objects.count(), 10)
+        for thread in Thread.objects.all():
+            self.assertEqual(thread.category_id, self.category_d.pk)
 
         self.assertValidTree([
             (self.root, 0, 1, 14),
@@ -484,8 +486,8 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCase):
             (self.category_f, 2, 7, 8),
         ])
 
-    def test_delete_leaf_category(self):
-        """category was deleted and its contents were moved"""
+    def test_delete_leaf_category_and_contents(self):
+        """leaf category was deleted with contents"""
         for _ in range(10):
             testutils.post_thread(self.category_d)
         self.assertEqual(Thread.objects.count(), 10)
