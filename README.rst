@@ -15,7 +15,7 @@ Misago
    :alt: Works on Python 2.7, 3.5, 3,6
 
 
-**Development Status:** Big changes happening on master, use `latest release <https://github.com/rafalp/Misago/releases>`_ for working code.
+**Development Status:** Big changes happening on master branch, use `latest release <https://github.com/rafalp/Misago/releases>`_ for working code.
 
 Misago aims to be complete, featured and modern forum solution that has no fear to say 'NO' to common and outdated opinions about how forum software should be made and what it should do.
 
