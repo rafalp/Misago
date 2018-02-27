@@ -169,22 +169,20 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 403)
-
-        response_json = response.json()
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response_json, [
-                {
-                    'id': thread.pk,
-                    'title': thread.title,
-                    'errors': ["You can't merge threads in this category."],
-                },
-                {
-                    'id': self.thread.pk,
-                    'title': self.thread.title,
-                    'errors': ["You can't merge threads in this category."],
-                },
-            ]
+            response.json(), {
+                'merge': [
+                    {
+                        'id': str(thread.pk),
+                        'detail': ["You can't merge threads in this category."],
+                    },
+                    {
+                        'id': str(self.thread.pk),
+                        'detail': ["You can't merge threads in this category."],
+                    },
+                ],
+            }
         )
 
     def test_thread_category_is_closed(self):
@@ -209,10 +207,20 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(
-            response,
-            "This category is closed. You can't merge it's threads.",
-            status_code=403,
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(), {
+                'merge': [
+                    {
+                        'id': str(other_thread.pk),
+                        'detail': ["This category is closed. You can't merge it's threads."],
+                    },
+                    {
+                        'id': str(self.thread.pk),
+                        'detail': ["This category is closed. You can't merge it's threads."],
+                    },
+                ],
+            }
         )
 
     def test_thread_is_closed(self):
@@ -237,10 +245,18 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(
-            response,
-            "This thread is closed. You can't merge it with other threads.",
-            status_code=403,
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(), {
+                'merge': [
+                    {
+                        'id': str(other_thread.pk),
+                        'detail': [
+                            "This thread is closed. You can't merge it with other threads."
+                        ],
+                    },
+                ],
+            }
         )
 
     def test_merge_too_many_threads(self):
@@ -255,20 +271,24 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             'can_edit_threads': False,
             'can_reply_threads': False,
         })
+        self.override_other_category()
 
         response = self.client.post(
             self.api_link,
             json.dumps({
+                'category': self.category_b.pk,
+                'title': 'Lorem ipsum dolor',
                 'threads': threads,
             }),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json['threads'],
-            ["No more than %s threads can be merged at single time." % THREADS_LIMIT],
+            response.json(), {
+                'threads': [
+                    "No more than %s threads can be merged at single time." % THREADS_LIMIT
+                ],
+            }
         )
 
     def test_merge_no_final_thread(self):
@@ -865,9 +885,9 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(
             response.json(), {
                 'polls': [
-                    [0, "Delete all polls"],
-                    [poll.pk, poll.question],
-                    [other_poll.pk, other_poll.question],
+                    ['0', "Delete all polls"],
+                    [str(poll.pk), poll.question],
+                    [str(other_poll.pk), other_poll.question],
                 ],
             }
         )
@@ -898,7 +918,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': "Invalid choice.",
+            'poll': ["Invalid choice."],
         })
 
         # polls and votes were untouched

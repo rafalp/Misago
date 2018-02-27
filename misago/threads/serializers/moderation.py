@@ -1,8 +1,8 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import PermissionDenied
 from django.http import Http404
-from django.utils import six
 from django.utils.translation import ugettext as _, ugettext_lazy, ungettext
 
 from misago.acl import add_acl
@@ -94,14 +94,14 @@ class MergePostsSerializer(serializers.Serializer):
         data = list(set(data))
 
         if len(data) < 2:
-            raise serializers.ValidationError(self.error_empty_or_required)
+            raise ValidationError(self.error_empty_or_required)
         if len(data) > POSTS_LIMIT:
             message = ungettext(
                 "No more than %(limit)s post can be merged at single time.",
                 "No more than %(limit)s posts can be merged at single time.",
                 POSTS_LIMIT,
             )
-            raise serializers.ValidationError(message % {'limit': POSTS_LIMIT})
+            raise ValidationError(message % {'limit': POSTS_LIMIT})
 
         user = self.context['user']
         thread = self.context['thread']
@@ -117,7 +117,7 @@ class MergePostsSerializer(serializers.Serializer):
             try:
                 allow_merge_post(user, post)
             except PermissionDenied as e:
-                raise serializers.ValidationError(e)
+                raise ValidationError(e)
 
             if not posts:
                 posts.append(post)
@@ -125,22 +125,22 @@ class MergePostsSerializer(serializers.Serializer):
                 authorship_error = _("Posts made by different users can't be merged.")
                 if posts[0].poster_id:
                     if post.poster_id != posts[0].poster_id:
-                        raise serializers.ValidationError(authorship_error)
+                        raise ValidationError(authorship_error)
                 else:
                     if post.poster_id or post.poster_name != posts[0].poster_name:
-                        raise serializers.ValidationError(authorship_error)
+                        raise ValidationError(authorship_error)
 
                 if posts[0].pk != thread.first_post_id:
                     if (posts[0].is_hidden != post.is_hidden or
                             posts[0].is_unapproved != post.is_unapproved):
-                        raise serializers.ValidationError(
+                        raise ValidationError(
                             _("Posts with different visibility can't be merged.")
                         )
 
                 posts.append(post)
 
         if len(posts) != len(data):
-            raise serializers.ValidationError(_("One or more posts to merge could not be found."))
+            raise ValidationError(_("One or more posts to merge could not be found."))
 
         return posts
 
@@ -174,14 +174,14 @@ class MovePostsSerializer(serializers.Serializer):
 
         new_thread_id = get_thread_id_from_url(request, data)
         if not new_thread_id:
-            raise serializers.ValidationError(_("This is not a valid thread link."))
+            raise ValidationError(_("This is not a valid thread link."))
         if new_thread_id == thread.pk:
-            raise serializers.ValidationError(_("Thread to move posts to is same as current one."))
+            raise ValidationError(_("Thread to move posts to is same as current one."))
 
         try:
             new_thread = viewmodel(request, new_thread_id).unwrap()
         except Http404:
-            raise serializers.ValidationError(
+            raise ValidationError(
                 _(
                     "The thread you have entered link to doesn't "
                     "exist or you don't have permission to see it."
@@ -189,7 +189,7 @@ class MovePostsSerializer(serializers.Serializer):
             )
 
         if not new_thread.acl['can_reply']:
-            raise serializers.ValidationError(_("You can't move posts to threads you can't reply."))
+            raise ValidationError(_("You can't move posts to threads you can't reply."))
 
         return new_thread
 
@@ -201,7 +201,7 @@ class MovePostsSerializer(serializers.Serializer):
                 "No more than %(limit)s posts can be moved at single time.",
                 POSTS_LIMIT,
             )
-            raise serializers.ValidationError(message % {'limit': POSTS_LIMIT})
+            raise ValidationError(message % {'limit': POSTS_LIMIT})
 
         request = self.context['request']
         thread = self.context['thread']
@@ -218,10 +218,10 @@ class MovePostsSerializer(serializers.Serializer):
                 allow_move_post(request.user, post)
                 posts.append(post)
             except PermissionDenied as e:
-                raise serializers.ValidationError(e)
+                raise ValidationError(e)
 
         if len(posts) != len(data):
-            raise serializers.ValidationError(_("One or more posts to move could not be found."))
+            raise ValidationError(_("One or more posts to move could not be found."))
 
         return posts
 
@@ -244,7 +244,8 @@ class NewThreadSerializer(serializers.Serializer):
     def validate_category(self, category_id):
         self.category = validate_category(self.context['user'], category_id)
         if not can_start_thread(self.context['user'], self.category):
-            raise ValidationError(_("You can't create new threads in selected category."))
+            raise ValidationError(
+                _("You can't create new threads in selected category."))
         return self.category
 
     def validate_weight(self, weight):
@@ -271,7 +272,8 @@ class NewThreadSerializer(serializers.Serializer):
             return is_hidden  # don't validate hidden further if category failed
 
         if is_hidden and not self.category.acl.get('can_hide_threads'):
-            raise ValidationError(_("You don't have permission to hide threads in this category."))
+            raise ValidationError(
+                _("You don't have permission to hide threads in this category."))
         return is_hidden
 
     def validate_is_closed(self, is_closed):
@@ -369,24 +371,26 @@ class DeleteThreadsSerializer(serializers.Serializer):
         threads = []
         errors = []
 
-        for thread_id in data:
+        sorted_ids = sorted(data, reverse=True)
+
+        for thread_id in sorted_ids:
             try:
                 thread = viewmodel(request, thread_id).unwrap()
                 allow_delete_thread(request.user, thread)
                 threads.append(thread)
-            except PermissionDenied as e:
+            except PermissionDenied as permission_error:
                 errors.append({
                     'thread': {
                         'id': thread.id,
                         'title': thread.title
                     },
-                    'error': six.text_type(e)
+                    'error': permission_error,
                 })
             except Http404 as e:
                 pass # skip invisible threads
 
         if errors:
-            raise serializers.ValidationError({'details': errors})
+            raise ValidationError({'details': errors})
 
         if len(threads) != len(data):
             raise ValidationError(_("One or more threads to delete could not be found."))
@@ -422,7 +426,7 @@ class MergeThreadSerializer(serializers.Serializer):
             other_thread = viewmodel(request, other_thread_id).unwrap()
             allow_merge_thread(request.user, other_thread, otherthread=True)
         except PermissionDenied as e:
-            raise serializers.ValidationError(e)
+            raise ValidationError(e)
         except Http404:
             raise ValidationError(
                 _(
@@ -450,7 +454,7 @@ class MergeThreadSerializer(serializers.Serializer):
                 if polls_handler.is_valid():
                     data['poll'] = polls_handler.get_resolution()
                 else:
-                    raise serializers.ValidationError({'poll': _("Invalid choice.")})
+                    raise ValidationError({'poll': _("Invalid choice.")})
             else:
                 data['polls'] = polls_handler.get_available_resolutions()
 
@@ -475,6 +479,12 @@ class MergeThreadsSerializer(NewThreadSerializer):
             'null': error_empty_or_required,
             'required': error_empty_or_required,
             'min_length': error_empty_or_required,
+        },
+    )
+    poll = serializers.IntegerField(
+        required=False,
+        error_messages={
+            'invalid': ugettext_lazy("Invalid choice."),
         },
     )
 
@@ -506,3 +516,42 @@ class MergeThreadsSerializer(NewThreadSerializer):
             raise ValidationError(_("One or more threads to merge could not be found."))
 
         return threads
+    
+    def validate_threads_merge(self, threads):
+        user = self.context['user']
+        invalid_threads = []
+        for thread in threads:
+            try:
+                allow_merge_thread(user, thread)
+            except PermissionDenied as permission_error:
+                invalid_threads.append({
+                    'id': thread.pk,
+                    'detail': [permission_error]
+                })
+
+        if invalid_threads:
+            raise ValidationError({'merge': invalid_threads})
+
+    def validate_poll_merge(self, data):
+        validated_threads = data['threads']
+        polls_handler = PollMergeHandler(validated_threads)
+
+        if len(polls_handler.polls) == 1:
+            return polls_handler.polls[0]
+
+        if polls_handler.is_merge_conflict():
+            if 'poll' in data:
+                polls_handler.set_resolution(data['poll'])
+                if polls_handler.is_valid():
+                    return polls_handler.get_resolution()
+                else:
+                    raise ValidationError({'poll': [_("Invalid choice.")]})
+            else:
+                raise ValidationError({'polls': polls_handler.get_available_resolutions()})
+
+        return None
+
+    def validate(self, data):
+        self.validate_threads_merge(data['threads'])
+        data['poll'] = self.validate_poll_merge(data)
+        return data

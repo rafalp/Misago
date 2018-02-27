@@ -30,9 +30,9 @@ class PollMergeHandler(object):
         return len(self._list) > 1
 
     def get_available_resolutions(self):
-        resolutions = [(0, _("Delete all polls"))]
+        resolutions = [[0, _("Delete all polls")]]
         for poll in self._list:
-            resolutions.append((poll.pk, poll.question))
+            resolutions.append([poll.pk, poll.question])
         return resolutions
 
     def set_resolution(self, resolution):
