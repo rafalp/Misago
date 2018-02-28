@@ -179,7 +179,7 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
                             'title': thread.title,
                         },
                         'error': "This category is closed. You can't delete threads in it.",
-                    } for thread in self.threads
+                    } for thread in reversed(self.threads)
                 ],
             },
         })
