@@ -33,9 +33,12 @@ class UserUsernameTests(AuthenticatedUserTestCase):
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
-
-        self.assertEqual(response.json()['changes_left'], 0)
-        self.assertIsNotNone(response.json()['next_change_on'])
+        self.assertEqual(response.json(), {
+            'changes_left': 0,
+            'next_change_on': response.json()['next_change_on'],
+            'length_min': settings.username_length_min,
+            'length_max': settings.username_length_max,
+        })
 
     def test_change_username_no_changes_left(self):
         """api returns error 400 if there are no username changes left"""

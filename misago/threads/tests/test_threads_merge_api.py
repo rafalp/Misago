@@ -1,5 +1,6 @@
 import json
 
+from django.utils import six
 from django.urls import reverse
 
 from misago.acl import add_acl
@@ -55,14 +56,16 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             }
         )
 
-    def test_merge_no_threads(self):
+    def test_empty_data(self):
         """api validates if we are trying to merge no threads"""
         response = self.client.post(self.api_link, content_type="application/json")
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json['threads'], ["You have to select at least two threads to merge."]
+            response.json(), {
+                'title': ['This field is required.'],
+                'category': ['This field is required.'],
+                'threads': ["You have to select at least two threads to merge."],
+            }
         )
 
     def test_merge_empty_threads(self):
@@ -70,15 +73,17 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
+                'category': self.category.pk,
+                'title': 'Lorem ipsum dolor',
                 'threads': [],
             }),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json['threads'], ["You have to select at least two threads to merge."]
+            response.json(), {
+                'threads': ["You have to select at least two threads to merge."],
+            }
         )
 
     def test_merge_invalid_threads(self):
@@ -86,24 +91,35 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
+                'category': self.category.pk,
+                'title': 'Lorem ipsum dolor',
                 'threads': 'abcd',
             }),
             content_type="application/json",
         )
-        self.assertContains(response, "Expected a list of items", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(), {
+                'threads': [
+                    'Expected a list of items but got type "{}".'.format(six.text_type.__name__)
+                ],
+            }
+        )
 
         response = self.client.post(
             self.api_link,
             json.dumps({
+                'category': self.category.pk,
+                'title': 'Lorem ipsum dolor',
                 'threads': ['a', '-', 'c'],
             }),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json['threads'], ["One or more thread ids received were invalid."]
+            response.json(), {
+                'threads': ["One or more thread ids received were invalid."],
+            }
         )
 
     def test_merge_single_thread(self):
@@ -111,15 +127,17 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
+                'category': self.category.pk,
+                'title': 'Lorem ipsum dolor',
                 'threads': [self.thread.id],
             }),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json['threads'], ["You have to select at least two threads to merge."]
+            response.json(), {
+                'threads': ["You have to select at least two threads to merge."],
+            }
         )
 
     def test_merge_with_nonexisting_thread(self):
@@ -127,15 +145,17 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
+                'category': self.category.pk,
+                'title': 'Lorem ipsum dolor',
                 'threads': [self.thread.id, self.thread.id + 1000],
             }),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json['threads'], ["One or more threads to merge could not be found."]
+            response.json(), {
+                'threads': ["One or more threads to merge could not be found."],
+            }
         )
 
     def test_merge_with_invisible_thread(self):
@@ -145,15 +165,17 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
+                'category': self.category.pk,
+                'title': 'Lorem ipsum dolor',
                 'threads': [self.thread.id, unaccesible_thread.id],
             }),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json['threads'], ["One or more threads to merge could not be found."]
+            response.json(), {
+                'threads': ["One or more threads to merge could not be found."],
+            }
         )
 
     def test_merge_no_permission(self):
@@ -174,12 +196,14 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             response.json(), {
                 'merge': [
                     {
+                        'status': '403',
                         'id': str(thread.pk),
-                        'detail': ["You can't merge threads in this category."],
+                        'detail': "You can't merge threads in this category.",
                     },
                     {
+                        'status': '403',
                         'id': str(self.thread.pk),
-                        'detail': ["You can't merge threads in this category."],
+                        'detail': "You can't merge threads in this category.",
                     },
                 ],
             }
@@ -212,12 +236,14 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             response.json(), {
                 'merge': [
                     {
+                        'status': '403',
                         'id': str(other_thread.pk),
-                        'detail': ["This category is closed. You can't merge it's threads."],
+                        'detail': "This category is closed. You can't merge it's threads.",
                     },
                     {
+                        'status': '403',
                         'id': str(self.thread.pk),
-                        'detail': ["This category is closed. You can't merge it's threads."],
+                        'detail': "This category is closed. You can't merge it's threads.",
                     },
                 ],
             }
@@ -229,7 +255,6 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             'can_merge_threads': 1,
             'can_close_threads': 0,
         })
-        self.override_other_category()
 
         other_thread = testutils.post_thread(self.category)
 
@@ -239,7 +264,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps({
-                'category': self.category_b.pk,
+                'category': self.category.pk,
                 'title': 'Lorem ipsum dolor',
                 'threads': [self.thread.id, other_thread.id],
             }),
@@ -250,10 +275,9 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             response.json(), {
                 'merge': [
                     {
+                        'status': '403',
                         'id': str(other_thread.pk),
-                        'detail': [
-                            "This thread is closed. You can't merge it with other threads."
-                        ],
+                        'detail': "This thread is closed. You can't merge it with other threads.",
                     },
                 ],
             }
@@ -310,10 +334,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json, {
+            response.json(), {
                 'title': ['This field is required.'],
                 'category': ['This field is required.'],
             }
@@ -340,10 +362,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json, {
+            response.json(), {
                 'title': ["Thread title should be at least 5 characters long (it has 3)."],
             }
         )
@@ -369,10 +389,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json, {
+            response.json(), {
                 'category': ["Requested category could not be found."],
             }
         )
@@ -399,10 +417,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json, {
+            response.json(), {
                 'category': ["You can't create new threads in selected category."],
             }
         )
@@ -429,10 +445,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json, {
+            response.json(), {
                 'weight': ["Ensure this value is less than or equal to 2."],
             }
         )
@@ -459,10 +473,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json, {
+            response.json(), {
                 'weight': ["You don't have permission to pin threads globally in this category."],
             }
         )
@@ -489,10 +501,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json, {
+            response.json(), {
                 'weight': ["You don't have permission to pin threads in this category."],
             }
         )
@@ -520,10 +530,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json, {
+            response.json(), {
                 'title': ["Thread title should be at least 5 characters long (it has 3)."],
             }
         )
@@ -551,10 +559,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json, {
+            response.json(), {
                 'title': ["Thread title should be at least 5 characters long (it has 3)."],
             }
         )
@@ -581,10 +587,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json, {
+            response.json(), {
                 'is_closed': ["You don't have permission to close threads in this category."],
             }
         )
@@ -612,10 +616,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json, {
+            response.json(), {
                 'title': ["Thread title should be at least 5 characters long (it has 3)."],
             }
         )
@@ -643,10 +645,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json, {
+            response.json(), {
                 'is_hidden': ["You don't have permission to hide threads in this category."],
             }
         )
@@ -675,10 +675,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-
-        response_json = response.json()
         self.assertEqual(
-            response_json, {
+            response.json(), {
                 'title': ["Thread title should be at least 5 characters long (it has 3)."],
             }
         )
@@ -708,16 +706,14 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 200)
 
         # is response json with new thread?
-        response_json = response.json()
-
-        new_thread = Thread.objects.get(pk=response_json['id'])
+        new_thread = Thread.objects.get(pk=response.json()['id'])
         new_thread.is_read = False
         new_thread.subscription = None
 
         add_acl(self.user, new_thread.category)
         add_acl(self.user, new_thread)
 
-        self.assertEqual(response_json, ThreadsListSerializer(new_thread).data)
+        self.assertEqual(response.json(), ThreadsListSerializer(new_thread).data)
 
         # did posts move to new thread?
         for post in Post.objects.filter(id__in=posts_ids):

@@ -441,25 +441,8 @@ class MergeThreadSerializer(serializers.Serializer):
         return other_thread
 
     def validate(self, data):
-        thread = self.context['thread']
-        other_thread = data['other_thread']
-
-        polls_handler = PollMergeHandler([thread, other_thread])
-
-        if len(polls_handler.polls) == 1:
-            data['poll'] = polls_handler.polls[0]
-        elif polls_handler.is_merge_conflict():
-            if 'poll' in data:
-                polls_handler.set_resolution(data['poll'])
-                if polls_handler.is_valid():
-                    data['poll'] = polls_handler.get_resolution()
-                else:
-                    raise ValidationError({'poll': _("Invalid choice.")})
-            else:
-                data['polls'] = polls_handler.get_available_resolutions()
-
-        self.polls_handler = polls_handler
-
+        threads = [self.context['thread'], data['other_thread']]
+        data['poll'] = validate_poll_merge(threads, data)
         return data
 
 
@@ -517,7 +500,7 @@ class MergeThreadsSerializer(NewThreadSerializer):
 
         return threads
     
-    def validate_threads_merge(self, threads):
+    def validate_threads_permissions(self, threads):
         user = self.context['user']
         invalid_threads = []
         for thread in threads:
@@ -525,33 +508,34 @@ class MergeThreadsSerializer(NewThreadSerializer):
                 allow_merge_thread(user, thread)
             except PermissionDenied as permission_error:
                 invalid_threads.append({
+                    'status': 403,
                     'id': thread.pk,
-                    'detail': [permission_error]
+                    'detail': permission_error
                 })
 
         if invalid_threads:
             raise ValidationError({'merge': invalid_threads})
 
-    def validate_poll_merge(self, data):
-        validated_threads = data['threads']
-        polls_handler = PollMergeHandler(validated_threads)
-
-        if len(polls_handler.polls) == 1:
-            return polls_handler.polls[0]
-
-        if polls_handler.is_merge_conflict():
-            if 'poll' in data:
-                polls_handler.set_resolution(data['poll'])
-                if polls_handler.is_valid():
-                    return polls_handler.get_resolution()
-                else:
-                    raise ValidationError({'poll': [_("Invalid choice.")]})
-            else:
-                raise ValidationError({'polls': polls_handler.get_available_resolutions()})
-
-        return None
-
     def validate(self, data):
-        self.validate_threads_merge(data['threads'])
-        data['poll'] = self.validate_poll_merge(data)
+        self.validate_threads_permissions(data['threads'])
+        data['poll'] = validate_poll_merge(data['threads'], data)
         return data
+
+
+def validate_poll_merge(threads, data):
+    merge_handler = PollMergeHandler(threads)
+
+    if len(merge_handler.polls) == 1:
+        return merge_handler.polls[0]
+
+    if merge_handler.is_merge_conflict():
+        if 'poll' in data:
+            merge_handler.set_resolution(data['poll'])
+            if merge_handler.is_valid():
+                return merge_handler.get_resolution()
+            else:
+                raise ValidationError({'poll': [_("Invalid choice.")]})
+        else:
+            raise ValidationError({'polls': merge_handler.get_available_resolutions()})
+
+    return None

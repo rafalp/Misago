@@ -538,9 +538,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(
             response.json(), {
                 'polls': [
-                    [0, "Delete all polls"],
-                    [poll.pk, poll.question],
-                    [other_poll.pk, other_poll.question],
+                    ['0', "Delete all polls"],
+                    [str(poll.pk), poll.question],
+                    [str(other_poll.pk), other_poll.question],
                 ]
             }
         )

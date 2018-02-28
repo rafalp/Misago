@@ -26,24 +26,20 @@ def thread_merge_endpoint(request, thread, viewmodel):
         },
     )
 
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=400)
-
-    # interrupt merge with request for poll resolution?
-    if serializer.validated_data.get('polls'):
-        return Response({'polls': serializer.validated_data['polls']}, status=400)
+    serializer.is_valid(raise_exception=True)
 
     # merge polls
     other_thread = serializer.validated_data['other_thread']
-    poll = serializer.validated_data.get('poll')
+    poll = serializer.validated_data['poll']
 
-    if len(serializer.polls_handler.polls) == 1:
-        poll.move(other_thread)
-    elif serializer.polls_handler.is_merge_conflict():
-        if poll and poll.thread_id != other_thread.id:
+    if poll:
+        if hasattr(other_thread, 'poll') and poll != other_thread.poll:
             other_thread.poll.delete()
-            poll.move(other_thread)
-        elif not poll:
+        poll.move(other_thread)
+    else:
+        if hasattr(thread, 'poll'):
+            thread.poll.delete()
+        if hasattr(other_thread, 'poll'):
             other_thread.poll.delete()
 
     # merge thread contents
@@ -76,21 +72,18 @@ def threads_merge_endpoint(request):
 
     serializer.is_valid(raise_exception=True)
 
-    new_thread = merge_threads(request, serializer.validated_data)
-    return Response(ThreadsListSerializer(new_thread).data)
-
-
-def merge_threads(request, validated_data):
-    threads = validated_data['threads']
-    poll = validated_data.get('poll')
+    data = serializer.validated_data
+    
+    threads = data['threads']
+    poll = data['poll']
 
     new_thread = Thread(
-        category=validated_data['category'],
+        category=data['category'],
         started_on=threads[0].started_on,
         last_post_on=threads[0].last_post_on,
     )
 
-    new_thread.set_title(validated_data['title'])
+    new_thread.set_title(data['title'])
     new_thread.save()
 
     if poll:
@@ -107,7 +100,7 @@ def merge_threads(request, validated_data):
             new_thread,
             'merged',
             {
-                'merged_thread': thread.title,
+                'merged_thread': thread.title
             },
             commit=False,
         )
@@ -115,13 +108,13 @@ def merge_threads(request, validated_data):
     new_thread.synchronize()
     new_thread.save()
 
-    if validated_data.get('weight') == Thread.WEIGHT_GLOBAL:
+    if data.get('weight') == Thread.WEIGHT_GLOBAL:
         moderation.pin_thread_globally(request, new_thread)
-    elif validated_data.get('weight'):
+    elif data.get('weight'):
         moderation.pin_thread_locally(request, new_thread)
-    if validated_data.get('is_hidden', False):
+    if data.get('is_hidden', False):
         moderation.hide_thread(request, new_thread)
-    if validated_data.get('is_closed', False):
+    if data.get('is_closed', False):
         moderation.close_thread(request, new_thread)
 
     if new_thread.category not in categories:
@@ -136,4 +129,5 @@ def merge_threads(request, validated_data):
     new_thread.subscription = None
 
     add_acl(request.user, new_thread)
-    return new_thread
+
+    return Response(ThreadsListSerializer(new_thread).data)
