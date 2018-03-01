@@ -142,6 +142,10 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
 
     def test_merge_with_nonexisting_thread(self):
         """api validates if we are trying to merge with invalid thread"""
+        self.override_acl({
+            'can_merge_threads': True,
+        })
+
         response = self.client.post(
             self.api_link,
             json.dumps({
@@ -153,13 +157,26 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'threads': ["One or more threads to merge could not be found."],
-            }
+            response.json(),
+            {
+                'merge': [
+                    {
+                        'id': str(self.thread.id + 1000),
+                        'status': '404',
+                        'detail': (
+                            "Requested thread doesn't exist or you "
+                            "don't have permission to see it."
+                        )
+                    },
+                ],
+            },
         )
 
     def test_merge_with_invisible_thread(self):
         """api validates if we are trying to merge with inaccesible thread"""
+        self.override_acl({
+            'can_merge_threads': True,
+        })
         unaccesible_thread = testutils.post_thread(category=self.category_b)
 
         response = self.client.post(
@@ -173,9 +190,19 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'threads': ["One or more threads to merge could not be found."],
-            }
+            response.json(),
+            {
+                'merge': [
+                    {
+                        'id': str(unaccesible_thread.id),
+                        'status': '404',
+                        'detail': (
+                            "Requested thread doesn't exist or you "
+                            "don't have permission to see it."
+                        )
+                    },
+                ],
+            },
         )
 
     def test_merge_no_permission(self):
@@ -196,17 +223,54 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             response.json(), {
                 'merge': [
                     {
+                        'id': str(self.thread.pk),
                         'status': '403',
-                        'id': str(thread.pk),
                         'detail': "You can't merge threads in this category.",
                     },
                     {
+                        'id': str(thread.pk),
                         'status': '403',
-                        'id': str(self.thread.pk),
                         'detail': "You can't merge threads in this category.",
                     },
                 ],
             }
+        )
+
+    def test_merge_no_permission_with_invisible_thread(self):
+        """api validates if we are trying to merge with inaccesible thread without permission"""
+        unaccesible_thread = testutils.post_thread(category=self.category_b)
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({
+                'category': self.category.pk,
+                'title': 'Lorem ipsum dolor',
+                'threads': [self.thread.id, unaccesible_thread.id],
+            }),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(),
+            {
+                'merge': [
+                    {
+                        'id': str(self.thread.id),
+                        'status': '403',
+                        'detail': (
+                            "You can't merge threads in this category."
+                        )
+                    },
+                    {
+                        'id': str(unaccesible_thread.id),
+                        'status': '404',
+                        'detail': (
+                            "Requested thread doesn't exist or you "
+                            "don't have permission to see it."
+                        )
+                    },
+                ],
+            },
         )
 
     def test_thread_category_is_closed(self):
@@ -237,12 +301,12 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
                 'merge': [
                     {
                         'status': '403',
-                        'id': str(other_thread.pk),
+                        'id': str(self.thread.pk),
                         'detail': "This category is closed. You can't merge it's threads.",
                     },
                     {
                         'status': '403',
-                        'id': str(self.thread.pk),
+                        'id': str(other_thread.pk),
                         'detail': "This category is closed. You can't merge it's threads.",
                     },
                 ],
@@ -275,8 +339,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             response.json(), {
                 'merge': [
                     {
-                        'status': '403',
                         'id': str(other_thread.pk),
+                        'status': '403',
                         'detail': "This thread is closed. You can't merge it with other threads.",
                     },
                 ],

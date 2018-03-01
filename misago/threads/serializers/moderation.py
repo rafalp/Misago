@@ -479,45 +479,50 @@ class MergeThreadsSerializer(NewThreadSerializer):
                 POSTS_LIMIT,
             )
             raise ValidationError(message % {'limit': THREADS_LIMIT})
+        return data
+    
+    def get_valid_threads(self, threads_ids):
+        user = self.context['user']
 
         threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
-
         threads_queryset = Thread.objects.filter(
-            id__in=data,
+            id__in=threads_ids,
             category__tree_id=threads_tree_id,
         ).select_related('category').order_by('-id')
 
-        user = self.context['user']
-
-        threads = []
+        invalid_threads = []
+        valid_threads = []
         for thread in threads_queryset:
             add_acl(user, thread)
             if can_see_thread(user, thread):
-                threads.append(thread)
+                valid_threads.append(thread)
+                try:
+                    allow_merge_thread(user, thread)
+                except PermissionDenied as permission_error:
+                    invalid_threads.append({
+                        'id': thread.id,
+                        'status': 403,
+                        'detail': permission_error
+                    })
 
-        if len(threads) != len(data):
-            raise ValidationError(_("One or more threads to merge could not be found."))
-
-        return threads
-    
-    def validate_threads_permissions(self, threads):
-        user = self.context['user']
-        invalid_threads = []
-        for thread in threads:
-            try:
-                allow_merge_thread(user, thread)
-            except PermissionDenied as permission_error:
-                invalid_threads.append({
-                    'status': 403,
-                    'id': thread.pk,
-                    'detail': permission_error
-                })
+        not_found_ids = set(threads_ids) - set([t.id for t in valid_threads])
+        for not_found_id in not_found_ids:
+            invalid_threads.append({
+                'id': not_found_id,
+                'status': 404,
+                'detail': _(
+                    "Requested thread doesn't exist or you don't have permission to see it."
+                ),
+            })
 
         if invalid_threads:
+            invalid_threads.sort(key=lambda e: e['id'])
             raise ValidationError({'merge': invalid_threads})
 
+        return valid_threads
+
     def validate(self, data):
-        self.validate_threads_permissions(data['threads'])
+        data['threads'] = self.get_valid_threads(data['threads'])
         data['poll'] = validate_poll_merge(data['threads'], data)
         return data
 
