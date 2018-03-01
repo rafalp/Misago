@@ -215,9 +215,11 @@ class PostsAddAclApiTests(ThreadPostBulkPatchApiTestCase):
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
-        for i, post in enumerate(self.posts):
-            self.assertEqual(response_json[i]['id'], post.id)
-            self.assertTrue(response_json[i]['acl'])
+        for i, post_id in enumerate(self.ids):
+            data = response_json[i]
+            self.assertEqual(data['id'], str(post_id))
+            self.assertEqual(data['status'], '200')
+            self.assertTrue(data['patch']['acl'])
 
 
 class BulkPostProtectApiTests(ThreadPostBulkPatchApiTestCase):
@@ -241,11 +243,15 @@ class BulkPostProtectApiTests(ThreadPostBulkPatchApiTestCase):
             }
         )
         self.assertEqual(response.status_code, 200)
-
-        response_json = response.json()
-        for i, post in enumerate(self.posts):
-            self.assertEqual(response_json[i]['id'], post.id)
-            self.assertTrue(response_json[i]['is_protected'])
+        self.assertEqual(response.json(), [
+            {
+                'id': str(post_id),
+                'status': '200',
+                'patch': {
+                    'is_protected': True,
+                },
+            } for post_id in self.ids
+        ])
 
         for post in Post.objects.filter(id__in=self.ids):
             self.assertTrue(post.is_protected)
@@ -269,10 +275,10 @@ class BulkPostProtectApiTests(ThreadPostBulkPatchApiTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), [
             {
-                'id': post.id,
-                'status': 403,
+                'id': str(post_id),
+                'status': '403',
                 'detail': "You can't protect posts in this category.",
-            } for post in self.posts
+            } for post_id in self.ids
         ])
 
         for post in Post.objects.filter(id__in=self.ids):
@@ -306,11 +312,15 @@ class BulkPostsApproveApiTests(ThreadPostBulkPatchApiTestCase):
             }
         )
         self.assertEqual(response.status_code, 200)
-
-        response_json = response.json()
-        for i, post in enumerate(self.posts):
-            self.assertEqual(response_json[i]['id'], post.id)
-            self.assertFalse(response_json[i]['is_unapproved'])
+        self.assertEqual(response.json(), [
+            {
+                'id': str(post_id),
+                'status': '200',
+                'patch': {
+                    'is_unapproved': False,
+                },
+            } for post_id in self.ids
+        ])
 
         for post in Post.objects.filter(id__in=self.ids):
             self.assertFalse(post.is_unapproved)

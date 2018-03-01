@@ -68,8 +68,8 @@ class ApiPatchDispatchBulkTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, [
-            {'id': 5, 'value': 14, 'status': 200},
-            {'id': 7, 'value': 14, 'status': 200},
+            {'id': '5', 'status': '200', 'patch': {'value': 14}},
+            {'id': '7', 'status': '200', 'patch': {'value': 14}},
         ])
 
         # invalid action in bulk dispatch
@@ -98,7 +98,9 @@ class ApiPatchDispatchBulkTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data['detail'], '"replace" op has to specify path.')
+        self.assertEqual(response.data, {
+            'detail': '"replace" op has to specify path.',
+        })
 
         # op raised validation error
         response = patch.dispatch_bulk(
@@ -129,8 +131,8 @@ class ApiPatchDispatchBulkTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, [
-            {'id': 5, 'detail': ["invalid data here!"], 'status': 400},
-            {'id': 7, 'detail': ["invalid data here!"], 'status': 400},
+            {'id': '5', 'status': '400', 'detail': ["invalid data here!"]},
+            {'id': '7', 'status': '400', 'detail': ["invalid data here!"]},
         ])
 
         # op raised api validation error
@@ -162,8 +164,8 @@ class ApiPatchDispatchBulkTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, [
-            {'id': 5, 'detail': ["invalid api data here!"], 'status': 400},
-            {'id': 7, 'detail': ["invalid api data here!"], 'status': 400},
+            {'id': '5', 'status': '400', 'detail': ["invalid api data here!"]},
+            {'id': '7', 'status': '400', 'detail': ["invalid api data here!"]},
         ])
 
         # action in bulk dispatch raised perm denied
@@ -195,8 +197,8 @@ class ApiPatchDispatchBulkTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, [
-            {'id': 5, 'detail': "yo ain't doing that!", 'status': 403},
-            {'id': 7, 'detail': "yo ain't doing that!", 'status': 403},
+            {'id': '5', 'status': '403', 'detail': "yo ain't doing that!"},
+            {'id': '7', 'status': '403', 'detail': "yo ain't doing that!"},
         ])
 
         # action in bulk dispatch raised 404
@@ -228,8 +230,8 @@ class ApiPatchDispatchBulkTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, [
-            {'id': 5, 'detail': "NOT FOUND", 'status': 404},
-            {'id': 7, 'detail': "NOT FOUND", 'status': 404},
+            {'id': '5', 'status': '404', 'detail': "NOT FOUND"},
+            {'id': '7', 'status': '404', 'detail': "NOT FOUND"},
         ])
 
         # action in bulk dispatch raised 404 with message
@@ -261,6 +263,6 @@ class ApiPatchDispatchBulkTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, [
-            {'id': 5, 'detail': "something was removed", 'status': 404},
-            {'id': 7, 'detail': "something was removed", 'status': 404},
+            {'id': '5', 'status': '404', 'detail': "something was removed"},
+            {'id': '7', 'status': '404', 'detail': "something was removed"},
         ])

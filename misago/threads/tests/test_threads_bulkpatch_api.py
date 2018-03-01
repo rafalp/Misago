@@ -14,13 +14,13 @@ class ThreadsBulkPatchApiTestCase(ThreadsApiTestCase):
     def setUp(self):
         super(ThreadsBulkPatchApiTestCase, self).setUp()
 
-        self.threads = list(reversed([
+        self.threads = [
             testutils.post_thread(category=self.category),
             testutils.post_thread(category=self.category),
             testutils.post_thread(category=self.category),
-        ]))
+        ]
 
-        self.ids = list(reversed([t.id for t in self.threads]))
+        self.ids = [t.id for t in self.threads]
 
         self.api_link = reverse('misago:api:thread-list')
 
@@ -175,9 +175,11 @@ class ThreadAddAclApiTests(ThreadsBulkPatchApiTestCase):
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
-        for i, thread in enumerate(self.threads):
-            self.assertEqual(response_json[i]['id'], thread.id)
-            self.assertTrue(response_json[i]['acl'])
+        for i, thread_id in enumerate(self.ids):
+            data = response_json[i]
+            self.assertEqual(data['id'], str(thread_id))
+            self.assertEqual(data['status'], '200')
+            self.assertTrue(data['patch']['acl'])
 
 
 class ThreadsBulkChangeTitleApiTests(ThreadsBulkPatchApiTestCase):
@@ -199,11 +201,15 @@ class ThreadsBulkChangeTitleApiTests(ThreadsBulkPatchApiTestCase):
             }
         )
         self.assertEqual(response.status_code, 200)
-
-        response_json = response.json()
-        for i, thread in enumerate(self.threads):
-            self.assertEqual(response_json[i]['id'], thread.id)
-            self.assertEqual(response_json[i]['title'], 'Changed the title!')
+        self.assertEqual(response.json(), [
+            {
+                'id': str(thread_id),
+                'status': '200',
+                'patch': {
+                    'title': 'Changed the title!',
+                }
+            } for thread_id in self.ids
+        ])
 
         for thread in Thread.objects.filter(id__in=self.ids):
             self.assertEqual(thread.title, 'Changed the title!')
@@ -231,10 +237,10 @@ class ThreadsBulkChangeTitleApiTests(ThreadsBulkPatchApiTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), [
             {
-                'id': thread_id,
-                'status': 403,
+                'id': str(thread_id),
+                'status': '403',
                 'detail': "You can't edit threads in this category.",
-            } for thread_id in sorted(self.ids, reverse=True)
+            } for thread_id in self.ids
         ])
 
 
@@ -302,11 +308,15 @@ class ThreadsBulkMoveApiTests(ThreadsBulkPatchApiTestCase):
             }
         )
         self.assertEqual(response.status_code, 200)
-
-        response_json = response.json()
-        for i, thread in enumerate(self.threads):
-            self.assertEqual(response_json[i]['id'], thread.id)
-            self.assertEqual(response_json[i]['category'], self.category_b.pk)
+        self.assertEqual(response.json(), [
+            {
+                'id': str(thread_id),
+                'status': '200',
+                'patch': {
+                    'category': self.category_b.pk,
+                },
+            } for thread_id in self.ids
+        ])
 
         for thread in Thread.objects.filter(id__in=self.ids):
             self.assertEqual(thread.category_id, self.category_b.pk)
@@ -337,11 +347,15 @@ class ThreadsBulksHideApiTests(ThreadsBulkPatchApiTestCase):
             }
         )
         self.assertEqual(response.status_code, 200)
-
-        response_json = response.json()
-        for i, thread in enumerate(self.threads):
-            self.assertEqual(response_json[i]['id'], thread.id)
-            self.assertTrue(response_json[i]['is_hidden'])
+        self.assertEqual(response.json(), [
+            {
+                'id': str(thread_id),
+                'status': '200',
+                'patch': {
+                    'is_hidden': True,
+                },
+            } for thread_id in self.ids
+        ])
 
         for thread in Thread.objects.filter(id__in=self.ids):
             self.assertTrue(thread.is_hidden)
@@ -382,12 +396,16 @@ class ThreadsBulksApproveApiTests(ThreadsBulkPatchApiTestCase):
             }
         )
         self.assertEqual(response.status_code, 200)
-
-        response_json = response.json()
-        for i, thread in enumerate(self.threads):
-            self.assertEqual(response_json[i]['id'], thread.id)
-            self.assertFalse(response_json[i]['is_unapproved'])
-            self.assertFalse(response_json[i]['has_unapproved_posts'])
+        self.assertEqual(response.json(), [
+            {
+                'id': str(thread_id),
+                'status': '200',
+                'patch': {
+                    'is_unapproved': False,
+                    'has_unapproved_posts': False,
+                },
+            } for thread_id in self.ids
+        ])
 
         for thread in Thread.objects.filter(id__in=self.ids):
             self.assertFalse(thread.is_unapproved)

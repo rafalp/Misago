@@ -516,7 +516,7 @@ class MergeThreadsSerializer(NewThreadSerializer):
             })
 
         if invalid_threads:
-            invalid_threads.sort(key=lambda e: e['id'])
+            invalid_threads.sort(key=lambda item: item['id'])
             raise ValidationError({'merge': invalid_threads})
 
         return valid_threads

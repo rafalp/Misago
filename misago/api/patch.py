@@ -79,19 +79,26 @@ class ApiPatch(object):
                 return Response({'detail': detail}, status=status)
 
         for target in targets:
-            patch = {'id': target.pk, 'status': 200}
+            data = {'id': target.pk, 'status': 200, 'patch': {}}
             for action in request.data['ops']:
                 try:
-                    self.dispatch_action(patch, request, target, action)
+                    self.dispatch_action(data['patch'], request, target, action)
                 except HANDLED_EXCEPTIONS as exception:
                     detail, status = self.get_error_detail_code(exception)
-                    patch = {
+                    data = {
                         'id': target.pk,
-                        'detail': detail,
                         'status': status,
+                        'detail': detail,
                     }
                     break
-            result.append(patch)
+            result.append(data)
+
+        # sort result items by id then cast id and status to string
+        # so we are compliant with our bulk actions spec
+        result.sort(key=lambda item: item['id'])
+        for data in result:
+            data['id'] = str(data['id'])
+            data['status'] = str(data['status'])
 
         # always returning 200 on op error saves us logic duplication
         # in the frontend, were we need to do success handling in both
@@ -111,11 +118,11 @@ class ApiPatch(object):
         if 'value' not in action:
             raise InvalidAction(_('"%s" op has to specify value.') % action.get('op'))
 
-    def dispatch_action(self, patch, request, target, action):
+    def dispatch_action(self, data, request, target, action):
         for handler in self._actions:
             if action['op'] == handler['op'] and action['path'] == handler['path']:
                 with transaction.atomic():
-                    patch.update(handler['handler'](request, target, action['value']))
+                    data.update(handler['handler'](request, target, action['value']))
 
     def get_error_detail_code(self, exception):
         if isinstance(exception, InvalidAction):
