@@ -21,8 +21,7 @@ def posts_split_endpoint(request, thread):
         },
     )
 
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=400)
+    serializer.is_valid(raise_exception=True)
 
     split_posts_to_new_thread(request, thread, serializer.validated_data)
 

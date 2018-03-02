@@ -320,8 +320,7 @@ def thread_patch_endpoint(request, thread):
 
 def bulk_patch_endpoint(request, viewmodel):
     serializer = BulkPatchSerializer(data=request.data)
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=400)
+    serializer.is_valid(raise_exception=True)
 
     threads = clean_threads_for_patch(request, viewmodel, serializer.data['ids'])
 

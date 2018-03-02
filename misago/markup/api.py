@@ -10,8 +10,7 @@ from . import common_flavour, finalise_markup
 @api_view(['POST'])
 def parse_markup(request):
     serializer = MarkupSerializer(data=request.data)
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=400)
+    serializer.is_valid(raise_exception=True)
 
     parsing_result = common_flavour(
         request,

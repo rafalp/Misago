@@ -64,19 +64,18 @@ class ViewSet(viewsets.ViewSet):
         )
 
         serializer = NewPollSerializer(instance, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
+        serializer.is_valid(raise_exception=True)
 
-            add_acl(request.user, instance)
-            for choice in instance.choices:
-                choice['selected'] = False
+        serializer.save()
 
-            thread.has_poll = True
-            thread.save()
+        add_acl(request.user, instance)
+        for choice in instance.choices:
+            choice['selected'] = False
 
-            return Response(PollSerializer(instance).data)
-        else:
-            return Response(serializer.errors, status=400)
+        thread.has_poll = True
+        thread.save()
+
+        return Response(PollSerializer(instance).data)
 
     @transaction.atomic
     def update(self, request, thread_pk, pk=None):
@@ -86,15 +85,14 @@ class ViewSet(viewsets.ViewSet):
         allow_edit_poll(request.user, instance)
 
         serializer = EditPollSerializer(instance, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
+        serializer.is_valid(raise_exception=True)
 
-            add_acl(request.user, instance)
-            instance.make_choices_votes_aware(request.user)
+        serializer.save()
 
-            return Response(PollSerializer(instance).data)
-        else:
-            return Response(serializer.errors, status=400)
+        add_acl(request.user, instance)
+        instance.make_choices_votes_aware(request.user)
+
+        return Response(PollSerializer(instance).data)
 
     @transaction.atomic
     def delete(self, request, thread_pk, pk=None):

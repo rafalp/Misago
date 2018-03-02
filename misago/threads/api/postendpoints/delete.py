@@ -35,8 +35,7 @@ def delete_bulk(request, thread):
         },
     )
 
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=400)
+    serializer.is_valid(raise_exception=True)
 
     for post in serializer.validated_data['posts']:
         post.delete()

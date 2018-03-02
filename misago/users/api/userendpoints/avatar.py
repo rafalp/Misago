@@ -209,23 +209,20 @@ AVATAR_TYPES = {
 def moderate_avatar_endpoint(request, profile):
     if request.method == "POST":
         is_avatar_locked = profile.is_avatar_locked
-        serializer = ModerateAvatarSerializer(profile, data=request.data)
-        if serializer.is_valid():
-            if serializer.validated_data['is_avatar_locked'] and not is_avatar_locked:
-                avatars.dynamic.set_avatar(profile)
-            serializer.save()
 
-            return Response({
-                'avatars': profile.avatars,
-                'is_avatar_locked': int(profile.is_avatar_locked),
-                'avatar_lock_user_message': profile.avatar_lock_user_message,
-                'avatar_lock_staff_message': profile.avatar_lock_staff_message,
-            })
-        else:
-            return Response(
-                serializer.errors,
-                status=400,
-            )
+        serializer = ModerateAvatarSerializer(profile, data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        if serializer.validated_data['is_avatar_locked'] and not is_avatar_locked:
+            avatars.dynamic.set_avatar(profile)
+        serializer.save()
+
+        return Response({
+            'avatars': profile.avatars,
+            'is_avatar_locked': int(profile.is_avatar_locked),
+            'avatar_lock_user_message': profile.avatar_lock_user_message,
+            'avatar_lock_staff_message': profile.avatar_lock_staff_message,
+        })
     else:
         return Response({
             'is_avatar_locked': int(profile.is_avatar_locked),

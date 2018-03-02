@@ -104,11 +104,10 @@ class UserViewSet(viewsets.GenericViewSet):
         allow_self_only(request.user, pk, _("You can't change other users options."))
 
         serializer = ForumOptionsSerializer(request.user, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=204)
-        else:
-            return Response(serializer.errors, status=400)
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save()
+        return Response(status=204)
 
     @detail_route(methods=['get', 'post'])
     def username(self, request, pk=None):

@@ -146,8 +146,7 @@ def post_patch_endpoint(request, post):
 
 def bulk_patch_endpoint(request, thread):
     serializer = BulkPatchSerializer(data=request.data)
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=400)
+    serializer.is_valid(raise_exception=True)
 
     posts = clean_posts_for_patch(request, thread, serializer.data['ids'])
 

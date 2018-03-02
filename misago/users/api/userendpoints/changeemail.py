@@ -14,8 +14,7 @@ def change_email_endpoint(request, pk=None):
         context={'user': request.user},
     )
 
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=400)
+    serializer.is_valid(raise_exception=True)
 
     token = store_new_credential(request, 'email', serializer.validated_data['new_email'])
 

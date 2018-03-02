@@ -37,8 +37,7 @@ def change_username(request):
         context={'user': request.user},
     )
 
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=400)
+    serializer.is_valid(raise_exception=True)
 
     try:
         serializer.change_username(changed_by=request.user)
@@ -62,9 +61,7 @@ def change_username(request):
 def moderate_username_endpoint(request, profile):
     if request.method == 'POST':
         serializer = ChangeUsernameSerializer(data=request.data, context={'user': profile})
-
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=400)
+        serializer.is_valid(raise_exception=True)
 
         try:
             serializer.change_username(changed_by=request.user)
