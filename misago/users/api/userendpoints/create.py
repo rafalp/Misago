@@ -7,10 +7,11 @@ from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 
 from misago.conf import settings
+from misago.core.exceptions import Banned
 from misago.core.mail import mail_user
+from misago.users.bans import get_ip_ban
 from misago.users.serializers import RegisterUserSerializer
 from misago.users.tokens import make_activation_token
-
 
 UserModel = get_user_model()
 
@@ -19,6 +20,10 @@ UserModel = get_user_model()
 def create_endpoint(request):
     if settings.account_activation == 'closed':
         raise PermissionDenied(_("New users registrations are currently closed."))
+
+    ban = get_ip_ban(request.user_ip, registration_only=True)
+    if ban:
+        raise Banned(ban)
 
     serializer = RegisterUserSerializer(
         data=request.data,

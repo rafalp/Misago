@@ -82,10 +82,14 @@ class UserCreateTests(UserTestCase):
             },
         )
 
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 403)
         self.assertEqual(
             response.json(), {
-                'non_field_errors': ["You can't register account like this."],
+                'detail': {
+                    'html': '<p>You can&#39;t register account like this.</p>',
+                    'plain': "You can't register account like this.",
+                },
+                'expires_on': None,
             }
         )
 

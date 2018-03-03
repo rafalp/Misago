@@ -7,7 +7,7 @@ from django.utils import six
 from django.utils.translation import ugettext as _
 
 from misago.users import captcha, validators
-from misago.users.bans import get_email_ban, get_ip_ban, get_username_ban
+from misago.users.bans import get_email_ban, get_username_ban
 
 
 UserModel = get_user_model()
@@ -47,13 +47,6 @@ class RegisterUserSerializer(serializers.Serializer):
 
     def validate(self, data):
         request = self.context['request']
-
-        ban = get_ip_ban(request.user_ip, registration_only=True)
-        if ban:
-            if ban.user_message:
-                raise ValidationError(ban.user_message)
-            else:
-                raise ValidationError(_("New registrations from this IP address are not allowed."))
 
         self._added_errors = {}
 
