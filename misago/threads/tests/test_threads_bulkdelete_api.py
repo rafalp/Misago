@@ -1,6 +1,7 @@
 import json
 
 from django.urls import reverse
+from django.utils import six
 
 from misago.acl.testutils import override_acl
 from misago.categories import PRIVATE_THREADS_ROOT_NAME
@@ -75,7 +76,9 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
         response = self.delete(self.api_link, 'abbss')
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'threads': ['Expected a list of items but got type "str".'],
+            'threads': [
+                'Expected a list of items but got type "{}".'.format(six.text_type.__name__)
+            ],
         })
         
         self.override_acl({
