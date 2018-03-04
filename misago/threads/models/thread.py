@@ -78,6 +78,16 @@ class Thread(models.Model):
     is_hidden = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
 
+    answer = models.ForeignKey(
+        'misago_threads.Post',
+        related_name='+',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+    answer_is_protected =  models.BooleanField(default=False)
+    answer_set_on = models.DateTimeField(null=True, blank=True)
+
     participants = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         related_name='privatethread_set',
