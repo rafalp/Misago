@@ -146,8 +146,11 @@ def allow_set_answer(user, target):
     if target.is_answer:
         raise PermissionDenied(_("This post is already set as an answer."))
 
-    if category_acl['can_set_answers'] == 1 and target.thread.answer_id:
-        if not has_time_to_change_answer(user, target):
+    if target.thread.answer_id:
+        if not category_acl['can_change_answers']:
+            raise PermissionDenied(_("You don't have permission to change selected answer."))
+
+        if category_acl['can_change_answers'] == 1 and not has_time_to_change_answer(user, target):
             raise PermissionDenied(
                 ungettext(
                     (
@@ -224,13 +227,28 @@ def allow_unset_answer(user, target):
             )
         )
 
-    if category_acl['can_change_answers'] == 1 and target.thread.starter != user:
-        raise PermissionDenied(
-            _(
-                "You dont't have permission to unset this answer because "
-                "you are not a thread starter."
+    if category_acl['can_change_answers'] == 1:
+        if target.thread.starter != user:
+            raise PermissionDenied(
+                _(
+                    "You dont't have permission to unset this answer because "
+                    "you are not a thread starter."
+                )
             )
-        )
+        if not has_time_to_change_answer(user, target):
+            raise PermissionDenied(
+                ungettext(
+                    (
+                        "You don't have permission to change thread's answer that was set "
+                        "for more than %(minutes)s minute."),
+                    (
+                        "You don't have permission to change thread's answer that was set "
+                        "for more than %(minutes)s minutes."),
+                    category_acl['answer_change_time'],
+                ) % {
+                    'minutes': category_acl['answer_change_time'],
+                }
+            )
         
     if not category_acl['can_close_threads']:
         if target.category.is_closed:
