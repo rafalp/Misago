@@ -14,6 +14,10 @@ Misago
    :target: https://travis-ci.org/rafalp/Misago
    :alt: Works on Python 2.7, 3.5, 3,6
 
+.. image:: https://img.shields.io/badge/chat-on_discord-7289da.svg
+   :target: https://discord.gg/fwvrZgB
+   :alt: Community Chat
+
 
 **Development Status:** Big changes happening on master branch, use `latest release <https://github.com/rafalp/Misago/releases>`_ for working code.
 
