@@ -6,7 +6,7 @@ django-debug-toolbar~=1.8
 django-crispy-forms~=1.6.1
 django-htmlmin~=0.10.0
 django-mptt~=0.8.7
-Faker==0.8.11
+Faker~=0.8.11
 html5lib==0.999999999
 markdown~=2.6.8
 path.py~=10.3.1
