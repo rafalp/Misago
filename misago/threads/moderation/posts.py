@@ -28,6 +28,9 @@ def protect_post(user, post):
     if not post.is_protected:
         post.is_protected = True
         post.save(update_fields=['is_protected'])
+        if post.is_best_answer:
+            post.thread.best_answer_is_protected = True
+            post.thread.save(update_fields=['best_answer_is_protected'])
         return True
     else:
         return False
@@ -37,6 +40,9 @@ def unprotect_post(user, post):
     if post.is_protected:
         post.is_protected = False
         post.save(update_fields=['is_protected'])
+        if post.is_best_answer:
+            post.thread.best_answer_is_protected = False
+            post.thread.save(update_fields=['best_answer_is_protected'])
         return True
     else:
         return False
