@@ -106,10 +106,10 @@ def register_with(registry):
 
 def allow_mark_as_best_answer(user, target):
     if user.is_anonymous:
-        raise PermissionDenied(_("You have to sign in to set posts as answers."))
+        raise PermissionDenied(_("You have to sign in to mark best answers."))
 
     if target.is_event:
-        raise PermissionDenied(_("Events can't be set as answers."))
+        raise PermissionDenied(_("Events can't be marked as best answers."))
 
     category_acl = user.acl_cache['categories'].get(
         target.category_id, {
@@ -120,7 +120,7 @@ def allow_mark_as_best_answer(user, target):
     if not category_acl['can_mark_best_answers']:
         raise PermissionDenied(
             _(
-                'You don\'t have permission to set answers in the "%(category)s" category.'
+                'You don\'t have permission to mark best answers in the "%(category)s" category.'
             ) % {
                 'category': target.category,
             }
@@ -129,37 +129,46 @@ def allow_mark_as_best_answer(user, target):
     if category_acl['can_mark_best_answers'] == 1 and target.thread.starter != user:
         raise PermissionDenied(
             _(
-                "You dont't have permission to set this post as an answer "
-                "because you are not the thread starter."
+                "You don't have permission to mark best answer in this thread because you "
+                "didn't start it."
             )
         )
 
     if target.is_first_post:
-        raise PermissionDenied(_("First post in a thread can't be set as an answer."))
+        raise PermissionDenied(_("First post in a thread can't be marked as best answer."))
 
     if target.is_hidden:
-        raise PermissionDenied(_("Hidden posts can't be set as answers."))
+        raise PermissionDenied(_("Hidden posts can't be marked as best answers."))
 
     if target.is_unapproved:
-        raise PermissionDenied(_("Unapproved posts can't be set as answers."))
+        raise PermissionDenied(_("Unapproved posts can't be marked as best answers."))
 
     if target.is_answer:
-        raise PermissionDenied(_("This post is already set as an answer."))
+        raise PermissionDenied(_("This post is already marked as best answer."))
 
     if target.thread.best_answer_id:
         if not category_acl['can_change_marked_answers']:
-            raise PermissionDenied(_("You don't have permission to change selected answer."))
+            raise PermissionDenied(
+                _(
+                    'You don\'t have permission to change marked best answers in the '
+                    '"%(category)s" category.'
+                ) % {
+                    'category': target.category,
+                }
+            )
 
         if (category_acl['can_change_marked_answers'] == 1 and
                 not has_time_to_change_answer(user, target)):
             raise PermissionDenied(
                 ungettext(
                     (
-                        "You don't have permission to change thread's answer that was set "
-                        "for more than %(minutes)s minute."),
+                        "You don't have permission to change best answer that was marked for more "
+                        "than %(minutes)s minute."
+                    ),
                     (
-                        "You don't have permission to change thread's answer that was set "
-                        "for more than %(minutes)s minutes."),
+                        "You don't have permission to change best answer that was marked for more "
+                        "than %(minutes)s minutes."
+                    ),
                     category_acl['answer_change_time'],
                 ) % {
                     'minutes': category_acl['answer_change_time'],
@@ -169,8 +178,8 @@ def allow_mark_as_best_answer(user, target):
         if target.thread.best_answer_is_protected and not category_acl['can_protect_posts']:
             raise PermissionDenied(
                 _(
-                    "You don't have permission to change this thread's answer because moderator "
-                    "has protected it."
+                    "You don't have permission to change this thread's marked best answer because "
+                    "a moderator has protected it."
                 )
             )
         
@@ -178,8 +187,8 @@ def allow_mark_as_best_answer(user, target):
         if target.category.is_closed:
             raise PermissionDenied(
                 _(
-                    'You can\'t sets this post as an answer because it\'s category '
-                    '"%(category)s" is closed.'
+                    'You don\'t have permission to mark this post as best answer because its '
+                    'category "%(category)s" is closed.'
                 ) % {
                     'category': target.category,
                 }
@@ -187,14 +196,17 @@ def allow_mark_as_best_answer(user, target):
         if target.thread.is_closed:
             raise PermissionDenied(
                 _(
-                    "You can't set this post as an answer because it's thread is closed and you "
+                    "You can't mark this post as best answer because its thread is closed and you "
                     "don't have permission to open it."
                 )
             )
 
     if target.is_protected and not category_acl['can_protect_posts']:
         raise PermissionDenied(
-            _("You can't set this post as an answer because moderator has protected it.")
+            _(
+                "You don't have permission to mark this post as best answer because a moderator "
+                "has protected it."
+            )
         )
 
 
@@ -203,7 +215,7 @@ can_mark_as_best_answer = return_boolean(allow_mark_as_best_answer)
 
 def allow_unmark_best_answer(user, target):
     if user.is_anonymous:
-        raise PermissionDenied(_("You have to sign in to unset threads answers."))
+        raise PermissionDenied(_("You have to sign in to unmark best answers."))
 
     category_acl = user.acl_cache['categories'].get(
         target.category_id, {
@@ -214,7 +226,7 @@ def allow_unmark_best_answer(user, target):
     if not category_acl['can_mark_best_answers']:
         raise PermissionDenied(
             _(
-                'You don\'t have permission to unset threads answers in the "%(category)s" '
+                'You don\'t have permission to unmark threads answers in the "%(category)s" '
                 'category.'
             ) % {
                 'category': target.category,
@@ -224,7 +236,7 @@ def allow_unmark_best_answer(user, target):
     if not target.is_answer:
         raise PermissionDenied(
             _(
-                "You can't unset."
+                "This post can't be unmarked because it's not currently marked as best answer."
             )
         )
 
@@ -232,19 +244,21 @@ def allow_unmark_best_answer(user, target):
         if target.thread.starter != user:
             raise PermissionDenied(
                 _(
-                    "You dont't have permission to unset this answer because "
-                    "you are not a thread starter."
+                    "You don't have permission to unmark this best answer because you are not a "
+                    "thread starter."
                 )
             )
         if not has_time_to_change_answer(user, target):
             raise PermissionDenied(
                 ungettext(
                     (
-                        "You don't have permission to change thread's answer that was set "
-                        "for more than %(minutes)s minute."),
+                        "You don't have permission to unmark best answer that was marked for more "
+                        "than %(minutes)s minute."
+                    ),
                     (
-                        "You don't have permission to change thread's answer that was set "
-                        "for more than %(minutes)s minutes."),
+                        "You don't have permission to unmark best answer that was marked for more "
+                        "than %(minutes)s minutes."
+                    ),
                     category_acl['answer_change_time'],
                 ) % {
                     'minutes': category_acl['answer_change_time'],
@@ -255,7 +269,8 @@ def allow_unmark_best_answer(user, target):
         if target.category.is_closed:
             raise PermissionDenied(
                 _(
-                    'You can\'t unset this answer because it\'s scategory "%(category)s" is closed.'
+                    'You don\'t have permission to unmark this best answer because its category '
+                    '"%(category)s" is closed.'
                 ) % {
                     'category': target.category,
                 }
@@ -263,15 +278,15 @@ def allow_unmark_best_answer(user, target):
         if target.thread.is_closed:
             raise PermissionDenied(
                 _(
-                    "You don't have permission to unset this answer because it's thread is closed "
-                    "and you don't have permission to open it."
+                    "You can't unmark this best answer because its thread is closed and you don't "
+                    "have permission to open it."
                 )
             )
 
     if target.is_protected and not category_acl['can_protect_posts']:
         raise PermissionDenied(
             _(
-                "You don't have permission to unset this thread's answer because moderator has "
+                "You don't have permission to unmark this best answer because a moderator has "
                 "protected it."
             )
         )

@@ -1,5 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
@@ -275,6 +276,14 @@ class Thread(models.Model):
             self.last_poster_slug = post.poster.slug
         else:
             self.last_poster_slug = slugify(post.poster_name)
+
+    def set_best_answer(self, user, post):
+        self.best_answer = post
+        self.best_answer_is_protected = post.is_protected
+        self.best_answer_marked_on = timezone.now()
+        self.best_answer_marked_by = user
+        self.best_answer_marked_by_name = user.username
+        self.best_answer_marked_by_slug = user.slug
 
     def clear_best_answer(self):
         self.best_answer = None
