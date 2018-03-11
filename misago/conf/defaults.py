@@ -20,7 +20,7 @@ MISAGO_ACL_EXTENSIONS = [
     'misago.threads.permissions.polls',
     'misago.threads.permissions.threads',
     'misago.threads.permissions.privatethreads',
-    'misago.threads.permissions.answers',
+    'misago.threads.permissions.bestanswers',
     'misago.search.permissions',
 ]
 

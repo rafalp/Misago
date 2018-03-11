@@ -12,18 +12,18 @@ from misago.threads.models import Post
 
 
 __all__nope = [
-    'allow_select_answer',
-    'can_select_answer',
-    'allow_remove_answer',
-    'can_remove_answer',
+    'allow_mark_as_best_answer',
+    'can_mark_as_best_answer',
+    'allow_unmark_best_answer',
+    'can_unmark_best_answer',
 ]
 
 
 class CategoryPermissionsForm(forms.Form):
-    legend = _("Answers")
+    legend = _("Best answers")
 
-    can_set_answers = forms.TypedChoiceField(
-        label=_("Can set answers"),
+    can_mark_best_answers = forms.TypedChoiceField(
+        label=_("Can mark posts as best answers"),
         coerce=int,
         initial=0,
         choices=[
@@ -32,8 +32,8 @@ class CategoryPermissionsForm(forms.Form):
             (2, _("All threads")),
         ],
     )
-    can_change_answers = forms.TypedChoiceField(
-        label=_("Can change answers"),
+    can_change_marked_answers = forms.TypedChoiceField(
+        label=_("Can change marked answers"),
         coerce=int,
         initial=0,
         choices=[
@@ -42,9 +42,9 @@ class CategoryPermissionsForm(forms.Form):
             (2, _("All threads")),
         ],
     )
-    answer_change_time = forms.IntegerField(
-        label=_("Time limit for owned thread answer change, in minutes"),
-        help_text=_("Enter 0 to don't limit time for changing own thread answer."),
+    best_answer_change_time = forms.IntegerField(
+        label=_("Time limit for changing marked best answer in owned thread, in minutes"),
+        help_text=_("Enter 0 to don't limit time for changing marked best answer in owned thread."),
         initial=0,
         min_value=0,
     )
@@ -75,9 +75,9 @@ def build_category_acl(acl, category, categories_roles, key_name):
     category_roles = categories_roles.get(category.pk, [])
 
     final_acl = {
-        'can_set_answers': 0,
-        'can_change_answers': 0,
-        'answer_change_time': 0,
+        'can_mark_best_answers': 0,
+        'can_change_marked_answers': 0,
+        'best_answer_change_time': 0,
     }
     final_acl.update(acl)
 
@@ -85,9 +85,9 @@ def build_category_acl(acl, category, categories_roles, key_name):
         final_acl,
         roles=category_roles,
         key=key_name,
-        can_set_answers=algebra.greater,
-        can_change_answers=algebra.greater,
-        answer_change_time=algebra.greater_or_zero,
+        can_mark_best_answers=algebra.greater,
+        can_change_marked_answers=algebra.greater,
+        best_answer_change_time=algebra.greater_or_zero,
     )
 
     return final_acl
@@ -95,8 +95,8 @@ def build_category_acl(acl, category, categories_roles, key_name):
 
 def add_acl_to_post(user, post):
     post.acl.update({
-        'can_set_answer': can_set_answer(user, post),
-        'can_unset_answer': can_unset_answer(user, post),
+        'can_mark_as_best_answer': can_mark_as_best_answer(user, post),
+        'can_unmark_best_answer': can_unmark_best_answer(user, post),
     })
 
 
@@ -104,7 +104,7 @@ def register_with(registry):
     registry.acl_annotator(Post, add_acl_to_post)
 
 
-def allow_set_answer(user, target):
+def allow_mark_as_best_answer(user, target):
     if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to set posts as answers."))
 
@@ -113,11 +113,11 @@ def allow_set_answer(user, target):
 
     category_acl = user.acl_cache['categories'].get(
         target.category_id, {
-            'can_set_answers': 0,
+            'can_mark_best_answers': 0,
         }
     )
 
-    if not category_acl['can_set_answers']:
+    if not category_acl['can_mark_best_answers']:
         raise PermissionDenied(
             _(
                 'You don\'t have permission to set answers in the "%(category)s" category.'
@@ -126,7 +126,7 @@ def allow_set_answer(user, target):
             }
         )
 
-    if category_acl['can_set_answers'] == 1 and target.thread.starter != user:
+    if category_acl['can_mark_best_answers'] == 1 and target.thread.starter != user:
         raise PermissionDenied(
             _(
                 "You dont't have permission to set this post as an answer "
@@ -146,11 +146,12 @@ def allow_set_answer(user, target):
     if target.is_answer:
         raise PermissionDenied(_("This post is already set as an answer."))
 
-    if target.thread.answer_id:
-        if not category_acl['can_change_answers']:
+    if target.thread.best_answer_id:
+        if not category_acl['can_change_marked_answers']:
             raise PermissionDenied(_("You don't have permission to change selected answer."))
 
-        if category_acl['can_change_answers'] == 1 and not has_time_to_change_answer(user, target):
+        if (category_acl['can_change_marked_answers'] == 1 and
+                not has_time_to_change_answer(user, target)):
             raise PermissionDenied(
                 ungettext(
                     (
@@ -165,7 +166,7 @@ def allow_set_answer(user, target):
                 }
             )
 
-        if target.thread.answer_is_protected and not category_acl['can_protect_posts']:
+        if target.thread.best_answer_is_protected and not category_acl['can_protect_posts']:
             raise PermissionDenied(
                 _(
                     "You don't have permission to change this thread's answer because moderator "
@@ -193,24 +194,24 @@ def allow_set_answer(user, target):
 
     if target.is_protected and not category_acl['can_protect_posts']:
         raise PermissionDenied(
-            _("You can't sets this post as an answer because moderator has protected it.")
+            _("You can't set this post as an answer because moderator has protected it.")
         )
 
 
-can_set_answer = return_boolean(allow_set_answer)
+can_mark_as_best_answer = return_boolean(allow_mark_as_best_answer)
 
 
-def allow_unset_answer(user, target):
+def allow_unmark_best_answer(user, target):
     if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to unset threads answers."))
 
     category_acl = user.acl_cache['categories'].get(
         target.category_id, {
-            'can_change_answers': 0,
+            'can_mark_best_answers': 0,
         }
     )
 
-    if not category_acl['can_change_answers']:
+    if not category_acl['can_mark_best_answers']:
         raise PermissionDenied(
             _(
                 'You don\'t have permission to unset threads answers in the "%(category)s" '
@@ -227,7 +228,7 @@ def allow_unset_answer(user, target):
             )
         )
 
-    if category_acl['can_change_answers'] == 1:
+    if category_acl['can_mark_best_answers'] == 1:
         if target.thread.starter != user:
             raise PermissionDenied(
                 _(
@@ -276,15 +277,15 @@ def allow_unset_answer(user, target):
         )
 
 
-can_unset_answer = return_boolean(allow_unset_answer)
+can_unmark_best_answer = return_boolean(allow_unmark_best_answer)
 
 
 def has_time_to_change_answer(user, target):
     category_acl = user.acl_cache['categories'].get(target.category_id, {})
-    change_time = category_acl.get('answer_change_time', 0)
+    change_time = category_acl.get('best_answer_change_time', 0)
 
     if change_time:
-        diff = timezone.now() - target.thread.answer_set_on
+        diff = timezone.now() - target.thread.best_answer_set_on
         diff_minutes = int(diff.total_seconds() / 60)
         return diff_minutes < change_time
     else:

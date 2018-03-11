@@ -134,8 +134,8 @@ class Post(models.Model):
         other_post.parsed = six.text_type('\n').join((other_post.parsed, self.parsed))
         update_post_checksum(other_post)
 
-        if self.thread.answer_id == self.id:
-            self.thread.answer = other_post
+        if self.thread.best_answer_id == self.id:
+            self.thread.best_answer = other_post
 
         from misago.threads.signals import merge_post
         merge_post.send(sender=self, other_post=other_post)
@@ -143,8 +143,8 @@ class Post(models.Model):
     def move(self, new_thread):
         from misago.threads.signals import move_post
 
-        if self.thread.answer_id == self.id:
-            self.thread.answer = None
+        if self.thread.best_answer_id == self.id:
+            self.thread.clear_best_answer()
 
         self.category = new_thread.category
         self.thread = new_thread
@@ -222,5 +222,5 @@ class Post(models.Model):
         return self.id == self.thread.first_post_id
 
     @property
-    def is_answer(self):
-        return self.id == self.thread.answer_id
+    def is_best_answer(self):
+        return self.id == self.thread.best_answer_id

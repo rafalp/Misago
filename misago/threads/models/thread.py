@@ -78,15 +78,24 @@ class Thread(models.Model):
     is_hidden = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
 
-    answer = models.ForeignKey(
+    best_answer = models.ForeignKey(
         'misago_threads.Post',
         related_name='+',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
     )
-    answer_is_protected =  models.BooleanField(default=False)
-    answer_set_on = models.DateTimeField(null=True, blank=True)
+    best_answer_is_protected =  models.BooleanField(default=False)
+    best_answer_marked_on = models.DateTimeField(null=True, blank=True)
+    best_answer_marked_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='marked_best_answer_set',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+    best_answer_marked_by_name = models.CharField(max_length=255, null=True, blank=True)
+    best_answer_marked_by_slug = models.CharField(max_length=255, null=True, blank=True)
 
     participants = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
@@ -266,3 +275,11 @@ class Thread(models.Model):
             self.last_poster_slug = post.poster.slug
         else:
             self.last_poster_slug = slugify(post.poster_name)
+
+    def clear_best_answer(self):
+        self.best_answer = None
+        self.best_answer_is_protected = None
+        self.best_answer_marked_on = None
+        self.best_answer_marked_by = None
+        self.best_answer_marked_by_name = None
+        self.best_answer_marked_by_slug = None
