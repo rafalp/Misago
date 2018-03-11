@@ -317,7 +317,7 @@ class ThreadModelTests(TestCase):
         # clear best answer
         self.thread.clear_best_answer()
 
-        self.assertIsNone(self.thread.best_answer, best_answer)
+        self.assertIsNone(self.thread.best_answer)
         self.assertFalse(self.thread.best_answer_is_protected)
         self.assertIsNone(self.thread.best_answer_marked_on)
         self.assertIsNone(self.thread.best_answer_marked_by)
