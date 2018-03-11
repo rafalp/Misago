@@ -456,7 +456,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_merge_with_hidden_thread(self):
-        """api recjects attempt to merge posts with different visibility"""
+        """api excludes thread's first post from visibility checks"""
         self.thread.first_post.is_hidden = True
         self.thread.first_post.poster = self.user
         self.thread.first_post.save()
@@ -473,6 +473,23 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_merge_protected(self):
+        """api preserves protected status after merge"""
+        response = self.client.post(
+            self.api_link,
+            json.dumps({
+                'posts': [
+                    testutils.reply_thread(self.thread, poster="Bob", is_protected=True).pk,
+                    testutils.reply_thread(self.thread, poster="Bob", is_protected=False).pk,
+                ]
+            }),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+
+        merged_post = self.thread.post_set.order_by('-id')[0]
+        self.assertTrue(merged_post.is_protected)
 
     def test_merge_best_answer(self):
         """api merges best answer with other post"""
@@ -518,6 +535,30 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
 
         self.refresh_thread()
         self.assertEqual(self.thread.best_answer, other_post)
+
+    def test_merge_best_answer_in_protected(self):
+        """api merges best answer into protected post"""
+        best_answer = testutils.reply_thread(self.thread, poster="Bob")
+        
+        self.thread.set_best_answer(self.user, best_answer)
+        self.thread.save()
+         
+        response = self.client.post(
+            self.api_link,
+            json.dumps({
+                'posts': [
+                    best_answer.pk,
+                    testutils.reply_thread(self.thread, poster="Bob", is_protected=True).pk,
+                ]
+            }),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+
+        self.refresh_thread()
+        self.assertEqual(self.thread.best_answer, best_answer)
+        self.assertTrue(self.thread.best_answer.is_protected)
+        self.assertTrue(self.thread.best_answer_is_protected)
 
     def test_merge_remove_reads(self):
         """two posts merge removes read tracker from post"""

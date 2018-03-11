@@ -137,8 +137,12 @@ class Post(models.Model):
         other_post.parsed = six.text_type('\n').join((other_post.parsed, self.parsed))
         update_post_checksum(other_post)
 
-        if self.thread.best_answer_id == self.id:
+        if self.is_protected:
+            other_post.is_protected = True
+        if self.is_best_answer:
             self.thread.best_answer = other_post
+        if other_post.is_best_answer:
+            self.thread.best_answer_is_protected = other_post.is_protected
 
         from misago.threads.signals import merge_post
         merge_post.send(sender=self, other_post=other_post)
@@ -146,7 +150,7 @@ class Post(models.Model):
     def move(self, new_thread):
         from misago.threads.signals import move_post
 
-        if self.thread.best_answer_id == self.id:
+        if self.is_best_answer:
             self.thread.clear_best_answer()
 
         self.category = new_thread.category

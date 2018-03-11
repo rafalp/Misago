@@ -77,6 +77,7 @@ def reply_thread(
         is_unapproved=False,
         is_hidden=False,
         is_event=False,
+        is_protected=False,
         has_reports=False,
         has_open_reports=False,
         posted_on=None,
@@ -96,6 +97,7 @@ def reply_thread(
         'is_event': is_event,
         'is_unapproved': is_unapproved,
         'is_hidden': is_hidden,
+        'is_protected': is_protected,
         'has_reports': has_reports,
         'has_open_reports': has_open_reports,
     }
