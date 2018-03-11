@@ -133,23 +133,28 @@ class MergePostsSerializer(serializers.Serializer):
 
             if not posts:
                 posts.append(post)
-            else:
-                authorship_error = _("Posts made by different users can't be merged.")
-                if posts[0].poster_id:
-                    if post.poster_id != posts[0].poster_id:
-                        raise serializers.ValidationError(authorship_error)
-                else:
-                    if post.poster_id or post.poster_name != posts[0].poster_name:
-                        raise serializers.ValidationError(authorship_error)
+                continue
+            
+            authorship_error = _("Posts made by different users can't be merged.")
+            if post.poster_id != posts[0].poster_id:
+                raise serializers.ValidationError(authorship_error)
+            elif (post.poster_id is None and posts[0].poster_id is None and 
+                    post.poster_name != posts[0].poster_name):
+                raise serializers.ValidationError(authorship_error)
 
-                if posts[0].pk != thread.first_post_id:
-                    if (posts[0].is_hidden != post.is_hidden or
-                            posts[0].is_unapproved != post.is_unapproved):
-                        raise serializers.ValidationError(
-                            _("Posts with different visibility can't be merged.")
-                        )
+            if posts[0].is_first_post and post.is_best_answer:
+                raise serializers.ValidationError(
+                    _("Post marked as best answer can't be merged with thread's first post.")
+                )
 
-                posts.append(post)
+            if not posts[0].is_first_post:
+                if (posts[0].is_hidden != post.is_hidden or
+                        posts[0].is_unapproved != post.is_unapproved):
+                    raise serializers.ValidationError(
+                        _("Posts with different visibility can't be merged.")
+                    )
+
+            posts.append(post)
 
         if len(posts) != len(data):
             raise serializers.ValidationError(_("One or more posts to merge could not be found."))

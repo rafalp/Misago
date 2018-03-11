@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from misago.categories.models import Category
+from misago.threads import testutils
 from misago.threads.models import Poll, Post, Thread, ThreadParticipant
 
 
@@ -29,7 +30,7 @@ class ThreadModelTests(TestCase):
         self.thread.set_title("Test thread")
         self.thread.save()
 
-        post = Post.objects.create(
+        Post.objects.create(
             category=self.category,
             thread=self.thread,
             poster_name='Tester',
@@ -41,8 +42,7 @@ class ThreadModelTests(TestCase):
             updated_on=datetime,
         )
 
-        self.thread.first_post = post
-        self.thread.last_post = post
+        self.thread.synchronize()
         self.thread.save()
 
     def test_synchronize(self):
@@ -283,9 +283,68 @@ class ThreadModelTests(TestCase):
         self.assertEqual(self.thread.last_poster_name, user.username)
         self.assertEqual(self.thread.last_poster_slug, user.slug)
 
+    def test_set_best_answer(self):
+        """set_best_answer sets best answer and setter data on thread"""
+        user = UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
+
+        best_answer = Post.objects.create(
+            category=self.category,
+            thread=self.thread,
+            poster=user,
+            poster_name=user.username,
+            poster_ip='127.0.0.1',
+            original="Hello! I am test message!",
+            parsed="<p>Hello! I am test message!</p>",
+            checksum="nope",
+            posted_on=timezone.now(),
+            updated_on=timezone.now(),
+            is_protected=True,
+        )
+
+        self.thread.synchronize()
+        self.thread.save()
+
+        self.thread.set_best_answer(user, best_answer)
+        self.thread.save()
+
+        self.assertEqual(self.thread.best_answer, best_answer)
+        self.assertTrue(self.thread.best_answer_is_protected)
+        self.assertTrue(self.thread.best_answer_marked_on)
+        self.assertEqual(self.thread.best_answer_marked_by, user)
+        self.assertEqual(self.thread.best_answer_marked_by_name, user.username)
+        self.assertEqual(self.thread.best_answer_marked_by_slug, user.slug)
+
+        # clear best answer
+        self.thread.clear_best_answer()
+
+        self.assertIsNone(self.thread.best_answer, best_answer)
+        self.assertFalse(self.thread.best_answer_is_protected)
+        self.assertIsNone(self.thread.best_answer_marked_on)
+        self.assertIsNone(self.thread.best_answer_marked_by)
+        self.assertIsNone(self.thread.best_answer_marked_by_name)
+        self.assertIsNone(self.thread.best_answer_marked_by_slug)
+
+    def test_set_invalid_best_answer(self):
+        """set_best_answer implements some assertions for data integrity"""
+        user = UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
+
+        other_thread = testutils.post_thread(self.category)
+        with self.assertRaises(ValueError):
+            self.thread.set_best_answer(user, other_thread.first_post)
+
+        with self.assertRaises(ValueError):
+            self.thread.set_best_answer(user, self.thread.first_post)
+
+        with self.assertRaises(ValueError):
+            reply = testutils.reply_thread(self.thread, is_hidden=True)
+            self.thread.set_best_answer(user, reply)
+
+        with self.assertRaises(ValueError):
+            reply = testutils.reply_thread(self.thread, is_unapproved=True)
+            self.thread.set_best_answer(user, reply)
+
     def test_move(self):
         """move(new_category) moves thread to other category"""
-        # pick category instead of category (so we don't have to create one)
         root_category = Category.objects.root_category()
         Category(
             name='New Category',

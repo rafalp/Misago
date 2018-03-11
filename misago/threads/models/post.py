@@ -118,7 +118,10 @@ class Post(models.Model):
         super(Post, self).delete(*args, **kwargs)
 
     def merge(self, other_post):
-        if not self.poster_id or self.poster_id != other_post.poster_id:
+        if self.poster_id != other_post.poster_id:
+            raise ValueError("post can't be merged with other user's post")
+        elif (self.poster_id is None and other_post.poster_id is None and
+                self.poster_name != other_post.poster_name):
             raise ValueError("post can't be merged with other user's post")
 
         if self.thread_id != other_post.thread_id:

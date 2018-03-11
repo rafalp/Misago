@@ -278,6 +278,15 @@ class Thread(models.Model):
             self.last_poster_slug = slugify(post.poster_name)
 
     def set_best_answer(self, user, post):
+        if post.thread_id != self.id:
+            raise ValueError("post to set as best answer must be in same thread")
+        if post.is_first_post:
+            raise ValueError("post to set as best answer can't be first post")
+        if post.is_hidden:
+            raise ValueError("post to set as best answer can't be hidden")
+        if post.is_unapproved:
+            raise ValueError("post to set as best answer can't be unapproved")
+
         self.best_answer = post
         self.best_answer_is_protected = post.is_protected
         self.best_answer_marked_on = timezone.now()
@@ -287,7 +296,7 @@ class Thread(models.Model):
 
     def clear_best_answer(self):
         self.best_answer = None
-        self.best_answer_is_protected = None
+        self.best_answer_is_protected = False
         self.best_answer_marked_on = None
         self.best_answer_marked_by = None
         self.best_answer_marked_by_name = None
