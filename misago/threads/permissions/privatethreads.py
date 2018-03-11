@@ -132,9 +132,6 @@ def build_acl(acl, roles, key_name):
         'can_see_posts_likes': 0,
         'can_like_posts': 0,
         'can_hide_events': 0,
-        'can_mark_best_answers': 0,
-        'can_change_marked_answers': 0,
-        'best_answer_change_time': 0,
     }
 
     if new_acl['can_moderate_private_threads']:

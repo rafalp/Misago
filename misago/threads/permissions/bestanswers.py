@@ -64,9 +64,18 @@ def build_acl(acl, roles, key_name):
     for category in categories:
         category_acl = acl['categories'].get(category.pk, {'can_browse': 0})
         if category_acl['can_browse']:
-            category_acl = acl['categories'][category.pk] = build_category_acl(
+            acl['categories'][category.pk] = build_category_acl(
                 category_acl, category, categories_roles, key_name
             )
+
+    private_category = Category.objects.private_threads()
+    private_threads_acl = acl['categories'].get(private_category.pk)
+    if private_threads_acl:
+        private_threads_acl.update({
+            'can_mark_best_answers': 0,
+            'can_change_marked_answers': 0,
+            'best_answer_change_time': 0,
+        })
 
     return acl
 
