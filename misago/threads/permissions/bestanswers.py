@@ -16,6 +16,10 @@ __all__nope = [
     'can_mark_as_best_answer',
     'allow_unmark_best_answer',
     'can_unmark_best_answer',
+    'allow_hide_best_answer',
+    'can_hide_best_answer',
+    'allow_delete_best_answer',
+    'can_delete_best_answer',
 ]
 
 
@@ -106,6 +110,8 @@ def add_acl_to_post(user, post):
     post.acl.update({
         'can_mark_as_best_answer': can_mark_as_best_answer(user, post),
         'can_unmark_best_answer': can_unmark_best_answer(user, post),
+        'can_hide_best_answer': can_hide_best_answer(user, post),
+        'can_delete_best_answer': can_delete_best_answer(user, post),
     })
 
 
@@ -302,6 +308,26 @@ def allow_unmark_best_answer(user, target):
 
 
 can_unmark_best_answer = return_boolean(allow_unmark_best_answer)
+
+
+def allow_hide_best_answer(user, target):
+    if target.is_best_answer:
+        raise PermissionDenied(
+            _("You can't hide this post because its marked as best answer.")
+        )
+
+
+can_hide_best_answer = return_boolean(allow_hide_best_answer)
+
+
+def allow_delete_best_answer(user, target):
+    if target.is_best_answer:
+        raise PermissionDenied(
+            _("You can't delete this post because its marked as best answer.")
+        )
+
+
+can_delete_best_answer = return_boolean(allow_delete_best_answer)
 
 
 def has_time_to_change_answer(user, target):

@@ -687,6 +687,28 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't hide thread's first post.")
 
+    def test_hide_best_answer(self):
+        """api hide first post fails"""
+        self.thread.set_best_answer(self.user, self.post)
+        self.thread.save()
+
+        self.override_acl({'can_hide_posts': 2})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.post.id,
+            'detail': ["You can't hide this post because its marked as best answer."],
+        })
+
 
 class PostUnhideApiTests(ThreadPostPatchApiTestCase):
     def test_show_post(self):

@@ -116,7 +116,7 @@ class PostDeleteApiTests(ThreadsApiTestCase):
         )
 
     def test_delete_first_post(self):
-        """api disallows first post's deletion"""
+        """api disallows first post deletion"""
         self.override_acl({'can_hide_own_posts': 2, 'can_hide_posts': 2})
 
         api_link = reverse(
@@ -129,6 +129,19 @@ class PostDeleteApiTests(ThreadsApiTestCase):
 
         response = self.client.delete(api_link)
         self.assertContains(response, "You can't delete thread's first post.", status_code=403)
+
+    def test_delete_best_answer(self):
+        """api disallows best answer deletion"""
+        self.override_acl({'can_hide_own_posts': 2, 'can_hide_posts': 2})
+
+        self.thread.set_best_answer(self.user, self.post)
+        self.thread.save()
+
+        response = self.client.delete(self.api_link)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete this post because its marked as best answer.",
+        })
 
     def test_delete_owned_post(self):
         """api deletes owned thread post"""

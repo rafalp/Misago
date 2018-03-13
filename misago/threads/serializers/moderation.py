@@ -10,7 +10,7 @@ from misago.categories import THREADS_ROOT_NAME
 from misago.conf import settings
 from misago.threads.models import Thread
 from misago.threads.permissions import (
-    allow_delete_event, allow_delete_post, allow_delete_thread,
+    allow_delete_best_answer, allow_delete_event, allow_delete_post, allow_delete_thread,
     allow_merge_post, allow_merge_thread,
     allow_move_post, allow_split_post,
     can_reply_thread, can_see_thread,
@@ -77,6 +77,7 @@ class DeletePostsSerializer(serializers.Serializer):
             if post.is_event:
                 allow_delete_event(user, post)
             else:
+                allow_delete_best_answer(user, post)
                 allow_delete_post(user, post)
 
             posts.append(post)
