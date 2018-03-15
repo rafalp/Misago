@@ -8,6 +8,7 @@ from django.utils.translation import ugettext as _, ugettext_lazy, ungettext
 from misago.acl import add_acl
 from misago.categories import THREADS_ROOT_NAME
 from misago.conf import settings
+from misago.threads.mergeconflict import MergeConflict
 from misago.threads.models import Thread
 from misago.threads.permissions import (
     allow_delete_best_answer, allow_delete_event, allow_delete_post, allow_delete_thread,
@@ -15,7 +16,6 @@ from misago.threads.permissions import (
     allow_move_post, allow_split_post,
     can_reply_thread, can_see_thread,
     can_start_thread, exclude_invisible_posts)
-from misago.threads.pollmergehandler import PollMergeHandler
 from misago.threads.threadtypes import trees_map
 from misago.threads.utils import get_thread_id_from_url
 from misago.threads.validators import validate_category, validate_title
@@ -458,21 +458,10 @@ class MergeThreadSerializer(serializers.Serializer):
         thread = self.context['thread']
         other_thread = data['other_thread']
 
-        polls_handler = PollMergeHandler([thread, other_thread])
-
-        if len(polls_handler.polls) == 1:
-            data['poll'] = polls_handler.polls[0]
-        elif polls_handler.is_merge_conflict():
-            if 'poll' in data:
-                polls_handler.set_resolution(data['poll'])
-                if polls_handler.is_valid():
-                    data['poll'] = polls_handler.get_resolution()
-                else:
-                    raise serializers.ValidationError({'poll': _("Invalid choice.")})
-            else:
-                data['polls'] = polls_handler.get_available_resolutions()
-
-        self.polls_handler = polls_handler
+        merge_conflict = MergeConflict(data, [thread, other_thread])
+        merge_conflict.is_valid(raise_exception=True)
+        data.update(merge_conflict.get_resolution())
+        self.merge_conflict = merge_conflict.get_merge_conflict()
 
         return data
 

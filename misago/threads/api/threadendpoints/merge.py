@@ -6,10 +6,10 @@ from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
 from misago.threads.events import record_event
+from misago.threads.mergeconflict import MergeConflict
 from misago.threads.models import Thread
 from misago.threads.moderation import threads as moderation
 from misago.threads.permissions import allow_merge_thread
-from misago.threads.pollmergehandler import PollMergeHandler
 from misago.threads.serializers import (
     MergeThreadSerializer, MergeThreadsSerializer, ThreadsListSerializer)
 
@@ -31,6 +31,8 @@ def thread_merge_endpoint(request, thread, viewmodel):
             errors = serializer.errors['other_thread']
         elif 'poll' in serializer.errors:
             errors = serializer.errors['poll']
+        elif 'polls' in serializer.errors:
+            return Response({'polls': serializer.errors['polls']}, status=400)
         else:
             errors = list(serializer.errors.values())[0]
         return Response({'detail': errors[0]}, status=400)
@@ -39,18 +41,18 @@ def thread_merge_endpoint(request, thread, viewmodel):
     if serializer.validated_data.get('polls'):
         return Response({'polls': serializer.validated_data['polls']}, status=400)
 
-    # merge polls
+    # merge conflict
     other_thread = serializer.validated_data['other_thread']
-    poll = serializer.validated_data.get('poll')
 
-    if len(serializer.polls_handler.polls) == 1:
-        poll.move(other_thread)
-    elif serializer.polls_handler.is_merge_conflict():
+    poll = serializer.validated_data.get('poll')
+    if 'poll' in serializer.merge_conflict:
         if poll and poll.thread_id != other_thread.id:
             other_thread.poll.delete()
             poll.move(other_thread)
         elif not poll:
             other_thread.poll.delete()
+    elif poll:
+        poll.move(other_thread)
 
     # merge thread contents
     moderation.merge_thread(request, other_thread, thread)
