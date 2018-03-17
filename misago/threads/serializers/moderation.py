@@ -418,6 +418,12 @@ class MergeThreadSerializer(serializers.Serializer):
             'required': ugettext_lazy("Enter link to new thread."),
         },
     )
+    best_answer = serializers.IntegerField(
+        required=False,
+        error_messages={
+            'invalid': ugettext_lazy("Invalid choice."),
+        },
+    )
     poll = serializers.IntegerField(
         required=False,
         error_messages={

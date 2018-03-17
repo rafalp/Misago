@@ -33,13 +33,13 @@ def thread_merge_endpoint(request, thread, viewmodel):
             errors = serializer.errors['poll']
         elif 'polls' in serializer.errors:
             return Response({'polls': serializer.errors['polls']}, status=400)
+        elif 'best_answer' in serializer.errors:
+            errors = serializer.errors['best_answer']
+        elif 'best_answers' in serializer.errors:
+            return Response({'best_answers': serializer.errors['best_answers']}, status=400)
         else:
             errors = list(serializer.errors.values())[0]
         return Response({'detail': errors[0]}, status=400)
-
-    # interrupt merge with request for poll resolution?
-    if serializer.validated_data.get('polls'):
-        return Response({'polls': serializer.validated_data['polls']}, status=400)
 
     # merge conflict
     other_thread = serializer.validated_data['other_thread']
@@ -53,6 +53,17 @@ def thread_merge_endpoint(request, thread, viewmodel):
             other_thread.poll.delete()
     elif poll:
         poll.move(other_thread)
+
+    best_answer = serializer.validated_data.get('best_answer')
+    if 'best_answer' in serializer.merge_conflict and not best_answer:
+        other_thread.clear_best_answer()
+    if best_answer and best_answer != other_thread:
+        other_thread.best_answer_id = thread.best_answer_id
+        other_thread.best_answer_is_protected = thread.best_answer_is_protected
+        other_thread.best_answer_marked_on = thread.best_answer_marked_on
+        other_thread.best_answer_marked_by_id = thread.best_answer_marked_by_id
+        other_thread.best_answer_marked_by_name = thread.best_answer_marked_by_name
+        other_thread.best_answer_marked_by_slug = thread.best_answer_marked_by_slug
 
     # merge thread contents
     moderation.merge_thread(request, other_thread, thread)

@@ -51,7 +51,7 @@ class BestAnswerMergeHandler(MergeConflictHandler):
             if thread.best_answer_id:
                 self.items.append(thread)
                 self.choices[thread.pk] = thread
-        self.items.sort(key=lambda choice: choice.id, reverse=True)
+        self.items.sort(key=lambda choice: (thread.title, thread.id))
 
     def get_available_resolutions(self):
         resolutions = [[0, _("Unmark all best answers")]]
@@ -70,12 +70,12 @@ class PollMergeHandler(MergeConflictHandler):
                 self.choices[thread.poll.id] = thread.poll
             except Poll.DoesNotExist:
                 pass
-        self.items.sort(key=lambda choice: choice.thread_id, reverse=True)
+        self.items.sort(key=lambda poll: poll.question)
 
     def get_available_resolutions(self):
         resolutions = [[0, _("Delete all polls")]]
         for poll in self.items:
-            resolutions.append([poll.id, poll.question])
+            resolutions.append([poll.id, u'{} ({})'.format(poll.question, poll.thread.title)])
         return resolutions
 
 

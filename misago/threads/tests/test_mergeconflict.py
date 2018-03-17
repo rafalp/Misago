@@ -117,7 +117,7 @@ class MergeConflictTests(TestCase):
                     [
                         str(thread.id),
                         thread.title,
-                    ] for thread in reversed(best_answers)
+                    ] for thread in best_answers
                 ]
             })
 
@@ -174,8 +174,8 @@ class MergeConflictTests(TestCase):
                 'polls': [['0', 'Delete all polls']] + [
                     [
                         str(thread.poll.id),
-                        thread.poll.question,
-                    ] for thread in reversed(polls)
+                        u'{} ({})'.format(thread.poll.question, thread.title),
+                    ] for thread in polls
                 ]
             })
 
@@ -233,13 +233,13 @@ class MergeConflictTests(TestCase):
                     [
                         str(thread.id),
                         thread.title,
-                    ] for thread in reversed(best_answers)
+                    ] for thread in best_answers
                 ],
                 'polls': [['0', 'Delete all polls']] + [
                     [
                         str(thread.poll.id),
-                        thread.poll.question,
-                    ] for thread in reversed(polls)
+                        u'{} ({})'.format(thread.poll.question, thread.title),
+                    ] for thread in polls
                 ]
             })
 
