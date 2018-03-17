@@ -112,15 +112,29 @@ class MergeConflict(object):
         return all([i.is_valid() for i in self._handlers])
 
     def raise_exception(self):
+        # if any choice was made by user, we are in validation stage of resolution
+        for conflict in self._conflicts:
+            if self.data.get(conflict.data_name) is not None:
+                self.raise_validation_exception()
+                break
+        else:
+            self.raise_resolutions_exception()
+
+    def raise_validation_exception(self):
         errors = {}
-        for handler in self._conflicts:
-            if self.data.get(handler.data_name) is None:
-                key = '{}s'.format(handler.data_name)
-                errors[key] = handler.get_available_resolutions()
-            elif not handler.is_valid():
-                errors[handler.data_name] = [_("Invalid choice.")]
+        for conflict in self._conflicts:
+            if not conflict.is_valid() or self.data.get(conflict.data_name) is None:
+                errors[conflict.data_name] = [_("Invalid choice.")]
         if errors:
             raise ValidationError(errors)
+
+    def raise_resolutions_exception(self):
+        resolutions = {}
+        for conflict in self._conflicts:
+            key = '{}s'.format(conflict.data_name)
+            resolutions[key] = conflict.get_available_resolutions()
+        if resolutions:
+            raise ValidationError(resolutions)
 
     def get_resolution(self):
         resolved_handlers = [i for i in self._handlers if i.is_valid()]

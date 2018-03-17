@@ -150,8 +150,8 @@ class MergeConflictTests(TestCase):
             'poll': polls[0].poll,
         })
 
-    def test_one_best_answer_three_poll_two_plain_conflict(self):
-        """three threads with best answer, thread with poll and two plain threads conflict"""
+    def test_one_best_answer_three_polls_two_plain_conflict(self):
+        """one thread with best answer, three threads with poll and two plain threads conflict"""
         best_answers = [self.create_best_answer_thread()]
         polls = [self.create_poll_thread() for i in range(3)]
         threads = [
@@ -206,4 +206,117 @@ class MergeConflictTests(TestCase):
         self.assertEqual(merge_conflict.get_resolution(), {
             'best_answer': best_answers[0],
             'poll': None,
+        })
+
+    def test_three_best_answers_three_polls_two_plain_conflict(self):
+        """multiple conflict is handled"""
+        best_answers = [self.create_best_answer_thread() for i in range(3)]
+        polls = [self.create_poll_thread() for i in range(3)]
+        threads = [
+            self.create_plain_thread(),
+            self.create_plain_thread(),
+        ] + best_answers + polls
+
+        merge_conflict = MergeConflict(threads=threads)
+        self.assertTrue(merge_conflict.is_merge_conflict())
+        self.assertEqual(merge_conflict.get_merge_conflict(), ['best_answer', 'poll'])
+
+        # without choice, conflict lists all resolutions
+        try:
+            merge_conflict.is_valid(raise_exception=True)
+            self.fail("merge_conflict.is_valid() should raise ValidationError")
+        except ValidationError as e:
+            self.assertTrue(merge_conflict.is_merge_conflict())
+            self.assertEqual(merge_conflict.get_merge_conflict(), ['best_answer', 'poll'])
+            self.assertEqual(e.detail, {
+                'best_answers': [['0', 'Unmark all best answers']] + [
+                    [
+                        str(thread.id),
+                        thread.title,
+                    ] for thread in reversed(best_answers)
+                ],
+                'polls': [['0', 'Delete all polls']] + [
+                    [
+                        str(thread.poll.id),
+                        thread.poll.question,
+                    ] for thread in reversed(polls)
+                ]
+            })
+
+        # conflict validates all choices if single choice was given
+        try:
+            merge_conflict = MergeConflict({'best_answer': threads[0].id}, threads)
+            merge_conflict.is_valid(raise_exception=True)
+            self.fail("merge_conflict.is_valid() should raise ValidationError")
+        except ValidationError as e:
+            self.assertTrue(merge_conflict.is_merge_conflict())
+            self.assertEqual(e.detail, {
+                'best_answer': ['Invalid choice.'],
+                'poll': ['Invalid choice.'],
+            })
+
+        try:
+            merge_conflict = MergeConflict({'poll': threads[0].id}, threads)
+            merge_conflict.is_valid(raise_exception=True)
+            self.fail("merge_conflict.is_valid() should raise ValidationError")
+        except ValidationError as e:
+            self.assertTrue(merge_conflict.is_merge_conflict())
+            self.assertEqual(e.detail, {
+                'best_answer': ['Invalid choice.'],
+                'poll': ['Invalid choice.'],
+            })
+
+        # conflict validates all choices if all choices were given
+        try:
+            merge_conflict = MergeConflict({
+                'best_answer': threads[0].id,
+                'poll': threads[0].id,
+            }, threads)
+            merge_conflict.is_valid(raise_exception=True)
+            self.fail("merge_conflict.is_valid() should raise ValidationError")
+        except ValidationError as e:
+            self.assertTrue(merge_conflict.is_merge_conflict())
+            self.assertEqual(e.detail, {
+                'best_answer': ['Invalid choice.'],
+                'poll': ['Invalid choice.'],
+            })
+
+        # conflict returns selected resolutions
+        valid_choices = {'best_answer': best_answers[0].id, 'poll': polls[0].poll.id}
+        merge_conflict = MergeConflict(valid_choices, threads)
+        self.assertTrue(merge_conflict.is_merge_conflict())
+        self.assertEqual(merge_conflict.get_merge_conflict(), ['best_answer', 'poll'])
+        merge_conflict.is_valid(raise_exception=True)
+        self.assertEqual(merge_conflict.get_resolution(), {
+            'best_answer': best_answers[0],
+            'poll': polls[0].poll,
+        })
+
+        # conflict returns no-choice resolution
+        merge_conflict = MergeConflict({'best_answer': 0, 'poll': 0}, threads)
+        self.assertTrue(merge_conflict.is_merge_conflict())
+        self.assertEqual(merge_conflict.get_merge_conflict(), ['best_answer', 'poll'])
+        merge_conflict.is_valid(raise_exception=True)
+        self.assertEqual(merge_conflict.get_resolution(), {
+            'best_answer': None,
+            'poll': None,
+        })
+
+        # conflict allows mixing no-choice with choice
+        merge_conflict = MergeConflict({'best_answer': best_answers[0].id, 'poll': 0}, threads)
+        self.assertTrue(merge_conflict.is_merge_conflict())
+        self.assertEqual(merge_conflict.get_merge_conflict(), ['best_answer', 'poll'])
+        merge_conflict.is_valid(raise_exception=True)
+        self.assertEqual(merge_conflict.get_resolution(), {
+            'best_answer': best_answers[0],
+            'poll': None,
+        })
+
+        merge_conflict = MergeConflict({'best_answer': 0, 'poll': polls[0].poll.id}, threads)
+        self.assertTrue(merge_conflict.is_merge_conflict())
+        self.assertEqual(merge_conflict.get_merge_conflict(), ['best_answer', 'poll'])
+        merge_conflict.is_valid(raise_exception=True)
+        self.assertEqual(merge_conflict.get_resolution(), {
+            'best_answer': None,
+            'poll': polls[0].poll,
         })
