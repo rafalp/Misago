@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Define placeholder gettext function
 # This function will mark strings in settings visible to makemessages
 # without need for Django's i18n features be initialized first.
-_ = lambda x: x
+_ = lambda s: s
 
 
 # Quick-start development settings - unsuitable for production

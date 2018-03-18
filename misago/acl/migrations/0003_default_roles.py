@@ -2,7 +2,9 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-from django.utils.translation import ugettext as _
+
+
+_ = lambda s: s
 
 
 def create_default_roles(apps, schema_editor):

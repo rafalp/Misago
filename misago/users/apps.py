@@ -19,25 +19,25 @@ class MisagoUsersConfig(AppConfig):
     def register_default_usercp_pages(self):
         usercp.add_section(
             link='misago:usercp-change-forum-options',
-            name=_('Forum options'),
+            name=_("Forum options"),
             component='forum-options',
             icon='settings',
         )
         usercp.add_section(
             link='misago:usercp-edit-details',
-            name=_('Edit details'),
+            name=_("Edit details"),
             component='edit-details',
             icon='person_outline',
         )
         usercp.add_section(
             link='misago:usercp-change-username',
-            name=_('Change username'),
+            name=_("Change username"),
             component='change-username',
             icon='card_membership',
         )
         usercp.add_section(
             link='misago:usercp-change-email-password',
-            name=_('Change email or password'),
+            name=_("Change email or password"),
             component='sign-in-credentials',
             icon='vpn_key',
         )
@@ -46,7 +46,7 @@ class MisagoUsersConfig(AppConfig):
         users_list.add_section(
             link='misago:users-active-posters',
             component='active-posters',
-            name=_('Active posters')
+            name=_("Active poster")
         )
 
     def register_default_user_profile_pages(self):

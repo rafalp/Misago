@@ -6,7 +6,7 @@ from django.db import migrations
 from misago.conf.migrationutils import migrate_settings_group
 
 
-_ = lambda x: x
+_ = lambda s: s
 
 
 def create_legal_settings_group(apps, schema_editor):
