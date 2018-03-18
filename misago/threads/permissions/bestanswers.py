@@ -191,32 +191,39 @@ def allow_change_best_answer(user, target):
     if not category_acl['can_change_marked_answers']:
         raise PermissionDenied(
             _(
-                'You don\'t have permission to change this thread\' marked answer because it\'s '
+                'You don\'t have permission to change this thread\'s marked answer because it\'s '
                 'in the "%(category)s" category.'
             ) % {
                 'category': target.category,
             }
         )
 
-    if (category_acl['can_change_marked_answers'] == 1 and
-            not has_time_to_change_answer(user, target)):
-        raise PermissionDenied(
-            ungettext(
-                (
-                    "You don't have permission to change best answer that was marked for more "
-                    "than %(minutes)s minute."
-                ),
-                (
-                    "You don't have permission to change best answer that was marked for more "
-                    "than %(minutes)s minutes."
-                ),
-                category_acl['answer_change_time'],
-            ) % {
-                'minutes': category_acl['answer_change_time'],
-            }
-        )
+    if category_acl['can_change_marked_answers'] == 1:
+        if target.starter_id != user.id:
+            raise PermissionDenied(
+                _(
+                    "You don't have permission to change this thread's marked answer because you "
+                    "are not a thread starter."
+                )
+            )
+        if not has_time_to_change_answer(user, target):
+            raise PermissionDenied(
+                ungettext(
+                    (
+                        "You don't have permission to change best answer that was marked for more "
+                        "than %(minutes)s minute."
+                    ),
+                    (
+                        "You don't have permission to change best answer that was marked for more "
+                        "than %(minutes)s minutes."
+                    ),
+                    category_acl['best_answer_change_time'],
+                ) % {
+                    'minutes': category_acl['best_answer_change_time'],
+                }
+            )
 
-    if target.thread.best_answer_is_protected and not category_acl['can_protect_posts']:
+    if target.best_answer_is_protected and not category_acl['can_protect_posts']:
         raise PermissionDenied(
             _(
                 "You don't have permission to change this thread's best answer because "
@@ -252,7 +259,7 @@ def allow_unmark_best_answer(user, target):
         )
 
     if category_acl['can_change_marked_answers'] == 1:
-        if target.starter != user:
+        if target.starter_id != user.id:
             raise PermissionDenied(
                 _(
                     "You don't have permission to unmark this best answer because you are not a "
@@ -270,9 +277,9 @@ def allow_unmark_best_answer(user, target):
                         "You don't have permission to unmark best answer that was marked for more "
                         "than %(minutes)s minutes."
                     ),
-                    category_acl['answer_change_time'],
+                    category_acl['best_answer_change_time'],
                 ) % {
-                    'minutes': category_acl['answer_change_time'],
+                    'minutes': category_acl['best_answer_change_time'],
                 }
             )
         
@@ -328,7 +335,7 @@ def allow_mark_as_best_answer(user, target):
             }
         )
 
-    if category_acl['can_mark_best_answers'] == 1 and target.thread.starter != user:
+    if category_acl['can_mark_best_answers'] == 1 and target.thread.starter_id != user.id:
         raise PermissionDenied(
             _(
                 "You don't have permission to mark best answer in this thread because you "
@@ -382,7 +389,7 @@ def has_time_to_change_answer(user, target):
     change_time = category_acl.get('best_answer_change_time', 0)
 
     if change_time:
-        diff = timezone.now() - target.best_answer_set_on
+        diff = timezone.now() - target.best_answer_marked_on
         diff_minutes = int(diff.total_seconds() / 60)
         return diff_minutes < change_time
     else:

@@ -214,7 +214,7 @@ def patch_best_answer(request, thread, value):
     allow_mark_as_best_answer(request.user, post)
 
     if post.is_best_answer:
-        raise PermissionDenied(_("This post is already marked as best answer."))
+        raise PermissionDenied(_("This post is already marked as thread's best answer."))
 
     if thread.best_answer_id:
         allow_change_best_answer(request.user, thread)
@@ -240,6 +240,14 @@ def patch_unmark_best_answer(request, thread, value):
         post_id = int(value)
     except (TypeError, ValueError):
         raise PermissionDenied(_("A valid integer is required."))
+
+    post = get_object_or_404(thread.post_set, id=post_id)
+    post.category = thread.category
+    post.thread = thread
+
+    if not post.is_best_answer:
+        raise PermissionDenied(
+            _("This post can't be unmarked because it's not currently marked as best answer."))
 
     allow_unmark_best_answer(request.user, thread)
     thread.clear_best_answer()

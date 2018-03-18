@@ -143,8 +143,8 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
         """api cleans, validates and rejects too short title"""
         self.override_acl({'thread_edit_time': 1, 'can_edit_threads': 1})
 
-        self.thread.starter = self.user
         self.thread.started_on = timezone.now() - timedelta(minutes=10)
+        self.thread.starter = self.user
         self.thread.save()
 
         response = self.patch(
@@ -1129,8 +1129,8 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
             'thread_edit_time': 1,
         })
 
-        self.thread.starter = self.user
         self.thread.started_on = timezone.now() - timedelta(minutes=5)
+        self.thread.starter = self.user
         self.thread.save()
 
         response = self.patch(
@@ -1849,6 +1849,680 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
                     'op': 'replace',
                     'path': 'best-answer',
                     'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+
+
+class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
+    def setUp(self):
+        super(ThreadChangeBestAnswerApiTests, self).setUp()
+
+        self.best_answer = testutils.reply_thread(self.thread)
+        self.thread.set_best_answer(self.user, self.best_answer)
+        self.thread.save()
+
+    def test_change_best_answer(self):
+        """api makes it possible to change best answer"""
+        self.override_acl({'can_mark_best_answers': 2, 'can_change_marked_answers': 2})
+
+        best_answer = testutils.reply_thread(self.thread)
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ['ok'],
+
+            'best_answer': best_answer.id,
+            'best_answer_is_protected': False,
+            'best_answer_marked_on': response.json()['best_answer_marked_on'],
+            'best_answer_marked_by': self.user.id,
+            'best_answer_marked_by_name': self.user.username,
+            'best_answer_marked_by_slug': self.user.slug,
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], best_answer.id)
+        self.assertEqual(thread_json['best_answer_is_protected'], False)
+        self.assertEqual(
+            thread_json['best_answer_marked_on'], response.json()['best_answer_marked_on'])
+        self.assertEqual(thread_json['best_answer_marked_by'], self.user.id)
+        self.assertEqual(thread_json['best_answer_marked_by_name'], self.user.username)
+        self.assertEqual(thread_json['best_answer_marked_by_slug'], self.user.slug)
+
+    def test_change_best_answer_same_post(self):
+        """api validates if new best answer is same as current one"""
+        self.override_acl({'can_mark_best_answers': 2, 'can_change_marked_answers': 2})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': self.best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ["This post is already marked as thread's best answer."],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], self.best_answer.id)
+
+    def test_change_best_answer_no_permission_to_mark(self):
+        """api validates permission to mark best answers before allowing answer change"""
+        self.override_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 2})
+
+        best_answer = testutils.reply_thread(self.thread)
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                'You don\'t have permission to mark best answers in the "First category" category.'
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], self.best_answer.id)
+
+    def test_change_best_answer_no_permission(self):
+        """api validates permission to change best answers"""
+        self.override_acl({'can_mark_best_answers': 2, 'can_change_marked_answers': 0})
+
+        best_answer = testutils.reply_thread(self.thread)
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                'You don\'t have permission to change this thread\'s marked answer because it\'s '
+                'in the "First category" category.'
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], self.best_answer.id)
+
+    def test_change_best_answer_not_starter(self):
+        """api validates permission to change best answers"""
+        self.override_acl({'can_mark_best_answers': 2, 'can_change_marked_answers': 1})
+
+        best_answer = testutils.reply_thread(self.thread)
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                "You don't have permission to change this thread's marked answer because you are "
+                "not a thread starter."
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], self.best_answer.id)
+
+        # passing scenario is possible
+        self.override_acl({'can_mark_best_answers': 2, 'can_change_marked_answers': 1})
+        
+        self.thread.starter = self.user
+        self.thread.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_change_best_answer_timelimit(self):
+        """api validates permission for starter to change best answers within timelimit"""
+        self.override_acl({
+            'can_mark_best_answers': 2,
+            'can_change_marked_answers': 1,
+            'best_answer_change_time': 5,
+        })
+
+        best_answer = testutils.reply_thread(self.thread)
+
+        self.thread.best_answer_marked_on = timezone.now() - timedelta(minutes=6)
+        self.thread.starter = self.user
+        self.thread.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                "You don't have permission to change best answer that was marked for more than "
+                "5 minutes."
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], self.best_answer.id)
+
+        # passing scenario is possible
+        self.override_acl({
+            'can_mark_best_answers': 2,
+            'can_change_marked_answers': 1,
+            'best_answer_change_time': 10,
+        })
+        
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_change_best_answer_protected(self):
+        """api validates permission to change protected best answers"""
+        self.override_acl({
+            'can_mark_best_answers': 2,
+            'can_change_marked_answers': 2,
+            'can_protect_posts': 0,
+        })
+
+        best_answer = testutils.reply_thread(self.thread)
+
+        self.thread.best_answer_is_protected = True
+        self.thread.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                "You don't have permission to change this thread's best answer because a "
+                "moderator has protected it."
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], self.best_answer.id)
+
+        # passing scenario is possible
+        self.override_acl({
+            'can_mark_best_answers': 2,
+            'can_change_marked_answers': 2,
+            'can_protect_posts': 1,
+        })
+        
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_change_best_answer_post_validation(self):
+        """api validates new post'"""
+        self.override_acl({
+            'can_mark_best_answers': 2,
+            'can_change_marked_answers': 2,
+        })
+
+        best_answer = testutils.reply_thread(self.thread, is_hidden=True)
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], self.best_answer.id)
+
+
+class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
+    def setUp(self):
+        super(ThreadUnmarkBestAnswerApiTests, self).setUp()
+
+        self.best_answer = testutils.reply_thread(self.thread)
+        self.thread.set_best_answer(self.user, self.best_answer)
+        self.thread.save()
+
+    def test_unmark_best_answer(self):
+        """api makes it possible to unmark best answer"""
+        self.override_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 2})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'remove',
+                    'path': 'best-answer',
+                    'value': self.best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ['ok'],
+
+            'best_answer': None,
+            'best_answer_is_protected': False,
+            'best_answer_marked_on': None,
+            'best_answer_marked_by': None,
+            'best_answer_marked_by_name': None,
+            'best_answer_marked_by_slug': None,
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertIsNone(thread_json['best_answer'])
+        self.assertFalse(thread_json['best_answer_is_protected'])
+        self.assertIsNone(thread_json['best_answer_marked_on'])
+        self.assertIsNone(thread_json['best_answer_marked_by'])
+        self.assertIsNone(thread_json['best_answer_marked_by_name'])
+        self.assertIsNone(thread_json['best_answer_marked_by_slug'])
+
+    def test_unmark_best_answer_invalid_post_id(self):
+        """api validates that post id is int"""
+        self.override_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 2})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'remove',
+                    'path': 'best-answer',
+                    'value': 'd7sd89a7d98sa',
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ["A valid integer is required."],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], self.best_answer.id)
+
+    def test_unmark_best_answer_post_not_found(self):
+        """api validates that post to unmark exists"""
+        self.override_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 2})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'remove',
+                    'path': 'best-answer',
+                    'value': self.best_answer.id + 1,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ["NOT FOUND"],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], self.best_answer.id)
+        
+    def test_unmark_best_answer_wrong_post(self):
+        """api validates if post given to unmark is best answer"""
+        self.override_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 2})
+
+        best_answer = testutils.reply_thread(self.thread)
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'remove',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                "This post can't be unmarked because it's not currently marked as best answer."
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], self.best_answer.id)
+
+    def test_unmark_best_answer_no_permission(self):
+        """api validates if user has permission to unmark best answers"""
+        self.override_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 0})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'remove',
+                    'path': 'best-answer',
+                    'value': self.best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                'You don\'t have permission to unmark threads answers in the "First category" '
+                'category.'
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], self.best_answer.id)
+
+    def test_unmark_best_answer_not_starter(self):
+        """api validates if starter has permission to unmark best answers"""
+        self.override_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 1})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'remove',
+                    'path': 'best-answer',
+                    'value': self.best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                "You don't have permission to unmark this best answer because you are not a "
+                "thread starter."
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], self.best_answer.id)
+
+        # passing scenario is possible
+        self.override_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 1})
+
+        self.thread.starter = self.user
+        self.thread.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'remove',
+                    'path': 'best-answer',
+                    'value': self.best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_unmark_best_answer_timelimit(self):
+        """api validates if starter has permission to unmark best answer within time limit"""
+        self.override_acl({
+            'can_mark_best_answers': 0,
+            'can_change_marked_answers': 1,
+            'best_answer_change_time': 5,
+        })
+
+        self.thread.best_answer_marked_on = timezone.now() - timedelta(minutes=6)
+        self.thread.starter = self.user
+        self.thread.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'remove',
+                    'path': 'best-answer',
+                    'value': self.best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                "You don't have permission to unmark best answer that was marked for more than "
+                "5 minutes."
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], self.best_answer.id)
+
+        # passing scenario is possible
+        self.override_acl({
+            'can_mark_best_answers': 0,
+            'can_change_marked_answers': 1,
+            'best_answer_change_time': 10,
+        })
+        
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'remove',
+                    'path': 'best-answer',
+                    'value': self.best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_unmark_best_answer_closed_category(self):
+        """api validates if user has permission to unmark best answer in closed category"""
+        self.override_acl({
+            'can_mark_best_answers': 0,
+            'can_change_marked_answers': 2,
+            'can_close_threads': 0,
+        })
+
+        self.category.is_closed = True
+        self.category.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'remove',
+                    'path': 'best-answer',
+                    'value': self.best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                'You don\'t have permission to unmark this best answer because its category '
+                '"First category" is closed.'
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], self.best_answer.id)
+
+        # passing scenario is possible
+        self.override_acl({
+            'can_mark_best_answers': 0,
+            'can_change_marked_answers': 2,
+            'can_close_threads': 1,
+        })
+        
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'remove',
+                    'path': 'best-answer',
+                    'value': self.best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_unmark_best_answer_closed_thread(self):
+        """api validates if user has permission to unmark best answer in closed thread"""
+        self.override_acl({
+            'can_mark_best_answers': 0,
+            'can_change_marked_answers': 2,
+            'can_close_threads': 0,
+        })
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'remove',
+                    'path': 'best-answer',
+                    'value': self.best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                "You can't unmark this thread's best answer because it's closed and you don't "
+                "have permission to open it."
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], self.best_answer.id)
+
+        # passing scenario is possible
+        self.override_acl({
+            'can_mark_best_answers': 0,
+            'can_change_marked_answers': 2,
+            'can_close_threads': 1,
+        })
+        
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'remove',
+                    'path': 'best-answer',
+                    'value': self.best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_unmark_best_answer_protected(self):
+        """api validates permission to unmark protected best answers"""
+        self.override_acl({
+            'can_mark_best_answers': 0,
+            'can_change_marked_answers': 2,
+            'can_protect_posts': 0,
+        })
+
+        self.thread.best_answer_is_protected = True
+        self.thread.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'remove',
+                    'path': 'best-answer',
+                    'value': self.best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                "You don't have permission to unmark this thread's best answer because a "
+                "moderator has protected it."
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], self.best_answer.id)
+
+        # passing scenario is possible
+        self.override_acl({
+            'can_mark_best_answers': 0,
+            'can_change_marked_answers': 2,
+            'can_protect_posts': 1,
+        })
+        
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'remove',
+                    'path': 'best-answer',
+                    'value': self.best_answer.id,
                 },
             ]
         )
