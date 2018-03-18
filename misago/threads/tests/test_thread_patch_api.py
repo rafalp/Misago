@@ -6,6 +6,7 @@ from django.utils import six, timezone
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.readtracker import poststracker
+from misago.threads import testutils
 from misago.threads.models import Thread
 
 from .test_threads_api import ThreadsApiTestCase
@@ -1401,3 +1402,454 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
         )
 
         self.assertEqual(response.status_code, 404)
+
+
+class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
+    def test_mark_best_answer(self):
+        """api makes it possible to mark best answer"""
+        self.override_acl({'can_mark_best_answers': 2})
+
+        best_answer = testutils.reply_thread(self.thread)
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ['ok'],
+
+            'best_answer': best_answer.id,
+            'best_answer_is_protected': False,
+            'best_answer_marked_on': response.json()['best_answer_marked_on'],
+            'best_answer_marked_by': self.user.id,
+            'best_answer_marked_by_name': self.user.username,
+            'best_answer_marked_by_slug': self.user.slug,
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertEqual(thread_json['best_answer'], best_answer.id)
+        self.assertEqual(thread_json['best_answer_is_protected'], False)
+        self.assertEqual(
+            thread_json['best_answer_marked_on'], response.json()['best_answer_marked_on'])
+        self.assertEqual(thread_json['best_answer_marked_by'], self.user.id)
+        self.assertEqual(thread_json['best_answer_marked_by_name'], self.user.username)
+        self.assertEqual(thread_json['best_answer_marked_by_slug'], self.user.slug)
+
+    def test_mark_best_answer_anonymous(self):
+        """api validates that user is authenticated before marking best answer"""
+        self.logout_user()
+
+        self.override_acl({'can_mark_best_answers': 2})
+
+        best_answer = testutils.reply_thread(self.thread)
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This action is not available to guests.",
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertIsNone(thread_json['best_answer'])
+
+    def test_mark_best_answer_no_permission(self):
+        """api validates permission to mark best answers"""
+        self.override_acl({'can_mark_best_answers': 0})
+
+        best_answer = testutils.reply_thread(self.thread)
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                'You don\'t have permission to mark best answers in the "First category" category.'
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertIsNone(thread_json['best_answer'])
+
+    def test_mark_best_answer_not_thread_starter(self):
+        """api validates permission to mark best answers in owned thread"""
+        self.override_acl({'can_mark_best_answers': 1})
+
+        best_answer = testutils.reply_thread(self.thread)
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                "You don't have permission to mark best answer in this thread because you didn't "
+                "start it."
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertIsNone(thread_json['best_answer'])
+
+        # passing scenario is possible
+        self.thread.starter = self.user
+        self.thread.save()
+
+        self.override_acl({'can_mark_best_answers': 1})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_mark_best_answer_category_closed(self):
+        """api validates permission to mark best answers in closed category"""
+        self.override_acl({'can_mark_best_answers': 2, 'can_close_threads': 0})
+
+        best_answer = testutils.reply_thread(self.thread)
+
+        self.category.is_closed = True
+        self.category.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                'You don\'t have permission to mark best answer in this thread because its '
+                'category "First category" is closed.'
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertIsNone(thread_json['best_answer'])
+
+        # passing scenario is possible
+        self.override_acl({'can_mark_best_answers': 2, 'can_close_threads': 1})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_mark_best_answer_thread_closed(self):
+        """api validates permission to mark best answers in closed thread"""
+        self.override_acl({'can_mark_best_answers': 2, 'can_close_threads': 0})
+
+        best_answer = testutils.reply_thread(self.thread)
+
+        self.thread.is_closed = True
+        self.thread.save()
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                "You can't mark best answer in this thread because it's closed and you don't have "
+                "permission to open it."
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertIsNone(thread_json['best_answer'])
+
+        # passing scenario is possible
+        self.override_acl({'can_mark_best_answers': 2, 'can_close_threads': 1})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_mark_best_answer_invalid_post_id(self):
+        """api validates that post id is int"""
+        self.override_acl({'can_mark_best_answers': 2})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': 'd7sd89a7d98sa',
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ["A valid integer is required."],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertIsNone(thread_json['best_answer'])
+
+    def test_mark_best_answer_post_not_found(self):
+        """api validates that post exists"""
+        self.override_acl({'can_mark_best_answers': 2})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': self.thread.last_post_id + 1,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ["NOT FOUND"],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertIsNone(thread_json['best_answer'])
+        
+    def test_mark_best_answer_post_invisible(self):
+        """api validates post visibility to action author"""
+        self.override_acl({'can_mark_best_answers': 2})
+
+        unapproved_post = testutils.reply_thread(self.thread, is_unapproved=True)
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': unapproved_post.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ["NOT FOUND"],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertIsNone(thread_json['best_answer'])
+
+    def test_mark_best_answer_post_other_thread(self):
+        """api validates post belongs to same thread"""
+        self.override_acl({'can_mark_best_answers': 2})
+
+        other_thread = testutils.post_thread(self.category)
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': other_thread.first_post_id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ["NOT FOUND"],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertIsNone(thread_json['best_answer'])
+
+    def test_mark_best_answer_event_id(self):
+        """api validates that post is not an event"""
+        self.override_acl({'can_mark_best_answers': 2})
+
+        best_answer = testutils.reply_thread(self.thread)
+        best_answer.is_event = True
+        best_answer.save()
+        
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ["Events can't be marked as best answers."],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertIsNone(thread_json['best_answer'])
+
+    def test_mark_best_answer_first_post(self):
+        """api validates that post is not a first post in thread"""
+        self.override_acl({'can_mark_best_answers': 2})
+        
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': self.thread.first_post_id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ["First post in a thread can't be marked as best answer."],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertIsNone(thread_json['best_answer'])
+
+    def test_mark_best_answer_hidden_post(self):
+        """api validates that post is not hidden"""
+        self.override_acl({'can_mark_best_answers': 2})
+        
+        best_answer = testutils.reply_thread(self.thread, is_hidden=True)
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ["Hidden posts can't be marked as best answers."],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertIsNone(thread_json['best_answer'])
+
+    def test_mark_best_answer_unapproved_post(self):
+        """api validates that post is not unapproved"""
+        self.override_acl({'can_mark_best_answers': 2})
+        
+        best_answer = testutils.reply_thread(self.thread, poster=self.user, is_unapproved=True)
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ["Unapproved posts can't be marked as best answers."],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertIsNone(thread_json['best_answer'])
+
+    def test_mark_best_answer_protected_post(self):
+        """api respects post protection"""
+        self.override_acl({'can_mark_best_answers': 2, 'can_protect_posts': 0})
+        
+        best_answer = testutils.reply_thread(self.thread, is_protected=True)
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': [
+                "You don't have permission to mark this post as best answer because a moderator "
+                "has protected it."
+            ],
+        })
+
+        thread_json = self.get_thread_json()
+        self.assertIsNone(thread_json['best_answer'])
+
+        # passing scenario is possible
+        self.override_acl({'can_mark_best_answers': 2, 'can_protect_posts': 1})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'best-answer',
+                    'value': best_answer.id,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)

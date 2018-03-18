@@ -272,12 +272,12 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
                 {
                     'op': 'remove',
                     'path': 'participants',
-                    'value': 'string',
+                    'value': '',
                 },
             ]
         )
 
-        self.assertContains(response, "Participant doesn't exist.", status_code=400)
+        self.assertContains(response, "A valid integer is required.", status_code=400)
 
     def test_remove_invalid(self):
         """api validates user id type"""
@@ -293,7 +293,7 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
             ]
         )
 
-        self.assertContains(response, "Participant doesn't exist.", status_code=400)
+        self.assertContains(response, "A valid integer is required.", status_code=400)
 
     def test_remove_nonexistant(self):
         """removed user has to be participant"""
@@ -578,7 +578,7 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
             ]
         )
 
-        self.assertContains(response, "Participant doesn't exist.", status_code=400)
+        self.assertContains(response, "A valid integer is required.", status_code=400)
 
     def test_invalid_user_id(self):
         """api handles invalid user id"""
@@ -594,7 +594,7 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
             ]
         )
 
-        self.assertContains(response, "Participant doesn't exist.", status_code=400)
+        self.assertContains(response, "A valid integer is required.", status_code=400)
 
     def test_nonexistant_user_id(self):
         """api handles nonexistant user id"""

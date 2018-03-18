@@ -31,6 +31,8 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
     is_read = serializers.SerializerMethodField()
     path = BasicCategorySerializer(many=True, read_only=True)
     poll = PollSerializer(many=False, read_only=True)
+    best_answer = serializers.PrimaryKeyRelatedField(read_only=True)
+    best_answer_marked_by = serializers.PrimaryKeyRelatedField(read_only=True)
     subscription = serializers.SerializerMethodField()
 
     api = serializers.SerializerMethodField()
@@ -54,6 +56,12 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             'is_hidden',
             'is_closed',
             'weight',
+            'best_answer',
+            'best_answer_is_protected',
+            'best_answer_marked_on',
+            'best_answer_marked_by',
+            'best_answer_marked_by_name',
+            'best_answer_marked_by_slug',
             'acl',
             'is_new',
             'is_read',
