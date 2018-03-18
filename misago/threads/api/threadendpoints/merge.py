@@ -1,3 +1,4 @@
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
@@ -29,30 +30,20 @@ def thread_merge_endpoint(request, thread, viewmodel):
     if not serializer.is_valid():
         if 'other_thread' in serializer.errors:
             errors = serializer.errors['other_thread']
-        elif 'poll' in serializer.errors:
-            errors = serializer.errors['poll']
-        elif 'polls' in serializer.errors:
-            return Response({'polls': serializer.errors['polls']}, status=400)
         elif 'best_answer' in serializer.errors:
             errors = serializer.errors['best_answer']
         elif 'best_answers' in serializer.errors:
             return Response({'best_answers': serializer.errors['best_answers']}, status=400)
+        elif 'poll' in serializer.errors:
+            errors = serializer.errors['poll']
+        elif 'polls' in serializer.errors:
+            return Response({'polls': serializer.errors['polls']}, status=400)
         else:
             errors = list(serializer.errors.values())[0]
         return Response({'detail': errors[0]}, status=400)
 
     # merge conflict
     other_thread = serializer.validated_data['other_thread']
-
-    poll = serializer.validated_data.get('poll')
-    if 'poll' in serializer.merge_conflict:
-        if poll and poll.thread_id != other_thread.id:
-            other_thread.poll.delete()
-            poll.move(other_thread)
-        elif not poll:
-            other_thread.poll.delete()
-    elif poll:
-        poll.move(other_thread)
 
     best_answer = serializer.validated_data.get('best_answer')
     if 'best_answer' in serializer.merge_conflict and not best_answer:
@@ -64,6 +55,16 @@ def thread_merge_endpoint(request, thread, viewmodel):
         other_thread.best_answer_marked_by_id = thread.best_answer_marked_by_id
         other_thread.best_answer_marked_by_name = thread.best_answer_marked_by_name
         other_thread.best_answer_marked_by_slug = thread.best_answer_marked_by_slug
+
+    poll = serializer.validated_data.get('poll')
+    if 'poll' in serializer.merge_conflict:
+        if poll and poll.thread_id != other_thread.id:
+            other_thread.poll.delete()
+            poll.move(other_thread)
+        elif not poll:
+            other_thread.poll.delete()
+    elif poll:
+        poll.move(other_thread)
 
     # merge thread contents
     moderation.merge_thread(request, other_thread, thread)
@@ -119,26 +120,15 @@ def threads_merge_endpoint(request):
     if invalid_threads:
         return Response(invalid_threads, status=403)
 
-    polls_handler = PollMergeHandler(threads)
-    if len(polls_handler.polls) == 1:
-        poll = polls_handler.polls[0]
-    elif polls_handler.is_merge_conflict():
-        if 'poll' in request.data:
-            polls_handler.set_resolution(request.data.get('poll'))
-            if polls_handler.is_valid():
-                poll = polls_handler.get_resolution()
-            else:
-                return Response({'detail': _("Invalid choice.")}, status=400)
-        else:
-            return Response({'polls': polls_handler.get_available_resolutions()}, status=400)
-    else:
-        poll = None
+    # handle merge conflict
+    merge_conflict = MergeConflict(serializer.validated_data, threads)
+    merge_conflict.is_valid(raise_exception=True)
 
-    new_thread = merge_threads(request, serializer.validated_data, threads, poll)
+    new_thread = merge_threads(request, serializer.validated_data, threads, merge_conflict)
     return Response(ThreadsListSerializer(new_thread).data)
 
 
-def merge_threads(request, validated_data, threads, poll):
+def merge_threads(request, validated_data, threads, merge_conflict):
     new_thread = Thread(
         category=validated_data['category'],
         started_on=threads[0].started_on,
@@ -148,6 +138,18 @@ def merge_threads(request, validated_data, threads, poll):
     new_thread.set_title(validated_data['title'])
     new_thread.save()
 
+    resolution = merge_conflict.get_resolution()
+
+    best_answer = resolution.get('best_answer')
+    if best_answer:
+        new_thread.best_answer_id = best_answer.best_answer_id
+        new_thread.best_answer_is_protected = best_answer.best_answer_is_protected
+        new_thread.best_answer_marked_on = best_answer.best_answer_marked_on
+        new_thread.best_answer_marked_by_id = best_answer.best_answer_marked_by_id
+        new_thread.best_answer_marked_by_name = best_answer.best_answer_marked_by_name
+        new_thread.best_answer_marked_by_slug = best_answer.best_answer_marked_by_slug
+
+    poll = resolution.get('poll')
     if poll:
         poll.move(new_thread)
 

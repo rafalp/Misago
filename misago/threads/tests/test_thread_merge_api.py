@@ -440,7 +440,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         with self.assertRaises(Thread.DoesNotExist):
             Thread.objects.get(pk=self.thread.pk)
 
-        # best answer is kept sin other thread
+        # best answer is kept in other thread
         other_thread = Thread.objects.get(pk=other_thread.pk)
         self.assertEqual(other_thread.best_answer, best_answer)
 
@@ -469,7 +469,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         with self.assertRaises(Thread.DoesNotExist):
             Thread.objects.get(pk=self.thread.pk)
 
-        # best answer is kept sin other thread
+        # best answer is kept in other thread
         other_thread = Thread.objects.get(pk=other_thread.pk)
         self.assertEqual(other_thread.best_answer, best_answer)
 
@@ -538,8 +538,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(
             Thread.objects.get(pk=other_thread.pk).best_answer_id, other_best_answer.id)
 
-    def test_threads_merge_conflict_delete_all_best_answers(self):
-        """api unmarks all best answers when delete all choice is selected"""
+    def test_threads_merge_conflict_unmark_all_best_answers(self):
+        """api unmarks all best answers when unmark all choice is selected"""
         self.override_acl({'can_merge_threads': 1})
         self.override_other_acl({'can_merge_threads': 1})
 
@@ -636,7 +636,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             Thread.objects.get(pk=other_thread.pk).best_answer_id, other_best_answer.id)
 
     def test_merge_threads_kept_poll(self):
-        """api merges two threads successfully, keeping poll from old thread"""
+        """api merges two threads successfully, keeping poll from other thread"""
         self.override_acl({'can_merge_threads': 1})
         self.override_other_acl({'can_merge_threads': 1})
 
@@ -662,7 +662,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(PollVote.objects.filter(poll=poll, thread=other_thread).count(), 4)
 
     def test_merge_threads_moved_poll(self):
-        """api merges two threads successfully, moving poll from other thread"""
+        """api merges two threads successfully, moving poll from old thread"""
         self.override_acl({'can_merge_threads': 1})
         self.override_other_acl({'can_merge_threads': 1})
 

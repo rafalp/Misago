@@ -467,7 +467,7 @@ class MergeThreadSerializer(serializers.Serializer):
         merge_conflict = MergeConflict(data, [thread, other_thread])
         merge_conflict.is_valid(raise_exception=True)
         data.update(merge_conflict.get_resolution())
-        self.merge_conflict = merge_conflict.get_merge_conflict()
+        self.merge_conflict = merge_conflict.get_conflicting_fields()
 
         return data
 
@@ -488,6 +488,18 @@ class MergeThreadsSerializer(NewThreadSerializer):
             'null': error_empty_or_required,
             'required': error_empty_or_required,
             'min_length': error_empty_or_required,
+        },
+    )
+    best_answer = serializers.IntegerField(
+        required=False,
+        error_messages={
+            'invalid': ugettext_lazy("Invalid choice."),
+        },
+    )
+    poll = serializers.IntegerField(
+        required=False,
+        error_messages={
+            'invalid': ugettext_lazy("Invalid choice."),
         },
     )
 

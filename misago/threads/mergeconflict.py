@@ -51,7 +51,7 @@ class BestAnswerMergeHandler(MergeConflictHandler):
             if thread.best_answer_id:
                 self.items.append(thread)
                 self.choices[thread.pk] = thread
-        self.items.sort(key=lambda choice: (thread.title, thread.id))
+        self.items.sort(key=lambda thread: (thread.title, thread.id))
 
     def get_available_resolutions(self):
         resolutions = [[0, _("Unmark all best answers")]]
@@ -98,7 +98,7 @@ class MergeConflict(object):
     def is_merge_conflict(self):
         return bool(self._conflicts)
 
-    def get_merge_conflict(self):
+    def get_conflicting_fields(self):
         return [i.data_name for i in self._conflicts]
 
     def set_resolution(self, data):

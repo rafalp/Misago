@@ -790,7 +790,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
 
         self.assertEqual(
             list(postreads.values_list('post_id', flat=True)),
-            [self.thread.first_post_id, thread.first_post_id]
+            [self.thread.first_post_id, thread.first_post_id],
         )
         self.assertEqual(postreads.filter(thread=new_thread).count(), 2)
         self.assertEqual(postreads.filter(category=self.category).count(), 2)
@@ -800,8 +800,191 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         self.user.subscription_set.get(thread=new_thread)
         self.user.subscription_set.get(category=self.category)
 
+    def test_merge_threads_merged_best_answer(self):
+        """api merges two threads successfully, moving best answer to old thread"""
+        self.override_acl({'can_merge_threads': 1})
+
+        other_thread = testutils.post_thread(self.category)
+
+        best_answer = testutils.reply_thread(self.thread)
+        self.thread.set_best_answer(self.user, best_answer)
+        self.thread.save()
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({
+                'threads': [self.thread.id, other_thread.id],
+                'title': 'Merged thread!',
+                'category': self.category.id,
+            }),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+        
+        # best answer is set on new thread
+        new_thread = Thread.objects.get(pk=response.json()['id'])
+        self.assertEqual(new_thread.best_answer_id, best_answer.id)
+
+    def test_merge_threads_merge_conflict_best_answer(self):
+        """api errors on merge conflict, returning list of available best answers"""
+        self.override_acl({'can_merge_threads': 1})
+
+        best_answer = testutils.reply_thread(self.thread)
+        self.thread.set_best_answer(self.user, best_answer)
+        self.thread.save()
+        
+        other_thread = testutils.post_thread(self.category)
+        other_best_answer = testutils.reply_thread(other_thread)
+        other_thread.set_best_answer(self.user, other_best_answer)
+        other_thread.save()
+
+        response = self.client.post(
+            self.api_link, 
+            json.dumps({
+                'threads': [self.thread.id, other_thread.id],
+                'title': 'Merged thread!',
+                'category': self.category.id,
+            }),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'best_answers': [
+                ['0', "Unmark all best answers"],
+                [str(self.thread.id), self.thread.title],
+                [str(other_thread.id), other_thread.title],
+            ]
+        })
+
+        # best answers were untouched
+        self.assertEqual(self.thread.post_set.count(), 2)
+        self.assertEqual(other_thread.post_set.count(), 2)
+        self.assertEqual(Thread.objects.get(pk=self.thread.pk).best_answer_id, best_answer.id)
+        self.assertEqual(
+            Thread.objects.get(pk=other_thread.pk).best_answer_id, other_best_answer.id)
+
+    def test_threads_merge_conflict_best_answer_invalid_resolution(self):
+        """api errors on invalid merge conflict resolution"""
+        self.override_acl({'can_merge_threads': 1})
+
+        best_answer = testutils.reply_thread(self.thread)
+        self.thread.set_best_answer(self.user, best_answer)
+        self.thread.save()
+        
+        other_thread = testutils.post_thread(self.category)
+        other_best_answer = testutils.reply_thread(other_thread)
+        other_thread.set_best_answer(self.user, other_best_answer)
+        other_thread.save()
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({
+                'threads': [self.thread.id, other_thread.id],
+                'title': 'Merged thread!',
+                'category': self.category.id,
+                'best_answer': other_thread.id + 10,
+            }),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {'best_answer': ["Invalid choice."]})
+
+        # best answers were untouched
+        self.assertEqual(self.thread.post_set.count(), 2)
+        self.assertEqual(other_thread.post_set.count(), 2)
+        self.assertEqual(Thread.objects.get(pk=self.thread.pk).best_answer_id, best_answer.id)
+        self.assertEqual(
+            Thread.objects.get(pk=other_thread.pk).best_answer_id, other_best_answer.id)
+
+    def test_threads_merge_conflict_unmark_all_best_answers(self):
+        """api unmarks all best answers when unmark all choice is selected"""
+        self.override_acl({'can_merge_threads': 1})
+
+        best_answer = testutils.reply_thread(self.thread)
+        self.thread.set_best_answer(self.user, best_answer)
+        self.thread.save()
+        
+        other_thread = testutils.post_thread(self.category)
+        other_best_answer = testutils.reply_thread(other_thread)
+        other_thread.set_best_answer(self.user, other_best_answer)
+        other_thread.save()
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({
+                'threads': [self.thread.id, other_thread.id],
+                'title': 'Merged thread!',
+                'category': self.category.id,
+                'best_answer': 0,
+            }),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # best answer is not set on new thread
+        new_thread = Thread.objects.get(pk=response.json()['id'])
+        self.assertIsNone(new_thread.best_answer_id)
+
+    def test_threads_merge_conflict_keep_first_best_answer(self):
+        """api unmarks other best answer on merge"""
+        self.override_acl({'can_merge_threads': 1})
+
+        best_answer = testutils.reply_thread(self.thread)
+        self.thread.set_best_answer(self.user, best_answer)
+        self.thread.save()
+        
+        other_thread = testutils.post_thread(self.category)
+        other_best_answer = testutils.reply_thread(other_thread)
+        other_thread.set_best_answer(self.user, other_best_answer)
+        other_thread.save()
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({
+                'threads': [self.thread.id, other_thread.id],
+                'title': 'Merged thread!',
+                'category': self.category.id,
+                'best_answer': self.thread.pk,
+            }),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # selected best answer is set on new thread
+        new_thread = Thread.objects.get(pk=response.json()['id'])
+        self.assertEqual(new_thread.best_answer_id, best_answer.id)
+
+    def test_threads_merge_conflict_keep_other_best_answer(self):
+        """api unmarks first best answer on merge"""
+        self.override_acl({'can_merge_threads': 1})
+
+        best_answer = testutils.reply_thread(self.thread)
+        self.thread.set_best_answer(self.user, best_answer)
+        self.thread.save()
+        
+        other_thread = testutils.post_thread(self.category)
+        other_best_answer = testutils.reply_thread(other_thread)
+        other_thread.set_best_answer(self.user, other_best_answer)
+        other_thread.save()
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({
+                'threads': [self.thread.id, other_thread.id],
+                'title': 'Merged thread!',
+                'category': self.category.id,
+                'best_answer': other_thread.pk,
+            }),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # selected best answer is set on new thread
+        new_thread = Thread.objects.get(pk=response.json()['id'])
+        self.assertEqual(new_thread.best_answer_id, other_best_answer.id)
+
     def test_merge_threads_kept_poll(self):
-        """api merges two threads successfully, keeping poll from old thread"""
+        """api merges two threads successfully, keeping poll from other thread"""
         self.override_acl({'can_merge_threads': True})
 
         other_thread = testutils.post_thread(self.category)
@@ -829,7 +1012,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(PollVote.objects.count(), 4)
 
     def test_merge_threads_moved_poll(self):
-        """api merges two threads successfully, moving poll from other thread"""
+        """api merges two threads successfully, moving poll from old thread"""
         self.override_acl({'can_merge_threads': True})
 
         other_thread = testutils.post_thread(self.category)
@@ -856,7 +1039,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(Poll.objects.count(), 1)
         self.assertEqual(PollVote.objects.count(), 4)
 
-    def test_threads_merge_conflict(self):
+    def test_threads_merge_conflict_poll(self):
         """api errors on merge conflict, returning list of available polls"""
         self.override_acl({'can_merge_threads': True})
 
@@ -878,9 +1061,15 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(
             response.json(), {
                 'polls': [
-                    [0, "Delete all polls"],
-                    [poll.pk, poll.question],
-                    [other_poll.pk, other_poll.question],
+                    ['0', "Delete all polls"],
+                    [
+                        str(other_poll.pk),
+                        u'{} ({})'.format(other_poll.question, other_poll.thread.title),
+                    ],
+                    [
+                        str(poll.pk),
+                        u'{} ({})'.format(poll.question, poll.thread.title),
+                    ],
                 ],
             }
         )
@@ -889,7 +1078,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(Poll.objects.count(), 2)
         self.assertEqual(PollVote.objects.count(), 8)
 
-    def test_threads_merge_conflict_invalid_resolution(self):
+    def test_threads_merge_conflict_poll_invalid_resolution(self):
         """api errors on invalid merge conflict resolution"""
         self.override_acl({'can_merge_threads': True})
 
@@ -904,21 +1093,21 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
                 'threads': [self.thread.id, other_thread.id],
                 'title': 'Merged thread!',
                 'category': self.category.id,
-                'poll': 'dsa7dsadsa9789',
+                'poll': other_thread.poll.id + 10,
             }),
             content_type="application/json",
         )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': "Invalid choice.",
+            'poll': ["Invalid choice."],
         })
 
         # polls and votes were untouched
         self.assertEqual(Poll.objects.count(), 2)
         self.assertEqual(PollVote.objects.count(), 8)
 
-    def test_threads_merge_conflict_delete_all(self):
+    def test_threads_merge_conflict_delete_all_polls(self):
         """api deletes all polls when delete all choice is selected"""
         self.override_acl({'can_merge_threads': True})
 
