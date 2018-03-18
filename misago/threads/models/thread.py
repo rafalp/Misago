@@ -246,6 +246,9 @@ class Thread(models.Model):
     def get_last_post_url(self):
         return self.thread_type.get_thread_last_post_url(self)
 
+    def get_best_answer_url(self):
+        return self.thread_type.get_thread_best_answer_url(self)
+
     def get_unapproved_post_url(self):
         return self.thread_type.get_thread_unapproved_post_url(self)
 

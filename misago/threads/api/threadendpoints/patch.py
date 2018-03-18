@@ -17,12 +17,14 @@ from misago.core.apipatch import ApiPatch
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.moderation import threads as moderation
 from misago.threads.participants import (
-    add_participant, change_owner, make_participants_aware, remove_participant)
+    add_participant, change_owner, make_participants_aware, remove_participant
+)
 from misago.threads.permissions import (
     allow_add_participant, allow_add_participants, allow_approve_thread, allow_change_best_answer,
     allow_change_owner, allow_edit_thread, allow_pin_thread, allow_hide_thread, allow_mark_as_best_answer,
     allow_mark_best_answer, allow_move_thread, allow_remove_participant, allow_see_post,
-    allow_start_thread, allow_unhide_thread, allow_unmark_best_answer)
+    allow_start_thread, allow_unhide_thread, allow_unmark_best_answer
+)
 from misago.threads.serializers import ThreadParticipantSerializer
 from misago.threads.validators import validate_title
 
