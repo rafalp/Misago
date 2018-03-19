@@ -86,30 +86,6 @@ def create_default_categories_roles(apps, schema_editor):
         }
     )
 
-    CategoryRole.objects.create(
-        name=_("Start and reply threads, make polls"),
-        permissions={
-            # categories perms
-            'misago.categories.permissions': {
-                'can_see': 1,
-                'can_browse': 1,
-            },
-
-            # threads perms
-            'misago.threads.permissions.threads': {
-                'can_see_all_threads': 1,
-                'can_start_threads': 1,
-                'can_reply_threads': 1,
-                'can_edit_threads': 1,
-                'can_edit_posts': 1,
-                'can_download_other_users_attachments': 1,
-                'max_attachment_size': 500,
-                'can_see_posts_likes': 2,
-                'can_like_posts': 1
-            },
-        }
-    )
-
     moderator = CategoryRole.objects.create(
         name=_("Moderator"),
         permissions={
