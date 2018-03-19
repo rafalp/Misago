@@ -36,6 +36,7 @@ export function GotoMenu(props) {
       <div className="row hidden-xs hidden-sm">
         <GotoLast thread={props.thread} />
         <GotoNew thread={props.thread} />
+        <GotoBestAnswer thread={props.thread} />
         <GotoUnapproved thread={props.thread} />
       </div>
       <CompactOptions {...props} />
@@ -54,6 +55,24 @@ export function GotoNew(props) {
         title={gettext('Go to first new post')}
       >
         {gettext("New")}
+      </a>
+    </div>
+  );
+}
+
+export function GotoBestAnswer(props) {
+  if (!props.thread.best_answer) {
+    return null;
+  }
+
+  return (
+    <div className="col-sm-4">
+      <a
+        href={props.thread.url.best_answer}
+        className="btn btn-default btn-block btn-outline"
+        title={gettext('Go to best answer')}
+      >
+        {gettext("Best answer")}
       </a>
     </div>
   );

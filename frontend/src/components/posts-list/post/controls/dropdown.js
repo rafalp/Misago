@@ -10,6 +10,8 @@ export default function(props) {
   return (
     <ul className="dropdown-menu dropdown-menu-right stick-to-bottom">
       <Permalink {...props} />
+      <MarkAsBestAnswer {...props} />
+      <UnmarkMarkBestAnswer {...props} />
       <PostEdits {...props} />
       <Approve {...props} />
       <Move {...props} />
@@ -44,6 +46,64 @@ export class Permalink extends React.Component {
             link
           </span>
           {gettext("Permament link")}
+        </button>
+      </li>
+    );
+  }
+}
+
+export class MarkAsBestAnswer extends React.Component {
+  onClick = () => {
+    moderation.markAsBestAnswer(this.props);
+  };
+
+  render() {
+    const { post, thread } = this.props;
+
+    if (!thread.acl.can_mark_best_answer) return null;
+    if (!post.acl.can_mark_as_best_answer) return null;
+    if (post.id === thread.best_answer) return null;
+    if (thread.best_answer && !thread.acl.can_change_best_answer) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.onClick}
+          type="button"
+        >
+          <span className="material-icon">
+            check_box
+          </span>
+          {gettext("Mark as best answer")}
+        </button>
+      </li>
+    );
+  }
+}
+
+export class UnmarkMarkBestAnswer extends React.Component {
+  onClick = () => {
+    moderation.unmarkBestAnswer(this.props);
+  };
+
+  render() {
+    const { post, thread } = this.props;
+
+    if (post.id !== thread.best_answer) return null;
+    if (!thread.acl.can_unmark_best_answer) return null;
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.onClick}
+          type="button"
+        >
+          <span className="material-icon">
+            check_box_outline_blank
+          </span>
+          {gettext("Unmark best answer")}
         </button>
       </li>
     );
@@ -227,8 +287,11 @@ export class Hide extends React.Component {
   };
 
   render() {
-    if (!this.props.post.acl.can_hide) return null;
-    if (this.props.post.is_hidden) return null;
+    const { post, thread } = this.props;
+
+    if (post.id === thread.best_answer) return null;
+    if (!post.acl.can_hide) return null;
+    if (post.is_hidden) return null;
 
     return (
       <li>
@@ -279,7 +342,10 @@ export class Delete extends React.Component {
   };
 
   render() {
-    if (!this.props.post.acl.can_delete) return null;
+    const { post, thread } = this.props;
+
+    if (post.id === thread.best_answer) return null;
+    if (!post.acl.can_delete) return null;
 
     return (
       <li>

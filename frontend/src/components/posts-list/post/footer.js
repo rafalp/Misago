@@ -10,6 +10,7 @@ export default function(props) {
 
   return (
     <div className="post-footer">
+      <MarkAsBestAnswer {...props} />
       <Like {...props} />
       <Likes
         lastLikes={props.post.last_likes}
@@ -33,6 +34,35 @@ export function isVisible(post) {
     (post.acl.can_see_likes && (post.last_likes || []).length) ||
     post.acl.can_like
   );
+}
+
+export class MarkAsBestAnswer extends React.Component {
+  onClick = () => {
+    actions.markAsBestAnswer(this.props);
+  };
+
+  render() {
+    const { post, thread } = this.props;
+
+    if (!thread.acl.can_mark_best_answer) return null;
+    if (!post.acl.can_mark_as_best_answer) return null;
+    if (post.id === thread.best_answer) return null;
+    if (thread.best_answer && !thread.acl.can_change_best_answer) return null;
+
+    return (
+      <button
+        className="btn btn-default btn-sm pull-left"
+        disabled={this.props.post.isBusy}
+        onClick={this.onClick}
+        type="button"
+      >
+        <span className="material-icon">
+          check_box
+        </span>
+        {gettext("Best answer")}
+      </button>
+    );
+  }
 }
 
 export class Like extends React.Component {
