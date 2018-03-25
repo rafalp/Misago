@@ -5,7 +5,7 @@ from misago.core import context_processors
 
 
 class MockRequest(object):
-    path_info = '/'
+    path = '/'
 
     def __init__(self, secure, host):
         self.secure = secure

@@ -253,9 +253,14 @@ class GetThreadIdFromUrlTests(MisagoTestCase):
     def test_get_thread_id_from_invalid_urls(self):
         TEST_CASES = [
             {
-                # invalid wsgi alias
+                # lacking wsgi alias
                 'request': MockRequest('https', 'testforum.com'),
                 'url': 'http://testforum.com/discuss/t/test-thread-123/',
+            },
+            {
+                # invalid wsgi alias
+                'request': MockRequest('https', 'testforum.com', '/discuss/'),
+                'url': 'http://testforum.com/forum/t/test-thread-123/',
             },
             {
                 # invalid hostname
