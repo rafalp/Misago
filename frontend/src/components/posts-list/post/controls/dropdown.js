@@ -1,6 +1,7 @@
 /* jshint ignore:start */
 import React from 'react';
 import modal from 'misago/services/modal';
+import posting from 'misago/services/posting';
 import * as moderation from './actions';
 import MoveModal from './move';
 import PostChangelog from 'misago/components/post-changelog';
@@ -10,6 +11,7 @@ export default function(props) {
   return (
     <ul className="dropdown-menu dropdown-menu-right stick-to-bottom">
       <Permalink {...props} />
+      <Edit {...props} />
       <MarkAsBestAnswer {...props} />
       <UnmarkMarkBestAnswer {...props} />
       <PostEdits {...props} />
@@ -46,6 +48,36 @@ export class Permalink extends React.Component {
             link
           </span>
           {gettext("Permament link")}
+        </button>
+      </li>
+    );
+  }
+}
+
+export class Edit extends React.Component {
+  onClick = () => {
+    posting.open({
+      mode: 'EDIT',
+
+      config: this.props.post.api.editor,
+      submit: this.props.post.api.index
+    });
+  };
+
+  render() {
+    if (!this.props.post.acl.can_edit) return null
+
+    return (
+      <li>
+        <button
+          className="btn btn-link"
+          onClick={this.onClick}
+          type="button"
+        >
+          <span className="material-icon">
+            edit
+          </span>
+          {gettext("Edit")}
         </button>
       </li>
     );

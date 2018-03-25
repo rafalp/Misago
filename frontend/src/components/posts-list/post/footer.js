@@ -11,6 +11,7 @@ export default function(props) {
   return (
     <div className="post-footer">
       <MarkAsBestAnswer {...props} />
+      <MarkAsBestAnswerCompact {...props} />
       <Like {...props} />
       <Likes
         lastLikes={props.post.last_likes}
@@ -46,13 +47,12 @@ export class MarkAsBestAnswer extends React.Component {
 
     if (!thread.acl.can_mark_best_answer) return null;
     if (!post.acl.can_mark_as_best_answer) return null;
-    if (post.id === thread.best_answer) return null;
     if (thread.best_answer && !thread.acl.can_change_best_answer) return null;
 
     return (
       <button
-        className="btn btn-default btn-sm pull-left"
-        disabled={this.props.post.isBusy}
+        className="hidden-xs btn btn-default btn-sm pull-left"
+        disabled={this.props.post.isBusy || post.id === thread.best_answer}
         onClick={this.onClick}
         type="button"
       >
@@ -60,6 +60,34 @@ export class MarkAsBestAnswer extends React.Component {
           check_box
         </span>
         {gettext("Best answer")}
+      </button>
+    );
+  }
+}
+
+
+export class MarkAsBestAnswerCompact extends React.Component {
+  onClick = () => {
+    actions.markAsBestAnswer(this.props);
+  };
+
+  render() {
+    const { post, thread } = this.props;
+
+    if (!thread.acl.can_mark_best_answer) return null;
+    if (!post.acl.can_mark_as_best_answer) return null;
+    if (thread.best_answer && !thread.acl.can_change_best_answer) return null;
+
+    return (
+      <button
+        className="vixible-xs-inline-block btn btn-default btn-sm pull-left"
+        disabled={this.props.post.isBusy || post.id === thread.best_answer}
+        onClick={this.onClick}
+        type="button"
+      >
+        <span className="material-icon">
+          check_box
+        </span>
       </button>
     );
   }
@@ -240,7 +268,7 @@ export class Edit extends React.Component {
     if (this.props.post.acl.can_edit) {
       return (
         <button
-          className="btn btn-default btn-sm pull-right"
+          className="hidden-xs btn btn-default btn-sm pull-right"
           type="button"
           onClick={this.onClick}
         >

@@ -14,6 +14,7 @@ export default function({ category, thread }) {
         thread={thread.is_unapproved}
         posts={thread.has_unapproved_posts}
       />
+      <BestAnswerLabel thread={thread} />
       <Category
         className="item-title thread-detail-category visible-xs-inline-block"
         category={category}
@@ -95,6 +96,22 @@ export function UnapprovedLabel({ posts, thread }) {
         {text}
       </span>
     </span>
+  )
+}
+
+export function BestAnswerLabel({ thread }) {
+  if (!thread.best_answer) return null;
+
+  return (
+    <a
+      className="hidden-xs thread-detail-answered"
+      href={thread.url.best_answer}
+    >
+      <span className="material-icon">check_box</span>
+      <span className="detail-text">
+        {gettext("Answered")}
+      </span>
+    </a>
   )
 }
 

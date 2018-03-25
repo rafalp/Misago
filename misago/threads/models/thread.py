@@ -210,6 +210,10 @@ class Thread(models.Model):
                 self.has_events = self.post_set.filter(is_event=True).exists()
 
     @property
+    def has_best_answer(self):
+        return self.best_answer_id
+
+    @property
     def thread_type(self):
         return self.category.thread_type
 
