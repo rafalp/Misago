@@ -3,7 +3,6 @@ from django.test import RequestFactory
 from django.urls import reverse
 
 from misago.categories.models import Category
-from misago.conf import settings
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads import testutils
@@ -55,7 +54,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
             'user': {
                 'id': None,
                 'username': user.username,
-                'url': reverse('misago:users'),
+                'url': reverse('misago:index'),
             },
         })
 
@@ -75,7 +74,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
             'user': {
                 'id': None,
                 'username': user.username,
-                'url': reverse('misago:users'),
+                'url': reverse('misago:index'),
             },
         })
 
@@ -98,7 +97,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
             'user': {
                 'id': None,
                 'username': user.username,
-                'url': reverse('misago:users'),
+                'url': reverse('misago:index'),
             },
         })
 
@@ -121,7 +120,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
             'user': {
                 'id': None,
                 'username': user.username,
-                'url': reverse('misago:users'),
+                'url': reverse('misago:index'),
             },
         })
 
@@ -144,7 +143,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
             'user': {
                 'id': None,
                 'username': user.username,
-                'url': reverse('misago:users'),
+                'url': reverse('misago:index'),
             },
         })
         
@@ -167,7 +166,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
             'user': {
                 'id': None,
                 'username': user.username,
-                'url': reverse('misago:users'),
+                'url': reverse('misago:index'),
             },
         })
 

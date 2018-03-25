@@ -27,7 +27,13 @@ MISAGO_ACL_EXTENSIONS = [
 
 # Anonymous name used to replace deleted user's name in places that are keeping it
 
-MISAGO_ANONYMOUS_USERNAME = 'Ghost'
+MISAGO_ANONYMOUS_USERNAME = "Ghost"
+
+
+# Allow users to delete their own accounts?
+# Providing such feature is required by EU law from entities that process europeans personal data.
+
+MISAGO_ENABLE_DELETE_OWN_ACCOUNT = False
 
 
 # Custom markup extensions

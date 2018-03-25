@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models.signals import pre_delete
 from django.dispatch import Signal, receiver
-from django.urls import reverse
 
 from misago.categories.models import Category
 from misago.categories.signals import delete_category_content, move_category_content
@@ -10,6 +9,7 @@ from misago.core.pgutils import batch_delete, batch_update
 from misago.core.utils import ANONYMOUS_IP
 from misago.users.signals import anonymize_user_content, delete_user_content, username_changed
 
+from .anonymize import ANONYMIZABLE_EVENTS, anonymize_event, anonymize_post_last_likes
 from .models import Attachment, Poll, PollVote, Post, PostEdit, PostLike, Thread
 
 
@@ -93,6 +93,12 @@ def delete_user_threads(sender, **kwargs):
     recount_categories = set()
     recount_threads = set()
 
+    for post in sender.liked_post_set.iterator():
+        cleaned_likes = list(filter(lambda i: i['id'] != sender.id, post.last_likes))
+        if cleaned_likes != post.last_likes:
+            post.last_likes = cleaned_likes
+            post.save(update_fields=['last_likes'])
+            
     for thread in batch_delete(sender.thread_set.all(), 50):
         recount_categories.add(thread.category_id)
         with transaction.atomic():
@@ -116,15 +122,6 @@ def delete_user_threads(sender, **kwargs):
             category.save()
 
 
-@receiver([delete_user_content])
-def delete_user_in_likes(sender, **kwargs):
-    for post in sender.liked_post_set.iterator():
-        cleaned_likes = list(filter(lambda i: i['id'] != sender.id, post.last_likes))
-        if cleaned_likes != post.last_likes:
-            post.last_likes = cleaned_likes
-            post.save(update_fields=['last_likes'])
-
-
 @receiver(anonymize_user_content)
 def anonymize_user(sender, **kwargs):
     Post.objects.filter(poster=sender).update(poster_ip=ANONYMOUS_IP)
@@ -141,44 +138,18 @@ def anonymize_user(sender, **kwargs):
 def anonymize_user_in_events(sender, **kwargs):
     queryset = Post.objects.filter(
         is_event=True,
-        event_type__in=[
-            'added_participant',
-            'changed_owner',
-            'owner_left',
-            'removed_owner',
-            'participant_left',
-            'removed_participant',
-        ],
+        event_type__in=ANONYMIZABLE_EVENTS,
         event_context__user__id=sender.id,
     ).iterator()
 
     for event in queryset:
-        event.event_context = {
-            'user': {
-                'id': None,
-                'username': sender.username,
-                'url': reverse('misago:users'),
-            },
-        }
-        event.save(update_fields=['event_context'])
+        anonymize_event(sender, event)
 
 
 @receiver([anonymize_user_content])
 def anonymize_user_in_likes(sender, **kwargs):
     for post in sender.liked_post_set.iterator():
-        cleaned_likes = []
-        for like in post.last_likes:
-            if like['id'] == sender.id:
-                cleaned_likes.append({
-                    'id': None,
-                    'username': sender.username
-                })
-            else:
-                cleaned_likes.append(like)
-
-        if cleaned_likes != post.last_likes:
-            post.last_likes = cleaned_likes
-            post.save(update_fields=['last_likes'])
+        anonymize_post_last_likes(sender, post)
 
 
 @receiver([anonymize_user_content, username_changed])

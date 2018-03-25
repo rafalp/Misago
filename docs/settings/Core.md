@@ -121,6 +121,11 @@ Dialy limit of posts that may be posted from single account. Fail-safe for situa
 Function used to create unique avatar for this user. Allows for customization of algorithm used to generate those.
 
 
+## `MISAGO_ENABLE_DELETE_OWN_ACCOUNT`
+
+Allow users to delete their own accounts? Providing such feature is required by EU law from entities that process europeans personal data.
+
+
 ## `MISAGO_EVENTS_PER_PAGE`
 
 Misago reads events to display in separate database query to avoid situation when thread with large number of eg. moderator actions displays pages consisting exclusively of events. Using this setting you may specify upper limit of events displayed on thread's single page. This setting is intented as fail safe, both to save threads from excessively long lists of events your users will have to scroll trough, as well as to keep memory usage within limts.
