@@ -48,7 +48,7 @@ class BestAnswerMergeHandler(MergeConflictHandler):
     
     def populate_from_threads(self, threads):
         for thread in threads:
-            if thread.best_answer_id:
+            if thread.has_best_answer:
                 self.items.append(thread)
                 self.choices[thread.pk] = thread
         self.items.sort(key=lambda thread: (thread.title, thread.id))

@@ -218,7 +218,7 @@ def patch_best_answer(request, thread, value):
     if post.is_best_answer:
         raise PermissionDenied(_("This post is already marked as thread's best answer."))
 
-    if thread.best_answer_id:
+    if thread.has_best_answer:
         allow_change_best_answer(request.user, thread)
         
     thread.set_best_answer(request.user, post)

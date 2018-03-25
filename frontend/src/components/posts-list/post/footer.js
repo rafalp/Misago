@@ -80,7 +80,7 @@ export class MarkAsBestAnswerCompact extends React.Component {
 
     return (
       <button
-        className="vixible-xs-inline-block btn btn-default btn-sm pull-left"
+        className="visible-xs-inline-block btn btn-default btn-sm pull-left"
         disabled={this.props.post.isBusy || post.id === thread.best_answer}
         onClick={this.onClick}
         type="button"

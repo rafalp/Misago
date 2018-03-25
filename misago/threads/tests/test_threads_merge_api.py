@@ -923,6 +923,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
 
         # best answer is not set on new thread
         new_thread = Thread.objects.get(pk=response.json()['id'])
+        self.assertFalse(new_thread.has_best_answer)
         self.assertIsNone(new_thread.best_answer_id)
 
     def test_threads_merge_conflict_keep_first_best_answer(self):

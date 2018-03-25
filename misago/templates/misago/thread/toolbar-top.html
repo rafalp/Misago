@@ -20,5 +20,12 @@
         {% trans "Last" %}
       </a>
     </li>
+    {% if thread.has_best_answer %}
+      <li>
+        <a href="{{ thread.get_best_answer_url }}" class="btn btn-default btn-outline" title="{% trans 'Go to best answers' %}">
+          {% trans "Best answer" %}
+        </a>
+      </li>
+    {% endif %}
   </ul>
 </div>

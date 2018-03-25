@@ -21,7 +21,7 @@
     {{ replies }} reply, last one from {{ last_post_on }}.
   {% plural %}
     {{ replies }} replies, last one from {{ last_post_on }}.
-  {% endblocktrans %}
+  {% endblocktrans %}{% if thread.has_best_answer %} {% trans "Answered." %}{% endif %}{% if thread.has_best_answer %} {% trans "Closed." %}{% endif %}
 {% endblock og-description %}
 
 

@@ -308,6 +308,7 @@ class ThreadModelTests(TestCase):
         self.thread.save()
 
         self.assertEqual(self.thread.best_answer, best_answer)
+        self.assertTrue(self.thread.has_best_answer)
         self.assertTrue(self.thread.best_answer_is_protected)
         self.assertTrue(self.thread.best_answer_marked_on)
         self.assertEqual(self.thread.best_answer_marked_by, user)
@@ -318,6 +319,7 @@ class ThreadModelTests(TestCase):
         self.thread.clear_best_answer()
 
         self.assertIsNone(self.thread.best_answer)
+        self.assertFalse(self.thread.has_best_answer)
         self.assertFalse(self.thread.best_answer_is_protected)
         self.assertIsNone(self.thread.best_answer_marked_on)
         self.assertIsNone(self.thread.best_answer_marked_by)

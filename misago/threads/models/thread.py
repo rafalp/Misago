@@ -211,7 +211,7 @@ class Thread(models.Model):
 
     @property
     def has_best_answer(self):
-        return self.best_answer_id
+        return bool(self.best_answer_id)
 
     @property
     def thread_type(self):

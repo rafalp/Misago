@@ -179,7 +179,7 @@ can_mark_best_answer = return_boolean(allow_mark_best_answer)
 
 
 def allow_change_best_answer(user, target):
-    if not target.best_answer_id:
+    if not target.has_best_answer:
         return # shortcircut permission test
 
     category_acl = user.acl_cache['categories'].get(
@@ -239,7 +239,7 @@ def allow_unmark_best_answer(user, target):
     if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to unmark best answers."))
 
-    if not target.best_answer_id:
+    if not target.has_best_answer:
         return # shortcircut test
 
     category_acl = user.acl_cache['categories'].get(
