@@ -67,7 +67,7 @@ export function select(store) {
 }
 
 export function paths() {
-  return [
+  const paths = [
     {
       path: misago.get('USERCP_URL') + 'forum-options/',
       component: connect(select)(ChangeForumOptions)
@@ -83,10 +83,15 @@ export function paths() {
     {
       path: misago.get('USERCP_URL') + 'sign-in-credentials/',
       component: connect(select)(ChangeSignInCredentials)
-    },
-    {
-      path: misago.get('USERCP_URL') + 'delete-account/',
-      component: connect(select)(DeleteAccount)
     }
   ];
+
+  if (misago.get('ENABLE_DELETE_OWN_ACCOUNT')) {
+    paths.push({
+      path: misago.get('USERCP_URL') + 'delete-account/',
+      component: connect(select)(DeleteAccount)
+    });
+  }
+
+  return paths;
 }
