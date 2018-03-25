@@ -2,6 +2,7 @@ import json
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
+from django.test import override_settings
 from django.urls import reverse
 from django.utils.encoding import smart_str
 
@@ -576,7 +577,7 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         )
 
         response = self.client.post('/api/users/%s/delete/' % self.user.pk)
-        self.assertContains(response, "can't delete yourself", status_code=403)
+        self.assertContains(response, "can't delete your account", status_code=403)
 
     def test_delete_admin(self):
         """raises 403 error when attempting to delete admin"""
@@ -655,3 +656,52 @@ class UserDeleteTests(AuthenticatedUserTestCase):
 
         self.assertEqual(Thread.objects.count(), self.threads + 1)
         self.assertEqual(Post.objects.count(), self.posts + 2)
+
+    @override_settings(MISAGO_ENABLE_DELETE_OWN_ACCOUNT=False)
+    def test_delete_own_account_feature_disabled(self):
+        """raises 403 error when attempting to delete own account but feature is disabled"""
+        response = self.client.post(
+            '/api/users/%s/delete/' % self.user.pk, {'password': self.USER_PASSWORD})
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete your account.",
+        })
+
+    def test_delete_own_account_is_staff(self):
+        """raises 403 error when attempting to delete own account as admin"""
+        self.user.is_staff = True
+        self.user.save()
+
+        response = self.client.post(
+            '/api/users/%s/delete/' % self.user.pk, {'password': self.USER_PASSWORD})
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete your account because you are an administrator.",
+        })
+
+    def test_delete_own_account_is_superuser(self):
+        """raises 403 error when attempting to delete own account as superadmin"""
+        self.user.is_superuser = True
+        self.user.save()
+
+        response = self.client.post(
+            '/api/users/%s/delete/' % self.user.pk, {'password': self.USER_PASSWORD})
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete your account because you are an administrator.",
+        })
+
+    def test_delete_own_account_invalid_password(self):
+        """raises 400 error when attempting to delete own account with invalid password"""
+        response = self.client.post('/api/users/%s/delete/' % self.user.pk, {'password': 'hello'})
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'password': ["Entered password is invalid."]
+        })
+
+    def test_delete_own_account(self):
+        """raises 400 error when attempting to delete own account with invalid password"""
+        response = self.client.post(
+            '/api/users/%s/delete/' % self.user.pk, {'password': self.USER_PASSWORD})
+        self.assertEqual(response.status_code, 200)

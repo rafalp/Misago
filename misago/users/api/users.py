@@ -22,7 +22,8 @@ from misago.users.permissions import (
     allow_browse_users_list, allow_delete_user, allow_edit_profile_details,
     allow_follow_user, allow_moderate_avatar, allow_rename_user, allow_see_ban_details)
 from misago.users.profilefields import profilefields, serialize_profilefields_data
-from misago.users.serializers import BanDetailsSerializer, ForumOptionsSerializer, UserSerializer
+from misago.users.serializers import (
+    BanDetailsSerializer, DeleteAccountSerializer, ForumOptionsSerializer, UserSerializer)
 from misago.users.viewmodels import Followers, Follows, UserPosts, UserThreads
 
 from .rest_permissions import BasePermission, UnbannedAnonOnly
@@ -206,6 +207,14 @@ class UserViewSet(viewsets.GenericViewSet):
     @detail_route(methods=['get', 'post'])
     def delete(self, request, pk=None):
         profile = self.get_user(request, pk)
+
+        if request.method == 'POST' and 'password' in request.data:
+            serializer = DeleteAccountSerializer(data=request.data, context={'user': request.user})
+            serializer.is_valid(raise_exception=True)
+            with transaction.atomic():
+                serializer.delete_account(request)
+            return Response({})
+        
         allow_delete_user(request.user, profile)
 
         if request.method == 'POST':

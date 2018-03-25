@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from .pages import user_profile, usercp, users_list
@@ -41,6 +42,14 @@ class MisagoUsersConfig(AppConfig):
             component='sign-in-credentials',
             icon='vpn_key',
         )
+
+        if settings.MISAGO_ENABLE_DELETE_OWN_ACCOUNT:
+            usercp.add_section(
+                link='misago:usercp-delete-account',
+                name=_("Delete account"),
+                component='delete-account',
+                icon='cancel',
+            )
 
     def register_default_users_list_pages(self):
         users_list.add_section(

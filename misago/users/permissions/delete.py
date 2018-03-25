@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from django import forms
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
@@ -15,6 +16,7 @@ from misago.acl.models import Role
 __all__ = [
     'allow_delete_user',
     'can_delete_user',
+    'allow_delete_self',
 ]
 
 
@@ -75,7 +77,7 @@ def allow_delete_user(user, target):
         raise PermissionDenied(_("You can't delete users."))
 
     if user.pk == target.pk:
-        raise PermissionDenied(_("You can't delete yourself."))
+        raise PermissionDenied(_("You can't delete your account."))
     if target.is_staff or target.is_superuser:
         raise PermissionDenied(_("You can't delete administrators."))
 
@@ -98,3 +100,14 @@ def allow_delete_user(user, target):
 
 
 can_delete_user = return_boolean(allow_delete_user)
+
+
+def allow_delete_self(user, target):
+    if not settings.MISAGO_ENABLE_DELETE_OWN_ACCOUNT:
+        raise PermissionDenied(_("You can't delete your account."))
+    if user.pk != target.pk:
+        raise PermissionDenied(_("You can't delete other users accounts."))
+    if user.is_staff or user.is_superuser:
+        raise PermissionDenied(
+            _("You can't delete your account because you are an administrator.")
+        )
