@@ -25,6 +25,11 @@ MISAGO_ACL_EXTENSIONS = [
 ]
 
 
+# Anonymous name used to replace deleted user's name in places that are keeping it
+
+MISAGO_ANONYMOUS_USERNAME = 'Ghost'
+
+
 # Custom markup extensions
 
 MISAGO_MARKUP_EXTENSIONS = []

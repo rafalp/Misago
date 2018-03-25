@@ -2,6 +2,9 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
+from misago.conf import settings
+from misago.core.utils import slugify
+
 from misago.users.models import User
 
 
@@ -87,3 +90,11 @@ class UserModelTests(TestCase):
         user.set_email('bOb@TEst.com')
         self.assertEqual(user.email, 'bOb@test.com')
         self.assertTrue(user.email_hash)
+
+    def test_anonymize_content(self):
+        """anonymize_content sets username and slug to one defined in settings"""
+        user = User.objects.create_user('Bob', 'bob@example.com', 'Pass.123')
+
+        user.anonymize_content()
+        self.assertEqual(user.username, settings.MISAGO_ANONYMOUS_USERNAME)
+        self.assertEqual(user.slug, slugify(settings.MISAGO_ANONYMOUS_USERNAME))

@@ -36,6 +36,11 @@ Path prefix for Misago administration backend. Defautly "admincp", but you may s
 Maximum allowed lenght of inactivity period between two requests to admin namespaces. If its exceeded, user will be asked to sign in again to admin backed before being allowed to continue activities.
 
 
+## `MISAGO_ANONYMOUS_USERNAME`
+
+Anonymous name used to replace deleted user's name in places that are keeping it. Defaults to "Ghost".
+
+
 ## `MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT`
 
 Max dimensions (width and height) of user-uploaded images embedded in posts. If uploaded image is greater than dimensions specified in this settings, Misago will generate thumbnail for it.

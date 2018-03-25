@@ -295,6 +295,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         if kwargs.pop('delete_content', False):
             self.delete_content()
 
+        self.anonymize_content()
+
         avatars.delete_avatar(self)
 
         return super(User, self).delete(*args, **kwargs)
@@ -302,6 +304,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     def delete_content(self):
         from misago.users.signals import delete_user_content
         delete_user_content.send(sender=self)
+
+    def anonymize_content(self):
+        # Replace username on associated items with anonymous one
+        self.username = settings.MISAGO_ANONYMOUS_USERNAME
+        self.slug = slugify(self.username)
+        
+        from misago.users.signals import anonymize_user_content
+        anonymize_user_content.send(sender=self)
 
     @property
     def acl_cache(self):

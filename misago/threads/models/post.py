@@ -99,6 +99,10 @@ class Post(models.Model):
                 fields=['is_hidden'],
                 where={'is_hidden': False},
             ),
+            PgPartialIndex(
+                fields=['is_event', 'event_type'],
+                where={'is_event': True},
+            ),
             GinIndex(fields=['search_vector']),
         ]
 
