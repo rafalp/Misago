@@ -152,6 +152,13 @@ class UserViewSet(viewsets.GenericViewSet):
         return edit_details_endpoint(request, profile)
 
     @detail_route(methods=['post'])
+    def delete_own_account(self, request, pk=None):
+        serializer = DeleteAccountSerializer(data=request.data, context={'user': request.user})
+        serializer.is_valid(raise_exception=True)
+        serializer.delete_account(request)
+        return Response({})
+        
+    @detail_route(methods=['post'])
     def follow(self, request, pk=None):
         profile = self.get_user(request, pk)
         allow_follow_user(request.user, profile)
@@ -207,14 +214,6 @@ class UserViewSet(viewsets.GenericViewSet):
     @detail_route(methods=['get', 'post'])
     def delete(self, request, pk=None):
         profile = self.get_user(request, pk)
-
-        if request.method == 'POST' and 'password' in request.data:
-            serializer = DeleteAccountSerializer(data=request.data, context={'user': request.user})
-            serializer.is_valid(raise_exception=True)
-            with transaction.atomic():
-                serializer.delete_account(request)
-            return Response({})
-        
         allow_delete_user(request.user, profile)
 
         if request.method == 'POST':

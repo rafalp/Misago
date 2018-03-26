@@ -266,6 +266,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     profile_fields = HStoreField(default=dict)
 
+    delete_own_account = models.BooleanField(default=False)
+
     USERNAME_FIELD = 'slug'
     REQUIRED_FIELDS = ['email']
 
@@ -280,6 +282,10 @@ class User(AbstractBaseUser, PermissionsMixin):
             PgPartialIndex(
                 fields=['requires_activation'],
                 where={'requires_activation__gt': 0},
+            ),
+            PgPartialIndex(
+                fields=['delete_own_account'],
+                where={'delete_own_account': True},
             ),
         ]
 

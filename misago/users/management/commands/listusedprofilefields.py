@@ -3,19 +3,19 @@ from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
+from misago.core.pgutils import chunk_queryset
+
 
 UserModel = get_user_model()
 
 
 class Command(BaseCommand):
-    help = (
-        "Lists all profile fields in use."
-    )
+    help = "Lists all profile fields in use."
 
     def handle(self, *args, **options):
         keys = {}
 
-        for user in UserModel.objects.all().iterator():
+        for user in chunk_queryset(UserModel.objects.all()):
             for key in user.profile_fields.keys():
                 keys.setdefault(key, 0)
                 keys[key] += 1
