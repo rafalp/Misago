@@ -57,9 +57,12 @@ As of now Misago implements all features considered "must have" on live internet
 * Python-based profile fields framework letting site owners to define custom fields for users to fill in complete with powerful customization options for custom requirements, display or validation logic.
 * Rich polls  system, allowing polls with public and private voters, single and multiple choices as well as ones that allow vote change or limit voting tp limited period of time.
 * Post attachments complete thumbnailing and gif's animation removal.
+* Mark post in question thread as best answer, bringing basic Q&A functionality.
 * Posts edits log allowing you to see how user messages used to look in past as well as revert function protecting you from malignant users emptying their posts contents.
 * Moderation queue for users and categories allowing you to moderate content before it becomes visible to other members of the community.
 * Custom theme developed over bootstrap.
+* Optionally enable users to delete their own account.
+* Anonymise user data on their account's deletion.
 
 Even more features will follow in future releases:
 
@@ -67,7 +70,6 @@ Even more features will follow in future releases:
 * Content reporting for users to report offensive content.
 * Forum-wide JS routing further reducing navigation times.
 * IP search for moderators to find `sock puppets <https://en.wikipedia.org/wiki/Sockpuppet_(Internet)>`_ or bot nets.
-* Mark post in question thread as answer, bringing basic Q&A functionality.
 * Notifications for users to notice content and events of concern faster.
 * Post accurate read tracker that lets moderators spot unapproved replies and non-moderators spot approved posts.
 * Sign in with Facebook/Google/Github/Steam/etc/ect.
