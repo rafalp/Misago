@@ -5,7 +5,7 @@ from django.dispatch import Signal, receiver
 
 from misago.categories.models import Category
 from misago.categories.signals import delete_category_content, move_category_content
-from misago.core.pgutils import batch_delete, batch_update
+from misago.core.pgutils import chunk_queryset
 from misago.core.utils import ANONYMOUS_IP
 from misago.users.signals import anonymize_user_content, delete_user_content, username_changed
 
@@ -93,18 +93,18 @@ def delete_user_threads(sender, **kwargs):
     recount_categories = set()
     recount_threads = set()
 
-    for post in sender.liked_post_set.iterator():
+    for post in sender.liked_post_set.all():
         cleaned_likes = list(filter(lambda i: i['id'] != sender.id, post.last_likes))
         if cleaned_likes != post.last_likes:
             post.last_likes = cleaned_likes
             post.save(update_fields=['last_likes'])
             
-    for thread in batch_delete(sender.thread_set.all(), 50):
+    for thread in chunk_queryset(sender.thread_set.all()):
         recount_categories.add(thread.category_id)
         with transaction.atomic():
             thread.delete()
 
-    for post in batch_delete(sender.post_set.all(), 50):
+    for post in chunk_queryset(sender.post_set.all()):
         recount_categories.add(post.category_id)
         recount_threads.add(post.thread_id)
         with transaction.atomic():
@@ -112,7 +112,7 @@ def delete_user_threads(sender, **kwargs):
 
     if recount_threads:
         changed_threads_qs = Thread.objects.filter(id__in=recount_threads)
-        for thread in batch_update(changed_threads_qs, 50):
+        for thread in chunk_queryset(changed_threads_qs):
             thread.synchronize()
             thread.save()
 
@@ -140,15 +140,15 @@ def anonymize_user_in_events(sender, **kwargs):
         is_event=True,
         event_type__in=ANONYMIZABLE_EVENTS,
         event_context__user__id=sender.id,
-    ).iterator()
+    )
 
-    for event in queryset:
+    for event in chunk_queryset(queryset):
         anonymize_event(sender, event)
 
 
 @receiver([anonymize_user_content])
 def anonymize_user_in_likes(sender, **kwargs):
-    for post in sender.liked_post_set.iterator():
+    for post in chunk_queryset(sender.liked_post_set):
         anonymize_post_last_likes(sender, post)
 
 
@@ -207,7 +207,7 @@ def update_usernames(sender, **kwargs):
 @receiver(pre_delete, sender=get_user_model())
 def remove_unparticipated_private_threads(sender, **kwargs):
     threads_qs = kwargs['instance'].privatethread_set.all()
-    for thread in batch_update(threads_qs, 50):
+    for thread in chunk_queryset(threads_qs):
         if thread.participants.count() == 1:
             with transaction.atomic():
                 thread.delete()

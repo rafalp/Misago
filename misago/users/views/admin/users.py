@@ -10,7 +10,7 @@ from misago.admin.views import generic
 from misago.categories.models import Category
 from misago.conf import settings
 from misago.core.mail import mail_users
-from misago.core.pgutils import batch_update
+from misago.core.pgutils import chunk_queryset
 from misago.threads.models import Thread
 from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
 from misago.users.forms.admin import (
@@ -386,7 +386,7 @@ class DeletePostsStep(DeletionStep):
 
         if recount_categories:
             changed_threads_qs = Thread.objects.filter(id__in=recount_threads)
-            for thread in batch_update(changed_threads_qs, 50):
+            for thread in chunk_queryset(changed_threads_qs, 50):
                 thread.synchronize()
                 thread.save()
 
