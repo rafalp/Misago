@@ -98,3 +98,14 @@ class UserModelTests(TestCase):
         user.anonymize_content()
         self.assertEqual(user.username, settings.MISAGO_ANONYMOUS_USERNAME)
         self.assertEqual(user.slug, slugify(settings.MISAGO_ANONYMOUS_USERNAME))
+
+    def test_mark_for_delete(self):
+        """mark_for_delete deactivates user and sets is_deleting_account flag"""
+        user = User.objects.create_user('Bob', 'bob@example.com', 'Pass.123')
+        user.mark_for_delete()
+        self.assertFalse(user.is_active)
+        self.assertTrue(user.is_deleting_account)
+
+        user_from_db = User.objects.get(pk=user.pk)
+        self.assertFalse(user_from_db.is_active)
+        self.assertTrue(user_from_db.is_deleting_account)

@@ -129,6 +129,4 @@ class DeleteOwnAccountSerializer(serializers.Serializer):
         logout(request)
         clear_tracking(request)
 
-        profile.is_active = False
-        profile.delete_own_account = True
-        profile.save(update_fields=['is_active', 'delete_own_account'])
+        profile.mark_for_delete()

@@ -9,10 +9,10 @@ from misago.users.management.commands import deletemarkedusers
 UserModel = get_user_model()
 
 
-class DeleteMArkedUsersTests(TestCase):
+class DeleteMarkedUsersTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user(
-            'Bob', 'bob@bob.com', 'pass123', delete_own_account=True)
+        self.user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        self.user.mark_for_delete()
 
     def test_delete_marked_user(self):
         """deletes marked user"""
@@ -27,7 +27,7 @@ class DeleteMArkedUsersTests(TestCase):
 
     def test_delete_not_marked(self):
         """user has to be marked to be deletable"""
-        self.user.delete_own_account = False
+        self.user.is_deleting_account = False
         self.user.save()
 
         out = StringIO()

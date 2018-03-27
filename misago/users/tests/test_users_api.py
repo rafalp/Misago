@@ -518,7 +518,7 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
 
         self.reload_user()
         self.assertTrue(self.user.is_active)
-        self.assertFalse(self.user.delete_own_account)
+        self.assertFalse(self.user.is_deleting_account)
 
     def test_delete_own_account_is_staff(self):
         """raises 403 error when attempting to delete own account as admin"""
@@ -533,7 +533,7 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
 
         self.reload_user()
         self.assertTrue(self.user.is_active)
-        self.assertFalse(self.user.delete_own_account)
+        self.assertFalse(self.user.is_deleting_account)
 
     def test_delete_own_account_is_superuser(self):
         """raises 403 error when attempting to delete own account as superadmin"""
@@ -548,7 +548,7 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
 
         self.reload_user()
         self.assertTrue(self.user.is_active)
-        self.assertFalse(self.user.delete_own_account)
+        self.assertFalse(self.user.is_deleting_account)
 
     def test_delete_own_account_invalid_password(self):
         """raises 400 error when attempting to delete own account with invalid password"""
@@ -560,7 +560,7 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
 
         self.reload_user()
         self.assertTrue(self.user.is_active)
-        self.assertFalse(self.user.delete_own_account)
+        self.assertFalse(self.user.is_deleting_account)
 
     def test_delete_own_account(self):
         """deactivates account and marks it for deletion"""
@@ -569,7 +569,7 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
         
         self.reload_user()
         self.assertFalse(self.user.is_active)
-        self.assertTrue(self.user.delete_own_account)
+        self.assertTrue(self.user.is_deleting_account)
 
 
 class UserDeleteTests(AuthenticatedUserTestCase):

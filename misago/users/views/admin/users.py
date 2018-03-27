@@ -32,11 +32,11 @@ class UserAdmin(generic.AdminBaseMixin):
         add_is_active_fields = False
         add_admin_fields = False
 
-        if not target.delete_own_account:
+        if not target.is_deleting_account:
             if not target.is_staff:
                 add_is_active_fields = True
             elif request.user.is_superuser:
-                    add_is_active_fields = request.user.pk != target.pk
+                add_is_active_fields = request.user.pk != target.pk
 
         if request.user.is_superuser:
             add_admin_fields = request.user.pk != target.pk

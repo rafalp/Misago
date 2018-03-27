@@ -73,8 +73,8 @@ class ProfileView(View):
 
         if not profile.is_active:
             request.frontend_context['PROFILE']['is_active'] = False
-        if profile.delete_own_account:
-            request.frontend_context['PROFILE']['delete_own_account'] = True
+        if profile.is_deleting_account:
+            request.frontend_context['PROFILE']['is_deleting_account'] = True
 
     def complete_context_data(self, request, profile, sections, context):
         context['profile'] = profile

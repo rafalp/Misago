@@ -181,7 +181,7 @@ export default class extends React.Component {
 
             <IsDisabledMessage
               isActive={this.props.profile.is_active}
-              requestedDelete={this.props.profile.delete_own_account}
+              isDeletingAccount={this.props.profile.is_deleting_account}
             />
 
             <div className="row">
@@ -263,12 +263,12 @@ export default class extends React.Component {
 }
 
 /* jshint ignore:start */
-export function IsDisabledMessage({ isActive, requestedDelete }) {
-  if (isActive !== false && requestedDelete !== true) return null;
+export function IsDisabledMessage({ isActive, isDeletingAccount }) {
+  if (isActive !== false && isDeletingAccount !== true) return null;
 
   let message = null;
-  if (requestedDelete) {
-    message = gettext("This user has requested for their account to be deleted.");
+  if (isDeletingAccount) {
+    message = gettext("This user is deleting their account.");
   } else {
     message = gettext("This user's account has been disabled by administrator.");
   }

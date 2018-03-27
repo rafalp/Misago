@@ -73,10 +73,10 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertContains(response, '<del>%s</del>' % user_c.username)
 
         # Search requested own account delete
-        user_c.delete_own_account = True
+        user_c.is_deleting_account = True
         user_c.save()
 
-        response = self.client.get('%s&delete_own_account=1' % link_base)
+        response = self.client.get('%s&is_deleting_account=1' % link_base)
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, user_a.username)
         self.assertNotContains(response, user_b.username)
@@ -834,11 +834,10 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertTrue(updated_user.is_active)
         self.assertFalse(updated_user.is_active_staff_message)
 
-    def test_edit_delete_own_account_cant_reactivate(self):
+    def test_edit_is_deleting_account_cant_reactivate(self):
         """users deleting own accounts can't be reactivated"""
-        test_user = UserModel.objects.create_user(
-            'Bob', 'bob@test.com', 'pass123', is_active=False, delete_own_account=True)
-        test_user.save()
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user.mark_for_delete()
 
         test_link = reverse(
             'misago:admin:users:accounts:edit', kwargs={
@@ -875,7 +874,7 @@ class UserAdminViewsTests(AdminTestCase):
 
         updated_user = UserModel.objects.get(pk=test_user.pk)
         self.assertFalse(updated_user.is_active)
-        self.assertTrue(updated_user.delete_own_account)
+        self.assertTrue(updated_user.is_deleting_account)
 
     def test_delete_threads_view_self(self):
         """delete user threads view validates if user deletes self"""

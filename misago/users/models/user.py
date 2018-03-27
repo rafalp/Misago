@@ -204,6 +204,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     is_active_staff_message = models.TextField(null=True, blank=True)
 
+    is_deleting_account = models.BooleanField(default=False)
+
     avatar_tmp = models.ImageField(
         max_length=255,
         upload_to=avatars.store.upload_to,
@@ -266,8 +268,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     profile_fields = HStoreField(default=dict)
 
-    delete_own_account = models.BooleanField(default=False)
-
     USERNAME_FIELD = 'slug'
     REQUIRED_FIELDS = ['email']
 
@@ -284,8 +284,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                 where={'requires_activation__gt': 0},
             ),
             PgPartialIndex(
-                fields=['delete_own_account'],
-                where={'delete_own_account': True},
+                fields=['is_deleting_account'],
+                where={'is_deleting_account': True},
             ),
         ]
 
@@ -310,6 +310,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     def delete_content(self):
         from misago.users.signals import delete_user_content
         delete_user_content.send(sender=self)
+
+    def mark_for_delete(self):
+        self.is_active = False
+        self.is_deleting_account = True
+        self.save(update_fields=['is_active', 'is_deleting_account'])
 
     def anonymize_content(self):
         # Replace username on associated items with anonymous one

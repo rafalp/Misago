@@ -35,8 +35,8 @@
   </a>
 </td>
 <td class="item-name {% if item.requires_activation %}text-muted{% endif %}">
-  {% if item.delete_own_account %}
-    <a href="{{ item.get_absolute_url }}" title="{% trans "Requested account deletion" %}">
+  {% if item.is_deleting_account %}
+    <a href="{{ item.get_absolute_url }}" title="{% trans "Is deleting their account" %}">
       <del>{{ item }}</del>
     </a>
   {% elif not item.is_active %}
@@ -138,7 +138,7 @@
 </div>
 <div class="row">
   <div class="col-md-6">
-    {% form_row search_form.delete_own_account %}
+    {% form_row search_form.is_deleting_account %}
   </div>
   <div class="col-md-6">
     {% form_row search_form.is_staff %}

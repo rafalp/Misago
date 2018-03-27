@@ -15,11 +15,11 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='user',
-            name='delete_own_account',
+            name='is_deleting_account',
             field=models.BooleanField(default=False),
         ),
         migrations.AddIndex(
             model_name='user',
-            index=misago.core.pgutils.PgPartialIndex(fields=['delete_own_account'], name='misago_user_delete__8d97e7_part', where={'delete_own_account': True}),
+            index=misago.core.pgutils.PgPartialIndex(fields=['is_deleting_account'], name='misago_user_delete__8d97e7_part', where={'is_deleting_account': True}),
         ),
     ]

@@ -143,15 +143,15 @@ class="form-horizontal"
   <fieldset>
     <legend>{% trans "Account status" %}</legend>
 
-    {% if target.delete_own_account %}
-      <div id="div_id_delete_own_account" class="form-group">
-        <label for="id_is_adelete_own_account_0" class="control-label {{ label_class }}">
+    {% if target.is_deleting_account %}
+      <div id="div_id_is_deleting_account" class="form-group">
+        <label for="id_is_ais_deleting_account_0" class="control-label {{ label_class }}">
           {{ form.IS_ACTIVE_LABEL }}:
         </label>
         <div class="{{ field_class }}">
           <p class="form-control-static">
             <strong class="text-danger">
-              {% trans "This user has requested for their account to be deleted." %}
+              {% trans "This user is deleting their account. It has been deactivated for the duration of that process." %}
             </strong>
           </p>
           <p id="hint_id_is_active" class="help-block">

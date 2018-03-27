@@ -24,7 +24,7 @@ class Command(BaseCommand):
 
         deleted = 0
 
-        queryset = UserModel.objects.filter(delete_own_account=True)
+        queryset = UserModel.objects.filter(is_deleting_account=True)
 
         for user in chunk_queryset(queryset):
             if can_delete_own_account(user, user):

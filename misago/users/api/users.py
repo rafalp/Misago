@@ -89,8 +89,8 @@ class UserViewSet(viewsets.GenericViewSet):
 
         if not profile.is_active:
             profile_json['is_active'] = False
-        if profile.delete_own_account:
-            profile_json['delete_own_account'] = True
+        if profile.is_deleting_account:
+            profile_json['is_deleting_account'] = True
 
         return Response(profile_json)
 
