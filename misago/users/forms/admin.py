@@ -310,6 +310,7 @@ class SearchUsersFormBase(forms.Form):
     inactive = YesNoSwitch(label=_("Inactive only"))
     disabled = YesNoSwitch(label=_("Disabled only"))
     is_staff = YesNoSwitch(label=_("Admins only"))
+    delete_own_account = YesNoSwitch(label=_("Requested account deletion"))
 
     def filter_queryset(self, criteria, queryset):
         if criteria.get('username'):
@@ -332,6 +333,9 @@ class SearchUsersFormBase(forms.Form):
 
         if criteria.get('is_staff'):
             queryset = queryset.filter(is_staff=True)
+
+        if criteria.get('delete_own_account'):
+            queryset = queryset.filter(delete_own_account=True)
 
         if criteria.get('profilefields', '').strip():
             queryset = profilefields.search_users(

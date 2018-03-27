@@ -72,6 +72,22 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertNotContains(response, user_b.username)
         self.assertContains(response, '<del>%s</del>' % user_c.username)
 
+        # Search requested own account delete
+        user_c.delete_own_account = True
+        user_c.save()
+
+        response = self.client.get('%s&delete_own_account=1' % link_base)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, user_a.username)
+        self.assertNotContains(response, user_b.username)
+        self.assertContains(response, '<del>%s</del>' % user_c.username)
+        
+        response = self.client.get('%s&disabled=1' % link_base)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, user_a.username)
+        self.assertNotContains(response, user_b.username)
+        self.assertContains(response, '<del>%s</del>' % user_c.username)
+
     def test_mass_activation(self):
         """users list activates multiple users"""
         user_pks = []
@@ -817,6 +833,49 @@ class UserAdminViewsTests(AdminTestCase):
         updated_user = UserModel.objects.get(pk=test_user.pk)
         self.assertTrue(updated_user.is_active)
         self.assertFalse(updated_user.is_active_staff_message)
+
+    def test_edit_delete_own_account_cant_reactivate(self):
+        """users deleting own accounts can't be reactivated"""
+        test_user = UserModel.objects.create_user(
+            'Bob', 'bob@test.com', 'pass123', is_active=False, delete_own_account=True)
+        test_user.save()
+
+        test_link = reverse(
+            'misago:admin:users:accounts:edit', kwargs={
+                'pk': test_user.pk,
+            }
+        )
+
+        response = self.client.get(test_link)
+        self.assertNotContains(response, 'id="id_is_active_1"')
+        self.assertNotContains(response, 'id="id_is_active_staff_message"')
+
+        response = self.client.post(
+            test_link,
+            data={
+                'username': 'Bawww',
+                'rank': six.text_type(test_user.rank_id),
+                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'email': 'reg@stered.com',
+                'new_password': 'pass123',
+                'is_staff': '1',
+                'is_superuser': '0',
+                'signature': 'Hello world!',
+                'is_signature_locked': '1',
+                'is_hiding_presence': '0',
+                'limits_private_thread_invites_to': '0',
+                'signature_lock_staff_message': 'Staff message',
+                'signature_lock_user_message': 'User message',
+                'subscribe_to_started_threads': '2',
+                'subscribe_to_replied_threads': '2',
+                'is_active': '1',
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+
+        updated_user = UserModel.objects.get(pk=test_user.pk)
+        self.assertFalse(updated_user.is_active)
+        self.assertTrue(updated_user.delete_own_account)
 
     def test_delete_threads_view_self(self):
         """delete user threads view validates if user deletes self"""
