@@ -47,6 +47,10 @@ def fill_in_settings(f):
         pos = s.find('STATICFILES_DIRS')
         s = s[:s.find('[', pos) + 1] + s[s.find(']', pos):]
 
+        # Remote theme dir from template dirs
+        pos = s.find("'DIRS': [")
+        s = s[:s.find('[', pos) + 1] + s[s.find(']', pos):]
+
     with open(f, 'w') as fd:
         fd.write(s)
 
