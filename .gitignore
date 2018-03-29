@@ -47,6 +47,9 @@ pylint.txt
 .project
 .pydevproject
 
+# pycharm
+.idea/
+
 # Rope
 .ropeproject
 
@@ -63,9 +66,11 @@ pylint.txt
 _book/
 
 # Local development stuff
+forum/
 dev/
 dev-manage.py
 .vscode/
+env/
 venv/
 venv2/
 venv3/
