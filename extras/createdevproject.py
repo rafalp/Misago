@@ -34,10 +34,14 @@ def fill_in_settings(f):
     with open(f, 'r') as fd:
         s = fd.read()
 
+        # Postgres
         s = s.replace("'NAME': '',", "'NAME': os.environ['POSTGRES_DB'],")
         s = s.replace("'USER': '',", "'USER': os.environ['POSTGRES_USER'],")
         s = s.replace("'PASSWORD': '',", "'PASSWORD': os.environ['POSTGRES_PASSWORD'],")
         s = s.replace("'HOST': 'localhost',", "'HOST': os.environ['POSTGRES_HOST'],")
+
+        # Specify console backend for email
+        s += "\nEMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\n"
 
     with open(f, 'w') as fd:
         fd.write(s)
