@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Sometimes postgres is not ready before django attempts to connect.
+# This script waits until we can do a basic select before continuing.
 export PGPASSWORD=$POSTGRES_PASSWORD
 RETRIES=10
 
