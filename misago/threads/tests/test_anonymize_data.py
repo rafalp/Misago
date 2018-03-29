@@ -3,6 +3,7 @@ from django.test import RequestFactory
 from django.urls import reverse
 
 from misago.categories.models import Category
+from misago.core.utils import ANONYMOUS_IP
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads import testutils
@@ -208,3 +209,29 @@ class AnonymizeLikesTests(AuthenticatedUserTestCase):
                 'username': self.user.username,
             },
         ])
+
+
+class AnonymizePostsTests(AuthenticatedUserTestCase):
+    def setUp(self):
+        super(AnonymizePostsTests, self).setUp()
+        self.factory = RequestFactory()
+
+    def get_request(self, user=None):
+        request = self.factory.get('/customer/details')
+        request.user = user or self.user
+        request.user_ip = '127.0.0.1'
+
+        return request
+
+    def test_anonymize_user_posts(self):
+        """post is anonymized by user.anonymize_content"""
+        category = Category.objects.get(slug='first-category')
+        thread = testutils.post_thread(category)
+
+        user = get_mock_user()
+        post = testutils.reply_thread(thread, poster=user)
+        user.anonymize_content()
+
+        anonymized_post = Post.objects.get(pk=post.pk)
+        self.assertEqual(anonymized_post.poster_ip, ANONYMOUS_IP)
+        self.assertTrue(anonymized_post.is_valid)

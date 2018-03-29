@@ -10,6 +10,7 @@ from misago.core.utils import ANONYMOUS_IP
 from misago.users.signals import anonymize_user_content, delete_user_content, username_changed
 
 from .anonymize import ANONYMIZABLE_EVENTS, anonymize_event, anonymize_post_last_likes
+from .checksums import update_post_checksum
 from .models import Attachment, Poll, PollVote, Post, PostEdit, PostLike, Thread
 
 
@@ -93,18 +94,18 @@ def delete_user_threads(sender, **kwargs):
     recount_categories = set()
     recount_threads = set()
 
-    for post in sender.liked_post_set.all():
+    for post in chunk_queryset(sender.liked_post_set):
         cleaned_likes = list(filter(lambda i: i['id'] != sender.id, post.last_likes))
         if cleaned_likes != post.last_likes:
             post.last_likes = cleaned_likes
             post.save(update_fields=['last_likes'])
             
-    for thread in chunk_queryset(sender.thread_set.all()):
+    for thread in chunk_queryset(sender.thread_set):
         recount_categories.add(thread.category_id)
         with transaction.atomic():
             thread.delete()
 
-    for post in chunk_queryset(sender.post_set.all()):
+    for post in chunk_queryset(sender.post_set):
         recount_categories.add(post.category_id)
         recount_threads.add(post.thread_id)
         with transaction.atomic():
@@ -124,7 +125,11 @@ def delete_user_threads(sender, **kwargs):
 
 @receiver(anonymize_user_content)
 def anonymize_user(sender, **kwargs):
-    Post.objects.filter(poster=sender).update(poster_ip=ANONYMOUS_IP)
+    for post in chunk_queryset(sender.post_set):
+        post.poster_ip = ANONYMOUS_IP
+        update_post_checksum(post)
+        post.save(update_fields=['checksum', 'poster_ip'])
+
     PostEdit.objects.filter(editor=sender).update(editor_ip=ANONYMOUS_IP)
     PostLike.objects.filter(liker=sender).update(liker_ip=ANONYMOUS_IP)
 
