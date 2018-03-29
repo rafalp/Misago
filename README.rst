@@ -82,44 +82,52 @@ If you are looking into using Misago to run live forum, you are absolutely invit
 Development
 ===========
 
-To start Misago site locally, first setup and activate virtual environment for it and then fire following commands::
+To start Misago site locally, first make sure you have [docker](https://www.docker.com/community-edition#/download)
+installed.
 
-    python setup.py install
-    misago-start.py testforum
+To get a basic empty forum up and running, simply run::
 
-This will install Misago and its dependencies in your virtual environment and will make pre-configured Misago site for you named ``testforum``::
+   docker-compose build
+   docker-compose up -d
 
-    testforum
-      + avatar_store
-      + media
-      + testforum
-        * __init__.py
-        * settings.py
-        * urls.py
-        * wsgi.py
-      + static
-      + theme
-      + cron.txt
-      + manage.py
+Every time you start services the following happens:
 
-Now  edit ``settings.py`` file in your editor of choice in order to set up basic settings like database connection, default timezone or interface language.
+* postgres database will be created from scratch
+* requirements are installed
+* a ``devforum`` project is (re)created in the Misago project root
+* settings.py is modified with variables from the ``docker-compose.yaml`` file
+* database migrations runs
+* a superuser is created
 
-Next, initialize database by using migrate commands provided by ``manage.py`` admin utility that you'll find in directory up one level from where ``settings.py`` is::
+The default env vars passed in is::
 
-    python manage.py migrate
+    environment:
+      # Postgres
+      - POSTGRES_USER=misago
+      - POSTGRES_PASSWORD=misago
+      - POSTGRES_DB=misago
+      - POSTGRES_HOST=postgres
+      # Superuser
+      - SUPERUSER_USERNAME=misago
+      - SUPERUSER_EMAIL=devforum@example.com
+      - SUPERUSER_PASSWORD=devforum
 
-Then, call ``createsuperuser`` command to create super admin in database::
+A Django developer server will start, enabling you to visit ``127.0.0.1:8000``
+in your browser and see the forum index. You should now be able to sign in with the superuser account.
 
-    python manage.py createsuperuser
+Note again that the generated `devforum` with its database will not persist after the service/container
+is restarted.
 
-Finally start development server using ``runserver`` command::
+Admin Control Panel available under ``127.0.0.1:8000/admincp/`` url.
 
-    python manage.py runserver
+Some useful commands during development::
 
-If nothing is wrong with your setup, Django developer server will start, enabling you to visit ``127.0.0.1:8000`` in your browser and see the forum index. You should now be able to sign in to user account that you have created ealier.
+    # Enter the running misago container
+    docker-compose exec misago bash
 
-You will likely want to customize your site via changing settings and creating categories. You can do this with Admin Control Panel available under ``127.0.0.1:8000/admincp/`` url.
-
+    # Manually run the misago container. This assumes you manually start misago with ``entrypoint_dev.sh``
+    docker-compose up -d postgres
+    docker-compose run --rm --service-ports misago bash
 
 Frontend
 --------
