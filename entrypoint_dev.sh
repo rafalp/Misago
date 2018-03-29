@@ -14,6 +14,10 @@ rm manage.py
 # Create new project
 python extras/createdevproject.py devforum /srv/misago
 
+# Clean up unnecessary project files
+rm -rf theme
+rm cron.txt
+
 # Database
 ./extras/wait_for_postgres.sh
 python manage.py migrate
