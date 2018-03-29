@@ -115,7 +115,7 @@ The default env vars passed in is::
 A Django developer server will start, enabling you to visit ``127.0.0.1:8000``
 in your browser and see the forum index. You should now be able to sign in with the superuser account.
 
-Note again that the generated `devforum` with its database will not persist after the service/container
+Note again that the generated ``devforum`` with its database will not persist after the service/container
 is restarted.
 
 Admin Control Panel available under ``127.0.0.1:8000/admincp/`` url.
@@ -128,6 +128,10 @@ Some useful commands during development::
     # Manually run the misago container. This assumes you manually start misago with ``entrypoint_dev.sh``
     docker-compose up -d postgres
     docker-compose run --rm --service-ports misago bash
+
+    # View container logs
+    docker-compose logs -f --tail 100
+
 
 Frontend
 --------
