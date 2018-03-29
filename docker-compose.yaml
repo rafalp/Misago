@@ -8,11 +8,6 @@ services:
       - POSTGRES_USER=misago
       - POSTGRES_PASSWORD=misago
       - POSTGRES_DB=misago
-    volumes:
-      # To keep things simple we map the postgres data into a docker volume.
-      # When re-creating the database you need to delete the volume with `docker volume rm`.
-      # You can also map the path to the host if this is more convenient
-      - postgres:/var/lib/postgresql/data
   misago:
     build: .
     volumes:
@@ -32,6 +27,3 @@ services:
     depends_on:
       - postgres
     tty: true
-
-volumes:
-  postgres:

@@ -47,8 +47,9 @@ pylint.txt
 .project
 .pydevproject
 
-# pycharm
+# IDEs
 .idea/
+.vscode/
 
 # Rope
 .ropeproject
@@ -66,10 +67,8 @@ pylint.txt
 _book/
 
 # Local development stuff
-forum/
 dev/
 dev-manage.py
-.vscode/
 env/
 venv/
 venv2/
@@ -80,3 +79,10 @@ venv36/
 future-manage.py
 misago-admin.py
 db.sqlite3
+
+# Local development files
+manage.py
+avatargallery/
+static/
+theme/
+cron.txt

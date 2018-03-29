@@ -1,36 +1,36 @@
 """
-Modifies the project template to fit with local development
+Creates a test project for local development
 """
+
 import os
 import sys
+
 from misago.core import setup
 
-
-PROJECT_NAME = 'forum'
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def main():
-    global PROJECT_NAME, SETTINGS_FILE
+    project_name = 'forum'
 
     # Allow for overriding project name
     if len(sys.argv) > 1:
-        PROJECT_NAME = sys.argv[1]
+        project_name = sys.argv[1]
     else:
-        sys.argv.append(PROJECT_NAME)
+        sys.argv.append(project_name)
 
-    settings_file = os.path.join(BASE_DIR, PROJECT_NAME, PROJECT_NAME, 'settings.py')
+    settings_file = os.path.join(BASE_DIR, project_name, 'settings.py')
 
     # Avoid recreating if already present
     if os.path.exists(settings_file):
         return
 
     setup.start_misago_project()
-    tweak_settings(settings_file)
+    fill_in_settings(settings_file)
 
 
-def tweak_settings(f):
+def fill_in_settings(f):
     with open(f, 'r') as fd:
         s = fd.read()
 
