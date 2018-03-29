@@ -20,6 +20,10 @@ services:
       - POSTGRES_PASSWORD=misago
       - POSTGRES_DB=misago
       - POSTGRES_HOST=postgres
+      # Superuser
+      - SUPERUSER_USERNAME=misago
+      - SUPERUSER_EMAIL=devforum@example.com
+      - SUPERUSER_PASSWORD=devforum
     ports:
       # Map port 8000 in the container to port 8000 on the host
       # This way we can access the forum through http://localhost:8000

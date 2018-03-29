@@ -18,9 +18,6 @@ RUN apt-get update && apt-get install -y \
 ADD requirements.txt /
 RUN pip install -r requirements.txt
 
-# Add project source and run
-# ADD . /srv/misago (We don't need this in development, leaving out for now)
-
 WORKDIR /srv/misago
 
 EXPOSE 8000

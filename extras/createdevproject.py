@@ -43,6 +43,14 @@ def fill_in_settings(f):
         # Specify console backend for email
         s += "\nEMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\n"
 
+        # Empty the contents of STATICFILES_DIRS (STATICFILES_DIRS = [])
+        pos = s.find('STATICFILES_DIRS')
+        s = s[:s.find('[', pos) + 1] + s[s.find(']', pos):]
+
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'theme', 'static'),
+    ]
+
     with open(f, 'w') as fd:
         fd.write(s)
 

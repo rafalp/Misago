@@ -82,7 +82,7 @@ db.sqlite3
 
 # Local development files
 /manage.py
-/forum/
+/devforum/
 /avatargallery/
 /static/
 /theme/
