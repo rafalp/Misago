@@ -1,0 +1,37 @@
+# This compose setup is only meant for local development of Misago itself
+# This is not for running your Misago site in docker
+version: "3.0"
+services:
+  postgres:
+    image: postgres:9
+    environment:
+      - POSTGRES_USER=misago
+      - POSTGRES_PASSWORD=misago
+      - POSTGRES_DB=misago
+    volumes:
+      # To keep things simple we map the postgres data into a docker volume.
+      # When re-creating the database you need to delete the volume with `docker volume rm`.
+      # You can also map the path to the host if this is more convenient
+      - postgres:/var/lib/postgresql/data
+  misago:
+    build: .
+    volumes:
+      # Map in the entire project into the container
+      # This makes sure files in the container updates on the fly as we were working locally
+      - .:/srv/misago
+    environment:
+      # Postgres
+      - POSTGRES_USER=misago
+      - POSTGRES_PASSWORD=misago
+      - POSTGRES_DB=misago
+      - POSTGRES_HOST=postgres
+    ports:
+      # Map port 8000 in the container to port 8000 on the host
+      # This way we can access the forum through http://localhost:8000
+      - "8000:8000"
+    depends_on:
+      - postgres
+    tty: true
+
+volumes:
+  postgres:
