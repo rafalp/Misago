@@ -81,8 +81,9 @@ misago-admin.py
 db.sqlite3
 
 # Local development files
-manage.py
-avatargallery/
-static/
-theme/
-cron.txt
+/manage.py
+/forum/
+/avatargallery/
+/static/
+/theme/
+/cron.txt
