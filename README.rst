@@ -131,6 +131,9 @@ Some useful commands during development::
     # Enter psql so you can inspect or modify the database
     docker-compose run --rm misago extras/psql.sh
 
+    # Runnning tests
+    docker-compose run --rm misago python runtests.py
+
 Frontend
 --------
 
