@@ -3,13 +3,7 @@
 version: "3.0"
 services:
   postgres:
-    image: postgres:9
-    environment:
-      - POSTGRES_USER=misago
-      - POSTGRES_PASSWORD=misago
-      - POSTGRES_DB=misago
-  postgres-test:
-    image: postgres:9
+    build: postgres
     environment:
       - POSTGRES_USER=misago
       - POSTGRES_PASSWORD=misago
