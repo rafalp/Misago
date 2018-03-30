@@ -112,9 +112,9 @@ The default env vars passed in ``docker-compose.yml`` is::
       - POSTGRES_DB=misago
       - POSTGRES_HOST=postgres
       # Superuser
-      - SUPERUSER_USERNAME=misago
-      - SUPERUSER_EMAIL=devforum@example.com
-      - SUPERUSER_PASSWORD=developer
+      - SUPERUSER_USERNAME=Admin
+      - SUPERUSER_EMAIL=admin@example.com
+      - SUPERUSER_PASSWORD=password
 
 Some useful commands during development::
 
