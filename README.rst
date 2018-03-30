@@ -95,15 +95,17 @@ in your browser and see the forum index. You should now be able to sign in with 
 
 Admin Control Panel available under ``127.0.0.1:8000/admincp/`` url.
 
-The ``init.sh`` script prepares everything you need:
+The ``initdev`` script prepares everything you need:
 
 * requirements are installed
 * ``devforum`` project is created in the misago project root
-* settings.py is modified with variables from the ``docker-compose.yaml`` file
+* ``settings.py`` is modified with variables from the ``docker-compose.yaml`` file
 * database migrations runs
 * superuser is created
 
-The default env vars passed in ``docker-compose.yml`` is::
+The default env vars passed in ``docker-compose.yml`` is:
+
+.. code-block:: yaml
 
     environment:
       # Postgres
@@ -111,12 +113,15 @@ The default env vars passed in ``docker-compose.yml`` is::
       - POSTGRES_PASSWORD=misago
       - POSTGRES_DB=misago
       - POSTGRES_HOST=postgres
+      - POSTGRES_TEST_DB=misago_test
       # Superuser
       - SUPERUSER_USERNAME=Admin
       - SUPERUSER_EMAIL=admin@example.com
       - SUPERUSER_PASSWORD=password
 
-Some useful commands during development::
+Some useful commands during development:
+
+.. code-block:: bash
 
     # Enter the running misago container
     docker-compose exec misago bash
