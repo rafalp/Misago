@@ -87,7 +87,7 @@ To start Misago site locally, first make sure you have `docker <https://www.dock
 To get a basic empty forum up simply run::
 
    docker-compose build
-   docker-compose run --rm misago extras/init.sh
+   docker-compose run --rm misago initdev
    docker-compose up -d
 
 A Django developer server will start, enabling you to visit ``127.0.0.1:8000``

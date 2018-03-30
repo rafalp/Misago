@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# This is only used for local development of Misago in Docker
-# Execute from the root of the project ./extras/init.sh
+# This script is a shortcut for configuring newly-build docker container for Misago development
 python setup.py develop
 
 # Create new project
