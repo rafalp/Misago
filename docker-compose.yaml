@@ -8,6 +8,12 @@ services:
       - POSTGRES_USER=misago
       - POSTGRES_PASSWORD=misago
       - POSTGRES_DB=misago
+  postgres-test:
+    image: postgres:9
+    environment:
+      - POSTGRES_USER=misago
+      - POSTGRES_PASSWORD=misago
+      - POSTGRES_DB=misago
   misago:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
