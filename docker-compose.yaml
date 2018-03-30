@@ -21,6 +21,7 @@ services:
       - POSTGRES_PASSWORD=misago
       - POSTGRES_DB=misago
       - POSTGRES_HOST=postgres
+      - POSTGRES_TEST_DB=misago_test
       # Superuser
       - SUPERUSER_USERNAME=Admin
       - SUPERUSER_EMAIL=admin@example.com

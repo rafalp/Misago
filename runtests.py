@@ -122,10 +122,10 @@ TEST_NAME = 'travis_ci_test'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'misago_test',
+        'NAME': os.environ['POSTGRES_TEST_DB'],
         'USER': os.environ['POSTGRES_USER'],
         'PASSWORD': os.environ['POSTGRES_PASSWORD'],
-        'HOST': 'postgres',
+        'HOST': os.environ['POSTGRES_HOST'],
         'PORT': 5432,
     }
 }
