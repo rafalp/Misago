@@ -82,24 +82,28 @@ If you are looking into using Misago to run live forum, you are absolutely invit
 Development
 ===========
 
-To start Misago site locally, first make sure you have [docker](https://www.docker.com/community-edition#/download)
-installed.
+To start Misago site locally, first make sure you have `docker <https://www.docker.com/community-edition#/download>`_ installed.
 
-To get a basic empty forum up and running, simply run::
+To get a basic empty forum up simply run::
 
    docker-compose build
+   docker-compose run --rm misago extras/init.sh
    docker-compose up -d
 
-Every time you start services the following happens:
+A Django developer server will start, enabling you to visit ``127.0.0.1:8000``
+in your browser and see the forum index. You should now be able to sign in with the superuser account.
 
-* postgres database will be created from scratch
+Admin Control Panel available under ``127.0.0.1:8000/admincp/`` url.
+
+The ``init.sh`` script prepares everything you need:
+
 * requirements are installed
-* a ``devforum`` project is (re)created in the Misago project root
+* ``devforum`` project is created in the misago project root
 * settings.py is modified with variables from the ``docker-compose.yaml`` file
 * database migrations runs
-* a superuser is created
+* superuser is created
 
-The default env vars passed in is::
+The default env vars passed in ``docker-compose.yml`` is::
 
     environment:
       # Postgres
@@ -110,28 +114,22 @@ The default env vars passed in is::
       # Superuser
       - SUPERUSER_USERNAME=misago
       - SUPERUSER_EMAIL=devforum@example.com
-      - SUPERUSER_PASSWORD=devforum
-
-A Django developer server will start, enabling you to visit ``127.0.0.1:8000``
-in your browser and see the forum index. You should now be able to sign in with the superuser account.
-
-Note again that the generated ``devforum`` with its database will not persist after the service/container
-is restarted.
-
-Admin Control Panel available under ``127.0.0.1:8000/admincp/`` url.
+      - SUPERUSER_PASSWORD=developer
 
 Some useful commands during development::
 
     # Enter the running misago container
     docker-compose exec misago bash
 
-    # Manually run the misago container. This assumes you manually start misago with ``entrypoint_dev.sh``
-    docker-compose up -d postgres
+    # Manually run the misago container. Run ``python manage.py runserver 0.0.0.0:8000``.
+    # This can be useful when debugging.
     docker-compose run --rm --service-ports misago bash
 
     # View container logs
     docker-compose logs -f --tail 100
 
+    # Enter psql so you can inspect or modify the database
+    docker-compose run --rm misago extras/psql.sh
 
 Frontend
 --------

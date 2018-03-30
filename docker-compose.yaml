@@ -10,6 +10,7 @@ services:
       - POSTGRES_DB=misago
   misago:
     build: .
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       # Map in the entire project into the container
       # This makes sure files in the container updates on the fly as we were working locally
@@ -23,7 +24,7 @@ services:
       # Superuser
       - SUPERUSER_USERNAME=misago
       - SUPERUSER_EMAIL=devforum@example.com
-      - SUPERUSER_PASSWORD=devforum
+      - SUPERUSER_PASSWORD=developer
     ports:
       # Map port 8000 in the container to port 8000 on the host
       # This way we can access the forum through http://localhost:8000

@@ -2,6 +2,8 @@
 # If you are looking for a proper docker setup for Misago look elsewhere
 FROM python:3
 
+ENV PYTHONUNBUFFERED 1
+
 # Install dependencies in one single command/layer
 RUN apt-get update && apt-get install -y \
     vim \
@@ -22,4 +24,4 @@ WORKDIR /srv/misago
 
 EXPOSE 8000
 
-CMD ./entrypoint_dev.sh
+CMD python manage.py runserver 0.0.0.0:8000
