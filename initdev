@@ -7,7 +7,7 @@ python extras/createdevproject.py $PROJECT_NAME /srv/misago
 
 # Clean up unnecessary project files
 rm -rf theme
-rm cron.txt
+rm -f cron.txt
 
 # Database
 ./extras/wait_for_postgres.sh
