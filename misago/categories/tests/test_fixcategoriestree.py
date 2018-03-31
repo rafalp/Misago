@@ -20,38 +20,7 @@ class FixCategoriesTreeTests(TestCase):
     """
     def setUp(self):
         Category.objects.create(name='Test', slug='test', parent=Category.objects.root_category())
-        self.fetch_categories()
-
-    def test_fix_categories_tree_unaffected(self):
-        """Command should not affect a healthy three"""
-        tree_id = self.root.tree_id
-        run_command()
-
-        self.fetch_categories()
-
-        self.assertValidTree([
-            (self.root, 0, 1, 6),
-            (self.first_category, 1, 2, 3),
-            (self.test_category, 1, 4, 5),
-        ])
-
-        self.assertEqual(self.root.tree_id, tree_id, msg="tree_id changed by command")
-
-    def test_fix_categories_tree_affected(self):
-        """Command should fix a broken tree"""
-        # Root node with too narrow lft/rght range
-        Category.objects.filter(id=self.root.id).update(lft=1, rght=4)
-        # Make conflicting/identical lft/rght range
-        Category.objects.filter(id=self.test_category.id).update(lft=2, rght=3)
-
-        run_command()
-        self.fetch_categories()
-
-        self.assertValidTree([
-            (self.root, 0, 1, 6),
-            (self.test_category, 1, 2, 3),
-            (self.first_category, 1, 4, 5),
-        ])
+        self.fetchCategories()
 
     def assertValidTree(self, expected_tree):
         root = Category.objects.root_category()
@@ -76,8 +45,39 @@ class FixCategoriesTreeTests(TestCase):
                 self.fail(('expected lft at index #%s to be %s, '
                            'found %s instead') % (i, category[3], _category[3]))
 
-    def fetch_categories(self):
+    def fetchCategories(self):
         """gets a fresh version from the database"""
         self.root = Category.objects.root_category()
         self.first_category = Category.objects.get(slug='first-category')
         self.test_category = Category.objects.get(slug='test')
+
+    def test_fix_categories_tree_unaffected(self):
+        """Command should not affect a healthy three"""
+        tree_id = self.root.tree_id
+        run_command()
+
+        self.fetchCategories()
+
+        self.assertValidTree([
+            (self.root, 0, 1, 6),
+            (self.first_category, 1, 2, 3),
+            (self.test_category, 1, 4, 5),
+        ])
+
+        self.assertEqual(self.root.tree_id, tree_id, msg="tree_id changed by command")
+
+    def test_fix_categories_tree_affected(self):
+        """Command should fix a broken tree"""
+        # Root node with too narrow lft/rght range
+        Category.objects.filter(id=self.root.id).update(lft=1, rght=4)
+        # Make conflicting/identical lft/rght range
+        Category.objects.filter(id=self.test_category.id).update(lft=2, rght=3)
+
+        run_command()
+        self.fetchCategories()
+
+        self.assertValidTree([
+            (self.root, 0, 1, 6),
+            (self.test_category, 1, 2, 3),
+            (self.first_category, 1, 4, 5),
+        ])

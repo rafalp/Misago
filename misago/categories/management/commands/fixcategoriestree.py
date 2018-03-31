@@ -15,9 +15,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         root = Category.objects.root_category()
-        self.stdout.write("Rebulding category tree_id {}".format(root.tree_id))
         Category.objects.partial_rebuild(root.tree_id)
-        self.stdout.write("Clearing category cache")
+        self.stdout.write("Categories tree has been rebuild.")
         Category.objects.clear_cache()
-        self.stdout.write("Invalidating acls")
+        self.stdout.write("Caches have been cleared.")
         acl_version.invalidate()
