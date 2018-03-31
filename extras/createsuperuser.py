@@ -5,7 +5,7 @@ Create superuser for the devproject
 import os
 import django
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'devproject.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = '{}.settings'.format(os.environ['PROJECT_NAME'])
 django.setup()
 
 from django.contrib.auth import get_user_model
