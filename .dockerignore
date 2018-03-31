@@ -1,0 +1,14 @@
+# Speed up bulding by excluding files from the docker context
+
+# Project files we don't need in docker
+postgres/
+
+# Local development stuff
+dev/
+env/
+venv/
+venv2/
+venv3/
+venv34/
+venv35/
+venv36/
