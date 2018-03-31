@@ -79,7 +79,7 @@ class UserManager(BaseUserManager):
             )
         else:
             # just for test purposes
-            user.avatars = [{'size': 400, 'url': '/placekitten.com/400/400'}]
+            user.avatars = [{'size': 400, 'url': 'http://placekitten.com/400/400'}]
 
         authenticated_role = Role.objects.get(special_role='authenticated')
         if authenticated_role not in user.roles.all():
