@@ -3,18 +3,15 @@
 version: "3.0"
 services:
   postgres:
-    build: postgres
+    image: postgres:10
     environment:
       - POSTGRES_USER=misago
       - POSTGRES_PASSWORD=misago
-      - POSTGRES_DB=misago
+    ports:
+      - '127.0.0.1:5432:5432'
   misago:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      # Map in the entire project into the container
-      # This makes sure files in the container updates on the fly as we were working locally
-      - .:/srv/misago
     environment:
       # Postgres
       - POSTGRES_USER=misago
@@ -33,3 +30,7 @@ services:
     depends_on:
       - postgres
     tty: true
+    volumes:
+      # Map in the entire project into the container
+      # This makes sure files in the container updates on the fly as we were working locally
+      - .:/srv/misago:Z

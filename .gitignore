@@ -68,20 +68,13 @@ _book/
 
 # Local development stuff
 dev/
-dev-manage.py
 env/
 venv/
-venv2/
-venv3/
-venv34/
-venv35/
-venv36/
-future-manage.py
 misago-admin.py
 db.sqlite3
 
 # Local development files
 /manage.py
-/devforum/
+/devproject/
 /avatargallery/
 /static/

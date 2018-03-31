@@ -1,5 +1,5 @@
 """
-Creates a test project for local development
+Creates a dev project for local development
 """
 
 import os
@@ -12,7 +12,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def main():
-    project_name = 'devforum'
+    project_name = 'devproject'
 
     # Allow for overriding project name
     if len(sys.argv) > 1:
@@ -35,10 +35,10 @@ def fill_in_settings(f):
         s = fd.read()
 
         # Postgres
-        s = s.replace("'NAME': '',", "'NAME': os.environ['POSTGRES_DB'],")
-        s = s.replace("'USER': '',", "'USER': os.environ['POSTGRES_USER'],")
-        s = s.replace("'PASSWORD': '',", "'PASSWORD': os.environ['POSTGRES_PASSWORD'],")
-        s = s.replace("'HOST': 'localhost',", "'HOST': os.environ['POSTGRES_HOST'],")
+        s = s.replace("'NAME': '',", "'NAME': os.environ.get('POSTGRES_DB'),")
+        s = s.replace("'USER': '',", "'USER': os.environ.get('POSTGRES_USER'),")
+        s = s.replace("'PASSWORD': '',", "'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),")
+        s = s.replace("'HOST': 'localhost',", "'HOST': os.environ.get('POSTGRES_HOST'),")
 
         # Specify console backend for email
         s += "\nEMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\n"

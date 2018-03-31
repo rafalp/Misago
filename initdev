@@ -3,7 +3,7 @@
 python setup.py develop
 
 # Create new project
-python extras/createdevproject.py devforum /srv/misago
+python extras/createdevproject.py devproject /srv/misago
 
 # Clean up unnecessary project files
 rm -rf theme
