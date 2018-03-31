@@ -7,6 +7,6 @@ class Command(BaseCommand):
     help = 'Builds active posters ranking'
 
     def handle(self, *args, **options):
-        self.stdout.write('\n\nBuilding active posters ranking...')
+        self.stdout.write("\n\nBuilding active posters ranking...")
         build_active_posters_ranking()
-        self.stdout.write('Done!')
+        self.stdout.write("Done!")
