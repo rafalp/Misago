@@ -54,10 +54,7 @@ class Command(BaseCommand):
                     rank=random.choice(ranks),
                 )
 
-                if random.randint(0, 100) > 90:
-                    dynamic.set_avatar(user)
-                else:
-                    gallery.set_random_avatar(user)
+                dynamic.set_avatar(user)
                 user.save(update_fields=['avatars'])
             except (ValidationError, IntegrityError):
                 pass

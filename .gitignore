@@ -58,11 +58,6 @@ pylint.txt
 *.log
 *.pot
 
-# Misago test runner project
-/avatar_store/
-/media/
-/testproject/
-
 # GitBook Documentation
 _book/
 
@@ -74,7 +69,10 @@ misago-admin.py
 db.sqlite3
 
 # Local development files
+/avatargallery/
+/avatar_store/
 /manage.py
 /devproject/
-/avatargallery/
+/testproject/
+/media/
 /static/

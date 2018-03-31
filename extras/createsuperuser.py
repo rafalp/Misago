@@ -18,7 +18,8 @@ if User.objects.count() == 0:
     superuser = User.objects.create_superuser(
         os.environ['SUPERUSER_USERNAME'],
         os.environ['SUPERUSER_EMAIL'],
-        get_random_string(10) # set throwaway password
+        get_random_string(10), # set throwaway password
+        set_default_avatar=True,
     )
 
     # Override user's throwaway password with configured one
