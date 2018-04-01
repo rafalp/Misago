@@ -20,7 +20,7 @@ class FixCategoriesTreeTests(TestCase):
     """
     def setUp(self):
         Category.objects.create(name='Test', slug='test', parent=Category.objects.root_category())
-        self.fetchCategories()
+        self.fetch_categories()
 
     def assertValidTree(self, expected_tree):
         root = Category.objects.root_category()
@@ -45,7 +45,7 @@ class FixCategoriesTreeTests(TestCase):
                 self.fail(('expected lft at index #%s to be %s, '
                            'found %s instead') % (i, category[3], _category[3]))
 
-    def fetchCategories(self):
+    def fetch_categories(self):
         """gets a fresh version from the database"""
         self.root = Category.objects.root_category()
         self.first_category = Category.objects.get(slug='first-category')
@@ -56,7 +56,7 @@ class FixCategoriesTreeTests(TestCase):
         tree_id = self.root.tree_id
         run_command()
 
-        self.fetchCategories()
+        self.fetch_categories()
 
         self.assertValidTree([
             (self.root, 0, 1, 6),
@@ -74,7 +74,7 @@ class FixCategoriesTreeTests(TestCase):
         Category.objects.filter(id=self.test_category.id).update(lft=2, rght=3)
 
         run_command()
-        self.fetchCategories()
+        self.fetch_categories()
 
         self.assertValidTree([
             (self.root, 0, 1, 6),

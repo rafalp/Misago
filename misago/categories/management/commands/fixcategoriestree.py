@@ -17,6 +17,7 @@ class Command(BaseCommand):
         root = Category.objects.root_category()
         Category.objects.partial_rebuild(root.tree_id)
         self.stdout.write("Categories tree has been rebuild.")
+
         Category.objects.clear_cache()
-        self.stdout.write("Caches have been cleared.")
         acl_version.invalidate()
+        self.stdout.write("Caches have been cleared.")
