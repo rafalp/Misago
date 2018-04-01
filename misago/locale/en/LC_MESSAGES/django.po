@@ -1508,7 +1508,7 @@ msgstr ""
 #: templates/misago/admin/users/edit.html:154
 msgid ""
 "This user is deleting their account. It has been deactivated for the "
-"duration of that process."
+"duration of the process."
 msgstr ""
 
 #: templates/misago/admin/users/edit.html:158
