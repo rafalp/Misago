@@ -21,4 +21,4 @@ script:
 after_success:
   - coveralls
   - sudo echo $'[https://www.transifex.com]\nhostname = https://www.transifex.com\nusername = '"$TRANSIFEX_USER"$'\npassword = '"$TRANSIFEX_PASSWORD"$'\n' > ~/.transifexrc
-  - if [ "$TRAVIS_EVENT_TYPE" != "pull_request" ]; then tx push -s
+  - if [ "$TRAVIS_EVENT_TYPE" != "pull_request" ]; then tx push -s fi
