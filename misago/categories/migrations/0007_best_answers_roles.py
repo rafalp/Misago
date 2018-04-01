@@ -12,7 +12,7 @@ def create_default_categories_roles(apps, schema_editor):
     CategoryRole = apps.get_model('misago_categories', 'CategoryRole')
 
     CategoryRole.objects.create(
-        name=_("Start and reply threads, mark best answers"),
+        name=_("Q&A user"),
         permissions={
             # best answers perms
             'misago.threads.permissions.bestanswers': {
@@ -20,74 +20,17 @@ def create_default_categories_roles(apps, schema_editor):
                 'can_change_marked_answers': 1,
                 'best_answer_change_time': 60 * 36, # 1.5 day
             },
-
-            # categories perms
-            'misago.categories.permissions': {
-                'can_see': 1,
-                'can_browse': 1,
-            },
-
-            # threads perms
-            'misago.threads.permissions.threads': {
-                'can_see_all_threads': 1,
-                'can_start_threads': 1,
-                'can_reply_threads': 1,
-                'can_edit_threads': 1,
-                'can_edit_posts': 1,
-                'can_download_other_users_attachments': 1,
-                'max_attachment_size': 500,
-                'can_see_posts_likes': 2,
-                'can_like_posts': 1
-            },
         }
     )
 
     CategoryRole.objects.create(
-        name=_("Best answers moderator"),
+        name=_("Q&A moderator"),
         permissions={
             # best answers perms
             'misago.threads.permissions.bestanswers': {
                 'can_mark_best_answers': 2,
                 'can_change_marked_answers': 2,
                 'best_answer_change_time': 0,
-            },
-
-            # categories perms
-            'misago.categories.permissions': {
-                'can_see': 1,
-                'can_browse': 1
-            },
-
-            # threads perms
-            'misago.threads.permissions.threads': {
-                'can_see_all_threads': 1,
-                'can_start_threads': 1,
-                'can_reply_threads': 1,
-                'can_edit_threads': 2,
-                'can_edit_posts': 2,
-                'can_hide_own_threads': 2,
-                'can_hide_own_posts': 2,
-                'thread_edit_time': 0,
-                'post_edit_time': 0,
-                'can_hide_threads': 2,
-                'can_hide_posts': 2,
-                'can_protect_posts': 1,
-                'can_move_posts': 1,
-                'can_merge_posts': 1,
-                'can_announce_threads': 1,
-                'can_pin_threads': 2,
-                'can_close_threads': 1,
-                'can_move_threads': 1,
-                'can_merge_threads': 1,
-                'can_approve_content': 1,
-                'can_download_other_users_attachments': 1,
-                'max_attachment_size': 2500,
-                'can_delete_other_users_attachments': 1,
-                'can_see_posts_likes': 2,
-                'can_like_posts': 1,
-                'can_report_content': 1,
-                'can_see_reports': 1,
-                'can_hide_events': 2
             },
         }
     )
