@@ -133,13 +133,9 @@ def allow_mark_best_answer(user, target):
     if user.is_anonymous:
         raise PermissionDenied(_("You have to sign in to mark best answers."))
 
-    category_acl = user.acl_cache['categories'].get(
-        target.category_id, {
-            'can_mark_best_answers': 0,
-        }
-    )
+    category_acl = user.acl_cache['categories'].get(target.category_id, {})
 
-    if not category_acl['can_mark_best_answers']:
+    if not category_acl.get('can_mark_best_answers'):
         raise PermissionDenied(
             _(
                 'You don\'t have permission to mark best answers in the "%(category)s" category.'
@@ -182,13 +178,9 @@ def allow_change_best_answer(user, target):
     if not target.has_best_answer:
         return # shortcircut permission test
 
-    category_acl = user.acl_cache['categories'].get(
-        target.category_id, {
-            'can_change_marked_answers': 0,
-        }
-    )
+    category_acl = user.acl_cache['categories'].get(target.category_id, {})
 
-    if not category_acl['can_change_marked_answers']:
+    if not category_acl.get('can_change_marked_answers'):
         raise PermissionDenied(
             _(
                 'You don\'t have permission to change this thread\'s marked answer because it\'s '
@@ -242,13 +234,9 @@ def allow_unmark_best_answer(user, target):
     if not target.has_best_answer:
         return # shortcircut test
 
-    category_acl = user.acl_cache['categories'].get(
-        target.category_id, {
-            'can_mark_best_answers': 0,
-        }
-    )
+    category_acl = user.acl_cache['categories'].get(target.category_id, {})
 
-    if not category_acl['can_change_marked_answers']:
+    if not category_acl.get('can_change_marked_answers'):
         raise PermissionDenied(
             _(
                 'You don\'t have permission to unmark threads answers in the "%(category)s" '
@@ -320,13 +308,9 @@ def allow_mark_as_best_answer(user, target):
     if target.is_event:
         raise PermissionDenied(_("Events can't be marked as best answers."))
 
-    category_acl = user.acl_cache['categories'].get(
-        target.category_id, {
-            'can_mark_best_answers': 0,
-        }
-    )
+    category_acl = user.acl_cache['categories'].get(target.category_id, {})
 
-    if not category_acl['can_mark_best_answers']:
+    if not category_acl.get('can_mark_best_answers'):
         raise PermissionDenied(
             _(
                 'You don\'t have permission to mark best answers in the "%(category)s" category.'
