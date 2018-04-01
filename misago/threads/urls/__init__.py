@@ -4,8 +4,9 @@ from misago.conf import settings
 
 from misago.threads.views.attachment import attachment_server
 from misago.threads.views.goto import (
-    ThreadGotoPostView, ThreadGotoLastView, ThreadGotoNewView, ThreadGotoUnapprovedView,
-    PrivateThreadGotoPostView, PrivateThreadGotoLastView, PrivateThreadGotoNewView
+    ThreadGotoPostView, ThreadGotoLastView, ThreadGotoNewView, ThreadGotoBestAnswerView,
+    ThreadGotoUnapprovedView, PrivateThreadGotoPostView, PrivateThreadGotoLastView,
+    PrivateThreadGotoNewView
 )
 from misago.threads.views.list import ForumThreadsList, CategoryThreadsList, PrivateThreadsList
 from misago.threads.views.thread import ThreadView, PrivateThreadView
@@ -90,6 +91,7 @@ def goto_patterns(prefix, **views):
         urls.append(url(url_pattern, post_view.as_view(), name=url_name))
 
     for name, view in views.items():
+        name = name.replace('_', '-')
         url_pattern = r'^%s/(?P<slug>[-a-zA-Z0-9]+)/(?P<pk>\d+)/%s/$' % (prefix[0], name)
         url_name = '%s-%s' % (prefix, name)
         urls.append(url(url_pattern, view.as_view(), name=url_name))
@@ -102,7 +104,8 @@ urlpatterns += goto_patterns(
     post=ThreadGotoPostView,
     last=ThreadGotoLastView,
     new=ThreadGotoNewView,
-    unapproved=ThreadGotoUnapprovedView
+    best_answer=ThreadGotoBestAnswerView,
+    unapproved=ThreadGotoUnapprovedView,
 )
 
 urlpatterns += goto_patterns(

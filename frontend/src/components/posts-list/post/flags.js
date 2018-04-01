@@ -1,6 +1,31 @@
 /* jshint ignore:start */
 import React from 'react';
 
+export function FlagBestAnswer({ post, thread, user }) {
+  if (!(isVisible(post) && post.id === thread.best_answer)) {
+    return null;
+  }
+  
+  let message = null;
+  if (user.id && thread.best_answer_marked_by === user.id) {
+    message = interpolate(gettext("Marked as best answer by you %(marked_on)s."), {
+      marked_on: thread.best_answer_marked_on.fromNow()
+    }, true);
+  } else {
+    message = interpolate(gettext("Marked as best answer by %(marked_by)s %(marked_on)s."), {
+      marked_by: thread.best_answer_marked_by_name,
+      marked_on: thread.best_answer_marked_on.fromNow()
+    }, true);
+  }
+  
+  return (
+    <div className="post-status-message post-status-best-answer">
+      <span className="material-icon">check_box</span>
+      <p>{message}</p>
+    </div>
+  );
+}
+
 export function FlagHidden(props) {
   if (!(isVisible(props.post) && props.post.is_hidden)) {
     return null;

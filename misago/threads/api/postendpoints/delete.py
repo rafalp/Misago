@@ -6,7 +6,8 @@ from django.utils.translation import ungettext
 
 from misago.conf import settings
 from misago.threads.moderation import posts as moderation
-from misago.threads.permissions import allow_delete_event, allow_delete_post
+from misago.threads.permissions import (
+    allow_delete_best_answer, allow_delete_event, allow_delete_post)
 from misago.threads.permissions import exclude_invisible_posts
 from misago.threads.serializers import DeletePostsSerializer
 
@@ -18,6 +19,7 @@ def delete_post(request, thread, post):
     if post.is_event:
         allow_delete_event(request.user, post)
     else:
+        allow_delete_best_answer(request.user, post)
         allow_delete_post(request.user, post)
 
     moderation.delete_post(request.user, post)

@@ -1,3 +1,5 @@
+from rest_framework.request import Request
+
 from django.utils import timezone
 
 from misago.users.models import Online
@@ -31,3 +33,9 @@ def stop_tracking(request, tracker):
     user.save(update_fields=['last_login', 'last_ip'])
 
     tracker.delete()
+
+
+def clear_tracking(request):
+    if isinstance(request, Request):
+        request = request._request  # Fugly unwrap restframework's request 
+    request._misago_online_tracker = None

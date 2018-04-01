@@ -3,7 +3,7 @@ import time
 from django.core.management.base import BaseCommand
 
 from misago.core.management.progressbar import show_progress
-from misago.core.pgutils import batch_update
+from misago.core.pgutils import chunk_queryset
 from misago.threads.models import Thread
 
 
@@ -27,7 +27,7 @@ class Command(BaseCommand):
         synchronized_count = 0
         show_progress(self, synchronized_count, threads_to_sync)
         start_time = time.time()
-        for thread in batch_update(Thread.objects.all()):
+        for thread in chunk_queryset(Thread.objects.all()):
             thread.synchronize()
             thread.save()
 

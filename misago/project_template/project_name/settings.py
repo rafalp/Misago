@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Define placeholder gettext function
 # This function will mark strings in settings visible to makemessages
 # without need for Django's i18n features be initialized first.
-_ = lambda x: x
+_ = lambda s: s
 
 
 # Quick-start development settings - unsuitable for production
@@ -157,6 +157,12 @@ EMAIL_HOST_PASSWORD = ''
 # Default email address to use for various automated correspondence from the site manager(s).
 
 DEFAULT_FROM_EMAIL = 'Forums <%s>' % EMAIL_HOST_USER
+
+
+# Allow users to delete their own accounts?
+# Providing such feature is required by EU law from entities that process europeans personal data.
+
+MISAGO_ENABLE_DELETE_OWN_ACCOUNT = True
 
 
 # Application definition

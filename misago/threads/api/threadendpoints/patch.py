@@ -17,14 +17,16 @@ from misago.conf import settings
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.moderation import threads as moderation
 from misago.threads.participants import (
-    add_participant, change_owner, make_participants_aware, remove_participant)
+    add_participant, change_owner, make_participants_aware, remove_participant
+)
 from misago.threads.permissions import (
-    allow_add_participant, allow_add_participants, allow_approve_thread, allow_change_owner, allow_edit_thread,
-    allow_pin_thread, allow_hide_thread, allow_move_thread, allow_remove_participant, allow_start_thread,
-    allow_unhide_thread)
+    allow_add_participant, allow_add_participants, allow_approve_thread, allow_change_best_answer,
+    allow_change_owner, allow_edit_thread, allow_pin_thread, allow_hide_thread, allow_mark_as_best_answer,
+    allow_mark_best_answer, allow_move_thread, allow_remove_participant, allow_see_post,
+    allow_start_thread, allow_unhide_thread, allow_unmark_best_answer
+)
 from misago.threads.serializers import ThreadParticipantSerializer
 from misago.threads.validators import validate_title
-
 
 PATCH_LIMIT = settings.MISAGO_THREADS_PER_PAGE + settings.MISAGO_THREADS_TAIL
 
@@ -49,7 +51,7 @@ def patch_title(request, thread, value):
     try:
         value_cleaned = six.text_type(value).strip()
     except (TypeError, ValueError):
-        raise ValidationError(_("Invalid thread title."))
+        raise PermissionDenied(_('Not a valid string.'))
 
     validate_title(value_cleaned)
 
@@ -195,6 +197,74 @@ def patch_subscription(request, thread, value):
 thread_patch_dispatcher.replace('subscription', patch_subscription)
 
 
+def patch_best_answer(request, thread, value):
+    try:
+        post_id = int(value)
+    except (TypeError, ValueError):
+        raise PermissionDenied(_("A valid integer is required."))
+
+    allow_mark_best_answer(request.user, thread)
+
+    post = get_object_or_404(thread.post_set, id=post_id)
+    post.category = thread.category
+    post.thread = thread
+
+    allow_see_post(request.user, post)
+    allow_mark_as_best_answer(request.user, post)
+
+    if post.is_best_answer:
+        raise PermissionDenied(_("This post is already marked as thread's best answer."))
+
+    if thread.has_best_answer:
+        allow_change_best_answer(request.user, thread)
+        
+    thread.set_best_answer(request.user, post)
+    thread.save()
+
+    return {
+        'best_answer': thread.best_answer_id,
+        'best_answer_is_protected': thread.best_answer_is_protected,
+        'best_answer_marked_on': thread.best_answer_marked_on,
+        'best_answer_marked_by': thread.best_answer_marked_by_id,
+        'best_answer_marked_by_name': thread.best_answer_marked_by_name,
+        'best_answer_marked_by_slug': thread.best_answer_marked_by_slug,
+    }
+
+
+thread_patch_dispatcher.replace('best-answer', patch_best_answer)
+
+
+def patch_unmark_best_answer(request, thread, value):
+    try:
+        post_id = int(value)
+    except (TypeError, ValueError):
+        raise PermissionDenied(_("A valid integer is required."))
+
+    post = get_object_or_404(thread.post_set, id=post_id)
+    post.category = thread.category
+    post.thread = thread
+
+    if not post.is_best_answer:
+        raise PermissionDenied(
+            _("This post can't be unmarked because it's not currently marked as best answer."))
+
+    allow_unmark_best_answer(request.user, thread)
+    thread.clear_best_answer()
+    thread.save()
+
+    return {
+        'best_answer': None,
+        'best_answer_is_protected': False,
+        'best_answer_marked_on': None,
+        'best_answer_marked_by': None,
+        'best_answer_marked_by_name': None,
+        'best_answer_marked_by_slug': None,
+    }
+
+
+thread_patch_dispatcher.remove('best-answer', patch_unmark_best_answer)
+
+
 def patch_add_participant(request, thread, value):
     allow_add_participants(request.user, thread)
 
@@ -234,7 +304,7 @@ def patch_remove_participant(request, thread, value):
     try:
         user_id = int(value)
     except (ValueError, TypeError):
-        user_id = 0
+        raise PermissionDenied(_("A valid integer is required."))
 
     for participant in thread.participants_list:
         if participant.user_id == user_id:
@@ -264,7 +334,7 @@ def patch_replace_owner(request, thread, value):
     try:
         user_id = int(value)
     except (ValueError, TypeError):
-        user_id = 0
+        raise PermissionDenied(_("A valid integer is required."))
 
     for participant in thread.participants_list:
         if participant.user_id == user_id:

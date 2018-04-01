@@ -70,8 +70,8 @@ def set_owner(thread, user):
     ThreadParticipant.objects.set_owner(thread, user)
 
 
-def change_owner(request, thread, user):
-    ThreadParticipant.objects.set_owner(thread, user)
+def change_owner(request, thread, new_owner):
+    ThreadParticipant.objects.set_owner(thread, new_owner)
     set_users_unread_private_threads_sync(
         participants=thread.participants_list,
         exclude_user=request.user,
@@ -84,8 +84,9 @@ def change_owner(request, thread, user):
             'changed_owner',
             {
                 'user': {
-                    'username': user.username,
-                    'url': user.get_absolute_url(),
+                    'id': new_owner.id,
+                    'username': new_owner.username,
+                    'url': new_owner.get_absolute_url(),
                 },
             },
         )
@@ -93,11 +94,11 @@ def change_owner(request, thread, user):
         record_event(request, thread, 'tookover')
 
 
-def add_participant(request, thread, user):
+def add_participant(request, thread, new_participant):
     """adds single participant to thread, registers this on the event"""
-    add_participants(request, thread, [user])
+    add_participants(request, thread, [new_participant])
 
-    if request.user == user:
+    if request.user == new_participant:
         record_event(request, thread, 'entered_thread')
     else:
         record_event(
@@ -106,8 +107,9 @@ def add_participant(request, thread, user):
             'added_participant',
             {
                 'user': {
-                    'username': user.username,
-                    'url': user.get_absolute_url(),
+                    'id': new_participant.id,
+                    'username': new_participant.username,
+                    'url': new_participant.get_absolute_url(),
                 },
             },
         )
@@ -191,6 +193,7 @@ def remove_participant(request, thread, user):
             event_type,
             {
                 'user': {
+                    'id': user.id,
                     'username': user.username,
                     'url': user.get_absolute_url(),
                 },

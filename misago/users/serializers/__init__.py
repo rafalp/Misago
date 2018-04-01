@@ -2,7 +2,7 @@ from .ban import BanMessageSerializer, BanDetailsSerializer
 from .moderation import ModerateAvatarSerializer, ModerateSignatureSerializer
 from .options import (
     ForumOptionsSerializer, EditSignatureSerializer, ChangeUsernameSerializer,
-    ChangePasswordSerializer, ChangeEmailSerializer,
+    ChangePasswordSerializer, ChangeEmailSerializer, DeleteOwnAccountSerializer,
 )
 from .rank import RankSerializer
 from .user import StatusSerializer, UserCardSerializer, UserSerializer

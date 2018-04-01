@@ -10,7 +10,8 @@ from misago.conf import settings
 from misago.threads.models import PostLike
 from misago.threads.moderation import posts as moderation
 from misago.threads.permissions import (
-    allow_approve_post, allow_hide_post, allow_protect_post, allow_unhide_post)
+    allow_approve_post, allow_hide_best_answer, allow_hide_post, allow_protect_post,
+    allow_unhide_post)
 from misago.threads.permissions import exclude_invisible_posts
 
 
@@ -117,6 +118,7 @@ post_patch_dispatcher.replace('is-unapproved', patch_is_unapproved)
 def patch_is_hidden(request, post, value):
     if value is True:
         allow_hide_post(request.user, post)
+        allow_hide_best_answer(request.user, post)
         moderation.hide_post(request.user, post)
     elif value is False:
         allow_unhide_post(request.user, post)

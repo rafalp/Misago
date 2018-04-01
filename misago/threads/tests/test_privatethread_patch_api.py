@@ -280,13 +280,13 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
                 {
                     'op': 'remove',
                     'path': 'participants',
-                    'value': 'string',
+                    'value': '',
                 },
             ]
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["Participant doesn't exist."],
+            'detail': ["A valid integer is required."],
         })
 
     def test_remove_invalid(self):
@@ -304,7 +304,7 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["Participant doesn't exist."],
+            'detail': ["A valid integer is required."],
         })
 
     def test_remove_nonexistant(self):
@@ -593,7 +593,7 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["Participant doesn't exist."],
+            'detail': ["A valid integer is required."],
         })
 
     def test_invalid_user_id(self):
@@ -611,7 +611,7 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["Participant doesn't exist."],
+            'detail': ["A valid integer is required."],
         })
 
     def test_nonexistant_user_id(self):

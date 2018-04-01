@@ -1,0 +1,38 @@
+# This compose setup is only meant for local development of Misago itself
+# This is not for running your Misago site in docker
+version: "3.0"
+services:
+  postgres:
+    image: postgres:10
+    environment:
+      - POSTGRES_USER=misago
+      - POSTGRES_PASSWORD=misago
+    ports:
+      - '127.0.0.1:5432:5432'
+  misago:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      # Name of development project
+      - PROJECT_NAME=devproject
+      # Postgres
+      - POSTGRES_USER=misago
+      - POSTGRES_PASSWORD=misago
+      - POSTGRES_DB=misago
+      - POSTGRES_HOST=postgres
+      - POSTGRES_TEST_DB=misago_test
+      # Superuser
+      - SUPERUSER_USERNAME=Admin
+      - SUPERUSER_EMAIL=admin@example.com
+      - SUPERUSER_PASSWORD=password
+    ports:
+      # Map port 8000 in the container to port 8000 on the host
+      # This way we can access the forum through http://localhost:8000
+      - "8000:8000"
+    depends_on:
+      - postgres
+    tty: true
+    volumes:
+      # Map in the entire project into the container
+      # This makes sure files in the container updates on the fly as we were working locally
+      - .:/srv/misago:Z

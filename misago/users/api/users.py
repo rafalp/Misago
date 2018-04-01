@@ -19,10 +19,11 @@ from misago.threads.moderation import hide_post, hide_thread
 from misago.users.bans import get_user_ban
 from misago.users.online.utils import get_user_status
 from misago.users.permissions import (
-    allow_browse_users_list, allow_delete_user, allow_edit_profile_details,
-    allow_follow_user, allow_moderate_avatar, allow_rename_user, allow_see_ban_details)
+    allow_browse_users_list, allow_delete_user, allow_edit_profile_details, allow_follow_user,
+    allow_moderate_avatar, allow_rename_user, allow_see_ban_details)
 from misago.users.profilefields import profilefields, serialize_profilefields_data
-from misago.users.serializers import BanDetailsSerializer, ForumOptionsSerializer, UserSerializer
+from misago.users.serializers import (
+    BanDetailsSerializer, DeleteOwnAccountSerializer, ForumOptionsSerializer, UserSerializer)
 from misago.users.viewmodels import Followers, Follows, UserPosts, UserThreads
 
 from .rest_permissions import BasePermission, UnbannedAnonOnly
@@ -88,6 +89,8 @@ class UserViewSet(viewsets.GenericViewSet):
 
         if not profile.is_active:
             profile_json['is_active'] = False
+        if profile.is_deleting_account:
+            profile_json['is_deleting_account'] = True
 
         return Response(profile_json)
 
@@ -148,6 +151,16 @@ class UserViewSet(viewsets.GenericViewSet):
         profile = self.get_user(request, pk)
         allow_edit_profile_details(request.user, profile)
         return edit_details_endpoint(request, profile)
+
+    @detail_route(methods=['post'])
+    def delete_own_account(self, request, pk=None):
+        serializer = DeleteOwnAccountSerializer(
+            data=request.data,
+            context={'user': request.user},
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.mark_account_for_deletion(request)
+        return Response({})
 
     @detail_route(methods=['post'])
     def follow(self, request, pk=None):

@@ -44,6 +44,7 @@ class AuthenticatedUserSerializer(UserSerializer):
             'edit_details': reverse('misago:api:user-edit-details', kwargs={'pk': obj.pk}),
             'options': reverse('misago:api:user-forum-options', kwargs={'pk': obj.pk}),
             'username': reverse('misago:api:user-username', kwargs={'pk': obj.pk}),
+            'delete': reverse('misago:api:user-delete-own-account', kwargs={'pk': obj.pk}),
         }
 
 

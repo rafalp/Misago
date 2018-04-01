@@ -35,7 +35,7 @@ class AuthenticateAPITests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), [
             {
-                'avatar': '/placekitten.com/400/400',
+                'avatar': 'http://placekitten.com/400/400',
                 'username': 'BobBoberson',
             }
         ])
@@ -45,7 +45,7 @@ class AuthenticateAPITests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), [
             {
-                'avatar': '/placekitten.com/400/400',
+                'avatar': 'http://placekitten.com/400/400',
                 'username': 'BobBoberson',
             }
         ])
@@ -55,7 +55,7 @@ class AuthenticateAPITests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), [
             {
-                'avatar': '/placekitten.com/400/400',
+                'avatar': 'http://placekitten.com/400/400',
                 'username': 'BobBoberson',
             }
         ])

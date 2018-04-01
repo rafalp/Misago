@@ -185,7 +185,7 @@ class UserBansTests(TestCase):
         self.assertFalse(self.user.ban_cache.is_banned)
 
 
-class FakeRequest(object):
+class MockRequest(object):
     def __init__(self):
         self.user_ip = '127.0.0.1'
         self.session = {}
@@ -194,7 +194,7 @@ class FakeRequest(object):
 class RequestIPBansTests(TestCase):
     def test_no_ban(self):
         """no ban found"""
-        ip_ban = get_request_ip_ban(FakeRequest())
+        ip_ban = get_request_ip_ban(MockRequest())
         self.assertIsNone(ip_ban)
 
     def test_permanent_ban(self):
@@ -205,13 +205,13 @@ class RequestIPBansTests(TestCase):
             user_message='User reason',
         )
 
-        ip_ban = get_request_ip_ban(FakeRequest())
+        ip_ban = get_request_ip_ban(MockRequest())
         self.assertTrue(ip_ban['is_banned'])
         self.assertEqual(ip_ban['ip'], '127.0.0.1')
         self.assertEqual(ip_ban['message'], 'User reason')
 
         # repeated call uses cache
-        get_request_ip_ban(FakeRequest())
+        get_request_ip_ban(MockRequest())
 
     def test_temporary_ban(self):
         """ip is caught by temporary ban"""
@@ -222,13 +222,13 @@ class RequestIPBansTests(TestCase):
             expires_on=timezone.now() + timedelta(days=7),
         )
 
-        ip_ban = get_request_ip_ban(FakeRequest())
+        ip_ban = get_request_ip_ban(MockRequest())
         self.assertTrue(ip_ban['is_banned'])
         self.assertEqual(ip_ban['ip'], '127.0.0.1')
         self.assertEqual(ip_ban['message'], 'User reason')
 
         # repeated call uses cache
-        get_request_ip_ban(FakeRequest())
+        get_request_ip_ban(MockRequest())
 
     def test_expired_ban(self):
         """ip is not caught by expired ban"""
@@ -239,11 +239,11 @@ class RequestIPBansTests(TestCase):
             expires_on=timezone.now() - timedelta(days=7),
         )
 
-        ip_ban = get_request_ip_ban(FakeRequest())
+        ip_ban = get_request_ip_ban(MockRequest())
         self.assertIsNone(ip_ban)
 
         # repeated call uses cache
-        get_request_ip_ban(FakeRequest())
+        get_request_ip_ban(MockRequest())
 
 
 class BanUserTests(TestCase):

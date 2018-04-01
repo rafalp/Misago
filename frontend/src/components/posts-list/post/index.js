@@ -2,7 +2,7 @@
 import React from 'react';
 import Attachments from './attachments';
 import Body from './body';
-import { FlagHidden, FlagUnapproved, FlagProtected } from './flags';
+import { FlagBestAnswer, FlagHidden, FlagUnapproved, FlagProtected } from './flags';
 import Footer from './footer';
 import Header from './header';
 import PostSide from './post-side';
@@ -32,6 +32,7 @@ export default function(props) {
             <PostSide {...props} />
             <div className="col-xs-12 col-md-9">
               <Header {...props} />
+              <FlagBestAnswer {...props} />
               <FlagUnapproved {...props} />
               <FlagProtected {...props} />
               <FlagHidden {...props} />

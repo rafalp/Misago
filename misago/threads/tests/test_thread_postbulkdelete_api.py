@@ -102,7 +102,7 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         self.assertContains(response, "One or more posts to delete could not be found.", status_code=403)
 
     def test_validate_posts_same_thread(self):
-        """api validates that ids are visible posts"""
+        """api validates that ids are same thread posts"""
         self.override_acl({
             'can_hide_own_posts': 2,
             'can_hide_posts': 2,
@@ -211,6 +211,19 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
 
         response = self.delete(self.api_link, ids)
         self.assertContains(response, "You can't delete thread's first post.", status_code=403)
+
+    def test_delete_best_answer(self):
+        """api disallows best answer deletion"""
+        self.override_acl({'can_hide_own_posts': 2, 'can_hide_posts': 2})
+
+        self.thread.set_best_answer(self.user, self.posts[0])
+        self.thread.save()
+
+        response = self.delete(self.api_link, [p.id for p in self.posts])
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete this post because its marked as best answer.",
+        })
 
     def test_delete_event(self):
         """api differs posts from events"""

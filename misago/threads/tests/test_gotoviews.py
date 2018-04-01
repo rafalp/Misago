@@ -202,6 +202,36 @@ class GotoNewTests(GotoViewTestCase):
         )
 
 
+class GotoBestAnswerTests(GotoViewTestCase):
+    def test_view_handles_no_best_answer(self):
+        """if thread has no best answer, redirect to first post"""
+        response = self.client.get(self.thread.get_best_answer_url())
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            response['location'],
+            GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id),
+        )
+
+    def test_view_handles_best_answer(self):
+        """if thread has best answer, redirect to it"""
+        for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
+            testutils.reply_thread(self.thread, posted_on=timezone.now())
+
+        best_answer = testutils.reply_thread(self.thread, posted_on=timezone.now())
+        self.thread.set_best_answer(self.user, best_answer)
+        self.thread.save()
+
+        for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
+            testutils.reply_thread(self.thread, posted_on=timezone.now())
+
+        response = self.client.get(self.thread.get_best_answer_url())
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            response['location'],
+            GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, best_answer.pk),
+        )
+
+
 class GotoUnapprovedTests(GotoViewTestCase):
     def grant_permission(self):
         self.user.acl_cache['categories'][self.category.pk]['can_approve_content'] = 1

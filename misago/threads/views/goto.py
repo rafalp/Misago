@@ -105,6 +105,13 @@ class ThreadGotoNewView(GotoView, GetFirstUnreadPostMixin):
         return self.get_first_unread_post(user, posts_queryset)
 
 
+class ThreadGotoBestAnswerView(GotoView):
+    thread = ForumThread
+
+    def get_target_post(self, user, thread, posts_queryset, **kwargs):
+        return thread.best_answer or thread.first_post
+
+
 class ThreadGotoUnapprovedView(GotoView):
     thread = ForumThread
 

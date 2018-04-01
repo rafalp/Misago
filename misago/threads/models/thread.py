@@ -1,5 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
@@ -77,6 +78,25 @@ class Thread(models.Model):
     is_unapproved = models.BooleanField(default=False, db_index=True)
     is_hidden = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
+
+    best_answer = models.ForeignKey(
+        'misago_threads.Post',
+        related_name='+',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+    best_answer_is_protected =  models.BooleanField(default=False)
+    best_answer_marked_on = models.DateTimeField(null=True, blank=True)
+    best_answer_marked_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='marked_best_answer_set',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+    best_answer_marked_by_name = models.CharField(max_length=255, null=True, blank=True)
+    best_answer_marked_by_slug = models.CharField(max_length=255, null=True, blank=True)
 
     participants = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
@@ -190,6 +210,10 @@ class Thread(models.Model):
                 self.has_events = self.post_set.filter(is_event=True).exists()
 
     @property
+    def has_best_answer(self):
+        return bool(self.best_answer_id)
+
+    @property
     def thread_type(self):
         return self.category.thread_type
 
@@ -226,6 +250,9 @@ class Thread(models.Model):
     def get_last_post_url(self):
         return self.thread_type.get_thread_last_post_url(self)
 
+    def get_best_answer_url(self):
+        return self.thread_type.get_thread_best_answer_url(self)
+
     def get_unapproved_post_url(self):
         return self.thread_type.get_thread_unapproved_post_url(self)
 
@@ -256,3 +283,28 @@ class Thread(models.Model):
             self.last_poster_slug = post.poster.slug
         else:
             self.last_poster_slug = slugify(post.poster_name)
+
+    def set_best_answer(self, user, post):
+        if post.thread_id != self.id:
+            raise ValueError("post to set as best answer must be in same thread")
+        if post.is_first_post:
+            raise ValueError("post to set as best answer can't be first post")
+        if post.is_hidden:
+            raise ValueError("post to set as best answer can't be hidden")
+        if post.is_unapproved:
+            raise ValueError("post to set as best answer can't be unapproved")
+
+        self.best_answer = post
+        self.best_answer_is_protected = post.is_protected
+        self.best_answer_marked_on = timezone.now()
+        self.best_answer_marked_by = user
+        self.best_answer_marked_by_name = user.username
+        self.best_answer_marked_by_slug = user.slug
+
+    def clear_best_answer(self):
+        self.best_answer = None
+        self.best_answer_is_protected = False
+        self.best_answer_marked_on = None
+        self.best_answer_marked_by = None
+        self.best_answer_marked_by_name = None
+        self.best_answer_marked_by_slug = None

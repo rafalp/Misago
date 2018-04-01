@@ -50,6 +50,16 @@
         </span>
       </span>
     {% endif %}
+    {% if thread.has_best_answer %}
+      <a href="{{ thread.get_best_answer_url }}" class="hidden-xs thread-detail-answered">
+        <span class="material-icon">
+          check_box
+        </span>
+        <span class="detail-text">
+          {% trans "Answered" %}
+        </span>
+      </a>
+    {% endif %}
     {% if thread.category != category %}
       <a class="item-title thread-detail-category visible-xs-inline-block {% if thread.category.css_class %}thread-detail-category-{{ thread.category.css_class }}{% endif %}" href="{{ thread.category.get_absolute_url }}">
         {{ thread.category.name }}
@@ -129,6 +139,11 @@
                       {% trans "Poll" %}
                     </span>
                   </span>
+                {% endif %}
+                {% if thread.has_best_answer %}
+                  <a href="{{ thread.get_best_answer_url }}" class="visible-xs-inline-block thread-detail-answered">
+                    <span class="material-icon">check_box</span>
+                  </a>
                 {% endif %}
                 <span class="thread-detail-replies">
                   <span class="material-icon">

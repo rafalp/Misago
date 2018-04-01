@@ -4,14 +4,14 @@ from __future__ import unicode_literals
 from django.db import migrations
 
 
-_ = lambda x: x
+_ = lambda s: s
 
 
 def create_default_categories_roles(apps, schema_editor):
     CategoryRole = apps.get_model('misago_categories', 'CategoryRole')
 
     CategoryRole.objects.create(
-        name=_('See only'),
+        name=_("See only"),
         permissions={
             # categories perms
             'misago.categories.permissions': {
@@ -22,7 +22,7 @@ def create_default_categories_roles(apps, schema_editor):
     )
 
     read_only = CategoryRole.objects.create(
-        name=_('Read only'),
+        name=_("Read only"),
         permissions={
             # categories perms
             'misago.categories.permissions': {
@@ -41,7 +41,7 @@ def create_default_categories_roles(apps, schema_editor):
     )
 
     CategoryRole.objects.create(
-        name=_('Reply to threads'),
+        name=_("Reply to threads"),
         permissions={
             # categories perms
             'misago.categories.permissions': {
@@ -63,7 +63,7 @@ def create_default_categories_roles(apps, schema_editor):
     )
 
     standard = CategoryRole.objects.create(
-        name=_('Start and reply threads'),
+        name=_("Start and reply threads"),
         permissions={
             # categories perms
             'misago.categories.permissions': {
@@ -86,32 +86,8 @@ def create_default_categories_roles(apps, schema_editor):
         }
     )
 
-    CategoryRole.objects.create(
-        name=_('Start and reply threads, make polls'),
-        permissions={
-            # categories perms
-            'misago.categories.permissions': {
-                'can_see': 1,
-                'can_browse': 1,
-            },
-
-            # threads perms
-            'misago.threads.permissions.threads': {
-                'can_see_all_threads': 1,
-                'can_start_threads': 1,
-                'can_reply_threads': 1,
-                'can_edit_threads': 1,
-                'can_edit_posts': 1,
-                'can_download_other_users_attachments': 1,
-                'max_attachment_size': 500,
-                'can_see_posts_likes': 2,
-                'can_like_posts': 1
-            },
-        }
-    )
-
     moderator = CategoryRole.objects.create(
-        name=_('Moderator'),
+        name=_("Moderator"),
         permissions={
             # categories perms
             'misago.categories.permissions': {
@@ -161,7 +137,7 @@ def create_default_categories_roles(apps, schema_editor):
     category = Category.objects.get(tree_id=1, level=1)
 
     RoleCategoryACL.objects.create(
-        role=Role.objects.get(name=_('Moderator')), category=category, category_role=moderator
+        role=Role.objects.get(name=_("Moderator")), category=category, category_role=moderator
     )
 
     RoleCategoryACL.objects.create(

@@ -1,0 +1,11 @@
+# Speed up bulding by excluding files from the docker context
+_book/
+dev/
+dist/
+docs/
+env/
+frontend/
+venv/
+
+.DS_Store
+thumbs.db

@@ -26,7 +26,7 @@ class DeleteProfileFieldTests(TestCase):
 
         self.assertEqual(command_output, '"gender" profile field has been deleted from 0 users.')
 
-    def test_delete_fields_(self):
+    def test_delete_fields(self):
         """utility has no showstoppers when no fields are set"""
         user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
         user.profile_fields = {'gender': 'male', 'bio': "Yup!"}

@@ -2,6 +2,7 @@ import React from 'react'; // jshint ignore:line
 import { connect } from 'react-redux';
 import DropdownToggle from 'misago/components/dropdown-toggle'; // jshint ignore:line
 import { SideNav, CompactNav } from 'misago/components/options/navs'; // jshint ignore:line
+import DeleteAccount from 'misago/components/options/delete-account';
 import EditDetails from 'misago/components/options/edit-details';
 import ChangeForumOptions from 'misago/components/options/forum-options';
 import ChangeUsername from 'misago/components/options/change-username/root';
@@ -66,7 +67,7 @@ export function select(store) {
 }
 
 export function paths() {
-  return [
+  const paths = [
     {
       path: misago.get('USERCP_URL') + 'forum-options/',
       component: connect(select)(ChangeForumOptions)
@@ -84,4 +85,13 @@ export function paths() {
       component: connect(select)(ChangeSignInCredentials)
     }
   ];
+
+  if (misago.get('ENABLE_DELETE_OWN_ACCOUNT')) {
+    paths.push({
+      path: misago.get('USERCP_URL') + 'delete-account/',
+      component: connect(select)(DeleteAccount)
+    });
+  }
+
+  return paths;
 }

@@ -47,6 +47,10 @@ pylint.txt
 .project
 .pydevproject
 
+# IDEs
+.idea/
+.vscode/
+
 # Rope
 .ropeproject
 
@@ -54,24 +58,21 @@ pylint.txt
 *.log
 *.pot
 
-# Misago test runner project
-/avatar_store/
-/media/
-/testproject/
-
 # GitBook Documentation
 _book/
 
 # Local development stuff
 dev/
-dev-manage.py
-.vscode/
+env/
 venv/
-venv2/
-venv3/
-venv34/
-venv35/
-venv36/
-future-manage.py
 misago-admin.py
 db.sqlite3
+
+# Local development files
+/avatargallery/
+/avatar_store/
+/manage.py
+/devproject/
+/testproject/
+/media/
+/static/

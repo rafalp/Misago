@@ -3,8 +3,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http import Http404
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext
+from django.utils.translation import ugettext_lazy as _, ungettext
 
 from misago.acl import add_acl, algebra
 from misago.acl.decorators import return_boolean
@@ -1228,7 +1227,6 @@ def has_time_to_edit_thread(user, target):
     if edit_time:
         diff = timezone.now() - target.started_on
         diff_minutes = int(diff.total_seconds() / 60)
-
         return diff_minutes < edit_time
     else:
         return True
@@ -1239,7 +1237,6 @@ def has_time_to_edit_post(user, target):
     if edit_time:
         diff = timezone.now() - target.posted_on
         diff_minutes = int(diff.total_seconds() / 60)
-
         return diff_minutes < edit_time
     else:
         return True

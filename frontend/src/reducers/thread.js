@@ -11,6 +11,7 @@ export function hydrate(json) {
   return Object.assign({}, json, {
     started_on: moment(json.started_on),
     last_post_on: moment(json.last_post_on),
+    best_answer_marked_on: json.best_answer_marked_on ? moment(json.best_answer_marked_on) : null,
 
     isBusy: false
   });

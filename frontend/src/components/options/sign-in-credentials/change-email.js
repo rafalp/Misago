@@ -93,8 +93,8 @@ export default class extends Form {
 
           <hr />
 
-          <FormGroup label={gettext("Your current password")} for="id_password">
-            <input type="password" id="id_password" className="form-control"
+          <FormGroup label={gettext("Your current password")} for="id_confirm_email">
+            <input type="password" id="id_confirm_email" className="form-control"
                    disabled={this.state.isLoading}
                    onChange={this.bindInput('password')}
                    value={this.state.password} />

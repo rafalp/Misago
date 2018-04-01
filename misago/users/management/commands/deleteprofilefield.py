@@ -3,14 +3,13 @@ from __future__ import unicode_literals
 from django.contrib.auth import get_user_model
 from django.core.management.base import CommandError, BaseCommand
 
+from misago.core.pgutils import chunk_queryset
 
 UserModel = get_user_model()
 
 
 class Command(BaseCommand):
-    help = (
-        "Deletes specified profile field from database."
-    )
+    help = "Deletes specified profile field from database."
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -31,7 +30,7 @@ class Command(BaseCommand):
             profile_fields__has_keys=[fieldname],
         )
 
-        for user in queryset.iterator():
+        for user in chunk_queryset(queryset):
             if fieldname in user.profile_fields.keys():
                 user.profile_fields.pop(fieldname)
                 user.save(update_fields=['profile_fields'])

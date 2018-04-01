@@ -1,9 +1,13 @@
 {% load i18n misago_avatars %}
 <div class="container">
 
-  {% if not profile.is_active %}
+  {% if not profile.is_active or profile.is_deleting_account %}
     <div class="alert alert-danger">
-      <p>{% trans "This user's account has been disabled by administrator." %}</p>
+      {% if profile.is_deleting_account %}
+        <p>{% trans "This user is deleting their account." %}</p>
+      {% else %}
+        <p>{% trans "This user's account has been disabled by administrator." %}</p>
+      {% endif %}
     </div>
   {% endif %}
 

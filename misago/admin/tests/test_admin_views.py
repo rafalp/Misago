@@ -12,20 +12,20 @@ from misago.admin.views import get_protected_namespace
 UserModel = get_user_model()
 
 
-class FakeRequest(object):
+class MockRequest(object):
     def __init__(self, path):
         self.path = path
-        self.path_info = path
 
 
 class AdminProtectedNamespaceTests(TestCase):
     def test_valid_cases(self):
         """get_protected_namespace returns true for protected links"""
-        links_prefix = reverse('misago:admin:index')
         TEST_CASES = ('', 'somewhere/', 'ejksajdlksajldjskajdlksajlkdas', )
-
+        
+        links_prefix = reverse('misago:admin:index')
+        
         for case in TEST_CASES:
-            request = FakeRequest(links_prefix + case)
+            request = MockRequest(links_prefix + case)
             self.assertEqual(get_protected_namespace(request), 'misago:admin')
 
     def test_invalid_cases(self):
@@ -33,7 +33,7 @@ class AdminProtectedNamespaceTests(TestCase):
         TEST_CASES = ('/', '/somewhere/', '/ejksajdlksajldjskajdlksajlkdas', )
 
         for case in TEST_CASES:
-            request = FakeRequest(case)
+            request = MockRequest(case)
             self.assertEqual(get_protected_namespace(request), None)
 
 

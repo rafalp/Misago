@@ -10,7 +10,7 @@ from django.utils import timezone
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.threads import testutils
-from misago.threads.models import Post
+from misago.threads.models import Thread, Post
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -35,6 +35,9 @@ class ThreadPostPatchApiTestCase(AuthenticatedUserTestCase):
 
     def refresh_post(self):
         self.post = self.thread.post_set.get(pk=self.post.pk)
+
+    def refresh_thread(self):
+        self.thread = Thread.objects.get(pk=self.thread.pk)
 
     def override_acl(self, extra_acl=None):
         new_acl = self.user.acl_cache
@@ -127,6 +130,67 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
 
         self.refresh_post()
         self.assertFalse(self.post.is_protected)
+
+    def test_protect_best_answer(self):
+        """api makes it possible to protect post"""
+        self.thread.set_best_answer(self.user, self.post)
+        self.thread.save()
+
+        self.assertFalse(self.thread.best_answer_is_protected)
+        
+        self.override_acl({'can_protect_posts': 1})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-protected',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+
+        reponse_json = response.json()
+        self.assertTrue(reponse_json['is_protected'])
+
+        self.refresh_post()
+        self.assertTrue(self.post.is_protected)
+
+        self.refresh_thread()
+        self.assertTrue(self.thread.best_answer_is_protected)
+
+    def test_unprotect_best_answer(self):
+        """api makes it possible to unprotect protected post"""
+        self.post.is_protected = True
+        self.post.save()
+
+        self.thread.set_best_answer(self.user, self.post)
+        self.thread.save()
+
+        self.assertTrue(self.thread.best_answer_is_protected)
+
+        self.override_acl({'can_protect_posts': 1})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-protected',
+                    'value': False,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 200)
+
+        reponse_json = response.json()
+        self.assertFalse(reponse_json['is_protected'])
+
+        self.refresh_post()
+        self.assertFalse(self.post.is_protected)
+
+        self.refresh_thread()
+        self.assertFalse(self.thread.best_answer_is_protected)
 
     def test_protect_post_no_permission(self):
         """api validates permission to protect post"""
@@ -605,6 +669,28 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
             'detail': "You can't hide thread's first post.",
+        })
+
+    def test_hide_best_answer(self):
+        """api hide first post fails"""
+        self.thread.set_best_answer(self.user, self.post)
+        self.thread.save()
+
+        self.override_acl({'can_hide_posts': 2})
+
+        response = self.patch(
+            self.api_link, [
+                {
+                    'op': 'replace',
+                    'path': 'is-hidden',
+                    'value': True,
+                },
+            ]
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.post.id,
+            'detail': ["You can't hide this post because its marked as best answer."],
         })
 
 

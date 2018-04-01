@@ -79,7 +79,7 @@ class UserManager(BaseUserManager):
             )
         else:
             # just for test purposes
-            user.avatars = [{'size': 400, 'url': '/placekitten.com/400/400'}]
+            user.avatars = [{'size': 400, 'url': 'http://placekitten.com/400/400'}]
 
         authenticated_role = Role.objects.get(special_role='authenticated')
         if authenticated_role not in user.roles.all():
@@ -204,6 +204,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     is_active_staff_message = models.TextField(null=True, blank=True)
 
+    is_deleting_account = models.BooleanField(default=False)
+
     avatar_tmp = models.ImageField(
         max_length=255,
         upload_to=avatars.store.upload_to,
@@ -281,6 +283,10 @@ class User(AbstractBaseUser, PermissionsMixin):
                 fields=['requires_activation'],
                 where={'requires_activation__gt': 0},
             ),
+            PgPartialIndex(
+                fields=['is_deleting_account'],
+                where={'is_deleting_account': True},
+            ),
         ]
 
     def clean(self):
@@ -295,6 +301,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         if kwargs.pop('delete_content', False):
             self.delete_content()
 
+        self.anonymize_content()
+
         avatars.delete_avatar(self)
 
         return super(User, self).delete(*args, **kwargs)
@@ -302,6 +310,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     def delete_content(self):
         from misago.users.signals import delete_user_content
         delete_user_content.send(sender=self)
+
+    def mark_for_delete(self):
+        self.is_active = False
+        self.is_deleting_account = True
+        self.save(update_fields=['is_active', 'is_deleting_account'])
+
+    def anonymize_content(self):
+        # Replace username on associated items with anonymous one
+        self.username = settings.MISAGO_ANONYMOUS_USERNAME
+        self.slug = slugify(self.username)
+        
+        from misago.users.signals import anonymize_user_content
+        anonymize_user_content.send(sender=self)
 
     @property
     def acl_cache(self):

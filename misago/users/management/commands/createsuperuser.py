@@ -24,7 +24,7 @@ class NotRunningInTTYException(Exception):
 
 
 class Command(BaseCommand):
-    help = 'Used to create a superuser.'
+    help = "Used to create a superuser."
 
     def add_arguments(self, parser):
         parser.add_argument(

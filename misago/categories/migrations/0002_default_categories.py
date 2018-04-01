@@ -2,9 +2,11 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-from django.utils.translation import ugettext as _
 
 from misago.core.utils import slugify
+
+
+_ = lambda s: s
 
 
 def create_default_categories_tree(apps, schema_editor):

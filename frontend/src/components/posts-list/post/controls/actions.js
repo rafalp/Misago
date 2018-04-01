@@ -1,4 +1,5 @@
 import moment from 'moment';
+import * as thread from 'misago/reducers/thread';
 import * as post from 'misago/reducers/post';
 import ajax from 'misago/services/ajax';
 import snackbar from 'misago/services/snackbar';
@@ -174,5 +175,80 @@ export function remove(props) {
     store.dispatch(post.patch(props.post, {
       isDeleted: false
     }));
+  });
+}
+
+export function markAsBestAnswer(props) {
+  const { post, user } = props;
+
+  store.dispatch(thread.update({
+    best_answer: post.id,
+    best_answer_is_protected: post.is_protected,
+    best_answer_marked_on: moment(),
+    best_answer_marked_by: user.id,
+    best_answer_marked_by_name: user.username,
+    best_answer_marked_by_slug: user.slug,
+  }));
+
+  const ops = [
+    { 'op': 'replace', 'path': 'best-answer', 'value': post.id },
+    { 'op': 'add', 'path': 'acl', 'value': true }
+  ];
+
+  const previousState = {
+    best_answer: props.thread.best_answer,
+    best_answer_is_protected: props.thread.best_answer_is_protected,
+    best_answer_marked_on: props.thread.best_answer_marked_on,
+    best_answer_marked_by: props.thread.best_answer_marked_by,
+    best_answer_marked_by_name: props.thread.best_answer_marked_by_name,
+    best_answer_marked_by_slug: props.thread.best_answer_marked_by_slug,
+  };
+
+  patchThread(props, ops, previousState);
+}
+
+export function unmarkBestAnswer(props) {
+  const { post } = props;
+
+  store.dispatch(thread.update({
+    best_answer: null,
+    best_answer_is_protected: false,
+    best_answer_marked_on: null,
+    best_answer_marked_by: null,
+    best_answer_marked_by_name: null,
+    best_answer_marked_by_slug: null,
+  }));
+
+  const ops = [
+    { 'op': 'remove', 'path': 'best-answer', 'value': post.id },
+    { 'op': 'add', 'path': 'acl', 'value': true }
+  ];
+
+  const previousState = {
+    best_answer: props.thread.best_answer,
+    best_answer_is_protected: props.thread.best_answer_is_protected,
+    best_answer_marked_on: props.thread.best_answer_marked_on,
+    best_answer_marked_by: props.thread.best_answer_marked_by,
+    best_answer_marked_by_name: props.thread.best_answer_marked_by_name,
+    best_answer_marked_by_slug: props.thread.best_answer_marked_by_slug,
+  };
+
+  patchThread(props, ops, previousState);
+}
+
+export function patchThread(props, ops, previousState) {
+  ajax.patch(props.thread.api.index, ops).then((newState) => {
+    if (newState.best_answer_marked_on) {
+      newState.best_answer_marked_on = moment(newState.best_answer_marked_on);
+    }
+    store.dispatch(thread.update(newState));
+  }, (rejection) => {
+    if (rejection.status === 400) {
+      snackbar.error(rejection.detail[0]);
+    } else {
+      snackbar.apiError(rejection);
+    }
+
+    store.dispatch(thread.update(previousState));
   });
 }

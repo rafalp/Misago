@@ -186,7 +186,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                'get_latest_by': b'changed_on',
+                'get_latest_by': 'changed_on',
             },
             bases=(models.Model, ),
         ),
@@ -209,7 +209,7 @@ class Migration(migrations.Migration):
                 ('roles', models.ManyToManyField(to='misago_acl.Role', null=True, blank=True)),
             ],
             options={
-                'get_latest_by': b'order',
+                'get_latest_by': 'order',
             },
             bases=(models.Model, ),
         ),

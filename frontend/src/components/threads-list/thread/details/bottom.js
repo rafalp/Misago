@@ -44,6 +44,7 @@ export default function({category, isBusy, showOptions, isSelected, thread}) {
           textClassName={textClassName}
           display={thread.has_poll}
         />
+        <BestAnswerLabel thread={thread} />
         <RepliesLabel
           forceFullText={!showOptions || statusFlags < 2}
           replies={thread.replies}
@@ -110,6 +111,19 @@ export function PollLabel({ display, textClassName }) {
       </span>
     </span>
   );
+}
+
+export function BestAnswerLabel({ thread }) {
+  if (!thread.best_answer) return null;
+
+  return (
+    <a
+      className="visible-xs-inline-block thread-detail-answered"
+      href={thread.url.best_answer}
+    >
+      <span className="material-icon">check_box</span>
+    </a>
+  )
 }
 
 export function RepliesLabel({ replies, forceFullText }) {

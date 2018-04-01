@@ -419,8 +419,10 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         other_thread = testutils.post_thread(self.category_b)
 
         posts = (
-            testutils.reply_thread(self.thread).pk, testutils.reply_thread(self.thread).pk,
-            testutils.reply_thread(self.thread).pk, testutils.reply_thread(self.thread).pk,
+            testutils.reply_thread(self.thread).pk,
+            testutils.reply_thread(self.thread).pk,
+            testutils.reply_thread(self.thread).pk,
+            testutils.reply_thread(self.thread).pk,
         )
 
         self.refresh_thread()
@@ -443,6 +445,40 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         other_thread = Thread.objects.get(pk=other_thread.pk)
         self.assertEqual(other_thread.post_set.filter(pk__in=posts).count(), 4)
         self.assertEqual(other_thread.replies, 4)
+
+    def test_move_best_answer(self):
+        """api moves best answer to other thread"""
+        self.override_other_acl({'can_reply_threads': 1})
+
+        other_thread = testutils.post_thread(self.category_b)
+        best_answer = testutils.reply_thread(self.thread)
+
+        self.thread.set_best_answer(self.user, best_answer)
+        self.thread.synchronize()
+        self.thread.save()
+
+        self.refresh_thread()
+        self.assertEqual(self.thread.best_answer, best_answer)
+        self.assertEqual(self.thread.replies, 1)
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({
+                'new_thread': other_thread.get_absolute_url(),
+                'posts': [best_answer.pk],
+            }),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # best_answer was moved and unmarked
+        self.refresh_thread()
+        self.assertEqual(self.thread.replies, 0)
+        self.assertIsNone(self.thread.best_answer)
+
+        other_thread = Thread.objects.get(pk=other_thread.pk)
+        self.assertEqual(other_thread.replies, 1)
+        self.assertIsNone(other_thread.best_answer)
 
     def test_move_posts_reads(self):
         """api moves posts reads together with posts"""

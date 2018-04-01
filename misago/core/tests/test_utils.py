@@ -12,21 +12,19 @@ from misago.core.utils import (
     parse_iso8601_string, slugify, get_exception_message)
 
 
-VALID_PATHS = ("/", "/threads/", )
-
-INVALID_PATHS = ("", "somewhere/", )
-
-
 class IsRequestToMisagoTests(TestCase):
     def test_is_request_to_misago(self):
         """
         is_request_to_misago correctly detects requests directed at Misago
         """
+        VALID_PATHS = ('/', '/threads/', )
+        INVALID_PATHS = ('', 'somewhere/', )
+
         misago_prefix = reverse('misago:index')
 
         for path in VALID_PATHS:
             request = RequestFactory().get('/')
-            request.path_info = path
+            request.path = path
             self.assertTrue(
                 is_request_to_misago(request),
                 '"%s" is not overlapped by "%s"' % (path, misago_prefix)
@@ -34,7 +32,7 @@ class IsRequestToMisagoTests(TestCase):
 
         for path in INVALID_PATHS:
             request = RequestFactory().get('/')
-            request.path_info = path
+            request.path = path
             self.assertFalse(
                 is_request_to_misago(request),
                 '"%s" is overlapped by "%s"' % (path, misago_prefix)

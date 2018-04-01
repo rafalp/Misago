@@ -8,7 +8,7 @@ import misago from 'misago/index';
 import { filterThreads } from 'misago/reducers/threads'; // jshint ignore:line
 import * as select from 'misago/reducers/selection'; // jshint ignore:line
 import ErrorsModal from 'misago/components/threads/moderation/errors-list'; // jshint ignore:line
-import MergePolls from 'misago/components/merge-polls'; // jshint ignore:line
+import MergeConflict from 'misago/components/merge-conflict'; // jshint ignore:line
 import ajax from 'misago/services/ajax'; // jshint ignore:line
 import modal from 'misago/services/modal'; // jshint ignore:line
 import snackbar from 'misago/services/snackbar';
@@ -141,10 +141,11 @@ export default class extends Form {
 
   handleError = (rejection) => {
     if (rejection.status === 400) {
-      if (rejection.polls) {
+      if (rejection.best_answers || rejection.polls) {
         modal.show(
-          <MergePolls
+          <MergeConflict
             api={misago.get('MERGE_THREADS_API')}
+            bestAnswers={rejection.best_answers}
             data={this.getFormdata()}
             polls={rejection.polls}
             onError={this.handleError}
@@ -159,6 +160,10 @@ export default class extends Form {
       }
     } else if (rejection.status === 403 && Array.isArray(rejection)) {
       modal.show(<ErrorsModal errors={rejection} />);
+    } else if (rejection.best_answer) {
+      snackbar.error(rejection.best_answer[0]);
+    } else if (rejection.poll) {
+      snackbar.error(rejection.poll[0]);
     } else {
       snackbar.apiError(rejection);
     }

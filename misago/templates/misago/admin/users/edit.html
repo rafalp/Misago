@@ -143,44 +143,62 @@ class="form-horizontal"
   <fieldset>
     <legend>{% trans "Account status" %}</legend>
 
-    {% if 'is_active' in form.fields %}
-      {% form_row form.is_active label_class field_class %}
-      {% form_row form.is_active_staff_message label_class field_class %}
-    {% else %}
-      <div id="div_id_is_active" class="form-group">
-        <label for="id_is_active_0" class="control-label {{ label_class }}">
+    {% if target.is_deleting_account %}
+      <div id="div_id_is_deleting_account" class="form-group">
+        <label for="id_is_ais_deleting_account_0" class="control-label {{ label_class }}">
           {{ form.IS_ACTIVE_LABEL }}:
         </label>
         <div class="{{ field_class }}">
           <p class="form-control-static">
-            {% if target.is_active %}
-              <strong class="text-success">{% trans "Yes" %}</strong>
-            {% else %}
-              <strong class="text-danger">{% trans "No" %}</strong>
-            {% endif %}
+            <strong class="text-danger">
+              {% trans "This user is deleting their account. It has been deactivated for the duration of the process." %}
+            </strong>
           </p>
           <p id="hint_id_is_active" class="help-block">
-            {{ form.IS_ACTIVE_HELP_TEXT }}
+            {% trans "No additional action is required. This account will be deleted automatically." %}
           </p>
         </div>
       </div>
-      <div id="div_id_is_superuser" class="form-group">
-        <label for="id_is_superuser_0" class="control-label {{ label_class }}">
-          {{ form.IS_ACTIVE_STAFF_MESSAGE_LABEL }}:
-        </label>
-        <div class="{{ field_class }}">
-          <div class="form-control-static">
-            {% if target.is_active_staff_message %}
-              {{ target.is_active_staff_message|force_escape|urlize|linebreaks }}
-            {% else %}
-              <em>{% trans "No staff message is available." %}</em>
-            {% endif %}
+    {% else %}
+      {% if 'is_active' in form.fields %}
+        {% form_row form.is_active label_class field_class %}
+        {% form_row form.is_active_staff_message label_class field_class %}
+      {% else %}
+        <div id="div_id_is_active" class="form-group">
+          <label for="id_is_active_0" class="control-label {{ label_class }}">
+            {{ form.IS_ACTIVE_LABEL }}:
+          </label>
+          <div class="{{ field_class }}">
+            <p class="form-control-static">
+              {% if target.is_active %}
+                <strong class="text-success">{% trans "Yes" %}</strong>
+              {% else %}
+                <strong class="text-danger">{% trans "No" %}</strong>
+              {% endif %}
+            </p>
+            <p id="hint_id_is_active" class="help-block">
+              {{ form.IS_ACTIVE_HELP_TEXT }}
+            </p>
           </div>
-          <p id="hint_id_is_superuser" class="help-block">
-            {{ form.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT }}
-          </p>
         </div>
-      </div>
+        <div id="div_id_is_superuser" class="form-group">
+          <label for="id_is_superuser_0" class="control-label {{ label_class }}">
+            {{ form.IS_ACTIVE_STAFF_MESSAGE_LABEL }}:
+          </label>
+          <div class="{{ field_class }}">
+            <div class="form-control-static">
+              {% if target.is_active_staff_message %}
+                {{ target.is_active_staff_message|force_escape|urlize|linebreaks }}
+              {% else %}
+                <em>{% trans "No staff message is available." %}</em>
+              {% endif %}
+            </div>
+            <p id="hint_id_is_superuser" class="help-block">
+              {{ form.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT }}
+            </p>
+          </div>
+        </div>
+      {% endif %}
     {% endif %}
 
   </fieldset>

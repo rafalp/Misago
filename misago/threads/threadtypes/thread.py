@@ -86,6 +86,14 @@ class Thread(ThreadType):
             }
         )
 
+    def get_thread_best_answer_url(self, thread):
+        return reverse(
+            'misago:thread-best-answer', kwargs={
+                'slug': thread.slug,
+                'pk': thread.pk,
+            }
+        )
+
     def get_thread_unapproved_post_url(self, thread):
         return reverse(
             'misago:thread-unapproved', kwargs={

@@ -99,6 +99,10 @@ class Post(models.Model):
                 fields=['is_hidden'],
                 where={'is_hidden': False},
             ),
+            PgPartialIndex(
+                fields=['is_event', 'event_type'],
+                where={'is_event': True},
+            ),
             GinIndex(fields=['search_vector']),
         ]
 
@@ -118,7 +122,10 @@ class Post(models.Model):
         super(Post, self).delete(*args, **kwargs)
 
     def merge(self, other_post):
-        if not self.poster_id or self.poster_id != other_post.poster_id:
+        if self.poster_id != other_post.poster_id:
+            raise ValueError("post can't be merged with other user's post")
+        elif (self.poster_id is None and other_post.poster_id is None and
+                self.poster_name != other_post.poster_name):
             raise ValueError("post can't be merged with other user's post")
 
         if self.thread_id != other_post.thread_id:
@@ -134,11 +141,21 @@ class Post(models.Model):
         other_post.parsed = six.text_type('\n').join((other_post.parsed, self.parsed))
         update_post_checksum(other_post)
 
+        if self.is_protected:
+            other_post.is_protected = True
+        if self.is_best_answer:
+            self.thread.best_answer = other_post
+        if other_post.is_best_answer:
+            self.thread.best_answer_is_protected = other_post.is_protected
+
         from misago.threads.signals import merge_post
         merge_post.send(sender=self, other_post=other_post)
 
     def move(self, new_thread):
         from misago.threads.signals import move_post
+
+        if self.is_best_answer:
+            self.thread.clear_best_answer()
 
         self.category = new_thread.category
         self.thread = new_thread
@@ -213,4 +230,8 @@ class Post(models.Model):
 
     @property
     def is_first_post(self):
-        return self.pk == self.thread.first_post_id
+        return self.id == self.thread.first_post_id
+
+    @property
+    def is_best_answer(self):
+        return self.id == self.thread.best_answer_id

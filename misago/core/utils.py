@@ -9,6 +9,7 @@ from django.utils.encoding import force_text
 from django.utils.module_loading import import_string
 
 
+ANONYMOUS_IP = '0.0.0.0'
 MISAGO_SLUGIFY = getattr(settings, 'MISAGO_SLUGIFY', 'misago.core.slugify.default')
 
 slugify = import_string(MISAGO_SLUGIFY)
@@ -115,11 +116,11 @@ def is_request_to_misago(request):
 def _is_request_path_under_misago(request):
     # We are assuming that forum_index link is root of all Misago links
     forum_index = reverse('misago:index')
-    path_info = request.path_info
+    path = request.path
 
-    if len(forum_index) > len(path_info):
+    if len(forum_index) > len(path):
         return False
-    return path_info[:len(forum_index)] == forum_index
+    return path[:len(forum_index)] == forum_index
 
 
 def is_referer_local(request):

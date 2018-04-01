@@ -1,10 +1,12 @@
 from rest_framework import serializers
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import ugettext as _
 
 from misago.conf import settings
+from misago.users.online.tracker import clear_tracking
+from misago.users.permissions import allow_delete_own_account
 from misago.users.validators import validate_email, validate_username
 
 
@@ -90,3 +92,25 @@ class ChangeEmailSerializer(serializers.Serializer):
         validate_email(value)
 
         return value
+
+
+class DeleteOwnAccountSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=200, trim_whitespace=False)
+
+    def validate_password(self, value):
+        if not self.context['user'].check_password(value):
+            raise serializers.ValidationError(_("Entered password is invalid."))
+        return value
+
+    def mark_account_for_deletion(self, request):
+        """
+        Deleting user account can be costful, so just mark account for deletion, deactivate it
+        and sign user out.
+        """
+        profile = self.context['user']
+        allow_delete_own_account(request.user, profile)
+        
+        logout(request)
+        clear_tracking(request)
+
+        profile.mark_for_delete()

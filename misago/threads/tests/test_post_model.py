@@ -143,6 +143,61 @@ class PostModelTests(TestCase):
         self.assertIn(other_post.parsed, self.post.parsed)
         self.assertTrue(self.post.is_valid)
 
+    def test_merge_best_answer(self):
+        """merge method merges best answer into post"""
+        best_answer = Post.objects.create(
+            category=self.category,
+            thread=self.thread,
+            poster=self.user,
+            poster_name=self.user.username,
+            poster_ip='127.0.0.1',
+            original="I am other message!",
+            parsed="<p>I am other message!</p>",
+            checksum="nope",
+            posted_on=timezone.now() + timedelta(minutes=5),
+            updated_on=timezone.now() + timedelta(minutes=5),
+        )
+
+        self.thread.set_best_answer(self.user, best_answer)
+        self.thread.save()
+
+        best_answer.merge(self.post)
+        self.assertEqual(self.thread.best_answer, self.post)
+
+    def test_merge_in_best_answer(self):
+        """merge method merges post into best answert"""
+        best_answer = Post.objects.create(
+            category=self.category,
+            thread=self.thread,
+            poster=self.user,
+            poster_name=self.user.username,
+            poster_ip='127.0.0.1',
+            original="I am other message!",
+            parsed="<p>I am other message!</p>",
+            checksum="nope",
+            posted_on=timezone.now() + timedelta(minutes=5),
+            updated_on=timezone.now() + timedelta(minutes=5),
+        )
+
+        other_post = Post.objects.create(
+            category=self.category,
+            thread=self.thread,
+            poster=self.user,
+            poster_name=self.user.username,
+            poster_ip='127.0.0.1',
+            original="I am other message!",
+            parsed="<p>I am other message!</p>",
+            checksum="nope",
+            posted_on=timezone.now() + timedelta(minutes=5),
+            updated_on=timezone.now() + timedelta(minutes=5),
+        )
+
+        self.thread.set_best_answer(self.user, best_answer)
+        self.thread.save()
+
+        other_post.merge(best_answer)
+        self.assertEqual(self.thread.best_answer, best_answer)
+
     def test_move(self):
         """move method moves post to other thread"""
         new_thread = Thread.objects.create(

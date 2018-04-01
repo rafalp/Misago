@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# This script is a shortcut for configuring newly-build docker container for Misago development
+python setup.py develop
+
+# Create new project
+python extras/createdevproject.py $PROJECT_NAME /srv/misago
+
+# Clean up unnecessary project files
+rm -rf theme
+rm -f cron.txt
+
+# Database
+./extras/wait_for_postgres.sh
+python manage.py migrate
+python extras/createsuperuser.py

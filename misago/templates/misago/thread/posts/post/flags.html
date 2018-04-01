@@ -1,4 +1,22 @@
 {% load i18n %}
+{% if post.is_best_answer %}
+  <div class="post-status-message post-status-best-answer">
+    <span class="material-icon">check_box</span>
+    {% if user.is_authenticated and user.id == thread.best_answer_marked_by_id %}
+      <p>
+        {% blocktrans trimmed with marked_by=thread.best_answer_marked_by_username marked_on=thread.best_answer_marked_on|date:'DATETIME_FORMAT' %}
+          Marked as best answer by you {{ marked_on }}.
+        {% endblocktrans %}
+      </p>
+    {% else %}
+      <p>
+        {% blocktrans trimmed with marked_by=thread.best_answer_marked_by_username marked_on=thread.best_answer_marked_on|date:'DATETIME_FORMAT' %}
+          Marked as best answer by {{ marked_by }} {{ marked_on }}.
+        {% endblocktrans %}
+      </p>
+    {% endif %}
+  </div>
+{% endif %}
 {% if post.is_hidden %}
   <div class="post-status-message post-status-hidden">
     <span class="material-icon">visibility_off</span>

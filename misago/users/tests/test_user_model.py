@@ -1,8 +1,14 @@
 # -*- coding: utf-8 -*-
+from path import Path
+
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from misago.users.models import User
+from misago.conf import settings
+from misago.core.utils import slugify
+
+from misago.users.avatars import dynamic
+from misago.users.models import Avatar, User
 
 
 class UserManagerTests(TestCase):
@@ -68,6 +74,38 @@ class UserManagerTests(TestCase):
 
 
 class UserModelTests(TestCase):
+    def test_anonymize_content(self):
+        """anonymize_content sets username and slug to one defined in settings"""
+        user = User.objects.create_user('Bob', 'bob@example.com', 'Pass.123')
+
+        user.anonymize_content()
+        self.assertEqual(user.username, settings.MISAGO_ANONYMOUS_USERNAME)
+        self.assertEqual(user.slug, slugify(settings.MISAGO_ANONYMOUS_USERNAME))
+
+    def test_delete_avatar_on_delete(self):
+        """account deletion for user also deletes their avatar file"""
+        user = User.objects.create_user('Bob', 'bob@example.com', 'Pass.123')
+        dynamic.set_avatar(user)
+        user.save()
+
+        user_avatars = []
+        for avatar in user.avatar_set.all():
+            avatar_path = Path(avatar.image.path)
+            self.assertTrue(avatar_path.exists())
+            self.assertTrue(avatar_path.isfile())
+            user_avatars.append(avatar)
+        self.assertNotEqual(user_avatars, [])
+        
+        user.delete()
+
+        for removed_avatar in user_avatars:
+            avatar_path = Path(removed_avatar.image.path)
+            self.assertFalse(avatar_path.exists())
+            self.assertFalse(avatar_path.isfile())
+
+            with self.assertRaises(Avatar.DoesNotExist):
+                Avatar.objects.get(pk=removed_avatar.pk)
+
     def test_set_username(self):
         """set_username sets username and slug on model"""
         user = User()
@@ -87,3 +125,14 @@ class UserModelTests(TestCase):
         user.set_email('bOb@TEst.com')
         self.assertEqual(user.email, 'bOb@test.com')
         self.assertTrue(user.email_hash)
+
+    def test_mark_for_delete(self):
+        """mark_for_delete deactivates user and sets is_deleting_account flag"""
+        user = User.objects.create_user('Bob', 'bob@example.com', 'Pass.123')
+        user.mark_for_delete()
+        self.assertFalse(user.is_active)
+        self.assertTrue(user.is_deleting_account)
+
+        user_from_db = User.objects.get(pk=user.pk)
+        self.assertFalse(user_from_db.is_active)
+        self.assertTrue(user_from_db.is_deleting_account)

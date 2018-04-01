@@ -2,6 +2,7 @@ import json
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
+from django.test import override_settings
 from django.urls import reverse
 from django.utils.encoding import smart_str
 
@@ -515,6 +516,78 @@ class UserBanTests(AuthenticatedUserTestCase):
         })
 
 
+class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
+    """tests for user request own account delete RPC (POST to /api/users/1/delete-own-account/)"""
+    def setUp(self):
+        super(UserDeleteOwnAccountTests, self).setUp()
+        self.api_link = '/api/users/%s/delete-own-account/' % self.user.pk
+
+    @override_settings(MISAGO_ENABLE_DELETE_OWN_ACCOUNT=False)
+    def test_delete_own_account_feature_disabled(self):
+        """raises 403 error when attempting to delete own account but feature is disabled"""
+        response = self.client.post(self.api_link, {'password': self.USER_PASSWORD})
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete your account.",
+        })
+
+        self.reload_user()
+        self.assertTrue(self.user.is_active)
+        self.assertFalse(self.user.is_deleting_account)
+
+    def test_delete_own_account_is_staff(self):
+        """raises 403 error when attempting to delete own account as admin"""
+        self.user.is_staff = True
+        self.user.save()
+
+        response = self.client.post(self.api_link, {'password': self.USER_PASSWORD})
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete your account because you are an administrator.",
+        })
+
+        self.reload_user()
+        self.assertTrue(self.user.is_active)
+        self.assertFalse(self.user.is_deleting_account)
+
+    def test_delete_own_account_is_superuser(self):
+        """raises 403 error when attempting to delete own account as superadmin"""
+        self.user.is_superuser = True
+        self.user.save()
+
+        response = self.client.post(self.api_link, {'password': self.USER_PASSWORD})
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete your account because you are an administrator.",
+        })
+
+        self.reload_user()
+        self.assertTrue(self.user.is_active)
+        self.assertFalse(self.user.is_deleting_account)
+
+    def test_delete_own_account_invalid_password(self):
+        """raises 400 error when attempting to delete own account with invalid password"""
+        response = self.client.post(self.api_link, {'password': 'hello'})
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'password': ["Entered password is invalid."]
+        })
+
+        self.reload_user()
+        self.assertTrue(self.user.is_active)
+        self.assertFalse(self.user.is_deleting_account)
+
+    def test_delete_own_account(self):
+        """deactivates account and marks it for deletion"""
+        response = self.client.post(self.api_link, {'password': self.USER_PASSWORD})
+        self.assertEqual(response.status_code, 200)
+        
+        self.reload_user()
+        self.assertFalse(self.user.is_active)
+        self.assertTrue(self.user.is_deleting_account)
+
+
 class UserDeleteTests(AuthenticatedUserTestCase):
     """tests for user delete RPC (POST to /api/users/1/delete/)"""
 
@@ -598,7 +671,7 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         response = self.client.post('/api/users/%s/delete/' % self.user.pk)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
-            'detail': "You can't delete yourself.",
+            'detail': "You can't delete your account.",
         })
 
     def test_delete_admin(self):
@@ -684,3 +757,4 @@ class UserDeleteTests(AuthenticatedUserTestCase):
 
         self.assertEqual(Thread.objects.count(), self.threads + 1)
         self.assertEqual(Post.objects.count(), self.posts + 2)
+

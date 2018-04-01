@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from misago.conf import settings
 from misago.core.management.progressbar import show_progress
-from misago.core.pgutils import batch_update
+from misago.core.pgutils import chunk_queryset
 from misago.threads.models import Attachment
 
 
@@ -36,7 +36,7 @@ class Command(BaseCommand):
         synchronized_count = 0
         show_progress(self, synchronized_count, attachments_to_sync)
         start_time = time.time()
-        for attachment in batch_update(queryset):
+        for attachment in chunk_queryset(queryset):
             attachment.delete()
 
             synchronized_count += 1

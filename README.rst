@@ -58,9 +58,12 @@ As of now Misago implements all features considered "must have" on live internet
 * Python-based profile fields framework letting site owners to define custom fields for users to fill in complete with powerful customization options for custom requirements, display or validation logic.
 * Rich polls  system, allowing polls with public and private voters, single and multiple choices as well as ones that allow vote change or limit voting tp limited period of time.
 * Post attachments complete thumbnailing and gif's animation removal.
+* Mark post in question thread as best answer, bringing basic Q&A functionality.
 * Posts edits log allowing you to see how user messages used to look in past as well as revert function protecting you from malignant users emptying their posts contents.
 * Moderation queue for users and categories allowing you to moderate content before it becomes visible to other members of the community.
 * Custom theme developed over bootstrap.
+* Optionally enable users to delete their own account.
+* Anonymise user data on their account's deletion.
 
 Even more features will follow in future releases:
 
@@ -68,7 +71,6 @@ Even more features will follow in future releases:
 * Content reporting for users to report offensive content.
 * Forum-wide JS routing further reducing navigation times.
 * IP search for moderators to find `sock puppets <https://en.wikipedia.org/wiki/Sockpuppet_(Internet)>`_ or bot nets.
-* Mark post in question thread as answer, bringing basic Q&A functionality.
 * Notifications for users to notice content and events of concern faster.
 * Sign in with Facebook/Google/Github/Steam/etc/ect.
 * OAuth2 server for those looking to use Misago as auth provider for other apps.
@@ -85,43 +87,30 @@ If you are looking into using Misago to run live forum, you are absolutely invit
 Development
 ===========
 
-To start Misago site locally, first setup and activate virtual environment for it and then fire following commands::
+To start Misago site locally, first make sure you have `Docker <https://www.docker.com/community-edition#/download>`_ installed.
 
-    python setup.py install
-    misago-start.py testforum
+Next, clone repository on your machine and run following commands::
 
-This will install Misago and its dependencies in your virtual environment and will make pre-configured Misago site for you named ``testforum``::
+   docker-compose build
+   docker-compose run --rm misago initdev
+   docker-compose up
 
-    testforum
-      + avatar_store
-      + media
-      + testforum
-        * __init__.py
-        * settings.py
-        * urls.py
-        * wsgi.py
-      + static
-      + theme
-      + cron.txt
-      + manage.py
+Those commands will install necessary dependencies, create new Misago project `devproject` that you may use for development as well as start Django developer server, enabling you to visit ``127.0.0.1:8000``
+in your browser and see the forum index. You should now be able to sign in with the superuser account, using `Admin` username and `password` password.
 
-Now  edit ``settings.py`` file in your editor of choice in order to set up basic settings like database connection, default timezone or interface language.
+Admin Control Panel is available under the ``127.0.0.1:8000/admincp/`` url.
 
-Next, initialize database by using migrate commands provided by ``manage.py`` admin utility that you'll find in directory up one level from where ``settings.py`` is::
+`manage.py` is available through Docker's `run` command::
+    
+    docker-compose run --rm misago python manage.py
 
-    python manage.py migrate
+Docker also allows you to run tests suite::
+    
+    docker-compose run --rm misago python runtests.py
 
-Then, call ``createsuperuser`` command to create super admin in database::
+If you'll ever want to destroy Docker setup because you no longer need it, run this command::
 
-    python manage.py createsuperuser
-
-Finally start development server using ``runserver`` command::
-
-    python manage.py runserver
-
-If nothing is wrong with your setup, Django developer server will start, enabling you to visit ``127.0.0.1:8000`` in your browser and see the forum index. You should now be able to sign in to user account that you have created ealier.
-
-You will likely want to customize your site via changing settings and creating categories. You can do this with Admin Control Panel available under ``127.0.0.1:8000/admincp/`` url.
+    docker-compose down
 
 
 Frontend

@@ -1,7 +1,7 @@
 import React from 'react'; // jshint ignore:line
 import Form from 'misago/components/form';
 import FormGroup from 'misago/components/form-group'; // jshint ignore:line
-import MergePolls from 'misago/components/merge-polls'; // jshint ignore:line
+import MergeConflict from 'misago/components/merge-conflict'; // jshint ignore:line
 import * as thread from 'misago/reducers/thread';
 import ajax from 'misago/services/ajax'; // jshint ignore:line
 import modal from 'misago/services/modal'; // jshint ignore:line
@@ -61,16 +61,21 @@ export default class extends Form {
     store.dispatch(thread.release());
 
     if (rejection.status === 400) {
-      if (rejection.polls) {
+      if (rejection.best_answers || rejection.polls) {
         modal.show(
-          <MergePolls
+          <MergeConflict
             api={this.props.thread.api.merge}
+            bestAnswers={rejection.best_answers}
             data={{other_thread: this.state.url}}
             polls={rejection.polls}
             onError={this.handleError}
             onSuccess={this.handleSuccessUnmounted}
           />
         );
+      } else if (rejection.best_answer) {
+        snackbar.error(rejection.best_answer[0]);
+      } else if (rejection.poll) {
+        snackbar.error(rejection.poll[0]);
       } else {
         snackbar.error(rejection.detail);
       }

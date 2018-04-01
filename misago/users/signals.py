@@ -1,6 +1,7 @@
 from django.dispatch import Signal, receiver
 
 
+anonymize_user_content = Signal()
 delete_user_content = Signal()
 username_changed = Signal()
 

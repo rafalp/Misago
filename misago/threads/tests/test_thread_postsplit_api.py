@@ -603,6 +603,38 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         # posts were moved to new thread
         self.assertEqual(split_thread.post_set.filter(pk__in=self.posts).count(), 2)
 
+    def test_split_best_answer(self):
+        """api splits best answer to new thread"""
+        best_answer = testutils.reply_thread(self.thread)
+
+        self.thread.set_best_answer(self.user, best_answer)
+        self.thread.synchronize()
+        self.thread.save()
+
+        self.refresh_thread()
+        self.assertEqual(self.thread.best_answer, best_answer)
+        self.assertEqual(self.thread.replies, 3)
+
+        response = self.client.post(
+            self.api_link,
+            json.dumps({
+                'posts': [best_answer.pk],
+                'title': 'Split thread.',
+                'category': self.category.id,
+            }),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+
+        # best_answer was moved and unmarked
+        self.refresh_thread()
+        self.assertEqual(self.thread.replies, 2)
+        self.assertIsNone(self.thread.best_answer)
+
+        split_thread = self.category.thread_set.get(slug='split-thread')
+        self.assertEqual(split_thread.replies, 0)
+        self.assertIsNone(split_thread.best_answer)
+
     def test_split_kitchensink(self):
         """api splits posts with kitchensink"""
         self.refresh_thread()

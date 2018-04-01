@@ -26,6 +26,9 @@ class ThreadType(object):
     def get_thread_new_post_url(self, thread):
         return None
 
+    def get_thread_best_answer_url(self, thread):
+        return None
+
     def get_thread_unapproved_post_url(self, thread):
         return None
 

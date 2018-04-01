@@ -35,6 +35,7 @@ def preload_settings_json(request):
     request.frontend_context['conf'].update({
         'csrf_cookie_name': misago_settings.CSRF_COOKIE_NAME,
         'threads_on_index': misago_settings.MISAGO_THREADS_ON_INDEX,
+        'enable_delete_own_account': misago_settings.MISAGO_ENABLE_DELETE_OWN_ACCOUNT,
         'style': STYLE,
     })
 

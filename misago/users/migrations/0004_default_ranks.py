@@ -7,7 +7,7 @@ from django.utils.translation import ugettext
 from misago.core.utils import slugify
 
 
-_ = lambda x: x
+_ = lambda s: s
 
 
 def create_default_ranks(apps, schema_editor):

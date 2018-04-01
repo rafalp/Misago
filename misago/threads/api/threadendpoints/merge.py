@@ -1,3 +1,4 @@
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
@@ -6,10 +7,10 @@ from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
 from misago.threads.events import record_event
+from misago.threads.mergeconflict import MergeConflict
 from misago.threads.models import Thread
 from misago.threads.moderation import threads as moderation
 from misago.threads.permissions import allow_merge_thread
-from misago.threads.pollmergehandler import PollMergeHandler
 from misago.threads.serializers import (
     MergeThreadSerializer, MergeThreadsSerializer, ThreadsListSerializer)
 
@@ -28,12 +29,23 @@ def thread_merge_endpoint(request, thread, viewmodel):
 
     serializer.is_valid(raise_exception=True)
 
-    # merge polls
+    # merge conflict
     other_thread = serializer.validated_data['other_thread']
-    poll = serializer.validated_data['poll']
 
-    if poll:
-        if hasattr(other_thread, 'poll') and poll != other_thread.poll:
+    best_answer = serializer.validated_data.get('best_answer')
+    if 'best_answer' in serializer.merge_conflict and not best_answer:
+        other_thread.clear_best_answer()
+    if best_answer and best_answer != other_thread:
+        other_thread.best_answer_id = thread.best_answer_id
+        other_thread.best_answer_is_protected = thread.best_answer_is_protected
+        other_thread.best_answer_marked_on = thread.best_answer_marked_on
+        other_thread.best_answer_marked_by_id = thread.best_answer_marked_by_id
+        other_thread.best_answer_marked_by_name = thread.best_answer_marked_by_name
+        other_thread.best_answer_marked_by_slug = thread.best_answer_marked_by_slug
+
+    poll = serializer.validated_data.get('poll')
+    if 'poll' in serializer.merge_conflict:
+        if poll and poll.thread_id != other_thread.id:
             other_thread.poll.delete()
         poll.move(other_thread)
     else:
@@ -72,6 +84,29 @@ def threads_merge_endpoint(request):
 
     serializer.is_valid(raise_exception=True)
 
+    threads = serializer.validated_data['threads']
+    invalid_threads = []
+
+    for thread in threads:
+        try:
+            allow_merge_thread(request.user, thread)
+        except PermissionDenied as e:
+            invalid_threads.append({
+                'id': thread.pk,
+                'title': thread.title,
+                'errors': [text_type(e)]
+            })
+
+    if invalid_threads:
+        return Response(invalid_threads, status=403)
+
+    # handle merge conflict
+    merge_conflict = MergeConflict(serializer.validated_data, threads)
+    merge_conflict.is_valid(raise_exception=True)
+
+    new_thread = merge_threads(request, serializer.validated_data, threads, merge_conflict)
+    return Response(ThreadsListSerializer(new_thread).data)
+
     data = serializer.validated_data
     
     threads = data['threads']
@@ -86,6 +121,18 @@ def threads_merge_endpoint(request):
     new_thread.set_title(data['title'])
     new_thread.save()
 
+    resolution = merge_conflict.get_resolution()
+
+    best_answer = resolution.get('best_answer')
+    if best_answer:
+        new_thread.best_answer_id = best_answer.best_answer_id
+        new_thread.best_answer_is_protected = best_answer.best_answer_is_protected
+        new_thread.best_answer_marked_on = best_answer.best_answer_marked_on
+        new_thread.best_answer_marked_by_id = best_answer.best_answer_marked_by_id
+        new_thread.best_answer_marked_by_name = best_answer.best_answer_marked_by_name
+        new_thread.best_answer_marked_by_slug = best_answer.best_answer_marked_by_slug
+
+    poll = resolution.get('poll')
     if poll:
         poll.move(new_thread)
 
