@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-20 23:08+0200\n"
+"POT-Creation-Date: 2018-04-01 00:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Carlos López <carlos@vocalaze.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/misago/teams/65369/es/)\n"
@@ -25,7 +25,7 @@ msgstr ""
 msgid "Permissions"
 msgstr "Permisos"
 
-#: acl/admin.py:33 users/forms/admin.py:410
+#: acl/admin.py:33 users/forms/admin.py:414
 msgid "User roles"
 msgstr "Roles de usuario"
 
@@ -33,39 +33,39 @@ msgstr "Roles de usuario"
 msgid "Role name"
 msgstr "Nombre del rol"
 
-#: acl/migrations/0003_default_roles.py:12
+#: acl/migrations/0003_default_roles.py:14
 msgid "Member"
 msgstr "Miembro"
 
-#: acl/migrations/0003_default_roles.py:56
+#: acl/migrations/0003_default_roles.py:58
 msgid "Guest"
 msgstr "Invitado"
 
-#: acl/migrations/0003_default_roles.py:91
-#: categories/migrations/0003_categories_roles.py:114
-#: categories/migrations/0003_categories_roles.py:164
+#: acl/migrations/0003_default_roles.py:93
+#: categories/migrations/0003_categories_roles.py:90
+#: categories/migrations/0003_categories_roles.py:140
 #: users/migrations/0004_default_ranks.py:34
 msgid "Moderator"
 msgstr "Moderador"
 
-#: acl/migrations/0003_default_roles.py:151
+#: acl/migrations/0003_default_roles.py:153
 msgid "Renaming users"
 msgstr "Renombrando usuarios"
 
-#: acl/migrations/0003_default_roles.py:161
+#: acl/migrations/0003_default_roles.py:163
 msgid "Banning users"
 msgstr "Prohibir usuarios"
 
-#: acl/migrations/0003_default_roles.py:177
-#: users/migrations/0004_default_ranks.py:37 users/permissions/delete.py:22
+#: acl/migrations/0003_default_roles.py:179
+#: users/migrations/0004_default_ranks.py:37 users/permissions/delete.py:25
 msgid "Deleting users"
 msgstr "Eliminar usuarios"
 
-#: acl/migrations/0003_default_roles.py:188
+#: acl/migrations/0003_default_roles.py:190
 msgid "Can't be blocked"
 msgstr "No se puede bloquear"
 
-#: acl/migrations/0003_default_roles.py:198
+#: acl/migrations/0003_default_roles.py:200
 #: threads/permissions/privatethreads.py:34
 #: threads/threadtypes/privatethread.py:13 threads/viewmodels/thread.py:143
 #: users/migrations/0004_default_ranks.py:35
@@ -73,7 +73,7 @@ msgstr "No se puede bloquear"
 msgid "Private threads"
 msgstr "Hilos privados"
 
-#: acl/migrations/0003_default_roles.py:213
+#: acl/migrations/0003_default_roles.py:215
 #: users/migrations/0004_default_ranks.py:36
 msgid "Private threads moderator"
 msgstr "Moderador de hilos privados"
@@ -171,11 +171,11 @@ msgstr "Jerarquía de categorías"
 msgid "Category roles"
 msgstr "Roles de categoría"
 
-#: categories/forms.py:47 users/forms/admin.py:384
+#: categories/forms.py:47 users/forms/admin.py:388
 msgid "Name"
 msgstr "Nombre"
 
-#: categories/forms.py:49 users/forms/admin.py:400
+#: categories/forms.py:49 users/forms/admin.py:404
 msgid "Description"
 msgstr "Descripción"
 
@@ -183,7 +183,7 @@ msgstr "Descripción"
 msgid "Optional description explaining category intented purpose."
 msgstr "Descripción opcional que explica el propósito de la categoría."
 
-#: categories/forms.py:56 categories/forms.py:68 users/forms/admin.py:417
+#: categories/forms.py:56 categories/forms.py:68 users/forms/admin.py:421
 msgid "CSS class"
 msgstr "Clase CSS"
 
@@ -217,8 +217,8 @@ msgstr ""
 #: templates/misago/threadslist/threads.html:63
 #: threads/migrations/0002_threads_settings.py:16
 #: threads/migrations/0004_update_settings.py:16
-#: threads/permissions/threads.py:73 threads/permissions/threads.py:104
-#: threads/search.py:20 threads/viewmodels/thread.py:118 users/apps.py:79
+#: threads/permissions/threads.py:72 threads/permissions/threads.py:103
+#: threads/search.py:20 threads/viewmodels/thread.py:118 users/apps.py:88
 msgid "Threads"
 msgstr "Hilos"
 
@@ -352,7 +352,7 @@ msgstr "Rol"
 msgid "No access"
 msgstr "Sin acceso"
 
-#: categories/migrations/0002_default_categories.py:33
+#: categories/migrations/0002_default_categories.py:35
 msgid "First category"
 msgstr "Primera categoría"
 
@@ -372,13 +372,17 @@ msgstr "Responder a hilos"
 msgid "Start and reply threads"
 msgstr "Empieza y responde hilos"
 
-#: categories/migrations/0003_categories_roles.py:90
-msgid "Start and reply threads, make polls"
-msgstr "Empieza y responde hilos, realiza encuestas"
-
-#: categories/migrations/0006_moderation_queue_roles.py:12
+#: categories/migrations/0006_moderation_queue_roles.py:14
 msgid "In moderation queue"
 msgstr "En cola de moderación"
+
+#: categories/migrations/0007_best_answers_roles.py:15
+msgid "Start and reply threads, mark best answers"
+msgstr ""
+
+#: categories/migrations/0007_best_answers_roles.py:46
+msgid "Best answers moderator"
+msgstr ""
 
 #: categories/permissions.py:16
 msgid "Category access"
@@ -500,20 +504,21 @@ msgstr "La autenticación de solicitud no es válida."
 
 #: core/forms.py:43 templates/misago/admin/users/edit.html:61
 #: templates/misago/admin/users/edit.html:78
-#: templates/misago/admin/users/edit.html:157 users/forms/admin.py:586
+#: templates/misago/admin/users/edit.html:174 users/forms/admin.py:590
 msgid "Yes"
 msgstr "Sí"
 
 #: core/forms.py:44 templates/misago/admin/users/edit.html:63
 #: templates/misago/admin/users/edit.html:80
-#: templates/misago/admin/users/edit.html:159 threads/permissions/polls.py:36
-#: threads/permissions/polls.py:46 threads/permissions/polls.py:56
-#: threads/permissions/threads.py:124 threads/permissions/threads.py:138
-#: threads/permissions/threads.py:154 threads/permissions/threads.py:165
-#: threads/permissions/threads.py:179 threads/permissions/threads.py:190
-#: threads/permissions/threads.py:206 threads/permissions/threads.py:217
-#: threads/permissions/threads.py:248 users/forms/admin.py:587
-#: users/models/user.py:144
+#: templates/misago/admin/users/edit.html:176
+#: threads/permissions/bestanswers.py:36 threads/permissions/bestanswers.py:46
+#: threads/permissions/polls.py:36 threads/permissions/polls.py:46
+#: threads/permissions/polls.py:56 threads/permissions/threads.py:123
+#: threads/permissions/threads.py:137 threads/permissions/threads.py:153
+#: threads/permissions/threads.py:164 threads/permissions/threads.py:178
+#: threads/permissions/threads.py:189 threads/permissions/threads.py:205
+#: threads/permissions/threads.py:216 threads/permissions/threads.py:247
+#: users/forms/admin.py:591 users/models/user.py:144
 msgid "No"
 msgstr "No"
 
@@ -721,15 +726,15 @@ msgstr "%(title)s ha escrito:"
 msgid "Quoted message:"
 msgstr "Mensaje citado:"
 
-#: project_template/project_name/settings.py:347
+#: project_template/project_name/settings.py:353
 msgid "Personal"
 msgstr "Personal"
 
-#: project_template/project_name/settings.py:356
+#: project_template/project_name/settings.py:362
 msgid "Contact"
 msgstr "Contacto"
 
-#: project_template/project_name/settings.py:364 users/models/ban.py:77
+#: project_template/project_name/settings.py:370 users/models/ban.py:77
 msgid "IP address"
 msgstr "Dirección IP"
 
@@ -777,7 +782,7 @@ msgstr "Valor"
 msgid "Account activated"
 msgstr "Cuenta activada"
 
-#: templates/misago/activation/done.html:19
+#: templates/misago/activation/done.html:20
 msgid ""
 "You can now sign in to finish setting up your account and to participate in "
 "or start new discussions."
@@ -789,7 +794,7 @@ msgstr ""
 msgid "Activation error"
 msgstr "Error de activación"
 
-#: templates/misago/activation/error.html:18
+#: templates/misago/activation/error.html:19
 msgid "Can't activate account."
 msgstr "No se puede activar la cuenta."
 
@@ -834,7 +839,7 @@ msgstr "Para solicitar un nuevo enlace de activación, habilite JavaScript."
 msgid "Activation failed"
 msgstr "Activación fallida"
 
-#: templates/misago/activation/stopped.html:18
+#: templates/misago/activation/stopped.html:19
 msgid "Your account can't be activated at this time."
 msgstr "Tu cuenta no puede ser activada en este momento."
 
@@ -905,7 +910,7 @@ msgid "Availability"
 msgstr "Disponibilidad"
 
 #: templates/misago/admin/attachmenttypes/list.html:16
-#: templates/misago/admin/bans/list.html:17 users/forms/admin.py:571
+#: templates/misago/admin/bans/list.html:17 users/forms/admin.py:575
 msgid "Type"
 msgstr "Tipo"
 
@@ -963,8 +968,8 @@ msgstr "Mensaje"
 msgid "Ban"
 msgstr "Ban"
 
-#: templates/misago/admin/bans/list.html:18 users/forms/admin.py:489
-#: users/forms/admin.py:542
+#: templates/misago/admin/bans/list.html:18 users/forms/admin.py:493
+#: users/forms/admin.py:546
 msgid "Expires on"
 msgstr "Expira el"
 
@@ -1185,7 +1190,7 @@ msgstr "La página solicitada no está disponible."
 #: templates/misago/admin/errorpages/403.html:21
 #: templates/misago/errorpages/403.html:12
 #: templates/misago/errorpages/403.html:24
-#: templates/misago/errorpages/403.html:43
+#: templates/misago/errorpages/403.html:44
 msgid "You don't have permission to access this page."
 msgstr "No tienes permisos para acceder a esta página."
 
@@ -1197,7 +1202,7 @@ msgid "Page not found"
 msgstr "Página no encontrada"
 
 #: templates/misago/admin/errorpages/404.html:17
-#: templates/misago/errorpages/404.html:31
+#: templates/misago/errorpages/404.html:32
 msgid "Requested page could not be found."
 msgstr "La página solicitada no se pudo encontrar."
 
@@ -1219,15 +1224,15 @@ msgstr "Solicitud bloqueada"
 
 #: templates/misago/admin/errorpages/csrf_failure.html:19
 #: templates/misago/admin/errorpages/csrf_failure_authenticated.html:17
-#: templates/misago/errorpages/csrf_failure.html:23
-#: templates/misago/errorpages/csrf_failure_authenticated.html:18
+#: templates/misago/errorpages/csrf_failure.html:24
+#: templates/misago/errorpages/csrf_failure_authenticated.html:19
 msgid "Suspicious request blocked."
 msgstr "Solicitud sospechosa bloqueada."
 
 #: templates/misago/admin/errorpages/csrf_failure.html:20
 #: templates/misago/admin/errorpages/csrf_failure_authenticated.html:18
-#: templates/misago/errorpages/csrf_failure.html:24
-#: templates/misago/errorpages/csrf_failure_authenticated.html:19
+#: templates/misago/errorpages/csrf_failure.html:25
+#: templates/misago/errorpages/csrf_failure_authenticated.html:20
 msgid ""
 "This is usually caused by your browser not accepting or using outdated "
 "cookies."
@@ -1237,8 +1242,8 @@ msgstr ""
 
 #: templates/misago/admin/errorpages/csrf_failure.html:21
 #: templates/misago/admin/errorpages/csrf_failure_authenticated.html:19
-#: templates/misago/errorpages/csrf_failure.html:25
-#: templates/misago/errorpages/csrf_failure_authenticated.html:20
+#: templates/misago/errorpages/csrf_failure.html:26
+#: templates/misago/errorpages/csrf_failure_authenticated.html:21
 msgid "Check your browser configuration and try again."
 msgstr "Verifique la configuración de su navegador y vuelva a intentarlo."
 
@@ -1350,7 +1355,7 @@ msgstr "Contenido de BD"
 #: templates/misago/admin/users/list.html:23
 #: templates/misago/profile/posts.html:5 templates/misago/profile/posts.html:8
 #: threads/migrations/0002_threads_settings.py:48
-#: threads/migrations/0004_update_settings.py:48 users/apps.py:73
+#: threads/migrations/0004_update_settings.py:48 users/apps.py:82
 msgid "Posts"
 msgstr "Mensajes"
 
@@ -1569,7 +1574,7 @@ msgstr "Credenciales de inicio de sesión"
 msgid "Signature"
 msgstr "Firma"
 
-#: templates/misago/admin/users/edit.html:130 users/apps.py:22
+#: templates/misago/admin/users/edit.html:130 users/apps.py:23
 msgid "Forum options"
 msgstr "Opciones de foro"
 
@@ -1581,7 +1586,19 @@ msgstr "Preferencias automáticas de suscripción"
 msgid "Account status"
 msgstr "Estado de Cuenta"
 
-#: templates/misago/admin/users/edit.html:176
+#: templates/misago/admin/users/edit.html:154
+msgid ""
+"This user is deleting their account. It has been deactivated for the "
+"duration of the process."
+msgstr ""
+
+#: templates/misago/admin/users/edit.html:158
+msgid ""
+"No additional action is required. This account will be deleted "
+"automatically."
+msgstr ""
+
+#: templates/misago/admin/users/edit.html:193
 msgid "No staff message is available."
 msgstr "No hay mensaje de personal disponible."
 
@@ -1604,36 +1621,40 @@ msgstr "E-mail"
 msgid "Joined"
 msgstr "Unido"
 
-#: templates/misago/admin/users/list.html:41
+#: templates/misago/admin/users/list.html:39
+msgid "Is deleting their account"
+msgstr ""
+
+#: templates/misago/admin/users/list.html:43
 msgid "Is disabled by administrator"
 msgstr "Está deshabilitado por el administrador"
 
-#: templates/misago/admin/users/list.html:48
+#: templates/misago/admin/users/list.html:54
 msgid "Requires activation by administrator"
 msgstr "Requiere activación por parte del administrador"
 
-#: templates/misago/admin/users/list.html:50
+#: templates/misago/admin/users/list.html:56
 msgid "Has to activate account"
 msgstr "Tiene que activar la cuenta"
 
-#: templates/misago/admin/users/list.html:57
+#: templates/misago/admin/users/list.html:63
 msgid "Super administrator"
 msgstr "Súper administrador"
 
-#: templates/misago/admin/users/list.html:59
+#: templates/misago/admin/users/list.html:65
 msgid "Administrator"
 msgstr "Administrador"
 
-#: templates/misago/admin/users/list.html:84
+#: templates/misago/admin/users/list.html:90
 msgid "Edit user"
 msgstr "Editar usuario"
 
-#: templates/misago/admin/users/list.html:93
+#: templates/misago/admin/users/list.html:99
 msgid "No users matching search criteria have been found."
 msgstr ""
 "No se han encontrado usuarios que coincidan con los criterios de búsqueda."
 
-#: templates/misago/admin/users/list.html:99
+#: templates/misago/admin/users/list.html:105
 msgid "Search users"
 msgstr "Búqueda de Usuarios"
 
@@ -1966,11 +1987,11 @@ msgstr ""
 "%(user)s, estás recibiendo este mensaje porque %(poster)s ha respondido a un"
 " hilo \"%(thread)s\" al que estás suscrito."
 
-#: templates/misago/errorpages/403.html:39
+#: templates/misago/errorpages/403.html:40
 msgid "This page is not available."
 msgstr "Esta página no está disponible."
 
-#: templates/misago/errorpages/404.html:32
+#: templates/misago/errorpages/404.html:33
 msgid ""
 "The link you followed was incorrect or the page has been moved or deleted."
 msgstr "El enlace que siguió fue incorrecto o la página se movió o eliminó."
@@ -1982,13 +2003,13 @@ msgstr "Sentido contrario"
 
 #: templates/misago/errorpages/405.html:9
 #: templates/misago/errorpages/405.html:17
-#: templates/misago/errorpages/405.html:32
+#: templates/misago/errorpages/405.html:33
 msgid "This page should be reached via form submission or pressing button."
 msgstr ""
 "Esta página debe llegar a través del envío de formularios o presionando el "
 "botón."
 
-#: templates/misago/errorpages/405.html:31
+#: templates/misago/errorpages/405.html:32
 msgid "Page reached in wrong way."
 msgstr "Página alcanzada de manera incorrecta."
 
@@ -2000,12 +2021,12 @@ msgstr "Has sido baneado"
 msgid "You are banned from accessing this page."
 msgstr "Tienes prohibido el acceso a esta página."
 
-#: templates/misago/errorpages/banned.html:35
+#: templates/misago/errorpages/banned.html:36
 #, python-format
 msgid "This ban expires on %(expires_on)s."
 msgstr "El ban expirará en %(expires_on)s."
 
-#: templates/misago/errorpages/banned.html:39
+#: templates/misago/errorpages/banned.html:40
 msgid "This ban is permanent."
 msgstr "El ban es permanente."
 
@@ -2026,7 +2047,7 @@ msgstr "Para una experiencia completa activa JavaScript."
 msgid "Change forgotten password error"
 msgstr "Cambiar el error de contraseña olvidada"
 
-#: templates/misago/forgottenpassword/error.html:18
+#: templates/misago/forgottenpassword/error.html:19
 msgid "Can't change forgotten password."
 msgstr "No se puede cambiar la contraseña olvidada."
 
@@ -2072,16 +2093,16 @@ msgstr ""
 msgid "Change sign-in credentials"
 msgstr "Cambiar credenciales de inicio de sesión"
 
-#: templates/misago/options/credentials_changed.html:19
+#: templates/misago/options/credentials_changed.html:20
 msgid "From now you will need to use new credentials when signing in."
 msgstr ""
 "A partir de ahora, deberá usar nuevas credenciales cuando inicie sesión."
 
-#: templates/misago/options/credentials_error.html:18
+#: templates/misago/options/credentials_error.html:19
 msgid "Change confirmation link is invalid."
 msgstr "El enlace de confirmación de cambio no es válido."
 
-#: templates/misago/options/credentials_error.html:19
+#: templates/misago/options/credentials_error.html:20
 msgid ""
 "The confirmation link belongs to other user, was already used, or has "
 "expired."
@@ -2093,11 +2114,11 @@ msgstr ""
 msgid "Change your options"
 msgstr "Cambia tus opciones"
 
-#: templates/misago/options/noscript.html:19
+#: templates/misago/options/noscript.html:20
 msgid "Enable JavaScript"
 msgstr "Habilitar Javascript"
 
-#: templates/misago/options/noscript.html:20
+#: templates/misago/options/noscript.html:21
 msgid "You need to enable JavaScript in your browser to change your options."
 msgstr "Debe habilitar JavaScript en su navegador para cambiar sus opciones."
 
@@ -2177,7 +2198,7 @@ msgstr "Ver resultados"
 
 #: templates/misago/profile/ban_details.html:5
 #: templates/misago/profile/ban_details.html:8
-#: templates/misago/profile/ban_details.html:15 users/apps.py:110
+#: templates/misago/profile/ban_details.html:15 users/apps.py:119
 msgid "Ban details"
 msgstr "Detalles del baneo"
 
@@ -2224,7 +2245,7 @@ msgstr[1] "Empezó %(threads)s hilos."
 
 #: templates/misago/profile/details.html:5
 #: templates/misago/profile/details.html:8
-#: templates/misago/profile/details.html:18 users/apps.py:97
+#: templates/misago/profile/details.html:18 users/apps.py:106
 msgid "Details"
 msgstr "Detalles"
 
@@ -2254,7 +2275,7 @@ msgstr ""
 "mensaje."
 
 #: templates/misago/profile/followers.html:5
-#: templates/misago/profile/followers.html:8 users/apps.py:85
+#: templates/misago/profile/followers.html:8 users/apps.py:94
 msgid "Followers"
 msgstr "Seguidores"
 
@@ -2282,7 +2303,7 @@ msgid "%(username)s has no followers."
 msgstr "%(username)s no tiene seguidores."
 
 #: templates/misago/profile/follows.html:5
-#: templates/misago/profile/follows.html:8 users/apps.py:91
+#: templates/misago/profile/follows.html:8 users/apps.py:100
 msgid "Follows"
 msgstr "Seguidos"
 
@@ -2309,11 +2330,15 @@ msgstr "No sigues a nadie."
 msgid "%(username)s is not following any users."
 msgstr "%(username)s no está siguiendo a nadie."
 
-#: templates/misago/profile/header.html:6
+#: templates/misago/profile/header.html:7
+msgid "This user is deleting their account."
+msgstr ""
+
+#: templates/misago/profile/header.html:9
 msgid "This user's account has been disabled by administrator."
 msgstr "La cuenta de este usuario ha sido deshabilitada por un administrador."
 
-#: templates/misago/profile/header.html:42
+#: templates/misago/profile/header.html:46
 #, python-format
 msgid "Member since %(joined_on)s"
 msgstr "Miembro desde %(joined_on)s"
@@ -2365,7 +2390,7 @@ msgid "%(username)s started no threads."
 msgstr "%(username)s no ha iniciado ningún hilo."
 
 #: templates/misago/profile/username_history.html:5
-#: templates/misago/profile/username_history.html:8 users/apps.py:103
+#: templates/misago/profile/username_history.html:8 users/apps.py:112
 msgid "Username history"
 msgstr "Historial de nombres de usuario"
 
@@ -2509,12 +2534,22 @@ msgstr "%(filetype)s ,%(size)s, cargado por %(uploader)s en %(uploaded_on)s."
 msgid "This post is hidden. You cannot not see its contents."
 msgstr "Esta publicación está oculta. No puedes ver sus contenidos."
 
-#: templates/misago/thread/posts/post/flags.html:5
+#: templates/misago/thread/posts/post/flags.html:7
+#, python-format
+msgid "Marked as best answer by you %(marked_on)s."
+msgstr ""
+
+#: templates/misago/thread/posts/post/flags.html:13
+#, python-format
+msgid "Marked as best answer by %(marked_by)s %(marked_on)s."
+msgstr ""
+
+#: templates/misago/thread/posts/post/flags.html:23
 msgid "This post is hidden. Only users with permission may see its contents."
 msgstr ""
 "El mensaje está oculto. Sólo usuarios con permisos pueden ver su contenido."
 
-#: templates/misago/thread/posts/post/flags.html:11
+#: templates/misago/thread/posts/post/flags.html:29
 msgid ""
 "This post is unapproved. Only users with permission to approve posts and its"
 " author may see its contents."
@@ -2522,7 +2557,7 @@ msgstr ""
 "El mensaje no ha sido aprobado. Sólo los usuarios con permisos pueden "
 "aprobar mensajes y sólo su autor puede ver su contenido."
 
-#: templates/misago/thread/posts/post/flags.html:17
+#: templates/misago/thread/posts/post/flags.html:35
 msgid "This post is protected. Only moderators may change it."
 msgstr "El mensaje está protegido. Sólo los moderadores pueden cambiarlo."
 
@@ -2580,17 +2615,17 @@ msgid "Unapproved posts"
 msgstr "Mensajes no aprobados"
 
 #: templates/misago/thread/stats.html:49
-#: templates/misago/threadslist/thread.html:109
+#: templates/misago/threadslist/thread.html:119
 msgid "Hidden"
 msgstr "Oculto"
 
 #: templates/misago/thread/stats.html:59
-#: templates/misago/threadslist/thread.html:119
+#: templates/misago/threadslist/thread.html:129
 msgid "Closed"
 msgstr "Cerrado"
 
 #: templates/misago/thread/stats.html:68
-#: templates/misago/threadslist/thread.html:138
+#: templates/misago/threadslist/thread.html:153
 #, python-format
 msgid "%(replies)s reply"
 msgid_plural "%(replies)s replies"
@@ -2615,6 +2650,14 @@ msgid_plural "%(replies)s replies, last one from %(last_post_on)s."
 msgstr[0] "Respuesta de %(replies)s, la última de %(last_post_on)s."
 msgstr[1] "Respuesta de %(replies)s, la última de %(last_post_on)s."
 
+#: templates/misago/thread/thread.html:24
+msgid "Answered."
+msgstr ""
+
+#: templates/misago/thread/thread.html:24
+msgid "Closed."
+msgstr ""
+
 #: templates/misago/thread/toolbar-top.html:6
 msgid "Go to first new post"
 msgstr "Ir al primer mensaje nuevo"
@@ -2626,6 +2669,14 @@ msgstr "Ir al primer mensaje no aprobado"
 #: templates/misago/thread/toolbar-top.html:19
 msgid "Go to last post"
 msgstr "Ir al último mensaje"
+
+#: templates/misago/thread/toolbar-top.html:25
+msgid "Go to best answers"
+msgstr ""
+
+#: templates/misago/thread/toolbar-top.html:26
+msgid "Best answer"
+msgstr ""
 
 #: templates/misago/threadslist/base.html:63
 msgid "There are no threads in this category."
@@ -2686,12 +2737,16 @@ msgstr "Suscrito"
 msgid "New posts"
 msgstr "Nuevos mensajes"
 
-#: templates/misago/threadslist/thread.html:129
+#: templates/misago/threadslist/thread.html:59
+msgid "Answered"
+msgstr ""
+
+#: templates/misago/threadslist/thread.html:139
 msgid "Poll"
 msgstr "Encuesta"
 
 #: templates/misago/userslists/active_posters.html:5
-#: templates/misago/userslists/active_posters.html:23 users/apps.py:49
+#: templates/misago/userslists/active_posters.html:23
 msgid "Active posters"
 msgstr "Carteles activos"
 
@@ -2799,16 +2854,16 @@ msgstr "No puedes combinar publicaciones en este hilo."
 msgid "You can't move posts in this thread."
 msgstr "No puedes mover publicaciones en este hilo."
 
-#: threads/api/postendpoints/patch_post.py:36
+#: threads/api/postendpoints/patch_post.py:37
 msgid "You can't like posts in this category."
 msgstr "No te pueden gustar las publicaciones en esta categoría."
 
-#: threads/api/postendpoints/patch_post.py:107
-#: threads/api/threadendpoints/patch.py:128
+#: threads/api/postendpoints/patch_post.py:108
+#: threads/api/threadendpoints/patch.py:130
 msgid "Content approval can't be reversed."
 msgstr "La aprobación del contenido no se puede revertir."
 
-#: threads/api/postendpoints/patch_post.py:184
+#: threads/api/postendpoints/patch_post.py:186
 msgid "One or more posts to update could not be found."
 msgstr "No se encontraron una o más publicaciones para actualizar."
 
@@ -2922,59 +2977,71 @@ msgstr ""
 "No hay categorías que permitan nuevos hilos disponibles para usted en este "
 "momento."
 
-#: threads/api/threadendpoints/merge.py:118
-#: threads/serializers/moderation.py:418 threads/serializers/moderation.py:465
-msgid "Invalid choice."
-msgstr "Elección inválida"
+#: threads/api/threadendpoints/patch.py:54
+msgid "Not a valid string."
+msgstr ""
 
-#: threads/api/threadendpoints/patch.py:52
-msgid "Invalid thread title."
-msgstr "Título de título no válido"
-
-#: threads/api/threadendpoints/patch.py:72
+#: threads/api/threadendpoints/patch.py:74
 msgid "You can't change globally pinned threads weights in this category."
 msgstr ""
 "No puedes cambiar los pesos de hilos fijados a nivel global en esta "
 "categoría."
 
-#: threads/api/threadendpoints/patch.py:78
+#: threads/api/threadendpoints/patch.py:80
 msgid "You can't pin threads globally in this category."
 msgstr "No puedes fijar hilos de manera global en esta categoría."
 
-#: threads/api/threadendpoints/patch.py:104
+#: threads/api/threadendpoints/patch.py:106
 msgid "You can't move thread to the category it's already in."
 msgstr "No puedes mover el hilo a la categoría en la que ya está."
 
-#: threads/api/threadendpoints/patch.py:151
+#: threads/api/threadendpoints/patch.py:153
 msgid "You don't have permission to close this thread."
 msgstr "No tienes permiso para cerrar este hilo."
 
-#: threads/api/threadendpoints/patch.py:153
+#: threads/api/threadendpoints/patch.py:155
 msgid "You don't have permission to open this thread."
 msgstr "No tienes permiso para abrir este hilo."
 
 #: threads/api/threadendpoints/patch.py:207
+#: threads/api/threadendpoints/patch.py:244
+#: threads/api/threadendpoints/patch.py:301
+#: threads/api/threadendpoints/patch.py:331
+msgid "A valid integer is required."
+msgstr ""
+
+#: threads/api/threadendpoints/patch.py:219
+msgid "This post is already marked as thread's best answer."
+msgstr ""
+
+#: threads/api/threadendpoints/patch.py:252
+msgid ""
+"This post can't be unmarked because it's not currently marked as best "
+"answer."
+msgstr ""
+
+#: threads/api/threadendpoints/patch.py:277
 msgid "You have to enter new participant's username."
 msgstr "Debes ingresar el nombre de usuario del nuevo participante."
 
-#: threads/api/threadendpoints/patch.py:210
+#: threads/api/threadendpoints/patch.py:280
 msgid "No user with such name exists."
 msgstr "No existe ningún usuario con ese nombre."
 
-#: threads/api/threadendpoints/patch.py:213
+#: threads/api/threadendpoints/patch.py:283
 msgid "This user is already thread participant."
 msgstr "Este usuario ya participa en el hilo."
 
-#: threads/api/threadendpoints/patch.py:237
-#: threads/api/threadendpoints/patch.py:270
+#: threads/api/threadendpoints/patch.py:307
+#: threads/api/threadendpoints/patch.py:340
 msgid "Participant doesn't exist."
 msgstr "El participante no existe."
 
-#: threads/api/threadendpoints/patch.py:266
+#: threads/api/threadendpoints/patch.py:336
 msgid "This user already is thread owner."
 msgstr "Este usuario ya es propietario del hilo."
 
-#: threads/api/threadendpoints/patch.py:377
+#: threads/api/threadendpoints/patch.py:447
 msgid "One or more threads to update could not be found."
 msgstr "Uno o más hilos para actualizar no se pudieron encontrar."
 
@@ -3014,7 +3081,7 @@ msgstr "Nombre de archivo contiene"
 msgid "File type"
 msgstr "Tipo de archivo"
 
-#: threads/forms.py:24 users/forms/admin.py:591
+#: threads/forms.py:24 users/forms/admin.py:595
 msgid "State"
 msgstr "Estado"
 
@@ -3103,6 +3170,20 @@ msgstr ""
 " descargar archivos adjuntos puedan descargar archivos adjuntos de este "
 "tipo."
 
+#: threads/mergeconflict.py:57
+msgid "Unmark all best answers"
+msgstr ""
+
+#: threads/mergeconflict.py:76
+msgid "Delete all polls"
+msgstr "Eliminar todas las encuestas"
+
+#: threads/mergeconflict.py:127 threads/serializers/moderation.py:424
+#: threads/serializers/moderation.py:430 threads/serializers/moderation.py:496
+#: threads/serializers/moderation.py:502
+msgid "Invalid choice."
+msgstr "Elección inválida"
+
 #: threads/migrations/0002_threads_settings.py:17
 #: threads/migrations/0004_update_settings.py:17
 msgid "Those settings control threads and posts."
@@ -3171,32 +3252,32 @@ msgstr "Permitir solo descargas"
 msgid "Disallow both uploading and downloading"
 msgstr "No permitir tanto la carga como la descarga"
 
-#: threads/models/thread.py:18
+#: threads/models/thread.py:19
 msgid "Don't pin thread"
 msgstr "No fijar el hilo"
 
-#: threads/models/thread.py:19
+#: threads/models/thread.py:20
 msgid "Pin thread within category"
 msgstr "Fijar hilo dentro de la categoría"
 
-#: threads/models/thread.py:20
+#: threads/models/thread.py:21
 msgid "Pin thread globally"
 msgstr "Fijar thread globalmente"
 
-#: threads/moderation/posts.py:47
+#: threads/moderation/posts.py:53
 msgid "You can't make original post visible without revealing thread."
 msgstr ""
 "No puedes hacer que la publicación original sea visible sin revelar el hilo."
 
-#: threads/moderation/posts.py:59
+#: threads/moderation/posts.py:65
 msgid "You can't hide original post without hiding thread."
 msgstr "No puedes ocultar la publicación original sin ocultar el hilo."
 
-#: threads/moderation/posts.py:84
+#: threads/moderation/posts.py:90
 msgid "You can't delete original post without deleting thread."
 msgstr "No puedes borrar la publicación original sin eliminar la secuencia."
 
-#: threads/participants.py:143
+#: threads/participants.py:145
 #, python-format
 msgid "%(user)s has invited you to participate in private thread \"%(thread)s\""
 msgstr "%(user)s te ha invitado a participar en el hilo privado \"%(thread)s\""
@@ -3222,6 +3303,156 @@ msgstr "Puede eliminar otros archivos adjuntos de los usuarios"
 msgid "Can download attachments"
 msgstr "Puede descargar archivos adjuntos"
 
+#: threads/permissions/bestanswers.py:29
+msgid "Best answers"
+msgstr ""
+
+#: threads/permissions/bestanswers.py:32
+msgid "Can mark posts as best answers"
+msgstr ""
+
+#: threads/permissions/bestanswers.py:37 threads/permissions/bestanswers.py:47
+#: threads/permissions/polls.py:37 threads/permissions/threads.py:124
+msgid "Own threads"
+msgstr "Hilos propios"
+
+#: threads/permissions/bestanswers.py:38 threads/permissions/bestanswers.py:48
+#: threads/permissions/polls.py:38 threads/permissions/threads.py:111
+#: threads/permissions/threads.py:125
+msgid "All threads"
+msgstr "Todos los hilos"
+
+#: threads/permissions/bestanswers.py:42
+msgid "Can change marked answers"
+msgstr ""
+
+#: threads/permissions/bestanswers.py:52
+msgid "Time limit for changing marked best answer in owned thread, in minutes"
+msgstr ""
+
+#: threads/permissions/bestanswers.py:53
+msgid ""
+"Enter 0 to don't limit time for changing marked best answer in owned thread."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:134
+#: threads/permissions/bestanswers.py:318
+msgid "You have to sign in to mark best answers."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:145
+#: threads/permissions/bestanswers.py:332
+#, python-format
+msgid ""
+"You don't have permission to mark best answers in the \"%(category)s\" "
+"category."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:154
+#: threads/permissions/bestanswers.py:341
+msgid ""
+"You don't have permission to mark best answer in this thread because you "
+"didn't start it."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:163
+#, python-format
+msgid ""
+"You don't have permission to mark best answer in this thread because its "
+"category \"%(category)s\" is closed."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:172
+msgid ""
+"You can't mark best answer in this thread because it's closed and you don't "
+"have permission to open it."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:194
+#, python-format
+msgid ""
+"You don't have permission to change this thread's marked answer because it's"
+" in the \"%(category)s\" category."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:205
+msgid ""
+"You don't have permission to change this thread's marked answer because you "
+"are not a thread starter."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:229
+msgid ""
+"You don't have permission to change this thread's best answer because a "
+"moderator has protected it."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:240
+msgid "You have to sign in to unmark best answers."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:254
+#, python-format
+msgid ""
+"You don't have permission to unmark threads answers in the \"%(category)s\" "
+"category."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:265
+msgid ""
+"You don't have permission to unmark this best answer because you are not a "
+"thread starter."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:290
+#, python-format
+msgid ""
+"You don't have permission to unmark this best answer because its category "
+"\"%(category)s\" is closed."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:299
+msgid ""
+"You can't unmark this thread's best answer because it's closed and you don't"
+" have permission to open it."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:307
+msgid ""
+"You don't have permission to unmark this thread's best answer because a "
+"moderator has protected it."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:321
+msgid "Events can't be marked as best answers."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:347
+msgid "First post in a thread can't be marked as best answer."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:350
+msgid "Hidden posts can't be marked as best answers."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:353
+msgid "Unapproved posts can't be marked as best answers."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:358
+msgid ""
+"You don't have permission to mark this post as best answer because a "
+"moderator has protected it."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:370
+msgid "You can't hide this post because its marked as best answer."
+msgstr ""
+
+#: threads/permissions/bestanswers.py:380
+msgid "You can't delete this post because its marked as best answer."
+msgstr ""
+
 #: threads/permissions/polls.py:29
 msgid "Polls"
 msgstr "Encuestas"
@@ -3229,15 +3460,6 @@ msgstr "Encuestas"
 #: threads/permissions/polls.py:32
 msgid "Can start polls"
 msgstr "Puede comenzar encuestas"
-
-#: threads/permissions/polls.py:37 threads/permissions/threads.py:125
-msgid "Own threads"
-msgstr "Hilos propios"
-
-#: threads/permissions/polls.py:38 threads/permissions/threads.py:112
-#: threads/permissions/threads.py:126
-msgid "All threads"
-msgstr "Todos los hilos"
 
 #: threads/permissions/polls.py:42
 msgid "Can edit polls"
@@ -3493,11 +3715,11 @@ msgid "%(user)s limits invitations to private threads to followed users."
 msgstr ""
 "%(user)s limita las invitaciones a hilos privados a usuarios seguidos."
 
-#: threads/permissions/threads.py:76
+#: threads/permissions/threads.py:75
 msgid "Can see unapproved content list"
 msgstr "Puede ver la lista de contenido no aprobado"
 
-#: threads/permissions/threads.py:78
+#: threads/permissions/threads.py:77
 msgid ""
 "Allows access to \"unapproved\" tab on threads lists for easy listing of "
 "threads that are unapproved or contain unapproved posts. Despite the tab "
@@ -3510,11 +3732,11 @@ msgstr ""
 "todas las listas de hilos, solo mostrará los hilos pertenecientes a las "
 "categorías en las que el usuario tiene permiso para aprobar el contenido."
 
-#: threads/permissions/threads.py:87
+#: threads/permissions/threads.py:86
 msgid "Can see reported content list"
 msgstr "Puede ver la lista de contenido reportado"
 
-#: threads/permissions/threads.py:89
+#: threads/permissions/threads.py:88
 msgid ""
 "Allows access to \"reported\" tab on threads lists for easy listing of "
 "threads that contain reported posts. Despite the tab being available on all "
@@ -3527,335 +3749,335 @@ msgstr ""
 "categorías, solo mostrará hilos pertenecientes a categorías en las que el "
 "usuario tiene permiso para ver informes de publicaciones."
 
-#: threads/permissions/threads.py:98
+#: threads/permissions/threads.py:97
 msgid "Can omit flood protection"
 msgstr "Puede omitir la protección contra flood"
 
-#: threads/permissions/threads.py:99
+#: threads/permissions/threads.py:98
 msgid "Allows posting more frequently than flood protection would."
 msgstr "Permite publicar con más frecuencia que la protección contra flood."
 
-#: threads/permissions/threads.py:107
+#: threads/permissions/threads.py:106
 msgid "Can see threads"
 msgstr "Puede ver hilos"
 
-#: threads/permissions/threads.py:111 users/forms/admin.py:166
+#: threads/permissions/threads.py:110 users/forms/admin.py:166
 #: users/migrations/0002_users_settings.py:144
 #: users/migrations/0006_update_settings.py:130
 msgid "Started threads"
 msgstr "Hilos iniciados"
 
-#: threads/permissions/threads.py:116
+#: threads/permissions/threads.py:115
 msgid "Can start threads"
 msgstr "Puede iniciar hilos"
 
-#: threads/permissions/threads.py:117
+#: threads/permissions/threads.py:116
 msgid "Can reply to threads"
 msgstr "Puede responder a los hilos"
 
-#: threads/permissions/threads.py:120
+#: threads/permissions/threads.py:119
 msgid "Can edit threads"
 msgstr "Puede editar hilos"
 
-#: threads/permissions/threads.py:130
+#: threads/permissions/threads.py:129
 msgid "Can hide own threads"
 msgstr "Puede ocultar sus propios hilos"
 
-#: threads/permissions/threads.py:132
+#: threads/permissions/threads.py:131
 msgid ""
 "Only threads started within time limit and with no replies can be hidden."
 msgstr ""
 "Solo se pueden ocultar hilos iniciados dentro del límite de tiempo y sin "
 "respuestas."
 
-#: threads/permissions/threads.py:139 threads/permissions/threads.py:155
+#: threads/permissions/threads.py:138 threads/permissions/threads.py:154
 msgid "Hide threads"
 msgstr "Ocultar hilos"
 
-#: threads/permissions/threads.py:140 threads/permissions/threads.py:156
+#: threads/permissions/threads.py:139 threads/permissions/threads.py:155
 msgid "Delete threads"
 msgstr "Eliminar hilos"
 
-#: threads/permissions/threads.py:144
+#: threads/permissions/threads.py:143
 msgid "Time limit for own threads edits, in minutes"
 msgstr "Límite de tiempo para las ediciones de los hilos propios, en minutos"
 
-#: threads/permissions/threads.py:145
+#: threads/permissions/threads.py:144
 msgid "Enter 0 to don't limit time for editing own threads."
 msgstr "Ingresa 0 para no limitar el tiempo de edición de los hilos propios."
 
-#: threads/permissions/threads.py:150
+#: threads/permissions/threads.py:149
 msgid "Can hide all threads"
 msgstr "Puede ocultar todos los hilos"
 
-#: threads/permissions/threads.py:161
+#: threads/permissions/threads.py:160
 msgid "Can pin threads"
 msgstr "Puede fijar hilos"
 
-#: threads/permissions/threads.py:166
+#: threads/permissions/threads.py:165
 msgid "Locally"
 msgstr "Localmente"
 
-#: threads/permissions/threads.py:167
+#: threads/permissions/threads.py:166
 msgid "Globally"
 msgstr "Globalmente"
 
-#: threads/permissions/threads.py:170
+#: threads/permissions/threads.py:169
 msgid "Can close threads"
 msgstr "Puede cerrar hilos"
 
-#: threads/permissions/threads.py:171
+#: threads/permissions/threads.py:170
 msgid "Can move threads"
 msgstr "Puede mover hilos"
 
-#: threads/permissions/threads.py:172
+#: threads/permissions/threads.py:171
 msgid "Can merge threads"
 msgstr "Puede combinar hilos"
 
-#: threads/permissions/threads.py:175
+#: threads/permissions/threads.py:174
 msgid "Can edit posts"
 msgstr "Puede editar publicaciones"
 
-#: threads/permissions/threads.py:180
+#: threads/permissions/threads.py:179
 msgid "Own posts"
 msgstr "Publicaciones propias"
 
-#: threads/permissions/threads.py:181
+#: threads/permissions/threads.py:180
 msgid "All posts"
 msgstr "Todos las publicaciones"
 
-#: threads/permissions/threads.py:185
+#: threads/permissions/threads.py:184
 msgid "Can hide own posts"
 msgstr "Puede ocultar sus propios mensajes"
 
-#: threads/permissions/threads.py:186
+#: threads/permissions/threads.py:185
 msgid "Only last posts to thread made within edit time limit can be hidden."
 msgstr ""
 "Solo se pueden ocultar las últimas publicaciones en el hilo dentro del "
 "límite de tiempo de edición."
 
-#: threads/permissions/threads.py:191 threads/permissions/threads.py:207
+#: threads/permissions/threads.py:190 threads/permissions/threads.py:206
 msgid "Hide posts"
 msgstr "Ocultar publicaciones"
 
-#: threads/permissions/threads.py:192 threads/permissions/threads.py:208
+#: threads/permissions/threads.py:191 threads/permissions/threads.py:207
 msgid "Delete posts"
 msgstr "Eliminar los mensajes"
 
-#: threads/permissions/threads.py:196
+#: threads/permissions/threads.py:195
 msgid "Time limit for own post edits, in minutes"
 msgstr "Límite de tiempo para las propias ediciones posteriores, en minutos"
 
-#: threads/permissions/threads.py:197
+#: threads/permissions/threads.py:196
 msgid "Enter 0 to don't limit time for editing own posts."
 msgstr ""
 "Ingresa 0 para no limitar el tiempo de edición de publicaciones propias."
 
-#: threads/permissions/threads.py:202
+#: threads/permissions/threads.py:201
 msgid "Can hide all posts"
 msgstr "Puede ocultar todas las publicaciones"
 
-#: threads/permissions/threads.py:213
+#: threads/permissions/threads.py:212
 msgid "Can see posts likes"
 msgstr "Puede ver publicaciones como \"me gusta\""
 
-#: threads/permissions/threads.py:218
+#: threads/permissions/threads.py:217
 msgid "Number only"
 msgstr "Sólo número"
 
-#: threads/permissions/threads.py:219
+#: threads/permissions/threads.py:218
 msgid "Number and list of likers"
 msgstr "Número y lista de personas que le gusta"
 
-#: threads/permissions/threads.py:223
+#: threads/permissions/threads.py:222
 msgid "Can like posts"
 msgstr "Puede dar likes"
 
-#: threads/permissions/threads.py:224
+#: threads/permissions/threads.py:223
 msgid "Only users with this permission to see likes can like posts."
 msgstr "Solo los usuarios con este permiso para ver likes pueden dar likes."
 
-#: threads/permissions/threads.py:228
+#: threads/permissions/threads.py:227
 msgid "Can protect posts"
 msgstr "Puede proteger publicaciones"
 
-#: threads/permissions/threads.py:229
+#: threads/permissions/threads.py:228
 msgid "Only users with this permission can edit protected posts."
 msgstr ""
 "Solo los usuarios con este permiso pueden editar publicaciones protegidas."
 
-#: threads/permissions/threads.py:232
+#: threads/permissions/threads.py:231
 msgid "Can move posts"
 msgstr "Puede mover mensajes"
 
-#: threads/permissions/threads.py:233
+#: threads/permissions/threads.py:232
 msgid "Will be able to move posts to other threads."
 msgstr "Podrá mover publicaciones a otros hilos."
 
-#: threads/permissions/threads.py:235
+#: threads/permissions/threads.py:234
 msgid "Can merge posts"
 msgstr "Puede combinar publicaciones"
 
-#: threads/permissions/threads.py:237
+#: threads/permissions/threads.py:236
 msgid "Can approve content"
 msgstr "Puede aprobar el contenido"
 
-#: threads/permissions/threads.py:238
+#: threads/permissions/threads.py:237
 msgid "Will be able to see and approve unapproved content."
 msgstr "Podrá ver y aprobar contenido no aprobado."
 
-#: threads/permissions/threads.py:240
+#: threads/permissions/threads.py:239
 msgid "Can report posts"
 msgstr "Puede reportar publicaciones"
 
-#: threads/permissions/threads.py:241
+#: threads/permissions/threads.py:240
 msgid "Can see reports"
 msgstr "Puede ver informes"
 
-#: threads/permissions/threads.py:244
+#: threads/permissions/threads.py:243
 msgid "Can hide events"
 msgstr "Puede ocultar eventos"
 
-#: threads/permissions/threads.py:249
+#: threads/permissions/threads.py:248
 msgid "Hide events"
 msgstr "Ocultar eventos"
 
-#: threads/permissions/threads.py:250
+#: threads/permissions/threads.py:249
 msgid "Delete events"
 msgstr "Eliminar eventos"
 
-#: threads/permissions/threads.py:254
+#: threads/permissions/threads.py:253
 msgid "Require threads approval"
 msgstr "Requiere aprobación de hilos"
 
-#: threads/permissions/threads.py:255
+#: threads/permissions/threads.py:254
 msgid "Require replies approval"
 msgstr "Requiere aprobación de respuestas"
 
-#: threads/permissions/threads.py:256
+#: threads/permissions/threads.py:255
 msgid "Require edits approval"
 msgstr "Requiere edición de aprobación"
 
-#: threads/permissions/threads.py:565
+#: threads/permissions/threads.py:564
 msgid "You have to sign in to start threads."
 msgstr "Debes iniciar sesión para iniciar los hilos."
 
-#: threads/permissions/threads.py:575
+#: threads/permissions/threads.py:574
 msgid "You don't have permission to start new threads in this category."
 msgstr "No tienes permiso para iniciar nuevos hilos en esta categoría."
 
-#: threads/permissions/threads.py:579
+#: threads/permissions/threads.py:578
 msgid "This category is closed. You can't start new threads in it."
 msgstr "Esta categoría esta cerrada. No puede iniciar nuevos hilos en él."
 
-#: threads/permissions/threads.py:587
+#: threads/permissions/threads.py:586
 msgid "You have to sign in to reply threads."
 msgstr "Tienes que iniciar sesión para responder a los hilos."
 
-#: threads/permissions/threads.py:596
+#: threads/permissions/threads.py:595
 msgid "You can't reply to threads in this category."
 msgstr "No puede responder a los hilos en esta categoría."
 
-#: threads/permissions/threads.py:600
+#: threads/permissions/threads.py:599
 msgid "This category is closed. You can't reply to threads in it."
 msgstr "Esta categoría esta cerrada. No puedes responder a los hilos en él."
 
-#: threads/permissions/threads.py:602
+#: threads/permissions/threads.py:601
 msgid "You can't reply to closed threads in this category."
 msgstr "No puedes responder a los hilos cerrados en esta categoría."
 
-#: threads/permissions/threads.py:610
+#: threads/permissions/threads.py:609
 msgid "You have to sign in to edit threads."
 msgstr "Tienes que iniciar sesión para editar los hilos."
 
-#: threads/permissions/threads.py:619
+#: threads/permissions/threads.py:618
 msgid "You can't edit threads in this category."
 msgstr "No puedes editar hilos en esta categoría."
 
-#: threads/permissions/threads.py:623
+#: threads/permissions/threads.py:622
 msgid "You can't edit other users threads in this category."
 msgstr "No puedes editar los hilos de otros usuarios en esta categoría."
 
-#: threads/permissions/threads.py:627
+#: threads/permissions/threads.py:626
 #, python-format
 msgid "You can't edit threads that are older than %(minutes)s minute."
 msgid_plural "You can't edit threads that are older than %(minutes)s minutes."
 msgstr[0] "No puedes editar hilos anteriores a %(minutes)s por minuto."
 msgstr[1] "No puedes editar hilos anteriores a %(minutes)s por minuto."
 
-#: threads/permissions/threads.py:635
+#: threads/permissions/threads.py:634
 msgid "This category is closed. You can't edit threads in it."
 msgstr "Esta categoría esta cerrada. No puedes editar los hilos en él."
 
-#: threads/permissions/threads.py:637
+#: threads/permissions/threads.py:636
 msgid "This thread is closed. You can't edit it."
 msgstr "Este hilo está cerrado. No puedes editarlo"
 
-#: threads/permissions/threads.py:645
+#: threads/permissions/threads.py:644
 msgid "You have to sign in to change threads weights."
 msgstr "Debes iniciar sesión para cambiar los pesos de los hilos."
 
-#: threads/permissions/threads.py:654
+#: threads/permissions/threads.py:653
 msgid "You can't change threads weights in this category."
 msgstr "No puedes cambiar los pesos de los hilos en esta categoría."
 
-#: threads/permissions/threads.py:658
+#: threads/permissions/threads.py:657
 msgid "This category is closed. You can't change threads weights in it."
 msgstr ""
 "Esta categoría esta cerrada. No puedes cambiar los pesos de los hilos en él."
 
-#: threads/permissions/threads.py:660
+#: threads/permissions/threads.py:659
 msgid "This thread is closed. You can't change its weight."
 msgstr "Este hilo está cerrado. No puedes cambiar su peso."
 
-#: threads/permissions/threads.py:668 threads/permissions/threads.py:688
+#: threads/permissions/threads.py:667 threads/permissions/threads.py:687
 msgid "You have to sign in to hide threads."
 msgstr "Tienes que iniciar sesión para ocultar los hilos."
 
-#: threads/permissions/threads.py:678
+#: threads/permissions/threads.py:677
 msgid "This category is closed. You can't reveal threads in it."
 msgstr "Esta categoría esta cerrada. No puedes revelar hilos en él."
 
-#: threads/permissions/threads.py:680
+#: threads/permissions/threads.py:679
 msgid "This thread is closed. You can't reveal it."
 msgstr "Este hilo está cerrado. No puedes revelarlo"
 
-#: threads/permissions/threads.py:698
+#: threads/permissions/threads.py:697
 msgid "You can't hide threads in this category."
 msgstr "No puedes ocultar los hilos en esta categoría."
 
-#: threads/permissions/threads.py:702
+#: threads/permissions/threads.py:701
 msgid "You can't hide other users theads in this category."
 msgstr "No puedes ocultar otros usuarios en esta categoría."
 
-#: threads/permissions/threads.py:706
+#: threads/permissions/threads.py:705
 #, python-format
 msgid "You can't hide threads that are older than %(minutes)s minute."
 msgid_plural "You can't hide threads that are older than %(minutes)s minutes."
 msgstr[0] "No puedes ocultar hilos anteriores a %(minutes)s por minuto."
 msgstr[1] "No puedes ocultar hilos anteriores a %(minutes)s por minuto."
 
-#: threads/permissions/threads.py:714
+#: threads/permissions/threads.py:713
 msgid "This category is closed. You can't hide threads in it."
 msgstr "Esta categoría esta cerrada. No puedes ocultar los hilos en él."
 
-#: threads/permissions/threads.py:716
+#: threads/permissions/threads.py:715
 msgid "This thread is closed. You can't hide it."
 msgstr "Este hilo está cerrado. No puedes ocultarlo"
 
-#: threads/permissions/threads.py:724
+#: threads/permissions/threads.py:723
 msgid "You have to sign in to delete threads."
 msgstr "Tienes que iniciar sesión para eliminar hilos."
 
-#: threads/permissions/threads.py:734
+#: threads/permissions/threads.py:733
 msgid "You can't delete threads in this category."
 msgstr "No puede eliminar hilos en esta categoría."
 
-#: threads/permissions/threads.py:738
+#: threads/permissions/threads.py:737
 msgid "You can't delete other users theads in this category."
 msgstr "No puedes eliminar otros usuarios de los temas en esta categoría."
 
-#: threads/permissions/threads.py:742
+#: threads/permissions/threads.py:741
 #, python-format
 msgid "You can't delete threads that are older than %(minutes)s minute."
 msgid_plural ""
@@ -3863,100 +4085,100 @@ msgid_plural ""
 msgstr[0] "No puede eliminar hilos mayores de %(minutes)s por minuto."
 msgstr[1] "No puede eliminar hilos mayores de %(minutes)s por minuto."
 
-#: threads/permissions/threads.py:750
+#: threads/permissions/threads.py:749
 msgid "This category is closed. You can't delete threads in it."
 msgstr "Esta categoría esta cerrada. No puedes eliminar hilos en ella."
 
-#: threads/permissions/threads.py:752
+#: threads/permissions/threads.py:751
 msgid "This thread is closed. You can't delete it."
 msgstr "Este hilo está cerrado. No puedes borrarlo"
 
-#: threads/permissions/threads.py:760
+#: threads/permissions/threads.py:759
 msgid "You have to sign in to move threads."
 msgstr "Debes iniciar sesión para mover los hilos."
 
-#: threads/permissions/threads.py:769
+#: threads/permissions/threads.py:768
 msgid "You can't move threads in this category."
 msgstr "No puedes mover hilos en esta categoría."
 
-#: threads/permissions/threads.py:773
+#: threads/permissions/threads.py:772
 msgid "This category is closed. You can't move it's threads."
 msgstr "Esta categoría esta cerrada. No puedes mover sus hilos."
 
-#: threads/permissions/threads.py:775
+#: threads/permissions/threads.py:774
 msgid "This thread is closed. You can't move it."
 msgstr "Este hilo está cerrado. No puedes moverlo."
 
-#: threads/permissions/threads.py:783
+#: threads/permissions/threads.py:782
 msgid "You have to sign in to merge threads."
 msgstr "Debes iniciar sesión para combinar hilos."
 
-#: threads/permissions/threads.py:793
+#: threads/permissions/threads.py:792
 msgid "Other thread can't be merged with."
 msgstr "Otro hilo no se puede combinar con."
 
-#: threads/permissions/threads.py:794
+#: threads/permissions/threads.py:793
 msgid "You can't merge threads in this category."
 msgstr "No puede combinar hilos en esta categoría."
 
-#: threads/permissions/threads.py:799
+#: threads/permissions/threads.py:798
 msgid "Other thread's category is closed. You can't merge with it."
 msgstr "La categoría de otro hilo está cerrada. No puedes combinar con ella."
 
-#: threads/permissions/threads.py:800
+#: threads/permissions/threads.py:799
 msgid "This category is closed. You can't merge it's threads."
 msgstr "Esta categoría esta cerrada. No puedes combinar sus hilos."
 
-#: threads/permissions/threads.py:803
+#: threads/permissions/threads.py:802
 msgid "Other thread is closed and can't be merged with."
 msgstr "Otro hilo está cerrado y no se puede combinar con."
 
-#: threads/permissions/threads.py:804
+#: threads/permissions/threads.py:803
 msgid "This thread is closed. You can't merge it with other threads."
 msgstr "Este hilo está cerrado. No puedes combinarlo con otros hilos."
 
-#: threads/permissions/threads.py:812
+#: threads/permissions/threads.py:811
 msgid "You have to sign in to approve threads."
 msgstr "Debes iniciar sesión para aprobar los hilos."
 
-#: threads/permissions/threads.py:821
+#: threads/permissions/threads.py:820
 msgid "You can't approve threads in this category."
 msgstr "No puede aprobar hilos en esta categoría."
 
-#: threads/permissions/threads.py:825
+#: threads/permissions/threads.py:824
 msgid "This category is closed. You can't approve threads in it."
 msgstr "Esta categoría esta cerrada. No puedes aprobar los hilos en él."
 
-#: threads/permissions/threads.py:827
+#: threads/permissions/threads.py:826
 msgid "This thread is closed. You can't approve it."
 msgstr "Este hilo está cerrado. No puedes aprobarlo"
 
-#: threads/permissions/threads.py:857
+#: threads/permissions/threads.py:856
 msgid "You have to sign in to edit posts."
 msgstr "Tienes que iniciar sesión para editar las publicaciones."
 
-#: threads/permissions/threads.py:860
+#: threads/permissions/threads.py:859
 msgid "Events can't be edited."
 msgstr "Los eventos no pueden ser editados."
 
-#: threads/permissions/threads.py:865
+#: threads/permissions/threads.py:864
 msgid "You can't edit posts in this category."
 msgstr "No puedes editar publicaciones en esta categoría."
 
-#: threads/permissions/threads.py:868
+#: threads/permissions/threads.py:867
 msgid "This post is hidden, you can't edit it."
 msgstr "Esta publicación está oculta, no puedes editarla."
 
-#: threads/permissions/threads.py:872
+#: threads/permissions/threads.py:871
 msgid "You can't edit other users posts in this category."
 msgstr ""
 "No puedes editar las publicaciones de otros usuarios en esta categoría."
 
-#: threads/permissions/threads.py:875
+#: threads/permissions/threads.py:874
 msgid "This post is protected. You can't edit it."
 msgstr "Esta publicación está protegida. No puedes editarla"
 
-#: threads/permissions/threads.py:879
+#: threads/permissions/threads.py:878
 #, python-format
 msgid "You can't edit posts that are older than %(minutes)s minute."
 msgid_plural "You can't edit posts that are older than %(minutes)s minutes."
@@ -3965,31 +4187,31 @@ msgstr[0] ""
 msgstr[1] ""
 "No puede editar publicaciones que sean anteriores a %(minutes)s por minuto."
 
-#: threads/permissions/threads.py:887
+#: threads/permissions/threads.py:886
 msgid "This category is closed. You can't edit posts in it."
 msgstr "Esta categoría esta cerrada. No puedes editar publicaciones en ella."
 
-#: threads/permissions/threads.py:889
+#: threads/permissions/threads.py:888
 msgid "This thread is closed. You can't edit posts in it."
 msgstr "Este hilo está cerrado. No puedes editar publicaciones en él."
 
-#: threads/permissions/threads.py:897
+#: threads/permissions/threads.py:896
 msgid "You have to sign in to reveal posts."
 msgstr "Debes iniciar sesión para ver las publicaciones."
 
-#: threads/permissions/threads.py:908
+#: threads/permissions/threads.py:907
 msgid "You can't reveal posts in this category."
 msgstr "No puedes revelar publicaciones en esta categoría."
 
-#: threads/permissions/threads.py:911
+#: threads/permissions/threads.py:910
 msgid "You can't reveal other users posts in this category."
 msgstr "No puede revelar otras publicaciones de usuarios en esta categoría."
 
-#: threads/permissions/threads.py:914
+#: threads/permissions/threads.py:913
 msgid "This post is protected. You can't reveal it."
 msgstr "Esta publicación está protegida. No puedes revelarla"
 
-#: threads/permissions/threads.py:918
+#: threads/permissions/threads.py:917
 #, python-format
 msgid "You can't reveal posts that are older than %(minutes)s minute."
 msgid_plural "You can't reveal posts that are older than %(minutes)s minutes."
@@ -3998,36 +4220,36 @@ msgstr[0] ""
 msgstr[1] ""
 "No puede revelar publicaciones que tengan más de a %(minutes)s minutos."
 
-#: threads/permissions/threads.py:925
+#: threads/permissions/threads.py:924
 msgid "You can't reveal thread's first post."
 msgstr "No puedes revelar la primera publicación des hilo."
 
-#: threads/permissions/threads.py:929
+#: threads/permissions/threads.py:928
 msgid "This category is closed. You can't reveal posts in it."
 msgstr "Esta categoría esta cerrada. No puedes revelar publicaciones en él."
 
-#: threads/permissions/threads.py:931
+#: threads/permissions/threads.py:930
 msgid "This thread is closed. You can't reveal posts in it."
 msgstr "Este hilo está cerrado. No puedes revelar publicaciones en él."
 
-#: threads/permissions/threads.py:939
+#: threads/permissions/threads.py:938
 msgid "You have to sign in to hide posts."
 msgstr "Debes iniciar sesión para ocultar las publicaciones."
 
-#: threads/permissions/threads.py:950
+#: threads/permissions/threads.py:949
 msgid "You can't hide posts in this category."
 msgstr "No puedes ocultar publicaciones en esta categoría."
 
-#: threads/permissions/threads.py:953
+#: threads/permissions/threads.py:952
 msgid "You can't hide other users posts in this category."
 msgstr ""
 "No puedes ocultar las publicaciones de otros usuarios en esta categoría."
 
-#: threads/permissions/threads.py:956
+#: threads/permissions/threads.py:955
 msgid "This post is protected. You can't hide it."
 msgstr "Esta publicación está protegida. No puedes ocultarla"
 
-#: threads/permissions/threads.py:960
+#: threads/permissions/threads.py:959
 #, python-format
 msgid "You can't hide posts that are older than %(minutes)s minute."
 msgid_plural "You can't hide posts that are older than %(minutes)s minutes."
@@ -4036,37 +4258,37 @@ msgstr[0] ""
 msgstr[1] ""
 "No puede ocultar publicaciones que tengan más de %(minutes)s minutos."
 
-#: threads/permissions/threads.py:967
+#: threads/permissions/threads.py:966
 msgid "You can't hide thread's first post."
 msgstr "No puedes ocultar la primera publicación del hilo."
 
-#: threads/permissions/threads.py:971
+#: threads/permissions/threads.py:970
 msgid "This category is closed. You can't hide posts in it."
 msgstr ""
 "Esta categoría esta cerrada. No puedes ocultar las publicaciones en él."
 
-#: threads/permissions/threads.py:973
+#: threads/permissions/threads.py:972
 msgid "This thread is closed. You can't hide posts in it."
 msgstr "Este hilo está cerrado. No puedes ocultar las publicaciones en él."
 
-#: threads/permissions/threads.py:981
+#: threads/permissions/threads.py:980
 msgid "You have to sign in to delete posts."
 msgstr "Debes iniciar sesión para eliminar publicaciones."
 
-#: threads/permissions/threads.py:992
+#: threads/permissions/threads.py:991
 msgid "You can't delete posts in this category."
 msgstr "No puedes eliminar publicaciones en esta categoría."
 
-#: threads/permissions/threads.py:995
+#: threads/permissions/threads.py:994
 msgid "You can't delete other users posts in this category."
 msgstr ""
 "No puede eliminar las publicaciones de otros usuarios en esta categoría."
 
-#: threads/permissions/threads.py:998
+#: threads/permissions/threads.py:997
 msgid "This post is protected. You can't delete it."
 msgstr "Esta publicación está protegida. No puedes borrarla"
 
-#: threads/permissions/threads.py:1002
+#: threads/permissions/threads.py:1001
 #, python-format
 msgid "You can't delete posts that are older than %(minutes)s minute."
 msgid_plural "You can't delete posts that are older than %(minutes)s minutes."
@@ -4075,192 +4297,188 @@ msgstr[0] ""
 msgstr[1] ""
 "No puedes eliminar publicaciones que tengan más de a %(minutes)s minutos."
 
-#: threads/permissions/threads.py:1009
+#: threads/permissions/threads.py:1008
 msgid "You can't delete thread's first post."
 msgstr "No puedes eliminar la primera publicación del hilo."
 
-#: threads/permissions/threads.py:1013
+#: threads/permissions/threads.py:1012
 msgid "This category is closed. You can't delete posts in it."
 msgstr "Esta categoría esta cerrada. No puedes eliminar publicaciones en él."
 
-#: threads/permissions/threads.py:1015
+#: threads/permissions/threads.py:1014
 msgid "This thread is closed. You can't delete posts in it."
 msgstr "Este hilo está cerrado. No puedes eliminar publicaciones en él."
 
-#: threads/permissions/threads.py:1023
+#: threads/permissions/threads.py:1022
 msgid "You have to sign in to protect posts."
 msgstr "Debes iniciar sesión para proteger las publicaciones."
 
-#: threads/permissions/threads.py:1030
+#: threads/permissions/threads.py:1029
 msgid "You can't protect posts in this category."
 msgstr "No puedes proteger publicaciones en esta categoría."
 
-#: threads/permissions/threads.py:1032
+#: threads/permissions/threads.py:1031
 msgid "You can't protect posts you can't edit."
 msgstr "No puedes proteger las publicaciones que no puedes editar."
 
-#: threads/permissions/threads.py:1040
+#: threads/permissions/threads.py:1039
 msgid "You have to sign in to approve posts."
 msgstr "Debes iniciar sesión para aprobar publicaciones."
 
-#: threads/permissions/threads.py:1047
+#: threads/permissions/threads.py:1046
 msgid "You can't approve posts in this category."
 msgstr "No puedes aprobar publicaciones en esta categoría."
 
-#: threads/permissions/threads.py:1049
+#: threads/permissions/threads.py:1048
 msgid "You can't approve thread's first post."
 msgstr "No puedes aprobar la primera publicación de thread."
 
-#: threads/permissions/threads.py:1051
+#: threads/permissions/threads.py:1050
 msgid "You can't approve posts the content you can't see."
 msgstr "No puedes aprobar publicar el contenido que no puedes ver."
 
-#: threads/permissions/threads.py:1055
+#: threads/permissions/threads.py:1054
 msgid "This category is closed. You can't approve posts in it."
 msgstr "Esta categoría esta cerrada. No puedes aprobar publicaciones en él."
 
-#: threads/permissions/threads.py:1057
+#: threads/permissions/threads.py:1056
 msgid "This thread is closed. You can't approve posts in it."
 msgstr "Este hilo está cerrado. No puedes aprobar publicaciones en él."
 
-#: threads/permissions/threads.py:1065
+#: threads/permissions/threads.py:1064
 msgid "You have to sign in to move posts."
 msgstr "Debes iniciar sesión para mover publicaciones."
 
-#: threads/permissions/threads.py:1074
+#: threads/permissions/threads.py:1073
 msgid "You can't move posts in this category."
 msgstr "No puedes mover publicaciones en esta categoría."
 
-#: threads/permissions/threads.py:1076
+#: threads/permissions/threads.py:1075
 msgid "Events can't be moved."
 msgstr "Los eventos no se pueden mover."
 
-#: threads/permissions/threads.py:1078
+#: threads/permissions/threads.py:1077
 msgid "You can't move thread's first post."
 msgstr "No puedes mover la primera publicación de thread."
 
-#: threads/permissions/threads.py:1080
+#: threads/permissions/threads.py:1079
 msgid "You can't move posts the content you can't see."
 msgstr "No puedes mover publicaciones del contenido que no puede ver."
 
-#: threads/permissions/threads.py:1084
+#: threads/permissions/threads.py:1083
 msgid "This category is closed. You can't move posts in it."
 msgstr "Esta categoría esta cerrada. No puedes mover publicaciones en él."
 
-#: threads/permissions/threads.py:1086
+#: threads/permissions/threads.py:1085
 msgid "This thread is closed. You can't move posts in it."
 msgstr "Este hilo está cerrado. No puedes mover publicaciones en él."
 
-#: threads/permissions/threads.py:1094
+#: threads/permissions/threads.py:1093
 msgid "You have to sign in to merge posts."
 msgstr "Tienes que iniciar sesión para combinar publicaciones."
 
-#: threads/permissions/threads.py:1103
+#: threads/permissions/threads.py:1102
 msgid "You can't merge posts in this category."
 msgstr "No puedes combinar publicaciones en esta categoría."
 
-#: threads/permissions/threads.py:1105
+#: threads/permissions/threads.py:1104
 msgid "Events can't be merged."
 msgstr "Los eventos no se pueden combinar."
 
-#: threads/permissions/threads.py:1107
+#: threads/permissions/threads.py:1106
 msgid "You can't merge posts the content you can't see."
 msgstr "No puedes combinar publicaciones del contenido que no puede ver."
 
-#: threads/permissions/threads.py:1111
+#: threads/permissions/threads.py:1110
 msgid "This category is closed. You can't merge posts in it."
 msgstr "Esta categoría está cerrada. No puedes combinar publicaciones en él."
 
-#: threads/permissions/threads.py:1113
+#: threads/permissions/threads.py:1112
 msgid "This thread is closed. You can't merge posts in it."
 msgstr "Este hilo está cerrado. No puedes combinar publicaciones en él."
 
-#: threads/permissions/threads.py:1121
+#: threads/permissions/threads.py:1120
 msgid "You have to sign in to split posts."
 msgstr "Tienes que iniciar sesión para dividir publicaciones."
 
-#: threads/permissions/threads.py:1130
+#: threads/permissions/threads.py:1129
 msgid "You can't split posts in this category."
 msgstr "No puedes dividir publicaciones en esta categoría."
 
-#: threads/permissions/threads.py:1132
+#: threads/permissions/threads.py:1131
 msgid "Events can't be split."
 msgstr "Los eventos no se pueden dividir."
 
-#: threads/permissions/threads.py:1134
+#: threads/permissions/threads.py:1133
 msgid "You can't split thread's first post."
 msgstr "No puedes dividir la primera publicación del hilo."
 
-#: threads/permissions/threads.py:1136
+#: threads/permissions/threads.py:1135
 msgid "You can't split posts the content you can't see."
 msgstr "No puede dividir las publicaciones del contenido que no puede ver."
 
-#: threads/permissions/threads.py:1140
+#: threads/permissions/threads.py:1139
 msgid "This category is closed. You can't split posts in it."
 msgstr "Esta categoría esta cerrada. No puedes dividir publicaciones en ella."
 
-#: threads/permissions/threads.py:1142
+#: threads/permissions/threads.py:1141
 msgid "This thread is closed. You can't split posts in it."
 msgstr "Este hilo está cerrado. No puedes dividir publicaciones en él."
 
-#: threads/permissions/threads.py:1149
+#: threads/permissions/threads.py:1148
 msgid "You have to sign in to reveal events."
 msgstr "Tienes que iniciar sesión para revelar eventos."
 
-#: threads/permissions/threads.py:1158
+#: threads/permissions/threads.py:1157
 msgid "You can't reveal events in this category."
 msgstr "No puedes revelar eventos en esta categoría."
 
-#: threads/permissions/threads.py:1162
+#: threads/permissions/threads.py:1161
 msgid "This category is closed. You can't reveal events in it."
 msgstr "Esta categoría esta cerrada. No puedes revelar eventos en ella."
 
-#: threads/permissions/threads.py:1164
+#: threads/permissions/threads.py:1163
 msgid "This thread is closed. You can't reveal events in it."
 msgstr "Este hilo está cerrado. No puedes revelar eventos en él."
 
-#: threads/permissions/threads.py:1172
+#: threads/permissions/threads.py:1171
 msgid "You have to sign in to hide events."
 msgstr "Tienes que iniciar sesión para ocultar eventos."
 
-#: threads/permissions/threads.py:1181
+#: threads/permissions/threads.py:1180
 msgid "You can't hide events in this category."
 msgstr "No puedes ocultar eventos en esta categoría."
 
-#: threads/permissions/threads.py:1185
+#: threads/permissions/threads.py:1184
 msgid "This category is closed. You can't hide events in it."
 msgstr "Esta categoría esta cerrada. No puedes ocultar eventos en ella."
 
-#: threads/permissions/threads.py:1187
+#: threads/permissions/threads.py:1186
 msgid "This thread is closed. You can't hide events in it."
 msgstr "Este hilo está cerrado. No puedes ocultar eventos en él."
 
-#: threads/permissions/threads.py:1195
+#: threads/permissions/threads.py:1194
 msgid "You have to sign in to delete events."
 msgstr "Tienes que iniciar sesión para eliminar eventos."
 
-#: threads/permissions/threads.py:1204
+#: threads/permissions/threads.py:1203
 msgid "You can't delete events in this category."
 msgstr "No puedes eliminar eventos en esta categoría."
 
-#: threads/permissions/threads.py:1208
+#: threads/permissions/threads.py:1207
 msgid "This category is closed. You can't delete events in it."
 msgstr "Esta categoría está cerrada. No puedes borrar eventos en ella."
 
-#: threads/permissions/threads.py:1210
+#: threads/permissions/threads.py:1209
 msgid "This thread is closed. You can't delete events in it."
 msgstr "Este hilo está cerrado. No puedes borrar eventos en él."
-
-#: threads/pollmergehandler.py:33
-msgid "Delete all polls"
-msgstr "Eliminar todas las encuestas"
 
 #: threads/serializers/moderation.py:41
 msgid "You have to specify at least one post to delete."
 msgstr "Debes especificar al menos una publicación para eliminar."
 
-#: threads/serializers/moderation.py:47 threads/serializers/moderation.py:96
-#: threads/serializers/moderation.py:172 threads/serializers/moderation.py:309
+#: threads/serializers/moderation.py:47 threads/serializers/moderation.py:97
+#: threads/serializers/moderation.py:178 threads/serializers/moderation.py:315
 msgid "One or more post ids received were invalid."
 msgstr "Uno o más ID de correos recibidos no son válidos."
 
@@ -4271,147 +4489,151 @@ msgid_plural "No more than %(limit)s posts can be deleted at single time."
 msgstr[0] "No se puede eliminar más de %(limit)s publicacione a la vez."
 msgstr[1] "No se pueden eliminar más de %(limit)s publicaciones a la vez."
 
-#: threads/serializers/moderation.py:85
+#: threads/serializers/moderation.py:86
 msgid "One or more posts to delete could not be found."
 msgstr "No se encontraron una o más publicaciones para eliminar."
 
-#: threads/serializers/moderation.py:91
+#: threads/serializers/moderation.py:92
 msgid "You have to select at least two posts to merge."
 msgstr "Debes seleccionar al menos dos publicaciones para combinar."
 
-#: threads/serializers/moderation.py:112
+#: threads/serializers/moderation.py:113
 #, python-format
 msgid "No more than %(limit)s post can be merged at single time."
 msgid_plural "No more than %(limit)s posts can be merged at single time."
 msgstr[0] "No se puede combinar más de %(limit)s publicacion de una vez."
 msgstr[1] "No se pueden combinar más de %(limit)s publicaciones de una vez."
 
-#: threads/serializers/moderation.py:137
+#: threads/serializers/moderation.py:139
 msgid "Posts made by different users can't be merged."
 msgstr ""
 "Las publicaciones realizadas por diferentes usuarios no se pueden combinar."
 
-#: threads/serializers/moderation.py:149
+#: threads/serializers/moderation.py:148
+msgid "Post marked as best answer can't be merged with thread's first post."
+msgstr ""
+
+#: threads/serializers/moderation.py:155
 msgid "Posts with different visibility can't be merged."
 msgstr "Las publicaciones con diferente visibilidad no se pueden combinar."
 
-#: threads/serializers/moderation.py:155
+#: threads/serializers/moderation.py:161
 msgid "One or more posts to merge could not be found."
 msgstr "No se encontraron una o más publicaciones para combinar."
 
-#: threads/serializers/moderation.py:161
+#: threads/serializers/moderation.py:167
 msgid "You have to specify at least one post to move."
 msgstr "Debes especificar al menos una publicación que mover."
 
-#: threads/serializers/moderation.py:165 threads/serializers/moderation.py:412
+#: threads/serializers/moderation.py:171 threads/serializers/moderation.py:418
 msgid "Enter link to new thread."
 msgstr "Ingresa el enlace a un nuevo hilo."
 
-#: threads/serializers/moderation.py:189 threads/serializers/moderation.py:429
+#: threads/serializers/moderation.py:195 threads/serializers/moderation.py:441
 msgid "This is not a valid thread link."
 msgstr "Este no es un enlace de hilo válido."
 
-#: threads/serializers/moderation.py:191
+#: threads/serializers/moderation.py:197
 msgid "Thread to move posts to is same as current one."
 msgstr "El hilo para mover las publicaciones es el mismo que el actual."
 
-#: threads/serializers/moderation.py:198 threads/serializers/moderation.py:441
+#: threads/serializers/moderation.py:204 threads/serializers/moderation.py:453
 msgid ""
 "The thread you have entered link to doesn't exist or you don't have "
 "permission to see it."
 msgstr ""
 "El enlace al que has ingresado no existe o no tienes permiso para verlo."
 
-#: threads/serializers/moderation.py:204
+#: threads/serializers/moderation.py:210
 msgid "You can't move posts to threads you can't reply."
 msgstr "No puedes mover publicaciones a temas que no puedes responder."
 
-#: threads/serializers/moderation.py:212
+#: threads/serializers/moderation.py:218
 #, python-format
 msgid "No more than %(limit)s post can be moved at single time."
 msgid_plural "No more than %(limit)s posts can be moved at single time."
 msgstr[0] "No se puede mover más de %(limit)s publicacion a la vez."
 msgstr[1] "No se pueden mover más de %(limit)s publicaciones a la vez."
 
-#: threads/serializers/moderation.py:236
+#: threads/serializers/moderation.py:242
 msgid "One or more posts to move could not be found."
 msgstr "No se encontraron una o más publicaciones para mover."
 
-#: threads/serializers/moderation.py:259
+#: threads/serializers/moderation.py:265
 msgid "You can't create new threads in selected category."
 msgstr "No puede crear nuevos hilos en la categoría seleccionada."
 
-#: threads/serializers/moderation.py:271
+#: threads/serializers/moderation.py:277
 msgid "You don't have permission to pin threads globally in this category."
 msgstr ""
 "No tienes permiso para fijar hilos de manera global en esta categoría."
 
-#: threads/serializers/moderation.py:275
+#: threads/serializers/moderation.py:281
 msgid "You don't have permission to pin threads in this category."
 msgstr "No tienes permiso para anclar hilos en esta categoría."
 
-#: threads/serializers/moderation.py:286
+#: threads/serializers/moderation.py:292
 msgid "You don't have permission to hide threads in this category."
 msgstr "No tienes permiso para ocultar hilos en esta categoría."
 
-#: threads/serializers/moderation.py:297
+#: threads/serializers/moderation.py:303
 msgid "You don't have permission to close threads in this category."
 msgstr "No tienes permiso para cerrar temas en esta categoría."
 
-#: threads/serializers/moderation.py:303
+#: threads/serializers/moderation.py:309
 msgid "You have to specify at least one post to split."
 msgstr "Debes especificar al menos una publicación para dividir."
 
-#: threads/serializers/moderation.py:322
+#: threads/serializers/moderation.py:328
 #, python-format
 msgid "No more than %(limit)s post can be split at single time."
 msgid_plural "No more than %(limit)s posts can be split at single time."
 msgstr[0] "No se puede dividir más de %(limit)s publicacion a la vez."
 msgstr[1] "No se pueden dividir más de %(limit)s publicaciones a la vez."
 
-#: threads/serializers/moderation.py:347
+#: threads/serializers/moderation.py:353
 msgid "One or more posts to split could not be found."
 msgstr "No se encontraron una o más publicaciones para dividir."
 
-#: threads/serializers/moderation.py:353
+#: threads/serializers/moderation.py:359
 msgid "You have to specify at least one thread to delete."
 msgstr "Debes especificar al menos un hilo para eliminar."
 
-#: threads/serializers/moderation.py:359 threads/serializers/moderation.py:482
+#: threads/serializers/moderation.py:365 threads/serializers/moderation.py:483
 msgid "One or more thread ids received were invalid."
 msgstr "Uno o más id. de hilos recibidos no eran válidos."
 
-#: threads/serializers/moderation.py:372
+#: threads/serializers/moderation.py:378
 #, python-format
 msgid "No more than %(limit)s thread can be deleted at single time."
 msgid_plural "No more than %(limit)s threads can be deleted at single time."
 msgstr[0] "No se puede eliminar más de %(limit)s publicacion a la vez."
 msgstr[1] "No se pueden eliminar más de %(limit)s publicaciones a la vez."
 
-#: threads/serializers/moderation.py:404
+#: threads/serializers/moderation.py:410
 msgid "One or more threads to delete could not be found."
 msgstr "Uno o más hilos para eliminar no se pudieron encontrar."
 
-#: threads/serializers/moderation.py:431
+#: threads/serializers/moderation.py:443
 msgid "You can't merge thread with itself."
 msgstr "No puedes combinar el hilo consigo mismo."
 
-#: threads/serializers/moderation.py:447
+#: threads/serializers/moderation.py:459
 msgid "You can't merge this thread into thread you can't reply."
 msgstr "No puede combinar este hilo en el hilo que no puede responder."
 
-#: threads/serializers/moderation.py:475
+#: threads/serializers/moderation.py:476
 msgid "You have to select at least two threads to merge."
 msgstr "Necesitas al menos dos hilos para combinar."
 
-#: threads/serializers/moderation.py:496
+#: threads/serializers/moderation.py:509
 #, python-format
 msgid "No more than %(limit)s thread can be merged at single time."
 msgid_plural "No more than %(limit)s threads can be merged at single time."
 msgstr[0] "No se puede combinar más de %(limit)s publicacion a la vez."
 msgstr[1] "No se pueden combinar más de %(limit)s publicaciones a la vez."
 
-#: threads/serializers/moderation.py:518
+#: threads/serializers/moderation.py:531
 msgid "One or more threads to merge could not be found."
 msgstr "Uno o más hilos para combinar no se pudieron encontrar."
 
@@ -4694,7 +4916,7 @@ msgstr ""
 msgid "Attachment type \"%(name)s\" has been deleted."
 msgstr "Se ha eliminado el tipo de adjunto \"%(name)s\"."
 
-#: threads/views/goto.py:115
+#: threads/views/goto.py:122
 msgid ""
 "You need permission to approve content to be able to go to first unapproved "
 "post."
@@ -4840,50 +5062,58 @@ msgstr "Error al cambiar el nombre de usuario. Por favor inténtalo de nuevo"
 msgid "You don't have permission to see other users name history."
 msgstr "No tienes permiso para ver el historial de nombres de otros usuarios."
 
-#: users/api/users.py:53
+#: users/api/users.py:54
 msgid "You have to sign in to perform this action."
 msgstr "Debes iniciar sesión para realizar esta acción."
 
-#: users/api/users.py:97
+#: users/api/users.py:100
 msgid "You can't change other users avatars."
 msgstr "No puedes cambiar avatares de otros usuarios."
 
-#: users/api/users.py:104
+#: users/api/users.py:107
 msgid "You can't change other users options."
 msgstr "No puede cambiar opciones de otros usuarios."
 
-#: users/api/users.py:109
+#: users/api/users.py:112
 msgid "Your forum options have been changed."
 msgstr "Tus opciones de foro han sido cambiadas."
 
-#: users/api/users.py:116
+#: users/api/users.py:119
 msgid "You can't change other users names."
 msgstr "No puedes cambiar otros nombres de usuarios."
 
-#: users/api/users.py:123
+#: users/api/users.py:126
 msgid "You can't change other users signatures."
 msgstr "No puedes cambiar las firmas de otros usuarios."
 
-#: users/api/users.py:130
+#: users/api/users.py:133
 msgid "You can't change other users passwords."
 msgstr "No puedes cambiar las contraseñas de otros usuarios."
 
-#: users/api/users.py:137
+#: users/api/users.py:140
 msgid "You can't change other users e-mail addresses."
 msgstr ""
 "No puedes cambiar las direcciones de correo electrónico de otros usuarios."
 
-#: users/apps.py:28
+#: users/apps.py:29
 msgid "Edit details"
 msgstr "Editar detalles"
 
-#: users/apps.py:34
+#: users/apps.py:35
 msgid "Change username"
 msgstr "Cambiar nombre de usuario"
 
-#: users/apps.py:40
+#: users/apps.py:41
 msgid "Change email or password"
 msgstr "Cambiar e-mail o contraseña"
+
+#: users/apps.py:49
+msgid "Delete account"
+msgstr ""
+
+#: users/apps.py:58
+msgid "Active poster"
+msgstr ""
 
 #: users/avatars/uploaded.py:19
 msgid "Uploaded file is too big."
@@ -4919,11 +5149,11 @@ msgstr "Error al contactar la API reCAPTCHA."
 msgid "Entered answer is incorrect."
 msgstr "La respuesta ingresada es incorrecta."
 
-#: users/decorators.py:13
+#: users/decorators.py:15
 msgid "This page is not available to signed in users."
 msgstr "Esta página no está disponible para usuarios registrados."
 
-#: users/decorators.py:23
+#: users/decorators.py:27
 msgid "You have to sign in to access this page."
 msgstr "Debes iniciar sesión para acceder a esta página."
 
@@ -5023,8 +5253,8 @@ msgstr ""
 "Establecer esto evitará que el usuario cambie su avatar, y restablecerá su "
 "avatar a uno generado por procedimiento."
 
-#: users/forms/admin.py:114 users/forms/admin.py:145 users/forms/admin.py:469
-#: users/forms/admin.py:522
+#: users/forms/admin.py:114 users/forms/admin.py:145 users/forms/admin.py:473
+#: users/forms/admin.py:526
 msgid "User message"
 msgstr "Mensaje de usuario"
 
@@ -5131,23 +5361,27 @@ msgstr "Deshabilitado solo"
 msgid "Admins only"
 msgstr "Admins solo"
 
-#: users/forms/admin.py:351
+#: users/forms/admin.py:313
+msgid "Deleting their accounts"
+msgstr ""
+
+#: users/forms/admin.py:355
 msgid "All ranks"
 msgstr "Todos los rangos"
 
-#: users/forms/admin.py:358
+#: users/forms/admin.py:362
 msgid "All roles"
 msgstr "Todos los roles"
 
-#: users/forms/admin.py:365
+#: users/forms/admin.py:369
 msgid "Has rank"
 msgstr "Tiene rango"
 
-#: users/forms/admin.py:371
+#: users/forms/admin.py:375
 msgid "Has role"
 msgstr "Tiene un rol"
 
-#: users/forms/admin.py:387
+#: users/forms/admin.py:391
 msgid ""
 "Short and descriptive name of all users with this rank. \"The Team\" or "
 "\"Game Masters\" are good examples."
@@ -5155,11 +5389,11 @@ msgstr ""
 "Nombre breve y descriptivo de todos los usuarios con este rango. \"The "
 "Team\" o \"Game Masters\" son buenos ejemplos."
 
-#: users/forms/admin.py:392
+#: users/forms/admin.py:396
 msgid "User title"
 msgstr "Título del usuario"
 
-#: users/forms/admin.py:395
+#: users/forms/admin.py:399
 msgid ""
 "Optional, singular version of rank name displayed by user names. For example"
 " \"GM\" or \"Dev\"."
@@ -5167,7 +5401,7 @@ msgstr ""
 "Versión opcional y singular del nombre de rango mostrado por los nombres de "
 "usuario. Por ejemplo \"GM\" o \"Dev\"."
 
-#: users/forms/admin.py:405
+#: users/forms/admin.py:409
 msgid ""
 "Optional description explaining function or status of members distincted "
 "with this rank."
@@ -5175,21 +5409,21 @@ msgstr ""
 "Descripción opcional que explica la función o el estado de los miembros "
 "distinguidos con este rango."
 
-#: users/forms/admin.py:414
+#: users/forms/admin.py:418
 msgid "Rank can give additional roles to users with it."
 msgstr "Rank puede otorgar roles adicionales a los usuarios que lo utilizan."
 
-#: users/forms/admin.py:419
+#: users/forms/admin.py:423
 msgid "Optional css class added to content belonging to this rank owner."
 msgstr ""
 "Clase css opcional agregada al contenido que pertenece al propietario del "
 "rango."
 
-#: users/forms/admin.py:422
+#: users/forms/admin.py:426
 msgid "Give rank dedicated tab on users list"
 msgstr "Dar una pestaña de rango dedicada en la lista de usuarios"
 
-#: users/forms/admin.py:425
+#: users/forms/admin.py:429
 msgid ""
 "Selecting this option will make users with this rank easily discoverable by "
 "others through dedicated page on forum users list."
@@ -5198,71 +5432,71 @@ msgstr ""
 " detectables por otros a través de la página dedicada en la lista de "
 "usuarios del foro."
 
-#: users/forms/admin.py:450
+#: users/forms/admin.py:454
 msgid "This name collides with other rank."
 msgstr "Este nombre colisiona con otro rango."
 
-#: users/forms/admin.py:457
+#: users/forms/admin.py:461
 msgid "Values to ban"
 msgstr "Valores para prohibir"
 
-#: users/forms/admin.py:460 users/forms/admin.py:575
+#: users/forms/admin.py:464 users/forms/admin.py:579
 msgid "Usernames"
 msgstr "Nombres de Usuario"
 
-#: users/forms/admin.py:461 users/forms/admin.py:576
+#: users/forms/admin.py:465 users/forms/admin.py:580
 msgid "E-mails"
 msgstr "Correos electrónicos"
 
-#: users/forms/admin.py:462
+#: users/forms/admin.py:466
 msgid "E-mail domains"
 msgstr "Dominios de correo electrónico"
 
-#: users/forms/admin.py:463
+#: users/forms/admin.py:467
 msgid "IP addresses"
 msgstr "Dirección(es) IP "
 
-#: users/forms/admin.py:464
+#: users/forms/admin.py:468
 msgid "First segment of IP addresses"
 msgstr "Primer segmento de direcciones IP"
 
-#: users/forms/admin.py:465
+#: users/forms/admin.py:469
 msgid "First two segments of IP addresses"
 msgstr "Primeros dos segmentos de direcciones IP"
 
-#: users/forms/admin.py:472
+#: users/forms/admin.py:476
 msgid "Optional message displayed to users instead of default one."
 msgstr ""
 "Mensaje opcional que se muestra a los usuarios en lugar de uno "
 "predeterminado."
 
-#: users/forms/admin.py:475 users/forms/admin.py:485 users/forms/admin.py:528
-#: users/forms/admin.py:538
+#: users/forms/admin.py:479 users/forms/admin.py:489 users/forms/admin.py:532
+#: users/forms/admin.py:542
 msgid "Message can't be longer than 1000 characters."
 msgstr "El mensaje no puede tener más de 1000 caracteres."
 
-#: users/forms/admin.py:479 users/forms/admin.py:532
+#: users/forms/admin.py:483 users/forms/admin.py:536
 msgid "Team message"
 msgstr "Mensaje de equipo"
 
-#: users/forms/admin.py:482 users/forms/admin.py:535
+#: users/forms/admin.py:486 users/forms/admin.py:539
 msgid "Optional ban message for moderators and administrators."
 msgstr "Mensaje de prohibición opcional para moderadores y administradores."
 
-#: users/forms/admin.py:491
+#: users/forms/admin.py:495
 msgid "Leave this field empty for set bans to never expire."
 msgstr ""
 "Deja este campo vacío para que las prohibiciones establecidas nunca expiren."
 
-#: users/forms/admin.py:497
+#: users/forms/admin.py:501
 msgid "Check type"
 msgstr "Tipo de cheque"
 
-#: users/forms/admin.py:502
+#: users/forms/admin.py:506
 msgid "Restrict this ban to registrations"
 msgstr "Restringe esta prohibición a los registros"
 
-#: users/forms/admin.py:504
+#: users/forms/admin.py:508
 msgid ""
 "Changing this to yes will make this ban check be only performed on "
 "registration step. This is good if you want to block certain registrations "
@@ -5274,11 +5508,11 @@ msgstr ""
 "como los de proveedores de correo electrónico recientemente comprometidos, "
 "sin dañar a los usuarios existentes."
 
-#: users/forms/admin.py:510
+#: users/forms/admin.py:514
 msgid "Banned value"
 msgstr "Valor prohibido"
 
-#: users/forms/admin.py:513
+#: users/forms/admin.py:517
 msgid ""
 "This value is case-insensitive and accepts asterisk (*) for rought matches. "
 "For example, making IP ban for value \"83.*\" will ban all IP addresses "
@@ -5289,48 +5523,48 @@ msgstr ""
 "prohíba el valor \"83. * \" Prohibirá todas las direcciones IP que comiencen"
 " con \"83. \"."
 
-#: users/forms/admin.py:518
+#: users/forms/admin.py:522
 msgid "Banned value can't be longer than 250 characters."
 msgstr "El valor prohibido no puede tener más de 250 caracteres."
 
-#: users/forms/admin.py:525
+#: users/forms/admin.py:529
 msgid "Optional message displayed to user instead of default one."
 msgstr ""
 "Mensaje opcional que se muestra al usuario en lugar del predeterminado."
 
-#: users/forms/admin.py:544
+#: users/forms/admin.py:548
 msgid "Leave this field empty for this ban to never expire."
 msgstr "Deje este campo vacío para que esta prohibición nunca expire."
 
-#: users/forms/admin.py:564
+#: users/forms/admin.py:568
 msgid "Banned value is too vague."
 msgstr "El valor prohibido es demasiado vago."
 
-#: users/forms/admin.py:574
+#: users/forms/admin.py:578
 msgid "All bans"
 msgstr "Todas las prohibiciones"
 
-#: users/forms/admin.py:577
+#: users/forms/admin.py:581
 msgid "IPs"
 msgstr "IPs"
 
-#: users/forms/admin.py:580
+#: users/forms/admin.py:584
 msgid "Banned value begins with"
 msgstr "El valor prohibido comienza con"
 
-#: users/forms/admin.py:582
+#: users/forms/admin.py:586
 msgid "Registration only"
 msgstr "Sólo registro"
 
-#: users/forms/admin.py:585 users/forms/admin.py:594
+#: users/forms/admin.py:589 users/forms/admin.py:598
 msgid "Any"
 msgstr "Todos"
 
-#: users/forms/admin.py:595
+#: users/forms/admin.py:599
 msgid "Active"
 msgstr "Activo"
 
-#: users/forms/admin.py:596
+#: users/forms/admin.py:600
 msgid "Expired"
 msgstr "Expirado"
 
@@ -5761,32 +5995,31 @@ msgstr "Tienes que iniciar sesión para realizar esta acción."
 msgid "Only guests can perform this action."
 msgstr "Solo los invitados pueden realizar esta acción."
 
-#: users/permissions/delete.py:25
+#: users/permissions/delete.py:28
 msgid "Maximum age of deleted account (in days)"
 msgstr "Edad máxima de la cuenta eliminada (en días)"
 
-#: users/permissions/delete.py:26 users/permissions/delete.py:32
+#: users/permissions/delete.py:29 users/permissions/delete.py:35
 msgid "Enter zero to disable this check."
 msgstr "Ingresa cero para desactivar esta verificación."
 
-#: users/permissions/delete.py:31
+#: users/permissions/delete.py:34
 msgid "Maximum number of posts on deleted account"
 msgstr "Número máximo de publicaciones en la cuenta eliminada"
 
-#: users/permissions/delete.py:75
+#: users/permissions/delete.py:78
 msgid "You can't delete users."
 msgstr "No puedes eliminar usuarios."
 
-#: users/permissions/delete.py:78 users/views/admin/users.py:201
-#: users/views/admin/users.py:215 users/views/admin/users.py:331
-msgid "You can't delete yourself."
-msgstr "No puedes borrarte a ti mismo."
+#: users/permissions/delete.py:81 users/permissions/delete.py:108
+msgid "You can't delete your account."
+msgstr ""
 
-#: users/permissions/delete.py:80
+#: users/permissions/delete.py:83
 msgid "You can't delete administrators."
 msgstr "No puedes eliminar administradores."
 
-#: users/permissions/delete.py:85
+#: users/permissions/delete.py:88
 #, python-format
 msgid "You can't delete users that are members for more than %(days)s day."
 msgid_plural ""
@@ -5796,7 +6029,7 @@ msgstr[0] ""
 msgstr[1] ""
 "No puede eliminar usuarios que son miembros por más de %(days)s días."
 
-#: users/permissions/delete.py:93
+#: users/permissions/delete.py:96
 #, python-format
 msgid "You can't delete users that made more than %(posts)s post."
 msgid_plural "You can't delete users that made more than %(posts)s posts."
@@ -5804,6 +6037,14 @@ msgstr[0] ""
 "No puede eliminar usuarios que hayan publicado más de %(posts)s mensaje."
 msgstr[1] ""
 "No puede eliminar usuarios que hayan publicado más de %(posts)s mensajes."
+
+#: users/permissions/delete.py:110
+msgid "You can't delete other users accounts."
+msgstr ""
+
+#: users/permissions/delete.py:113
+msgid "You can't delete your account because you are an administrator."
+msgstr ""
 
 #: users/permissions/moderation.py:34
 msgid "Users moderation"
@@ -5853,63 +6094,63 @@ msgstr ""
 "Ingrese cero para permitir que los moderadores levanten prohibiciones "
 "permanentes."
 
-#: users/permissions/moderation.py:120
+#: users/permissions/moderation.py:118
 msgid "You can't rename users."
 msgstr "No puedes cambiar el nombre de los usuarios."
 
-#: users/permissions/moderation.py:122
+#: users/permissions/moderation.py:120
 msgid "You can't rename administrators."
 msgstr "No puedes cambiar el nombre de los administradores."
 
-#: users/permissions/moderation.py:130
+#: users/permissions/moderation.py:128
 msgid "You can't moderate avatars."
 msgstr "No puedes moderar avatares."
 
-#: users/permissions/moderation.py:132
+#: users/permissions/moderation.py:130
 msgid "You can't moderate administrators avatars."
 msgstr "No puedes moderar los avatares de los administradores."
 
-#: users/permissions/moderation.py:140
+#: users/permissions/moderation.py:138
 msgid "You can't moderate signatures."
 msgstr "No puedes moderar las firmas."
 
-#: users/permissions/moderation.py:142
+#: users/permissions/moderation.py:140
 msgid "You can't moderate administrators signatures."
 msgstr "No puedes moderar las firmas de los administradores."
 
-#: users/permissions/moderation.py:151
+#: users/permissions/moderation.py:149
 msgid "You have to sign in to edit profile details."
 msgstr "Debes iniciar sesión para editar los detalles del perfil."
 
-#: users/permissions/moderation.py:153
+#: users/permissions/moderation.py:151
 msgid "You can't edit other users details."
 msgstr "No puedes editar detalles de otros usuarios."
 
-#: users/permissions/moderation.py:155
+#: users/permissions/moderation.py:153
 msgid "You can't edit administrators details."
 msgstr "No puedes editar los detalles de los administradores."
 
-#: users/permissions/moderation.py:164
+#: users/permissions/moderation.py:162
 msgid "You can't ban users."
 msgstr "No puedes prohibir a los usuarios."
 
-#: users/permissions/moderation.py:166
+#: users/permissions/moderation.py:164
 msgid "You can't ban administrators."
 msgstr "No puedes banear a los administradores."
 
-#: users/permissions/moderation.py:174
+#: users/permissions/moderation.py:172
 msgid "You can't lift bans."
 msgstr "No puedes levantar prohibiciones."
 
-#: users/permissions/moderation.py:177
+#: users/permissions/moderation.py:175
 msgid "This user is not banned."
 msgstr "Este usuario no está baneado."
 
-#: users/permissions/moderation.py:182
+#: users/permissions/moderation.py:180
 msgid "You can't lift permanent bans."
 msgstr "No puedes levantar baneos permanentes."
 
-#: users/permissions/moderation.py:184
+#: users/permissions/moderation.py:182
 #, python-format
 msgid "You can't lift bans that expire after %(expiration)s."
 msgstr "No puede levantar baneos que caducan después de %(expiration)s."
@@ -6088,27 +6329,28 @@ msgstr "Tu dirección IP está prohibida."
 msgid "You are banned."
 msgstr "Estás baneado."
 
-#: users/serializers/options.py:49
+#: users/serializers/options.py:52
 msgid "Signature is too long."
 msgstr "La firma es demasiado larga."
 
-#: users/serializers/options.py:61
+#: users/serializers/options.py:64
 msgid "Enter new username."
 msgstr "Introduce un nuevo nombre de usuario."
 
-#: users/serializers/options.py:64
+#: users/serializers/options.py:67
 msgid "New username is same as current one."
 msgstr "El nuevo nombre de usuario es el mismo que el actual."
 
-#: users/serializers/options.py:81 users/serializers/options.py:95
+#: users/serializers/options.py:84 users/serializers/options.py:98
+#: users/serializers/options.py:118
 msgid "Entered password is invalid."
 msgstr "La contraseña introducida no es válida."
 
-#: users/serializers/options.py:100
+#: users/serializers/options.py:103
 msgid "You have to enter new e-mail address."
 msgstr "Debes ingresar una nueva dirección de correo electrónico."
 
-#: users/serializers/options.py:103
+#: users/serializers/options.py:106
 msgid "New e-mail is same as current one."
 msgstr "El nuevo correo electrónico es el mismo que el actual."
 
@@ -6319,6 +6561,11 @@ msgstr "%(user)s es super administrador y no puede ser baneado."
 #: users/views/admin/users.py:186
 msgid "Selected users have been banned."
 msgstr "Los usuarios seleccionados han sido baneados."
+
+#: users/views/admin/users.py:201 users/views/admin/users.py:215
+#: users/views/admin/users.py:331
+msgid "You can't delete yourself."
+msgstr "No puedes borrarte a ti mismo."
 
 #: users/views/admin/users.py:203 users/views/admin/users.py:217
 #: users/views/admin/users.py:334
