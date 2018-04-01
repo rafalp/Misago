@@ -687,10 +687,9 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
-            'id': self.post.id,
-            'detail': ["You can't hide this post because its marked as best answer."],
+            'detail': "You can't hide this post because its marked as best answer.",
         })
 
 

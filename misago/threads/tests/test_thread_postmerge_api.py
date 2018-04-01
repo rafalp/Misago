@@ -381,7 +381,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': "Post marked as best answer can't be merged with thread's first post."
+            'posts': ["Post marked as best answer can't be merged with thread's first post."]
         })
 
     def test_merge_posts(self):

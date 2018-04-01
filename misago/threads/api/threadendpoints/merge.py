@@ -7,7 +7,6 @@ from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
 from misago.threads.events import record_event
-from misago.threads.mergeconflict import MergeConflict
 from misago.threads.models import Thread
 from misago.threads.moderation import threads as moderation
 from misago.threads.permissions import allow_merge_thread
@@ -47,12 +46,11 @@ def thread_merge_endpoint(request, thread, viewmodel):
     if 'poll' in serializer.merge_conflict:
         if poll and poll.thread_id != other_thread.id:
             other_thread.poll.delete()
-        poll.move(other_thread)
-    else:
-        if hasattr(thread, 'poll'):
-            thread.poll.delete()
-        if hasattr(other_thread, 'poll'):
+            poll.move(other_thread)
+        elif not poll:
             other_thread.poll.delete()
+    elif poll:
+        poll.move(other_thread)
 
     # merge thread contents
     moderation.merge_thread(request, other_thread, thread)
@@ -85,32 +83,9 @@ def threads_merge_endpoint(request):
     serializer.is_valid(raise_exception=True)
 
     threads = serializer.validated_data['threads']
-    invalid_threads = []
-
-    for thread in threads:
-        try:
-            allow_merge_thread(request.user, thread)
-        except PermissionDenied as e:
-            invalid_threads.append({
-                'id': thread.pk,
-                'title': thread.title,
-                'errors': [text_type(e)]
-            })
-
-    if invalid_threads:
-        return Response(invalid_threads, status=403)
-
-    # handle merge conflict
-    merge_conflict = MergeConflict(serializer.validated_data, threads)
-    merge_conflict.is_valid(raise_exception=True)
-
-    new_thread = merge_threads(request, serializer.validated_data, threads, merge_conflict)
-    return Response(ThreadsListSerializer(new_thread).data)
 
     data = serializer.validated_data
-    
     threads = data['threads']
-    poll = data['poll']
 
     new_thread = Thread(
         category=data['category'],
@@ -121,9 +96,8 @@ def threads_merge_endpoint(request):
     new_thread.set_title(data['title'])
     new_thread.save()
 
-    resolution = merge_conflict.get_resolution()
-
-    best_answer = resolution.get('best_answer')
+    # handle merge conflict
+    best_answer = data.get('best_answer')
     if best_answer:
         new_thread.best_answer_id = best_answer.best_answer_id
         new_thread.best_answer_is_protected = best_answer.best_answer_is_protected
@@ -132,7 +106,7 @@ def threads_merge_endpoint(request):
         new_thread.best_answer_marked_by_name = best_answer.best_answer_marked_by_name
         new_thread.best_answer_marked_by_slug = best_answer.best_answer_marked_by_slug
 
-    poll = resolution.get('poll')
+    poll = data.get('poll')
     if poll:
         poll.move(new_thread)
 

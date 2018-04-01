@@ -547,24 +547,10 @@ class MergeThreadsSerializer(NewThreadSerializer):
 
     def validate(self, data):
         data['threads'] = self.get_valid_threads(data['threads'])
-        data['poll'] = validate_poll_merge(data['threads'], data)
+
+        merge_conflict = MergeConflict(data, data['threads'])
+        merge_conflict.is_valid(raise_exception=True)
+        data.update(merge_conflict.get_resolution())
+        self.merge_conflict = merge_conflict.get_conflicting_fields()
+        
         return data
-
-
-def validate_poll_merge(threads, data):
-    merge_handler = PollMergeHandler(threads)
-
-    if len(merge_handler.polls) == 1:
-        return merge_handler.polls[0]
-
-    if merge_handler.is_merge_conflict():
-        if 'poll' in data:
-            merge_handler.set_resolution(data['poll'])
-            if merge_handler.is_valid():
-                return merge_handler.get_resolution()
-            else:
-                raise ValidationError({'poll': [_("Invalid choice.")]})
-        else:
-            raise ValidationError({'polls': merge_handler.get_available_resolutions()})
-
-    return None

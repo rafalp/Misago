@@ -35,7 +35,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         request.user_ip = '127.0.0.1'
 
         request.include_frontend_context = False
-        request.frontend_context = {}
+        request.frontend_context = {'conf': {}, 'store': {}, 'url': {}}
 
         return request
 

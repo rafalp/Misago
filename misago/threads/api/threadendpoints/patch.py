@@ -51,7 +51,7 @@ def patch_title(request, thread, value):
     try:
         value_cleaned = six.text_type(value).strip()
     except (TypeError, ValueError):
-        raise PermissionDenied(_('Not a valid string.'))
+        raise ValidationError(_('Not a valid string.'))
 
     validate_title(value_cleaned)
 
@@ -201,7 +201,7 @@ def patch_best_answer(request, thread, value):
     try:
         post_id = int(value)
     except (TypeError, ValueError):
-        raise PermissionDenied(_("A valid integer is required."))
+        raise ValidationError(_("A valid integer is required."))
 
     allow_mark_best_answer(request.user, thread)
 
@@ -238,7 +238,7 @@ def patch_unmark_best_answer(request, thread, value):
     try:
         post_id = int(value)
     except (TypeError, ValueError):
-        raise PermissionDenied(_("A valid integer is required."))
+        raise ValidationError(_("A valid integer is required."))
 
     post = get_object_or_404(thread.post_set, id=post_id)
     post.category = thread.category
@@ -303,8 +303,8 @@ thread_patch_dispatcher.add('participants', patch_add_participant)
 def patch_remove_participant(request, thread, value):
     try:
         user_id = int(value)
-    except (ValueError, TypeError):
-        raise PermissionDenied(_("A valid integer is required."))
+    except (TypeError, ValueError):
+        raise ValidationError(_("A valid integer is required."))
 
     for participant in thread.participants_list:
         if participant.user_id == user_id:
@@ -333,8 +333,8 @@ thread_patch_dispatcher.remove('participants', patch_remove_participant)
 def patch_replace_owner(request, thread, value):
     try:
         user_id = int(value)
-    except (ValueError, TypeError):
-        raise PermissionDenied(_("A valid integer is required."))
+    except (TypeError, ValueError):
+        raise ValidationError(_("A valid integer is required."))
 
     for participant in thread.participants_list:
         if participant.user_id == user_id:

@@ -570,7 +570,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             }
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {'detail': "Invalid choice."})
+        self.assertEqual(response.json(), {
+            'best_answer': ["Invalid choice."],
+        })
 
         # best answers were untouched
         self.assertEqual(self.thread.post_set.count(), 2)
