@@ -8,4 +8,4 @@
 25 0 * * * python manage.py clearreadtracker
 25 0 * * * python manage.py clearsessions
 25 0 * * * python manage.py invalidatebans
-1 0 * * * python manage.py deletemarkedusers
+0 1 * * * python manage.py deletemarkedusers
