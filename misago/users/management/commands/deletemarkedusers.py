@@ -1,9 +1,9 @@
 from __future__ import unicode_literals
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.management.base import CommandError, BaseCommand
 
+from misago.conf import settings
 from misago.core.pgutils import chunk_queryset
 
 from misago.users.permissions import can_delete_own_account
