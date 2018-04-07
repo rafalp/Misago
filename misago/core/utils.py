@@ -56,6 +56,16 @@ def parse_iso8601_string(value):
     return timezone.make_aware(parsed_value, tz_correction)
 
 
+def serialize_datetime(value):
+    if value is None:
+        return None
+        
+    value = value.isoformat()
+    if value.endswith('+00:00'):
+        value = value[:-6] + 'Z'
+    return value
+
+
 def hide_post_parameters(request):
     """
     Mark request as having sensitive parameters
