@@ -2,6 +2,23 @@
 # This script is a shortcut for configuring newly-build docker container for Misago development
 python setup.py develop
 
+# Clear OS files
+rm -f /srv/misago/.DS_Store
+rm -f /srv/misago/Thumbs.db
+
+# If user specified "--f", clear after previous devinit
+if [ "$1" = "--f" ]
+then
+    echo "Cleaned files created by previous initdev"
+    rm -f /srv/misago/cron.txt
+    rm -f /srv/misago/manage.py
+    rm -rf /srv/misago/avatargallery
+    rm -rf /srv/misago/$PROJECT_NAME
+    rm -rf /srv/misago/media
+    rm -rf /srv/misago/static
+    rm -rf /srv/misago/theme
+fi
+
 # Create new project
 python extras/createdevproject.py $PROJECT_NAME /srv/misago
 
@@ -13,3 +30,28 @@ rm -f cron.txt
 ./extras/wait_for_postgres.sh
 python manage.py migrate
 python extras/createsuperuser.py
+
+# Print short bit of help at the end of cript
+RED='\033[0;31m'
+DEFAULT='\033[0m'
+
+echo ""
+echo "================================================================================"
+echo ""
+echo "Note: running 'initdev' after already having used it previously to setup Misago"
+echo "for development may result in any of following errors occuring:"
+echo ""
+echo "  - CommandError: /srv/misago/... already exists, overlaying a project or app into an existing directory won't replace conflicting files"
+echo "  - ModuleNotFoundError: No module named '$PROJECT_NAME'"
+echo "  - django.core.exceptions.ImproperlyConfigured: settings.DATABASES is improperly configured. Please supply the NAME value."
+echo "  - python: can't open file 'manage.py': [Errno 2] No such file or directory"
+echo ""
+echo "If you are experiencing either of those errors, this means that files are"
+echo "present in the repository\'s main directory preventing 'initdev' from succedding."
+echo "Please try running the 'initdev' with \"--f\" option to force old files deletion:"
+echo ""
+echo "  docker-compose run --rm misago initdev --f"
+echo ""
+echo -e "${RED}Warning:${DEFAULT} if you have uncommited changes to Misago's setup that should be included"
+echo "in next release, make sure that they are commited to 'misago/project_template'"
+echo "or 'initdev --f' will overwrite the files causing them to be lost."
