@@ -29,18 +29,21 @@ class PostReadApiTests(ThreadsApiTestCase):
         self.logout_user()
 
         response = self.client.post(self.api_link)
-        self.assertContains(response, "This action is not available to guests.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This action is not available to guests.",
+        })
 
     def test_read_post(self):
         """api marks post as read"""
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'thread_is_read': False,
+        })
 
         self.assertEqual(self.user.postread_set.count(), 1)
         self.user.postread_set.get(post=self.post)
-
-        # one post read, first post is still unread
-        self.assertFalse(response.json()['thread_is_read'])
 
         # read second post
         response = self.client.post(reverse(
@@ -51,12 +54,12 @@ class PostReadApiTests(ThreadsApiTestCase):
             }
         ))
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'thread_is_read': True,
+        })
 
         self.assertEqual(self.user.postread_set.count(), 2)
         self.user.postread_set.get(post=self.thread.first_post)
-
-        # both posts are read
-        self.assertTrue(response.json()['thread_is_read'])
 
     def test_read_subscribed_thread_post(self):
         """api marks post as read and updates subscription"""

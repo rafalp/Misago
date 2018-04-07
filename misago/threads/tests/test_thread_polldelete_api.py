@@ -20,6 +20,9 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This action is not available to guests.",
+        })
 
     def test_invalid_thread_id(self):
         """api validates that thread id is integer"""
@@ -33,6 +36,9 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
 
         response = self.client.delete(api_link)
         self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json(), {
+            'detail': "NOT FOUND",
+        })
 
     def test_nonexistant_thread_id(self):
         """api validates that thread exists"""
@@ -46,6 +52,9 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
 
         response = self.client.delete(api_link)
         self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json(), {
+            'detail': "No Thread matches the given query.",
+        })
 
     def test_invalid_poll_id(self):
         """api validates that poll id is integer"""
@@ -59,6 +68,9 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
 
         response = self.client.delete(api_link)
         self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json(), {
+            'detail': "NOT FOUND",
+        })
 
     def test_nonexistant_poll_id(self):
         """api validates that poll exists"""
@@ -72,13 +84,19 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
 
         response = self.client.delete(api_link)
         self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json(), {
+            'detail': "NOT FOUND",
+        })
 
     def test_no_permission(self):
         """api validates that user has permission to delete poll in thread"""
         self.override_acl({'can_delete_polls': 0})
 
         response = self.client.delete(self.api_link)
-        self.assertContains(response, "can't delete polls", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete polls.",
+        })
 
     def test_no_permission_timeout(self):
         """api validates that user's window to delete poll in thread has closed"""
@@ -88,9 +106,10 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
         self.poll.save()
 
         response = self.client.delete(self.api_link)
-        self.assertContains(
-            response, "can't delete polls that are older than 5 minutes", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete polls that are older than 5 minutes.",
+        })
 
     def test_no_permission_poll_closed(self):
         """api validates that user's window to delete poll in thread has closed"""
@@ -101,7 +120,10 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
         self.poll.save()
 
         response = self.client.delete(self.api_link)
-        self.assertContains(response, "This poll is over", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This poll is over. You can't delete it.",
+        })
 
     def test_no_permission_other_user_poll(self):
         """api validates that user has permission to delete other user poll in thread"""
@@ -111,7 +133,10 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
         self.poll.save()
 
         response = self.client.delete(self.api_link)
-        self.assertContains(response, "can't delete other users polls", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete other users polls in this category.",
+        })
 
     def test_no_permission_closed_thread(self):
         """api validates that user has permission to delete poll in closed thread"""
@@ -121,7 +146,10 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
         self.thread.save()
 
         response = self.client.delete(self.api_link)
-        self.assertContains(response, "thread is closed", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This thread is closed. You can't delete polls in it.",
+        })
 
         self.override_acl(category={'can_close_threads': 1})
 
@@ -136,7 +164,10 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
         self.category.save()
 
         response = self.client.delete(self.api_link)
-        self.assertContains(response, "category is closed", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This category is closed. You can't delete polls in it.",
+        })
 
         self.override_acl(category={'can_close_threads': 1})
 
