@@ -55,14 +55,8 @@ def get_signature_options(user):
 
 def edit_signature(request, user):
     serializer = EditSignatureSerializer(user, data=request.data)
-    if serializer.is_valid():
-        set_user_signature(request, user, serializer.validated_data['signature'])
-        user.save(update_fields=['signature', 'signature_parsed', 'signature_checksum'])
-        return get_signature_options(user)
-    else:
-        return Response(
-            {
-                'detail': serializer.errors
-            },
-            status=400,
-        )
+    serializer.is_valid(raise_exception=True)
+
+    set_user_signature(request, user, serializer.validated_data['signature'])
+    user.save(update_fields=['signature', 'signature_parsed', 'signature_checksum'])
+    return get_signature_options(user)
