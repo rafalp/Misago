@@ -13,21 +13,20 @@ def poll_vote_create(request, thread, poll):
     allow_vote_poll(request.user, poll)
 
     serializer = NewVoteSerializer(
-        data={
-            'choices': request.data,
-        },
+        # FIXME: lets use {'choices': []} JSON instead!
+        data={'choices': request.data},
         context={
             'allowed_choices': poll.allowed_choices,
             'choices': poll.choices,
         },
     )
 
-    if not serializer.is_valid():
-        return Response(
-            {'detail': serializer.errors}, status=400)
+    serializer.is_valid(raise_exception=True)
 
-    remove_user_votes(request.user, poll, serializer.data['choices'])
-    set_new_votes(request, poll, serializer.data['choices'])
+    validated_choices = serializer.validated_data['choices']
+
+    remove_user_votes(request.user, poll, validated_choices)
+    set_new_votes(request, poll, validated_choices)
 
     add_acl(request.user, poll)
     serialized_poll = PollSerializer(poll).data

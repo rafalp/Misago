@@ -146,9 +146,6 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
             'allowed_choices': ["This field is required."],
         })
 
-        response_json = response.json()
-        self.assertEqual(len(response_json), 4)
-
     def test_length_validation(self):
         """api validates poll's length"""
         response = self.post(
