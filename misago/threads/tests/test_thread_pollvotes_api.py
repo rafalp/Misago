@@ -346,7 +346,10 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         self.delete_user_votes()
 
         response = self.post(self.api_link, data=['lorem', 'ipsum'])
-        self.assertContains(response, "One or more of poll choices were invalid.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'choices': ["One or more of poll choices were invalid."],
+        })
 
     def test_too_many_choices(self):
         """api validates if vote that user has made overlaps with allowed votes"""
