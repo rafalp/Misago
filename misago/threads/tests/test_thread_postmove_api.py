@@ -95,43 +95,69 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, json.dumps({}), content_type="application/json")
         self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This action is not available to guests.",
+        })
 
     def test_invalid_data(self):
         """api handles post that is invalid type"""
         self.override_acl()
         response = self.client.post(self.api_link, '[]', content_type="application/json")
-        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["Invalid data. Expected a dictionary, but got list."],
+        })
 
         self.override_acl()
         response = self.client.post(self.api_link, '123', content_type="application/json")
-        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["Invalid data. Expected a dictionary, but got int."],
+        })
 
         self.override_acl()
         response = self.client.post(self.api_link, '"string"', content_type="application/json")
-        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["Invalid data. Expected a dictionary, but got str."],
+        })
 
         self.override_acl()
         response = self.client.post(self.api_link, 'malformed', content_type="application/json")
-        self.assertContains(response, "JSON parse error", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'detail': "JSON parse error - Expecting value: line 1 column 1 (char 0)",
+        })
 
     def test_no_permission(self):
         """api validates permission to move"""
         self.override_acl({'can_move_posts': 0})
 
         response = self.client.post(self.api_link, json.dumps({}), content_type="application/json")
-        self.assertContains(response, "You can't move posts in this thread.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't move posts in this thread.",
+        })
 
     def test_move_no_new_thread_url(self):
         """api validates if new thread url was given"""
         response = self.client.post(self.api_link)
-        self.assertContains(response, "Enter link to new thread.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'new_thread': ["Enter link to new thread."],
+            'posts': ["You have to specify at least one post to move."],
+        })
 
     def test_invalid_new_thread_url(self):
         """api validates new thread url"""
         response = self.client.post(self.api_link, {
             'new_thread': self.user.get_absolute_url(),
         })
-        self.assertContains(response, "This is not a valid thread link.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'new_thread': ["This is not a valid thread link."],
+            'posts': ["You have to specify at least one post to move."],
+        })
 
     def test_current_new_thread_url(self):
         """api validates if new thread url points to current thread"""
@@ -140,9 +166,11 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
                 'new_thread': self.thread.get_absolute_url(),
             }
         )
-        self.assertContains(
-            response, "Thread to move posts to is same as current one.", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'new_thread': ["Thread to move posts to is same as current one."],
+            'posts': ["You have to specify at least one post to move."],
+        })
 
     def test_other_thread_exists(self):
         """api validates if other thread exists"""
@@ -155,9 +183,14 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(self.api_link, {
             'new_thread': other_new_thread,
         })
-        self.assertContains(
-            response, "The thread you have entered link to doesn't exist", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'new_thread': [
+                "The thread you have entered link to doesn't exist or you don't have permission "
+                "to see it."
+            ],
+            'posts': ["You have to specify at least one post to move."],
+        })
 
     def test_other_thread_is_invisible(self):
         """api validates if other thread is visible"""
@@ -170,9 +203,14 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
                 'new_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(
-            response, "The thread you have entered link to doesn't exist", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'new_thread': [
+                "The thread you have entered link to doesn't exist or you don't have permission "
+                "to see it."
+            ],
+            'posts': ["You have to specify at least one post to move."],
+        })
 
     def test_other_thread_isnt_replyable(self):
         """api validates if other thread can be replied"""
@@ -185,18 +223,22 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
                 'new_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(
-            response, "You can't move posts to threads you can't reply.", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'new_thread': [
+                "You can't move posts to threads you can't reply."
+            ],
+            'posts': ["You have to specify at least one post to move."],
+        })
 
     def test_empty_data(self):
         """api handles empty data"""
-        other_thread = testutils.post_thread(self.category)
-
         response = self.client.post(self.api_link)
-        self.assertContains(
-            response, "Enter link to new thread.", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'new_thread': ["Enter link to new thread."],
+            'posts': ["You have to specify at least one post to move."],
+        })
 
     def test_empty_posts_data_json(self):
         """api handles empty json data"""
@@ -209,25 +251,10 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-
-        self.assertContains(
-            response, "You have to specify at least one post to move.", status_code=400
-        )
-
-    def test_empty_posts_data_form(self):
-        """api handles empty form data"""
-        other_thread = testutils.post_thread(self.category)
-
-        response = self.client.post(
-            self.api_link,
-            {
-                'new_thread': other_thread.get_absolute_url(),
-            },
-        )
-
-        self.assertContains(
-            response, "You have to specify at least one post to move.", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ["You have to specify at least one post to move."],
+        })
 
     def test_no_posts_ids(self):
         """api rejects no posts ids"""
@@ -241,9 +268,10 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(
-            response, "You have to specify at least one post to move.", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ["You have to specify at least one post to move."],
+        })
 
     def test_invalid_posts_data(self):
         """api handles invalid data"""
@@ -257,9 +285,10 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(
-            response, "Expected a list of items", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ['Expected a list of items but got type "str".'],
+        })
 
     def test_invalid_posts_ids(self):
         """api handles invalid post id"""
@@ -273,9 +302,10 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(
-            response, "One or more post ids received were invalid.", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ["One or more post ids received were invalid."],
+        })
 
     def test_move_limit(self):
         """api rejects more posts than move limit"""
@@ -289,9 +319,10 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(
-            response, "No more than {} posts can be moved".format(POSTS_LIMIT), status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ["No more than {} posts can be moved at single time.".format(POSTS_LIMIT)],
+        })
 
     def test_move_invisible(self):
         """api validates posts visibility"""
@@ -305,9 +336,10 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(
-            response, "One or more posts to move could not be found.", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ["One or more posts to move could not be found."],
+        })
 
     def test_move_other_thread_posts(self):
         """api recjects attempt to move other thread's post"""
@@ -321,9 +353,10 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(
-            response, "One or more posts to move could not be found.", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ["One or more posts to move could not be found."],
+        })
 
     def test_move_event(self):
         """api rejects events move"""
@@ -337,7 +370,10 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(response, "Events can't be moved.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ["Events can't be moved."],
+        })
 
     def test_move_first_post(self):
         """api rejects first post move"""
@@ -351,7 +387,10 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(response, "You can't move thread's first post.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ["You can't move thread's first post."],
+        })
 
     def test_move_hidden_posts(self):
         """api recjects attempt to move urneadable hidden post"""
@@ -365,9 +404,10 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(
-            response, "You can't move posts the content you can't see.", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ["You can't move posts the content you can't see."],
+        })
 
     def test_move_posts_closed_thread_no_permission(self):
         """api recjects attempt to move posts from closed thread"""
@@ -386,9 +426,10 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(
-            response, "This thread is closed. You can't move posts in it.", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ["This thread is closed. You can't move posts in it."],
+        })
 
     def test_move_posts_closed_category_no_permission(self):
         """api recjects attempt to move posts from closed thread"""
@@ -408,9 +449,10 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(
-            response, "This category is closed. You can't move posts in it.", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ["This category is closed. You can't move posts in it."],
+        })
 
     def test_move_posts(self):
         """api moves posts to other thread"""
@@ -486,10 +528,10 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
 
         other_thread = testutils.post_thread(self.category_b)
 
-        posts = (
+        posts = [
             testutils.reply_thread(self.thread),
             testutils.reply_thread(self.thread),
-        )
+        ]
 
         self.refresh_thread()
         self.assertEqual(self.thread.replies, 2)

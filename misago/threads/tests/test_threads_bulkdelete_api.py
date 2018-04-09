@@ -40,7 +40,10 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
         self.logout_user()
 
         response = self.delete(self.api_link)
-        self.assertContains(response, "This action is not available to guests.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This action is not available to guests.",
+        })
 
     def test_delete_no_ids(self):
         """api requires ids to delete"""
