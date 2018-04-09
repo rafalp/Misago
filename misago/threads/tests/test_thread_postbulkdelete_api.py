@@ -35,22 +35,34 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         self.logout_user()
 
         response = self.delete(self.api_link)
-        self.assertContains(response, "This action is not available to guests.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This action is not available to guests.",
+        })
 
     def test_delete_no_data(self):
         """api handles empty data"""
         response = self.client.delete(self.api_link, content_type="application/json")
-        self.assertContains(response, "Expected a list of items", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ['Expected a list of items but got type "dict".'],
+        })
 
     def test_delete_no_ids(self):
         """api requires ids to delete"""
         response = self.delete(self.api_link)
-        self.assertContains(response, "You have to specify at least one post to delete.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ["You have to specify at least one post to delete."],
+        })
 
     def test_delete_empty_ids(self):
         """api requires ids to delete"""
         response = self.delete(self.api_link, [])
-        self.assertContains(response, "You have to specify at least one post to delete.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ["You have to specify at least one post to delete."],
+        })
 
     def test_validate_ids(self):
         """api validates that ids are list of ints"""
@@ -60,13 +72,22 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         })
 
         response = self.delete(self.api_link, True)
-        self.assertContains(response, "Expected a list of items", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ['Expected a list of items but got type "bool".'],
+        })
 
         response = self.delete(self.api_link, 'abbss')
-        self.assertContains(response, "Expected a list of items", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ['Expected a list of items but got type "str".'],
+        })
 
         response = self.delete(self.api_link, [1, 2, 3, 'a', 'b', 'x'])
-        self.assertContains(response, "One or more post ids received were invalid.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ["One or more post ids received were invalid."],
+        })
 
     def test_validate_ids_length(self):
         """api validates that ids are list of ints"""
@@ -76,7 +97,10 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         })
 
         response = self.delete(self.api_link, list(range(100)))
-        self.assertContains(response, "No more than 24 posts can be deleted at single time.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'posts': ["No more than 24 posts can be deleted at single time."],
+        })
 
     def test_validate_posts_exist(self):
         """api validates that ids are visible posts"""
@@ -86,7 +110,10 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         })
 
         response = self.delete(self.api_link, [p.id * 10 for p in self.posts])
-        self.assertContains(response, "One or more posts to delete could not be found.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "One or more posts to delete could not be found.",
+        })
 
     def test_validate_posts_visibility(self):
         """api validates that ids are visible posts"""
@@ -99,7 +126,10 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         self.posts[1].save()
 
         response = self.delete(self.api_link, [p.id for p in self.posts])
-        self.assertContains(response, "One or more posts to delete could not be found.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "One or more posts to delete could not be found.",
+        })
 
     def test_validate_posts_same_thread(self):
         """api validates that ids are same thread posts"""
@@ -112,7 +142,10 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         self.posts.append(testutils.reply_thread(other_thread, poster=self.user))
 
         response = self.delete(self.api_link, [p.id for p in self.posts])
-        self.assertContains(response, "One or more posts to delete could not be found.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "One or more posts to delete could not be found.",
+        })
 
     def test_no_permission(self):
         """api validates permission to delete"""
@@ -122,7 +155,10 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         })
 
         response = self.delete(self.api_link, [p.id for p in self.posts])
-        self.assertContains(response, "You can't delete posts in this category.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete posts in this category.",
+        })
 
     def test_delete_other_user_post_no_permission(self):
         """api valdiates if user can delete other users posts"""
@@ -133,9 +169,10 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         })
 
         response = self.delete(self.api_link, [p.id for p in self.posts])
-        self.assertContains(
-            response, "You can't delete other users posts in this category", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete other users posts in this category.",
+        })
 
     def test_delete_protected_post_no_permission(self):
         """api validates if user can delete protected post"""
@@ -149,9 +186,10 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         self.posts[0].save()
 
         response = self.delete(self.api_link, [p.id for p in self.posts])
-        self.assertContains(
-            response, "This post is protected. You can't delete it.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This post is protected. You can't delete it.",
+        })
 
     def test_delete_protected_post_after_edit_time(self):
         """api validates if user can delete delete post after edit time"""
@@ -165,10 +203,11 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         self.posts[0].save()
 
         response = self.delete(self.api_link, [p.id for p in self.posts])
-        self.assertContains(
-            response, "You can't delete posts that are older than 1 minute.", status_code=403
-        )
-
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete posts that are older than 1 minute.",
+        })
+        
     def test_delete_post_closed_thread_no_permission(self):
         """api valdiates if user can delete posts in closed threads"""
         self.override_acl({
@@ -180,9 +219,10 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         self.thread.save()
 
         response = self.delete(self.api_link, [p.id for p in self.posts])
-        self.assertContains(
-            response, "This thread is closed. You can't delete posts in it.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This thread is closed. You can't delete posts in it.",
+        })
 
     def test_delete_post_closed_category_no_permission(self):
         """api valdiates if user can delete posts in closed categories"""
@@ -195,9 +235,10 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         self.category.save()
 
         response = self.delete(self.api_link, [p.id for p in self.posts])
-        self.assertContains(
-            response, "This category is closed. You can't delete posts in it.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This category is closed. You can't delete posts in it.",
+        })
 
     def test_delete_first_post(self):
         """api disallows first post's deletion"""
@@ -210,7 +251,10 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         ids.append(self.thread.first_post_id)
 
         response = self.delete(self.api_link, ids)
-        self.assertContains(response, "You can't delete thread's first post.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete thread's first post.",
+        })
 
     def test_delete_best_answer(self):
         """api disallows best answer deletion"""
@@ -237,7 +281,10 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         self.posts[1].save()
 
         response = self.delete(self.api_link, [p.id for p in self.posts])
-        self.assertContains(response, "You can't delete events in this category.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete events in this category.",
+        })
 
     def test_delete_owned_posts(self):
         """api deletes owned thread posts"""
@@ -250,6 +297,8 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         ids = [self.posts[0].id, self.posts[-1].id]
 
         response = self.delete(self.api_link, ids)
+        self.assertEqual(response.status_code, 200)
+        
         self.thread = Thread.objects.get(pk=self.thread.pk)
 
         self.assertNotEqual(self.thread.last_post_id, ids[-1])

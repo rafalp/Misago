@@ -28,14 +28,20 @@ class PostDeleteApiTests(ThreadsApiTestCase):
         self.logout_user()
 
         response = self.client.delete(self.api_link)
-        self.assertContains(response, "This action is not available to guests.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This action is not available to guests.",
+        })
 
     def test_no_permission(self):
         """api validates permission to delete post"""
         self.override_acl({'can_hide_own_posts': 1, 'can_hide_posts': 1})
 
         response = self.client.delete(self.api_link)
-        self.assertContains(response, "You can't delete posts in this category.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete posts in this category.",
+        })
 
     def test_delete_other_user_post_no_permission(self):
         """api valdiates if user can delete other users posts"""
@@ -49,9 +55,10 @@ class PostDeleteApiTests(ThreadsApiTestCase):
         self.post.save()
 
         response = self.client.delete(self.api_link)
-        self.assertContains(
-            response, "You can't delete other users posts in this category", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete other users posts in this category.",
+        })
 
     def test_delete_protected_post_no_permission(self):
         """api validates if user can delete protected post"""
@@ -65,9 +72,10 @@ class PostDeleteApiTests(ThreadsApiTestCase):
         self.post.save()
 
         response = self.client.delete(self.api_link)
-        self.assertContains(
-            response, "This post is protected. You can't delete it.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This post is protected. You can't delete it.",
+        })
 
     def test_delete_protected_post_after_edit_time(self):
         """api validates if user can delete delete post after edit time"""
@@ -81,9 +89,10 @@ class PostDeleteApiTests(ThreadsApiTestCase):
         self.post.save()
 
         response = self.client.delete(self.api_link)
-        self.assertContains(
-            response, "You can't delete posts that are older than 1 minute.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete posts that are older than 1 minute.",
+        })
 
     def test_delete_post_closed_thread_no_permission(self):
         """api valdiates if user can delete posts in closed threads"""
@@ -96,9 +105,10 @@ class PostDeleteApiTests(ThreadsApiTestCase):
         self.thread.save()
 
         response = self.client.delete(self.api_link)
-        self.assertContains(
-            response, "This thread is closed. You can't delete posts in it.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This thread is closed. You can't delete posts in it.",
+        })
 
     def test_delete_post_closed_category_no_permission(self):
         """api valdiates if user can delete posts in closed categories"""
@@ -111,9 +121,10 @@ class PostDeleteApiTests(ThreadsApiTestCase):
         self.category.save()
 
         response = self.client.delete(self.api_link)
-        self.assertContains(
-            response, "This category is closed. You can't delete posts in it.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This category is closed. You can't delete posts in it.",
+        })
 
     def test_delete_first_post(self):
         """api disallows first post deletion"""
@@ -128,7 +139,10 @@ class PostDeleteApiTests(ThreadsApiTestCase):
         )
 
         response = self.client.delete(api_link)
-        self.assertContains(response, "You can't delete thread's first post.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete thread's first post.",
+        })
 
     def test_delete_best_answer(self):
         """api disallows best answer deletion"""
@@ -193,7 +207,10 @@ class EventDeleteApiTests(ThreadsApiTestCase):
         self.logout_user()
 
         response = self.client.delete(self.api_link)
-        self.assertContains(response, "This action is not available to guests.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This action is not available to guests.",
+        })
 
     def test_no_permission(self):
         """api validates permission to delete event"""
@@ -204,7 +221,10 @@ class EventDeleteApiTests(ThreadsApiTestCase):
         })
 
         response = self.client.delete(self.api_link)
-        self.assertContains(response, "You can't delete events in this category.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't delete events in this category.",
+        })
 
     def test_delete_event_closed_thread_no_permission(self):
         """api valdiates if user can delete events in closed threads"""
@@ -217,9 +237,10 @@ class EventDeleteApiTests(ThreadsApiTestCase):
         self.thread.save()
 
         response = self.client.delete(self.api_link)
-        self.assertContains(
-            response, "This thread is closed. You can't delete events in it.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This thread is closed. You can't delete events in it.",
+        })
 
     def test_delete_event_closed_category_no_permission(self):
         """api valdiates if user can delete events in closed categories"""
@@ -232,9 +253,10 @@ class EventDeleteApiTests(ThreadsApiTestCase):
         self.category.save()
 
         response = self.client.delete(self.api_link)
-        self.assertContains(
-            response, "This category is closed. You can't delete events in it.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This category is closed. You can't delete events in it.",
+        })
 
     def test_delete_event(self):
         """api differs posts from events"""
