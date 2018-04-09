@@ -426,6 +426,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
+        # fixme: this is bad place to return message that thread is closed
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
             'posts': ["This thread is closed. You can't move posts in it."],
@@ -449,6 +450,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
+        # fixme: this is bad place to return message that category is closed
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
             'posts': ["This category is closed. You can't move posts in it."],
