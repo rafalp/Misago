@@ -53,7 +53,7 @@ class RegisterUserSerializer(serializers.Serializer):
         try:
             self.full_clean_password(data)
         except ValidationError as e:
-            self._added_errors['password'] = [e]
+            self.add_error('password', e)
 
         validators.validate_new_registration(request, self, data)
 

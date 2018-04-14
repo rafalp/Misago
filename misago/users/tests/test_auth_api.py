@@ -18,9 +18,11 @@ class GatewayTests(TestCase):
                 'password': 'nope',
             }
         )
-
-        self.assertContains(response, "Login or password is incorrect.", status_code=400)
-
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["Login or password is incorrect."],
+        })
+        
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
@@ -59,8 +61,10 @@ class GatewayTests(TestCase):
                 'password': 'Pass.123',
             },
         )
-
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["Login or password is incorrect."],
+        })
 
         response = self.client.post(
             '/api/auth/',
@@ -109,8 +113,10 @@ class GatewayTests(TestCase):
             'false',
             content_type="application/json",
         )
-
-        self.assertContains(response, "Invalid data.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["Invalid data. Expected a dictionary, but got bool."],
+        })
 
     def test_login_banned(self):
         """login api fails to sign banned user in"""
@@ -235,7 +241,10 @@ class GatewayTests(TestCase):
                 'password': 'Pass.123',
             },
         )
-        self.assertContains(response, "Login or password is incorrect.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["Login or password is incorrect."],
+        })
 
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
@@ -249,6 +258,21 @@ class UserRequirementsTests(TestCase):
         """api edge has no showstoppers"""
         response = self.client.get('/api/auth/requirements/')
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'username': {'max_length': 14, 'min_length': 3},
+            'password': [
+                {
+                    'name': 'UserAttributeSimilarityValidator',
+                    'user_attributes': ['username', 'email'],
+                },
+                {
+                    'name': 'MinimumLengthValidator',
+                    'min_length': 7,
+                },
+                {'name': 'CommonPasswordValidator'},
+                {'name': 'NumericPasswordValidator'},
+            ],
+        })
 
 
 class SendActivationAPITests(TestCase):
@@ -307,7 +331,12 @@ class SendActivationAPITests(TestCase):
                 'email': self.user.email,
             },
         )
-        self.assertContains(response, "No user with this e-mail exists.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        # fixme: don't leak out the info that email is invalid in auth forms
+        # instead, message that if email was valid you'll get an email
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["No user with this e-mail exists."],
+        })
 
         self.assertTrue(not mail.outbox)
 
@@ -315,7 +344,9 @@ class SendActivationAPITests(TestCase):
         """request activation link api errors for no body"""
         response = self.client.post(self.link)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {'email': ["This field is required."]})
+        self.assertEqual(response.json(), {
+            'email': ["This field is required."],
+        })
 
         self.assertTrue(not mail.outbox)
 
@@ -326,7 +357,10 @@ class SendActivationAPITests(TestCase):
             'false',
             content_type="application/json",
         )
-        self.assertContains(response, "Invalid data.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["Invalid data. Expected a dictionary, but got bool."],
+        })
 
     def test_submit_invalid_email(self):
         """request activation link api errors for invalid email"""
@@ -336,7 +370,12 @@ class SendActivationAPITests(TestCase):
                 'email': 'fake@mail.com',
             },
         )
-        self.assertContains(response, "No user with this e-mail exists.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        # fixme: don't leak out the info that email is invalid in auth forms
+        # instead, message that if email was valid you'll get an email
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["No user with this e-mail exists."],
+        })
 
         self.assertTrue(not mail.outbox)
 
@@ -351,7 +390,10 @@ class SendActivationAPITests(TestCase):
                 'email': self.user.email,
             },
         )
-        self.assertContains(response, "Bob, your account is already active.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["Bob, your account is already active."],
+        })
 
     def test_submit_inactive_user(self):
         """request activation link api errors for admin-activated users"""
@@ -364,7 +406,10 @@ class SendActivationAPITests(TestCase):
                 'email': self.user.email,
             },
         )
-        self.assertContains(response, "only administrator may activate your account", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["Bob, only administrator may activate your account."],
+        })
 
         self.assertTrue(not mail.outbox)
 
@@ -439,7 +484,10 @@ class SendPasswordFormAPITests(TestCase):
                 'email': self.user.email,
             },
         )
-        self.assertContains(response, "No user with this e-mail exists.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["No user with this e-mail exists."],
+        })
 
         self.assertTrue(not mail.outbox)
 
@@ -447,7 +495,9 @@ class SendPasswordFormAPITests(TestCase):
         """request change password form link api errors for no body"""
         response = self.client.post(self.link)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {'email': ["This field is required."]})
+        self.assertEqual(response.json(), {
+            'email': ["This field is required."],
+        })
 
         self.assertTrue(not mail.outbox)
 
@@ -459,7 +509,10 @@ class SendPasswordFormAPITests(TestCase):
                 'email': 'fake@mail.com',
             },
         )
-        self.assertContains(response, "No user with this e-mail exists.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["No user with this e-mail exists."],
+        })
 
         self.assertTrue(not mail.outbox)
 
@@ -470,7 +523,10 @@ class SendPasswordFormAPITests(TestCase):
             'false',
             content_type="application/json",
         )
-        self.assertContains(response, "Invalid data.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["Invalid data. Expected a dictionary, but got bool."],
+        })
 
     def test_submit_inactive_user(self):
         """request change password form link api errors for inactive users"""
@@ -483,7 +539,13 @@ class SendPasswordFormAPITests(TestCase):
                 'email': self.user.email,
             },
         )
-        self.assertContains(response, "You have to activate your account", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': [
+                "You have to activate your account before you will "
+                "be able to request new password.",
+            ],
+        })
         self.assertTrue(not mail.outbox)
 
         self.user.requires_activation = 2
@@ -495,7 +557,13 @@ class SendPasswordFormAPITests(TestCase):
                 'email': self.user.email,
             },
         )
-        self.assertContains(response, "Administrator has to activate your account", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': [
+                "Administrator has to activate your account before you "
+                "will be able to request new password.",
+            ],
+        })
         self.assertTrue(not mail.outbox)
 
 
@@ -539,7 +607,10 @@ class ChangePasswordAPITests(TestCase):
             'false',
             content_type="application/json",
         )
-        self.assertContains(response, "Invalid data.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["Invalid data. Expected a dictionary, but got bool."],
+        })
 
     def test_invalid_token(self):
         """api errors on invalid user id link"""
@@ -550,7 +621,10 @@ class ChangePasswordAPITests(TestCase):
                 'token': 'invalid!',
             },
         )
-        self.assertContains(response, "Form link is invalid or expired.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'token': ["Form link is invalid or expired. Please try again."],
+        })
 
     def test_banned_user_link(self):
         """request errors because user is banned"""
@@ -588,7 +662,13 @@ class ChangePasswordAPITests(TestCase):
                 'token': make_password_change_token(self.user),
             },
         )
-        self.assertContains(response, "You have to activate your account", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': [
+                "You have to activate your account before you will "
+                "be able to change your password.",
+            ],
+        })
 
         self.user.requires_activation = 2
         self.user.save()
@@ -600,7 +680,13 @@ class ChangePasswordAPITests(TestCase):
                 'token': make_password_change_token(self.user),
             },
         )
-        self.assertContains(response, "Administrator has to activate your account", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': [
+                "Administrator has to activate your account before you "
+                "will be able to change your password.",
+            ],
+        })
 
     def test_disabled_user(self):
         """change password api errors for disabled users"""
@@ -609,8 +695,15 @@ class ChangePasswordAPITests(TestCase):
 
         response = self.client.post(self.link % self.user.pk)
         self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json(), {
+            'detail': "No User matches the given query.",
+        })
 
     def test_submit_empty(self):
         """change password api errors for empty body"""
         response = self.client.post(self.link % self.user.pk)
-        self.assertContains(response, "This field is required.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'password': ["This field is required."],
+            'token': ["This field is required."],
+        })

@@ -45,6 +45,9 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This action is not available to guests.",
+        })
 
     def test_cant_see(self):
         """has no permission to see selected category"""
@@ -53,9 +56,13 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(self.api_link, {
             'category': self.category.pk,
         })
-
-        self.assertContains(response, "Selected category is invalid.", status_code=400)
-
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'category': ["Selected category is invalid."],
+            'title': ["You have to enter thread title."],
+            'post': ["You have to enter a message."],
+        })
+        
     def test_cant_browse(self):
         """has no permission to browse selected category"""
         self.override_acl({'can_browse': 0})
@@ -63,8 +70,12 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(self.api_link, {
             'category': self.category.pk,
         })
-
-        self.assertContains(response, "Selected category is invalid.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'category': ["Selected category is invalid."],
+            'title': ["You have to enter thread title."],
+            'post': ["You have to enter a message."],
+        })
 
     def test_cant_start_thread(self):
         """permission to start thread in category is validated"""
@@ -73,12 +84,14 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(self.api_link, {
             'category': self.category.pk,
         })
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'category': ["You don't have permission to start new threads in this category."],
+            'title': ["You have to enter thread title."],
+            'post': ["You have to enter a message."],
+        })
 
-        self.assertContains(
-            response, "You don't have permission to start new threads", status_code=400
-        )
-
-    def test_cant_start_thread_in_locked_category(self):
+    def test_cant_start_thread_in_closed_category(self):
         """can't post in closed category"""
         self.category.is_closed = True
         self.category.save()
@@ -88,8 +101,12 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(self.api_link, {
             'category': self.category.pk,
         })
-
-        self.assertContains(response, "This category is closed.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'category': ["This category is closed. You can't start new threads in it."],
+            'title': ["You have to enter thread title."],
+            'post': ["You have to enter a message."],
+        })
 
     def test_cant_start_thread_in_invalid_category(self):
         """can't post in invalid category"""
@@ -98,9 +115,16 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         self.override_acl({'can_close_threads': 0})
 
-        response = self.client.post(self.api_link, {'category': self.category.pk * 100000})
-
-        self.assertContains(response, "Selected category doesn't exist", status_code=400)
+        response = self.client.post(self.api_link, {'category': self.category.pk * 100})
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            # fixme: invalid category should return same error as invisible one
+            'category': [
+                "Selected category doesn't exist or you don't have permission to browse it."
+            ],
+            'title': ["You have to enter thread title."],
+            'post': ["You have to enter a message."],
+        })
 
     def test_empty_data(self):
         """no data sent handling has no showstoppers"""
@@ -125,8 +149,12 @@ class StartThreadTests(AuthenticatedUserTestCase):
             'false',
             content_type="application/json",
         )
-
-        self.assertContains(response, "Invalid data.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(), {
+                'non_field_errors': ["Invalid data. Expected a dictionary, but got bool."],
+            }
+        )
 
     def test_title_is_validated(self):
         """title is validated"""
@@ -140,7 +168,6 @@ class StartThreadTests(AuthenticatedUserTestCase):
                 'post': "Lorem ipsum dolor met, sit amet elit!",
             }
         )
-
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(), {
@@ -160,7 +187,6 @@ class StartThreadTests(AuthenticatedUserTestCase):
                 'post': "a",
             }
         )
-
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(), {
@@ -183,8 +209,9 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         thread = self.user.thread_set.all()[:1][0]
 
-        response_json = response.json()
-        self.assertEqual(response_json['url'], thread.get_absolute_url())
+        thread_json = response.json()
+        self.assertEqual(thread_json['title'], "Hello, I am test thread!")
+        self.assertEqual(thread_json['url'], thread.get_absolute_url())
 
         self.override_acl()
         response = self.client.get(thread.get_absolute_url())

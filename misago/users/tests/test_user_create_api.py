@@ -22,6 +22,11 @@ class UserCreateTests(UserTestCase):
         """empty request errors with code 400"""
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'email': ["This field is required."],
+            'password': ["This field is required."],
+            'username': ["This field is required."],
+        })
 
     def test_invalid_data(self):
         """invalid request data errors with code 400"""
@@ -31,19 +36,28 @@ class UserCreateTests(UserTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["Invalid data. Expected a dictionary, but got bool."],
+        })
 
     def test_authenticated_request(self):
         """authentiated user request errors with code 403"""
         self.login_user(self.get_authenticated_user())
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "This action is not available to signed in users.",
+        })
 
     def test_registration_off_request(self):
         """registrations off request errors with code 403"""
         settings.override_setting('account_activation', 'closed')
 
         response = self.client.post(self.api_link)
-        self.assertContains(response, 'closed', status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "New users registrations are currently closed.",
+        })
 
     def test_registration_validates_ip_ban(self):
         """api validates ip ban"""
@@ -61,8 +75,14 @@ class UserCreateTests(UserTestCase):
                 'password': 'LoremP4ssword',
             },
         )
-
         self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': {
+                'html': '<p>You can&#39;t register account like this.</p>',
+                'plain': "You can't register account like this."
+            },
+            'expires_on': None,
+        })
 
     def test_registration_validates_ip_registration_ban(self):
         """api validates ip registration-only ban"""
@@ -150,7 +170,6 @@ class UserCreateTests(UserTestCase):
                 'password': 'LoremP4ssword',
             },
         )
-
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(), {
@@ -192,7 +211,7 @@ class UserCreateTests(UserTestCase):
                 'password': 'LoremP4ssword',
             },
         )
-
+        
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
             'email': ["You can't register account like this."],
@@ -231,10 +250,14 @@ class UserCreateTests(UserTestCase):
                 'password': '123',
             },
         )
-
-        self.assertContains(response, "password is too short", status_code=400)
-        self.assertContains(response, "password is entirely numeric", status_code=400)
-        self.assertContains(response, "email is not allowed", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'password': [
+                "This password is too short. It must contain at least 7 characters.",
+                "This password is entirely numeric.",
+            ],
+            'email': ["This email is not allowed."],
+        })
 
     def test_registration_validates_password_similiarity(self):
         """api uses validate_password to validate registrations"""
@@ -246,8 +269,11 @@ class UserCreateTests(UserTestCase):
                 'password': 'BobBoberson',
             },
         )
-
-        self.assertContains(response, "password is too similar to the username", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'password': ["The password is too similar to the username."],
+            'email': ["This email is not allowed."],
+        })
 
     @override_settings(captcha_type='qa', qa_question='Test', qa_answers='Lorem\nIpsum')
     def test_registration_validates_captcha(self):

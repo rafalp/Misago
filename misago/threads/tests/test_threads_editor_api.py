@@ -80,21 +80,40 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
         self.logout_user()
 
         response = self.client.get(self.api_link)
-        self.assertContains(response, "You need to be signed in", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': "You need to be signed in to start threads.",
+            }
+        )
 
     def test_category_visibility_validation(self):
         """endpoint omits non-browseable categories"""
         self.override_acl({'can_browse': 0})
 
         response = self.client.get(self.api_link)
-        self.assertContains(response, "No categories that allow new threads", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': (
+                    "No categories that allow new threads are available to you at the moment."
+                ),
+            }
+        )
 
     def test_category_disallowing_new_threads(self):
         """endpoint omits category disallowing starting threads"""
         self.override_acl({'can_start_threads': 0})
 
         response = self.client.get(self.api_link)
-        self.assertContains(response, "No categories that allow new threads", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': (
+                    "No categories that allow new threads are available to you at the moment."
+                ),
+            }
+        )
 
     def test_category_closed_disallowing_new_threads(self):
         """endpoint omits closed category"""
@@ -104,7 +123,14 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
         self.category.save()
 
         response = self.client.get(self.api_link)
-        self.assertContains(response, "No categories that allow new threads", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': (
+                    "No categories that allow new threads are available to you at the moment."
+                ),
+            }
+        )
 
     def test_category_closed_allowing_new_threads(self):
         """endpoint adds closed category that allows new threads"""
@@ -271,29 +297,52 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
         self.logout_user()
 
         response = self.client.get(self.api_link)
-        self.assertContains(response, "You have to sign in to reply threads.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': "You have to sign in to reply threads.",
+            }
+        )
 
     def test_thread_visibility(self):
         """thread's visibility is validated"""
         self.override_acl({'can_see': 0})
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            response.json(), {
+                'detail': 'NOT FOUND',
+            }
+        )
 
         self.override_acl({'can_browse': 0})
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            response.json(), {
+                'detail': 'NOT FOUND',
+            }
+        )
 
         self.override_acl({'can_see_all_threads': 0})
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            response.json(), {
+                'detail': 'NOT FOUND',
+            }
+        )
 
     def test_no_reply_permission(self):
         """permssion to reply is validated"""
         self.override_acl({'can_reply_threads': 0})
 
         response = self.client.get(self.api_link)
-        self.assertContains(
-            response, "You can't reply to threads in this category.", status_code=403
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': "You can't reply to threads in this category.",
+            }
         )
 
     def test_closed_category(self):
@@ -304,10 +353,11 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
         self.category.save()
 
         response = self.client.get(self.api_link)
-        self.assertContains(
-            response,
-            "This category is closed. You can't reply to threads in it.",
-            status_code=403
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': "This category is closed. You can't reply to threads in it.",
+            }
         )
 
         # allow to post in closed category
@@ -324,8 +374,11 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
         self.thread.save()
 
         response = self.client.get(self.api_link)
-        self.assertContains(
-            response, "You can't reply to closed threads in this category.", status_code=403
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': "You can't reply to closed threads in this category.",
+            }
         )
 
         # allow to post in closed thread
@@ -341,18 +394,20 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-    def test_reply_to_visibility(self):
+    def test_reply_to_invisible_post(self):
         """api validates replied post visibility"""
         self.override_acl({'can_reply_threads': 1})
 
         # unapproved reply can't be replied to
-        unapproved_reply = testutils.reply_thread(
-            self.thread,
-            is_unapproved=True,
-        )
+        unapproved_reply = testutils.reply_thread(self.thread, is_unapproved=True)
 
         response = self.client.get('{}?reply={}'.format(self.api_link, unapproved_reply.pk))
         self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            response.json(), {
+                'detail': "No Post matches the given query.",
+            }
+        )
 
         # hidden reply can't be replied to
         self.override_acl({'can_reply_threads': 1})
@@ -360,7 +415,12 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
         hidden_reply = testutils.reply_thread(self.thread, is_hidden=True)
 
         response = self.client.get('{}?reply={}'.format(self.api_link, hidden_reply.pk))
-        self.assertContains(response, "You can't reply to hidden posts", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': "You can't reply to hidden posts.",
+            }
+        )
 
     def test_reply_to_other_thread_post(self):
         """api validates is replied post belongs to same thread"""
@@ -369,6 +429,11 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
 
         response = self.client.get('{}?reply={}'.format(self.api_link, reply_to.pk))
         self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            response.json(), {
+                'detail': "No Post matches the given query.",
+            }
+        )
 
     def test_reply_to_event(self):
         """events can't be edited"""
@@ -377,8 +442,12 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
         reply_to = testutils.reply_thread(self.thread, is_event=True)
 
         response = self.client.get('{}?reply={}'.format(self.api_link, reply_to.pk))
-
-        self.assertContains(response, "You can't reply to events.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': "You can't reply to events.",
+            }
+        )
 
     def test_reply_to(self):
         """api includes replied to post details in response"""
@@ -418,28 +487,53 @@ class EditReplyEditorApiTests(EditorApiTestCase):
         self.logout_user()
 
         response = self.client.get(self.api_link)
-        self.assertContains(response, "You have to sign in to edit posts.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': "You have to sign in to edit posts.",
+            }
+        )
 
     def test_thread_visibility(self):
         """thread's visibility is validated"""
         self.override_acl({'can_see': 0})
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            response.json(), {
+                'detail': 'NOT FOUND',
+            }
+        )
 
         self.override_acl({'can_browse': 0})
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            response.json(), {
+                'detail': 'NOT FOUND',
+            }
+        )
 
         self.override_acl({'can_see_all_threads': 0})
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            response.json(), {
+                'detail': 'NOT FOUND',
+            }
+        )
 
     def test_no_edit_permission(self):
         """permssion to edit is validated"""
         self.override_acl({'can_edit_posts': 0})
 
         response = self.client.get(self.api_link)
-        self.assertContains(response, "You can't edit posts in this category.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': "You can't edit posts in this category.",
+            }
+        )
 
     def test_closed_category(self):
         """permssion to edit in closed category is validated"""
@@ -449,8 +543,11 @@ class EditReplyEditorApiTests(EditorApiTestCase):
         self.category.save()
 
         response = self.client.get(self.api_link)
-        self.assertContains(
-            response, "This category is closed. You can't edit posts in it.", status_code=403
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': "This category is closed. You can't edit posts in it.",
+            }
         )
 
         # allow to edit in closed category
@@ -467,8 +564,11 @@ class EditReplyEditorApiTests(EditorApiTestCase):
         self.thread.save()
 
         response = self.client.get(self.api_link)
-        self.assertContains(
-            response, "This thread is closed. You can't edit posts in it.", status_code=403
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': "This thread is closed. You can't edit posts in it.",
+            }
         )
 
         # allow to edit in closed thread
@@ -485,8 +585,11 @@ class EditReplyEditorApiTests(EditorApiTestCase):
         self.post.save()
 
         response = self.client.get(self.api_link)
-        self.assertContains(
-            response, "This post is protected. You can't edit it.", status_code=403
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': "This post is protected. You can't edit it.",
+            }
         )
 
         # allow to post in closed thread
@@ -503,7 +606,12 @@ class EditReplyEditorApiTests(EditorApiTestCase):
         self.post.save()
 
         response = self.client.get(self.api_link)
-        self.assertContains(response, "This post is hidden, you can't edit it.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': "This post is hidden, you can't edit it.",
+            }
+        )
 
         # allow hidden edition
         self.override_acl({'can_edit_posts': 1, 'can_hide_posts': 1})
@@ -523,6 +631,11 @@ class EditReplyEditorApiTests(EditorApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            response.json(), {
+                'detail': "No Post matches the given query.",
+            }
+        )
 
         # allow unapproved edition
         self.override_acl({'can_edit_posts': 2, 'can_approve_content': 1})
@@ -538,8 +651,12 @@ class EditReplyEditorApiTests(EditorApiTestCase):
         self.post.save()
 
         response = self.client.get(self.api_link)
-
-        self.assertContains(response, "Events can't be edited.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': "Events can't be edited.",
+            }
+        )
 
     def test_other_user_post(self):
         """api validates if other user's post can be edited"""
@@ -549,8 +666,11 @@ class EditReplyEditorApiTests(EditorApiTestCase):
         self.post.save()
 
         response = self.client.get(self.api_link)
-        self.assertContains(
-            response, "You can't edit other users posts in this category.", status_code=403
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(), {
+                'detail': "You can't edit other users posts in this category.",
+            }
         )
 
         # allow other users post edition
