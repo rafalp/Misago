@@ -34,8 +34,8 @@ class UserTestCaseTests(UserTestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = response.json()
-        self.assertEqual(user_json['id'], user.id)
+        response_json = response.json()
+        self.assertEqual(response_json['id'], user.id)
 
     def test_login_superuser(self):
         """login_user logs superuser"""
@@ -45,8 +45,8 @@ class UserTestCaseTests(UserTestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = response.json()
-        self.assertEqual(user_json['id'], user.id)
+        response_json = response.json()
+        self.assertEqual(response_json['id'], user.id)
 
     def test_logout_user(self):
         """logout_user logs user out"""
@@ -57,8 +57,8 @@ class UserTestCaseTests(UserTestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = response.json()
-        self.assertIsNone(user_json['id'])
+        response_json = response.json()
+        self.assertIsNone(response_json['id'])
 
     def test_logout_superuser(self):
         """logout_user logs superuser out"""
@@ -69,8 +69,8 @@ class UserTestCaseTests(UserTestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = response.json()
-        self.assertIsNone(user_json['id'])
+        response_json = response.json()
+        self.assertIsNone(response_json['id'])
 
 
 class AuthenticatedUserTestCaseTests(AuthenticatedUserTestCase):
@@ -96,5 +96,5 @@ class SuperUserTestCaseTests(SuperUserTestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = response.json()
-        self.assertEqual(user_json['id'], self.user.id)
+        response_json = response.json()
+        self.assertEqual(response_json['id'], self.user.id)

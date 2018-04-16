@@ -26,8 +26,8 @@ class GatewayTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = response.json()
-        self.assertIsNone(user_json['id'])
+        response_json = response.json()
+        self.assertIsNone(response_json['id'])
 
     def test_login(self):
         """api signs user in"""
@@ -46,9 +46,9 @@ class GatewayTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = response.json()
-        self.assertEqual(user_json['id'], user.id)
-        self.assertEqual(user_json['username'], user.username)
+        response_json = response.json()
+        self.assertEqual(response_json['id'], user.id)
+        self.assertEqual(response_json['username'], user.username)
 
     def test_login_whitespaces_password(self):
         """api signs user in with password left untouched"""
@@ -79,9 +79,9 @@ class GatewayTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = response.json()
-        self.assertEqual(user_json['id'], user.id)
-        self.assertEqual(user_json['username'], user.username)
+        response_json = response.json()
+        self.assertEqual(response_json['id'], user.id)
+        self.assertEqual(response_json['username'], user.username)
 
     def test_submit_no_data(self):
         """login api errors for no body"""
@@ -147,8 +147,8 @@ class GatewayTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = response.json()
-        self.assertIsNone(user_json['id'])
+        response_json = response.json()
+        self.assertIsNone(response_json['id'])
 
     def test_login_banned_staff(self):
         """login api signs banned staff member in"""
@@ -175,9 +175,9 @@ class GatewayTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = response.json()
-        self.assertEqual(user_json['id'], user.id)
-        self.assertEqual(user_json['username'], user.username)
+        response_json = response.json()
+        self.assertEqual(response_json['id'], user.id)
+        self.assertEqual(response_json['username'], user.username)
 
     def test_login_inactive_admin(self):
         """login api fails to sign admin-activated user in"""
@@ -200,8 +200,8 @@ class GatewayTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = response.json()
-        self.assertIsNone(user_json['id'])
+        response_json = response.json()
+        self.assertIsNone(response_json['id'])
 
     def test_login_inactive_user(self):
         """login api fails to sign user-activated user in"""
@@ -224,8 +224,8 @@ class GatewayTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = response.json()
-        self.assertIsNone(user_json['id'])
+        response_json = response.json()
+        self.assertIsNone(response_json['id'])
 
     def test_login_disabled_user(self):
         """its impossible to sign in to disabled account"""
@@ -249,8 +249,8 @@ class GatewayTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        user_json = response.json()
-        self.assertIsNone(user_json['id'])
+        response_json = response.json()
+        self.assertIsNone(response_json['id'])
 
 
 class UserRequirementsTests(TestCase):

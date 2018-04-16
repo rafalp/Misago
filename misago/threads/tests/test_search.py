@@ -28,10 +28,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertIn('threads', [p['id'] for p in reponse_json])
+        response_json = response.json()
+        self.assertIn('threads', [p['id'] for p in response_json])
 
-        for provider in reponse_json:
+        for provider in response_json:
             if provider['id'] == 'threads':
                 self.assertEqual(provider['results']['results'], [])
 
@@ -40,10 +40,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertIn('threads', [p['id'] for p in reponse_json])
+        response_json = response.json()
+        self.assertIn('threads', [p['id'] for p in response_json])
 
-        for provider in reponse_json:
+        for provider in response_json:
             if provider['id'] == 'threads':
                 self.assertEqual(provider['results']['results'], [])
 
@@ -56,10 +56,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=ip' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertIn('threads', [p['id'] for p in reponse_json])
+        response_json = response.json()
+        self.assertIn('threads', [p['id'] for p in response_json])
 
-        for provider in reponse_json:
+        for provider in response_json:
             if provider['id'] == 'threads':
                 self.assertEqual(provider['results']['results'], [])
 
@@ -72,10 +72,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=elit' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertIn('threads', [p['id'] for p in reponse_json])
+        response_json = response.json()
+        self.assertIn('threads', [p['id'] for p in response_json])
 
-        for provider in reponse_json:
+        for provider in response_json:
             if provider['id'] == 'threads':
                 self.assertEqual(provider['results']['results'], [])
 
@@ -92,10 +92,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=ipsum' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertIn('threads', [p['id'] for p in reponse_json])
+        response_json = response.json()
+        self.assertIn('threads', [p['id'] for p in response_json])
 
-        for provider in reponse_json:
+        for provider in response_json:
             if provider['id'] == 'threads':
                 self.assertEqual(provider['results']['results'], [])
 
@@ -112,10 +112,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=ipsum' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertIn('threads', [p['id'] for p in reponse_json])
+        response_json = response.json()
+        self.assertIn('threads', [p['id'] for p in response_json])
 
-        for provider in reponse_json:
+        for provider in response_json:
             if provider['id'] == 'threads':
                 self.assertEqual(provider['results']['results'], [])
 
@@ -128,10 +128,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=ipsum' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertIn('threads', [p['id'] for p in reponse_json])
+        response_json = response.json()
+        self.assertIn('threads', [p['id'] for p in response_json])
 
-        for provider in reponse_json:
+        for provider in response_json:
             if provider['id'] == 'threads':
                 results = provider['results']['results']
                 self.assertEqual(len(results), 1)
@@ -148,10 +148,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=mars atmosphere' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertIn('threads', [p['id'] for p in reponse_json])
+        response_json = response.json()
+        self.assertIn('threads', [p['id'] for p in response_json])
 
-        for provider in reponse_json:
+        for provider in response_json:
             if provider['id'] == 'threads':
                 results = provider['results']['results']
                 self.assertEqual(len(results), 1)
@@ -166,10 +166,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=Mars atmosphere' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertIn('threads', [p['id'] for p in reponse_json])
+        response_json = response.json()
+        self.assertIn('threads', [p['id'] for p in response_json])
 
-        for provider in reponse_json:
+        for provider in response_json:
             if provider['id'] == 'threads':
                 results = provider['results']['results']
                 self.assertEqual(len(results), 1)
@@ -188,10 +188,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=MMM' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertIn('threads', [p['id'] for p in reponse_json])
+        response_json = response.json()
+        self.assertIn('threads', [p['id'] for p in response_json])
 
-        for provider in reponse_json:
+        for provider in response_json:
             if provider['id'] == 'threads':
                 results = provider['results']['results']
                 self.assertEqual(len(results), 1)
@@ -200,7 +200,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=Marines Medics' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        for provider in reponse_json:
+        for provider in response_json:
             if provider['id'] == 'threads':
                 results = provider['results']['results']
                 self.assertEqual(len(results), 1)

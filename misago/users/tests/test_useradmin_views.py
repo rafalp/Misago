@@ -888,7 +888,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "delete yourself");
+        self.assertContains(response, "delete yourself")
 
     def test_delete_threads_view_staff(self):
         """delete user threads view validates if user deletes staff"""
@@ -906,7 +906,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "is admin and");
+        self.assertContains(response, "is admin and")
 
     def test_delete_threads_view_superuser(self):
         """delete user threads view validates if user deletes superuser"""
@@ -924,7 +924,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "is admin and");
+        self.assertContains(response, "is admin and")
 
     def test_delete_threads_view(self):
         """delete user threads view deletes threads"""
@@ -940,17 +940,17 @@ class UserAdminViewsTests(AdminTestCase):
 
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
-
-        response_dict = response.json()
-        self.assertEqual(response_dict['deleted_count'], 10)
-        self.assertFalse(response_dict['is_completed'])
+        self.assertEqual(response.json(), {
+            'deleted_count': 10,
+            'is_completed': False,
+        })
 
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
-
-        response_dict = response.json()
-        self.assertEqual(response_dict['deleted_count'], 0)
-        self.assertTrue(response_dict['is_completed'])
+        self.assertEqual(response.json(), {
+            'deleted_count': 0,
+            'is_completed': True,
+        })
 
     def test_delete_posts_view_self(self):
         """delete user posts view validates if user deletes self"""
@@ -964,7 +964,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "delete yourself");
+        self.assertContains(response, "delete yourself")
 
     def test_delete_posts_view_staff(self):
         """delete user posts view validates if user deletes staff"""
@@ -982,7 +982,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "is admin and");
+        self.assertContains(response, "is admin and")
 
     def test_delete_posts_view_superuser(self):
         """delete user posts view validates if user deletes superuser"""
@@ -1000,7 +1000,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "is admin and");
+        self.assertContains(response, "is admin and")
 
     def test_delete_posts_view(self):
         """delete user posts view deletes posts"""
@@ -1017,17 +1017,17 @@ class UserAdminViewsTests(AdminTestCase):
 
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
-
-        response_dict = response.json()
-        self.assertEqual(response_dict['deleted_count'], 10)
-        self.assertFalse(response_dict['is_completed'])
+        self.assertEqual(response.json(), {
+            'deleted_count': 10,
+            'is_completed': False,
+        })
 
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
-
-        response_dict = response.json()
-        self.assertEqual(response_dict['deleted_count'], 0)
-        self.assertTrue(response_dict['is_completed'])
+        self.assertEqual(response.json(), {
+            'deleted_count': 0,
+            'is_completed': True,
+        })
 
     def test_delete_account_view_self(self):
         """delete user account view validates if user deletes self"""
@@ -1041,7 +1041,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "delete yourself");
+        self.assertContains(response, "delete yourself")
 
     def test_delete_account_view_staff(self):
         """delete user account view validates if user deletes staff"""
@@ -1059,7 +1059,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "is admin and");
+        self.assertContains(response, "is admin and")
 
     def test_delete_account_view_superuser(self):
         """delete user account view validates if user deletes superuser"""
@@ -1077,7 +1077,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "is admin and");
+        self.assertContains(response, "is admin and")
 
     def test_delete_account_view(self):
         """delete user account view deletes user account"""
@@ -1090,6 +1090,6 @@ class UserAdminViewsTests(AdminTestCase):
 
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
-
-        response_dict = response.json()
-        self.assertTrue(response_dict['is_completed'])
+        self.assertEqual(response.json(), {
+            'is_completed': True,
+        })

@@ -101,8 +101,8 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertTrue(reponse_json['is_protected'])
+        response_json = response.json()
+        self.assertTrue(response_json['is_protected'])
 
         self.refresh_post()
         self.assertTrue(self.post.is_protected)
@@ -125,8 +125,8 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertFalse(reponse_json['is_protected'])
+        response_json = response.json()
+        self.assertFalse(response_json['is_protected'])
 
         self.refresh_post()
         self.assertFalse(self.post.is_protected)
@@ -151,8 +151,8 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertTrue(reponse_json['is_protected'])
+        response_json = response.json()
+        self.assertTrue(response_json['is_protected'])
 
         self.refresh_post()
         self.assertTrue(self.post.is_protected)
@@ -183,8 +183,8 @@ class PostProtectApiTests(ThreadPostPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertFalse(reponse_json['is_protected'])
+        response_json = response.json()
+        self.assertFalse(response_json['is_protected'])
 
         self.refresh_post()
         self.assertFalse(self.post.is_protected)
@@ -302,8 +302,8 @@ class PostApproveApiTests(ThreadPostPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertFalse(reponse_json['is_unapproved'])
+        response_json = response.json()
+        self.assertFalse(response_json['is_unapproved'])
 
         self.refresh_post()
         self.assertFalse(self.post.is_unapproved)
@@ -482,8 +482,8 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertTrue(reponse_json['is_hidden'])
+        response_json = response.json()
+        self.assertTrue(response_json['is_hidden'])
 
         self.refresh_post()
         self.assertTrue(self.post.is_hidden)
@@ -503,8 +503,8 @@ class PostHideApiTests(ThreadPostPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertTrue(reponse_json['is_hidden'])
+        response_json = response.json()
+        self.assertTrue(response_json['is_hidden'])
 
         self.refresh_post()
         self.assertTrue(self.post.is_hidden)
@@ -715,8 +715,8 @@ class PostUnhideApiTests(ThreadPostPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertFalse(reponse_json['is_hidden'])
+        response_json = response.json()
+        self.assertFalse(response_json['is_hidden'])
 
         self.refresh_post()
         self.assertFalse(self.post.is_hidden)
@@ -742,8 +742,8 @@ class PostUnhideApiTests(ThreadPostPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertFalse(reponse_json['is_hidden'])
+        response_json = response.json()
+        self.assertFalse(response_json['is_hidden'])
 
         self.refresh_post()
         self.assertFalse(self.post.is_hidden)

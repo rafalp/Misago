@@ -487,8 +487,8 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertEqual(reponse_json['category'], self.category_b.pk)
+        response_json = response.json()
+        self.assertEqual(response_json['category'], self.category_b.pk)
 
         self.override_other_acl({})
 
@@ -521,8 +521,8 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertEqual(reponse_json['category'], self.category_b.pk)
+        response_json = response.json()
+        self.assertEqual(response_json['category'], self.category_b.pk)
 
         self.override_other_acl({})
 
@@ -1027,8 +1027,8 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertTrue(reponse_json['is_hidden'])
+        response_json = response.json()
+        self.assertTrue(response_json['is_hidden'])
 
         self.override_acl({'can_hide_threads': 1})
 
@@ -1174,8 +1174,8 @@ class ThreadUnhideApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertFalse(reponse_json['is_hidden'])
+        response_json = response.json()
+        self.assertFalse(response_json['is_hidden'])
 
         self.override_acl({'can_hide_threads': 1})
 
@@ -1261,8 +1261,8 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertFalse(reponse_json['subscription'])
+        response_json = response.json()
+        self.assertFalse(response_json['subscription'])
 
         thread_json = self.get_thread_json()
         self.assertFalse(thread_json['subscription'])
@@ -1284,8 +1284,8 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertTrue(reponse_json['subscription'])
+        response_json = response.json()
+        self.assertTrue(response_json['subscription'])
 
         thread_json = self.get_thread_json()
         self.assertTrue(thread_json['subscription'])
@@ -1307,8 +1307,8 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        reponse_json = response.json()
-        self.assertIsNone(reponse_json['subscription'])
+        response_json = response.json()
+        self.assertIsNone(response_json['subscription'])
 
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['subscription'])

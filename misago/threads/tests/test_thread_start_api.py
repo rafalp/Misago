@@ -209,9 +209,9 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         thread = self.user.thread_set.all()[:1][0]
 
-        thread_json = response.json()
-        self.assertEqual(thread_json['title'], "Hello, I am test thread!")
-        self.assertEqual(thread_json['url'], thread.get_absolute_url())
+        response_json = response.json()
+        self.assertEqual(response_json['title'], "Hello, I am test thread!")
+        self.assertEqual(response_json['url'], thread.get_absolute_url())
 
         self.override_acl()
         response = self.client.get(thread.get_absolute_url())
