@@ -47,7 +47,7 @@ class ApiPatchDispatchTests(TestCase):
         # dispatch requires list as an argument
         response = patch.dispatch(MockRequest({}), {})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data['detail'], "PATCH request should be a list of operations.")
+        self.assertEqual(response.data, {'detail': "PATCH request should be a list of operations."})
 
         # valid dispatch
         response = patch.dispatch(
@@ -98,7 +98,7 @@ class ApiPatchDispatchTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data['detail'], '"replace" op has to specify path.')
+        self.assertEqual(response.data, {'detail': '"replace" op has to specify path.'})
 
         # op raised validation error
         response = patch.dispatch(
@@ -127,7 +127,7 @@ class ApiPatchDispatchTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data['detail'], ["invalid data here!"])
+        self.assertEqual(response.data, {'detail': ["invalid data here!"]})
 
         # op raised api validation error
         response = patch.dispatch(
@@ -156,7 +156,7 @@ class ApiPatchDispatchTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data['detail'], ["invalid api data here!"])
+        self.assertEqual(response.data, {'detail': ["invalid api data here!"]})
 
         # action in dispatch raised perm denied
         response = patch.dispatch(
@@ -185,7 +185,7 @@ class ApiPatchDispatchTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.data['detail'], "yo ain't doing that!")
+        self.assertEqual(response.data, {'detail': "yo ain't doing that!"})
 
         # action in dispatch raised 404
         response = patch.dispatch(
@@ -214,7 +214,7 @@ class ApiPatchDispatchTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.data['detail'], "NOT FOUND")
+        self.assertEqual(response.data, {'detail': 'NOT FOUND'})
 
         # action in dispatch raised 404 with message
         response = patch.dispatch(
@@ -243,4 +243,4 @@ class ApiPatchDispatchTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.data['detail'], "something was removed")
+        self.assertEqual(response.data, {'detail': 'NOT FOUND'})

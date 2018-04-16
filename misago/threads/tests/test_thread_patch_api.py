@@ -695,9 +695,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
             ]
         )
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {
-            'detail': "NOT FOUND"
-        })
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
         self.override_other_acl({})
 
@@ -1602,9 +1600,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
             ]
         )
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {
-            'detail': "No Post matches the given query.",
-        })
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
@@ -1625,9 +1621,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
             ]
         )
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {
-            'detail': "NOT FOUND",
-        })
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
@@ -1648,9 +1642,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
             ]
         )
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {
-            'detail': "No Post matches the given query.",
-        })
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
@@ -2151,9 +2143,7 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
             ]
         )
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {
-            'detail': "No Post matches the given query.",
-        })
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)

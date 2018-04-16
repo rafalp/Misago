@@ -309,29 +309,17 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
         self.override_acl({'can_see': 0})
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(
-            response.json(), {
-                'detail': 'NOT FOUND',
-            }
-        )
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
         self.override_acl({'can_browse': 0})
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(
-            response.json(), {
-                'detail': 'NOT FOUND',
-            }
-        )
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
         self.override_acl({'can_see_all_threads': 0})
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(
-            response.json(), {
-                'detail': 'NOT FOUND',
-            }
-        )
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
     def test_no_reply_permission(self):
         """permssion to reply is validated"""
@@ -403,11 +391,7 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
 
         response = self.client.get('{}?reply={}'.format(self.api_link, unapproved_reply.pk))
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(
-            response.json(), {
-                'detail': "No Post matches the given query.",
-            }
-        )
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
         # hidden reply can't be replied to
         self.override_acl({'can_reply_threads': 1})
@@ -429,11 +413,7 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
 
         response = self.client.get('{}?reply={}'.format(self.api_link, reply_to.pk))
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(
-            response.json(), {
-                'detail': "No Post matches the given query.",
-            }
-        )
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
     def test_reply_to_event(self):
         """events can't be edited"""
@@ -499,29 +479,17 @@ class EditReplyEditorApiTests(EditorApiTestCase):
         self.override_acl({'can_see': 0})
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(
-            response.json(), {
-                'detail': 'NOT FOUND',
-            }
-        )
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
         self.override_acl({'can_browse': 0})
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(
-            response.json(), {
-                'detail': 'NOT FOUND',
-            }
-        )
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
         self.override_acl({'can_see_all_threads': 0})
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(
-            response.json(), {
-                'detail': 'NOT FOUND',
-            }
-        )
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
     def test_no_edit_permission(self):
         """permssion to edit is validated"""
@@ -631,11 +599,7 @@ class EditReplyEditorApiTests(EditorApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(
-            response.json(), {
-                'detail': "No Post matches the given query.",
-            }
-        )
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
         # allow unapproved edition
         self.override_acl({'can_edit_posts': 2, 'can_approve_content': 1})

@@ -230,11 +230,11 @@ class ApiPatchDispatchBulkTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, [
-            {'id': '5', 'status': '404', 'detail': "NOT FOUND"},
-            {'id': '7', 'status': '404', 'detail': "NOT FOUND"},
+            {'id': '5', 'status': '404', 'detail': 'NOT FOUND'},
+            {'id': '7', 'status': '404', 'detail': 'NOT FOUND'},
         ])
 
-        # action in bulk dispatch raised 404 with message
+        # action in bulk dispatch raises 404 and hides the message
         response = patch.dispatch_bulk(
             MockRequest([
                 {
@@ -263,6 +263,6 @@ class ApiPatchDispatchBulkTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, [
-            {'id': '5', 'status': '404', 'detail': "something was removed"},
-            {'id': '7', 'status': '404', 'detail': "something was removed"},
+            {'id': '5', 'status': '404', 'detail': 'NOT FOUND'},
+            {'id': '7', 'status': '404', 'detail': 'NOT FOUND'},
         ])

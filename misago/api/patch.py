@@ -138,5 +138,4 @@ class ApiPatch(object):
             return six.text_type(exception), 403
 
         if isinstance(exception, Http404):
-            # fixme: don't return exception's message
-            return six.text_type(exception) or "NOT FOUND", 404
+            return 'NOT FOUND', 404

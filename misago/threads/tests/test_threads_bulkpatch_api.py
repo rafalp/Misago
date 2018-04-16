@@ -133,9 +133,7 @@ class BulkPatchSerializerTests(ThreadsBulkPatchApiTestCase):
         })
 
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {
-            'detail': "NOT FOUND",
-        })
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
     def test_ops_invalid(self):
         """api validates descriptions"""

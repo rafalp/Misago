@@ -695,9 +695,7 @@ class ChangePasswordAPITests(TestCase):
 
         response = self.client.post(self.link % self.user.pk)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {
-            'detail': "No User matches the given query.",
-        })
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
     def test_submit_empty(self):
         """change password api errors for empty body"""

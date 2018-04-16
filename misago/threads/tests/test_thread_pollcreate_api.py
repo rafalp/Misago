@@ -29,9 +29,7 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
 
         response = self.post(api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {
-            'detail': "NOT FOUND",
-        })
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
     def test_nonexistant_thread_id(self):
         """api validates that thread exists"""
@@ -43,9 +41,7 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
 
         response = self.post(api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {
-            'detail': "No Thread matches the given query.",
-        })
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
     def test_no_permission(self):
         """api validates that user has permission to start poll in thread"""

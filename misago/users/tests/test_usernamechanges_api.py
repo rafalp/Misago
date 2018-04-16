@@ -60,7 +60,7 @@ class UsernameChangesApiTests(AuthenticatedUserTestCase):
 
         response = self.client.get('%s?user=abcd' % self.link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {'detail': "NOT FOUND"})
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
     def test_list_handles_nonexisting_user(self):
         """list raises 404 for invalid user id"""
@@ -70,7 +70,7 @@ class UsernameChangesApiTests(AuthenticatedUserTestCase):
 
         response = self.client.get('%s?user=142141' % self.link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {'detail': "No User matches the given query."})
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
     def test_list_handles_search(self):
         """list returns found username changes"""

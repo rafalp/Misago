@@ -52,23 +52,17 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.override_acl({'can_see': 0})
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {
-            'detail': "NOT FOUND",
-        })
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
         self.override_acl({'can_browse': 0})
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {
-            'detail': "NOT FOUND",
-        })
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
         self.override_acl({'can_see_all_threads': 0})
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {
-            'detail': "NOT FOUND",
-        })
+        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
     def test_cant_reply_thread(self):
         """permission to reply thread is validated"""

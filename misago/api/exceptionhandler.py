@@ -18,7 +18,7 @@ def handle_api_exception(exception, context):
             }
         elif isinstance(exception, Http404):
             response.data = {
-                'detail': six.text_type(exception) or "NOT FOUND",
+                'detail': 'NOT FOUND',
             }
         return response
     else:
