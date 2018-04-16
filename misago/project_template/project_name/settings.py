@@ -371,6 +371,7 @@ MISAGO_PROFILE_FIELDS = [
     },
 ]
 
+
 # Allow users to delete their own accounts?
 # Providing such feature is required by EU law from entities that process europeans personal data.
 
