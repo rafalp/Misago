@@ -2,7 +2,7 @@ from django.contrib.auth import logout
 from django.utils.deprecation import MiddlewareMixin
 
 from .bans import get_request_ip_ban, get_user_ban
-from .models import AnonymousUser, Online
+from .models import AnonymousUser
 from .online import tracker
 
 
@@ -27,22 +27,8 @@ class UserMiddleware(MiddlewareMixin):
 
 class OnlineTrackerMiddleware(MiddlewareMixin):
     def process_request(self, request):
-        if request.user.is_authenticated:
-            try:
-                request._misago_online_tracker = request.user.online_tracker
-            except Online.DoesNotExist:
-                tracker.start_tracking(request, request.user)
-        else:
-            request._misago_online_tracker = None
+        tracker.start_request_tracker(request)
 
     def process_response(self, request, response):
-        if hasattr(request, '_misago_online_tracker'):
-            online_tracker = request._misago_online_tracker
-
-            if online_tracker:
-                if request.user.is_anonymous:
-                    tracker.stop_tracking(request, online_tracker)
-                else:
-                    tracker.update_tracker(request, online_tracker)
-
+        tracker.update_request_tracker(request)
         return response

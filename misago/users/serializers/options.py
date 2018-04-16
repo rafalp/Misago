@@ -5,7 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import ugettext as _
 
 from misago.conf import settings
-from misago.users.online.tracker import clear_tracking
+from misago.users.online.tracker import clear_request_tracker
 from misago.users.permissions import allow_delete_own_account
 from misago.users.validators import validate_email, validate_username
 
@@ -111,6 +111,6 @@ class DeleteOwnAccountSerializer(serializers.Serializer):
         allow_delete_own_account(request.user, profile)
         
         logout(request)
-        clear_tracking(request)
+        clear_request_tracker(request)
 
         profile.mark_for_delete()
