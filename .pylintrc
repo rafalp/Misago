@@ -1,4 +1,14 @@
-[Basic]
-disable=all
-enable=function-redefined,import-self,redefined-outer-name,reimported,return-in-init,undefined-all-variable,undefined-variable,unreachable,unused-import,unused-variable
+[MASTER]
+
+load-plugins=pylint_django
+ignore=migrations
+
+
+[MESSAGES CONTROL]
+
+disable=abstract-method,duplicate-code,invalid-name,missing-docstring,no-self-use,redefined-builtin,too-few-public-methods,too-many-ancestors,too-many-lines,too-many-public-methods,too-many-statement
+
+
+[REPORTS]
+
 reports=no
