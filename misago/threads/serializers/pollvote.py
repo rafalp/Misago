@@ -41,26 +41,24 @@ class NewVoteSerializer(serializers.Serializer):
 
 
 class PollVoteSerializer(serializers.Serializer):
-    voted_on = serializers.DateTimeField()
+    id = serializers.SerializerMethodField()
     username = serializers.SerializerMethodField()
-
-    url = serializers.SerializerMethodField()
+    slug = serializers.SerializerMethodField()
+    voted_on = serializers.DateTimeField()
 
     class Meta:
         fields = [
-            'voted_on',
+            'id',
             'username',
-            'url',
+            'slug'
+            'voted_on',
         ]
+
+    def get_id(self, obj):
+        return obj['voter_id']
 
     def get_username(self, obj):
         return obj['voter_name']
 
-    def get_url(self, obj):
-        if obj['voter_id']:
-            return reverse(
-                'misago:user', kwargs={
-                    'pk': obj['voter_id'],
-                    'slug': obj['voter_slug'],
-                }
-            )
+    def get_slug(self, obj):
+        return obj['voter_slug']

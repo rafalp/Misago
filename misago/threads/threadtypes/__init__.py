@@ -1,6 +1,7 @@
 from .treesmap import trees_map
 
 
+# fixme: a lot of those getters may be superficial
 class ThreadType(object):
     """Abstract class for thread type strategy"""
     root_name = 'undefined'

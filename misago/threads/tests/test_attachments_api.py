@@ -254,9 +254,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
         self.assertIsNone(response_json['post'])
         self.assertEqual(response_json['uploader_name'], self.user.username)
-        self.assertEqual(response_json['url']['index'], attachment.get_absolute_url())
-        self.assertIsNone(response_json['url']['thumb'])
-        self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
+        self.assertFalse(response_json['has_thumbnail'])
 
         # files associated with attachment are deleted on its deletion
         file_path = attachment.file.path
@@ -295,9 +293,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
         self.assertIsNone(response_json['post'])
         self.assertEqual(response_json['uploader_name'], self.user.username)
-        self.assertEqual(response_json['url']['index'], attachment.get_absolute_url())
-        self.assertIsNone(response_json['url']['thumb'])
-        self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
+        self.assertFalse(response_json['has_thumbnail'])
 
     def test_large_image_upload(self):
         """successful large image upload creates orphan attachment with thumbnail"""
@@ -333,9 +329,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
         self.assertIsNone(response_json['post'])
         self.assertEqual(response_json['uploader_name'], self.user.username)
-        self.assertEqual(response_json['url']['index'], attachment.get_absolute_url())
-        self.assertEqual(response_json['url']['thumb'], attachment.get_thumbnail_url())
-        self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
+        self.assertTrue(response_json['has_thumbnail'])
 
         # thumbnail was scaled down
         thumbnail = Image.open(attachment.thumbnail.path)
@@ -386,6 +380,4 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
         self.assertIsNone(response_json['post'])
         self.assertEqual(response_json['uploader_name'], self.user.username)
-        self.assertEqual(response_json['url']['index'], attachment.get_absolute_url())
-        self.assertEqual(response_json['url']['thumb'], attachment.get_thumbnail_url())
-        self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
+        self.assertTrue(response_json['has_thumbnail'])

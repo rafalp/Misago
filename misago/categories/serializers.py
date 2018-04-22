@@ -38,9 +38,6 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
     description = serializers.SerializerMethodField()
     is_read = serializers.SerializerMethodField()
     subcategories = serializers.SerializerMethodField()
-    acl = serializers.SerializerMethodField()
-
-    url = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
@@ -59,11 +56,9 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
             'css_class',
             'is_read',
             'subcategories',
-            'acl',
             'level',
             'lft',
             'rght',
-            'url',
         ]
 
     def get_description(self, obj):
@@ -86,12 +81,6 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
         except AttributeError:
             return []
 
-    def get_acl(self, obj):
-        try:
-            return obj.acl
-        except AttributeError:
-            return {}
-
     @last_activity_detail
     def get_last_poster(self, obj):
         if obj.last_poster_id:
@@ -106,26 +95,6 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
                 )
             }
         return None
-
-    def get_url(self, obj):
-        return {
-            'index': obj.get_absolute_url(),
-            'last_thread': self.get_last_thread_url(obj),
-            'last_thread_new': self.get_last_thread_new_url(obj),
-            'last_post': self.get_last_post_url(obj),
-        }
-
-    @last_activity_detail
-    def get_last_thread_url(self, obj):
-        return obj.get_last_thread_url()
-
-    @last_activity_detail
-    def get_last_thread_new_url(self, obj):
-        return obj.get_last_thread_new_url()
-
-    @last_activity_detail
-    def get_last_post_url(self, obj):
-        return obj.get_last_post_url()
 
 
 class CategoryWithPosterSerializer(CategorySerializer):
@@ -142,5 +111,5 @@ CategoryWithPosterSerializer = CategoryWithPosterSerializer.extend_fields('last_
 
 BasicCategorySerializer = CategorySerializer.subset_fields(
     'id', 'parent', 'name', 'description', 'is_closed', 'css_class',
-    'level', 'lft', 'rght', 'url'
+    'level', 'lft', 'rght'
 )

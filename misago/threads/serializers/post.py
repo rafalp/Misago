@@ -16,7 +16,6 @@ UserSerializer = BaseUserSerializer.subset_fields(
     'title',
     'status',
     'posts',
-    'url',
 )
 
 
@@ -28,15 +27,11 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
     last_editor = serializers.PrimaryKeyRelatedField(read_only=True)
     hidden_by = serializers.PrimaryKeyRelatedField(read_only=True)
 
-    acl = serializers.SerializerMethodField()
     is_read = serializers.SerializerMethodField()
     is_new = serializers.SerializerMethodField()
     is_liked = serializers.SerializerMethodField()
     last_likes = serializers.SerializerMethodField()
     likes = serializers.SerializerMethodField()
-
-    api = serializers.SerializerMethodField()
-    url = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
@@ -63,14 +58,11 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
             'is_event',
             'event_type',
             'event_context',
-            'acl',
             'is_liked',
             'is_new',
             'is_read',
             'last_likes',
             'likes',
-            'api',
-            'url',
         ]
 
     def get_poster_ip(self, obj):
@@ -87,12 +79,6 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
 
     def get_attachments(self, obj):
         return obj.attachments_cache
-
-    def get_acl(self, obj):
-        try:
-            return obj.acl
-        except AttributeError:
-            return None
 
     def get_is_liked(self, obj):
         try:
@@ -130,47 +116,4 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
             if obj.acl['can_see_likes']:
                 return obj.likes
         except AttributeError:
-            return None
-
-    def get_api(self, obj):
-        api_links = {
-            'index': obj.get_api_url(),
-            'likes': obj.get_likes_api_url(),
-            'editor': obj.get_editor_api_url(),
-            'edits': obj.get_edits_api_url(),
-            'read': obj.get_read_api_url(),
-        }
-
-        if obj.is_event:
-            del api_links['likes']
-
-        return api_links
-
-    def get_url(self, obj):
-        return {
-            'index': obj.get_absolute_url(),
-            'last_editor': self.get_last_editor_url(obj),
-            'hidden_by': self.get_hidden_by_url(obj),
-        }
-
-    def get_last_editor_url(self, obj):
-        if obj.last_editor_id:
-            return reverse(
-                'misago:user', kwargs={
-                    'pk': obj.last_editor_id,
-                    'slug': obj.last_editor_slug,
-                }
-            )
-        else:
-            return None
-
-    def get_hidden_by_url(self, obj):
-        if obj.hidden_by_id:
-            return reverse(
-                'misago:user', kwargs={
-                    'pk': obj.hidden_by_id,
-                    'slug': obj.hidden_by_slug,
-                }
-            )
-        else:
             return None

@@ -113,7 +113,6 @@ class AttachmentsSerializer(serializers.Serializer):
         if attachments:
             post.attachments_cache = AttachmentSerializer(attachments, many=True).data
             for attachment in post.attachments_cache:
-                del attachment['acl']
                 del attachment['post']
                 del attachment['uploader_ip']
         else:

@@ -6,7 +6,6 @@ from misago.users.models import Rank
 
 class RankSerializer(serializers.ModelSerializer):
     description = serializers.SerializerMethodField()
-    url = serializers.SerializerMethodField()
 
     class Meta:
         model = Rank
@@ -19,7 +18,6 @@ class RankSerializer(serializers.ModelSerializer):
             'css_class',
             'is_default',
             'is_tab',
-            'url',
         ]
 
     def get_description(self, obj):
@@ -27,6 +25,3 @@ class RankSerializer(serializers.ModelSerializer):
             return format_plaintext_for_html(obj.description)
         else:
             return ''
-
-    def get_url(self, obj):
-        return obj.get_absolute_url()

@@ -12,12 +12,11 @@ FeedUserSerializer = UserSerializer.subset_fields(
     'id',
     'username',
     'avatars',
-    'url',
     'title',
     'rank',
 )
 
-FeedCategorySerializer = CategorySerializer.subset_fields('name', 'css_class', 'url')
+FeedCategorySerializer = CategorySerializer.subset_fields('name', 'css_class')
 
 
 class FeedSerializer(PostSerializer, MutableFields):

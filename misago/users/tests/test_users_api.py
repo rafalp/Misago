@@ -214,7 +214,7 @@ class RankListTests(AuthenticatedUserTestCase):
             is_tab=True,
         )
 
-        test_user = UserModel.objects.create_user(
+        UserModel.objects.create_user(
             'Visible',
             'visible@te.com',
             'Pass.123',
@@ -223,14 +223,16 @@ class RankListTests(AuthenticatedUserTestCase):
         )
 
         response = self.client.get(self.link % test_rank.pk)
-        self.assertNotContains(response, test_user.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['count'], 0)
 
         # api shows disabled accounts to staff
         self.user.is_staff = True
         self.user.save()
 
         response = self.client.get(self.link % test_rank.pk)
-        self.assertContains(response, test_user.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['count'], 1)
 
 
 class SearchNamesListTests(AuthenticatedUserTestCase):

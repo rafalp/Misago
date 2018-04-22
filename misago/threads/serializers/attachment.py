@@ -13,17 +13,15 @@ IMAGE_EXTENSIONS = ('jpg', 'jpeg', 'png', 'gif')
 class AttachmentSerializer(serializers.ModelSerializer):
     post = serializers.PrimaryKeyRelatedField(read_only=True)
 
-    acl = serializers.SerializerMethodField()
-    is_image = serializers.SerializerMethodField()
     filetype = serializers.SerializerMethodField()
     uploader_ip = serializers.SerializerMethodField()
-
-    url = serializers.SerializerMethodField()
+    has_thumbnail = serializers.SerializerMethodField()
 
     class Meta:
         model = Attachment
         fields = [
             'id',
+            'secret',
             'filetype',
             'post',
             'uploaded_on',
@@ -31,19 +29,9 @@ class AttachmentSerializer(serializers.ModelSerializer):
             'uploader_ip',
             'filename',
             'size',
-            'acl',
             'is_image',
-            'url',
+            'has_thumbnail',
         ]
-
-    def get_acl(self, obj):
-        try:
-            return obj.acl
-        except AttributeError:
-            return None
-
-    def get_is_image(self, obj):
-        return obj.is_image
 
     def get_filetype(self, obj):
         return obj.filetype.name
@@ -55,23 +43,8 @@ class AttachmentSerializer(serializers.ModelSerializer):
         else:
             return None
 
-    def get_url(self, obj):
-        return {
-            'index': obj.get_absolute_url(),
-            'thumb': obj.get_thumbnail_url(),
-            'uploader': self.get_uploader_url(obj),
-        }
-
-    def get_uploader_url(self, obj):
-        if obj.uploader_id:
-            return reverse(
-                'misago:user', kwargs={
-                    'slug': obj.uploader_slug,
-                    'pk': obj.uploader_id,
-                }
-            )
-        else:
-            return None
+    def get_has_thumbnail(self, obj):
+        return bool(obj.thumbnail)
 
 
 class NewAttachmentSerializer(serializers.Serializer):

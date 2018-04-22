@@ -13,7 +13,6 @@ from .threadparticipant import ThreadParticipantSerializer
 class ThreadSerializer(serializers.ModelSerializer, MutableFields):
     category = BasicCategorySerializer(many=False, read_only=True)
 
-    acl = serializers.SerializerMethodField()
     has_unapproved_posts = serializers.SerializerMethodField()
     is_new = serializers.SerializerMethodField()
     is_read = serializers.SerializerMethodField()
@@ -22,9 +21,6 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
     best_answer = serializers.PrimaryKeyRelatedField(read_only=True)
     best_answer_marked_by = serializers.PrimaryKeyRelatedField(read_only=True)
     subscription = serializers.SerializerMethodField()
-
-    api = serializers.SerializerMethodField()
-    url = serializers.SerializerMethodField()
 
     class Meta:
         model = Thread
@@ -50,21 +46,12 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             'best_answer_marked_by',
             'best_answer_marked_by_name',
             'best_answer_marked_by_slug',
-            'acl',
             'is_new',
             'is_read',
             'path',
             'poll',
             'subscription',
-            'api',
-            'url',
         ]
-
-    def get_acl(self, obj):
-        try:
-            return obj.acl
-        except AttributeError:
-            return {}
 
     def get_has_unapproved_posts(self, obj):
         try:
@@ -94,60 +81,13 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
         except AttributeError:
             return None
 
-    def get_api(self, obj):
-        return {
-            'index': obj.get_api_url(),
-            'editor': obj.get_editor_api_url(),
-            'merge': obj.get_merge_api_url(),
-            'poll': obj.get_poll_api_url(),
-            'posts': {
-                'index': obj.get_posts_api_url(),
-                'merge': obj.get_post_merge_api_url(),
-                'move': obj.get_post_move_api_url(),
-                'split': obj.get_post_split_api_url(),
-            },
-        }
-
-    def get_url(self, obj):
-        return {
-            'index': obj.get_absolute_url(),
-            'new_post': obj.get_new_post_url(),
-            'last_post': obj.get_last_post_url(),
-            'best_answer': obj.get_best_answer_url(),
-            'unapproved_post': obj.get_unapproved_post_url(),
-            'starter': self.get_starter_url(obj),
-            'last_poster': self.get_last_poster_url(obj),
-        }
-
-    def get_starter_url(self, obj):
-        if obj.starter_id:
-            return reverse(
-                'misago:user', kwargs={
-                    'slug': obj.starter_slug,
-                    'pk': obj.starter_id,
-                }
-            )
-        return None
-
-    def get_last_poster_url(self, obj):
-        if obj.last_poster_id:
-            return reverse(
-                'misago:user', kwargs={
-                    'slug': obj.last_poster_slug,
-                    'pk': obj.last_poster_id,
-                }
-            )
-        return None
-
 
 class PrivateThreadSerializer(ThreadSerializer):
     participants = serializers.SerializerMethodField()
 
     class Meta:
         model = Thread
-        fields = ThreadSerializer.Meta.fields + [
-            'participants',
-        ]
+        fields = ThreadSerializer.Meta.fields + ['participants']
 
 
 class ThreadsListSerializer(ThreadSerializer):
@@ -165,20 +105,31 @@ class ThreadsListSerializer(ThreadSerializer):
         ]
 
     def get_starter(self, obj):
-        if obj.starter_id:
-            return {
-                'id': obj.starter_id,
-                'avatars': obj.starter.avatars,
-            }
-        return None
+        if obj.starter:
+            avatars = obj.starter.avatars
+        else:
+            avatars = None
+
+        return {
+            'id': obj.starter_id,
+            'username': obj.starter_name,
+            'slug': obj.starter_slug,
+            'avatars': avatars,
+        }
 
     def get_last_poster(self, obj):
-        if obj.last_poster_id:
-            return {
-                'id': obj.last_poster_id,
-                'avatars': obj.last_poster.avatars,
-            }
-        return None
+        if obj.last_poster:
+            avatars = obj.last_poster.avatars
+        else:
+            avatars = None
+
+        return {
+            'id': obj.last_poster_id,
+            'username': obj.last_poster_name,
+            'slug': obj.last_poster_slug,
+            'avatars': avatars,
+        }
+
 
 
 ThreadsListSerializer = ThreadsListSerializer.exclude_fields('path', 'poll')

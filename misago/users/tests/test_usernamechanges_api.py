@@ -35,14 +35,14 @@ class UsernameChangesApiTests(AuthenticatedUserTestCase):
                     'user': {
                         'id': self.user.id,
                         'username': 'NewUsername',
+                        'slug': 'newusername',
                         'avatars': self.user.avatars,
-                        'url': self.user.get_absolute_url(),
                     },
                     'changed_by': {
                         'id': self.user.id,
                         'username': 'NewUsername',
+                        'slug': 'newusername',
                         'avatars': self.user.avatars,
-                        'url': self.user.get_absolute_url(),
                     },
                     'changed_by_username': 'NewUsername',
                     'changed_on': serialize_datetime(username_change.changed_on),
@@ -99,14 +99,14 @@ class UsernameChangesApiTests(AuthenticatedUserTestCase):
                     'user': {
                         'id': self.user.id,
                         'username': 'NewUsername',
+                        'slug': 'newusername',
                         'avatars': self.user.avatars,
-                        'url': self.user.get_absolute_url(),
                     },
                     'changed_by': {
                         'id': self.user.id,
                         'username': 'NewUsername',
+                        'slug': 'newusername',
                         'avatars': self.user.avatars,
-                        'url': self.user.get_absolute_url(),
                     },
                     'changed_by_username': 'NewUsername',
                     'changed_on': serialize_datetime(username_change.changed_on),

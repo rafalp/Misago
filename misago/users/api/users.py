@@ -324,10 +324,7 @@ UserProfileSerializer = UserSerializer.subset_fields(
     'following',
     'threads',
     'posts',
-    'acl',
     'is_followed',
     'is_blocked',
     'status',
-    'api',
-    'url',
 )
