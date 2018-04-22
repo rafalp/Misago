@@ -4,8 +4,8 @@ from django.core.exceptions import PermissionDenied
 from django.utils import six
 from django.utils.translation import ugettext as _
 
+from misago.threads import moderation
 from misago.threads.models import Thread
-from misago.threads.moderation import threads as moderation
 from misago.threads.serializers import SplitPostsSerializer
 
 

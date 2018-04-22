@@ -9,8 +9,7 @@ from misago.core.forms import YesNoSwitch
 from misago.core.validators import validate_sluggable
 from misago.threads.threadtypes import trees_map
 
-from . import THREADS_ROOT_NAME
-from .models import Category, CategoryRole
+from .models import THREADS_ROOT, Category, CategoryRole
 
 
 class AdminCategoryFieldMixin(object):
@@ -18,7 +17,7 @@ class AdminCategoryFieldMixin(object):
         self.base_level = kwargs.pop('base_level', 1)
         kwargs['level_indicator'] = kwargs.get('level_indicator', '- - ')
 
-        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
+        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT)
         queryset = Category.objects.filter(tree_id=threads_tree_id)
         if not kwargs.pop('include_root', False):
             queryset = queryset.exclude(special_role="root_category")

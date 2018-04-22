@@ -6,8 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from misago.acl import algebra
 from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
-from misago.categories import PRIVATE_THREADS_ROOT_NAME
-from misago.categories.models import Category
+from misago.categories.models import PRIVATE_THREADS_ROOT, Category
 from misago.core.forms import YesNoSwitch
 from misago.threads.models import Thread
 
@@ -153,7 +152,7 @@ def build_acl(acl, roles, key_name):
 
 
 def add_acl_to_thread(user, thread):
-    if thread.thread_type.root_name != PRIVATE_THREADS_ROOT_NAME:
+    if thread.thread_type.root_name != PRIVATE_THREADS_ROOT:
         return
 
     if not hasattr(thread, 'participant'):

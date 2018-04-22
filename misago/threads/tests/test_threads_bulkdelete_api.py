@@ -4,8 +4,7 @@ from django.urls import reverse
 from django.utils import six
 
 from misago.acl.testutils import override_acl
-from misago.categories import PRIVATE_THREADS_ROOT_NAME
-from misago.categories.models import Category
+from misago.categories.models import PRIVATE_THREADS_ROOT, Category
 from misago.threads import testutils
 from misago.threads.models import Thread
 from misago.threads.serializers.moderation import THREADS_LIMIT
@@ -223,7 +222,7 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
         private_thread = self.threads[0]
 
         private_thread.category = Category.objects.get(
-            tree_id=trees_map.get_tree_id_for_root(PRIVATE_THREADS_ROOT_NAME),
+            tree_id=trees_map.get_tree_id_for_root(PRIVATE_THREADS_ROOT),
         )
         private_thread.save()
 

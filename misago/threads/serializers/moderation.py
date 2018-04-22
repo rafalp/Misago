@@ -6,7 +6,7 @@ from django.http import Http404
 from django.utils.translation import ugettext as _, ugettext_lazy, ungettext
 
 from misago.acl import add_acl
-from misago.categories import THREADS_ROOT_NAME
+from misago.categories.models import THREADS_ROOT
 from misago.conf import settings
 from misago.threads.mergeconflict import MergeConflict
 from misago.threads.models import Thread
@@ -508,7 +508,7 @@ class MergeThreadsSerializer(NewThreadSerializer):
     def get_valid_threads(self, threads_ids):
         user = self.context['user']
 
-        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
+        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT)
         threads_queryset = Thread.objects.filter(
             id__in=threads_ids,
             category__tree_id=threads_tree_id,

@@ -2,8 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
-from misago.categories import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
-from misago.categories.models import Category
+from misago.categories.models import PRIVATE_THREADS_ROOT, THREADS_ROOT, Category
 from misago.core.shortcuts import validate_slug
 from misago.core.viewmodel import ViewModel as BaseViewModel
 from misago.readtracker.threadstracker import make_read_aware
@@ -106,7 +105,7 @@ class ForumThread(ViewModel):
         thread = get_object_or_404(
             Thread.objects.select_related(*BASE_RELATIONS),
             pk=pk,
-            category__tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT_NAME),
+            category__tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT),
         )
 
         allow_see_thread(request.user, thread)
@@ -128,7 +127,7 @@ class PrivateThread(ViewModel):
         thread = get_object_or_404(
             Thread.objects.select_related(*BASE_RELATIONS),
             pk=pk,
-            category__tree_id=trees_map.get_tree_id_for_root(PRIVATE_THREADS_ROOT_NAME),
+            category__tree_id=trees_map.get_tree_id_for_root(PRIVATE_THREADS_ROOT),
         )
 
         make_participants_aware(request.user, thread)

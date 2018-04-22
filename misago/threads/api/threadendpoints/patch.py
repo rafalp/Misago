@@ -15,7 +15,7 @@ from misago.categories.permissions import allow_browse_category, allow_see_categ
 from misago.categories.serializers import CategorySerializer
 from misago.conf import settings
 from misago.core.shortcuts import get_int_or_404
-from misago.threads.moderation import threads as moderation
+from misago.threads import moderation
 from misago.threads.participants import (
     add_participant, change_owner, make_participants_aware, remove_participant
 )

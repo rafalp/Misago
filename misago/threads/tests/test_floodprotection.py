@@ -9,9 +9,9 @@ from misago.threads import testutils
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
-class PostMentionsTests(AuthenticatedUserTestCase):
+class FloodProtectionTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(PostMentionsTests, self).setUp()
+        super(FloodProtectionTests, self).setUp()
 
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(category=self.category)

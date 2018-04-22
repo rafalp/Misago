@@ -6,7 +6,7 @@ from django.utils import six
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
-from misago.categories import PRIVATE_THREADS_ROOT_NAME
+from misago.categories.models import PRIVATE_THREADS_ROOT
 from misago.threads.participants import add_participants, set_owner
 from misago.threads.permissions import allow_message_user
 
@@ -19,7 +19,7 @@ UserModel = get_user_model()
 class ParticipantsMiddleware(PostingMiddleware):
     def use_this_middleware(self):
         if self.mode == PostingEndpoint.START:
-            return self.tree_name == PRIVATE_THREADS_ROOT_NAME
+            return self.tree_name == PRIVATE_THREADS_ROOT
         return False
 
     def get_serializer(self):

@@ -2,7 +2,7 @@ from rest_framework.response import Response
 
 from django.db import transaction
 
-from misago.threads.moderation import threads as moderation
+from misago.threads import moderation
 from misago.threads.permissions import allow_delete_thread
 from misago.threads.serializers import DeleteThreadsSerializer
 

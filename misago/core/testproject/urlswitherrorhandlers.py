@@ -1,4 +1,4 @@
-from .urls import *
+from .urls import *  # pylint: disable=unused-wildcard-import
 
 
 handler403 = 'misago.core.testproject.views.mock_custom_403_error_page'

@@ -1,6 +1,6 @@
 from django.db.models import F
 
-from misago.categories import THREADS_ROOT_NAME
+from misago.categories.models import THREADS_ROOT
 
 from . import PostingEndpoint, PostingMiddleware
 
@@ -41,7 +41,7 @@ class UpdateStatsMiddleware(PostingMiddleware):
         if post.is_unapproved:
             return  # don't update user on moderated post
 
-        if self.thread.thread_type.root_name == THREADS_ROOT_NAME:
+        if self.thread.thread_type.root_name == THREADS_ROOT:
             if self.mode == PostingEndpoint.START:
                 user.threads = F('threads') + 1
                 user.update_fields.append('threads')

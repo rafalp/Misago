@@ -8,7 +8,7 @@ from misago.acl import add_acl
 from misago.api.patch import ApiPatch
 from misago.conf import settings
 from misago.threads.models import PostLike
-from misago.threads.moderation import posts as moderation
+from misago.threads import moderation
 from misago.threads.permissions import (
     allow_approve_post, allow_hide_best_answer, allow_hide_post, allow_protect_post,
     allow_unhide_post)

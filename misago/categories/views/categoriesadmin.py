@@ -4,9 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from misago.acl import version as acl_version
 from misago.admin.views import generic
-from misago.categories import THREADS_ROOT_NAME
 from misago.categories.forms import CategoryFormFactory, DeleteFormFactory
-from misago.categories.models import Category, RoleCategoryACL
+from misago.categories.models import THREADS_ROOT, Category, RoleCategoryACL
 from misago.threads.threadtypes import trees_map
 
 
@@ -19,7 +18,7 @@ class CategoryAdmin(generic.AdminBaseMixin):
     def get_target(self, kwargs):
         target = super(CategoryAdmin, self).get_target(kwargs)
 
-        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
+        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT)
 
         target_is_special = bool(target.special_role)
         target_not_in_categories_tree = target.tree_id != threads_tree_id

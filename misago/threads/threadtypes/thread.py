@@ -1,13 +1,13 @@
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from misago.categories import THREADS_ROOT_NAME
+from misago.categories.models import THREADS_ROOT
 
 from . import ThreadType
 
 
 class Thread(ThreadType):
-    root_name = THREADS_ROOT_NAME
+    root_name = THREADS_ROOT
 
     def get_category_name(self, category):
         if category.level:

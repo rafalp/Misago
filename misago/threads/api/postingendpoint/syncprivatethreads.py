@@ -1,4 +1,4 @@
-from misago.categories import PRIVATE_THREADS_ROOT_NAME
+from misago.categories.models import PRIVATE_THREADS_ROOT
 from misago.threads.participants import set_users_unread_private_threads_sync
 
 from . import PostingEndpoint, PostingMiddleware
@@ -9,7 +9,7 @@ class SyncPrivateThreadsMiddleware(PostingMiddleware):
 
     def use_this_middleware(self):
         if self.mode == PostingEndpoint.REPLY:
-            return self.thread.thread_type.root_name == PRIVATE_THREADS_ROOT_NAME
+            return self.thread.thread_type.root_name == PRIVATE_THREADS_ROOT
         return False
 
     def post_save(self, serializer):

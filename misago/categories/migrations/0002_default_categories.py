@@ -5,6 +5,8 @@ from django.db import migrations
 
 from misago.core.utils import slugify
 
+from misago.categories.models import PRIVATE_THREADS_ROOT, THREADS_ROOT
+
 
 _ = lambda s: s
 
@@ -13,7 +15,7 @@ def create_default_categories_tree(apps, schema_editor):
     Category = apps.get_model('misago_categories', 'Category')
 
     Category.objects.create(
-        special_role='private_threads',
+        special_role=PRIVATE_THREADS_ROOT,
         name='Private',
         slug='private',
         lft=1,
@@ -23,7 +25,7 @@ def create_default_categories_tree(apps, schema_editor):
     )
 
     root = Category.objects.create(
-        special_role='root_category',
+        special_role=THREADS_ROOT,
         name='Root',
         slug='root',
         lft=3,

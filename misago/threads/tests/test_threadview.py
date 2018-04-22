@@ -2,11 +2,10 @@
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.conf import settings
-from misago.threads import testutils
+from misago.threads import moderation, testutils
 from misago.threads.checksums import update_post_checksum
 from misago.threads.events import record_event
-from misago.threads.moderation import threads as threads_moderation
-from misago.threads.moderation import hide_post
+from misago.threads import moderation
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -156,7 +155,7 @@ class ThreadPostsVisibilityTests(ThreadViewTestCase):
     def test_hidden_post_visibility(self):
         """hidden post renders correctly"""
         post = testutils.reply_thread(self.thread, message="Hello, I'm hidden post!")
-        hide_post(self.user, post)
+        moderation.hide_post(self.user, post)
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, post.get_absolute_url())
@@ -223,14 +222,14 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
     def test_thread_events_render(self):
         """different thread events render"""
         TEST_ACTIONS = [
-            (threads_moderation.pin_thread_globally, "Thread has been pinned globally."),
-            (threads_moderation.pin_thread_locally, "Thread has been pinned locally."),
-            (threads_moderation.unpin_thread, "Thread has been unpinned."),
-            (threads_moderation.approve_thread, "Thread has been approved."),
-            (threads_moderation.close_thread, "Thread has been closed."),
-            (threads_moderation.open_thread, "Thread has been opened."),
-            (threads_moderation.hide_thread, "Thread has been made hidden."),
-            (threads_moderation.unhide_thread, "Thread has been revealed."),
+            (moderation.pin_thread_globally, "Thread has been pinned globally."),
+            (moderation.pin_thread_locally, "Thread has been pinned locally."),
+            (moderation.unpin_thread, "Thread has been unpinned."),
+            (moderation.approve_thread, "Thread has been approved."),
+            (moderation.close_thread, "Thread has been closed."),
+            (moderation.open_thread, "Thread has been opened."),
+            (moderation.hide_thread, "Thread has been made hidden."),
+            (moderation.unhide_thread, "Thread has been revealed."),
         ]
 
         self.thread.is_unapproved = True
@@ -250,7 +249,7 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
             self.assertContains(response, message)
 
             # hidden events don't render without permission
-            hide_post(self.user, event)
+            moderation.hide_post(self.user, event)
             self.override_acl({'can_approve_content': 1, 'can_hide_threads': 1})
 
             response = self.client.get(self.thread.get_absolute_url())
@@ -258,7 +257,7 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
             self.assertNotContains(response, message)
 
             # hidden event renders with permission
-            hide_post(self.user, event)
+            moderation.hide_post(self.user, event)
             self.override_acl({
                 'can_approve_content': 1,
                 'can_hide_threads': 1,
@@ -347,7 +346,7 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
 
     def test_changed_thread_title_event_renders(self):
         """changed thread title event renders"""
-        threads_moderation.change_thread_title(
+        moderation.change_thread_title(
             MockRequest(self.user), self.thread, "Lorem renamed ipsum!"
         )
 
@@ -365,7 +364,7 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
         self.thread.category = self.thread.category.parent
         self.thread.save()
 
-        threads_moderation.move_thread(MockRequest(self.user), self.thread, self.category)
+        moderation.move_thread(MockRequest(self.user), self.thread, self.category)
 
         event = self.thread.post_set.filter(is_event=True)[0]
         self.assertEqual(event.event_type, 'moved')
@@ -378,7 +377,7 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
     def test_thread_merged_event_renders(self):
         """merged thread event renders"""
         other_thread = testutils.post_thread(category=self.category)
-        threads_moderation.merge_thread(MockRequest(self.user), self.thread, other_thread)
+        moderation.merge_thread(MockRequest(self.user), self.thread, other_thread)
 
         event = self.thread.post_set.filter(is_event=True)[0]
         self.assertEqual(event.event_type, 'merged')
@@ -510,7 +509,7 @@ class ThreadAnonViewTests(ThreadViewTestCase):
         event = record_event(MockRequest(self.user), self.thread, 'closed')
 
         hidden_event = record_event(MockRequest(self.user), self.thread, 'opened')
-        hide_post(self.user, hidden_event)
+        moderation.hide_post(self.user, hidden_event)
 
         unapproved_post = testutils.reply_thread(self.thread, is_unapproved=True)
         post = testutils.reply_thread(self.thread)

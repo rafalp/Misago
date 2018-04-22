@@ -6,9 +6,9 @@ from django.utils.six import text_type
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
+from misago.threads import moderation
 from misago.threads.events import record_event
 from misago.threads.models import Thread
-from misago.threads.moderation import threads as moderation
 from misago.threads.permissions import allow_merge_thread
 from misago.threads.serializers import (
     MergeThreadSerializer, MergeThreadsSerializer, ThreadsListSerializer)
