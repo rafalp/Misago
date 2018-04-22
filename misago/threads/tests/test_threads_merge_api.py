@@ -31,7 +31,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         self.category_b = Category.objects.get(slug='category-b')
 
     def override_other_category(self):
-        categories =  self.user.acl_cache['categories']
+        categories = self.user.acl_cache['categories']
 
         visible_categories = self.user.acl_cache['visible_categories']
         browseable_categories = self.user.acl_cache['browseable_categories']

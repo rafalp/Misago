@@ -86,7 +86,7 @@ class Thread(models.Model):
         blank=True,
         on_delete=models.SET_NULL,
     )
-    best_answer_is_protected =  models.BooleanField(default=False)
+    best_answer_is_protected = models.BooleanField(default=False)
     best_answer_marked_on = models.DateTimeField(null=True, blank=True)
     best_answer_marked_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
