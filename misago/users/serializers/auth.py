@@ -29,23 +29,8 @@ class AuthenticatedUserSerializer(UserSerializer):
             'subscribe_to_replied_threads',
         ]
 
-    def get_acl(self, obj):
-        return serialize_acl(obj)
-
     def get_email(self, obj):
         return obj.email
-
-    def get_api(self, obj):
-        return {
-            'avatar': reverse('misago:api:user-avatar', kwargs={'pk': obj.pk}),
-            'details': reverse('misago:api:user-details', kwargs={'pk': obj.pk}),
-            'change_email': reverse('misago:api:user-change-email', kwargs={'pk': obj.pk}),
-            'change_password': reverse('misago:api:user-change-password', kwargs={'pk': obj.pk}),
-            'edit_details': reverse('misago:api:user-edit-details', kwargs={'pk': obj.pk}),
-            'options': reverse('misago:api:user-forum-options', kwargs={'pk': obj.pk}),
-            'username': reverse('misago:api:user-username', kwargs={'pk': obj.pk}),
-            'delete': reverse('misago:api:user-delete-own-account', kwargs={'pk': obj.pk}),
-        }
 
 
 AuthenticatedUserSerializer = AuthenticatedUserSerializer.exclude_fields(
@@ -61,13 +46,6 @@ AuthenticatedUserSerializer = AuthenticatedUserSerializer.exclude_fields(
 
 class AnonymousUserSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
-    acl = serializers.SerializerMethodField()
-
-    def get_acl(self, obj):
-        if hasattr(obj, 'acl_cache'):
-            return serialize_acl(obj)
-        else:
-            return {}
 
 
 class LoginSerializer(serializers.Serializer, AuthMixin):

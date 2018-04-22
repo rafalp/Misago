@@ -22,8 +22,16 @@ def last_activity_detail(f):
         if not obj.last_thread_id:
             return None
 
-        acl = self.get_acl(obj)
-        tested_acls = (acl.get('can_see'), acl.get('can_browse'), acl.get('can_see_all_threads'), )
+        try:
+            acl = obj.acl
+        except AttributeError:
+            return None
+            
+        tested_acls = (
+            acl.get('can_see'),
+            acl.get('can_browse'),
+            acl.get('can_see_all_threads'),
+        )
 
         if not all(tested_acls):
             return None
