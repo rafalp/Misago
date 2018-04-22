@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
 
-from misago.acl import add_acl
 from misago.core.utils import serialize_datetime
 from misago.threads.models import Poll
 
@@ -35,15 +34,11 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
         choices_votes = {choice['hash']: [] for choice in self.poll.choices}
         queryset = self.poll.pollvote_set.order_by('-id').select_related()
         for vote in queryset:
-            if vote.voter:
-                url = vote.voter.get_absolute_url()
-            else:
-                url = None
-
             choices_votes[vote.choice_hash].append({
+                'id': vote.voter_id,
                 'username': vote.voter_name,
+                'slug': vote.voter_slug,
                 'voted_on': serialize_datetime(vote.voted_on),
-                'url': url
             })
         return choices_votes
 
@@ -432,14 +427,15 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         """api handles first vote in poll"""
         self.delete_user_votes()
 
-        add_acl(self.user, self.poll)
-        self.poll.acl['can_vote'] = False
-
         response = self.post(self.api_link, data=['aaaaaaaaaaaa', 'bbbbbbbbbbbb'])
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {
             'id': self.poll.id,
-            'poster_name': self.user.username,
+            'poster': {
+                'id': self.user.id,
+                'username': self.user.username,
+                'slug': self.user.slug,
+            },
             'posted_on': serialize_datetime(self.poll.posted_on),
             'length': 0,
             'question': "Lorem ipsum dolor met?",
@@ -447,7 +443,6 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
             'allow_revotes': False,
             'votes': 4,
             'is_public': False,
-            'acl': self.poll.acl,
             'choices': [
                 {
                     'hash': 'aaaaaaaaaaaa',
@@ -474,13 +469,6 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
                     'votes': 0
                 },
             ],
-            'api': {
-                'index': self.poll.get_api_url(),
-                'votes': self.poll.get_votes_api_url(),
-            },
-            'url': {
-                'poster': self.user.get_absolute_url(),
-            },
         })
 
         # validate state change
@@ -523,13 +511,15 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         self.poll.allow_revotes = True
         self.poll.save()
 
-        add_acl(self.user, self.poll)
-
         response = self.post(self.api_link, data=['aaaaaaaaaaaa', 'bbbbbbbbbbbb'])
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {
             'id': self.poll.id,
-            'poster_name': self.user.username,
+            'poster': {
+                'id': self.user.id,
+                'username': self.user.username,
+                'slug': self.user.slug,
+            },
             'posted_on': serialize_datetime(self.poll.posted_on),
             'length': 0,
             'question': "Lorem ipsum dolor met?",
@@ -537,7 +527,6 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
             'allow_revotes': True,
             'votes': 4,
             'is_public': False,
-            'acl': self.poll.acl,
             'choices': [
                 {
                     'hash': 'aaaaaaaaaaaa',
@@ -564,13 +553,6 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
                     'votes': 0
                 },
             ],
-            'api': {
-                'index': self.poll.get_api_url(),
-                'votes': self.poll.get_votes_api_url(),
-            },
-            'url': {
-                'poster': self.user.get_absolute_url(),
-            },
         })
 
         # validate state change

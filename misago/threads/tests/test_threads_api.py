@@ -149,22 +149,20 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
             response, hidden_post.parsed
         )  # hidden post's body is visible with permission
 
-        self.override_acl({'can_approve_content': 0})
-
         # unapproved posts shouldn't show at all
         unapproved_post = testutils.reply_thread(
             self.thread,
             is_unapproved=True,
         )
 
+        self.override_acl({'can_approve_content': 0})
         response = self.client.get(self.tested_links[1])
         self.assertNotContains(response, unapproved_post.get_absolute_url())
 
         # add permission to see unapproved posts
         self.override_acl({'can_approve_content': 1})
-
         response = self.client.get(self.tested_links[1])
-        self.assertContains(response, unapproved_post.get_absolute_url())
+        self.assertContains(response, unapproved_post.parsed)
 
     def test_api_validates_has_unapproved_posts_visibility(self):
         """api checks acl before exposing unapproved flag"""

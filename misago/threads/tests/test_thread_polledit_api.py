@@ -3,7 +3,6 @@ from datetime import timedelta
 from django.urls import reverse
 from django.utils import timezone
 
-from misago.acl import add_acl
 from misago.core.utils import serialize_datetime
 from misago.threads.models import Poll
 from misago.threads.serializers.poll import MAX_POLL_OPTIONS
@@ -356,28 +355,31 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         self.assertEqual(response.status_code, 200)
 
         poll = Poll.objects.all()[0]
-        add_acl(self.user, poll)
 
-        response_json = response.json()
+        expected_choices = []
+        for choice in poll.choices:
+            self.assertIn(choice['label'], ["Red", "Green", "Blue"])
+            expected_choices.append(choice.copy())
+            expected_choices[-1]['selected'] = False
 
-        self.assertEqual(response_json['poster_name'], self.user.username)
-        self.assertEqual(response_json['length'], 40)
-        self.assertEqual(response_json['question'], "Select two best colors")
-        self.assertEqual(response_json['allowed_choices'], 2)
-        self.assertTrue(response_json['allow_revotes'])
-
-        # you can't change poll's type after its posted
-        self.assertFalse(response_json['is_public'])
-
-        # choices were updated
-        self.assertEqual(len(response_json['choices']), 3)
-        self.assertEqual(len(set([c['hash'] for c in response_json['choices']])), 3)
-        self.assertEqual([c['label'] for c in response_json['choices']], ['Red', 'Green', 'Blue'])
-        self.assertEqual([c['votes'] for c in response_json['choices']], [0, 0, 0])
-        self.assertEqual([c['selected'] for c in response_json['choices']], [False, False, False])
+        self.assertEqual(response.json(), {
+            'id': poll.id,
+            'poster': {
+                'id': self.user.id,
+                'username': self.user.username,
+                'slug': self.user.slug,
+            },
+            'posted_on': serialize_datetime(poll.posted_on),
+            'length': 40,
+            'question': "Select two best colors",
+            'allowed_choices': 2,
+            'allow_revotes': True,
+            'votes': 0,
+            'is_public': False,
+            'choices': expected_choices,
+        })
 
         # votes were removed
-        self.assertEqual(response_json['votes'], 0)
         self.assertEqual(self.poll.pollvote_set.count(), 0)
 
     def test_poll_current_choices_edited(self):
@@ -417,11 +419,14 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         self.assertEqual(response.status_code, 200)
 
         poll = Poll.objects.all()[0]
-        add_acl(self.user, poll)
 
         self.assertEqual(response.json(), {
             'id': poll.id,
-            'poster_name': self.user.username,
+            'poster': {
+                'id': self.user.id,
+                'username': self.user.username,
+                'slug': self.user.slug,
+            },
             'posted_on': serialize_datetime(poll.posted_on),
             'length': 40,
             'question': "Select two best colors",
@@ -429,7 +434,6 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
             'allow_revotes': True,
             'votes': 4,
             'is_public': False,
-            'acl': poll.acl,
             'choices': [
                 {
                     'hash': 'aaaaaaaaaaaa',
@@ -456,13 +460,6 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
                     'selected': True,
                 },
             ],
-            'api': {
-                'index': poll.get_api_url(),
-                'votes': poll.get_votes_api_url(),
-            },
-            'url': {
-                'poster': self.user.get_absolute_url(),
-            },
         })
 
         # no votes were removed
@@ -500,11 +497,14 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         self.assertEqual(response.status_code, 200)
 
         poll = Poll.objects.all()[0]
-        add_acl(self.user, poll)
 
         self.assertEqual(response.json(), {
             'id': poll.id,
-            'poster_name': self.user.username,
+            'poster': {
+                'id': self.user.id,
+                'username': self.user.username,
+                'slug': self.user.slug,
+            },
             'posted_on': serialize_datetime(poll.posted_on),
             'length': 40,
             'question': "Select two best colors",
@@ -512,7 +512,6 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
             'allow_revotes': True,
             'votes': 1,
             'is_public': False,
-            'acl': poll.acl,
             'choices': [
                 {
                     'hash': 'aaaaaaaaaaaa',
@@ -533,13 +532,6 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
                     'selected': False,
                 },
             ],
-            'api': {
-                'index': poll.get_api_url(),
-                'votes': poll.get_votes_api_url(),
-            },
-            'url': {
-                'poster': self.user.get_absolute_url(),
-            },
         })
 
         # no votes were removed
@@ -578,7 +570,6 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         self.assertEqual(response.status_code, 200)
 
         poll = Poll.objects.all()[0]
-        add_acl(self.user, poll)
 
         expected_choices = []
         for choice in poll.choices:
@@ -588,7 +579,11 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
 
         self.assertEqual(response.json(), {
             'id': poll.id,
-            'poster_name': self.user.username,
+            'poster': {
+                'id': None,
+                'username': self.user.username,
+                'slug': self.user.slug,
+            },
             'posted_on': serialize_datetime(poll.posted_on),
             'length': 40,
             'question': "Select two best colors",
@@ -596,15 +591,7 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
             'allow_revotes': True,
             'votes': 0,
             'is_public': False,
-            'acl': poll.acl,
             'choices': expected_choices,
-            'api': {
-                'index': poll.get_api_url(),
-                'votes': poll.get_votes_api_url(),
-            },
-            'url': {
-                'poster': None,
-            },
         })
         
         # votes were removed

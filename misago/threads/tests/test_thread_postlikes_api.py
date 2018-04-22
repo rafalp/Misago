@@ -60,16 +60,16 @@ class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
                     'liked_on': serialize_datetime(other_like.liked_on),
                     'liker_id': self.user.id,
                     'username': self.user.username,
+                    'slug': self.user.slug,
                     'avatars': self.user.avatars,
-                    'url': self.user.get_absolute_url(),
                 },
                 {
                     'id': like.id,
                     'liked_on': serialize_datetime(like.liked_on),
                     'liker_id': self.user.id,
                     'username': self.user.username,
+                    'slug': self.user.slug,
                     'avatars': self.user.avatars,
-                    'url': self.user.get_absolute_url(),
                 },
             ]
         )
@@ -90,16 +90,16 @@ class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
                     'liked_on': serialize_datetime(other_like.liked_on),
                     'liker_id': None,
                     'username': self.user.username,
+                    'slug': self.user.slug,
                     'avatars': None,
-                    'url': None,
                 },
                 {
                     'id': like.id,
                     'liked_on': serialize_datetime(like.liked_on),
                     'liker_id': None,
                     'username': self.user.username,
+                    'slug': self.user.slug,
                     'avatars': None,
-                    'url': None,
                 },
             ]
         )

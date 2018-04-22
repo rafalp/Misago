@@ -13,14 +13,13 @@ MAX_POLL_OPTIONS = 16
 
 class PollSerializer(serializers.ModelSerializer):
     choices = serializers.SerializerMethodField()
+    poster = serializers.SerializerMethodField()
 
     class Meta:
         model = Poll
         fields = [
             'id',
             'poster',
-            'poster_name',
-            'poster_slug',
             'posted_on',
             'length',
             'question',
@@ -33,6 +32,13 @@ class PollSerializer(serializers.ModelSerializer):
 
     def get_choices(self, obj):
         return obj.choices
+
+    def get_poster(self, obj):
+        return {
+            'id': obj.poster_id,
+            'username': obj.poster_name,
+            'slug': obj.poster_slug
+        }
 
 
 class EditPollSerializer(serializers.ModelSerializer):

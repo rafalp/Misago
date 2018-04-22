@@ -132,8 +132,8 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
                 {
                     'id': self.user.id,
                     'username': self.user.username,
+                    'slug': self.user.slug,
                     'avatars': self.user.avatars,
-                    'url': self.user.get_absolute_url(),
                     'is_owner': True,
                 },
             ]
@@ -153,8 +153,8 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
                 {
                     'id': self.user.id,
                     'username': self.user.username,
+                    'slug': self.user.slug,
                     'avatars': self.user.avatars,
-                    'url': self.user.get_absolute_url(),
                     'is_owner': False,
                 },
             ]

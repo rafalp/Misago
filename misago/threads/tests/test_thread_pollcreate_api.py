@@ -1,6 +1,5 @@
 from django.urls import reverse
 
-from misago.acl import add_acl
 from misago.core.utils import serialize_datetime
 from misago.threads.models import Poll, Thread
 from misago.threads.serializers.poll import MAX_POLL_OPTIONS
@@ -319,8 +318,7 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         self.maxDiff = None
 
         poll = Poll.objects.all()[0]
-        add_acl(self.user, poll)
-
+        
         expected_choices = []
         for choice in poll.choices:
             expected_choices.append(choice.copy())
@@ -328,7 +326,11 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
 
         self.assertEqual(response.json(), {
             'id': poll.id,
-            'poster_name': self.user.username,
+            'poster': {
+                'id': self.user.id,
+                'username': self.user.username,
+                'slug': self.user.slug,
+            },
             'posted_on': serialize_datetime(poll.posted_on),
             'length': 40,
             'question': "Select two best colors",
@@ -336,15 +338,7 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
             'allow_revotes': True,
             'votes': 0,
             'is_public': True,
-            'acl': poll.acl,
             'choices': expected_choices,
-            'api': {
-                'index': poll.get_api_url(),
-                'votes': poll.get_votes_api_url(),
-            },
-            'url': {
-                'poster': self.user.get_absolute_url(),
-            },
         })
         
         self.assertEqual(len(poll.choices), 3)
