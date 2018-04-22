@@ -6,7 +6,7 @@ ignore=migrations
 
 [MESSAGES CONTROL]
 
-disable=abstract-method,duplicate-code,invalid-name,missing-docstring,no-self-use,redefined-builtin,too-few-public-methods,too-many-ancestors,too-many-lines,too-many-public-methods,too-many-statement
+disable=abstract-method,duplicate-code,invalid-name,missing-docstring,no-else-return,no-self-use,redefined-builtin,super-init-not-called,too-few-public-methods,too-many-ancestors,too-many-lines,too-many-public-methods,too-many-statement,unused-argument
 
 
 [REPORTS]

@@ -5,16 +5,6 @@ from django.utils.translation import ugettext as _
 from .exceptions import ModerationError
 
 
-__all__ = [
-    'approve_post',
-    'protect_post',
-    'unprotect_post',
-    'unhide_post',
-    'hide_post',
-    'delete_post',
-]
-
-
 def approve_post(user, post):
     if post.is_unapproved:
         post.is_unapproved = False

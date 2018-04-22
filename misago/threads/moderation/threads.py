@@ -4,22 +4,6 @@ from django.utils import timezone
 from misago.threads.events import record_event
 
 
-__all__ = [
-    'change_thread_title',
-    'pin_thread_globally',
-    'pin_thread_locally',
-    'unpin_thread',
-    'move_thread',
-    'merge_thread',
-    'approve_thread',
-    'open_thread',
-    'close_thread',
-    'unhide_thread',
-    'hide_thread',
-    'delete_thread',
-]
-
-
 @transaction.atomic
 def change_thread_title(request, thread, new_title):
     if thread.title != new_title:
