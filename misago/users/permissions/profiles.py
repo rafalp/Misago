@@ -11,17 +11,6 @@ from misago.core.forms import YesNoSwitch
 from .decorators import authenticated_only
 
 
-__all__ = [
-    'allow_browse_users_list',
-    'can_browse_users_list',
-    'allow_follow_user',
-    'can_follow_user',
-    'allow_block_user',
-    'can_block_user',
-    'allow_see_ban_details',
-    'can_see_ban_details',
-]
-
 CAN_BROWSE_USERS_LIST = YesNoSwitch(label=_("Can browse users list"), initial=1)
 CAN_SEARCH_USERS = YesNoSwitch(label=_("Can search user profiles"), initial=1)
 CAN_SEE_USER_NAME_HISTORY = YesNoSwitch(label=_("Can see other members name history"))

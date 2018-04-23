@@ -11,20 +11,6 @@ from misago.core.forms import YesNoSwitch
 from misago.threads.models import Post, Thread
 
 
-__all__nope = [
-    'allow_mark_best_answer',
-    'can_mark_best_answer',
-    'allow_mark_as_best_answer',
-    'can_mark_as_best_answer',
-    'allow_unmark_best_answer',
-    'can_unmark_best_answer',
-    'allow_hide_best_answer',
-    'can_hide_best_answer',
-    'allow_delete_best_answer',
-    'can_delete_best_answer',
-]
-
-
 class CategoryPermissionsForm(forms.Form):
     legend = _("Best answers")
 

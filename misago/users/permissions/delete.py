@@ -13,14 +13,6 @@ from misago.acl.models import Role
 from misago.conf import settings
 
 
-__all__ = [
-    'allow_delete_user',
-    'can_delete_user',
-    'allow_delete_own_account',
-    'can_delete_own_account',
-]
-
-
 class PermissionsForm(forms.Form):
     legend = _("Deleting users")
 
