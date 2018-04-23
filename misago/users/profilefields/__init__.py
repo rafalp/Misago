@@ -10,8 +10,7 @@ from django.utils.translation import ugettext as _
 
 from misago.conf import settings
 
-from .basefields import (
-    ChoiceProfileField, ProfileField, TextareaProfileField, TextProfileField, UrlProfileField)
+from .basefields import *
 from .serializers import serialize_profilefields_data
 
 

@@ -20,6 +20,8 @@ from misago.threads.subscriptions import make_subscription_aware
 from misago.threads.utils import add_categories_to_items
 
 
+__all__ = ['ForumThreads', 'PrivateThreads', 'filter_read_threads_queryset']
+
 LISTS_NAMES = {
     'all': None,
     'my': ugettext_lazy("Your threads"),

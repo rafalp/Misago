@@ -15,6 +15,8 @@ from misago.threads.subscriptions import make_subscription_aware
 from misago.threads.threadtypes import trees_map
 
 
+__all__ = ['ForumThread', 'PrivateThread']
+
 BASE_RELATIONS = [
     'category',
     'poll',

@@ -9,6 +9,9 @@ from misago.threads.utils import add_likes_to_posts
 from misago.users.online.utils import make_users_status_aware
 
 
+__all__ = ['ThreadPosts']
+
+
 class ViewModel(object):
     def __init__(self, request, thread, page):
         try:

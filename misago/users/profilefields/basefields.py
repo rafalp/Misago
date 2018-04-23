@@ -6,6 +6,15 @@ from django.utils.six import text_type
 from misago.core.utils import format_plaintext_for_html
 
 
+__all__ = [
+    'ProfileField',
+    'TextProfileField',
+    'UrlProfileField',
+    'TextareaProfileField',
+    'ChoiceProfileField',
+]
+
+
 class ProfileField(object):
     """
     Basic profile field
@@ -86,7 +95,7 @@ class ChoiceProfileField(ProfileField):
                 "profile field ChoiceProfileField has to define "
                 "choices attribute or get_choices(user) method"
             )
-        return self.choices or []
+        return self.choices
 
     def get_form_field(self, request, user):
         return forms.ChoiceField(
