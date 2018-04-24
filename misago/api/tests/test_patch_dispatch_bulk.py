@@ -50,17 +50,7 @@ class ApiPatchDispatchBulkTests(TestCase):
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 2,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
                     'value': 6,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 7,
                 },
             ]),
             [MockObject(5), MockObject(7)],
@@ -68,9 +58,16 @@ class ApiPatchDispatchBulkTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, [
-            {'id': '5', 'status': '200', 'patch': {'value': 14}},
-            {'id': '7', 'status': '200', 'patch': {'value': 14}},
+            {'id': '5', 'status': '200', 'patch': {'value': 12}},
+            {'id': '7', 'status': '200', 'patch': {'value': 12}},
         ])
+
+        # dispatch requires list as an argument
+        response = patch.dispatch_bulk(MockRequest({}), [MockObject(5), MockObject(7)])
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data, {
+            'detail': ["PATCH request should be a list of operations."],
+        })
 
         # invalid action in bulk dispatch
         response = patch.dispatch_bulk(
@@ -78,20 +75,10 @@ class ApiPatchDispatchBulkTests(TestCase):
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 2,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
                     'value': 6,
                 },
                 {
                     'op': 'replace',
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 7,
                 },
             ]),
             [MockObject(5), MockObject(7)],
@@ -102,14 +89,31 @@ class ApiPatchDispatchBulkTests(TestCase):
             'detail': '"replace" op has to specify path.',
         })
 
-        # op raised validation error
+        # repeated action in dispatch
         response = patch.dispatch_bulk(
             MockRequest([
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 2,
+                    'value': 6,
                 },
+                {
+                    'op': 'replace',
+                    'path': 'mutate',
+                    'value': 12,
+                },
+            ]),
+            [MockObject(5), MockObject(7)],
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data, {
+            'detail': '"replace" op for "mutate" path is repeated.',
+        })
+
+        # op raised validation error
+        response = patch.dispatch_bulk(
+            MockRequest([
                 {
                     'op': 'replace',
                     'path': 'mutate',
@@ -119,11 +123,6 @@ class ApiPatchDispatchBulkTests(TestCase):
                     'op': 'replace',
                     'path': 'error',
                     'value': 'invalid',
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 7,
                 },
             ]),
             [MockObject(5), MockObject(7)],
@@ -141,22 +140,12 @@ class ApiPatchDispatchBulkTests(TestCase):
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 2,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
                     'value': 6,
                 },
                 {
                     'op': 'replace',
                     'path': 'error',
                     'value': 'api_invalid',
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 7,
                 },
             ]),
             [MockObject(5), MockObject(7)],
@@ -174,17 +163,7 @@ class ApiPatchDispatchBulkTests(TestCase):
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 2,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
                     'value': 6,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 9,
                 },
                 {
                     'op': 'replace',
@@ -207,22 +186,12 @@ class ApiPatchDispatchBulkTests(TestCase):
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 2,
+                    'value': 6,
                 },
                 {
                     'op': 'replace',
                     'path': 'error',
                     'value': '404',
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 6,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 7,
                 },
             ]),
             [MockObject(5), MockObject(7)],
@@ -234,7 +203,7 @@ class ApiPatchDispatchBulkTests(TestCase):
             {'id': '7', 'status': '404', 'detail': 'NOT FOUND'},
         ])
 
-        # action in bulk dispatch raises 404 and hides the message
+        # action in dispatch raised 404 with message but didn't expose it
         response = patch.dispatch_bulk(
             MockRequest([
                 {
@@ -246,16 +215,6 @@ class ApiPatchDispatchBulkTests(TestCase):
                     'op': 'replace',
                     'path': 'error',
                     'value': '404_reason',
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 6,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 7,
                 },
             ]),
             [MockObject(5), MockObject(7)],

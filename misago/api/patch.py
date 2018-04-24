@@ -52,32 +52,25 @@ class ApiPatch(object):
         })
 
     def dispatch(self, request, target):
-        if not isinstance(request.data, list):
-            return Response({
-                'detail': _("PATCH request should be a list of operations."),
-            }, status=400)
-
         response = {'id': target.pk}
-        for action in request.data:
-            try:
-                self.validate_action(action)
+
+        try:
+            self.validate_actions(request.data)
+            for action in request.data:
                 self.dispatch_action(response, request, target, action)
-            except HANDLED_EXCEPTIONS as exception:
-                detail, status = self.get_error_detail_code(exception)
-                return Response({'detail': detail}, status=status)
+        except HANDLED_EXCEPTIONS as exception:
+            detail, status = self.get_error_detail_code(exception)
+            return Response({'detail': detail}, status=status)
 
         return Response(response)
 
     def dispatch_bulk(self, request, targets):
+        try:
+            self.validate_actions(request.data['ops'])
+        except HANDLED_EXCEPTIONS as exception:
+            return self.handle_exception(exception)
+
         result = []
-
-        for action in request.data['ops']:
-            try:
-                self.validate_action(action)
-            except InvalidAction as exception:
-                detail, status = self.get_error_detail_code(exception)
-                return Response({'detail': detail}, status=status)
-
         for target in targets:
             data = {'id': target.pk, 'status': 200, 'patch': {}}
             for action in request.data['ops']:
@@ -105,6 +98,20 @@ class ApiPatch(object):
         # success and error handles
         return Response(result)
 
+    def validate_actions(self, actions):
+        if not isinstance(actions, list):
+            raise ApiValidationError(_("PATCH request should be a list of operations."))
+
+        reduced_actions = []
+        for action in actions:
+            self.validate_action(action)
+
+            reduced_action = self.reduce_action(action)
+            if reduced_action in reduced_actions:
+                raise InvalidAction(
+                    _('"%(op)s" op for "%(path)s" path is repeated.') % reduced_action)
+            reduced_actions.append(reduced_action)
+
     def validate_action(self, action):
         if not action.get('op'):
             raise InvalidAction(_('"op" parameter must be defined.'))
@@ -118,11 +125,18 @@ class ApiPatch(object):
         if 'value' not in action:
             raise InvalidAction(_('"%s" op has to specify value.') % action.get('op'))
 
+    def reduce_action(self, action):
+        return {'op': action['op'], 'path': action['path']}
+
     def dispatch_action(self, data, request, target, action):
         for handler in self._actions:
             if action['op'] == handler['op'] and action['path'] == handler['path']:
                 with transaction.atomic():
                     data.update(handler['handler'](request, target, action['value']))
+
+    def handle_exception(self, exception):
+        detail, status = self.get_error_detail_code(exception)
+        return Response({'detail': detail}, status=status)
 
     def get_error_detail_code(self, exception):
         if isinstance(exception, InvalidAction):

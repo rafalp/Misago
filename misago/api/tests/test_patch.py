@@ -54,8 +54,8 @@ class ApiPatchTests(TestCase):
         self.assertEqual(patch._actions[0]['path'], 'test-replace')
         self.assertEqual(patch._actions[0]['handler'], mock_function)
 
-    def test_validate_action(self):
-        """validate_action method validates action dict"""
+    def test_validate_actions(self):
+        """validate_actions method validates action dict"""
         patch = ApiPatch()
 
         VALID_ACTIONS = [
@@ -77,47 +77,56 @@ class ApiPatchTests(TestCase):
         ]
 
         for action in VALID_ACTIONS:
-            patch.validate_action(action)
+            patch.validate_actions([action])
 
         # undefined op
         UNSUPPORTED_ACTIONS = ({}, {'op': ''}, {'no': 'op'}, )
 
         for action in UNSUPPORTED_ACTIONS:
             try:
-                patch.validate_action(action)
+                patch.validate_actions([action])
             except InvalidAction as e:
                 self.assertEqual(e.args[0], '"op" parameter must be defined.')
 
         # unsupported op
         try:
-            patch.validate_action({'op': 'nope'})
+            patch.validate_actions([{'op': 'nope'}])
         except InvalidAction as e:
-            self.assertEqual(e.args[0], u'"nope" op is unsupported.')
+            self.assertEqual(e.args[0], '"nope" op is unsupported.')
 
         # op lacking patch
         try:
-            patch.validate_action({'op': 'add'})
+            patch.validate_actions([{'op': 'add'}])
         except InvalidAction as e:
-            self.assertEqual(e.args[0], u'"add" op has to specify path.')
+            self.assertEqual(e.args[0], '"add" op has to specify path.')
 
         # op lacking value
         try:
-            patch.validate_action({
+            patch.validate_actions([{
                 'op': 'add',
                 'path': 'yolo',
-            })
+            }])
         except InvalidAction as e:
-            self.assertEqual(e.args[0], u'"add" op has to specify value.')
+            self.assertEqual(e.args[0], '"add" op has to specify value.')
 
-        # empty value is allowed
+        # empty value is forbidden
         try:
-            patch.validate_action({
+            patch.validate_actions([{
                 'op': 'add',
                 'path': 'yolo',
                 'value': '',
-            })
+            }])
         except InvalidAction as e:
-            self.assertEqual(e.args[0], u'"add" op has to specify value.')
+            self.assertEqual(e.args[0], '"add" op has to specify value.')
+
+        # duplicated actions are forbidden
+        try:
+            patch.validate_actions([
+                {'op': 'add', 'path': 'like', 'value': True},
+                {'op': 'add', 'path': 'like', 'value': False},
+            ])
+        except InvalidAction as e:
+            self.assertEqual(e.args[0], '"add" op for "like" path is repeated.')
 
     def test_dispatch_action(self):
         """dispatch_action calls specified actions"""

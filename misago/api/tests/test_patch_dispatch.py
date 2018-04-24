@@ -45,9 +45,11 @@ class ApiPatchDispatchTests(TestCase):
         patch.replace('mutate', action_mutate)
 
         # dispatch requires list as an argument
-        response = patch.dispatch(MockRequest({}), {})
+        response = patch.dispatch(MockRequest({}), MockObject(13))
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data, {'detail': "PATCH request should be a list of operations."})
+        self.assertEqual(response.data, {
+            'detail': ["PATCH request should be a list of operations."],
+        })
 
         # valid dispatch
         response = patch.dispatch(
@@ -55,23 +57,13 @@ class ApiPatchDispatchTests(TestCase):
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 2,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
                     'value': 6,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 7,
                 },
             ]), MockObject(13)
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, {'value': 14, 'id': 13})
+        self.assertEqual(response.data, {'value': 12, 'id': 13})
 
         # invalid action in dispatch
         response = patch.dispatch(
@@ -79,8 +71,22 @@ class ApiPatchDispatchTests(TestCase):
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 2,
+                    'value': 6,
                 },
+                {
+                    'op': 'replace',
+                },
+            ]), MockObject(13)
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data, {
+            'detail': '"replace" op has to specify path.',
+        })
+
+        # repeated action in dispatch
+        response = patch.dispatch(
+            MockRequest([
                 {
                     'op': 'replace',
                     'path': 'mutate',
@@ -88,26 +94,20 @@ class ApiPatchDispatchTests(TestCase):
                 },
                 {
                     'op': 'replace',
-                },
-                {
-                    'op': 'replace',
                     'path': 'mutate',
-                    'value': 7,
+                    'value': 12,
                 },
             ]), MockObject(13)
         )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.data, {'detail': '"replace" op has to specify path.'})
+        self.assertEqual(response.data, {
+            'detail': '"replace" op for "mutate" path is repeated.',
+        })
 
         # op raised validation error
         response = patch.dispatch(
             MockRequest([
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 2,
-                },
                 {
                     'op': 'replace',
                     'path': 'mutate',
@@ -117,11 +117,6 @@ class ApiPatchDispatchTests(TestCase):
                     'op': 'replace',
                     'path': 'error',
                     'value': 'invalid',
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 7,
                 },
             ]), MockObject(13)
         )
@@ -135,22 +130,12 @@ class ApiPatchDispatchTests(TestCase):
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 2,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
                     'value': 6,
                 },
                 {
                     'op': 'replace',
                     'path': 'error',
                     'value': 'api_invalid',
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 7,
                 },
             ]), MockObject(13)
         )
@@ -164,17 +149,7 @@ class ApiPatchDispatchTests(TestCase):
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 2,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
                     'value': 6,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 9,
                 },
                 {
                     'op': 'replace',
@@ -193,22 +168,12 @@ class ApiPatchDispatchTests(TestCase):
                 {
                     'op': 'replace',
                     'path': 'mutate',
-                    'value': 2,
+                    'value': 6,
                 },
                 {
                     'op': 'replace',
                     'path': 'error',
                     'value': '404',
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 6,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 7,
                 },
             ]), MockObject(13)
         )
@@ -216,7 +181,7 @@ class ApiPatchDispatchTests(TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.data, {'detail': 'NOT FOUND'})
 
-        # action in dispatch raised 404 with message
+        # action in dispatch raised 404 with message but didn't expose it
         response = patch.dispatch(
             MockRequest([
                 {
@@ -228,16 +193,6 @@ class ApiPatchDispatchTests(TestCase):
                     'op': 'replace',
                     'path': 'error',
                     'value': '404_reason',
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 6,
-                },
-                {
-                    'op': 'replace',
-                    'path': 'mutate',
-                    'value': 7,
                 },
             ]), MockObject(13)
         )
