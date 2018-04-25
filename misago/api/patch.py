@@ -64,7 +64,7 @@ class ApiPatch(object):
             try:
                 self.dispatch_action(response, request, target, action)
             except HANDLED_EXCEPTIONS as exception:
-                return self.handle_exception(exception, path=action['path'])
+                return self.handle_exception(exception)
 
         return Response(response)
 
@@ -81,12 +81,8 @@ class ApiPatch(object):
                 try:
                     self.dispatch_action(data['patch'], request, target, action)
                 except HANDLED_EXCEPTIONS as exception:
-                    errors, status = self.get_error_data_status(exception, path=action['path'])
-                    data = {'id': target.pk, 'status': status, }
-                    if status == 400:
-                        data['invalid'] = errors
-                    else:
-                        data.update(errors)
+                    data, status = self.get_error_data_status(exception)
+                    data.update({'id': target.pk, 'status': status, })
                     break
             result.append(data)
 
@@ -138,24 +134,19 @@ class ApiPatch(object):
                 with transaction.atomic():
                     data.update(handler['handler'](request, target, action['value']))
 
-    def handle_exception(self, exception, path=None):
-        data, status = self.get_error_data_status(exception, path)
+    def handle_exception(self, exception):
+        data, status = self.get_error_data_status(exception)
         return Response(data, status=status)
 
-    def get_error_data_status(self, exception, path=None):
-        if path:
-            # if path is set, we swap comma for underscore
-            # this makes it easier to process errors in frontend
-            path = path.replace('-', '_')
-
+    def get_error_data_status(self, exception):
         if isinstance(exception, InvalidAction):
             return {api_settings.NON_FIELD_ERRORS_KEY: [six.text_type(exception)]}, 400
 
         if isinstance(exception, serializers.ValidationError):
-            return {path: exception.detail}, 400
+            return {'value': exception.detail}, 400
 
         if isinstance(exception, ValidationError):
-            return {path: exception.messages}, 400
+            return {'value': exception.messages}, 400
 
         if isinstance(exception, PermissionDenied):
             return {'detail': six.text_type(exception)}, 403
