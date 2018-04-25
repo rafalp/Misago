@@ -170,7 +170,9 @@ class BulkPatchSerializerTests(ThreadPostBulkPatchApiTestCase):
         })
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {'detail': '"op" parameter must be defined.'})
+        self.assertEqual(response.json(), {
+            'non_field_errors': ['"op" parameter must be defined.'],
+        })
 
     def test_anonymous_user(self):
         """anonymous users can't use bulk actions"""

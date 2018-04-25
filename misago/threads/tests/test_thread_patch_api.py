@@ -173,7 +173,7 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["Thread title should be at least 5 characters long (it has 2)."]
+            'value': ["Thread title should be at least 5 characters long (it has 2)."]
         })
 
 
@@ -766,7 +766,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["You can't move thread to the category it's already in."]
+            'value': ["You can't move thread to the category it's already in."]
         })
 
         self.override_other_acl({})
@@ -1580,7 +1580,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["A valid integer is required."],
+            'value': ["A valid integer is required."],
         })
 
         thread_json = self.get_thread_json()
@@ -2123,7 +2123,7 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["A valid integer is required."],
+            'value': ["A valid integer is required."],
         })
 
         thread_json = self.get_thread_json()

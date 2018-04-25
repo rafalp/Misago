@@ -62,7 +62,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["You have to enter new participant's username."],
+            'value': ["You have to enter new participant's username."],
         })
 
     def test_add_nonexistant_user(self):
@@ -80,7 +80,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["No user with such name exists."],
+            'value': ["No user with such name exists."],
         })
 
     def test_add_already_participant(self):
@@ -98,7 +98,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["This user is already thread participant."],
+            'value': ["This user is already thread participant."],
         })
 
     def test_add_blocking_user(self):
@@ -117,7 +117,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["BobBoberson is blocking you."],
+            'value': ["BobBoberson is blocking you."],
         })
 
     def test_add_no_perm_user(self):
@@ -137,7 +137,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["BobBoberson can't participate in private threads."],
+            'value': ["BobBoberson can't participate in private threads."],
         })
 
     def test_add_too_many_users(self):
@@ -161,7 +161,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["You can't add any more new users to this thread."],
+            'value': ["You can't add any more new users to this thread."],
         })
 
     def test_add_user_closed_thread(self):
@@ -286,7 +286,7 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["A valid integer is required."],
+            'value': ["A valid integer is required."],
         })
 
     def test_remove_invalid(self):
@@ -304,7 +304,7 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["A valid integer is required."],
+            'value': ["A valid integer is required."],
         })
 
     def test_remove_nonexistant(self):
@@ -322,7 +322,7 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["Participant doesn't exist."],
+            'value': ["Participant doesn't exist."],
         })
 
     def test_remove_not_owner(self):
@@ -593,7 +593,7 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["A valid integer is required."],
+            'value': ["A valid integer is required."],
         })
 
     def test_invalid_user_id(self):
@@ -611,7 +611,7 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["A valid integer is required."],
+            'value': ["A valid integer is required."],
         })
 
     def test_nonexistant_user_id(self):
@@ -629,7 +629,7 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["Participant doesn't exist."],
+            'value': ["Participant doesn't exist."],
         })
 
     def test_no_permission(self):
@@ -667,7 +667,7 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': ["This user already is thread owner."],
+            'value': ["This user already is thread owner."],
         })
 
     def test_change_closed_thread_owner(self):
