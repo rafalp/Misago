@@ -39,6 +39,14 @@ class ApiPatchDispatchBulkTests(TestCase):
 
         patch.replace('error', action_error)
 
+        def action_custom_path_error(request, target, value):
+            if value == 'invalid':
+                raise ValidationError("invalid data here!")
+            if value == 'api_invalid':
+                raise ApiValidationError("invalid api data here!")
+
+        patch.replace('path-error', action_custom_path_error)
+
         def action_mutate(request, target, value):
             return {'value': value * 2}
 
@@ -66,7 +74,7 @@ class ApiPatchDispatchBulkTests(TestCase):
         response = patch.dispatch_bulk(MockRequest({}), [MockObject(5), MockObject(7)])
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data, {
-            'detail': ["PATCH request should be a list of operations."],
+            'non_field_errors': ["PATCH request should be a list of operations."],
         })
 
         # invalid action in bulk dispatch
@@ -86,7 +94,7 @@ class ApiPatchDispatchBulkTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data, {
-            'detail': '"replace" op has to specify path.',
+            'non_field_errors': ['"replace" op has to specify path.'],
         })
 
         # repeated action in dispatch
@@ -108,7 +116,7 @@ class ApiPatchDispatchBulkTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.data, {
-            'detail': '"replace" op for "mutate" path is repeated.',
+            'non_field_errors': ['"replace" op for "mutate" path is repeated.'],
         })
 
         # op raised validation error
@@ -130,8 +138,31 @@ class ApiPatchDispatchBulkTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, [
-            {'id': '5', 'status': '400', 'detail': ["invalid data here!"]},
-            {'id': '7', 'status': '400', 'detail': ["invalid data here!"]},
+            {'id': '5', 'status': '400', 'invalid': {'error': ["invalid data here!"]}},
+            {'id': '7', 'status': '400', 'invalid': {'error': ["invalid data here!"]}},
+        ])
+
+        # op raised api validation error dict in custom path
+        response = patch.dispatch_bulk(
+            MockRequest([
+                {
+                    'op': 'replace',
+                    'path': 'mutate',
+                    'value': 6,
+                },
+                {
+                    'op': 'replace',
+                    'path': 'path-error',
+                    'value': 'api_invalid',
+                },
+            ]),
+            [MockObject(5), MockObject(7)],
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, [
+            {'id': '5', 'status': '400', 'invalid': {'path_error': ["invalid api data here!"]}},
+            {'id': '7', 'status': '400', 'invalid': {'path_error': ["invalid api data here!"]}},
         ])
 
         # op raised api validation error
@@ -153,8 +184,31 @@ class ApiPatchDispatchBulkTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, [
-            {'id': '5', 'status': '400', 'detail': ["invalid api data here!"]},
-            {'id': '7', 'status': '400', 'detail': ["invalid api data here!"]},
+            {'id': '5', 'status': '400', 'invalid': {'error': ["invalid api data here!"]}},
+            {'id': '7', 'status': '400', 'invalid': {'error': ["invalid api data here!"]}},
+        ])
+
+        # op raised api validation error in custom path
+        response = patch.dispatch_bulk(
+            MockRequest([
+                {
+                    'op': 'replace',
+                    'path': 'mutate',
+                    'value': 6,
+                },
+                {
+                    'op': 'replace',
+                    'path': 'path-error',
+                    'value': 'api_invalid',
+                },
+            ]),
+            [MockObject(5), MockObject(7)],
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, [
+            {'id': '5', 'status': '400', 'invalid': {'path_error': ["invalid api data here!"]}},
+            {'id': '7', 'status': '400', 'invalid': {'path_error': ["invalid api data here!"]}},
         ])
 
         # action in bulk dispatch raised perm denied

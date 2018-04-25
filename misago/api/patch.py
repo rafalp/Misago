@@ -1,7 +1,8 @@
 from __future__ import unicode_literals
 
-from rest_framework.exceptions import ValidationError as ApiValidationError
+from rest_framework import serializers
 from rest_framework.response import Response
+from rest_framework.settings import api_settings
 
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import transaction
@@ -18,7 +19,7 @@ class InvalidAction(Exception):
 
 
 HANDLED_EXCEPTIONS = (
-    ApiValidationError,
+    serializers.ValidationError,
     ValidationError,
     InvalidAction,
     PermissionDenied,
@@ -56,11 +57,14 @@ class ApiPatch(object):
 
         try:
             self.validate_actions(request.data)
-            for action in request.data:
-                self.dispatch_action(response, request, target, action)
         except HANDLED_EXCEPTIONS as exception:
-            detail, status = self.get_error_detail_code(exception)
-            return Response({'detail': detail}, status=status)
+            return self.handle_exception(exception)
+
+        for action in request.data:
+            try:
+                self.dispatch_action(response, request, target, action)
+            except HANDLED_EXCEPTIONS as exception:
+                return self.handle_exception(exception, path=action['path'])
 
         return Response(response)
 
@@ -77,12 +81,12 @@ class ApiPatch(object):
                 try:
                     self.dispatch_action(data['patch'], request, target, action)
                 except HANDLED_EXCEPTIONS as exception:
-                    detail, status = self.get_error_detail_code(exception)
-                    data = {
-                        'id': target.pk,
-                        'status': status,
-                        'detail': detail,
-                    }
+                    errors, status = self.get_error_data_status(exception, path=action['path'])
+                    data = {'id': target.pk, 'status': status, }
+                    if status == 400:
+                        data['invalid'] = errors
+                    else:
+                        data.update(errors)
                     break
             result.append(data)
 
@@ -100,7 +104,7 @@ class ApiPatch(object):
 
     def validate_actions(self, actions):
         if not isinstance(actions, list):
-            raise ApiValidationError(_("PATCH request should be a list of operations."))
+            raise InvalidAction(_("PATCH request should be a list of operations."))
 
         reduced_actions = []
         for action in actions:
@@ -134,22 +138,27 @@ class ApiPatch(object):
                 with transaction.atomic():
                     data.update(handler['handler'](request, target, action['value']))
 
-    def handle_exception(self, exception):
-        detail, status = self.get_error_detail_code(exception)
-        return Response({'detail': detail}, status=status)
+    def handle_exception(self, exception, path=None):
+        data, status = self.get_error_data_status(exception, path)
+        return Response(data, status=status)
 
-    def get_error_detail_code(self, exception):
+    def get_error_data_status(self, exception, path=None):
+        if path:
+            # if path is set, we swap comma for underscore
+            # this makes it easier to process errors in frontend
+            path = path.replace('-', '_')
+
         if isinstance(exception, InvalidAction):
-            return six.text_type(exception), 400
+            return {api_settings.NON_FIELD_ERRORS_KEY: [six.text_type(exception)]}, 400
 
-        if isinstance(exception, ApiValidationError):
-            return exception.detail, 400
+        if isinstance(exception, serializers.ValidationError):
+            return {path: exception.detail}, 400
 
         if isinstance(exception, ValidationError):
-            return exception.messages, 400
+            return {path: exception.messages}, 400
 
         if isinstance(exception, PermissionDenied):
-            return six.text_type(exception), 403
+            return {'detail': six.text_type(exception)}, 403
 
         if isinstance(exception, Http404):
-            return 'NOT FOUND', 404
+            return {'detail': 'NOT FOUND'}, 404
