@@ -192,6 +192,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'mptt',
     'rest_framework',
+    'social_django',
 
     # Misago apps
     'misago.admin',
