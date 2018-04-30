@@ -129,6 +129,12 @@ MISAGO_USE_STOP_FORUM_SPAM = True
 MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE = 80
 
 
+# Social Auth Providers Names Overrides
+# Allows you to customize 
+
+MISAGO_SOCIAL_AUTH_PROVIDERS_NAMES = {} 
+
+
 # Login API URL
 
 MISAGO_LOGIN_API_URL = 'auth'

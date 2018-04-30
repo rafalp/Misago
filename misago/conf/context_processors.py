@@ -2,6 +2,8 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.urls import reverse
 from django.utils.translation import get_language
 
+from misago.users.social.utils import get_enabled_social_auth_sites_list
+
 from .gateway import settings as misago_settings  # noqa
 from .gateway import db_settings
 
@@ -30,6 +32,7 @@ def preload_settings_json(request):
         'LOGIN_REDIRECT_URL': reverse(misago_settings.LOGIN_REDIRECT_URL),
         'LOGIN_URL': reverse(misago_settings.LOGIN_URL),
         'LOGOUT_URL': reverse(misago_settings.LOGOUT_URL),
+        'SOCIAL_AUTH': get_enabled_social_auth_sites_list(),
     })
 
     request.frontend_context.update({
