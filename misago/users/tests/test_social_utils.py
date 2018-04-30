@@ -1,4 +1,5 @@
 from django.test import TestCase, override_settings
+from django.urls import reverse
 
 from misago.users.social.utils import get_enabled_social_auth_sites_list
 
@@ -14,10 +15,12 @@ class SocialUtilsTests(TestCase):
             {
                 'id': 'facebook',
                 'name': 'Facebook',
+                'url': reverse('social:begin', kwargs={'backend': 'facebook'}),
             },
             {
                 'id': 'github',
                 'name': 'GitHub',
+                'url': reverse('social:begin', kwargs={'backend': 'github'}),
             }
         ])
 
@@ -36,9 +39,11 @@ class SocialUtilsTests(TestCase):
             {
                 'id': 'facebook',
                 'name': 'Facebook Connect',
+                'url': reverse('social:begin', kwargs={'backend': 'facebook'}),
             },
             {
                 'id': 'github',
                 'name': 'GitHub',
+                'url': reverse('social:begin', kwargs={'backend': 'github'}),
             }
         ])

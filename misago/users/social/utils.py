@@ -1,3 +1,4 @@
+from django.urls import reverse
 from social_core.backends.utils import load_backends
 
 from misago.conf import settings
@@ -16,5 +17,6 @@ def get_enabled_social_auth_sites_list():
         providers_list.append({
             'id': provider_id,
             'name': provider_name,
+            'url': reverse('social:begin', kwargs={'backend': provider_id}),
         })
     return providers_list
