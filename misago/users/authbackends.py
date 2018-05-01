@@ -10,6 +10,11 @@ class MisagoBackend(ModelBackend):
         if kwargs.get('email'):
             username = kwargs['email']  # Bias to email if it was passed explictly
 
+        if not username or not password:
+            # If no username or password was given, skip rest of this auth
+            # This may happen if we are during different auth flow (eg. OAuth/JWT)
+            return None
+
         try:
             user = UserModel.objects.get_by_username_or_email(username)
         except UserModel.DoesNotExist:

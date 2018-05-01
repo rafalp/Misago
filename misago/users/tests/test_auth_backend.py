@@ -34,6 +34,28 @@ class MisagoBackendTests(TestCase):
 
         self.assertEqual(user, self.user)
 
+    def test_authenticate_username_and_email(self):
+        """auth authenticates with email and skips username"""
+        user = backend.authenticate(
+            None,
+            username=self.user.username,
+            password=self.password,
+            email=self.user.email
+        )
+
+        self.assertEqual(user, self.user)
+
+    def test_authenticate_wrong_username_and_email(self):
+        """auth authenticates with email and invalid username"""
+        user = backend.authenticate(
+            None,
+            username='skipped-username',
+            password=self.password,
+            email=self.user.email
+        )
+
+        self.assertEqual(user, self.user)
+
     def test_authenticate_invalid_credential(self):
         """auth handles invalid credentials"""
         user = backend.authenticate(
@@ -64,6 +86,15 @@ class MisagoBackendTests(TestCase):
             username=self.user.email,
             password=self.password,
         )
+
+        self.assertIsNone(user)
+
+    def test_authenticate_no_data(self):
+        """auth has no errors if no recognised credentials are provided"""
+        self.user.is_active = False
+        self.user.save()
+
+        user = backend.authenticate(None)
 
         self.assertIsNone(user)
 
