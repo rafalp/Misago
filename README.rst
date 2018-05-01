@@ -82,9 +82,9 @@ If you are looking into using Misago to run live forum, you are absolutely invit
 Development
 ===========
 
-To start Misago site locally, first make sure you have `Docker <https://www.docker.com/community-edition#/download>`_ installed.
+Preferred way to setup Misago for local development is with `Docker <https://www.docker.com/community-edition#/download>`_, which makes it easy to spin up arbitrary number of instances running different code with separate databases and dependencies one besides the other with just three terminal commands.
 
-Next, clone repository on your machine and run following commands::
+To start, clone repository to your machine and then run following commands::
 
    docker-compose build
    docker-compose run --rm misago initdev
