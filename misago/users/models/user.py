@@ -317,7 +317,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.save(update_fields=['is_active', 'is_deleting_account'])
 
     def anonymize_content(self):
-        # Replace username on associated items with anonymous one
+        """Replaces username with anonymized one, then send anonymization signal.
+
+        Items associated with this user then anonymize their user-specific data
+        like username or IP addresses.
+        """
         self.username = settings.MISAGO_ANONYMOUS_USERNAME
         self.slug = slugify(self.username)
         
