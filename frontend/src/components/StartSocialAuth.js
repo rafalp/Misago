@@ -1,38 +1,46 @@
+/* jshint ignore:start */
 import React from 'react'
 import misago from 'misago'
 
-const StartSocialAuth = ({ buttonLabel, formLabel, header }) => {
+const StartSocialAuth = (props) => {
+  const {
+    buttonClassName,
+    buttonLabel,
+    formLabel,
+    header,
+    labelClassName,
+  } = props;
   const socialAuth = misago.get('SETTINGS').SOCIAL_AUTH;
 
   if (socialAuth.length === 0) return;
 
   return (
-    <div className="form-group">
-      <FormHeader text={header} />
-      {socialAuth.map(({ id, name, url }) => {
-        const className = 'btn btn-block btn-default btn-social-' + id;
-        const finalButtonLabel = interpolate(buttonLabel, { site: name }, true);
+    <div className="form-group form-social-auth">
+      <FormHeader className={labelClassName} text={header} />
+      <div className="row">
+        {socialAuth.map(({ id, name, url }) => {
+          const className = 'btn btn-block btn-default btn-social-' + id;
+          const finalButtonLabel = interpolate(buttonLabel, { site: name }, true);
 
-        return (
-          <a
-            className={className}
-            href={url}
-            key={id}
-          >
-            {finalButtonLabel}
-          </a>
-        );
-      })}
+          return (
+            <div className={buttonClassName || 'col-xs-12'} key={id}>
+              <a className={className} href={url}>
+                {finalButtonLabel}
+              </a>
+            </div>
+          );
+        })}
+      </div>
       <hr />
-      <FormHeader text={formLabel} />
+      <FormHeader className={labelClassName} text={formLabel} />
     </div>
   )
 }
 
-const FormHeader = ({ text }) => {
+const FormHeader = ({ className, text }) => {
   if (!text) return null;
   return (
-    <h5 className="text-center">{text}</h5>
+    <h5 className={className || ""}>{text}</h5>
   );
 }
 

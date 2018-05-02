@@ -2,7 +2,7 @@ import React from 'react'; // jshint ignore:line
 import misago from 'misago/index';
 import Button from 'misago/components/button'; // jshint ignore:line
 import Form from 'misago/components/form';
-import StartSocialAuth from 'misago/components/StartSocialAuth';
+import StartSocialAuth from 'misago/components/StartSocialAuth'; // jshint ignore:line
 import ajax from 'misago/services/ajax';
 import modal from 'misago/services/modal';
 import snackbar from 'misago/services/snackbar';
@@ -126,6 +126,7 @@ export default class extends Form {
               <StartSocialAuth
                 buttonLabel={gettext("Sign in with %(site)s")}
                 formLabel={gettext("Or use your forum account:")}
+                labelClassName="text-center"
               />
 
               <div className="form-group">
