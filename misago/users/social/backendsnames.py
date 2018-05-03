@@ -3,7 +3,7 @@ Python Social Auth doesn't provide information about proper names for OAuth site
 so we are using this file for overrides whenever name is different than `provider.name.title`
 """
 
-PROVIDERS_NAMES = {
+BACKENDS_NAMES = {
     'angel': "AngelList",
     'aol': "AOL",
     'arcgis': "ArcGIS",

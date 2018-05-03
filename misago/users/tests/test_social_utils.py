@@ -30,7 +30,7 @@ class SocialUtilsTests(TestCase):
             'social_core.backends.facebook.FacebookOAuth2',
             'social_core.backends.github.GithubOAuth2',
         ],
-        MISAGO_SOCIAL_AUTH_PROVIDERS_NAMES={
+        MISAGO_SOCIAL_AUTH_BACKENDS_NAMES={
             'facebook': "Facebook Connect",
         }
     )

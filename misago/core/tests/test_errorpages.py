@@ -43,6 +43,22 @@ class ErrorPageViewsTests(TestCase):
         self.assertContains(response, "misago:error-405", status_code=405)
         self.assertContains(response, "Wrong way", status_code=405)
 
+    def test_social_auth_failed_returns_400(self):
+        """social auth's failed error returns 400"""
+        response = self.client.get(reverse('raise-social-auth-failed'))
+        self.assertContains(response, "page-error-social", status_code=400)
+        self.assertContains(response, "GitHub", status_code=400)
+
+    def test_social_wrong_backend_returns_400(self):
+        """social auth's wrong backend error returns 400"""
+        response = self.client.get(reverse('raise-social-wrong-backend'))
+        self.assertContains(response, "page-error-social", status_code=400)
+
+    def test_social_not_allowed_to_disconnect_returns_400(self):
+        """social auth's not allowed to disconnect error returns 400"""
+        response = self.client.get(reverse('raise-social-not-allowed-to-disconnect'))
+        self.assertContains(response, "page-error-social", status_code=400)
+
 
 @override_settings(ROOT_URLCONF='misago.core.testproject.urlswitherrorhandlers')
 class CustomErrorPagesTests(TestCase):

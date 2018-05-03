@@ -251,11 +251,11 @@ Items in Misago are usually indexed in search engine on save or update. If you c
 Path to function or callable used by Misago to generate slugs. Defaults to `misago.core.slugify.default`. Use this function if you want to customize slugs generation on your community.
 
 
-## `MISAGO_SOCIAL_AUTH_PROVIDERS_NAMES`
+## `MISAGO_SOCIAL_AUTH_BACKENDS_NAMES`
 
-This setting allows you to override social auth provider's name displayed in Misago interface to be more descriptive. For example, to rename "Facebook" to "Facebook Connect" and "Google Plus" to "Google+" at same time, add following code to your `settings.py`:
+This setting allows you to override social auth backend name displayed in Misago interface to be more descriptive. For example, to rename "Facebook" to "Facebook Connect" and "Google Plus" to "Google+" at same time, add following code to your `settings.py`:
 
-    MISAGO_SOCIAL_AUTH_PROVIDERS_NAMES = {
+    MISAGO_SOCIAL_AUTH_BACKENDS_NAMES = {
         'facebook': "Facebook Connect",
         'google-plus': "Google+",
     }

@@ -3,6 +3,8 @@ from rest_framework.decorators import api_view
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponse
+from social_core.exceptions import AuthFailed, NotAllowedToDisconnect, WrongBackend
+from social_core.backends.github import GithubOAuth2
 
 from misago.core import errorpages, mail
 from misago.core.decorators import require_POST
@@ -119,6 +121,18 @@ def raise_403(request):
 
 def raise_404(request):
     raise Http404()
+
+
+def raise_social_auth_failed(require_POST):
+    raise AuthFailed(GithubOAuth2)
+
+
+def raise_social_wrong_backend(request):
+    raise WrongBackend('facebook')
+
+
+def raise_social_not_allowed_to_disconnect(request):
+    raise NotAllowedToDisconnect()
 
 
 def test_redirect(request):
