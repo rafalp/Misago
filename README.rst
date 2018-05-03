@@ -90,8 +90,8 @@ To start, clone repository to your machine and then run following commands::
    docker-compose run --rm misago initdev
    docker-compose up
 
-Those commands will install necessary dependencies, create new Misago project `devproject` that you may use for development as well as start Django developer server, enabling you to visit ``127.0.0.1:8000``
-in your browser and see the forum index. You should now be able to sign in with the superuser account, using `Admin` username and `password` password.
+Those commands will install necessary dependencies, create new Misago project ``devproject`` that you may use for development as well as start Django developer server, enabling you to visit ``127.0.0.1:8000``
+in your browser and see the forum index. You should now be able to sign in with the superuser account, using ``Admin`` username and ``password`` password.
 
 Admin Control Panel is available under the ``127.0.0.1:8000/admincp/`` url.
 
