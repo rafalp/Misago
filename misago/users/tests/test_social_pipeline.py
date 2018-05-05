@@ -57,7 +57,7 @@ class AssociateByEmailTests(PipelineTestCase):
             self.assertEqual(
                 e.message,
                 (
-                    "The e-mail address associated with your GitHub account is not available for"
+                    "The e-mail address associated with your GitHub account is not available for "
                     "use on this site."
                 ),
             )
@@ -126,7 +126,7 @@ class ValidateIpNotBannedTests(PipelineTestCase):
         self.assertIsNone(result)
 
 
-class ValidateIpNotBannedTests(PipelineTestCase):
+class ValidateUserNotBannedTests(PipelineTestCase):
     def test_skip_if_user_not_set(self):
         """pipeline step is skipped if no user was passed"""
         result = associate_by_email(None, {}, GithubOAuth2)
