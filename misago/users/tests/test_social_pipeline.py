@@ -116,7 +116,8 @@ class ValidateIpNotBannedTests(PipelineTestCase):
 
         Ban.objects.create(banned_value='188.*', check_type=Ban.IP)
 
-        result = validate_ip_not_banned(MockStrategy(user_ip='188.1.2.3'), {}, GithubOAuth2, self.user)
+        result = validate_ip_not_banned(
+            MockStrategy(user_ip='188.1.2.3'), {}, GithubOAuth2, self.user)
         self.assertIsNone(result)
 
 
