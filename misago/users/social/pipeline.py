@@ -13,22 +13,22 @@ UserModel = get_user_model()
 
 def validate_ip_not_banned(strategy, details, backend, user=None, *args, **kwargs):
     """Pipeline step that interrupts pipeline if found user is non-staff and IP banned"""
-    if user and user.acl.is_staff:
+    if user and user.is_staff:
         return None
     
     ip_ban = get_request_ip_ban(strategy.request)
     if ip_ban:
-        raise SocialAuthBanned(ip_ban)
+        raise SocialAuthBanned(backend, ip_ban)
 
 
 def validate_user_not_banned(strategy, details, backend, user=None, *args, **kwargs):
     """Pipeline step that interrupts pipeline if found user is non-staff and banned"""
-    if user and user.acl.is_staff:
+    if user and user.is_staff:
         return None
 
     user_ban = get_user_ban(user)
     if user_ban:
-        raise SocialAuthBanned(user_ban)
+        raise SocialAuthBanned(backend, user_ban)
 
 
 def associate_by_email(strategy, details, backend, user=None, *args, **kwargs):
@@ -40,20 +40,30 @@ def associate_by_email(strategy, details, backend, user=None, *args, **kwargs):
 
     email = details.get('email')
     if not email:
-        return
+        return None
 
     try:
         user = UserModel.objects.get_by_email(email)
     except UserModel.DoesNotExist:
         return None
 
+    backend_name = get_social_auth_backend_name(backend.name)
+
     if not user.is_active:
-        backend_name = get_social_auth_backend_name(backend.name)
         raise SocialAuthFailed(
             backend,
             _(
                 "The e-mail address associated with your %(backend)s account is "
                 "not available for use on this site."
+            ) % {'backend': backend_name}
+        )
+
+    if user.requires_activation_by_admin:
+        raise SocialAuthFailed(
+            backend,
+            _(
+                "Your account has to be activated by site administrator before you will be able to "
+                "sign in with %(backend)s."
             ) % {'backend': backend_name}
         )
 
