@@ -3,6 +3,7 @@ from django.utils.translation import ugettext as _
 
 from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
 
+from misago.users.models import Ban
 from misago.users.bans import get_request_ip_ban, get_user_ban
 
 from .utils import get_social_auth_backend_name
@@ -16,9 +17,14 @@ def validate_ip_not_banned(strategy, details, backend, user=None, *args, **kwarg
     if user and user.is_staff:
         return None
     
-    ip_ban = get_request_ip_ban(strategy.request)
-    if ip_ban:
-        raise SocialAuthBanned(backend, ip_ban)
+    ban = get_request_ip_ban(strategy.request)
+    if ban:
+        hydrated_ban = Ban(
+            check_type=Ban.IP,
+            user_message=ban['message'],
+            expires_on=ban['expires_on'],
+        )
+        raise SocialAuthBanned(backend, hydrated_ban)
 
 
 def validate_user_not_banned(strategy, details, backend, user=None, *args, **kwargs):

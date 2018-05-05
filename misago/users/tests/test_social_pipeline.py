@@ -3,7 +3,7 @@ from social_core.backends.github import GithubOAuth2
 
 from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
 
-from misago.users.models import Ban
+from misago.users.models import Ban, BanCache
 from misago.users.social.pipeline import (
     associate_by_email, validate_ip_not_banned, validate_user_not_banned
 )
@@ -107,13 +107,7 @@ class ValidateIpNotBannedTests(PipelineTestCase):
             validate_ip_not_banned(MockStrategy(user_ip='188.1.2.3'), {}, GithubOAuth2, self.user)
             self.fail("validate_ip_not_banned should raise SocialAuthBanned")
         except SocialAuthBanned as e:
-            self.assertEqual(e.ban, {
-                'version': 0,
-                'ip': '188.1.2.3',
-                'expires_on': None,
-                'is_banned': True,
-                'message': None,
-            })
+            self.assertTrue(isinstance(e.ban, Ban))
 
     def test_exclude_staff(self):
         """pipeline excludes staff from bans"""
@@ -141,6 +135,7 @@ class ValidateUserNotBannedTests(PipelineTestCase):
             self.fail("validate_ip_not_banned should raise SocialAuthBanned")
         except SocialAuthBanned as e:
             self.assertEqual(e.ban.user, self.user)
+            self.assertTrue(isinstance(e.ban, BanCache))
 
     def test_exclude_staff(self):
         """pipeline excludes staff from bans"""
