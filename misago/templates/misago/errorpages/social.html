@@ -29,14 +29,18 @@
       </div>
 
       <div class="message-body">
-        <p class="lead">{{ message }}</p>
-        <p>
-          {% if help_text %}
-            {{ help_text }}
-          {% else %}
-            {% trans "Please try again or use another method to sign in if the problem persists." %}
-          {% endif %}
-        </p>
+        {% if ban %}
+          {% include "misago/errorpages/ban_message.html" %}
+        {% else %}
+          <p class="lead">{{ message }}</p>
+          <p>
+            {% if help_text %}
+              {{ help_text }}
+            {% else %}
+              {% trans "Please try again or use another method to sign in if the problem persists." %}
+            {% endif %}
+          </p>
+        {% endif %}
       </div>
 
     </div>

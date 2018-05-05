@@ -8,7 +8,7 @@ from social_core.backends.github import GithubOAuth2
 
 from misago.core import errorpages, mail
 from misago.core.decorators import require_POST
-from misago.core.exceptions import Banned
+from misago.core.exceptions import Banned, SocialAuthBanned, SocialAuthFailed
 from misago.core.shortcuts import paginate, paginated_response, validate_slug
 from misago.core.views import home_redirect
 from misago.users.models import Ban
@@ -133,6 +133,15 @@ def raise_social_wrong_backend(request):
 
 def raise_social_not_allowed_to_disconnect(request):
     raise NotAllowedToDisconnect()
+
+
+def raise_social_auth_failed_message(request):
+    raise SocialAuthFailed(GithubOAuth2, "This message will be shown to user!")
+
+
+def raise_social_auth_banned(request):
+    ban = Ban(user_message="Banned in auth!")
+    raise SocialAuthBanned(GithubOAuth2, ban)
 
 
 def test_redirect(request):

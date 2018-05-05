@@ -21,25 +21,7 @@
       </div>
 
       <div class="message-body">
-        {% if ban.message.html %}
-        <div class="lead">
-          {{ ban.message.html|safe }}
-        </div>
-        {% else %}
-        <p class="lead">
-          {{ ban.message.plain }}
-        </p>
-        {% endif %}
-
-        <p className="message-footnote">
-          {% if ban.expires_on %}
-            {% blocktrans trimmed with expires_on=ban.expires_on|date:"DATETIME_FORMAT" %}
-              This ban expires on {{ expires_on }}.
-            {% endblocktrans %}
-          {% else %}
-            {% trans "This ban is permanent." %}
-          {% endif %}
-        </p>
+        {% include "misago/errorpages/ban_message.html" %}
       </div>
 
     </div>

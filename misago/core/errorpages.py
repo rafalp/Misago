@@ -61,8 +61,8 @@ def page_not_found(request, exception):
 def social_auth_failed(request, exception):
     backend_name = None
     ban = None
-    message = None
     help_text = None
+    message = None
 
     try:
         backend_name = exception.backend_name
@@ -103,7 +103,7 @@ def social_auth_failed(request, exception):
         'ban': ban,
         'message': message,
         'help_text': help_text,
-    }, status=400)
+    }, status=403)
 
 
 @admin_csrf_failure
