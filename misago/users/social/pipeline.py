@@ -1,12 +1,14 @@
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext as _
 
+from misago.conf import settings
 from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
 
 from misago.users.models import Ban
 from misago.users.bans import get_request_ip_ban, get_user_ban
+from misago.users.validators import ValidationError, validate_username, validate_email
 
-from .utils import get_social_auth_backend_name
+from .utils import get_social_auth_backend_name, perpare_username
 
 
 UserModel = get_user_model()
@@ -14,7 +16,7 @@ UserModel = get_user_model()
 
 def validate_ip_not_banned(strategy, details, backend, user=None, *args, **kwargs):
     """Pipeline step that interrupts pipeline if found user is non-staff and IP banned"""
-    if user and user.is_staff:
+    if not user or user.is_staff:
         return None
     
     ban = get_request_ip_ban(strategy.request)
@@ -29,7 +31,7 @@ def validate_ip_not_banned(strategy, details, backend, user=None, *args, **kwarg
 
 def validate_user_not_banned(strategy, details, backend, user=None, *args, **kwargs):
     """Pipeline step that interrupts pipeline if found user is non-staff and banned"""
-    if user and user.is_staff:
+    if not user or user.is_staff:
         return None
 
     user_ban = get_user_ban(user)
@@ -76,10 +78,64 @@ def associate_by_email(strategy, details, backend, user=None, *args, **kwargs):
     return {'user': user, 'is_new': False}
 
 
+def get_username(strategy, details, backend, user=None, *args, **kwargs):
+    """Resolve valid username for use in new account"""
+    if user:
+        return None
+
+    username = perpare_username(details.get('username', ''))
+    full_name = perpare_username(details.get('full_name', ''))
+    first_name = perpare_username(details.get('first_name', ''))
+    last_name = perpare_username(details.get('last_name', ''))
+
+    names_to_try = [
+        username,
+        first_name,
+    ]
+
+    if username:
+        names_to_try.append(username)
+
+    if first_name:
+        names_to_try.append(first_name)
+        if last_name:
+            # if first name is taken, try first name + first char of last name
+            names_to_try.append(first_name + last_name[0])
+
+    if full_name:
+        names_to_try.append(full_name)
+
+    username_length_max = settings.username_length_max
+    for name in names_to_try:
+        if len(name) > username_length_max:
+            names_to_try.append(name[:username_length_max])
+
+    for name in filter(bool, names_to_try):
+        try:
+            validate_username(name)
+            return {'clean_username': name}
+        except ValidationError:
+            pass
+
+
 def create_user(strategy, details, backend, user=None, *args, **kwargs):
     """Aggressively attempt to register and sign in new user"""
     if user:
         return None
+    
+    email = details.get('email')
+    username = kwargs.get('clean_username')
+    
+    if not email or not username:
+        return None
+
+    try:
+        validate_email(email)
+    except ValidationError:
+        return None
+
+    user = UserModel.objects.create_user(username, email, set_default_avatar=True)
+    return {'user': user, 'is_new': True}
 
 
 def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs):

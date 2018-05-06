@@ -1,5 +1,6 @@
 from django.urls import reverse
 from social_core.backends.utils import load_backends
+from unidecode import unidecode
 
 from misago.conf import settings
 
@@ -26,3 +27,7 @@ def get_social_auth_backend_name(backend_id):
     if backend_id in BACKENDS_NAMES:
         return BACKENDS_NAMES[backend_id]
     return backend_id.title()
+
+
+def perpare_username(username):
+    return ''.join(filter(str.isalnum, unidecode(username)))

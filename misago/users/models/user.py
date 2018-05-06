@@ -35,8 +35,6 @@ class UserManager(BaseUserManager):
 
         if not email:
             raise ValueError(_("User must have an email address."))
-        if not password:
-            raise ValueError(_("User must have a password."))
 
         if not 'joined_from_ip' in extra_fields:
             extra_fields['joined_from_ip'] = '127.0.0.1'
@@ -66,7 +64,10 @@ class UserManager(BaseUserManager):
 
         validate_username(username)
         validate_email(email)
-        validate_password(password, user=user)
+        
+        if password:
+            # password is conditional: users created with social-auth don't have one
+            validate_password(password, user=user)
 
         if not 'rank' in extra_fields:
             user.rank = Rank.objects.get_default()

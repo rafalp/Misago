@@ -93,6 +93,23 @@ class GatewayTests(TestCase):
         )
         self.assertContains(response, "Invalid data.", status_code=400)
 
+    def test_login_not_usable_password(self):
+        """login api fails to sign user with not-usable password in"""
+        UserModel.objects.create_user('Bob', 'bob@test.com')
+
+        response = self.client.post(
+            '/api/auth/',
+            data={
+                'username': 'Bob',
+                'password': 'Pass.123',
+            },
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'code': 'invalid_login',
+            'detail': 'Login or password is incorrect.',
+        })
+
     def test_login_banned(self):
         """login api fails to sign banned user in"""
         UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')

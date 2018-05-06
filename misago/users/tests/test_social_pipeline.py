@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib.auth import get_user_model
 from social_core.backends.github import GithubOAuth2
 
@@ -5,7 +6,7 @@ from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
 
 from misago.users.models import Ban, BanCache
 from misago.users.social.pipeline import (
-    associate_by_email, validate_ip_not_banned, validate_user_not_banned
+    associate_by_email, create_user, get_username, validate_ip_not_banned, validate_user_not_banned
 )
 from misago.users.testutils import UserTestCase
 
@@ -93,10 +94,133 @@ class AssociateByEmailTests(PipelineTestCase):
         self.assertEqual(result, {'user': self.user, 'is_new': False})
     
 
+class CreateUser(PipelineTestCase):
+    def test_skip_if_user_is_set(self):
+        """pipeline step is skipped if user was passed"""
+        result = create_user(None, {}, None, user=self.user)
+        self.assertIsNone(result)
+
+    def test_skip_if_no_email_passed(self):
+        """pipeline step is skipped if no email was passed"""
+        details = {
+            'clean_username': 'TestBob',
+        }
+        result = create_user(None, details, None)
+        self.assertIsNone(result)
+
+    def test_skip_if_no_clean_username_passed(self):
+        """pipeline step is skipped if cleaned username wasnt passed"""
+        details = {
+            'email': 'hello@example.com',
+        }
+        result = create_user(None, details, None)
+        self.assertIsNone(result)
+
+    def test_skip_if_email_is_taken(self):
+        """pipeline step is skipped if email was taken"""
+        details = {
+            'email': self.user.email,
+        }
+        result = create_user(None, details, None)
+        self.assertIsNone(result)
+
+    def test_user_is_created(self):
+        """pipeline step returns user if data is correct"""
+        details = {
+            'email': 'new@example.com'
+            'clean_username': 'NewUser',
+        }
+        result = create_user(None, details, None)
+        new_user = UserModel.objects.get(email='new@example.com')
+        self.assertEqual(result, {
+            'user': new_user,
+            'is_new': True,
+        })
+        self.assertEqual(new_user.username, 'NewUser')
+        self.assertFalse(new_user.has_useable_password())
+
+
+class GetUsernameTests(PipelineTestCase):
+    def test_skip_if_user_is_set(self):
+        """pipeline step is skipped if user was passed"""
+        result = get_username(None, {}, None, user=self.user)
+        self.assertIsNone(result)
+
+    def test_skip_if_no_names(self):
+        """pipeline step is skipped if API returned no names"""
+        result = get_username(None, {}, None)
+        self.assertIsNone(result)
+
+    def test_resolve_to_username(self):
+        """pipeline step resolves username"""
+        result = get_username(None, {'username': 'BobBoberson'}, None)
+        self.assertEqual(result, {'clean_username': 'BobBoberson'})
+
+    def test_normalize_username(self):
+        """pipeline step normalizes username"""
+        result = get_username(None, {'username': u'Błop Błoperson'}, None)
+        self.assertEqual(result, {'clean_username': 'BlopBloperson'})
+
+    def test_resolve_to_first_name(self):
+        """pipeline attempts to use first name because username is taken"""
+        details = {
+            'username': self.user.username,
+            'first_name': u'Błob',
+        }
+        result = get_username(None, details, None)
+        self.assertEqual(result, {'clean_username': 'Blob'})
+
+    def test_dont_resolve_to_last_name(self):
+        """pipeline will not fallback to last name because username is taken"""
+        details = {
+            'username': self.user.username,
+            'last_name': u'Błob',
+        }
+        result = get_username(None, details, None)
+        self.assertIsNone(result)
+
+    def test_resolve_to_first_last_name_first_char(self):
+        """pipeline will construct username from first name and first char of surname"""
+        details = {
+            'first_name': self.user.username,
+            'last_name': u'Błob',
+        }
+        result = get_username(None, details, None)
+        self.assertEqual(result, {'clean_username': self.user.username + 'B'})
+
+    def test_dont_resolve_to_banned_name(self):
+        """pipeline will not resolve to banned name"""
+        Ban.objects.create(banned_value='*Admin*', check_type=Ban.USERNAME)
+        details = {
+            'username': 'Misago Admin',
+            'first_name': u'Błob',
+        }
+        result = get_username(None, details, None)
+        self.assertEqual(result, {'clean_username': 'Blob'})
+
+    def test_resolve_full_name(self):
+        """pipeline will resolve to full name"""
+        Ban.objects.create(banned_value='*Admin*', check_type=Ban.USERNAME)
+        details = {
+            'username': 'Misago Admin',
+            'full_name': u'Błob Błopo',
+        }
+        result = get_username(None, details, None)
+        self.assertEqual(result, {'clean_username': 'BlobBlopo'})
+
+    def test_resolve_to_cut_name(self):
+        """pipeline will resolve cut too long name on second pass"""
+        details = {
+            'username': u'Abrakadabrapokuskonstantynopolitańczykowianeczkatrzy',
+        }
+        result = get_username(None, details, None)
+        self.assertEqual(result, {'clean_username': 'Abrakadabrapok'})
+
+
 class ValidateIpNotBannedTests(PipelineTestCase):
     def test_skip_if_user_not_set(self):
         """pipeline step is skipped if no user was passed"""
-        result = associate_by_email(None, {}, GithubOAuth2)
+        result = validate_ip_not_banned(None, {}, GithubOAuth2)
         self.assertIsNone(result)
 
     def test_raise_if_banned(self):
@@ -124,7 +248,7 @@ class ValidateIpNotBannedTests(PipelineTestCase):
 class ValidateUserNotBannedTests(PipelineTestCase):
     def test_skip_if_user_not_set(self):
         """pipeline step is skipped if no user was passed"""
-        result = associate_by_email(None, {}, GithubOAuth2)
+        result = validate_user_not_banned(None, {}, GithubOAuth2)
         self.assertIsNone(result)
 
     def test_raise_if_banned(self):
