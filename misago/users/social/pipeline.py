@@ -1,11 +1,18 @@
+import json
+
 from django.contrib.auth import get_user_model
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.urls import reverse
 from django.utils.translation import ugettext as _
+from social_core.pipeline.partial import partial
 
 from misago.conf import settings
 from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
 
-from misago.users.models import Ban
 from misago.users.bans import get_request_ip_ban, get_user_ban
+from misago.users.forms.register import SocialAuthRegisterForm
+from misago.users.models import Ban
 from misago.users.validators import ValidationError, validate_username, validate_email
 
 from .utils import get_social_auth_backend_name, perpare_username
@@ -138,7 +145,39 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
     return {'user': user, 'is_new': True}
 
 
+@partial
 def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs):
     """Alternatively to create_user lets user confirm account creation before authenticating"""
     if user:
         return None
+
+    request = strategy.request
+    backend_name = get_social_auth_backend_name(backend.name)
+
+    if request.method == 'POST':
+        try:
+            request_data = json.loads(request.body)
+        except (TypeError, ValueError):
+            request_data = request.POST.copy()
+            
+        form = SocialAuthRegisterForm(request_data, request=request)
+        if not form.is_valid():
+            return JsonResponse(form.errors, status=400)
+
+        email_verified = form.cleaned_data['email'] == details.get('email')
+        # todo:
+        # if activate by admin
+        # if email not verified
+        # just create account
+
+    request.frontend_context['SOCIAL_AUTH'] = {
+        'backend_name': backend_name,
+        'step': 'register',
+        'email': details.get('email'),
+        'username': kwargs.get('clean_username'),
+        'url': reverse('social:complete', kwargs={'backend': backend.name}),
+    }
+
+    return render(request, 'misago/socialauth.html', {
+        'backend_name': backend_name,
+    })

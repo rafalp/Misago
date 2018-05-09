@@ -1,0 +1,34 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{% blocktrans trimmed with backend=backend_name %}
+  Sign in with {{ backend }}
+{% endblocktrans %} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+<div class="page page-options page-error page-noscript">
+  <div class="page-header-bg"></div>
+  <noscript>
+    <div class="container">
+      <div class="message-panel">
+
+        <div class="message-icon">
+          <span class="material-icon">fingerprint</span>
+        </div>
+
+        <div class="message-body">
+          <p class="lead">{% trans "Enable JavaScript" %}</p>
+          <p>
+            {% blocktrans trimmed with backend=backend_name %}
+              You need to enable JavaScript in your browser to complete the sign in with {{ backend }}.
+            {% endblocktrans %}
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </noscript>
+</div>
+{% endblock content %}

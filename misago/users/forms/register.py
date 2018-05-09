@@ -11,17 +11,10 @@ from misago.users.bans import get_email_ban, get_ip_ban, get_username_ban
 UserModel = get_user_model()
 
 
-class RegisterForm(forms.Form):
-    username = forms.CharField(validators=[validators.validate_username])
-    email = forms.CharField(validators=[validators.validate_email])
-    password = forms.CharField(strip=False)
-
-    # placeholder field for setting captcha errors on form
-    captcha = forms.CharField(required=False)
-
+class BaseRegisterForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
-        super(RegisterForm, self).__init__(*args, **kwargs)
+        super(BaseRegisterForm, self).__init__(*args, **kwargs)
 
     def clean_username(self):
         data = self.cleaned_data['username']
@@ -45,6 +38,37 @@ class RegisterForm(forms.Form):
                 raise ValidationError(_("This e-mail address is not allowed."))
         return data
 
+    def raise_if_ip_banned(self):
+        ban = get_ip_ban(self.request.user_ip, registration_only=True)
+        if ban:
+            if ban.user_message:
+                raise ValidationError(ban.user_message)
+            else:
+                raise ValidationError(_("New registrations from this IP address are not allowed."))
+
+
+class SocialAuthRegisterForm(BaseRegisterForm):
+    username = forms.CharField(validators=[validators.validate_username])
+    email = forms.CharField(validators=[validators.validate_email])
+
+    def clean(self):
+        cleaned_data = super(SocialAuthRegisterForm, self).clean()
+
+        self.raise_if_ip_banned()
+
+        validators.validate_new_registration(self.request, self, cleaned_data)
+
+        return cleaned_data
+
+
+class RegisterForm(BaseRegisterForm):
+    username = forms.CharField(validators=[validators.validate_username])
+    email = forms.CharField(validators=[validators.validate_email])
+    password = forms.CharField(strip=False)
+
+    # placeholder field for setting captcha errors on form
+    captcha = forms.CharField(required=False)
+
     def full_clean_password(self, cleaned_data):
         if cleaned_data.get('password'):
             validate_password(
@@ -58,12 +82,7 @@ class RegisterForm(forms.Form):
     def clean(self):
         cleaned_data = super(RegisterForm, self).clean()
 
-        ban = get_ip_ban(self.request.user_ip, registration_only=True)
-        if ban:
-            if ban.user_message:
-                raise ValidationError(ban.user_message)
-            else:
-                raise ValidationError(_("New registrations from this IP address are not allowed."))
+        self.raise_if_ip_banned()
 
         try:
             self.full_clean_password(cleaned_data)
