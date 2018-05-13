@@ -1,5 +1,6 @@
 /* jshint ignore:start */
 import React from 'react';
+import RegisterLegalFootnote from 'misago/components/RegisterLegalFootnote';
 import Button from 'misago/components/button';
 import Form from 'misago/components/form';
 import FormGroup from 'misago/components/form-group';
@@ -55,11 +56,16 @@ export default class Register extends Form {
   }
 
   handleSuccess(response) {
-    console.log('success!')
+    onRegistrationComplete(response);
   }
 
   handleError(rejection) {
-    if (rejection.status === 400) {
+    if (rejection.status === 200) {
+      // We've entered "errored" state because response is HTML instead of exptected JSON
+      const { onRegistrationComplete } = this.props;
+      const { username } = this.state;
+      onRegistrationComplete({ activation: 'active', step: 'done', username });
+    } else if (rejection.status === 400) {
       const stateUpdate = { errors: rejection };
       if (rejection.email) {
         stateUpdate.emailProtected = false;
@@ -126,6 +132,7 @@ export default class Register extends Form {
                         value={email}
                       />
                     </FormGroup>
+                    <RegisterLegalFootnote />
                   </div>
                   <div className="panel-footer">
                     <Button className="btn-primary" loading={this.state.isLoading}>

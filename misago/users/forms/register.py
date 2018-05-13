@@ -56,7 +56,7 @@ class SocialAuthRegisterForm(BaseRegisterForm):
 
         self.raise_if_ip_banned()
 
-        validators.validate_new_registration(self.request, self, cleaned_data)
+        validators.validate_new_registration(self.request, cleaned_data, self)
 
         return cleaned_data
 
@@ -89,6 +89,6 @@ class RegisterForm(BaseRegisterForm):
         except forms.ValidationError as e:
             self.add_error('password', e)
 
-        validators.validate_new_registration(self.request, self, cleaned_data)
+        validators.validate_new_registration(self.request, cleaned_data, self)
 
         return cleaned_data

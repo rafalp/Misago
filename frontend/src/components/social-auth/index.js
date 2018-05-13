@@ -1,6 +1,7 @@
 /* jshint ignore:start */
 import React from 'react';
 import Register from './register';
+import Complete from './complete';
 
 export default class SocialAuth extends React.Component {
   constructor(props) {
@@ -8,22 +9,20 @@ export default class SocialAuth extends React.Component {
 
     this.state = {
       step: props.step,
+
+      activation: props.activation || '',
       email: props.email || '',
       username: props.username || ''
     };
   }
 
-  handleRegistrationComplete = (step, username, email) => {
-    this.setState({
-      step,
-      email,
-      username
-    });
+  handleRegistrationComplete = ({ activation, email, step, username }) => {
+    this.setState({ activation, email, step, username });
   };
 
   render() {
     const { backend_name, url } = this.props
-    const { email, username, step} = this.state
+    const { activation, email, step, username } = this.state
 
     if (step === 'register') {
       return (
@@ -36,5 +35,15 @@ export default class SocialAuth extends React.Component {
         />
       );
     }
+
+    return (
+      <Complete
+        activation={activation}
+        backend_name={backend_name}
+        email={email}
+        url={url}
+        username={username}
+      /> 
+    )
   }
 }

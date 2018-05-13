@@ -8,10 +8,9 @@ from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 
 from misago.conf import settings
-from misago.core.mail import mail_user
 from misago.users import captcha
 from misago.users.forms.register import RegisterForm
-from misago.users.tokens import make_activation_token
+from misago.users.registration import get_registration_result_json, send_welcome_email
 
 
 UserModel = get_user_model()
@@ -56,43 +55,12 @@ def create_endpoint(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    mail_subject = _("Welcome on %(forum_name)s forums!")
-    mail_subject = mail_subject % {'forum_name': settings.forum_name}
+    send_welcome_email(request, new_user)
 
-    if settings.account_activation == 'none':
+    if not new_user.requires_activation == 'none':
         authenticated_user = authenticate(
             username=new_user.email, password=form.cleaned_data['password']
         )
         login(request, authenticated_user)
 
-        mail_user(request, new_user, mail_subject, 'misago/emails/register/complete')
-
-        return Response({
-            'activation': 'active',
-            'username': new_user.username,
-            'email': new_user.email
-        })
-    else:
-        activation_token = make_activation_token(new_user)
-
-        activation_by_admin = new_user.requires_activation_by_admin
-        activation_by_user = new_user.requires_activation_by_user
-
-        mail_user(
-            request, new_user, mail_subject, 'misago/emails/register/inactive', {
-                'activation_token': activation_token,
-                'activation_by_admin': activation_by_admin,
-                'activation_by_user': activation_by_user,
-            }
-        )
-
-        if activation_by_admin:
-            activation_method = 'admin'
-        else:
-            activation_method = 'user'
-
-        return Response({
-            'activation': activation_method,
-            'username': new_user.username,
-            'email': new_user.email
-        })
+    return Response(get_registration_result_json(new_user))

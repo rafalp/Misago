@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth import get_user_model
+from django.db import IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
@@ -13,7 +14,9 @@ from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
 from misago.users.bans import get_request_ip_ban, get_user_ban
 from misago.users.forms.register import SocialAuthRegisterForm
 from misago.users.models import Ban
-from misago.users.validators import ValidationError, validate_username, validate_email
+from misago.users.registration import get_registration_result_json, send_welcome_email
+from misago.users.validators import (
+    ValidationError, validate_new_registration, validate_email, validate_username)
 
 from .utils import get_social_auth_backend_name, perpare_username
 
@@ -130,6 +133,7 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
     if user:
         return None
     
+    request = strategy.request
     email = details.get('email')
     username = kwargs.get('clean_username')
     
@@ -138,11 +142,28 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
 
     try:
         validate_email(email)
+        validate_new_registration(request, {
+            'email': email,
+            'username': username,
+        })
     except ValidationError:
         return None
 
-    user = UserModel.objects.create_user(username, email, set_default_avatar=True)
-    return {'user': user, 'is_new': True}
+    activation_kwargs = {}
+    if settings.account_activation == 'admin':
+        activation_kwargs = {'requires_activation': UserModel.ACTIVATION_ADMIN}
+
+    new_user = UserModel.objects.create_user(
+        username, 
+        email, 
+        joined_from_ip=request.user_ip, 
+        set_default_avatar=True,
+        **activation_kwargs,
+    )
+
+    send_welcome_email(request, new_user)
+
+    return {'user': new_user, 'is_new': True}
 
 
 @partial
@@ -165,10 +186,27 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
             return JsonResponse(form.errors, status=400)
 
         email_verified = form.cleaned_data['email'] == details.get('email')
-        # todo:
-        # if activate by admin
-        # if email not verified
-        # just create account
+
+        activation_kwargs = {}
+        if settings.account_activation == 'admin':
+            activation_kwargs = {'requires_activation': UserModel.ACTIVATION_ADMIN}
+        elif settings.account_activation == 'user' and not email_verified:
+            activation_kwargs = {'requires_activation': UserModel.ACTIVATION_USER}
+
+        try:
+            new_user = UserModel.objects.create_user(
+                form.cleaned_data['username'],
+                form.cleaned_data['email'],
+                joined_from_ip=request.user_ip,
+                set_default_avatar=True,
+                **activation_kwargs
+            )
+        except IntegrityError:
+            return JsonResponse({'__all__': _("Please try resubmitting the form.")}, status=400)
+
+        send_welcome_email(request, new_user)
+
+        return {'user': new_user, 'is_new': True}
 
     request.frontend_context['SOCIAL_AUTH'] = {
         'backend_name': backend_name,
@@ -177,6 +215,39 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
         'username': kwargs.get('clean_username'),
         'url': reverse('social:complete', kwargs={'backend': backend.name}),
     }
+
+    return render(request, 'misago/socialauth.html', {
+        'backend_name': backend_name,
+    })
+
+
+@partial
+def require_activation(strategy, details, backend, user=None, is_new=False, *args, **kwargs):
+    if not user:
+        # Social auth pipeline has entered corrupted state
+        # Remove partial auth state and redirect user to beginning
+        partial_token = strategy.session.get('partial_pipeline_token')
+        if partial_token:
+            strategy.clean_partial_pipeline(partial_token)
+        return None
+        
+    if not user.requires_activation:
+        return None
+
+    request = strategy.request
+    backend_name = get_social_auth_backend_name(backend.name)
+
+    response_data = get_registration_result_json(user)
+    response_data.update({'step': 'done',  'backend_name': backend_name})
+
+    if request.method == 'POST':
+        # we are carrying on from requestration request
+        return JsonResponse(response_data)
+
+    request.frontend_context['SOCIAL_AUTH'] = response_data
+    request.frontend_context['SOCIAL_AUTH'].update({
+        'url': reverse('social:complete', kwargs={'backend': backend.name}),
+    })
 
     return render(request, 'misago/socialauth.html', {
         'backend_name': backend_name,

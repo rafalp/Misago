@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth import get_user_model
+from django.test import RequestFactory
 from social_core.backends.github import GithubOAuth2
 
 from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
 
-from misago.users.models import Ban, BanCache
+from misago.users.models import AnonymousUser, Ban, BanCache
 from misago.users.social.pipeline import (
     associate_by_email, create_user, get_username, validate_ip_not_banned, validate_user_not_banned
 )
@@ -17,11 +18,16 @@ UserModel = get_user_model()
 class MockRequest(object):
     def __init__(self, user_ip='0.0.0.0'):
         self.session = {}
+        self.user = AnonymousUser()
         self.user_ip = user_ip
+
+    def is_secure(self):
+        return False
 
 
 class MockStrategy(object):
-    def __init__(self, user_ip='0.0.0.0'):
+    def __init__(self, request_factory, user_ip='0.0.0.0'):
+        factory = RequestFactory()
         self.request = MockRequest(user_ip=user_ip)
 
 
@@ -97,40 +103,46 @@ class AssociateByEmailTests(PipelineTestCase):
 class CreateUser(PipelineTestCase):
     def test_skip_if_user_is_set(self):
         """pipeline step is skipped if user was passed"""
-        result = create_user(None, {}, None, user=self.user)
+        result = create_user(MockStrategy(), {}, GithubOAuth2(), user=self.user)
         self.assertIsNone(result)
 
     def test_skip_if_no_email_passed(self):
         """pipeline step is skipped if no email was passed"""
-        details = {
-            'clean_username': 'TestBob',
-        }
-        result = create_user(None, details, None)
+        result = create_user(
+            MockStrategy(),
+            {},
+            GithubOAuth2(),
+            clean_username='TestBob',
+        )
         self.assertIsNone(result)
 
     def test_skip_if_no_clean_username_passed(self):
         """pipeline step is skipped if cleaned username wasnt passed"""
-        details = {
-            'email': 'hello@example.com',
-        }
-        result = create_user(None, details, None)
+        result = create_user(
+            MockStrategy(),
+            {'email': 'hello@example.com'},
+            GithubOAuth2(),
+        )
         self.assertIsNone(result)
 
     def test_skip_if_email_is_taken(self):
         """pipeline step is skipped if email was taken"""
-        details = {
-            'email': self.user.email,
-        }
-        result = create_user(None, details, None)
+        result = create_user(
+            MockStrategy(),
+            {'email': self.user.email},
+            GithubOAuth2(),
+            clean_username='NewUser',
+        )
         self.assertIsNone(result)
 
     def test_user_is_created(self):
         """pipeline step returns user if data is correct"""
-        details = {
-            'email': 'new@example.com'
-            'clean_username': 'NewUser',
-        }
-        result = create_user(None, details, None)
+        result = create_user(
+            MockStrategy(),
+            {'email': 'new@example.com'},
+            GithubOAuth2(),
+            clean_username='NewUser',
+        )
         new_user = UserModel.objects.get(email='new@example.com')
         self.assertEqual(result, {
             'user': new_user,
