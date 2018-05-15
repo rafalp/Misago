@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
+import json
+
 from django.contrib.auth import get_user_model
-from django.test import RequestFactory
+from django.core import mail
+from django.test import RequestFactory, override_settings
 from social_core.backends.github import GithubOAuth2
+from social_django.utils import load_strategy
 
 from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
 
 from misago.users.models import AnonymousUser, Ban, BanCache
 from misago.users.social.pipeline import (
-    associate_by_email, create_user, get_username, validate_ip_not_banned, validate_user_not_banned
+    associate_by_email, create_user, create_user_with_form, get_username, require_activation,
+    validate_ip_not_banned, validate_user_not_banned
 )
 from misago.users.testutils import UserTestCase
 
@@ -15,25 +20,44 @@ from misago.users.testutils import UserTestCase
 UserModel = get_user_model()
 
 
-class MockRequest(object):
-    def __init__(self, user_ip='0.0.0.0'):
-        self.session = {}
-        self.user = AnonymousUser()
-        self.user_ip = user_ip
-
-    def is_secure(self):
-        return False
+def create_request(user_ip='0.0.0.0', data=None):
+    factory = RequestFactory()
+    if data is None:
+        request = factory.get('/')
+    else:
+        request = factory.post('/', data=json.dumps(data), content_type='application/json')
+    request.include_frontend_context = True
+    request.frontend_context = {}
+    request.session = {}
+    request.user = AnonymousUser()
+    request.user_ip = user_ip
+    return request
 
 
 class MockStrategy(object):
-    def __init__(self, request_factory, user_ip='0.0.0.0'):
-        factory = RequestFactory()
-        self.request = MockRequest(user_ip=user_ip)
+    def __init__(self, user_ip='0.0.0.0'):
+        self.request = create_request(user_ip)
 
 
 class PipelineTestCase(UserTestCase):
     def get_initial_user(self):
         self.user = self.get_authenticated_user()
+
+    def assertNewUserIsCorrect(self, new_user, form_data, activation=None, email_verified=False):
+        self.assertEqual(new_user.email, form_data['email'])
+        self.assertEqual(new_user.username, form_data['username'])
+
+        self.assertIn('Welcome', mail.outbox[0].subject)
+
+        if activation == 'none':
+            self.assertEqual(new_user.requires_activation, UserModel.ACTIVATION_NONE)
+        if activation == 'user':
+            if email_verified:
+                self.assertEqual(new_user.requires_activation, UserModel.ACTIVATION_NONE)
+            else:
+                self.assertEqual(new_user.requires_activation, UserModel.ACTIVATION_USER)
+        if activation == 'admin':
+            self.assertEqual(new_user.requires_activation, UserModel.ACTIVATION_ADMIN)
 
 
 class AssociateByEmailTests(PipelineTestCase):
@@ -149,7 +173,224 @@ class CreateUser(PipelineTestCase):
             'is_new': True,
         })
         self.assertEqual(new_user.username, 'NewUser')
-        self.assertFalse(new_user.has_useable_password())
+        self.assertFalse(new_user.has_usable_password())
+
+
+class CreateUserWithFormTests(PipelineTestCase):
+    def test_skip_if_user_is_set(self):
+        """pipeline step is skipped if user was passed"""
+        request = create_request()
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        result = create_user_with_form(
+            strategy=strategy,
+            details={},
+            backend=backend,
+            user=self.user,
+            pipeline_index=1,
+        )
+        self.assertEqual(result, {})
+
+    def test_renders_form_if_not_post(self):
+        """pipeline step renders form if not POST"""
+        request = create_request()
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        response = create_user_with_form(
+            strategy=strategy,
+            details={},
+            backend=backend,
+            user=None,
+            pipeline_index=1,
+        )
+        self.assertContains(response, "GitHub")
+
+    def test_empty_data_rejected(self):
+        """form rejects empty data"""
+        request = create_request(data={})
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        response = create_user_with_form(
+            strategy=strategy,
+            details={},
+            backend=backend,
+            user=None,
+            pipeline_index=1,
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(json.loads(response.content), {
+            'email': ["This field is required."],
+            'username': ["This field is required."],
+        })
+
+    def test_taken_data_rejected(self):
+        """form rejects taken data"""
+        request = create_request(data={
+            'email': self.user.email,
+            'username': self.user.username,
+        })
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        response = create_user_with_form(
+            strategy=strategy,
+            details={},
+            backend=backend,
+            user=None,
+            pipeline_index=1,
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(json.loads(response.content), {
+            'email': ["This e-mail address is not available."],
+            'username': ["This username is not available."],
+        })
+
+    @override_settings(account_activation='none')
+    def test_user_created_no_activation_verified_email(self):
+        """active user is created for verified email and activation disabled"""
+        form_data = {
+            'email': 'social@auth.com',
+            'username': 'SocialUser',
+        }
+        request = create_request(data=form_data)
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        result = create_user_with_form(
+            strategy=strategy,
+            details={'email': form_data['email']},
+            backend=backend,
+            user=None,
+            pipeline_index=1,
+        )
+
+        new_user = UserModel.objects.get(email='social@auth.com')
+        self.assertEqual(result, {'user': new_user, 'is_new': True})
+
+        self.assertNewUserIsCorrect(new_user, form_data, activation='none', email_verified=True)
+
+    @override_settings(account_activation='none')
+    def test_user_created_no_activation_nonverified_email(self):
+        """active user is created for non-verified email and activation disabled"""
+        form_data = {
+            'email': 'social@auth.com',
+            'username': 'SocialUser',
+        }
+        request = create_request(data=form_data)
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        result = create_user_with_form(
+            strategy=strategy,
+            details={'email': ''},
+            backend=backend,
+            user=None,
+            pipeline_index=1,
+        )
+
+        new_user = UserModel.objects.get(email='social@auth.com')
+        self.assertEqual(result, {'user': new_user, 'is_new': True})
+
+        self.assertNewUserIsCorrect(new_user, form_data, activation='none', email_verified=False)
+
+    @override_settings(account_activation='user')
+    def test_user_created_activation_by_user_verified_email(self):
+        """active user is created for verified email and activation by user"""
+        form_data = {
+            'email': 'social@auth.com',
+            'username': 'SocialUser',
+        }
+        request = create_request(data=form_data)
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        result = create_user_with_form(
+            strategy=strategy,
+            details={'email': form_data['email']},
+            backend=backend,
+            user=None,
+            pipeline_index=1,
+        )
+
+        new_user = UserModel.objects.get(email='social@auth.com')
+        self.assertEqual(result, {'user': new_user, 'is_new': True})
+
+        self.assertNewUserIsCorrect(new_user, form_data, activation='user', email_verified=True)
+
+    @override_settings(account_activation='user')
+    def test_user_created_activation_by_user_nonverified_email(self):
+        """inactive user is created for non-verified email and activation by user"""
+        form_data = {
+            'email': 'social@auth.com',
+            'username': 'SocialUser',
+        }
+        request = create_request(data=form_data)
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        result = create_user_with_form(
+            strategy=strategy,
+            details={'email': ''},
+            backend=backend,
+            user=None,
+            pipeline_index=1,
+        )
+
+        new_user = UserModel.objects.get(email='social@auth.com')
+        self.assertEqual(result, {'user': new_user, 'is_new': True})
+
+        self.assertNewUserIsCorrect(new_user, form_data, activation='user', email_verified=False)
+
+    @override_settings(account_activation='admin')
+    def test_user_created_activation_by_admin_verified_email(self):
+        """inactive user is created for verified email and activation by admin"""
+        form_data = {
+            'email': 'social@auth.com',
+            'username': 'SocialUser',
+        }
+        request = create_request(data=form_data)
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        result = create_user_with_form(
+            strategy=strategy,
+            details={'email': form_data['email']},
+            backend=backend,
+            user=None,
+            pipeline_index=1,
+        )
+
+        new_user = UserModel.objects.get(email='social@auth.com')
+        self.assertEqual(result, {'user': new_user, 'is_new': True})
+
+        self.assertNewUserIsCorrect(new_user, form_data, activation='admin', email_verified=True)
+
+    @override_settings(account_activation='admin')
+    def test_user_created_activation_by_admin_nonverified_email(self):
+        """inactive user is created for non-verified email and activation by admin"""
+        form_data = {
+            'email': 'social@auth.com',
+            'username': 'SocialUser',
+        }
+        request = create_request(data=form_data)
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        result = create_user_with_form(
+            strategy=strategy,
+            details={'email': ''},
+            backend=backend,
+            user=None,
+            pipeline_index=1,
+        )
+
+        new_user = UserModel.objects.get(email='social@auth.com')
+        self.assertEqual(result, {'user': new_user, 'is_new': True})
+
+        self.assertNewUserIsCorrect(new_user, form_data, activation='admin', email_verified=False)
 
 
 class GetUsernameTests(PipelineTestCase):
