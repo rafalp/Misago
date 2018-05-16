@@ -15,6 +15,7 @@ admin.autodiscover()
 admin.site.login_form = AdminAuthenticationForm
 
 urlpatterns = [
+    url(r'^', include('social_django.urls', namespace='social')),
     url(r'^forum/', include('misago.urls', namespace='misago')),
     url(r'^django-admin/', admin.site.urls),
     url(
