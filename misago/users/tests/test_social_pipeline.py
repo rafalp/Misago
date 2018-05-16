@@ -68,6 +68,11 @@ class PipelineTestCase(UserTestCase):
         if activation == 'admin':
             self.assertEqual(new_user.requires_activation, UserModel.ACTIVATION_ADMIN)
 
+    def assertJsonResponseEquals(self, response, value):
+        response_content = response.content.decode("utf-8")
+        response_json = json.loads(response_content)
+        self.assertEqual(response_json, value)
+
 
 class AssociateByEmailTests(PipelineTestCase):
     def test_skip_if_user_is_already_set(self):
@@ -265,7 +270,7 @@ class CreateUserWithFormTests(PipelineTestCase):
             pipeline_index=1,
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(json.loads(response.content), {
+        self.assertJsonResponseEquals(response, {
             'email': ["This field is required."],
             'username': ["This field is required."],
         })
@@ -287,7 +292,7 @@ class CreateUserWithFormTests(PipelineTestCase):
             pipeline_index=1,
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(json.loads(response.content), {
+        self.assertJsonResponseEquals(response, {
             'email': ["This e-mail address is not available."],
             'username': ["This username is not available."],
         })
@@ -602,7 +607,7 @@ class RequireActivationTests(PipelineTestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['content-type'], 'application/json')
-        self.assertEqual(json.loads(response.content), {
+        self.assertJsonResponseEquals(response, {
             'step': 'done',
             'backend_name': 'GitHub',
             'activation': 'admin',
