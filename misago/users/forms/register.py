@@ -89,6 +89,6 @@ class RegisterForm(BaseRegisterForm):
         except forms.ValidationError as e:
             self.add_error('password', e)
 
-        validators.validate_new_registration(self.request, cleaned_data, self)
+        validators.validate_new_registration(self.request, cleaned_data, self.add_error)
 
         return cleaned_data
