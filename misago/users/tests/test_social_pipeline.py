@@ -36,26 +36,35 @@ def create_request(user_ip='0.0.0.0', data=None):
 
 class MockStrategy(object):
     def __init__(self, user_ip='0.0.0.0'):
+        self.cleaned_partial_token = None
         self.request = create_request(user_ip)
+
+    def clean_partial_pipeline(self, token):
+        self.cleaned_partial_token = token
 
 
 class PipelineTestCase(UserTestCase):
     def get_initial_user(self):
         self.user = self.get_authenticated_user()
 
-    def assertNewUserIsCorrect(self, new_user, form_data, activation=None, email_verified=False):
-        self.assertEqual(new_user.email, form_data['email'])
-        self.assertEqual(new_user.username, form_data['username'])
-
+    def assertNewUserIsCorrect(
+            self, new_user, form_data=None, activation=None, email_verified=False):
+        self.assertFalse(new_user.has_usable_password())
         self.assertIn('Welcome', mail.outbox[0].subject)
+
+        if form_data:
+            self.assertEqual(new_user.email, form_data['email'])
+            self.assertEqual(new_user.username, form_data['username'])
 
         if activation == 'none':
             self.assertEqual(new_user.requires_activation, UserModel.ACTIVATION_NONE)
+
         if activation == 'user':
             if email_verified:
                 self.assertEqual(new_user.requires_activation, UserModel.ACTIVATION_NONE)
             else:
                 self.assertEqual(new_user.requires_activation, UserModel.ACTIVATION_USER)
+
         if activation == 'admin':
             self.assertEqual(new_user.requires_activation, UserModel.ACTIVATION_ADMIN)
 
@@ -159,8 +168,9 @@ class CreateUser(PipelineTestCase):
         )
         self.assertIsNone(result)
 
-    def test_user_is_created(self):
-        """pipeline step returns user if data is correct"""
+    @override_settings(account_activation='none')
+    def test_user_created_no_activation(self):
+        """pipeline step creates active user for valid data and disabled activation"""
         result = create_user(
             MockStrategy(),
             {'email': 'new@example.com'},
@@ -173,7 +183,41 @@ class CreateUser(PipelineTestCase):
             'is_new': True,
         })
         self.assertEqual(new_user.username, 'NewUser')
-        self.assertFalse(new_user.has_usable_password())
+        self.assertNewUserIsCorrect(new_user, email_verified=True, activation='none')
+
+    @override_settings(account_activation='user')
+    def test_user_created_activation_by_user(self):
+        """pipeline step creates active user for valid data and user activation"""
+        result = create_user(
+            MockStrategy(),
+            {'email': 'new@example.com'},
+            GithubOAuth2(),
+            clean_username='NewUser',
+        )
+        new_user = UserModel.objects.get(email='new@example.com')
+        self.assertEqual(result, {
+            'user': new_user,
+            'is_new': True,
+        })
+        self.assertEqual(new_user.username, 'NewUser')
+        self.assertNewUserIsCorrect(new_user, email_verified=True, activation='user')
+
+    @override_settings(account_activation='admin')
+    def test_user_created_activation_by_admin(self):
+        """pipeline step creates in user for valid data and admin activation"""
+        result = create_user(
+            MockStrategy(),
+            {'email': 'new@example.com'},
+            GithubOAuth2(),
+            clean_username='NewUser',
+        )
+        new_user = UserModel.objects.get(email='new@example.com')
+        self.assertEqual(result, {
+            'user': new_user,
+            'is_new': True,
+        })
+        self.assertEqual(new_user.username, 'NewUser')
+        self.assertNewUserIsCorrect(new_user, email_verified=True, activation='admin')
 
 
 class CreateUserWithFormTests(PipelineTestCase):
@@ -468,6 +512,103 @@ class GetUsernameTests(PipelineTestCase):
         }
         result = get_username(None, details, None)
         self.assertEqual(result, {'clean_username': 'Abrakadabrapok'})
+
+
+class RequireActivationTests(PipelineTestCase):
+    def setUp(self):
+        super(RequireActivationTests, self).setUp()
+
+        self.user.requires_activation = UserModel.ACTIVATION_ADMIN
+        self.user.save()
+
+    def test_skip_if_user_not_set(self):
+        """pipeline step is skipped if user is not set"""
+        request = create_request()
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        result = require_activation(
+            strategy=strategy,
+            details={},
+            backend=backend,
+            user=None,
+            pipeline_index=1,
+        )
+        self.assertEqual(result, {})
+
+    def test_partial_token_if_user_not_set_no_showstopper(self):
+        """pipeline step handles set session token if user is not set"""
+        request = create_request()
+        strategy = load_strategy(request=request)
+        strategy.request.session['partial_pipeline_token'] = 'test-token'
+        backend = GithubOAuth2(strategy, '/')
+
+        require_activation(
+            strategy=strategy,
+            details={},
+            backend=backend,
+            user=None,
+            pipeline_index=1,
+        )
+
+    def test_skip_if_user_is_active(self):
+        """pipeline step is skipped if user is active"""
+        self.user.requires_activation = UserModel.ACTIVATION_NONE
+        self.user.save()
+
+        self.assertFalse(self.user.requires_activation)
+
+        request = create_request()
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        result = require_activation(
+            strategy=strategy,
+            details={},
+            backend=backend,
+            user=self.user,
+            pipeline_index=1,
+        )
+        self.assertEqual(result, {})
+
+    def test_pipeline_returns_html_responseon_get(self):
+        """pipeline step renders http response for GET request and inactive user"""
+        request = create_request()
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        response = require_activation(
+            strategy=strategy,
+            details={},
+            backend=backend,
+            user=self.user,
+            pipeline_index=1,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['content-type'], 'text/html; charset=utf-8')
+
+    def test_pipeline_returns_json_response_on_post(self):
+        """pipeline step renders json response for POST request and inactive user"""
+        request = create_request(data={'username': 'anything'})
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        response = require_activation(
+            strategy=strategy,
+            details={},
+            backend=backend,
+            user=self.user,
+            pipeline_index=1,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['content-type'], 'application/json')
+        self.assertEqual(json.loads(response.content), {
+            'step': 'done',
+            'backend_name': 'GitHub',
+            'activation': 'admin',
+            'email': 'test@user.com',
+            'username': 'TestUser',
+        })
 
 
 class ValidateIpNotBannedTests(PipelineTestCase):
