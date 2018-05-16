@@ -2,9 +2,6 @@ dist: trusty
 sudo: required
 addons:
   postgresql: "9.4"
-env:
-  - PYTHONWARNINGS=error
-  - PYTHONDONTWRITEBYTECODE=1
 language: python
 python:
   - "2.7"
