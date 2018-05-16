@@ -158,7 +158,7 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
         email, 
         joined_from_ip=request.user_ip, 
         set_default_avatar=True,
-        **activation_kwargs,
+        **activation_kwargs
     )
 
     send_welcome_email(request, new_user)
