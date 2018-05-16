@@ -3,6 +3,7 @@ sudo: required
 addons:
   postgresql: "9.4"
 env:
+  - PYTHONWARNINGS=error
   - PYTHONDONTWRITEBYTECODE=1
 language: python
 python:
