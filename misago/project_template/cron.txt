@@ -7,5 +7,6 @@
 25 0 * * * python manage.py clearattachments
 25 0 * * * python manage.py clearreadtracker
 25 0 * * * python manage.py clearsessions
+25 0 * * * python manage.py clearsocial
 25 0 * * * python manage.py invalidatebans
 0 1 * * * python manage.py deletemarkedusers
