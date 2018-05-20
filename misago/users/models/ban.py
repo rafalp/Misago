@@ -43,10 +43,9 @@ class BansManager(models.Manager):
         if ip:
             checks.append(self.model.IP)
 
-        queryset = self.filter(
-            is_checked=True,
-            registration_only=registration_only,
-        )
+        queryset = self.filter(is_checked=True)
+        if not registration_only:
+            queryset = self.filter(registration_only=False)
 
         if len(checks) == 1:
             queryset = queryset.filter(check_type=checks[0])

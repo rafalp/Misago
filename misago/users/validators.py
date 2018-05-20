@@ -32,7 +32,7 @@ def validate_email_available(value, exclude=None):
 
 
 def validate_email_banned(value):
-    ban = get_email_ban(value)
+    ban = get_email_ban(value, registration_only=True)
 
     if ban:
         if ban.user_message:
@@ -59,7 +59,7 @@ def validate_username_available(value, exclude=None):
 
 
 def validate_username_banned(value):
-    ban = get_username_ban(value)
+    ban = get_username_ban(value, registration_only=True)
 
     if ban:
         if ban.user_message:
