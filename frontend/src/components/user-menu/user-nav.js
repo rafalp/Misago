@@ -147,13 +147,20 @@ export function UserNav({ user }) {
 export function UserPrivateThreadsLink({ user }) {
   if (!user.acl.can_use_private_threads) return null;
 
+  let title = null;
+  if (user.unread_private_threads) {
+    title = gettext("You have unread private threads!");
+  } else {
+    title = gettext("Private threads");
+  }
+
   /* jshint ignore:start */
   return (
     <li>
       <a
         className="navbar-icon"
         href={misago.get('PRIVATE_THREADS_URL')}
-        title={gettext("You have unread private threads.")}>
+        title={title}>
         <span className="material-icon">
           message
         </span>
