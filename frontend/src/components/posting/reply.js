@@ -128,7 +128,8 @@ export default class extends Form {
     if (rejection.status === 400) {
       const errors = [].concat(
         rejection.non_field_errors || [],
-        rejection.post || []
+        rejection.post || [],
+        rejection.attachments || []
       );
 
       snackbar.error(errors[0]);

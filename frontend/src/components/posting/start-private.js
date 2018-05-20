@@ -115,7 +115,8 @@ export default class extends Form {
         rejection.non_field_errors || [],
         rejection.to || [],
         rejection.title || [],
-        rejection.post || []
+        rejection.post || [],
+        rejection.attachments || []
       );
 
       snackbar.error(errors[0]);
