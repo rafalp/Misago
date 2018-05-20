@@ -2,7 +2,13 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Change forgotten password" %} | {{ block.super }}{% endblock %}
+{% block title %}
+{% if user.is_authenticated and not user.has_usable_assword %}
+  {% trans "Set new password" %} | {{ block.super }}
+{% else %}
+  {% trans "Change forgotten password" %} | {{ block.super }}
+{% endif %}
+{% endblock %}
 
 
 {% block content %}
@@ -10,7 +16,11 @@
   <div class="page-header-bg">
     <div class="page-header">
       <div class="container">
-        <h1>{% trans "Change forgotten password" %}</h1>
+        {% if user.is_authenticated and not user.has_usable_assword %}
+          <h1>{% trans "Set new password" %}</h1>
+        {% else %}
+          <h1>{% trans "Change forgotten password" %}</h1>
+        {% endif %}
       </div>
     </div>
   </div>

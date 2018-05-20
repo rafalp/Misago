@@ -32,6 +32,7 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
     class Meta:
         model = UserModel
         fields = UserSerializer.Meta.fields + [
+            'has_usable_password',
             'is_hiding_presence',
             'limits_private_thread_invites_to',
             'unread_private_threads',

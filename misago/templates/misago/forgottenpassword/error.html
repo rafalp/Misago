@@ -2,7 +2,13 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Change forgotten password error" %} | {{ block.super }}{% endblock %}
+{% block title %}
+{% if user.is_authenticated and not user.has_usable_assword %}
+  {% trans "Set new password error" %} | {{ block.super }}
+{% else %}
+  {% trans "Change forgotten password error" %} | {{ block.super }}
+{% endif %}
+{% endblock %}
 
 
 {% block content %}
@@ -16,7 +22,11 @@
       </div>
 
       <div class="message-body">
-        <p class="lead">{% trans "Can't change forgotten password." %}</p>
+        {% if user.is_authenticated and not user.has_usable_assword %}
+          <p class="lead">{% trans "Can't set new password." %}</p>
+        {% else %}
+          <p class="lead">{% trans "Can't change forgotten password." %}</p>
+        {% endif %}
         <p>{{ message }}</p>
         <p>
           <a href="{% url 'misago:forgotten-password' %}">
