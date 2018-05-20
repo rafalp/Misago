@@ -876,6 +876,85 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertFalse(updated_user.is_active)
         self.assertTrue(updated_user.is_deleting_account)
 
+    def test_edit_unusable_password(self):
+        """admin edit form handles unusable passwords and lets setting new password"""
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com')
+        self.assertFalse(test_user.has_usable_password())
+
+        test_link = reverse(
+            'misago:admin:users:accounts:edit', kwargs={
+                'pk': test_user.pk,
+            }
+        )
+
+        response = self.client.get(test_link)
+        self.assertContains(response, 'id="div_id_has_usable_password"')
+
+        response = self.client.post(
+            test_link,
+            data={
+                'username': 'Bawww',
+                'rank': six.text_type(test_user.rank_id),
+                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'email': 'reg@stered.com',
+                'new_password': 'pass123',
+                'is_staff': '1',
+                'is_superuser': '0',
+                'signature': 'Hello world!',
+                'is_signature_locked': '1',
+                'is_hiding_presence': '0',
+                'limits_private_thread_invites_to': '0',
+                'signature_lock_staff_message': 'Staff message',
+                'signature_lock_user_message': 'User message',
+                'subscribe_to_started_threads': '2',
+                'subscribe_to_replied_threads': '2',
+                'is_active': '1',
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+
+        updated_user = UserModel.objects.get(pk=test_user.pk)
+        self.assertTrue(updated_user.has_usable_password())
+
+    def test_edit_keep_unusable_password(self):
+        """admin edit form handles unusable passwords and lets admin leave them unchanged"""
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com')
+        self.assertFalse(test_user.has_usable_password())
+
+        test_link = reverse(
+            'misago:admin:users:accounts:edit', kwargs={
+                'pk': test_user.pk,
+            }
+        )
+
+        response = self.client.get(test_link)
+        self.assertContains(response, 'id="div_id_has_usable_password"')
+
+        response = self.client.post(
+            test_link,
+            data={
+                'username': 'Bawww',
+                'rank': six.text_type(test_user.rank_id),
+                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'email': 'reg@stered.com',
+                'is_staff': '1',
+                'is_superuser': '0',
+                'signature': 'Hello world!',
+                'is_signature_locked': '1',
+                'is_hiding_presence': '0',
+                'limits_private_thread_invites_to': '0',
+                'signature_lock_staff_message': 'Staff message',
+                'signature_lock_user_message': 'User message',
+                'subscribe_to_started_threads': '2',
+                'subscribe_to_replied_threads': '2',
+                'is_active': '1',
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+
+        updated_user = UserModel.objects.get(pk=test_user.pk)
+        self.assertFalse(updated_user.has_usable_password())
+
     def test_delete_threads_view_self(self):
         """delete user threads view validates if user deletes self"""
         test_link = reverse(

@@ -98,6 +98,16 @@ class="form-horizontal"
     {% form_row form.email label_class field_class %}
     {% form_row form.new_password label_class field_class %}
 
+    {% if not target.has_usable_password %}
+      <div id="div_id_has_usable_password" class="form-group">
+        <div class="{{ field_class }} col-md-offset-3">
+          <p class="form-control-static">
+            {% trans "This user has not set account password and uses other service to authenticate." %}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+
   </fieldset>
   <fieldset>
     <legend>{% trans "Avatar" %}</legend>
