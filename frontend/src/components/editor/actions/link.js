@@ -29,7 +29,8 @@ export function insertLink(selection, replace) {
     }
   }
 
-  url = $.trim(prompt(gettext("Enter link address") + ':', url));
+  url = $.trim(prompt(gettext("Enter link address") + ':', url) || '');
+  if (url.length === 0) return false;
   label = $.trim(prompt(gettext("Enter link label (optional)") + ':', label));
 
   if (url.length) {
