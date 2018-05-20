@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-01 00:16+0000\n"
+"POT-Creation-Date: 2018-05-20 21:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Roman Patsev <rpatsev@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/misago/teams/65369/ru/)\n"
@@ -38,14 +38,17 @@ msgstr ""
 msgid "Promise can't be resolved itself"
 msgstr ""
 
+#: static/misago/js/misago.js:1
+msgid "By registering you agree to site's terms and conditions."
+msgstr "Регистрируясь, вы соглашаетесь с условиями и положениями сайта"
+
 #: static/misago/js/misago.js:1 static/misago/js/misago.js:2
 #: static/misago/js/misago.js:3 static/misago/js/misago.js:4
-#: static/misago/js/misago.js:6 static/misago/js/misago.js:7
-#: static/misago/js/misago.js:8 static/misago/js/misago.js:10
-#: static/misago/js/misago.js:12 static/misago/js/misago.js:13
-#: static/misago/js/misago.js:14 static/misago/js/misago.js:15
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:18
-#: static/misago/js/misago.js:19
+#: static/misago/js/misago.js:7 static/misago/js/misago.js:8
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:12
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:14
+#: static/misago/js/misago.js:15 static/misago/js/misago.js:16
+#: static/misago/js/misago.js:18 static/misago/js/misago.js:19
 msgid "Close"
 msgstr "Закрыть"
 
@@ -142,7 +145,7 @@ msgstr "Эта категория приватная. Вы можете виде
 msgid "This category is protected. You can't browse it's contents."
 msgstr "Эта категория защищена. Вы не можете просматривать её содержимое."
 
-#: static/misago/js/misago.js:1 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:1 static/misago/js/misago.js:21
 msgid "%(threads)s thread"
 msgid_plural "%(threads)s threads"
 msgstr[0] "%(threads)s тема"
@@ -151,7 +154,7 @@ msgstr[2] "%(threads)s тем"
 msgstr[3] "%(threads)s тем"
 
 #: static/misago/js/misago.js:1 static/misago/js/misago.js:11
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:21
 msgid "%(posts)s post"
 msgid_plural "%(posts)s posts"
 msgstr[0] "%(posts)s сообщение"
@@ -167,11 +170,11 @@ msgstr "Установить аватар"
 msgid "Crop image"
 msgstr "Обрезать изображение"
 
-#: static/misago/js/misago.js:1
+#: static/misago/js/misago.js:2
 msgid "Save choice"
 msgstr "Сохранить выбор"
 
-#: static/misago/js/misago.js:1
+#: static/misago/js/misago.js:2
 msgid "Select avatar"
 msgstr "Выбрать аватарку"
 
@@ -196,8 +199,8 @@ msgid "Generate my individual avatar"
 msgstr "Сгенерировать индивидуальную аватарку"
 
 #: static/misago/js/misago.js:2 static/misago/js/misago.js:4
-#: static/misago/js/misago.js:13 static/misago/js/misago.js:15
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:19
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:16
+#: static/misago/js/misago.js:19
 msgid "Ok"
 msgstr "Ок"
 
@@ -239,13 +242,13 @@ msgstr "Эта опция недоступна."
 
 #: static/misago/js/misago.js:2 static/misago/js/misago.js:6
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:13
-#: static/misago/js/misago.js:15 static/misago/js/misago.js:19
+#: static/misago/js/misago.js:16 static/misago/js/misago.js:19
 msgid "Form contains errors."
 msgstr "Форма содержит ошибки."
 
 #: static/misago/js/misago.js:2 static/misago/js/misago.js:5
 #: static/misago/js/misago.js:6 static/misago/js/misago.js:12
-#: static/misago/js/misago.js:14
+#: static/misago/js/misago.js:15
 msgid "Save changes"
 msgstr "Сохранить изменения"
 
@@ -301,11 +304,11 @@ msgstr "Введите автора цитаты, ник пишите с пре�
 msgid "Insert quote"
 msgstr "Вставить цитату"
 
-#: static/misago/js/misago.js:2
+#: static/misago/js/misago.js:3
 msgid "Striketrough selection"
 msgstr "Зачеркнуть выделенное"
 
-#: static/misago/js/misago.js:2
+#: static/misago/js/misago.js:3
 msgid "Bolder selection"
 msgstr "Сделать выделенное жирным"
 
@@ -345,7 +348,7 @@ msgstr "Загрузить файл"
 msgid "Protected"
 msgstr "Защищено"
 
-#: static/misago/js/misago.js:3 static/misago/js/misago.js:9
+#: static/misago/js/misago.js:3 static/misago/js/misago.js:10
 #: static/misago/js/misago.js:15
 msgid "Protect"
 msgstr "Защитить"
@@ -370,22 +373,22 @@ msgstr "(ошибка)"
 msgid "(success)"
 msgstr "(успешно)"
 
-#: static/misago/js/misago.js:3 static/misago/js/misago.js:10
+#: static/misago/js/misago.js:4 static/misago/js/misago.js:10
 #: static/misago/js/misago.js:17
 msgid "Best answer"
 msgstr ""
 
-#: static/misago/js/misago.js:3
+#: static/misago/js/misago.js:4
 msgid ""
 "Please select the best answer for your newly merged thread. No posts will be"
 " deleted during the merge."
 msgstr ""
 
-#: static/misago/js/misago.js:3 static/misago/js/misago.js:17
+#: static/misago/js/misago.js:4 static/misago/js/misago.js:17
 msgid "Poll"
 msgstr "Опрос"
 
-#: static/misago/js/misago.js:3
+#: static/misago/js/misago.js:4
 msgid ""
 "Please select the poll for your newly merged thread. Rejected polls will be "
 "permanently deleted and cannot be recovered."
@@ -395,8 +398,7 @@ msgstr ""
 msgid "Are you sure you want to delete all polls?"
 msgstr ""
 
-#: static/misago/js/misago.js:4 static/misago/js/misago.js:18
-#: static/misago/js/misago.js:19
+#: static/misago/js/misago.js:4 static/misago/js/misago.js:19
 msgid "Merge threads"
 msgstr "Объединить темы"
 
@@ -481,37 +483,38 @@ msgstr "Имя было успешно изменено."
 msgid "Change your options"
 msgstr "Измените ваши настройки"
 
-#: static/misago/js/misago.js:4
+#: static/misago/js/misago.js:4 static/misago/js/misago.js:5
 msgid "Enter your password to confirm account deletion."
 msgstr ""
 
-#: static/misago/js/misago.js:4 static/misago/js/misago.js:13
+#: static/misago/js/misago.js:4 static/misago/js/misago.js:5
+#: static/misago/js/misago.js:13
 msgid "Delete account"
 msgstr "Удалить аккаунт"
 
-#: static/misago/js/misago.js:4
+#: static/misago/js/misago.js:5
 msgid ""
 "You are going to delete your account. This action is nonreversible, and will"
 " result in following data being deleted:"
 msgstr ""
 
-#: static/misago/js/misago.js:4
+#: static/misago/js/misago.js:5
 msgid ""
 "Stored IP addresses associated with content that you have posted will be "
 "deleted."
 msgstr ""
 
-#: static/misago/js/misago.js:4
+#: static/misago/js/misago.js:5
 msgid ""
 "Your username will become available for other user to rename to or for new "
 "user to register their account with."
 msgstr ""
 
-#: static/misago/js/misago.js:4
+#: static/misago/js/misago.js:5
 msgid "Your e-mail will become available for use in new account registration."
 msgstr ""
 
-#: static/misago/js/misago.js:4
+#: static/misago/js/misago.js:5
 msgid ""
 "All your posted content will NOT be deleted, but username associated with it"
 " will be changed to one shared by all deleted accounts."
@@ -538,7 +541,7 @@ msgid "Nobody"
 msgstr "Никто"
 
 #: static/misago/js/misago.js:5 static/misago/js/misago.js:10
-#: static/misago/js/misago.js:15 static/misago/js/misago.js:19
+#: static/misago/js/misago.js:16 static/misago/js/misago.js:19
 msgid "No"
 msgstr "Нет"
 
@@ -607,6 +610,20 @@ msgid "Threads I reply to"
 msgstr "Темы, где я отвечал"
 
 #: static/misago/js/misago.js:5
+msgid "Change email or password"
+msgstr "Изменить email или пароль"
+
+#: static/misago/js/misago.js:5
+msgid ""
+"You need to set a password for your account to be able to change your "
+"username or email."
+msgstr ""
+
+#: static/misago/js/misago.js:5
+msgid "Set password"
+msgstr ""
+
+#: static/misago/js/misago.js:5 static/misago/js/misago.js:15
 msgid "Fill out all fields."
 msgstr "Заполнить все поля."
 
@@ -643,26 +660,22 @@ msgid "Repeat password"
 msgstr "Повторите пароль"
 
 #: static/misago/js/misago.js:5
-msgid "Change email or password"
-msgstr "Изменить email или пароль"
-
-#: static/misago/js/misago.js:5
 msgid "Change forgotten password"
 msgstr "Изменить забытый пароль"
 
-#: static/misago/js/misago.js:5
+#: static/misago/js/misago.js:6
 msgid "You have left this thread."
 msgstr "Вы вышли из этой темы"
 
-#: static/misago/js/misago.js:5
+#: static/misago/js/misago.js:6
 msgid "%(user)s has been removed from this thread."
 msgstr "%(user)s был удален из этой темы."
 
-#: static/misago/js/misago.js:5
+#: static/misago/js/misago.js:6
 msgid "%(user)s has been made new thread owner."
 msgstr "%(user)s новый владелец темы."
 
-#: static/misago/js/misago.js:5
+#: static/misago/js/misago.js:6
 msgid "Thread owner"
 msgstr "Владелец темы"
 
@@ -862,7 +875,7 @@ msgstr[1] "%(votes)s пользователя проголосовало за э
 msgstr[2] "%(votes)s пользователей проголосовало за этот вариант"
 msgstr[3] "%(votes)s пользователей проголосовало за этот вариант"
 
-#: static/misago/js/misago.js:6
+#: static/misago/js/misago.js:7
 msgid "Poll votes"
 msgstr "Результаты голосования"
 
@@ -973,7 +986,7 @@ msgstr ""
 msgid "posted %(posted_on)s"
 msgstr "Опубликовано  %(posted_on)s"
 
-#: static/misago/js/misago.js:7 static/misago/js/misago.js:10
+#: static/misago/js/misago.js:7 static/misago/js/misago.js:11
 msgid "Removed user"
 msgstr "Удалённый пользователь"
 
@@ -1033,7 +1046,7 @@ msgstr "Вы уверены, что хотите сбросить приватн
 msgid "You have to enter at least one recipient."
 msgstr "Необходимо указать хотя бы одного получателя."
 
-#: static/misago/js/misago.js:8 static/misago/js/misago.js:14
+#: static/misago/js/misago.js:8 static/misago/js/misago.js:15
 msgid "You have to enter thread title."
 msgstr "Вы должны ввести заголовок темы."
 
@@ -1081,18 +1094,18 @@ msgid "Unpinned"
 msgstr "Откреплено"
 
 #: static/misago/js/misago.js:8 static/misago/js/misago.js:10
-#: static/misago/js/misago.js:15 static/misago/js/misago.js:17
-#: static/misago/js/misago.js:19
+#: static/misago/js/misago.js:15 static/misago/js/misago.js:16
+#: static/misago/js/misago.js:18 static/misago/js/misago.js:19
 msgid "Pinned locally"
 msgstr "Закреплено локально"
 
 #: static/misago/js/misago.js:8 static/misago/js/misago.js:10
-#: static/misago/js/misago.js:15 static/misago/js/misago.js:17
-#: static/misago/js/misago.js:19
+#: static/misago/js/misago.js:15 static/misago/js/misago.js:16
+#: static/misago/js/misago.js:18 static/misago/js/misago.js:19
 msgid "Pinned globally"
 msgstr "Закреплено глобально"
 
-#: static/misago/js/misago.js:8
+#: static/misago/js/misago.js:9
 msgid ""
 "Thread title should be at least %(limit_value)s character long (it has "
 "%(show_value)s)."
@@ -1112,7 +1125,7 @@ msgstr[3] ""
 "Название темы должно быть не короче %(limit_value)s символов (сейчас "
 "%(show_value)s)."
 
-#: static/misago/js/misago.js:8
+#: static/misago/js/misago.js:9
 msgid ""
 "Thread title cannot be longer than %(limit_value)s character (it has "
 "%(show_value)s)."
@@ -1132,7 +1145,7 @@ msgstr[3] ""
 "Название темы не должно быть длиннее %(limit_value)s символов (сейчас "
 "%(show_value)s)."
 
-#: static/misago/js/misago.js:8
+#: static/misago/js/misago.js:9
 msgid ""
 "Posted message should be at least %(limit_value)s character long (it has "
 "%(show_value)s)."
@@ -1152,7 +1165,7 @@ msgstr[3] ""
 "Сообщение должно быть не короче %(limit_value)s символов (сейчас "
 "%(show_value)s)."
 
-#: static/misago/js/misago.js:8
+#: static/misago/js/misago.js:9
 msgid ""
 "Posted message cannot be longer than %(limit_value)s character (it has "
 "%(show_value)s)."
@@ -1317,25 +1330,25 @@ msgstr[1] "Это сообщение было отредактировано %(e
 msgstr[2] "Это сообщение было отредактировано %(edits)s раз."
 msgstr[3] "Это сообщение было отредактировано %(edits)s раз."
 
-#: static/misago/js/misago.js:9
+#: static/misago/js/misago.js:10
 msgid "Changes history"
 msgstr "История изменений"
 
-#: static/misago/js/misago.js:9 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
 #: static/misago/js/misago.js:16
 msgid "Approve"
 msgstr "Одобрить"
 
-#: static/misago/js/misago.js:9 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
 #: static/misago/js/misago.js:16
 msgid "Move"
 msgstr "Переместить"
 
-#: static/misago/js/misago.js:9 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
 msgid "Split"
 msgstr "Разделить"
 
-#: static/misago/js/misago.js:9
+#: static/misago/js/misago.js:10
 msgid "Remove protection"
 msgstr "Удалить защиту"
 
@@ -1343,8 +1356,7 @@ msgstr "Удалить защиту"
 msgid "Move post"
 msgstr "Переместить сообщение"
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
-#: static/misago/js/misago.js:16
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 msgid "You have to enter link to the other thread."
 msgstr "Вы должны указать ссылку на другую тему."
 
@@ -1364,7 +1376,7 @@ msgstr "Вы не можете переместить это сообщение.
 msgid "Split post into new thread"
 msgstr "Разделить сообщение для новой темы"
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:19
 msgid "Yes"
 msgstr "Да"
@@ -1373,22 +1385,22 @@ msgstr "Да"
 msgid "Selected post was split into new thread."
 msgstr "Выбранное сообщение было разделено для новой темы."
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:19
 msgid "Not pinned"
 msgstr "Не закреплено"
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:19
 msgid "Thread weight"
 msgstr "Вес темы"
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:19
 msgid "Hide thread"
 msgstr "Скрыть тему"
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:19
 msgid "Close thread"
 msgstr "Закрыть тему"
@@ -1456,7 +1468,7 @@ msgstr "Нравится"
 msgid "Like"
 msgstr "Лайк"
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:16
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:17
 msgid "Reply"
 msgstr "Ответить"
 
@@ -1477,7 +1489,7 @@ msgstr "Это сообщение защищено и не может быть �
 msgid "protected"
 msgstr "защищено"
 
-#: static/misago/js/misago.js:10
+#: static/misago/js/misago.js:11
 msgid "edited %(edits)s time"
 msgid_plural "edited %(edits)s times"
 msgstr[0] "отредактировано %(edits)s раз"
@@ -1485,7 +1497,7 @@ msgstr[1] "отредактировано %(edits)s раза"
 msgstr[2] "отредактировано %(edits)s раз"
 msgstr[3] "отредактировано %(edits)s раз"
 
-#: static/misago/js/misago.js:10
+#: static/misago/js/misago.js:11
 msgid "%(edits)s edit"
 msgid_plural "%(edits)s edits"
 msgstr[0] "%(edits)sизменение"
@@ -1563,7 +1575,7 @@ msgid "Loading..."
 msgstr "Загрузка..."
 
 #: static/misago/js/misago.js:11 static/misago/js/misago.js:18
-#: static/misago/js/misago.js:19
+#: static/misago/js/misago.js:20
 msgid "Threads"
 msgstr "Темы"
 
@@ -1599,15 +1611,15 @@ msgstr "Сообщений"
 msgid "Show more (%(more)s)"
 msgstr "Показать ещё (%(more)s)"
 
-#: static/misago/js/misago.js:11
+#: static/misago/js/misago.js:12
 msgid "Following"
 msgstr "Подписчики"
 
-#: static/misago/js/misago.js:11
+#: static/misago/js/misago.js:12
 msgid "Follow"
 msgstr "Подписаться"
 
-#: static/misago/js/misago.js:11
+#: static/misago/js/misago.js:12
 msgid "Followers"
 msgstr "Подписчики"
 
@@ -1687,16 +1699,15 @@ msgstr ""
 msgid "This user's account has been disabled by administrator."
 msgstr "Аккаунт этого пользователя был деактивирован администратором."
 
-#: static/misago/js/misago.js:12 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:12 static/misago/js/misago.js:21
 msgid "Joined on %(joined_on)s"
 msgstr "Присоединился %(joined_on)s"
 
-#: static/misago/js/misago.js:12 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:12 static/misago/js/misago.js:21
 msgid "Joined %(joined_on)s"
 msgstr "Присоединился %(joined_on)s"
 
-#: static/misago/js/misago.js:12 static/misago/js/misago.js:14
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:12 static/misago/js/misago.js:15
 msgid "Moderation"
 msgstr "Модерация"
 
@@ -1748,7 +1759,7 @@ msgid ""
 "form changing avatar."
 msgstr ""
 
-#: static/misago/js/misago.js:12
+#: static/misago/js/misago.js:12 static/misago/js/misago.js:13
 msgid "Avatar controls"
 msgstr "Контроль за аватаром"
 
@@ -1790,7 +1801,7 @@ msgstr "Скрыть после удаления аккаунта пользов
 msgid "Return to users list"
 msgstr "Вернуться к списку пользователей"
 
-#: static/misago/js/misago.js:12
+#: static/misago/js/misago.js:13
 msgid "Delete user account"
 msgstr "Удалить аккаунт пользователя"
 
@@ -1826,7 +1837,7 @@ msgstr[3] ""
 msgid "Search returned no username changes matching specified criteria."
 msgstr ""
 
-#: static/misago/js/misago.js:13 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:21
 msgid "No name changes have been recorded for your account."
 msgstr ""
 
@@ -1859,14 +1870,18 @@ msgid "Register"
 msgstr "Регистрация"
 
 #: static/misago/js/misago.js:13
-msgid "By registering you agree to site's terms and conditions."
-msgstr "Регистрируясь, вы соглашаетесь с условиями и положениями сайта"
+msgid "Join with %(site)s"
+msgstr ""
 
 #: static/misago/js/misago.js:13
+msgid "Or create forum account:"
+msgstr ""
+
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:15
 msgid "Username"
 msgstr "Имя пользователя"
 
-#: static/misago/js/misago.js:13 static/misago/js/misago.js:16
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:17
 #: static/misago/js/misago.js:18
 msgid "E-mail"
 msgstr "Электронная почта"
@@ -1879,13 +1894,13 @@ msgstr "Пароль"
 msgid "Register account"
 msgstr "Зарегистрировать аккаунт"
 
-#: static/misago/js/misago.js:13
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:14
 msgid ""
 "%(username)s, your account has been created but you need to activate it "
 "before you will be able to sign in."
 msgstr ""
 
-#: static/misago/js/misago.js:13
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:14
 msgid ""
 "%(username)s, your account has been created but board administrator will "
 "have to activate it before you will be able to sign in."
@@ -1905,15 +1920,16 @@ msgstr ""
 msgid "Registration complete"
 msgstr "Регистрация завершена"
 
-#: static/misago/js/misago.js:13 static/misago/js/misago.js:24
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:14
+#: static/misago/js/misago.js:24
 msgid "Enter a valid email address."
 msgstr "Введите корректный e-mail адрес."
 
-#: static/misago/js/misago.js:13
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:14
 msgid "Your e-mail address"
 msgstr "Ваш e-mail адрес"
 
-#: static/misago/js/misago.js:13
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:14
 msgid "Send link"
 msgstr "Отправить ссылку"
 
@@ -1925,7 +1941,7 @@ msgstr ""
 msgid "Request another link"
 msgstr "Запросить другую ссылку"
 
-#: static/misago/js/misago.js:13
+#: static/misago/js/misago.js:14
 msgid "Reset password link was sent to %(email)s"
 msgstr ""
 
@@ -1953,7 +1969,8 @@ msgstr "%(username)s, Ваш пароль был успешно изменен. 
 msgid "You will have to sign in using new password before continuing."
 msgstr "Вы должны войти, используя новый пароль, для продолжения."
 
-#: static/misago/js/misago.js:14 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:14 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:20
 msgid "Sign in"
 msgstr "Войти"
 
@@ -1973,7 +1990,7 @@ msgstr "По заданным критериям поиска темы не на
 msgid "Enter at least two characters to search threads."
 msgstr "Введите хотя бы два символа для поиска темы."
 
-#: static/misago/js/misago.js:14 static/misago/js/misago.js:19
+#: static/misago/js/misago.js:14 static/misago/js/misago.js:20
 msgid "Show more"
 msgstr "Показать ещё."
 
@@ -1994,6 +2011,14 @@ msgid "Activate account"
 msgstr "Активировать аккаунт"
 
 #: static/misago/js/misago.js:14
+msgid "Sign in with %(site)s"
+msgstr ""
+
+#: static/misago/js/misago.js:14
+msgid "Or use your forum account:"
+msgstr ""
+
+#: static/misago/js/misago.js:14
 msgid "Username or e-mail"
 msgstr "Имя пользователя или e-mail"
 
@@ -2002,6 +2027,36 @@ msgid "Forgot password?"
 msgstr "Забыли пароль?"
 
 #: static/misago/js/misago.js:14
+msgid ""
+"%(username)s, your account has been created and you has been signed in to "
+"it."
+msgstr ""
+
+#: static/misago/js/misago.js:14
+msgid "Registration completed!"
+msgstr ""
+
+#: static/misago/js/misago.js:14
+msgid "Return to forum index"
+msgstr ""
+
+#: static/misago/js/misago.js:15
+msgid "Sign in with %(backend)s"
+msgstr ""
+
+#: static/misago/js/misago.js:15
+msgid "Your e-mail address has been verified by %(backend)s."
+msgstr ""
+
+#: static/misago/js/misago.js:15
+msgid "Complete your details"
+msgstr ""
+
+#: static/misago/js/misago.js:15
+msgid "E-mail address"
+msgstr ""
+
+#: static/misago/js/misago.js:15
 msgid "Change title"
 msgstr "Изменить название"
 
@@ -2010,11 +2065,11 @@ msgid "Edit title"
 msgstr "Изменить название"
 
 #: static/misago/js/misago.js:15 static/misago/js/misago.js:17
-#: static/misago/js/misago.js:19
+#: static/misago/js/misago.js:18 static/misago/js/misago.js:19
 msgid "Unapproved"
 msgstr "Одобренные"
 
-#: static/misago/js/misago.js:15 static/misago/js/misago.js:17
+#: static/misago/js/misago.js:15 static/misago/js/misago.js:18
 msgid "Unapproved posts"
 msgstr "Одобренные темы"
 
@@ -2060,31 +2115,31 @@ msgstr ""
 msgid "One or more posts could not be changed:"
 msgstr "Одно или больше сообщений не могут быть изменены:"
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid "Posts options"
 msgstr "Настройки сообщений"
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid "Move posts"
 msgstr "Переместить сообщения"
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid "Selected posts were moved to the other thread."
 msgstr "Выбранные сообщения были перемещены в другую тему."
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid "Link to thread you want to move posts to"
 msgstr "Ссылка на тему, в которую вы хотите переместить сообщения"
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid "You can't move selected posts at the moment."
 msgstr "Вы не можете перемещать выбранные сообщения в данный момент."
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid "Split posts into new thread"
 msgstr "Разделить сообщения в новую тему"
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid "Selected posts were split into new thread."
 msgstr "Избранные сообщения были разделены на новые."
 
@@ -2150,23 +2205,23 @@ msgstr "Тема была перемещена."
 msgid "New category"
 msgstr "Новая категория"
 
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:21
+#: static/misago/js/misago.js:17 static/misago/js/misago.js:22
 msgid "Go to first page"
 msgstr "Перейти на первую страницу"
 
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:21
+#: static/misago/js/misago.js:17 static/misago/js/misago.js:22
 msgid "Go to previous page"
 msgstr "Перейти на предыдущую страницу"
 
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:21
+#: static/misago/js/misago.js:17 static/misago/js/misago.js:22
 msgid "Go to next page"
 msgstr "Перейти на следующую страницу"
 
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:21
+#: static/misago/js/misago.js:17 static/misago/js/misago.js:22
 msgid "Go to last page"
 msgstr "Перейти на последнюю страницу"
 
-#: static/misago/js/misago.js:16
+#: static/misago/js/misago.js:17
 msgid "There is %(more)s more post in this thread."
 msgid_plural "There are %(more)s more posts in this thread."
 msgstr[0] ""
@@ -2174,15 +2229,15 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: static/misago/js/misago.js:16
+#: static/misago/js/misago.js:17
 msgid "There are no more posts in this thread."
 msgstr "В этой теме нет новых сообщений."
 
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:18
+#: static/misago/js/misago.js:17 static/misago/js/misago.js:18
 msgid "Enabled"
 msgstr "Активна"
 
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:18
+#: static/misago/js/misago.js:17 static/misago/js/misago.js:18
 msgid "Disabled"
 msgstr "Неактивна"
 
@@ -2222,7 +2277,7 @@ msgstr "Последнее"
 msgid "Last post"
 msgstr "Последнее сообщение"
 
-#: static/misago/js/misago.js:17 static/misago/js/misago.js:19
+#: static/misago/js/misago.js:17 static/misago/js/misago.js:20
 msgid "Options"
 msgstr "Настройки"
 
@@ -2241,11 +2296,11 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: static/misago/js/misago.js:17
+#: static/misago/js/misago.js:18
 msgid "New posts"
 msgstr "Новые сообщения"
 
-#: static/misago/js/misago.js:17
+#: static/misago/js/misago.js:18
 msgid "Answered"
 msgstr ""
 
@@ -2257,107 +2312,107 @@ msgstr "Изменить подписку"
 msgid "Start thread"
 msgstr "Новая тема"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Why not start one yourself?"
 msgstr "Почему бы Вам не начать тему?"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "There are no threads on this forum... yet!"
 msgstr "На этом форуме ещё нет тем... пока что!"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "There are no threads in this category."
 msgstr "В этой категории ещё нет тем."
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "No threads matching specified criteria were found."
 msgstr "Не найдено тем совпадающих с указанными критериями."
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were pinned globally."
 msgstr "Выбранные темы были закреплены глобально."
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were pinned locally."
 msgstr "Выбранные темы были закреплены локально."
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were unpinned."
 msgstr "Выбранные темы были откреплены."
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were approved."
 msgstr "Выбранные темы были одобрены."
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were opened."
 msgstr "Выбранные темы были открыты."
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were closed."
 msgstr "Выбранные темы были закрыты."
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were unhidden."
 msgstr "Выбранные темы были открыты."
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were hidden."
 msgstr "Выбранные темы были спрятаны."
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "You don't have permission to merge this thread with others."
 msgstr "У вас нет прав объединять эту тему с другой."
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "You have to select at least two threads to merge."
 msgstr "Вы должны выбрать по крайне мере две темы, чтобы объединить их."
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Are you sure you want to delete selected threads?"
 msgstr "Вы уверены, что хотите удалить выбранные темы?"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were deleted."
 msgstr "Выбранные темы были удалены."
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Pin threads globally"
 msgstr "Прикрепить темы глобально"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Pin threads locally"
 msgstr "Прикрепить темы локально"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Unpin threads"
 msgstr "Открепить темы"
 
-#: static/misago/js/misago.js:18 static/misago/js/misago.js:19
+#: static/misago/js/misago.js:19
 msgid "Move threads"
 msgstr "Переместить темы"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Approve threads"
 msgstr "Одобрить темы"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Open threads"
 msgstr "Открыть темы"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Close threads"
 msgstr "Закрыть темы"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Unhide threads"
 msgstr "Показать темы"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Hide threads"
 msgstr "Скрыть темы"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Delete threads"
 msgstr "Удалить темы"
 
@@ -2448,8 +2503,12 @@ msgid "Sign in or register to start and participate in discussions."
 msgstr "Войдите или зарегистрируйтесь, чтобы участвовать в обсуждениях."
 
 #: static/misago/js/misago.js:20
-msgid "You have unread private threads."
-msgstr "У Вас непрочитанные приватные темы."
+msgid "You have unread private threads!"
+msgstr ""
+
+#: static/misago/js/misago.js:20 static/misago/js/misago.js:22
+msgid "Private threads"
+msgstr "Приватные темы"
 
 #: static/misago/js/misago.js:20
 msgid "Are you sure you want to sign out?"
@@ -2466,10 +2525,6 @@ msgstr "Изменить настройки"
 #: static/misago/js/misago.js:20
 msgid "Change avatar"
 msgstr "Изменить аватар"
-
-#: static/misago/js/misago.js:20 static/misago/js/misago.js:22
-msgid "Private threads"
-msgstr "Приватные темы"
 
 #: static/misago/js/misago.js:20
 msgid "Log out"
@@ -2523,7 +2578,7 @@ msgstr "В сети"
 msgid "Offline"
 msgstr "Не в сети"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:21
 msgid "%(followers)s follower"
 msgid_plural "%(followers)s followers"
 msgstr[0] "%(followers)sпоследователь"
@@ -2555,11 +2610,11 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: static/misago/js/misago.js:21 static/misago/js/misago.js:22
+#: static/misago/js/misago.js:22
 msgid "Users"
 msgstr "Пользователи"
 
-#: static/misago/js/misago.js:21
+#: static/misago/js/misago.js:22
 msgid "There is %(more)s more member with this role."
 msgid_plural "There are %(more)s more members with this role."
 msgstr[0] ""
@@ -2567,11 +2622,11 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: static/misago/js/misago.js:21
+#: static/misago/js/misago.js:22
 msgid "There are no more members with this role."
 msgstr ""
 
-#: static/misago/js/misago.js:21
+#: static/misago/js/misago.js:22
 msgid "There are no users with this rank at the moment."
 msgstr "В данный момент нет пользователей с таким рейтингом."
 
@@ -2593,7 +2648,7 @@ msgstr ""
 msgid "You aren't participating in any private threads."
 msgstr "Вы не участвуете ни в каких приватных темах."
 
-#: static/misago/js/misago.js:23
+#: static/misago/js/misago.js:23 static/misago/js/misago.js:24
 msgid "Lost connection with application."
 msgstr "Потеряно соединение с приложением."
 
@@ -2605,19 +2660,19 @@ msgstr ""
 msgid "Unknown error has occured."
 msgstr "Произошла неизвестная ошибка."
 
-#: static/misago/js/misago.js:23
+#: static/misago/js/misago.js:24
 msgid "Upload was rejected by server as too large."
 msgstr "Загрузка на сервер была отклонена из-за превышения объема файла."
 
-#: static/misago/js/misago.js:23
+#: static/misago/js/misago.js:24
 msgid "Failed to load CAPTCHA."
 msgstr "Не удалось загрузить CAPTCHA."
 
-#: static/misago/js/misago.js:23
+#: static/misago/js/misago.js:24
 msgid "Please solve the quick test"
 msgstr "Пожалуйста, решите простой тест"
 
-#: static/misago/js/misago.js:23
+#: static/misago/js/misago.js:24
 msgid "This test helps us prevent automated spam registrations on our site."
 msgstr ""
 "Этот тест помогает нам предотвратить автоматическую спам регистрацию на "
