@@ -73,7 +73,7 @@ You will need to module that will handle GitHub authentication to this list. Go 
 
 ![GitHub App Settings](./images/SocialAuth/github_step_4.png)
 
-This is suprising. Looks like there is not one but 7 GitHub backends available. Click the first one, named siply "GitHub", and this will take you to [documentation](http://python-social-auth.readthedocs.io/en/latest/backends/github.html) explaining how to add GitHub auth in your site:
+This is suprising. Looks like there is not one but 7 GitHub backends available. Click the first one, named simply "GitHub", and this will take you to [documentation](http://python-social-auth.readthedocs.io/en/latest/backends/github.html) explaining how to add GitHub auth in your site:
 
 ![GitHub Backend Settings](./images/SocialAuth/github_step_5.png)
 
