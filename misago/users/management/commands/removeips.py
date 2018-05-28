@@ -1,14 +1,12 @@
-
 from django.contrib.auth import get_user_model
 from django.core.management import BaseCommand
+from misago.core.utils import ANONYMOUS_IP
+from misago.users.signals import anonymize_old_ips
 
-UserModel = get_user_model()
-
+MISAGO_IP_STORE_TIME = 33300
 class Command(BaseCommand):
-    help = "Deletes all user registered IPs"
+    help =  "Anonymizes users IPs stored for longer than set in MISAGO_IP_STORE_TIME."
 
     def handle(self, *args, **options):
-      for user in UserModel.objects.all():
-        user.joined_from_ip = "0.0.0.0"
-        user.save()
-      self.stdout.write("Users IP is successfully updated to 0.0.0.0")
+      anonymize_old_ips.send(sender=self)
+      self.stdout.write("IP addresses older than " + str(MISAGO_IP_STORE_TIME) + " days have been anonymized!")
