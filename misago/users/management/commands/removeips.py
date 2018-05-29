@@ -10,7 +10,7 @@ class Command(BaseCommand):
     
     def handle(self, *args, **options):
       if not settings.MISAGO_IP_STORE_TIME:
-        print("IP anonymization is disabled!")
+        self.stdout.write("IP anonymization is disabled!")
         return
       else:
         anonymize_old_ips.send(sender=self)
