@@ -1,8 +1,8 @@
-from django.utils import timezone
 from datetime import timedelta
 
 from django.dispatch import Signal, receiver
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from django.db.models import Q
 from misago.core.utils import ANONYMOUS_IP
