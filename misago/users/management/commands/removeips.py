@@ -12,7 +12,7 @@ class Command(BaseCommand):
       if not settings.MISAGO_IP_STORE_TIME:
         self.stdout.write("IP anonymization is disabled!")
         return
-      else:
-        anonymize_old_ips.send(sender=self)
-        self.stdout.write("IP addresses older than {:d} days have been anonymized!".format(not settings.MISAGO_IP_STORE_TIME))
+      
+      anonymize_old_ips.send(sender=self)
+      self.stdout.write("IP addresses older than {:d} days have been anonymized!".format(not settings.MISAGO_IP_STORE_TIME))
 
