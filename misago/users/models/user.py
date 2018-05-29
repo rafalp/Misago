@@ -156,6 +156,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         (LIMIT_INVITES_TO_FOLLOWED, _("Users I follow")),
         (LIMIT_INVITES_TO_NOBODY, _("Nobody")),
     ]
+    
     # Note that "username" field is purely for shows.
     # When searching users by their names, always use lowercased string
     # and slug field instead that is normalized around DB engines

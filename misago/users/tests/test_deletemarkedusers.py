@@ -25,6 +25,18 @@ class DeleteMarkedUsersTests(TestCase):
         with self.assertRaises(UserModel.DoesNotExist):
             UserModel.objects.get(pk=self.user.pk)
 
+    @override_settings(MISAGO_ENABLE_DELETE_OWN_ACCOUNT=False)
+    def test_delete_disabled(self):
+        """deletion respects user decision even if configuration has changed"""
+        out = StringIO()
+        call_command(deletemarkedusers.Command(), stdout=out)
+        command_output = out.getvalue().splitlines()[0].strip()
+
+        self.assertEqual(command_output, "Deleted users: 1")
+        
+        with self.assertRaises(UserModel.DoesNotExist):
+            UserModel.objects.get(pk=self.user.pk)
+            
     def test_delete_not_marked(self):
         """user has to be marked to be deletable"""
         self.user.is_deleting_account = False
@@ -61,16 +73,5 @@ class DeleteMarkedUsersTests(TestCase):
         command_output = out.getvalue().splitlines()[0].strip()
 
         self.assertEqual(command_output, "Deleted users: 0")
-        
-        UserModel.objects.get(pk=self.user.pk)
-
-    @override_settings(MISAGO_ENABLE_DELETE_OWN_ACCOUNT=False)
-    def test_delete_disabled(self):
-        """deletion is disabled"""
-        out = StringIO()
-        call_command(deletemarkedusers.Command(), stdout=out)
-        command_output = out.getvalue().splitlines()[0].strip()
-
-        self.assertEqual(command_output, "Delete own account option is currently disabled.")
         
         UserModel.objects.get(pk=self.user.pk)
