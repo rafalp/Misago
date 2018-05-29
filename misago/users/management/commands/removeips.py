@@ -15,3 +15,4 @@ class Command(BaseCommand):
       else:
         anonymize_old_ips.send(sender=self)
         self.stdout.write("IP addresses older than {:d} days have been anonymized!".format(not settings.MISAGO_IP_STORE_TIME))
+
