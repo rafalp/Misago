@@ -344,3 +344,8 @@ MISAGO_MOMENT_JS_LOCALES = [
     'vi',
     'zh-cn', 'zh-hans', 'zh-tw',
 ]
+
+
+# Specifies the amout of time we can saves the user ips in days
+
+MISAGO_IP_STORE_TIME = 50

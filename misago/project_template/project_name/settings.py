@@ -409,3 +409,8 @@ MISAGO_PROFILE_FIELDS = [
         ],
     },
 ]
+
+
+# Specifies the amout of time we can saves the user ips in days
+
+MISAGO_IP_STORE_TIME = 50
