@@ -414,4 +414,4 @@ MISAGO_PROFILE_FIELDS = [
 # Specifies the number of days that IP addresses are stored in the database before anonymization.
 # Change this setting to None to never anonymize old IP addresses.
 
-MISAGO_IP_STORE_TIME = None
+MISAGO_IP_STORE_TIME = 50
