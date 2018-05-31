@@ -67,9 +67,9 @@ class LocationField(basefields.TextProfileField):
     label = _("Location")
 
 
-class FullNameField(basefields.TextProfileField):
-    fieldname = 'fullname'
-    label = _("Full name")
+class RealNameField(basefields.TextProfileField):
+    fieldname = 'real_name'
+    label = _("Real name")
     help_text = None
 ```
 
@@ -179,9 +179,9 @@ Also take a note that while its not necessary, its good practice for all profile
 This method is called to obtain the JSON describing how to build edit field in JavaScript UI. Because default implementation provided by the `ProfileField` is versalite enough for great majority of use cases, its unlikely that you'll ever want to write custom implementation for your fields, instead limiting yourself to editing the `get_input_json` exclusively.
 
 ```python
-class FullNameField(basefields.TextProfileField):
-    fieldname = 'fullname'
-    label = _("Full name")
+class RealNameField(basefields.TextProfileField):
+    fieldname = 'real_name'
+    label = _("Real name")
 
     def get_form_field_json(self, request, user):
         # default implementation inherited from ProfileField
@@ -205,9 +205,9 @@ It supports either of those inputs:
 
 ```python
 # this field will use text input
-class FullNameField(basefields.TextProfileField):
-    fieldname = 'fullname'
-    label = _("Full name")
+class RealNameField(basefields.TextProfileField):
+    fieldname = 'real_name'
+    label = _("Real name")
 
     def get_input_json(self, request, user):
         return {
@@ -321,7 +321,7 @@ This method returns JSON describing how field's value should be displayed on use
 
 ```python
 # Display value in paragraph
-class FullNameField(basefields.TextProfileField):
+class RealNameField(basefields.TextProfileField):
     
     # ...
 
@@ -479,7 +479,7 @@ Misago defines few default profile fields that can be imported from the `misago.
 Field inheriting from `UrlifiedTextareaProfileField` that allows user to enter small text bit about themselves.
 
 
-### `FullNameField`
+### `RealNameField`
 
 Field inheriting from `TextProfileField` that allows user to enter real name.
 
@@ -515,12 +515,12 @@ Misago comes with special `listusedprofilefields` command that lists fields exis
 
 ```
 $ python manage.py listusedprofilefields
-bio:      5
-fullname: 5
-location: 2
+bio:        5
+real_name:  5
+location:   2
 ```
 
-Above result means that 5 users `profile_fields` has `bio` and `fullname` keys and two users have `location` key. This tool doesn't filter off empty values, meaning that those key exist, but may be empty strings.
+Above result means that 5 users `profile_fields` has `bio` and `real_name` keys and two users have `location` key. This tool doesn't filter off empty values, meaning that those key exist, but may be empty strings.
 
 
 ## Deleting profile field from database
