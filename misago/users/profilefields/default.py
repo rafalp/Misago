@@ -13,9 +13,9 @@ class BioField(basefields.UrlifiedTextareaProfileField):
     label = _("Bio")
 
 
-class FullNameField(basefields.TextProfileField):
-    fieldname = 'fullname'
-    label = _("Full name")
+class RealNameField(basefields.TextProfileField):
+    fieldname = 'real_name'
+    label = _("Real name")
 
 
 class LocationField(basefields.TextProfileField):

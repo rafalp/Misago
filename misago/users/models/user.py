@@ -391,6 +391,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         return self.username
 
+    def get_real_name(self):
+        return self.profile_fields.get('real_name')
+
     def set_username(self, new_username, changed_by=None):
         new_username = self.normalize_username(new_username)
         if new_username != self.username:

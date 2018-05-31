@@ -136,3 +136,11 @@ class UserModelTests(TestCase):
         user_from_db = User.objects.get(pk=user.pk)
         self.assertFalse(user_from_db.is_active)
         self.assertTrue(user_from_db.is_deleting_account)
+
+    def test_get_real_name(self):
+        """get_real_name returns user-set real name or none"""
+        user = User.objects.create_user('Bob', 'bob@example.com', 'Pass.123')
+        self.assertIsNone(user.get_real_name())
+
+        user.profile_fields['real_name'] = 'Bob Boberson'
+        self.assertEqual(user.get_real_name(), 'Bob Boberson')

@@ -180,6 +180,8 @@ class ThreadsListSerializer(ThreadSerializer):
         if obj.starter_id:
             return {
                 'id': obj.starter_id,
+                'username': obj.starter.username,
+                'real_name': obj.starter.get_real_name(),
                 'avatars': obj.starter.avatars,
             }
         return None
@@ -188,6 +190,8 @@ class ThreadsListSerializer(ThreadSerializer):
         if obj.last_poster_id:
             return {
                 'id': obj.last_poster_id,
+                'username': obj.last_poster.username,
+                'real_name': obj.last_poster.get_real_name(),
                 'avatars': obj.last_poster.avatars,
             }
         return None

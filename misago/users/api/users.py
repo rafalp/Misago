@@ -325,6 +325,7 @@ UserProfileSerializer = UserSerializer.subset_fields(
     'acl',
     'is_followed',
     'is_blocked',
+    'real_name',
     'status',
     'api',
     'url',
