@@ -129,6 +129,12 @@ MISAGO_USE_STOP_FORUM_SPAM = True
 MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE = 80
 
 
+# Social Auth Backends Names Overrides
+# This seeting may be used to customise auth backends names displayed in the UI
+
+MISAGO_SOCIAL_AUTH_BACKENDS_NAMES = {} 
+
+
 # Login API URL
 
 MISAGO_LOGIN_API_URL = 'auth'

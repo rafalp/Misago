@@ -140,31 +140,32 @@ class ProfileFields(object):
                 new_fields[fieldname] = form.cleaned_data[fieldname]
         user.profile_fields = new_fields
 
-        if old_fields != new_fields:
-            if request.user == user:
-                log_message = "{} edited own profile fields".format(user.username)
-            else:
-                log_message = "{} edited {}'s (#{}) profile fields".format(request.user, user.username, user.pk)
+        old_fields_reduced = {k: v for k, v in old_fields.items() if v}
+        new_fields_reduced = {k: v for k, v in new_fields.items() if v}
 
-            logger.info(
-                log_message,
-                extra={
-                    'old_fields': old_fields,
-                    'new_fields': new_fields,
+        if old_fields_reduced != new_fields_reduced:
+            self.log_profile_fields_update(request, user)
 
-                    'tags': {
-                        'absolute_url': request.build_absolute_uri(
-                            reverse(
-                                'misago:user-details',
-                                kwargs={
-                                    'slug': user.slug,
-                                    'pk': user.pk,
-                                },
-                            )
-                        ),
-                    },
-                }
-            )
+    def log_profile_fields_update(self, request, user):
+        if request.user == user:
+            log_message = "{} edited own profile fields".format(user.username)
+        else:
+            log_message = "{} edited {}'s (#{}) profile fields".format(request.user, user.username, user.pk)
+
+        logger.info(
+            log_message,
+            extra={
+                'absolute_url': request.build_absolute_uri(
+                    reverse(
+                        'misago:user-details',
+                        kwargs={
+                            'slug': user.slug,
+                            'pk': user.pk,
+                        },
+                    )
+                ),
+            }
+        )
 
     def search_users(self, criteria, queryset):
         if not self.is_loaded:

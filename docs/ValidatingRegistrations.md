@@ -8,8 +8,8 @@ When user submits registration form, within its `clean` method form calls functi
 Each function is called with following arguments:
 
 * `request` - current HttpRequest instance. You may use it to obtain IP address using form, via `request.user_ip` attribute.
-* `form` - registration form instance. Allows you to set errors on field via `form.add_error` utility that Django provides.
 * `cleaned_data` - dict containing cleaned data. Use it too look up user's input that you wish to validate.
+* `add_error` - `None` or [`add_error`](https://docs.djangoproject.com/en/{{ book.django_version }}/ref/forms/api/#django.forms.Form.add_error) function accepting fieldname and list of errors. Allows you to set validation errors on field.
 
 If function decides to interrup registration process and thus stop user from registering account, it can raise either `django.core.exceptions.ValidationError`, `django.core.exceptions.PermissionDenied`, or set errors on form via `form.add_error` utility.
 

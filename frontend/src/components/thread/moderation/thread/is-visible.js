@@ -8,6 +8,6 @@ export default function(thread) {
     thread.acl.can_merge ||
     thread.acl.can_pin ||
     (thread.acl.can_pin_globally && thread.weight !== 2) ||
-    thread.acl.can_unhide
+    (thread.acl.can_unhide && thread.is_hidden)
   );
 }

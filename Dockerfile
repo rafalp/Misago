@@ -1,5 +1,6 @@
 # This dockerfile is only meant for local development of Misago
-# If you are looking for a proper docker setup for Misago look elsewhere
+# If you are looking for a proper docker setup for running Misago in production,
+# please use misago-docker instead
 FROM python:3
 
 ENV PYTHONUNBUFFERED 1
@@ -20,7 +21,7 @@ RUN apt-get update && apt-get install -y \
 
 # Add requirements and install them. We do this unnecessasy rebuilding.
 ADD requirements.txt /
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
 WORKDIR /srv/misago
 

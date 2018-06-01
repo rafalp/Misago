@@ -32,7 +32,7 @@ def validate_email_available(value, exclude=None):
 
 
 def validate_email_banned(value):
-    ban = get_email_ban(value)
+    ban = get_email_ban(value, registration_only=True)
 
     if ban:
         if ban.user_message:
@@ -59,7 +59,7 @@ def validate_username_available(value, exclude=None):
 
 
 def validate_username_banned(value):
-    ban = get_username_ban(value)
+    ban = get_username_ban(value, registration_only=True)
 
     if ban:
         if ban.user_message:
@@ -103,7 +103,7 @@ def validate_username(value, exclude=None):
 SFS_API_URL = u'http://api.stopforumspam.org/api?email=%(email)s&ip=%(ip)s&f=json&confidence'  # noqa
 
 
-def validate_with_sfs(request, form, cleaned_data):
+def validate_with_sfs(request, cleaned_data, add_error):
     if settings.MISAGO_USE_STOP_FORUM_SPAM and cleaned_data.get('email'):
         _real_validate_with_sfs(request.user_ip, cleaned_data['email'])
 
@@ -126,14 +126,14 @@ def _real_validate_with_sfs(ip, email):
         pass  # todo: log those somewhere
 
 
-def validate_gmail_email(request, form, cleaned_data):
+def validate_gmail_email(request, cleaned_data, add_error):
     email = cleaned_data.get('email', '')
     if '@' not in email:
         return
 
     username, domain = email.lower().split('@')
     if domain == 'gmail.com' and username.count('.') > 5:
-        form.add_error('email', ValidationError(_("This email is not allowed.")))
+        add_error('email', ValidationError(_("This email is not allowed.")))
 
 
 # Registration validation
@@ -141,8 +141,12 @@ validators_list = settings.MISAGO_NEW_REGISTRATIONS_VALIDATORS
 REGISTRATION_VALIDATORS = list(map(import_string, validators_list))
 
 
-def validate_new_registration(request, form, cleaned_data, validators=None):
-    validators = validators or REGISTRATION_VALIDATORS
+def raise_validation_error(fieldname, validation_error):
+    raise ValidationError()
 
+
+def validate_new_registration(request, cleaned_data, add_error=None, validators=None):
+    validators = validators or REGISTRATION_VALIDATORS
+    add_error = add_error or raise_validation_error
     for validator in validators:
-        validator(request, form, cleaned_data)
+        validator(request, cleaned_data, add_error)

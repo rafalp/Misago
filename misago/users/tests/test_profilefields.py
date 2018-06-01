@@ -110,7 +110,7 @@ class ProfileFieldsLoadTests(TestCase):
 
     def test_field_correct_field(self):
         """util loads correct field"""
-        field_path = 'misago.users.profilefields.default.FullNameField'
+        field_path = 'misago.users.profilefields.default.RealNameField'
 
         profilefields = ProfileFields([
             {

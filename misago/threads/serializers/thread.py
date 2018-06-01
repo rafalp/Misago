@@ -107,6 +107,7 @@ class ThreadsListSerializer(ThreadSerializer):
     def get_starter(self, obj):
         if obj.starter:
             avatars = obj.starter.avatars
+            real_name = obj.starter.get_real_name()
         else:
             avatars = None
 
@@ -114,12 +115,14 @@ class ThreadsListSerializer(ThreadSerializer):
             'id': obj.starter_id,
             'username': obj.starter_name,
             'slug': obj.starter_slug,
+            'real_name': real_name,
             'avatars': avatars,
         }
 
     def get_last_poster(self, obj):
         if obj.last_poster:
             avatars = obj.last_poster.avatars
+            real_name = obj.last_poster.get_real_name()
         else:
             avatars = None
 
@@ -127,6 +130,7 @@ class ThreadsListSerializer(ThreadSerializer):
             'id': obj.last_poster_id,
             'username': obj.last_poster_name,
             'slug': obj.last_poster_slug,
+            'real_name': real_name,
             'avatars': avatars,
         }
 

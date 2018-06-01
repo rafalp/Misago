@@ -35,8 +35,6 @@ class UserManager(BaseUserManager):
 
         if not email:
             raise ValueError(_("User must have an email address."))
-        if not password:
-            raise ValueError(_("User must have a password."))
 
         if not 'joined_from_ip' in extra_fields:
             extra_fields['joined_from_ip'] = '127.0.0.1'
@@ -66,7 +64,10 @@ class UserManager(BaseUserManager):
 
         validate_username(username)
         validate_email(email)
-        validate_password(password, user=user)
+        
+        if password:
+            # password is conditional: users created with social-auth don't have one
+            validate_password(password, user=user)
 
         if not 'rank' in extra_fields:
             user.rank = Rank.objects.get_default()
@@ -155,6 +156,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         (LIMIT_INVITES_TO_FOLLOWED, _("Users I follow")),
         (LIMIT_INVITES_TO_NOBODY, _("Nobody")),
     ]
+    
     # Note that "username" field is purely for shows.
     # When searching users by their names, always use lowercased string
     # and slug field instead that is normalized around DB engines
@@ -317,7 +319,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.save(update_fields=['is_active', 'is_deleting_account'])
 
     def anonymize_content(self):
-        # Replace username on associated items with anonymous one
+        """Replaces username with anonymized one, then send anonymization signal.
+
+        Items associated with this user then anonymize their user-specific data
+        like username or IP addresses.
+        """
         self.username = settings.MISAGO_ANONYMOUS_USERNAME
         self.slug = slugify(self.username)
         
@@ -384,6 +390,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.username
+
+    def get_real_name(self):
+        return self.profile_fields.get('real_name')
 
     def set_username(self, new_username, changed_by=None):
         new_username = self.normalize_username(new_username)

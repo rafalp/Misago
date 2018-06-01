@@ -1,6 +1,7 @@
 from django.urls import reverse
 
 from misago.users.bans import ban_ip, ban_user
+from misago.users.models import Ban
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -29,6 +30,21 @@ class UserMiddlewareTest(AuthenticatedUserTestCase):
 
         ban_user(self.user)
 
+        response = self.client.get(self.test_link)
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(self.api_link)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['id'], self.user.pk)
+
+    def test_registration_only_ban(self):
+        """middleware ignores registration only bans"""
+        Ban.objects.create(
+            check_type=Ban.USERNAME,
+            banned_value='{}*'.format(self.user.username[:3]),
+            registration_only=True,
+        )
+        
         response = self.client.get(self.test_link)
         self.assertEqual(response.status_code, 200)
 

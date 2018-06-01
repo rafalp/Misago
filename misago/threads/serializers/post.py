@@ -10,6 +10,7 @@ from misago.users.serializers import UserSerializer as BaseUserSerializer
 UserSerializer = BaseUserSerializer.subset_fields(
     'id',
     'username',
+    'real_name',
     'rank',
     'avatars',
     'signature',

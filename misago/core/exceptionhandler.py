@@ -2,23 +2,26 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponsePermanentRedirect, JsonResponse
 from django.urls import reverse
 from django.utils import six
+from social_core.exceptions import SocialAuthBaseException
+from social_core.utils import social_logger
 
 from . import errorpages
 from .exceptions import AjaxError, Banned, ExplicitFirstPage, OutdatedSlug
 
 
-HANDLED_EXCEPTIONS = [
+HANDLED_EXCEPTIONS = (
     AjaxError,
     Banned,
     ExplicitFirstPage,
     Http404,
     OutdatedSlug,
     PermissionDenied,
-]
+    SocialAuthBaseException,
+)
 
 
 def is_misago_exception(exception):
-    return exception.__class__ in HANDLED_EXCEPTIONS
+    return isinstance(exception, HANDLED_EXCEPTIONS)
 
 
 def handle_ajax_error(request, exception):
@@ -64,6 +67,11 @@ def handle_permission_denied_exception(request, exception):
     return errorpages.permission_denied(request, exception)
 
 
+def handle_social_auth_exception(request, exception):
+    social_logger.error(exception)
+    return errorpages.social_auth_failed(request, exception)
+
+
 EXCEPTION_HANDLERS = [
     (AjaxError, handle_ajax_error),
     (Banned, handle_banned_exception),
@@ -71,6 +79,7 @@ EXCEPTION_HANDLERS = [
     (ExplicitFirstPage, handle_explicit_first_page_exception),
     (OutdatedSlug, handle_outdated_slug_exception),
     (PermissionDenied, handle_permission_denied_exception),
+    (SocialAuthBaseException, handle_social_auth_exception),
 ]
 
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-01 00:16+0000\n"
+"POT-Creation-Date: 2018-05-31 23:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -213,7 +213,7 @@ msgstr ""
 #: threads/migrations/0002_threads_settings.py:16
 #: threads/migrations/0004_update_settings.py:16
 #: threads/permissions/threads.py:72 threads/permissions/threads.py:103
-#: threads/search.py:20 threads/viewmodels/thread.py:118 users/apps.py:88
+#: threads/search.py:20 threads/viewmodels/thread.py:118 users/apps.py:89
 msgid "Threads"
 msgstr ""
 
@@ -355,11 +355,11 @@ msgid "In moderation queue"
 msgstr ""
 
 #: categories/migrations/0007_best_answers_roles.py:15
-msgid "Start and reply threads, mark best answers"
+msgid "Q&A user"
 msgstr ""
 
-#: categories/migrations/0007_best_answers_roles.py:46
-msgid "Best answers moderator"
+#: categories/migrations/0007_best_answers_roles.py:27
+msgid "Q&A moderator"
 msgstr ""
 
 #: categories/permissions.py:16
@@ -472,23 +472,52 @@ msgstr ""
 msgid "System"
 msgstr ""
 
-#: core/errorpages.py:46
+#: core/errorpages.py:49
 msgid "Permission denied."
 msgstr ""
 
-#: core/errorpages.py:61
+#: core/errorpages.py:79
+msgid ""
+"A problem was encountered when disconnecting your account from the remote "
+"site."
+msgstr ""
+
+#: core/errorpages.py:82
+msgid ""
+"You are not allowed to disconnect your account from the other site, because "
+"currently it's the only way to sign in to your account."
+msgstr ""
+
+#: core/errorpages.py:86
+#, python-format
+msgid "A problem was encountered when signing you in using %(backend)s."
+msgstr ""
+
+#: core/errorpages.py:91
+msgid "The sign in process has been canceled by user."
+msgstr ""
+
+#: core/errorpages.py:93
+msgid "The other service could not be reached."
+msgstr ""
+
+#: core/errorpages.py:99
+msgid "Unexpected problem has been encountered during sign in process."
+msgstr ""
+
+#: core/errorpages.py:112
 msgid "Request authentication is invalid."
 msgstr ""
 
 #: core/forms.py:43 templates/misago/admin/users/edit.html:61
 #: templates/misago/admin/users/edit.html:78
-#: templates/misago/admin/users/edit.html:174 users/forms/admin.py:590
+#: templates/misago/admin/users/edit.html:184 users/forms/admin.py:590
 msgid "Yes"
 msgstr ""
 
 #: core/forms.py:44 templates/misago/admin/users/edit.html:63
 #: templates/misago/admin/users/edit.html:80
-#: templates/misago/admin/users/edit.html:176
+#: templates/misago/admin/users/edit.html:186
 #: threads/permissions/bestanswers.py:36 threads/permissions/bestanswers.py:46
 #: threads/permissions/polls.py:36 threads/permissions/polls.py:46
 #: threads/permissions/polls.py:56 threads/permissions/threads.py:123
@@ -496,7 +525,7 @@ msgstr ""
 #: threads/permissions/threads.py:164 threads/permissions/threads.py:178
 #: threads/permissions/threads.py:189 threads/permissions/threads.py:205
 #: threads/permissions/threads.py:216 threads/permissions/threads.py:247
-#: users/forms/admin.py:591 users/models/user.py:144
+#: users/forms/admin.py:591 users/models/user.py:145
 msgid "No"
 msgstr ""
 
@@ -685,15 +714,15 @@ msgstr ""
 msgid "Quoted message:"
 msgstr ""
 
-#: project_template/project_name/settings.py:353
+#: project_template/project_name/settings.py:388
 msgid "Personal"
 msgstr ""
 
-#: project_template/project_name/settings.py:362
+#: project_template/project_name/settings.py:397
 msgid "Contact"
 msgstr ""
 
-#: project_template/project_name/settings.py:370 users/models/ban.py:77
+#: project_template/project_name/settings.py:405 users/models/ban.py:76
 msgid "IP address"
 msgstr ""
 
@@ -771,7 +800,7 @@ msgid ""
 msgstr ""
 
 #: templates/misago/activation/request.html:27
-#: templates/misago/forgottenpassword/request.html:27
+#: templates/misago/forgottenpassword/request.html:42
 msgid ""
 "To receive this link, enter your account's e-mail addres in form and press "
 "the \"Send link\" button."
@@ -1276,7 +1305,7 @@ msgstr ""
 #: templates/misago/admin/users/list.html:23
 #: templates/misago/profile/posts.html:5 templates/misago/profile/posts.html:8
 #: threads/migrations/0002_threads_settings.py:48
-#: threads/migrations/0004_update_settings.py:48 users/apps.py:82
+#: threads/migrations/0004_update_settings.py:48 users/apps.py:83
 msgid "Posts"
 msgstr ""
 
@@ -1316,12 +1345,12 @@ msgstr ""
 msgid "Please try again."
 msgstr ""
 
-#: templates/misago/admin/login.html:57 users/forms/auth.py:53
+#: templates/misago/admin/login.html:57 users/forms/auth.py:54
 msgid "Username or e-mail"
 msgstr ""
 
 #: templates/misago/admin/login.html:62 users/forms/admin.py:60
-#: users/forms/auth.py:58
+#: users/forms/auth.py:59
 msgid "Password"
 msgstr ""
 
@@ -1426,7 +1455,7 @@ msgid "Ban selected users:"
 msgstr ""
 
 #: templates/misago/admin/users/ban.html:35
-#: templates/misago/admin/users/edit.html:103
+#: templates/misago/admin/users/edit.html:113
 #: templates/misago/admin/users/list.html:34
 #: templates/misago/userslists/active_posters.html:66
 msgid "Avatar"
@@ -1489,34 +1518,40 @@ msgstr ""
 msgid "Sign-in credentials"
 msgstr ""
 
-#: templates/misago/admin/users/edit.html:111
+#: templates/misago/admin/users/edit.html:105
+msgid ""
+"This user has not set account password and uses other service to "
+"authenticate."
+msgstr ""
+
+#: templates/misago/admin/users/edit.html:121
 msgid "Signature"
 msgstr ""
 
-#: templates/misago/admin/users/edit.html:130 users/apps.py:23
+#: templates/misago/admin/users/edit.html:140 users/apps.py:24
 msgid "Forum options"
 msgstr ""
 
-#: templates/misago/admin/users/edit.html:137
+#: templates/misago/admin/users/edit.html:147
 msgid "Automatic subscription preferences"
 msgstr ""
 
-#: templates/misago/admin/users/edit.html:144
+#: templates/misago/admin/users/edit.html:154
 msgid "Account status"
 msgstr ""
 
-#: templates/misago/admin/users/edit.html:154
+#: templates/misago/admin/users/edit.html:164
 msgid ""
 "This user is deleting their account. It has been deactivated for the "
 "duration of the process."
 msgstr ""
 
-#: templates/misago/admin/users/edit.html:158
+#: templates/misago/admin/users/edit.html:168
 msgid ""
 "No additional action is required. This account will be deleted automatically."
 msgstr ""
 
-#: templates/misago/admin/users/edit.html:193
+#: templates/misago/admin/users/edit.html:203
 msgid "No staff message is available."
 msgstr ""
 
@@ -1771,6 +1806,10 @@ msgid "To change your account password click the link below:"
 msgstr ""
 
 #: templates/misago/emails/change_password_form_link.html:16
+#: templates/misago/forgottenpassword/form.html:7
+#: templates/misago/forgottenpassword/form.html:20
+#: templates/misago/forgottenpassword/request.html:7
+#: templates/misago/forgottenpassword/request.html:20
 msgid "Set new password"
 msgstr ""
 
@@ -1903,6 +1942,15 @@ msgstr ""
 msgid "Page reached in wrong way."
 msgstr ""
 
+#: templates/misago/errorpages/ban_message.html:15
+#, python-format
+msgid "This ban expires on %(expires_on)s."
+msgstr ""
+
+#: templates/misago/errorpages/ban_message.html:19
+msgid "This ban is permanent."
+msgstr ""
+
 #: templates/misago/errorpages/banned.html:5
 msgid "You are banned"
 msgstr ""
@@ -1911,59 +1959,81 @@ msgstr ""
 msgid "You are banned from accessing this page."
 msgstr ""
 
-#: templates/misago/errorpages/banned.html:36
-#, python-format
-msgid "This ban expires on %(expires_on)s."
-msgstr ""
-
-#: templates/misago/errorpages/banned.html:40
-msgid "This ban is permanent."
-msgstr ""
-
 #: templates/misago/errorpages/csrf_failure.html:9
 msgid ""
 "This is usually caused by your browser not accepting or using outdated "
 "cookies. Check your browser configuration and try again."
 msgstr ""
 
+#: templates/misago/errorpages/social.html:5
+#: templates/misago/errorpages/social.html:13
+msgid "Problem with sign in"
+msgstr ""
+
+#: templates/misago/errorpages/social.html:40
+msgid ""
+"Please try again or use another method to sign in if the problem persists."
+msgstr ""
+
 #: templates/misago/footer.html:9
 msgid "For complete experience please enable JavaScript."
 msgstr ""
 
-#: templates/misago/forgottenpassword/error.html:5
+#: templates/misago/forgottenpassword/error.html:7
+msgid "Set new password error"
+msgstr ""
+
+#: templates/misago/forgottenpassword/error.html:9
 msgid "Change forgotten password error"
 msgstr ""
 
-#: templates/misago/forgottenpassword/error.html:19
+#: templates/misago/forgottenpassword/error.html:26
+msgid "Can't set new password."
+msgstr ""
+
+#: templates/misago/forgottenpassword/error.html:28
 msgid "Can't change forgotten password."
 msgstr ""
 
-#: templates/misago/forgottenpassword/form.html:5
-#: templates/misago/forgottenpassword/form.html:13
-#: templates/misago/forgottenpassword/request.html:5
-#: templates/misago/forgottenpassword/request.html:13
+#: templates/misago/forgottenpassword/form.html:9
+#: templates/misago/forgottenpassword/form.html:22
+#: templates/misago/forgottenpassword/request.html:9
+#: templates/misago/forgottenpassword/request.html:22
 msgid "Change forgotten password"
 msgstr ""
 
-#: templates/misago/forgottenpassword/form.html:32
+#: templates/misago/forgottenpassword/form.html:42
 msgid "To reset your password please enable JavaScript."
 msgstr ""
 
-#: templates/misago/forgottenpassword/request.html:24
+#: templates/misago/forgottenpassword/request.html:35
+msgid ""
+"Your user account has no password set for it because it was created with "
+"other service."
+msgstr ""
+
+#: templates/misago/forgottenpassword/request.html:36
+msgid ""
+"To set password for your account, you can use special secure form that will "
+"be available by special link valid only for your browser, for seven days or "
+"until your password is set."
+msgstr ""
+
+#: templates/misago/forgottenpassword/request.html:38
 msgid ""
 "Because user passwords are processed in an irreversible way before being "
 "saved to database, it is not possible for us to simply send you your "
 "password."
 msgstr ""
 
-#: templates/misago/forgottenpassword/request.html:25
+#: templates/misago/forgottenpassword/request.html:39
 msgid ""
 "Instead, you can change your password using special secure form that will be "
 "available by special link valid only for your browser, for seven days or "
 "until your password is changed."
 msgstr ""
 
-#: templates/misago/forgottenpassword/request.html:45
+#: templates/misago/forgottenpassword/request.html:60
 msgid "To request new password reset link please enable JavaScript."
 msgstr ""
 
@@ -1991,6 +2061,7 @@ msgid "Change your options"
 msgstr ""
 
 #: templates/misago/options/noscript.html:20
+#: templates/misago/socialauth.html:22
 msgid "Enable JavaScript"
 msgstr ""
 
@@ -2074,7 +2145,7 @@ msgstr ""
 
 #: templates/misago/profile/ban_details.html:5
 #: templates/misago/profile/ban_details.html:8
-#: templates/misago/profile/ban_details.html:15 users/apps.py:119
+#: templates/misago/profile/ban_details.html:15 users/apps.py:120
 msgid "Ban details"
 msgstr ""
 
@@ -2121,7 +2192,7 @@ msgstr[1] ""
 
 #: templates/misago/profile/details.html:5
 #: templates/misago/profile/details.html:8
-#: templates/misago/profile/details.html:18 users/apps.py:106
+#: templates/misago/profile/details.html:18 users/apps.py:107
 msgid "Details"
 msgstr ""
 
@@ -2149,7 +2220,7 @@ msgid "This error is caused by invalid post content manipulation."
 msgstr ""
 
 #: templates/misago/profile/followers.html:5
-#: templates/misago/profile/followers.html:8 users/apps.py:94
+#: templates/misago/profile/followers.html:8 users/apps.py:95
 msgid "Followers"
 msgstr ""
 
@@ -2177,7 +2248,7 @@ msgid "%(username)s has no followers."
 msgstr ""
 
 #: templates/misago/profile/follows.html:5
-#: templates/misago/profile/follows.html:8 users/apps.py:100
+#: templates/misago/profile/follows.html:8 users/apps.py:101
 msgid "Follows"
 msgstr ""
 
@@ -2264,7 +2335,7 @@ msgid "%(username)s started no threads."
 msgstr ""
 
 #: templates/misago/profile/username_history.html:5
-#: templates/misago/profile/username_history.html:8 users/apps.py:112
+#: templates/misago/profile/username_history.html:8 users/apps.py:113
 msgid "Username history"
 msgstr ""
 
@@ -2297,6 +2368,18 @@ msgstr ""
 
 #: templates/misago/search.html:45
 msgid "Loading search..."
+msgstr ""
+
+#: templates/misago/socialauth.html:5
+#, python-format
+msgid "Sign in with %(backend)s"
+msgstr ""
+
+#: templates/misago/socialauth.html:24
+#, python-format
+msgid ""
+"You need to enable JavaScript in your browser to complete the sign in with "
+"%(backend)s."
 msgstr ""
 
 #: templates/misago/thread/paginator.html:41
@@ -3165,120 +3248,120 @@ msgid ""
 msgstr ""
 
 #: threads/permissions/bestanswers.py:134
-#: threads/permissions/bestanswers.py:318
+#: threads/permissions/bestanswers.py:306
 msgid "You have to sign in to mark best answers."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:145
-#: threads/permissions/bestanswers.py:332
+#: threads/permissions/bestanswers.py:141
+#: threads/permissions/bestanswers.py:316
 #, python-format
 msgid ""
 "You don't have permission to mark best answers in the \"%(category)s\" "
 "category."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:154
-#: threads/permissions/bestanswers.py:341
+#: threads/permissions/bestanswers.py:150
+#: threads/permissions/bestanswers.py:325
 msgid ""
 "You don't have permission to mark best answer in this thread because you "
 "didn't start it."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:163
+#: threads/permissions/bestanswers.py:159
 #, python-format
 msgid ""
 "You don't have permission to mark best answer in this thread because its "
 "category \"%(category)s\" is closed."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:172
+#: threads/permissions/bestanswers.py:168
 msgid ""
 "You can't mark best answer in this thread because it's closed and you don't "
 "have permission to open it."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:194
+#: threads/permissions/bestanswers.py:186
 #, python-format
 msgid ""
 "You don't have permission to change this thread's marked answer because it's "
 "in the \"%(category)s\" category."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:205
+#: threads/permissions/bestanswers.py:197
 msgid ""
 "You don't have permission to change this thread's marked answer because you "
 "are not a thread starter."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:229
+#: threads/permissions/bestanswers.py:221
 msgid ""
 "You don't have permission to change this thread's best answer because a "
 "moderator has protected it."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:240
+#: threads/permissions/bestanswers.py:232
 msgid "You have to sign in to unmark best answers."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:254
+#: threads/permissions/bestanswers.py:242
 #, python-format
 msgid ""
 "You don't have permission to unmark threads answers in the \"%(category)s\" "
 "category."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:265
+#: threads/permissions/bestanswers.py:253
 msgid ""
 "You don't have permission to unmark this best answer because you are not a "
 "thread starter."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:290
+#: threads/permissions/bestanswers.py:278
 #, python-format
 msgid ""
 "You don't have permission to unmark this best answer because its category "
 "\"%(category)s\" is closed."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:299
+#: threads/permissions/bestanswers.py:287
 msgid ""
 "You can't unmark this thread's best answer because it's closed and you don't "
 "have permission to open it."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:307
+#: threads/permissions/bestanswers.py:295
 msgid ""
 "You don't have permission to unmark this thread's best answer because a "
 "moderator has protected it."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:321
+#: threads/permissions/bestanswers.py:309
 msgid "Events can't be marked as best answers."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:347
+#: threads/permissions/bestanswers.py:331
 msgid "First post in a thread can't be marked as best answer."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:350
+#: threads/permissions/bestanswers.py:334
 msgid "Hidden posts can't be marked as best answers."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:353
+#: threads/permissions/bestanswers.py:337
 msgid "Unapproved posts can't be marked as best answers."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:358
+#: threads/permissions/bestanswers.py:342
 msgid ""
 "You don't have permission to mark this post as best answer because a "
 "moderator has protected it."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:370
+#: threads/permissions/bestanswers.py:354
 msgid "You can't hide this post because its marked as best answer."
 msgstr ""
 
-#: threads/permissions/bestanswers.py:380
+#: threads/permissions/bestanswers.py:364
 msgid "You can't delete this post because its marked as best answer."
 msgstr ""
 
@@ -4774,17 +4857,12 @@ msgstr ""
 msgid "Password change confirmation link was sent to your address."
 msgstr ""
 
-#: users/api/userendpoints/create.py:23
+#: users/api/userendpoints/create.py:22
 msgid "New users registrations are currently closed."
 msgstr ""
 
-#: users/api/userendpoints/create.py:54
+#: users/api/userendpoints/create.py:53 users/social/pipeline.py:205
 msgid "Please try resubmitting the form."
-msgstr ""
-
-#: users/api/userendpoints/create.py:59
-#, python-format
-msgid "Welcome on %(forum_name)s forums!"
 msgstr ""
 
 #: users/api/userendpoints/signature.py:17
@@ -4840,23 +4918,23 @@ msgstr ""
 msgid "You can't change other users e-mail addresses."
 msgstr ""
 
-#: users/apps.py:29
+#: users/apps.py:30
 msgid "Edit details"
 msgstr ""
 
-#: users/apps.py:35
+#: users/apps.py:36
 msgid "Change username"
 msgstr ""
 
-#: users/apps.py:41
+#: users/apps.py:42
 msgid "Change email or password"
 msgstr ""
 
-#: users/apps.py:49
+#: users/apps.py:50
 msgid "Delete account"
 msgstr ""
 
-#: users/apps.py:58
+#: users/apps.py:59
 msgid "Active poster"
 msgstr ""
 
@@ -4913,7 +4991,7 @@ msgstr ""
 msgid "Edit the user from Misago admin panel"
 msgstr ""
 
-#: users/forms/admin.py:21 users/models/ban.py:75
+#: users/forms/admin.py:21 users/models/ban.py:74
 msgid "Username"
 msgstr ""
 
@@ -4921,7 +4999,7 @@ msgstr ""
 msgid "Custom title"
 msgstr ""
 
-#: users/forms/admin.py:23 users/models/ban.py:76
+#: users/forms/admin.py:23 users/models/ban.py:75
 msgid "E-mail address"
 msgstr ""
 
@@ -5278,57 +5356,57 @@ msgstr ""
 
 #: users/forms/auth.py:20
 msgid ""
-"Your account has to be activated by Administrator before you will be able to "
-"sign in."
+"Your account has to be activated by site administrator before you will be "
+"able to sign in."
 msgstr ""
 
-#: users/forms/auth.py:90
+#: users/forms/auth.py:91
 msgid "Your account does not have admin privileges."
 msgstr ""
 
-#: users/forms/auth.py:108
+#: users/forms/auth.py:109
 msgid "Enter e-mail address."
 msgstr ""
 
-#: users/forms/auth.py:113
+#: users/forms/auth.py:114
 msgid "Entered e-mail is invalid."
 msgstr ""
 
-#: users/forms/auth.py:121
+#: users/forms/auth.py:122
 msgid "No user with this e-mail exists."
 msgstr ""
 
-#: users/forms/auth.py:136 users/views/activation.py:46
+#: users/forms/auth.py:137 users/views/activation.py:46
 #, python-format
 msgid "%(user)s, your account is already active."
 msgstr ""
 
-#: users/forms/auth.py:140
+#: users/forms/auth.py:141
 #, python-format
 msgid "%(user)s, only administrator may activate your account."
 msgstr ""
 
-#: users/forms/auth.py:147
+#: users/forms/auth.py:148
 msgid ""
 "You have to activate your account before you will be able to request new "
 "password."
 msgstr ""
 
-#: users/forms/auth.py:151
+#: users/forms/auth.py:152
 msgid ""
 "Administrator has to activate your account before you will be able to "
 "request new password."
 msgstr ""
 
-#: users/forms/register.py:34
+#: users/forms/register.py:27
 msgid "This usernane is not allowed."
 msgstr ""
 
-#: users/forms/register.py:45 users/validators.py:41
+#: users/forms/register.py:38 users/validators.py:41
 msgid "This e-mail address is not allowed."
 msgstr ""
 
-#: users/forms/register.py:66
+#: users/forms/register.py:47
 msgid "New registrations from this IP address are not allowed."
 msgstr ""
 
@@ -5555,7 +5633,7 @@ msgid "Enter each answer in new line. Answers are case-insensitive."
 msgstr ""
 
 #: users/migrations/0004_default_ranks.py:17
-#: users/migrations/0004_default_ranks.py:18 users/models/user.py:110
+#: users/migrations/0004_default_ranks.py:18 users/models/user.py:111
 msgid "Forum team"
 msgstr ""
 
@@ -5572,47 +5650,43 @@ msgstr ""
 msgid "User must have an email address."
 msgstr ""
 
-#: users/models/user.py:39
-msgid "User must have a password."
-msgstr ""
-
-#: users/models/user.py:145
+#: users/models/user.py:146
 msgid "Notify"
 msgstr ""
 
-#: users/models/user.py:146
+#: users/models/user.py:147
 msgid "Notify with e-mail"
 msgstr ""
 
-#: users/models/user.py:154
+#: users/models/user.py:155
 msgid "Everybody"
 msgstr ""
 
-#: users/models/user.py:155
+#: users/models/user.py:156
 msgid "Users I follow"
 msgstr ""
 
-#: users/models/user.py:156
+#: users/models/user.py:157
 msgid "Nobody"
 msgstr ""
 
-#: users/models/user.py:173
+#: users/models/user.py:175
 msgid "joined on"
 msgstr ""
 
-#: users/models/user.py:188
+#: users/models/user.py:190
 msgid "staff status"
 msgstr ""
 
-#: users/models/user.py:190
+#: users/models/user.py:192
 msgid "Designates whether the user can log into admin sites."
 msgstr ""
 
-#: users/models/user.py:197
+#: users/models/user.py:199
 msgid "active"
 msgstr ""
 
-#: users/models/user.py:201
+#: users/models/user.py:203
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
@@ -5896,7 +5970,7 @@ msgid "Bio"
 msgstr ""
 
 #: users/profilefields/default.py:18
-msgid "Full name"
+msgid "Real name"
 msgstr ""
 
 #: users/profilefields/default.py:23
@@ -5968,6 +6042,11 @@ msgstr ""
 msgid "Last IP"
 msgstr ""
 
+#: users/registration.py:9
+#, python-format
+msgid "Welcome on %(forum_name)s forums!"
+msgstr ""
+
 #: users/search.py:24
 msgid "You don't have permission to search users."
 msgstr ""
@@ -6003,6 +6082,20 @@ msgstr ""
 
 #: users/serializers/options.py:106
 msgid "New e-mail is same as current one."
+msgstr ""
+
+#: users/social/pipeline.py:74
+#, python-format
+msgid ""
+"The e-mail address associated with your %(backend)s account is not available "
+"for use on this site."
+msgstr ""
+
+#: users/social/pipeline.py:83
+#, python-format
+msgid ""
+"Your account has to be activated by site administrator before you will be "
+"able to sign in with %(backend)s."
 msgstr ""
 
 #: users/validators.py:29

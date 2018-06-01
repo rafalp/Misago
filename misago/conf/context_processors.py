@@ -2,6 +2,8 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.urls import reverse
 from django.utils.translation import get_language
 
+from misago.users.social.utils import get_enabled_social_auth_sites_list
+
 from .gateway import settings as misago_settings  # noqa
 from .gateway import db_settings
 
@@ -12,7 +14,7 @@ BLANK_AVATAR_URL = static(misago_settings.MISAGO_BLANK_AVATAR)
 STYLE = misago_settings._MISAGO_STYLE_DEFAULT.copy()
 
 if misago_settings.MISAGO_STYLE:
-    STYLE.update(MISAGO_STYLE)
+    STYLE.update(misago_settings.MISAGO_STYLE)
 
 
 def settings(request):
@@ -36,6 +38,7 @@ def preload_settings_json(request):
         'csrf_cookie_name': misago_settings.CSRF_COOKIE_NAME,
         'threads_on_index': misago_settings.MISAGO_THREADS_ON_INDEX,
         'enable_delete_own_account': misago_settings.MISAGO_ENABLE_DELETE_OWN_ACCOUNT,
+        'social_auth_sites': get_enabled_social_auth_sites_list(),
         'style': STYLE,
     })
 

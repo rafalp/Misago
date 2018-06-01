@@ -129,25 +129,19 @@ class ValidateUsernameLengthTests(TestCase):
             validate_username_length('a' * (settings.username_length_max + 1))
 
 
-class MockForm(object):
-    def __init__(self):
-        self.errors = {}
-
-    def add_error(self, field, error):
-        self.errors[field] = error
-
-
 class ValidateGmailEmailTests(TestCase):
     def test_validate_gmail_email(self):
         """validate_gmail_email spots spammy gmail address"""
-        form = MockForm()
+        added_errors = {}
+        def add_errors(field_name, errors):
+            added_errors[field_name] = errors
 
-        validate_gmail_email(None, form, {})
-        validate_gmail_email(None, form, {'email': 'invalid-email'})
-        validate_gmail_email(None, form, {'email': 'the.bob.boberson@gmail.com'})
-        validate_gmail_email(None, form, {'email': 'the.bob.boberson@hotmail.com'})
+        validate_gmail_email(None, {}, add_errors)
+        validate_gmail_email(None, {'email': 'invalid-email'}, add_errors)
+        validate_gmail_email(None, {'email': 'the.bob.boberson@gmail.com'}, add_errors)
+        validate_gmail_email(None, {'email': 'the.bob.boberson@hotmail.com'}, add_errors)
 
-        self.assertFalse(form.errors)
+        self.assertFalse(added_errors)
 
-        validate_gmail_email(None, form, {'email': 'the.b.o.b.b.ob.e.r.son@gmail.com'})
-        self.assertTrue(form.errors)
+        validate_gmail_email(None, {'email': 'the.b.o.b.b.ob.e.r.son@gmail.com'}, add_errors)
+        self.assertTrue(added_errors)

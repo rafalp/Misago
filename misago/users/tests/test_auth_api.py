@@ -118,6 +118,23 @@ class GatewayTests(TestCase):
             'non_field_errors': ["Invalid data. Expected a dictionary, but got bool."],
         })
 
+    def test_login_not_usable_password(self):
+        """login api fails to sign user with not-usable password in"""
+        UserModel.objects.create_user('Bob', 'bob@test.com')
+
+        response = self.client.post(
+            '/api/auth/',
+            data={
+                'username': 'Bob',
+                'password': 'Pass.123',
+            },
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'code': 'invalid_login',
+            'detail': 'Login or password is incorrect.',
+        })
+
     def test_login_banned(self):
         """login api fails to sign banned user in"""
         UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
@@ -178,6 +195,32 @@ class GatewayTests(TestCase):
         response_json = response.json()
         self.assertEqual(response_json['id'], user.id)
         self.assertEqual(response_json['username'], user.username)
+
+    def test_login_ban_registration_only(self):
+        """login api ignores registration-only bans"""
+        user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+
+        Ban.objects.create(
+            check_type=Ban.USERNAME,
+            banned_value='bob',
+            registration_only=True,
+        )
+
+        response = self.client.post(
+            '/api/auth/',
+            data={
+                'username': 'Bob',
+                'password': 'Pass.123',
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get('/api/auth/')
+        self.assertEqual(response.status_code, 200)
+
+        user_json = response.json()
+        self.assertEqual(user_json['id'], user.id)
+        self.assertEqual(user_json['username'], user.username)
 
     def test_login_inactive_admin(self):
         """login api fails to sign admin-activated user in"""

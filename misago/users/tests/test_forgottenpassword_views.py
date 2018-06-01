@@ -23,6 +23,18 @@ class ForgottenPasswordViewsTests(UserTestCase):
         response = self.client.get(reverse('misago:forgotten-password'))
         self.assertEqual(response.status_code, 200)
 
+    def test_authenticated_request_unusable_password_view_returns_200(self):
+        """request new password view returns 200 for authenticated with unusable password"""
+        user = self.get_authenticated_user()
+        user.set_password(None)
+        user.save()
+
+        self.assertFalse(user.has_usable_password())
+        self.login_user(user)
+
+        response = self.client.get(reverse('misago:forgotten-password'))
+        self.assertEqual(response.status_code, 200)
+
     def test_change_password_on_banned(self):
         """change banned user password errors"""
         test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
@@ -83,6 +95,23 @@ class ForgottenPasswordViewsTests(UserTestCase):
     def test_change_password_form(self):
         """change user password form displays for valid token"""
         test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
+
+        password_token = make_password_change_token(test_user)
+
+        response = self.client.get(
+            reverse(
+                'misago:forgotten-password-change-form',
+                kwargs={
+                    'pk': test_user.pk,
+                    'token': password_token,
+                },
+            )
+        )
+        self.assertContains(response, password_token)
+
+    def test_change_password_unusable_password_form(self):
+        """set user first password form displays for valid token"""
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com')
 
         password_token = make_password_change_token(test_user)
 

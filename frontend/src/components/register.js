@@ -3,6 +3,8 @@ import Button from 'misago/components/button'; // jshint ignore:line
 import Form from 'misago/components/form';
 import FormGroup from 'misago/components/form-group'; // jshint ignore:line
 import PasswordStrength from 'misago/components/password-strength'; // jshint ignore:line
+import RegisterLegalFootnote from 'misago/components/RegisterLegalFootnote'; // jshint ignore:line
+import StartSocialAuth from 'misago/components/StartSocialAuth'; // jshint ignore:line
 import misago from 'misago';
 import ajax from 'misago/services/ajax';
 import auth from 'misago/services/auth'; // jshint ignore:line
@@ -96,26 +98,6 @@ export class RegisterForm extends Form {
     }
   }
 
-  getLegalFootNote() {
-    if (!misago.get('TERMS_OF_SERVICE_URL')) return null;
-
-    /* jshint ignore:start */
-    return (
-      <p className="legal-footnote">
-        <span className="material-icon">
-          info_outline
-        </span>
-        <a
-          href={misago.get('TERMS_OF_SERVICE_URL')}
-          target="_blank"
-        >
-          {gettext("By registering you agree to site's terms and conditions.")}
-        </a>
-      </p>
-    );
-    /* jshint ignore:end */
-  }
-
   render() {
     /* jshint ignore:start */
     return <div className="modal-dialog modal-register" role="document">
@@ -132,6 +114,12 @@ export class RegisterForm extends Form {
           <input type="password" style={{display: 'none'}} />
           <div className="modal-body">
 
+            <StartSocialAuth
+              buttonClassName="col-xs-12 col-sm-6"
+              buttonLabel={gettext("Join with %(site)s")}
+              formLabel={gettext("Or create forum account:")}
+            />
+            
             <FormGroup label={gettext("Username")} for="id_username"
                        validation={this.state.errors.username}>
               <input type="text" id="id_username" className="form-control"
@@ -172,7 +160,7 @@ export class RegisterForm extends Form {
               form: this,
             })}
 
-            {this.getLegalFootNote()}
+            <RegisterLegalFootnote />
 
           </div>
           <div className="modal-footer">

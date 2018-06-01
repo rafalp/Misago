@@ -31,11 +31,11 @@ Misago aims to be complete, featured and modern forum solution that has no fear 
 Screenshots
 ===========
 
-.. image:: https://misago-project.org/media/mporg-home-small.png?v2
+.. image:: https://misago-project.org/media/mporg-home-small.png?01062018
    :target: https://misago-project.org
    :alt: Forum index
 
-.. image:: https://misago-project.org/media/mporg-thread-small.png?v2
+.. image:: https://misago-project.org/media/mporg-thread-small.png?01062018
    :target: https://misago-project.org
    :alt: Thread view
 
@@ -46,6 +46,7 @@ Production use
 As of now Misago implements all features considered "must have" on live internet forum:
 
 * Your users may register accounts, set avatars, change options and edit their profiles. They have option to reset forgotten password.
+* Sign in with Facebook, Google, Github, Steam, Blizzard.net or any other over 50 supported OAuth providers.
 * Site admins may require users to confirm validity of their e-mail addresses via e-mail sent activation link, or limit user account activation to administrator action. They can use custom Q&A challenge, ReCAPTCHA, Stop Forum Spam or IP's blacklist to combat spam registrations. Pletora of settings are available to control user account behaviour, like username lengths or avatar restrictions.
 * Create categories together with unlimited number and depth of subcategories.
 * Write messages using either GitHub flavoured markdown, BBCode subset, or both.
@@ -72,7 +73,6 @@ Even more features will follow in future releases:
 * Forum-wide JS routing further reducing navigation times.
 * IP search for moderators to find `sock puppets <https://en.wikipedia.org/wiki/Sockpuppet_(Internet)>`_ or bot nets.
 * Notifications for users to notice content and events of concern faster.
-* Sign in with Facebook/Google/Github/Steam/etc/ect.
 * OAuth2 server for those looking to use Misago as auth provider for other apps.
 * Warning system for easy tracking users history of infractions and offenses.
 * WYSIWYM content editor for even easier post formatting.
@@ -87,16 +87,16 @@ If you are looking into using Misago to run live forum, you are absolutely invit
 Development
 ===========
 
-To start Misago site locally, first make sure you have `Docker <https://www.docker.com/community-edition#/download>`_ installed.
+Preferred way to setup Misago for local development is with `Docker <https://www.docker.com/community-edition#/download>`_, which makes it easy to spin up arbitrary number of instances running different code with separate databases and dependencies one besides the other with just three terminal commands.
 
-Next, clone repository on your machine and run following commands::
+To start, clone repository to your machine and then run following commands::
 
    docker-compose build
    docker-compose run --rm misago initdev
    docker-compose up
 
-Those commands will install necessary dependencies, create new Misago project `devproject` that you may use for development as well as start Django developer server, enabling you to visit ``127.0.0.1:8000``
-in your browser and see the forum index. You should now be able to sign in with the superuser account, using `Admin` username and `password` password.
+Those commands will install necessary dependencies, create new Misago project ``devproject`` that you may use for development as well as start Django developer server, enabling you to visit ``127.0.0.1:8000``
+in your browser and see the forum index. You should now be able to sign in with the superuser account, using ``Admin`` username and ``password`` password.
 
 Admin Control Panel is available under the ``127.0.0.1:8000/admincp/`` url.
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-01 00:16+0000\n"
+"POT-Creation-Date: 2018-05-20 21:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: mayne <dreama9ain@gmail.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
@@ -38,14 +38,17 @@ msgstr ""
 msgid "Promise can't be resolved itself"
 msgstr ""
 
+#: static/misago/js/misago.js:1
+msgid "By registering you agree to site's terms and conditions."
+msgstr "通过注册，您同意网站的条款和条件。"
+
 #: static/misago/js/misago.js:1 static/misago/js/misago.js:2
 #: static/misago/js/misago.js:3 static/misago/js/misago.js:4
-#: static/misago/js/misago.js:6 static/misago/js/misago.js:7
-#: static/misago/js/misago.js:8 static/misago/js/misago.js:10
-#: static/misago/js/misago.js:12 static/misago/js/misago.js:13
-#: static/misago/js/misago.js:14 static/misago/js/misago.js:15
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:18
-#: static/misago/js/misago.js:19
+#: static/misago/js/misago.js:7 static/misago/js/misago.js:8
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:12
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:14
+#: static/misago/js/misago.js:15 static/misago/js/misago.js:16
+#: static/misago/js/misago.js:18 static/misago/js/misago.js:19
 msgid "Close"
 msgstr "未订阅"
 
@@ -141,13 +144,13 @@ msgstr "此版块是私有的。您只可以看到您自己的该版块的主题
 msgid "This category is protected. You can't browse it's contents."
 msgstr "此版块访问权受限。您不可以浏览其内容。"
 
-#: static/misago/js/misago.js:1 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:1 static/misago/js/misago.js:21
 msgid "%(threads)s thread"
 msgid_plural "%(threads)s threads"
 msgstr[0] "%(threads)s 主题帖"
 
 #: static/misago/js/misago.js:1 static/misago/js/misago.js:11
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:21
 msgid "%(posts)s post"
 msgid_plural "%(posts)s posts"
 msgstr[0] "%(posts)s 发帖"
@@ -160,11 +163,11 @@ msgstr "设置头像"
 msgid "Crop image"
 msgstr "修剪头像"
 
-#: static/misago/js/misago.js:1
+#: static/misago/js/misago.js:2
 msgid "Save choice"
 msgstr "保存选择"
 
-#: static/misago/js/misago.js:1
+#: static/misago/js/misago.js:2
 msgid "Select avatar"
 msgstr "选择头像"
 
@@ -189,8 +192,8 @@ msgid "Generate my individual avatar"
 msgstr "自动生成"
 
 #: static/misago/js/misago.js:2 static/misago/js/misago.js:4
-#: static/misago/js/misago.js:13 static/misago/js/misago.js:15
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:19
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:16
+#: static/misago/js/misago.js:19
 msgid "Ok"
 msgstr "Ok"
 
@@ -232,13 +235,13 @@ msgstr "该选项当前不可用"
 
 #: static/misago/js/misago.js:2 static/misago/js/misago.js:6
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:13
-#: static/misago/js/misago.js:15 static/misago/js/misago.js:19
+#: static/misago/js/misago.js:16 static/misago/js/misago.js:19
 msgid "Form contains errors."
 msgstr "表单包含错误。"
 
 #: static/misago/js/misago.js:2 static/misago/js/misago.js:5
 #: static/misago/js/misago.js:6 static/misago/js/misago.js:12
-#: static/misago/js/misago.js:14
+#: static/misago/js/misago.js:15
 msgid "Save changes"
 msgstr "保存更改"
 
@@ -294,11 +297,11 @@ msgstr "输入报价autor，前缀用户名@"
 msgid "Insert quote"
 msgstr "插入报价"
 
-#: static/misago/js/misago.js:2
+#: static/misago/js/misago.js:3
 msgid "Striketrough selection"
 msgstr "Striketinter选择"
 
-#: static/misago/js/misago.js:2
+#: static/misago/js/misago.js:3
 msgid "Bolder selection"
 msgstr "更大的选择"
 
@@ -338,7 +341,7 @@ msgstr "上传文件"
 msgid "Protected"
 msgstr "受保护"
 
-#: static/misago/js/misago.js:3 static/misago/js/misago.js:9
+#: static/misago/js/misago.js:3 static/misago/js/misago.js:10
 #: static/misago/js/misago.js:15
 msgid "Protect"
 msgstr "保护"
@@ -363,22 +366,22 @@ msgstr "（错误）"
 msgid "(success)"
 msgstr "（成功）"
 
-#: static/misago/js/misago.js:3 static/misago/js/misago.js:10
+#: static/misago/js/misago.js:4 static/misago/js/misago.js:10
 #: static/misago/js/misago.js:17
 msgid "Best answer"
 msgstr ""
 
-#: static/misago/js/misago.js:3
+#: static/misago/js/misago.js:4
 msgid ""
 "Please select the best answer for your newly merged thread. No posts will be"
 " deleted during the merge."
 msgstr ""
 
-#: static/misago/js/misago.js:3 static/misago/js/misago.js:17
+#: static/misago/js/misago.js:4 static/misago/js/misago.js:17
 msgid "Poll"
 msgstr "调查"
 
-#: static/misago/js/misago.js:3
+#: static/misago/js/misago.js:4
 msgid ""
 "Please select the poll for your newly merged thread. Rejected polls will be "
 "permanently deleted and cannot be recovered."
@@ -388,8 +391,7 @@ msgstr ""
 msgid "Are you sure you want to delete all polls?"
 msgstr ""
 
-#: static/misago/js/misago.js:4 static/misago/js/misago.js:18
-#: static/misago/js/misago.js:19
+#: static/misago/js/misago.js:4 static/misago/js/misago.js:19
 msgid "Merge threads"
 msgstr "合并主题帖"
 
@@ -458,37 +460,38 @@ msgstr "您的用户名已成功更改。"
 msgid "Change your options"
 msgstr "更改您的选项"
 
-#: static/misago/js/misago.js:4
+#: static/misago/js/misago.js:4 static/misago/js/misago.js:5
 msgid "Enter your password to confirm account deletion."
 msgstr ""
 
-#: static/misago/js/misago.js:4 static/misago/js/misago.js:13
+#: static/misago/js/misago.js:4 static/misago/js/misago.js:5
+#: static/misago/js/misago.js:13
 msgid "Delete account"
 msgstr "删除帐户"
 
-#: static/misago/js/misago.js:4
+#: static/misago/js/misago.js:5
 msgid ""
 "You are going to delete your account. This action is nonreversible, and will"
 " result in following data being deleted:"
 msgstr ""
 
-#: static/misago/js/misago.js:4
+#: static/misago/js/misago.js:5
 msgid ""
 "Stored IP addresses associated with content that you have posted will be "
 "deleted."
 msgstr ""
 
-#: static/misago/js/misago.js:4
+#: static/misago/js/misago.js:5
 msgid ""
 "Your username will become available for other user to rename to or for new "
 "user to register their account with."
 msgstr ""
 
-#: static/misago/js/misago.js:4
+#: static/misago/js/misago.js:5
 msgid "Your e-mail will become available for use in new account registration."
 msgstr ""
 
-#: static/misago/js/misago.js:4
+#: static/misago/js/misago.js:5
 msgid ""
 "All your posted content will NOT be deleted, but username associated with it"
 " will be changed to one shared by all deleted accounts."
@@ -515,7 +518,7 @@ msgid "Nobody"
 msgstr "没有人"
 
 #: static/misago/js/misago.js:5 static/misago/js/misago.js:10
-#: static/misago/js/misago.js:15 static/misago/js/misago.js:19
+#: static/misago/js/misago.js:16 static/misago/js/misago.js:19
 msgid "No"
 msgstr "没有"
 
@@ -582,6 +585,20 @@ msgid "Threads I reply to"
 msgstr "我回复的主题帖"
 
 #: static/misago/js/misago.js:5
+msgid "Change email or password"
+msgstr "更改电子邮件或密码"
+
+#: static/misago/js/misago.js:5
+msgid ""
+"You need to set a password for your account to be able to change your "
+"username or email."
+msgstr ""
+
+#: static/misago/js/misago.js:5
+msgid "Set password"
+msgstr ""
+
+#: static/misago/js/misago.js:5 static/misago/js/misago.js:15
 msgid "Fill out all fields."
 msgstr "填写所有字段。"
 
@@ -618,26 +635,22 @@ msgid "Repeat password"
 msgstr "重复输入密码"
 
 #: static/misago/js/misago.js:5
-msgid "Change email or password"
-msgstr "更改电子邮件或密码"
-
-#: static/misago/js/misago.js:5
 msgid "Change forgotten password"
 msgstr "忘记密码"
 
-#: static/misago/js/misago.js:5
+#: static/misago/js/misago.js:6
 msgid "You have left this thread."
 msgstr "您已经离开了这个主题帖。"
 
-#: static/misago/js/misago.js:5
+#: static/misago/js/misago.js:6
 msgid "%(user)s has been removed from this thread."
 msgstr "%(user)s 已被从该主题帖中移除。"
 
-#: static/misago/js/misago.js:5
+#: static/misago/js/misago.js:6
 msgid "%(user)s has been made new thread owner."
 msgstr "%(user)s 已经成为主题帖的新主人。"
 
-#: static/misago/js/misago.js:5
+#: static/misago/js/misago.js:6
 msgid "Thread owner"
 msgstr "主题帖主人"
 
@@ -819,7 +832,7 @@ msgid "%(votes)s user has voted for this choice."
 msgid_plural "%(votes)s users have voted for this choice."
 msgstr[0] "%(votes)s用户已经投票选择了这个选择。"
 
-#: static/misago/js/misago.js:6
+#: static/misago/js/misago.js:7
 msgid "Poll votes"
 msgstr "投票"
 
@@ -923,7 +936,7 @@ msgstr "此错误是由不合法的帖子内容操作引起的。"
 msgid "posted %(posted_on)s"
 msgstr "发布于 %(posted_on)s"
 
-#: static/misago/js/misago.js:7 static/misago/js/misago.js:10
+#: static/misago/js/misago.js:7 static/misago/js/misago.js:11
 msgid "Removed user"
 msgstr "被移除用户"
 
@@ -980,7 +993,7 @@ msgstr "您确定要丢弃私人主题帖吗？"
 msgid "You have to enter at least one recipient."
 msgstr "您必须至少输入一个收件人。"
 
-#: static/misago/js/misago.js:8 static/misago/js/misago.js:14
+#: static/misago/js/misago.js:8 static/misago/js/misago.js:15
 msgid "You have to enter thread title."
 msgstr "您必须输入主题帖标题。"
 
@@ -1028,18 +1041,18 @@ msgid "Unpinned"
 msgstr "取消置顶"
 
 #: static/misago/js/misago.js:8 static/misago/js/misago.js:10
-#: static/misago/js/misago.js:15 static/misago/js/misago.js:17
-#: static/misago/js/misago.js:19
+#: static/misago/js/misago.js:15 static/misago/js/misago.js:16
+#: static/misago/js/misago.js:18 static/misago/js/misago.js:19
 msgid "Pinned locally"
 msgstr "版块内置顶"
 
 #: static/misago/js/misago.js:8 static/misago/js/misago.js:10
-#: static/misago/js/misago.js:15 static/misago/js/misago.js:17
-#: static/misago/js/misago.js:19
+#: static/misago/js/misago.js:15 static/misago/js/misago.js:16
+#: static/misago/js/misago.js:18 static/misago/js/misago.js:19
 msgid "Pinned globally"
 msgstr "全局置顶（于所有版块中置顶）"
 
-#: static/misago/js/misago.js:8
+#: static/misago/js/misago.js:9
 msgid ""
 "Thread title should be at least %(limit_value)s character long (it has "
 "%(show_value)s)."
@@ -1048,7 +1061,7 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] "主题帖标题应至少有%(limit_value)s个字符（现有%(show_value)s）。"
 
-#: static/misago/js/misago.js:8
+#: static/misago/js/misago.js:9
 msgid ""
 "Thread title cannot be longer than %(limit_value)s character (it has "
 "%(show_value)s)."
@@ -1057,7 +1070,7 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] "主题帖标题最多包含%(limit_value)s个字符（现有%(show_value)s）。"
 
-#: static/misago/js/misago.js:8
+#: static/misago/js/misago.js:9
 msgid ""
 "Posted message should be at least %(limit_value)s character long (it has "
 "%(show_value)s)."
@@ -1066,7 +1079,7 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] "发帖内容应至少有%(limit_value)s个字符（现有%(show_value)s）。"
 
-#: static/misago/js/misago.js:8
+#: static/misago/js/misago.js:9
 msgid ""
 "Posted message cannot be longer than %(limit_value)s character (it has "
 "%(show_value)s)."
@@ -1216,25 +1229,25 @@ msgid "This post was edited %(edits)s time."
 msgid_plural "This post was edited %(edits)s times."
 msgstr[0] "此帖子被编辑了%(edits)s次"
 
-#: static/misago/js/misago.js:9
+#: static/misago/js/misago.js:10
 msgid "Changes history"
 msgstr "改变历史"
 
-#: static/misago/js/misago.js:9 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
 #: static/misago/js/misago.js:16
 msgid "Approve"
 msgstr "批准"
 
-#: static/misago/js/misago.js:9 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
 #: static/misago/js/misago.js:16
 msgid "Move"
 msgstr "移动"
 
-#: static/misago/js/misago.js:9 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
 msgid "Split"
 msgstr "分裂"
 
-#: static/misago/js/misago.js:9
+#: static/misago/js/misago.js:10
 msgid "Remove protection"
 msgstr "去除保护"
 
@@ -1242,8 +1255,7 @@ msgstr "去除保护"
 msgid "Move post"
 msgstr "移动帖子"
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
-#: static/misago/js/misago.js:16
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 msgid "You have to enter link to the other thread."
 msgstr "您必须输入到另一个主题帖的链接。"
 
@@ -1263,7 +1275,7 @@ msgstr "您现在不可以移动这个帖子。"
 msgid "Split post into new thread"
 msgstr "拆分帖子为新主题帖"
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:19
 msgid "Yes"
 msgstr "是"
@@ -1272,22 +1284,22 @@ msgstr "是"
 msgid "Selected post was split into new thread."
 msgstr "选定的帖子被分成新的主题帖。"
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:19
 msgid "Not pinned"
 msgstr "没有置顶"
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:19
 msgid "Thread weight"
 msgstr "主题帖权重"
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:19
 msgid "Hide thread"
 msgstr "隐藏主题帖"
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:19
 msgid "Close thread"
 msgstr "关闭主题帖"
@@ -1348,7 +1360,7 @@ msgstr "赞过"
 msgid "Like"
 msgstr "赞"
 
-#: static/misago/js/misago.js:10 static/misago/js/misago.js:16
+#: static/misago/js/misago.js:10 static/misago/js/misago.js:17
 msgid "Reply"
 msgstr "回复"
 
@@ -1369,12 +1381,12 @@ msgstr "这篇文章是受保护的，不可以被编辑。"
 msgid "protected"
 msgstr "受保护"
 
-#: static/misago/js/misago.js:10
+#: static/misago/js/misago.js:11
 msgid "edited %(edits)s time"
 msgid_plural "edited %(edits)s times"
 msgstr[0] "被编辑了%(edits)s次"
 
-#: static/misago/js/misago.js:10
+#: static/misago/js/misago.js:11
 msgid "%(edits)s edit"
 msgid_plural "%(edits)s edits"
 msgstr[0] "%(edits)s 次编辑。"
@@ -1443,7 +1455,7 @@ msgid "Loading..."
 msgstr "正在加载..."
 
 #: static/misago/js/misago.js:11 static/misago/js/misago.js:18
-#: static/misago/js/misago.js:19
+#: static/misago/js/misago.js:20
 msgid "Threads"
 msgstr "主题帖"
 
@@ -1473,15 +1485,15 @@ msgstr "发帖"
 msgid "Show more (%(more)s)"
 msgstr "展示更多 （%(more）s）"
 
-#: static/misago/js/misago.js:11
+#: static/misago/js/misago.js:12
 msgid "Following"
 msgstr "关注"
 
-#: static/misago/js/misago.js:11
+#: static/misago/js/misago.js:12
 msgid "Follow"
 msgstr "关注"
 
-#: static/misago/js/misago.js:11
+#: static/misago/js/misago.js:12
 msgid "Followers"
 msgstr "关注者"
 
@@ -1546,16 +1558,15 @@ msgstr ""
 msgid "This user's account has been disabled by administrator."
 msgstr "此用户的帐户已被管理员禁用。"
 
-#: static/misago/js/misago.js:12 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:12 static/misago/js/misago.js:21
 msgid "Joined on %(joined_on)s"
 msgstr "于%(joined_on)s加入"
 
-#: static/misago/js/misago.js:12 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:12 static/misago/js/misago.js:21
 msgid "Joined %(joined_on)s"
 msgstr "加入%(joined_on)s"
 
-#: static/misago/js/misago.js:12 static/misago/js/misago.js:14
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:12 static/misago/js/misago.js:15
 msgid "Moderation"
 msgstr "调整"
 
@@ -1605,7 +1616,7 @@ msgid ""
 "form changing avatar."
 msgstr "呈现给论坛管理团队的用于说明禁止用户改变头像的原因的消息。（可选）"
 
-#: static/misago/js/misago.js:12
+#: static/misago/js/misago.js:12 static/misago/js/misago.js:13
 msgid "Avatar controls"
 msgstr "头像限制"
 
@@ -1647,7 +1658,7 @@ msgstr "删除用户帐户后隐藏"
 msgid "Return to users list"
 msgstr "返回用户列表"
 
-#: static/misago/js/misago.js:12
+#: static/misago/js/misago.js:13
 msgid "Delete user account"
 msgstr "删除用户帐号"
 
@@ -1674,7 +1685,7 @@ msgstr[0] "%(username)s的用户名已更改%(changes)s次"
 msgid "Search returned no username changes matching specified criteria."
 msgstr "搜索没有返回符合指定条件的用户名更改。"
 
-#: static/misago/js/misago.js:13 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:21
 msgid "No name changes have been recorded for your account."
 msgstr "您的帐户没有记录名称更改。"
 
@@ -1707,14 +1718,18 @@ msgid "Register"
 msgstr "注册"
 
 #: static/misago/js/misago.js:13
-msgid "By registering you agree to site's terms and conditions."
-msgstr "通过注册，您同意网站的条款和条件。"
+msgid "Join with %(site)s"
+msgstr ""
 
 #: static/misago/js/misago.js:13
+msgid "Or create forum account:"
+msgstr ""
+
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:15
 msgid "Username"
 msgstr "用户名"
 
-#: static/misago/js/misago.js:13 static/misago/js/misago.js:16
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:17
 #: static/misago/js/misago.js:18
 msgid "E-mail"
 msgstr "电子邮件"
@@ -1727,13 +1742,13 @@ msgstr "密码"
 msgid "Register account"
 msgstr "注册账号"
 
-#: static/misago/js/misago.js:13
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:14
 msgid ""
 "%(username)s, your account has been created but you need to activate it "
 "before you will be able to sign in."
 msgstr "%(username)s，您的帐户已创建，但您需要激活它之后才可以登录。"
 
-#: static/misago/js/misago.js:13
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:14
 msgid ""
 "%(username)s, your account has been created but board administrator will "
 "have to activate it before you will be able to sign in."
@@ -1753,15 +1768,16 @@ msgstr "届时，我们将向 %(email)s 发送一封电子邮件。"
 msgid "Registration complete"
 msgstr "注册完成"
 
-#: static/misago/js/misago.js:13 static/misago/js/misago.js:24
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:14
+#: static/misago/js/misago.js:24
 msgid "Enter a valid email address."
 msgstr "输入一个有效的电子邮件地址。"
 
-#: static/misago/js/misago.js:13
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:14
 msgid "Your e-mail address"
 msgstr "您的电子邮件地址"
 
-#: static/misago/js/misago.js:13
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:14
 msgid "Send link"
 msgstr "发送链接"
 
@@ -1773,7 +1789,7 @@ msgstr "激活链接已发送至 %(email)s"
 msgid "Request another link"
 msgstr "重新发送链接"
 
-#: static/misago/js/misago.js:13
+#: static/misago/js/misago.js:14
 msgid "Reset password link was sent to %(email)s"
 msgstr "重置密码链接已发送至 %(email)s"
 
@@ -1801,7 +1817,8 @@ msgstr "%(username)s，您的密码已成功更改。"
 msgid "You will have to sign in using new password before continuing."
 msgstr "您必须在继续之前使用新密码登录。"
 
-#: static/misago/js/misago.js:14 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:14 static/misago/js/misago.js:15
+#: static/misago/js/misago.js:20
 msgid "Sign in"
 msgstr "登录"
 
@@ -1821,7 +1838,7 @@ msgstr "没有找到符合搜索条件的帖子。"
 msgid "Enter at least two characters to search threads."
 msgstr "多输入些内容才能搜索到主题帖."
 
-#: static/misago/js/misago.js:14 static/misago/js/misago.js:19
+#: static/misago/js/misago.js:14 static/misago/js/misago.js:20
 msgid "Show more"
 msgstr "展示更多"
 
@@ -1842,6 +1859,14 @@ msgid "Activate account"
 msgstr "激活帐号"
 
 #: static/misago/js/misago.js:14
+msgid "Sign in with %(site)s"
+msgstr ""
+
+#: static/misago/js/misago.js:14
+msgid "Or use your forum account:"
+msgstr ""
+
+#: static/misago/js/misago.js:14
 msgid "Username or e-mail"
 msgstr "用户名或电子邮件"
 
@@ -1850,6 +1875,36 @@ msgid "Forgot password?"
 msgstr "忘记密码？"
 
 #: static/misago/js/misago.js:14
+msgid ""
+"%(username)s, your account has been created and you has been signed in to "
+"it."
+msgstr ""
+
+#: static/misago/js/misago.js:14
+msgid "Registration completed!"
+msgstr ""
+
+#: static/misago/js/misago.js:14
+msgid "Return to forum index"
+msgstr ""
+
+#: static/misago/js/misago.js:15
+msgid "Sign in with %(backend)s"
+msgstr ""
+
+#: static/misago/js/misago.js:15
+msgid "Your e-mail address has been verified by %(backend)s."
+msgstr ""
+
+#: static/misago/js/misago.js:15
+msgid "Complete your details"
+msgstr ""
+
+#: static/misago/js/misago.js:15
+msgid "E-mail address"
+msgstr ""
+
+#: static/misago/js/misago.js:15
 msgid "Change title"
 msgstr "更改标题"
 
@@ -1858,11 +1913,11 @@ msgid "Edit title"
 msgstr "编辑标题"
 
 #: static/misago/js/misago.js:15 static/misago/js/misago.js:17
-#: static/misago/js/misago.js:19
+#: static/misago/js/misago.js:18 static/misago/js/misago.js:19
 msgid "Unapproved"
 msgstr "未批准"
 
-#: static/misago/js/misago.js:15 static/misago/js/misago.js:17
+#: static/misago/js/misago.js:15 static/misago/js/misago.js:18
 msgid "Unapproved posts"
 msgstr "未批准的帖子"
 
@@ -1903,31 +1958,31 @@ msgstr "%(username)s于%(posted_on)s"
 msgid "One or more posts could not be changed:"
 msgstr "无法更改一条或多条帖子"
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid "Posts options"
 msgstr "帖子选项"
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid "Move posts"
 msgstr "移动帖子"
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid "Selected posts were moved to the other thread."
 msgstr "选定的帖子被移动到另一个主题帖。"
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid "Link to thread you want to move posts to"
 msgstr "链接到您要移动帖子的主题帖"
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid "You can't move selected posts at the moment."
 msgstr "您目前无法移动所选的帖子。"
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid "Split posts into new thread"
 msgstr "将帖子拆分成新主题帖"
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid "Selected posts were split into new thread."
 msgstr "选定的帖子被拆分为新主题帖。"
 
@@ -1993,36 +2048,36 @@ msgstr "主题帖已被移动。"
 msgid "New category"
 msgstr "新版块"
 
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:21
+#: static/misago/js/misago.js:17 static/misago/js/misago.js:22
 msgid "Go to first page"
 msgstr "转到第一页"
 
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:21
+#: static/misago/js/misago.js:17 static/misago/js/misago.js:22
 msgid "Go to previous page"
 msgstr "转到上一页"
 
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:21
+#: static/misago/js/misago.js:17 static/misago/js/misago.js:22
 msgid "Go to next page"
 msgstr "转到下一页"
 
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:21
+#: static/misago/js/misago.js:17 static/misago/js/misago.js:22
 msgid "Go to last page"
 msgstr "转到最后一页"
 
-#: static/misago/js/misago.js:16
+#: static/misago/js/misago.js:17
 msgid "There is %(more)s more post in this thread."
 msgid_plural "There are %(more)s more posts in this thread."
 msgstr[0] "有%(more)s更多帖子在这个主题帖。"
 
-#: static/misago/js/misago.js:16
+#: static/misago/js/misago.js:17
 msgid "There are no more posts in this thread."
 msgstr "这个主题帖中没有其他帖子。"
 
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:18
+#: static/misago/js/misago.js:17 static/misago/js/misago.js:18
 msgid "Enabled"
 msgstr "已订阅"
 
-#: static/misago/js/misago.js:16 static/misago/js/misago.js:18
+#: static/misago/js/misago.js:17 static/misago/js/misago.js:18
 msgid "Disabled"
 msgstr "未订阅"
 
@@ -2062,7 +2117,7 @@ msgstr "到末尾"
 msgid "Last post"
 msgstr "最后的帖子"
 
-#: static/misago/js/misago.js:17 static/misago/js/misago.js:19
+#: static/misago/js/misago.js:17 static/misago/js/misago.js:20
 msgid "Options"
 msgstr "选项"
 
@@ -2078,11 +2133,11 @@ msgid_plural ""
 "them."
 msgstr[0] "有%(threads)s条新的或更新的主题帖。点击此消息显示他们。"
 
-#: static/misago/js/misago.js:17
+#: static/misago/js/misago.js:18
 msgid "New posts"
 msgstr "新帖子"
 
-#: static/misago/js/misago.js:17
+#: static/misago/js/misago.js:18
 msgid "Answered"
 msgstr ""
 
@@ -2094,107 +2149,107 @@ msgstr "更改订阅"
 msgid "Start thread"
 msgstr "发起主题帖"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Why not start one yourself?"
 msgstr "为什么不自己发起一个？"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "There are no threads on this forum... yet!"
 msgstr "在这个论坛上没有主题帖...目前！"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "There are no threads in this category."
 msgstr "这个版块里面没有主题帖。"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "No threads matching specified criteria were found."
 msgstr "没有找到符合指定标准的主题帖。"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were pinned globally."
 msgstr "所选主题帖全局置顶。"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were pinned locally."
 msgstr "所选主题帖已在版块内置顶。"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were unpinned."
 msgstr "所选主题帖已取消置顶。"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were approved."
 msgstr "所选主题帖已通过审批。"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were opened."
 msgstr "所选主题帖已打开。"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were closed."
 msgstr "所选主题帖已关闭。"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were unhidden."
 msgstr "所选主题帖已取消隐藏。"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were hidden."
 msgstr "所选主题帖已隐藏。"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "You don't have permission to merge this thread with others."
 msgstr "您没有权限将此主题帖与其他的合并。"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "You have to select at least two threads to merge."
 msgstr "您必须至少选择两个主题帖进行合并。"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Are you sure you want to delete selected threads?"
 msgstr "您确定要删除所选主题帖吗？"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Selected threads were deleted."
 msgstr "所选主题帖已删除。"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Pin threads globally"
 msgstr "全局置顶主题帖"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Pin threads locally"
 msgstr "版块内置顶主题帖"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Unpin threads"
 msgstr "取消置顶主题帖"
 
-#: static/misago/js/misago.js:18 static/misago/js/misago.js:19
+#: static/misago/js/misago.js:19
 msgid "Move threads"
 msgstr "移动主题帖"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Approve threads"
 msgstr "批准主题帖"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Open threads"
 msgstr "解锁主题帖"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Close threads"
 msgstr "锁定主题帖"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Unhide threads"
 msgstr "取消隐藏主题帖"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Hide threads"
 msgstr "隐藏主题帖"
 
-#: static/misago/js/misago.js:18
+#: static/misago/js/misago.js:19
 msgid "Delete threads"
 msgstr "删除主题帖"
 
@@ -2285,8 +2340,12 @@ msgid "Sign in or register to start and participate in discussions."
 msgstr "登录或注册来发起或参与讨论。"
 
 #: static/misago/js/misago.js:20
-msgid "You have unread private threads."
-msgstr "您有未读的私人主题帖。"
+msgid "You have unread private threads!"
+msgstr ""
+
+#: static/misago/js/misago.js:20 static/misago/js/misago.js:22
+msgid "Private threads"
+msgstr "私人主题帖"
 
 #: static/misago/js/misago.js:20
 msgid "Are you sure you want to sign out?"
@@ -2303,10 +2362,6 @@ msgstr "更改设置"
 #: static/misago/js/misago.js:20
 msgid "Change avatar"
 msgstr "更改头像"
-
-#: static/misago/js/misago.js:20 static/misago/js/misago.js:22
-msgid "Private threads"
-msgstr "私人主题帖"
 
 #: static/misago/js/misago.js:20
 msgid "Log out"
@@ -2360,7 +2415,7 @@ msgstr "在线"
 msgid "Offline"
 msgstr "离线"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:21
 msgid "%(followers)s follower"
 msgid_plural "%(followers)s followers"
 msgstr[0] "%(followers)s的关注者"
@@ -2386,20 +2441,20 @@ msgid "%(posters)s most active poster from last %(days)s days."
 msgid_plural "%(posters)s most active posters from last %(days)s days."
 msgstr[0] "%最近%(days)s天最活跃的发布者%(poster)s"
 
-#: static/misago/js/misago.js:21 static/misago/js/misago.js:22
+#: static/misago/js/misago.js:22
 msgid "Users"
 msgstr "用户"
 
-#: static/misago/js/misago.js:21
+#: static/misago/js/misago.js:22
 msgid "There is %(more)s more member with this role."
 msgid_plural "There are %(more)s more members with this role."
 msgstr[0] "该身份新增了%(more)s个成员。"
 
-#: static/misago/js/misago.js:21
+#: static/misago/js/misago.js:22
 msgid "There are no more members with this role."
 msgstr "已无拥有该身份的成员。"
 
-#: static/misago/js/misago.js:21
+#: static/misago/js/misago.js:22
 msgid "There are no users with this rank at the moment."
 msgstr "目前没有这个级别的用户。"
 
@@ -2421,7 +2476,7 @@ msgstr "私人主题帖只有那些启动他们和那些他们已经邀请可以
 msgid "You aren't participating in any private threads."
 msgstr "您没有参与任何私人主题帖。"
 
-#: static/misago/js/misago.js:23
+#: static/misago/js/misago.js:23 static/misago/js/misago.js:24
 msgid "Lost connection with application."
 msgstr "与应用程序的连接失败"
 
@@ -2433,19 +2488,19 @@ msgstr "操作链接无效。"
 msgid "Unknown error has occured."
 msgstr "发生未知错误。"
 
-#: static/misago/js/misago.js:23
+#: static/misago/js/misago.js:24
 msgid "Upload was rejected by server as too large."
 msgstr "上传因为过大被服务器拒绝。"
 
-#: static/misago/js/misago.js:23
+#: static/misago/js/misago.js:24
 msgid "Failed to load CAPTCHA."
 msgstr "无法加载人机验证"
 
-#: static/misago/js/misago.js:23
+#: static/misago/js/misago.js:24
 msgid "Please solve the quick test"
 msgstr "请完成人机测试"
 
-#: static/misago/js/misago.js:23
+#: static/misago/js/misago.js:24
 msgid "This test helps us prevent automated spam registrations on our site."
 msgstr "此检测帮助本站预防自动化的批量垃圾注册。"
 

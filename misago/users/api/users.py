@@ -326,5 +326,6 @@ UserProfileSerializer = UserSerializer.subset_fields(
     'posts',
     'is_followed',
     'is_blocked',
+    'real_name',
     'status',
 )

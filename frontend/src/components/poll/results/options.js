@@ -85,6 +85,7 @@ export function ChangeVote(props) {
         className="btn btn-default btn-block btn-sm"
         disabled={props.poll.isBusy}
         onClick={props.showVoting}
+        type="button"
       >
         {gettext("Vote")}
       </button>
@@ -109,6 +110,7 @@ export class SeeVotes extends React.Component {
           className="btn btn-default btn-block btn-sm"
           disabled={this.props.poll.isBusy}
           onClick={this.onClick}
+          type="button"
         >
           {gettext("See votes")}
         </button>
@@ -138,6 +140,7 @@ export class Edit extends React.Component {
           className="btn btn-default btn-block btn-sm"
           disabled={this.props.poll.isBusy}
           onClick={this.onClick}
+          type="button"
         >
           {gettext("Edit")}
         </button>
@@ -177,6 +180,7 @@ export class Delete extends React.Component {
           className="btn btn-default btn-block btn-sm"
           disabled={this.props.poll.isBusy}
           onClick={this.onClick}
+          type="button"
         >
           {gettext("Delete")}
         </button>

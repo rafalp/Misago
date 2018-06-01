@@ -19,16 +19,13 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
-        if not settings.MISAGO_ENABLE_DELETE_OWN_ACCOUNT:
-            self.stdout.write("Delete own account option is currently disabled.")
-
-        deleted = 0
-
+        users_deleted = 0
+        
         queryset = UserModel.objects.filter(is_deleting_account=True)
 
         for user in chunk_queryset(queryset):
             if can_delete_own_account(user, user):
                 user.delete()
-                deleted += 1
+                users_deleted += 1
 
-        self.stdout.write("Deleted users: {}".format(deleted))
+        self.stdout.write("Deleted users: {}".format(users_deleted))

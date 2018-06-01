@@ -22,6 +22,8 @@ class ErrorPageViewsTests(TestCase):
     def test_banned_returns_403(self):
         """banned error page has no show-stoppers"""
         response = self.client.get(reverse('raise-misago-banned'))
+        self.assertContains(response, "misago:error-banned", status_code=403)
+        self.assertContains(response, "<p>Banned for test!</p>", status_code=403)
         self.assertContains(response, encode_json_html("<p>Banned for test!</p>"), status_code=403)
 
     def test_permission_denied_returns_403(self):
@@ -38,6 +40,34 @@ class ErrorPageViewsTests(TestCase):
         """not allowed error page has no showstoppers"""
         response = self.client.get(reverse('raise-misago-405'))
         self.assertContains(response, "Wrong way", status_code=405)
+
+    def test_social_auth_failed_returns_403(self):
+        """social auth's failed error returns 403"""
+        response = self.client.get(reverse('raise-social-auth-failed'))
+        self.assertContains(response, "page-error-social", status_code=403)
+        self.assertContains(response, "GitHub", status_code=403)
+
+    def test_social_wrong_backend_returns_403(self):
+        """social auth's wrong backend error returns 403"""
+        response = self.client.get(reverse('raise-social-wrong-backend'))
+        self.assertContains(response, "page-error-social", status_code=403)
+
+    def test_social_not_allowed_to_disconnect_returns_403(self):
+        """social auth's not allowed to disconnect error returns 403"""
+        response = self.client.get(reverse('raise-social-not-allowed-to-disconnect'))
+        self.assertContains(response, "page-error-social", status_code=403)
+
+    def test_social_failed_message(self):
+        """misago-specific social auth failed exception error page returns 403 with message"""
+        response = self.client.get(reverse('raise-social-auth-failed-message'))
+        self.assertContains(response, "page-error-social", status_code=403)
+        self.assertContains(response, "This message will be shown to user!", status_code=403)
+
+    def test_social_auth_banned(self):
+        """misago-specific social auth banned exception error page returns 403 with ban message"""
+        response = self.client.get(reverse('raise-social-auth-banned'))
+        self.assertContains(response, "page-error-social", status_code=403)
+        self.assertContains(response, "Banned in auth!", status_code=403)
 
 
 @override_settings(ROOT_URLCONF='misago.core.testproject.urlswitherrorhandlers')

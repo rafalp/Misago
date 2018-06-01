@@ -2,7 +2,13 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Change forgotten password" %} | {{ block.super }}{% endblock %}
+{% block title %}
+{% if user.is_authenticated and not user.has_usable_assword %}
+  {% trans "Set new password" %} | {{ block.super }}
+{% else %}
+  {% trans "Change forgotten password" %} | {{ block.super }}
+{% endif %}
+{% endblock %}
 
 
 {% block content %}
@@ -10,7 +16,11 @@
   <div class="page-header-bg">
     <div class="page-header">
       <div class="container">
-        <h1>{% trans "Change forgotten password" %}</h1>
+        {% if user.is_authenticated and not user.has_usable_assword %}
+          <h1>{% trans "Set new password" %}</h1>
+        {% else %}
+          <h1>{% trans "Change forgotten password" %}</h1>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -21,8 +31,13 @@
       <div class="col-md-8">
         <div class="side-form-copy">
 
-          <p class="lead">{% trans "Because user passwords are processed in an irreversible way before being saved to database, it is not possible for us to simply send you your password." %}</p>
-          <p>{% trans "Instead, you can change your password using special secure form that will be available by special link valid only for your browser, for seven days or until your password is changed." %}</p>
+          {% if user.is_authenticated and not user.has_usable_assword %}
+            <p class="lead">{% trans "Your user account has no password set for it because it was created with other service." %}</p>
+            <p>{% trans "To set password for your account, you can use special secure form that will be available by special link valid only for your browser, for seven days or until your password is set." %}</p>
+          {% else %}
+            <p class="lead">{% trans "Because user passwords are processed in an irreversible way before being saved to database, it is not possible for us to simply send you your password." %}</p>
+            <p>{% trans "Instead, you can change your password using special secure form that will be available by special link valid only for your browser, for seven days or until your password is changed." %}</p>
+          {% endif %}
           <p>
             {% blocktrans trimmed %}
               To receive this link, enter your account's e-mail addres in form and press the "Send link" button.

@@ -31,6 +31,7 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
     is_followed = serializers.SerializerMethodField()
     is_blocked = serializers.SerializerMethodField()
     meta = serializers.SerializerMethodField()
+    real_name = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
 
     class Meta:
@@ -55,6 +56,7 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
             'is_blocked',
 
             'meta',
+            'real_name',
             'status',
         ]
 
@@ -79,6 +81,9 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
     def get_meta(self, obj):
         return {'score': obj.score}
 
+    def get_real_name(self, obj):
+        return obj.get_real_name()
+
     def get_signature(self, obj):
         if obj.has_valid_signature:
             return obj.signature_parsed
@@ -102,5 +107,6 @@ UserCardSerializer = UserSerializer.subset_fields(
     'followers',
     'threads',
     'posts',
+    'real_name',
     'status',
 )

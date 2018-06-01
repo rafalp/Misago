@@ -1,0 +1,49 @@
+{% extends "misago/base.html" %}
+{% load i18n %}
+
+
+{% block title %}{% trans "Problem with sign in" %} | {{ block.super }}{% endblock %}
+
+
+{% block meta-description %}
+{{ message }}
+{% endblock meta-description %}
+
+
+{% block og-title %}{% trans "Problem with sign in" %}{% endblock %}
+
+
+{% block og-description %}
+{{ message }}
+{% endblock %}
+
+
+{% block content %}
+<div class="page page-error page-error-social">
+  <div class="page-header-bg"></div>
+  <div class="container">
+    <div class="message-panel">
+
+      <div class="message-icon">
+        <span class="material-icon">sync_problem</span>
+      </div>
+
+      <div class="message-body">
+        {% if ban %}
+          {% include "misago/errorpages/ban_message.html" %}
+        {% else %}
+          <p class="lead">{{ message }}</p>
+          <p>
+            {% if help_text %}
+              {{ help_text }}
+            {% else %}
+              {% trans "Please try again or use another method to sign in if the problem persists." %}
+            {% endif %}
+          </p>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock content %}

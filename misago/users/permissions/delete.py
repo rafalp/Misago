@@ -104,7 +104,7 @@ can_delete_user = return_boolean(allow_delete_user)
 
 
 def allow_delete_own_account(user, target):
-    if not settings.MISAGO_ENABLE_DELETE_OWN_ACCOUNT:
+    if not settings.MISAGO_ENABLE_DELETE_OWN_ACCOUNT and not user.is_deleting_account:
         raise PermissionDenied(_("You can't delete your account."))
     if user.pk != target.pk:
         raise PermissionDenied(_("You can't delete other users accounts."))

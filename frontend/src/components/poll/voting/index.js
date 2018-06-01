@@ -4,6 +4,7 @@ import ChoicesHelp from './help';
 import ChoicesSelect from './select';
 import { getChoicesLeft, getChoiceFromHash } from './utils';
 import PollInfo from '../info';
+import { Delete, Edit, getClassName } from '../results/options';
 import Button from 'misago/components/button';
 import Form from 'misago/components/form';
 import * as poll from 'misago/reducers/poll';
@@ -104,6 +105,13 @@ export default class extends Form {
   }
 
   render() {
+    const controls = [];
+
+    if (this.props.poll.acl.can_vote) controls.push(0);
+    if (this.props.poll.is_public || this.props.poll.acl.can_see_votes) controls.push(1);
+    if (this.props.poll.acl.can_edit) controls.push(2);
+    if (this.props.poll.acl.can_delete) controls.push(3);
+
     return (
       <div className="panel panel-default panel-poll">
         <form onSubmit={this.handleSubmit}>
@@ -121,7 +129,7 @@ export default class extends Form {
           </div>
           <div className="panel-footer">
             <div className="row">
-              <div className="col-xs-6 col-sm-4 col-md-2">
+              <div className={getClassName(controls, 0)}>
                 <Button
                   className="btn-primary btn-block btn-sm"
                   loading={this.state.isLoading}
@@ -129,7 +137,7 @@ export default class extends Form {
                   {gettext("Save your vote")}
                 </Button>
               </div>
-              <div className="col-xs-6 col-sm-4 col-md-2">
+              <div className={getClassName(controls, 1)}>
                 <button
                   className="btn btn-default btn-block btn-sm"
                   disabled={this.state.isLoading}
@@ -139,6 +147,15 @@ export default class extends Form {
                   {gettext("See results")}
                 </button>
               </div>
+              <Edit
+                controls={controls}
+                poll={this.props.poll}
+                thread={this.props.thread}
+              />
+              <Delete
+                controls={controls}
+                poll={this.props.poll}
+              />
             </div>
           </div>
         </form>

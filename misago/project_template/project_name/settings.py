@@ -189,6 +189,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'mptt',
     'rest_framework',
+    'social_django',
 
     # Misago apps
     'misago.acl',
@@ -238,6 +239,40 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = '{{ project_name }}.urls'
+
+SOCIAL_AUTH_PIPELINE = (
+    # Steps required by social pipeline to work - don't delete those!
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.social_user',
+
+    # Uncomment next line to let your users to associate their old forum account with social one.
+    # 'misago.users.social.pipeline.associate_by_email',
+
+    # Those steps make sure banned users may not join your site or use banned name or email.
+    'misago.users.social.pipeline.validate_ip_not_banned',
+    'misago.users.social.pipeline.validate_user_not_banned',
+
+    # Reads user data received from social site and tries to create valid and available username
+    # Required if you want automatic account creation to work. Otherwhise optional.
+    'misago.users.social.pipeline.get_username',
+
+    # Uncomment next line to enable automatic account creation if data from social site is valid
+    # and get_username found valid name for new user account:
+    # 'misago.users.social.pipeline.create_user',
+
+    # This step asks user to complete simple, pre filled registration form containing username,
+    # email, legal note if you remove it without adding custom one, users will have no fallback
+    # for joining your site using their social account.
+    'misago.users.social.pipeline.create_user_with_form',
+
+    # Steps finalizing social authentication flow - don't delete those!
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'misago.users.social.pipeline.require_activation',
+)
+
+SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
 TEMPLATES = [
     {
@@ -348,7 +383,7 @@ MISAGO_PROFILE_FIELDS = [
     {
         'name': _("Personal"),
         'fields': [
-            'misago.users.profilefields.default.FullNameField',
+            'misago.users.profilefields.default.RealNameField',
             'misago.users.profilefields.default.GenderField',
             'misago.users.profilefields.default.BioField',
             'misago.users.profilefields.default.LocationField',
