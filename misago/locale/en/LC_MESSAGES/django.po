@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-20 21:20+0200\n"
+"POT-Creation-Date: 2018-05-31 23:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -321,7 +321,8 @@ msgid "Move child categories to"
 msgstr ""
 
 #: categories/forms.py:247 categories/forms.py:262
-#: templates/misago/acl_debug.html:15 templates/misago/admin/roles/list.html:16
+#: templates/misago/acl_debug.html:15
+#: templates/misago/admin/roles/list.html:16
 msgid "Role"
 msgstr ""
 
@@ -1395,7 +1396,8 @@ msgstr ""
 #: templates/misago/admin/ranks/list.html:16
 #: templates/misago/admin/users/list.html:21
 #: templates/misago/userslists/active_posters.html:95
-#: templates/misago/userslists/active_posters.html:106 users/forms/admin.py:236
+#: templates/misago/userslists/active_posters.html:106
+#: users/forms/admin.py:236
 msgid "Rank"
 msgstr ""
 
@@ -5668,23 +5670,23 @@ msgstr ""
 msgid "Nobody"
 msgstr ""
 
-#: users/models/user.py:174
+#: users/models/user.py:175
 msgid "joined on"
 msgstr ""
 
-#: users/models/user.py:189
+#: users/models/user.py:190
 msgid "staff status"
 msgstr ""
 
-#: users/models/user.py:191
+#: users/models/user.py:192
 msgid "Designates whether the user can log into admin sites."
 msgstr ""
 
-#: users/models/user.py:198
+#: users/models/user.py:199
 msgid "active"
 msgstr ""
 
-#: users/models/user.py:202
+#: users/models/user.py:203
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
@@ -5968,7 +5970,7 @@ msgid "Bio"
 msgstr ""
 
 #: users/profilefields/default.py:18
-msgid "Full name"
+msgid "Real name"
 msgstr ""
 
 #: users/profilefields/default.py:23

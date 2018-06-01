@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-20 21:20+0200\n"
+"POT-Creation-Date: 2018-05-31 23:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Carlos López <carlos@vocalaze.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/misago/teams/65369/es/)\n"
@@ -5990,24 +5990,24 @@ msgstr "Usuarios que sigo"
 msgid "Nobody"
 msgstr "Nadie"
 
-#: users/models/user.py:174
+#: users/models/user.py:175
 msgid "joined on"
 msgstr "se unió a"
 
-#: users/models/user.py:189
+#: users/models/user.py:190
 msgid "staff status"
 msgstr "estado del personal"
 
-#: users/models/user.py:191
+#: users/models/user.py:192
 msgid "Designates whether the user can log into admin sites."
 msgstr ""
 "Designa si el usuario puede iniciar sesión en sitios de administración."
 
-#: users/models/user.py:198
+#: users/models/user.py:199
 msgid "active"
 msgstr "activo"
 
-#: users/models/user.py:202
+#: users/models/user.py:203
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
@@ -6307,8 +6307,8 @@ msgid "Bio"
 msgstr "Biografia"
 
 #: users/profilefields/default.py:18
-msgid "Full name"
-msgstr "Nombre completo"
+msgid "Real name"
+msgstr ""
 
 #: users/profilefields/default.py:23
 msgid "Location"
