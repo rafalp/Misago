@@ -55,7 +55,7 @@ class RegisterUserSerializer(serializers.Serializer):
         except ValidationError as e:
             self.add_error('password', e)
 
-        validators.validate_new_registration(request, self, data)
+        validators.validate_new_registration(request, data, self.add_error)
 
         if self._added_errors:
             # fail registration with additional errors
