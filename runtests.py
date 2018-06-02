@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 import pwd
 import shutil
@@ -8,7 +9,7 @@ from django import setup
 
 TEST_RUNNER_PATH = os.path.dirname(os.path.abspath(__file__))
 
-sys.path.append(TEST_RUNNER_PATH)
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
 def runtests():
@@ -38,9 +39,7 @@ def parse_args():
 
 
 def setup_testproject():
-    TEST_RUNNER_PATH = os.path.dirname(os.path.abspath(__file__))
     project_template_path = os.path.join(TEST_RUNNER_PATH, 'misago/project_template')
-    project_package_path = os.path.join(TEST_RUNNER_PATH, 'misago/project_template/project_name')
 
     test_project_path = os.path.join(TEST_RUNNER_PATH, "testproject")
     if os.path.exists(test_project_path):
