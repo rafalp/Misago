@@ -24,7 +24,7 @@ Misago
 Misago aims to be complete, featured and modern forum solution that has no fear to say 'NO' to common and outdated opinions about how forum software should be made and what it should do.
 
 * **Homepage:** http://misago-project.org/
-* **Documentation:** https://rafalp.gitbooks.io/misago/
+* **Documentation:** https://misago.gitbook.io/docs/
 * **Code & BugTracker:** https://github.com/rafalp/Misago/
 
 
