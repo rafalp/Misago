@@ -27,7 +27,7 @@ def send_welcome_email(request, user):
 
 
 def get_registration_result_json(user):
-    activation_method = 'active'
+    activation_method = None
     if user.requires_activation_by_admin:
         activation_method = 'admin'
     elif user.requires_activation_by_user:

@@ -131,8 +131,7 @@ class GatewayTests(TestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'code': 'invalid_login',
-            'detail': 'Login or password is incorrect.',
+            'non_field_errors': ["Login or password is incorrect."],
         })
 
     def test_login_banned(self):

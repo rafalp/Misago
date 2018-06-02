@@ -27,7 +27,7 @@ def create_request(user_ip='0.0.0.0', data=None):
     else:
         request = factory.post('/', data=json.dumps(data), content_type='application/json')
     request.include_frontend_context = True
-    request.frontend_context = {}
+    request.frontend_context = {'auth': {}, 'conf': {}, 'store': {}, 'url': {}}
     request.session = {}
     request.user = AnonymousUser()
     request.user_ip = user_ip

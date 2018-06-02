@@ -13,7 +13,7 @@ from misago.users.bans import get_email_ban, get_username_ban
 UserModel = get_user_model()
 
 
-class RegisterUserSerializer(serializers.Serializer):
+class BaseRegisterUserSerializer(serializers.Serializer):
     username = serializers.CharField(
         max_length=255,
         validators=[validators.validate_username],
@@ -21,10 +21,6 @@ class RegisterUserSerializer(serializers.Serializer):
     email = serializers.CharField(
         max_length=255,
         validators=[validators.validate_email],
-    )
-    password = serializers.CharField(
-        max_length=255,
-        trim_whitespace=False,
     )
 
     def validate_username(self, data):
@@ -45,10 +41,54 @@ class RegisterUserSerializer(serializers.Serializer):
                 raise ValidationError(_("This e-mail address is not allowed."))
         return data
 
+    def validate_added_errors(self):
+        if self._added_errors:
+            # fail registration with additional errors
+            raise serializers.ValidationError(self._added_errors)
+            
     def validate(self, data):
+        self._added_errors = {}
+        return data
+
+    def add_error(self, field, error):
+        """
+        custom implementation for quasi add_error feature for custom validators
+        we are doing some hacky introspection here to deconstruct ValidationError
+        """
+        self._added_errors.setdefault(field, [])
+
+        if isinstance(error, ValidationError):
+            self._added_errors[field].extend(list(error))
+        elif isinstance(error, serializers.ValidationError):
+            details = [e['message'] for e in error.get_full_details()]
+            self._added_errors[field].extend(details)
+        else:
+            self._added_errors[field].append(six.text_type(error))
+
+
+class SocialRegisterUserSerializer(BaseRegisterUserSerializer):
+    def validate(self, data):
+        data = super(SocialRegisterUserSerializer, self).validate(data)
+
         request = self.context['request']
 
-        self._added_errors = {}
+        validators.validate_new_registration(request, data, self.add_error)
+
+        self.validate_added_errors()
+
+        return data
+
+
+class RegisterUserSerializer(BaseRegisterUserSerializer):
+    password = serializers.CharField(
+        max_length=255,
+        trim_whitespace=False,
+    )
+
+    def validate(self, data):
+        data = super(RegisterUserSerializer, self).validate(data)
+
+        request = self.context['request']
 
         try:
             self.full_clean_password(data)
@@ -57,9 +97,7 @@ class RegisterUserSerializer(serializers.Serializer):
 
         validators.validate_new_registration(request, data, self.add_error)
 
-        if self._added_errors:
-            # fail registration with additional errors
-            raise serializers.ValidationError(self._added_errors)
+        self.validate_added_errors()
 
         # run test for captcha
         try:
@@ -78,19 +116,3 @@ class RegisterUserSerializer(serializers.Serializer):
                     email=data.get('email'),
                 ),
             )
-
-    def add_error(self, field, error):
-        """
-        custom implementation for quasi add_error feature for custom validators
-        we are doing some hacky introspection here to deconstruct ValidationError
-        """
-        self._added_errors.setdefault(field, [])
-
-        if isinstance(error, ValidationError):
-            self._added_errors[field].extend(list(error))
-        elif isinstance(error, serializers.ValidationError):
-            details = [e['message'] for e in error.get_full_details()]
-            self._added_errors[field].extend(details)
-        else:
-            self._added_errors[field].append(six.text_type(error))
-

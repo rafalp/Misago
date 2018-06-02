@@ -110,6 +110,7 @@ class ThreadsListSerializer(ThreadSerializer):
             real_name = obj.starter.get_real_name()
         else:
             avatars = None
+            real_name = None
 
         return {
             'id': obj.starter_id,
@@ -125,6 +126,7 @@ class ThreadsListSerializer(ThreadSerializer):
             real_name = obj.last_poster.get_real_name()
         else:
             avatars = None
+            real_name = None
 
         return {
             'id': obj.last_poster_id,

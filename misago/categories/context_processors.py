@@ -12,7 +12,7 @@ def preload_categories_json(request):
     except AttributeError:
         return {}
         
-    cache_key = 'misago_categories_json_{}'.format(request.user.acl_key)
+    cache_key = 'misago_categories_json_{}'.format(user_acl_key)
     categories_json = cache.get(cache_key, 'nada')
     if categories_json == 'nada':
         is_root = Q(level=0)

@@ -12,7 +12,7 @@ from misago.conf import settings
 from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
 
 from misago.users.bans import get_request_ip_ban, get_user_ban
-from misago.users.forms.register import SocialAuthRegisterForm
+from misago.users.serializers.register import SocialRegisterUserSerializer
 from misago.users.models import Ban
 from misago.users.registration import get_registration_result_json, send_welcome_email
 from misago.users.validators import (
@@ -181,11 +181,12 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
         except (TypeError, ValueError):
             request_data = request.POST.copy()
             
-        form = SocialAuthRegisterForm(request_data, request=request)
-        if not form.is_valid():
-            return JsonResponse(form.errors, status=400)
+        serializer = SocialRegisterUserSerializer(data=request_data, context={'request': request})
+        if not serializer.is_valid():
+            return JsonResponse(serializer.errors, status=400)
 
-        email_verified = form.cleaned_data['email'] == details.get('email')
+        validated_data = serializer.validated_data
+        email_verified = validated_data['email'] == details.get('email')
 
         activation_kwargs = {}
         if settings.account_activation == 'admin':
@@ -195,8 +196,8 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
 
         try:
             new_user = UserModel.objects.create_user(
-                form.cleaned_data['username'],
-                form.cleaned_data['email'],
+                validated_data['username'],
+                validated_data['email'],
                 joined_from_ip=request.user_ip,
                 set_default_avatar=True,
                 **activation_kwargs

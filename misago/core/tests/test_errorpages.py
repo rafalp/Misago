@@ -22,9 +22,7 @@ class ErrorPageViewsTests(TestCase):
     def test_banned_returns_403(self):
         """banned error page has no show-stoppers"""
         response = self.client.get(reverse('raise-misago-banned'))
-        self.assertContains(response, "misago:error-banned", status_code=403)
         self.assertContains(response, "<p>Banned for test!</p>", status_code=403)
-        self.assertContains(response, encode_json_html("<p>Banned for test!</p>"), status_code=403)
 
     def test_permission_denied_returns_403(self):
         """permission_denied error page has no show-stoppers"""

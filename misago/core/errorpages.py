@@ -33,7 +33,7 @@ def banned(request, exception):
             'ban': ban.get_serialized_message(),
         },
     })
-
+    
     return render(
         request, 'misago/errorpages/banned.html', {
             'ban': ban,
