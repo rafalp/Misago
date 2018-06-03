@@ -6,12 +6,11 @@ from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 
 
-@python_2_unicode_compatible
 class AuditTrail(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(db_index=True, default=timezone.now)
     ip_address = models.GenericIPAddressField()
-    
+
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
