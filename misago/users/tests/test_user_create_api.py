@@ -320,6 +320,8 @@ class UserCreateTests(UserTestCase):
 
         self.assertIn('Welcome', mail.outbox[0].subject)
 
+        self.assertEqual(test_user.audittrail_set.count(), 1)
+
     def test_registration_creates_inactive_user(self):
         """api creates inactive user on POST"""
         settings.override_setting('account_activation', 'user')

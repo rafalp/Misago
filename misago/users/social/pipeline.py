@@ -156,6 +156,7 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
     new_user = UserModel.objects.create_user(
         username, 
         email, 
+        create_audit_trail=True,
         joined_from_ip=request.user_ip, 
         set_default_avatar=True,
         **activation_kwargs
@@ -197,6 +198,7 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
             new_user = UserModel.objects.create_user(
                 form.cleaned_data['username'],
                 form.cleaned_data['email'],
+                create_audit_trail=True,
                 joined_from_ip=request.user_ip,
                 set_default_avatar=True,
                 **activation_kwargs
