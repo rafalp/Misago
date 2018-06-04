@@ -4,14 +4,18 @@ from .models import AuditTrail
 
 
 def create_audit_trail(request, obj):
+    return create_user_audit_trail(request.user, request.user_ip, obj)
+
+
+def create_user_audit_trail(user, ip_address, obj):
     if not isinstance(obj, models.Model):
         raise ValueError("obj must be a valid Django model instance")
 
-    if request.user.is_anonymous:
+    if user.is_anonymous:
         return None
 
     return AuditTrail.objects.create(
-        user=request.user,
-        ip_address=request.user_ip,
+        user=user,
+        ip_address=ip_address,
         content_object=obj,
     )
