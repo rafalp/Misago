@@ -313,3 +313,5 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
 
         self.assertEqual(len(poll.choices), 3)
         self.assertEqual(len(set([c['hash'] for c in poll.choices])), 3)
+        
+        self.assertEqual(self.user.audittrail_set.count(), 1)

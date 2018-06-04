@@ -335,6 +335,8 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         # votes were removed
         self.assertEqual(response_json['votes'], 0)
         self.assertEqual(self.poll.pollvote_set.count(), 0)
+        
+        self.assertEqual(self.user.audittrail_set.count(), 1)
 
     def test_poll_current_choices_edited(self):
         """api edits current poll choices"""
@@ -418,6 +420,8 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         # no votes were removed
         self.assertEqual(response_json['votes'], 4)
         self.assertEqual(self.poll.pollvote_set.count(), 4)
+        
+        self.assertEqual(self.user.audittrail_set.count(), 1)
 
     def test_poll_some_choices_edited(self):
         """api edits some poll choices"""
@@ -491,6 +495,8 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         self.assertEqual(response_json['votes'], 1)
         self.assertEqual(self.poll.pollvote_set.count(), 1)
 
+        self.assertEqual(self.user.audittrail_set.count(), 1)
+
     def test_moderate_user_poll(self):
         """api edits all poll choices out in other users poll, even if its over"""
         self.override_acl({'can_edit_polls': 2, 'poll_edit_time': 5})
@@ -544,3 +550,5 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         # votes were removed
         self.assertEqual(response_json['votes'], 0)
         self.assertEqual(self.poll.pollvote_set.count(), 0)
+
+        self.assertEqual(self.user.audittrail_set.count(), 1)
