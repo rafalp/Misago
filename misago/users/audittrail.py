@@ -3,7 +3,7 @@ from django.db import models
 from .models import AuditTrail
 
 
-def create_user_audit_trail(request, obj):
+def create_audit_trail(request, obj):
     if not isinstance(obj, models.Model):
         raise ValueError("obj must be a valid Django model instance")
 

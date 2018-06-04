@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from misago.users.audittrail import create_user_audit_trail
+from misago.users.audittrail import create_audit_trail
 from misago.users.models import AuditTrail
 from misago.users.testutils import UserTestCase
 
@@ -21,25 +21,25 @@ class CreateAuditTrailTests(UserTestCase):
         self.obj = UserModel.objects.create_user('BobBoberson', 'bob@example.com')
 
     def test_create_user_audit_require_model(self):
-        """create_user_audit_trail requires model instance"""
+        """create_audit_trail requires model instance"""
         anonymous_user = self.get_anonymous_user()
         request = MockRequest(anonymous_user)
         with self.assertRaises(ValueError):
-            create_user_audit_trail(request, anonymous_user)
+            create_audit_trail(request, anonymous_user)
         self.assertEqual(AuditTrail.objects.count(), 0)
 
     def test_create_user_audit_trail_anonymous_user(self):
-        """create_user_audit_trail doesn't record anonymous users"""
+        """create_audit_trail doesn't record anonymous users"""
         user = self.get_anonymous_user()
         request = MockRequest(user)
-        create_user_audit_trail(request, self.obj)
+        create_audit_trail(request, self.obj)
         self.assertEqual(AuditTrail.objects.count(), 0)
 
     def test_create_user_audit_trail(self):
-        """create_user_audit_trail creates new db record"""
+        """create_audit_trail creates new db record"""
         user = self.get_authenticated_user()
         request = MockRequest(user)
-        create_user_audit_trail(request, self.obj)
+        create_audit_trail(request, self.obj)
         self.assertEqual(AuditTrail.objects.count(), 1)
 
         audit_trail = user.audittrail_set.all()[0]
@@ -51,7 +51,7 @@ class CreateAuditTrailTests(UserTestCase):
         """audit trail is deleted together with user it belongs to"""
         user = self.get_authenticated_user()
         request = MockRequest(user)
-        create_user_audit_trail(request, self.obj)
+        create_audit_trail(request, self.obj)
         self.assertEqual(AuditTrail.objects.count(), 1)
 
         user.delete()
@@ -61,7 +61,7 @@ class CreateAuditTrailTests(UserTestCase):
         """audit trail is kept after with obj it points at is deleted"""
         user = self.get_authenticated_user()
         request = MockRequest(user)
-        create_user_audit_trail(request, self.obj)
+        create_audit_trail(request, self.obj)
         self.assertEqual(AuditTrail.objects.count(), 1)
 
         self.obj.delete()
@@ -76,7 +76,7 @@ class CreateAuditTrailTests(UserTestCase):
         """audit trail deletion leaves other data untouched"""
         user = self.get_authenticated_user()
         request = MockRequest(user)
-        create_user_audit_trail(request, self.obj)
+        create_audit_trail(request, self.obj)
         self.assertEqual(AuditTrail.objects.count(), 1)
 
         audit_trail = user.audittrail_set.all()[0]
