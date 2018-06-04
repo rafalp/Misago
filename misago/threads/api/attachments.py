@@ -8,6 +8,7 @@ from django.utils.translation import ugettext as _
 from misago.acl import add_acl
 from misago.threads.models import Attachment, AttachmentType
 from misago.threads.serializers import AttachmentSerializer
+from misago.users.audittrail import create_audit_trail
 
 
 IMAGE_EXTENSIONS = ('jpg', 'jpeg', 'png', 'gif')
@@ -53,6 +54,8 @@ class AttachmentViewSet(viewsets.ViewSet):
 
         attachment.save()
         add_acl(request.user, attachment)
+
+        create_audit_trail(request, attachment)
 
         return Response(AttachmentSerializer(attachment, context={'user': request.user}).data)
 
