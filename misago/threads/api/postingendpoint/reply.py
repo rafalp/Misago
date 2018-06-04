@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy
 from misago.markup import common_flavour
 from misago.threads.checksums import update_post_checksum
 from misago.threads.validators import validate_post, validate_post_length, validate_title
+from misago.users.audittrail import create_audit_trail
 
 from . import PostingEndpoint, PostingMiddleware
 
@@ -45,6 +46,8 @@ class ReplyMiddleware(PostingMiddleware):
             self.thread.set_last_post(self.post)
 
         self.thread.save()
+
+        create_audit_trail(self.request, self.post)
 
         # annotate post for future middlewares
         self.post.parsing_result = parsing_result
