@@ -5,7 +5,6 @@ from misago.conf import settings
 from misago.core.utils import ANONYMOUS_IP
 from misago.users.signals import anonymize_old_ips
 
-
 class Command(BaseCommand):
     help =  "Anonymizes users IPs stored for longer than set in MISAGO_IP_STORE_TIME."
     
