@@ -10,7 +10,6 @@ from misago.core.utils import ANONYMOUS_IP
 from misago.users.management.commands import anonymizeoldips
 
 
-
 UserModel = get_user_model()
 
 
