@@ -12,7 +12,7 @@ const StartSocialAuth = (props) => {
   } = props;
   const socialAuth = misago.get('SETTINGS').SOCIAL_AUTH;
 
-  if (socialAuth.length === 0) return;
+  if (socialAuth.length === 0) return null;
 
   return (
     <div className="form-group form-social-auth">
