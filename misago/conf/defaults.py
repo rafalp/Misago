@@ -346,8 +346,8 @@ MISAGO_MOMENT_JS_LOCALES = [
 ]
 
 
-# Specifies the number of days that IP addresses are stored in the database before anonymization.
-# Change this setting to None to never anonymize old IP addresses.
+# Specifies the number of days that IP addresses are stored in the database before removing.
+# Change this setting to None to never remove old IP addresses.
 
 MISAGO_IP_STORE_TIME = None
 
