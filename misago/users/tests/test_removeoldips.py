@@ -23,7 +23,7 @@ class RemoveOldIpsTests(TestCase):
         self.assertNotEqual(user_joined_from_ip, ANONYMOUS_IP)
     
     def test_removeoldips_old_user(self):
-        """command is removing user's IP if its old"""
+        """command is removes user's IP if its old"""
         joined_on_past = timezone.now() - timedelta(days=50)
         user = UserModel.objects.create_user('Bob1', 'bob1@bob.com')
         user.joined_on = joined_on_past
