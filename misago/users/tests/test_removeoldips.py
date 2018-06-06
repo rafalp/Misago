@@ -37,13 +37,13 @@ class RemoveOldIpsTests(TestCase):
     def test_not_anonymizing_user_ip(self):
         """command is not anonymizing user's IP if anonymization is disabled"""
         user = UserModel.objects.create_user('Bob1', 'bob1@bob.com')
-        user_joined_from_ip = UserModel.objects.get(pk=user.pk).joined_from_ip
-
-        self.assertNotEqual(user_joined_from_ip, ANONYMOUS_IP)
         
         out = StringIO()
         call_command(removeoldips.Command(), stdout=out)
         command_output = out.getvalue().splitlines()[0].strip()
-
+        
         self.assertEqual(command_output, "IP anonymization is disabled.")
+        
+        user_joined_from_ip = UserModel.objects.get(pk=user.pk).joined_from_ip
+        self.assertNotEqual(user_joined_from_ip, ANONYMOUS_IP)
 
