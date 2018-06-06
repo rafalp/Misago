@@ -46,3 +46,4 @@ class RemoveOldIpsTests(TestCase):
         command_output = out.getvalue().splitlines()[0].strip()
 
         self.assertEqual(command_output, "IP anonymization is disabled.")
+

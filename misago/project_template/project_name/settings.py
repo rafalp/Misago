@@ -415,3 +415,4 @@ MISAGO_PROFILE_FIELDS = [
 # Change this setting to None to never anonymize old IP addresses.
 
 MISAGO_IP_STORE_TIME = 50
+

@@ -350,3 +350,4 @@ MISAGO_MOMENT_JS_LOCALES = [
 # Change this setting to None to never anonymize old IP addresses.
 
 MISAGO_IP_STORE_TIME = None
+
