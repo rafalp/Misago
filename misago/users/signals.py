@@ -13,8 +13,8 @@ UserModel = get_user_model()
 
 anonymize_user_content = Signal()
 delete_user_content = Signal()
-username_changed = Signal()
 remove_old_ips = Signal()
+username_changed = Signal()
 
 
 @receiver(username_changed)

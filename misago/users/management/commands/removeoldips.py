@@ -5,6 +5,7 @@ from misago.conf import settings
 from misago.core.utils import ANONYMOUS_IP
 from misago.users.signals import remove_old_ips
 
+
 class Command(BaseCommand):
     help =  "Removes users IPs stored for longer than set in MISAGO_IP_STORE_TIME."
     
@@ -15,3 +16,4 @@ class Command(BaseCommand):
       
       remove_old_ips.send(sender=self)
       self.stdout.write("IP addresses older than {} days have been removed.".format(settings.MISAGO_IP_STORE_TIME))
+
