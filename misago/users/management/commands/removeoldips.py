@@ -3,7 +3,7 @@ from django.core.management import BaseCommand
 
 from misago.conf import settings
 from misago.core.utils import ANONYMOUS_IP
-from misago.users.signals import anonymize_old_ips
+from misago.users.signals import remove_old_ips
 
 class Command(BaseCommand):
     help =  "Anonymizes users IPs stored for longer than set in MISAGO_IP_STORE_TIME."
@@ -13,6 +13,6 @@ class Command(BaseCommand):
         self.stdout.write("IP anonymization is disabled.")
         return
       
-      anonymize_old_ips.send(sender=self)
+      remove_old_ips.send(sender=self)
       self.stdout.write("IP addresses older than {} days have been anonymized.".format(settings.MISAGO_IP_STORE_TIME))
 

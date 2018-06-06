@@ -7,28 +7,28 @@ from django.utils import timezone
 from django.utils.six import StringIO
 
 from misago.core.utils import ANONYMOUS_IP
-from misago.users.management.commands import anonymizeoldips
+from misago.users.management.commands import removeoldips
 
 
 UserModel = get_user_model()
 
 
-class AnonymizeOldIpsTests(TestCase):
-    def test_anonymizeoldips_new_user(self):
+class RemoveOldIpsTests(TestCase):
+    def test_removeoldips_new_user(self):
         """command is not anonymizing user's IP if its new"""
         user = UserModel.objects.create_user('Bob', 'bob@bob.com')
-        call_command(anonymizeoldips.Command())
+        call_command(removeoldips.Command())
         user_joined_from_ip = UserModel.objects.get(pk=user.pk).joined_from_ip
         
         self.assertNotEqual(user_joined_from_ip, ANONYMOUS_IP)
     
-    def test_anonymizeoldips_old_user(self):
+    def test_removeoldips_old_user(self):
         """command is anonymizing user's IP if its old"""
         joined_on_past = timezone.now() - timedelta(days=50)
         user = UserModel.objects.create_user('Bob1', 'bob1@bob.com')
         user.joined_on = joined_on_past
         user.save()
-        call_command(anonymizeoldips.Command())
+        call_command(removeoldips.Command())
         user_joined_from_ip = UserModel.objects.get(pk=user.pk).joined_from_ip
 
         self.assertEqual(user_joined_from_ip, ANONYMOUS_IP)
@@ -37,7 +37,7 @@ class AnonymizeOldIpsTests(TestCase):
     def test_not_anonymizing_user_ip(self):
         """command is not anonymizing user's IP if anonymization is disabled"""
         out = StringIO()
-        call_command(anonymizeoldips.Command(), stdout=out)
+        call_command(removeoldips.Command(), stdout=out)
         command_output = out.getvalue().splitlines()[0].strip()
 
         self.assertEqual(command_output, "IP anonymization is disabled.")
