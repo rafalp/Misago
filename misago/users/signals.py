@@ -17,7 +17,6 @@ username_changed = Signal()
 remove_old_ips = Signal()
 
 
-
 @receiver(username_changed)
 def handle_name_change(sender, **kwargs):
     sender.user_renames.update(changed_by_username=sender.username)
