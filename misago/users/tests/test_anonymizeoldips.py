@@ -1,10 +1,10 @@
-import datetime
+from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
+from django.test import TestCase, override_settings
 from django.utils import timezone
 from django.utils.six import StringIO
-from django.test import TestCase, override_settings
 
 from misago.core.utils import ANONYMOUS_IP
 from misago.users.management.commands import anonymizeoldips
@@ -24,17 +24,16 @@ class AnonymizeOldIpsTests(TestCase):
     
     def test_anonymizeoldips_old_user(self):
         """command is anonymizing user's IP if its old"""
-        current_datetime = timezone.now()
-        datetime_50_days_past = current_datetime - datetime.timedelta(days=51)
-        user = UserModel.objects.create_user('Bob', 'bob@bob.com')
-        user.joined_on = datetime_50_days_past
+        joined_on_past = timezone.now() - timedelta(days=50)
+        user = UserModel.objects.create_user('Bob1', 'bob1@bob.com')
+        user.joined_on = joined_on_past
         user.save()
         call_command(anonymizeoldips.Command())
         user_joined_from_ip = UserModel.objects.get(pk=user.pk).joined_from_ip
 
         self.assertEqual(user_joined_from_ip, ANONYMOUS_IP)
 
-    @override_settings(MISAGO_IP_STORE_TIME = None)
+    @override_settings(MISAGO_IP_STORE_TIME=None)
     def test_not_anonymizing_user_ip(self):
         """command is not anonymizing user's IP if anonymization is disabled"""
         out = StringIO()
