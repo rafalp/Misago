@@ -1,8 +1,6 @@
-from django.contrib.auth import get_user_model
 from django.core.management import BaseCommand
 
 from misago.conf import settings
-from misago.core.utils import ANONYMOUS_IP
 from misago.users.signals import remove_old_ips
 
 
@@ -18,4 +16,3 @@ class Command(BaseCommand):
       
       self.stdout.write(
         "IP addresses older than {} days have been removed.".format(settings.MISAGO_IP_STORE_TIME))
-
