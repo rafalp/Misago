@@ -9,4 +9,5 @@
 25 0 * * * python manage.py clearsessions
 25 0 * * * python manage.py clearsocial
 25 0 * * * python manage.py invalidatebans
+0 2 * * * python manage.py removeoldips
 0 1 * * * python manage.py deletemarkedusers
