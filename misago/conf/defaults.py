@@ -259,6 +259,12 @@ MISAGO_RANKING_LENGTH = 30
 MISAGO_RANKING_SIZE = 50
 
 
+# Specifies the number of days that IP addresses are stored in the database before removing.
+# Change this setting to None to never remove old IP addresses.
+
+MISAGO_IP_STORE_TIME = None
+
+
 # Controls number of users displayed on single page
 
 MISAGO_USERS_PER_PAGE = 12
@@ -344,10 +350,3 @@ MISAGO_MOMENT_JS_LOCALES = [
     'vi',
     'zh-cn', 'zh-hans', 'zh-tw',
 ]
-
-
-# Specifies the number of days that IP addresses are stored in the database before removing.
-# Change this setting to None to never remove old IP addresses.
-
-MISAGO_IP_STORE_TIME = None
-

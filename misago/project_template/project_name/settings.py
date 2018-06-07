@@ -381,6 +381,12 @@ MISAGO_SEARCH_CONFIG = 'simple'
 MISAGO_AVATAR_GALLERY = os.path.join(BASE_DIR, 'avatargallery')
 
 
+# Specifies the number of days that IP addresses are stored in the database before removing.
+# Change this setting to None to never remove old IP addresses.
+
+MISAGO_IP_STORE_TIME = 50
+
+
 # Profile fields
 
 MISAGO_PROFILE_FIELDS = [
@@ -409,10 +415,3 @@ MISAGO_PROFILE_FIELDS = [
         ],
     },
 ]
-
-
-# Specifies the number of days that IP addresses are stored in the database before removing.
-# Change this setting to None to never remove old IP addresses.
-
-MISAGO_IP_STORE_TIME = 50
-
