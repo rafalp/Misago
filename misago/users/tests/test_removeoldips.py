@@ -17,9 +17,11 @@ class RemoveOldIpsTests(TestCase):
     def test_removeoldips_recent_user(self):
         """command is not removing user's IP if its recent"""
         user = UserModel.objects.create_user('Bob', 'bob@bob.com')
-        call_command(removeoldips.Command())
-        user_joined_from_ip = UserModel.objects.get(pk=user.pk).joined_from_ip
         
+        out = StringIO()
+        call_command(removeoldips.Command(), stdout=out)
+
+        user_joined_from_ip = UserModel.objects.get(pk=user.pk).joined_from_ip
         self.assertNotEqual(user_joined_from_ip, ANONYMOUS_IP)
     
     def test_removeoldips_old_user(self):
@@ -29,7 +31,9 @@ class RemoveOldIpsTests(TestCase):
         user.joined_on = joined_on_past
         user.save()
 
-        call_command(removeoldips.Command())
+        out = StringIO()
+        call_command(removeoldips.Command(), stdout=out)
+
         user_joined_from_ip = UserModel.objects.get(pk=user.pk).joined_from_ip
         self.assertEqual(user_joined_from_ip, ANONYMOUS_IP)
 
