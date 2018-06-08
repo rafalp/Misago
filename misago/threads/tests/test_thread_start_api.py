@@ -197,6 +197,8 @@ class StartThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(self.user.threads, 1)
         self.assertEqual(self.user.posts, 1)
 
+        self.assertEqual(self.user.audittrail_set.count(), 1)
+
         self.assertEqual(thread.category_id, self.category.pk)
         self.assertEqual(thread.title, "Hello, I am test thread!")
         self.assertEqual(thread.starter_id, self.user.id)

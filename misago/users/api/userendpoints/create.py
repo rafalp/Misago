@@ -43,6 +43,7 @@ def create_endpoint(request):
             form.cleaned_data['username'],
             form.cleaned_data['email'],
             form.cleaned_data['password'],
+            create_audit_trail=True,
             joined_from_ip=request.user_ip,
             set_default_avatar=True,
             **activation_kwargs

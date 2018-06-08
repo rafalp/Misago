@@ -17,6 +17,7 @@ from misago.conf import settings
 from misago.core.pgutils import PgPartialIndex
 from misago.core.utils import slugify
 from misago.users import avatars
+from misago.users.audittrail import create_user_audit_trail
 from misago.users.signatures import is_user_signature_valid
 from misago.users.utils import hash_email
 
@@ -26,8 +27,8 @@ from .rank import Rank
 class UserManager(BaseUserManager):
     @transaction.atomic
     def create_user(
-            self, username, email, password=None, set_default_avatar=False, **extra_fields
-    ):
+            self, username, email, password=None, create_audit_trail=False,
+            joined_from_ip=None, set_default_avatar=False, **extra_fields):
         from misago.users.validators import validate_email, validate_username
 
         email = self.normalize_email(email)
@@ -88,6 +89,9 @@ class UserManager(BaseUserManager):
         user.update_acl_key()
 
         user.save(update_fields=['avatars', 'acl_key'])
+
+        if create_audit_trail:
+            create_user_audit_trail(user, user.joined_from_ip, user)
 
         # populate online tracker with default value
         Online.objects.create(

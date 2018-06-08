@@ -68,6 +68,8 @@ class PipelineTestCase(UserTestCase):
         if activation == 'admin':
             self.assertEqual(new_user.requires_activation, UserModel.ACTIVATION_ADMIN)
 
+        self.assertEqual(new_user.audittrail_set.count(), 1)
+
     def assertJsonResponseEquals(self, response, value):
         response_content = response.content.decode("utf-8")
         response_json = json.loads(response_content)

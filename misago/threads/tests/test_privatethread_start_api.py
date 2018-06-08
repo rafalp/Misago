@@ -351,6 +351,8 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(post.poster_id, self.user.id)
         self.assertEqual(post.poster_name, self.user.username)
 
+        self.assertEqual(self.user.audittrail_set.count(), 1)
+
         # thread has two participants
         self.assertEqual(thread.participants.count(), 2)
 

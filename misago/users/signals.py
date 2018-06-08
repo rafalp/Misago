@@ -8,6 +8,8 @@ from django.utils import timezone
 from misago.conf import settings
 from misago.core.utils import ANONYMOUS_IP
 
+from .models import AuditTrail
+
 
 UserModel = get_user_model()
 
@@ -31,3 +33,8 @@ def anonymize_old_registrations_ips(sender, **kwargs):
     queryset = UserModel.objects.exclude(ip_is_too_new | ip_is_already_anonymized)
     queryset.update(joined_from_ip=ANONYMOUS_IP)
 
+
+@receiver(remove_old_ips)
+def remove_old_audit_trails(sender, **kwargs):
+    removal_cutoff = timezone.now() - timedelta(days=settings.MISAGO_IP_STORE_TIME)
+    AuditTrail.objects.filter(created_at__lte=removal_cutoff).delete()

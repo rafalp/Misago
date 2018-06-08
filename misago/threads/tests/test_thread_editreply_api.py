@@ -239,6 +239,8 @@ class EditReplyTests(AuthenticatedUserTestCase):
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, "<p>This is test edit!</p>")
 
+        self.assertEqual(self.user.audittrail_set.count(), 1)
+
         post = self.thread.post_set.order_by('id').last()
         self.assertEqual(post.edits, 1)
         self.assertEqual(post.original, "This is test edit!")
