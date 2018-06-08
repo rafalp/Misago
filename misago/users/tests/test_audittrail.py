@@ -1,13 +1,18 @@
+from datetime import timedelta
+
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+
 from misago.users.audittrail import create_audit_trail, create_user_audit_trail
 from misago.users.models import AuditTrail
+from misago.users.signals import remove_old_ips
 from misago.users.testutils import UserTestCase
 
 
 UserModel = get_user_model()
 
-
 USER_IP = '13.41.51.41'
+
 
 class MockRequest(object):
     user_ip = USER_IP
@@ -152,3 +157,31 @@ class CreateUserAuditTrailTests(UserTestCase):
         
         UserModel.objects.get(id=user.id)
         UserModel.objects.get(id=self.obj.id)
+
+
+class RemoveOldAuditTrailsTest(UserTestCase):
+    def setUp(self):
+        super(RemoveOldAuditTrailsTest, self).setUp()
+
+        self.obj = UserModel.objects.create_user('BobBoberson', 'bob@example.com')
+        
+    def test_recent_audit_trail_is_kept(self):
+        """remove_old_ips keeps recent audit trails"""
+        user = self.get_authenticated_user()
+        audit_trail = create_user_audit_trail(user, USER_IP, self.obj)
+
+        remove_old_ips.send(None)
+
+        self.assertEqual(user.audittrail_set.count(), 1)
+
+    def test_old_audit_trail_is_removed(self):
+        """remove_old_ips removes old audit trails"""
+        user = self.get_authenticated_user()
+        audit_trail = create_user_audit_trail(user, USER_IP, self.obj)
+
+        audit_trail.created_at = timezone.now() - timedelta(days=50)
+        audit_trail.save()
+
+        remove_old_ips.send(None)
+
+        self.assertEqual(user.audittrail_set.count(), 0)
