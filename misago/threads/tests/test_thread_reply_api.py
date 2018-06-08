@@ -163,6 +163,8 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(self.user.threads, 0)
         self.assertEqual(self.user.posts, 1)
 
+        self.assertEqual(self.user.audittrail_set.count(), 1)
+
         post = self.user.post_set.all()[:1][0]
         self.assertEqual(post.category_id, self.category.pk)
         self.assertEqual(post.original, "This is test response!")

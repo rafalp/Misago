@@ -226,6 +226,8 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         self.assertIsNone(response_json['url']['thumb'])
         self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
 
+        self.assertEqual(self.user.audittrail_set.count(), 1)
+
         # files associated with attachment are deleted on its deletion
         file_path = attachment.file.path
         self.assertTrue(os.path.exists(file_path))
@@ -267,6 +269,8 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         self.assertIsNone(response_json['url']['thumb'])
         self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
 
+        self.assertEqual(self.user.audittrail_set.count(), 1)
+
     def test_large_image_upload(self):
         """successful large image upload creates orphan attachment with thumbnail"""
         self.override_acl({'max_attachment_size': 10 * 1024})
@@ -304,6 +308,8 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         self.assertEqual(response_json['url']['index'], attachment.get_absolute_url())
         self.assertEqual(response_json['url']['thumb'], attachment.get_thumbnail_url())
         self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
+        
+        self.assertEqual(self.user.audittrail_set.count(), 1)
 
         # thumbnail was scaled down
         thumbnail = Image.open(attachment.thumbnail.path)
@@ -357,3 +363,5 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         self.assertEqual(response_json['url']['index'], attachment.get_absolute_url())
         self.assertEqual(response_json['url']['thumb'], attachment.get_thumbnail_url())
         self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
+        
+        self.assertEqual(self.user.audittrail_set.count(), 1)
