@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     sqlite3 \
     libjpeg-dev \
-    libopenjpeg-dev \
+    libopenjp2-7-dev \
     locales \
     cron \
     postgresql-client \
