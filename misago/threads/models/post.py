@@ -34,7 +34,6 @@ class Post(models.Model):
         on_delete=models.SET_NULL,
     )
     poster_name = models.CharField(max_length=255)
-    poster_ip = models.GenericIPAddressField()
     original = models.TextField()
     parsed = models.TextField()
     checksum = models.CharField(max_length=64, default='-')
