@@ -40,7 +40,6 @@ class AttachmentViewSet(viewsets.ViewSet):
             uploader=request.user,
             uploader_name=request.user.username,
             uploader_slug=request.user.slug,
-            uploader_ip=request.user_ip,
             filename=upload.name,
         )
 

@@ -29,9 +29,4 @@
       By {{ event_by }} on {{ event_on }}.
     {% endblocktrans %}
   </li>
-  {% if user.acl_cache.can_see_users_ips %}
-    <li class="event-ip">
-      <abbr title="{{ post.poster_ip }}">{% trans "IP recorded" %}</abbr>
-    </li>
-  {% endif %}
 </ul>

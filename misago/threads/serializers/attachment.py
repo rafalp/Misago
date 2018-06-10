@@ -14,7 +14,6 @@ class AttachmentSerializer(serializers.ModelSerializer):
     acl = serializers.SerializerMethodField()
     is_image = serializers.SerializerMethodField()
     filetype = serializers.SerializerMethodField()
-    uploader_ip = serializers.SerializerMethodField()
 
     url = serializers.SerializerMethodField()
 
@@ -26,7 +25,6 @@ class AttachmentSerializer(serializers.ModelSerializer):
             'post',
             'uploaded_on',
             'uploader_name',
-            'uploader_ip',
             'filename',
             'size',
             'acl',
@@ -45,12 +43,6 @@ class AttachmentSerializer(serializers.ModelSerializer):
 
     def get_filetype(self, obj):
         return obj.filetype.name
-
-    def get_uploader_ip(self, obj):
-        if 'user' in self.context and self.context['user'].acl_cache['can_see_users_ips']:
-            return obj.uploader_ip
-        else:
-            return None
 
     def get_url(self, obj):
         return {

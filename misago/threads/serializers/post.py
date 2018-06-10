@@ -25,7 +25,6 @@ UserSerializer = BaseUserSerializer.subset_fields(
 
 class PostSerializer(serializers.ModelSerializer, MutableFields):
     poster = UserSerializer(many=False, read_only=True)
-    poster_ip = serializers.SerializerMethodField()
     content = serializers.SerializerMethodField()
     attachments = serializers.SerializerMethodField()
     last_editor = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -47,7 +46,6 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
             'id',
             'poster',
             'poster_name',
-            'poster_ip',
             'content',
             'attachments',
             'posted_on',
@@ -75,12 +73,6 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
             'api',
             'url',
         ]
-
-    def get_poster_ip(self, obj):
-        if self.context['user'].acl_cache['can_see_users_ips']:
-            return obj.poster_ip
-        else:
-            return None
 
     def get_content(self, obj):
         if obj.is_valid and not obj.is_event and (not obj.is_hidden or obj.acl['can_see_hidden']):

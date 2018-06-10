@@ -47,7 +47,6 @@ def revert_post_endpoint(request, post):
         editor=request.user,
         editor_name=request.user.username,
         editor_slug=request.user.slug,
-        editor_ip=request.user_ip,
         edited_from=post.original,
         edited_to=edit.edited_from,
     )

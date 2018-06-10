@@ -39,7 +39,6 @@ class ClearAttachmentsTests(TestCase):
                 uploaded_on=cutoff,
                 uploader_name='bob',
                 uploader_slug='bob',
-                uploader_ip='127.0.0.1',
                 filename='testfile_{}.zip'.format(Attachment.objects.count() + 1),
             )
 
@@ -56,7 +55,6 @@ class ClearAttachmentsTests(TestCase):
                 post=post,
                 uploader_name='bob',
                 uploader_slug='bob',
-                uploader_ip='127.0.0.1',
                 filename='testfile_{}.zip'.format(Attachment.objects.count() + 1),
             )
 
@@ -68,7 +66,6 @@ class ClearAttachmentsTests(TestCase):
                 size=1000,
                 uploader_name='bob',
                 uploader_slug='bob',
-                uploader_ip='127.0.0.1',
                 filename='testfile_{}.zip'.format(Attachment.objects.count() + 1),
             )
 

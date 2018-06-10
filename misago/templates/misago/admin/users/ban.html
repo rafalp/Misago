@@ -42,7 +42,11 @@ class="form-horizontal"
       {{ user.email }}
     </td>
     <td>
-      {{ user.joined_from_ip }}
+      {% if user.joined_from_ip %}
+        {{ user.joined_from_ip }}
+      {% else %}
+        <i>{% trans "IP not available" %}</i>
+      {% endif %}
     </td>
   </tr>
   {% endfor %}

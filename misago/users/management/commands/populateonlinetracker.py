@@ -15,11 +15,7 @@ class Command(BaseCommand):
         entries_created = 0
         queryset = UserModel.objects.filter(online_tracker__isnull=True)
         for user in chunk_queryset(queryset):
-            Online.objects.create(
-                user=user,
-                current_ip=user.joined_from_ip,
-                last_click=user.last_login,
-            )
+            Online.objects.create(user=user, last_click=user.last_login)
             entries_created += 1
 
         self.stdout.write("Tracker entries created: %s" % entries_created)

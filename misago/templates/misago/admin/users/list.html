@@ -18,6 +18,7 @@
 <th style="width: 1%;">&nbsp;</th>
 <th style="width: 1%;">&nbsp;</th>
 <th style="width: 200px;">{% trans "E-mail" %}</th>
+<th style="width: 128px;">{% trans "IP Address" %}</th>
 <th style="width: 150px;">{% trans "Rank" %}</th>
 <th style="width: 200px;">{% trans "Joined" %}</th>
 <th style="width: 128px;">{% trans "Posts" %}</th>
@@ -69,6 +70,13 @@
 </td>
 <td>
   <a href="mailto:{{ item.email }}">{{ item.email }}</a>
+</td>
+<td>
+  {% if item.joined_from_ip %}
+    {{ item.joined_from_ip }}
+  {% else %}
+    <i>{% trans "IP removed" %}</i>
+  {% endif %}
 </td>
 <td>
   {{ item.rank }}

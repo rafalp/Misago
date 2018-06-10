@@ -61,7 +61,6 @@ class ViewSet(viewsets.ViewSet):
             poster=request.user,
             poster_name=request.user.username,
             poster_slug=request.user.slug,
-            poster_ip=request.user_ip,
         )
 
         serializer = NewPollSerializer(instance, data=request.data)

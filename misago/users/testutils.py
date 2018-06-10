@@ -10,6 +10,7 @@ UserModel = get_user_model()
 
 class UserTestCase(MisagoTestCase):
     USER_PASSWORD = "Pass.123"
+    USER_IP = '127.0.0.1'
 
     def setUp(self):
         super(UserTestCase, self).setUp()
@@ -22,12 +23,20 @@ class UserTestCase(MisagoTestCase):
         return AnonymousUser()
 
     def get_authenticated_user(self):
-        return UserModel.objects.create_user("TestUser", "test@user.com", self.USER_PASSWORD)
+        return UserModel.objects.create_user(
+            "TestUser",
+            "test@user.com",
+            self.USER_PASSWORD,
+            joined_from_ip=self.USER_IP,
+        )
 
     def get_superuser(self):
-        return UserModel.objects.create_superuser(
+        user = UserModel.objects.create_superuser(
             "TestSuperUser", "test@superuser.com", self.USER_PASSWORD
         )
+        user.joined_from_ip = self.USER_IP
+        user.save()
+        return user
 
     def login_user(self, user, password=None):
         self.client.force_login(user)
