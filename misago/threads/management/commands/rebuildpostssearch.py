@@ -19,11 +19,10 @@ class Command(BaseCommand):
             self.rebuild_posts_search(posts_to_reindex)
 
     def rebuild_posts_search(self, posts_to_reindex):
-        message = "Rebuilding search for %s posts...\n"
-        self.stdout.write(message % posts_to_reindex)
+        self.stdout.write("Rebuilding search for {} posts...\n".format(posts_to_reindex))
 
-        synchronized_count = 0
-        show_progress(self, synchronized_count, posts_to_reindex)
+        rebuild_count = 0
+        show_progress(self, rebuild_count, posts_to_reindex)
         start_time = time.time()
 
         queryset = Post.objects.select_related('thread').filter(is_event=False)
@@ -37,7 +36,7 @@ class Command(BaseCommand):
             post.update_search_vector()
             post.save(update_fields=['search_vector'])
 
-            synchronized_count += 1
-            show_progress(self, synchronized_count, posts_to_reindex, start_time)
+            rebuild_count += 1
+            show_progress(self, rebuild_count, posts_to_reindex, start_time)
 
-        self.stdout.write("\n\nRebuild search for %s posts" % synchronized_count)
+        self.stdout.write("\n\nRebuild search for {} posts".format(rebuild_count))

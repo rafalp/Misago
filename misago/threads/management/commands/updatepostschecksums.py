@@ -20,8 +20,7 @@ class Command(BaseCommand):
             self.update_posts_checksums(posts_to_update)
 
     def update_posts_checksums(self, posts_to_update):
-        message = "Updating %s posts checksums...\n"
-        self.stdout.write(message % posts_to_update)
+        self.stdout.write("Updating {} posts checksums...\n".format(posts_to_update))
 
         updated_count = 0
         show_progress(self, updated_count, posts_to_update)
@@ -35,4 +34,4 @@ class Command(BaseCommand):
             updated_count += 1
             show_progress(self, updated_count, posts_to_update, start_time)
 
-        self.stdout.write("\n\nUpdated %s posts checksums" % updated_count)
+        self.stdout.write("\n\nUpdated {} posts checksums".format(updated_count))
