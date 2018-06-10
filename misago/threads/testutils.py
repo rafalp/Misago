@@ -80,8 +80,7 @@ def reply_thread(
         is_protected=False,
         has_reports=False,
         has_open_reports=False,
-        posted_on=None,
-        poster_ip='127.0.0.1'
+        posted_on=None
 ):
     posted_on = posted_on or thread.last_post_on + timedelta(minutes=5)
 
@@ -91,7 +90,6 @@ def reply_thread(
         'original': message,
         'parsed': message,
         'checksum': 'nope',
-        'poster_ip': poster_ip,
         'posted_on': posted_on,
         'updated_on': posted_on,
         'is_event': is_event,
@@ -130,7 +128,6 @@ def post_poll(thread, poster):
         poster=poster,
         poster_name=poster.username,
         poster_slug=poster.slug,
-        poster_ip='127.0.0.1',
         question="Lorem ipsum dolor met?",
         choices=[
             {
@@ -170,7 +167,6 @@ def post_poll(thread, poster):
         voter=user,
         voter_name=user.username,
         voter_slug=user.slug,
-        voter_ip='127.0.0.1',
         choice_hash='aaaaaaaaaaaa',
     )
 
@@ -181,7 +177,6 @@ def post_poll(thread, poster):
         voter=poster,
         voter_name=poster.username,
         voter_slug=poster.slug,
-        voter_ip='127.0.0.1',
         choice_hash='gggggggggggg',
     )
     poll.pollvote_set.create(
@@ -190,7 +185,6 @@ def post_poll(thread, poster):
         voter=poster,
         voter_name=poster.username,
         voter_slug=poster.slug,
-        voter_ip='127.0.0.1',
         choice_hash='dddddddddddd',
     )
 
@@ -200,7 +194,6 @@ def post_poll(thread, poster):
         thread=thread,
         voter_name='deleted',
         voter_slug='deleted',
-        voter_ip='127.0.0.1',
         choice_hash='gggggggggggg',
     )
 
@@ -218,7 +211,6 @@ def like_post(post, liker=None, username=None):
             liker=liker,
             liker_name=liker.username,
             liker_slug=liker.slug,
-            liker_ip='127.0.0.1',
         )
 
         post.last_likes = [{
@@ -231,7 +223,6 @@ def like_post(post, liker=None, username=None):
             thread=post.thread,
             liker_name=username,
             liker_slug=slugify(username),
-            liker_ip='127.0.0.1',
         )
 
         post.last_likes = [{

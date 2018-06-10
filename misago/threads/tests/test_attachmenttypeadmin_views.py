@@ -209,7 +209,6 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
             filetype=test_type,
             uploader_name='Bob',
             uploader_slug='bob',
-            uploader_ip='127.0.0.1',
             filename='test.zip',
             file='sad76asd678as687sa.zip'
         )

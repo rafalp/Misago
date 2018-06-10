@@ -46,7 +46,7 @@ def create_endpoint(request):
             create_audit_trail=True,
             joined_from_ip=request.user_ip,
             set_default_avatar=True,
-            **activation_kwargs
+            **activation_kwargs,
         )
     except IntegrityError:
         return Response(

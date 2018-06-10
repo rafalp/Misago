@@ -75,5 +75,4 @@ def set_new_votes(request, poll, final_votes):
                 voter_name=request.user.username,
                 voter_slug=request.user.slug,
                 choice_hash=choice['hash'],
-                voter_ip=request.user_ip,
             )

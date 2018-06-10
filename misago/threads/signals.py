@@ -6,11 +6,9 @@ from django.dispatch import Signal, receiver
 from misago.categories.models import Category
 from misago.categories.signals import delete_category_content, move_category_content
 from misago.core.pgutils import chunk_queryset
-from misago.core.utils import ANONYMOUS_IP
 from misago.users.signals import anonymize_user_content, delete_user_content, username_changed
 
 from .anonymize import ANONYMIZABLE_EVENTS, anonymize_event, anonymize_post_last_likes
-from .checksums import update_post_checksum
 from .models import Attachment, Poll, PollVote, Post, PostEdit, PostLike, Thread
 
 
@@ -121,22 +119,6 @@ def delete_user_threads(sender, **kwargs):
         for category in Category.objects.filter(id__in=recount_categories):
             category.synchronize()
             category.save()
-
-
-@receiver(anonymize_user_content)
-def anonymize_user(sender, **kwargs):
-    for post in chunk_queryset(sender.post_set):
-        post.poster_ip = ANONYMOUS_IP
-        update_post_checksum(post)
-        post.save(update_fields=['checksum', 'poster_ip'])
-
-    PostEdit.objects.filter(editor=sender).update(editor_ip=ANONYMOUS_IP)
-    PostLike.objects.filter(liker=sender).update(liker_ip=ANONYMOUS_IP)
-
-    Attachment.objects.filter(uploader=sender).update(uploader_ip=ANONYMOUS_IP)
-
-    Poll.objects.filter(poster=sender).update(poster_ip=ANONYMOUS_IP)
-    PollVote.objects.filter(voter=sender).update(voter_ip=ANONYMOUS_IP)
 
 
 @receiver(anonymize_user_content)

@@ -6,7 +6,6 @@ from django.test import TestCase, override_settings
 from django.utils import timezone
 from django.utils.six import StringIO
 
-from misago.core.utils import ANONYMOUS_IP
 from misago.users.management.commands import removeoldips
 
 
@@ -24,7 +23,7 @@ class RemoveOldIpsTests(TestCase):
         call_command(removeoldips.Command(), stdout=out)
 
         user_joined_from_ip = UserModel.objects.get(pk=user.pk).joined_from_ip
-        self.assertNotEqual(user_joined_from_ip, ANONYMOUS_IP)
+        self.assertEqual(user_joined_from_ip, USER_IP)
     
     def test_removeoldips_old_user(self):
         """command removes user's IP if its old"""
@@ -37,7 +36,7 @@ class RemoveOldIpsTests(TestCase):
         call_command(removeoldips.Command(), stdout=out)
 
         user_joined_from_ip = UserModel.objects.get(pk=user.pk).joined_from_ip
-        self.assertEqual(user_joined_from_ip, ANONYMOUS_IP)
+        self.assertIsNone(user_joined_from_ip)
 
     @override_settings(MISAGO_IP_STORE_TIME=None)
     def test_not_removing_user_ip(self):
@@ -51,5 +50,5 @@ class RemoveOldIpsTests(TestCase):
         self.assertEqual(command_output, "Old IP removal is disabled.")
         
         user_joined_from_ip = UserModel.objects.get(pk=user.pk).joined_from_ip
-        self.assertNotEqual(user_joined_from_ip, ANONYMOUS_IP)
+        self.assertEqual(user_joined_from_ip, USER_IP)
 

@@ -31,7 +31,6 @@ class ThreadParticipantTests(TestCase):
             category=self.category,
             thread=self.thread,
             poster_name='Tester',
-            poster_ip='127.0.0.1',
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",

@@ -61,7 +61,6 @@ def patch_is_liked(request, post, value):
             liker=request.user,
             liker_name=request.user.username,
             liker_slug=request.user.slug,
-            liker_ip=request.user_ip,
         )
         post.likes += 1
 

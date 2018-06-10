@@ -13,7 +13,6 @@ def record_event(request, thread, event_type, context=None, commit=True):
         thread=thread,
         poster=request.user,
         poster_name=request.user.username,
-        poster_ip=request.user_ip,
         original='-',
         parsed='-',
         posted_on=time_now,

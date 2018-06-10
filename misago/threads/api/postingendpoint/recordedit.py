@@ -32,7 +32,6 @@ class RecordEditMiddleware(PostingMiddleware):
             editor=self.user,
             editor_name=self.user.username,
             editor_slug=self.user.slug,
-            editor_ip=self.request.user_ip,
             edited_from=self.original_post,
             edited_to=self.post.original,
         )

@@ -115,7 +115,6 @@ class AttachmentsSerializer(serializers.Serializer):
             for attachment in post.attachments_cache:
                 del attachment['acl']
                 del attachment['post']
-                del attachment['uploader_ip']
         else:
             post.attachments_cache = None
         post.update_fields.append('attachments_cache')

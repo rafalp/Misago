@@ -131,11 +131,6 @@ class BioProfileFieldTests(AdminTestCase):
                             'name': 'Join IP',
                             'text': '127.0.0.1',
                         },
-                        {
-                            'fieldname': 'last_ip',
-                            'name': 'Last IP',
-                            'text': '127.0.0.1',
-                        },
                     ],
                 },
             ]
@@ -164,11 +159,6 @@ class BioProfileFieldTests(AdminTestCase):
                         {
                             'fieldname': 'join_ip',
                             'name': 'Join IP',
-                            'text': '127.0.0.1',
-                        },
-                        {
-                            'fieldname': 'last_ip',
-                            'name': 'Last IP',
                             'text': '127.0.0.1',
                         },
                     ],

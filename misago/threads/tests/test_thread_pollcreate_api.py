@@ -95,7 +95,6 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
             category=self.category,
             poster_name='Test',
             poster_slug='test',
-            poster_ip='127.0.0.1',
             length=30,
             question='Test',
             choices=[

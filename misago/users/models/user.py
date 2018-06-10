@@ -54,7 +54,12 @@ class UserManager(BaseUserManager):
         extra_fields.update({'is_staff': False, 'is_superuser': False})
 
         now = timezone.now()
-        user = self.model(last_login=now, joined_on=now, **extra_fields)
+        user = self.model(
+            last_login=now, 
+            joined_on=now, 
+            joined_from_ip=joined_from_ip,
+            **extra_fields,
+        )
 
         user.set_username(username)
         user.set_email(email)

@@ -3,7 +3,6 @@ from django.test import RequestFactory
 from django.urls import reverse
 
 from misago.categories.models import Category
-from misago.core.utils import ANONYMOUS_IP
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads import testutils
@@ -233,5 +232,4 @@ class AnonymizePostsTests(AuthenticatedUserTestCase):
         user.anonymize_content()
 
         anonymized_post = Post.objects.get(pk=post.pk)
-        self.assertEqual(anonymized_post.poster_ip, ANONYMOUS_IP)
         self.assertTrue(anonymized_post.is_valid)
