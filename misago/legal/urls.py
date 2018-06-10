@@ -1,9 +1,8 @@
 from django.conf.urls import url
 
-from .views import privacy_policy, terms_of_service
-
+from . import views
 
 urlpatterns = [
-    url(r'^privacy-policy/$', privacy_policy, name='privacy-policy'),
-    url(r'^terms-of-service/$', terms_of_service, name='terms-of-service'),
+   url(r'^$', views.legals_active, name='legal'),
+   url(r'^(?P<title>\S+)/$', views.legal_title, name='legal_title'),
 ]
