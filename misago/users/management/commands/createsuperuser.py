@@ -166,8 +166,8 @@ class Command(BaseCommand):
             )
 
             if verbosity >= 1:
-                message = "Superuser #%(pk)s has been created successfully."
-                self.stdout.write(message % {'pk': user.pk})
+                message = "Superuser #{pk} has been created successfully."
+                self.stdout.write(message.format(pk=user.pk))
         except ValidationError as e:
             self.stderr.write(e.messages[0])
         except IntegrityError as e:

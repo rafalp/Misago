@@ -18,4 +18,4 @@ class Command(BaseCommand):
             Online.objects.create(user=user, last_click=user.last_login)
             entries_created += 1
 
-        self.stdout.write("Tracker entries created: %s" % entries_created)
+        self.stdout.write("Tracker entries created: {}".format(entries_created))

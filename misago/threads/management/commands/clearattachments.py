@@ -28,18 +28,16 @@ class Command(BaseCommand):
             self.sync_attachments(queryset, attachments_to_sync)
 
     def sync_attachments(self, queryset, attachments_to_sync):
-        message = "Clearing %s attachments...\n"
-        self.stdout.write(message % attachments_to_sync)
+        self.stdout.write("Clearing {} attachments...\n".format(attachments_to_sync))
 
-        message = "\n\nCleared %s attachments"
-
-        synchronized_count = 0
-        show_progress(self, synchronized_count, attachments_to_sync)
+        cleared_count = 0
+        show_progress(self, cleared_count, attachments_to_sync)
         start_time = time.time()
+        
         for attachment in chunk_queryset(queryset):
             attachment.delete()
 
-            synchronized_count += 1
-            show_progress(self, synchronized_count, attachments_to_sync, start_time)
+            cleared_count += 1
+            show_progress(self, cleared_count, attachments_to_sync, start_time)
 
-        self.stdout.write(message % synchronized_count)
+        self.stdout.write("\n\nCleared {} attachments".format(cleared_count))
