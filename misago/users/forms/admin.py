@@ -460,14 +460,7 @@ class BanUsersForm(forms.Form):
     ban_type = forms.MultipleChoiceField(
         label=_("Values to ban"),
         widget=forms.CheckboxSelectMultiple,
-        choices=[
-            ('usernames', _('Usernames')),
-            ('emails', _('E-mails')),
-            ('domains', _('E-mail domains')),
-            ('ip', _('IP addresses')),
-            ('ip_first', _('First segment of IP addresses')),
-            ('ip_two', _('First two segments of IP addresses')),
-        ]
+        choices=[]
     )
     user_message = forms.CharField(
         label=_("User message"),
@@ -494,6 +487,25 @@ class BanUsersForm(forms.Form):
         required=False,
         help_text=_("Leave this field empty for set bans to never expire.")
     )
+
+    def __init__(self, *args, **kwargs):
+        users = kwargs.pop('users')
+
+        super(BanUsersForm, self).__init__(*args, **kwargs)
+
+        self.fields['ban_type'].choices = [
+            ('usernames', _('Usernames')),
+            ('emails', _('E-mails')),
+            ('domains', _('E-mail domains')),
+        ]
+
+        enable_ip_bans = list(filter(None, [u.joined_from_ip for u in users]))
+        if enable_ip_bans:
+            self.fields['ban_type'].choices += [
+                ('ip', _('IP addresses')),
+                ('ip_first', _('First segment of IP addresses')),
+                ('ip_two', _('First two segments of IP addresses')),
+            ]
 
 
 class BanForm(forms.ModelForm):

@@ -135,7 +135,45 @@ class UserAdminViewsTests(AdminTestCase):
                 'selected_items': user_pks,
             }
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'value="ip"')
+        self.assertNotContains(response, 'value="ip_first"')
+        self.assertNotContains(response, 'value="ip_two"')
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={
+                'action': 'ban',
+                'selected_items': user_pks,
+                'ban_type': ['usernames', 'emails', 'domains'],
+                'finalize': '',
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Ban.objects.count(), 21)
+
+    def test_mass_ban_with_ips(self):
+        """users list bans multiple users that also have ips"""
+        user_pks = []
+        for i in range(10):
+            test_user = UserModel.objects.create_user(
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+                joined_from_ip='73.95.67.27',
+                requires_activation=1,
+            )
+            user_pks.append(test_user.pk)
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={
+                'action': 'ban',
+                'selected_items': user_pks,
+            }
+        )
+        self.assertContains(response, 'value="ip"')
+        self.assertContains(response, 'value="ip_first"')
+        self.assertContains(response, 'value="ip_two"')
 
         response = self.client.post(
             reverse('misago:admin:users:accounts:index'),
