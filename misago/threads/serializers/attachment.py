@@ -24,7 +24,7 @@ class AttachmentSerializer(serializers.ModelSerializer):
             'filetype',
             'post',
             'uploaded_on',
-            'uploader_name'
+            'uploader_name',
             'filename',
             'size',
             'acl',
