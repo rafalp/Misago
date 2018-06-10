@@ -58,7 +58,7 @@ class UserManager(BaseUserManager):
             last_login=now, 
             joined_on=now, 
             joined_from_ip=joined_from_ip,
-            **extra_fields,
+            **extra_fields
         )
 
         user.set_username(username)
