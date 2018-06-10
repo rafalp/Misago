@@ -26,7 +26,6 @@ class AttachmentAdminViewsTests(AdminTestCase):
             uploader=self.user,
             uploader_name=self.user.username,
             uploader_slug=self.user.slug,
-            uploader_ip='127.0.0.1',
             filename='testfile_{}.zip'.format(Attachment.objects.count() + 1),
             file=None,
             image=None,

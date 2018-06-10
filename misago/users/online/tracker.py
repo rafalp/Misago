@@ -10,27 +10,22 @@ def mute_tracker(request):
 
 
 def start_tracking(request, user):
-    online_tracker = Online.objects.create(
-        user=user,
-        current_ip=request.user_ip,
-    )
+    online_tracker = Online.objects.create(user=user)
 
     request.user.online_tracker = online_tracker
     request._misago_online_tracker = online_tracker
 
 
 def update_tracker(request, tracker):
-    tracker.current_ip = request.user_ip
     tracker.last_click = timezone.now()
 
-    tracker.save(update_fields=['last_click', 'current_ip'])
+    tracker.save(update_fields=['last_click'])
 
 
 def stop_tracking(request, tracker):
     user = tracker.user
     user.last_login = tracker.last_click
-    user.last_ip = tracker.current_ip
-    user.save(update_fields=['last_login', 'last_ip'])
+    user.save(update_fields=['last_login'])
 
     tracker.delete()
 

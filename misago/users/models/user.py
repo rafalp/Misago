@@ -37,9 +37,6 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError(_("User must have an email address."))
 
-        if not 'joined_from_ip' in extra_fields:
-            extra_fields['joined_from_ip'] = '127.0.0.1'
-
         WATCH_DICT = {
             'no': self.model.SUBSCRIBE_NONE,
             'watch': self.model.SUBSCRIBE_NOTIFY,
@@ -57,7 +54,12 @@ class UserManager(BaseUserManager):
         extra_fields.update({'is_staff': False, 'is_superuser': False})
 
         now = timezone.now()
-        user = self.model(last_login=now, joined_on=now, **extra_fields)
+        user = self.model(
+            last_login=now, 
+            joined_on=now, 
+            joined_from_ip=joined_from_ip,
+            **extra_fields
+        )
 
         user.set_username(username)
         user.set_email(email)
@@ -94,11 +96,7 @@ class UserManager(BaseUserManager):
             create_user_audit_trail(user, user.joined_from_ip, user)
 
         # populate online tracker with default value
-        Online.objects.create(
-            user=user,
-            current_ip=extra_fields['joined_from_ip'],
-            last_click=now,
-        )
+        Online.objects.create(user=user, last_click=now)
 
         return user
 
@@ -177,8 +175,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email_hash = models.CharField(max_length=32, unique=True)
 
     joined_on = models.DateTimeField(_('joined on'), default=timezone.now)
-    joined_from_ip = models.GenericIPAddressField()
-    last_ip = models.GenericIPAddressField(null=True, blank=True)
+    joined_from_ip = models.GenericIPAddressField(null=True, blank=True)
     is_hiding_presence = models.BooleanField(default=False)
 
     rank = models.ForeignKey(
@@ -481,7 +478,6 @@ class Online(models.Model):
         related_name='online_tracker',
         on_delete=models.CASCADE,
     )
-    current_ip = models.GenericIPAddressField()
     last_click = models.DateTimeField(default=timezone.now)
 
     def save(self, *args, **kwargs):

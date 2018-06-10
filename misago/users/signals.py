@@ -6,7 +6,6 @@ from django.dispatch import Signal, receiver
 from django.utils import timezone
 
 from misago.conf import settings
-from misago.core.utils import ANONYMOUS_IP
 
 from .models import AuditTrail
 
@@ -25,13 +24,13 @@ def handle_name_change(sender, **kwargs):
 
 
 @receiver(remove_old_ips)
-def anonymize_old_registrations_ips(sender, **kwargs):
-    anonymization_cutoff = timezone.now() - timedelta(days=settings.MISAGO_IP_STORE_TIME)
-    ip_is_too_new = Q(joined_on__gt=anonymization_cutoff)
-    ip_is_already_anonymized = Q(joined_from_ip=ANONYMOUS_IP)
+def remove_old_registrations_ips(sender, **kwargs):
+    datetime_cutoff = timezone.now() - timedelta(days=settings.MISAGO_IP_STORE_TIME)
+    ip_is_too_new = Q(joined_on__gt=datetime_cutoff)
+    ip_is_already_removed = Q(joined_from_ip__isnull=True)
     
-    queryset = UserModel.objects.exclude(ip_is_too_new | ip_is_already_anonymized)
-    queryset.update(joined_from_ip=ANONYMOUS_IP)
+    queryset = UserModel.objects.exclude(ip_is_too_new | ip_is_already_removed)
+    queryset.update(joined_from_ip=None)
 
 
 @receiver(remove_old_ips)

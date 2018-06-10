@@ -13,7 +13,6 @@ export default function(props) {
     <ul className="list-inline event-info">
       <Hidden {...props} />
       <Poster {...props} />
-      <Ip {...props} />
       <Controls {...props} />
     </ul>
   );
@@ -81,18 +80,4 @@ export function Poster(props) {
   return (
     <li className="event-posters" dangerouslySetInnerHTML={{__html: message}} />
   );
-}
-
-export function Ip(props) {
-  if (props.user.acl.can_see_users_ips) {
-    return (
-      <li className="event-ip">
-        <abbr title={props.post.poster_ip}>
-          {gettext("IP recorded")}
-        </abbr>
-      </li>
-    );
-  } else {
-    return null;
-  }
 }

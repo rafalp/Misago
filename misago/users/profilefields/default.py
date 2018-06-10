@@ -89,20 +89,9 @@ class JoinIpField(basefields.TextProfileField):
         if not request.user.acl_cache.get('can_see_users_ips'):
             return None
 
-        return {
-            'text': user.joined_from_ip
-        }
-
-
-class LastIpField(basefields.TextProfileField):
-    fieldname = 'last_ip'
-    label = _("Last IP")
-    readonly = True
-
-    def get_value_display_data(self, request, user, value):
-        if not request.user.acl_cache.get('can_see_users_ips'):
+        if not user.joined_from_ip:
             return None
 
         return {
-            'text': user.last_ip or user.joined_from_ip
+            'text': user.joined_from_ip
         }

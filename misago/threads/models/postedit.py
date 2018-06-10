@@ -24,7 +24,6 @@ class PostEdit(models.Model):
     )
     editor_name = models.CharField(max_length=255)
     editor_slug = models.CharField(max_length=255)
-    editor_ip = models.GenericIPAddressField()
 
     edited_from = models.TextField()
     edited_to = models.TextField()

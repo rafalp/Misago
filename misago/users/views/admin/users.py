@@ -126,9 +126,9 @@ class UsersList(UserAdmin, generic.ListView):
                 mesage = message % {'user': user.username}
                 raise generic.MassActionError(mesage)
 
-        form = BanUsersForm()
+        form = BanUsersForm(users=users)
         if 'finalize' in request.POST:
-            form = BanUsersForm(request.POST)
+            form = BanUsersForm(request.POST, users=users)
             if form.is_valid():
                 cleaned_data = form.cleaned_data
                 banned_values = []
@@ -141,6 +141,8 @@ class UsersList(UserAdmin, generic.ListView):
 
                 for user in users:
                     for ban in cleaned_data['ban_type']:
+                        banned_value = None
+
                         if ban == 'usernames':
                             check_type = Ban.USERNAME
                             banned_value = user.username.lower()
@@ -155,11 +157,11 @@ class UsersList(UserAdmin, generic.ListView):
                             at_pos = banned_value.find('@')
                             banned_value = '*%s' % banned_value[at_pos:]
 
-                        if ban == 'ip':
+                        if ban == 'ip' and user.joined_from_ip:
                             check_type = Ban.IP
                             banned_value = user.joined_from_ip
 
-                        if ban in ('ip_first', 'ip_two'):
+                        if ban in ('ip_first', 'ip_two') and user.joined_from_ip:
                             check_type = Ban.IP
 
                             if ':' in user.joined_from_ip:
@@ -174,7 +176,7 @@ class UsersList(UserAdmin, generic.ListView):
                                 formats = (bits[0], ip_separator, bits[1], ip_separator)
                             banned_value = '%s*' % (''.join(formats))
 
-                        if banned_value not in banned_values:
+                        if banned_value and banned_value not in banned_values:
                             ban_kwargs.update({
                                 'check_type': check_type,
                                 'banned_value': banned_value,

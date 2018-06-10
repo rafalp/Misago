@@ -39,8 +39,8 @@
     <abbr class="moment" data-iso="{{ item.uploaded_on.isoformat }}" data-format="LL"></abbr>
   {% endcapture %}
   <small class="text-muted">
-    {% blocktrans trimmed with filetype=item.filetype size=item.size|filesizeformat uploader=uploader|safe uploaded_on=uploaded_on|safe uploader_ip=item.uploader_ip %}
-      {{ filetype }}, {{ size }}, uploaded by {{ uploader }} {{ uploaded_on }} from {{ uploader_ip }}.
+    {% blocktrans trimmed with filetype=item.filetype size=item.size|filesizeformat uploader=uploader|safe uploaded_on=uploaded_on|safe %}
+      {{ filetype }}, {{ size }}, uploaded by {{ uploader }} {{ uploaded_on }}.
     {% endblocktrans %}
   </small>
 </td>

@@ -411,7 +411,6 @@ MISAGO_PROFILE_FIELDS = [
         'name': _("IP address"),
         'fields': [
             'misago.users.profilefields.default.JoinIpField',
-            'misago.users.profilefields.default.LastIpField',
         ],
     },
 ]
