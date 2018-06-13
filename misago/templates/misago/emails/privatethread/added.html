@@ -4,9 +4,9 @@
 
 {% block content %}
 {% capture trimmed as thread_title %}
-<strong>{{ thread.title }}</strong>
+<b>{{ thread.title }}</b>
 {% endcapture %}
-{% blocktrans trimmed with user=recipient.username sender=sender.username thread=thread_title %}
+{% blocktrans trimmed with user=recipient.username sender=sender.username thread=thread_title|safe %}
 {{ user }}, you are receiving this message because {{ sender }} has invited you to participate in private thread {{ thread }}.
 {% endblocktrans %}
 <br>
