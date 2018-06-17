@@ -17,6 +17,7 @@ from misago.core.rest_permissions import IsAuthenticatedOrReadOnly
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.moderation import hide_post, hide_thread
 from misago.users.bans import get_user_ban
+from misago.users.dataexport import is_user_data_export_in_progress, start_data_export_for_user
 from misago.users.online.utils import get_user_status
 from misago.users.permissions import (
     allow_browse_users_list, allow_delete_user, allow_edit_profile_details, allow_follow_user,
@@ -215,6 +216,18 @@ class UserViewSet(viewsets.GenericViewSet):
         allow_rename_user(request.user, profile)
 
         return moderate_username_endpoint(request, profile)
+
+    @detail_route(methods=['post'])
+    def start_data_export(self, request, pk=None):
+        get_int_or_404(pk)
+        allow_self_only(request.user, pk, _("You can't request data export for other users."))
+
+        if is_user_data_export_in_progress(request.user):
+            raise PermissionDenied(_("You already data export in progress."))
+            
+        start_data_export_for_user(request.user)
+
+        return Response({'detail': 'ok'})
 
     @detail_route(methods=['get', 'post'])
     def delete(self, request, pk=None):
