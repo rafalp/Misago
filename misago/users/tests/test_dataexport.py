@@ -42,7 +42,7 @@ class IsUserDataExportInProgressTests(AuthenticatedUserTestCase):
 
 
 class StartDataExportForUserTests(AuthenticatedUserTestCase):
-    def test_util_creates_data_export_for_user(self):
+    def test_util_creates_data_export_for_user_with_them_as_requester(self):
         """start_data_export_for_user created valid data export for user"""
         data_export = start_data_export_for_user(self.user)
 
@@ -51,7 +51,7 @@ class StartDataExportForUserTests(AuthenticatedUserTestCase):
         self.assertEqual(data_export.requester_name, self.user.username)
         self.assertEqual(data_export.status, DataExport.STATUS_PENDING)
 
-    def test_util_creates_data_export_for_user_with_request(self):
+    def test_util_creates_data_export_for_user_explicit_requester(self):
         """start_data_export_for_user created valid data export for user with other requester"""
         requester = self.get_superuser()
         data_export = start_data_export_for_user(self.user, requester)

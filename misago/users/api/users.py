@@ -223,7 +223,7 @@ class UserViewSet(viewsets.GenericViewSet):
         allow_self_only(request.user, pk, _("You can't request data export for other users."))
 
         if is_user_data_export_in_progress(request.user):
-            raise PermissionDenied(_("You already data export in progress."))
+            raise PermissionDenied(_("You already have an data export in progress."))
             
         start_data_export_for_user(request.user)
 
