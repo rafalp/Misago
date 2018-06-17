@@ -13,6 +13,7 @@ from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
 from misago.categories.models import Category
+from misago.conf import settings
 from misago.core.rest_permissions import IsAuthenticatedOrReadOnly
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.moderation import hide_post, hide_thread
@@ -221,6 +222,9 @@ class UserViewSet(viewsets.GenericViewSet):
     def start_data_export(self, request, pk=None):
         get_int_or_404(pk)
         allow_self_only(request.user, pk, _("You can't request data export for other users."))
+
+        if not settings.MISAGO_ENABLE_EXPORT_OWN_DATA:
+            raise PermissionDenied(_("You can't export your own data."))
 
         if is_user_data_export_in_progress(request.user):
             raise PermissionDenied(_("You already have an data export in progress."))

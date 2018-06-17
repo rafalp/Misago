@@ -35,6 +35,13 @@ MISAGO_ACL_EXTENSIONS = [
 MISAGO_ANONYMOUS_USERNAME = "Ghost"
 
 
+# Allow users to export their own data?
+# This may take some pressure from site administrators handling data export or access requests made
+# by users exerting rights granted to them by GDPR.
+
+MISAGO_ENABLE_EXPORT_OWN_DATA = False
+
+
 # Allow users to delete their own accounts?
 # Providing such feature is required by EU law from entities that process europeans personal data.
 

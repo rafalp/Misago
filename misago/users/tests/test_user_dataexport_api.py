@@ -1,3 +1,5 @@
+from django.test.utils import override_settings
+
 from misago.users.dataexport import start_data_export_for_user
 from misago.users.testutils import AuthenticatedUserTestCase
 
@@ -26,6 +28,15 @@ class UserStartDataExportApiTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
             'detail': "You can\'t request data export for other users.",
+        })
+
+    @override_settings(MISAGO_ENABLE_EXPORT_OWN_DATA=False)
+    def test_start_export_disabled(self):
+        """request to api fails if own data exports are disabled"""
+        response = self.client.post(self.link)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            'detail': "You can't export your own data.",
         })
 
     def test_start_export_in_progress(self):
