@@ -51,6 +51,7 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
     def get_api(self, obj):
         return {
             'avatar': reverse('misago:api:user-avatar', kwargs={'pk': obj.pk}),
+            'data-export': reverse('misago:api:user-data-exports', kwargs={'pk': obj.pk}),
             'details': reverse('misago:api:user-details', kwargs={'pk': obj.pk}),
             'change_email': reverse('misago:api:user-change-email', kwargs={'pk': obj.pk}),
             'change_password': reverse('misago:api:user-change-password', kwargs={'pk': obj.pk}),

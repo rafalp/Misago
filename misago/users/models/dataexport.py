@@ -38,3 +38,6 @@ class DataExport(models.Model):
     requested_on = models.DateTimeField(default=timezone.now)
     expires_on = models.DateTimeField(default=timezone.now)
     export_file = models.FileField(upload_to=get_export_upload_to, null=True, blank=True)
+
+    class Meta:
+        ordering = ['-pk']

@@ -25,7 +25,8 @@ from misago.users.permissions import (
     allow_moderate_avatar, allow_rename_user, allow_see_ban_details)
 from misago.users.profilefields import profilefields, serialize_profilefields_data
 from misago.users.serializers import (
-    BanDetailsSerializer, DeleteOwnAccountSerializer, ForumOptionsSerializer, UserSerializer)
+    BanDetailsSerializer, DataExportSerializer, DeleteOwnAccountSerializer, ForumOptionsSerializer,
+    UserSerializer)
 from misago.users.viewmodels import Followers, Follows, UserPosts, UserThreads
 
 from .rest_permissions import BasePermission, UnbannedAnonOnly
@@ -269,6 +270,15 @@ class UserViewSet(viewsets.GenericViewSet):
                 profile.delete()
 
         return Response({})
+
+    @detail_route(methods=['get'])
+    def data_exports(self, request, pk=None):
+        get_int_or_404(pk)
+        allow_self_only(request.user, pk, _("You can't see other users data exports history."))
+
+        queryset = request.user.dataexport_set.all()[:5]
+        serializer = DataExportSerializer(queryset, many=True)
+        return Response(serializer.data)
 
     @detail_route(methods=['get'])
     def followers(self, request, pk=None):
