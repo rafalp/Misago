@@ -44,6 +44,14 @@ class MisagoUsersConfig(AppConfig):
             icon='vpn_key',
         )
 
+        if settings.MISAGO_ENABLE_EXPORT_OWN_DATA:
+            usercp.add_section(
+                link='misago:usercp-export-data',
+                name=_("Export data"),
+                component='export-data',
+                icon='save_alt',
+            )
+
         if settings.MISAGO_ENABLE_DELETE_OWN_ACCOUNT:
             usercp.add_section(
                 link='misago:usercp-delete-account',
