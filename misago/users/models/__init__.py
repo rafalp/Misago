@@ -5,4 +5,4 @@ from .avatar import Avatar
 from .audittrail import AuditTrail
 from .avatargallery import AvatarGallery
 from .ban import Ban, BanCache
-from .dataexport import DataExport
+from .datadownload import DataDownload

@@ -4,7 +4,7 @@ import DropdownToggle from 'misago/components/dropdown-toggle'; // jshint ignore
 import { SideNav, CompactNav } from 'misago/components/options/navs'; // jshint ignore:line
 import DeleteAccount from 'misago/components/options/delete-account';
 import EditDetails from 'misago/components/options/edit-details';
-import ExportData from 'misago/components/options/export-data';
+import DownloadData from 'misago/components/options/download-data';
 import ChangeForumOptions from 'misago/components/options/forum-options';
 import ChangeUsername from 'misago/components/options/change-username/root';
 import ChangeSignInCredentials from 'misago/components/options/sign-in-credentials/root';
@@ -87,10 +87,10 @@ export function paths() {
     }
   ];
 
-  if (misago.get('ENABLE_DELETE_OWN_ACCOUNT')) {
+  if (misago.get('ENABLE_DOWNLOAD_OWN_DATA')) {
     paths.push({
-      path: misago.get('USERCP_URL') + 'export-data/',
-      component: connect(select)(ExportData)
+      path: misago.get('USERCP_URL') + 'download-data/',
+      component: connect(select)(DownloadData)
     });
   }
 

@@ -4,11 +4,11 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 
-def get_export_upload_to(instance, filename):
+def get_data_upload_to(instance, filename):
     raise NotImplementedError() # todo: generate secure upload to path
 
 
-class DataExport(models.Model):
+class DataDownload(models.Model):
     STATUS_PENDING = 0
     STATUS_PROCESSING = 1
     STATUS_READY = 2
@@ -37,7 +37,7 @@ class DataExport(models.Model):
     requester_name = models.CharField(max_length=255)
     requested_on = models.DateTimeField(default=timezone.now)
     expires_on = models.DateTimeField(default=timezone.now)
-    export_file = models.FileField(upload_to=get_export_upload_to, null=True, blank=True)
+    file = models.FileField(upload_to=get_data_upload_to, null=True, blank=True)
 
     class Meta:
         ordering = ['-pk']

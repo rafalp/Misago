@@ -18,14 +18,14 @@ from misago.core.rest_permissions import IsAuthenticatedOrReadOnly
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.moderation import hide_post, hide_thread
 from misago.users.bans import get_user_ban
-from misago.users.dataexport import is_user_data_export_in_progress, start_data_export_for_user
+from misago.users.datadownload import is_user_preparing_data_download, prepare_user_data_download
 from misago.users.online.utils import get_user_status
 from misago.users.permissions import (
     allow_browse_users_list, allow_delete_user, allow_edit_profile_details, allow_follow_user,
     allow_moderate_avatar, allow_rename_user, allow_see_ban_details)
 from misago.users.profilefields import profilefields, serialize_profilefields_data
 from misago.users.serializers import (
-    BanDetailsSerializer, DataExportSerializer, DeleteOwnAccountSerializer, ForumOptionsSerializer,
+    BanDetailsSerializer, DataDownloadSerializer, DeleteOwnAccountSerializer, ForumOptionsSerializer,
     UserSerializer)
 from misago.users.viewmodels import Followers, Follows, UserPosts, UserThreads
 
@@ -220,17 +220,17 @@ class UserViewSet(viewsets.GenericViewSet):
         return moderate_username_endpoint(request, profile)
 
     @detail_route(methods=['post'])
-    def start_data_export(self, request, pk=None):
+    def prepare_data_download(self, request, pk=None):
         get_int_or_404(pk)
-        allow_self_only(request.user, pk, _("You can't request data export for other users."))
+        allow_self_only(request.user, pk, _("You can't prepare data downloads for other users."))
 
-        if not settings.MISAGO_ENABLE_EXPORT_OWN_DATA:
-            raise PermissionDenied(_("You can't export your own data."))
+        if not settings.MISAGO_ENABLE_DOWNLOAD_OWN_DATA:
+            raise PermissionDenied(_("You can't download your data."))
 
-        if is_user_data_export_in_progress(request.user):
-            raise PermissionDenied(_("You already have an data export in progress."))
+        if is_user_preparing_data_download(request.user):
+            raise PermissionDenied(_("Your data download is already in preparation."))
             
-        start_data_export_for_user(request.user)
+        prepare_user_data_download(request.user)
 
         return Response({'detail': 'ok'})
 
@@ -272,12 +272,12 @@ class UserViewSet(viewsets.GenericViewSet):
         return Response({})
 
     @detail_route(methods=['get'])
-    def data_exports(self, request, pk=None):
+    def data_downloads(self, request, pk=None):
         get_int_or_404(pk)
-        allow_self_only(request.user, pk, _("You can't see other users data exports history."))
+        allow_self_only(request.user, pk, _("You can't see other users data downloads."))
 
-        queryset = request.user.dataexport_set.all()[:5]
-        serializer = DataExportSerializer(queryset, many=True)
+        queryset = request.user.datadownload_set.all()[:5]
+        serializer = DataDownloadSerializer(queryset, many=True)
         return Response(serializer.data)
 
     @detail_route(methods=['get'])

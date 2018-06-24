@@ -44,11 +44,11 @@ class MisagoUsersConfig(AppConfig):
             icon='vpn_key',
         )
 
-        if settings.MISAGO_ENABLE_EXPORT_OWN_DATA:
+        if settings.MISAGO_ENABLE_DOWNLOAD_OWN_DATA:
             usercp.add_section(
-                link='misago:usercp-export-data',
-                name=_("Export data"),
-                component='export-data',
+                link='misago:usercp-download-data',
+                name=_("Download data"),
+                component='download-data',
                 icon='save_alt',
             )
 

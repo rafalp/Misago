@@ -1,13 +1,11 @@
-from django.test.utils import override_settings
-
-from misago.users.dataexport import start_data_export_for_user
+from misago.users.datadownload import prepare_user_data_download
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
-class UserDataExportApiTests(AuthenticatedUserTestCase):
+class UserDataDownloadsApiTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(UserDataExportApiTests, self).setUp()
-        self.link = '/api/users/%s/data-exports/' % self.user.pk
+        super(UserDataDownloadsApiTests, self).setUp()
+        self.link = '/api/users/%s/data-downloads/' % self.user.pk
 
     def test_get_other_user_exports_anonymous(self):
         """requests to api fails if user is anonymous"""
@@ -22,17 +20,17 @@ class UserDataExportApiTests(AuthenticatedUserTestCase):
     def test_get_other_user_exports(self):
         """requests to api fails if user tries to access other user"""
         other_user = self.get_superuser()
-        link = '/api/users/%s/data-exports/' % other_user.pk
+        link = '/api/users/%s/data-downloads/' % other_user.pk
 
         response = self.client.get(link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
-            'detail': "You can't see other users data exports history.",
+            'detail': "You can't see other users data downloads.",
         })
         
     def test_get_empty_list(self):
         """api returns empy list"""
-        self.assertFalse(self.user.dataexport_set.exists())
+        self.assertFalse(self.user.datadownload_set.exists())
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
@@ -41,8 +39,8 @@ class UserDataExportApiTests(AuthenticatedUserTestCase):
     def test_populated_list(self):
         """api returns list"""
         for _ in range(6):
-            start_data_export_for_user(self.user)
-        self.assertTrue(self.user.dataexport_set.exists())
+            prepare_user_data_download(self.user)
+        self.assertTrue(self.user.datadownload_set.exists())
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)

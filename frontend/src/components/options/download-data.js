@@ -6,14 +6,14 @@ import ajax from 'misago/services/ajax';
 import title from 'misago/services/page-title';
 import snackbar from 'misago/services/snackbar';
 
-export default class ExportData extends React.Component {
+export default class DownloadData extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
       isLoading: false,
       isSubmiting: false,
-      exports: []
+      downloads: []
     }
   }
 
@@ -23,24 +23,29 @@ export default class ExportData extends React.Component {
       parent: gettext("Change your options")
     });
 
-    this.handleLoadExports();
+    this.handleLoadDownloads();
   }
 
-  handleLoadExports = () => {
-    ajax.get(this.props.user.api.data_export).then((data) => {
-      this.setState({
-        isLoading: false,
-        exports: data
-      });
-    });
+  handleLoadDownloads = () => {
+    ajax.get(this.props.user.api.data_downloads).then(
+      (data) => {
+        this.setState({
+          isLoading: false,
+          downloads: data
+        });
+      },
+      (rejection) => {
+        snackbar.apiError(rejection);
+      }
+    );
   };
 
-  handleStartDataExport = () => {
+  handlePrepareDataDownload = () => {
     this.setState({ isSubmiting: true });
-    ajax.post(this.props.user.api.start_data_export).then(
-      (data) => {
-        this.handleLoadExports();
-        snackbar.success(rejection);
+    ajax.post(this.props.user.api.prepare_data_download).then(
+      () => {
+        this.handleLoadDownloads();
+        snackbar.success(gettext("New data download is now being prepared."));
         this.setState({ isSubmiting: false });
       },
       (rejection) => {
@@ -57,35 +62,37 @@ export default class ExportData extends React.Component {
           <div className="panel-heading">
             <h3 className="panel-title">{gettext("Download your data")}</h3>
           </div>
-          <div className="panel-body lead">
+          <div className="panel-body">
 
-            To download your data from the site, click the "Request data download" button.
+            <p>{gettext("To download your data from the site, click the \"Prepare data download\" button. Depending on amount of data to be archived and number of users wanting to download their data at same time it may take up to few days for your download to be prepared. An e-mail with notification will be sent to you when your data is ready to be downloaded.")}</p>
+
+            <p>{gettext("The download will only be available for limited amount of time, after which it will be deleted from the site and market as expired.")}</p>
 
           </div>
           <table className="table">
             <thead>
               <tr>
                 <th>{gettext("Requested on")}</th>
-                <th className="col-md-3">{gettext("Download")}</th>
+                <th className="col-md-4">{gettext("Download")}</th>
               </tr>
             </thead>
             <tbody>
-              {this.state.exports.map((item) => {
+              {this.state.downloads.map((item) => {
                 return (
                   <tr key={item.id}>
                     <td style={rowStyle}>{moment(item.requested_on).fromNow()}</td>
                     <td>
                       <DownloadButton
-                        exportFile={item.export_file}
+                        exportFile={item.file}
                         status={item.status}
                       />
                     </td>
                   </tr>
                 )
               })}
-              {this.state.exports.length == 0 ?
+              {this.state.downloads.length == 0 ?
                 <tr>
-                  <td colSpan="2">{gettext("You have no data exports history.")}</td>
+                  <td colSpan="2">{gettext("You have no data downloads.")}</td>
                 </tr> : null}
             </tbody>
           </table>
@@ -94,9 +101,9 @@ export default class ExportData extends React.Component {
               className="btn-primary"
               loading={this.state.isSubmiting}
               type="button"
-              onClick={this.handleStartDataExport}
+              onClick={this.handlePrepareDataDownload}
             >
-              {gettext("Request data download")}
+              {gettext("Prepare data download")}
             </Button>
           </div>
         </div>
@@ -113,26 +120,14 @@ const STATUS_PENDING = 0;
 const STATUS_PROCESSING = 1;
 
 const DownloadButton = ({ exportFile, status }) => {
-  if (status === STATUS_PENDING) {
+  if (status === STATUS_PENDING || status === STATUS_PROCESSING) {
     return (
       <Button
         className="btn-info btn-sm btn-block"
         disabled={true}
         type="button"
       >
-        {gettext("Export is started")}
-      </Button>
-    );
-  }
-
-  if (status === STATUS_PROCESSING) {
-    return (
-      <Button
-        className="btn-success btn-sm btn-block"
-        disabled={true}
-        type="button"
-      >
-        {gettext("Export in progress")}
+        {gettext("Download is being prepared")}
       </Button>
     );
   }
@@ -154,7 +149,7 @@ const DownloadButton = ({ exportFile, status }) => {
       disabled={true}
       type="button"
     >
-      {gettext("Download has expired")}
+      {gettext("Download is expired")}
     </Button>
   );
 }
