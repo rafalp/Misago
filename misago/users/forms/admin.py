@@ -9,7 +9,7 @@ from misago.conf import settings
 from misago.core import threadstore
 from misago.core.forms import IsoDateTimeField, YesNoSwitch
 from misago.core.validators import validate_sluggable
-from misago.users.models import Ban, Rank
+from misago.users.models import Ban, DataDownload, Rank
 from misago.users.profilefields import profilefields
 from misago.users.validators import validate_email, validate_username
 
@@ -638,5 +638,34 @@ class SearchBansForm(forms.Form):
 
         if criteria.get('registration_only') == 'exclude':
             queryset = queryset.filter(registration_only=False)
+
+        return queryset
+
+
+class SearchDataDownloadsForm(forms.Form):
+    status = forms.ChoiceField(
+        label=_("Status"),
+        required=False,
+        choices=DataDownload.STATUS_CHOICES,
+    )
+    user = forms.CharField(
+        label=_("User"),
+        required=False,
+    )
+    requested_by = forms.CharField(
+        label=_("Requested by"),
+        required=False,
+    )
+
+    def filter_queryset(self, search_criteria, queryset):
+        criteria = search_criteria
+        if criteria.get('status') is not None:
+            queryset = queryset.filter(status=criteria['status'])
+
+        if criteria.get('user'):
+            queryset = queryset.filter(user__slug__istartswith=criteria['user'])
+
+        if criteria.get('requested_by'):
+            queryset = queryset.filter(requester__slug__istartswith=criteria['requested_by'])
 
         return queryset

@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from .djangoadmin import UserAdminModel
 from .views.admin.bans import BansList, DeleteBan, EditBan, NewBan
+from .views.admin.datadownloads import DataDownloadsList
 from .views.admin.ranks import (
     DefaultRank, DeleteRank, EditRank, MoveDownRank, MoveUpRank, NewRank, RanksList, RankUsers)
 from .views.admin.users import (
@@ -65,6 +66,14 @@ class MisagoAdminExtension(object):
             url(r'^delete/(?P<pk>\d+)/$', DeleteBan.as_view(), name='delete'),
         )
 
+        # Data Downloads
+        urlpatterns.namespace(r'^data-downloads/', 'data-downloads', 'users')
+        urlpatterns.patterns(
+            'users:data-downloads',
+            url(r'^$', DataDownloadsList.as_view(), name='index'),
+            url(r'^(?P<page>\d+)/$', DataDownloadsList.as_view(), name='index'),
+        )
+        
     def register_navigation_nodes(self, site):
         site.add_node(
             name=_("Users"),
@@ -99,4 +108,13 @@ class MisagoAdminExtension(object):
             after='misago:admin:users:ranks:index',
             namespace='misago:admin:users:bans',
             link='misago:admin:users:bans:index',
+        )
+
+        site.add_node(
+            name=_("Data downloads"),
+            icon='fa fa-download',
+            parent='misago:admin:users',
+            after='misago:admin:users:bans:index',
+            namespace='misago:admin:users:data-downloads',
+            link='misago:admin:users:data-downloads:index',
         )
