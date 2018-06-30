@@ -17,3 +17,11 @@ def prepare_user_data_download(user, requester=None):
         requester=requester,
         requester_name=requester.username,
     )
+
+
+def expire_user_data_download(download):
+    download.status = DataDownload.STATUS_EXPIRED
+    if download.file:
+        download.file.delete(save=False)
+    download.save()
+    

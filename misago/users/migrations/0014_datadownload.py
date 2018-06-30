@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('requester_name', models.CharField(max_length=255)),
                 ('requested_on', models.DateTimeField(default=django.utils.timezone.now)),
                 ('expires_on', models.DateTimeField(default=django.utils.timezone.now)),
-                ('file', models.FileField(blank=True, null=True, upload_to=misago.users.models.datadownload.get_data_upload_to)),
+                ('file', models.FileField(blank=True, max_length=255, null=True, upload_to=misago.users.models.datadownload.get_data_upload_to)),
                 ('requester', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
             ],
