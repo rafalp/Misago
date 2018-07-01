@@ -24,4 +24,3 @@ def expire_user_data_download(download):
     if download.file:
         download.file.delete(save=False)
     download.save()
-    

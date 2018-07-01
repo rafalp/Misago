@@ -1,12 +1,15 @@
 import os
 
+from django.contrib.auth import get_user_model
 from django.core.files import File
 from django.urls import reverse
 
 from misago.admin.testutils import AdminTestCase
-from misago.users.datadownload import prepare_user_data_download
+from misago.users.datadownloads import prepare_user_data_download
 from misago.users.models import DataDownload
 
+
+UserModel = get_user_model()
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testfiles')
 TEST_FILE_PATH = os.path.join(TESTFILES_DIR, 'avatar.png')
@@ -50,7 +53,7 @@ class DataDownloadAdminViewsTests(AdminTestCase):
             data={
                 'action': 'expire',
                 'selected_items': [data_download.pk],
-            }
+            },
         )
         self.assertEqual(response.status_code, 302)
 
@@ -76,9 +79,55 @@ class DataDownloadAdminViewsTests(AdminTestCase):
             data={
                 'action': 'delete',
                 'selected_items': [data_download.pk],
-            }
+            },
         )
         self.assertEqual(response.status_code, 302)
 
         self.assertEqual(DataDownload.objects.count(), 0)
         self.assertFalse(os.path.isfile(data_download.file.path))
+
+    def test_prepare_view(self):
+        """prepare data downloads view initializes new downloads"""
+        response = self.client.get(reverse('misago:admin:users:data-downloads:prepare'))
+        self.assertEqual(response.status_code, 200)
+
+        other_user = UserModel.objects.create_user('bob', 'bob@boberson.com')
+
+        response = self.client.post(
+            reverse('misago:admin:users:data-downloads:prepare'),
+            data={
+                'user_identifiers': '\n'.join([
+                    self.user.username,
+                    other_user.email,
+                ]),
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+
+        self.assertEqual(DataDownload.objects.count(), 2)
+
+    def test_prepare_view_empty_data(self):
+        """prepare data downloads view handles empty data"""
+        response = self.client.get(reverse('misago:admin:users:data-downloads:prepare'))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(
+            reverse('misago:admin:users:data-downloads:prepare'),
+            data={'user_identifiers': ''},
+        )
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(DataDownload.objects.count(), 0)
+
+    def test_prepare_view_user_not_found(self):
+        """prepare data downloads view handles empty data"""
+        response = self.client.get(reverse('misago:admin:users:data-downloads:prepare'))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post(
+            reverse('misago:admin:users:data-downloads:prepare'),
+            data={'user_identifiers': 'not@found.com'},
+        )
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(DataDownload.objects.count(), 0)

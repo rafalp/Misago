@@ -18,7 +18,7 @@ from misago.core.rest_permissions import IsAuthenticatedOrReadOnly
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.moderation import hide_post, hide_thread
 from misago.users.bans import get_user_ban
-from misago.users.datadownload import is_user_preparing_data_download, prepare_user_data_download
+from misago.users.datadownloads import is_user_preparing_data_download, prepare_user_data_download
 from misago.users.online.utils import get_user_status
 from misago.users.permissions import (
     allow_browse_users_list, allow_delete_user, allow_edit_profile_details, allow_follow_user,

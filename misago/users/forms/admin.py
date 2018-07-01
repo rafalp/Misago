@@ -1,4 +1,5 @@
 from django import forms
+from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import ugettext_lazy as _
@@ -11,6 +12,7 @@ from misago.core.forms import IsoDateTimeField, YesNoSwitch
 from misago.core.validators import validate_sluggable
 from misago.users.models import Ban, DataDownload, Rank
 from misago.users.profilefields import profilefields
+from misago.users.utils import hash_email
 from misago.users.validators import validate_email, validate_username
 
 
@@ -640,6 +642,48 @@ class SearchBansForm(forms.Form):
             queryset = queryset.filter(registration_only=False)
 
         return queryset
+
+
+class PrepareDataDownloadsForm(forms.Form):
+    user_identifiers = forms.CharField(
+        label=_("Usernames or emails"),
+        help_text=_(
+            "Enter every item in new line. Duplicates will be ignored. "
+            "This field is case insensitive. Depending on site configuration and amount of data "
+            "to archive it may take up to few days for preparation to complete. E-mail "
+            "will notification will be sent to every user once their download is ready."
+        ),
+        widget=forms.Textarea,
+    )
+
+    def clean_user_identifiers(self):
+        user_identifiers = self.cleaned_data['user_identifiers'].lower().splitlines()
+        user_identifiers = list(filter(bool, user_identifiers))
+        user_identifiers = list(set(user_identifiers))
+        
+        if len(user_identifiers) > 20:
+            raise forms.ValidationError(
+                _(
+                    "You may not enter more than 20 items at single time "
+                    "(You have entered %(show_value)s)."
+                ) % {'show_value': len(user_identifiers)}
+            )
+        
+        return user_identifiers
+
+    def clean(self):
+        data = super(PrepareDataDownloadsForm, self).clean()
+
+        if data.get('user_identifiers'):
+            username_match = Q(slug__in=data['user_identifiers'])
+            email_match = Q(email_hash__in=map(hash_email, data['user_identifiers']))
+
+            data['users'] = list(UserModel.objects.filter(username_match | email_match))
+
+            if len(data['users']) != len(data['user_identifiers']):
+                raise forms.ValidationError(_("One or more requested users could not be found."))
+
+        return data
 
 
 class SearchDataDownloadsForm(forms.Form):

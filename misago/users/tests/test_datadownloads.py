@@ -1,4 +1,4 @@
-from misago.users.datadownload import is_user_preparing_data_download, prepare_user_data_download
+from misago.users.datadownloads import is_user_preparing_data_download, prepare_user_data_download
 from misago.users.models import DataDownload
 from misago.users.testutils import AuthenticatedUserTestCase
 

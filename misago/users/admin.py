@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from .djangoadmin import UserAdminModel
 from .views.admin.bans import BansList, DeleteBan, EditBan, NewBan
-from .views.admin.datadownloads import DataDownloadsList
+from .views.admin.datadownloads import DataDownloadsList, PrepareDataDownloads
 from .views.admin.ranks import (
     DefaultRank, DeleteRank, EditRank, MoveDownRank, MoveUpRank, NewRank, RanksList, RankUsers)
 from .views.admin.users import (
@@ -72,6 +72,7 @@ class MisagoAdminExtension(object):
             'users:data-downloads',
             url(r'^$', DataDownloadsList.as_view(), name='index'),
             url(r'^(?P<page>\d+)/$', DataDownloadsList.as_view(), name='index'),
+            url(r'^prepare/$', PrepareDataDownloads.as_view(), name='prepare'),
         )
         
     def register_navigation_nodes(self, site):

@@ -1,6 +1,6 @@
 from django.test.utils import override_settings
 
-from misago.users.datadownload import prepare_user_data_download
+from misago.users.datadownloads import prepare_user_data_download
 from misago.users.testutils import AuthenticatedUserTestCase
 
 

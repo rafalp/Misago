@@ -2,8 +2,9 @@ from django.contrib import messages
 from django.utils.translation import ugettext_lazy as _
 
 from misago.admin.views import generic
-from misago.users.datadownload import expire_user_data_download
-from misago.users.forms.admin import SearchDataDownloadsForm
+from misago.users.datadownloads import (
+    expire_user_data_download, is_user_preparing_data_download, prepare_user_data_download)
+from misago.users.forms.admin import PrepareDataDownloadsForm, SearchDataDownloadsForm
 from misago.users.models import DataDownload
 
 
@@ -54,3 +55,14 @@ class DataDownloadsList(DataDownloadAdmin, generic.ListView):
             data_download.delete()
 
         messages.success(request, _("Selected data downloads have been deleted."))
+
+
+class PrepareDataDownloads(DataDownloadAdmin, generic.FormView):
+    form = PrepareDataDownloadsForm
+
+    def handle_form(self, form, request):
+        for user in form.cleaned_data['users']:
+            if not is_user_preparing_data_download(user):
+                prepare_user_data_download(user, requester=request.user)
+
+        messages.success(request, _("Data downloads are now being prepared for specified users."))
