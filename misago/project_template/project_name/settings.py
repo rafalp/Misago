@@ -162,6 +162,11 @@ DEFAULT_FROM_EMAIL = 'Forums <%s>' % EMAIL_HOST_USER
 
 MISAGO_ENABLE_DOWNLOAD_OWN_DATA = True
 
+# Path to the directory that Misago should use to prepare user data downloads.
+# Should not be accessible from internet.
+
+MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = os.path.join(BASE_DIR, 'userdata')
+
 
 # Allow users to delete their accounts
 # Lets users delete their own account on the site without having to contact site administrators.

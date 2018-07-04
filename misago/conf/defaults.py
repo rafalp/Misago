@@ -39,7 +39,12 @@ MISAGO_ANONYMOUS_USERNAME = "Ghost"
 # Enables users to learn what data about them is being held by the site without having to contact
 # site's administrators.
 
-MISAGO_ENABLE_DOWNLOAD_OWN_DATA = False
+MISAGO_ENABLE_DOWNLOAD_OWN_DATA = True
+
+# Path to the directory that Misago should use to prepare user data downloads.
+# Should not be accessible from internet.
+
+MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = None
 
 
 # Allow users to delete their accounts
