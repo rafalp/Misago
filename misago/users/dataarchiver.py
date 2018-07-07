@@ -5,11 +5,13 @@ import yaml
 
 from django.utils import timezone
 from django.utils.crypto import get_random_string
+from misago.core.utils import slugify
 
 
 class DataWriter(object):
     def write_data_file(self, name, data):
-        file_path = os.path.join(self.data_dir_path, '{}.txt'.format(name))
+        clean_name = slugify(str(name))
+        file_path = os.path.join(self.data_dir_path, '{}.txt'.format(clean_name))
         with open(file_path, 'w+') as fp:
             yaml.safe_dump(data, fp, default_flow_style=False, allow_unicode=True)
             return file_path
@@ -35,7 +37,7 @@ class DataCollection(DataWriter):
         os.mkdir(data_dir_path)
 
 
-class DataCollector(DataWriter):
+class DataArchiver(DataWriter):
     def __init__(self, user, working_dir_path):
         self.user = user
         self.working_dir_path = working_dir_path

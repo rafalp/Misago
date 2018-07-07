@@ -2,11 +2,13 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models.signals import pre_delete
 from django.dispatch import Signal, receiver
+from django.utils.translation import ugettext as _
 
 from misago.categories.models import Category
 from misago.categories.signals import delete_category_content, move_category_content
 from misago.core.pgutils import chunk_queryset
-from misago.users.signals import anonymize_user_content, delete_user_content, username_changed
+from misago.users.signals import (
+    anonymize_user_content, archive_user_data, delete_user_content, username_changed)
 
 from .anonymize import ANONYMIZABLE_EVENTS, anonymize_event, anonymize_post_last_likes
 from .models import Attachment, Poll, PollVote, Post, PostEdit, PostLike, Thread
@@ -119,6 +121,41 @@ def delete_user_threads(sender, **kwargs):
         for category in Category.objects.filter(id__in=recount_categories):
             category.synchronize()
             category.save()
+
+
+@receiver(archive_user_data)
+def archive_user_attachments(sender, data_archiver=None, **kwargs):
+    collection = data_archiver.create_collection('attachment')
+    queryset = sender.attachment_set.order_by('id')
+    for attachment in chunk_queryset(queryset):
+        collection.write_model_file(attachment.image or attachment.file)
+
+
+@receiver(archive_user_data)
+def archive_user_posts(sender, data_archiver=None, **kwargs):
+    collection = data_archiver.create_collection('post')
+    queryset = sender.post_set.order_by('id')
+    for post in chunk_queryset(queryset):
+        collection.write_data_file(post.posted_on, post.parsed)
+
+
+@receiver(archive_user_data)
+def archive_user_posts_edits(sender, data_archiver=None, **kwargs):
+    collection = data_archiver.create_collection('post_edit')
+    queryset = sender.postedit_set.order_by('id')
+    for post_edit in chunk_queryset(queryset):
+        collection.write_data_file(post_edit.edited_on, post_edit.edited_from)
+
+
+@receiver(archive_user_data)
+def archive_user_polls(sender, data_archiver=None, **kwargs):
+    collection = data_archiver.create_collection('poll')
+    queryset = sender.poll_set.order_by('id')
+    for poll in chunk_queryset(queryset):
+        collection.write_data_file(poll.posted_on, {
+            _("Question"): poll.question,
+            _("Choices"): [c['label'] for c in poll.choices],
+        })
 
 
 @receiver(anonymize_user_content)
