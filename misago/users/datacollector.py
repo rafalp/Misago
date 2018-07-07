@@ -1,18 +1,20 @@
-import json
 import os
 import shutil
+
+import yaml
 
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 
 
 class DataWriter(object):
-    def write_json_file(self, name, data):
-        file_path = os.path.join(self.data_dir_path, '{}.json'.format(name))
+    def write_data_file(self, name, data):
+        file_path = os.path.join(self.data_dir_path, '{}.txt'.format(name))
         with open(file_path, 'w+') as fp:
-            json.dump(data, fp, ensure_ascii=False, indent=2)
+            yaml.safe_dump(data, fp, default_flow_style=False, allow_unicode=True)
+            return file_path
 
-    def write_file(self, model_file):
+    def write_model_file(self, model_file):
         if not model_file:
             return None
 

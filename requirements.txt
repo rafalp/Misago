@@ -13,6 +13,7 @@ path.py~=10.3.1
 pillow~=4.1.1
 psycopg2-binary~=2.7.1
 pytz
+pyyaml~=3.13
 requests<3
 misago-social-auth-app-django~=2.1.0
 unidecode~=0.4.20
