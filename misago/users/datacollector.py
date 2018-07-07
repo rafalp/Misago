@@ -84,10 +84,16 @@ class DataCollector(DataWriter):
     def create_archive(self):
         archive_name = self.get_tmp_dir_name()
         archive_path = os.path.join(self.working_dir_path, archive_name)
-        shutil.make_archive(archive_path, 'zip', self.tmp_dir_path)
 
-        self.archive_path = archive_path
-        return archive_path
+        self.archive_path = shutil.make_archive(archive_path, 'zip', self.tmp_dir_path)
+        return self.archive_path
+
+    def delete_archive(self):
+        if self.archive_path:
+            os.remove(self.archive_path)
+            self.archive_path = None
 
     def delete_tmp_dir(self):
-        shutil.rmtree(self.tmp_dir_path)
+        if self.tmp_dir_path:
+            shutil.rmtree(self.tmp_dir_path)
+            self.tmp_dir_path = None
