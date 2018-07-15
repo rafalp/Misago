@@ -93,7 +93,10 @@ class DataArchiveTests(AuthenticatedUserTestCase):
 
             with open(file_path, 'r', encoding="utf-8") as fp:
                 saved_data = fp.read().strip()
-                self.assertEqual(saved_data, u"first: łorld!\nsecond: łup!")
+                # order of dict items in py<3.6 is non-deterministic
+                # making testing for exact match a mistake
+                self.assertIn(u"first: łorld!", saved_data)
+                self.assertIn(u"second: łup!", saved_data)
 
     def test_add_dict_ordered(self):
         """add_dict method creates text file form ordered dict"""
