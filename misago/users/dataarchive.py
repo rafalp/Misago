@@ -9,6 +9,9 @@ from django.utils import six
 from misago.core.utils import slugify
 
 
+FILENAME_MAX_LEN = 50
+
+
 class DataArchive(object):
     def __init__(self, user, working_dir_path):
         self.user = user
@@ -70,28 +73,35 @@ class DataArchive(object):
             os.remove(self.file_path)
             self.file_path = None
 
-    def add_text(self, name, value, path=None):
+    def add_text(self, name, value, date=None, directory=None):
         clean_filename = slugify(str(name))
-        file_dir_path = self.make_path(path)
+        file_dir_path = self.make_final_path(date=date, directory=directory)
         file_path = os.path.join(file_dir_path, '{}.txt'.format(clean_filename))
         with open(file_path, 'w+') as fp:
             fp.write(six.text_type(value))
             return file_path
 
-    def add_dict(self, name, value, path=None):
+    def add_dict(self, name, value, date=None, directory=None):
         text_lines = []
         for key, value in value.items():
             text_lines.append(u"{}: {}".format(key, value))
         text = u'\n'.join(text_lines)
-        return self.add_text(name, text, path)
+        return self.add_text(name, text, date=date, directory=directory)
 
-    def add_model_file(self, model_file, path=None):
+    def add_model_file(self, model_file, prefix=None, date=None, directory=None):
         if not model_file:
             return None
 
-        clean_filename = model_file.name.split('/')[-1]
-        target_dir_path = self.make_path(path)
-        target_path = os.path.join(target_dir_path, clean_filename)
+        target_dir_path = self.make_final_path(date=date, directory=directory)
+
+        filename = os.path.basename(model_file.name)
+        if prefix:
+            prefixed_filename = u"{}-{}".format(prefix, filename)
+            clean_filename = trim_long_filename(prefixed_filename)
+            target_path = os.path.join(target_dir_path, clean_filename)
+        else:
+            clean_filename = trim_long_filename(filename)
+            target_path = os.path.join(target_dir_path, clean_filename)
 
         with open(target_path, 'wb') as fp:
             for chunk in model_file.chunks():
@@ -99,18 +109,29 @@ class DataArchive(object):
 
         return target_path
 
-    def make_path(self, path):
-        # fixme: this can be simplified in py37k
-        final_path = self.data_dir_path
+    def make_final_path(self, date=None, directory=None):
+        # fixme: os.path.isdir test can be avoided in py37k
+        if date and directory:
+            raise ValueError("date and directory arguments are mutually exclusive")
 
-        if not path:
+        data_dir_path = self.data_dir_path
+
+        if date:
+            final_path = data_dir_path
+            path_items = [date.strftime('%Y'), date.strftime('%m'), date.strftime('%d')]
+            for path_item in path_items:
+                final_path = os.path.join(final_path, six.text_type(path_item))
+                if not os.path.isdir(final_path):
+                    os.mkdir(final_path)
             return final_path
 
-        for path_item in path:
-            final_path = os.path.join(final_path, six.text_type(path_item))
+        if directory:
+            final_path = os.path.join(data_dir_path, six.text_type(directory))
             if not os.path.isdir(final_path):
                 os.mkdir(final_path)
-        return final_path
+            return final_path
+
+        return data_dir_path
 
 
 def get_tmp_filename(user):
@@ -121,3 +142,14 @@ def get_tmp_filename(user):
     ]
 
     return '-'.join(filename_bits)
+
+
+def trim_long_filename(filename):
+    # fixme: consider moving this utility to better place?
+    # eg. to trim too long attachment filenames on upload
+    if len(filename) < FILENAME_MAX_LEN:
+        return filename
+
+    name, extension = os.path.splitext(filename)
+    name_len = FILENAME_MAX_LEN - len(extension)
+    return u'{}{}'.format(name[:name_len], extension)

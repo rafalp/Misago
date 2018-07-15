@@ -48,32 +48,32 @@ def archive_user_profile_fields(sender, archive=None, **kwargs):
 
 @receiver(archive_user_data)
 def archive_user_avatar(sender, archive=None, **kwargs):
-    avatars_path = ['avatar']
-
-    archive.add_model_file(sender.avatar_tmp, avatars_path)
-    archive.add_model_file(sender.avatar_src, avatars_path)
+    archive.add_model_file(sender.avatar_tmp, directory='avatar')
+    archive.add_model_file(sender.avatar_src, directory='avatar')
     for avatar in sender.avatar_set.iterator():
-        archive.add_model_file(avatar.image, avatars_path)
+        archive.add_model_file(avatar.image, directory='avatar')
 
 
 @receiver(archive_user_data)
 def archive_user_audit_trail(sender, archive=None, **kwargs):
     queryset = sender.audittrail_set.order_by('id')
     for audit_trail in chunk_queryset(queryset):
-        item_name = audit_trail.created_at.strftime('audit_trail_%H%M%S')
-        item_path = [audit_trail.created_at.year, audit_trail.created_at.month, audit_trail.created_at.day]
-        archive.add_text(item_name, audit_trail.ip_address, item_path)
+        item_name = audit_trail.created_at.strftime('%H%M%S-audit-trail')
+        archive.add_text(item_name, audit_trail.ip_address, date=audit_trail.created_at)
 
 
 @receiver(archive_user_data)
 def archive_user_name_history(sender, archive=None, **kwargs):
     for name_change in sender.namechanges.order_by('id').iterator():
-        item_name = name_change.changed_on.strftime('name_change_%H%M%S')
-        item_path = [name_change.changed_on.year, name_change.changed_on.month, name_change.changed_on.day]
-        archive.add_dict(item_name, OrderedDict([
-            (_("New username"), name_change.new_username),
-            (_("Old username"), name_change.old_username),
-        ]), item_path)
+        item_name = name_change.changed_on.strftime('%H%M%S-name-change')
+        archive.add_dict(
+            item_name,
+            OrderedDict([
+                (_("New username"), name_change.new_username),
+                (_("Old username"), name_change.old_username),
+            ]),
+            date=name_change.changed_on,
+        )
 
 
 @receiver(username_changed)

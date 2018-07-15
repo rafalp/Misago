@@ -3,9 +3,11 @@ import os
 from collections import OrderedDict
 
 from django.core.files import File
+from django.test import TestCase
+from django.utils import timezone
 
 from misago.conf import settings
-from misago.users.dataarchive import DataArchive
+from misago.users.dataarchive import FILENAME_MAX_LEN, DataArchive, trim_long_filename
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -79,21 +81,6 @@ class DataArchiveTests(AuthenticatedUserTestCase):
                 saved_data = fp.read().strip()
                 self.assertEqual(saved_data, str(data_to_write))
 
-    def test_add_text_path(self):
-        """add_dict method creates text file under path"""
-        with DataArchive(self.user, DATA_DOWNLOADS_WORKING_DIR) as archive:
-            data_to_write = u"Hello, łorld!"
-            file_path = archive.add_text(
-                'testfile', data_to_write, path=['avatars', 'tmp'])
-            self.assertTrue(os.path.isfile(file_path))
-
-            valid_output_path = os.path.join(archive.data_dir_path, 'testfile.txt')
-            self.assertEqual(file_path, valid_output_path)
-
-            data_dir_path = str(archive.data_dir_path)
-            self.assertTrue(str(valid_output_path).startswith(data_dir_path))
-            self.assertIn('/avatars/tmp/', str(valid_output_path))
-
     def test_add_dict(self):
         """add_dict method creates text file from dict"""
         with DataArchive(self.user, DATA_DOWNLOADS_WORKING_DIR) as archive:
@@ -122,21 +109,6 @@ class DataArchiveTests(AuthenticatedUserTestCase):
                 saved_data = fp.read().strip()
                 self.assertEqual(saved_data, u"first: łorld!\nsecond: łup!")
 
-    def test_add_dict_path(self):
-        """add_dict method creates text file under path"""
-        with DataArchive(self.user, DATA_DOWNLOADS_WORKING_DIR) as archive:
-            data_to_write = {'first': u"łorld!", 'second': u"łup!"}
-            file_path = archive.add_dict(
-                'testfile', data_to_write, path=['avatars', 'tmp']))
-            self.assertTrue(os.path.isfile(file_path))
-
-            valid_output_path = os.path.join(archive.data_dir_path, 'testfile.txt')
-            self.assertEqual(file_path, valid_output_path)
-
-            data_dir_path = str(archive.data_dir_path)
-            self.assertTrue(str(valid_output_path).startswith(data_dir_path))
-            self.assertIn('/avatars/tmp/', str(valid_output_path))
-
     def test_add_model_file(self):
         """add_model_file method adds model file"""
         with open(TEST_AVATAR_PATH, 'rb') as avatar:
@@ -159,21 +131,73 @@ class DataArchiveTests(AuthenticatedUserTestCase):
             self.assertIsNone(file_path)
             self.assertFalse(os.listdir(archive.data_dir_path))
 
-    def test_add_model_file_path(self):
-        """add_model_file method adds model file under path"""
+    def test_add_model_file_prefixed(self):
+        """add_model_file method adds model file with prefix"""
         with open(TEST_AVATAR_PATH, 'rb') as avatar:
             self.user.avatar_tmp = File(avatar)
             self.user.save()
 
         with DataArchive(self.user, DATA_DOWNLOADS_WORKING_DIR) as archive:
-            file_path = archive.add_model_file(
-                self.user.avatar_tmp, path=['avatars', 'tmp'])
+            file_path = archive.add_model_file(self.user.avatar_tmp, prefix="prefix")
 
             self.assertTrue(os.path.isfile(file_path))
     
             data_dir_path = str(archive.data_dir_path)
             self.assertTrue(str(file_path).startswith(data_dir_path))
-            self.assertIn('/avatars/tmp/', str(file_path))
+            
+            filename = os.path.basename(self.user.avatar_tmp.name)
+            target_filename = 'prefix-{}'.format(filename)
+            self.assertTrue(str(file_path).endswith(target_filename))
+
+    def test_make_final_path_no_kwargs(self):
+        """make_final_path returns data_dir_path if no kwargs are set"""
+        with DataArchive(self.user, DATA_DOWNLOADS_WORKING_DIR) as archive:
+            final_path = archive.make_final_path()
+            self.assertEqual(final_path, archive.data_dir_path)
+
+    def test_make_final_path_directory(self):
+        """make_final_path returns path including directory name"""
+        with DataArchive(self.user, DATA_DOWNLOADS_WORKING_DIR) as archive:
+            final_path = archive.make_final_path(directory='test-directory')
+            valid_path = os.path.join(archive.data_dir_path, 'test-directory')
+            self.assertEqual(final_path, valid_path)
+
+    def test_make_final_path_date(self):
+        """make_final_path returns path including date segments"""
+        with DataArchive(self.user, DATA_DOWNLOADS_WORKING_DIR) as archive:
+            now = timezone.now().date()
+            final_path = archive.make_final_path(date=now)
+            
+            valid_path = os.path.join(
+                archive.data_dir_path,
+                now.strftime('%Y'),
+                now.strftime('%m'),
+                now.strftime('%d')
+            )
+
+            self.assertEqual(final_path, valid_path)
+
+    def test_make_final_path_datetime(self):
+        """make_final_path returns path including date segments"""
+        with DataArchive(self.user, DATA_DOWNLOADS_WORKING_DIR) as archive:
+            now = timezone.now()
+            final_path = archive.make_final_path(date=now)
+            
+            valid_path = os.path.join(
+                archive.data_dir_path,
+                now.strftime('%Y'),
+                now.strftime('%m'),
+                now.strftime('%d')
+            )
+
+            self.assertEqual(final_path, valid_path)
+
+    def test_make_final_path_both_kwargs(self):
+        """make_final_path raises value error if both date and directory are set"""
+        with DataArchive(self.user, DATA_DOWNLOADS_WORKING_DIR) as archive:
+            expected_message = "date and directory arguments are mutually exclusive"
+            with self.assertRaisesMessage(ValueError, expected_message):
+                archive.make_final_path(date=timezone.now(), directory='test')
 
     def test_get_file(self):
         """get_file returns django file"""
@@ -196,3 +220,23 @@ class DataArchiveTests(AuthenticatedUserTestCase):
         self.assertIsNone(archive.file)
         self.assertIsNone(archive.file_path)
         self.assertTrue(django_file.closed)
+
+
+class TrimLongFilenameTests(TestCase):
+    def test_trim_short_filename(self):
+        """trim_too_long_filename returns short filename as it is"""
+        filename = 'filename.jpg'
+        trimmed_filename = trim_long_filename(filename)
+        self.assertEqual(trimmed_filename, filename)
+
+    def test_trim_too_long_filename(self):
+        """trim_too_long_filename trims filename if its longer than allowed"""
+        filename = 'filename'
+        extension = '.jpg'
+        long_filename = '{}{}'.format(filename * 10, extension)
+
+        trimmed_filename = trim_long_filename(long_filename)
+        
+        self.assertEqual(len(trimmed_filename), FILENAME_MAX_LEN)
+        self.assertTrue(trimmed_filename.startswith(filename))
+        self.assertTrue(trimmed_filename.endswith(extension))
