@@ -124,32 +124,32 @@ def delete_user_threads(sender, **kwargs):
 
 
 @receiver(archive_user_data)
-def archive_user_attachments(sender, data_archiver=None, **kwargs):
-    collection = data_archiver.create_collection('attachment')
+def archive_user_attachments(sender, archive=None, **kwargs):
+    collection = archive.create_collection('attachment')
     queryset = sender.attachment_set.order_by('id')
     for attachment in chunk_queryset(queryset):
         collection.write_model_file(attachment.image or attachment.file)
 
 
 @receiver(archive_user_data)
-def archive_user_posts(sender, data_archiver=None, **kwargs):
-    collection = data_archiver.create_collection('post')
+def archive_user_posts(sender, archive=None, **kwargs):
+    collection = archive.create_collection('post')
     queryset = sender.post_set.order_by('id')
     for post in chunk_queryset(queryset):
         collection.write_data_file(post.posted_on, post.parsed)
 
 
 @receiver(archive_user_data)
-def archive_user_posts_edits(sender, data_archiver=None, **kwargs):
-    collection = data_archiver.create_collection('post_edit')
+def archive_user_posts_edits(sender, archive=None, **kwargs):
+    collection = archive.create_collection('post_edit')
     queryset = sender.postedit_set.order_by('id')
     for post_edit in chunk_queryset(queryset):
         collection.write_data_file(post_edit.edited_on, post_edit.edited_from)
 
 
 @receiver(archive_user_data)
-def archive_user_polls(sender, data_archiver=None, **kwargs):
-    collection = data_archiver.create_collection('poll')
+def archive_user_polls(sender, archive=None, **kwargs):
+    collection = archive.create_collection('poll')
     queryset = sender.poll_set.order_by('id')
     for poll in chunk_queryset(queryset):
         collection.write_data_file(poll.posted_on, {

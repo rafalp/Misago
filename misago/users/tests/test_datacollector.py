@@ -4,7 +4,7 @@ import os
 from django.core.files import File
 
 from misago.conf import settings
-from misago.users.dataarchiver import DataArchiver
+from misago.users.datacollector import DataCollector
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -17,13 +17,13 @@ DATA_DOWNLOADS_WORKING_DIR = settings.MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR
 class DataArchiverTests(AuthenticatedUserTestCase):
     def test_init_with_dirs(self):
         """data collector initializes with valid tmp directories"""
-        data_archiver = DataArchiver(self.user, DATA_DOWNLOADS_WORKING_DIR)
-        self.assertTrue(os.path.exists(data_archiver.tmp_dir_path))
-        self.assertTrue(os.path.exists(data_archiver.data_dir_path))
+        data_collector = DataCollector(self.user, DATA_DOWNLOADS_WORKING_DIR)
+        self.assertTrue(os.path.exists(data_collector.tmp_dir_path))
+        self.assertTrue(os.path.exists(data_collector.data_dir_path))
 
         data_downloads_working_dir = str(DATA_DOWNLOADS_WORKING_DIR)
-        tmp_dir_path = str(data_archiver.tmp_dir_path)
-        data_dir_path = str(data_archiver.data_dir_path)
+        tmp_dir_path = str(data_collector.tmp_dir_path)
+        data_dir_path = str(data_collector.data_dir_path)
         
         self.assertTrue(tmp_dir_path.startswith(data_downloads_working_dir))
         self.assertTrue(data_dir_path.startswith(data_downloads_working_dir))
@@ -33,13 +33,13 @@ class DataArchiverTests(AuthenticatedUserTestCase):
 
     def test_write_data_file(self):
         """write_data_file creates new data file in data_dir_path"""
-        data_archiver = DataArchiver(self.user, DATA_DOWNLOADS_WORKING_DIR)
+        data_collector = DataCollector(self.user, DATA_DOWNLOADS_WORKING_DIR)
 
         data_to_write = {'hello': "I am test!", 'nice': u"łał!"}
-        data_file_path = data_archiver.write_data_file("testfile", data_to_write)
+        data_file_path = data_collector.write_data_file("testfile", data_to_write)
         self.assertTrue(os.path.isfile(data_file_path))
 
-        valid_output_path = os.path.join(data_archiver.data_dir_path, 'testfile.txt')
+        valid_output_path = os.path.join(data_collector.data_dir_path, 'testfile.txt')
         self.assertEqual(data_file_path, valid_output_path)
 
         with open(data_file_path, 'r') as fp:
@@ -52,28 +52,28 @@ class DataArchiverTests(AuthenticatedUserTestCase):
             self.user.avatar_tmp = File(avatar)
             self.user.save()
 
-        data_archiver = DataArchiver(self.user, DATA_DOWNLOADS_WORKING_DIR)
-        file_path = data_archiver.write_model_file(self.user.avatar_tmp)
+        data_collector = DataCollector(self.user, DATA_DOWNLOADS_WORKING_DIR)
+        file_path = data_collector.write_model_file(self.user.avatar_tmp)
         
         self.assertTrue(os.path.isfile(file_path))
     
-        data_dir_path = str(data_archiver.data_dir_path)
+        data_dir_path = str(data_collector.data_dir_path)
         self.assertTrue(str(file_path).startswith(data_dir_path))
 
     def test_write_model_file_empty(self):
         """write_model_file is noop if model file field is none"""
-        data_archiver = DataArchiver(self.user, DATA_DOWNLOADS_WORKING_DIR)
-        file_path = data_archiver.write_model_file(self.user.avatar_tmp)
+        data_collector = DataCollector(self.user, DATA_DOWNLOADS_WORKING_DIR)
+        file_path = data_collector.write_model_file(self.user.avatar_tmp)
         
         self.assertIsNone(file_path)
-        self.assertFalse(os.listdir(data_archiver.data_dir_path))
+        self.assertFalse(os.listdir(data_collector.data_dir_path))
 
     def test_create_collection(self):
         """create_collection creates new directory for collection"""
-        data_archiver = DataArchiver(self.user, DATA_DOWNLOADS_WORKING_DIR)
-        collection = data_archiver.create_collection('collection')
+        data_collector = DataCollector(self.user, DATA_DOWNLOADS_WORKING_DIR)
+        collection = data_collector.create_collection('collection')
 
-        data_dir_path = str(data_archiver.data_dir_path)
+        data_dir_path = str(data_collector.data_dir_path)
         collection_dir_path = str(collection.data_dir_path)
         self.assertNotEqual(data_dir_path, collection_dir_path)
         self.assertTrue(collection_dir_path.startswith(data_dir_path))
@@ -82,8 +82,8 @@ class DataArchiverTests(AuthenticatedUserTestCase):
 
     def test_collection_write_data_file(self):
         """write_data_file creates new data file in collection data_dir_path"""
-        data_archiver = DataArchiver(self.user, DATA_DOWNLOADS_WORKING_DIR)
-        collection = data_archiver.create_collection('collection')
+        data_collector = DataCollector(self.user, DATA_DOWNLOADS_WORKING_DIR)
+        collection = data_collector.create_collection('collection')
 
         data_to_write = {'hello': "I am test!", 'nice': u"łał!"}
         data_file_path = collection.write_data_file("testfile", data_to_write)
@@ -102,8 +102,8 @@ class DataArchiverTests(AuthenticatedUserTestCase):
             self.user.avatar_tmp = File(avatar)
             self.user.save()
 
-        data_archiver = DataArchiver(self.user, DATA_DOWNLOADS_WORKING_DIR)
-        collection = data_archiver.create_collection('collection')
+        data_collector = DataCollector(self.user, DATA_DOWNLOADS_WORKING_DIR)
+        collection = data_collector.create_collection('collection')
 
         file_path = collection.write_model_file(self.user.avatar_tmp)
         
@@ -114,8 +114,8 @@ class DataArchiverTests(AuthenticatedUserTestCase):
 
     def test_collection_write_model_file_empty(self):
         """write_model_file is noop if model file field is none"""
-        data_archiver = DataArchiver(self.user, DATA_DOWNLOADS_WORKING_DIR)
-        collection = data_archiver.create_collection('collection')
+        data_collector = DataCollector(self.user, DATA_DOWNLOADS_WORKING_DIR)
+        collection = data_collector.create_collection('collection')
 
         file_path = collection.write_model_file(self.user.avatar_tmp)
         
@@ -124,36 +124,36 @@ class DataArchiverTests(AuthenticatedUserTestCase):
 
     def test_create_archive(self):
         """create_archive creates zip file from collected data"""
-        data_archiver = DataArchiver(self.user, DATA_DOWNLOADS_WORKING_DIR)
+        data_collector = DataCollector(self.user, DATA_DOWNLOADS_WORKING_DIR)
         
         data_to_write = {'hello': "I am test!", 'nice': u"łał!"}
-        data_archiver.write_data_file("testfile", data_to_write)
+        data_collector.write_data_file("testfile", data_to_write)
 
         with open(TEST_AVATAR_PATH, 'rb') as avatar:
             self.user.avatar_tmp = File(avatar)
             self.user.save()
-        data_archiver.write_model_file(self.user.avatar_tmp)
+        data_collector.write_model_file(self.user.avatar_tmp)
 
-        archive_path = data_archiver.create_archive()
-        self.assertEqual(data_archiver.archive_path, archive_path)
+        archive_path = data_collector.create_archive()
+        self.assertEqual(data_collector.archive_path, archive_path)
         self.assertTrue(os.path.isfile(archive_path))
 
     def test_delete_archive(self):
         """delete_archive deletes zip file"""
-        data_archiver = DataArchiver(self.user, DATA_DOWNLOADS_WORKING_DIR)
-        archive_path = data_archiver.create_archive()
-        data_archiver.delete_archive()
+        data_collector = DataCollector(self.user, DATA_DOWNLOADS_WORKING_DIR)
+        archive_path = data_collector.create_archive()
+        data_collector.delete_archive()
         self.assertFalse(os.path.isfile(archive_path))
 
     def test_delete_archive_none(self):
         """delete_archive is noop if zip file doesnt exist"""
-        data_archiver = DataArchiver(self.user, DATA_DOWNLOADS_WORKING_DIR)
-        self.assertIsNone(data_archiver.archive_path)
-        data_archiver.delete_archive()
+        data_collector = DataCollector(self.user, DATA_DOWNLOADS_WORKING_DIR)
+        self.assertIsNone(data_collector.archive_path)
+        data_collector.delete_archive()
 
     def test_delete_tmp_dir(self):
         """delete_tmp_dir delete's directory but leaves archive"""
-        data_archiver = DataArchiver(self.user, DATA_DOWNLOADS_WORKING_DIR)
-        tmp_dir_path = data_archiver.tmp_dir_path
-        data_archiver.delete_tmp_dir()
+        data_collector = DataCollector(self.user, DATA_DOWNLOADS_WORKING_DIR)
+        tmp_dir_path = data_collector.tmp_dir_path
+        data_collector.delete_tmp_dir()
         self.assertFalse(os.path.exists(tmp_dir_path))

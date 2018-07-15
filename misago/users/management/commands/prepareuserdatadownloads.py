@@ -5,9 +5,9 @@ from django.core.management.base import BaseCommand
 
 from misago.conf import settings
 from misago.core.pgutils import chunk_queryset
-from misago.users.dataarchiver import DataArchiver
+from misago.users.dataarchive import DataArchive
 from misago.users.models import DataDownload
-from misago.users.signals import archive_user_data
+from misago.users.signals import archive_user_personal_data
 
 
 logger = logging.getLogger('misago.users.datadownloads')
@@ -31,16 +31,14 @@ class Command(BaseCommand):
         queryset = queryset.filter(status=DataDownload.STATUS_PENDING)
         for data_download in chunk_queryset(queryset):
             user = data_download.user
-            data_archiver = DataArchiver(user, working_dir)
-            try:
-                archive_user_data.send(user, data_archiver=data_archiver)
-                data_archiver.create_archive()
-                #data_download.save()
-            except Exception as e:
-                print(e)
-                logger.exception(e)
-            # data_archiver.delete_archive()
-            data_archiver.delete_tmp_dir()
+            with DataArchive(user, working_dir) as archive:
+                try:
+                    archive_user_personal_data.send(user, archive=archive)
+                    data_download.file = archive.get_file()
+                    #data_download.save()
+                except Exception as e:
+                    print(e)
+                    logger.exception(e)
 
             downloads_prepared += 1
 

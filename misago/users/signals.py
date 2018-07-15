@@ -23,8 +23,8 @@ username_changed = Signal()
 
 
 @receiver(archive_user_data)
-def archive_user_details(sender, data_archiver=None, **kwargs):
-    data_archiver.write_data_file('details', {
+def archive_user_details(sender, archive=None, **kwargs):
+    archive.write_data_file('details', {
         _('Username'): sender.username,
         _('E-mail'): sender.email,
         _('Joined on'): sender.joined_on,
@@ -33,7 +33,7 @@ def archive_user_details(sender, data_archiver=None, **kwargs):
 
 
 @receiver(archive_user_data)
-def archive_user_profile_fields(sender, data_archiver=None, **kwargs):
+def archive_user_profile_fields(sender, archive=None, **kwargs):
     clean_profile_fields = {}
     for profile_fields_group in profilefields.get_fields_groups():
         for profile_field in profile_fields_group['fields']:
@@ -42,12 +42,12 @@ def archive_user_profile_fields(sender, data_archiver=None, **kwargs):
                 clean_profile_fields[str(profile_field.label)] = field_value
                 
     if clean_profile_fields:
-        data_archiver.write_data_file('profile_fields', clean_profile_fields)
+        archive.write_data_file('profile_fields', clean_profile_fields)
 
 
 @receiver(archive_user_data)
-def archive_user_avatar(sender, data_archiver=None, **kwargs):
-    collection = data_archiver.create_collection('avatar')
+def archive_user_avatar(sender, archive=None, **kwargs):
+    collection = archive.create_collection('avatar')
     collection.write_model_file(sender.avatar_tmp)
     collection.write_model_file(sender.avatar_src)
     for avatar in sender.avatar_set.iterator():
@@ -55,16 +55,16 @@ def archive_user_avatar(sender, data_archiver=None, **kwargs):
 
 
 @receiver(archive_user_data)
-def archive_user_audit_trail(sender, data_archiver=None, **kwargs):
-    collection = data_archiver.create_collection('audit_trail')
+def archive_user_audit_trail(sender, archive=None, **kwargs):
+    collection = archive.create_collection('audit_trail')
     queryset = sender.audittrail_set.order_by('id')
     for audit_trail in chunk_queryset(queryset):
         collection.write_data_file(audit_trail.created_at, audit_trail.ip_address)
 
 
 @receiver(archive_user_data)
-def archive_user_name_history(sender, data_archiver=None, **kwargs):
-    collection = data_archiver.create_collection('name_history')
+def archive_user_name_history(sender, archive=None, **kwargs):
+    collection = archive.create_collection('name_history')
     for name_change in sender.namechanges.order_by('id').iterator():
         collection.write_data_file(name_change.changed_on, {
             _("New username"): name_change.new_username,
