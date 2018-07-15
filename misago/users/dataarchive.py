@@ -107,7 +107,7 @@ class DataArchive(object):
             return final_path
 
         for path_item in path:
-            final_path = os.path.join(final_path, path_item)
+            final_path = os.path.join(final_path, six.text_type(path_item))
             if not os.path.isdir(final_path):
                 os.mkdir(final_path)
         return final_path

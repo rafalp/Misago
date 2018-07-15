@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models.signals import pre_delete
@@ -125,37 +127,40 @@ def delete_user_threads(sender, **kwargs):
 
 @receiver(archive_user_data)
 def archive_user_attachments(sender, archive=None, **kwargs):
-    collection = archive.create_collection('attachment')
     queryset = sender.attachment_set.order_by('id')
     for attachment in chunk_queryset(queryset):
-        collection.write_model_file(attachment.image or attachment.file)
+        item_path = [attachment.uploaded_on.year, attachment.uploaded_on.month, attachment.uploaded_on.day]
+        archive.add_model_file(attachment.image or attachment.file, item_path)
 
 
 @receiver(archive_user_data)
 def archive_user_posts(sender, archive=None, **kwargs):
-    collection = archive.create_collection('post')
     queryset = sender.post_set.order_by('id')
     for post in chunk_queryset(queryset):
-        collection.write_data_file(post.posted_on, post.parsed)
+        item_name = post.posted_on.strftime('post_%H%M%S')
+        item_path = [post.posted_on.year, post.posted_on.month, post.posted_on.day]
+        archive.add_text(item_name, post.parsed, item_path)
 
 
 @receiver(archive_user_data)
 def archive_user_posts_edits(sender, archive=None, **kwargs):
-    collection = archive.create_collection('post_edit')
     queryset = sender.postedit_set.order_by('id')
     for post_edit in chunk_queryset(queryset):
-        collection.write_data_file(post_edit.edited_on, post_edit.edited_from)
+        item_name = post_edit.edited_on.strftime('post_edit_%H%M%S')
+        item_path = [post_edit.edited_on.year, post_edit.edited_on.month, post_edit.edited_on.day]
+        archive.add_text(item_name, post_edit.edited_from, item_path)
 
 
 @receiver(archive_user_data)
 def archive_user_polls(sender, archive=None, **kwargs):
-    collection = archive.create_collection('poll')
     queryset = sender.poll_set.order_by('id')
     for poll in chunk_queryset(queryset):
-        collection.write_data_file(poll.posted_on, {
-            _("Question"): poll.question,
-            _("Choices"): [c['label'] for c in poll.choices],
-        })
+        item_name = poll.posted_on.strftime('poll_%H%M%S')
+        item_path = [poll.posted_on.year, poll.posted_on.month, poll.posted_on.day]
+        archive.add_dict(item_name, OrderedDict([
+            (_("Question"), poll.question),
+            (_("Choices"), u', '.join([c['label'] for c in poll.choices])),
+        ]), item_path)
 
 
 @receiver(anonymize_user_content)

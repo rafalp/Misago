@@ -7,7 +7,7 @@ from misago.conf import settings
 from misago.core.pgutils import chunk_queryset
 from misago.users.dataarchive import DataArchive
 from misago.users.models import DataDownload
-from misago.users.signals import archive_user_personal_data
+from misago.users.signals import archive_user_data
 
 
 logger = logging.getLogger('misago.users.datadownloads')
@@ -33,7 +33,7 @@ class Command(BaseCommand):
             user = data_download.user
             with DataArchive(user, working_dir) as archive:
                 try:
-                    archive_user_personal_data.send(user, archive=archive)
+                    archive_user_data.send(user, archive=archive)
                     data_download.file = archive.get_file()
                     #data_download.save()
                 except Exception as e:
