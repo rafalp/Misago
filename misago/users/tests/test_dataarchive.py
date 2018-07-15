@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import io  # fixme: remove explicit io imports after going py3k-only
 import os
 from collections import OrderedDict
 
@@ -63,7 +64,7 @@ class DataArchiveTests(AuthenticatedUserTestCase):
             valid_output_path = os.path.join(archive.data_dir_path, 'testfile.txt')
             self.assertEqual(file_path, valid_output_path)
 
-            with open(file_path, 'r', encoding="utf-8") as fp:
+            with io.open(file_path, 'r', encoding="utf-8") as fp:
                 saved_data = fp.read().strip()
                 self.assertEqual(saved_data, data_to_write)
 
@@ -77,7 +78,7 @@ class DataArchiveTests(AuthenticatedUserTestCase):
             valid_output_path = os.path.join(archive.data_dir_path, 'testfile.txt')
             self.assertEqual(file_path, valid_output_path)
 
-            with open(file_path, 'r', encoding="utf-8") as fp:
+            with io.open(file_path, 'r', encoding="utf-8") as fp:
                 saved_data = fp.read().strip()
                 self.assertEqual(saved_data, str(data_to_write))
 
@@ -91,7 +92,7 @@ class DataArchiveTests(AuthenticatedUserTestCase):
             valid_output_path = os.path.join(archive.data_dir_path, 'testfile.txt')
             self.assertEqual(file_path, valid_output_path)
 
-            with open(file_path, 'r', encoding="utf-8") as fp:
+            with io.open(file_path, 'r', encoding="utf-8") as fp:
                 saved_data = fp.read().strip()
                 # order of dict items in py<3.6 is non-deterministic
                 # making testing for exact match a mistake
@@ -108,13 +109,13 @@ class DataArchiveTests(AuthenticatedUserTestCase):
             valid_output_path = os.path.join(archive.data_dir_path, 'testfile.txt')
             self.assertEqual(file_path, valid_output_path)
 
-            with open(file_path, 'r', encoding="utf-8") as fp:
+            with io.open(file_path, 'r', encoding="utf-8") as fp:
                 saved_data = fp.read().strip()
                 self.assertEqual(saved_data, u"first: łorld!\nsecond: łup!")
 
     def test_add_model_file(self):
         """add_model_file method adds model file"""
-        with open(TEST_AVATAR_PATH, 'rb') as avatar:
+        with io.open(TEST_AVATAR_PATH, 'rb') as avatar:
             self.user.avatar_tmp = File(avatar)
             self.user.save()
 
@@ -136,7 +137,7 @@ class DataArchiveTests(AuthenticatedUserTestCase):
 
     def test_add_model_file_prefixed(self):
         """add_model_file method adds model file with prefix"""
-        with open(TEST_AVATAR_PATH, 'rb') as avatar:
+        with io.open(TEST_AVATAR_PATH, 'rb') as avatar:
             self.user.avatar_tmp = File(avatar)
             self.user.save()
 
@@ -206,7 +207,7 @@ class DataArchiveTests(AuthenticatedUserTestCase):
         """get_file returns django file"""
         django_file = None
         
-        with open(TEST_AVATAR_PATH, 'rb') as avatar:
+        with io.open(TEST_AVATAR_PATH, 'rb') as avatar:
             self.user.avatar_tmp = File(avatar)
             self.user.save()
 
