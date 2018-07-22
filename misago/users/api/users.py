@@ -18,7 +18,7 @@ from misago.core.rest_permissions import IsAuthenticatedOrReadOnly
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.moderation import hide_post, hide_thread
 from misago.users.bans import get_user_ban
-from misago.users.datadownloads import is_user_preparing_data_download, prepare_user_data_download
+from misago.users.datadownloads import request_user_data_download, user_has_data_download_request
 from misago.users.online.utils import get_user_status
 from misago.users.permissions import (
     allow_browse_users_list, allow_delete_user, allow_edit_profile_details, allow_follow_user,
@@ -220,17 +220,18 @@ class UserViewSet(viewsets.GenericViewSet):
         return moderate_username_endpoint(request, profile)
 
     @detail_route(methods=['post'])
-    def prepare_data_download(self, request, pk=None):
+    def request_data_download(self, request, pk=None):
         get_int_or_404(pk)
-        allow_self_only(request.user, pk, _("You can't prepare data downloads for other users."))
+        allow_self_only(request.user, pk, _("You can't request data downloads for other users."))
 
         if not settings.MISAGO_ENABLE_DOWNLOAD_OWN_DATA:
             raise PermissionDenied(_("You can't download your data."))
 
-        if is_user_preparing_data_download(request.user):
-            raise PermissionDenied(_("Your data download is already in preparation."))
+        if user_has_data_download_request(request.user):
+            raise PermissionDenied(
+                _("You can't have more than one data download request at single time."))
             
-        prepare_user_data_download(request.user)
+        request_user_data_download(request.user)
 
         return Response({'detail': 'ok'})
 

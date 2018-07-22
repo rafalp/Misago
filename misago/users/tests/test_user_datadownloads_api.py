@@ -1,4 +1,4 @@
-from misago.users.datadownloads import prepare_user_data_download
+from misago.users.datadownloads import request_user_data_download
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -39,7 +39,7 @@ class UserDataDownloadsApiTests(AuthenticatedUserTestCase):
     def test_populated_list(self):
         """api returns list"""
         for _ in range(6):
-            prepare_user_data_download(self.user)
+            request_user_data_download(self.user)
         self.assertTrue(self.user.datadownload_set.exists())
 
         response = self.client.get(self.link)

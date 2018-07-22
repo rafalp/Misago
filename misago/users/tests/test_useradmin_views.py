@@ -7,7 +7,7 @@ from misago.acl.models import Role
 from misago.admin.testutils import AdminTestCase
 from misago.categories.models import Category
 from misago.threads.testutils import post_thread, reply_thread
-from misago.users.datadownloads import prepare_user_data_download
+from misago.users.datadownloads import request_user_data_download
 from misago.users.models import Ban, DataDownload, Rank
 
 
@@ -188,8 +188,8 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Ban.objects.count(), 24)
 
-    def test_mass_prepare_data_download(self):
-        """users list prepares data download for multiple users"""
+    def test_mass_request_data_download(self):
+        """users list requests data download for multiple users"""
         user_pks = []
         for i in range(10):
             test_user = UserModel.objects.create_user(
@@ -203,7 +203,7 @@ class UserAdminViewsTests(AdminTestCase):
         response = self.client.post(
             reverse('misago:admin:users:accounts:index'),
             data={
-                'action': 'prepare_data_download',
+                'action': 'request_data_download',
                 'selected_items': user_pks,
             }
         )
@@ -211,8 +211,8 @@ class UserAdminViewsTests(AdminTestCase):
 
         self.assertEqual(DataDownload.objects.filter(user_id__in=user_pks).count(), len(user_pks))
 
-    def test_mass_prepare_data_download_avoid_excessive_downloads(self):
-        """users list avoids excessive data download preparation for multiple users"""
+    def test_mass_request_data_download_avoid_excessive_downloads(self):
+        """users list avoids excessive data download requests for multiple users"""
         user_pks = []
         for i in range(10):
             test_user = UserModel.objects.create_user(
@@ -221,13 +221,13 @@ class UserAdminViewsTests(AdminTestCase):
                 'pass123',
                 requires_activation=1,
             )
-            prepare_user_data_download(test_user)
+            request_user_data_download(test_user)
             user_pks.append(test_user.pk)
 
         response = self.client.post(
             reverse('misago:admin:users:accounts:index'),
             data={
-                'action': 'prepare_data_download',
+                'action': 'v',
                 'selected_items': user_pks,
             }
         )

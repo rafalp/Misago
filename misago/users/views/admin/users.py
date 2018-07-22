@@ -13,7 +13,7 @@ from misago.core.mail import mail_users
 from misago.core.pgutils import chunk_queryset
 from misago.threads.models import Thread
 from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
-from misago.users.datadownloads import is_user_preparing_data_download, prepare_user_data_download
+from misago.users.datadownloads import request_user_data_download, user_has_data_download_request
 from misago.users.forms.admin import (
     BanUsersForm, EditUserForm, EditUserFormFactory, NewUserForm, SearchUsersForm)
 from misago.users.models import Ban
@@ -74,8 +74,8 @@ class UsersList(UserAdmin, generic.ListView):
             'icon': 'fa fa-lock',
         },
         {
-            'action': 'prepare_data_download',
-            'name': _("Prepare data download"),
+            'action': 'request_data_download',
+            'name': _("Request data download"),
             'icon': 'fa fa-download',
         },
         {
@@ -203,12 +203,13 @@ class UsersList(UserAdmin, generic.ListView):
             }
         )
 
-    def action_prepare_data_download(self, request, users):
+    def action_request_data_download(self, request, users):
         for user in users:
-            if not is_user_preparing_data_download(user):
-                prepare_user_data_download(user, requester=request.user)
+            if not user_has_data_download_request(user):
+                request_user_data_download(user, requester=request.user)
 
-        messages.success(request, _("Data downloads are now being prepared for specified users."))
+        messages.success(
+            request, _("Data download requests have been placed for selected users."))
 
     def action_delete_accounts(self, request, users):
         for user in users:

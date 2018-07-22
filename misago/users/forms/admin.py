@@ -644,13 +644,13 @@ class SearchBansForm(forms.Form):
         return queryset
 
 
-class PrepareDataDownloadsForm(forms.Form):
+class RequestDataDownloadsForm(forms.Form):
     user_identifiers = forms.CharField(
         label=_("Usernames or emails"),
         help_text=_(
             "Enter every item in new line. Duplicates will be ignored. "
             "This field is case insensitive. Depending on site configuration and amount of data "
-            "to archive it may take up to few days for preparation to complete. E-mail "
+            "to archive it may take up to few days for requests to complete. E-mail "
             "will notification will be sent to every user once their download is ready."
         ),
         widget=forms.Textarea,
@@ -672,7 +672,7 @@ class PrepareDataDownloadsForm(forms.Form):
         return user_identifiers
 
     def clean(self):
-        data = super(PrepareDataDownloadsForm, self).clean()
+        data = super(RequestDataDownloadsForm, self).clean()
 
         if data.get('user_identifiers'):
             username_match = Q(slug__in=data['user_identifiers'])
@@ -681,7 +681,7 @@ class PrepareDataDownloadsForm(forms.Form):
             data['users'] = list(UserModel.objects.filter(username_match | email_match))
 
             if len(data['users']) != len(data['user_identifiers']):
-                raise forms.ValidationError(_("One or more requested users could not be found."))
+                raise forms.ValidationError(_("One or more specified users could not be found."))
 
         return data
 

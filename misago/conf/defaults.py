@@ -41,6 +41,11 @@ MISAGO_ANONYMOUS_USERNAME = "Ghost"
 
 MISAGO_ENABLE_DOWNLOAD_OWN_DATA = True
 
+# Number of hours for which user data should be available for download.
+# When data download is marked as expired, data archive associated with it is deleted.
+
+MISAGO_USER_DATA_DOWNLOADS_EXPIRE_AFTER_HOURS = 48
+
 # Path to the directory that Misago should use to prepare user data downloads.
 # Should not be accessible from internet.
 

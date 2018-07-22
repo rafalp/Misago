@@ -4,9 +4,9 @@
 
 {% block page-actions %}
 <div class="page-actions">
-  <a href="{% url 'misago:admin:users:data-downloads:prepare' %}" class="btn btn-success">
+  <a href="{% url 'misago:admin:users:data-downloads:request' %}" class="btn btn-success">
     <span class="fa fa-plus-circle"></span>
-    {% trans "Prepare new downloads" %}
+    {% trans "Request new downloads" %}
   </a>
 </div>
 {% endblock %}
@@ -44,14 +44,22 @@
   <abbr class="moment" data-iso="{{ item.requested_on.isoformat }}" data-format="LL"></abbr>
 </td>
 <td>
-  <a href="{{ item.requester.get_absolute_url }}">
-    <img src="{{ item.requester|avatar:24 }}" alt="{% trans "Avatar" %}" width="24" height="24">
-  </a>
+  {% if item.requester %}
+    <a href="{{ item.requester.get_absolute_url }}">
+      <img src="{{ item.requester|avatar:24 }}" alt="{% trans "Avatar" %}" width="24" height="24">
+    </a>
+  {% else %}
+    <img src="{{ BLANK_AVATAR_URL }}" alt="{% trans "Avatar" %}" width="24" height="24">
+  {% endif %}
 </td>
 <td class="item-name">
-  <a href="{{ item.requester.get_absolute_url }}">
+  {% if item.requester %}
+    <a href="{{ item.requester.get_absolute_url }}">
+      {{ item.requester }}
+    </a>
+  {% else %}
     {{ item.requester_name }}
-  </a>
+  {% endif %}
 </td>
 {% for action in extra_actions %}
 <td class="row-action">

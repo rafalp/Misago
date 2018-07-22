@@ -40,15 +40,16 @@ export default class DownloadData extends React.Component {
     );
   };
 
-  handlePrepareDataDownload = () => {
+  handleRequestDataDownload = () => {
     this.setState({ isSubmiting: true });
-    ajax.post(this.props.user.api.prepare_data_download).then(
+    ajax.post(this.props.user.api.request_data_download).then(
       () => {
         this.handleLoadDownloads();
-        snackbar.success(gettext("New data download is now being prepared."));
+        snackbar.success(gettext("Your request for data download has been registered."));
         this.setState({ isSubmiting: false });
       },
       (rejection) => {
+        console.log(rejection)
         snackbar.apiError(rejection);
         this.setState({ isSubmiting: false });
       }
@@ -64,9 +65,9 @@ export default class DownloadData extends React.Component {
           </div>
           <div className="panel-body">
 
-            <p>{gettext("To download your data from the site, click the \"Prepare data download\" button. Depending on amount of data to be archived and number of users wanting to download their data at same time it may take up to few days for your download to be prepared. An e-mail with notification will be sent to you when your data is ready to be downloaded.")}</p>
+            <p>{gettext("To download your data from the site, click the \"Request data download\" button. Depending on amount of data to be archived and number of users wanting to download their data at same time it may take up to few days for your download to be prepared. An e-mail with notification will be sent to you when your data is ready to be downloaded.")}</p>
 
-            <p>{gettext("The download will only be available for limited amount of time, after which it will be deleted from the site and market as expired.")}</p>
+            <p>{gettext("The download will only be available for limited amount of time, after which it will be deleted from the site and marked as expired.")}</p>
 
           </div>
           <table className="table">
@@ -101,9 +102,9 @@ export default class DownloadData extends React.Component {
               className="btn-primary"
               loading={this.state.isSubmiting}
               type="button"
-              onClick={this.handlePrepareDataDownload}
+              onClick={this.handleRequestDataDownload}
             >
-              {gettext("Prepare data download")}
+              {gettext("Request data download")}
             </Button>
           </div>
         </div>

@@ -8,14 +8,13 @@ from django.test import TestCase
 from django.utils import timezone
 
 from misago.conf import settings
-from misago.users.dataarchive import FILENAME_MAX_LEN, DataArchive, trim_long_filename
+from misago.users.datadownloads.dataarchive import FILENAME_MAX_LEN, DataArchive, trim_long_filename
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
+DATA_DOWNLOADS_WORKING_DIR = settings.MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testfiles')
 TEST_AVATAR_PATH = os.path.join(TESTFILES_DIR, 'avatar.png')
-
-DATA_DOWNLOADS_WORKING_DIR = settings.MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR
 
 
 class DataArchiveTests(AuthenticatedUserTestCase):
