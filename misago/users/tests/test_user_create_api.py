@@ -314,9 +314,10 @@ class UserCreateTests(UserTestCase):
         self.assertEqual(Online.objects.filter(user=test_user).count(), 1)
 
         self.assertTrue(test_user.check_password('pass123'))
-
-        response = self.client.get(reverse('misago:index'))
-        self.assertContains(response, 'Bob')
+        
+        auth_json = self.client.get(reverse('misago:api:auth')).json()
+        self.assertTrue(auth_json['is_authenticated'])
+        self.assertEqual(auth_json['username'], 'Bob')
 
         self.assertIn('Welcome', mail.outbox[0].subject)
 
@@ -336,6 +337,9 @@ class UserCreateTests(UserTestCase):
         self.assertContains(response, 'user')
         self.assertContains(response, 'Bob')
         self.assertContains(response, 'bob@bob.com')
+
+        auth_json = self.client.get(reverse('misago:api:auth')).json()
+        self.assertFalse(auth_json['is_authenticated'])
 
         UserModel.objects.get_by_username('Bob')
         UserModel.objects.get_by_email('bob@bob.com')
@@ -358,6 +362,9 @@ class UserCreateTests(UserTestCase):
         self.assertContains(response, 'admin')
         self.assertContains(response, 'Bob')
         self.assertContains(response, 'bob@bob.com')
+
+        auth_json = self.client.get(reverse('misago:api:auth')).json()
+        self.assertFalse(auth_json['is_authenticated'])
 
         UserModel.objects.get_by_username('Bob')
         UserModel.objects.get_by_email('bob@bob.com')
@@ -387,8 +394,5 @@ class UserCreateTests(UserTestCase):
         self.assertEqual(Online.objects.filter(user=test_user).count(), 1)
 
         self.assertTrue(test_user.check_password(' pass123 '))
-
-        response = self.client.get(reverse('misago:index'))
-        self.assertContains(response, 'Bob')
 
         self.assertIn('Welcome', mail.outbox[0].subject)
