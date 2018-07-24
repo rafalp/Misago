@@ -57,7 +57,7 @@ def create_endpoint(request):
 
     send_welcome_email(request, new_user)
 
-    if not new_user.requires_activation == 'none':
+    if new_user.requires_activation == UserModel.ACTIVATION_NONE:
         authenticated_user = authenticate(
             username=new_user.email, password=form.cleaned_data['password']
         )
