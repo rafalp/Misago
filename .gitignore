@@ -58,21 +58,17 @@ pylint.txt
 *.log
 *.pot
 
-# GitBook Documentation
-_book/
-
-# Local development stuff
+# Local development files
 dev/
 env/
 venv/
-misago-admin.py
-db.sqlite3
 
-# Local development files
-/avatargallery/
+# Files and dirs created for devproject and testproject
 /avatar_store/
-/manage.py
+/avatargallery/
 /devproject/
 /testproject/
 /media/
 /static/
+/userdata/
+/manage.py
