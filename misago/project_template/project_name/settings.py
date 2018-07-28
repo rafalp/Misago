@@ -365,6 +365,12 @@ REST_FRAMEWORK = {
 # Misago specific settings
 # https://misago.readthedocs.io/en/latest/developers/settings.html
 
+# Complete HTTP address of your Misago installation
+# If you are unsure what to enter here, refer to your site's admin control panel for help
+
+MISAGO_ADDRESS = 'http://my-misago-site.com/'
+
+
 # PostgreSQL text search configuration to use in searches
 # Defaults to "simple", for list of installed configurations run "\dF" in "psql"
 # Standard configs as of PostgreSQL 9.5 are: dutch, english, finnish, french,

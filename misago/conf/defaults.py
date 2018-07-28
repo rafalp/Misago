@@ -7,6 +7,11 @@ instead of Django's `django.conf.settings`.
 """
 
 
+# Complete HTTP address of your Misago installation
+
+MISAGO_ADDRESS = None
+
+
 # Permissions system extensions
 # https://misago.readthedocs.io/en/latest/developers/acls.html#extending-permissions-system
 
