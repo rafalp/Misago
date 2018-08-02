@@ -103,11 +103,10 @@ def send_activation(request):
         }
 
         mail_user(
-            request,
             requesting_user,
             mail_subject,
             'misago/emails/activation/by_user',
-            {
+            context={
                 'activation_token': make_activation_token(requesting_user),
             },
         )
@@ -144,11 +143,10 @@ def send_password_form(request):
         confirmation_token = make_password_change_token(requesting_user)
 
         mail_user(
-            request,
             requesting_user,
             mail_subject,
             'misago/emails/change_password_form_link',
-            {
+            context={
                 'confirmation_token': confirmation_token,
             },
         )

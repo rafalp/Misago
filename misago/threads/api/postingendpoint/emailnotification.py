@@ -43,11 +43,11 @@ class EmailNotificationMiddleware(PostingMiddleware):
         subject_formats = {'user': self.user.username, 'thread': self.thread.title}
 
         return build_mail(
-            self.request,
             subscriber,
             subject % subject_formats,
             'misago/emails/thread/reply',
-            {
+            sender=self.user,
+            context={
                 'thread': self.thread,
                 'post': self.post,
             },

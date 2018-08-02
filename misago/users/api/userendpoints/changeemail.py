@@ -25,7 +25,7 @@ def change_email_endpoint(request, pk=None):
         request.user.email = serializer.validated_data['new_email']
 
         mail_user(
-            request, request.user, mail_subject, 'misago/emails/change_email', {'token': token}
+            request.user, mail_subject, 'misago/emails/change_email', context={'token': token}
         )
 
         message = _("E-mail change confirmation link was sent to new address.")

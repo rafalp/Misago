@@ -1,5 +1,5 @@
 {% extends "misago/emails/register/complete.html" %}
-{% load i18n misago_capture %}
+{% load i18n misago_absoluteurl misago_capture %}
 
 
 {% block activation-message %}
@@ -24,11 +24,11 @@
   {% endblocktrans %}
   <br>
   <br>
-  <a href="{{ SITE_ADDRESS }}{% url 'misago:activate-by-token' pk=recipient.pk token=activation_token %}">{% trans "Activate my account!" %}</a>
+  <a href="{% absoluteurl 'misago:activate-by-token' pk=user.pk token=activation_token %}">{% trans "Activate my account!" %}</a>
   <br>
   <br>
   {% capture trimmed as login_link %}
-  <a href="{{ SITE_ADDRESS }}{% url LOGIN_URL %}">{% trans "this form" %}</a>
+  <a href="{% absoluteurl LOGIN_URL %}">{% trans "this form" %}</a>
   {% endcapture %}
   {% blocktrans trimmed with login_form=login_link|safe %}
   Once your account is activated, you can always sign in to it using {{ login_form }}.

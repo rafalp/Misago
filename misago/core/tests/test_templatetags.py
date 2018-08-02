@@ -1,8 +1,34 @@
 from django import forms
 from django.template import Context, Template, TemplateSyntaxError
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from misago.core.templatetags import misago_batch
+from misago.core.templatetags.misago_absoluteurl import absoluteurl
+
+
+TEST_ADDRESS = 'https://testsite.com/'
+
+
+class AbsoluteUrlTests(TestCase):
+    @override_settings(MISAGO_ADDRESS=None)
+    def test_address_is_none(self):
+        """template tag returns null if address setting is not filled"""
+        result = absoluteurl('misago:index')
+        self.assertIsNone(result)
+
+    
+    @override_settings(MISAGO_ADDRESS=TEST_ADDRESS)
+    def test_prefix_url(self):
+        """template tag prefixes already reversed url"""
+        result = absoluteurl('/')
+        self.assertEqual(result, TEST_ADDRESS)
+
+    
+    @override_settings(MISAGO_ADDRESS=TEST_ADDRESS)
+    def test_rprefix_url_name(self):
+        """template tag reverses url name and prefixes it"""
+        result = absoluteurl('misago:index')
+        self.assertEqual(result, TEST_ADDRESS)
 
 
 class CaptureTests(TestCase):

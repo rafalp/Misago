@@ -11,6 +11,7 @@ UserModel = get_user_model()
 class MisagoMailerTests(TestCase):
     def test_mail_user(self):
         """mail_user sets message in backend"""
+        #fixme: nuke test view for mailing users!
         user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
 
         response = self.client.get(reverse('test-mail-user'))
@@ -26,6 +27,7 @@ class MisagoMailerTests(TestCase):
 
     def test_mail_users(self):
         """mail_users sets messages in backend"""
+        #fixme: nuke test view for mailing users!
         test_users = (
             UserModel.objects.create_user('Alpha', 'alpha@test.com', 'pass123'),
             UserModel.objects.create_user('Beta', 'beta@test.com', 'pass123'),

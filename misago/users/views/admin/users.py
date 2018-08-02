@@ -114,7 +114,7 @@ class UsersList(UserAdmin, generic.ListView):
             subject = _("Your account on %(forum_name)s forums has been activated")
             mail_subject = subject % {'forum_name': settings.forum_name}
 
-            mail_users(request, inactive_users, mail_subject, 'misago/emails/activation/by_admin')
+            mail_users(inactive_users, mail_subject, 'misago/emails/activation/by_admin')
 
             messages.success(request, _("Selected users accounts have been activated."))
 

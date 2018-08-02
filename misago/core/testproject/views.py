@@ -22,14 +22,14 @@ UserModel = get_user_model()
 
 def test_mail_user(request):
     test_user = UserModel.objects.all().first()
-    mail.mail_user(request, test_user, "Misago Test Mail", "misago/emails/base")
+    mail.mail_user(test_user, "Misago Test Mail", "misago/emails/base")
 
     return HttpResponse("Mailed user!")
 
 
 def test_mail_users(request):
     mail.mail_users(
-        request, UserModel.objects.iterator(), "Misago Test Spam", "misago/emails/base"
+        UserModel.objects.iterator(), "Misago Test Spam", "misago/emails/base"
     )
 
     return HttpResponse("Mailed users!")
