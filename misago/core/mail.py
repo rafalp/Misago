@@ -2,17 +2,20 @@ from django.core import mail as djmail
 from django.template.loader import render_to_string
 from django.utils.translation import get_language
 
-from misago.conf import settings
+from misago.conf import db_settings, settings
+
+from .utils import get_host_from_address
 
 
 def build_mail(recipient, subject, template, sender=None, context=None):
     context = context.copy() if context else {}
     context.update({
         'SITE_ADDRESS': settings.MISAGO_ADDRESS,
+        'SITE_HOST': get_host_from_address(settings.MISAGO_ADDRESS),
         'LANGUAGE_CODE': get_language()[:2],
         'LOGIN_URL': settings.LOGIN_URL,
 
-        'misago_settings': settings,
+        'misago_settings': db_settings,
 
         'user': recipient,
         'sender': sender,
@@ -28,13 +31,11 @@ def build_mail(recipient, subject, template, sender=None, context=None):
     return message
 
 
-# fixme: rename this function to email_user
 def mail_user(recipient, subject, template, sender=None, context=None):
     message = build_mail(recipient, subject, template, sender, context)
     message.send()
 
 
-# fixme: rename this function to email_users
 def mail_users(recipients, subject, template, sender=None, context=None):
     messages = []
 

@@ -365,8 +365,10 @@ REST_FRAMEWORK = {
 # Misago specific settings
 # https://misago.readthedocs.io/en/latest/developers/settings.html
 
-# Complete HTTP address of your Misago installation
-# If you are unsure what to enter here, refer to your site's admin control panel for help
+# Complete HTTP address to your Misago site homepage. Misago relies on this address to create
+# links in e-mails that are sent to site users.
+# On Misago admin panel home page you will find a message telling you if you have entered the
+# correct value, or what value is correct in case you've didn't.
 
 MISAGO_ADDRESS = 'http://my-misago-site.com/'
 
