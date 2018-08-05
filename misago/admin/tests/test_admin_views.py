@@ -196,14 +196,6 @@ class AdminViewAccessTests(AdminTestCase):
         self.assertContains(response, self.user.username)
 
 
-class AdminIndexViewTests(AdminTestCase):
-    def test_view_returns_200(self):
-        """admin index view returns 200"""
-        response = self.client.get(reverse('misago:admin:index'))
-
-        self.assertContains(response, self.user.username)
-
-
 class Admin404ErrorTests(AdminTestCase):
     def test_list_search_unicode_handling(self):
         """querystring creation handles unicode strings"""

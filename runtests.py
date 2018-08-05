@@ -83,6 +83,8 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
 )
 
+# Default misago address to test address
+MISAGO_ADDRESS = 'http://testserver/'
 
 # Use english search config
 MISAGO_SEARCH_CONFIG = 'english'

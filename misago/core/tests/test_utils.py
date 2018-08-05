@@ -9,7 +9,7 @@ from django.utils import six
 
 from misago.core.utils import (
     clean_return_path, format_plaintext_for_html, is_referer_local, is_request_to_misago,
-    parse_iso8601_string, slugify, get_exception_message, clean_ids_list)
+    parse_iso8601_string, slugify, get_exception_message, clean_ids_list, get_host_from_address)
 
 
 class IsRequestToMisagoTests(TestCase):
@@ -298,3 +298,35 @@ class CleanIdsListTests(TestCase):
         for invalid_input in INVALID_INPUTS:
             with self.assertRaisesMessage(PermissionDenied, "Test error message!"):
                 clean_ids_list(invalid_input, "Test error message!")
+
+
+class GetHostFromAddressTests(TestCase):
+    def test_none(self):
+        """get_host_from_address returns None for None"""
+        result = get_host_from_address(None)
+        self.assertIsNone(result)
+
+    def test_empty_string(self):
+        """get_host_from_address returns None for empty string"""
+        result = get_host_from_address('')
+        self.assertIsNone(result)
+
+    def test_hostname(self):
+        """get_host_from_address returns hostname unchanged"""
+        result = get_host_from_address('hostname')
+        self.assertEqual(result, 'hostname')
+        
+    def test_hostname_with_trailing_slash(self):
+        """get_host_from_address returns hostname for hostname with trailing slash"""
+        result = get_host_from_address('//hostname')
+        self.assertEqual(result, 'hostname')
+
+    def test_hostname_with_port(self):
+        """get_host_from_address returns hostname for hostname with port"""
+        result = get_host_from_address('hostname:8888')
+        self.assertEqual(result, 'hostname')
+        
+    def test_hostname_with_port_path_and_protocol(self):
+        """get_host_from_address returns hostname for hostname with port and path"""
+        result = get_host_from_address('https://hostname:8888/somewhere/else/')
+        self.assertEqual(result, 'hostname')

@@ -1,15 +1,15 @@
 {% extends "misago/emails/base.html" %}
-{% load i18n misago_capture %}
+{% load i18n misago_absoluteurl misago_capture %}
 
 
 {% block content %}
-{% blocktrans trimmed with user=recipient %}
+{% blocktrans trimmed with user=user %}
 {{ user }}, your account has been activated by forum administrator.
 {% endblocktrans %}
 <br>
 <br>
 {% capture trimmed as login_link %}
-<a href="{{ SITE_ADDRESS }}{% url LOGIN_URL %}">{% trans "this form" %}</a>
+<a href="{% absoluteurl LOGIN_URL %}">{% trans "this form" %}</a>
 {% endcapture %}
 {% blocktrans trimmed with login_form=login_link|safe %}
 You can now sign in to it using {{ login_form }}.

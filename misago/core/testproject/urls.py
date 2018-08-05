@@ -29,8 +29,6 @@ urlpatterns = [
         ),
         name='django-i18n'
     ),
-    url(r'^forum/test-mail-user/$', views.test_mail_user, name='test-mail-user'),
-    url(r'^forum/test-mail-users/$', views.test_mail_users, name='test-mail-users'),
     url(r'^forum/test-pagination/$', views.test_pagination, name='test-pagination'),
     url(
         r'^forum/test-pagination/(?P<page>[1-9][0-9]*)/$',

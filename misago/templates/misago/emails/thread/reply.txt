@@ -1,12 +1,12 @@
 {% extends "misago/emails/base.txt" %}
-{% load i18n %}
+{% load i18n misago_absoluteurl %}
 
 
 {% block content %}
-{% blocktrans trimmed with user=recipient poster=user thread=thread %}
-{{ user }}, you are receiving this message because {{ poster }} has replied to the thread "{{ thread }}" that you are subscribed to.
+{% blocktrans trimmed with user=user sender=sender thread=thread %}
+{{ user }}, you are receiving this message because {{ sender }} has replied to the thread "{{ thread }}" that you are subscribed to.
 {% endblocktrans %}
 
 {% trans "To read this reply, click the below link:" %}
-{{ SITE_ADDRESS }}{{ post.get_absolute_url }}
+{% absoluteurl post.get_absolute_url %}
 {% endblock content %}

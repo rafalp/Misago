@@ -16,14 +16,17 @@ def send_welcome_email(request, user):
         activation_by_user = user.requires_activation_by_user
 
         mail_user(
-            request, user, mail_subject, 'misago/emails/register/inactive', {
+            user,
+            mail_subject,
+            'misago/emails/register/inactive',
+            context={
                 'activation_token': activation_token,
                 'activation_by_admin': activation_by_admin,
                 'activation_by_user': activation_by_user,
             }
         )
     else:
-        mail_user(request, user, mail_subject, 'misago/emails/register/complete')
+        mail_user(user, mail_subject, 'misago/emails/register/complete')
 
 
 def get_registration_result_json(user):

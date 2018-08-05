@@ -1,9 +1,9 @@
 {% extends "misago/emails/base.txt" %}
-{% load i18n %}
+{% load i18n misago_absoluteurl %}
 
 
 {% block content %}
-{% blocktrans trimmed with user=recipient %}
+{% blocktrans trimmed with user=user %}
 {{ user }}, thank you for joining us!
 {% endblocktrans %}
 
@@ -14,5 +14,5 @@ You may now join discussion on our forums. Why not spend a minute or two to have
 {% blocktrans trimmed %}
 You can always sign in to your account using the form below:
 {% endblocktrans %}
-{{ SITE_ADDRESS }}{% url LOGIN_URL %}
+{% absoluteurl LOGIN_URL %}
 {% endblock content %}
