@@ -34,7 +34,7 @@ class Command(BaseCommand):
                 subject = ugettext("%(user)s, your data download is ready") % { 'user': user }
                 mail_user(user, subject, 'misago/emails/data_download', context={
                     'data_download': data_download,
-                    'expires_in': settings.MISAGO_USER_DATA_DOWNLOADS_EXPIRE_AFTER_HOURS,
+                    'expires_in': settings.MISAGO_USER_DATA_DOWNLOADS_EXPIRE_IN_HOURS,
                 })
 
                 downloads_prepared += 1

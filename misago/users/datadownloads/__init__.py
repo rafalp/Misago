@@ -35,7 +35,7 @@ def prepare_user_data_download(download, logger=None):
             archive_user_data.send(user, archive=archive)
             download.status = DataDownload.STATUS_READY
             download.expires_on = timezone.now() + timedelta(
-                hours=settings.MISAGO_USER_DATA_DOWNLOADS_EXPIRE_AFTER_HOURS)
+                hours=settings.MISAGO_USER_DATA_DOWNLOADS_EXPIRE_IN_HOURS)
             download.file = archive.get_file()
             download.save()
             # todo: send an e-mail with download link
