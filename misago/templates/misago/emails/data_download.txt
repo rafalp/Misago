@@ -1,0 +1,20 @@
+{% extends "misago/emails/base.txt" %}
+{% load i18n misago_absoluteurl %}
+
+
+{% block content %}
+{% blocktrans trimmed with user=user %}
+{{ user }}, you are receiving this message because your data is ready for download.
+{% endblocktrans %}
+
+{% blocktrans trimmed %}
+To download your data, click the following link:
+{% endblocktrans %}
+{% absoluteurl data_download.file.url %}
+
+{% blocktrans trimmed count expires_in=expires_in %}
+This link will remain active for {{ expires_in }} hour from the time this message has been sent.
+{% plural %}
+This link will remain active for {{ expires_in }} hours from the time this message has been sent.
+{% endblocktrans %}
+{% endblock content %}
