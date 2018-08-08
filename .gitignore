@@ -71,7 +71,4 @@ venv/
 /media/
 /static/
 /userdata/
-<<<<<<< HEAD
 /manage.py
-=======
->>>>>>> c92db2d... WIP groundwork for data downloads creation
