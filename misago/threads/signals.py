@@ -156,7 +156,11 @@ def archive_user_posts(sender, archive=None, **kwargs):
 
 @receiver(archive_user_data)
 def archive_user_posts_edits(sender, archive=None, **kwargs):
-    queryset = sender.postedit_set.order_by('id')
+    queryset = PostEdit.objects.filter(post__poster=sender).order_by('id')
+    for post_edit in chunk_queryset(queryset):
+        item_name = post_edit.edited_on.strftime('%H%M%S-post-edit')
+        archive.add_text(item_name, post_edit.edited_from, date=post_edit.edited_on)
+    queryset = sender.postedit_set.exclude(id__in=queryset.values('id')).order_by('id')
     for post_edit in chunk_queryset(queryset):
         item_name = post_edit.edited_on.strftime('%H%M%S-post-edit')
         archive.add_text(item_name, post_edit.edited_from, date=post_edit.edited_on)

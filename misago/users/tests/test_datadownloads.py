@@ -2,7 +2,9 @@ import os
 
 from django.core.files import File
 
+from misago.categories.models import Category
 from misago.threads.models import Attachment, AttachmentType
+from misago.threads.testutils import post_thread
 from misago.users.audittrail import create_user_audit_trail
 from misago.users.datadownloads import (
     expire_user_data_download, prepare_user_data_download, request_user_data_download,
@@ -188,6 +190,69 @@ class PrepareUserDataDownload(AuthenticatedUserTestCase):
     def test_prepare_download_with_audit_trail(self):
         """function creates data download for user with audit trail"""
         create_user_audit_trail(self.user, '127.0.0.1', self.user)
+
+        self.assert_download_is_valid()
+
+    def test_prepare_download_with_post(self):
+        """function creates data download for user with post"""
+        category = Category.objects.get(slug='first-category')
+        post_thread(category, poster=self.user)
+
+        self.assert_download_is_valid()
+
+    def test_prepare_download_with_owm_post_edit(self):
+        """function creates data download for user with own post edit"""
+        category = Category.objects.get(slug='first-category')
+        thread = post_thread(category, poster=self.user)
+        post = thread.first_post
+
+        post.edits_record.create(
+            category=category,
+            thread=thread,
+            editor=self.user,
+            editor_name=self.user.username,
+            editor_slug=self.user.slug,
+            edited_from="edited from",
+            edited_to="edited to",
+        )
+
+        self.assert_download_is_valid()
+
+    def test_prepare_download_with_other_users_post_edit(self):
+        """function creates data download for user with other user's post edit"""
+        category = Category.objects.get(slug='first-category')
+        thread = post_thread(category)
+        post = thread.first_post
+
+        post.edits_record.create(
+            category=category,
+            thread=thread,
+            editor=self.user,
+            editor_name=self.user.username,
+            editor_slug=self.user.slug,
+            edited_from="edited from",
+            edited_to="edited to",
+        )
+
+        self.assert_download_is_valid()
+
+    def test_prepare_download_with_own_post_edit_by_staff(self):
+        """function creates data download for user with post edited by staff"""
+        category = Category.objects.get(slug='first-category')
+        thread = post_thread(category, poster=self.user)
+        post = thread.first_post
+
+        staff_user = self.get_superuser()
+
+        post.edits_record.create(
+            category=category,
+            thread=thread,
+            editor=staff_user,
+            editor_name=staff_user.username,
+            editor_slug=staff_user.slug,
+            edited_from="edited from",
+            edited_to="edited to",
+        )
 
         self.assert_download_is_valid()
 
