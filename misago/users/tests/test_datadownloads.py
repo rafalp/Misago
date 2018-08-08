@@ -2,6 +2,7 @@ import os
 
 from django.core.files import File
 
+from misago.threads.models import Attachment, AttachmentType
 from misago.users.datadownloads import (
     expire_user_data_download, prepare_user_data_download, request_user_data_download,
     user_has_data_download_request
@@ -79,24 +80,87 @@ class PrepareUserDataDownload(AuthenticatedUserTestCase):
 
     def test_prepare_download_with_tmp_avatar(self):
         """function creates data download for user with tmp avatar"""
-        with open(TEST_FILE_PATH, 'rb') as download_file:
-            self.user.avatar_tmp = File(download_file)
+        with open(TEST_FILE_PATH, 'rb') as test_file:
+            self.user.avatar_tmp = File(test_file)
             self.user.save()
 
         self.assert_download_is_valid()
 
     def test_prepare_download_with_src_avatar(self):
         """function creates data download for user with src avatar"""
-        with open(TEST_FILE_PATH, 'rb') as download_file:
-            self.user.avatar_src = File(download_file)
+        with open(TEST_FILE_PATH, 'rb') as test_file:
+            self.user.avatar_src = File(test_file)
             self.user.save()
 
         self.assert_download_is_valid()
 
     def test_prepare_download_with_avatar_set(self):
         """function creates data download for user with avatar set"""
-        with open(TEST_FILE_PATH, 'rb') as download_file:
-            self.user.avatar_set.create(size=100, image=File(download_file))
+        with open(TEST_FILE_PATH, 'rb') as test_file:
+            self.user.avatar_set.create(size=100, image=File(test_file))
+
+        self.assert_download_is_valid()
+
+    def test_prepare_download_with_file_attachment(self):
+        """function creates data download for user with file attachment"""
+        filetype = AttachmentType.objects.create(
+            name="Test extension",
+            extensions='png',
+            mimetypes='image/png',
+        )
+
+        with open(TEST_FILE_PATH, 'rb') as test_file:
+            self.user.attachment_set.create(
+                secret='test',
+                filetype=filetype,
+                uploader_name=self.user.username,
+                uploader_slug=self.user.slug,
+                filename='test.png',
+                size=1000,
+                file=File(test_file),
+            )
+
+        self.assert_download_is_valid()
+
+    def test_prepare_download_with_image_attachment(self):
+        """function creates data download for user with image attachment"""
+        filetype = AttachmentType.objects.create(
+            name="Test extension",
+            extensions='png',
+            mimetypes='image/png',
+        )
+
+        with open(TEST_FILE_PATH, 'rb') as test_file:
+            self.user.attachment_set.create(
+                secret='test',
+                filetype=filetype,
+                uploader_name=self.user.username,
+                uploader_slug=self.user.slug,
+                filename='test.png',
+                size=1000,
+                image=File(test_file),
+            )
+
+        self.assert_download_is_valid()
+
+    def test_prepare_download_with_thumbnail_attachment(self):
+        """function creates data download for user with thumbnail attachment"""
+        filetype = AttachmentType.objects.create(
+            name="Test extension",
+            extensions='png',
+            mimetypes='image/png',
+        )
+
+        with open(TEST_FILE_PATH, 'rb') as test_file:
+            self.user.attachment_set.create(
+                secret='test',
+                filetype=filetype,
+                uploader_name=self.user.username,
+                uploader_slug=self.user.slug,
+                filename='test.png',
+                size=1000,
+                thumbnail=File(test_file),
+            )
 
         self.assert_download_is_valid()
 
