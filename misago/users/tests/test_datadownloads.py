@@ -3,6 +3,7 @@ import os
 from django.core.files import File
 
 from misago.threads.models import Attachment, AttachmentType
+from misago.users.audittrail import create_user_audit_trail
 from misago.users.datadownloads import (
     expire_user_data_download, prepare_user_data_download, request_user_data_download,
     user_has_data_download_request
@@ -181,6 +182,12 @@ class PrepareUserDataDownload(AuthenticatedUserTestCase):
         """function creates data download for user with username changed by deleted user"""
         self.user.record_name_change(self.user, 'aerith', 'alice')
         self.user.namechanges.update(changed_by=None)
+
+        self.assert_download_is_valid()
+
+    def test_prepare_download_with_audit_trail(self):
+        """function creates data download for user with audit trail"""
+        create_user_audit_trail(self.user, '127.0.0.1', self.user)
 
         self.assert_download_is_valid()
 
