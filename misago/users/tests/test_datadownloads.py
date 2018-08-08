@@ -164,6 +164,26 @@ class PrepareUserDataDownload(AuthenticatedUserTestCase):
 
         self.assert_download_is_valid()
 
+    def test_prepare_download_with_self_username_change(self):
+        """function creates data download for user that changed their username"""
+        self.user.record_name_change(self.user, 'aerith', 'alice')
+
+        self.assert_download_is_valid()
+
+    def test_prepare_download_with_username_changed_by_staff(self):
+        """function creates data download for user with username changed by staff"""
+        staff_user = self.get_superuser()
+        self.user.record_name_change(staff_user, 'aerith', 'alice')
+
+        self.assert_download_is_valid()
+
+    def test_prepare_download_with_username_changed_by_deleted_user(self):
+        """function creates data download for user with username changed by deleted user"""
+        self.user.record_name_change(self.user, 'aerith', 'alice')
+        self.user.namechanges.update(changed_by=None)
+
+        self.assert_download_is_valid()
+
 
 class RequestUserDataDownloadTests(AuthenticatedUserTestCase):
     def test_util_creates_data_download_for_user_with_them_as_requester(self):
