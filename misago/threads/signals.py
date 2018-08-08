@@ -131,17 +131,17 @@ def archive_user_attachments(sender, archive=None, **kwargs):
     for attachment in chunk_queryset(queryset):
         archive.add_model_file(
             attachment.file,
-            prefix=attachment.uploaded_on.strftime('%H%M%S'),
+            prefix=attachment.uploaded_on.strftime('%H%M%S-file'),
             date=attachment.uploaded_on,
         )
         archive.add_model_file(
             attachment.image,
-            prefix=attachment.uploaded_on.strftime('%H%M%S'),
+            prefix=attachment.uploaded_on.strftime('%H%M%S-image'),
             date=attachment.uploaded_on,
         )
         archive.add_model_file(
             attachment.thumbnail,
-            prefix=attachment.uploaded_on.strftime('%H%M%S'),
+            prefix=attachment.uploaded_on.strftime('%H%M%S-thumbnail'),
             date=attachment.uploaded_on,
         )
 

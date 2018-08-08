@@ -48,10 +48,10 @@ def archive_user_profile_fields(sender, archive=None, **kwargs):
 
 @receiver(archive_user_data)
 def archive_user_avatar(sender, archive=None, **kwargs):
-    archive.add_model_file(sender.avatar_tmp, directory='avatar')
-    archive.add_model_file(sender.avatar_src, directory='avatar')
+    archive.add_model_file(sender.avatar_tmp, directory='avatar', prefix='tmp')
+    archive.add_model_file(sender.avatar_src, directory='avatar', prefix='src')
     for avatar in sender.avatar_set.iterator():
-        archive.add_model_file(avatar.image, directory='avatar')
+        archive.add_model_file(avatar.image, directory='avatar', prefix=avatar.size)
 
 
 @receiver(archive_user_data)
