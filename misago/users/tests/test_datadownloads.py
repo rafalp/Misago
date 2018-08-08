@@ -4,7 +4,7 @@ from django.core.files import File
 
 from misago.categories.models import Category
 from misago.threads.models import Attachment, AttachmentType
-from misago.threads.testutils import post_thread
+from misago.threads.testutils import post_thread, post_poll
 from misago.users.audittrail import create_user_audit_trail
 from misago.users.datadownloads import (
     expire_user_data_download, prepare_user_data_download, request_user_data_download,
@@ -253,6 +253,14 @@ class PrepareUserDataDownload(AuthenticatedUserTestCase):
             edited_from="edited from",
             edited_to="edited to",
         )
+
+        self.assert_download_is_valid()
+
+    def test_prepare_download_with_poll(self):
+        """function creates data download for user with poll"""
+        category = Category.objects.get(slug='first-category')
+        thread = post_thread(category, poster=self.user)
+        post_poll(thread, self.user)
 
         self.assert_download_is_valid()
 
