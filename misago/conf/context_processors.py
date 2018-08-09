@@ -39,6 +39,7 @@ def preload_settings_json(request):
         'SETTINGS': preloaded_settings,
         'MISAGO_PATH': reverse('misago:index'),
         'BLANK_AVATAR_URL': BLANK_AVATAR_URL,
+        'ENABLE_DOWNLOAD_OWN_DATA': misago_settings.MISAGO_ENABLE_DOWNLOAD_OWN_DATA,
         'ENABLE_DELETE_OWN_ACCOUNT': misago_settings.MISAGO_ENABLE_DELETE_OWN_ACCOUNT,
         'STATIC_URL': misago_settings.STATIC_URL,
         'CSRF_COOKIE_NAME': misago_settings.CSRF_COOKIE_NAME,

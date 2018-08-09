@@ -7,7 +7,8 @@ from misago.acl.models import Role
 from misago.admin.testutils import AdminTestCase
 from misago.categories.models import Category
 from misago.threads.testutils import post_thread, reply_thread
-from misago.users.models import Ban, Rank
+from misago.users.datadownloads import request_user_data_download
+from misago.users.models import Ban, DataDownload, Rank
 
 
 UserModel = get_user_model()
@@ -186,6 +187,53 @@ class UserAdminViewsTests(AdminTestCase):
         )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Ban.objects.count(), 24)
+
+    def test_mass_request_data_download(self):
+        """users list requests data download for multiple users"""
+        user_pks = []
+        for i in range(10):
+            test_user = UserModel.objects.create_user(
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+                requires_activation=1,
+            )
+            user_pks.append(test_user.pk)
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={
+                'action': 'request_data_download',
+                'selected_items': user_pks,
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+
+        self.assertEqual(DataDownload.objects.filter(user_id__in=user_pks).count(), len(user_pks))
+
+    def test_mass_request_data_download_avoid_excessive_downloads(self):
+        """users list avoids excessive data download requests for multiple users"""
+        user_pks = []
+        for i in range(10):
+            test_user = UserModel.objects.create_user(
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+                requires_activation=1,
+            )
+            request_user_data_download(test_user)
+            user_pks.append(test_user.pk)
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={
+                'action': 'v',
+                'selected_items': user_pks,
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+
+        self.assertEqual(DataDownload.objects.filter(user_id__in=user_pks).count(), len(user_pks))
 
     def test_mass_delete_accounts_self(self):
         """its impossible to delete oneself"""

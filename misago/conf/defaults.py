@@ -35,8 +35,27 @@ MISAGO_ACL_EXTENSIONS = [
 MISAGO_ANONYMOUS_USERNAME = "Ghost"
 
 
-# Allow users to delete their own accounts?
-# Providing such feature is required by EU law from entities that process europeans personal data.
+# Allow users to download their personal data
+# Enables users to learn what data about them is being held by the site without having to contact
+# site's administrators.
+
+MISAGO_ENABLE_DOWNLOAD_OWN_DATA = True
+
+# Number of hours for which user data should be available for download.
+# When data download is marked as expired, data archive associated with it is deleted.
+
+MISAGO_USER_DATA_DOWNLOADS_EXPIRE_IN_HOURS = 48
+
+# Path to the directory that Misago should use to prepare user data downloads.
+# Should not be accessible from internet.
+
+MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = None
+
+
+# Allow users to delete their accounts
+# Lets users delete their own account on the site without having to contact site administrators.
+# This mechanism doesn't delete user posts, polls or attachments, but attempts to anonymize any
+# data about user left behind after user is deleted.
 
 MISAGO_ENABLE_DELETE_OWN_ACCOUNT = False
 

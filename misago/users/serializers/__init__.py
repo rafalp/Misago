@@ -1,4 +1,5 @@
 from .ban import *
+from .datadownload import *
 from .moderation import *
 from .options import *
 from .rank import *

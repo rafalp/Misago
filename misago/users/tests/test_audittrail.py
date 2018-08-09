@@ -27,7 +27,7 @@ class CreateAuditTrailTests(UserTestCase):
 
         self.obj = UserModel.objects.create_user('BobBoberson', 'bob@example.com')
 
-    def test_create_user_audit_require_model(self):
+    def test_create_audit_require_model(self):
         """create_audit_trail requires model instance"""
         anonymous_user = self.get_anonymous_user()
         request = MockRequest(anonymous_user)
@@ -35,14 +35,14 @@ class CreateAuditTrailTests(UserTestCase):
             create_audit_trail(request, anonymous_user)
         self.assertEqual(AuditTrail.objects.count(), 0)
 
-    def test_create_user_audit_trail_anonymous_user(self):
+    def test_create_audit_trail_anonymous_user(self):
         """create_audit_trail doesn't record anonymous users"""
         user = self.get_anonymous_user()
         request = MockRequest(user)
         create_audit_trail(request, self.obj)
         self.assertEqual(AuditTrail.objects.count(), 0)
 
-    def test_create_user_audit_trail(self):
+    def test_create_audit_trail(self):
         """create_audit_trail creates new db record"""
         user = self.get_authenticated_user()
         request = MockRequest(user)

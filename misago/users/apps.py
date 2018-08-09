@@ -44,6 +44,14 @@ class MisagoUsersConfig(AppConfig):
             icon='vpn_key',
         )
 
+        if settings.MISAGO_ENABLE_DOWNLOAD_OWN_DATA:
+            usercp.add_section(
+                link='misago:usercp-download-data',
+                name=_("Download data"),
+                component='download-data',
+                icon='save_alt',
+            )
+
         if settings.MISAGO_ENABLE_DELETE_OWN_ACCOUNT:
             usercp.add_section(
                 link='misago:usercp-delete-account',

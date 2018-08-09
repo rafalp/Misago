@@ -13,6 +13,7 @@ from misago.core.mail import mail_users
 from misago.core.pgutils import chunk_queryset
 from misago.threads.models import Thread
 from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
+from misago.users.datadownloads import request_user_data_download, user_has_data_download_request
 from misago.users.forms.admin import (
     BanUsersForm, EditUserForm, EditUserFormFactory, NewUserForm, SearchUsersForm)
 from misago.users.models import Ban
@@ -71,6 +72,11 @@ class UsersList(UserAdmin, generic.ListView):
             'action': 'ban',
             'name': _("Ban users"),
             'icon': 'fa fa-lock',
+        },
+        {
+            'action': 'request_data_download',
+            'name': _("Request data download"),
+            'icon': 'fa fa-download',
         },
         {
             'action': 'delete_accounts',
@@ -197,6 +203,14 @@ class UsersList(UserAdmin, generic.ListView):
             }
         )
 
+    def action_request_data_download(self, request, users):
+        for user in users:
+            if not user_has_data_download_request(user):
+                request_user_data_download(user, requester=request.user)
+
+        messages.success(
+            request, _("Data download requests have been placed for selected users."))
+
     def action_delete_accounts(self, request, users):
         for user in users:
             if user == request.user:
@@ -208,8 +222,7 @@ class UsersList(UserAdmin, generic.ListView):
         for user in users:
             user.delete()
 
-        message = _("Selected users have been deleted.")
-        messages.success(request, message)
+        messages.success(request, _("Selected users have been deleted."))
 
     def action_delete_all(self, request, users):
         for user in users:

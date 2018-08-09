@@ -1,21 +1,79 @@
+from collections import OrderedDict
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.dispatch import Signal, receiver
 from django.utils import timezone
+from django.utils.translation import ugettext as _
 
 from misago.conf import settings
+from misago.core.pgutils import chunk_queryset
 
 from .models import AuditTrail
+from .profilefields import profilefields
 
 
 UserModel = get_user_model()
 
 anonymize_user_content = Signal()
+archive_user_data = Signal()
 delete_user_content = Signal()
 remove_old_ips = Signal()
 username_changed = Signal()
+
+
+@receiver(archive_user_data)
+def archive_user_details(sender, archive=None, **kwargs):
+    archive.add_dict('details', OrderedDict([
+        (_('Username'), sender.username),
+        (_('E-mail'), sender.email),
+        (_('Joined on'), sender.joined_on),
+        (_('Joined from ip'), sender.joined_from_ip or 'unavailable'),
+    ]))
+
+
+@receiver(archive_user_data)
+def archive_user_profile_fields(sender, archive=None, **kwargs):
+    clean_profile_fields = OrderedDict()
+    for profile_fields_group in profilefields.get_fields_groups():
+        for profile_field in profile_fields_group['fields']:
+            if sender.profile_fields.get(profile_field.fieldname):
+                field_value = sender.profile_fields[profile_field.fieldname]
+                clean_profile_fields[str(profile_field.label)] = field_value
+                
+    if clean_profile_fields:
+        archive.add_dict('profile_fields', clean_profile_fields)
+
+
+@receiver(archive_user_data)
+def archive_user_avatar(sender, archive=None, **kwargs):
+    archive.add_model_file(sender.avatar_tmp, directory='avatar', prefix='tmp')
+    archive.add_model_file(sender.avatar_src, directory='avatar', prefix='src')
+    for avatar in sender.avatar_set.iterator():
+        archive.add_model_file(avatar.image, directory='avatar', prefix=avatar.size)
+
+
+@receiver(archive_user_data)
+def archive_user_audit_trail(sender, archive=None, **kwargs):
+    queryset = sender.audittrail_set.order_by('id')
+    for audit_trail in chunk_queryset(queryset):
+        item_name = audit_trail.created_at.strftime('%H%M%S-audit-trail')
+        archive.add_text(item_name, audit_trail.ip_address, date=audit_trail.created_at)
+
+
+@receiver(archive_user_data)
+def archive_user_name_history(sender, archive=None, **kwargs):
+    for name_change in sender.namechanges.order_by('id').iterator():
+        item_name = name_change.changed_on.strftime('%H%M%S-name-change')
+        archive.add_dict(
+            item_name,
+            OrderedDict([
+                (_("New username"), name_change.new_username),
+                (_("Old username"), name_change.old_username),
+            ]),
+            date=name_change.changed_on,
+        )
 
 
 @receiver(username_changed)

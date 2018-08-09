@@ -1,12 +1,16 @@
+from collections import OrderedDict
+
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models.signals import pre_delete
 from django.dispatch import Signal, receiver
+from django.utils.translation import ugettext as _
 
 from misago.categories.models import Category
 from misago.categories.signals import delete_category_content, move_category_content
 from misago.core.pgutils import chunk_queryset
-from misago.users.signals import anonymize_user_content, delete_user_content, username_changed
+from misago.users.signals import (
+    anonymize_user_content, archive_user_data, delete_user_content, username_changed)
 
 from .anonymize import ANONYMIZABLE_EVENTS, anonymize_event, anonymize_post_last_likes
 from .models import Attachment, Poll, PollVote, Post, PostEdit, PostLike, Thread
@@ -119,6 +123,62 @@ def delete_user_threads(sender, **kwargs):
         for category in Category.objects.filter(id__in=recount_categories):
             category.synchronize()
             category.save()
+
+
+@receiver(archive_user_data)
+def archive_user_attachments(sender, archive=None, **kwargs):
+    queryset = sender.attachment_set.order_by('id')
+    for attachment in chunk_queryset(queryset):
+        archive.add_model_file(
+            attachment.file,
+            prefix=attachment.uploaded_on.strftime('%H%M%S-file'),
+            date=attachment.uploaded_on,
+        )
+        archive.add_model_file(
+            attachment.image,
+            prefix=attachment.uploaded_on.strftime('%H%M%S-image'),
+            date=attachment.uploaded_on,
+        )
+        archive.add_model_file(
+            attachment.thumbnail,
+            prefix=attachment.uploaded_on.strftime('%H%M%S-thumbnail'),
+            date=attachment.uploaded_on,
+        )
+
+
+@receiver(archive_user_data)
+def archive_user_posts(sender, archive=None, **kwargs):
+    queryset = sender.post_set.order_by('id')
+    for post in chunk_queryset(queryset):
+        item_name = post.posted_on.strftime('%H%M%S-post')
+        archive.add_text(item_name, post.parsed, date=post.posted_on)
+
+
+@receiver(archive_user_data)
+def archive_user_posts_edits(sender, archive=None, **kwargs):
+    queryset = PostEdit.objects.filter(post__poster=sender).order_by('id')
+    for post_edit in chunk_queryset(queryset):
+        item_name = post_edit.edited_on.strftime('%H%M%S-post-edit')
+        archive.add_text(item_name, post_edit.edited_from, date=post_edit.edited_on)
+    queryset = sender.postedit_set.exclude(id__in=queryset.values('id')).order_by('id')
+    for post_edit in chunk_queryset(queryset):
+        item_name = post_edit.edited_on.strftime('%H%M%S-post-edit')
+        archive.add_text(item_name, post_edit.edited_from, date=post_edit.edited_on)
+
+
+@receiver(archive_user_data)
+def archive_user_polls(sender, archive=None, **kwargs):
+    queryset = sender.poll_set.order_by('id')
+    for poll in chunk_queryset(queryset):
+        item_name = poll.posted_on.strftime('%H%M%S-poll')
+        archive.add_dict(
+            item_name,
+            OrderedDict([
+                (_("Question"), poll.question),
+                (_("Choices"), u', '.join([c['label'] for c in poll.choices])),
+            ]),
+            date=poll.posted_on,
+        )
 
 
 @receiver(anonymize_user_content)

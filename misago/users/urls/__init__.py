@@ -39,6 +39,8 @@ urlpatterns += [
         options.confirm_password_change,
         name='options-confirm-password-change'
     ),
+    url(r'^options/dowload-data/$', options.index, name='usercp-download-data'),
+    url(r'^options/delete-account/$', options.index, name='usercp-delete-account'),
 ]
 
 urlpatterns += [
