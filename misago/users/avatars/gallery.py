@@ -2,6 +2,8 @@ import random
 
 from path import Path
 from PIL import Image
+import requests
+from io import BytesIO
 
 from django.core.files.base import ContentFile
 
@@ -66,7 +68,12 @@ def load_avatar_galleries():
 
 
 def set_avatar(user, image):
-    store.store_new_avatar(user, Image.open(image.path))
+    try:
+        response = requests.get(image.url)
+        img = Image.open(BytesIO(response.content))
+        store.store_new_avatar(user, img)
+    except :
+        store.store_new_avatar(user, Image.open(image.path))
 
 
 def set_random_avatar(user):
