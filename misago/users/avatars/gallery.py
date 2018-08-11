@@ -65,8 +65,8 @@ def load_avatar_galleries():
     return galleries
 
 
-def set_avatar(user, image):
-    store.store_new_avatar(user, Image.open(image.path))
+def set_avatar(user, avatar):
+    store.store_new_avatar(user, Image.open(avatar.image))
 
 
 def set_random_avatar(user):
@@ -82,5 +82,5 @@ def set_random_avatar(user):
         else:
             avatars_list += gallery['images']
 
-    random_image_path = random.choice(avatars_list).path
-    store.store_new_avatar(user, Image.open(random_image_path))
+    random_avatar = random.choice(avatars_list)
+    store.store_new_avatar(user, Image.open(random_avatar.image))
