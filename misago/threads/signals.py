@@ -10,7 +10,7 @@ from misago.categories.models import Category
 from misago.categories.signals import delete_category_content, move_category_content
 from misago.core.pgutils import chunk_queryset
 from misago.users.signals import (
-    anonymize_user_content, archive_user_data, delete_user_content, username_changed)
+    anonymize_user_data, archive_user_data, delete_user_content, username_changed)
 
 from .anonymize import ANONYMIZABLE_EVENTS, anonymize_event, anonymize_post_last_likes
 from .models import Attachment, Poll, PollVote, Post, PostEdit, PostLike, Thread
@@ -181,7 +181,7 @@ def archive_user_polls(sender, archive=None, **kwargs):
         )
 
 
-@receiver(anonymize_user_content)
+@receiver(anonymize_user_data)
 def anonymize_user_in_events(sender, **kwargs):
     queryset = Post.objects.filter(
         is_event=True,
@@ -193,13 +193,13 @@ def anonymize_user_in_events(sender, **kwargs):
         anonymize_event(sender, event)
 
 
-@receiver([anonymize_user_content])
+@receiver([anonymize_user_data])
 def anonymize_user_in_likes(sender, **kwargs):
     for post in chunk_queryset(sender.liked_post_set):
         anonymize_post_last_likes(sender, post)
 
 
-@receiver([anonymize_user_content, username_changed])
+@receiver([anonymize_user_data, username_changed])
 def update_usernames(sender, **kwargs):
     Thread.objects.filter(starter=sender).update(
         starter_name=sender.username,

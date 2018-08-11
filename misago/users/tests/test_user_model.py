@@ -74,11 +74,11 @@ class UserManagerTests(TestCase):
 
 
 class UserModelTests(TestCase):
-    def test_anonymize_content(self):
-        """anonymize_content sets username and slug to one defined in settings"""
+    def test_anonymize_data(self):
+        """anonymize_data sets username and slug to one defined in settings"""
         user = User.objects.create_user('Bob', 'bob@example.com', 'Pass.123')
 
-        user.anonymize_content()
+        user.anonymize_data()
         self.assertEqual(user.username, settings.MISAGO_ANONYMOUS_USERNAME)
         self.assertEqual(user.slug, slugify(settings.MISAGO_ANONYMOUS_USERNAME))
 

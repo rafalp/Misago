@@ -304,7 +304,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if kwargs.pop('delete_content', False):
             self.delete_content()
 
-        self.anonymize_content()
+        self.anonymize_data()
 
         avatars.delete_avatar(self)
 
@@ -319,7 +319,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.is_deleting_account = True
         self.save(update_fields=['is_active', 'is_deleting_account'])
 
-    def anonymize_content(self):
+    def anonymize_data(self):
         """Replaces username with anonymized one, then send anonymization signal.
 
         Items associated with this user then anonymize their user-specific data
@@ -328,8 +328,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.username = settings.MISAGO_ANONYMOUS_USERNAME
         self.slug = slugify(self.username)
         
-        from misago.users.signals import anonymize_user_content
-        anonymize_user_content.send(sender=self)
+        from misago.users.signals import anonymize_user_data
+        anonymize_user_data.send(sender=self)
 
     @property
     def acl_cache(self):

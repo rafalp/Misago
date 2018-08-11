@@ -16,7 +16,7 @@ from .profilefields import profilefields
 
 UserModel = get_user_model()
 
-anonymize_user_content = Signal()
+anonymize_user_data = Signal()
 archive_user_data = Signal()
 delete_user_content = Signal()
 remove_old_ips = Signal()

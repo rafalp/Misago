@@ -30,7 +30,7 @@ class DeleteUserLikesTests(AuthenticatedUserTestCase):
         return request
 
     def test_anonymize_user_likes(self):
-        """post's last like is anonymized by user.anonymize_content"""
+        """post's last like is anonymized by user.anonymize_data"""
         category = Category.objects.get(slug='first-category')
         thread = testutils.post_thread(category)
         post = testutils.reply_thread(thread)
