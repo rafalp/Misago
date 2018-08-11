@@ -10,9 +10,6 @@ class AvatarGallery(models.Model):
     class Meta:
         ordering = ['gallery', 'pk']
 
-    @property
-    def path(self):
-        return self.image.path
 
     @property
     def url(self):
