@@ -156,26 +156,6 @@ EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = 'Forums <%s>' % EMAIL_HOST_USER
 
 
-# Allow users to download their personal data
-# Enables users to learn what data about them is being held by the site without having to contact
-# site's administrators.
-
-MISAGO_ENABLE_DOWNLOAD_OWN_DATA = True
-
-# Path to the directory that Misago should use to prepare user data downloads.
-# Should not be accessible from internet.
-
-MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = os.path.join(BASE_DIR, 'userdata')
-
-
-# Allow users to delete their accounts
-# Lets users delete their own account on the site without having to contact site administrators.
-# This mechanism doesn't delete user posts, polls or attachments, but attempts to anonymize any
-# data about user left behind after user is deleted.
-
-MISAGO_ENABLE_DELETE_OWN_ACCOUNT = True
-
-
 # Application definition
 
 AUTH_USER_MODEL = 'misago_users.User'
@@ -388,13 +368,41 @@ MISAGO_ADDRESS = 'http://my-misago-site.com/'
 
 
 # PostgreSQL text search configuration to use in searches
-# Defaults to "simple", for list of installed configurations run "\dF" in "psql"
+# Defaults to "simple", for list of installed configurations run "\dF" in "psql".
 # Standard configs as of PostgreSQL 9.5 are: dutch, english, finnish, french,
 # german, hungarian, italian, norwegian, portuguese, romanian, russian, simple,
 # spanish, swedish and turkish
 # Example on adding custom language can be found here: https://github.com/lemonskyjwt/plpstgrssearch
 
 MISAGO_SEARCH_CONFIG = 'simple'
+
+
+# Allow users to download their personal data
+# Enables users to learn what data about them is being held by the site without having to contact
+# site's administrators.
+
+MISAGO_ENABLE_DOWNLOAD_OWN_DATA = True
+
+# Path to the directory that Misago should use to prepare user data downloads.
+# Should not be accessible from internet.
+
+MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = os.path.join(BASE_DIR, 'userdata')
+
+
+# Allow users to delete their accounts
+# Lets users delete their own account on the site without having to contact site administrators.
+# This mechanism doesn't delete user posts, polls or attachments, but attempts to anonymize any
+# data about user left behind after user is deleted.
+
+MISAGO_ENABLE_DELETE_OWN_ACCOUNT = True
+
+
+# Automatically delete new user accounts that weren't activated in specified time
+# If you rely on admin review of new registrations, make this period long, disable
+# the "deleteinactiveusers" management command, or change this value to zero. Otherwise
+# keep it short to give users a chance to retry on their own after few days pass.
+
+MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS = 2
 
 
 # Path to directory containing avatar galleries

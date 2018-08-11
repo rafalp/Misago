@@ -52,6 +52,14 @@ MISAGO_USER_DATA_DOWNLOADS_EXPIRE_IN_HOURS = 48
 MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = None
 
 
+# Automatically delete new user accounts that weren't activated in specified time
+# If you rely on admin review of new registrations, make this period long, disable
+# the "deleteinactiveusers" management command, or change this value to zero. Otherwise
+# keep it short to give users a chance to retry on their own after few days pass.s
+
+MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS = 0
+
+
 # Allow users to delete their accounts
 # Lets users delete their own account on the site without having to contact site administrators.
 # This mechanism doesn't delete user posts, polls or attachments, but attempts to anonymize any
