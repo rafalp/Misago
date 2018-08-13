@@ -19,12 +19,12 @@ class DataDownload(models.Model):
     STATUS_READY = 2
     STATUS_EXPIRED = 3
 
-    STATUS_CHOICES = (
+    STATUS_CHOICES = [
         (STATUS_PENDING, _("Pending")),
         (STATUS_PROCESSING, _("Processing")),
         (STATUS_READY, _("Ready")),
         (STATUS_EXPIRED, _("Expired")),
-    )
+    ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     status = models.PositiveIntegerField(
