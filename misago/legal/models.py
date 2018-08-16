@@ -55,6 +55,7 @@ class Agreement(models.Model):
     created_on = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True,
         related_name='+',
@@ -63,6 +64,7 @@ class Agreement(models.Model):
     last_modified_on = models.DateTimeField(null=True, blank=True)
     last_modified_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True,
         related_name='+',

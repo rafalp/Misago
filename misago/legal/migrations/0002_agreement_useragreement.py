@@ -31,8 +31,8 @@ class Migration(migrations.Migration):
                 ('created_by_name', models.CharField(blank=True, max_length=255, null=True)),
                 ('last_modified_on', models.DateTimeField(blank=True, null=True)),
                 ('last_modified_by_name', models.CharField(blank=True, max_length=255, null=True)),
-                ('created_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='+', to=settings.AUTH_USER_MODEL)),
-                ('last_modified_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='+', to=settings.AUTH_USER_MODEL)),
+                ('created_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
+                ('last_modified_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
