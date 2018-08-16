@@ -69,6 +69,11 @@ class AgreementAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test Rules')
 
+        test_agreement = Agreement.objects.get(type=Agreement.TYPE_TOS)
+        self.assertIsNone(test_agreement.last_modified_on)
+        self.assertIsNone(test_agreement.last_modified_by)
+        self.assertIsNone(test_agreement.last_modified_by_name)
+
     def test_new_view_change_active(self):
         """new agreement view creates new active agreement"""
         response = self.client.get(reverse('misago:admin:users:agreements:new'))
@@ -136,6 +141,11 @@ class AgreementAdminViewsTests(AdminTestCase):
         response = self.client.get(response['location'])
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test Privacy')
+
+        updated_agreement = Agreement.objects.get(type=Agreement.TYPE_PRIVACY)
+        self.assertTrue(updated_agreement.last_modified_on)
+        self.assertEqual(updated_agreement.last_modified_by, self.user)
+        self.assertEqual(updated_agreement.last_modified_by_name, self.user.username)
 
     def test_edit_view_change_active(self):
         """edit agreement view sets new active"""

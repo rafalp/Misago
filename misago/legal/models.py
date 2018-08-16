@@ -25,10 +25,9 @@ class AgreementManager(models.Manager):
 
     def get_agreements_from_db(self):
         agreements = {}
-        for agreement in Agreement.objects.filter('is_active'):
+        for agreement in Agreement.objects.filter(is_active=True):
             agreements[agreement.type] = {
-                'type': agreement.type,
-                'title': agreement.title,
+                'title': agreement.get_final_title(),
                 'link': agreement.link,
                 'text': bool(agreement.text),
             }
@@ -61,7 +60,7 @@ class Agreement(models.Model):
         related_name='+',
     )
     created_by_name = models.CharField(max_length=255, null=True, blank=True)
-    last_modified_on = models.DateTimeField(default=timezone.now)
+    last_modified_on = models.DateTimeField(null=True, blank=True)
     last_modified_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         blank=True,

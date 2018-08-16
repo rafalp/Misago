@@ -1,20 +1,20 @@
 from hashlib import md5
 
-from django.http import Http404
-from django.shortcuts import redirect, render
+from django.conf import settings
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.encoding import force_bytes
-from django.utils.translation import ugettext as _
+from django.utils.text import slugify
 
-from misago.conf import settings
 from misago.core.cache import cache
+from misago.legal.models import Agreement
 from misago.markup import common_flavour
 
 
-def get_parsed_content(request, setting_name):
-    cache_name = 'misago_legal_%s' % setting_name
+def get_parsed_content(request, agreement):
+    cache_name = 'misago_legal_%s_%s' % (agreement.pk, agreement.last_modified_on or '')
     cached_content = cache.get(cache_name)
 
-    unparsed_content = settings.get_lazy_setting(setting_name)
+    unparsed_content = agreement.text
 
     checksum_source = force_bytes('%s:%s' % (unparsed_content, settings.SECRET_KEY))
     unparsed_checksum = md5(checksum_source).hexdigest()
@@ -31,39 +31,32 @@ def get_parsed_content(request, setting_name):
         return cached_content['parsed']
 
 
-def privacy_policy(request):
-    if not (settings.privacy_policy or settings.privacy_policy_link):
-        raise Http404()
+def legal_view(request, agreement_type):
+    agreement = get_object_or_404(
+        Agreement, type=agreement_type, is_active=True
+    )
 
-    if settings.privacy_policy_link:
-        return redirect(settings.privacy_policy_link)
+    if agreement.link:
+        return redirect(agreement.link)
 
-    parsed_content = get_parsed_content(request, 'privacy_policy')
+    template_name = 'misago/{}.html'.format(agreement_type)
+    parsed_content = get_parsed_content(request, agreement)
 
     return render(
-        request, 'misago/privacy_policy.html', {
-            'id': 'privacy-policy',
-            'title': settings.privacy_policy_title or _("Privacy policy"),
-            'link': settings.privacy_policy_link,
+        request,
+        template_name,
+        {
+            'id': slugify(agreement_type),
+            'title': agreement.get_final_title(),
+            'link': agreement.link,
             'body': parsed_content,
         }
     )
+
+
+def privacy_policy(request):
+    return legal_view(request, Agreement.TYPE_PRIVACY)
 
 
 def terms_of_service(request):
-    if not (settings.terms_of_service or settings.terms_of_service_link):
-        raise Http404()
-
-    if settings.terms_of_service_link:
-        return redirect(settings.terms_of_service_link)
-
-    parsed_content = get_parsed_content(request, 'terms_of_service')
-
-    return render(
-        request, 'misago/terms_of_service.html', {
-            'id': 'terms-of-service',
-            'title': settings.terms_of_service_title or _("Terms of service"),
-            'link': settings.terms_of_service_link,
-            'body': parsed_content,
-        }
-    )
+    return legal_view(request, Agreement.TYPE_TOS)

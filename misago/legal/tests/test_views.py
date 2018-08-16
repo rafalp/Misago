@@ -1,9 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from misago.conf import settings
-
 from misago.legal.context_processors import legal_links
+from misago.legal.models import Agreement
 
 
 class MockRequest(object):
@@ -12,23 +11,25 @@ class MockRequest(object):
 
 
 class PrivacyPolicyTests(TestCase):
+    def setUp(self):
+        Agreement.objects.invalidate_cache()
+
     def tearDown(self):
-        settings.reset_settings()
+        Agreement.objects.invalidate_cache()
 
     def test_404_on_no_policy(self):
         """policy view returns 404 when no policy is set"""
-        self.assertFalse(settings.privacy_policy_link)
-        self.assertFalse(settings.privacy_policy)
-
         response = self.client.get(reverse('misago:privacy-policy'))
         self.assertEqual(response.status_code, 404)
 
     def test_301_on_link_policy(self):
         """policy view returns 302 redirect when link is set"""
-        settings.override_setting('privacy_policy_link', 'http://test.com')
-        settings.override_setting('privacy_policy', 'Lorem ipsum')
-        self.assertTrue(settings.privacy_policy_link)
-        self.assertTrue(settings.privacy_policy)
+        Agreement.objects.create(
+            type=Agreement.TYPE_PRIVACY,
+            link='http://test.com',
+            text='Lorem ipsum',
+            is_active=True,
+        )
 
         response = self.client.get(reverse('misago:privacy-policy'))
         self.assertEqual(response.status_code, 302)
@@ -36,10 +37,12 @@ class PrivacyPolicyTests(TestCase):
 
     def test_200_on_link_policy(self):
         """policy view returns 200 when custom tos content is set"""
-        settings.override_setting('privacy_policy_title', 'Test Policy')
-        settings.override_setting('privacy_policy', 'Lorem ipsum dolor')
-        self.assertTrue(settings.privacy_policy_title)
-        self.assertTrue(settings.privacy_policy)
+        Agreement.objects.create(
+            type=Agreement.TYPE_PRIVACY,
+            title='Test Policy',
+            text='Lorem ipsum dolor',
+            is_active=True,
+        )
 
         response = self.client.get(reverse('misago:privacy-policy'))
         self.assertEqual(response.status_code, 200)
@@ -53,7 +56,12 @@ class PrivacyPolicyTests(TestCase):
 
     def test_context_processor_misago_policy(self):
         """context processor has TOS link to Misago view"""
-        settings.override_setting('privacy_policy', 'Lorem ipsum')
+        Agreement.objects.create(
+            type=Agreement.TYPE_PRIVACY,
+            text='Lorem ipsum',
+            is_active=True,
+        )
+
         context_dict = legal_links(MockRequest())
 
         self.assertEqual(context_dict, {
@@ -62,7 +70,12 @@ class PrivacyPolicyTests(TestCase):
 
     def test_context_processor_remote_policy(self):
         """context processor has TOS link to remote url"""
-        settings.override_setting('privacy_policy_link', 'http://test.com')
+        agreement = Agreement.objects.create(
+            type=Agreement.TYPE_PRIVACY,
+            link='http://test.com',
+            is_active=True,
+        )
+
         context_dict = legal_links(MockRequest())
 
         self.assertEqual(context_dict, {
@@ -70,7 +83,9 @@ class PrivacyPolicyTests(TestCase):
         })
 
         # set misago view too
-        settings.override_setting('privacy_policy', 'Lorem ipsum')
+        agreement.text = 'Lorem ipsum'
+        agreement.save()
+        
         context_dict = legal_links(MockRequest())
 
         self.assertEqual(context_dict, {
@@ -79,23 +94,25 @@ class PrivacyPolicyTests(TestCase):
 
 
 class TermsOfServiceTests(TestCase):
+    def setUp(self):
+        Agreement.objects.invalidate_cache()
+
     def tearDown(self):
-        settings.reset_settings()
+        Agreement.objects.invalidate_cache()
 
     def test_404_on_no_tos(self):
         """TOS view returns 404 when no TOS is set"""
-        self.assertFalse(settings.terms_of_service_link)
-        self.assertFalse(settings.terms_of_service)
-
         response = self.client.get(reverse('misago:terms-of-service'))
         self.assertEqual(response.status_code, 404)
 
     def test_301_on_link_tos(self):
         """TOS view returns 302 redirect when link is set"""
-        settings.override_setting('terms_of_service_link', 'http://test.com')
-        settings.override_setting('terms_of_service', 'Lorem ipsum')
-        self.assertTrue(settings.terms_of_service_link)
-        self.assertTrue(settings.terms_of_service)
+        Agreement.objects.create(
+            type=Agreement.TYPE_TOS,
+            link='http://test.com',
+            text='Lorem ipsum',
+            is_active=True,
+        )
 
         response = self.client.get(reverse('misago:terms-of-service'))
         self.assertEqual(response.status_code, 302)
@@ -103,10 +120,12 @@ class TermsOfServiceTests(TestCase):
 
     def test_200_on_link_tos(self):
         """TOS view returns 200 when custom tos content is set"""
-        settings.override_setting('terms_of_service_title', 'Test ToS')
-        settings.override_setting('terms_of_service', 'Lorem ipsum dolor')
-        self.assertTrue(settings.terms_of_service_title)
-        self.assertTrue(settings.terms_of_service)
+        Agreement.objects.create(
+            type=Agreement.TYPE_TOS,
+            title='Test ToS',
+            text='Lorem ipsum dolor',
+            is_active=True,
+        )
 
         response = self.client.get(reverse('misago:terms-of-service'))
         self.assertEqual(response.status_code, 200)
@@ -120,7 +139,12 @@ class TermsOfServiceTests(TestCase):
 
     def test_context_processor_misago_tos(self):
         """context processor has TOS link to Misago view"""
-        settings.override_setting('terms_of_service', 'Lorem ipsum')
+        Agreement.objects.create(
+            type=Agreement.TYPE_TOS,
+            text='Lorem ipsum',
+            is_active=True,
+        )
+
         context_dict = legal_links(MockRequest())
 
         self.assertEqual(
@@ -131,7 +155,12 @@ class TermsOfServiceTests(TestCase):
 
     def test_context_processor_remote_tos(self):
         """context processor has TOS link to remote url"""
-        settings.override_setting('terms_of_service_link', 'http://test.com')
+        agreement = Agreement.objects.create(
+            type=Agreement.TYPE_TOS,
+            link='http://test.com',
+            is_active=True,
+        )
+
         context_dict = legal_links(MockRequest())
 
         self.assertEqual(context_dict, {
@@ -139,7 +168,9 @@ class TermsOfServiceTests(TestCase):
         })
 
         # set misago view too
-        settings.override_setting('terms_of_service', 'Lorem ipsum')
+        agreement.text = 'Lorem ipsum'
+        agreement.save()
+
         context_dict = legal_links(MockRequest())
 
         self.assertEqual(context_dict, {
