@@ -3,7 +3,7 @@ from django.urls import reverse
 
 from misago.conf import settings
 
-from .context_processors import legal_links
+from misago.legal.context_processors import legal_links
 
 
 class MockRequest(object):
