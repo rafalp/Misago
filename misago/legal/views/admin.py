@@ -80,7 +80,7 @@ class DeleteAgreement(AgreementAdmin, generic.ButtonView):
 
 class SetAgreementAsActive(AgreementAdmin, generic.ButtonView):
     def button_action(self, request, target):
-        set_agreement_as_active(target)
+        set_agreement_as_active(target, commit=True)
 
         message = _('Agreement "%(title)s" has been set as active for type "%(type)s".')
         targets_names = {'title': target.get_final_title(), 'type': target.get_type_display()}

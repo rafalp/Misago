@@ -1,13 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from misago.legal.context_processors import legal_links
 from misago.legal.models import Agreement
-
-
-class MockRequest(object):
-    def __init__(self):
-        self.frontend_context = {}
 
 
 class PrivacyPolicyTests(TestCase):
@@ -49,49 +43,6 @@ class PrivacyPolicyTests(TestCase):
         self.assertContains(response, 'Test Policy')
         self.assertContains(response, 'Lorem ipsum dolor')
 
-    def test_context_processor_no_policy(self):
-        """context processor has no TOS link"""
-        context_dict = legal_links(MockRequest())
-        self.assertFalse(context_dict)
-
-    def test_context_processor_misago_policy(self):
-        """context processor has TOS link to Misago view"""
-        Agreement.objects.create(
-            type=Agreement.TYPE_PRIVACY,
-            text='Lorem ipsum',
-            is_active=True,
-        )
-
-        context_dict = legal_links(MockRequest())
-
-        self.assertEqual(context_dict, {
-            'PRIVACY_POLICY_URL': reverse('misago:privacy-policy'),
-        })
-
-    def test_context_processor_remote_policy(self):
-        """context processor has TOS link to remote url"""
-        agreement = Agreement.objects.create(
-            type=Agreement.TYPE_PRIVACY,
-            link='http://test.com',
-            is_active=True,
-        )
-
-        context_dict = legal_links(MockRequest())
-
-        self.assertEqual(context_dict, {
-            'PRIVACY_POLICY_URL': 'http://test.com',
-        })
-
-        # set misago view too
-        agreement.text = 'Lorem ipsum'
-        agreement.save()
-        
-        context_dict = legal_links(MockRequest())
-
-        self.assertEqual(context_dict, {
-            'PRIVACY_POLICY_URL': 'http://test.com',
-        })
-
 
 class TermsOfServiceTests(TestCase):
     def setUp(self):
@@ -131,48 +82,3 @@ class TermsOfServiceTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Test ToS')
         self.assertContains(response, 'Lorem ipsum dolor')
-
-    def test_context_processor_no_tos(self):
-        """context processor has no TOS link"""
-        context_dict = legal_links(MockRequest())
-        self.assertFalse(context_dict)
-
-    def test_context_processor_misago_tos(self):
-        """context processor has TOS link to Misago view"""
-        Agreement.objects.create(
-            type=Agreement.TYPE_TOS,
-            text='Lorem ipsum',
-            is_active=True,
-        )
-
-        context_dict = legal_links(MockRequest())
-
-        self.assertEqual(
-            context_dict, {
-                'TERMS_OF_SERVICE_URL': reverse('misago:terms-of-service'),
-            }
-        )
-
-    def test_context_processor_remote_tos(self):
-        """context processor has TOS link to remote url"""
-        agreement = Agreement.objects.create(
-            type=Agreement.TYPE_TOS,
-            link='http://test.com',
-            is_active=True,
-        )
-
-        context_dict = legal_links(MockRequest())
-
-        self.assertEqual(context_dict, {
-            'TERMS_OF_SERVICE_URL': 'http://test.com',
-        })
-
-        # set misago view too
-        agreement.text = 'Lorem ipsum'
-        agreement.save()
-
-        context_dict = legal_links(MockRequest())
-
-        self.assertEqual(context_dict, {
-            'TERMS_OF_SERVICE_URL': 'http://test.com',
-        })

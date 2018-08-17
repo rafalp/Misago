@@ -13,8 +13,10 @@ def set_agreement_as_active(agreement, commit=False):
     agreement.is_active = True
     queryset = Agreement.objects.filter(type=agreement.type).exclude(pk=agreement.pk)
     queryset.update(is_active=False)
-    agreement.save(update_fields=['is_active'])
-    Agreement.objects.invalidate_cache()
+    
+    if commit:
+        agreement.save(update_fields=['is_active'])
+        Agreement.objects.invalidate_cache()
 
 
 def get_required_user_agreement(user, agreements):
@@ -32,7 +34,10 @@ def get_required_user_agreement(user, agreements):
     return None
 
 
-def get_parsed_content(request, agreement):
+def get_parsed_agreement_text(request, agreement):
+    if not agreement.text:
+        return None
+
     cache_name = 'misago_legal_%s_%s' % (agreement.pk, agreement.last_modified_on or '')
     cached_content = cache.get(cache_name)
 

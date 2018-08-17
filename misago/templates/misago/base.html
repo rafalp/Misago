@@ -42,7 +42,7 @@
     <div class="modal fade" id="modal-mount" tabindex="-1" role="dialog" aria-labelledby="misago-modal-label"></div>
 
     {% if misago_agreement %}
-      {% include "misago/agreement-overlay.html" %}
+      {% include "misago/required_agreement.html" %}
     {% endif %}
 
     <script src="{% url 'django-i18n' %}?{{ LANGUAGE_CODE }}"></script>

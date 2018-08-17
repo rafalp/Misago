@@ -1,14 +1,18 @@
 from django.urls import reverse
 
 from .models import Agreement
-from .utils import get_required_user_agreement, get_parsed_content
+from .utils import get_parsed_agreement_text, get_required_user_agreement
 
 
 # fixme: rename this context processor to more suitable name
 def legal_links(request):
     agreements = Agreement.objects.get_agreements()
 
-    legal_context = {}
+    legal_context = {
+        'TERMS_OF_SERVICE_URL': None,
+        'PRIVACY_POLICY_URL': None,
+        'misago_agreement': None,
+    }
 
     terms_of_service = agreements.get(Agreement.TYPE_TOS)
     if terms_of_service:
@@ -34,9 +38,7 @@ def legal_links(request):
         legal_context['misago_agreement'] = {
             'title': required_agreement.get_final_title(),
             'link': required_agreement.link,
-            'content': get_parsed_content(request, required_agreement)
+            'text': get_parsed_agreement_text(request, required_agreement)
         }
-    else:
-        legal_context['misago_agreement'] = None
 
     return legal_context
