@@ -27,6 +27,7 @@ class AgreementManager(models.Manager):
         agreements = {}
         for agreement in Agreement.objects.filter(is_active=True):
             agreements[agreement.type] = {
+                'id': agreement.id,
                 'title': agreement.get_final_title(),
                 'link': agreement.link,
                 'text': bool(agreement.text),
@@ -89,10 +90,9 @@ class UserAgreement(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         blank=True,
-        null=True,
-        related_name='agreements'
+        null=True
     )
-    agreement = models.ForeignKey(Agreement, related_name='agreements')
+    agreement = models.ForeignKey(Agreement, related_name='accepted_by')
     accepted_on = models.DateTimeField(default=timezone.now)
 
     class Meta:

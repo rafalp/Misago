@@ -1,8 +1,10 @@
 from django.urls import reverse
 
 from .models import Agreement
+from .utils import get_required_user_agreement, get_parsed_content
 
 
+# fixme: rename this context processor to more suitable name
 def legal_links(request):
     agreements = Agreement.objects.get_agreements()
 
@@ -24,5 +26,17 @@ def legal_links(request):
 
     if legal_context:
         request.frontend_context.update(legal_context)
+
+    required_agreement = get_required_user_agreement(request.user, agreements)
+    if required_agreement:
+        request.frontend_context['REQUIRED_AGREEMENT_ID'] = required_agreement.id
+
+        legal_context['misago_agreement'] = {
+            'title': required_agreement.get_final_title(),
+            'link': required_agreement.link,
+            'content': get_parsed_content(request, required_agreement)
+        }
+    else:
+        legal_context['misago_agreement'] = None
 
     return legal_context

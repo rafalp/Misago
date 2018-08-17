@@ -21,12 +21,12 @@
     {% include "misago/head.html" %}
     <script type="application/ld+json">{"@context":"http://schema.org","@type":"WebSite","url":"{{ SITE_ADDRESS }}"}</script>
   </head>
-  <body>
+  <body {% if misago_agreement %}class="agreement-overlay-visible"{% endif %}>
 
     <div id="auth-message-mount"></div>
     <div id="snackbar-mount"></div>
 
-    <div id="misago-container">
+    <div id="misago-container" {% if misago_agreement %}aria-hidden="true"{% endif %}>
       {% include "misago/jumbotron.html" %}
       {% include "misago/navbar.html" %}
 
@@ -40,6 +40,10 @@
     {% include "misago/auth.html" %}
 
     <div class="modal fade" id="modal-mount" tabindex="-1" role="dialog" aria-labelledby="misago-modal-label"></div>
+
+    {% if misago_agreement %}
+      {% include "misago/agreement-overlay.html" %}
+    {% endif %}
 
     <script src="{% url 'django-i18n' %}?{{ LANGUAGE_CODE }}"></script>
     <script type="text/javascript">

@@ -1,0 +1,20 @@
+{% load i18n %}
+<div class="agreement-overlay">
+  <div class="container">
+    <div class="agreement-content">
+      <div class="agreement-header">
+        <h2>{{ misago_agreement.title }}</h2>
+      </div>
+      <div class="agreement-body">
+        <article class="misago-markup">
+          {{ misago_agreement.content|safe }}
+        </article>
+      </div>
+      <div id="agreement-actions" class="agreement-footer">
+        <button class="btn btn-primary">
+          {% trans "Continue" %}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
