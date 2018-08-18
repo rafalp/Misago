@@ -12,6 +12,12 @@ UserModel = get_user_model()
 
 
 class BaseRegisterForm(forms.Form):
+    username = forms.CharField(validators=[validators.validate_username])
+    email = forms.CharField(validators=[validators.validate_email])
+
+    terms_of_service = forms.IntegerField(required=False)
+    privacy_policy = forms.IntegerField(required=False)
+
     def __init__(self, *args, **kwargs):
         self.agreements = kwargs.pop('agreements')
         self.request = kwargs.pop('request')
@@ -55,12 +61,6 @@ class BaseRegisterForm(forms.Form):
 
 
 class SocialAuthRegisterForm(BaseRegisterForm):
-    username = forms.CharField(validators=[validators.validate_username])
-    email = forms.CharField(validators=[validators.validate_email])
-
-    terms_of_service = forms.IntegerField(required=False)
-    privacy_policy = forms.IntegerField(required=False)
-
     def clean(self):
         cleaned_data = super(SocialAuthRegisterForm, self).clean()
 
@@ -73,12 +73,7 @@ class SocialAuthRegisterForm(BaseRegisterForm):
 
 
 class RegisterForm(BaseRegisterForm):
-    username = forms.CharField(validators=[validators.validate_username])
-    email = forms.CharField(validators=[validators.validate_email])
     password = forms.CharField(strip=False)
-
-    terms_of_service = forms.IntegerField(required=False)
-    privacy_policy = forms.IntegerField(required=False)
 
     # placeholder field for setting captcha errors on form
     captcha = forms.CharField(required=False)
