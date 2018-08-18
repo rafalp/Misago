@@ -6,7 +6,7 @@ from misago.conf import settings
 from misago.core.cache import cache
 
 
-CACHE_KEY = 'agreements'
+CACHE_KEY = 'misago_agreements'
 
 
 class AgreementManager(models.Manager):
@@ -87,11 +87,7 @@ class Agreement(models.Model):
 
 
 class UserAgreement(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        blank=True,
-        null=True,
-    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     agreement = models.ForeignKey(Agreement, related_name='accepted_by')
     accepted_on = models.DateTimeField(default=timezone.now)
 

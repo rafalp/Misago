@@ -10,12 +10,12 @@ export function required(message) {
 }
 
 export function requiredTermsOfService(message) {
-  const error = gettext("You need to accept the terms of service.");
+  const error = gettext("You have to accept the terms of service.");
   return required(message || error);
 }
 
 export function requiredPrivacyPolicy(message) {
-  const error = gettext("You need to accept the privacy policy.");
+  const error = gettext("You have to accept the privacy policy.");
   return required(message || error);
 }
 
