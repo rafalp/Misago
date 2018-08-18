@@ -1,0 +1,22 @@
+{% load i18n %}
+<div class="agreement-overlay">
+  <div class="container">
+    <div class="agreement-content">
+      <div class="agreement-header">
+        <h2>{{ misago_agreement.title }}</h2>
+        <p class="lead">
+          {% blocktrans trimmed with agreement=misago_agreement.type %}
+            Please review the updated {{ agreement }}:
+          {% endblocktrans %}
+        </p>
+      </div>
+      <div class="agreement-body">
+        <article class="misago-markup">
+          {{ misago_agreement.text|safe }}
+        </article>
+      </div>
+      <div id="required-agreement-mount" class="agreement-footer">
+      </div>
+    </div>
+  </div>
+</div>

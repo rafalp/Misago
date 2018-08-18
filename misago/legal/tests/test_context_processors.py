@@ -46,6 +46,7 @@ class PrivacyPolicyTests(AuthenticatedUserTestCase):
             'TERMS_OF_SERVICE_URL': None,
             'PRIVACY_POLICY_URL': reverse('misago:privacy-policy'),
             'misago_agreement': {
+                'type': 'Privacy policy',
                 'title': 'Privacy policy',
                 'link': None,
                 'text': '<p>Lorem ipsum</p>',
@@ -66,6 +67,7 @@ class PrivacyPolicyTests(AuthenticatedUserTestCase):
             'TERMS_OF_SERVICE_URL': None,
             'PRIVACY_POLICY_URL': 'http://test.com',
             'misago_agreement': {
+                'type': 'Privacy policy',
                 'title': 'Privacy policy',
                 'link': 'http://test.com',
                 'text': None,
@@ -82,6 +84,7 @@ class PrivacyPolicyTests(AuthenticatedUserTestCase):
             'TERMS_OF_SERVICE_URL': None,
             'PRIVACY_POLICY_URL': 'http://test.com',
             'misago_agreement': {
+                'type': 'Privacy policy',
                 'title': 'Privacy policy',
                 'link': 'http://test.com',
                 'text': '<p>Lorem ipsum</p>',
@@ -117,17 +120,16 @@ class TermsOfServiceTests(AuthenticatedUserTestCase):
 
         context_dict = legal_links(MockRequest(self.user))
 
-        self.assertEqual(
-            context_dict, {
-                'TERMS_OF_SERVICE_URL': reverse('misago:terms-of-service'),
-                'PRIVACY_POLICY_URL': None,
-                'misago_agreement': {
-                    'title': 'Terms of service',
-                    'link': None,
-                    'text': '<p>Lorem ipsum</p>',
-                }
+        self.assertEqual(context_dict, {
+            'TERMS_OF_SERVICE_URL': reverse('misago:terms-of-service'),
+            'PRIVACY_POLICY_URL': None,
+            'misago_agreement': {
+                'type': 'Terms of service',
+                'title': 'Terms of service',
+                'link': None,
+                'text': '<p>Lorem ipsum</p>',
             }
-        )
+        })
 
     def test_context_processor_remote_tos(self):
         """context processor has TOS link to remote url"""
@@ -143,6 +145,7 @@ class TermsOfServiceTests(AuthenticatedUserTestCase):
             'TERMS_OF_SERVICE_URL': 'http://test.com',
             'PRIVACY_POLICY_URL': None,
             'misago_agreement': {
+                'type': 'Terms of service',
                 'title': 'Terms of service',
                 'link': 'http://test.com',
                 'text': None,
@@ -159,6 +162,7 @@ class TermsOfServiceTests(AuthenticatedUserTestCase):
             'TERMS_OF_SERVICE_URL': 'http://test.com',
             'PRIVACY_POLICY_URL': None,
             'misago_agreement': {
+                'type': 'Terms of service',
                 'title': 'Terms of service',
                 'link': 'http://test.com',
                 'text': '<p>Lorem ipsum</p>',

@@ -37,8 +37,8 @@ def legal_links(request):
             'misago:api:submit-agreement', kwargs={'pk': required_agreement.pk})
 
         legal_context['misago_agreement'] = {
-            'title': required_agreement.get_final_title(),
             'type': required_agreement.get_type_display(),
+            'title': required_agreement.get_final_title(),
             'link': required_agreement.link,
             'text': get_parsed_agreement_text(request, required_agreement)
         }
