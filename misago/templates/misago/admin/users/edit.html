@@ -212,6 +212,37 @@ class="form-horizontal"
     {% endif %}
 
   </fieldset>
+  <fieldset>
+    <legend>{% trans "Agreements" %}</legend>
+    <table class="table table-condensed">
+      <thead>
+        <tr>
+          <th>{% trans "Agreement" %}</th>
+          <th style="width: 250px;">{% trans "Accepted on" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for agreement in target.useragreement_set.select_related.iterator %}
+          <tr>
+            <td>
+              <a href="{% url 'misago:admin:users:agreements:edit' pk=agreement.agreement_id %}">
+                {{ agreement.agreement.get_final_title }}
+              </a>
+            </td>
+            <td>
+              <abbr class="moment" data-iso="{{ agreement.accepted_on.isoformat }}" data-format="LL"></abbr>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="2">
+              {% trans "This user didn't accept any agreements." %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </fieldset>
   {% endwith %}
 </div>
 {% endblock form-body %}

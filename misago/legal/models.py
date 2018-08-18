@@ -90,10 +90,10 @@ class UserAgreement(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         blank=True,
-        null=True
+        null=True,
     )
     agreement = models.ForeignKey(Agreement, related_name='accepted_by')
     accepted_on = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        ordering = ["-accepted_on"]
+        ordering = ["-pk"]

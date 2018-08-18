@@ -6,6 +6,8 @@ from django.utils import six
 from misago.acl.models import Role
 from misago.admin.testutils import AdminTestCase
 from misago.categories.models import Category
+from misago.legal.models import Agreement
+from misago.legal.utils import save_user_agreement_acceptance
 from misago.threads.testutils import post_thread, reply_thread
 from misago.users.datadownloads import request_user_data_download
 from misago.users.models import Ban, DataDownload, Rank
@@ -1040,6 +1042,32 @@ class UserAdminViewsTests(AdminTestCase):
 
         updated_user = UserModel.objects.get(pk=test_user.pk)
         self.assertFalse(updated_user.has_usable_password())
+
+    def test_edit_agreements_list(self):
+        """edit view displays list of user's agreements"""
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_link = reverse(
+            'misago:admin:users:accounts:edit', kwargs={
+                'pk': test_user.pk,
+            }
+        )
+
+        agreement = Agreement.objects.create(
+            type=Agreement.TYPE_TOS,
+            title="Test agreement!",
+            text="Lorem ipsum!",
+            is_active=True,
+        )
+
+        response = self.client.get(test_link)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, agreement.title)
+
+        save_user_agreement_acceptance(test_user, agreement, commit=True)
+
+        response = self.client.get(test_link)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, agreement.title)
 
     def test_delete_threads_view_self(self):
         """delete user threads view validates if user deletes self"""
