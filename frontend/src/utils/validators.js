@@ -3,7 +3,7 @@ const USERNAME = new RegExp('^[0-9a-z]+$', 'i');
 
 export function required() {
   return function(value) {
-    if ($.trim(value).length === 0) {
+    if (value === false || value === null || $.trim(value).length === 0) {
       return gettext("This field is required.");
     }
   };
