@@ -1,8 +1,9 @@
 from django.test import TestCase
 
-from misago.legal.models import Agreement
+from misago.legal.models import Agreement, UserAgreement
 from misago.legal.utils import (
-    get_parsed_agreement_text, get_required_user_agreement, set_agreement_as_active
+    get_parsed_agreement_text, get_required_user_agreement, save_user_agreement_acceptance,
+    set_agreement_as_active
 )
 from misago.users.testutils import UserTestCase
 
@@ -86,6 +87,44 @@ class GetRequiredUserAgreementTests(UserTestCase):
 
         result = get_required_user_agreement(authenticated_user, self.agreements)
         self.assertIsNone(result)
+
+
+class SaveUserAgreementAcceptance(UserTestCase):
+    def test_no_commit(self):
+        user = self.get_authenticated_user()
+
+        agreement = Agreement.objects.create(
+            type=Agreement.TYPE_PRIVACY,
+            link='https://somewhre.com',
+            text='Lorem ipsum',
+        )
+
+        save_user_agreement_acceptance(user, agreement)
+        self.assertEqual(user.agreements, [agreement.id])
+
+        user.refresh_from_db()
+        self.assertEqual(user.agreements, [])
+
+        UserAgreement.objects.get(user=user, agreement=agreement)
+        self.assertEqual(UserAgreement.objects.count(), 1)
+
+    def test_commit(self):
+        user = self.get_authenticated_user()
+
+        agreement = Agreement.objects.create(
+            type=Agreement.TYPE_PRIVACY,
+            link='https://somewhre.com',
+            text='Lorem ipsum',
+        )
+
+        save_user_agreement_acceptance(user, agreement, commit=True)
+        self.assertEqual(user.agreements, [agreement.id])
+
+        user.refresh_from_db()
+        self.assertEqual(user.agreements, [agreement.id])
+
+        UserAgreement.objects.get(user=user, agreement=agreement)
+        self.assertEqual(UserAgreement.objects.count(), 1)
 
 
 class SetAgreementAsActiveTests(TestCase):

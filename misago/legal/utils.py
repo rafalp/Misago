@@ -6,14 +6,14 @@ from django.utils.encoding import force_bytes
 from misago.core.cache import cache
 from misago.markup import common_flavour
 
-from .models import Agreement
+from .models import Agreement, UserAgreement
 
 
 def set_agreement_as_active(agreement, commit=False):
     agreement.is_active = True
     queryset = Agreement.objects.filter(type=agreement.type).exclude(pk=agreement.pk)
     queryset.update(is_active=False)
-    
+
     if commit:
         agreement.save(update_fields=['is_active'])
         Agreement.objects.invalidate_cache()
@@ -56,3 +56,11 @@ def get_parsed_agreement_text(request, agreement):
         }
         cache.set(cache_name, cached_content)
         return cached_content['parsed']
+
+
+def save_user_agreement_acceptance(user, agreement, commit=False):
+    user.agreements.append(agreement.id)
+    UserAgreement.objects.create(agreement=agreement, user=user)
+
+    if commit:
+        user.save(update_fields=['agreements'])
