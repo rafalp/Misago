@@ -33,11 +33,12 @@ def legal_links(request):
 
     required_agreement = get_required_user_agreement(request.user, agreements)
     if required_agreement:
-        request.frontend_context['REQUIRED_AGREEMENT'] = reverse(
+        request.frontend_context['REQUIRED_AGREEMENT_API'] = reverse(
             'misago:api:submit-agreement', kwargs={'pk': required_agreement.pk})
 
         legal_context['misago_agreement'] = {
             'title': required_agreement.get_final_title(),
+            'type': required_agreement.get_type_display(),
             'link': required_agreement.link,
             'text': get_parsed_agreement_text(request, required_agreement)
         }
