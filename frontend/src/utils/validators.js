@@ -1,12 +1,22 @@
 const EMAIL = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 const USERNAME = new RegExp('^[0-9a-z]+$', 'i');
 
-export function required() {
+export function required(message) {
   return function(value) {
     if (value === false || value === null || $.trim(value).length === 0) {
-      return gettext("This field is required.");
+      return message || gettext("This field is required.");
     }
   };
+}
+
+export function requiredTermsOfService(message) {
+  const error = gettext("You need to accept the terms of service.");
+  return required(message || error);
+}
+
+export function requiredPrivacyPolicy(message) {
+  const error = gettext("You need to accept the privacy policy.");
+  return required(message || error);
 }
 
 export function email(message) {

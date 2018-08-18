@@ -43,11 +43,11 @@ export class RegisterForm extends Form {
     };
 
     if (!!misago.get('TERMS_OF_SERVICE_ID')) {
-      formValidators.termsOfService = [validators.required()];
+      formValidators.termsOfService = [validators.requiredTermsOfService()];
     }
 
     if (!!misago.get('PRIVACY_POLICY_ID')) {
-      formValidators.privacyPolicy = [validators.required()];
+      formValidators.privacyPolicy = [validators.requiredPrivacyPolicy()];
     }
 
     this.state = {
@@ -125,14 +125,14 @@ export class RegisterForm extends Form {
 
   handleToggleAgreement = (agreement, value) => {
     this.setState((prevState, props) => {
-      if (prevState[agreement] === false) {
+      if (prevState[agreement] === null) {
         const errors = { ...prevState.errors, [agreement]: null };
         return { errors, [agreement]: value };
       }
 
       const validator = this.state.validators[agreement][0];
       const errors = { ...prevState.errors, [agreement]: [validator(null)] };
-      return { errors, [agreement]: false };
+      return { errors, [agreement]: null };
     })
   };
   /* jshint ignore:end */

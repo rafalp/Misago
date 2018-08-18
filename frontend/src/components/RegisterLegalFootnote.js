@@ -26,7 +26,7 @@ const RegisterLegalFootnote = (props) => {
     <div>
       <LegalAgreement
         agreement={gettext("the terms of service")}
-        checked={termsOfService}
+        checked={termsOfService !== null}
         errors={errors.termsOfService}
         url={termsOfServiceUrl}
         value={termsOfServiceId}
@@ -34,7 +34,7 @@ const RegisterLegalFootnote = (props) => {
       />
       <LegalAgreement
         agreement={gettext("the privacy policy")}
-        checked={privacyPolicy}
+        checked={privacyPolicy !== null}
         errors={errors.privacyPolicy}
         url={privacyPolicyUrl}
         value={privacyPolicyId}

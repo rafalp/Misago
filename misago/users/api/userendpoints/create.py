@@ -8,9 +8,12 @@ from django.utils.translation import ugettext as _
 from django.views.decorators.csrf import csrf_protect
 
 from misago.conf import settings
+from misago.legal.models import Agreement
 from misago.users import captcha
 from misago.users.forms.register import RegisterForm
-from misago.users.registration import get_registration_result_json, send_welcome_email
+from misago.users.registration import (
+    get_registration_result_json, save_user_agreements, send_welcome_email
+)
 
 
 UserModel = get_user_model()
@@ -21,7 +24,11 @@ def create_endpoint(request):
     if settings.account_activation == 'closed':
         raise PermissionDenied(_("New users registrations are currently closed."))
 
-    form = RegisterForm(request.data, request=request)
+    form = RegisterForm(
+        request.data,
+        request=request,
+        agreements=Agreement.objects.get_agreements(),
+    )
 
     try:
         if form.is_valid():
@@ -56,6 +63,7 @@ def create_endpoint(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
+    save_user_agreements(new_user, form)
     send_welcome_email(request, new_user)
 
     if new_user.requires_activation == UserModel.ACTIVATION_NONE:

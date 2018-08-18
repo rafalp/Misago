@@ -10,11 +10,14 @@ from social_core.pipeline.partial import partial
 
 from misago.conf import settings
 from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
+from misago.legal.models import Agreement
 
 from misago.users.bans import get_request_ip_ban, get_user_ban
 from misago.users.forms.register import SocialAuthRegisterForm
 from misago.users.models import Ban
-from misago.users.registration import get_registration_result_json, send_welcome_email
+from misago.users.registration import (
+    get_registration_result_json, save_user_agreements, send_welcome_email
+)
 from misago.users.validators import (
     ValidationError, validate_new_registration, validate_email, validate_username)
 
@@ -182,7 +185,12 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
         except (TypeError, ValueError):
             request_data = request.POST.copy()
             
-        form = SocialAuthRegisterForm(request_data, request=request)
+        form = SocialAuthRegisterForm(
+            request_data,
+            request=request,    
+            agreements=Agreement.objects.get_agreements(),
+        )
+        
         if not form.is_valid():
             return JsonResponse(form.errors, status=400)
 
@@ -206,6 +214,7 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
         except IntegrityError:
             return JsonResponse({'__all__': _("Please try resubmitting the form.")}, status=400)
 
+        save_user_agreements(new_user, form)
         send_welcome_email(request, new_user)
 
         return {'user': new_user, 'is_new': True}
