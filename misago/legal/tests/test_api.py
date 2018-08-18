@@ -82,6 +82,18 @@ class SubmitAgreementTests(AuthenticatedUserTestCase):
         self.assertTrue(self.user.is_deleting_account)
         self.assertFalse(self.user.is_active)
 
+    def test_accept_false_staff(self):
+        self.user.is_staff = True
+        self.user.save()
+
+        response = self.post_json({'accept': False})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'detail': 'ok'})
+
+        self.user.refresh_from_db()
+        self.assertFalse(self.user.is_deleting_account)
+        self.assertTrue(self.user.is_active)
+
     def test_accept_true(self):
         response = self.post_json({'accept': True})
         self.assertEqual(response.status_code, 200)
