@@ -1,7 +1,7 @@
 # This dockerfile is only meant for local development of Misago
 # If you are looking for a proper docker setup for running Misago in production,
 # please use misago-docker instead
-FROM python:3
+FROM python:3.5
 
 ENV PYTHONUNBUFFERED 1
 ENV PATH "$PATH:/srv/misago"

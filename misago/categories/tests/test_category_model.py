@@ -1,4 +1,5 @@
-from misago.categories.models import THREADS_ROOT, Category
+from misago.categories import THREADS_ROOT_NAME
+from misago.categories.models import Category
 from misago.core.testutils import MisagoTestCase
 from misago.threads import testutils
 from misago.threads.threadtypes import trees_map
@@ -37,7 +38,7 @@ class CategoryManagerTests(MisagoTestCase):
         test_dict = Category.objects.get_categories_dict_from_db()
 
         for category in Category.objects.all():
-            threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT)
+            threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
             if category.tree_id == threads_tree_id:
                 self.assertIn(category.id, test_dict)
             else:

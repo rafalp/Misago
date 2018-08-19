@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from misago.admin.views import generic
-from misago.users.forms import RankForm
+from misago.users.forms.admin import RankForm
 from misago.users.models import Rank
 
 

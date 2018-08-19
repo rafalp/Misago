@@ -4,6 +4,7 @@ from django.test import override_settings
 from django.urls import reverse
 
 from misago.conf import settings
+from misago.legal.models import Agreement
 from misago.users.models import Ban, Online
 from misago.users.testutils import UserTestCase
 
@@ -16,17 +17,18 @@ class UserCreateTests(UserTestCase):
 
     def setUp(self):
         super(UserCreateTests, self).setUp()
+        
+        Agreement.objects.invalidate_cache()
+
         self.api_link = '/api/users/'
+
+    def tearDown(self):
+        Agreement.objects.invalidate_cache()
 
     def test_empty_request(self):
         """empty request errors with code 400"""
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'email': ["This field is required."],
-            'password': ["This field is required."],
-            'username': ["This field is required."],
-        })
 
     def test_invalid_data(self):
         """invalid request data errors with code 400"""
@@ -36,28 +38,19 @@ class UserCreateTests(UserTestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'non_field_errors': ["Invalid data. Expected a dictionary, but got bool."],
-        })
 
     def test_authenticated_request(self):
         """authentiated user request errors with code 403"""
         self.login_user(self.get_authenticated_user())
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This action is not available to signed in users.",
-        })
 
     def test_registration_off_request(self):
         """registrations off request errors with code 403"""
         settings.override_setting('account_activation', 'closed')
 
         response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "New users registrations are currently closed.",
-        })
+        self.assertContains(response, 'closed', status_code=403)
 
     def test_registration_validates_ip_ban(self):
         """api validates ip ban"""
@@ -75,14 +68,8 @@ class UserCreateTests(UserTestCase):
                 'password': 'LoremP4ssword',
             },
         )
+
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': {
-                'html': '<p>You can&#39;t register account like this.</p>',
-                'plain': "You can't register account like this."
-            },
-            'expires_on': None,
-        })
 
     def test_registration_validates_ip_registration_ban(self):
         """api validates ip registration-only ban"""
@@ -102,14 +89,10 @@ class UserCreateTests(UserTestCase):
             },
         )
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(), {
-                'detail': {
-                    'html': '<p>You can&#39;t register account like this.</p>',
-                    'plain': "You can't register account like this.",
-                },
-                'expires_on': None,
+                '__all__': ["You can't register account like this."],
             }
         )
 
@@ -170,6 +153,7 @@ class UserCreateTests(UserTestCase):
                 'password': 'LoremP4ssword',
             },
         )
+
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(), {
@@ -211,7 +195,7 @@ class UserCreateTests(UserTestCase):
                 'password': 'LoremP4ssword',
             },
         )
-        
+
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
             'email': ["You can't register account like this."],
@@ -250,14 +234,10 @@ class UserCreateTests(UserTestCase):
                 'password': '123',
             },
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'password': [
-                "This password is too short. It must contain at least 7 characters.",
-                "This password is entirely numeric.",
-            ],
-            'email': ["This email is not allowed."],
-        })
+
+        self.assertContains(response, "password is too short", status_code=400)
+        self.assertContains(response, "password is entirely numeric", status_code=400)
+        self.assertContains(response, "email is not allowed", status_code=400)
 
     def test_registration_validates_password_similiarity(self):
         """api uses validate_password to validate registrations"""
@@ -269,11 +249,8 @@ class UserCreateTests(UserTestCase):
                 'password': 'BobBoberson',
             },
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'password': ["The password is too similar to the username."],
-            'email': ["This email is not allowed."],
-        })
+
+        self.assertContains(response, "password is too similar to the username", status_code=400)
 
     @override_settings(captcha_type='qa', qa_question='Test', qa_answers='Lorem\nIpsum')
     def test_registration_validates_captcha(self):
@@ -308,6 +285,89 @@ class UserCreateTests(UserTestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_registration_check_agreement(self):
+        """api checks agreement"""
+        agreement = Agreement.objects.create(
+            type=Agreement.TYPE_TOS,
+            text="Lorem ipsum",
+            is_active=True,
+        )
+
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+            },
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(), {
+                'terms_of_service': ['This agreement is required.'],
+            }
+        )
+
+        # invalid agreement id
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+                'terms_of_service': agreement.id + 1,
+            },
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(), {
+                'terms_of_service': ['This agreement is required.'],
+            }
+        )
+
+        # valid agreement id
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+                'terms_of_service': agreement.id,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        
+        user = UserModel.objects.get(email='loremipsum@dolor.met')
+        self.assertEqual(user.agreements, [agreement.id])
+        self.assertEqual(user.useragreement_set.count(), 1)
+
+    def test_registration_ignore_inactive_agreement(self):
+        """api ignores inactive agreement"""
+        Agreement.objects.create(
+            type=Agreement.TYPE_TOS,
+            text="Lorem ipsum",
+            is_active=False,
+        )
+
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+                'terms_of_service': '',
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        
+        user = UserModel.objects.get(email='loremipsum@dolor.met')
+        self.assertEqual(user.agreements, [])
+        self.assertEqual(user.useragreement_set.count(), 0)
+
     def test_registration_calls_validate_new_registration(self):
         """api uses validate_new_registration to validate registrations"""
         response = self.client.post(
@@ -315,13 +375,11 @@ class UserCreateTests(UserTestCase):
             data={
                 'username': 'Bob',
                 'email': 'l.o.r.e.m.i.p.s.u.m@gmail.com',
-                'password': 'pass1234',
+                'password': 'pas123',
             },
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'email': ["This email is not allowed."]
-        })
+
+        self.assertContains(response, "email is not allowed", status_code=400)
 
     def test_registration_creates_active_user(self):
         """api creates active and signed in user on POST"""
@@ -336,11 +394,9 @@ class UserCreateTests(UserTestCase):
             },
         )
 
-        self.assertEqual(response.json(), {
-            'activation': None,
-            'username': 'Bob',
-            'email': 'bob@bob.com',
-        })
+        self.assertContains(response, 'active')
+        self.assertContains(response, 'Bob')
+        self.assertContains(response, 'bob@bob.com')
 
         UserModel.objects.get_by_username('Bob')
 
@@ -348,11 +404,14 @@ class UserCreateTests(UserTestCase):
         self.assertEqual(Online.objects.filter(user=test_user).count(), 1)
 
         self.assertTrue(test_user.check_password('pass123'))
-
-        response = self.client.get(reverse('misago:index'))
-        self.assertContains(response, 'Bob')
+        
+        auth_json = self.client.get(reverse('misago:api:auth')).json()
+        self.assertTrue(auth_json['is_authenticated'])
+        self.assertEqual(auth_json['username'], 'Bob')
 
         self.assertIn('Welcome', mail.outbox[0].subject)
+
+        self.assertEqual(test_user.audittrail_set.count(), 1)
 
     def test_registration_creates_inactive_user(self):
         """api creates inactive user on POST"""
@@ -367,11 +426,12 @@ class UserCreateTests(UserTestCase):
             },
         )
 
-        self.assertEqual(response.json(), {
-            'activation': 'user',
-            'username': 'Bob',
-            'email': 'bob@bob.com',
-        })
+        self.assertContains(response, 'user')
+        self.assertContains(response, 'Bob')
+        self.assertContains(response, 'bob@bob.com')
+
+        auth_json = self.client.get(reverse('misago:api:auth')).json()
+        self.assertFalse(auth_json['is_authenticated'])
 
         UserModel.objects.get_by_username('Bob')
         UserModel.objects.get_by_email('bob@bob.com')
@@ -391,11 +451,12 @@ class UserCreateTests(UserTestCase):
             },
         )
 
-        self.assertEqual(response.json(), {
-            'activation': 'admin',
-            'username': 'Bob',
-            'email': 'bob@bob.com',
-        })
+        self.assertContains(response, 'admin')
+        self.assertContains(response, 'Bob')
+        self.assertContains(response, 'bob@bob.com')
+
+        auth_json = self.client.get(reverse('misago:api:auth')).json()
+        self.assertFalse(auth_json['is_authenticated'])
 
         UserModel.objects.get_by_username('Bob')
         UserModel.objects.get_by_email('bob@bob.com')
@@ -415,11 +476,9 @@ class UserCreateTests(UserTestCase):
             },
         )
 
-        self.assertEqual(response.json(), {
-            'activation': None,
-            'username': 'Bob',
-            'email': 'bob@bob.com',
-        })
+        self.assertContains(response, 'active')
+        self.assertContains(response, 'Bob')
+        self.assertContains(response, 'bob@bob.com')
 
         UserModel.objects.get_by_username('Bob')
 
@@ -427,8 +486,5 @@ class UserCreateTests(UserTestCase):
         self.assertEqual(Online.objects.filter(user=test_user).count(), 1)
 
         self.assertTrue(test_user.check_password(' pass123 '))
-
-        response = self.client.get(reverse('misago:index'))
-        self.assertContains(response, 'Bob')
 
         self.assertIn('Welcome', mail.outbox[0].subject)

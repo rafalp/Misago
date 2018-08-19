@@ -3,7 +3,8 @@ from django.utils.module_loading import import_string
 from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
-from misago.categories.models import THREADS_ROOT, Category
+from misago.categories import THREADS_ROOT_NAME
+from misago.categories.models import Category
 from misago.categories.permissions import can_browse_category, can_see_category
 from misago.conf import settings
 from misago.core.validators import validate_sluggable
@@ -13,7 +14,7 @@ from .threadtypes import trees_map
 
 def validate_category(user, category_id, allow_root=False):
     try:
-        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT)
+        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
         category = Category.objects.get(
             tree_id=threads_tree_id,
             id=category_id,

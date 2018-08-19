@@ -123,13 +123,13 @@ class ViewModel(object):
 
     def get_frontend_context(self):
         context = {
-            'threads': {
+            'THREADS': {
                 'results': ThreadsListSerializer(self.threads, many=True).data,
                 'subcategories': [c.pk for c in self.category.children],
             },
         }
 
-        context['threads'].update(self.paginator)
+        context['THREADS'].update(self.paginator)
         return context
 
     def get_template_context(self):

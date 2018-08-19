@@ -3,7 +3,6 @@ from django.test import RequestFactory
 from django.urls import reverse
 
 from misago.categories.models import Category
-from misago.core.utils import ANONYMOUS_IP
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads import testutils
@@ -35,12 +34,12 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         request.user_ip = '127.0.0.1'
 
         request.include_frontend_context = False
-        request.frontend_context = {'conf': {}, 'store': {}, 'url': {}}
+        request.frontend_context = {}
 
         return request
 
     def test_anonymize_changed_owner_event(self):
-        """changed owner event is anonymized by user.anonymize_content"""
+        """changed owner event is anonymized by user.anonymize_data"""
         user = get_mock_user()
         request = self.get_request()
 
@@ -48,7 +47,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         make_participants_aware(self.user, self.thread)
         change_owner(request, self.thread, user)
 
-        user.anonymize_content()
+        user.anonymize_data()
 
         event = Post.objects.get(event_type='changed_owner')
         self.assertEqual(event.event_context, {
@@ -60,7 +59,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         })
 
     def test_anonymize_added_participant_event(self):
-        """added participant event is anonymized by user.anonymize_content"""
+        """added participant event is anonymized by user.anonymize_data"""
         user = get_mock_user()
         request = self.get_request()
 
@@ -68,7 +67,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         make_participants_aware(self.user, self.thread)
         add_participant(request, self.thread, user)
 
-        user.anonymize_content()
+        user.anonymize_data()
 
         event = Post.objects.get(event_type='added_participant')
         self.assertEqual(event.event_context, {
@@ -80,7 +79,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         })
 
     def test_anonymize_owner_left_event(self):
-        """owner left event is anonymized by user.anonymize_content"""
+        """owner left event is anonymized by user.anonymize_data"""
         user = get_mock_user()
         request = self.get_request(user)
 
@@ -91,7 +90,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         make_participants_aware(user, self.thread)
         remove_participant(request, self.thread, user)
 
-        user.anonymize_content()
+        user.anonymize_data()
 
         event = Post.objects.get(event_type='owner_left')
         self.assertEqual(event.event_context, {
@@ -103,7 +102,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         })
 
     def test_anonymize_removed_owner_event(self):
-        """removed owner event is anonymized by user.anonymize_content"""
+        """removed owner event is anonymized by user.anonymize_data"""
         user = get_mock_user()
         request = self.get_request()
 
@@ -114,7 +113,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         make_participants_aware(user, self.thread)
         remove_participant(request, self.thread, user)
 
-        user.anonymize_content()
+        user.anonymize_data()
 
         event = Post.objects.get(event_type='removed_owner')
         self.assertEqual(event.event_context, {
@@ -126,7 +125,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         })
 
     def test_anonymize_participant_left_event(self):
-        """participant left event is anonymized by user.anonymize_content"""
+        """participant left event is anonymized by user.anonymize_data"""
         user = get_mock_user()
         request = self.get_request(user)
 
@@ -137,7 +136,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         make_participants_aware(user, self.thread)
         remove_participant(request, self.thread, user)
 
-        user.anonymize_content()
+        user.anonymize_data()
 
         event = Post.objects.get(event_type='participant_left')
         self.assertEqual(event.event_context, {
@@ -149,7 +148,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         })
         
     def test_anonymize_removed_participant_event(self):
-        """removed participant event is anonymized by user.anonymize_content"""
+        """removed participant event is anonymized by user.anonymize_data"""
         user = get_mock_user()
         request = self.get_request()
 
@@ -160,7 +159,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         make_participants_aware(self.user, self.thread)
         remove_participant(request, self.thread, user)
 
-        user.anonymize_content()
+        user.anonymize_data()
 
         event = Post.objects.get(event_type='removed_participant')
         self.assertEqual(event.event_context, {
@@ -185,7 +184,7 @@ class AnonymizeLikesTests(AuthenticatedUserTestCase):
         return request
 
     def test_anonymize_user_likes(self):
-        """post's last like is anonymized by user.anonymize_content"""
+        """post's last like is anonymized by user.anonymize_data"""
         category = Category.objects.get(slug='first-category')
         thread = testutils.post_thread(category)
         post = testutils.reply_thread(thread)
@@ -196,7 +195,7 @@ class AnonymizeLikesTests(AuthenticatedUserTestCase):
         patch_is_liked(self.get_request(self.user), post, 1)
         patch_is_liked(self.get_request(user), post, 1)
 
-        user.anonymize_content()
+        user.anonymize_data()
 
         last_likes = Post.objects.get(pk=post.pk).last_likes
         self.assertEqual(last_likes, [
@@ -224,14 +223,13 @@ class AnonymizePostsTests(AuthenticatedUserTestCase):
         return request
 
     def test_anonymize_user_posts(self):
-        """post is anonymized by user.anonymize_content"""
+        """post is anonymized by user.anonymize_data"""
         category = Category.objects.get(slug='first-category')
         thread = testutils.post_thread(category)
 
         user = get_mock_user()
         post = testutils.reply_thread(thread, poster=user)
-        user.anonymize_content()
+        user.anonymize_data()
 
         anonymized_post = Post.objects.get(pk=post.pk)
-        self.assertEqual(anonymized_post.poster_ip, ANONYMOUS_IP)
         self.assertTrue(anonymized_post.is_valid)

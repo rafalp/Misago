@@ -8,6 +8,7 @@ from social_core.backends.github import GithubOAuth2
 from social_django.utils import load_strategy
 
 from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
+from misago.legal.models import Agreement
 
 from misago.users.models import AnonymousUser, Ban, BanCache
 from misago.users.social.pipeline import (
@@ -27,7 +28,7 @@ def create_request(user_ip='0.0.0.0', data=None):
     else:
         request = factory.post('/', data=json.dumps(data), content_type='application/json')
     request.include_frontend_context = True
-    request.frontend_context = {'auth': {}, 'conf': {}, 'store': {}, 'url': {}}
+    request.frontend_context = {}
     request.session = {}
     request.user = AnonymousUser()
     request.user_ip = user_ip
@@ -67,6 +68,8 @@ class PipelineTestCase(UserTestCase):
 
         if activation == 'admin':
             self.assertEqual(new_user.requires_activation, UserModel.ACTIVATION_ADMIN)
+
+        self.assertEqual(new_user.audittrail_set.count(), 1)
 
     def assertJsonResponseEquals(self, response, value):
         response_content = response.content.decode("utf-8")
@@ -226,6 +229,16 @@ class CreateUser(PipelineTestCase):
 
 
 class CreateUserWithFormTests(PipelineTestCase):
+    def setUp(self):
+        super(CreateUserWithFormTests, self).setUp()
+
+        Agreement.objects.invalidate_cache()
+
+    def tearDown(self):
+        super(CreateUserWithFormTests, self).tearDown()
+        
+        Agreement.objects.invalidate_cache()
+
     def test_skip_if_user_is_set(self):
         """pipeline step is skipped if user was passed"""
         request = create_request()
@@ -440,6 +453,113 @@ class CreateUserWithFormTests(PipelineTestCase):
         self.assertEqual(result, {'user': new_user, 'is_new': True})
 
         self.assertNewUserIsCorrect(new_user, form_data, activation='admin', email_verified=False)
+
+    def test_form_check_agreement(self):
+        """social register checks agreement"""
+        form_data = {
+            'email': 'social@auth.com',
+            'username': 'SocialUser',
+        }
+        request = create_request(data=form_data)
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        agreement = Agreement.objects.create(
+            type=Agreement.TYPE_TOS,
+            text="Lorem ipsum",
+            is_active=True,
+        )
+
+        response = create_user_with_form(
+            strategy=strategy,
+            details={'email': form_data['email']},
+            backend=backend,
+            user=None,
+            pipeline_index=1,
+        )
+        
+        self.assertEqual(response.status_code, 400)
+        self.assertJsonResponseEquals(response, {
+            'terms_of_service': ['This agreement is required.'],
+        })
+
+        # invalid agreement id
+        form_data = {
+            'email': 'social@auth.com',
+            'username': 'SocialUser',
+            'terms_of_service': agreement.id + 1,
+        }
+        request = create_request(data=form_data)
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        response = create_user_with_form(
+            strategy=strategy,
+            details={'email': form_data['email']},
+            backend=backend,
+            user=None,
+            pipeline_index=1,
+        )
+        
+        self.assertEqual(response.status_code, 400)
+        self.assertJsonResponseEquals(response, {
+            'terms_of_service': ['This agreement is required.'],
+        })
+
+        # valid agreement id
+        form_data = {
+            'email': 'social@auth.com',
+            'username': 'SocialUser',
+            'terms_of_service': agreement.id,
+        }
+        request = create_request(data=form_data)
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        result = create_user_with_form(
+            strategy=strategy,
+            details={'email': form_data['email']},
+            backend=backend,
+            user=None,
+            pipeline_index=1,
+        )
+
+        new_user = UserModel.objects.get(email='social@auth.com')
+        self.assertEqual(result, {'user': new_user, 'is_new': True})
+
+        self.assertEqual(new_user.agreements, [agreement.id])
+        self.assertEqual(new_user.useragreement_set.count(), 1)
+
+    def test_form_ignore_inactive_agreement(self):
+        """social register ignores inactive agreement"""
+        form_data = {
+            'email': 'social@auth.com',
+            'username': 'SocialUser',
+            'terms_of_service': None,
+        }
+        request = create_request(data=form_data)
+        strategy = load_strategy(request=request)
+        backend = GithubOAuth2(strategy, '/')
+
+        Agreement.objects.create(
+            type=Agreement.TYPE_TOS,
+            text="Lorem ipsum",
+            is_active=False,
+        )
+
+        result = create_user_with_form(
+            strategy=strategy,
+            details={'email': form_data['email']},
+            backend=backend,
+            user=None,
+            pipeline_index=1,
+        )
+
+        new_user = UserModel.objects.get(email='social@auth.com')
+        self.assertEqual(result, {'user': new_user, 'is_new': True})
+
+        self.assertEqual(new_user.agreements, [])
+        self.assertEqual(new_user.useragreement_set.count(), 0)
 
 
 class GetUsernameTests(PipelineTestCase):

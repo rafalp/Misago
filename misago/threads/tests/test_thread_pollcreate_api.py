@@ -1,6 +1,5 @@
 from django.urls import reverse
 
-from misago.core.utils import serialize_datetime
 from misago.threads.models import Poll, Thread
 from misago.threads.serializers.poll import MAX_POLL_OPTIONS
 
@@ -14,9 +13,6 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
 
         response = self.post(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This action is not available to guests.",
-        })
 
     def test_invalid_thread_id(self):
         """api validates that thread id is integer"""
@@ -28,7 +24,6 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
 
         response = self.post(api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
     def test_nonexistant_thread_id(self):
         """api validates that thread exists"""
@@ -40,17 +35,13 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
 
         response = self.post(api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
     def test_no_permission(self):
         """api validates that user has permission to start poll in thread"""
         self.override_acl({'can_start_polls': 0})
 
         response = self.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't start polls.",
-        })
+        self.assertContains(response, "can't start polls", status_code=403)
 
     def test_no_permission_closed_thread(self):
         """api validates that user has permission to start poll in closed thread"""
@@ -60,10 +51,7 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         self.thread.save()
 
         response = self.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This thread is closed. You can't start polls in it.",
-        })
+        self.assertContains(response, "thread is closed", status_code=403)
 
         self.override_acl(category={'can_close_threads': 1})
 
@@ -78,10 +66,7 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         self.category.save()
 
         response = self.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This category is closed. You can't start polls in it.",
-        })
+        self.assertContains(response, "category is closed", status_code=403)
 
         self.override_acl(category={'can_close_threads': 1})
 
@@ -96,10 +81,7 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         self.thread.save()
 
         response = self.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't start polls in other users threads.",
-        })
+        self.assertContains(response, "can't start polls in other users threads", status_code=403)
 
         self.override_acl({'can_start_polls': 2})
 
@@ -113,7 +95,6 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
             category=self.category,
             poster_name='Test',
             poster_slug='test',
-            poster_ip='127.0.0.1',
             length=30,
             question='Test',
             choices=[
@@ -125,21 +106,15 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         )
 
         response = self.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "There's already a poll in this thread.",
-        })
+        self.assertContains(response, "There's already a poll in this thread.", status_code=403)
 
     def test_empty_data(self):
         """api handles empty request data"""
         response = self.post(self.api_link)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'question': ["This field is required."],
-            'choices': ["This field is required."],
-            'length': ["This field is required."],
-            'allowed_choices': ["This field is required."],
-        })
+
+        response_json = response.json()
+        self.assertEqual(len(response_json), 4)
 
     def test_length_validation(self):
         """api validates poll's length"""
@@ -149,12 +124,11 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
             }
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'question': ["This field is required."],
-            'choices': ["This field is required."],
-            'length': ["Ensure this value is greater than or equal to 0."],
-            'allowed_choices': ["This field is required."],
-        })
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['length'], ["Ensure this value is greater than or equal to 0."]
+        )
 
         response = self.post(
             self.api_link, data={
@@ -162,12 +136,11 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
             }
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'question': ["This field is required."],
-            'choices': ["This field is required."],
-            'length': ["Ensure this value is less than or equal to 180."],
-            'allowed_choices': ["This field is required."],
-        })
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['length'], ["Ensure this value is less than or equal to 180."]
+        )
 
     def test_question_validation(self):
         """api validates question length"""
@@ -177,12 +150,11 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
             }
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'question': ["Ensure this field has no more than 255 characters."],
-            'choices': ["This field is required."],
-            'length': ["This field is required."],
-            'allowed_choices': ["This field is required."],
-        })
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['question'], ["Ensure this field has no more than 255 characters."]
+        )
 
     def test_validate_choice_length(self):
         """api validates single choice length"""
@@ -197,12 +169,9 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
             }
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'question': ["This field is required."],
-            'choices': ["One or more poll choices are invalid."],
-            'length': ["This field is required."],
-            'allowed_choices': ["This field is required."],
-        })
+
+        response_json = response.json()
+        self.assertEqual(response_json['choices'], ["One or more poll choices are invalid."])
 
         response = self.post(
             self.api_link,
@@ -216,23 +185,19 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
             }
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'question': ["This field is required."],
-            'choices': ["One or more poll choices are invalid."],
-            'length': ["This field is required."],
-            'allowed_choices': ["This field is required."],
-        })
+
+        response_json = response.json()
+        self.assertEqual(response_json['choices'], ["One or more poll choices are invalid."])
 
     def test_validate_two_choices(self):
         """api validates that there are at least two choices in poll"""
         response = self.post(self.api_link, data={'choices': [{'label': 'Choice'}]})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'question': ["This field is required."],
-            'choices': ["You need to add at least two choices to a poll."],
-            'length': ["This field is required."],
-            'allowed_choices': ["This field is required."],
-        })
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['choices'], ["You need to add at least two choices to a poll."]
+        )
 
     def test_validate_max_choices(self):
         """api validates that there are no more choices in poll than allowed number"""
@@ -248,25 +213,22 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         self.assertEqual(response.status_code, 400)
 
         error_formats = (MAX_POLL_OPTIONS, MAX_POLL_OPTIONS + 1)
-        self.assertEqual(response.json(), {
-            'question': ["This field is required."],
-            'choices': [
-                "You can't add more than %s options to a single poll (added %s)." % error_formats
-            ],
-            'length': ["This field is required."],
-            'allowed_choices': ["This field is required."],
-        })
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['choices'],
+            ["You can't add more than %s options to a single poll (added %s)." % error_formats]
+        )
 
     def test_allowed_choices_validation(self):
         """api validates allowed choices number"""
         response = self.post(self.api_link, data={'allowed_choices': 0})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'question': ["This field is required."],
-            'choices': ["This field is required."],
-            'length': ["This field is required."],
-            'allowed_choices': ["Ensure this value is greater than or equal to 1."],
-        })
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['allowed_choices'], ["Ensure this value is greater than or equal to 1."]
+        )
 
         response = self.post(
             self.api_link,
@@ -285,11 +247,12 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
             }
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'non_field_errors': [
-                "Number of allowed choices can't be greater than number of all choices."
-            ],
-        })
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['non_field_errors'],
+            ["Number of allowed choices can't be greater than number of all choices."]
+        )
 
     def test_poll_created(self):
         """api creates public poll if provided with valid data"""
@@ -315,36 +278,39 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
             }
         )
         self.assertEqual(response.status_code, 200)
-        self.maxDiff = None
 
-        poll = Poll.objects.all()[0]
-        
-        expected_choices = []
-        for choice in poll.choices:
-            expected_choices.append(choice.copy())
-            expected_choices[-1]['selected'] = False
+        response_json = response.json()
 
-        self.assertEqual(response.json(), {
-            'id': poll.id,
-            'poster': {
-                'id': self.user.id,
-                'username': self.user.username,
-                'slug': self.user.slug,
-            },
-            'posted_on': serialize_datetime(poll.posted_on),
-            'length': 40,
-            'question': "Select two best colors",
-            'allowed_choices': 2,
-            'allow_revotes': True,
-            'votes': 0,
-            'is_public': True,
-            'choices': expected_choices,
-        })
-        
-        self.assertEqual(len(poll.choices), 3)
-        self.assertEqual(len(set([c['hash'] for c in poll.choices])), 3)
-        self.assertEqual([c['label'] for c in poll.choices], ['Red', 'Green', 'Blue'])
+        self.assertEqual(response_json['poster_name'], self.user.username)
+        self.assertEqual(response_json['length'], 40)
+        self.assertEqual(response_json['question'], "Select two best colors")
+        self.assertEqual(response_json['allowed_choices'], 2)
+        self.assertTrue(response_json['allow_revotes'])
+        self.assertEqual(response_json['votes'], 0)
+        self.assertTrue(response_json['is_public'])
+
+        self.assertEqual(len(response_json['choices']), 3)
+        self.assertEqual(len(set([c['hash'] for c in response_json['choices']])), 3)
+        self.assertEqual([c['label'] for c in response_json['choices']], ['Red', 'Green', 'Blue'])
 
         thread = Thread.objects.get(pk=self.thread.pk)
         self.assertTrue(thread.has_poll)
-        self.assertEqual(thread.poll, poll)
+
+        poll = thread.poll
+
+        self.assertEqual(poll.category_id, self.category.id)
+        self.assertEqual(poll.thread_id, self.thread.id)
+        self.assertEqual(poll.poster_id, self.user.id)
+        self.assertEqual(poll.poster_name, self.user.username)
+        self.assertEqual(poll.poster_slug, self.user.slug)
+        self.assertEqual(poll.length, 40)
+        self.assertEqual(poll.question, "Select two best colors")
+        self.assertEqual(poll.allowed_choices, 2)
+        self.assertTrue(poll.allow_revotes)
+        self.assertEqual(poll.votes, 0)
+        self.assertTrue(poll.is_public)
+
+        self.assertEqual(len(poll.choices), 3)
+        self.assertEqual(len(set([c['hash'] for c in poll.choices])), 3)
+        
+        self.assertEqual(self.user.audittrail_set.count(), 1)

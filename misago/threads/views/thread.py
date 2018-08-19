@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import View
 
 from misago.threads.viewmodels import ForumThread, PrivateThread, ThreadPosts
@@ -15,7 +16,7 @@ class ThreadBase(View):
         posts = self.get_posts(request, thread, page)
 
         frontend_context = self.get_frontend_context(request, thread, posts)
-        request.frontend_context['store'].update(frontend_context)
+        request.frontend_context.update(frontend_context)
 
         template_context = self.get_template_context(request, thread, posts)
         return render(request, self.template_name, template_context)
@@ -41,8 +42,8 @@ class ThreadBase(View):
         context = self.get_default_frontend_context()
 
         context.update({
-            'thread': thread.get_frontend_context(),
-            'posts': posts.get_frontend_context(),
+            'THREAD': thread.get_frontend_context(),
+            'POSTS': posts.get_frontend_context(),
         })
 
         return context
@@ -63,6 +64,11 @@ class ThreadBase(View):
 class ThreadView(ThreadBase):
     thread = ForumThread
     template_name = 'misago/thread/thread.html'
+
+    def get_default_frontend_context(self):
+        return {
+            'THREADS_API': reverse('misago:api:thread-list'),
+        }
 
 
 class PrivateThreadView(ThreadBase):

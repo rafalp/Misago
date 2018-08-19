@@ -7,6 +7,11 @@ instead of Django's `django.conf.settings`.
 """
 
 
+# Complete HTTP address of your Misago installation
+
+MISAGO_ADDRESS = None
+
+
 # Permissions system extensions
 # https://misago.readthedocs.io/en/latest/developers/acls.html#extending-permissions-system
 
@@ -30,8 +35,35 @@ MISAGO_ACL_EXTENSIONS = [
 MISAGO_ANONYMOUS_USERNAME = "Ghost"
 
 
-# Allow users to delete their own accounts?
-# Providing such feature is required by EU law from entities that process europeans personal data.
+# Allow users to download their personal data
+# Enables users to learn what data about them is being held by the site without having to contact
+# site's administrators.
+
+MISAGO_ENABLE_DOWNLOAD_OWN_DATA = True
+
+# Number of hours for which user data should be available for download.
+# When data download is marked as expired, data archive associated with it is deleted.
+
+MISAGO_USER_DATA_DOWNLOADS_EXPIRE_IN_HOURS = 48
+
+# Path to the directory that Misago should use to prepare user data downloads.
+# Should not be accessible from internet.
+
+MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = None
+
+
+# Automatically delete new user accounts that weren't activated in specified time
+# If you rely on admin review of new registrations, make this period long, disable
+# the "deleteinactiveusers" management command, or change this value to zero. Otherwise
+# keep it short to give users a chance to retry on their own after few days pass.s
+
+MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS = 0
+
+
+# Allow users to delete their accounts
+# Lets users delete their own account on the site without having to contact site administrators.
+# This mechanism doesn't delete user posts, polls or attachments, but attempts to anonymize any
+# data about user left behind after user is deleted.
 
 MISAGO_ENABLE_DELETE_OWN_ACCOUNT = False
 
@@ -201,22 +233,6 @@ MISAGO_AVATARS_SIZES = [400, 200, 150, 100, 64, 50, 30]
 MISAGO_BLANK_AVATAR = 'blank-avatar.png'
 
 
-# Path to default logo image used in navbar.
-
-MISAGO_LOGO = 'logo.png'
-
-
-# Empty style options and defaults
-
-MISAGO_STYLE = {}
-
-# Default style settings that are updated with user-entered MISAGO_STYLE
-
-_MISAGO_STYLE_DEFAULT = {
-    'navbar': 'navbar-light bg-light',
-}
-
-
 # Threads lists pagination settings
 
 MISAGO_THREADS_PER_PAGE = 25
@@ -273,6 +289,12 @@ MISAGO_RANKING_LENGTH = 30
 # Controls max number of items displayed on ranked lists
 
 MISAGO_RANKING_SIZE = 50
+
+
+# Specifies the number of days that IP addresses are stored in the database before removing.
+# Change this setting to None to never remove old IP addresses.
+
+MISAGO_IP_STORE_TIME = None
 
 
 # Controls number of users displayed on single page

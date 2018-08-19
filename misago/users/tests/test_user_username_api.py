@@ -17,28 +17,27 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         super(UserUsernameTests, self).setUp()
         self.link = '/api/users/%s/username/' % self.user.pk
 
-    def test_get_change_username_form_options(self):
-        """get to API returns form options"""
+    def test_get_change_username_options(self):
+        """get to API returns options"""
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {
-            'changes_left': self.user.acl_cache['name_changes_allowed'],
-            'next_change_on': None,
-            'length_min': settings.username_length_min,
-            'length_max': settings.username_length_max,
-        })
 
-        for i in range(response.json()['changes_left']):
+        response_json = response.json()
+
+        self.assertIsNotNone(response_json['changes_left'])
+        self.assertEqual(response_json['length_min'], settings.username_length_min)
+        self.assertEqual(response_json['length_max'], settings.username_length_max)
+        self.assertIsNone(response_json['next_on'])
+
+        for i in range(response_json['changes_left']):
             self.user.set_username('NewName%s' % i, self.user)
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {
-            'changes_left': 0,
-            'next_change_on': response.json()['next_change_on'],
-            'length_min': settings.username_length_min,
-            'length_max': settings.username_length_max,
-        })
+
+        response_json = response.json()
+        self.assertEqual(response_json['changes_left'], 0)
+        self.assertIsNotNone(response_json['next_on'])
 
     def test_change_username_no_changes_left(self):
         """api returns error 400 if there are no username changes left"""
@@ -56,31 +55,18 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.link,
             data={
-                'username': 'FailedChanges',
+                'username': 'Pointless',
             },
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'username': ["You can't change your username at this time."],
-            'next_change_on': response.json()['next_change_on'],
-        })
-        
-        self.reload_user()
-        self.assertTrue(self.user.username != 'FailedChanges')
+
+        self.assertContains(response, 'change your username now', status_code=400)
+        self.assertTrue(self.user.username != 'Pointless')
 
     def test_change_username_no_input(self):
-        """api returns error 400 if new username is omitted or empty"""
+        """api returns error 400 if new username is empty"""
         response = self.client.post(self.link, data={})
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'username': ["This field is required."],
-        })
 
-        response = self.client.post(self.link, data={'username': ''})
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'username': ["This field may not be blank."],
-        })
+        self.assertContains(response, 'Enter new username.', status_code=400)
 
     def test_change_username_invalid_name(self):
         """api returns error 400 if new username is wrong"""
@@ -90,13 +76,14 @@ class UserUsernameTests(AuthenticatedUserTestCase):
                 'username': '####',
             },
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'username': ["Username can only contain latin alphabet letters and digits."],
-        })
+
+        self.assertContains(response, 'can only contain latin', status_code=400)
 
     def test_change_username(self):
         """api changes username and records change"""
+        response = self.client.get(self.link)
+        changes_left = response.json()['changes_left']
+
         old_username = self.user.username
         new_username = 'NewUsernamu'
 
@@ -106,17 +93,14 @@ class UserUsernameTests(AuthenticatedUserTestCase):
                 'username': new_username,
             },
         )
+
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {
-            'username': 'NewUsernamu',
-            'slug': 'newusernamu',
-            'changes_left': 1,
-            'next_change_on': None,
-        })
+        options = response.json()['options']
+        self.assertEqual(changes_left, options['changes_left'] + 1)
 
         self.reload_user()
         self.assertEqual(self.user.username, new_username)
-        self.assertNotEqual(self.user.username, old_username)
+        self.assertTrue(self.user.username != old_username)
 
         self.assertEqual(self.user.namechanges.last().new_username, new_username)
 
@@ -138,38 +122,27 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         })
 
         response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't rename users."
-        })
+        self.assertContains(response, "can't rename users", status_code=403)
 
         override_acl(self.user, {
             'can_rename_users': 0,
         })
 
         response = self.client.post(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't rename users."
-        })
+        self.assertContains(response, "can't rename users", status_code=403)
 
-    def test_invalid_username(self):
-        """moderate username api validates username"""
+    def test_moderate_username(self):
+        """moderate username"""
         override_acl(self.user, {
             'can_rename_users': 1,
         })
 
-        response = self.client.post(
-            self.link,
-            json.dumps({
-                'username': None,
-            }),
-            content_type='application/json',
-        )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'username': ["This field may not be null."],
-        })
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 200)
+
+        options = response.json()
+        self.assertEqual(options['length_min'], settings.username_length_min)
+        self.assertEqual(options['length_max'], settings.username_length_max)
 
         override_acl(self.user, {
             'can_rename_users': 1,
@@ -182,10 +155,8 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
             }),
             content_type='application/json',
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'username': ["This field may not be blank."],
-        })
+
+        self.assertContains(response, "Enter new username", status_code=400)
 
         override_acl(self.user, {
             'can_rename_users': 1,
@@ -198,10 +169,12 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
             }),
             content_type='application/json',
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'username': ["Username can only contain latin alphabet letters and digits."],
-        })
+
+        self.assertContains(
+            response,
+            "Username can only contain latin alphabet letters and digits.",
+            status_code=400
+        )
 
         override_acl(self.user, {
             'can_rename_users': 1,
@@ -214,26 +187,12 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
             }),
             content_type='application/json',
         )
+
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'username': ["Username must be at least 3 characters long."],
-        })
+        self.assertContains(
+            response, "Username must be at least 3 characters long.", status_code=400
+        )
 
-    def test_get_username_requirements(self):
-        """get to API returns username requirements"""
-        override_acl(self.user, {
-            'can_rename_users': 1,
-        })
-
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {
-            'length_min': settings.username_length_min,
-            'length_max': settings.username_length_max,
-        })
-
-    def test_moderate_username(self):
-        """moderate username"""
         override_acl(self.user, {
             'can_rename_users': 1,
         })

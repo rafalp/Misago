@@ -1,14 +1,8 @@
-from .ban import BanMessageSerializer, BanDetailsSerializer
-from .moderation import ModerateAvatarSerializer, ModerateSignatureSerializer
-from .options import (
-    ForumOptionsSerializer, EditSignatureSerializer, ChangeUsernameSerializer,
-    ChangePasswordSerializer, ChangeEmailSerializer, DeleteOwnAccountSerializer,
-)
-from .rank import RankSerializer
-from .user import StatusSerializer, UserCardSerializer, UserSerializer
-from .auth import (
-    AuthenticatedUserSerializer, AnonymousUserSerializer, LoginSerializer,
-    ResendActivationSerializer, SendPasswordFormSerializer, ChangeForgottenPasswordSerializer,
-)
-from .register import RegisterUserSerializer
-from .usernamechange import UsernameChangeSerializer
+from .ban import *
+from .datadownload import *
+from .moderation import *
+from .options import *
+from .rank import *
+from .user import *
+from .auth import *
+from .usernamechange import *

@@ -5,7 +5,8 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
 from misago.conf import settings
-from misago.threads import moderation
+from misago.core.utils import clean_ids_list
+from misago.threads.moderation import posts as moderation
 from misago.threads.permissions import (
     allow_delete_best_answer, allow_delete_event, allow_delete_post)
 from misago.threads.permissions import exclude_invisible_posts
@@ -37,7 +38,12 @@ def delete_bulk(request, thread):
         },
     )
 
-    serializer.is_valid(raise_exception=True)
+    if not serializer.is_valid():
+        if 'posts' in serializer.errors:
+            errors = serializer.errors['posts']
+        else:
+            errors = list(serializer.errors.values())[0]
+        return Response({'detail': errors[0]}, status=400)
 
     for post in serializer.validated_data['posts']:
         post.delete()

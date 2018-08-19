@@ -46,7 +46,6 @@ class Attachment(models.Model):
     )
     uploader_name = models.CharField(max_length=255)
     uploader_slug = models.CharField(max_length=255, db_index=True)
-    uploader_ip = models.GenericIPAddressField()
 
     filename = models.CharField(max_length=255, db_index=True)
     size = models.PositiveIntegerField(default=0, db_index=True)

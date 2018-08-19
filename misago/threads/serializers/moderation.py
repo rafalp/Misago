@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
+from django.utils import six
 from django.utils.translation import ugettext as _, ugettext_lazy, ungettext
 
 from misago.acl import add_acl
-from misago.categories.models import THREADS_ROOT
+from misago.categories import THREADS_ROOT_NAME
 from misago.conf import settings
 from misago.threads.mergeconflict import MergeConflict
 from misago.threads.models import Thread
@@ -23,6 +23,18 @@ from misago.threads.validators import validate_category, validate_title
 
 POSTS_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
 THREADS_LIMIT = settings.MISAGO_THREADS_PER_PAGE + settings.MISAGO_THREADS_TAIL
+
+
+__all__ = [
+    'DeletePostsSerializer',
+    'DeleteThreadsSerializer',
+    'MergePostsSerializer',
+    'MergeThreadSerializer',
+    'MergeThreadsSerializer',
+    'MovePostsSerializer',
+    'NewThreadSerializer',
+    'SplitPostsSerializer',
+]
 
 
 class DeletePostsSerializer(serializers.Serializer):
@@ -95,14 +107,14 @@ class MergePostsSerializer(serializers.Serializer):
         data = list(set(data))
 
         if len(data) < 2:
-            raise ValidationError(self.error_empty_or_required)
+            raise serializers.ValidationError(self.error_empty_or_required)
         if len(data) > POSTS_LIMIT:
             message = ungettext(
                 "No more than %(limit)s post can be merged at single time.",
                 "No more than %(limit)s posts can be merged at single time.",
                 POSTS_LIMIT,
             )
-            raise ValidationError(message % {'limit': POSTS_LIMIT})
+            raise serializers.ValidationError(message % {'limit': POSTS_LIMIT})
 
         user = self.context['user']
         thread = self.context['thread']
@@ -118,7 +130,7 @@ class MergePostsSerializer(serializers.Serializer):
             try:
                 allow_merge_post(user, post)
             except PermissionDenied as e:
-                raise ValidationError(e)
+                raise serializers.ValidationError(e)
 
             if not posts:
                 posts.append(post)
@@ -146,7 +158,7 @@ class MergePostsSerializer(serializers.Serializer):
             posts.append(post)
 
         if len(posts) != len(data):
-            raise ValidationError(_("One or more posts to merge could not be found."))
+            raise serializers.ValidationError(_("One or more posts to merge could not be found."))
 
         return posts
 
@@ -180,14 +192,14 @@ class MovePostsSerializer(serializers.Serializer):
 
         new_thread_id = get_thread_id_from_url(request, data)
         if not new_thread_id:
-            raise ValidationError(_("This is not a valid thread link."))
+            raise serializers.ValidationError(_("This is not a valid thread link."))
         if new_thread_id == thread.pk:
-            raise ValidationError(_("Thread to move posts to is same as current one."))
+            raise serializers.ValidationError(_("Thread to move posts to is same as current one."))
 
         try:
             new_thread = viewmodel(request, new_thread_id).unwrap()
         except Http404:
-            raise ValidationError(
+            raise serializers.ValidationError(
                 _(
                     "The thread you have entered link to doesn't "
                     "exist or you don't have permission to see it."
@@ -195,7 +207,7 @@ class MovePostsSerializer(serializers.Serializer):
             )
 
         if not new_thread.acl['can_reply']:
-            raise ValidationError(_("You can't move posts to threads you can't reply."))
+            raise serializers.ValidationError(_("You can't move posts to threads you can't reply."))
 
         return new_thread
 
@@ -207,7 +219,7 @@ class MovePostsSerializer(serializers.Serializer):
                 "No more than %(limit)s posts can be moved at single time.",
                 POSTS_LIMIT,
             )
-            raise ValidationError(message % {'limit': POSTS_LIMIT})
+            raise serializers.ValidationError(message % {'limit': POSTS_LIMIT})
 
         request = self.context['request']
         thread = self.context['thread']
@@ -224,10 +236,10 @@ class MovePostsSerializer(serializers.Serializer):
                 allow_move_post(request.user, post)
                 posts.append(post)
             except PermissionDenied as e:
-                raise ValidationError(e)
+                raise serializers.ValidationError(e)
 
         if len(posts) != len(data):
-            raise ValidationError(_("One or more posts to move could not be found."))
+            raise serializers.ValidationError(_("One or more posts to move could not be found."))
 
         return posts
 
@@ -250,8 +262,7 @@ class NewThreadSerializer(serializers.Serializer):
     def validate_category(self, category_id):
         self.category = validate_category(self.context['user'], category_id)
         if not can_start_thread(self.context['user'], self.category):
-            raise ValidationError(
-                _("You can't create new threads in selected category."))
+            raise ValidationError(_("You can't create new threads in selected category."))
         return self.category
 
     def validate_weight(self, weight):
@@ -278,8 +289,7 @@ class NewThreadSerializer(serializers.Serializer):
             return is_hidden  # don't validate hidden further if category failed
 
         if is_hidden and not self.category.acl.get('can_hide_threads'):
-            raise ValidationError(
-                _("You don't have permission to hide threads in this category."))
+            raise ValidationError(_("You don't have permission to hide threads in this category."))
         return is_hidden
 
     def validate_is_closed(self, is_closed):
@@ -377,26 +387,24 @@ class DeleteThreadsSerializer(serializers.Serializer):
         threads = []
         errors = []
 
-        sorted_ids = sorted(data, reverse=True)
-
-        for thread_id in sorted_ids:
+        for thread_id in data:
             try:
                 thread = viewmodel(request, thread_id).unwrap()
                 allow_delete_thread(request.user, thread)
                 threads.append(thread)
-            except PermissionDenied as permission_error:
+            except PermissionDenied as e:
                 errors.append({
                     'thread': {
                         'id': thread.id,
                         'title': thread.title
                     },
-                    'error': permission_error,
+                    'error': six.text_type(e)
                 })
             except Http404 as e:
                 pass # skip invisible threads
 
         if errors:
-            raise ValidationError({'details': errors})
+            raise serializers.ValidationError({'details': errors})
 
         if len(threads) != len(data):
             raise ValidationError(_("One or more threads to delete could not be found."))
@@ -438,7 +446,7 @@ class MergeThreadSerializer(serializers.Serializer):
             other_thread = viewmodel(request, other_thread_id).unwrap()
             allow_merge_thread(request.user, other_thread, otherthread=True)
         except PermissionDenied as e:
-            raise ValidationError(e)
+            raise serializers.ValidationError(e)
         except Http404:
             raise ValidationError(
                 _(
@@ -503,54 +511,23 @@ class MergeThreadsSerializer(NewThreadSerializer):
                 POSTS_LIMIT,
             )
             raise ValidationError(message % {'limit': THREADS_LIMIT})
-        return data
-    
-    def get_valid_threads(self, threads_ids):
-        user = self.context['user']
 
-        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT)
+        threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
+
         threads_queryset = Thread.objects.filter(
-            id__in=threads_ids,
+            id__in=data,
             category__tree_id=threads_tree_id,
         ).select_related('category').order_by('-id')
 
-        invalid_threads = []
-        valid_threads = []
+        user = self.context['user']
+
+        threads = []
         for thread in threads_queryset:
             add_acl(user, thread)
             if can_see_thread(user, thread):
-                valid_threads.append(thread)
-                try:
-                    allow_merge_thread(user, thread)
-                except PermissionDenied as permission_error:
-                    invalid_threads.append({
-                        'id': thread.id,
-                        'status': 403,
-                        'detail': permission_error
-                    })
+                threads.append(thread)
 
-        not_found_ids = set(threads_ids) - set([t.id for t in valid_threads])
-        for not_found_id in not_found_ids:
-            invalid_threads.append({
-                'id': not_found_id,
-                'status': 404,
-                'detail': _(
-                    "Requested thread doesn't exist or you don't have permission to see it."
-                ),
-            })
+        if len(threads) != len(data):
+            raise ValidationError(_("One or more threads to merge could not be found."))
 
-        if invalid_threads:
-            invalid_threads.sort(key=lambda item: item['id'])
-            raise ValidationError({'merge': invalid_threads})
-
-        return valid_threads
-
-    def validate(self, data):
-        data['threads'] = self.get_valid_threads(data['threads'])
-
-        merge_conflict = MergeConflict(data, data['threads'])
-        merge_conflict.is_valid(raise_exception=True)
-        data.update(merge_conflict.get_resolution())
-        self.merge_conflict = merge_conflict.get_conflicting_fields()
-        
-        return data
+        return threads

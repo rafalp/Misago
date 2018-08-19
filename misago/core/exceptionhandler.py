@@ -1,3 +1,5 @@
+from rest_framework.views import exception_handler as rest_exception_handler
+
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponsePermanentRedirect, JsonResponse
 from django.urls import reverse
@@ -94,3 +96,18 @@ def get_exception_handler(exception):
 def handle_misago_exception(request, exception):
     handler = get_exception_handler(exception)
     return handler(request, exception)
+
+
+def handle_api_exception(exception, context):
+    response = rest_exception_handler(exception, context)
+    if response:
+        if isinstance(exception, Banned):
+            response.data['ban'] = exception.ban.get_serialized_message()
+        elif isinstance(exception, PermissionDenied):
+            try:
+                response.data['detail'] = exception.args[0]
+            except IndexError:
+                pass
+        return response
+    else:
+        return None

@@ -46,18 +46,12 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         self.override_acl({'max_attachment_size': 0})
 
         response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You don't have permission to upload new files.",
-        })
+        self.assertContains(response, "don't have permission to upload new files", status_code=403)
 
     def test_no_file_uploaded(self):
         """no file uploaded scenario is handled"""
         response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'upload': ["No file was submitted."],
-        })
+        self.assertContains(response, "No file has been uploaded.", status_code=400)
 
     def test_invalid_extension(self):
         """uploaded file's extension is rejected as invalid"""
@@ -73,10 +67,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
                     'upload': upload,
                 }
             )
-            self.assertEqual(response.status_code, 400)
-            self.assertEqual(response.json(), {
-                'upload': ["You can't upload files of this type."],
-            })
+        self.assertContains(response, "You can't upload files of this type.", status_code=400)
 
     def test_invalid_mime(self):
         """uploaded file's mimetype is rejected as invalid"""
@@ -92,10 +83,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
                     'upload': upload,
                 }
             )
-            self.assertEqual(response.status_code, 400)
-            self.assertEqual(response.json(), {
-                'upload': ["You can't upload files of this type."],
-            })
+        self.assertContains(response, "You can't upload files of this type.", status_code=400)
 
     def test_no_perm_to_type(self):
         """user needs permission to upload files of this type"""
@@ -114,10 +102,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
                     'upload': upload,
                 }
             )
-            self.assertEqual(response.status_code, 400)
-            self.assertEqual(response.json(), {
-                'upload': ["You can't upload files of this type."],
-            })
+        self.assertContains(response, "You can't upload files of this type.", status_code=400)
 
     def test_type_is_locked(self):
         """new uploads for this filetype are locked"""
@@ -134,10 +119,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
                     'upload': upload,
                 }
             )
-            self.assertEqual(response.status_code, 400)
-            self.assertEqual(response.json(), {
-                'upload': ["You can't upload files of this type."],
-            })
+        self.assertContains(response, "You can't upload files of this type.", status_code=400)
 
     def test_type_is_disabled(self):
         """new uploads for this filetype are disabled"""
@@ -154,10 +136,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
                     'upload': upload,
                 }
             )
-            self.assertEqual(response.status_code, 400)
-            self.assertEqual(response.json(), {
-                'upload': ["You can't upload files of this type."],
-            })
+        self.assertContains(response, "You can't upload files of this type.", status_code=400)
 
     def test_upload_too_big_for_type(self):
         """too big uploads are rejected"""
@@ -174,13 +153,10 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
                     'upload': upload,
                 }
             )
-            self.assertEqual(response.status_code, 400)
-            self.assertEqual(response.json(), {
-                'upload': [
-                    "You can't upload files of this type larger "
-                    "than 100.0\xa0KB (your file has 253.9\xa0KB)."
-                ],
-            })
+
+        self.assertContains(
+            response, "can't upload files of this type larger than", status_code=400
+        )
 
     def test_upload_too_big_for_user(self):
         """too big uploads are rejected"""
@@ -198,12 +174,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
                     'upload': upload,
                 }
             )
-            self.assertEqual(response.status_code, 400)
-            self.assertEqual(response.json(), {
-                'upload': [
-                    "You can't upload files larger than 100.0\xa0KB (your file has 253.9\xa0KB)."
-                ],
-            })
+        self.assertContains(response, "can't upload files larger than", status_code=400)
 
     def test_corrupted_image_upload(self):
         """corrupted image upload is handled"""
@@ -218,10 +189,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
                     'upload': upload,
                 }
             )
-            self.assertEqual(response.status_code, 400)
-            self.assertEqual(response.json(), {
-                'upload': ["Uploaded image was corrupted or invalid."],
-            })
+        self.assertContains(response, "Uploaded image was corrupted or invalid.", status_code=400)
 
     def test_document_upload(self):
         """successful upload creates orphan attachment"""
@@ -254,7 +222,11 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
         self.assertIsNone(response_json['post'])
         self.assertEqual(response_json['uploader_name'], self.user.username)
-        self.assertFalse(response_json['has_thumbnail'])
+        self.assertEqual(response_json['url']['index'], attachment.get_absolute_url())
+        self.assertIsNone(response_json['url']['thumb'])
+        self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
+
+        self.assertEqual(self.user.audittrail_set.count(), 1)
 
         # files associated with attachment are deleted on its deletion
         file_path = attachment.file.path
@@ -293,7 +265,11 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
         self.assertIsNone(response_json['post'])
         self.assertEqual(response_json['uploader_name'], self.user.username)
-        self.assertFalse(response_json['has_thumbnail'])
+        self.assertEqual(response_json['url']['index'], attachment.get_absolute_url())
+        self.assertIsNone(response_json['url']['thumb'])
+        self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
+
+        self.assertEqual(self.user.audittrail_set.count(), 1)
 
     def test_large_image_upload(self):
         """successful large image upload creates orphan attachment with thumbnail"""
@@ -329,7 +305,11 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
         self.assertIsNone(response_json['post'])
         self.assertEqual(response_json['uploader_name'], self.user.username)
-        self.assertTrue(response_json['has_thumbnail'])
+        self.assertEqual(response_json['url']['index'], attachment.get_absolute_url())
+        self.assertEqual(response_json['url']['thumb'], attachment.get_thumbnail_url())
+        self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
+        
+        self.assertEqual(self.user.audittrail_set.count(), 1)
 
         # thumbnail was scaled down
         thumbnail = Image.open(attachment.thumbnail.path)
@@ -380,4 +360,8 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
         self.assertIsNone(response_json['post'])
         self.assertEqual(response_json['uploader_name'], self.user.username)
-        self.assertTrue(response_json['has_thumbnail'])
+        self.assertEqual(response_json['url']['index'], attachment.get_absolute_url())
+        self.assertEqual(response_json['url']['thumb'], attachment.get_thumbnail_url())
+        self.assertEqual(response_json['url']['uploader'], self.user.get_absolute_url())
+        
+        self.assertEqual(self.user.audittrail_set.count(), 1)

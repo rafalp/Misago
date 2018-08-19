@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
 
-from misago.core.utils import serialize_datetime
 from misago.threads.models import Poll
 
 from .test_thread_poll_api import ThreadPollApiTestCase
@@ -30,57 +29,12 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
             }
         )
 
-    def get_votes_json(self):
-        choices_votes = {choice['hash']: [] for choice in self.poll.choices}
-        queryset = self.poll.pollvote_set.order_by('-id').select_related()
-        for vote in queryset:
-            choices_votes[vote.choice_hash].append({
-                'id': vote.voter_id,
-                'username': vote.voter_name,
-                'slug': vote.voter_slug,
-                'voted_on': serialize_datetime(vote.voted_on),
-            })
-        return choices_votes
-
     def test_anonymous(self):
         """api allows guests to get poll votes"""
         self.logout_user()
 
-        votes_json = self.get_votes_json()
-
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), [
-            {
-                'hash': 'aaaaaaaaaaaa',
-                'label': 'Alpha',
-                'votes': 1,
-                'voters': votes_json['aaaaaaaaaaaa'],
-            },
-            {
-                'hash': 'bbbbbbbbbbbb',
-                'label': 'Beta',
-                'votes': 0,
-                'voters': [],
-            },
-            {
-                'hash': 'gggggggggggg',
-                'label': 'Gamma',
-                'votes': 2,
-                'voters': votes_json['gggggggggggg'],
-            },
-            {
-                'hash': 'dddddddddddd',
-                'label': 'Delta',
-                'votes': 1,
-                'voters': votes_json['dddddddddddd'],
-            },
-        ])
-
-        self.assertEqual(len(votes_json['aaaaaaaaaaaa']), 1)
-        self.assertEqual(len(votes_json['bbbbbbbbbbbb']), 0)
-        self.assertEqual(len(votes_json['gggggggggggg']), 2)
-        self.assertEqual(len(votes_json['dddddddddddd']), 1)
 
     def test_invalid_thread_id(self):
         """api validates that thread id is integer"""
@@ -94,7 +48,6 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
 
         response = self.client.get(api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
     def test_nonexistant_thread_id(self):
         """api validates that thread exists"""
@@ -108,7 +61,6 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
 
         response = self.client.get(api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
     def test_invalid_poll_id(self):
         """api validates that poll id is integer"""
@@ -122,7 +74,6 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
 
         response = self.client.get(api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
     def test_nonexistant_poll_id(self):
         """api validates that poll exists"""
@@ -136,8 +87,7 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
 
         response = self.client.get(api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
-        
+
     def test_no_permission(self):
         """api chcecks permission to see poll voters"""
         self.override_acl({'can_always_see_poll_voters': False})
@@ -147,9 +97,6 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You dont have permission to this poll's voters.",
-        })
 
     def test_nonpublic_poll(self):
         """api validates that poll is public"""
@@ -160,47 +107,26 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You dont have permission to this poll's voters.",
-        })
 
     def test_get_votes(self):
         """api returns list of voters"""
-        votes_json = self.get_votes_json()
-
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), [
-            {
-                'hash': 'aaaaaaaaaaaa',
-                'label': 'Alpha',
-                'votes': 1,
-                'voters': votes_json['aaaaaaaaaaaa'],
-            },
-            {
-                'hash': 'bbbbbbbbbbbb',
-                'label': 'Beta',
-                'votes': 0,
-                'voters': [],
-            },
-            {
-                'hash': 'gggggggggggg',
-                'label': 'Gamma',
-                'votes': 2,
-                'voters': votes_json['gggggggggggg'],
-            },
-            {
-                'hash': 'dddddddddddd',
-                'label': 'Delta',
-                'votes': 1,
-                'voters': votes_json['dddddddddddd'],
-            },
-        ])
 
-        self.assertEqual(len(votes_json['aaaaaaaaaaaa']), 1)
-        self.assertEqual(len(votes_json['bbbbbbbbbbbb']), 0)
-        self.assertEqual(len(votes_json['gggggggggggg']), 2)
-        self.assertEqual(len(votes_json['dddddddddddd']), 1)
+        response_json = response.json()
+        self.assertEqual(len(response_json), 4)
+
+        self.assertEqual([c['label'] for c in response_json], ['Alpha', 'Beta', 'Gamma', 'Delta'])
+        self.assertEqual([c['votes'] for c in response_json], [1, 0, 2, 1])
+        self.assertEqual([len(c['voters']) for c in response_json], [1, 0, 2, 1])
+
+        self.assertEqual([[v['username'] for v in c['voters']] for c in response_json][0][0],
+                         'bob')
+
+        user = UserModel.objects.get(slug='bob')
+
+        self.assertEqual([[v['url'] for v in c['voters']] for c in response_json][0][0],
+                         user.get_absolute_url())
 
     def test_get_votes_private_poll(self):
         """api returns list of voters on private poll for user with permission"""
@@ -209,41 +135,23 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
         self.poll.is_public = False
         self.poll.save()
 
-        votes_json = self.get_votes_json()
-
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), [
-            {
-                'hash': 'aaaaaaaaaaaa',
-                'label': 'Alpha',
-                'votes': 1,
-                'voters': votes_json['aaaaaaaaaaaa'],
-            },
-            {
-                'hash': 'bbbbbbbbbbbb',
-                'label': 'Beta',
-                'votes': 0,
-                'voters': [],
-            },
-            {
-                'hash': 'gggggggggggg',
-                'label': 'Gamma',
-                'votes': 2,
-                'voters': votes_json['gggggggggggg'],
-            },
-            {
-                'hash': 'dddddddddddd',
-                'label': 'Delta',
-                'votes': 1,
-                'voters': votes_json['dddddddddddd'],
-            },
-        ])
 
-        self.assertEqual(len(votes_json['aaaaaaaaaaaa']), 1)
-        self.assertEqual(len(votes_json['bbbbbbbbbbbb']), 0)
-        self.assertEqual(len(votes_json['gggggggggggg']), 2)
-        self.assertEqual(len(votes_json['dddddddddddd']), 1)
+        response_json = response.json()
+        self.assertEqual(len(response_json), 4)
+
+        self.assertEqual([c['label'] for c in response_json], ['Alpha', 'Beta', 'Gamma', 'Delta'])
+        self.assertEqual([c['votes'] for c in response_json], [1, 0, 2, 1])
+        self.assertEqual([len(c['voters']) for c in response_json], [1, 0, 2, 1])
+
+        self.assertEqual([[v['username'] for v in c['voters']] for c in response_json][0][0],
+                         'bob')
+
+        user = UserModel.objects.get(slug='bob')
+
+        self.assertEqual([[v['url'] for v in c['voters']] for c in response_json][0][0],
+                         user.get_absolute_url())
 
 
 class ThreadPostVotesTests(ThreadPollApiTestCase):
@@ -274,9 +182,6 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
 
         response = self.post(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This action is not available to guests.",
-        })
 
     def test_empty_vote_json(self):
         """api validates if vote that user has made was empty"""
@@ -285,58 +190,37 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         response = self.client.post(
             self.api_link, '[]', content_type='application/json'
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'choices': ["You have to make a choice."],
-        })
+        self.assertContains(response, "You have to make a choice.", status_code=400)
 
     def test_empty_vote_form(self):
         """api validates if vote that user has made was empty"""
         self.delete_user_votes()
 
         response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'choices': ["You have to make a choice."],
-        })
+        self.assertContains(response, "You have to make a choice.", status_code=400)
 
     def test_malformed_vote(self):
         """api validates if vote that user has made was correctly structured"""
         self.delete_user_votes()
 
         response = self.post(self.api_link)
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'choices': ['Expected a list of items but got type "dict".'],
-        })
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
         response = self.post(self.api_link, data={})
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'choices': ['Expected a list of items but got type "dict".'],
-        })
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
         response = self.post(self.api_link, data='hello')
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'choices': ['Expected a list of items but got type "str".'],
-        })
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
         response = self.post(self.api_link, data=123)
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'choices': ['Expected a list of items but got type "int".'],
-        })
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
     def test_invalid_choices(self):
         """api validates if vote that user has made overlaps with allowed votes"""
         self.delete_user_votes()
 
         response = self.post(self.api_link, data=['lorem', 'ipsum'])
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'choices': ["One or more of poll choices were invalid."],
-        })
+        self.assertContains(response, "One or more of poll choices were invalid.", status_code=400)
 
     def test_too_many_choices(self):
         """api validates if vote that user has made overlaps with allowed votes"""
@@ -345,23 +229,19 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         self.poll.save()
 
         response = self.post(self.api_link, data=['aaaaaaaaaaaa', 'bbbbbbbbbbbb'])
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'choices': ["This poll disallows voting for more than 1 choice."],
-        })
+        self.assertContains(
+            response, "This poll disallows voting for more than 1 choice.", status_code=400
+        )
 
     def test_revote(self):
         """api validates if user is trying to change vote in poll that disallows revoting"""
         response = self.post(self.api_link, data=['lorem', 'ipsum'])
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You have already voted in this poll.",
-        })
+        self.assertContains(response, "You have already voted in this poll.", status_code=403)
 
         self.delete_user_votes()
 
         response = self.post(self.api_link)
-        self.assertEqual(response.status_code, 400)
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
     def test_vote_in_closed_thread(self):
         """api validates is user has permission to vote poll in closed thread"""
@@ -373,15 +253,12 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         self.delete_user_votes()
 
         response = self.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This thread is closed. You can't vote in it.",
-        })
+        self.assertContains(response, "thread is closed", status_code=403)
 
         self.override_acl(category={'can_close_threads': 1})
 
         response = self.post(self.api_link)
-        self.assertEqual(response.status_code, 400)
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
     def test_vote_in_closed_category(self):
         """api validates is user has permission to vote poll in closed category"""
@@ -393,15 +270,12 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         self.delete_user_votes()
 
         response = self.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This category is closed. You can't vote in it.",
-        })
+        self.assertContains(response, "category is closed", status_code=403)
 
         self.override_acl(category={'can_close_threads': 1})
 
         response = self.post(self.api_link)
-        self.assertEqual(response.status_code, 400)
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
     def test_vote_in_finished_poll(self):
         """api valdiates if poll has finished before letting user to vote in it"""
@@ -412,16 +286,13 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         self.delete_user_votes()
 
         response = self.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This poll is over. You can't vote in it.",
-        })
-        
+        self.assertContains(response, "This poll is over. You can't vote in it.", status_code=403)
+
         self.poll.length = 50
         self.poll.save()
 
         response = self.post(self.api_link)
-        self.assertEqual(response.status_code, 400)
+        self.assertContains(response, "Expected a list of items", status_code=400)
 
     def test_fresh_vote(self):
         """api handles first vote in poll"""
@@ -429,82 +300,25 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
 
         response = self.post(self.api_link, data=['aaaaaaaaaaaa', 'bbbbbbbbbbbb'])
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {
-            'id': self.poll.id,
-            'poster': {
-                'id': self.user.id,
-                'username': self.user.username,
-                'slug': self.user.slug,
-            },
-            'posted_on': serialize_datetime(self.poll.posted_on),
-            'length': 0,
-            'question': "Lorem ipsum dolor met?",
-            'allowed_choices': 2,
-            'allow_revotes': False,
-            'votes': 4,
-            'is_public': False,
-            'choices': [
-                {
-                    'hash': 'aaaaaaaaaaaa',
-                    'label': 'Alpha',
-                    'selected': True,
-                    'votes': 2
-                },
-                {
-                    'hash': 'bbbbbbbbbbbb',
-                    'label': 'Beta',
-                    'selected': True,
-                    'votes': 1
-                },
-                {
-                    'hash': 'gggggggggggg',
-                    'label': 'Gamma',
-                    'selected': False,
-                    'votes': 1
-                },
-                {
-                    'hash': 'dddddddddddd',
-                    'label': 'Delta',
-                    'selected': False,
-                    'votes': 0
-                },
-            ],
-        })
 
         # validate state change
         poll = Poll.objects.get(pk=self.poll.pk)
         self.assertEqual(poll.votes, 4)
-        self.assertEqual(poll.choices, [
-            {
-                'hash': 'aaaaaaaaaaaa',
-                'label': 'Alpha',
-                'votes': 2
-            },
-            {
-                'hash': 'bbbbbbbbbbbb',
-                'label': 'Beta',
-                'votes': 1
-            },
-            {
-                'hash': 'gggggggggggg',
-                'label': 'Gamma',
-                'votes': 1
-            },
-            {
-                'hash': 'dddddddddddd',
-                'label': 'Delta',
-                'votes': 0
-            },
-        ])
+        self.assertEqual([c['votes'] for c in poll.choices], [2, 1, 1, 0])
+
+        for choice in poll.choices:
+            self.assertNotIn('selected', choice)
 
         self.assertEqual(poll.pollvote_set.count(), 4)
 
-        # validate poll disallows for revote
-        response = self.post(self.api_link, data=['aaaaaaaaaaaa'])
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You have already voted in this poll.",
-        })
+        # validate response json
+        response_json = response.json()
+        self.assertEqual(response_json['votes'], 4)
+        self.assertEqual([c['votes'] for c in response_json['choices']], [2, 1, 1, 0])
+        self.assertEqual([c['selected'] for c in response_json['choices']],
+                         [True, True, False, False])
+
+        self.assertFalse(response_json['acl']['can_vote'])
 
     def test_vote_change(self):
         """api handles vote change"""
@@ -513,76 +327,22 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
 
         response = self.post(self.api_link, data=['aaaaaaaaaaaa', 'bbbbbbbbbbbb'])
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {
-            'id': self.poll.id,
-            'poster': {
-                'id': self.user.id,
-                'username': self.user.username,
-                'slug': self.user.slug,
-            },
-            'posted_on': serialize_datetime(self.poll.posted_on),
-            'length': 0,
-            'question': "Lorem ipsum dolor met?",
-            'allowed_choices': 2,
-            'allow_revotes': True,
-            'votes': 4,
-            'is_public': False,
-            'choices': [
-                {
-                    'hash': 'aaaaaaaaaaaa',
-                    'label': 'Alpha',
-                    'selected': True,
-                    'votes': 2
-                },
-                {
-                    'hash': 'bbbbbbbbbbbb',
-                    'label': 'Beta',
-                    'selected': True,
-                    'votes': 1
-                },
-                {
-                    'hash': 'gggggggggggg',
-                    'label': 'Gamma',
-                    'selected': False,
-                    'votes': 1
-                },
-                {
-                    'hash': 'dddddddddddd',
-                    'label': 'Delta',
-                    'selected': False,
-                    'votes': 0
-                },
-            ],
-        })
 
         # validate state change
         poll = Poll.objects.get(pk=self.poll.pk)
         self.assertEqual(poll.votes, 4)
-        self.assertEqual(poll.choices, [
-            {
-                'hash': 'aaaaaaaaaaaa',
-                'label': 'Alpha',
-                'votes': 2
-            },
-            {
-                'hash': 'bbbbbbbbbbbb',
-                'label': 'Beta',
-                'votes': 1
-            },
-            {
-                'hash': 'gggggggggggg',
-                'label': 'Gamma',
-                'votes': 1
-            },
-            {
-                'hash': 'dddddddddddd',
-                'label': 'Delta',
-                'votes': 0
-            },
-        ])
+        self.assertEqual([c['votes'] for c in poll.choices], [2, 1, 1, 0])
+
+        for choice in poll.choices:
+            self.assertNotIn('selected', choice)
 
         self.assertEqual(poll.pollvote_set.count(), 4)
 
-        # validate poll allows for revote
-        response = self.post(self.api_link, data=['aaaaaaaaaaaa'])
-        self.assertEqual(response.status_code, 200)
+        # validate response json
+        response_json = response.json()
+        self.assertEqual(response_json['votes'], 4)
+        self.assertEqual([c['votes'] for c in response_json['choices']], [2, 1, 1, 0])
+        self.assertEqual([c['selected'] for c in response_json['choices']],
+                         [True, True, False, False])
+
+        self.assertTrue(response_json['acl']['can_vote'])

@@ -43,36 +43,29 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This action is not available to guests.",
-        })
 
     def test_thread_visibility(self):
         """thread's visibility is validated"""
         self.override_acl({'can_see': 0})
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
         self.override_acl({'can_browse': 0})
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
         self.override_acl({'can_see_all_threads': 0})
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
 
     def test_cant_reply_thread(self):
         """permission to reply thread is validated"""
         self.override_acl({'can_reply_threads': 0})
 
         response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't reply to threads in this category.",
-        })
+        self.assertContains(
+            response, "You can't reply to threads in this category.", status_code=403
+        )
 
     def test_closed_category(self):
         """permssion to reply in closed category is validated"""
@@ -82,10 +75,11 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.category.save()
 
         response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This category is closed. You can't reply to threads in it.",
-        })
+        self.assertContains(
+            response,
+            "This category is closed. You can't reply to threads in it.",
+            status_code=403
+        )
 
         # allow to post in closed category
         self.override_acl({'can_close_threads': 1})
@@ -101,10 +95,9 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.thread.save()
 
         response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't reply to closed threads in this category.",
-        })
+        self.assertContains(
+            response, "You can't reply to closed threads in this category.", status_code=403
+        )
 
         # allow to post in closed thread
         self.override_acl({'can_close_threads': 1})
@@ -117,11 +110,9 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.override_acl()
 
         response = self.client.post(self.api_link, data={})
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'post': ['You have to enter a message.'],
-        })
-        
+
+        self.assertContains(response, "You have to enter a message.", status_code=400)
+
     def test_invalid_data(self):
         """api errors for invalid request data"""
         self.override_acl()
@@ -131,10 +122,8 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
             'false',
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'non_field_errors': ["Invalid data. Expected a dictionary, but got bool."],
-        })
+
+        self.assertContains(response, "Invalid data.", status_code=400)
 
     def test_post_is_validated(self):
         """post is validated"""
@@ -162,7 +151,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
             }
         )
         self.assertEqual(response.status_code, 200)
-        
+
         thread = Thread.objects.get(pk=self.thread.pk)
 
         self.override_acl()
@@ -173,6 +162,8 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.reload_user()
         self.assertEqual(self.user.threads, 0)
         self.assertEqual(self.user.posts, 1)
+
+        self.assertEqual(self.user.audittrail_set.count(), 1)
 
         post = self.user.post_set.all()[:1][0]
         self.assertEqual(post.category_id, self.category.pk)

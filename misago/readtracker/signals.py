@@ -1,6 +1,6 @@
 from django.dispatch import Signal, receiver
 
-from misago.categories.models import PRIVATE_THREADS_ROOT
+from misago.categories import PRIVATE_THREADS_ROOT_NAME
 from misago.categories.signals import delete_category_content, move_category_content
 from misago.threads.signals import merge_thread, move_thread, merge_post, move_post
 
@@ -50,7 +50,7 @@ def decrease_unread_private_count(sender, **kwargs):
     user = sender
     thread = kwargs['thread']
 
-    if thread.category.thread_type.root_name != PRIVATE_THREADS_ROOT:
+    if thread.category.thread_type.root_name != PRIVATE_THREADS_ROOT_NAME:
         return
 
     if user.unread_private_threads:

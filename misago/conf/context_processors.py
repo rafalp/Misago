@@ -8,22 +8,14 @@ from .gateway import settings as misago_settings  # noqa
 from .gateway import db_settings
 
 
-LOGO_URL = static(misago_settings.MISAGO_LOGO)
 BLANK_AVATAR_URL = static(misago_settings.MISAGO_BLANK_AVATAR)
-
-STYLE = misago_settings._MISAGO_STYLE_DEFAULT.copy()
-
-if misago_settings.MISAGO_STYLE:
-    STYLE.update(misago_settings.MISAGO_STYLE)
 
 
 def settings(request):
     return {
-        'MISAGO_STYLE': STYLE,
         'DEBUG': misago_settings.DEBUG,
         'LANGUAGE_CODE_SHORT': get_language()[:2],
         'misago_settings': db_settings,
-        'LOGO_URL': LOGO_URL,
         'BLANK_AVATAR_URL': BLANK_AVATAR_URL,
         'THREADS_ON_INDEX': misago_settings.MISAGO_THREADS_ON_INDEX,
         'LOGIN_REDIRECT_URL': misago_settings.LOGIN_REDIRECT_URL,
@@ -33,23 +25,25 @@ def settings(request):
 
 
 def preload_settings_json(request):
-    request.frontend_context['conf'].update(db_settings.get_public_settings())
-    request.frontend_context['conf'].update({
-        'csrf_cookie_name': misago_settings.CSRF_COOKIE_NAME,
-        'threads_on_index': misago_settings.MISAGO_THREADS_ON_INDEX,
-        'enable_delete_own_account': misago_settings.MISAGO_ENABLE_DELETE_OWN_ACCOUNT,
-        'social_auth_sites': get_enabled_social_auth_sites_list(),
-        'style': STYLE,
+    preloaded_settings = db_settings.get_public_settings()
+
+    preloaded_settings.update({
+        'LOGIN_API_URL': misago_settings.MISAGO_LOGIN_API_URL,
+        'LOGIN_REDIRECT_URL': reverse(misago_settings.LOGIN_REDIRECT_URL),
+        'LOGIN_URL': reverse(misago_settings.LOGIN_URL),
+        'LOGOUT_URL': reverse(misago_settings.LOGOUT_URL),
+        'SOCIAL_AUTH': get_enabled_social_auth_sites_list(),
     })
 
-    request.frontend_context['url'].update({
-        'index': reverse('misago:index'),
-        'blank_avatar': BLANK_AVATAR_URL,
-        'logo': LOGO_URL,
-        'login_redirect': reverse(misago_settings.LOGIN_REDIRECT_URL),
-        'login': reverse(misago_settings.LOGIN_URL),
-        'logout': reverse(misago_settings.LOGOUT_URL),
-        'static': misago_settings.STATIC_URL,
+    request.frontend_context.update({
+        'SETTINGS': preloaded_settings,
+        'MISAGO_PATH': reverse('misago:index'),
+        'BLANK_AVATAR_URL': BLANK_AVATAR_URL,
+        'ENABLE_DOWNLOAD_OWN_DATA': misago_settings.MISAGO_ENABLE_DOWNLOAD_OWN_DATA,
+        'ENABLE_DELETE_OWN_ACCOUNT': misago_settings.MISAGO_ENABLE_DELETE_OWN_ACCOUNT,
+        'STATIC_URL': misago_settings.STATIC_URL,
+        'CSRF_COOKIE_NAME': misago_settings.CSRF_COOKIE_NAME,
+        'THREADS_ON_INDEX': misago_settings.MISAGO_THREADS_ON_INDEX,
     })
 
     return {}

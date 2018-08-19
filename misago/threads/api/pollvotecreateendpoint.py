@@ -13,20 +13,25 @@ def poll_vote_create(request, thread, poll):
     allow_vote_poll(request.user, poll)
 
     serializer = NewVoteSerializer(
-        # FIXME: lets use {'choices': []} JSON instead!
-        data={'choices': request.data},
+        data={
+            'choices': request.data,
+        },
         context={
             'allowed_choices': poll.allowed_choices,
             'choices': poll.choices,
         },
     )
 
-    serializer.is_valid(raise_exception=True)
+    if not serializer.is_valid():
+        return Response(
+            {
+                'detail': serializer.errors['choices'][0],
+            },
+            status=400,
+        )
 
-    validated_choices = serializer.validated_data['choices']
-
-    remove_user_votes(request.user, poll, validated_choices)
-    set_new_votes(request, poll, validated_choices)
+    remove_user_votes(request.user, poll, serializer.data['choices'])
+    set_new_votes(request, poll, serializer.data['choices'])
 
     add_acl(request.user, poll)
     serialized_poll = PollSerializer(poll).data
@@ -53,10 +58,7 @@ def remove_user_votes(user, poll, final_votes):
             removed_votes.append(choice['hash'])
 
     if removed_votes:
-        poll.pollvote_set.filter(
-            voter=user,
-            choice_hash__in=removed_votes,
-        ).delete()
+        poll.pollvote_set.filter(voter=user, choice_hash__in=removed_votes).delete()
 
 
 def set_new_votes(request, poll, final_votes):
@@ -73,5 +75,4 @@ def set_new_votes(request, poll, final_votes):
                 voter_name=request.user.username,
                 voter_slug=request.user.slug,
                 choice_hash=choice['hash'],
-                voter_ip=request.user_ip,
             )

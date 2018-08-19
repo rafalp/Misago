@@ -1,6 +1,6 @@
 /* jshint ignore:start */
 import React from 'react';
-import Button from 'misago/components/button'; // jshint ignore:line
+import Button from 'misago/components/button';
 import ajax from 'misago/services/ajax';
 import title from 'misago/services/page-title';
 import snackbar from 'misago/services/snackbar';

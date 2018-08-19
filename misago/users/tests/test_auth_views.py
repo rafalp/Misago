@@ -78,8 +78,8 @@ class AuthViewsTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertIsNone(response_json['id'])
+        user_json = response.json()
+        self.assertIsNone(user_json['id'])
 
         response = self.client.post(reverse('misago:logout'))
         self.assertEqual(response.status_code, 302)
@@ -87,5 +87,5 @@ class AuthViewsTests(TestCase):
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertIsNone(response_json['id'])
+        user_json = response.json()
+        self.assertIsNone(user_json['id'])

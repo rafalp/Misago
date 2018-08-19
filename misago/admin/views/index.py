@@ -12,6 +12,7 @@ from django.http import Http404, JsonResponse
 from django.utils.translation import ugettext as _
 
 from misago import __version__
+from misago.conf import settings
 from misago.core.cache import cache
 from misago.threads.models import Post, Thread
 
@@ -38,11 +39,23 @@ def admin_index(request):
     return render(
         request, 'misago/admin/index.html', {
             'db_stats': db_stats,
+            'address_check': check_misago_address(request),
 
             'allow_version_check': ALLOW_VERSION_CHECK,
             'version_check': cache.get(VERSION_CHECK_CACHE_KEY),
         }
     )
+
+
+def check_misago_address(request):
+    set_address = settings.MISAGO_ADDRESS
+    correct_address = request.build_absolute_uri('/')
+
+    return {
+        'is_correct': set_address == correct_address,
+        'set_address': set_address,
+        'correct_address': correct_address,
+    }
 
 
 def check_version(request):

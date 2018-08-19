@@ -1,31 +1,27 @@
+from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import serializers
-
-from misago.threads.validators import validate_post_length
 
 from . import common_flavour, finalise_markup
+from .serializers import MarkupSerializer
 
 
 @api_view(['POST'])
 def parse_markup(request):
     serializer = MarkupSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
+    if not serializer.is_valid():
+        errors_list = list(serializer.errors.values())[0]
+        return Response(
+            {'detail': errors_list[0]},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     parsing_result = common_flavour(
         request,
         request.user,
-        serializer.data['markup'],
+        serializer.data['post'],
         force_shva=True,
     )
     finalised = finalise_markup(parsing_result['parsed_text'])
 
     return Response({'parsed': finalised})
-
-
-class MarkupSerializer(serializers.Serializer):
-    markup = serializers.CharField(allow_blank=True)
-
-    def validate_markup(self, data):
-        validate_post_length(data)
-        return data

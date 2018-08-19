@@ -6,7 +6,8 @@ from django.utils.translation import ugettext_lazy as _
 from misago.acl import algebra
 from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
-from misago.categories.models import PRIVATE_THREADS_ROOT, Category
+from misago.categories import PRIVATE_THREADS_ROOT_NAME
+from misago.categories.models import Category
 from misago.core.forms import YesNoSwitch
 from misago.threads.models import Thread
 
@@ -152,7 +153,7 @@ def build_acl(acl, roles, key_name):
 
 
 def add_acl_to_thread(user, thread):
-    if thread.thread_type.root_name != PRIVATE_THREADS_ROOT:
+    if thread.thread_type.root_name != PRIVATE_THREADS_ROOT_NAME:
         return
 
     if not hasattr(thread, 'participant'):
@@ -218,6 +219,12 @@ def allow_add_participants(user, target):
 
         if target.is_closed:
             raise PermissionDenied(_("Only moderators can add participants to closed threads."))
+
+    max_participants = user.acl_cache['max_private_thread_participants']
+    current_participants = len(target.participants_list) - 1
+
+    if current_participants >= max_participants:
+        raise PermissionDenied(_("You can't add any more new users to this thread."))
 
 
 can_add_participants = return_boolean(allow_add_participants)

@@ -12,18 +12,18 @@ from misago.core.cache import cache
 from misago.core.utils import slugify
 from misago.threads.threadtypes import trees_map
 
+from . import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
+
 
 CACHE_NAME = 'misago_categories_tree'
-PRIVATE_THREADS_ROOT = 'private_threads'
-THREADS_ROOT = 'root_category'
 
 
 class CategoryManager(TreeManager):
     def private_threads(self):
-        return self.get_special(PRIVATE_THREADS_ROOT)
+        return self.get_special(PRIVATE_THREADS_ROOT_NAME)
 
     def root_category(self):
-        return self.get_special(THREADS_ROOT)
+        return self.get_special(THREADS_ROOT_NAME)
 
     def get_special(self, special_role):
         cache_name = '%s_%s' % (CACHE_NAME, special_role)
@@ -35,7 +35,7 @@ class CategoryManager(TreeManager):
         return special_category
 
     def all_categories(self, include_root=False):
-        tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT)
+        tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
         queryset = self.filter(tree_id=tree_id)
         if not include_root:
             queryset = queryset.filter(level__gt=0)

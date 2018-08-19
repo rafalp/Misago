@@ -1,5 +1,6 @@
 import json
 
+from rest_framework import status
 from rest_framework.response import Response
 
 from django.core.exceptions import ValidationError
@@ -17,16 +18,16 @@ from misago.users.serializers import ModerateAvatarSerializer
 def avatar_endpoint(request, pk=None):
     if request.user.is_avatar_locked:
         if request.user.avatar_lock_user_message:
-            extra = format_plaintext_for_html(request.user.avatar_lock_user_message)
+            reason = format_plaintext_for_html(request.user.avatar_lock_user_message)
         else:
-            extra = None
+            reason = None
 
         return Response(
             {
                 'detail': _("Your avatar is locked. You can't change it."),
-                'extra': extra,
+                'reason': reason,
             },
-            status=403,
+            status=status.HTTP_403_FORBIDDEN,
         )
 
     avatar_options = get_avatar_options(request.user)
@@ -109,7 +110,7 @@ def avatar_post(options, user, data):
                 {
                     'detail': _("This avatar type is not allowed."),
                 },
-                status=400,
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         rpc_handler = AVATAR_TYPES[data.get('avatar', 'nope')]
@@ -118,7 +119,7 @@ def avatar_post(options, user, data):
             {
                 'detail': _("Unknown avatar type."),
             },
-            status=400,
+            status=status.HTTP_400_BAD_REQUEST,
         )
 
     try:
@@ -128,7 +129,7 @@ def avatar_post(options, user, data):
             {
                 'detail': e.args[0],
             },
-            status=400,
+            status=status.HTTP_400_BAD_REQUEST,
         )
 
     user.save()
@@ -209,20 +210,23 @@ AVATAR_TYPES = {
 def moderate_avatar_endpoint(request, profile):
     if request.method == "POST":
         is_avatar_locked = profile.is_avatar_locked
-
         serializer = ModerateAvatarSerializer(profile, data=request.data)
-        serializer.is_valid(raise_exception=True)
+        if serializer.is_valid():
+            if serializer.validated_data['is_avatar_locked'] and not is_avatar_locked:
+                avatars.dynamic.set_avatar(profile)
+            serializer.save()
 
-        if serializer.validated_data['is_avatar_locked'] and not is_avatar_locked:
-            avatars.dynamic.set_avatar(profile)
-        serializer.save()
-
-        return Response({
-            'avatars': profile.avatars,
-            'is_avatar_locked': int(profile.is_avatar_locked),
-            'avatar_lock_user_message': profile.avatar_lock_user_message,
-            'avatar_lock_staff_message': profile.avatar_lock_staff_message,
-        })
+            return Response({
+                'avatars': profile.avatars,
+                'is_avatar_locked': int(profile.is_avatar_locked),
+                'avatar_lock_user_message': profile.avatar_lock_user_message,
+                'avatar_lock_staff_message': profile.avatar_lock_staff_message,
+            })
+        else:
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
     else:
         return Response({
             'is_avatar_locked': int(profile.is_avatar_locked),

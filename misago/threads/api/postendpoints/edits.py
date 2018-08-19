@@ -2,7 +2,6 @@ from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
 from django.db.models import F
-from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.translation import ugettext as _
@@ -48,7 +47,6 @@ def revert_post_endpoint(request, post):
         editor=request.user,
         editor_name=request.user.username,
         editor_slug=request.user.slug,
-        editor_ip=request.user_ip,
         edited_from=post.original,
         edited_to=edit.edited_from,
     )
@@ -87,7 +85,7 @@ def get_edit(post, pk=None):
 
     edit = post.edits_record.first()
     if not edit:
-        raise Http404()
+        raise PermissionDenied(_("Edits record is unavailable for this post."))
     return edit
 
 

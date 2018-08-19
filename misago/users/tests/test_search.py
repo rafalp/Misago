@@ -27,10 +27,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertIn('users', [p['id'] for p in response_json])
+        reponse_json = response.json()
+        self.assertIn('users', [p['id'] for p in reponse_json])
 
-        for provider in response_json:
+        for provider in reponse_json:
             if provider['id'] == 'users':
                 self.assertEqual(provider['results']['results'], [])
 
@@ -39,10 +39,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertIn('users', [p['id'] for p in response_json])
+        reponse_json = response.json()
+        self.assertIn('users', [p['id'] for p in reponse_json])
 
-        for provider in response_json:
+        for provider in reponse_json:
             if provider['id'] == 'users':
                 self.assertEqual(provider['results']['results'], [])
 
@@ -51,10 +51,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=%s' % (self.api_link, self.user.username[0]))
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertIn('users', [p['id'] for p in response_json])
+        reponse_json = response.json()
+        self.assertIn('users', [p['id'] for p in reponse_json])
 
-        for provider in response_json:
+        for provider in reponse_json:
             if provider['id'] == 'users':
                 results = provider['results']['results']
                 self.assertEqual(len(results), 1)
@@ -65,10 +65,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=%s' % (self.api_link, self.user.username))
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertIn('users', [p['id'] for p in response_json])
+        reponse_json = response.json()
+        self.assertIn('users', [p['id'] for p in reponse_json])
 
-        for provider in response_json:
+        for provider in reponse_json:
             if provider['id'] == 'users':
                 results = provider['results']['results']
                 self.assertEqual(len(results), 1)
@@ -79,10 +79,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=%s' % (self.api_link, self.user.username[-3:]))
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertIn('users', [p['id'] for p in response_json])
+        reponse_json = response.json()
+        self.assertIn('users', [p['id'] for p in reponse_json])
 
-        for provider in response_json:
+        for provider in reponse_json:
             if provider['id'] == 'users':
                 results = provider['results']['results']
                 self.assertEqual(len(results), 1)
@@ -93,10 +93,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=BobBoberson' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertIn('users', [p['id'] for p in response_json])
+        reponse_json = response.json()
+        self.assertIn('users', [p['id'] for p in reponse_json])
 
-        for provider in response_json:
+        for provider in reponse_json:
             if provider['id'] == 'users':
                 self.assertEqual(provider['results']['results'], [])
 
@@ -112,10 +112,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=DisabledUser' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertIn('users', [p['id'] for p in response_json])
+        reponse_json = response.json()
+        self.assertIn('users', [p['id'] for p in reponse_json])
 
-        for provider in response_json:
+        for provider in reponse_json:
             if provider['id'] == 'users':
                 self.assertEqual(provider['results']['results'], [])
 
@@ -126,10 +126,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
         response = self.client.get('%s?q=DisabledUser' % self.api_link)
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertIn('users', [p['id'] for p in response_json])
+        reponse_json = response.json()
+        self.assertIn('users', [p['id'] for p in reponse_json])
 
-        for provider in response_json:
+        for provider in reponse_json:
             if provider['id'] == 'users':
                 results = provider['results']['results']
                 self.assertEqual(len(results), 1)

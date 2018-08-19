@@ -70,58 +70,42 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             json.dumps({}),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't merge posts in this thread.",
-        })
+        self.assertContains(response, "You can't merge posts in this thread.", status_code=403)
 
     def test_empty_data_json(self):
         """api handles empty json data"""
         response = self.client.post(
             self.api_link, json.dumps({}), content_type="application/json"
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ["You have to select at least two posts to merge."],
-        })
+        self.assertContains(
+            response, "You have to select at least two posts to merge.", status_code=400
+        )
 
     def test_empty_data_form(self):
         """api handles empty form data"""
         response = self.client.post(self.api_link, {})
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ["You have to select at least two posts to merge."],
-        })
+
+        self.assertContains(
+            response, "You have to select at least two posts to merge.", status_code=400
+        )
 
     def test_invalid_data(self):
         """api handles post that is invalid type"""
         self.override_acl()
         response = self.client.post(self.api_link, '[]', content_type="application/json")
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'non_field_errors': ["Invalid data. Expected a dictionary, but got list."],
-        })
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
 
         self.override_acl()
         response = self.client.post(self.api_link, '123', content_type="application/json")
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'non_field_errors': ["Invalid data. Expected a dictionary, but got int."],
-        })
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
 
         self.override_acl()
         response = self.client.post(self.api_link, '"string"', content_type="application/json")
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'non_field_errors': ["Invalid data. Expected a dictionary, but got str."],
-        })
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
 
         self.override_acl()
         response = self.client.post(self.api_link, 'malformed', content_type="application/json")
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'detail': "JSON parse error - Expecting value: line 1 column 1 (char 0)",
-        })
+        self.assertContains(response, "JSON parse error", status_code=400)
 
     def test_no_posts_ids(self):
         """api rejects no posts ids"""
@@ -132,11 +116,10 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ["You have to select at least two posts to merge."],
-        })
-        
+        self.assertContains(
+            response, "You have to select at least two posts to merge.", status_code=400
+        )
+
     def test_invalid_posts_data(self):
         """api handles invalid data"""
         response = self.client.post(
@@ -146,10 +129,9 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ['Expected a list of items but got type "str".'],
-        })
+        self.assertContains(
+            response, "Expected a list of items but got type", status_code=400
+        )
 
     def test_invalid_posts_ids(self):
         """api handles invalid post id"""
@@ -160,10 +142,9 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ["One or more post ids received were invalid."],
-        })
+        self.assertContains(
+            response, "One or more post ids received were invalid.", status_code=400
+        )
 
     def test_one_post_id(self):
         """api rejects one post id"""
@@ -174,10 +155,9 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ["You have to select at least two posts to merge."],
-        })
+        self.assertContains(
+            response, "You have to select at least two posts to merge.", status_code=400
+        )
 
     def test_merge_limit(self):
         """api rejects more posts than merge limit"""
@@ -188,10 +168,9 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ["No more than {} posts can be merged at single time.".format(POSTS_LIMIT)],
-        })
+        self.assertContains(
+            response, "No more than {} posts can be merged".format(POSTS_LIMIT), status_code=400
+        )
 
     def test_merge_event(self):
         """api recjects events"""
@@ -204,10 +183,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ["Events can't be merged."],
-        })
+        self.assertContains(response, "Events can't be merged.", status_code=400)
 
     def test_merge_notfound_pk(self):
         """api recjects nonexistant pk's"""
@@ -218,10 +194,9 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ["One or more posts to merge could not be found."],
-        })
+        self.assertContains(
+            response, "One or more posts to merge could not be found.", status_code=400
+        )
 
     def test_merge_cross_threads(self):
         """api recjects attempt to merge with post made in other thread"""
@@ -235,10 +210,9 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ["One or more posts to merge could not be found."],
-        })
+        self.assertContains(
+            response, "One or more posts to merge could not be found.", status_code=400
+        )
 
     def test_merge_authenticated_with_guest_post(self):
         """api recjects attempt to merge with post made by deleted user"""
@@ -251,10 +225,9 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ["Posts made by different users can't be merged."],
-        })
+        self.assertContains(
+            response, "Posts made by different users can't be merged.", status_code=400
+        )
 
     def test_merge_guest_with_authenticated_post(self):
         """api recjects attempt to merge with post made by deleted user"""
@@ -267,10 +240,9 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ["Posts made by different users can't be merged."],
-        })
+        self.assertContains(
+            response, "Posts made by different users can't be merged.", status_code=400
+        )
 
     def test_merge_guest_posts_different_usernames(self):
         """api recjects attempt to merge posts made by different guests"""
@@ -284,10 +256,9 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ["Posts made by different users can't be merged."],
-        })
+        self.assertContains(
+            response, "Posts made by different users can't be merged.", status_code=400
+        )
 
     def test_merge_different_visibility(self):
         """api recjects attempt to merge posts with different visibility"""
@@ -303,10 +274,9 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ["Posts with different visibility can't be merged."],
-        })
+        self.assertContains(
+            response, "Posts with different visibility can't be merged.", status_code=400
+        )
 
     def test_merge_different_approval(self):
         """api recjects attempt to merge posts with different approval"""
@@ -322,10 +292,9 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ["Posts with different visibility can't be merged."],
-        })
+        self.assertContains(
+            response, "Posts with different visibility can't be merged.", status_code=400
+        )
 
     def test_closed_thread(self):
         """api validates permission to merge in closed thread"""
@@ -342,10 +311,11 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             json.dumps({'posts': posts}),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ["This thread is closed. You can't merge posts in it."],
-        })
+        self.assertContains(
+            response,
+            "This thread is closed. You can't merge posts in it.",
+            status_code=400,
+        )
 
         # allow closing threads
         self.override_acl({'can_close_threads': 1})
@@ -372,10 +342,11 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             json.dumps({'posts': posts}),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'posts': ["This category is closed. You can't merge posts in it."],
-        })
+        self.assertContains(
+            response,
+            "This category is closed. You can't merge posts in it.",
+            status_code=400,
+        )
 
         # allow closing threads
         self.override_acl({'can_close_threads': 1})
@@ -410,7 +381,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'posts': ["Post marked as best answer can't be merged with thread's first post."]
+            'detail': "Post marked as best answer can't be merged with thread's first post."
         })
 
     def test_merge_posts(self):

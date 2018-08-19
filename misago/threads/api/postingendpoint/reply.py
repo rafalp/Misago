@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy
 from misago.markup import common_flavour
 from misago.threads.checksums import update_post_checksum
 from misago.threads.validators import validate_post, validate_post_length, validate_title
+from misago.users.audittrail import create_audit_trail
 
 from . import PostingEndpoint, PostingMiddleware
 
@@ -46,6 +47,8 @@ class ReplyMiddleware(PostingMiddleware):
 
         self.thread.save()
 
+        create_audit_trail(self.request, self.post)
+
         # annotate post for future middlewares
         self.post.parsing_result = parsing_result
 
@@ -67,7 +70,6 @@ class ReplyMiddleware(PostingMiddleware):
         self.post.thread = self.thread
         self.post.poster = self.user
         self.post.poster_name = self.user.username
-        self.post.poster_ip = self.request.user_ip
         self.post.posted_on = self.datetime
 
         self.post.original = parsing_result['original_text']

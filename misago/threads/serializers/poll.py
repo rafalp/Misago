@@ -8,18 +8,28 @@ from django.utils.translation import ungettext
 from misago.threads.models import Poll
 
 
+__all__ = [
+    'PollSerializer',
+    'EditPollSerializer',
+    'NewPollSerializer',
+    'PollChoiceSerializer',
+]
+
 MAX_POLL_OPTIONS = 16
 
 
 class PollSerializer(serializers.ModelSerializer):
+    acl = serializers.SerializerMethodField()
     choices = serializers.SerializerMethodField()
-    poster = serializers.SerializerMethodField()
+
+    api = serializers.SerializerMethodField()
+    url = serializers.SerializerMethodField()
 
     class Meta:
         model = Poll
         fields = [
             'id',
-            'poster',
+            'poster_name',
             'posted_on',
             'length',
             'question',
@@ -27,18 +37,42 @@ class PollSerializer(serializers.ModelSerializer):
             'allow_revotes',
             'votes',
             'is_public',
+            'acl',
             'choices',
+            'api',
+            'url',
         ]
+
+    def get_api(self, obj):
+        return {
+            'index': obj.get_api_url(),
+            'votes': obj.get_votes_api_url(),
+        }
+
+    def get_url(self, obj):
+        return {
+            'poster': self.get_poster_url(obj),
+        }
+
+    def get_poster_url(self, obj):
+        if obj.poster_id:
+            return reverse(
+                'misago:user', kwargs={
+                    'slug': obj.poster_slug,
+                    'pk': obj.poster_id,
+                }
+            )
+        else:
+            return None
+
+    def get_acl(self, obj):
+        try:
+            return obj.acl
+        except AttributeError:
+            return None
 
     def get_choices(self, obj):
         return obj.choices
-
-    def get_poster(self, obj):
-        return {
-            'id': obj.poster_id,
-            'username': obj.poster_name,
-            'slug': obj.poster_slug
-        }
 
 
 class EditPollSerializer(serializers.ModelSerializer):

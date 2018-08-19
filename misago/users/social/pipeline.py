@@ -10,11 +10,14 @@ from social_core.pipeline.partial import partial
 
 from misago.conf import settings
 from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
+from misago.legal.models import Agreement
 
 from misago.users.bans import get_request_ip_ban, get_user_ban
-from misago.users.serializers.register import SocialRegisterUserSerializer
+from misago.users.forms.register import SocialAuthRegisterForm
 from misago.users.models import Ban
-from misago.users.registration import get_registration_result_json, send_welcome_email
+from misago.users.registration import (
+    get_registration_result_json, save_user_agreements, send_welcome_email
+)
 from misago.users.validators import (
     ValidationError, validate_new_registration, validate_email, validate_username)
 
@@ -156,6 +159,7 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
     new_user = UserModel.objects.create_user(
         username, 
         email, 
+        create_audit_trail=True,
         joined_from_ip=request.user_ip, 
         set_default_avatar=True,
         **activation_kwargs
@@ -181,12 +185,16 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
         except (TypeError, ValueError):
             request_data = request.POST.copy()
             
-        serializer = SocialRegisterUserSerializer(data=request_data, context={'request': request})
-        if not serializer.is_valid():
-            return JsonResponse(serializer.errors, status=400)
+        form = SocialAuthRegisterForm(
+            request_data,
+            request=request,    
+            agreements=Agreement.objects.get_agreements(),
+        )
+        
+        if not form.is_valid():
+            return JsonResponse(form.errors, status=400)
 
-        validated_data = serializer.validated_data
-        email_verified = validated_data['email'] == details.get('email')
+        email_verified = form.cleaned_data['email'] == details.get('email')
 
         activation_kwargs = {}
         if settings.account_activation == 'admin':
@@ -196,8 +204,9 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
 
         try:
             new_user = UserModel.objects.create_user(
-                validated_data['username'],
-                validated_data['email'],
+                form.cleaned_data['username'],
+                form.cleaned_data['email'],
+                create_audit_trail=True,
                 joined_from_ip=request.user_ip,
                 set_default_avatar=True,
                 **activation_kwargs
@@ -205,6 +214,7 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
         except IntegrityError:
             return JsonResponse({'__all__': _("Please try resubmitting the form.")}, status=400)
 
+        save_user_agreements(new_user, form)
         send_welcome_email(request, new_user)
 
         return {'user': new_user, 'is_new': True}

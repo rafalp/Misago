@@ -5,12 +5,21 @@ from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import ugettext as _
 
 from misago.conf import settings
-from misago.users.online.tracker import clear_request_tracker
+from misago.users.online.tracker import clear_tracking
 from misago.users.permissions import allow_delete_own_account
 from misago.users.validators import validate_email, validate_username
 
 
 UserModel = get_user_model()
+
+__all__ = [
+    'ForumOptionsSerializer',
+    'EditSignatureSerializer',
+    'ChangeUsernameSerializer',
+    'ChangePasswordSerializer',
+    'ChangeEmailSerializer',
+    'DeleteOwnAccountSerializer',
+]
 
 
 class ForumOptionsSerializer(serializers.ModelSerializer):
@@ -46,13 +55,20 @@ class EditSignatureSerializer(serializers.ModelSerializer):
 
 
 class ChangeUsernameSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=200, required=True, allow_blank=False)
+    username = serializers.CharField(max_length=200, required=False, allow_blank=True)
 
-    def validate_username(self, username):
+    def validate(self, data):
+        username = data.get('username')
+
+        if not username:
+            raise serializers.ValidationError(_("Enter new username."))
+
         if username == self.context['user'].username:
             raise serializers.ValidationError(_("New username is same as current one."))
+
         validate_username(username)
-        return username
+
+        return data
 
     def change_username(self, changed_by):
         self.context['user'].set_username(self.validated_data['username'], changed_by=changed_by)
@@ -111,6 +127,6 @@ class DeleteOwnAccountSerializer(serializers.Serializer):
         allow_delete_own_account(request.user, profile)
         
         logout(request)
-        clear_request_tracker(request)
+        clear_tracking(request)
 
         profile.mark_for_delete()

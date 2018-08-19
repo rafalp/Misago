@@ -1,16 +1,18 @@
+from collections import OrderedDict
+
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models.signals import pre_delete
 from django.dispatch import Signal, receiver
+from django.utils.translation import ugettext as _
 
 from misago.categories.models import Category
 from misago.categories.signals import delete_category_content, move_category_content
 from misago.core.pgutils import chunk_queryset
-from misago.core.utils import ANONYMOUS_IP
-from misago.users.signals import anonymize_user_content, delete_user_content, username_changed
+from misago.users.signals import (
+    anonymize_user_data, archive_user_data, delete_user_content, username_changed)
 
 from .anonymize import ANONYMIZABLE_EVENTS, anonymize_event, anonymize_post_last_likes
-from .checksums import update_post_checksum
 from .models import Attachment, Poll, PollVote, Post, PostEdit, PostLike, Thread
 
 
@@ -123,23 +125,63 @@ def delete_user_threads(sender, **kwargs):
             category.save()
 
 
-@receiver(anonymize_user_content)
-def anonymize_user(sender, **kwargs):
-    for post in chunk_queryset(sender.post_set):
-        post.poster_ip = ANONYMOUS_IP
-        update_post_checksum(post)
-        post.save(update_fields=['checksum', 'poster_ip'])
+@receiver(archive_user_data)
+def archive_user_attachments(sender, archive=None, **kwargs):
+    queryset = sender.attachment_set.order_by('id')
+    for attachment in chunk_queryset(queryset):
+        archive.add_model_file(
+            attachment.file,
+            prefix=attachment.uploaded_on.strftime('%H%M%S-file'),
+            date=attachment.uploaded_on,
+        )
+        archive.add_model_file(
+            attachment.image,
+            prefix=attachment.uploaded_on.strftime('%H%M%S-image'),
+            date=attachment.uploaded_on,
+        )
+        archive.add_model_file(
+            attachment.thumbnail,
+            prefix=attachment.uploaded_on.strftime('%H%M%S-thumbnail'),
+            date=attachment.uploaded_on,
+        )
 
-    PostEdit.objects.filter(editor=sender).update(editor_ip=ANONYMOUS_IP)
-    PostLike.objects.filter(liker=sender).update(liker_ip=ANONYMOUS_IP)
 
-    Attachment.objects.filter(uploader=sender).update(uploader_ip=ANONYMOUS_IP)
+@receiver(archive_user_data)
+def archive_user_posts(sender, archive=None, **kwargs):
+    queryset = sender.post_set.order_by('id')
+    for post in chunk_queryset(queryset):
+        item_name = post.posted_on.strftime('%H%M%S-post')
+        archive.add_text(item_name, post.parsed, date=post.posted_on)
 
-    Poll.objects.filter(poster=sender).update(poster_ip=ANONYMOUS_IP)
-    PollVote.objects.filter(voter=sender).update(voter_ip=ANONYMOUS_IP)
+
+@receiver(archive_user_data)
+def archive_user_posts_edits(sender, archive=None, **kwargs):
+    queryset = PostEdit.objects.filter(post__poster=sender).order_by('id')
+    for post_edit in chunk_queryset(queryset):
+        item_name = post_edit.edited_on.strftime('%H%M%S-post-edit')
+        archive.add_text(item_name, post_edit.edited_from, date=post_edit.edited_on)
+    queryset = sender.postedit_set.exclude(id__in=queryset.values('id')).order_by('id')
+    for post_edit in chunk_queryset(queryset):
+        item_name = post_edit.edited_on.strftime('%H%M%S-post-edit')
+        archive.add_text(item_name, post_edit.edited_from, date=post_edit.edited_on)
 
 
-@receiver(anonymize_user_content)
+@receiver(archive_user_data)
+def archive_user_polls(sender, archive=None, **kwargs):
+    queryset = sender.poll_set.order_by('id')
+    for poll in chunk_queryset(queryset):
+        item_name = poll.posted_on.strftime('%H%M%S-poll')
+        archive.add_dict(
+            item_name,
+            OrderedDict([
+                (_("Question"), poll.question),
+                (_("Choices"), u', '.join([c['label'] for c in poll.choices])),
+            ]),
+            date=poll.posted_on,
+        )
+
+
+@receiver(anonymize_user_data)
 def anonymize_user_in_events(sender, **kwargs):
     queryset = Post.objects.filter(
         is_event=True,
@@ -151,13 +193,13 @@ def anonymize_user_in_events(sender, **kwargs):
         anonymize_event(sender, event)
 
 
-@receiver([anonymize_user_content])
+@receiver([anonymize_user_data])
 def anonymize_user_in_likes(sender, **kwargs):
     for post in chunk_queryset(sender.liked_post_set):
         anonymize_post_last_likes(sender, post)
 
 
-@receiver([anonymize_user_content, username_changed])
+@receiver([anonymize_user_data, username_changed])
 def update_usernames(sender, **kwargs):
     Thread.objects.filter(starter=sender).update(
         starter_name=sender.username,

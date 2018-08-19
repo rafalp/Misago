@@ -133,11 +133,6 @@ class AdminLoginViewTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
 
-    def test_login_no_data(self):
-        """login passess user thats staff and superuser"""
-        response = self.client.post(reverse('misago:admin:index'))
-        self.assertEqual(response.status_code, 200)
-
 
 class AdminLogoutTests(AdminTestCase):
     def test_admin_logout(self):
@@ -198,14 +193,6 @@ class AdminViewAccessTests(AdminTestCase):
         self.user.save()
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, self.user.username)
-
-
-class AdminIndexViewTests(AdminTestCase):
-    def test_view_returns_200(self):
-        """admin index view returns 200"""
-        response = self.client.get(reverse('misago:admin:index'))
-
         self.assertContains(response, self.user.username)
 
 

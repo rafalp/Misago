@@ -13,7 +13,8 @@ from misago.core.mail import mail_users
 from misago.core.pgutils import chunk_queryset
 from misago.threads.models import Thread
 from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
-from misago.users.forms import (
+from misago.users.datadownloads import request_user_data_download, user_has_data_download_request
+from misago.users.forms.admin import (
     BanUsersForm, EditUserForm, EditUserFormFactory, NewUserForm, SearchUsersForm)
 from misago.users.models import Ban
 from misago.users.profilefields import profilefields
@@ -73,6 +74,11 @@ class UsersList(UserAdmin, generic.ListView):
             'icon': 'fa fa-lock',
         },
         {
+            'action': 'request_data_download',
+            'name': _("Request data download"),
+            'icon': 'fa fa-download',
+        },
+        {
             'action': 'delete_accounts',
             'name': _("Delete accounts"),
             'icon': 'fa fa-times-circle',
@@ -114,7 +120,7 @@ class UsersList(UserAdmin, generic.ListView):
             subject = _("Your account on %(forum_name)s forums has been activated")
             mail_subject = subject % {'forum_name': settings.forum_name}
 
-            mail_users(request, inactive_users, mail_subject, 'misago/emails/activation/by_admin')
+            mail_users(inactive_users, mail_subject, 'misago/emails/activation/by_admin')
 
             messages.success(request, _("Selected users accounts have been activated."))
 
@@ -126,9 +132,9 @@ class UsersList(UserAdmin, generic.ListView):
                 mesage = message % {'user': user.username}
                 raise generic.MassActionError(mesage)
 
-        form = BanUsersForm()
+        form = BanUsersForm(users=users)
         if 'finalize' in request.POST:
-            form = BanUsersForm(request.POST)
+            form = BanUsersForm(request.POST, users=users)
             if form.is_valid():
                 cleaned_data = form.cleaned_data
                 banned_values = []
@@ -141,6 +147,8 @@ class UsersList(UserAdmin, generic.ListView):
 
                 for user in users:
                     for ban in cleaned_data['ban_type']:
+                        banned_value = None
+
                         if ban == 'usernames':
                             check_type = Ban.USERNAME
                             banned_value = user.username.lower()
@@ -155,11 +163,11 @@ class UsersList(UserAdmin, generic.ListView):
                             at_pos = banned_value.find('@')
                             banned_value = '*%s' % banned_value[at_pos:]
 
-                        if ban == 'ip':
+                        if ban == 'ip' and user.joined_from_ip:
                             check_type = Ban.IP
                             banned_value = user.joined_from_ip
 
-                        if ban in ('ip_first', 'ip_two'):
+                        if ban in ('ip_first', 'ip_two') and user.joined_from_ip:
                             check_type = Ban.IP
 
                             if ':' in user.joined_from_ip:
@@ -174,7 +182,7 @@ class UsersList(UserAdmin, generic.ListView):
                                 formats = (bits[0], ip_separator, bits[1], ip_separator)
                             banned_value = '%s*' % (''.join(formats))
 
-                        if banned_value not in banned_values:
+                        if banned_value and banned_value not in banned_values:
                             ban_kwargs.update({
                                 'check_type': check_type,
                                 'banned_value': banned_value,
@@ -195,6 +203,14 @@ class UsersList(UserAdmin, generic.ListView):
             }
         )
 
+    def action_request_data_download(self, request, users):
+        for user in users:
+            if not user_has_data_download_request(user):
+                request_user_data_download(user, requester=request.user)
+
+        messages.success(
+            request, _("Data download requests have been placed for selected users."))
+
     def action_delete_accounts(self, request, users):
         for user in users:
             if user == request.user:
@@ -206,8 +222,7 @@ class UsersList(UserAdmin, generic.ListView):
         for user in users:
             user.delete()
 
-        message = _("Selected users have been deleted.")
-        messages.success(request, message)
+        messages.success(request, _("Selected users have been deleted."))
 
     def action_delete_all(self, request, users):
         for user in users:

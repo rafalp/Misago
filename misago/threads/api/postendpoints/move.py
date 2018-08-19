@@ -18,8 +18,13 @@ def posts_move_endpoint(request, thread, viewmodel):
             'viewmodel': viewmodel,
         }
     )
-    
-    serializer.is_valid(raise_exception=True)
+
+    if not serializer.is_valid():
+        if 'new_thread' in serializer.errors:
+            errors = serializer.errors['new_thread']
+        else:
+            errors = list(serializer.errors.values())[0]
+        return Response({'detail': errors[0]}, status=400)
 
     new_thread = serializer.validated_data['new_thread']
 

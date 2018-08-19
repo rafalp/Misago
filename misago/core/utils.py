@@ -9,7 +9,6 @@ from django.utils.encoding import force_text
 from django.utils.module_loading import import_string
 
 
-ANONYMOUS_IP = '0.0.0.0'
 MISAGO_SLUGIFY = getattr(settings, 'MISAGO_SLUGIFY', 'misago.core.slugify.default')
 
 slugify = import_string(MISAGO_SLUGIFY)
@@ -54,16 +53,6 @@ def parse_iso8601_string(value):
 
     tz_correction = timezone.get_fixed_timezone(tz_offset)
     return timezone.make_aware(parsed_value, tz_correction)
-
-
-def serialize_datetime(value):
-    if value is None:
-        return None
-        
-    value = value.isoformat()
-    if value.endswith('+00:00'):
-        value = value[:-6] + 'Z'
-    return value
 
 
 def hide_post_parameters(request):
@@ -158,3 +147,29 @@ def get_exception_message(exception=None, default_message=None):
         return exception.args[0]
     except IndexError:
         return default_message
+
+
+def clean_ids_list(ids_list, error_message):
+    try:
+        return list(map(int, ids_list))
+    except (ValueError, TypeError):
+        raise PermissionDenied(error_message)
+
+
+def get_host_from_address(address):
+    if not address:
+        return None
+
+    if address.lower().startswith('https://'):
+        address = address[8:]
+    if address.lower().startswith('http://'):
+        address = address[7:]
+    if address[0] == '/':
+        address = address.lstrip('/')
+    if '/' in address:
+        address = address.split('/')[0] or address
+    if ':' in address:
+        address = address.split(':')[0] or address
+
+    return address
+    

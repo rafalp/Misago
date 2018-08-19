@@ -4,7 +4,8 @@ from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
-from misago.categories.models import THREADS_ROOT, Category
+from misago.categories import THREADS_ROOT_NAME
+from misago.categories.models import Category
 from misago.threads.permissions import can_start_thread
 from misago.threads.threadtypes import trees_map
 
@@ -19,7 +20,7 @@ def thread_start_editor(request):
 
     queryset = Category.objects.filter(
         pk__in=request.user.acl_cache['browseable_categories'],
-        tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT)
+        tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
     ).order_by('-lft')
 
     for category in queryset:

@@ -18,26 +18,22 @@ class PrivateThreadsListApiTests(PrivateThreadsTestCase):
         self.logout_user()
 
         response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You have to sign in to use private threads.",
-        })
+        self.assertContains(response, "sign in to use private threads", status_code=403)
 
     def test_no_permission(self):
         """api requires user to have permission to be able to access it"""
         override_acl(self.user, {'can_use_private_threads': 0})
 
         response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't use private threads.",
-        })
+        self.assertContains(response, "can't use private threads", status_code=403)
 
     def test_empty_list(self):
         """api has no showstoppers on returning empty list"""
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()['results'], [])
+
+        response_json = response.json()
+        self.assertEqual(response_json['count'], 0)
 
     def test_thread_visibility(self):
         """only participated threads are returned by private threads api"""
@@ -83,20 +79,14 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
         self.logout_user()
 
         response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You have to sign in to use private threads.",
-        })
+        self.assertContains(response, "sign in to use private threads", status_code=403)
 
     def test_no_permission(self):
         """user needs to have permission to see private thread"""
         override_acl(self.user, {'can_use_private_threads': 0})
 
         response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't use private threads.",
-        })
+        self.assertContains(response, "t use private threads", status_code=403)
 
     def test_no_participant(self):
         """user cant see thread he isn't part of"""
@@ -132,8 +122,8 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
                 {
                     'id': self.user.id,
                     'username': self.user.username,
-                    'slug': self.user.slug,
                     'avatars': self.user.avatars,
+                    'url': self.user.get_absolute_url(),
                     'is_owner': True,
                 },
             ]
@@ -153,8 +143,8 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
                 {
                     'id': self.user.id,
                     'username': self.user.username,
-                    'slug': self.user.slug,
                     'avatars': self.user.avatars,
+                    'url': self.user.get_absolute_url(),
                     'is_owner': False,
                 },
             ]
@@ -190,17 +180,19 @@ class PrivateThreadDeleteApiTests(PrivateThreadsTestCase):
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't delete threads in this category.",
-        })
+
+        self.assertEqual(
+            response.json()['detail'], "You can't delete threads in this category."
+        )
 
         self.override_acl({'can_hide_threads': 1})
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't delete threads in this category.",
-        })
+
+        self.assertEqual(
+            response.json()['detail'], "You can't delete threads in this category."
+        )
 
     def test_delete_thread(self):
         """DELETE to API link with permission deletes thread"""

@@ -3,12 +3,14 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from misago.api.serializers import MutableFields
+from misago.core.serializers import MutableFields
 
 from . import RankSerializer
 
 
 UserModel = get_user_model()
+
+__all__ = ['StatusSerializer', 'UserSerializer', 'UserCardSerializer']
 
 
 class StatusSerializer(serializers.Serializer):
@@ -28,11 +30,15 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
     rank = RankSerializer(many=False, read_only=True)
     signature = serializers.SerializerMethodField()
 
+    acl = serializers.SerializerMethodField()
     is_followed = serializers.SerializerMethodField()
     is_blocked = serializers.SerializerMethodField()
     meta = serializers.SerializerMethodField()
     real_name = serializers.SerializerMethodField()
     status = serializers.SerializerMethodField()
+
+    api = serializers.SerializerMethodField()
+    url = serializers.SerializerMethodField()
 
     class Meta:
         model = UserModel
@@ -52,13 +58,20 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
             'following',
             'threads',
             'posts',
+            'acl',
             'is_followed',
             'is_blocked',
 
             'meta',
             'real_name',
             'status',
+
+            'api',
+            'url',
         ]
+
+    def get_acl(self, obj):
+        return obj.acl
 
     def get_email(self, obj):
         if (obj == self.context['user'] or self.context['user'].acl_cache['can_see_users_emails']):
@@ -96,6 +109,85 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
         except AttributeError:
             return None
 
+    def get_api(self, obj):
+        return {
+            'index': reverse(
+                'misago:api:user-detail',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'follow': reverse(
+                'misago:api:user-follow',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'ban': reverse(
+                'misago:api:user-ban',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'details': reverse(
+                'misago:api:user-details',
+                kwargs={
+                    'pk': obj.pk,
+                }
+            ),
+            'edit_details': reverse(
+                'misago:api:user-edit-details',
+                kwargs={
+                    'pk': obj.pk,
+                }
+            ),
+            'moderate_avatar': reverse(
+                'misago:api:user-moderate-avatar',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'moderate_username': reverse(
+                'misago:api:user-moderate-username',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'delete': reverse(
+                'misago:api:user-delete',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'followers': reverse(
+                'misago:api:user-followers',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'follows': reverse(
+                'misago:api:user-follows',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'threads': reverse(
+                'misago:api:user-threads',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+            'posts': reverse(
+                'misago:api:user-posts',
+                kwargs={
+                    'pk': obj.pk
+                }
+            ),
+        }
+
+    def get_url(self, obj):
+        return obj.get_absolute_url()
+
 
 UserCardSerializer = UserSerializer.subset_fields(
     'id',
@@ -109,4 +201,5 @@ UserCardSerializer = UserSerializer.subset_fields(
     'posts',
     'real_name',
     'status',
+    'url',
 )

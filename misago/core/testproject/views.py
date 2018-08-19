@@ -1,12 +1,11 @@
 from rest_framework.decorators import api_view
 
-from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponse
 from social_core.exceptions import AuthFailed, NotAllowedToDisconnect, WrongBackend
 from social_core.backends.github import GithubOAuth2
 
-from misago.core import errorpages, mail
+from misago.core import errorpages
 from misago.core.decorators import require_POST
 from misago.core.exceptions import Banned, SocialAuthBanned, SocialAuthFailed
 from misago.core.shortcuts import paginate, paginated_response, validate_slug
@@ -15,24 +14,6 @@ from misago.users.models import Ban
 
 from .models import Model
 from .serializers import MockSerializer
-
-
-UserModel = get_user_model()
-
-
-def test_mail_user(request):
-    test_user = UserModel.objects.all().first()
-    mail.mail_user(request, test_user, "Misago Test Mail", "misago/emails/base")
-
-    return HttpResponse("Mailed user!")
-
-
-def test_mail_users(request):
-    mail.mail_users(
-        request, UserModel.objects.iterator(), "Misago Test Spam", "misago/emails/base"
-    )
-
-    return HttpResponse("Mailed users!")
 
 
 def test_pagination(request, page=None):

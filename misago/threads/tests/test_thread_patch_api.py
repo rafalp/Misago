@@ -82,10 +82,10 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't edit threads in this category."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(response_json['detail'][0], "You can't edit threads in this category.")
 
     def test_change_thread_title_closed_category_no_permission(self):
         """api test permission to edit thread title in closed category"""
@@ -106,11 +106,12 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This category is closed. You can't edit threads in it."
-        })
+        self.assertEqual(response.status_code, 400)
 
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This category is closed. You can't edit threads in it."
+        )
 
     def test_change_thread_title_closed_thread_no_permission(self):
         """api test permission to edit closed thread title"""
@@ -131,10 +132,12 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This thread is closed. You can't edit it."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This thread is closed. You can't edit it."
+        )
 
     def test_change_thread_title_after_edit_time(self):
         """api cleans, validates and rejects too short title"""
@@ -153,10 +156,12 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't edit threads that are older than 1 minute."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You can't edit threads that are older than 1 minute."
+        )
 
     def test_change_thread_title_invalid(self):
         """api cleans, validates and rejects too short title"""
@@ -172,9 +177,12 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
             ]
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'value': ["Thread title should be at least 5 characters long (it has 2)."]
-        })
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0],
+            "Thread title should be at least 5 characters long (it has 2)."
+        )
 
 
 class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
@@ -218,10 +226,12 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This category is closed. You can't change threads weights in it."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This category is closed. You can't change threads weights in it."
+        )
 
     def test_pin_thread_closed_no_permission(self):
         """api checks if thread is closed"""
@@ -242,10 +252,12 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This thread is closed. You can't change its weight."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This thread is closed. You can't change its weight."
+        )
 
     def test_unpin_thread(self):
         """api makes it possible to unpin thread"""
@@ -287,10 +299,12 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't pin threads globally in this category."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You can't pin threads globally in this category."
+        )
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 0)
@@ -314,10 +328,12 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't change globally pinned threads weights in this category."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You can't change globally pinned threads weights in this category."
+        )
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 2)
@@ -385,10 +401,12 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't change threads weights in this category."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You can't change threads weights in this category."
+        )
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 0)
@@ -412,10 +430,12 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't change threads weights in this category."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You can't change threads weights in this category."
+        )
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 1)
@@ -487,8 +507,8 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertEqual(response_json['category'], self.category_b.pk)
+        reponse_json = response.json()
+        self.assertEqual(reponse_json['category'], self.category_b.pk)
 
         self.override_other_acl({})
 
@@ -521,8 +541,8 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertEqual(response_json['category'], self.category_b.pk)
+        reponse_json = response.json()
+        self.assertEqual(reponse_json['category'], self.category_b.pk)
 
         self.override_other_acl({})
 
@@ -620,11 +640,13 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't move threads in this category."
-        })
-        
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You can't move threads in this category."
+        )
+
         self.override_other_acl({})
 
         thread_json = self.get_thread_json()
@@ -650,10 +672,12 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This category is closed. You can't move it's threads."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This category is closed. You can't move it's threads."
+        )
 
     def test_move_closed_thread_no_permission(self):
         """api move closed thread with no permission fails"""
@@ -675,10 +699,12 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This thread is closed. You can't move it."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This thread is closed. You can't move it."
+        )
 
     def test_move_thread_no_category_access(self):
         """api move thread to category with no access fails"""
@@ -694,8 +720,10 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(response_json['detail'][0], 'NOT FOUND')
 
         self.override_other_acl({})
 
@@ -716,10 +744,13 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': 'You don\'t have permission to browse "Category B" contents.'
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0],
+            'You don\'t have permission to browse "Category B" contents.'
+        )
 
         self.override_other_acl({})
 
@@ -740,10 +771,13 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You don't have permission to start new threads in this category."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0],
+            "You don't have permission to start new threads in this category."
+        )
 
         self.override_other_acl({})
 
@@ -765,9 +799,11 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
             ]
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'value': ["You can't move thread to the category it's already in."]
-        })
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You can't move thread to the category it's already in."
+        )
 
         self.override_other_acl({})
 
@@ -853,10 +889,12 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You don't have permission to close this thread."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You don't have permission to close this thread."
+        )
 
         thread_json = self.get_thread_json()
         self.assertFalse(thread_json['is_closed'])
@@ -880,10 +918,12 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You don't have permission to open this thread."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You don't have permission to open this thread."
+        )
 
         thread_json = self.get_thread_json()
         self.assertTrue(thread_json['is_closed'])
@@ -954,10 +994,10 @@ class ThreadApproveApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This category is closed. You can't approve threads in it."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(response_json['detail'][0], "This category is closed. You can't approve threads in it.")
 
     def test_approve_thread_closed_no_permission(self):
         """api checks permission for approving posts in closed categories"""
@@ -987,10 +1027,10 @@ class ThreadApproveApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This thread is closed. You can't approve it."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(response_json['detail'][0], "This thread is closed. You can't approve it.")
 
     def test_unapprove_thread(self):
         """api returns permission error on approval removal"""
@@ -1005,10 +1045,10 @@ class ThreadApproveApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "Content approval can't be reversed."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(response_json['detail'][0], "Content approval can't be reversed.")
 
 
 class ThreadHideApiTests(ThreadPatchApiTestCase):
@@ -1027,8 +1067,8 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertTrue(response_json['is_hidden'])
+        reponse_json = response.json()
+        self.assertTrue(reponse_json['is_hidden'])
 
         self.override_acl({'can_hide_threads': 1})
 
@@ -1048,10 +1088,12 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't hide threads in this category."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You can't hide threads in this category."
+        )
 
         thread_json = self.get_thread_json()
         self.assertFalse(thread_json['is_hidden'])
@@ -1072,10 +1114,12 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't hide other users theads in this category."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You can't hide other users theads in this category."
+        )
 
     def test_hide_owned_thread_no_time(self):
         """api forbids non-moderator from hiding other users threads"""
@@ -1098,10 +1142,12 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't hide threads that are older than 1 minute."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "You can't hide threads that are older than 1 minute."
+        )
 
     def test_hide_closed_category_no_permission(self):
         """api test permission to hide thread in closed category"""
@@ -1122,10 +1168,12 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This category is closed. You can't hide threads in it."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This category is closed. You can't hide threads in it."
+        )
 
     def test_hide_closed_thread_no_permission(self):
         """api test permission to hide closed thread"""
@@ -1146,10 +1194,12 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This thread is closed. You can't hide it."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This thread is closed. You can't hide it."
+        )
 
 
 class ThreadUnhideApiTests(ThreadPatchApiTestCase):
@@ -1174,8 +1224,8 @@ class ThreadUnhideApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertFalse(response_json['is_hidden'])
+        reponse_json = response.json()
+        self.assertFalse(reponse_json['is_hidden'])
 
         self.override_acl({'can_hide_threads': 1})
 
@@ -1216,10 +1266,12 @@ class ThreadUnhideApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This category is closed. You can't reveal threads in it."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This category is closed. You can't reveal threads in it."
+        )
 
     def test_unhide_closed_thread_no_permission(self):
         """api test permission to unhide closed thread"""
@@ -1240,10 +1292,12 @@ class ThreadUnhideApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This thread is closed. You can't reveal it."
-        })
+        self.assertEqual(response.status_code, 400)
+
+        response_json = response.json()
+        self.assertEqual(
+            response_json['detail'][0], "This thread is closed. You can't reveal it."
+        )
 
 
 class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
@@ -1261,8 +1315,8 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertFalse(response_json['subscription'])
+        reponse_json = response.json()
+        self.assertFalse(reponse_json['subscription'])
 
         thread_json = self.get_thread_json()
         self.assertFalse(thread_json['subscription'])
@@ -1284,8 +1338,8 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertTrue(response_json['subscription'])
+        reponse_json = response.json()
+        self.assertTrue(reponse_json['subscription'])
 
         thread_json = self.get_thread_json()
         self.assertTrue(thread_json['subscription'])
@@ -1307,8 +1361,8 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        response_json = response.json()
-        self.assertIsNone(response_json['subscription'])
+        reponse_json = response.json()
+        self.assertIsNone(reponse_json['subscription'])
 
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['subscription'])
@@ -1369,6 +1423,8 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {
             'id': self.thread.id,
+            'detail': ['ok'],
+
             'best_answer': best_answer.id,
             'best_answer_is_protected': False,
             'best_answer_marked_on': response.json()['best_answer_marked_on'],
@@ -1426,11 +1482,12 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 'You don\'t have permission to mark best answers in the "First category" category.'
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()
@@ -1451,12 +1508,13 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 "You don't have permission to mark best answer in this thread because you didn't "
                 "start it."
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()
@@ -1497,12 +1555,13 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 'You don\'t have permission to mark best answer in this thread because its '
                 'category "First category" is closed.'
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()
@@ -1540,12 +1599,13 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 "You can't mark best answer in this thread because it's closed and you don't have "
                 "permission to open it."
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()
@@ -1580,7 +1640,8 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'value': ["A valid integer is required."],
+            'id': self.thread.id,
+            'detail': ["A valid integer is required."],
         })
 
         thread_json = self.get_thread_json()
@@ -1599,8 +1660,11 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ["NOT FOUND"],
+        })
 
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
@@ -1620,8 +1684,11 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ["NOT FOUND"],
+        })
 
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
@@ -1641,8 +1708,11 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ["NOT FOUND"],
+        })
 
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
@@ -1664,9 +1734,10 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': "Events can't be marked as best answers.",
+            'id': self.thread.id,
+            'detail': ["Events can't be marked as best answers."],
         })
 
         thread_json = self.get_thread_json()
@@ -1685,9 +1756,10 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': "First post in a thread can't be marked as best answer.",
+            'id': self.thread.id,
+            'detail': ["First post in a thread can't be marked as best answer."],
         })
 
         thread_json = self.get_thread_json()
@@ -1708,9 +1780,10 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': "Hidden posts can't be marked as best answers.",
+            'id': self.thread.id,
+            'detail': ["Hidden posts can't be marked as best answers."],
         })
 
         thread_json = self.get_thread_json()
@@ -1731,9 +1804,10 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': "Unapproved posts can't be marked as best answers.",
+            'id': self.thread.id,
+            'detail': ["Unapproved posts can't be marked as best answers."],
         })
 
         thread_json = self.get_thread_json()
@@ -1754,12 +1828,13 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 "You don't have permission to mark this post as best answer because a moderator "
                 "has protected it."
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()
@@ -1806,6 +1881,8 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {
             'id': self.thread.id,
+            'detail': ['ok'],
+
             'best_answer': best_answer.id,
             'best_answer_is_protected': False,
             'best_answer_marked_on': response.json()['best_answer_marked_on'],
@@ -1836,9 +1913,10 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': "This post is already marked as thread's best answer.",
+            'id': self.thread.id,
+            'detail': ["This post is already marked as thread's best answer."],
         })
 
         thread_json = self.get_thread_json()
@@ -1859,11 +1937,12 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 'You don\'t have permission to mark best answers in the "First category" category.'
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()
@@ -1884,12 +1963,13 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 'You don\'t have permission to change this thread\'s marked answer because it\'s '
                 'in the "First category" category.'
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()
@@ -1910,12 +1990,13 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 "You don't have permission to change this thread's marked answer because you are "
                 "not a thread starter."
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()
@@ -1961,12 +2042,13 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 "You don't have permission to change best answer that was marked for more than "
                 "5 minutes."
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()
@@ -2012,12 +2094,13 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 "You don't have permission to change this thread's best answer because a "
                 "moderator has protected it."
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()
@@ -2059,10 +2142,7 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "Hidden posts can't be marked as best answers.",
-        })
+        self.assertEqual(response.status_code, 400)
         
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
@@ -2092,6 +2172,8 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {
             'id': self.thread.id,
+            'detail': ['ok'],
+
             'best_answer': None,
             'best_answer_is_protected': False,
             'best_answer_marked_on': None,
@@ -2123,7 +2205,8 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'value': ["A valid integer is required."],
+            'id': self.thread.id,
+            'detail': ["A valid integer is required."],
         })
 
         thread_json = self.get_thread_json()
@@ -2142,8 +2225,11 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {'detail': 'NOT FOUND'})
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'id': self.thread.id,
+            'detail': ["NOT FOUND"],
+        })
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
@@ -2163,11 +2249,12 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 "This post can't be unmarked because it's not currently marked as best answer."
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()
@@ -2186,12 +2273,13 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 'You don\'t have permission to unmark threads answers in the "First category" '
                 'category.'
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()
@@ -2210,12 +2298,13 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 "You don't have permission to unmark this best answer because you are not a "
                 "thread starter."
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()
@@ -2259,12 +2348,13 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 "You don't have permission to unmark best answer that was marked for more than "
                 "5 minutes."
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()
@@ -2308,12 +2398,13 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 'You don\'t have permission to unmark this best answer because its category '
                 '"First category" is closed.'
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()
@@ -2357,12 +2448,13 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 "You can't unmark this thread's best answer because it's closed and you don't "
                 "have permission to open it."
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()
@@ -2406,12 +2498,13 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
                 },
             ]
         )
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
-            'detail': (
+            'id': self.thread.id,
+            'detail': [
                 "You don't have permission to unmark this thread's best answer because a "
                 "moderator has protected it."
-            ),
+            ],
         })
 
         thread_json = self.get_thread_json()

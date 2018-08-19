@@ -6,8 +6,11 @@ from django.utils import six
 from misago.acl.models import Role
 from misago.admin.testutils import AdminTestCase
 from misago.categories.models import Category
+from misago.legal.models import Agreement
+from misago.legal.utils import save_user_agreement_acceptance
 from misago.threads.testutils import post_thread, reply_thread
-from misago.users.models import Ban, Rank
+from misago.users.datadownloads import request_user_data_download
+from misago.users.models import Ban, DataDownload, Rank
 
 
 UserModel = get_user_model()
@@ -135,7 +138,45 @@ class UserAdminViewsTests(AdminTestCase):
                 'selected_items': user_pks,
             }
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'value="ip"')
+        self.assertNotContains(response, 'value="ip_first"')
+        self.assertNotContains(response, 'value="ip_two"')
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={
+                'action': 'ban',
+                'selected_items': user_pks,
+                'ban_type': ['usernames', 'emails', 'domains'],
+                'finalize': '',
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Ban.objects.count(), 21)
+
+    def test_mass_ban_with_ips(self):
+        """users list bans multiple users that also have ips"""
+        user_pks = []
+        for i in range(10):
+            test_user = UserModel.objects.create_user(
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+                joined_from_ip='73.95.67.27',
+                requires_activation=1,
+            )
+            user_pks.append(test_user.pk)
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={
+                'action': 'ban',
+                'selected_items': user_pks,
+            }
+        )
+        self.assertContains(response, 'value="ip"')
+        self.assertContains(response, 'value="ip_first"')
+        self.assertContains(response, 'value="ip_two"')
 
         response = self.client.post(
             reverse('misago:admin:users:accounts:index'),
@@ -148,6 +189,53 @@ class UserAdminViewsTests(AdminTestCase):
         )
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Ban.objects.count(), 24)
+
+    def test_mass_request_data_download(self):
+        """users list requests data download for multiple users"""
+        user_pks = []
+        for i in range(10):
+            test_user = UserModel.objects.create_user(
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+                requires_activation=1,
+            )
+            user_pks.append(test_user.pk)
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={
+                'action': 'request_data_download',
+                'selected_items': user_pks,
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+
+        self.assertEqual(DataDownload.objects.filter(user_id__in=user_pks).count(), len(user_pks))
+
+    def test_mass_request_data_download_avoid_excessive_downloads(self):
+        """users list avoids excessive data download requests for multiple users"""
+        user_pks = []
+        for i in range(10):
+            test_user = UserModel.objects.create_user(
+                'Bob%s' % i,
+                'bob%s@test.com' % i,
+                'pass123',
+                requires_activation=1,
+            )
+            request_user_data_download(test_user)
+            user_pks.append(test_user.pk)
+
+        response = self.client.post(
+            reverse('misago:admin:users:accounts:index'),
+            data={
+                'action': 'v',
+                'selected_items': user_pks,
+            }
+        )
+        self.assertEqual(response.status_code, 302)
+
+        self.assertEqual(DataDownload.objects.filter(user_id__in=user_pks).count(), len(user_pks))
 
     def test_mass_delete_accounts_self(self):
         """its impossible to delete oneself"""
@@ -955,6 +1043,32 @@ class UserAdminViewsTests(AdminTestCase):
         updated_user = UserModel.objects.get(pk=test_user.pk)
         self.assertFalse(updated_user.has_usable_password())
 
+    def test_edit_agreements_list(self):
+        """edit view displays list of user's agreements"""
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_link = reverse(
+            'misago:admin:users:accounts:edit', kwargs={
+                'pk': test_user.pk,
+            }
+        )
+
+        agreement = Agreement.objects.create(
+            type=Agreement.TYPE_TOS,
+            title="Test agreement!",
+            text="Lorem ipsum!",
+            is_active=True,
+        )
+
+        response = self.client.get(test_link)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, agreement.title)
+
+        save_user_agreement_acceptance(test_user, agreement, commit=True)
+
+        response = self.client.get(test_link)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, agreement.title)
+
     def test_delete_threads_view_self(self):
         """delete user threads view validates if user deletes self"""
         test_link = reverse(
@@ -967,7 +1081,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "delete yourself")
+        self.assertContains(response, "delete yourself");
 
     def test_delete_threads_view_staff(self):
         """delete user threads view validates if user deletes staff"""
@@ -985,7 +1099,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "is admin and")
+        self.assertContains(response, "is admin and");
 
     def test_delete_threads_view_superuser(self):
         """delete user threads view validates if user deletes superuser"""
@@ -1003,7 +1117,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "is admin and")
+        self.assertContains(response, "is admin and");
 
     def test_delete_threads_view(self):
         """delete user threads view deletes threads"""
@@ -1019,17 +1133,17 @@ class UserAdminViewsTests(AdminTestCase):
 
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {
-            'deleted_count': 10,
-            'is_completed': False,
-        })
+
+        response_dict = response.json()
+        self.assertEqual(response_dict['deleted_count'], 10)
+        self.assertFalse(response_dict['is_completed'])
 
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {
-            'deleted_count': 0,
-            'is_completed': True,
-        })
+
+        response_dict = response.json()
+        self.assertEqual(response_dict['deleted_count'], 0)
+        self.assertTrue(response_dict['is_completed'])
 
     def test_delete_posts_view_self(self):
         """delete user posts view validates if user deletes self"""
@@ -1043,7 +1157,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "delete yourself")
+        self.assertContains(response, "delete yourself");
 
     def test_delete_posts_view_staff(self):
         """delete user posts view validates if user deletes staff"""
@@ -1061,7 +1175,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "is admin and")
+        self.assertContains(response, "is admin and");
 
     def test_delete_posts_view_superuser(self):
         """delete user posts view validates if user deletes superuser"""
@@ -1079,7 +1193,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "is admin and")
+        self.assertContains(response, "is admin and");
 
     def test_delete_posts_view(self):
         """delete user posts view deletes posts"""
@@ -1096,17 +1210,17 @@ class UserAdminViewsTests(AdminTestCase):
 
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {
-            'deleted_count': 10,
-            'is_completed': False,
-        })
+
+        response_dict = response.json()
+        self.assertEqual(response_dict['deleted_count'], 10)
+        self.assertFalse(response_dict['is_completed'])
 
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {
-            'deleted_count': 0,
-            'is_completed': True,
-        })
+
+        response_dict = response.json()
+        self.assertEqual(response_dict['deleted_count'], 0)
+        self.assertTrue(response_dict['is_completed'])
 
     def test_delete_account_view_self(self):
         """delete user account view validates if user deletes self"""
@@ -1120,7 +1234,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "delete yourself")
+        self.assertContains(response, "delete yourself");
 
     def test_delete_account_view_staff(self):
         """delete user account view validates if user deletes staff"""
@@ -1138,7 +1252,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "is admin and")
+        self.assertContains(response, "is admin and");
 
     def test_delete_account_view_superuser(self):
         """delete user account view validates if user deletes superuser"""
@@ -1156,7 +1270,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         response = self.client.get(reverse('misago:admin:index'))
-        self.assertContains(response, "is admin and")
+        self.assertContains(response, "is admin and");
 
     def test_delete_account_view(self):
         """delete user account view deletes user account"""
@@ -1169,6 +1283,6 @@ class UserAdminViewsTests(AdminTestCase):
 
         response = self.client.post(test_link, **self.AJAX_HEADER)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {
-            'is_completed': True,
-        })
+
+        response_dict = response.json()
+        self.assertTrue(response_dict['is_completed'])

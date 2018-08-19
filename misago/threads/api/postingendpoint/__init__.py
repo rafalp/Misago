@@ -24,12 +24,11 @@ class PostingEndpoint(object):
         # we are using lock on user model to protect us from flood
         request.user.lock()
 
-        # store mode
-        self.mode = mode
-
         # build kwargs dict for passing to middlewares
         self.kwargs = kwargs
         self.kwargs.update({'mode': mode, 'request': request, 'user': request.user})
+
+        self.__dict__.update(kwargs)
 
         # some middlewares (eg. emailnotification) may call render()
         # which will crash if this isn't set to false
@@ -135,19 +134,7 @@ class PostingMiddleware(object):
 
     def __init__(self, **kwargs):
         self.kwargs = kwargs
-
-        self.prefix = kwargs['prefix']
-
-        self.mode = kwargs['mode']
-        self.request = kwargs['request']
-        self.user = kwargs['user']
-
-        self.datetime = kwargs['datetime']
-        self.parsing_result = kwargs['parsing_result']
-        self.tree_name = kwargs.get('tree_name')
-
-        self.thread = kwargs['thread']
-        self.post = kwargs['post']
+        self.__dict__.update(kwargs)
 
     def use_this_middleware(self):
         return True

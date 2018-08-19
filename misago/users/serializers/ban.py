@@ -6,6 +6,12 @@ from misago.core.utils import format_plaintext_for_html
 from misago.users.models import Ban
 
 
+__all__ = [
+    'BanMessageSerializer',
+    'BanDetailsSerializer',
+]
+
+
 def serialize_message(message):
     if message:
         return {
@@ -17,16 +23,16 @@ def serialize_message(message):
 
 
 class BanMessageSerializer(serializers.ModelSerializer):
-    detail = serializers.SerializerMethodField()
+    message = serializers.SerializerMethodField()
 
     class Meta:
         model = Ban
         fields = [
-            'detail',
+            'message',
             'expires_on',
         ]
 
-    def get_detail(self, obj):
+    def get_message(self, obj):
         if obj.user_message:
             message = obj.user_message
         elif obj.check_type == Ban.IP:

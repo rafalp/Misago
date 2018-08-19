@@ -12,7 +12,14 @@ UserModel = get_user_model()
 
 
 class BaseRegisterForm(forms.Form):
+    username = forms.CharField(validators=[validators.validate_username])
+    email = forms.CharField(validators=[validators.validate_email])
+
+    terms_of_service = forms.IntegerField(required=False)
+    privacy_policy = forms.IntegerField(required=False)
+
     def __init__(self, *args, **kwargs):
+        self.agreements = kwargs.pop('agreements')
         self.request = kwargs.pop('request')
         super(BaseRegisterForm, self).__init__(*args, **kwargs)
 
@@ -38,6 +45,12 @@ class BaseRegisterForm(forms.Form):
                 raise ValidationError(_("This e-mail address is not allowed."))
         return data
 
+    def clean_agreements(self, data):
+        for field_name, agreement in self.agreements.items():
+            if data.get(field_name) != agreement['id']:
+                error = ValueError(_("This agreement is required."))
+                self.add_error(field_name, error)
+
     def raise_if_ip_banned(self):
         ban = get_ip_ban(self.request.user_ip, registration_only=True)
         if ban:
@@ -48,12 +61,10 @@ class BaseRegisterForm(forms.Form):
 
 
 class SocialAuthRegisterForm(BaseRegisterForm):
-    username = forms.CharField(validators=[validators.validate_username])
-    email = forms.CharField(validators=[validators.validate_email])
-
     def clean(self):
         cleaned_data = super(SocialAuthRegisterForm, self).clean()
 
+        self.clean_agreements(cleaned_data)
         self.raise_if_ip_banned()
 
         validators.validate_new_registration(self.request, cleaned_data, self)
@@ -62,8 +73,6 @@ class SocialAuthRegisterForm(BaseRegisterForm):
 
 
 class RegisterForm(BaseRegisterForm):
-    username = forms.CharField(validators=[validators.validate_username])
-    email = forms.CharField(validators=[validators.validate_email])
     password = forms.CharField(strip=False)
 
     # placeholder field for setting captcha errors on form
@@ -82,6 +91,7 @@ class RegisterForm(BaseRegisterForm):
     def clean(self):
         cleaned_data = super(RegisterForm, self).clean()
 
+        self.clean_agreements(cleaned_data)
         self.raise_if_ip_banned()
 
         try:

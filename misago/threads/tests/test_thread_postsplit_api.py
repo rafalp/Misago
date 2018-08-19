@@ -99,59 +99,38 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link, json.dumps({}), content_type="application/json")
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "This action is not available to guests.",
-        })
 
     def test_no_permission(self):
         """api validates permission to split"""
         self.override_acl({'can_move_posts': 0})
 
         response = self.client.post(self.api_link, json.dumps({}), content_type="application/json")
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "You can't split posts from this thread.",
-        })
+        self.assertContains(response, "You can't split posts from this thread.", status_code=403)
 
     def test_empty_data(self):
         """api handles empty data"""
         response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'title': ["This field is required."],
-            'category': ["This field is required."],
-            'posts': ["You have to specify at least one post to split."],
-        })
+        self.assertContains(
+            response, "You have to specify at least one post to split.", status_code=400
+        )
 
     def test_invalid_data(self):
         """api handles post that is invalid type"""
         self.override_acl()
         response = self.client.post(self.api_link, '[]', content_type="application/json")
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'non_field_errors': ["Invalid data. Expected a dictionary, but got list."],
-        })
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
 
         self.override_acl()
         response = self.client.post(self.api_link, '123', content_type="application/json")
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'non_field_errors': ["Invalid data. Expected a dictionary, but got int."],
-        })
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
 
         self.override_acl()
         response = self.client.post(self.api_link, '"string"', content_type="application/json")
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'non_field_errors': ["Invalid data. Expected a dictionary, but got str."],
-        })
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
 
         self.override_acl()
         response = self.client.post(self.api_link, 'malformed', content_type="application/json")
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'detail': "JSON parse error - Expecting value: line 1 column 1 (char 0)",
-        })
+        self.assertContains(response, "JSON parse error", status_code=400)
 
     def test_no_posts_ids(self):
         """api rejects no posts ids"""
@@ -160,12 +139,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             json.dumps({}),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'title': ["This field is required."],
-            'category': ["This field is required."],
-            'posts': ["You have to specify at least one post to split."],
-        })
+        self.assertContains(
+            response, "You have to specify at least one post to split.", status_code=400
+        )
 
     def test_empty_posts_ids(self):
         """api rejects empty posts ids list"""
@@ -176,12 +152,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'title': ["This field is required."],
-            'category': ["This field is required."],
-            'posts': ["You have to specify at least one post to split."],
-        })
+        self.assertContains(
+            response, "You have to specify at least one post to split.", status_code=400
+        )
 
     def test_invalid_posts_data(self):
         """api handles invalid data"""
@@ -192,12 +165,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'title': ["This field is required."],
-            'category': ["This field is required."],
-            'posts': ['Expected a list of items but got type "str".'],
-        })
+        self.assertContains(
+            response, "Expected a list of items but got type", status_code=400
+        )
 
     def test_invalid_posts_ids(self):
         """api handles invalid post id"""
@@ -208,12 +178,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'title': ["This field is required."],
-            'category': ["This field is required."],
-            'posts': ["One or more post ids received were invalid."],
-        })
+        self.assertContains(
+            response, "One or more post ids received were invalid.", status_code=400
+        )
 
     def test_split_limit(self):
         """api rejects more posts than split limit"""
@@ -224,12 +191,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'title': ["This field is required."],
-            'category': ["This field is required."],
-            'posts': ["No more than {} posts can be split at single time.".format(POSTS_LIMIT)],
-        })
+        self.assertContains(
+            response, "No more than {} posts can be split".format(POSTS_LIMIT), status_code=400
+        )
 
     def test_split_invisible(self):
         """api validates posts visibility"""
@@ -240,12 +204,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'title': ["This field is required."],
-            'category': ["This field is required."],
-            'posts': ["One or more posts to split could not be found."],
-        })
+        self.assertContains(
+            response, "One or more posts to split could not be found.", status_code=400
+        )
 
     def test_split_event(self):
         """api rejects events split"""
@@ -256,12 +217,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'title': ["This field is required."],
-            'category': ["This field is required."],
-            'posts': ["Events can't be split."],
-        })
+        self.assertContains(response, "Events can't be split.", status_code=400)
 
     def test_split_first_post(self):
         """api rejects first post split"""
@@ -272,12 +228,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'title': ["This field is required."],
-            'category': ["This field is required."],
-            'posts': ["You can't split thread's first post."],
-        })
+        self.assertContains(response, "You can't split thread's first post.", status_code=400)
 
     def test_split_hidden_posts(self):
         """api recjects attempt to split urneadable hidden post"""
@@ -288,12 +239,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'title': ["This field is required."],
-            'category': ["This field is required."],
-            'posts': ["You can't split posts the content you can't see."],
-        })
+        self.assertContains(
+            response, "You can't split posts the content you can't see.", status_code=400
+        )
 
     def test_split_posts_closed_thread_no_permission(self):
         """api recjects attempt to split posts from closed thread"""
@@ -309,12 +257,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'title': ["This field is required."],
-            'category': ["This field is required."],
-            'posts': ["This thread is closed. You can't split posts in it."],
-        })
+        self.assertContains(
+            response, "This thread is closed. You can't split posts in it.", status_code=400
+        )
 
     def test_split_posts_closed_category_no_permission(self):
         """api recjects attempt to split posts from closed thread"""
@@ -330,12 +275,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'title': ["This field is required."],
-            'category': ["This field is required."],
-            'posts': ["This category is closed. You can't split posts in it."],
-        })
+        self.assertContains(
+            response, "This category is closed. You can't split posts in it.", status_code=400
+        )
 
     def test_split_other_thread_posts(self):
         """api recjects attempt to split other thread's post"""
@@ -348,12 +290,9 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'title': ["This field is required."],
-            'category': ["This field is required."],
-            'posts': ["One or more posts to split could not be found."],
-        })
+        self.assertContains(
+            response, "One or more posts to split could not be found.", status_code=400
+        )
 
     def test_split_empty_new_thread_data(self):
         """api handles empty form data"""

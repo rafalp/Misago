@@ -19,7 +19,7 @@ export default function(props) {
 }
 
 export function getSrc(user, size) {
-  if (!!user && user.id) {
+  if (user && user.id) {
     // just avatar hash, size and user id
     return resolveAvatarForSize(user.avatars, size).url;
   } else {

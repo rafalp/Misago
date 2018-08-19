@@ -1,22 +1,27 @@
 from rest_framework import serializers
 
-from misago.api.serializers import MutableFields
 from misago.categories.serializers import CategorySerializer
+from misago.core.serializers import MutableFields
 from misago.threads.models import Post
 from misago.users.serializers import UserSerializer
 
 from .post import PostSerializer
 
 
+__all__ = [
+    'FeedSerializer',
+]
+
 FeedUserSerializer = UserSerializer.subset_fields(
     'id',
     'username',
     'avatars',
+    'url',
     'title',
     'rank',
 )
 
-FeedCategorySerializer = CategorySerializer.subset_fields('name', 'css_class')
+FeedCategorySerializer = CategorySerializer.subset_fields('name', 'css_class', 'url')
 
 
 class FeedSerializer(PostSerializer, MutableFields):

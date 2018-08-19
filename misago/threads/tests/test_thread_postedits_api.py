@@ -32,7 +32,6 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
                 editor=self.user,
                 editor_name=self.user.username,
                 editor_slug=self.user.slug,
-                editor_ip='127.0.0.1',
                 edited_from="Original body",
                 edited_to="First Edit",
             ),
@@ -41,7 +40,6 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
                 thread=self.thread,
                 editor_name='Deleted',
                 editor_slug='deleted',
-                editor_ip='127.0.0.1',
                 edited_from="First Edit",
                 edited_to="Second Edit",
             ),
@@ -51,7 +49,6 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
                 editor=self.user,
                 editor_name=self.user.username,
                 editor_slug=self.user.slug,
-                editor_ip='127.0.0.1',
                 edited_from="Second Edit",
                 edited_to="Last Edit",
             ),
@@ -66,14 +63,14 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
 
 class ThreadPostGetEditTests(ThreadPostEditsApiTestCase):
     def test_no_edits(self):
-        """api returns 404 if post has no edits record"""
+        """api returns 403 if post has no edits record"""
         response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 404)
+        self.assertContains(response, "Edits record is unavailable", status_code=403)
 
         self.logout_user()
 
         response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 404)
+        self.assertContains(response, "Edits record is unavailable", status_code=403)
 
     def test_empty_edit_id(self):
         """api handles empty edit in querystring"""

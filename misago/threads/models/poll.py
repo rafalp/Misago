@@ -24,7 +24,6 @@ class Poll(models.Model):
     )
     poster_name = models.CharField(max_length=255)
     poster_slug = models.CharField(max_length=255)
-    poster_ip = models.GenericIPAddressField()
 
     posted_on = models.DateTimeField(default=timezone.now)
     length = models.PositiveIntegerField(default=0)

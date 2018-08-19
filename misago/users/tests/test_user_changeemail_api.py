@@ -23,12 +23,13 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
     def test_empty_input(self):
         """api errors correctly for empty input"""
         response = self.client.post(self.link, data={})
+
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(), {
                 'new_email': ["This field is required."],
                 'password': ["This field is required."],
-            },
+            }
         )
 
     def test_invalid_password(self):
@@ -40,12 +41,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
                 'password': 'Lor3mIpsum',
             },
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(), {
-                'password': ["Entered password is invalid."],
-            },
-        )
+        self.assertContains(response, 'password is invalid', status_code=400)
 
     def test_invalid_input(self):
         """api errors correctly for invalid input"""
@@ -56,6 +52,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
                 'password': self.USER_PASSWORD,
             },
         )
+
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
             'new_email': ["This field may not be blank."],
@@ -68,6 +65,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
                 'password': self.USER_PASSWORD,
             },
         )
+
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
             'new_email': ["Enter a valid email address."],
@@ -84,12 +82,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
                 'password': self.USER_PASSWORD,
             },
         )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(), {
-                'new_email': ["This e-mail address is not available."],
-            },
-        )
+        self.assertContains(response, 'not available', status_code=400)
 
     def test_change_email(self):
         """api allows users to change their e-mail addresses"""
@@ -102,7 +95,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
                 'password': self.USER_PASSWORD,
             },
         )
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, 200)
 
         self.assertIn('Confirm e-mail change', mail.outbox[0].subject)
         for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
@@ -129,6 +122,8 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
     def test_change_email_user_password_whitespace(self):
         """api supports users with whitespace around their passwords"""
         user_password = ' old password '
+        new_password = ' N3wP@55w0rd '
+
         new_email = 'new@email.com'
 
         self.user.set_password(user_password)
@@ -143,7 +138,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
                 'password': user_password,
             },
         )
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, 200)
 
         self.assertIn('Confirm e-mail change', mail.outbox[0].subject)
         for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:

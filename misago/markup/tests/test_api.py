@@ -17,94 +17,46 @@ class ParseMarkupApiTests(AuthenticatedUserTestCase):
         self.logout_user()
 
         response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {
-                'detail': "This action is not available to guests.",
-            },
-        )
+        self.assertContains(response, "This action is not available to guests.", status_code=403)
 
     def test_no_data(self):
         """api handles no data"""
         response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(), {
-                'markup': ["This field is required."],
-            },
-        )
+        self.assertContains(response, "You have to enter a message.", status_code=400)
 
     def test_invalid_data(self):
         """api handles post that is invalid type"""
         response = self.client.post(self.api_link, '[]', content_type="application/json")
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(), {
-                'non_field_errors': ["Invalid data. Expected a dictionary, but got list."],
-            },
-        )
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
 
         response = self.client.post(self.api_link, '123', content_type="application/json")
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(), {
-                'non_field_errors': ["Invalid data. Expected a dictionary, but got int."],
-            },
-        )
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
 
         response = self.client.post(self.api_link, '"string"', content_type="application/json")
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(), {
-                'non_field_errors': ["Invalid data. Expected a dictionary, but got str."],
-            },
-        )
+        self.assertContains(response, "Invalid data. Expected a dictionary", status_code=400)
 
         response = self.client.post(self.api_link, 'malformed', content_type="application/json")
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(), {
-                'detail': 'JSON parse error - Expecting value: line 1 column 1 (char 0)',
-            },
-        )
+        self.assertContains(response, "JSON parse error", status_code=400)
 
-    def test_empty_markup(self):
-        """api handles empty markup"""
-        response = self.client.post(self.api_link, {'markup': ''})
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(), {
-                'markup': ["You have to enter a message."],
-            },
-        )
+    def test_empty_post(self):
+        """api handles empty post"""
+        response = self.client.post(self.api_link, {'post': ''})
+        self.assertContains(response, "You have to enter a message.", status_code=400)
 
         # regression test for #929
-        response = self.client.post(self.api_link, {'markup': '\n'})
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(), {
-                'markup': ["You have to enter a message."],
-            },
+        response = self.client.post(self.api_link, {'post': '\n'})
+        self.assertContains(response, "You have to enter a message.", status_code=400)
+
+    def test_invalid_post(self):
+        """api handles invalid post type"""
+        response = self.client.post(self.api_link, {'post': 123})
+        self.assertContains(
+            response,
+            "Posted message should be at least 5 characters long (it has 3).",
+            status_code=400
         )
 
-    def test_invalid_markup(self):
-        """api handles invalid markup type"""
-        response = self.client.post(self.api_link, {'markup': 123})
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(), {
-                'markup': [
-                    "Posted message should be at least 5 characters long (it has 3)."
-                ],
-            },
-        )
-        
-    def test_valid_markup(self):
-        """api returns parsed markup for valid markup"""
-        response = self.client.post(self.api_link, {'markup': 'Lorem ipsum dolor met!'})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            response.json(), {
-                'parsed': '<p>Lorem ipsum dolor met!</p>',
-            },
-        )
+    def test_valid_post(self):
+        """api returns parsed markup for valid post"""
+        response = self.client.post(self.api_link, {'post': 'Lorem ipsum dolor met!'})
+        self.assertContains(response, "<p>Lorem ipsum dolor met!</p>")

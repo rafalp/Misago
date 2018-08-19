@@ -5,10 +5,10 @@ from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
-from misago.api.patch import ApiPatch
 from misago.conf import settings
+from misago.core.apipatch import ApiPatch
 from misago.threads.models import PostLike
-from misago.threads import moderation
+from misago.threads.moderation import posts as moderation
 from misago.threads.permissions import (
     allow_approve_post, allow_hide_best_answer, allow_hide_post, allow_protect_post,
     allow_unhide_post)
@@ -61,7 +61,6 @@ def patch_is_liked(request, post, value):
             liker=request.user,
             liker_name=request.user.username,
             liker_slug=request.user.slug,
-            liker_ip=request.user_ip,
         )
         post.likes += 1
 
@@ -148,7 +147,8 @@ def post_patch_endpoint(request, post):
 
 def bulk_patch_endpoint(request, thread):
     serializer = BulkPatchSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=400)
 
     posts = clean_posts_for_patch(request, thread, serializer.data['ids'])
 

@@ -1,5 +1,5 @@
 {% extends "misago/admin/base.html" %}
-{% load i18n %}
+{% load i18n misago_capture %}
 
 
 {% block title %}{% trans "Home" %} | {{ block.super }}{% endblock %}
@@ -19,7 +19,34 @@
   <div class="row">
     <div class="col-md-8">
 
+      <h2>{% trans "System checks" %}</h2>
 
+      {% if address_check.is_correct %}
+        <div class="alert alert-success" role="alert">
+          <p>{% trans "MISAGO_ADDRESS setting appears to be correct." %}</p>
+        </div>
+      {% elif address_check.set_address %}
+        <div class="alert alert-warning" role="alert">
+          <p class="lead">{% trans "The settings.py value for MISAGO_ADDRESS appears to be incorrect." %}</p>
+          <p>
+            {% capture trimmed as set_address %}
+              <code>{{ address_check.set_address }}</code>
+            {% endcapture %}
+            {% capture trimmed as correct_address %}
+              <code>{{ address_check.correct_address }}</code>
+            {% endcapture %}
+            {% blocktrans trimmed with configured_address=set_address|safe correct_address=correct_address|safe %}
+              Your MISAGO_ADDRESS is set to {{ configured_address }} while correct value appears to be {{ correct_address }}.
+            {% endblocktrans %}
+          </p>
+          <p>{% trans "Misago uses this setting to build correct links in e-mails sent to site users." %}</p>
+        </div>
+      {% else %}
+        <div class="alert alert-danger" role="alert">
+          <p class="lead">{% trans "The settings.py is missing MISAGO_ADDRESS value." %}</p>
+          <p>{% trans "Misago uses this setting to build correct links in e-mails sent to site users." %}</p>
+        </div>
+      {% endif %}
 
     </div>
     <div class="col-md-4">

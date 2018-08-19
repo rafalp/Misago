@@ -16,25 +16,6 @@ class RequestMock(object):
         self.data = data or {}
 
 
-def get_middleware_for_testing(**kwargs):
-    mock_kwargs = {
-        'prefix': 'test',
-        'mode': 0,
-
-        'request': None,
-        'user': None,
-
-        'datetime': None,
-        'parsing_result': None,
-
-        'thread': None,
-        'post': None,
-    }
-    mock_kwargs.update(kwargs)
-
-    return AttachmentsMiddleware(**mock_kwargs)
-
-
 class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(AttachmentsMiddlewareTests, self).setUp()
@@ -60,13 +41,12 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             uploader=self.user if user else None,
             uploader_name=self.user.username,
             uploader_slug=self.user.slug,
-            uploader_ip='127.0.0.1',
             filename='testfile_{}.zip'.format(Attachment.objects.count() + 1),
         )
 
     def test_use_this_middleware(self):
         """use_this_middleware returns False if we can't upload attachments"""
-        middleware = get_middleware_for_testing(user=self.user)
+        middleware = AttachmentsMiddleware(user=self.user)
 
         self.override_acl({'max_attachment_size': 0})
 
@@ -81,7 +61,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         INPUTS = [{}, {'attachments': []}]
 
         for test_input in INPUTS:
-            middleware = get_middleware_for_testing(
+            middleware = AttachmentsMiddleware(
                 request=RequestMock(test_input),
                 mode=PostingEndpoint.START,
                 user=self.user,
@@ -96,7 +76,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         INPUTS = ['none', ['a', 'b', 123], range(settings.MISAGO_POST_ATTACHMENTS_LIMIT + 1)]
 
         for test_input in INPUTS:
-            middleware = get_middleware_for_testing(
+            middleware = AttachmentsMiddleware(
                 request=RequestMock({
                     'attachments': test_input
                 }),
@@ -110,7 +90,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
     def test_get_initial_attachments(self):
         """get_initial_attachments returns list of attachments already existing on post"""
-        middleware = get_middleware_for_testing(
+        middleware = AttachmentsMiddleware(
             request=RequestMock(),
             mode=PostingEndpoint.EDIT,
             user=self.user,
@@ -132,7 +112,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
     def test_get_new_attachments(self):
         """get_initial_attachments returns list of attachments already existing on post"""
-        middleware = get_middleware_for_testing(
+        middleware = AttachmentsMiddleware(
             request=RequestMock(),
             mode=PostingEndpoint.EDIT,
             user=self.user,
@@ -163,7 +143,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         attachment = self.mock_attachment(user=False, post=self.post)
         self.assertIsNone(attachment.uploader)
 
-        serializer = get_middleware_for_testing(
+        serializer = AttachmentsMiddleware(
             request=RequestMock({
                 'attachments': []
             }),
@@ -181,7 +161,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             self.mock_attachment(),
         ]
 
-        middleware = get_middleware_for_testing(
+        middleware = AttachmentsMiddleware(
             request=RequestMock({
                 'attachments': [a.pk for a in attachments]
             }),
@@ -209,7 +189,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             self.mock_attachment(post=self.post),
         ]
 
-        middleware = get_middleware_for_testing(
+        middleware = AttachmentsMiddleware(
             request=RequestMock({
                 'attachments': [attachments[0].pk]
             }),
@@ -241,7 +221,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             self.mock_attachment(),
         ]
 
-        middleware = get_middleware_for_testing(
+        middleware = AttachmentsMiddleware(
             request=RequestMock({
                 'attachments': [attachments[0].pk, attachments[1].pk]
             }),
@@ -269,7 +249,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             self.mock_attachment(),
         ]
 
-        middleware = get_middleware_for_testing(
+        middleware = AttachmentsMiddleware(
             request=RequestMock({
                 'attachments': [attachments[0].pk, attachments[2].pk]
             }),

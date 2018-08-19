@@ -5,7 +5,8 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy
 
 from misago.acl import add_acl
-from misago.categories.models import THREADS_ROOT, Category
+from misago.categories import THREADS_ROOT_NAME
+from misago.categories.models import Category
 from misago.categories.permissions import can_browse_category, can_see_category
 from misago.threads.permissions import allow_start_thread
 from misago.threads.threadtypes import trees_map
@@ -18,7 +19,7 @@ class CategoryMiddleware(PostingMiddleware):
 
     def use_this_middleware(self):
         if self.mode == PostingEndpoint.START:
-            return self.tree_name == THREADS_ROOT
+            return self.tree_name == THREADS_ROOT_NAME
         return False
 
     def get_serializer(self):
@@ -55,7 +56,7 @@ class CategorySerializer(serializers.Serializer):
     def validate_category(self, value):
         try:
             self.category_cache = Category.objects.get(
-                pk=value, tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT)
+                pk=value, tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
             )
 
             can_see = can_see_category(self.user, self.category_cache)

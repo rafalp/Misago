@@ -15,6 +15,7 @@ from misago.threads.permissions import (
 from misago.threads.serializers import (
     EditPollSerializer, NewPollSerializer, PollSerializer, PollVoteSerializer)
 from misago.threads.viewmodels import ForumThread
+from misago.users.audittrail import create_audit_trail
 
 from .pollvotecreateendpoint import poll_vote_create
 
@@ -60,7 +61,6 @@ class ViewSet(viewsets.ViewSet):
             poster=request.user,
             poster_name=request.user.username,
             poster_slug=request.user.slug,
-            poster_ip=request.user_ip,
         )
 
         serializer = NewPollSerializer(instance, data=request.data)
@@ -74,6 +74,8 @@ class ViewSet(viewsets.ViewSet):
 
         thread.has_poll = True
         thread.save()
+
+        create_audit_trail(request, instance)
 
         return Response(PollSerializer(instance).data)
 
@@ -91,6 +93,8 @@ class ViewSet(viewsets.ViewSet):
 
         add_acl(request.user, instance)
         instance.make_choices_votes_aware(request.user)
+
+        create_audit_trail(request, instance)
 
         return Response(PollSerializer(instance).data)
 

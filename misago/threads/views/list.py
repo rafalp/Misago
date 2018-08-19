@@ -21,7 +21,7 @@ class ThreadsList(View):
         threads = self.get_threads(request, category, list_type, page)
 
         frontend_context = self.get_frontend_context(request, category, threads)
-        request.frontend_context['store'].update(frontend_context)
+        request.frontend_context.update(frontend_context)
 
         template_context = self.get_template_context(request, category, threads)
         return render(request, self.template_name, template_context)

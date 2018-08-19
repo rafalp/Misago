@@ -1,13 +1,13 @@
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from misago.categories.models import PRIVATE_THREADS_ROOT
+from misago.categories import PRIVATE_THREADS_ROOT_NAME
 
 from . import ThreadType
 
 
 class PrivateThread(ThreadType):
-    root_name = PRIVATE_THREADS_ROOT
+    root_name = PRIVATE_THREADS_ROOT_NAME
 
     def get_category_name(self, category):
         return _('Private threads')

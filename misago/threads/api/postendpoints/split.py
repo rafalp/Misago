@@ -4,8 +4,8 @@ from django.core.exceptions import PermissionDenied
 from django.utils import six
 from django.utils.translation import ugettext as _
 
-from misago.threads import moderation
 from misago.threads.models import Thread
+from misago.threads.moderation import threads as moderation
 from misago.threads.serializers import SplitPostsSerializer
 
 
@@ -21,7 +21,15 @@ def posts_split_endpoint(request, thread):
         },
     )
 
-    serializer.is_valid(raise_exception=True)
+    if not serializer.is_valid():
+        if 'posts' in serializer.errors:
+            errors = {
+                'detail': serializer.errors['posts'][0]
+            }
+        else :
+            errors = serializer.errors
+
+        return Response(errors, status=400)
 
     split_posts_to_new_thread(request, thread, serializer.validated_data)
 

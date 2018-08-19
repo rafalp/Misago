@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
@@ -12,18 +12,21 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
-from misago.api.rest_permissions import IsAuthenticatedOrReadOnly
 from misago.categories.models import Category
+from misago.conf import settings
+from misago.core.rest_permissions import IsAuthenticatedOrReadOnly
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.moderation import hide_post, hide_thread
 from misago.users.bans import get_user_ban
+from misago.users.datadownloads import request_user_data_download, user_has_data_download_request
 from misago.users.online.utils import get_user_status
 from misago.users.permissions import (
     allow_browse_users_list, allow_delete_user, allow_edit_profile_details, allow_follow_user,
     allow_moderate_avatar, allow_rename_user, allow_see_ban_details)
 from misago.users.profilefields import profilefields, serialize_profilefields_data
 from misago.users.serializers import (
-    BanDetailsSerializer, DeleteOwnAccountSerializer, ForumOptionsSerializer, UserSerializer)
+    BanDetailsSerializer, DataDownloadSerializer, DeleteOwnAccountSerializer, ForumOptionsSerializer,
+    UserSerializer)
 from misago.users.viewmodels import Followers, Follows, UserPosts, UserThreads
 
 from .rest_permissions import BasePermission, UnbannedAnonOnly
@@ -107,10 +110,11 @@ class UserViewSet(viewsets.GenericViewSet):
         allow_self_only(request.user, pk, _("You can't change other users options."))
 
         serializer = ForumOptionsSerializer(request.user, data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        serializer.save()
-        return Response(status=204)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'detail': _("Your forum options have been changed.")})
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @detail_route(methods=['get', 'post'])
     def username(self, request, pk=None):
@@ -188,10 +192,7 @@ class UserViewSet(viewsets.GenericViewSet):
             profile.save(update_fields=['followers'])
             request.user.save(update_fields=['following'])
 
-            return Response({
-                'is_followed': followed,
-                'followers': profile_followers,
-            })
+            return Response({'is_followed': followed, 'followers': profile_followers})
 
     @detail_route()
     def ban(self, request, pk=None):
@@ -217,6 +218,22 @@ class UserViewSet(viewsets.GenericViewSet):
         allow_rename_user(request.user, profile)
 
         return moderate_username_endpoint(request, profile)
+
+    @detail_route(methods=['post'])
+    def request_data_download(self, request, pk=None):
+        get_int_or_404(pk)
+        allow_self_only(request.user, pk, _("You can't request data downloads for other users."))
+
+        if not settings.MISAGO_ENABLE_DOWNLOAD_OWN_DATA:
+            raise PermissionDenied(_("You can't download your data."))
+
+        if user_has_data_download_request(request.user):
+            raise PermissionDenied(
+                _("You can't have more than one data download request at single time."))
+            
+        request_user_data_download(request.user)
+
+        return Response({'detail': 'ok'})
 
     @detail_route(methods=['get', 'post'])
     def delete(self, request, pk=None):
@@ -254,6 +271,15 @@ class UserViewSet(viewsets.GenericViewSet):
                 profile.delete()
 
         return Response({})
+
+    @detail_route(methods=['get'])
+    def data_downloads(self, request, pk=None):
+        get_int_or_404(pk)
+        allow_self_only(request.user, pk, _("You can't see other users data downloads."))
+
+        queryset = request.user.datadownload_set.all()[:5]
+        serializer = DataDownloadSerializer(queryset, many=True)
+        return Response(serializer.data)
 
     @detail_route(methods=['get'])
     def followers(self, request, pk=None):
@@ -324,8 +350,11 @@ UserProfileSerializer = UserSerializer.subset_fields(
     'following',
     'threads',
     'posts',
+    'acl',
     'is_followed',
     'is_blocked',
     'real_name',
     'status',
+    'api',
+    'url',
 )

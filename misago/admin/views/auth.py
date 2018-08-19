@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 
 from misago.admin import auth
-from misago.admin.forms import AdminAuthenticationForm
+from misago.users.forms.auth import AdminAuthenticationForm
 
 
 @sensitive_post_parameters()

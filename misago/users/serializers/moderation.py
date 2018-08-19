@@ -8,6 +8,11 @@ from misago.conf import settings
 
 UserModel = get_user_model()
 
+__all__ = [
+    'ModerateAvatarSerializer',
+    'ModerateSignatureSerializer',
+]
+
 
 class ModerateAvatarSerializer(serializers.ModelSerializer):
     class Meta:

@@ -25,7 +25,6 @@ class PostLike(models.Model):
     )
     liker_name = models.CharField(max_length=255, db_index=True)
     liker_slug = models.CharField(max_length=255)
-    liker_ip = models.GenericIPAddressField()
 
     liked_on = models.DateTimeField(default=timezone.now)
 

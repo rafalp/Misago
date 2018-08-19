@@ -138,21 +138,18 @@ STATICFILES_DIRS = [
 ]
 
 
-# Path to default logo image used in navbar, should be relative to STATIC_URL.
-
-MISAGO_LOGO = 'logo.png'
-
-
 # Email configuration
 # https://docs.djangoproject.com/en/{{ docs_version }}/ref/settings/#email-backend
 
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 25
 
+
 # If either of these settings is empty, Django won't attempt authentication.
 
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
+
 
 # Default email address to use for various automated correspondence from the site manager(s).
 
@@ -192,9 +189,8 @@ INSTALLED_APPS = [
     'social_django',
 
     # Misago apps
-    'misago.acl',
     'misago.admin',
-    'misago.api',
+    'misago.acl',
     'misago.core',
     'misago.conf',
     'misago.markup',
@@ -220,7 +216,7 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 
     'misago.users.middleware.RealIPMiddleware',
-    'misago.api.middleware.FrontendContextMiddleware',
+    'misago.core.middleware.frontendcontext.FrontendContextMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -300,13 +296,15 @@ TEMPLATES = [
                 'misago.legal.context_processors.legal_links',
 
                 # Data preloaders
-                'misago.categories.context_processors.preload_categories_json',
                 'misago.conf.context_processors.preload_settings_json',
+                'misago.core.context_processors.current_link',
+                'misago.markup.context_processors.preload_api_url',
+                'misago.threads.context_processors.preload_threads_urls',
                 'misago.users.context_processors.preload_user_json',
 
                 # Note: keep frontend_context processor last for previous processors
                 # to be able to expose data UI app via request.frontend_context
-                'misago.api.context_processors.frontend_context',
+                'misago.core.context_processors.frontend_context',
             ],
         },
     },
@@ -347,12 +345,12 @@ DEBUG_TOOLBAR_PANELS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'misago.api.rest_permissions.IsAuthenticatedOrReadOnly',
+        'misago.core.rest_permissions.IsAuthenticatedOrReadOnly',
     ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],
-    'EXCEPTION_HANDLER': 'misago.api.exceptionhandler.handle_api_exception',
+    'EXCEPTION_HANDLER': 'misago.core.exceptionhandler.handle_api_exception',
     'UNAUTHENTICATED_USER': 'misago.users.models.AnonymousUser',
     'URL_FORMAT_OVERRIDE': None,
 }
@@ -361,8 +359,16 @@ REST_FRAMEWORK = {
 # Misago specific settings
 # https://misago.readthedocs.io/en/latest/developers/settings.html
 
+# Complete HTTP address to your Misago site homepage. Misago relies on this address to create
+# links in e-mails that are sent to site users.
+# On Misago admin panel home page you will find a message telling you if you have entered the
+# correct value, or what value is correct in case you've didn't.
+
+MISAGO_ADDRESS = 'http://my-misago-site.com/'
+
+
 # PostgreSQL text search configuration to use in searches
-# Defaults to "simple", for list of installed configurations run "\dF" in "psql"
+# Defaults to "simple", for list of installed configurations run "\dF" in "psql".
 # Standard configs as of PostgreSQL 9.5 are: dutch, english, finnish, french,
 # german, hungarian, italian, norwegian, portuguese, romanian, russian, simple,
 # spanish, swedish and turkish
@@ -371,10 +377,44 @@ REST_FRAMEWORK = {
 MISAGO_SEARCH_CONFIG = 'simple'
 
 
+# Allow users to download their personal data
+# Enables users to learn what data about them is being held by the site without having to contact
+# site's administrators.
+
+MISAGO_ENABLE_DOWNLOAD_OWN_DATA = True
+
+# Path to the directory that Misago should use to prepare user data downloads.
+# Should not be accessible from internet.
+
+MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = os.path.join(BASE_DIR, 'userdata')
+
+
+# Allow users to delete their accounts
+# Lets users delete their own account on the site without having to contact site administrators.
+# This mechanism doesn't delete user posts, polls or attachments, but attempts to anonymize any
+# data about user left behind after user is deleted.
+
+MISAGO_ENABLE_DELETE_OWN_ACCOUNT = True
+
+
+# Automatically delete new user accounts that weren't activated in specified time
+# If you rely on admin review of new registrations, make this period long, disable
+# the "deleteinactiveusers" management command, or change this value to zero. Otherwise
+# keep it short to give users a chance to retry on their own after few days pass.
+
+MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS = 2
+
+
 # Path to directory containing avatar galleries
 # Those galleries can be loaded by running loadavatargallery command
 
 MISAGO_AVATAR_GALLERY = os.path.join(BASE_DIR, 'avatargallery')
+
+
+# Specifies the number of days that IP addresses are stored in the database before removing.
+# Change this setting to None to never remove old IP addresses.
+
+MISAGO_IP_STORE_TIME = 50
 
 
 # Profile fields
@@ -401,13 +441,6 @@ MISAGO_PROFILE_FIELDS = [
         'name': _("IP address"),
         'fields': [
             'misago.users.profilefields.default.JoinIpField',
-            'misago.users.profilefields.default.LastIpField',
         ],
     },
 ]
-
-
-# Allow users to delete their own accounts?
-# Providing such feature is required by EU law from entities that process europeans personal data.
-
-MISAGO_ENABLE_DELETE_OWN_ACCOUNT = True

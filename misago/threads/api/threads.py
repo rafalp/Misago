@@ -6,10 +6,10 @@ from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.utils.translation import ugettext as _
 
-from misago.categories.models import PRIVATE_THREADS_ROOT, THREADS_ROOT
+from misago.categories import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.models import Post, Thread
-from misago.threads import moderation
+from misago.threads.moderation import threads as moderation
 from misago.threads.permissions import allow_use_private_threads
 from misago.threads.viewmodels import (ForumThread, PrivateThread,
     ThreadsRootCategory, PrivateThreadsCategory)
@@ -77,7 +77,7 @@ class ThreadViewSet(ViewSet):
         posting = PostingEndpoint(
             request,
             PostingEndpoint.START,
-            tree_name=THREADS_ROOT,
+            tree_name=THREADS_ROOT_NAME,
             thread=thread,
             post=post,
         )
@@ -132,7 +132,7 @@ class PrivateThreadViewSet(ViewSet):
         posting = PostingEndpoint(
             request,
             PostingEndpoint.START,
-            tree_name=PRIVATE_THREADS_ROOT,
+            tree_name=PRIVATE_THREADS_ROOT_NAME,
             thread=thread,
             post=post,
         )

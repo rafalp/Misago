@@ -5,6 +5,12 @@ from django.utils.translation import ugettext as _
 from django.utils.translation import ungettext
 
 
+__all__ = [
+    'NewVoteSerializer',
+    'PollVoteSerializer',
+]
+
+
 class NewVoteSerializer(serializers.Serializer):
     choices = serializers.ListField(
         child=serializers.CharField(),
@@ -41,24 +47,26 @@ class NewVoteSerializer(serializers.Serializer):
 
 
 class PollVoteSerializer(serializers.Serializer):
-    id = serializers.SerializerMethodField()
-    username = serializers.SerializerMethodField()
-    slug = serializers.SerializerMethodField()
     voted_on = serializers.DateTimeField()
+    username = serializers.SerializerMethodField()
+
+    url = serializers.SerializerMethodField()
 
     class Meta:
         fields = [
-            'id',
-            'username',
-            'slug'
             'voted_on',
+            'username',
+            'url',
         ]
-
-    def get_id(self, obj):
-        return obj['voter_id']
 
     def get_username(self, obj):
         return obj['voter_name']
 
-    def get_slug(self, obj):
-        return obj['voter_slug']
+    def get_url(self, obj):
+        if obj['voter_id']:
+            return reverse(
+                'misago:user', kwargs={
+                    'pk': obj['voter_id'],
+                    'slug': obj['voter_slug'],
+                }
+            )

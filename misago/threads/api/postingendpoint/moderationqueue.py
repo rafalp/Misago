@@ -1,4 +1,4 @@
-from misago.categories.models import PRIVATE_THREADS_ROOT
+from misago.categories import PRIVATE_THREADS_ROOT_NAME
 
 from . import PostingEndpoint, PostingMiddleware
 
@@ -10,7 +10,7 @@ class ModerationQueueMiddleware(PostingMiddleware):
         except AttributeError:
             tree_name = self.thread.category.thread_type.root_name
 
-        return tree_name != PRIVATE_THREADS_ROOT
+        return tree_name != PRIVATE_THREADS_ROOT_NAME
 
     def save(self, serializer):
         if self.mode == PostingEndpoint.START:

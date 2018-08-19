@@ -4,7 +4,7 @@ from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
 from django.contrib.auth.models import UserManager as BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.password_validation import validate_password
-from django.contrib.postgres.fields import HStoreField, JSONField
+from django.contrib.postgres.fields import ArrayField, HStoreField, JSONField
 from django.core.mail import send_mail
 from django.db import IntegrityError, models, transaction
 from django.urls import reverse
@@ -17,6 +17,7 @@ from misago.conf import settings
 from misago.core.pgutils import PgPartialIndex
 from misago.core.utils import slugify
 from misago.users import avatars
+from misago.users.audittrail import create_user_audit_trail
 from misago.users.signatures import is_user_signature_valid
 from misago.users.utils import hash_email
 
@@ -26,8 +27,8 @@ from .rank import Rank
 class UserManager(BaseUserManager):
     @transaction.atomic
     def create_user(
-            self, username, email, password=None, set_default_avatar=False, **extra_fields
-    ):
+            self, username, email, password=None, create_audit_trail=False,
+            joined_from_ip=None, set_default_avatar=False, **extra_fields):
         from misago.users.validators import validate_email, validate_username
 
         email = self.normalize_email(email)
@@ -35,9 +36,6 @@ class UserManager(BaseUserManager):
 
         if not email:
             raise ValueError(_("User must have an email address."))
-
-        if not 'joined_from_ip' in extra_fields:
-            extra_fields['joined_from_ip'] = '127.0.0.1'
 
         WATCH_DICT = {
             'no': self.model.SUBSCRIBE_NONE,
@@ -56,7 +54,12 @@ class UserManager(BaseUserManager):
         extra_fields.update({'is_staff': False, 'is_superuser': False})
 
         now = timezone.now()
-        user = self.model(last_login=now, joined_on=now, **extra_fields)
+        user = self.model(
+            last_login=now, 
+            joined_on=now, 
+            joined_from_ip=joined_from_ip,
+            **extra_fields
+        )
 
         user.set_username(username)
         user.set_email(email)
@@ -89,12 +92,11 @@ class UserManager(BaseUserManager):
 
         user.save(update_fields=['avatars', 'acl_key'])
 
+        if create_audit_trail:
+            create_user_audit_trail(user, user.joined_from_ip, user)
+
         # populate online tracker with default value
-        Online.objects.create(
-            user=user,
-            current_ip=extra_fields['joined_from_ip'],
-            last_click=now,
-        )
+        Online.objects.create(user=user, last_click=now)
 
         return user
 
@@ -173,8 +175,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email_hash = models.CharField(max_length=32, unique=True)
 
     joined_on = models.DateTimeField(_('joined on'), default=timezone.now)
-    joined_from_ip = models.GenericIPAddressField()
-    last_ip = models.GenericIPAddressField(null=True, blank=True)
+    joined_from_ip = models.GenericIPAddressField(null=True, blank=True)
     is_hiding_presence = models.BooleanField(default=False)
 
     rank = models.ForeignKey(
@@ -269,6 +270,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_posted_on = models.DateTimeField(null=True, blank=True)
 
     profile_fields = HStoreField(default=dict)
+    agreements = ArrayField(models.PositiveIntegerField(), default=list)
 
     USERNAME_FIELD = 'slug'
     REQUIRED_FIELDS = ['email']
@@ -303,7 +305,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if kwargs.pop('delete_content', False):
             self.delete_content()
 
-        self.anonymize_content()
+        self.anonymize_data()
 
         avatars.delete_avatar(self)
 
@@ -318,7 +320,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.is_deleting_account = True
         self.save(update_fields=['is_active', 'is_deleting_account'])
 
-    def anonymize_content(self):
+    def anonymize_data(self):
         """Replaces username with anonymized one, then send anonymization signal.
 
         Items associated with this user then anonymize their user-specific data
@@ -327,8 +329,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.username = settings.MISAGO_ANONYMOUS_USERNAME
         self.slug = slugify(self.username)
         
-        from misago.users.signals import anonymize_user_content
-        anonymize_user_content.send(sender=self)
+        from misago.users.signals import anonymize_user_data
+        anonymize_user_data.send(sender=self)
 
     @property
     def acl_cache(self):
@@ -477,7 +479,6 @@ class Online(models.Model):
         related_name='online_tracker',
         on_delete=models.CASCADE,
     )
-    current_ip = models.GenericIPAddressField()
     last_click = models.DateTimeField(default=timezone.now)
 
     def save(self, *args, **kwargs):
@@ -506,7 +507,7 @@ class UsernameChange(models.Model):
     old_username = models.CharField(max_length=255)
 
     class Meta:
-        get_latest_by = 'changed_on'
+        get_latest_by = "changed_on"
 
     def set_change_author(self, user):
         self.changed_by = user

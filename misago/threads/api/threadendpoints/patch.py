@@ -9,13 +9,13 @@ from django.utils import six
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
-from misago.api.patch import ApiPatch
 from misago.categories.models import Category
 from misago.categories.permissions import allow_browse_category, allow_see_category
 from misago.categories.serializers import CategorySerializer
 from misago.conf import settings
+from misago.core.apipatch import ApiPatch
 from misago.core.shortcuts import get_int_or_404
-from misago.threads import moderation
+from misago.threads.moderation import threads as moderation
 from misago.threads.participants import (
     add_participant, change_owner, make_participants_aware, remove_participant
 )
@@ -51,9 +51,12 @@ def patch_title(request, thread, value):
     try:
         value_cleaned = six.text_type(value).strip()
     except (TypeError, ValueError):
-        raise ValidationError(_('Not a valid string.'))
+        raise PermissionDenied(_('Not a valid string.'))
 
-    validate_title(value_cleaned)
+    try:
+        validate_title(value_cleaned)
+    except ValidationError as e:
+        raise PermissionDenied(e.args[0])
 
     allow_edit_thread(request.user, thread)
 
@@ -100,7 +103,7 @@ def patch_move(request, thread, value):
     allow_start_thread(request.user, new_category)
 
     if new_category == thread.category:
-        raise ValidationError(_("You can't move thread to the category it's already in."))
+        raise PermissionDenied(_("You can't move thread to the category it's already in."))
 
     moderation.move_thread(request, thread, new_category)
 
@@ -201,7 +204,7 @@ def patch_best_answer(request, thread, value):
     try:
         post_id = int(value)
     except (TypeError, ValueError):
-        raise ValidationError(_("A valid integer is required."))
+        raise PermissionDenied(_("A valid integer is required."))
 
     allow_mark_best_answer(request.user, thread)
 
@@ -238,7 +241,7 @@ def patch_unmark_best_answer(request, thread, value):
     try:
         post_id = int(value)
     except (TypeError, ValueError):
-        raise ValidationError(_("A valid integer is required."))
+        raise PermissionDenied(_("A valid integer is required."))
 
     post = get_object_or_404(thread.post_set, id=post_id)
     post.category = thread.category
@@ -271,26 +274,17 @@ def patch_add_participant(request, thread, value):
     try:
         username = six.text_type(value).strip().lower()
         if not username:
-            raise ValidationError(_("You have to enter new participant's username."))
+            raise PermissionDenied(_("You have to enter new participant's username."))
         participant = UserModel.objects.get(slug=username)
     except UserModel.DoesNotExist:
-        raise ValidationError(_("No user with such name exists."))
+        raise PermissionDenied(_("No user with such name exists."))
 
     if participant in [p.user for p in thread.participants_list]:
-        raise ValidationError(_("This user is already thread participant."))
+        raise PermissionDenied(_("This user is already thread participant."))
 
-    max_participants = request.user.acl_cache['max_private_thread_participants']
-    if max_participants:
-        current_participants = len(thread.participants_list)
-        if current_participants >= max_participants:
-            raise ValidationError(_("You can't add any more new users to this thread."))
-    
-    try:
-        allow_add_participant(request.user, participant)
-    except PermissionDenied as e:
-        raise ValidationError(six.text_type(e))
-
+    allow_add_participant(request.user, participant)
     add_participant(request, thread, participant)
+
     make_participants_aware(request.user, thread)
     participants = ThreadParticipantSerializer(thread.participants_list, many=True)
 
@@ -303,14 +297,14 @@ thread_patch_dispatcher.add('participants', patch_add_participant)
 def patch_remove_participant(request, thread, value):
     try:
         user_id = int(value)
-    except (TypeError, ValueError):
-        raise ValidationError(_("A valid integer is required."))
+    except (ValueError, TypeError):
+        raise PermissionDenied(_("A valid integer is required."))
 
     for participant in thread.participants_list:
         if participant.user_id == user_id:
             break
     else:
-        raise ValidationError(_("Participant doesn't exist."))
+        raise PermissionDenied(_("Participant doesn't exist."))
 
     allow_remove_participant(request.user, thread, participant.user)
     remove_participant(request, thread, participant.user)
@@ -333,17 +327,17 @@ thread_patch_dispatcher.remove('participants', patch_remove_participant)
 def patch_replace_owner(request, thread, value):
     try:
         user_id = int(value)
-    except (TypeError, ValueError):
-        raise ValidationError(_("A valid integer is required."))
+    except (ValueError, TypeError):
+        raise PermissionDenied(_("A valid integer is required."))
 
     for participant in thread.participants_list:
         if participant.user_id == user_id:
             if participant.is_owner:
-                raise ValidationError(_("This user already is thread owner."))
+                raise PermissionDenied(_("This user already is thread owner."))
             else:
                 break
     else:
-        raise ValidationError(_("Participant doesn't exist."))
+        raise PermissionDenied(_("Participant doesn't exist."))
 
     allow_change_owner(request.user, thread)
     change_owner(request, thread, participant.user)
@@ -390,7 +384,8 @@ def thread_patch_endpoint(request, thread):
 
 def bulk_patch_endpoint(request, viewmodel):
     serializer = BulkPatchSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=400)
 
     threads = clean_threads_for_patch(request, viewmodel, serializer.data['ids'])
 
@@ -446,7 +441,10 @@ def bulk_patch_endpoint(request, viewmodel):
 def clean_threads_for_patch(request, viewmodel, threads_ids):
     threads = []
     for thread_id in sorted(set(threads_ids), reverse=True):
-        threads.append(viewmodel(request, thread_id).unwrap())
+        try:
+            threads.append(viewmodel(request, thread_id).unwrap())
+        except (Http404, PermissionDenied):
+            raise PermissionDenied(_("One or more threads to update could not be found."))
     return threads
 
 

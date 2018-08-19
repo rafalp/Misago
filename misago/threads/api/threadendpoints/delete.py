@@ -2,7 +2,7 @@ from rest_framework.response import Response
 
 from django.db import transaction
 
-from misago.threads import moderation
+from misago.threads.moderation import threads as moderation
 from misago.threads.permissions import allow_delete_thread
 from misago.threads.serializers import DeleteThreadsSerializer
 
@@ -26,7 +26,16 @@ def delete_bulk(request, viewmodel):
         },
     )
 
-    serializer.is_valid(raise_exception=True)
+    if not serializer.is_valid():
+        if 'threads' in serializer.errors:
+            errors = serializer.errors['threads']
+            if 'details' in errors:
+                return Response(
+                    hydrate_error_details(errors['details']), status=400)
+            return Response({'detail': errors[0]}, status=403)
+        else:
+            errors = list(serializer.errors)[0][0]
+            return Response({'detail': errors}, status=400)
 
     for thread in serializer.validated_data['threads']:
         with transaction.atomic():
