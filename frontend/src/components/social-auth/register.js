@@ -1,5 +1,6 @@
 /* jshint ignore:start */
 import React from 'react';
+import misago from 'misago';
 import RegisterLegalFootnote from 'misago/components/RegisterLegalFootnote';
 import Button from 'misago/components/button';
 import Form from 'misago/components/form';
@@ -13,21 +14,33 @@ export default class Register extends Form {
   constructor(props) {
     super(props);
 
+    const formValidators = {
+      email: [
+        validators.email()
+      ],
+      username: [
+        validators.usernameContent()
+      ]
+    };
+
+    if (!!misago.get('TERMS_OF_SERVICE_ID')) {
+      formValidators.termsOfService = [validators.requiredTermsOfService()];
+    }
+
+    if (!!misago.get('PRIVACY_POLICY_ID')) {
+      formValidators.privacyPolicy = [validators.requiredPrivacyPolicy()];
+    }
+
     this.state = {
       email: props.email || '',
       emailProtected: !!props.email,
       username: props.username || '',
 
-      errors: {},
+      termsOfService: null,
+      privacyPolicy: null,
 
-      validators: {
-        email: [
-          validators.email()
-        ],
-        username: [
-          validators.usernameContent()
-        ]
-      },
+      validators: formValidators,
+      errors: {},
 
       isLoading: false
     };
@@ -37,11 +50,26 @@ export default class Register extends Form {
     let errors = this.validate();
     let lengths = [
       this.state.email.trim().length,
-      this.state.username.trim().length
+      this.state.username.trim().length,
     ];
 
     if (lengths.indexOf(0) !== -1) {
       snackbar.error(gettext("Fill out all fields."));
+      return false;
+    }
+
+    const { validators } = this.state;
+
+    const checkTermsOfService = !!misago.get('TERMS_OF_SERVICE_ID');
+    if (checkTermsOfService && this.state.termsOfService === null) {
+      snackbar.error(validators.termsOfService[0](null));
+      return false;
+    }
+
+    const checkPrivacyPolicy = !!misago.get('PRIVACY_POLICY_ID');
+    if (checkPrivacyPolicy && this.state.privacyPolicy === null) {
+      snackbar.error(validators.privacyPolicy[0](null));
+      snackbar.error(gettext("You need to accept the privacy policy."));
       return false;
     }
 
@@ -51,7 +79,9 @@ export default class Register extends Form {
   send() {
     return ajax.post(this.props.url, {
       email: this.state.email,
-      username: this.state.username
+      username: this.state.username,
+      terms_of_service: this.state.termsOfService,
+      privacy_policy: this.state.privacyPolicy
     });
   }
 
@@ -75,6 +105,29 @@ export default class Register extends Form {
       snackbar.apiError(rejection);
     }
   }
+
+  handlePrivacyPolicyChange = (event) => {
+    const value = event.target.value;
+    this.handleToggleAgreement('privacyPolicy', value);
+  };
+
+  handleTermsOfServiceChange = (event) => {
+    const value = event.target.value;
+    this.handleToggleAgreement('termsOfService', value);
+  };
+
+  handleToggleAgreement = (agreement, value) => {
+    this.setState((prevState, props) => {
+      if (prevState[agreement] === null) {
+        const errors = { ...prevState.errors, [agreement]: null };
+        return { errors, [agreement]: value };
+      }
+
+      const validator = this.state.validators[agreement][0];
+      const errors = { ...prevState.errors, [agreement]: [validator(null)] };
+      return { errors, [agreement]: null };
+    })
+  };
 
   render() {
     const { backend_name } = this.props;
@@ -132,7 +185,13 @@ export default class Register extends Form {
                         value={email}
                       />
                     </FormGroup>
-                    <RegisterLegalFootnote />
+                    <RegisterLegalFootnote
+                      errors={this.state.errors}
+                      privacyPolicy={this.state.privacyPolicy}
+                      termsOfService={this.state.termsOfService}
+                      onPrivacyPolicyChange={this.handlePrivacyPolicyChange}
+                      onTermsOfServiceChange={this.handleTermsOfServiceChange}
+                    />
                   </div>
                   <div className="panel-footer">
                     <Button className="btn-primary" loading={this.state.isLoading}>

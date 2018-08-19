@@ -4,7 +4,7 @@ from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
 from django.contrib.auth.models import UserManager as BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.password_validation import validate_password
-from django.contrib.postgres.fields import HStoreField, JSONField
+from django.contrib.postgres.fields import ArrayField, HStoreField, JSONField
 from django.core.mail import send_mail
 from django.db import IntegrityError, models, transaction
 from django.urls import reverse
@@ -270,6 +270,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_posted_on = models.DateTimeField(null=True, blank=True)
 
     profile_fields = HStoreField(default=dict)
+    agreements = ArrayField(models.PositiveIntegerField(), default=list)
 
     USERNAME_FIELD = 'slug'
     REQUIRED_FIELDS = ['email']

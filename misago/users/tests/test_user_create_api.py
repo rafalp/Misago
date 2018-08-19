@@ -4,6 +4,7 @@ from django.test import override_settings
 from django.urls import reverse
 
 from misago.conf import settings
+from misago.legal.models import Agreement
 from misago.users.models import Ban, Online
 from misago.users.testutils import UserTestCase
 
@@ -16,7 +17,13 @@ class UserCreateTests(UserTestCase):
 
     def setUp(self):
         super(UserCreateTests, self).setUp()
+        
+        Agreement.objects.invalidate_cache()
+
         self.api_link = '/api/users/'
+
+    def tearDown(self):
+        Agreement.objects.invalidate_cache()
 
     def test_empty_request(self):
         """empty request errors with code 400"""
@@ -277,6 +284,89 @@ class UserCreateTests(UserTestCase):
         )
 
         self.assertEqual(response.status_code, 200)
+
+    def test_registration_check_agreement(self):
+        """api checks agreement"""
+        agreement = Agreement.objects.create(
+            type=Agreement.TYPE_TOS,
+            text="Lorem ipsum",
+            is_active=True,
+        )
+
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+            },
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(), {
+                'terms_of_service': ['This agreement is required.'],
+            }
+        )
+
+        # invalid agreement id
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+                'terms_of_service': agreement.id + 1,
+            },
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(), {
+                'terms_of_service': ['This agreement is required.'],
+            }
+        )
+
+        # valid agreement id
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+                'terms_of_service': agreement.id,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        
+        user = UserModel.objects.get(email='loremipsum@dolor.met')
+        self.assertEqual(user.agreements, [agreement.id])
+        self.assertEqual(user.useragreement_set.count(), 1)
+
+    def test_registration_ignore_inactive_agreement(self):
+        """api ignores inactive agreement"""
+        Agreement.objects.create(
+            type=Agreement.TYPE_TOS,
+            text="Lorem ipsum",
+            is_active=False,
+        )
+
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'totallyNew',
+                'email': 'loremipsum@dolor.met',
+                'password': 'LoremP4ssword',
+                'terms_of_service': '',
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        
+        user = UserModel.objects.get(email='loremipsum@dolor.met')
+        self.assertEqual(user.agreements, [])
+        self.assertEqual(user.useragreement_set.count(), 0)
 
     def test_registration_calls_validate_new_registration(self):
         """api uses validate_new_registration to validate registrations"""

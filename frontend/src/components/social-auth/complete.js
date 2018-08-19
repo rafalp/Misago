@@ -11,7 +11,7 @@ const Complete = ({ activation, backend_name, username }) => {
   } else if (activation === 'admin') {
     message = gettext("%(username)s, your account has been created but board administrator will have to activate it before you will be able to sign in.");
   } else {
-    message = gettext("%(username)s, your account has been created and you has been signed in to it.")
+    message = gettext("%(username)s, your account has been created and you have been signed in to it.")
   }
 
   if (activation === 'active') {
