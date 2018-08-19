@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-31 23:36+0000\n"
+"POT-Creation-Date: 2018-08-19 15:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: alff0x1f <alff3one@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/misago/teams/65369/ru/)\n"
@@ -25,7 +25,7 @@ msgstr ""
 msgid "Permissions"
 msgstr "Права доступа"
 
-#: acl/admin.py:33 users/forms/admin.py:414
+#: acl/admin.py:33 users/forms/admin.py:416
 msgid "User roles"
 msgstr "Роли пользователей"
 
@@ -142,17 +142,17 @@ msgstr "Нужно выбрать один или более элементов.
 msgid "Action is not allowed."
 msgstr "Действие запрещено."
 
-#: admin/views/index.py:70
+#: admin/views/index.py:83
 #, python-format
 msgid "Outdated: %(current)s! (latest: %(latest)s)"
 msgstr "Устаревшая: %(current)s! (свежая: %(latest)s)"
 
-#: admin/views/index.py:78
+#: admin/views/index.py:91
 #, python-format
 msgid "Up to date! (%(current)s)"
 msgstr "Самая свежая! (%(current)s)"
 
-#: admin/views/index.py:87
+#: admin/views/index.py:100
 msgid "Failed to connect to GitHub API. Try again later."
 msgstr "Не удалось соединиться с GitHub API. Попробуйте позднее."
 
@@ -171,11 +171,11 @@ msgstr "Иерархия категорий"
 msgid "Category roles"
 msgstr "Роли категорий"
 
-#: categories/forms.py:47 users/forms/admin.py:388
+#: categories/forms.py:47 users/forms/admin.py:390
 msgid "Name"
 msgstr "Имя"
 
-#: categories/forms.py:49 users/forms/admin.py:404
+#: categories/forms.py:49 users/forms/admin.py:406
 msgid "Description"
 msgstr "Описание"
 
@@ -183,7 +183,7 @@ msgstr "Описание"
 msgid "Optional description explaining category intented purpose."
 msgstr "Необязательное описание, объясняющее назначение категории."
 
-#: categories/forms.py:56 categories/forms.py:68 users/forms/admin.py:421
+#: categories/forms.py:56 categories/forms.py:68 users/forms/admin.py:423
 msgid "CSS class"
 msgstr "CSS класс"
 
@@ -205,7 +205,7 @@ msgstr ""
 "Только пользователи с соответствующими правами могут оставлять сообщения в "
 "закрытых категориях."
 
-#: categories/forms.py:75 templates/misago/admin/index.html:83
+#: categories/forms.py:75 templates/misago/admin/index.html:110
 #: templates/misago/admin/users/delete.html:32 templates/misago/navbar.html:18
 #: templates/misago/navbar.html:34 templates/misago/profile/threads.html:5
 #: templates/misago/profile/threads.html:8
@@ -218,7 +218,7 @@ msgstr ""
 #: threads/migrations/0002_threads_settings.py:16
 #: threads/migrations/0004_update_settings.py:16
 #: threads/permissions/threads.py:72 threads/permissions/threads.py:103
-#: threads/search.py:20 threads/viewmodels/thread.py:118 users/apps.py:89
+#: threads/search.py:20 threads/viewmodels/thread.py:118 users/apps.py:97
 msgid "Threads"
 msgstr "Темы"
 
@@ -533,7 +533,7 @@ msgstr "Неправильный запрос на аутентификацию.
 
 #: core/forms.py:43 templates/misago/admin/users/edit.html:61
 #: templates/misago/admin/users/edit.html:78
-#: templates/misago/admin/users/edit.html:184 users/forms/admin.py:590
+#: templates/misago/admin/users/edit.html:184 users/forms/admin.py:604
 msgid "Yes"
 msgstr "Да"
 
@@ -547,7 +547,7 @@ msgstr "Да"
 #: threads/permissions/threads.py:164 threads/permissions/threads.py:178
 #: threads/permissions/threads.py:189 threads/permissions/threads.py:205
 #: threads/permissions/threads.py:216 threads/permissions/threads.py:247
-#: users/forms/admin.py:591 users/models/user.py:145
+#: users/forms/admin.py:605 users/models/user.py:147
 msgid "No"
 msgstr "Нет"
 
@@ -651,7 +651,72 @@ msgstr "Значение должно содержать буквы и цифр�
 msgid "Value is too long."
 msgstr "Значение слишком длинное."
 
+#: legal/admin.py:25 templates/misago/admin/users/edit.html:216
+msgid "Agreements"
+msgstr ""
+
+#: legal/api.py:18
+msgid "You have already accepted this agreement."
+msgstr ""
+
+#: legal/api.py:27
+msgid "You need to submit a valid choice."
+msgstr ""
+
+#: legal/forms.py:10 legal/forms.py:60
+#: templates/misago/admin/agreements/list.html:18
+#: templates/misago/admin/attachmenttypes/list.html:16
+#: templates/misago/admin/bans/list.html:17 users/forms/admin.py:589
+msgid "Type"
+msgstr "Тип"
+
+#: legal/forms.py:12 templates/misago/admin/agreements/list.html:16
+#: templates/misago/admin/ranks/list.html:17
+msgid "Title"
+msgstr "Заголовок"
+
+#: legal/forms.py:13
+msgid "Optional, leave empty for agreement to be named after its type."
+msgstr ""
+
+#: legal/forms.py:17
+msgid "Set as active for its type"
+msgstr ""
+
+#: legal/forms.py:19
+msgid ""
+"If other agreement is already active for this type, it will be unset and "
+"replaced with this one. Misago will ask users who didn't accept this "
+"agreement to do so before allowing them to continue using the site's "
+"features."
+msgstr ""
+
+#: legal/forms.py:27
+msgid "Link"
+msgstr ""
+
+#: legal/forms.py:28
+msgid "If your agreement is located on other page, enter here a link to it."
+msgstr ""
+
+#: legal/forms.py:32
+msgid "Text"
+msgstr ""
+
+#: legal/forms.py:33
+msgid "You can use Markdown syntax for rich text elements."
+msgstr ""
+
+#: legal/forms.py:46
+msgid "Please fill in agreement link or text."
+msgstr ""
+
+#: legal/forms.py:65
+msgid "Content"
+msgstr ""
+
 #: legal/migrations/0001_initial.py:16
+#: legal/migrations/0003_create_agreements_from_settings.py:57
 msgid "Legal information"
 msgstr "Правовая информация"
 
@@ -700,7 +765,7 @@ msgstr ""
 msgid "Policy title"
 msgstr "Заголовок политики"
 
-#: legal/migrations/0001_initial.py:64 legal/views.py:46
+#: legal/migrations/0001_initial.py:64 legal/models.py:43
 #: templates/misago/footer.html:27
 msgid "Privacy policy"
 msgstr "Политика конфиденциальности"
@@ -729,20 +794,84 @@ msgstr ""
 "доступна для форматирования."
 
 #: legal/migrations/0001_initial.py:105
+#: legal/migrations/0003_create_agreements_from_settings.py:62
 msgid "Footnote"
 msgstr "Сноска"
 
 #: legal/migrations/0001_initial.py:106
+#: legal/migrations/0003_create_agreements_from_settings.py:63
 msgid "Short message displayed in forum footer."
 msgstr "Короткое сообщение, отображаемое в нижней части форума."
 
 #: legal/migrations/0001_initial.py:107
+#: legal/migrations/0003_create_agreements_from_settings.py:64
 msgid "Forum footer"
 msgstr "Нижняя часть форума."
 
-#: legal/views.py:65 templates/misago/footer.html:22
+#: legal/migrations/0003_create_agreements_from_settings.py:58
+msgid ""
+"Those settings allow you to set additional legal information for your forum."
+msgstr ""
+
+#: legal/models.py:42 templates/misago/footer.html:22
 msgid "Terms of service"
 msgstr "Условия использования"
+
+#: legal/views/admin.py:17
+msgid "Requested agreement does not exist."
+msgstr ""
+
+#: legal/views/admin.py:29 threads/views/admin/attachments.py:24
+#: users/views/admin/bans.py:24 users/views/admin/datadownloads.py:20
+#: users/views/admin/users.py:56
+msgid "From newest"
+msgstr "От новейшего"
+
+#: legal/views/admin.py:30 threads/views/admin/attachments.py:25
+#: users/views/admin/bans.py:25 users/views/admin/datadownloads.py:21
+#: users/views/admin/users.py:57
+msgid "From oldest"
+msgstr "От старого"
+
+#: legal/views/admin.py:33
+msgid "With agreements: 0"
+msgstr ""
+
+#: legal/views/admin.py:34
+msgid "Select agreements"
+msgstr ""
+
+#: legal/views/admin.py:38
+msgid "Delete agreements"
+msgstr ""
+
+#: legal/views/admin.py:39
+msgid "Are you sure you want to delete those agreements?"
+msgstr ""
+
+#: legal/views/admin.py:49
+msgid "Selected agreements have been deleted."
+msgstr ""
+
+#: legal/views/admin.py:53
+#, python-format
+msgid "New agreement \"%(title)s\" has been saved."
+msgstr ""
+
+#: legal/views/admin.py:63
+#, python-format
+msgid "Agreement \"%(title)s\" has been edited."
+msgstr ""
+
+#: legal/views/admin.py:77
+#, python-format
+msgid "Agreement \"%(title)s\" has been deleted."
+msgstr ""
+
+#: legal/views/admin.py:85
+#, python-format
+msgid "Agreement \"%(title)s\" has been set as active for type \"%(type)s\"."
+msgstr ""
 
 #: markup/finalise.py:22
 #, python-format
@@ -753,15 +882,15 @@ msgstr "%(title)s написал:"
 msgid "Quoted message:"
 msgstr "Цитата:"
 
-#: project_template/project_name/settings.py:388
+#: project_template/project_name/settings.py:424
 msgid "Personal"
 msgstr "Личные данные"
 
-#: project_template/project_name/settings.py:397
+#: project_template/project_name/settings.py:433
 msgid "Contact"
 msgstr "Контакты"
 
-#: project_template/project_name/settings.py:405 users/models/ban.py:76
+#: project_template/project_name/settings.py:441 users/models/ban.py:76
 msgid "IP address"
 msgstr "IP адрес"
 
@@ -869,6 +998,98 @@ msgstr "Активация не удалась"
 msgid "Your account can't be activated at this time."
 msgstr "Ваш аккаунт не может быть активирован сейчас."
 
+#: templates/misago/admin/agreements/form.html:9
+#: templates/misago/admin/agreements/form.html:18
+#: templates/misago/admin/agreements/form.html:28
+#: templates/misago/admin/agreements/list.html:9
+msgid "New agreement"
+msgstr ""
+
+#: templates/misago/admin/agreements/form.html:43
+#: templates/misago/admin/categoryroles/form.html:43
+#: templates/misago/admin/roles/form.html:43
+msgid "Basic settings"
+msgstr "Базовые настройки"
+
+#: templates/misago/admin/agreements/form.html:51
+msgid "Agreement contents"
+msgstr ""
+
+#: templates/misago/admin/agreements/form.html:54
+msgid "Fill in one of the fields."
+msgstr ""
+
+#: templates/misago/admin/agreements/list.html:19
+msgid "Created"
+msgstr ""
+
+#: templates/misago/admin/agreements/list.html:20
+msgid "Modified"
+msgstr ""
+
+#: templates/misago/admin/agreements/list.html:33
+#, python-format
+msgid "Active %(type)s"
+msgstr ""
+
+#: templates/misago/admin/agreements/list.html:52
+#, python-format
+msgid "%(created_on)s by %(created_by)s"
+msgstr ""
+
+#: templates/misago/admin/agreements/list.html:68
+#, python-format
+msgid "%(last_modified_on)s by %(last_modified_by)s"
+msgstr ""
+
+#: templates/misago/admin/agreements/list.html:72
+msgid "never"
+msgstr ""
+
+#: templates/misago/admin/agreements/list.html:78
+msgid "Set as active"
+msgstr ""
+
+#: templates/misago/admin/agreements/list.html:88
+#: templates/misago/admin/attachmenttypes/list.html:54
+#: templates/misago/admin/bans/list.html:55
+#: templates/misago/admin/categories/list.html:66
+#: templates/misago/admin/categoryroles/list.html:27
+#: templates/misago/admin/ranks/list.html:99
+#: templates/misago/admin/roles/list.html:43
+#: templates/misago/admin/warnings/list.html:109
+#: templates/misago/poll/results.html:69
+#: templates/misago/profile/details.html:24
+#: templates/misago/thread/posts/post/footer.html:31 users/djangoadmin.py:54
+msgid "Edit"
+msgstr "Редактировать"
+
+#: templates/misago/admin/agreements/list.html:94
+#: templates/misago/admin/bans/list.html:61
+msgid "Remove"
+msgstr "Удалить"
+
+#: templates/misago/admin/agreements/list.html:106
+msgid "No agreements matching search criteria have been found"
+msgstr ""
+
+#: templates/misago/admin/agreements/list.html:108
+msgid "No agreements are currently set."
+msgstr ""
+
+#: templates/misago/admin/agreements/list.html:119
+msgid "Are you sure you want to set this agreement as active for its type?"
+msgstr ""
+
+#: templates/misago/admin/agreements/list.html:124
+msgid "Are you sure you want to delete this agreement?"
+msgstr ""
+
+#: templates/misago/admin/agreements/list.html:133
+#: templates/misago/admin/bans/list.html:95
+msgid "Search bans"
+msgstr "Поиск блокировок"
+
 #: templates/misago/admin/attachments/list.html:7
 msgid "Attachment"
 msgstr "Прикреплённый файл"
@@ -879,12 +1100,8 @@ msgstr "Тема"
 
 #: templates/misago/admin/attachments/list.html:42
 #, python-format
-msgid ""
-"%(filetype)s, %(size)s, uploaded by %(uploader)s %(uploaded_on)s from "
-"%(uploader_ip)s."
+msgid "%(filetype)s, %(size)s, uploaded by %(uploader)s %(uploaded_on)s."
 msgstr ""
-"%(filetype)s, %(size)s, загружено %(uploader)s %(uploaded_on)s с "
-"%(uploader_ip)s."
 
 #: templates/misago/admin/attachments/list.html:53
 #: templates/misago/admin/attachmenttypes/list.html:47
@@ -934,11 +1151,6 @@ msgstr "Базовые опции"
 msgid "Availability"
 msgstr "Доступность"
 
-#: templates/misago/admin/attachmenttypes/list.html:16
-#: templates/misago/admin/bans/list.html:17 users/forms/admin.py:575
-msgid "Type"
-msgstr "Тип"
-
 #: templates/misago/admin/attachmenttypes/list.html:17
 msgid "Extensions"
 msgstr "Расширения"
@@ -950,19 +1162,6 @@ msgstr "Mime-типы"
 #: templates/misago/admin/attachmenttypes/list.html:19
 msgid "Files"
 msgstr "Файлы"
-
-#: templates/misago/admin/attachmenttypes/list.html:54
-#: templates/misago/admin/bans/list.html:55
-#: templates/misago/admin/categories/list.html:66
-#: templates/misago/admin/categoryroles/list.html:27
-#: templates/misago/admin/ranks/list.html:99
-#: templates/misago/admin/roles/list.html:43
-#: templates/misago/admin/warnings/list.html:109
-#: templates/misago/poll/results.html:69
-#: templates/misago/profile/details.html:24
-#: templates/misago/thread/posts/post/footer.html:31 users/djangoadmin.py:54
-msgid "Edit"
-msgstr "Редактировать"
 
 #: templates/misago/admin/attachmenttypes/list.html:71
 msgid "No attachment types are currently defined."
@@ -980,12 +1179,12 @@ msgid "New ban"
 msgstr "Новая блокировка"
 
 #: templates/misago/admin/bans/form.html:43
-#: templates/misago/admin/users/ban.html:53
+#: templates/misago/admin/users/ban.html:57
 msgid "Ban settings"
 msgstr "Настройка блокировки"
 
 #: templates/misago/admin/bans/form.html:52
-#: templates/misago/admin/users/ban.html:60
+#: templates/misago/admin/users/ban.html:64
 msgid "Messages"
 msgstr "Сообщения"
 
@@ -993,8 +1192,8 @@ msgstr "Сообщения"
 msgid "Ban"
 msgstr "Блокировка"
 
-#: templates/misago/admin/bans/list.html:18 users/forms/admin.py:493
-#: users/forms/admin.py:546
+#: templates/misago/admin/bans/list.html:18 users/forms/admin.py:488
+#: users/forms/admin.py:560
 msgid "Expires on"
 msgstr "Истечёт в "
 
@@ -1007,10 +1206,6 @@ msgstr "%(check_type)s, только для регистрации"
 msgid "Never"
 msgstr "Никогда"
 
-#: templates/misago/admin/bans/list.html:61
-msgid "Remove"
-msgstr "Удалить"
-
 #: templates/misago/admin/bans/list.html:73
 msgid "No bans matching search criteria have been found"
 msgstr "Запрошенные блокировки по заданным критериям поиска не были найдены"
@@ -1022,10 +1217,6 @@ msgstr "В данный момент нет установленных блок�
 #: templates/misago/admin/bans/list.html:86
 msgid "Are you sure you want to remove this ban?"
 msgstr "Вы уверены, что хотите удалить эту блокировку?"
-
-#: templates/misago/admin/bans/list.html:95
-msgid "Search bans"
-msgstr "Поиск блокировок"
 
 #: templates/misago/admin/base_thin.html:8
 msgid "Misago Administration"
@@ -1158,11 +1349,6 @@ msgstr "Вы уверены, что хотите отказаться от из�
 msgid "New role"
 msgstr "Новая роль"
 
-#: templates/misago/admin/categoryroles/form.html:43
-#: templates/misago/admin/roles/form.html:43
-msgid "Basic settings"
-msgstr "Базовые настройки"
-
 #: templates/misago/admin/categoryroles/list.html:16
 msgid "Category role"
 msgstr "Роль категории"
@@ -1198,6 +1384,61 @@ msgstr ""
 #: templates/misago/admin/conf/group.html:61
 msgid "Change settings"
 msgstr "Изменить настройки"
+
+#: templates/misago/admin/datadownloads/form.html:6
+#: templates/misago/admin/datadownloads/form.html:11
+#: templates/misago/admin/datadownloads/form.html:17
+msgid "Request new data downloads"
+msgstr ""
+
+#: templates/misago/admin/datadownloads/list.html:9
+msgid "Request new downloads"
+msgstr ""
+
+#: templates/misago/admin/datadownloads/list.html:17
+#: templates/misago/admin/users/list.html:17 users/forms/admin.py:696
+msgid "User"
+msgstr "Пользователь"
+
+#: templates/misago/admin/datadownloads/list.html:18 threads/forms.py:56
+#: users/forms/admin.py:691
+msgid "Status"
+msgstr "Статус"
+
+#: templates/misago/admin/datadownloads/list.html:19
+msgid "Requested on"
+msgstr ""
+
+#: templates/misago/admin/datadownloads/list.html:21 users/forms/admin.py:700
+msgid "Requested by"
+msgstr ""
+
+#: templates/misago/admin/datadownloads/list.html:32
+#: templates/misago/admin/datadownloads/list.html:49
+#: templates/misago/admin/datadownloads/list.html:52
+#: templates/misago/admin/users/ban.html:35
+#: templates/misago/admin/users/edit.html:113
+#: templates/misago/admin/users/list.html:35
+#: templates/misago/userslists/active_posters.html:66
+msgid "Avatar"
+msgstr "Аватар"
+
+#: templates/misago/admin/datadownloads/list.html:73
+#: templates/misago/emails/data_download.html:11 users/apps.py:50
+msgid "Download data"
+msgstr ""
+
+#: templates/misago/admin/datadownloads/list.html:84
+msgid "No data downloads matching search criteria have been found."
+msgstr ""
+
+#: templates/misago/admin/datadownloads/list.html:86
+msgid "No data downloads exist at the moment."
+msgstr ""
+
+#: templates/misago/admin/datadownloads/list.html:93
+msgid "Search data downloads"
+msgstr ""
 
 #: templates/misago/admin/errorpages/403.html:5
 #: templates/misago/errorpages/403.html:5
@@ -1355,44 +1596,73 @@ msgstr "Последняя"
 msgid "Administration Home"
 msgstr "Главная панели администрирования"
 
-#: templates/misago/admin/index.html:33
+#: templates/misago/admin/index.html:22
+msgid "System checks"
+msgstr ""
+
+#: templates/misago/admin/index.html:26
+msgid "MISAGO_ADDRESS setting appears to be correct."
+msgstr ""
+
+#: templates/misago/admin/index.html:30
+msgid "The settings.py value for MISAGO_ADDRESS appears to be incorrect."
+msgstr ""
+
+#: templates/misago/admin/index.html:38
+#, python-format
+msgid ""
+"Your MISAGO_ADDRESS is set to %(configured_address)s while correct value "
+"appears to be %(correct_address)s."
+msgstr ""
+
+#: templates/misago/admin/index.html:42 templates/misago/admin/index.html:47
+msgid ""
+"Misago uses this setting to build correct links in e-mails sent to site "
+"users."
+msgstr ""
+
+#: templates/misago/admin/index.html:46
+msgid "The settings.py is missing MISAGO_ADDRESS value."
+msgstr ""
+
+#: templates/misago/admin/index.html:60
 msgid "Misago version"
 msgstr "Версия Misago"
 
-#: templates/misago/admin/index.html:56
+#: templates/misago/admin/index.html:83
 msgid "Check version"
 msgstr "Проверить версию"
 
-#: templates/misago/admin/index.html:62
+#: templates/misago/admin/index.html:89
 msgid "This feature requires \"packaging\" python module."
 msgstr "Эта функция требует python модуль \"packaging\"."
 
-#: templates/misago/admin/index.html:76
+#: templates/misago/admin/index.html:103
 msgid "DB Contents"
 msgstr "Содержимое базы данных"
 
-#: templates/misago/admin/index.html:87
+#: templates/misago/admin/index.html:114
 #: templates/misago/admin/users/delete.html:36
-#: templates/misago/admin/users/list.html:23
+#: templates/misago/admin/users/list.html:24
 #: templates/misago/profile/posts.html:5 templates/misago/profile/posts.html:8
 #: threads/migrations/0002_threads_settings.py:48
-#: threads/migrations/0004_update_settings.py:48 users/apps.py:83
+#: threads/migrations/0004_update_settings.py:48 users/apps.py:91
 msgid "Posts"
 msgstr "Сообщения"
 
-#: templates/misago/admin/index.html:91 templates/misago/navbar.html:40
+#: templates/misago/admin/index.html:118 templates/misago/navbar.html:40
 #: templates/misago/userslists/base.html:5
-#: templates/misago/userslists/base.html:14 users/admin.py:70
+#: templates/misago/userslists/base.html:14 users/admin.py:80
 #: users/migrations/0002_users_settings.py:16
 #: users/migrations/0006_update_settings.py:17 users/search.py:18
 msgid "Users"
 msgstr "Пользователи"
 
-#: templates/misago/admin/index.html:96
+#: templates/misago/admin/index.html:123
 msgid "Inactive users"
 msgstr "Деактивированные пользователи"
 
-#: templates/misago/admin/index.html:122
+#: templates/misago/admin/index.html:149
 msgid "Checking..."
 msgstr "Проверка..."
 
@@ -1420,7 +1690,7 @@ msgstr "Пожалуйста попробуйте снова."
 msgid "Username or e-mail"
 msgstr "Имя пользователя или e-mail"
 
-#: templates/misago/admin/login.html:62 users/forms/admin.py:60
+#: templates/misago/admin/login.html:62 users/forms/admin.py:62
 #: users/forms/auth.py:59
 msgid "Password"
 msgstr "Пароль"
@@ -1465,16 +1735,12 @@ msgid "Display and visibility"
 msgstr "Отображение и видимость"
 
 #: templates/misago/admin/ranks/list.html:16
-#: templates/misago/admin/users/list.html:21
+#: templates/misago/admin/users/list.html:22
 #: templates/misago/userslists/active_posters.html:95
 #: templates/misago/userslists/active_posters.html:106
-#: users/forms/admin.py:236
+#: users/forms/admin.py:238
 msgid "Rank"
 msgstr "Ранг"
-
-#: templates/misago/admin/ranks/list.html:17
-msgid "Title"
-msgstr "Заголовок"
 
 #: templates/misago/admin/ranks/list.html:18
 msgid "Special"
@@ -1517,7 +1783,7 @@ msgid "No user roles are currently defined."
 msgstr "Сейчас нет определённых ролей пользователя."
 
 #: templates/misago/admin/users/ban.html:6
-#: templates/misago/admin/users/ban.html:11 users/views/admin/users.py:72
+#: templates/misago/admin/users/ban.html:11 users/views/admin/users.py:73
 msgid "Ban users"
 msgstr "Блокировать пользователей"
 
@@ -1525,14 +1791,11 @@ msgstr "Блокировать пользователей"
 msgid "Ban selected users:"
 msgstr "Блокировать выбранных пользователей:"
 
-#: templates/misago/admin/users/ban.html:35
-#: templates/misago/admin/users/edit.html:113
-#: templates/misago/admin/users/list.html:34
-#: templates/misago/userslists/active_posters.html:66
-msgid "Avatar"
-msgstr "Аватар"
+#: templates/misago/admin/users/ban.html:48
+msgid "IP not available"
+msgstr ""
 
-#: templates/misago/admin/users/ban.html:72
+#: templates/misago/admin/users/ban.html:76
 msgid "Set bans"
 msgstr "Установить блокировки"
 
@@ -1629,6 +1892,18 @@ msgstr ""
 msgid "No staff message is available."
 msgstr "Нет доступного сообщения администраторов."
 
+#: templates/misago/admin/users/edit.html:220
+msgid "Agreement"
+msgstr ""
+
+#: templates/misago/admin/users/edit.html:221
+msgid "Accepted on"
+msgstr ""
+
+#: templates/misago/admin/users/edit.html:239
+msgid "This user didn't accept any agreements."
+msgstr ""
+
 #: templates/misago/admin/users/list.html:9
 #: templates/misago/admin/users/new.html:6
 #: templates/misago/admin/users/new.html:11
@@ -1636,51 +1911,55 @@ msgstr "Нет доступного сообщения администрато�
 msgid "New user"
 msgstr "Новый пользователь"
 
-#: templates/misago/admin/users/list.html:17
-msgid "User"
-msgstr "Пользователь"
-
-#: templates/misago/admin/users/list.html:20
+#: templates/misago/admin/users/list.html:20 users/signals.py:30
 msgid "E-mail"
 msgstr "E-mail"
 
-#: templates/misago/admin/users/list.html:22
+#: templates/misago/admin/users/list.html:21
+msgid "IP Address"
+msgstr ""
+
+#: templates/misago/admin/users/list.html:23
 msgid "Joined"
 msgstr "Присоединился"
 
-#: templates/misago/admin/users/list.html:39
+#: templates/misago/admin/users/list.html:40
 msgid "Is deleting their account"
 msgstr ""
 
-#: templates/misago/admin/users/list.html:43
+#: templates/misago/admin/users/list.html:44
 msgid "Is disabled by administrator"
 msgstr "Деактивирован администратором"
 
-#: templates/misago/admin/users/list.html:54
+#: templates/misago/admin/users/list.html:55
 msgid "Requires activation by administrator"
 msgstr "Требует активации администратором"
 
-#: templates/misago/admin/users/list.html:56
+#: templates/misago/admin/users/list.html:57
 msgid "Has to activate account"
 msgstr "Должен активировать аккаунт"
 
-#: templates/misago/admin/users/list.html:63
+#: templates/misago/admin/users/list.html:64
 msgid "Super administrator"
 msgstr "Супер администратор"
 
-#: templates/misago/admin/users/list.html:65
+#: templates/misago/admin/users/list.html:66
 msgid "Administrator"
 msgstr "Администратор"
 
-#: templates/misago/admin/users/list.html:90
+#: templates/misago/admin/users/list.html:78
+msgid "IP removed"
+msgstr ""
+
+#: templates/misago/admin/users/list.html:98
 msgid "Edit user"
 msgstr "Редактировать пользователя"
 
-#: templates/misago/admin/users/list.html:99
+#: templates/misago/admin/users/list.html:107
 msgid "No users matching search criteria have been found."
 msgstr "Пользователи по заданным критериям поиска не были найдены."
 
-#: templates/misago/admin/users/list.html:105
+#: templates/misago/admin/users/list.html:113
 msgid "Search users"
 msgstr "Искать пользователей"
 
@@ -1898,6 +2177,32 @@ msgstr "Для изменения пароля от аккаунта, кликн
 msgid "Set new password"
 msgstr "Установить новый пароль"
 
+#: templates/misago/emails/data_download.html:6
+#: templates/misago/emails/data_download.txt:6
+#, python-format
+msgid ""
+"%(user)s, you are receiving this message because your data is ready for "
+"download."
+msgstr ""
+
+#: templates/misago/emails/data_download.html:14
+#: templates/misago/emails/data_download.txt:15
+#, python-format
+msgid ""
+"This link will remain active for %(expires_in)s hour from the time this "
+"message has been sent."
+msgid_plural ""
+"This link will remain active for %(expires_in)s hours from the time this "
+"message has been sent."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: templates/misago/emails/data_download.txt:10
+msgid "To download your data, click the following link:"
+msgstr ""
+
 #: templates/misago/emails/privatethread/added.html:9
 #, python-format
 msgid ""
@@ -2000,11 +2305,9 @@ msgstr ""
 #: templates/misago/emails/thread/reply.html:9
 #, python-format
 msgid ""
-"%(user)s, you are receiving this message because %(poster)s has replied to "
+"%(user)s, you are receiving this message because %(sender)s has replied to "
 "the thread %(thread)s that you are subscribed to."
 msgstr ""
-"%(user)s, вы получили это сообщение, потому что %(poster)s ответил в теме "
-"%(thread)s, на которую вы подписаны."
 
 #: templates/misago/emails/thread/reply.html:14
 #: templates/misago/emails/thread/reply.txt:10
@@ -2018,11 +2321,9 @@ msgstr "Перейти к ответу"
 #: templates/misago/emails/thread/reply.txt:6
 #, python-format
 msgid ""
-"%(user)s, you are receiving this message because %(poster)s has replied to "
+"%(user)s, you are receiving this message because %(sender)s has replied to "
 "the thread \"%(thread)s\" that you are subscribed to."
 msgstr ""
-"%(user)s, вы получили это сообщение, потому что %(poster)s ответил в теме "
-"\"%(thread)s\" , на которую вы подписаны."
 
 #: templates/misago/errorpages/403.html:40
 msgid "This page is not available."
@@ -2280,7 +2581,7 @@ msgstr "Смотреть результаты"
 
 #: templates/misago/profile/ban_details.html:5
 #: templates/misago/profile/ban_details.html:8
-#: templates/misago/profile/ban_details.html:15 users/apps.py:120
+#: templates/misago/profile/ban_details.html:15 users/apps.py:128
 msgid "Ban details"
 msgstr "Детали блокировки"
 
@@ -2331,7 +2632,7 @@ msgstr[3] "Начал %(threads)s тем."
 
 #: templates/misago/profile/details.html:5
 #: templates/misago/profile/details.html:8
-#: templates/misago/profile/details.html:18 users/apps.py:107
+#: templates/misago/profile/details.html:18 users/apps.py:115
 msgid "Details"
 msgstr "Детали"
 
@@ -2360,7 +2661,7 @@ msgstr ""
 "Эта ошибка случилось из-за неправильной манипуляции содержимым сообщения."
 
 #: templates/misago/profile/followers.html:5
-#: templates/misago/profile/followers.html:8 users/apps.py:95
+#: templates/misago/profile/followers.html:8 users/apps.py:103
 msgid "Followers"
 msgstr "Последователи"
 
@@ -2392,7 +2693,7 @@ msgid "%(username)s has no followers."
 msgstr "У %(username)s нет последователей."
 
 #: templates/misago/profile/follows.html:5
-#: templates/misago/profile/follows.html:8 users/apps.py:101
+#: templates/misago/profile/follows.html:8 users/apps.py:109
 msgid "Follows"
 msgstr "Следить"
 
@@ -2491,7 +2792,7 @@ msgid "%(username)s started no threads."
 msgstr "У %(username)s нет начатых тем."
 
 #: templates/misago/profile/username_history.html:5
-#: templates/misago/profile/username_history.html:8 users/apps.py:113
+#: templates/misago/profile/username_history.html:8 users/apps.py:121
 msgid "Username history"
 msgstr "История имени пользователя"
 
@@ -2521,6 +2822,20 @@ msgstr "Ваше имя пользователя никогда не измен�
 #, python-format
 msgid "%(username)s's username was never changed."
 msgstr "Имя пользователя %(username)s никогда не изменялось."
+
+#: templates/misago/required_agreement.html:9
+#, python-format
+msgid "Please review the updated %(agreement)s:"
+msgstr ""
+
+#: templates/misago/required_agreement.html:19
+msgid "here"
+msgstr ""
+
+#: templates/misago/required_agreement.html:21
+#, python-format
+msgid "Please review the updated %(agreement)s available %(link)s."
+msgstr ""
 
 #: templates/misago/search.html:5 templates/misago/search.html:8
 msgid "Search site"
@@ -2639,10 +2954,6 @@ msgstr "Скрыто %(hidden_by)s %(hidden_on)s."
 #, python-format
 msgid "By %(event_by)s on %(event_on)s."
 msgstr "%(event_by)s %(event_on)s."
-
-#: templates/misago/thread/posts/event/info.html:34
-msgid "IP recorded"
-msgstr "IP записан"
 
 #: templates/misago/thread/posts/post/attachments.html:33
 #, python-format
@@ -2940,11 +3251,11 @@ msgstr "Вложения"
 msgid "Attachment types"
 msgstr "Типы вложений"
 
-#: threads/api/attachments.py:19
+#: threads/api/attachments.py:20
 msgid "You don't have permission to upload new files."
 msgstr "У вас нет разрешения загружать новые файлы."
 
-#: threads/api/attachments.py:29
+#: threads/api/attachments.py:30
 msgid "No file has been uploaded."
 msgstr "Нет обновлённых файлов."
 
@@ -2952,11 +3263,11 @@ msgstr "Нет обновлённых файлов."
 msgid "Uploaded image was corrupted or invalid."
 msgstr "Обновлённое изображение испорчено или неправильно."
 
-#: threads/api/attachments.py:81
+#: threads/api/attachments.py:83
 msgid "You can't upload files of this type."
 msgstr "Вы не можете загрузить файлы этого типа."
 
-#: threads/api/attachments.py:86
+#: threads/api/attachments.py:88
 #, python-format
 msgid ""
 "You can't upload files larger than %(limit)s (your file has %(upload)s)."
@@ -2964,7 +3275,7 @@ msgstr ""
 "Вы не можете загрузить файлы больше чем %(limit)s (У вашего файл есть "
 "%(upload)s)"
 
-#: threads/api/attachments.py:96
+#: threads/api/attachments.py:98
 #, python-format
 msgid ""
 "You can't upload files of this type larger than %(limit)s (your file has "
@@ -2973,7 +3284,7 @@ msgstr ""
 "Вы не можете загрузить файлы этого типа, больше чем %(limit)s (Ваш файл "
 "имеет %(upload)s)."
 
-#: threads/api/postendpoints/edits.py:89
+#: threads/api/postendpoints/edits.py:88
 msgid "Edits record is unavailable for this post."
 msgstr "Правки записи недоступны для этой публикации."
 
@@ -2989,12 +3300,12 @@ msgstr "Вы не можете перемещать публикации в эт
 msgid "You can't like posts in this category."
 msgstr "Вам не может нравится публикации в этой категории."
 
-#: threads/api/postendpoints/patch_post.py:108
+#: threads/api/postendpoints/patch_post.py:107
 #: threads/api/threadendpoints/patch.py:130
 msgid "Content approval can't be reversed."
 msgstr "Одобрение содержимого не может быть отменено."
 
-#: threads/api/postendpoints/patch_post.py:186
+#: threads/api/postendpoints/patch_post.py:185
 msgid "One or more posts to update could not be found."
 msgstr "Одна или больше публикаций для обновления, не могут быть найдены."
 
@@ -3007,7 +3318,7 @@ msgstr "Вы не можете разделить публикации в это
 msgid "You don't have permission to remove \"%(attachment)s\" attachment."
 msgstr "У вас нет разрешения удалять вложение \"%(attachment)s\"."
 
-#: threads/api/postingendpoint/attachments.py:128
+#: threads/api/postingendpoint/attachments.py:127
 #, python-format
 msgid ""
 "You can't attach more than %(limit_value)s file to single post (added "
@@ -3102,11 +3413,11 @@ msgstr[3] ""
 msgid "One or more users could not be found: %(usernames)s"
 msgstr "Один или более пользователей не найдены: %(usernames)s"
 
-#: threads/api/postingendpoint/reply.py:81 threads/validators.py:80
+#: threads/api/postingendpoint/reply.py:83 threads/validators.py:80
 msgid "You have to enter a message."
 msgstr "Вы должны ввести сообщение."
 
-#: threads/api/postingendpoint/reply.py:103 threads/validators.py:41
+#: threads/api/postingendpoint/reply.py:105 threads/validators.py:41
 msgid "You have to enter thread title."
 msgstr "Вы должны ввести заголовок темы."
 
@@ -3188,7 +3499,7 @@ msgstr "Этот пользователь уже владелец темы."
 msgid "One or more threads to update could not be found."
 msgstr "Одна или больше тем для обновления не могут быть найдены."
 
-#: threads/api/threadpoll.py:53
+#: threads/api/threadpoll.py:54
 msgid "There's already a poll in this thread."
 msgstr "В этой теме уже есть опрос."
 
@@ -3224,7 +3535,7 @@ msgstr "Имя файла содержит"
 msgid "File type"
 msgstr "Тип файла"
 
-#: threads/forms.py:24 users/forms/admin.py:595
+#: threads/forms.py:24 users/forms/admin.py:609
 msgid "State"
 msgstr "Состояние"
 
@@ -3247,10 +3558,6 @@ msgstr "Расширения файла"
 #: threads/forms.py:55
 msgid "Maximum allowed uploaded file size"
 msgstr "Максимально позволенная загрузка размера файла"
-
-#: threads/forms.py:56
-msgid "Status"
-msgstr "Статус"
 
 #: threads/forms.py:57
 msgid "Limit uploads to"
@@ -3907,7 +4214,7 @@ msgstr ""
 msgid "Can see threads"
 msgstr "Можно смотреть темы"
 
-#: threads/permissions/threads.py:110 users/forms/admin.py:166
+#: threads/permissions/threads.py:110 users/forms/admin.py:168
 #: users/migrations/0002_users_settings.py:144
 #: users/migrations/0006_update_settings.py:130
 msgid "Started threads"
@@ -4884,6 +5191,14 @@ msgstr "Один или больше выборов опроса неправи�
 msgid "You have to make a choice."
 msgstr "Вы должны сделать выбор."
 
+#: threads/signals.py:177
+msgid "Question"
+msgstr ""
+
+#: threads/signals.py:178
+msgid "Choices"
+msgstr ""
+
 #: threads/templatetags/misago_poststags.py:20
 #, python-format
 msgid "%(user)s likes this."
@@ -5065,23 +5380,13 @@ msgstr "У вас нет разрешения видеть не одобренн
 msgid "Requested attachment could not be found."
 msgstr "Запрошенное вложение не может быть найдено."
 
-#: threads/views/admin/attachments.py:24 users/views/admin/bans.py:24
-#: users/views/admin/users.py:55
-msgid "From newest"
-msgstr "От новейшего"
-
-#: threads/views/admin/attachments.py:25 users/views/admin/bans.py:25
-#: users/views/admin/users.py:56
-msgid "From oldest"
-msgstr "От старого"
-
 #: threads/views/admin/attachments.py:26 users/views/admin/bans.py:26
-#: users/views/admin/users.py:57
+#: users/views/admin/users.py:58
 msgid "A to z"
 msgstr "От А до я"
 
 #: threads/views/admin/attachments.py:27 users/views/admin/bans.py:27
-#: users/views/admin/users.py:58
+#: users/views/admin/users.py:59
 msgid "Z to a"
 msgstr "От Я до а"
 
@@ -5154,33 +5459,37 @@ msgstr ""
 "Вам нужно разрешение одобрять содержимое, чтобы быть способным перейти к "
 "первой не одобренной публикации."
 
-#: users/admin.py:79
+#: users/admin.py:89
 msgid "User Accounts"
 msgstr "Аккаунты пользователя"
 
-#: users/admin.py:87
+#: users/admin.py:97
 msgid "Ranks"
 msgstr "Ранги"
 
-#: users/admin.py:96
+#: users/admin.py:106
 msgid "Bans"
 msgstr "Запреты"
+
+#: users/admin.py:115
+msgid "Data downloads"
+msgstr ""
 
 #: users/api/auth.py:100
 #, python-format
 msgid "Activate %(user)s account on %(forum_name)s forums"
 msgstr "Активировать аккаунт %(user)s на %(forum_name)s форумах."
 
-#: users/api/auth.py:139
+#: users/api/auth.py:138
 #, python-format
 msgid "Change %(user)s password on %(forum_name)s forums"
 msgstr "Изменить пароль %(user)s на %(forum_name)s форумах"
 
-#: users/api/auth.py:180
+#: users/api/auth.py:178
 msgid "Form link is invalid. Please try again."
 msgstr "Ссылка формы неправильна. Пожалуйста, попробуйте заново."
 
-#: users/api/auth.py:181
+#: users/api/auth.py:179
 msgid "Your link has expired. Please request new one."
 msgstr "Ваша ссылка истекла. Пожалуйста, запросите новую."
 
@@ -5250,15 +5559,15 @@ msgstr "Ссылка подтверждения изменения e-mail-а б�
 msgid "Confirm password change on %(forum_name)s forums"
 msgstr "Подтвердите изменение пароля на %(forum_name)s форумах."
 
-#: users/api/userendpoints/changepassword.py:31
+#: users/api/userendpoints/changepassword.py:32
 msgid "Password change confirmation link was sent to your address."
 msgstr "Ссылка подтверждения изменения пароля было выслано на новый адрес."
 
-#: users/api/userendpoints/create.py:22
+#: users/api/userendpoints/create.py:25
 msgid "New users registrations are currently closed."
 msgstr "Новые регистрации пользователи сейчас закрыты."
 
-#: users/api/userendpoints/create.py:53 users/social/pipeline.py:205
+#: users/api/userendpoints/create.py:61 users/social/pipeline.py:215
 msgid "Please try resubmitting the form."
 msgstr "Пожалуйста, попробуйте повторно отправить эту форму."
 
@@ -5283,37 +5592,53 @@ msgstr "Ошибка изменения имени пользователя. П�
 msgid "You don't have permission to see other users name history."
 msgstr "У вас нет разрешения просматривать историю имён других пользователей."
 
-#: users/api/users.py:54
+#: users/api/users.py:57
 msgid "You have to sign in to perform this action."
 msgstr "Вы должны войти, чтобы выполнить это действие."
 
-#: users/api/users.py:100
+#: users/api/users.py:103
 msgid "You can't change other users avatars."
 msgstr "Вы не можете изменять аватары других пользователей."
 
-#: users/api/users.py:107
+#: users/api/users.py:110
 msgid "You can't change other users options."
 msgstr "Вы не можете изменять настройки других пользователей."
 
-#: users/api/users.py:112
+#: users/api/users.py:115
 msgid "Your forum options have been changed."
 msgstr "Ваши настройки форума были изменены."
 
-#: users/api/users.py:119
+#: users/api/users.py:122
 msgid "You can't change other users names."
 msgstr "Вы не можете менять имена других пользователей."
 
-#: users/api/users.py:126
+#: users/api/users.py:129
 msgid "You can't change other users signatures."
 msgstr "Вы не можете менять подписи других пользователей."
 
-#: users/api/users.py:133
+#: users/api/users.py:136
 msgid "You can't change other users passwords."
 msgstr "Вы не можете менять пароли других пользователей."
 
-#: users/api/users.py:140
+#: users/api/users.py:143
 msgid "You can't change other users e-mail addresses."
 msgstr "Вы не можете менять e-mail адреса других пользователей."
+
+#: users/api/users.py:225
+msgid "You can't request data downloads for other users."
+msgstr ""
+
+#: users/api/users.py:228
+msgid "You can't download your data."
+msgstr ""
+
+#: users/api/users.py:232
+msgid "You can't have more than one data download request at single time."
+msgstr ""
+
+#: users/api/users.py:278
+msgid "You can't see other users data downloads."
+msgstr ""
 
 #: users/apps.py:30
 msgid "Edit details"
@@ -5327,11 +5652,11 @@ msgstr "Изменить имя пользователя"
 msgid "Change email or password"
 msgstr "Изменить email или пароль"
 
-#: users/apps.py:50
+#: users/apps.py:58
 msgid "Delete account"
 msgstr ""
 
-#: users/apps.py:59
+#: users/apps.py:67
 msgid "Active poster"
 msgstr ""
 
@@ -5390,27 +5715,27 @@ msgstr "Редактировать разрешения и группы"
 msgid "Edit the user from Misago admin panel"
 msgstr "Редактировать пользователя из панели администрирования Misago"
 
-#: users/forms/admin.py:21 users/models/ban.py:74
+#: users/forms/admin.py:23 users/models/ban.py:74 users/signals.py:29
 msgid "Username"
 msgstr "Имя пользователя"
 
-#: users/forms/admin.py:22
+#: users/forms/admin.py:24
 msgid "Custom title"
 msgstr "Пользовательский заголовок"
 
-#: users/forms/admin.py:23 users/models/ban.py:75
+#: users/forms/admin.py:25 users/models/ban.py:75
 msgid "E-mail address"
 msgstr "E-mail адрес"
 
-#: users/forms/admin.py:52
+#: users/forms/admin.py:54
 msgid "All registered members must have \"Member\" role."
 msgstr "Все зарегистрированные участники должны иметь роль — \"Участник\"."
 
-#: users/forms/admin.py:71
+#: users/forms/admin.py:73
 msgid "Is administrator"
 msgstr "Является администратором"
 
-#: users/forms/admin.py:73
+#: users/forms/admin.py:75
 msgid ""
 "Designates whether the user can log into admin sites. If Django admin site "
 "is enabled, this user will need additional permissions assigned within it to"
@@ -5421,11 +5746,11 @@ msgstr ""
 "дополнительные разрешения назначенные внутри, чтобы администрировать модули "
 "Django."
 
-#: users/forms/admin.py:79
+#: users/forms/admin.py:81
 msgid "Is superuser"
 msgstr "Является суперпользователем"
 
-#: users/forms/admin.py:81
+#: users/forms/admin.py:83
 msgid ""
 "Only administrators can access admin sites. In addition to admin site "
 "access, superadmins can also change other members admin levels."
@@ -5434,11 +5759,11 @@ msgstr ""
 "дополнение доступу к административному сайту, супер администратор также "
 "может менять административные уровни других участников."
 
-#: users/forms/admin.py:86
+#: users/forms/admin.py:88
 msgid "Is active"
 msgstr "Является активным"
 
-#: users/forms/admin.py:88
+#: users/forms/admin.py:90
 msgid ""
 "Designates whether this user should be treated as active. Turning this off "
 "is non-destructible way to remove user accounts."
@@ -5446,11 +5771,11 @@ msgstr ""
 "Определяет, должен ли пользователь считаться активным. Выключить это — "
 "означает удалить аккаунты пользователя неразрушимым способом."
 
-#: users/forms/admin.py:92 users/forms/admin.py:123 users/forms/admin.py:151
+#: users/forms/admin.py:94 users/forms/admin.py:125 users/forms/admin.py:153
 msgid "Staff message"
 msgstr "Сообщение персонала"
 
-#: users/forms/admin.py:94
+#: users/forms/admin.py:96
 msgid ""
 "Optional message for forum team members explaining why user's account has "
 "been disabled."
@@ -5458,15 +5783,15 @@ msgstr ""
 "Дополнительное сообщение для участников команды форума, объясняющее почему "
 "аккаунт пользователя был отключён."
 
-#: users/forms/admin.py:99
+#: users/forms/admin.py:101
 msgid "Change password to"
 msgstr "Изменить пароль на"
 
-#: users/forms/admin.py:106
+#: users/forms/admin.py:108
 msgid "Lock avatar"
 msgstr "Блокировка аватара"
 
-#: users/forms/admin.py:108
+#: users/forms/admin.py:110
 msgid ""
 "Setting this to yes will stop user from changing his/her avatar, and will "
 "reset his/her avatar to procedurally generated one."
@@ -5474,12 +5799,12 @@ msgstr ""
 "Настройте это как \"да\", чтобы остановить пользователя изменять его/её "
 "аватар, и сбросить его/её аватар для процедурной генерации."
 
-#: users/forms/admin.py:114 users/forms/admin.py:145 users/forms/admin.py:473
-#: users/forms/admin.py:526
+#: users/forms/admin.py:116 users/forms/admin.py:147 users/forms/admin.py:468
+#: users/forms/admin.py:540
 msgid "User message"
 msgstr "Сообщение пользователя"
 
-#: users/forms/admin.py:116
+#: users/forms/admin.py:118
 msgid ""
 "Optional message for user explaining why he/she is banned form changing "
 "avatar."
@@ -5487,7 +5812,7 @@ msgstr ""
 "Дополнительное сообщение для пользователя, объясняющее почему ему запрещено "
 "менять аватар."
 
-#: users/forms/admin.py:125
+#: users/forms/admin.py:127
 msgid ""
 "Optional message for forum team members explaining why user is banned form "
 "changing avatar."
@@ -5495,47 +5820,47 @@ msgstr ""
 "Дополнительное сообщение для членов команды форума, объясняющее почему "
 "пользователь был заблокирован за форму изменения аватара."
 
-#: users/forms/admin.py:133
+#: users/forms/admin.py:135
 msgid "Signature contents"
 msgstr "Подпись содержимого"
 
-#: users/forms/admin.py:138
+#: users/forms/admin.py:140
 msgid "Lock signature"
 msgstr "Блокировка подписи"
 
-#: users/forms/admin.py:140
+#: users/forms/admin.py:142
 msgid ""
 "Setting this to yes will stop user from making changes to his/her signature."
 msgstr ""
 "Настройте это как \"да\", чтобы остановить пользователя изменять его /её "
 "подпись."
 
-#: users/forms/admin.py:146
+#: users/forms/admin.py:148
 msgid "Optional message to user explaining why his/hers signature is locked."
 msgstr ""
 "Дополнительное сообщение для пользователя, объясняющее почему его/ее подпись"
 " заблокирована."
 
-#: users/forms/admin.py:152
+#: users/forms/admin.py:154
 msgid ""
 "Optional message to team members explaining why user signature is locked."
 msgstr ""
 "Дополнительное сообщение для участников команды, объясняющее почему подпись "
 "пользователя заблокирована."
 
-#: users/forms/admin.py:157
+#: users/forms/admin.py:159
 msgid "Hides presence"
 msgstr "Скрывает присутствие"
 
-#: users/forms/admin.py:160
+#: users/forms/admin.py:162
 msgid "Who can add user to private threads"
 msgstr "Кто может добавлять пользователей в приватные темы."
 
-#: users/forms/admin.py:169
+#: users/forms/admin.py:171
 msgid "Replid threads"
 msgstr "Отвеченные темы"
 
-#: users/forms/admin.py:219 users/serializers/moderation.py:42
+#: users/forms/admin.py:221 users/serializers/moderation.py:42
 #, python-format
 msgid "Signature can't be longer than %(limit)s character."
 msgid_plural "Signature can't be longer than %(limit)s characters."
@@ -5544,7 +5869,7 @@ msgstr[1] "Подпись не может быть длиннее %(limit)s си
 msgstr[2] "Подпись не может быть длиннее %(limit)s символов."
 msgstr[3] "Подпись не может быть длиннее %(limit)s символов."
 
-#: users/forms/admin.py:238
+#: users/forms/admin.py:240
 msgid ""
 "Ranks are used to group and distinguish users. They are also used to add "
 "permissions to groups of users."
@@ -5552,61 +5877,61 @@ msgstr ""
 "Ранги используются для группировки и разпознавания пользователей. Они также "
 "используются для добавления разрешений для групп пользователей."
 
-#: users/forms/admin.py:248
+#: users/forms/admin.py:250
 msgid "Roles"
 msgstr "Роли"
 
-#: users/forms/admin.py:249
+#: users/forms/admin.py:251
 msgid "Individual roles of this user. All users must have \"member\" role."
 msgstr ""
 "Индивидуальная роль для этого пользователя. Все пользователи должны иметь "
 "роли \"участников\"."
 
-#: users/forms/admin.py:307
+#: users/forms/admin.py:309
 msgid "Username starts with"
 msgstr "Имя пользователя начинается с"
 
-#: users/forms/admin.py:308
+#: users/forms/admin.py:310
 msgid "E-mail starts with"
 msgstr "E-mail начинается с"
 
-#: users/forms/admin.py:309
+#: users/forms/admin.py:311
 msgid "Profile fields contain"
 msgstr "Поля профиля содержат"
 
-#: users/forms/admin.py:310
+#: users/forms/admin.py:312
 msgid "Inactive only"
 msgstr "Только неактивные"
 
-#: users/forms/admin.py:311
+#: users/forms/admin.py:313
 msgid "Disabled only"
 msgstr "Только деактивированные"
 
-#: users/forms/admin.py:312
+#: users/forms/admin.py:314
 msgid "Admins only"
 msgstr "Только администраторы"
 
-#: users/forms/admin.py:313
+#: users/forms/admin.py:315
 msgid "Deleting their accounts"
 msgstr ""
 
-#: users/forms/admin.py:355
+#: users/forms/admin.py:357
 msgid "All ranks"
 msgstr "Все ранги"
 
-#: users/forms/admin.py:362
+#: users/forms/admin.py:364
 msgid "All roles"
 msgstr "Все роли"
 
-#: users/forms/admin.py:369
+#: users/forms/admin.py:371
 msgid "Has rank"
 msgstr "Имеет ранг"
 
-#: users/forms/admin.py:375
+#: users/forms/admin.py:377
 msgid "Has role"
 msgstr "Имеет роль"
 
-#: users/forms/admin.py:391
+#: users/forms/admin.py:393
 msgid ""
 "Short and descriptive name of all users with this rank. \"The Team\" or "
 "\"Game Masters\" are good examples."
@@ -5614,11 +5939,11 @@ msgstr ""
 "Короткое и наглядное имя пользователей с этим рангом. \"Команда\" или "
 "\"Мастера\" являются хорошим примером."
 
-#: users/forms/admin.py:396
+#: users/forms/admin.py:398
 msgid "User title"
 msgstr "Пользовательский заголовок"
 
-#: users/forms/admin.py:399
+#: users/forms/admin.py:401
 msgid ""
 "Optional, singular version of rank name displayed by user names. For example"
 " \"GM\" or \"Dev\"."
@@ -5626,7 +5951,7 @@ msgstr ""
 "Дополнительная, единичная версия имени ранга, которая показывается именами "
 "пользователей. Например, \"GM\" или \"Dev\"."
 
-#: users/forms/admin.py:409
+#: users/forms/admin.py:411
 msgid ""
 "Optional description explaining function or status of members distincted "
 "with this rank."
@@ -5634,21 +5959,21 @@ msgstr ""
 "Необязательное описание, объясняющее функцию или статус членов, связанных с "
 "этим рангом."
 
-#: users/forms/admin.py:418
+#: users/forms/admin.py:420
 msgid "Rank can give additional roles to users with it."
 msgstr "Ранг может давать дополнительные роли пользователям."
 
-#: users/forms/admin.py:423
+#: users/forms/admin.py:425
 msgid "Optional css class added to content belonging to this rank owner."
 msgstr ""
 "Дополнительный класс CSS, добавленный к контенту, принадлежащий владельцу "
 "этого ранга."
 
-#: users/forms/admin.py:426
+#: users/forms/admin.py:428
 msgid "Give rank dedicated tab on users list"
 msgstr "Дайте вкладку  рангу в списке пользователей"
 
-#: users/forms/admin.py:429
+#: users/forms/admin.py:431
 msgid ""
 "Selecting this option will make users with this rank easily discoverable by "
 "others through dedicated page on forum users list."
@@ -5656,70 +5981,70 @@ msgstr ""
 "Выбор данной опции сделает пользователей данного ранга легко распознаваемыми"
 " для других через соответствующий список пользователей на странице форума."
 
-#: users/forms/admin.py:454
+#: users/forms/admin.py:456
 msgid "This name collides with other rank."
 msgstr "Это имя совпадает с именем другого ранга."
 
-#: users/forms/admin.py:461
+#: users/forms/admin.py:463
 msgid "Values to ban"
 msgstr "Значения для блокировки"
 
-#: users/forms/admin.py:464 users/forms/admin.py:579
-msgid "Usernames"
-msgstr "Имена пользователя"
-
-#: users/forms/admin.py:465 users/forms/admin.py:580
-msgid "E-mails"
-msgstr "E-mail'ы"
-
-#: users/forms/admin.py:466
-msgid "E-mail domains"
-msgstr "E-mail домены"
-
-#: users/forms/admin.py:467
-msgid "IP addresses"
-msgstr "IP адреса"
-
-#: users/forms/admin.py:468
-msgid "First segment of IP addresses"
-msgstr "Первый сегмент IP адресов"
-
-#: users/forms/admin.py:469
-msgid "First two segments of IP addresses"
-msgstr "Первые два сегмента IP адресов"
-
-#: users/forms/admin.py:476
+#: users/forms/admin.py:471
 msgid "Optional message displayed to users instead of default one."
 msgstr ""
 "Не обязательное сообщение, отображаемое пользователям вместо стандартного."
 
-#: users/forms/admin.py:479 users/forms/admin.py:489 users/forms/admin.py:532
-#: users/forms/admin.py:542
+#: users/forms/admin.py:474 users/forms/admin.py:484 users/forms/admin.py:546
+#: users/forms/admin.py:556
 msgid "Message can't be longer than 1000 characters."
 msgstr "Сообщение не может быть длиннее 1000 символов."
 
-#: users/forms/admin.py:483 users/forms/admin.py:536
+#: users/forms/admin.py:478 users/forms/admin.py:550
 msgid "Team message"
 msgstr "Сообщение команды"
 
-#: users/forms/admin.py:486 users/forms/admin.py:539
+#: users/forms/admin.py:481 users/forms/admin.py:553
 msgid "Optional ban message for moderators and administrators."
 msgstr ""
 "Не обязательное сообщение при блокировке для модераторов и администраторов."
 
-#: users/forms/admin.py:495
+#: users/forms/admin.py:490
 msgid "Leave this field empty for set bans to never expire."
 msgstr "Оставьте это поле пустым, чтобы блокировки никогда не заканчивались."
 
+#: users/forms/admin.py:499 users/forms/admin.py:593
+msgid "Usernames"
+msgstr "Имена пользователя"
+
+#: users/forms/admin.py:500 users/forms/admin.py:594
+msgid "E-mails"
+msgstr "E-mail'ы"
+
 #: users/forms/admin.py:501
+msgid "E-mail domains"
+msgstr "E-mail домены"
+
+#: users/forms/admin.py:507
+msgid "IP addresses"
+msgstr "IP адреса"
+
+#: users/forms/admin.py:508
+msgid "First segment of IP addresses"
+msgstr "Первый сегмент IP адресов"
+
+#: users/forms/admin.py:509
+msgid "First two segments of IP addresses"
+msgstr "Первые два сегмента IP адресов"
+
+#: users/forms/admin.py:515
 msgid "Check type"
 msgstr "Проверить тип"
 
-#: users/forms/admin.py:506
+#: users/forms/admin.py:520
 msgid "Restrict this ban to registrations"
 msgstr "Ограничить действие этой блокировки только на регистрацию."
 
-#: users/forms/admin.py:508
+#: users/forms/admin.py:522
 msgid ""
 "Changing this to yes will make this ban check be only performed on "
 "registration step. This is good if you want to block certain registrations "
@@ -5731,11 +6056,11 @@ msgstr ""
 "определенные регистрации, отклоненные недавно Email провайдерами, без ущерба"
 " существующих пользователей."
 
-#: users/forms/admin.py:514
+#: users/forms/admin.py:528
 msgid "Banned value"
 msgstr "Заблокированное значение"
 
-#: users/forms/admin.py:517
+#: users/forms/admin.py:531
 msgid ""
 "This value is case-insensitive and accepts asterisk (*) for rought matches. "
 "For example, making IP ban for value \"83.*\" will ban all IP addresses "
@@ -5745,50 +6070,73 @@ msgstr ""
 "совпадения. К примеру, установив блокировку по IP со значением \"83.*\", "
 "будут заблокированы все IP адреса, начинающиеся с \"83.\"."
 
-#: users/forms/admin.py:522
+#: users/forms/admin.py:536
 msgid "Banned value can't be longer than 250 characters."
 msgstr "Заблокированное значение может быть не длиннее 250 символов."
 
-#: users/forms/admin.py:529
+#: users/forms/admin.py:543
 msgid "Optional message displayed to user instead of default one."
 msgstr ""
 "Не обязательное сообщение, отображаемое пользователю вместо стандартного."
 
-#: users/forms/admin.py:548
+#: users/forms/admin.py:562
 msgid "Leave this field empty for this ban to never expire."
 msgstr "Оставьте это поле пустым, чтобы блокировка никогда не заканчивалась."
 
-#: users/forms/admin.py:568
+#: users/forms/admin.py:582
 msgid "Banned value is too vague."
 msgstr "Заблокированное значение слишком расплывчато."
 
-#: users/forms/admin.py:578
+#: users/forms/admin.py:592
 msgid "All bans"
 msgstr "Все блокировки"
 
-#: users/forms/admin.py:581
+#: users/forms/admin.py:595
 msgid "IPs"
 msgstr "IP"
 
-#: users/forms/admin.py:584
+#: users/forms/admin.py:598
 msgid "Banned value begins with"
 msgstr "Заблокированное значение начинается с"
 
-#: users/forms/admin.py:586
+#: users/forms/admin.py:600
 msgid "Registration only"
 msgstr "Только регистрация"
 
-#: users/forms/admin.py:589 users/forms/admin.py:598
+#: users/forms/admin.py:603 users/forms/admin.py:612
 msgid "Any"
 msgstr "Все"
 
-#: users/forms/admin.py:599
+#: users/forms/admin.py:613
 msgid "Active"
 msgstr "Активные"
 
-#: users/forms/admin.py:600
+#: users/forms/admin.py:614 users/models/datadownload.py:26
 msgid "Expired"
 msgstr "Истекшие"
+
+#: users/forms/admin.py:649
+msgid "Usernames or emails"
+msgstr ""
+
+#: users/forms/admin.py:651
+msgid ""
+"Enter every item in new line. Duplicates will be ignored. This field is case"
+" insensitive. Depending on site configuration and amount of data to archive "
+"it may take up to few days for requests to complete. E-mail will "
+"notification will be sent to every user once their download is ready."
+msgstr ""
+
+#: users/forms/admin.py:667
+#, python-format
+msgid ""
+"You may not enter more than 20 items at single time (You have entered "
+"%(show_value)s)."
+msgstr ""
+
+#: users/forms/admin.py:684
+msgid "One or more specified users could not be found."
+msgstr ""
 
 #: users/forms/auth.py:16
 msgid "Fill out both fields."
@@ -5850,17 +6198,26 @@ msgstr ""
 "Администратор должен активировать Ваш аккаунт до того как вы сможете "
 "запросить новый пароль."
 
-#: users/forms/register.py:27
+#: users/forms/register.py:34
 msgid "This usernane is not allowed."
 msgstr "Это имя пользователя недоступно."
 
-#: users/forms/register.py:38 users/validators.py:41
+#: users/forms/register.py:45 users/validators.py:41
 msgid "This e-mail address is not allowed."
 msgstr "Этот e-mail адрес недоступен."
 
-#: users/forms/register.py:47
+#: users/forms/register.py:51
+msgid "This agreement is required."
+msgstr ""
+
+#: users/forms/register.py:60
 msgid "New registrations from this IP address are not allowed."
 msgstr "Новые регистрации с данного IP адреса недоступны."
+
+#: users/management/commands/prepareuserdatadownloads.py:34
+#, python-format
+msgid "%(user)s, your data download is ready"
+msgstr ""
 
 #: users/migrations/0002_users_settings.py:18
 #: users/migrations/0006_update_settings.py:19
@@ -6096,7 +6453,7 @@ msgid "Enter each answer in new line. Answers are case-insensitive."
 msgstr "Введите каждый ответ в новой строке. Ответы чуствительны к регистру."
 
 #: users/migrations/0004_default_ranks.py:17
-#: users/migrations/0004_default_ranks.py:18 users/models/user.py:111
+#: users/migrations/0004_default_ranks.py:18 users/models/user.py:113
 msgid "Forum team"
 msgstr "Форум команды"
 
@@ -6109,47 +6466,59 @@ msgstr "Команда"
 msgid "Members"
 msgstr "Участники"
 
-#: users/models/user.py:37
+#: users/models/datadownload.py:23
+msgid "Pending"
+msgstr ""
+
+#: users/models/datadownload.py:24
+msgid "Processing"
+msgstr ""
+
+#: users/models/datadownload.py:25
+msgid "Ready"
+msgstr ""
+
+#: users/models/user.py:38
 msgid "User must have an email address."
 msgstr "Пользователь обязан иметь e-mail адрес."
 
-#: users/models/user.py:146
+#: users/models/user.py:148
 msgid "Notify"
 msgstr "Уведомлять"
 
-#: users/models/user.py:147
+#: users/models/user.py:149
 msgid "Notify with e-mail"
 msgstr "Уведомлять по e-mail"
 
-#: users/models/user.py:155
+#: users/models/user.py:157
 msgid "Everybody"
 msgstr "Все"
 
-#: users/models/user.py:156
+#: users/models/user.py:158
 msgid "Users I follow"
 msgstr "Пользователи, которых я читаю"
 
-#: users/models/user.py:157
+#: users/models/user.py:159
 msgid "Nobody"
 msgstr "Никто"
 
-#: users/models/user.py:175
+#: users/models/user.py:177
 msgid "joined on"
 msgstr "присоединился к"
 
-#: users/models/user.py:190
+#: users/models/user.py:191
 msgid "staff status"
 msgstr "статус сотрудника"
 
-#: users/models/user.py:192
+#: users/models/user.py:193
 msgid "Designates whether the user can log into admin sites."
 msgstr "Указывает, может ли пользователь заходить на администраторские сайты."
 
-#: users/models/user.py:199
+#: users/models/user.py:200
 msgid "active"
 msgstr "активен"
 
-#: users/models/user.py:203
+#: users/models/user.py:204
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
@@ -6541,11 +6910,7 @@ msgstr "Это неправильный twitter аккаунт."
 msgid "Join IP"
 msgstr "Подсоединить IP-адрес"
 
-#: users/profilefields/default.py:99
-msgid "Last IP"
-msgstr "Последний IP"
-
-#: users/registration.py:9
+#: users/registration.py:11
 #, python-format
 msgid "Welcome on %(forum_name)s forums!"
 msgstr "Добро пожаловать на %(forum_name)s форумы!"
@@ -6587,14 +6952,30 @@ msgstr "Вам необходимо ввести новый e-mail адрес."
 msgid "New e-mail is same as current one."
 msgstr "Новый e-mail совпадает с текущим."
 
-#: users/social/pipeline.py:74
+#: users/signals.py:31
+msgid "Joined on"
+msgstr ""
+
+#: users/signals.py:32
+msgid "Joined from ip"
+msgstr ""
+
+#: users/signals.py:72
+msgid "New username"
+msgstr ""
+
+#: users/signals.py:73
+msgid "Old username"
+msgstr ""
+
+#: users/social/pipeline.py:77
 #, python-format
 msgid ""
 "The e-mail address associated with your %(backend)s account is not available"
 " for use on this site."
 msgstr ""
 
-#: users/social/pipeline.py:83
+#: users/social/pipeline.py:86
 #, python-format
 msgid ""
 "Your account has to be activated by site administrator before you will be "
@@ -6704,6 +7085,42 @@ msgstr "Блокировка \"%(name)s\" была отредактирован�
 msgid "Ban \"%(name)s\" has been removed."
 msgstr "Блокировка \"%(name)s\" была удалена."
 
+#: users/views/admin/datadownloads.py:23
+msgid "With data downloads: 0"
+msgstr ""
+
+#: users/views/admin/datadownloads.py:24
+msgid "Select data downloads"
+msgstr ""
+
+#: users/views/admin/datadownloads.py:28
+msgid "Expire downloads"
+msgstr ""
+
+#: users/views/admin/datadownloads.py:30
+msgid "Are you sure you want to set selected data downloads as expired?"
+msgstr ""
+
+#: users/views/admin/datadownloads.py:34
+msgid "Delete downloads"
+msgstr ""
+
+#: users/views/admin/datadownloads.py:36
+msgid "Are you sure you want to delete selected data downloads?"
+msgstr ""
+
+#: users/views/admin/datadownloads.py:51
+msgid "Selected data downloads have been set as expired."
+msgstr ""
+
+#: users/views/admin/datadownloads.py:57
+msgid "Selected data downloads have been deleted."
+msgstr ""
+
+#: users/views/admin/datadownloads.py:68
+msgid "Data downloads have been requested for specified users."
+msgstr ""
+
 #: users/views/admin/ranks.py:16
 msgid "Requested rank does not exist."
 msgstr "Запрашиваемый ранг не существует."
@@ -6753,39 +7170,43 @@ msgstr "Ранг \"%(name)s\" уже является рангом по умол
 msgid "Rank \"%(name)s\" has been made default."
 msgstr "Ранг \"%(name)s\" был назначен рангом по умолчанию."
 
-#: users/views/admin/users.py:59
+#: users/views/admin/users.py:60
 msgid "Biggest posters"
 msgstr "Наибольшие постеры"
 
-#: users/views/admin/users.py:60
+#: users/views/admin/users.py:61
 msgid "Smallest posters"
 msgstr "Наименьшие постеры"
 
-#: users/views/admin/users.py:62
+#: users/views/admin/users.py:63
 msgid "With users: 0"
 msgstr "С пользователями: 0"
 
-#: users/views/admin/users.py:63
+#: users/views/admin/users.py:64
 msgid "Select users"
 msgstr "Выбрать пользователей"
 
-#: users/views/admin/users.py:67
+#: users/views/admin/users.py:68
 msgid "Activate accounts"
 msgstr "Активировать аккаунты"
 
-#: users/views/admin/users.py:77
+#: users/views/admin/users.py:78
+msgid "Request data download"
+msgstr ""
+
+#: users/views/admin/users.py:83
 msgid "Delete accounts"
 msgstr "Удалить аккаунты"
 
-#: users/views/admin/users.py:79
+#: users/views/admin/users.py:85
 msgid "Are you sure you want to delete selected users?"
 msgstr "Вы уверены что хотите удалить выбранных пользователей?"
 
-#: users/views/admin/users.py:83
+#: users/views/admin/users.py:89
 msgid "Delete all"
 msgstr "Удалить всё"
 
-#: users/views/admin/users.py:86
+#: users/views/admin/users.py:92
 msgid ""
 "Are you sure you want to delete selected users? This will also delete all "
 "content associated with their accounts."
@@ -6793,54 +7214,58 @@ msgstr ""
 "Вы уверены что хотите удалить выбранных пользователей? Это также удалит все "
 "данные, связанные с этими аккаунтами."
 
-#: users/views/admin/users.py:107
+#: users/views/admin/users.py:113
 msgid "You have to select inactive users."
 msgstr "Вы должны выбрать неактивных пользователей."
 
-#: users/views/admin/users.py:114
+#: users/views/admin/users.py:120
 #, python-format
 msgid "Your account on %(forum_name)s forums has been activated"
 msgstr "Ваш аккаунт на форуме %(forum_name)s был активирован"
 
-#: users/views/admin/users.py:119
+#: users/views/admin/users.py:125
 msgid "Selected users accounts have been activated."
 msgstr "Выбранные аккаунты пользователей были активированы."
 
-#: users/views/admin/users.py:125
+#: users/views/admin/users.py:131
 #, python-format
 msgid "%(user)s is super admin and can't be banned."
 msgstr "%(user)s - суперадминистратор и не может быть заблокирован."
 
-#: users/views/admin/users.py:186
+#: users/views/admin/users.py:194
 msgid "Selected users have been banned."
 msgstr "Выбранные пользователи были заблокированы."
 
-#: users/views/admin/users.py:201 users/views/admin/users.py:215
-#: users/views/admin/users.py:331
+#: users/views/admin/users.py:212
+msgid "Data download requests have been placed for selected users."
+msgstr ""
+
+#: users/views/admin/users.py:217 users/views/admin/users.py:230
+#: users/views/admin/users.py:346
 msgid "You can't delete yourself."
 msgstr "Вы не можете удалить себя."
 
-#: users/views/admin/users.py:203 users/views/admin/users.py:217
-#: users/views/admin/users.py:334
+#: users/views/admin/users.py:219 users/views/admin/users.py:232
+#: users/views/admin/users.py:349
 #, python-format
 msgid "%(user)s is admin and can't be deleted."
 msgstr "%(user)s - администратор и не может быть удален."
 
-#: users/views/admin/users.py:209
+#: users/views/admin/users.py:225
 msgid "Selected users have been deleted."
 msgstr "Выбранные пользователи были удалены."
 
-#: users/views/admin/users.py:232
+#: users/views/admin/users.py:247
 #, python-format
 msgid "New user \"%(user)s\" has been registered."
 msgstr "Новый пользователь \"%(user)s\" был зарегистрирован."
 
-#: users/views/admin/users.py:261
+#: users/views/admin/users.py:276
 #, python-format
 msgid "User \"%(user)s\" has been edited."
 msgstr "Пользователь \"%(user)s\" был отредактирован."
 
-#: users/views/admin/users.py:328
+#: users/views/admin/users.py:343
 msgid "This action can't be accessed directly."
 msgstr "Это действие нельзя выполнить напрямую."
 
