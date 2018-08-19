@@ -58,8 +58,8 @@ def archive_user_avatar(sender, archive=None, **kwargs):
 def archive_user_audit_trail(sender, archive=None, **kwargs):
     queryset = sender.audittrail_set.order_by('id')
     for audit_trail in chunk_queryset(queryset):
-        item_name = audit_trail.created_at.strftime('%H%M%S-audit-trail')
-        archive.add_text(item_name, audit_trail.ip_address, date=audit_trail.created_at)
+        item_name = audit_trail.created_on.strftime('%H%M%S-audit-trail')
+        archive.add_text(item_name, audit_trail.ip_address, date=audit_trail.created_on)
 
 
 @receiver(archive_user_data)
@@ -94,4 +94,4 @@ def remove_old_registrations_ips(sender, **kwargs):
 @receiver(remove_old_ips)
 def remove_old_audit_trails(sender, **kwargs):
     removal_cutoff = timezone.now() - timedelta(days=settings.MISAGO_IP_STORE_TIME)
-    AuditTrail.objects.filter(created_at__lte=removal_cutoff).delete()
+    AuditTrail.objects.filter(created_on__lte=removal_cutoff).delete()

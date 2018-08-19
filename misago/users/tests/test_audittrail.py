@@ -179,7 +179,7 @@ class RemoveOldAuditTrailsTest(UserTestCase):
         user = self.get_authenticated_user()
         audit_trail = create_user_audit_trail(user, USER_IP, self.obj)
 
-        audit_trail.created_at = timezone.now() - timedelta(days=50)
+        audit_trail.created_on = timezone.now() - timedelta(days=50)
         audit_trail.save()
 
         remove_old_ips.send(None)
