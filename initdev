@@ -6,8 +6,8 @@ python setup.py develop
 rm -f /srv/misago/.DS_Store
 rm -f /srv/misago/Thumbs.db
 
-# If user specified "--f", clear after previous devinit
-if [ "$1" = "--f" ]
+# If user specified "-f", clear after previous devinit
+if [ "$1" = "-f" ]
 then
     echo "Cleaned files created by previous initdev"
     rm -f /srv/misago/cron.txt
@@ -17,6 +17,7 @@ then
     rm -rf /srv/misago/media
     rm -rf /srv/misago/static
     rm -rf /srv/misago/theme
+    rm -rf /srv/misago/userdata
 fi
 
 # Create new project
@@ -48,10 +49,10 @@ echo "  - python: can't open file 'manage.py': [Errno 2] No such file or directo
 echo ""
 echo "If you are experiencing either of those errors, this means that files are"
 echo "present in the repository's main directory preventing 'initdev' from succedding."
-echo "Please try running the 'initdev' with \"--f\" option to force old files deletion:"
+echo "Please try running the 'initdev' with \"-f\" option to force old files deletion:"
 echo ""
-echo "  docker-compose run --rm misago initdev --f"
+echo "  docker-compose run --rm misago initdev -f"
 echo ""
 echo -e "${RED}Warning:${DEFAULT} if you have uncommited changes to Misago's setup that should be included"
 echo "in next release, make sure that they are commited to 'misago/project_template'"
-echo "or 'initdev --f' will overwrite the files causing them to be lost."
+echo "or 'initdev -f' will overwrite the files causing them to be lost."

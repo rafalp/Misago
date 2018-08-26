@@ -71,8 +71,9 @@ db.sqlite3
 # Local development files
 /avatargallery/
 /avatar_store/
-/manage.py
 /devproject/
 /testproject/
 /media/
 /static/
+/userdata/
+/manage.py
