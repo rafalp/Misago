@@ -23,8 +23,9 @@ def get_required_user_agreement(user, agreements):
     if user.is_anonymous:
         return None
 
-    for agreement in agreements.values():
-        if agreement['id'] not in user.agreements:
+    for agreement_type, _ in Agreement.TYPE_CHOICES:
+        agreement = agreements.get(agreement_type)
+        if agreement and agreement['id'] not in user.agreements:
             try:
                 return Agreement.objects.get(id=agreement['id'])
             except Agreement.DoesNotExist:
