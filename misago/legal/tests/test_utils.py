@@ -52,8 +52,6 @@ class GetParsedAgreementTextTests(TestCase):
 
 class GetRequiredUserAgreementTests(UserTestCase):
     def setUp(self):
-        Agreement.objects.invalidate_cache()
-
         self.agreement = Agreement.objects.create(
             type=Agreement.TYPE_PRIVACY,
             link='https://somewhre.com',
@@ -61,10 +59,7 @@ class GetRequiredUserAgreementTests(UserTestCase):
             is_active=True,
         )
 
-        self.agreements = Agreement.objects.get_agreements()
-
-    def tearDown(self):
-        Agreement.objects.invalidate_cache()
+        self.agreements = Agreement.objects.get_agreements_from_db()
 
     def test_anonymous_user(self):
         anonymous_user = self.get_anonymous_user()
@@ -87,6 +82,24 @@ class GetRequiredUserAgreementTests(UserTestCase):
 
         result = get_required_user_agreement(authenticated_user, self.agreements)
         self.assertIsNone(result)
+
+    def test_prioritize_terms_of_service(self):
+        terms_of_service = Agreement.objects.create(
+            type=Agreement.TYPE_TOS,
+            link='https://somewhre.com',
+            text='Lorem ipsum',
+            is_active=True,
+        )
+
+        agreements = Agreement.objects.get_agreements_from_db()
+        agreements_in_wrong_order = {
+            Agreement.TYPE_PRIVACY: agreements[Agreement.TYPE_PRIVACY],
+            Agreement.TYPE_TOS: agreements[Agreement.TYPE_TOS],
+        }
+
+        authenticated_user = self.get_authenticated_user()
+        result = get_required_user_agreement(authenticated_user, agreements_in_wrong_order)
+        self.assertEqual(result, terms_of_service)
 
 
 class SaveUserAgreementAcceptance(UserTestCase):
