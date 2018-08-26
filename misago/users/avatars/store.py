@@ -18,13 +18,13 @@ def normalize_image(image):
 
 def delete_avatar(user):
     if user.avatar_tmp:
-        user.avatar_tmp.delete(False)
+        user.avatar_tmp.delete(save=False)
 
     if user.avatar_src:
-        user.avatar_src.delete(False)
+        user.avatar_src.delete(save=False)
 
     for avatar in user.avatar_set.all():
-        avatar.image.delete(False)
+        avatar.image.delete(save=False)
     user.avatar_set.all().delete()
 
 
@@ -50,6 +50,13 @@ def store_avatar(user, image):
     user.avatars = [{'size': a.size, 'url': a.url} for a in avatars]
     user.save(update_fields=['avatars'])
 
+    # delete old user avatar images
+    new_avatars_ids = [i.id for i in avatars]
+    old_avatars_queryset = user.avatar_set.exclude(id__in=new_avatars_ids)
+    for avatar in old_avatars_queryset:
+        avatar.image.delete(save=False)
+    old_avatars_queryset.delete()
+
 
 def store_new_avatar(user, image):
     delete_avatar(user)
@@ -63,7 +70,7 @@ def store_temporary_avatar(user, image):
     image.save(image_stream, "PNG")
 
     if user.avatar_tmp:
-        user.avatar_tmp.delete(False)
+        user.avatar_tmp.delete(save=False)
 
     user.avatar_tmp = ContentFile(image_stream.getvalue(), 'avatar')
     user.save(update_fields=['avatar_tmp'])
@@ -71,7 +78,7 @@ def store_temporary_avatar(user, image):
 
 def store_original_avatar(user):
     if user.avatar_src:
-        user.avatar_src.delete(False)
+        user.avatar_src.delete(save=False)
     user.avatar_src = user.avatar_tmp
     user.avatar_tmp = None
     user.save(update_fields=['avatar_tmp', 'avatar_src'])
