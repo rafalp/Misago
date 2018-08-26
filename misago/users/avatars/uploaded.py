@@ -134,9 +134,11 @@ def crop_source_image(user, source, crop):
             int(round((crop['y'] - min_size) * upscale * -1, 0)),
         ))
 
-    store.store_avatar(user, cropped_image)
     if source == 'tmp':
+        store.store_new_avatar(user, cropped_image, delete_tmp=False)
         store.store_original_avatar(user)
+    else:
+        store.store_new_avatar(user, cropped_image, delete_src=False)
 
     return crop
 
