@@ -50,16 +50,27 @@ class UserManagerTests(TestCase):
         user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
         db_user = User.objects.get_by_username(user.username)
-        self.assertEqual(user.pk, db_user.pk)
+        self.assertEqual(user, db_user)
 
         db_user = User.objects.get_by_email(user.email)
-        self.assertEqual(user.pk, db_user.pk)
+        self.assertEqual(user, db_user)
 
         db_user = User.objects.get_by_username_or_email(user.username)
-        self.assertEqual(user.pk, db_user.pk)
+        self.assertEqual(user, db_user)
 
         db_user = User.objects.get_by_username_or_email(user.email)
-        self.assertEqual(user.pk, db_user.pk)
+        self.assertEqual(user, db_user)
+
+    def test_get_by_username_or_email_multiple_results(self):
+        """get_by_username_or_email method handles multiple results"""
+        email_match = User.objects.create_user('Bob', 'test@test.test', 'Pass.123')
+        slug_match = User.objects.create_user('TestTestTest', 'bob@test.com', 'Pass.123')
+
+        db_user = User.objects.get_by_username_or_email('test@test.test')
+        self.assertEqual(email_match, db_user)
+
+        db_user = User.objects.get_by_username_or_email('TestTestTest')
+        self.assertEqual(slug_match, db_user)
 
     def test_getters_unicode_handling(self):
         """get_by_ methods handle unicode"""
