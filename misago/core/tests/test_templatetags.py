@@ -25,10 +25,17 @@ class AbsoluteUrlTests(TestCase):
 
     
     @override_settings(MISAGO_ADDRESS=TEST_ADDRESS)
-    def test_rprefix_url_name(self):
+    def test_prefix_url_name(self):
         """template tag reverses url name and prefixes it"""
         result = absoluteurl('misago:index')
         self.assertEqual(result, TEST_ADDRESS)
+
+    @override_settings(MISAGO_ADDRESS=TEST_ADDRESS)
+    def test_dont_change_absolute_url(self):
+        """template tag doesn't change already absolute urls"""
+        absolute_url = "https://github.com/rafalp/Misago/issues/1067"
+        result = absoluteurl(absolute_url)
+        self.assertEqual(result, absolute_url)
 
 
 class CaptureTests(TestCase):
