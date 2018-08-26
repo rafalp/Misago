@@ -16,11 +16,11 @@ def normalize_image(image):
     return image.copy().convert('RGBA')
 
 
-def delete_avatar(user):
-    if user.avatar_tmp:
+def delete_avatar(user, delete_tmp=True, delete_src=True):
+    if delete_tmp and user.avatar_tmp:
         user.avatar_tmp.delete(save=False)
 
-    if user.avatar_src:
+    if delete_src and user.avatar_src:
         user.avatar_src.delete(save=False)
 
     for avatar in user.avatar_set.all():
@@ -50,16 +50,9 @@ def store_avatar(user, image):
     user.avatars = [{'size': a.size, 'url': a.url} for a in avatars]
     user.save(update_fields=['avatars'])
 
-    # delete old user avatar images
-    new_avatars_ids = [i.id for i in avatars]
-    old_avatars_queryset = user.avatar_set.exclude(id__in=new_avatars_ids)
-    for avatar in old_avatars_queryset:
-        avatar.image.delete(save=False)
-    old_avatars_queryset.delete()
 
-
-def store_new_avatar(user, image):
-    delete_avatar(user)
+def store_new_avatar(user, image, delete_tmp=True, delete_src=True):
+    delete_avatar(user, delete_tmp=delete_tmp, delete_src=delete_src)
     store_avatar(user, image)
 
 
