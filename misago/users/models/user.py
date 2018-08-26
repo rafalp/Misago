@@ -133,13 +133,18 @@ class UserManager(BaseUserManager):
         email_hash = hash_email(login)
         slug = slugify(login)
         
-        users = list(self.filter(Q(slug=slug) | Q(email_hash=email_hash)))
-        for user in users:
+        queryset = self.filter(Q(slug=slug) | Q(email_hash=email_hash))
+
+        # find user by email hash (more accurate)
+        for user in queryset:
             if user.email_hash == email_hash:
                 return user
-        for user in users:
+
+        # fallback to find user by slug (safe if email hash failed)
+        for user in queryset:
             if user.slug == slug:
                 return user
+
         raise User.DoesNotExist()
 
 
