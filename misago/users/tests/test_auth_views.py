@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.test import TestCase
 from django.urls import reverse
 
@@ -56,7 +57,18 @@ class AuthViewsTests(TestCase):
         response = self.client.post(
             reverse('misago:login'),
             data={
-                'redirect_to': 'canada goose not url',
+                'redirect_to': 'canada goose not url!',
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
+
+        # invalid redirect (unicode)
+        response = self.client.post(
+            reverse('misago:login'),
+            data={
+                'redirect_to': u'łelcome!',
             },
         )
 
