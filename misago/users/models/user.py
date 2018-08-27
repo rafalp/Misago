@@ -132,7 +132,6 @@ class UserManager(BaseUserManager):
     def get_by_username_or_email(self, login):
         if '@' in login:
             return self.get(email_hash=hash_email(login))
-
         return self.get(slug=slugify(login))
 
 
